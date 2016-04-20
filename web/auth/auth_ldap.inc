@@ -204,7 +204,7 @@ function authLdapAction($callback, $user, &$object)
           }
           authLdapDebug("authLdapAction: base_dn '".
                         $all_ldap_opts['ldap_base_dn'][$idx].
-                        "' user $user dn $dn");
+                        "' user '$user' dn '$dn'");
         }
       }
       else
@@ -501,15 +501,17 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
     if (@ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authCheckAdminGroupCallback: search successful".
-                    " $group_member_attrib");
+                    " '$group_member_attrib'");
       $entries = ldap_get_entries($ldap, $res);
       foreach ($entries[0][utf8_strtolower($group_member_attrib)] as $group)
       {
         if (strcasecmp($group, $admin_group_dn) == 0)
         {
+          authLdapDebug("authCheckAdminGroupCallback: Admin group successfully found in user object");
           return 1;
         }
       }
+      authLdapDebug("authCheckAdminGroupCallback: Admin group not found in user object");
     }
   }
   return 0;
