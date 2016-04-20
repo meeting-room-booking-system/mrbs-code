@@ -284,7 +284,14 @@ table.dwm_main {
     border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
 .dwm_main th.first_last, .dwm_main th span {padding: 0 2px}
 .dwm_main th:first-child {border-left: 0}
-.dwm_main a {display: block; min-height: inherit}
+
+.dwm_main a {
+  display: block;
+  min-height: inherit;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .dwm_main tbody a {padding: 0 2px}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
