@@ -185,7 +185,9 @@ function get_address_list($array)
     $array[$i] = trim($array[$i]);
     if ($array[$i] !== '')
     {
-      if (!validate_email($array[$i]))
+      $mailer = new PHPMailer;
+      // Use parseAddresses() to validate the address because it could contain a display name
+      if (count($mailer->parseAddresses($array[$i])) == 0)
       {
         $message = 'Invalid email address "' . $array[$i] . '"';
         mail_debug($message);
