@@ -242,14 +242,14 @@ class Calendar
   private function getDateLink($day, $month, $year)
   {
     $page = (func_num_args() > 3) ? func_get_arg(3) : $this->dmy;
-    if (empty($this->room))
+    $result .= "$page.php?year=$year&amp;month=$month&amp;day=$day&amp;area=" . $this->area;
+    
+    if (!empty($this->room))
     {
-      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area;
+      $result .= "&amp;room=".$this->room;
     }
-    else
-    {
-      return $page.".php?year=$year&amp;month=$month&amp;day=$day&amp;area=".$this->area."&amp;room=".$this->room;
-    }
+    
+    return $result;
   }
     
 
