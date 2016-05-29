@@ -242,7 +242,15 @@ class Calendar
   private function getDateLink($day, $month, $year)
   {
     $page = (func_num_args() > 3) ? func_get_arg(3) : $this->dmy;
-    $result .= "$page.php?year=$year&amp;month=$month&amp;day=$day&amp;area=" . $this->area;
+    
+    // Sanitize the date: the day may be negative
+    $date = getdate(mktime(12, 0, 0, $month, $day, $year));
+    
+    $result = "$page.php?" .
+              "year="  . $date['year'] . "&amp;" .
+              "month=" . $date['mon']  . "&amp;" .
+              "day="   . $date['mday'] . "&amp;" .
+              "area="  . $this->area;
     
     if (!empty($this->room))
     {
