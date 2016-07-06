@@ -2064,6 +2064,14 @@ function validate_email_list($list)
 function show_colour_key()
 {
   global $booking_types;
+  
+  // No point in showing the colour key if we aren't using entry types.  (Note:  count()
+  // returns 0 if its parameter is not set).
+  if (count($booking_types) < 2)
+  {
+    return;
+  }
+  
   // set the table width.   Default is 5, but try and avoid rows of unequal length
   switch (count($booking_types))
   {
