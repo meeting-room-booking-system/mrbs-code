@@ -1157,6 +1157,10 @@ $default_area_room_delimiter = '/';
 $booking_types[] = "E";
 $booking_types[] = "I";
 
+// If you don't want to use types then uncomment the following line.  (The booking will
+// still have a type associated with it in the database, which will be the default type.)
+// unset($booking_types)
+
 // Default type for new bookings
 // (Note that the default type does not apply if the type field is mandatory)
 $default_type = "I";
