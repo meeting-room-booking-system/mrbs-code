@@ -466,6 +466,12 @@ function create_field_entry_type($disabled=FALSE)
 {
   global $booking_types, $type, $is_mandatory_field;
   
+  // Don't bother with types if there's only one of them (or even none)
+  if (count($booking_types) < 2)
+  {
+    return;
+  }
+  
   echo "<div id=\"div_type\">\n";
   
   $params = array('label'       => get_vocab("type") . ":",

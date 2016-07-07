@@ -195,6 +195,10 @@ if (!$ajax)
   }        
 }
 
+if (!isset($type))
+{
+  $type = $default_type;
+}
 
 if (isset($month_relative_ord) && isset($month_relative_day))
 {
