@@ -40,7 +40,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   global $is_private_field, $standard_fields;
   global $strftime_format;
   global $tbl_entry;
-  global $select_options;
+  global $select_options, $booking_types;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -142,9 +142,12 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   }
   $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
   // Type
-  $type = get_type_vocab($data['type']);
-  $value = (empty($type)) ? "?${data['type']}?" : $type;
-  $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
+  if (count($booking_types) > 1)
+  {
+    $type = get_type_vocab($data['type']);
+    $value = (empty($type)) ? "?${data['type']}?" : $type;
+    $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
+  }
   // Created by
   $class = ($keep_private && !empty($is_private_field['entry.create_by'])) ? "private" : "";
   $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
