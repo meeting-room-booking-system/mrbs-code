@@ -385,7 +385,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $mail_settings, $standard_fields, $url_base;
   global $tbl_entry;
-  global $select_options;
+  global $select_options, $booking_types;
 
   // If we haven't got a previous entry just give it one.   It won't get used,
   // but will prevent a series if undefined index notices.
@@ -576,10 +576,13 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $compare, $as_html);
     
     // Type of booking
-    $body .= create_body_table_row (get_mail_vocab("type"),
-                                    get_type_vocab($data['type']),
-                                    get_type_vocab($mail_previous['type']),
-                                    $compare, $as_html);
+    if (count($booking_types) > 1)
+    {
+      $body .= create_body_table_row (get_mail_vocab("type"),
+                                      get_type_vocab($data['type']),
+                                      get_type_vocab($mail_previous['type']),
+                                      $compare, $as_html);
+    }
                                          
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
