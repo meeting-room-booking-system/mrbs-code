@@ -111,24 +111,27 @@ function generate_search_criteria(&$vars)
         break;
       
         
-      case 'typematch':  
-        echo "<div id=\"div_typematch\">\n";
-        $options = array();
-        foreach ($booking_types as $type)
+      case 'typematch':
+        if (count($booking_types) > 1)
         {
-          $options[$type] = get_type_vocab($type);
+          echo "<div id=\"div_typematch\">\n";
+          $options = array();
+          foreach ($booking_types as $type)
+          {
+            $options[$type] = get_type_vocab($type);
+          }
+          $params = array('label'        => get_vocab("match_type") . ':',
+                          'name'         => 'typematch[]',
+                          'id'           => 'typematch',
+                          'options'      => $options,
+                          'force_assoc'  => TRUE,  // in case the type keys happen to be digits
+                          'value'        => $vars['typematch'],
+                          'multiple'     => TRUE,
+                          'attributes'   => 'size="5"');
+          generate_select($params);
+          echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
+          echo "</div>\n";
         }
-        $params = array('label'        => get_vocab("match_type") . ':',
-                        'name'         => 'typematch[]',
-                        'id'           => 'typematch',
-                        'options'      => $options,
-                        'force_assoc'  => TRUE,  // in case the type keys happen to be digits
-                        'value'        => $vars['typematch'],
-                        'multiple'     => TRUE,
-                        'attributes'   => 'size="5"');
-        generate_select($params);
-        echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
-        echo "</div>\n";
         break;
       
         
@@ -461,7 +464,7 @@ function report_header()
   global $output_format, $ajax;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
-  global $field_order_list;
+  global $field_order_list, $booking_types;
 
   // Don't do anything if this is an Ajax request: we only want to send the data
   if ($ajax)
@@ -497,7 +500,10 @@ function report_header()
         $values[] = get_vocab("fulldescription_short");
         break;
       case 'type':
-        $values[] = get_vocab("type");
+        if (count($booking_types) > 1)
+        {
+          $values[] = get_vocab("type");
+        }
         break;
       case 'create_by': 
         $values[] = get_vocab("createdby");
@@ -714,7 +720,7 @@ function report_row(&$rows, &$data)
   global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $strftime_format;
-  global $select_options;
+  global $select_options, $booking_types;
   global $field_order_list;
   
   // If we're capable of delivering an Ajax request and this is not Ajax request,
@@ -848,7 +854,8 @@ function report_row(&$rows, &$data)
     // Add the value to the array.   We don't bother with some fields if
     // they are going to be irrelevant
     if (($confirmation_somewhere || ($field != 'confirmation_enabled')) &&
-        ($approval_somewhere || ($field != 'approval_enabled')) )
+        ($approval_somewhere || ($field != 'approval_enabled')) &&
+        ((count($booking_types) > 1) || ($field != 'type')))
     {
       $values[] = $value;
     }
