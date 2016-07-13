@@ -1354,6 +1354,7 @@ function generate_datalist($params)
     $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
     $html .= ">" . $params['label'] . "</label>\n";
   }
+  
   $html .= "<input id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= " list=\"" . $params['id'] . "_options\"";
   $html .= " value=\"" . $params['value'] . "\"";
@@ -1361,14 +1362,19 @@ function generate_datalist($params)
   $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  // We normally have the autocomplete atribute set to off because in most browsers
-  // this stops the browser suggesting previous input and confines the list to our
-  // options.   However in Opera turning off autocomplete turns off our options as
-  // well, so we have to turn it on.  (We'll also turn it on for Opera in the JavaScript,
-  // for good measure, just in case the server isn't passing through the user agent).
-  $html .= " autocomplete=\"";
-  $html .= (strpos(utf8_strtolower($HTTP_USER_AGENT), 'opera') === FALSE) ? 'off' : 'on';
-  $html .= "\">\n";
+  $html .= ">\n";
+  
+  // One problem with using a datalist with an input element is the way different browsers
+  // handle autocomplete.  If you have autocomplete on, and also an id or name attribute, then some
+  // browsers, eg Edge, will bring the history up on top of the datalist options so that you can't
+  // see the first few options.  But if you have autocomplete off, then other browsers, eg Chrome,
+  // will not present the datalist options at all.  This can be fixed in JavaScript by having a second,
+  // hidden, input which holds the actual form value and mirrors the visible input.  Because we can't
+  // rely on JavaScript being enabled we will create the basic HTML using autocomplete on, ie the default,
+  // which is the least bad alternative.   One disadvantage of this method is that the label is no longer
+  // tied to the visible input, but this isn't as important for a text input as it is, say, for a checkbox
+  // or radio button.
+  
   $html .= "<datalist id=\"" . $params['id'] . "_options\">";
   
   // Put a <select> wrapper around the options so that browsers that don't

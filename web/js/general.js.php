@@ -205,30 +205,67 @@ init = function(args) {
         });
     });
     
-   
-  <?php 
-  // Add jQuery UI Autocomplete functionality for those browsers that do not
-  // support the <datalist> element.  (We don't support autocomplete in IE6 and
-  // below because the browser doesn't render the autocomplete box properly - it
-  // gets hidden behind other elements.   Although there are fixes for this,
-  // it's not worth it ...)
-  ?> 
-  if (supportsDatalist() || lteIE6)
+  if (supportsDatalist())
   {
     <?php
-    // If the browser does support the datalist we have to do a bit of tweaking
-    // if we are running Opera.  We normally have the autocomplete atribute set
-    // to off because in most browsers this stops the browser suggesting previous
-    // input and confines the list to our options.   However in Opera turning off
-    // autocomplete turns off our options as well, so we have to turn it back on.
+    // One problem with using a datalist with an input element is the way different browsers
+    // handle autocomplete.  If you have autocomplete on, and also an id or name attribute, then some
+    // browsers, eg Edge, will bring the history up on top of the datalist options so that you can't
+    // see the first few options.  But if you have autocomplete off, then other browsers, eg Chrome,
+    // will not present the datalist options at all.  We fix this in JavaScript by having a second,
+    // hidden, input which holds the actual form value and mirrors the visible input.  Because we can't
+    // rely on JavaScript being enabled we will create the basic HTML using autocomplete on, ie the default,
+    // which is the least bad alternative.  One disadvantage of this method is that the label is no longer
+    // tied to the visible input, but this isn't as important for a text input as it is, say, for a checkbox
+    // or radio button.
     ?>
-    if (navigator.userAgent.toLowerCase().indexOf('opera') >= 0)
-    {
-      $('datalist').prev().attr('autocomplete', 'on');
-    }
+    $('input[list]').each(function() {
+      var input = $(this),
+          hiddenInput = $('<input type="hidden">');
+      
+      <?php
+      // Create a hidden input with the id, name and value of the original input.  Then remove the id and
+      // name from the original input (so that history doesn't work).   Finally make sure that
+      // the hidden input is updated whenever the original input is changed.
+      ?>
+      hiddenInput.attr('id', input.attr('id'))
+                 .attr('name', input.attr('name'))
+                 .val(input.val());
+                 
+      input.removeAttr('id')
+           .removeAttr('name')
+           .after(hiddenInput);
+           
+      input.change(function() {
+        hiddenInput.val($(this).val());
+      })
+
+    });
+    
+    <?php
+    // Because there are some browsers, eg MSIE and Edge, that will still give you form history even
+    // though the input has no id or name, then we need to clear the values from those inputs just
+    // before the form is submitted.   Note that we can't do it on the submit event because by that time
+    // the browser has cached the values.  So we do it when the Submit button is clicked - and this event
+    // is also triggered if Enter is entered into an input field.
+    ?>
+    $('form:has(input[list]) input[type="submit"]').click(function() {
+      $(this).closest('form')
+             .find('input:not([name])')
+             .not('input[type="submit"]')
+             .val('');
+    });
+    
   }
-  else
+  else if (!lteIE6)
   {
+    <?php 
+    // Add jQuery UI Autocomplete functionality for those browsers that do not
+    // support the <datalist> element.  (We don't support autocomplete in IE6 and
+    // below because the browser doesn't render the autocomplete box properly - it
+    // gets hidden behind other elements.   Although there are fixes for this,
+    // it's not worth it ...)
+    ?> 
     $('datalist').each(function() {
         var datalist = $(this);
         var options = [];
@@ -276,6 +313,8 @@ init = function(args) {
         }
       });
   }
+  
+
   
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
 
