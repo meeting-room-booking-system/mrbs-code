@@ -238,7 +238,7 @@ init = function(args) {
            
       input.change(function() {
         hiddenInput.val($(this).val());
-      })
+      });
 
     });
     
