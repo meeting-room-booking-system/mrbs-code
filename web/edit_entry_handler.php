@@ -87,6 +87,7 @@ $formvars = array('create_by'          => 'string',
                   'month_relative_ord' => 'string',
                   'month_relative_day' => 'string',
                   'skip'               => 'string',  // bool, actually
+                  'no_mail'            => 'string',  // bool, actually
                   'private'            => 'string',  // bool, actually
                   'confirmed'          => 'string',
                   'back_button'        => 'string',
@@ -248,6 +249,16 @@ if (!$is_admin && $auth['only_admin_can_book_multiday'])
   $end_day = $start_day;
   $end_month = $start_month;
   $end_year = $start_year;
+}
+
+// Check that they really are allowed to set $no_mail;
+if ($no_mail)
+{
+  if (!$mail_settings['allow_no_mail'] &&
+      (!$is_admin || !$mail_settings['allow_admins_no_mail']))
+  {
+    $no_mail = FALSE;
+  }
 }
 
 // If this is an Ajax request and we're being asked to commit the booking, then
@@ -685,7 +696,8 @@ foreach ($rooms as $room_id)
 
 $just_check = $ajax && function_exists('json_encode') && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
-$result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $need_to_send_mail, $edit_type);
+$send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
+$result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
 // If we weren't just checking and this was a succesful booking and
 // we were editing an existing booking, then delete the old booking

@@ -932,6 +932,12 @@ $mail_settings['on_new']    = TRUE;   // when an entry is created
 $mail_settings['on_change'] = FALSE;  // when an entry is changed
 $mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 
+// It is also possible to allow all users or just admins to choose not to send an
+// email when creating or editing a booking.  This can be useful if an inconsequential
+// change is being made, or many bookings are being made at the beginning of a term or season.
+$mail_settings['allow_no_mail']        = FALSE;
+$mail_settings['allow_admins_no_mail'] = FALSE;  // Ignored if 'allow_no_mail' is TRUE
+
 
 // WHAT TO EMAIL
 // -------------

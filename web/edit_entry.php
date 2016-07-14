@@ -1356,7 +1356,29 @@ if (($edit_type == "series") && $repeats_allowed)
 
   echo "</fieldset>\n";
 }
-    
+
+echo "<fieldset id=\"booking_controls\">\n";
+echo "<legend></legend>\n";
+
+// Checkbox for no email
+if ($need_to_send_mail &&
+    ($mail_settings['allow_no_mail'] || ($is_admin && $mail_settings['allow_admins_no_mail'])))
+{
+  echo "<div id=\"div_no_mail\">\n";
+  
+  $no_mail_default = FALSE;
+  
+  $params = array('label'    => get_vocab("no_mail") . ":",
+                  'name'     => 'no_mail',
+                  'value'    => $no_mail_default);
+  generate_checkbox($params);
+
+  echo "</div>\n";
+}
+
+echo "</fieldset>\n";
+
+
     ?>
     <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
     <input type="hidden" name="create_by" value="<?php echo htmlspecialchars($create_by)?>">
