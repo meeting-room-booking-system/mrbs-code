@@ -928,6 +928,16 @@ else
   }
 
   $start_time = mktime($hour, $minute, 0, $month, $day, $year);
+  
+  // If the start time is not on a slot boundary, then make it so.  (It's just possible that it won't be
+  // if (a) somebody messes with the query string or (b) somebody changes morningstarts or the
+  // resolution in another browser window and then this page is refreshed with the same query string).
+  $start_first_slot = get_start_first_slot($month, $day, $year);
+  $start_time = max($start_first_slot, $start_time);
+  if (($start_time - $start_first_slot)%$resolution != 0)
+  {
+    $start_time = $start_first_slot + intval(($start_time - $start_first_slot)/$resolution);  // rounds down
+  }
 
   if (isset($end_seconds))
   {
