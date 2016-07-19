@@ -114,7 +114,7 @@ init = function(args) {
       
           $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
                 .click(function() {
-                    var data = reportTable.fnGetFilteredData(),
+                    var data = reportTable.rows({filter: 'applied'}).data().toArray(),
                         nEntries = data.length;
                         
                     if (window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
@@ -190,12 +190,12 @@ init = function(args) {
                                       // side processing) and there's no summary table we can be
                                       // slightly more elegant and just reload the Ajax data source.
                                       ?>
-                                      oSettings = reportTable.fnSettings();
-                                      if (oSettings.ajax && 
-                                          !oSettings.bServerSide &&
+
+                                      if (reportTable.ajax.url() && 
+                                          !reportTable.page.info().serverSide &&
                                           ($('#div_summary').length === 0))
                                       {
-                                        reportTable.fnReloadAjax();
+                                        reportTable.ajax.reload();
                                         <?php
                                         // We also need to update the count of the number of entries.  We
                                         // can't just get the length of the data, because the new data is
