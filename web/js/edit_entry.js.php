@@ -1295,9 +1295,10 @@ init = function(args) {
                 });
      
     $('#conflict_check, #policy_check').click(function manageTabs() {
-        var tabId;
-        var checkResults = $('#check_results');
-        var checkTabs = $('#check_tabs');
+        var tabId,
+            tabIndex,
+            checkResults = $('#check_results'),
+            checkTabs = $('#check_tabs');
         <?php 
         // Work out which tab should be selected
         // (Slightly long-winded using a switch, but there may be more tabs in future)
@@ -1312,6 +1313,8 @@ init = function(args) {
             tabId = 'schedule_details';
             break;
         }
+        tabIndex = $('#details_tabs a[href="#' + tabId + '"]').parent().index();
+
         <?php
         // If we've already created the dialog and tabs, then all we have
         // to do is re-open the dialog if it has previously been closed and
@@ -1323,7 +1326,7 @@ init = function(args) {
           {
             checkResults.dialog("open");
           }
-          checkTabs.tabs("select", tabId);
+          checkTabs.tabs('option', 'active', tabIndex);
           return;
         }
         <?php
@@ -1332,7 +1335,7 @@ init = function(args) {
         // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
         ?>
         checkTabs.tabs();
-        checkTabs.tabs("select", tabId);
+        checkTabs.tabs('option', 'active', tabIndex);
         checkResults.dialog({'width':400, 'height':200, 
                                     'minWidth':300, 'minHeight':150, 
                                     'draggable':true });
