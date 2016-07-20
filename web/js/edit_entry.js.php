@@ -772,7 +772,7 @@ function getDateDifference()
       end,
       endDate;
       
-  if (endDatepickerAlt.length == 0)
+  if (endDatepickerAlt.length === 0)
   {
     <?php
     // No end date selector, so assume the end date is
@@ -1385,7 +1385,7 @@ init = function(args) {
     {
       if ($('#end_datepicker').css('visibility') === 'hidden')
       {
-        $('#end_datepicker_alt').val($('#start_datepicker_alt').val())
+        $('#end_datepicker_alt').val($('#start_datepicker_alt').val());
       }
     }
     
