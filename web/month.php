@@ -421,7 +421,7 @@ for ($cday = 1; $cday <= $days_in_month; $cday++)
     }
     else
     {
-      $query_string .= "&amp;hour=$morningstarts&amp;minute=0";
+      $query_string .= "&amp;hour=$morningstarts&amp;minute=$morningstarts_minutes";
     }
     
     echo "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
