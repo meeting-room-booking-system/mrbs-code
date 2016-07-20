@@ -1336,9 +1336,11 @@ init = function(args) {
         ?>
         checkTabs.tabs();
         checkTabs.tabs('option', 'active', tabIndex);
-        checkResults.dialog({'width':400, 'height':200, 
-                                    'minWidth':300, 'minHeight':150, 
-                                    'draggable':true });
+        checkResults.dialog({'width': 400,
+                             'height': 200, 
+                             'minWidth': 300,
+                             'minHeight': 150, 
+                             'draggable': true});
         <?php //steal the close button ?>
         $('#ui-tab-dialog-close').append($('a.ui-dialog-titlebar-close'));
         <?php //move the tabs out of the content and make them draggable ?>
