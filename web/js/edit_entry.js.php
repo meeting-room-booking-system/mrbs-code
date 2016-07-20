@@ -1342,7 +1342,7 @@ init = function(args) {
                              'minHeight': 150, 
                              'draggable': true});
         <?php //steal the close button ?>
-        $('#ui-tab-dialog-close').append($('a.ui-dialog-titlebar-close'));
+        $('#details_tabs').append($('button.ui-dialog-titlebar-close'));
         <?php //move the tabs out of the content and make them draggable ?>
         $('.ui-dialog').addClass('ui-tabs')
                        .prepend($('#details_tabs'))
