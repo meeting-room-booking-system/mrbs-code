@@ -306,7 +306,8 @@ define('REP_MONTH_RELATIVE', 1);
 /*************************************************
  * DIRECTORIES - internal use, do not change
  *************************************************/
- 
+
+define('MRBS_ROOT',       __DIR__);                   // Root of MRBS installation
 define('TZDIR',           'tzurl/zoneinfo');          // Directory containing TZURL definitions
 define('TZDIR_OUTLOOK',   'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL definitions
 

@@ -74,94 +74,101 @@ controllers; Netware servers; pop3 or imap mail servers; etc.
 
 PHP authentication modules
 --------------------------
-+------+------------------------+-------------------+------------------------+
-|Type  |Description             |Pros               |Cons                    |
-+------+------------------------+-------------------+------------------------+
-|none  |Every user is accepted. |                   |                        |
-|      |This was for example the|                   |                        |
-|      |case of the MRBS 1.1 IP |  - Very simple to |  - No security at all. |
-|      |address and computer    |  setup.           |                        |
-|      |name "authentications". |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|config|Users are listed in     |                   |                        |
-|      |config.inc.php.         |                   |                        |
-|      |                        |  - Simple to      |  - Users cannot update |
-|      |                        |  setup.           |  their own password.   |
-|      |                        |                   |                        |
-|      |                        |  - Not dependant  |  - Administrators      |
-|      |                        |  on an external   |  manually set the user |
-|      |                        |  authentication   |  passwords, which is   |
-|      |                        |  server, so usable|  against normal        |
-|      |                        |  on the Internet. |  confidentiality rules.|
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|db    |Users validated using   |                   |                        |
-|      |web-based authentication|  - Simple to setup|                        |
-|      |based on a table in mrbs|                   |  - Does not use        |
-|      |database                |  - Built in MRBS  |  existing directory    |
-|      |                        |  but more secure  |                        |
-|      |                        |  than 'config'    |                        |
-|      |                        |                   |                        |
-|      |                        |  - easy to        |                        |
-|      |                        |  configure        |                        |
-+------+------------------------+-------------------+------------------------+
-|db_ext|Users validated using   |                   |                        |
-|      |a table in an external  |  - Uses an        |                        |
-|      |database                |  existing         |                        |
-|      |                        |  authentication   |                        |
-|      |                        |  database thereby |                        |
-|      |                        |  saving directory |                        |
-|      |                        |  duplication.     |                        |
-|      |                        |                   |                        |
-|      |                        |  - easy to        |                        |
-|      |                        |  configure        |                        |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|ldap  |Users validated using   |                   |                        |
-|      |LDAP directory services.|                   |                        |
-|      |                        |  - For corporate  |  - Does not work on the|
-|      |                        |  intranets using  |  Internet?             |
-|      |                        |  LDAP directory   |                        |
-|      |                        |  services.        |                        |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|pop3  |Users validated by a    |                   |                        |
-|      |POP3 mail server.       |                   |                        |
-|      |                        |  - For groups of  |  - Technically works on|
-|      |                        |  users all having |  the Internet, but it's|
-|      |                        |  an Email address |  unlikely all users of |
-|      |                        |  on the same      |  a site will have an   |
-|      |                        |  server.          |  Email address on the  |
-|      |                        |                   |  same mail server.     |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|imap  |Users validated by an   |                   |                        |
-|      |IMAP mail server.       |                   |                        |
-|      |                        |  - For groups of  |  - Technically works on|
-|      |                        |  users all having |  the Internet, but it's|
-|      |                        |  an Email address |  unlikely all users of |
-|      |                        |  on the same      |  a site will have an   |
-|      |                        |  server.          |  Email address on the  |
-|      |                        |                   |  same mail server.     |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|nis   |Users validated by NIS  |                   |  - This extension is   |
-|      |server (user contrib.)  |                   |  not available on      |
-|      |                        |  - ?              |  Windows platforms.    |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|nw    |Users validated by      |                   |  - TThis is only going |
-|      |Netware server          |                   |   to work on Linux.    |
-|      |(user contrib.)         |  - ?              |                        |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
-|ext   |Validation is delegated |                   |                        |
-|      |to an external program. |                   |                        |
-|      |                        |  - Lots of        |  - Most available      |
-|      |                        |  possibilities.   |  programs work only    |
-|      |                        |                   |  under Unix.           |
-|      |                        |                   |                        |
-+------+------------------------+-------------------+------------------------+
++---------+------------------------+-------------------+------------------------+
+|Type     |Description             |Pros               |Cons                    |
++---------+------------------------+-------------------+------------------------+
+|none     |Every user is accepted. |                   |                        |
+|         |This was for example the|                   |                        |
+|         |case of the MRBS 1.1 IP |  - Very simple to |  - No security at all. |
+|         |address and computer    |  setup.           |                        |
+|         |name "authentications". |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|config   |Users are listed in     |                   |                        |
+|         |config.inc.php.         |                   |                        |
+|         |                        |  - Simple to      |  - Users cannot update |
+|         |                        |  setup.           |  their own password.   |
+|         |                        |                   |                        |
+|         |                        |  - Not dependant  |  - Administrators      |
+|         |                        |  on an external   |  manually set the user |
+|         |                        |  authentication   |  passwords, which is   |
+|         |                        |  server, so usable|  against normal        |
+|         |                        |  on the Internet. |  confidentiality rules.|
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|db       |Users validated using   |                   |                        |
+|         |web-based authentication|  - Simple to setup|                        |
+|         |based on a table in mrbs|                   |  - Does not use        |
+|         |database                |  - Built in MRBS  |  existing directory    |
+|         |                        |  but more secure  |                        |
+|         |                        |  than 'config'    |                        |
+|         |                        |                   |                        |
+|         |                        |  - easy to        |                        |
+|         |                        |  configure        |                        |
++---------+------------------------+-------------------+------------------------+
+|db_ext   |Users validated using   |                   |                        |
+|         |a table in an external  |  - Uses an        |                        |
+|         |database                |  existing         |                        |
+|         |                        |  authentication   |                        |
+|         |                        |  database thereby |                        |
+|         |                        |  saving directory |                        |
+|         |                        |  duplication.     |                        |
+|         |                        |                   |                        |
+|         |                        |  - easy to        |                        |
+|         |                        |  configure        |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|ldap     |Users validated using   |                   |                        |
+|         |LDAP directory services.|                   |                        |
+|         |                        |  - For corporate  |  - Does not work on the|
+|         |                        |  intranets using  |  Internet?             |
+|         |                        |  LDAP directory   |                        |
+|         |                        |  services.        |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|pop3     |Users validated by a    |                   |                        |
+|         |POP3 mail server.       |                   |                        |
+|         |                        |  - For groups of  |  - Technically works on|
+|         |                        |  users all having |  the Internet, but it's|
+|         |                        |  an Email address |  unlikely all users of |
+|         |                        |  on the same      |  a site will have an   |
+|         |                        |  server.          |  Email address on the  |
+|         |                        |                   |  same mail server.     |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|imap     |Users validated by an   |                   |                        |
+|         |IMAP mail server.       |                   |                        |
+|         |                        |  - For groups of  |  - Technically works on|
+|         |                        |  users all having |  the Internet, but it's|
+|         |                        |  an Email address |  unlikely all users of |
+|         |                        |  on the same      |  a site will have an   |
+|         |                        |  server.          |  Email address on the  |
+|         |                        |                   |  same mail server.     |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|nis      |Users validated by NIS  |                   |  - This extension is   |
+|         |server (user contrib.)  |                   |  not available on      |
+|         |                        |  - ?              |  Windows platforms.    |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|nw       |Users validated by      |                   |  - TThis is only going |
+|         |Netware server          |                   |   to work on Linux.    |
+|         |(user contrib.)         |  - ?              |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|ext      |Validation is delegated |                   |                        |
+|         |to an external program. |                   |                        |
+|         |                        |  - Lots of        |  - Most available      |
+|         |                        |  possibilities.   |  programs work only    |
+|         |                        |                   |  under Unix.           |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|wordpress|Users are validated     |                   |                        |
+|         |against a WordPress     |                   |                        |
+|         |installation running on |                   |                        |
+|         |the same server         |                   |                        |
+|         |                        |                   |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
 
 External authentication programs
 --------------------------------
@@ -241,97 +248,102 @@ Which session scheme to choose
 
 The session scheme is the way the user and password is queried and recorded.
 
-This one is a no-brainer. Use the "php" session scheme. The others are left in
-for historical reasons:
+This one is a no-brainer. Use the "php" session scheme, unless you are using
+'wordpress; authentication, in which case use the 'wordpress' session scheme.
+The others are left in for historical reasons:
 
-+-------+------------------------------+--------------------+----------------+
-|Type   |Description                   |Pros                |Cons            |
-+-------+------------------------------+--------------------+----------------+
-|php    |Use PHP's native session      |                    |                |
-|       |handling. Recommended.        |                    |                |
-|       |(Session data is usually saved|  - Recommended by  |  - Any?        |
-|       |in a file on the server)      |  PHP doctors, PHP  |                |
-|       |                              |  moms, etc.        |                |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|http   |Use the "HTTP basic           |                    |                |
-|       |authentication" protocol to   |                    |                |
-|       |get a user/password popup.    |  - Simple.         |  - Incompatible|
-|       |                              |                    |  with IIS web  |
-|       |                              |  - This was the    |  servers.      |
-|       |                              |  default in MRBS   |                |
-|       |                              |  1.1 for most      |  - No way to   |
-|       |                              |  authentication    |  log out.      |
-|       |                              |  schemes.          |                |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|cookies|Save the user/password in     |                    |                |
-|       |cookies on the client's web   |                    |                |
-|       |browser.                      |  - Less demanding  |  - Some users  |
-|       |                              |  for the server    |  disable       |
-|       |                              |  than PHP native   |  cookies on    |
-|       |                              |  sessions. (No     |  their browser.|
-|       |                              |  files stored)     |                |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|nt     |The users identity is queried |                    |                |
-|       |AND validated by an NT/IIS    |                    |                |
-|       |server running in             |  - For corporate   |  - Incompatible|
-|       |authenticated access mode.    |  intranets using   |  with Linux    |
-|       |(That is anonymous access     |  NT/2000/XP servers|  servers by    |
-|       |disabled, or Access Control   |  in authenticated  |  definition.   |
-|       |Lists enabled)                |  access mode.      |                |
-|       |                              |                    |  - Does not    |
-|       |Use in combination with       |                    |  work on the   |
-|       |authentication "none", as the |                    |  Internet.     |
-|       |authentication is already done|                    |                |
-|       |by IIS during the session     |                    |  - Does not    |
-|       |initiation.                   |                    |  allow         |
-|       |                              |                    |  anonymous     |
-|       |                              |                    |  browsing.     |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|omni   |The users identity is queried |                    |                |
-|       |AND validated by an Omnicron  |                    |                |
-|       |OmniHTTPd web server.         |  - For users of    |  - For users of|
-|       |                              |  Omnicron OmniHTTPd|  Omnicron      |
-|       |Use in combination with       |  web servers.      |  OmniHTTPd web |
-|       |authentication "none", as     |                    |  servers.      |
-|       |authentication is already done|                    |                |
-|       |by OmniHTTPd during the       |                    |                |
-|       |session initiation.           |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|remote_|The user's identity is        |                    |                |
-|user   |determined by reading the     |                    |                |
-|       |REMOTE_USER environment       | - For users that   |  - Requires a  |
-|       |variable.                     | already have an    |  web server    |
-|       |Use in combination with       | wider auth.        |  setup that    |
-|       |authentication "none", as     | scheme that sets   |  sets          |
-|       |authentication has already    | REMOTE_USER, allows|  REMOTE_USER.  |
-|       |been done by the system that  | MRBS to use that   |  Could be hard |
-|       |sets REMOTE_USER              | scheme             |  to set up     |
-+-------+------------------------------+--------------------+----------------+
-|ip     |Users are identified by the IP|                    |                |
-|       |address of their computer.    |                    |                |
-|       |                              |  - Easy to setup,  |  - Incompatible|
-|       |Use in combination with       |  for MRBS          |  with DHCP.    |
-|       |authentication "none" or      |  evaluation.       |                |
-|       |"config".                     |                    |  - Users cannot|
-|       |                              |                    |  make changes  |
-|       |                              |                    |  from a        |
-|       |                              |                    |  different     |
-|       |                              |                    |  computer.     |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
-|host   |Users are identified by the   |                    |                |
-|       |DNS name of their host        |                    |                |
-|       |computer.                     |  - Easy to setup,  |  - Users cannot|
-|       |                              |  for MRBS          |  make changes  |
-|       |Use in combination of         |  evaluation.       |  from a        |
-|       |authentication "none" or      |                    |  different     |
-|       |"config".                     |                    |  computer.     |
-|       |                              |                    |                |
-+-------+------------------------------+--------------------+----------------+
++---------+------------------------------+--------------------+----------------+
+|Type     |Description                   |Pros                |Cons            |
++---------+------------------------------+--------------------+----------------+
+|php      |Use PHP's native session      |                    |                |
+|         |handling. Recommended.        |                    |                |
+|         |(Session data is usually saved|  - Recommended by  |  - Any?        |
+|         |in a file on the server)      |  PHP doctors, PHP  |                |
+|         |                              |  moms, etc.        |                |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|http     |Use the "HTTP basic           |                    |                |
+|         |authentication" protocol to   |                    |                |
+|         |get a user/password popup.    |  - Simple.         |  - Incompatible|
+|         |                              |                    |  with IIS web  |
+|         |                              |  - This was the    |  servers.      |
+|         |                              |  default in MRBS   |                |
+|         |                              |  1.1 for most      |  - No way to   |
+|         |                              |  authentication    |  log out.      |
+|         |                              |  schemes.          |                |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|cookie   |Save the user/password in     |                    |                |
+|         |cookies on the client's web   |                    |                |
+|         |browser.                      |  - Less demanding  |  - Some users  |
+|         |                              |  for the server    |  disable       |
+|         |                              |  than PHP native   |  cookies on    |
+|         |                              |  sessions. (No     |  their browser.|
+|         |                              |  files stored)     |                |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|nt       |The users identity is queried |                    |                |
+|         |AND validated by an NT/IIS    |                    |                |
+|         |server running in             |  - For corporate   |  - Incompatible|
+|         |authenticated access mode.    |  intranets using   |  with Linux    |
+|         |(That is anonymous access     |  NT/2000/XP servers|  servers by    |
+|         |disabled, or Access Control   |  in authenticated  |  definition.   |
+|         |Lists enabled)                |  access mode.      |                |
+|         |                              |                    |  - Does not    |
+|         |Use in combination with       |                    |  work on the   |
+|         |authentication "none", as the |                    |  Internet.     |
+|         |authentication is already done|                    |                |
+|         |by IIS during the session     |                    |  - Does not    |
+|         |initiation.                   |                    |  allow         |
+|         |                              |                    |  anonymous     |
+|         |                              |                    |  browsing.     |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|omni     |The users identity is queried |                    |                |
+|         |AND validated by an Omnicron  |                    |                |
+|         |OmniHTTPd web server.         |  - For users of    |  - For users of|
+|         |                              |  Omnicron OmniHTTPd|  Omnicron      |
+|         |Use in combination with       |  web servers.      |  OmniHTTPd web |
+|         |authentication "none", as     |                    |  servers.      |
+|         |authentication is already done|                    |                |
+|         |by OmniHTTPd during the       |                    |                |
+|         |session initiation.           |                    |                |
++---------+------------------------------+--------------------+----------------+
+|remote_  |The user's identity is        |                    |                |
+|user     |determined by reading the     |                    |                |
+|         |REMOTE_USER environment       | - For users that   |  - Requires a  |
+|         |variable.                     | already have an    |  web server    |
+|         |Use in combination with       | wider auth.        |  setup that    |
+|         |authentication "none", as     | scheme that sets   |  sets          |
+|         |authentication has already    | REMOTE_USER, allows|  REMOTE_USER.  |
+|         |been done by the system that  | MRBS to use that   |  Could be hard |
+|         |sets REMOTE_USER              | scheme             |  to set up     |
++---------+------------------------------+--------------------+----------------+
+|ip       |Users are identified by the IP|                    |                |
+|         |address of their computer.    |                    |                |
+|         |                              |  - Easy to setup,  |  - Incompatible|
+|         |Use in combination with       |  for MRBS          |  with DHCP.    |
+|         |authentication "none" or      |  evaluation.       |                |
+|         |"config".                     |                    |  - Users cannot|
+|         |                              |                    |  make changes  |
+|         |                              |                    |  from a        |
+|         |                              |                    |  different     |
+|         |                              |                    |  computer.     |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|host     |Users are identified by the   |                    |                |
+|         |DNS name of their host        |                    |                |
+|         |computer.                     |  - Easy to setup,  |  - Users cannot|
+|         |                              |  for MRBS          |  make changes  |
+|         |Use in combination of         |  evaluation.       |  from a        |
+|         |authentication "none" or      |                    |  different     |
+|         |"config".                     |                    |  computer.     |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|wordpress|Use when using WordPress      |                    |                |
+|         |authentication.               |                    |                |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
 
 How to configure authentication
 ===============================

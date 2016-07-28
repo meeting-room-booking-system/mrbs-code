@@ -612,12 +612,12 @@ $report_presentation_field_order = array();
  ***********************************************/
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
-           // "http" "php" "cookie" "ip" "host" "nt" "omni"
-           // "remote_user"
+                          // "http", "php", "cookie", "ip", "host", "nt", "omni",
+                          // "remote_user" or "wordpress".
 
-$auth["type"] = "db"; // How to validate the user/password. One of "none"
-                      // "config" "db" "db_ext" "pop3" "imap" "ldap" "nis"
-                      // "nw" "ext".
+$auth["type"] = "db"; // How to validate the user/password. One of "none",
+                      // "config", "db", "db_ext", "pop3", "imap", "ldap", "nis",
+                      // "nw", "ext" or "wordpress".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -864,6 +864,15 @@ $pop3_port = "110";
 
 // 'auth_smtp' configuration settings
 $auth['smtp']['server'] = 'myserver.example.org';
+
+
+// 'auth_wordpress' configuration settings
+$auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation relative to MRBS.
+// List of WordPress roles that have MRBS Admin capabilities.   The example below assumes that you
+// have created a new WordPress role called "MRBS Admin" and assigned that role to those users that
+// you want to be MRBS admins.
+$auth['wordpress']['admin_roles'] = 'MRBS Admin';  // can also be an array, eg = array('Administrator', 'MRBS Admin');
+
 
 // General settings
 // If you want only administrators to be able to make and delete bookings,
