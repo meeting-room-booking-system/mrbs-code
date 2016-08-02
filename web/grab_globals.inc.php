@@ -2,11 +2,10 @@
 // +---------------------------------------------------------------------------+
 // | Meeting Room Booking System.
 // +---------------------------------------------------------------------------+
-// | Grabs the names and values of the '$HTTP_*_VARS' variables.
+// | Grabs the names and values of the $_POST and $_GET variables.
 // |---------------------------------------------------------------------------+
 // | This library grabs the names and values of the variables sent or posted to
-// | a script in the '$HTTP_*_VARS' and new globals arrays defined with
-// | php 4.1+ and sets simple globals variables from them.
+// | a script in the $_POST and $_GET variables.
 // | It does the same work for other external variables used in MRBS.
 // | USE : This file should be included in all files where external variables
 // |       are used, preferably before other included files.
@@ -51,19 +50,11 @@ function get_form_var($variable, $type = 'string')
   {
     $value = $_POST[$variable];
   }
-  else if (!empty($HTTP_POST_VARS) && isset($HTTP_POST_VARS[$variable]))
-  {
-    $value = $HTTP_POST_VARS[$variable];
-  }
   
   // Then get the GET variables
   if (!empty($_GET) && isset($_GET[$variable]))
   {
     $value = $_GET[$variable];
-  }
-  else if (!empty($HTTP_GET_VARS) && isset($HTTP_GET_VARS[$variable]))
-  {
-    $value = $HTTP_GET_VARS[$variable];
   }
   
   // Cast to an array if necessary
@@ -111,10 +102,6 @@ foreach ($vars as $var)
   if (!empty($_SERVER) && isset($_SERVER[$var]))
   {
     $$var = $_SERVER[$var];
-  }
-  else if (!empty($HTTP_SERVER_VARS) && isset($HTTP_SERVER_VARS[$var]))
-  {
-    $$var = $HTTP_SERVER_VARS[$var];
   }
 }
 
