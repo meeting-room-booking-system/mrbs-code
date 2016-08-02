@@ -20,6 +20,18 @@
 // $Id$
 
 
+// Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
+// slashed, regardless of the setting of magic_quotes.   So if we are using the 
+// WordPress authentication and session scemes then this will happen when the WordPress
+// files are included.  To get round this we take a local copy of $_GET and $_POST
+// before the WordPress files are included.   (There's no need to do this with $_SERVER
+// because we process $_SERVER when this file is included and we make sure that the
+// WordPress files haven't already been included).  For more details of the problem see
+// https://wordpress.org/support/topic/wp-automatically-escaping-get-and-post-etc-globals and
+// https://core.trac.wordpress.org/ticket/18322
+
+
+
 // Gets a form variable.   Takes an optional third parameter which
 // is the default value if nothing is found from the form.
 function get_form_var($variable, $type = 'string')
@@ -27,7 +39,7 @@ function get_form_var($variable, $type = 'string')
   // We use some functions from here
   require_once "functions.inc";
   
-  global $cli_params, $allow_cli;
+  global $cli_params, $allow_cli, $get, $post;
   
   // Set the default value, and make sure it's the right type
   if (func_num_args() > 2)
@@ -46,15 +58,15 @@ function get_form_var($variable, $type = 'string')
   {
     $value = $cli_params[$variable];
   }
-  else if (!empty($_POST) && isset($_POST[$variable]))
+  else if (!empty($post) && isset($post[$variable]))
   {
-    $value = $_POST[$variable];
+    $value = $post[$variable];
   }
   
   // Then get the GET variables
-  if (!empty($_GET) && isset($_GET[$variable]))
+  if (!empty($get) && isset($get[$variable]))
   {
-    $value = $_GET[$variable];
+    $value = $get[$variable];
   }
   
   // Cast to an array if necessary
@@ -86,6 +98,19 @@ function get_form_var($variable, $type = 'string')
 }
 
 
+// Check that the WordPress files haven't already been included (and therefore
+// that $_POST and $_GET haven't already been tampered with).
+if (defined('ABSPATH'))  // standard test for WordPress
+{
+  die('MRBS internal error: Wordpress files have already been included.');
+}
+
+// Take clean copies of $_POST and $_GET before WordPress alters them
+$get = $_GET;
+$post = $_POST;
+
+
+// Get useful $_SERVER variables
 $vars = array('PHP_SELF',
               'PHP_AUTH_USER',
               'PHP_AUTH_PW',
