@@ -868,10 +868,25 @@ $auth['smtp']['server'] = 'myserver.example.org';
 
 // 'auth_wordpress' configuration settings
 $auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation relative to MRBS.
-// List of WordPress roles that have MRBS Admin capabilities.   The example below assumes that you
-// have created a new WordPress role called "MRBS Admin" and assigned that role to those users that
-// you want to be MRBS admins.
-$auth['wordpress']['admin_roles'] = 'MRBS Admin';  // can also be an array, eg = array('Administrator', 'MRBS Admin');
+// List of WordPress roles that have MRBS Admin capabilities.  The default is 'Administrator'. 
+// However you can define more than one WordPress role that maps to the MRBS Admin role by using
+// an array.   The example below assumes that you have created a new WordPress role called "MRBS Admin"
+// (probably by using a WordPress plugin) and assigned that role to those users that you want to be MRBS admins.
+$auth['wordpress']['admin_roles'] = 'Administrator';  // can also be an array, eg = array('Administrator', 'MRBS Admin');
+
+// Note - you are also advised to set the following in your wp-config.php so that the auth
+// cookies can be shared between MRBS and WordPress:
+
+/*
+// Define cookie paths so that login cookies can be shared with MRBS
+$domain_name = 'example.com';  // Set to your domain name
+define('COOKIEPATH', '/');
+define('SITECOOKIEPATH', '/');
+// In the definition below the '.' is necessary for older browsers (see
+// http://php.net/manual/en/function.setcookie.php).
+define('COOKIE_DOMAIN', ".$domain_name");  
+define('COOKIEHASH', md5($domain_name));
+*/
 
 
 // General settings
