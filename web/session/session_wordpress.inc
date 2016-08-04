@@ -38,7 +38,7 @@ if (isset($Action) && ($Action == "SetName"))
     $credentials = array();
     $credentials['user_login'] = $NewUserName;
     $credentials['user_password'] = $NewUserPassword;
-    $credentials['remember'] = true;
+    $credentials['remember'] = false;
     $wp_user = wp_signon($credentials);
     if (is_wp_error($wp_user))
     {
