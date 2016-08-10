@@ -43,7 +43,7 @@ if (isset($Action) && ($Action == "SetName"))
     if (is_wp_error($wp_user))
     {
       print_header(0, 0, 0, 0, "");
-      echo "<p>" . $wp_user->get_error_message() . "</p>\n";  // WP login error messages can be changed using a WP filter
+      echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
       printLoginForm($TargetURL);
       exit();
     }
