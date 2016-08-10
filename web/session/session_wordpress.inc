@@ -43,7 +43,7 @@ if (isset($Action) && ($Action == "SetName"))
     if (is_wp_error($wp_user))
     {
       print_header(0, 0, 0, 0, "");
-      echo "<p>".get_vocab('unknown_user')."</p>\n";
+      echo "<p>" . $wp_user->get_error_message() . "</p>\n";  // WP login error messages can be changed using a WP filter
       printLoginForm($TargetURL);
       exit();
     }
