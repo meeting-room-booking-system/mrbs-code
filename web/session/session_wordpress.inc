@@ -85,7 +85,7 @@ function printLoginForm($TargetURL)
   global $HTTP_REFERER;
   global $returl;
 
-  // __() is a WordPress function
+  // __() and esc_attr__() are WordPress functions
   
   echo '<form class="form_general" id="logon" method="post" action="' . htmlspecialchars(this_page()) . "\">\n";
   echo "<fieldset>\n";
@@ -111,7 +111,7 @@ function printLoginForm($TargetURL)
   echo '<input type="hidden" name="TargetURL" value="' . htmlspecialchars($TargetURL) ."\">\n";
   echo "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
   echo "<div id=\"logon_submit\">\n";
-  echo '<input class="submit" type="submit" value="' . get_vocab('login') . "\">\n";
+  echo '<input class="submit" type="submit" value="' . esc_attr__('Log In') . "\">\n";
   echo "</div>\n";
   echo "</fieldset>\n";
   echo "</form>\n";
