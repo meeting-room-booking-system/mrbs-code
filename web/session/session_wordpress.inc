@@ -42,6 +42,7 @@ if (isset($Action) && ($Action == "SetName"))
     $wp_user = wp_signon($credentials);
     if (is_wp_error($wp_user))
     {
+      $errors = $wp_user;  // $errors is a WordPress global
       print_header(0, 0, 0, 0, "");
       echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
       printLoginForm($TargetURL);
