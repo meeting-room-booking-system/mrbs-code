@@ -89,11 +89,11 @@ function printLoginForm($TargetURL)
     <fieldset>
     <legend><?php echo get_vocab("please_login") ?></legend>
       <div>
-        <label for="NewUserName"><?php echo get_vocab("users.name") ?>:</label>
+        <label for="NewUserName"><?php _e('Username or Email') ?>:</label>
         <input type="text" id="NewUserName" name="NewUserName">
       </div>
       <div>
-        <label for="NewUserPassword"><?php echo get_vocab("users.password") ?>:</label>
+        <label for="NewUserPassword"><?php _e('Password') ?>:</label>
         <input type="password" id="NewUserPassword" name="NewUserPassword">
       </div>
       <?php
