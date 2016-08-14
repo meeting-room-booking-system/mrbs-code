@@ -84,37 +84,39 @@ function printLoginForm($TargetURL)
 {
   global $HTTP_REFERER;
   global $returl;
-  ?>
-  <form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(this_page()) ?>">
-    <fieldset>
-    <legend><?php echo get_vocab("please_login") ?></legend>
-      <div>
-        <label for="NewUserName"><?php _e('Username or Email') ?>:</label>
-        <input type="text" id="NewUserName" name="NewUserName">
-      </div>
-      <div>
-        <label for="NewUserPassword"><?php _e('Password') ?>:</label>
-        <input type="password" id="NewUserPassword" name="NewUserPassword">
-      </div>
-      <?php
-      // We need to preserve the original calling page, so that it's there when we eventually get
-      // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-      // the original caller.    If this is the second time through we will have stored it in $returl.
-      if (!isset($returl))
-      {
-        $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-      }
-      echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-      ?>
-      <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-      <input type="hidden" name="Action" value="SetName">
-      <div id="logon_submit">
-        <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
-      </div>
-    </fieldset>
-  </form>
-  <?php
-  echo "</div>";  // Close of the contents div
+
+  // __() is a WordPress function
+  
+  echo '<form class="form_general" id="logon" method="post" action="' . htmlspecialchars(this_page()) . "\">\n";
+  echo "<fieldset>\n";
+  echo '<legend>' . get_vocab("please_login") . "</legend>\n";
+  echo "<div>\n";
+  echo '<label for="NewUserName">' .  __('Username or Email') . ":</label>\n";
+  echo "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\">\n";
+  echo "</div>\n";
+  echo "<div>\n";
+  echo '<label for="NewUserPassword">' . __('Password') . ":</label>\n";
+  echo "<input type=\"password\" id=\"NewUserPassword\" name=\"NewUserPassword\">\n";
+  echo "</div>\n";
+
+  // We need to preserve the original calling page, so that it's there when we eventually get
+  // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
+  // the original caller.    If this is the second time through we will have stored it in $returl.
+  if (!isset($returl))
+  {
+    $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+  }
+  echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
+
+  echo '<input type="hidden" name="TargetURL" value="' . htmlspecialchars($TargetURL) ."\">\n";
+  echo "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
+  echo "<div id=\"logon_submit\">\n";
+  echo '<input class="submit" type="submit" value="' . get_vocab('login') . "\">\n";
+  echo "</div>\n";
+  echo "</fieldset>\n";
+  echo "</form>\n";
+  echo "</div>\n";  // Close of the contents div
+  
   // Print footer and exit
   print_footer(TRUE);
 }
