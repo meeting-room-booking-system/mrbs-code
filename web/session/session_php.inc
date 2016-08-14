@@ -153,7 +153,7 @@ if (isset($Action) && ($Action == "SetName"))
 */
 function printLoginForm($TargetURL)
 {
-  global $PHP_SELF, $HTTP_REFERER;
+  global $HTTP_REFERER;
   global $returl;
 ?>
 <form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(this_page()) ?>">
