@@ -350,13 +350,14 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 break;
               default:
                 echo "<div>\n";
+                $params['disabled'] = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
                 switch($key)
                 {
                   case 'level':
                     // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
                     // We don't want the user to be able to change the level if (a) it's the first user being created or
                     // (b) it's the last admin left or (c) they don't have admin rights
-                    $params['disabled'] = $initial_user_creation || $editing_last_admin || ($level < $min_user_editing_level);
+                    $params['disabled'] = $initial_user_creation || $editing_last_admin || $params['disabled'];
                     // Only display options up to and including one's own level (you can't upgrade yourself).
                     // If you're not some kind of admin then the select will also be disabled.
                     // (Note - disabling individual options doesn't work in older browsers, eg IE6)
@@ -686,6 +687,12 @@ if (isset($Action) && ($Action == "Update"))
     // For each db column get the value ready for the database
     foreach ($fields as $field)
     {
+      // Stop ordinary users trying to change fields they are not allowed to
+      if (($level < $min_user_editing_level) && in_array($field['name'], $auth['db']['protected_fields']))
+      {
+        continue;
+      }
+      
       $fieldname = $field['name'];
       if ($fieldname != 'id')
       {

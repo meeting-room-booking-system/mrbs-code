@@ -712,6 +712,13 @@ $min_user_editing_level = 2;
 // $pwd_policy['special'] = 1;  // Minimum number of special characters (not alpha-numeric)
 
 
+// 'auth_db' configuration settings
+// List of fields which only admins can edit.   By default these are the
+// user level (ie admin/user) and the username.   Custom fields can be added
+// as required.
+$auth['db']['protected_fields'] = array('level', 'name');
+
+
 // 'auth_db_ext' configuration settings
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
 // and allows you to use any of MRBS's database abstraction layers for
