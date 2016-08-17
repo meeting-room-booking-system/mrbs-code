@@ -532,7 +532,7 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
       }
       else                 // if it is booked then show the booking
       {
-        $html .= "<div data-id=\"$id\" class=\"celldiv slots" .
+        $html .= "<div data-id=\"$id\" data-type=\"$color\" class=\"celldiv slots" .
                  (($times_along_top) ? "1" : $slots) .
                  "\">\n";
         $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";

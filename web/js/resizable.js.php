@@ -992,8 +992,9 @@ init = function(args) {
                                 day: args.day,
                                 month: args.month,
                                 year: args.year};
-                    <?php // get the booking id ?>
+                    <?php // get the booking id and type ?>
                     data.id = divClone.data('id');
+                    data.type = divClone.data('type');
                     <?php // get the other parameters ?>
                     var oldParams = getBookingParams(table, tableData, divBooking);
                     var newParams = getBookingParams(table, tableData, divClone);
