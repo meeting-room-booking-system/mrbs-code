@@ -177,20 +177,20 @@ function print_header($day, $month, $year, $area, $room)
 function print_footer($and_exit)
 {
   global $theme;
+  
+  // Load the print_theme_footer function appropriate to the theme.    If there
+  // isn't one then fall back to the default footer.
   if (is_readable("Themes/$theme/footer.inc"))
   {
     include_once "Themes/$theme/footer.inc";
   }
-  if (function_exists("print_theme_footer"))
+  if (!function_exists("print_theme_footer"))
   {
-    print_theme_footer();
+    require_once "Themes/default/footer.inc";
   }
-  else {
-?>
-</body>
-</html>
-<?php
-  }
+
+  print_theme_footer();
+
   if ($and_exit)
   {
     exit(0);
