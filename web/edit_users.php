@@ -573,7 +573,7 @@ if (isset($Action) && ($Action == "Update"))
           // so don't do anything; otherwise calculate the hash.
           // Note: we don't put the password in the query string
           // for security reasons.
-          if (!empty($password0))
+          if ($password0 !== '')
           {
             if (PasswordCompat\binary\check())
             {
@@ -649,7 +649,7 @@ if (isset($Action) && ($Action == "Update"))
           // check that the password conforms to the password policy
           // if it's a new user (Id < 0), or else it's an existing user
           // trying to change their password
-          if (($Id <0) || !empty($password0))
+          if (($Id <0) || ($password0 !== ''))
           {
             if (!validate_password($password0))
             {
