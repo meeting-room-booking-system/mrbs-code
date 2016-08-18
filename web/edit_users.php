@@ -616,7 +616,7 @@ if (isset($Action) && ($Action == "Update"))
       {
         case 'name':
           // check that the name is not empty
-          if (empty($value))
+          if ($value === '')
           {
             $valid_data = FALSE;
             $q_string .= "&name_empty=1";
