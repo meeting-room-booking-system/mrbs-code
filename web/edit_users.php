@@ -639,7 +639,7 @@ if (isset($Action) && ($Action == "Update"))
             $q_string .= "&taken_name=$value";
           }
           break;
-        case 'password':
+        case 'password_hash':
           // check that the two passwords match
           if ($password0 != $password1)
           {
