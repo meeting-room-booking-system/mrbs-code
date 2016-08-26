@@ -113,3 +113,34 @@ function throttle(fn, threshold, scope) {
     }
   };
 }
+
+<?php
+// Tries to determine if the network connection is metered and subject to
+// charges or throttling
+?>
+function isMeteredConnection()
+{
+  var connection = navigator.connection || 
+                   navigator.mozConnection || 
+                   navigator.webkitConnection ||
+                   navigator.msConnection ||
+                   null;
+  
+  if (connection === null)
+  {
+    return false;
+  }
+  
+  if ('type' in connection)
+  {
+    return (connection.type === 'cellular');
+  }
+  
+  <?php // The older version of the interface ?>
+  if ('metered' in connection)
+  {
+    return connection.metered;
+  }
+  
+  return false;
+}

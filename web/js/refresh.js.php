@@ -19,7 +19,9 @@ if ($use_strict)
 var intervalId;
 
 var refreshPage = function refreshPage() {
-    if (!isHidden() && !refreshPage.disabled)
+    if (!isHidden() && 
+        !refreshPage.disabled &&
+        !isMeteredConnection())
     {
       var data = {ajax: 1, 
                   day: refreshPage.args.day,
