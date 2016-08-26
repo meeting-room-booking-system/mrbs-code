@@ -133,6 +133,12 @@ function isMeteredConnection()
   
   if ('type' in connection)
   {
+    <?php 
+    // Although not all cellular networks will be metered, they
+    // may be subject to throttling once a data threshold has passed.
+    // It is probably sensible to assume that most users connected via
+    // a cellular network will want to minimise data traffic.
+    ?>
     return (connection.type === 'cellular');
   }
   
