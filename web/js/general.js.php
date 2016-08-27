@@ -247,13 +247,22 @@ init = function(args) {
     // though the input has no id or name, then we need to clear the values from those inputs just
     // before the form is submitted.   Note that we can't do it on the submit event because by that time
     // the browser has cached the values.  So we do it when the Submit button is clicked - and this event
-    // is also triggered if Enter is entered into an input field.
+    // is also triggered if Enter is entered into an input field.   But
+    // of course we can't clear the value if the input field needs to be
+    // validated, otherwise the validation will fail.
     ?>
     $('form:has(input[list]) input[type="submit"]').click(function() {
       $(this).closest('form')
              .find('input:not([name])')
              .not('input[type="submit"]')
-             .val('');
+             .each(function() {
+                 if (!$(this).prop('required') &&
+                     (typeof($(this).attr('pattern')) == 'undefined'))
+                 {
+                   $(this).val('');
+                 }
+               });
+              
     });
     
   }
