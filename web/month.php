@@ -117,83 +117,68 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
     $pm7[$j] = get_start_last_slot($month, $j, $year);
   }
   
-  //Get all meetings for this month in the room that we care about
-  // row[0] = Start time
-  // row[1] = End time
-  // row[2] = Entry ID
+  // Get all meetings for this month in the room that we care about
   // This data will be retrieved day-by-day fo the whole month
   for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
   {
-    $sql = "SELECT start_time, end_time, id, name, type,
-                   repeat_id, status, create_by
-              FROM $tbl_entry
-             WHERE room_id=$room
-               AND start_time <= $pm7[$day_num] AND end_time > $am7[$day_num]
-          ORDER BY start_time";
+    $entries = get_entries_by_room($room, $am7[$day_num], $pm7[$day_num]);
 
     // Build an array of information about each day in the month.
     // The information is stored as:
-    //  d[monthday]["id"][] = ID of each entry, for linking.
-    //  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
+    //   d[monthday]["id"][] = ID of each entry, for linking.
+    //   d[monthday]["data"][] = "start-stop" times or "name" of each entry.
 
-    $res = sql_query($sql);
-    if (! $res)
+    foreach($entries as $entry)
     {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(TRUE, get_vocab("fatal_db_error"));
-    }
-    else
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      if ($debug_flag)
       {
-        if ($debug_flag)
-        {
-          $html .= "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'].", ends ".$row['end_time']."\n";
-        }
+        $html .= "<br>DEBUG: id ".$entry['id'].", starts ".$entry['start_time'].", ends ".$entry['end_time']."\n";
+      }
 
-        if ($debug_flag)
-        {
-          $html .= "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
-        }
-        $d[$day_num]["id"][] = $row['id'];
-        $d[$day_num]["color"][] = $row['type'];
-        $d[$day_num]["is_repeat"][] = isset($row['repeat_id']);
-        
-        // Handle private events
-        if (is_private_event($row['status'] & STATUS_PRIVATE)) 
-        {
-          if (getWritable($row['create_by'], $user, $room)) 
-          {
-            $private = FALSE;
-          }
-          else 
-          {
-            $private = TRUE;
-          }
-        }
-        else 
+      if ($debug_flag)
+      {
+        $html .= "<br>DEBUG: Entry ".$entry['id']." day $day_num\n";
+      }
+      $d[$day_num]["id"][] = $entry['id'];
+      $d[$day_num]["color"][] = $entry['type'];
+      $d[$day_num]["is_repeat"][] = isset($entry['repeat_id']);
+      
+      // Handle private events
+      if (is_private_event($entry['status'] & STATUS_PRIVATE)) 
+      {
+        if (getWritable($entry['create_by'], $user, $room)) 
         {
           $private = FALSE;
         }
-
-        if ($private & $is_private_field['entry.name']) 
+        else 
         {
-          $d[$day_num]["status"][] = $row['status'] | STATUS_PRIVATE;  // Set the private bit
-          $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
+          $private = TRUE;
         }
-        else
-        {
-          $d[$day_num]["status"][] = $row['status'] & ~STATUS_PRIVATE;  // Clear the private bit
-          $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
-        }
-        
-        $d[$day_num]["data"][] = get_booking_summary($row['start_time'],
-                                                     $row['end_time'],
-                                                     $am7[$day_num],
-                                                     $pm7[$day_num]);
       }
+      else 
+      {
+        $private = FALSE;
+      }
+
+      if ($private & $is_private_field['entry.name']) 
+      {
+        $d[$day_num]["status"][] = $entry['status'] | STATUS_PRIVATE;  // Set the private bit
+        $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
+      }
+      else
+      {
+        $d[$day_num]["status"][] = $entry['status'] & ~STATUS_PRIVATE;  // Clear the private bit
+        $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
+      }
+      
+      $d[$day_num]["data"][] = get_booking_summary($entry['start_time'],
+                                                   $entry['end_time'],
+                                                   $am7[$day_num],
+                                                   $pm7[$day_num]);
     }
   }
+
+  
   if ($debug_flag)
   {
     $html .= "<p>DEBUG: Array of month day data:</p><pre>\n";
