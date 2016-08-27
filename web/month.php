@@ -118,6 +118,15 @@ function get_table_head()
 }
 
 
+function get_blank_day($col)
+{
+  global $weekstarts;
+  
+  $td_class = (is_hidden_day(($col + $weekstarts) % 7)) ? 'hidden_day' : 'invalid';
+  return "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+}
+
+
 function month_table_innerhtml($day, $month, $year, $room, $area)
 {
   global $tbl_entry;
@@ -231,8 +240,7 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   // Skip days in week before start of month:
   for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
   {
-    $td_class = (is_hidden_day(($weekcol + $weekstarts) % 7)) ? 'hidden_day' : 'invalid';
-    $html .= "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+    $html .= get_blank_day($weekcol);
   }
 
   // Draw the days of the month:
@@ -370,8 +378,7 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   {
     for (; $weekcol < 7; $weekcol++)
     {
-      $td_class = (is_hidden_day(($weekcol + $weekstarts) % 7)) ? 'hidden_day' : 'invalid';
-      $html .= "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+      $html .= get_blank_day($weekcol);
     }
   }
   
