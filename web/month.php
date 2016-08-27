@@ -89,6 +89,35 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 }
 
 
+function get_table_head()
+{
+  global $weekstarts;
+  
+  $html = '';
+  
+  // Weekday name header row:
+  $html .= "<thead>\n";
+  $html .= "<tr>\n";
+  for ($i = 0; $i< 7; $i++)
+  {
+    if (is_hidden_day(($i + $weekstarts) % 7))
+    {
+      // These days are to be hidden in the display (as they are hidden, just give the
+      // day of the week in the header row 
+      $html .= "<th class=\"hidden_day\">" . day_name(($i + $weekstarts)%7) . "</th>";
+    }
+    else
+    {
+      $html .= "<th>" . day_name(($i + $weekstarts)%7) . "</th>";
+    }
+  }
+  $html .= "\n</tr>\n";
+  $html .= "</thead>\n";
+  
+  return $html;
+}
+
+
 function month_table_innerhtml($day, $month, $year, $room, $area)
 {
   global $tbl_entry;
@@ -193,25 +222,8 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
     $html .= "</pre>\n";
   }
   
-  // Weekday name header row:
-  $html .= "<thead>\n";
-  $html .= "<tr>\n";
-  for ($weekcol = 0; $weekcol < 7; $weekcol++)
-  {
-    if (is_hidden_day(($weekcol + $weekstarts) % 7))
-    {
-      // These days are to be hidden in the display (as they are hidden, just give the
-      // day of the week in the header row 
-      $html .= "<th class=\"hidden_day\">" . day_name(($weekcol + $weekstarts)%7) . "</th>";
-    }
-    else
-    {
-      $html .= "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
-    }
-  }
-  $html .= "\n</tr>\n";
-  $html .= "</thead>\n";
-
+  $html .= get_table_head();
+  
   // Main body
   $html .= "<tbody>\n";
   $html .= "<tr>\n";
