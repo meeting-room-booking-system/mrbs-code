@@ -185,13 +185,20 @@ if (is_readable("js/$page.js.php"))
   <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-    
-    
-// We need the resizable booking, multiple bookings and refresh code for the day and week pages
-if (in_array($page, array('day', 'week')))
+
+// The day, week and month views do refresh by Ajax.
+if (in_array($page, array('day', 'week', 'month')))
 {
   ?>
   <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
+  <?php
+}
+
+
+// We need the resizable booking and multiple bookings for the day and week pages
+if (in_array($page, array('day', 'week')))
+{
+  ?>
   <script type="text/javascript" src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
   <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
   <?php

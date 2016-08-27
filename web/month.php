@@ -7,8 +7,6 @@ require "defaultincludes.inc";
 require_once "mincals.inc";
 require_once "functions_table.inc";
 
-$debug_flag = get_form_var('debug_flag', 'int');
-
 // 3-value compare: Returns result of compare as "< " "= " or "> ".
 function cmp3($a, $b)
 {
@@ -91,6 +89,334 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 }
 
 
+function month_table_innerhtml($day, $month, $year, $room, $area)
+{
+  global $tbl_entry;
+  global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
+  global $enable_periods, $morningstarts, $morningstarts_minutes;
+  global $approval_enabled, $confirmation_enabled;
+  global $is_private_field;
+  global $user;
+  global $debug_flag;
+  
+  $html = '';
+  
+  $month_start = mktime(0, 0, 0, $month, 1, $year);
+  $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
+  $days_in_month = date("t", $month_start);
+  
+  // Define the start and end of each day of the month in a way which is not
+  // affected by daylight saving...
+  for ($j = 1; $j<=$days_in_month; $j++)
+  {
+    // are we entering or leaving daylight saving
+    // dst_change:
+    // -1 => no change
+    //  0 => entering DST
+    //  1 => leaving DST
+    $dst_change[$j] = is_dst($month, $j, $year);
+    $am7[$j] = get_start_first_slot($month, $j, $year);
+    $pm7[$j] = get_start_last_slot($month, $j, $year);
+  }
+  
+  //Get all meetings for this month in the room that we care about
+  // row[0] = Start time
+  // row[1] = End time
+  // row[2] = Entry ID
+  // This data will be retrieved day-by-day fo the whole month
+  for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
+  {
+    $sql = "SELECT start_time, end_time, id, name, type,
+                   repeat_id, status, create_by
+              FROM $tbl_entry
+             WHERE room_id=$room
+               AND start_time <= $pm7[$day_num] AND end_time > $am7[$day_num]
+          ORDER BY start_time";
+
+    // Build an array of information about each day in the month.
+    // The information is stored as:
+    //  d[monthday]["id"][] = ID of each entry, for linking.
+    //  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
+
+    $res = sql_query($sql);
+    if (! $res)
+    {
+      trigger_error(sql_error(), E_USER_WARNING);
+      fatal_error(TRUE, get_vocab("fatal_db_error"));
+    }
+    else
+    {
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        if ($debug_flag)
+        {
+          $html .= "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'].", ends ".$row['end_time']."\n";
+        }
+
+        if ($debug_flag)
+        {
+          $html .= "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
+        }
+        $d[$day_num]["id"][] = $row['id'];
+        $d[$day_num]["color"][] = $row['type'];
+        $d[$day_num]["is_repeat"][] = isset($row['repeat_id']);
+        
+        // Handle private events
+        if (is_private_event($row['status'] & STATUS_PRIVATE)) 
+        {
+          if (getWritable($row['create_by'], $user, $room)) 
+          {
+            $private = FALSE;
+          }
+          else 
+          {
+            $private = TRUE;
+          }
+        }
+        else 
+        {
+          $private = FALSE;
+        }
+
+        if ($private & $is_private_field['entry.name']) 
+        {
+          $d[$day_num]["status"][] = $row['status'] | STATUS_PRIVATE;  // Set the private bit
+          $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
+        }
+        else
+        {
+          $d[$day_num]["status"][] = $row['status'] & ~STATUS_PRIVATE;  // Clear the private bit
+          $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
+        }
+        
+        $d[$day_num]["data"][] = get_booking_summary($row['start_time'],
+                                                     $row['end_time'],
+                                                     $am7[$day_num],
+                                                     $pm7[$day_num]);
+      }
+    }
+  }
+  if ($debug_flag)
+  {
+    $html .= "<p>DEBUG: Array of month day data:</p><pre>\n";
+    for ($i = 1; $i <= $days_in_month; $i++)
+    {
+      if (isset($d[$i]["id"]))
+      {
+        $n = count($d[$i]["id"]);
+        $html .= "Day $i has $n entries:\n";
+        for ($j = 0; $j < $n; $j++)
+        {
+          $html .= "  ID: " . $d[$i]["id"][$j] .
+            " Data: " . $d[$i]["data"][$j] . "\n";
+        }
+      }
+    }
+    $html .= "</pre>\n";
+  }
+  
+  // Weekday name header row:
+  $html .= "<thead>\n";
+  $html .= "<tr>\n";
+  for ($weekcol = 0; $weekcol < 7; $weekcol++)
+  {
+    if (is_hidden_day(($weekcol + $weekstarts) % 7))
+    {
+      // These days are to be hidden in the display (as they are hidden, just give the
+      // day of the week in the header row 
+      $html .= "<th class=\"hidden_day\">" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+    }
+    else
+    {
+      $html .= "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
+    }
+  }
+  $html .= "\n</tr>\n";
+  $html .= "</thead>\n";
+
+  // Main body
+  $html .= "<tbody>\n";
+  $html .= "<tr>\n";
+
+  // Skip days in week before start of month:
+  for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
+  {
+    if (is_hidden_day(($weekcol + $weekstarts) % 7))
+    {
+      $html .= "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+    }
+    else
+    {
+      $html .= "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+    }
+  }
+
+  // Draw the days of the month:
+  for ($cday = 1; $cday <= $days_in_month; $cday++)
+  {
+    // if we're at the start of the week (and it's not the first week), start a new row
+    if (($weekcol == 0) && ($cday > 1))
+    {
+      $html .= "</tr><tr>\n";
+    }
+    
+    // output the day cell
+    if (is_hidden_day(($weekcol + $weekstarts) % 7))
+    {
+      // These days are to be hidden in the display (as they are hidden, just give the
+      // day of the week in the header row 
+      $html .= "<td class=\"hidden_day\">\n";
+      $html .= "<div class=\"cell_container\">\n";
+      $html .= "<div class=\"cell_header\">\n";
+      // first put in the day of the month
+      $html .= "<span>$cday</span>\n";
+      $html .= "</div>\n";
+      $html .= "</div>\n";
+      $html .= "</td>\n";
+    }
+    else
+    {   
+      $html .= "<td class=\"valid\">\n";
+      $html .= "<div class=\"cell_container\">\n";
+      
+      $html .= "<div class=\"cell_header\">\n";
+      // If it's a Monday (the start of the ISO week), show the week number
+      if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
+      {
+        $html .= "<a class=\"week_number\" href=\"week.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area&amp;room=$room\">";
+        $html .= date("W", gmmktime(12, 0, 0, $month, $cday, $year));
+        $html .= "</a>\n";
+      }
+      // then put in the day of the month
+      $html .= "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
+
+      $html .= "</div>\n";
+      
+      // then the link to make a new booking
+      $query_string = "room=$room&amp;area=$area&amp;year=$year&amp;month=$month&amp;day=$cday";
+      if ($enable_periods)
+      {
+        $query_string .= "&amp;period=0";
+      }
+      else
+      {
+        $query_string .= "&amp;hour=$morningstarts&amp;minute=$morningstarts_minutes";
+      }
+      
+      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
+      if ($show_plus_link)
+      {
+        $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+      }
+      $html .= "</a>\n";
+      
+      // then any bookings for the day
+      if (isset($d[$cday]["id"][0]))
+      {
+        $html .= "<div class=\"booking_list\">\n";
+        $n = count($d[$cday]["id"]);
+        // Show the start/stop times, 1 or 2 per line, linked to view_entry.
+        for ($i = 0; $i < $n; $i++)
+        {
+          // give the enclosing div the appropriate width: full width if both,
+          // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
+          $class = $d[$cday]["color"][$i]; 
+          if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
+          {
+            $class .= " private";
+          }
+          if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+          {
+            $class .= " awaiting_approval";
+          }
+          if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
+          {
+            $class .= " tentative";
+          }  
+          $html .= "<div class=\"" . $class . "\"" .
+            " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
+          $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
+          $slot_text = $d[$cday]["data"][$i];
+          $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
+          $full_text = $slot_text . " " . $description_text;
+          switch ($monthly_view_entries_details)
+          {
+            case "description":
+            {
+              $display_text = $description_text;
+              break;
+            }
+            case "slot":
+            {
+              $display_text = $slot_text;
+              break;
+            }
+            case "both":
+            {
+              $display_text = $full_text;
+              break;
+            }
+            default:
+            {
+              $html .= "error: unknown parameter";
+            }
+          }
+          $html .= "<a href=\"$booking_link\" title=\"$full_text\">";
+          $html .= ($d[$cday]['is_repeat'][$i]) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
+          $html .= "$display_text</a>\n";
+          $html .= "</div>\n";
+        }
+        $html .= "</div>\n";
+      }
+      
+      $html .= "</div>\n";
+      $html .= "</td>\n";
+    }
+    
+    // increment the day of the week counter
+    if (++$weekcol == 7)
+    {
+      $weekcol = 0;
+    }
+
+  } // end of for loop going through valid days of the month
+
+  // Skip from end of month to end of week:
+  if ($weekcol > 0)
+  {
+    for (; $weekcol < 7; $weekcol++)
+    {
+      if (is_hidden_day(($weekcol + $weekstarts) % 7))
+      {
+        $html .= "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+      }
+      else
+      {
+        $html .= "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
+      }
+    }
+  }
+  $html .= "</tr>\n";
+  $html .= "</tbody>\n";
+  
+  return $html;
+}
+
+
+$debug_flag = get_form_var('debug_flag', 'int');
+$ajax = get_form_var('ajax', 'int');
+
+$inner_html = month_table_innerhtml($day, $month, $year, $room, $area);
+
+if ($ajax)
+{
+  if (checkAuthorised(TRUE))
+  {
+    echo $inner_html;
+  }
+  exit;
+}
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -110,8 +436,8 @@ $month_start = mktime(0, 0, 0, $month, 1, $year);
 // What column the month starts in: 0 means $weekstarts weekday.
 $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
 
-$days_in_month = date("t", $month_start);
 
+$days_in_month = date("t", $month_start);
 $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
 
 if ($enable_periods)
@@ -124,19 +450,7 @@ if ($enable_periods)
 }
 
 
-// Define the start and end of each day of the month in a way which is not
-// affected by daylight saving...
-for ($j = 1; $j<=$days_in_month; $j++)
-{
-  // are we entering or leaving daylight saving
-  // dst_change:
-  // -1 => no change
-  //  0 => entering DST
-  //  1 => leaving DST
-  $dst_change[$j] = is_dst($month, $j, $year);
-  $am7[$j] = get_start_first_slot($month, $j, $year);
-  $pm7[$j] = get_start_last_slot($month, $j, $year);
-}
+
 
 // Section with areas, rooms, minicals.
 echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
@@ -231,295 +545,18 @@ $before_after_links_html = "<div class=\"screenonly\">
 </div>
 ";
 
-print $before_after_links_html;
+echo $before_after_links_html;
 
 if ($debug_flag)
 {
   echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end</p>\n";
 }
 
-//Get all meetings for this month in the room that we care about
-// row[0] = Start time
-// row[1] = End time
-// row[2] = Entry ID
-// This data will be retrieved day-by-day fo the whole month
-for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
-{
-  $sql = "SELECT start_time, end_time, id, name, type,
-                 repeat_id, status, create_by
-            FROM $tbl_entry
-           WHERE room_id=$room
-             AND start_time <= $pm7[$day_num] AND end_time > $am7[$day_num]
-        ORDER BY start_time";
-
-  // Build an array of information about each day in the month.
-  // The information is stored as:
-  //  d[monthday]["id"][] = ID of each entry, for linking.
-  //  d[monthday]["data"][] = "start-stop" times or "name" of each entry.
-
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
-  else
-  {
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-    {
-      if ($debug_flag)
-      {
-        echo "<br>DEBUG: result $i, id ".$row['id'].", starts ".$row['start_time'].", ends ".$row['end_time']."\n";
-      }
-
-      if ($debug_flag)
-      {
-        echo "<br>DEBUG: Entry ".$row['id']." day $day_num\n";
-      }
-      $d[$day_num]["id"][] = $row['id'];
-      $d[$day_num]["color"][] = $row['type'];
-      $d[$day_num]["is_repeat"][] = isset($row['repeat_id']);
-      
-      // Handle private events
-      if (is_private_event($row['status'] & STATUS_PRIVATE)) 
-      {
-        if (getWritable($row['create_by'], $user, $room)) 
-        {
-          $private = FALSE;
-        }
-        else 
-        {
-          $private = TRUE;
-        }
-      }
-      else 
-      {
-        $private = FALSE;
-      }
-
-      if ($private & $is_private_field['entry.name']) 
-      {
-        $d[$day_num]["status"][] = $row['status'] | STATUS_PRIVATE;  // Set the private bit
-        $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
-      }
-      else
-      {
-        $d[$day_num]["status"][] = $row['status'] & ~STATUS_PRIVATE;  // Clear the private bit
-        $d[$day_num]["shortdescrip"][] = htmlspecialchars($row['name']);
-      }
-      
-      $d[$day_num]["data"][] = get_booking_summary($row['start_time'],
-                                                   $row['end_time'],
-                                                   $am7[$day_num],
-                                                   $pm7[$day_num]);
-    }
-  }
-}
-if ($debug_flag)
-{
-  echo "<p>DEBUG: Array of month day data:</p><pre>\n";
-  for ($i = 1; $i <= $days_in_month; $i++)
-  {
-    if (isset($d[$i]["id"]))
-    {
-      $n = count($d[$i]["id"]);
-      echo "Day $i has $n entries:\n";
-      for ($j = 0; $j < $n; $j++)
-      {
-        echo "  ID: " . $d[$i]["id"][$j] .
-          " Data: " . $d[$i]["data"][$j] . "\n";
-      }
-    }
-  }
-  echo "</pre>\n";
-}
-
 echo "<table class=\"dwm_main\" id=\"month_main\">\n";
+echo $inner_html;
+echo "</table>\n";
 
-// Weekday name header row:
-echo "<thead>\n";
-echo "<tr>\n";
-for ($weekcol = 0; $weekcol < 7; $weekcol++)
-{
-  if (is_hidden_day(($weekcol + $weekstarts) % 7))
-  {
-    // These days are to be hidden in the display (as they are hidden, just give the
-    // day of the week in the header row 
-    echo "<th class=\"hidden_day\">" . day_name(($weekcol + $weekstarts)%7) . "</th>";
-  }
-  else
-  {
-    echo "<th>" . day_name(($weekcol + $weekstarts)%7) . "</th>";
-  }
-}
-echo "\n</tr>\n";
-echo "</thead>\n";
-
-// Main body
-echo "<tbody>\n";
-echo "<tr>\n";
-
-// Skip days in week before start of month:
-for ($weekcol = 0; $weekcol < $weekday_start; $weekcol++)
-{
-  if (is_hidden_day(($weekcol + $weekstarts) % 7))
-  {
-    echo "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-  }
-  else
-  {
-    echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-  }
-}
-
-// Draw the days of the month:
-for ($cday = 1; $cday <= $days_in_month; $cday++)
-{
-  // if we're at the start of the week (and it's not the first week), start a new row
-  if (($weekcol == 0) && ($cday > 1))
-  {
-    echo "</tr><tr>\n";
-  }
-  
-  // output the day cell
-  if (is_hidden_day(($weekcol + $weekstarts) % 7))
-  {
-    // These days are to be hidden in the display (as they are hidden, just give the
-    // day of the week in the header row 
-    echo "<td class=\"hidden_day\">\n";
-    echo "<div class=\"cell_container\">\n";
-    echo "<div class=\"cell_header\">\n";
-    // first put in the day of the month
-    echo "<span>$cday</span>\n";
-    echo "</div>\n";
-    echo "</div>\n";
-    echo "</td>\n";
-  }
-  else
-  {   
-    echo "<td class=\"valid\">\n";
-    echo "<div class=\"cell_container\">\n";
-    
-    echo "<div class=\"cell_header\">\n";
-    // If it's a Monday (the start of the ISO week), show the week number
-    if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
-    {
-      echo "<a class=\"week_number\" href=\"week.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area&amp;room=$room\">";
-      echo date("W", gmmktime(12, 0, 0, $month, $cday, $year));
-      echo "</a>\n";
-    }
-    // then put in the day of the month
-    echo "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
-
-    echo "</div>\n";
-    
-    // then the link to make a new booking
-    $query_string = "room=$room&amp;area=$area&amp;year=$year&amp;month=$month&amp;day=$cday";
-    if ($enable_periods)
-    {
-      $query_string .= "&amp;period=0";
-    }
-    else
-    {
-      $query_string .= "&amp;hour=$morningstarts&amp;minute=$morningstarts_minutes";
-    }
-    
-    echo "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
-    if ($show_plus_link)
-    {
-      echo "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-    }
-    echo "</a>\n";
-    
-    // then any bookings for the day
-    if (isset($d[$cday]["id"][0]))
-    {
-      echo "<div class=\"booking_list\">\n";
-      $n = count($d[$cday]["id"]);
-      // Show the start/stop times, 1 or 2 per line, linked to view_entry.
-      for ($i = 0; $i < $n; $i++)
-      {
-        // give the enclosing div the appropriate width: full width if both,
-        // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-        $class = $d[$cday]["color"][$i]; 
-        if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
-        {
-          $class .= " private";
-        }
-        if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
-        {
-          $class .= " awaiting_approval";
-        }
-        if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
-        {
-          $class .= " tentative";
-        }  
-        echo "<div class=\"" . $class . "\"" .
-          " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
-        $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
-        $slot_text = $d[$cday]["data"][$i];
-        $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
-        $full_text = $slot_text . " " . $description_text;
-        switch ($monthly_view_entries_details)
-        {
-          case "description":
-          {
-            $display_text = $description_text;
-            break;
-          }
-          case "slot":
-          {
-            $display_text = $slot_text;
-            break;
-          }
-          case "both":
-          {
-            $display_text = $full_text;
-            break;
-          }
-          default:
-          {
-            echo "error: unknown parameter";
-          }
-        }
-        echo "<a href=\"$booking_link\" title=\"$full_text\">";
-        echo ($d[$cday]['is_repeat'][$i]) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
-        echo "$display_text</a>\n";
-        echo "</div>\n";
-      }
-      echo "</div>\n";
-    }
-    
-    echo "</div>\n";
-    echo "</td>\n";
-  }
-  
-  // increment the day of the week counter
-  if (++$weekcol == 7)
-  {
-    $weekcol = 0;
-  }
-
-} // end of for loop going through valid days of the month
-
-// Skip from end of month to end of week:
-if ($weekcol > 0)
-{
-  for (; $weekcol < 7; $weekcol++)
-  {
-    if (is_hidden_day(($weekcol + $weekstarts) % 7))
-    {
-      echo "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-    }
-    else
-    {
-      echo "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-    }
-  }
-}
-echo "</tr></tbody></table>\n";
-
-print $before_after_links_html;
+echo $before_after_links_html;
 show_colour_key();
 
 // Draw the three month calendars

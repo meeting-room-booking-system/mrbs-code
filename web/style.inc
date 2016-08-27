@@ -75,12 +75,11 @@ else
 <?php
 if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))
 {
-  // If we're using JavaScript and on the day or week pages we'll do the refresh by 
-  // getting a new table using Ajax requests, which means we only have to download
+  // If we're using JavaScript we'll do the refresh by getting a new
+  // table using Ajax requests, which means we only have to download
   // the table not the whole page each time
-  $ajax_capable = preg_match("/(day|week)\.php/", $PHP_SELF);
-  echo ($ajax_capable) ? "<noscript>\n" : '';
+  echo "<noscript>\n";
   echo "<meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
-  echo ($ajax_capable) ? "</noscript>\n" : '';
+  echo "</noscript>\n";
 }
 
