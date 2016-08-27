@@ -337,6 +337,8 @@ $display_timezone = FALSE;
 $search["count"] = 20;
 
 // Page refresh time (in seconds). Set to 0 to disable
+// (Note that if MRBS detects that a client is on a metered network
+// connection it will disable page refresh for that client.)
 $refresh_rate = 0;
 
 // Refresh rate (in seconds) for Ajax checking of valid bookings on the edit_entry page
