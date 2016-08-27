@@ -376,16 +376,11 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   {
     for (; $weekcol < 7; $weekcol++)
     {
-      if (is_hidden_day(($weekcol + $weekstarts) % 7))
-      {
-        $html .= "<td class=\"hidden_day\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-      }
-      else
-      {
-        $html .= "<td class=\"invalid\"><div class=\"cell_container\">&nbsp;</div></td>\n";
-      }
+      $td_class = (is_hidden_day(($weekcol + $weekstarts) % 7)) ? 'hidden_day' : 'invalid';
+      $html .= "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
     }
   }
+  
   $html .= "</tr>\n";
   $html .= "</tbody>\n";
   
