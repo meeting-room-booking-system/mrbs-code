@@ -109,19 +109,14 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
   $days_in_month = date("t", $month_start);
   
-  // Define the start and end of each day of the month in a way which is not
-  // affected by daylight saving...
-  for ($j = 1; $j<=$days_in_month; $j++)
-  {
-    $am7[$j] = get_start_first_slot($month, $j, $year);
-    $pm7[$j] = get_start_last_slot($month, $j, $year);
-  }
-  
+
   // Get all meetings for this month in the room that we care about
   // This data will be retrieved day-by-day fo the whole month
   for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
   {
-    $entries = get_entries_by_room($room, $am7[$day_num], $pm7[$day_num]);
+    $start_first_slot = get_start_first_slot($month, $day_num, $year);
+    $start_last_slot = get_start_last_slot($month, $day_num, $year);
+    $entries = get_entries_by_room($room, $start_first_slot, $start_last_slot);
 
     // Build an array of information about each day in the month.
     // The information is stored as:
@@ -173,8 +168,8 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
       
       $d[$day_num]["data"][] = get_booking_summary($entry['start_time'],
                                                    $entry['end_time'],
-                                                   $am7[$day_num],
-                                                   $pm7[$day_num]);
+                                                   $start_first_slot,
+                                                   $start_last_slot);
     }
   }
 
