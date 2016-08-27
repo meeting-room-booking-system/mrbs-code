@@ -101,7 +101,11 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   
   $html = '';
   
+  // Month view start time. This ignores morningstarts/eveningends because it
+  // doesn't make sense to not show all entries for the day, and it messes
+  // things up when entries cross midnight.
   $month_start = mktime(0, 0, 0, $month, 1, $year);
+  // What column the month starts in: 0 means $weekstarts weekday.
   $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
   $days_in_month = date("t", $month_start);
   
@@ -433,13 +437,6 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 // things up when entries cross midnight.
 $month_start = mktime(0, 0, 0, $month, 1, $year);
 
-// What column the month starts in: 0 means $weekstarts weekday.
-$weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
-
-
-$days_in_month = date("t", $month_start);
-$month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
-
 if ($enable_periods)
 {
   $resolution = 60;
@@ -549,6 +546,10 @@ echo $before_after_links_html;
 
 if ($debug_flag)
 {
+  $days_in_month = date("t", $month_start);
+  $month_end = mktime(23, 59, 59, $month, $days_in_month, $year);
+  // What column the month starts in: 0 means $weekstarts weekday.
+  $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
   echo "<p>DEBUG: month=$month year=$year start=$weekday_start range=$month_start:$month_end</p>\n";
 }
 
