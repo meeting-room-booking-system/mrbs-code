@@ -113,12 +113,6 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   // affected by daylight saving...
   for ($j = 1; $j<=$days_in_month; $j++)
   {
-    // are we entering or leaving daylight saving
-    // dst_change:
-    // -1 => no change
-    //  0 => entering DST
-    //  1 => leaving DST
-    $dst_change[$j] = is_dst($month, $j, $year);
     $am7[$j] = get_start_first_slot($month, $j, $year);
     $pm7[$j] = get_start_last_slot($month, $j, $year);
   }
