@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // Handles actions on bookings awaiting approval

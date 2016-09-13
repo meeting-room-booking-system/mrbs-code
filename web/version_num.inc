@@ -1,4 +1,5 @@
 <?php
+namespace MRBS;
 
 // MRBS developers, make sure to update this string before each release
 

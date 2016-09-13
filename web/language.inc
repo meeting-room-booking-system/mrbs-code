@@ -1,4 +1,5 @@
 <?php
+namespace MRBS;
 
 // $Id$
 
@@ -1005,7 +1006,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
     // For some reason the third parameter to Locale::lookup() is mandatory in 5.3.0.
     // Can't see anything about it in the manual - must be a bug that was fixed in
     // later versions.
-    $locale = Locale::lookup($available_langtags, $lang, $canonicalize = FALSE);
+    $locale = \Locale::lookup($available_langtags, $lang, $canonicalize = FALSE);
     if (!empty($locale))
     {
       if (in_array($locale, $default_langtags))

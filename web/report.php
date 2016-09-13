@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 require "defaultincludes.inc";

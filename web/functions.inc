@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+use \DateTimeZone;
 
 // $Id$
 

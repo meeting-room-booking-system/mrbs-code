@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // mrbs/month.php - Month-at-a-time view

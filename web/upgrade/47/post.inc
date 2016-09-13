@@ -1,6 +1,5 @@
 <?php
-
-namespace MRBS\upgrade47;
+namespace MRBS;
 
 // $Id$
 

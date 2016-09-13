@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // mysqli.inc - Simple PHP database support for MySQL, using mysqli extension.
@@ -552,7 +554,7 @@ function sql_mysqli_connect($host, $username, $password,
   
   if (!$shutdown_registered)
   {
-    register_shutdown_function('sql_mysqli_cleanup');
+    register_shutdown_function(__NAMESPACE__ . "\\sql_mysqli_cleanup");
     $shutdown_registered = TRUE;
   }
   

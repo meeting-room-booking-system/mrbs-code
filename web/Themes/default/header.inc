@@ -1,4 +1,5 @@
 <?php
+namespace MRBS;
 
 // $Id$
 
@@ -227,7 +228,7 @@ function print_theme_header($day, $month, $year, $area, $room)
       </td>
       <?php
       // For session protocols that define their own logon box...
-      if (function_exists('PrintLogonBox'))
+      if (function_exists(__NAMESPACE__ . "\PrintLogonBox"))
       {
         echo "<td>\n";
         echo "<div id=\"logon_box\">\n";

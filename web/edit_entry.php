@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // If you want to add some extra columns to the entry and repeat tables to
