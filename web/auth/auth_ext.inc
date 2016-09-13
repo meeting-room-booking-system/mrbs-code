@@ -44,10 +44,6 @@ function version_check($vercheck)
   return false;
 }
 
-if (version_check("4.0.3") == false)
-{
-  require_once "escapeshellarg.inc";
-}
 
 /* authValidateUser($user, $pass)
  * 
