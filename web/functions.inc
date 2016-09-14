@@ -350,7 +350,7 @@ function get_period_interval($start_time, $end_time)
   else
   {
     // Otherwise we calculate the number of periods on the first day
-    $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
+    $startDate->add(new \DateInterval('PT' . $periods_per_day . 'M'));
     $result = get_period_interval($start_time, $startDate->getTimestamp());
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
