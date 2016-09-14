@@ -37,6 +37,9 @@ require_once "${dbsys}.inc";
 // the MRBS database handle to use. If this is not passed, the default
 // MRBS database connection is used.
 
+// The namespace needs to be prepended to the function names assigned to $f because
+// they are generated dynamically.
+
 
 // Free a result object
 function sql_free($r)
