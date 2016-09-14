@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // An Ajax function to record user activity on the client side.   (If there is some activity then

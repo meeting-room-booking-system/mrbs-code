@@ -1,4 +1,5 @@
 <?php
+
 // *$Id*
 
 // Emulates the PHP Locale class, for those sites that do not have the Intl extension installed.
@@ -51,7 +52,7 @@ class Locale
   {
     $glue = ',';
     $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = utf8_strtolower(str_replace('_', '-', $result));
+    $result = MRBS\utf8_strtolower(str_replace('_', '-', $result));
     return (is_array($langtag)) ? explode($glue, $result) : $result;
   }
 }

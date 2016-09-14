@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // Deletes an entry, or a series.    The $id is always the id of

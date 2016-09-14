@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 define('INTERVAL_DAY', 0);
@@ -719,7 +721,7 @@ function mrbsCreateEntry($table, $data)
     } // if
   } // foreach
   
-  $sql_col = array_map('sql_quote', $sql_col);
+  $sql_col = array_map(__NAMESPACE__ . "\\sql_quote", $sql_col);
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
   
   if (sql_command($sql) < 0)

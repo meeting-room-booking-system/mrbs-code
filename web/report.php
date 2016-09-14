@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 require "defaultincludes.inc";
@@ -935,14 +937,14 @@ function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
     // the last period and midnight
     
     // Need to use the MRBS version of DateTime to get round a bug in modify()
-    // in PHP before 5.3.6
-    $startDate = new MRBS\DateTime();
+    // in PHP before 5.3.6.  As we are in the MRBS namespace we will get the MRBS version.
+    $startDate = new DateTime();
     $startDate->setTimestamp($report_start)->modify('12:00');
     
-    $endDate = new MRBS\DateTime();
+    $endDate = new DateTime();
     $endDate->setTimestamp($report_end)->modify('12:00');
-    $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
-    $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
+    $endDate->sub(new \DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
+    $endDate->add(new \DateInterval('PT' . $periods_per_day . 'M'));
     
     $increment = get_period_interval(max($row['start_time'], $startDate->getTimestamp()),
                                      min($row['end_time'], $endDate->getTimestamp()));

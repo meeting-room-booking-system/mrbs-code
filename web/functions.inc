@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+use \DateTimeZone;
 
 // $Id$
 
@@ -322,10 +324,11 @@ function get_period_interval($start_time, $end_time)
   $periods_per_day = count($periods);
   
   // Need to use the MRBS version of DateTime to get round a bug in modify()
-  // in PHP before 5.3.6
-  $startDate = new MRBS\DateTime();
+  // in PHP before 5.3.6.  As we are in the MRBS namespace we will get the
+  // MRBS version.
+  $startDate = new DateTime();
   $startDate->setTimestamp($start_time);
-  $endDate = new MRBS\DateTime();
+  $endDate = new DateTime();
   $endDate->setTimestamp($end_time);
   
   // Set both dates to noon so that we can compare them and get an integral
@@ -347,7 +350,7 @@ function get_period_interval($start_time, $end_time)
   else
   {
     // Otherwise we calculate the number of periods on the first day
-    $startDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
+    $startDate->add(new \DateInterval('PT' . $periods_per_day . 'M'));
     $result = get_period_interval($start_time, $startDate->getTimestamp());
     // Add in the number of whole days worth of periods in between
     $result += ($interval_days - 1) * $periods_per_day;
@@ -2042,7 +2045,7 @@ function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8'
 
 function validate_email($email)
 {
-  return PHPMailer::validateAddress($email);
+  return \PHPMailer::validateAddress($email);
 }
 
 

@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // $Id$
 
 // pgsql.inc - Simple PHP database support for PostgreSQL.
@@ -577,7 +579,7 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
   
   if (!$shutdown_registered)
   {
-    register_shutdown_function('sql_pgsql_cleanup');
+    register_shutdown_function(__NAMESPACE__ . "\\sql_pgsql_cleanup");
     $shutdown_registered = TRUE;
   }
   

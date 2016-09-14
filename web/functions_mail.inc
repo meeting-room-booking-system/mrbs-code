@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 // +---------------------------------------------------------------------------+
 // | Meeting Room Booking System.                                              |
 // +---------------------------------------------------------------------------+
@@ -185,7 +187,7 @@ function get_address_list($array)
     $array[$i] = trim($array[$i]);
     if ($array[$i] !== '')
     {
-      $mailer = new PHPMailer;
+      $mailer = new \PHPMailer;
       // Use parseAddresses() to validate the address because it could contain a display name
       if (count($mailer->parseAddresses($array[$i])) == 0)
       {
@@ -1123,7 +1125,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
-  $mail = new PHPMailer;
+  $mail = new \PHPMailer;
   
   mail_debug("Preparing to send email ...");
   if ($mail_settings['debug'])
@@ -1258,7 +1260,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $mime_params = array();
   $mime_params['eol'] = $eol;
   $mime_params['content_type'] = "multipart/alternative";
-  $mime_inner = new Mail_mimePart('', $mime_params);
+  $mime_inner = new \Mail_mimePart('', $mime_params);
   
   // Add the text part
   $mime_params['content_type'] = "text/plain";
@@ -1295,7 +1297,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mime_params = array();
     $mime_params['eol'] = $eol;
     $mime_params['content_type'] = "multipart/mixed";
-    $mime = new Mail_mimePart('', $mime_params);
+    $mime = new \Mail_mimePart('', $mime_params);
 
     // Now add the inner section as the first sub part
     $mime_inner = $mime_inner->encode();

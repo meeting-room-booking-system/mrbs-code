@@ -1,7 +1,7 @@
 <?php
+namespace MRBS;
+
 // $Id$
-
-
 
 require "defaultincludes.inc";
 require_once "mincals.inc";

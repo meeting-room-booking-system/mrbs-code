@@ -1,4 +1,5 @@
 <?php
+namespace MRBS;
 
 define('WP_USE_THEMES', false);
 require_once MRBS_ROOT . '/'. $auth['wordpress']['rel_path'] . '/wp-load.php';
@@ -63,7 +64,7 @@ function authGetUserLevel($user)
       $admin_roles = array($admin_roles);
     }
     // Put the roles into the standard WordPress format
-    $admin_roles = array_map('standardise_role_name', $admin_roles);
+    $admin_roles = array_map(__NAMESPACE__ . "\\standardise_role_name", $admin_roles);
     
     // Check to see if one of the user's roles is an admin role
     foreach($wp_user->roles as $user_role)

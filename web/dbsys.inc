@@ -1,4 +1,5 @@
 <?php
+namespace MRBS;
 
 // $Id$
 
@@ -36,6 +37,9 @@ require_once "${dbsys}.inc";
 // the MRBS database handle to use. If this is not passed, the default
 // MRBS database connection is used.
 
+// The namespace needs to be prepended to the function names assigned to $f because
+// they are generated dynamically.
+
 
 // Free a result object
 function sql_free($r)
@@ -63,7 +67,7 @@ function sql_free($r)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_free";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_free";
   $f($r, $db_conn);
 }
 
@@ -85,7 +89,7 @@ function sql_escape($str)
     $db_conn = null;
   }
   
-  $f = "sql_${db_sys}_escape";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_escape";
   return $f($str, $db_conn);
 }
 
@@ -98,7 +102,7 @@ function sql_quote($identifier)
   global $dbsys;
   
   $db_sys = $dbsys;
-  $f = "sql_${db_sys}_quote";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_quote";
   return $f($identifier);
 }
 
@@ -120,7 +124,7 @@ function sql_command($sql)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_command";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_command";
   return $f($sql, $db_conn);
 }
 
@@ -143,7 +147,7 @@ function sql_query1($sql)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_query1";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_query1";
   return $f($sql, $db_conn);
 }
 
@@ -197,7 +201,7 @@ function sql_query($sql)
     $db_sys = $dbsys;
     $db_conn = null;
   }
-  $f = "sql_${db_sys}_query";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_query";
   return $f($sql, $db_conn);
 }
 
@@ -219,7 +223,7 @@ function sql_row($r, $i)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_row";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_row";
   return $f($r, $i, $db_conn);
 }
 
@@ -242,7 +246,7 @@ function sql_row_keyed($r, $i)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_row_keyed";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_row_keyed";
   return $f($r, $i, $db_conn);
 }
 
@@ -291,7 +295,7 @@ function sql_count($r)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_count";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_count";
   return $f($r, $db_conn);
 }
 
@@ -313,7 +317,7 @@ function sql_insert_id($table, $field)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_insert_id";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_insert_id";
   return $f($table, $field, $db_conn);
 }
 
@@ -335,7 +339,7 @@ function sql_error()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_error";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_error";
   return $f($db_conn);
 }
 
@@ -363,7 +367,7 @@ function sql_begin()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_begin";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_begin";
   $f($db_conn);
 }
 
@@ -385,7 +389,7 @@ function sql_commit()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_commit";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_commit";
   $f($db_conn);
   
   mrbs_ignore_user_abort(FALSE);
@@ -415,7 +419,7 @@ function sql_mutex_lock($name)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_mutex_lock";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_mutex_lock";
   return $f($name, $db_conn);
 }
 
@@ -437,7 +441,7 @@ function sql_mutex_unlock($name)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_mutex_unlock";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_mutex_unlock";
   $f($name, $db_conn);
   
   mrbs_ignore_user_abort(FALSE);
@@ -461,7 +465,7 @@ function sql_version()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_version";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_version";
   return $f($db_conn);
 }
 
@@ -483,7 +487,7 @@ function sql_syntax_limit($count, $offset)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_limit";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_limit";
   return $f($count, $offset, $db_conn);
 }
 
@@ -505,7 +509,7 @@ function sql_syntax_timestamp_to_unix($fieldname)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_timestamp_to_unix";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_timestamp_to_unix";
   return $f($fieldname, $db_conn);
 }
 
@@ -531,7 +535,7 @@ function sql_syntax_casesensitive_equals($fieldname, $s)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_casesensitive_equals";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_casesensitive_equals";
   return $f($fieldname, $s, $db_conn);
 }
 
@@ -553,7 +557,7 @@ function sql_syntax_caseless_contains($fieldname, $s)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_caseless_contains";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_caseless_contains";
   return $f($fieldname, $s, $db_conn);
 }
 
@@ -575,7 +579,7 @@ function sql_syntax_addcolumn_after($fieldname)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_addcolumn_after";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_addcolumn_after";
 
   if (function_exists($f))
   {
@@ -605,7 +609,7 @@ function sql_syntax_createtable_autoincrementcolumn()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_createtable_autoincrementcolumn";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_createtable_autoincrementcolumn";
   return $f($db_conn);
 }
 
@@ -627,7 +631,7 @@ function sql_syntax_bitwise_xor()
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_syntax_bitwise_xor";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_bitwise_xor";
   return $f($db_conn);
 }
 
@@ -649,7 +653,7 @@ function sql_field_name($result, $index)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_field_name";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_name";
   return $f($result, $index, $db_conn);
 }
 
@@ -671,7 +675,7 @@ function sql_field_type($result, $index)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_field_type";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_type";
   return $f($result, $index, $db_conn);
 }
 
@@ -693,7 +697,7 @@ function sql_num_fields($result)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_num_fields";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_num_fields";
   return $f($result, $db_conn);
 }
 
@@ -715,7 +719,7 @@ function sql_table_exists($table)
     $db_conn = null;
   }
 
-  $f = "sql_${db_sys}_table_exists";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_table_exists";
   return $f($table, $db_conn);
 }
 
@@ -770,7 +774,7 @@ function sql_field_info($table)
     $db_conn = null;
   }
   
-  $f = "sql_${db_sys}_field_info";
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_info";
   return $f($table, $db_conn);
 }
 
@@ -781,7 +785,7 @@ function sql_connect($system, $host, $username, $password, $db_name,
 {
   require_once "$system.inc";
 
-  $f = "sql_${system}_connect";
+  $f = __NAMESPACE__ . "\\sql_${system}_connect";
 
   $db_conn = $f($host, $username, $password, $db_name, $persist, $db_port);
 
@@ -796,7 +800,7 @@ function sql_close($handle)
 {
   $system = $handle['system'];
   require_once "$system.inc";
-  $f = "sql_${system}_close";
+  $f = __NAMESPACE__ . "\\sql_${system}_close";
   $f($handle['connection']);
 }
 
@@ -830,9 +834,9 @@ function db_get_userpass()
 
 //////////////////////////////////////////
 // Connect to the configured MRBS database
-
-$f = "sql_${dbsys}_default_connect";
+$f = __NAMESPACE__ . "\\sql_${dbsys}_default_connect";
 $f();
+
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.

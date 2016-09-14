@@ -1,4 +1,6 @@
 <?php
+namespace MRBS;
+
 /*****************************************************************************\
 *                                                                            *
 *   File name     edit_users.php                                             *
@@ -575,7 +577,7 @@ if (isset($Action) && ($Action == "Update"))
           // for security reasons.
           if ($password0 !== '')
           {
-            if (PasswordCompat\binary\check())
+            if (\PasswordCompat\binary\check())
             {
               $hash = password_hash($password0, PASSWORD_DEFAULT);
             }
@@ -748,7 +750,7 @@ if (isset($Action) && ($Action == "Update"))
         array_push($values_list,$value);
       }
 
-      $fields_list = array_map('sql_quote', $fields_list);
+      $fields_list = array_map(__NAMESPACE__ . "\\sql_quote", $fields_list);
       $operation = "INSERT INTO $tbl_users " .
         "(". implode(",", $fields_list) . ")" .
         " VALUES " . "(" . implode(",", $values_list) . ");";
