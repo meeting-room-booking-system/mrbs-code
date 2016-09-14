@@ -577,7 +577,7 @@ if (isset($Action) && ($Action == "Update"))
           // for security reasons.
           if ($password0 !== '')
           {
-            if (PasswordCompat\binary\check())
+            if (\PasswordCompat\binary\check())
             {
               $hash = password_hash($password0, PASSWORD_DEFAULT);
             }

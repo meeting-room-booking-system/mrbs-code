@@ -72,7 +72,7 @@ function authValidateUser($user, $pass)
         $do_rehash = true;
       }
     }
-    elseif (!PasswordCompat\binary\check())
+    elseif (!\PasswordCompat\binary\check())
     {
       // password_verify() failed and we are using a version of PHP where
       // crypt() is broken and so we are stuck, unable to verify the 
@@ -91,7 +91,7 @@ function authValidateUser($user, $pass)
     {
       $result = 1;
 
-      if (PasswordCompat\binary\check())
+      if (\PasswordCompat\binary\check())
       {
         $do_rehash = true;
       }
