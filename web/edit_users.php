@@ -750,7 +750,7 @@ if (isset($Action) && ($Action == "Update"))
         array_push($values_list,$value);
       }
 
-      $fields_list = array_map('sql_quote', $fields_list);
+      $fields_list = array_map(__NAMESPACE__ . "\\sql_quote", $fields_list);
       $operation = "INSERT INTO $tbl_users " .
         "(". implode(",", $fields_list) . ")" .
         " VALUES " . "(" . implode(",", $values_list) . ");";
