@@ -1,5 +1,6 @@
 <?php
 namespace MRBS;
+use mysqli;
 
 // $Id$
 
