@@ -1,6 +1,6 @@
 <?php
 namespace MRBS;
-use mysqli;
+use PDO;
 
 // $Id$
 
@@ -29,11 +29,12 @@ function sql_mysqli_ensure_handle(&$db_conn)
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
-function sql_mysqli_free ($r, $db_conn = null)
+function sql_mysqli_free ($sth, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $r->close();
+  $sth->closeCursor();
+  unset($sth);
 }
 
 
@@ -41,15 +42,8 @@ function sql_mysqli_free ($r, $db_conn = null)
 function sql_mysqli_escape($str, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
-  
-  if (function_exists('mysqli_real_escape_string'))
-  {
-    return mysqli_real_escape_string($db_conn, $str);
-  }
-  else
-  {
-    return addslashes($str);
-  }
+
+  return addslashes($str);
 }
 
 
@@ -71,9 +65,10 @@ function sql_mysqli_command ($sql, $db_conn = null)
   
   $ret = -1;
 
-  if ($db_conn->query($sql))
+  $sth = $db_conn->query($sql);
+  if ($sth)
   {
-    $ret = $db_conn->affected_rows;
+    $ret = $sth->rowCount();
   }
   return $ret;
 }
@@ -89,15 +84,16 @@ function sql_mysqli_query1 ($sql, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $r = $db_conn->query($sql);
-  if (!$r)
+  $sth = $db_conn->query($sql);
+  if (!$sth)
   {
-    trigger_error($db_conn->error, E_USER_WARNING);
+    $error_code = $sth->errorInfo();
+    trigger_error($error_code[2], E_USER_WARNING);
     return -1;
   }
 
-  if (($r->num_rows != 1) || ($r->field_count != 1) ||
-      (($row = $r->fetch_row()) == NULL))
+  if (($sth->rowCount() != 1) || ($sth->columnCount() != 1) ||
+      (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL))
   {
     $result = -1;
   }
@@ -105,7 +101,7 @@ function sql_mysqli_query1 ($sql, $db_conn = null)
   {
     $result = $row[0];
   }
-  $r->close();
+  $sth->closeCursor();
   return $result;
 }
 
@@ -113,12 +109,14 @@ function sql_mysqli_query1 ($sql, $db_conn = null)
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns FALSE on error; use sql_error to get the error message.
-function sql_mysqli_query ($sql, $db_conn = null)
+function sql_mysqli_query ($sql, $db_conn = null, $params = array())
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $r = $db_conn->query($sql);
-  return $r;
+  $sth = $db_conn->prepare($sql);
+  $sth->execute($params);
+  
+  return $sth;
 }
 
 
@@ -127,17 +125,16 @@ function sql_mysqli_query ($sql, $db_conn = null)
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
-function sql_mysqli_row ($r, $i, $db_conn = null)
+function sql_mysqli_row ($sth, $i, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  if ($i >= $r->num_rows)
+  if ($i >= $sth->rowCount())
   {
-    $r->close();
+    $sth->closeCursor();
     return 0;
   }
-  $r->data_seek($i);
-  return $r->fetch_row();
+  return $sth->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_ABS, $i);
 }
 
 
@@ -147,28 +144,25 @@ function sql_mysqli_row ($r, $i, $db_conn = null)
 // routing also stores the data under number indexes.
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
-function sql_mysqli_row_keyed ($r, $i, $db_conn = null)
+function sql_mysqli_row_keyed ($sth, $i, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  if ($i >= $r->num_rows)
+  if ($i >= $sth->rowCount())
   {
-    $r->close();
+    $sth->closeCursor();
     return 0;
   }
-  $r->data_seek($i);
-  // Use _assoc rather than _array because _array doesn't have
-  // an ASSOC parameter.  No impact on PHP version support.
-  return $r->fetch_assoc();
+  return $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS, $i);
 }
 
 
 // Return the number of rows returned by a result handle from sql_query.
-function sql_mysqli_count ($r, $db_conn = null)
+function sql_mysqli_count ($sth, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return $r->num_rows;
+  return $sth->rowCount();
 }
 
 
@@ -178,7 +172,7 @@ function sql_mysqli_insert_id($table, $field, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return $db_conn->insert_id;
+  return $db_conn->lastInsertId();
 }
 
 
@@ -187,7 +181,9 @@ function sql_mysqli_error($db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return $db_conn->error;
+  $error_info = $db_conn->errorInfo();
+
+  return $error_info[2];
 }
 
 
@@ -199,7 +195,7 @@ function sql_mysqli_begin($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error ($db_conn->error, E_USER_WARNING);
+    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
   }
 }
 
@@ -211,7 +207,7 @@ function sql_mysqli_commit($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error ($db_conn->error, E_USER_WARNING);
+    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
   }
 }
 
@@ -223,7 +219,7 @@ function sql_mysqli_rollback($db_conn = null)
   
   if ($result < 0)
   {
-    trigger_error ($db_conn->error, E_USER_WARNING);
+    trigger_error (sql_mysqli_error($db_conn), E_USER_WARNING);
   }
 }
 
@@ -249,16 +245,16 @@ function sql_mysqli_mutex_lock($name, $db_conn = null)
   // timed out (for example, because another client has previously locked the name),
   // or NULL if an error occurred (such as running out of memory or the thread was
   // killed with mysqladmin kill)
-  $r = $db_conn->query("SELECT GET_LOCK('$name', 20)");
-  if ($r === FALSE)
+  $sth = $db_conn->query("SELECT GET_LOCK('$name', 20)");
+  if ($sth === FALSE)
   {
-    trigger_error($db_conn->error, E_USER_WARNING);
+    trigger_error(sql_mysqli_error($db_conn), E_USER_WARNING);
     return FALSE;
   }
 
-  if (($r->num_rows != 1) || 
-      ($r->field_count != 1) ||
-      (($row = $r->fetch_row()) === NULL))
+  if (($sth->rowCount() != 1) || 
+      ($sth->columnCount() != 1) ||
+      (($row = $sth->fetch(PDO::FETCH_NUM)) === NULL))
   {
     return FALSE;
   }
@@ -271,7 +267,7 @@ function sql_mysqli_mutex_lock($name, $db_conn = null)
   {
     $sql_mysqli_mutex_unlock_name = $name;
   }
-  $r->free();
+  $sth->closeCursor();
   return $result;
 }
 
@@ -396,8 +392,8 @@ function sql_mysqli_field_name($result, $index, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $finfo = $result->fetch_field_direct($index);
-  return $finfo->name;
+  $finfo = $result->getColumnMeta($index);
+  return $finfo[name];
 }
 
 
@@ -494,7 +490,7 @@ function sql_mysqli_field_info($table, $db_conn = null)
   $res = sql_mysqli_query("SHOW COLUMNS FROM $table");
   if ($res === FALSE)
   {
-    trigger_error($db_conn->error, E_USER_WARNING);
+    trigger_error(mysql_mysqi_error($db_conn), E_USER_WARNING);
     fatal_error(TRUE, get_vocab("fatal_db_error"));
   }
   else
@@ -581,22 +577,17 @@ function sql_mysqli_connect($host, $username, $password,
     $full_host = $host;
   }
   
-  $db_conn = new mysqli($full_host, $username, $password, $db_name, $db_port);
+//  $db_conn = new mysqli($full_host, $username, $password, $db_name, $db_port);
 
-  /* check connection */
-  if (mysqli_connect_errno())
+  try
   {
-    trigger_error(mysqli_connect_error(), E_USER_WARNING);
+    $db_conn = new PDO("mysql:host=$host;port=$db_port;dbname=$db_name;charset=UTF8",$username,$password);
+  }
+  catch (PDOException $e)
+  {
+    trigger_error($e->getMessage(), E_USER_WARNING);
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
-  }
-  if (function_exists('mysqli_set_charset'))
-  {
-    $db_conn->set_charset("utf8");
-  }
-  else
-  {
-    $db_conn->query("SET NAMES 'utf8'");
   }
   return $db_conn;
 }
@@ -628,6 +619,6 @@ function sql_mysqli_default_connect()
 // Close a connection
 function sql_mysqli_close($connection)
 {
-  mysqli_close($connection);
+  unset($connection);
 }
 
