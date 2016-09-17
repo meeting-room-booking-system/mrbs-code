@@ -153,10 +153,10 @@ if ($series == 1)
   // as per the original series settings
   $sql = "SELECT id
           FROM $tbl_entry
-          WHERE repeat_id=$id AND entry_type=" . ENTRY_RPT_ORIGINAL . "
+          WHERE repeat_id=? AND entry_type=" . ENTRY_RPT_ORIGINAL . "
           ORDER BY start_time
           LIMIT 1";
-  $id = sql_query1($sql);
+  $id = sql_query1($sql, array($id));
   if ($id < 1)
   {
     // if all entries in series have been modified then
@@ -167,10 +167,10 @@ if ($series == 1)
     // but edit_entry.php will display the start time of the entry
     $sql = "SELECT id
             FROM $tbl_entry
-            WHERE repeat_id=$id
+            WHERE repeat_id=?
             ORDER BY start_time
             LIMIT 1";
-    $id = sql_query1($sql);
+    $id = sql_query1($sql, array($id));
   }
   $repeat_info_time = $row['repeat_info_time'];
   $repeat_info_user = $row['repeat_info_user'];
@@ -201,6 +201,7 @@ if (isset($action) && ($action == "export"))
   else
   {    
     // Construct the SQL query
+    $sql_params[] = array();
     $sql = "SELECT E.*, "
          .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
          . "A.area_name, R.room_name, "
@@ -214,12 +215,14 @@ if (isset($action) && ($action == "export"))
     if ($series)
     {
       $sql .= ", $tbl_repeat T"
-            . " WHERE E.repeat_id=$repeat_id"
+            . " WHERE E.repeat_id=?"
             . " AND E.repeat_id=T.id";
+      $sql_params[] = $repeat_id;
     }
     else
     {
-      $sql .= " WHERE E.id=$id";
+      $sql .= " WHERE E.id=?";
+      $sql_params[] = $id;
     }
     
     $sql .= " AND E.room_id=R.id
@@ -229,7 +232,7 @@ if (isset($action) && ($action == "export"))
     {
       $sql .= " ORDER BY E.ical_recur_id";
     }
-    $res = sql_query($sql);
+    $res = sql_query($sql, $sql_params);
     if ($res === FALSE)
     {
       trigger_error(sql_error(), E_USER_WARNING);

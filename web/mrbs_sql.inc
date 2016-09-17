@@ -28,8 +28,6 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   
   get_area_settings(get_area($room_id));
 
-  $sql_params = array();
-
   // Select any meetings which overlap for this room:
   $sql = "SELECT E.id, name, start_time, create_by, status, room_name
             FROM $tbl_entry E, $tbl_room R
@@ -182,6 +180,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
 
     if (!isset($existing[$location][$interval_type][$interval_start]))
     {
+      $sql_params = array();
       $sql = "SELECT COUNT(*)
                 FROM $tbl_entry E, $tbl_room R
                WHERE E.start_time<$interval_end
@@ -189,20 +188,25 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
                  AND E.create_by=?
                  AND E.room_id=R.id
                  AND R.disabled=0";
+      $sql_params[] = $booking['create_by'];
+
       if ($only_area)
       {
-        $sql .= " AND R.area_id=$area_id";
+        $sql .= " AND R.area_id=?";
+        $sql_params[] = $area_id;
       }
       if ($ignore > 0)
       {
-        $sql .= " AND E.id <> $ignore";
+        $sql .= " AND E.id <> ?";
+        $sql_params[] = $ignore;
       }
       if ($repignore > 0)
       {
-        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> $repignore)";
+        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> ?)";
+        $sql_params[] = $repignore;
       }
       
-      $existing[$location][$interval_type][$interval_start] = sql_query1($sql, array($booking['create_by']));
+      $existing[$location][$interval_type][$interval_start] = sql_query1($sql, $sql_params);
       if ($existing[$location][$interval_type][$interval_start] < 0)
       {
         fatal_error(FALSE, get_vocab("fatal_db_error"));
@@ -1120,10 +1124,10 @@ function update_last_reminded($id, $series)
   if ($series)
   {
     $sql = "UPDATE $tbl_repeat
-               SET reminded=$now,
+               SET reminded=?,
                    ical_sequence=ical_sequence+1
              WHERE id=?";
-    if (sql_command($sql, array($id)) >= 0)
+    if (sql_command($sql, array($now, $id)) >= 0)
     {
       $sql = "UPDATE $tbl_entry
                  SET reminded=?,
@@ -1231,7 +1235,7 @@ function mrbsApproveEntry($id, $series)
                    ical_sequence=ical_sequence+1
              WHERE $condition";  // PostgreSQL does not support LIMIT with UPDATE
     
-    if (sql_command($sql) < 0)
+    if (sql_command($sql, $params) < 0)
     {
       trigger_error(sql_error(), E_USER_WARNING);
       fatal_error(FALSE, get_vocab("fatal_db_error"));

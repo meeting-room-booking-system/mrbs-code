@@ -1668,11 +1668,11 @@ function get_default_area()
   {
     $area = sql_query1("SELECT area_id
                           FROM $tbl_room R, $tbl_area A
-                         WHERE R.id=$default_room
+                         WHERE R.id=?
                            AND R.area_id = A.id
                            AND R.disabled = 0
                            AND A.disabled = 0
-                         LIMIT 1");
+                         LIMIT 1", array($default_room));
     if ($area >= 0)
     {
       return $area;
@@ -1700,9 +1700,9 @@ function get_default_room($area)
     $room = sql_query1("SELECT id
                           FROM $tbl_room
                          WHERE id=$default_room
-                           AND area_id=$area
+                           AND area_id=?
                            AND disabled=0
-                         LIMIT 1");
+                         LIMIT 1", array($area));
     if ($room >= 0)
     {
       return $room;
@@ -1711,10 +1711,10 @@ function get_default_room($area)
   // Otherwise just return the first room (in sortkey order) in the area
   $room = sql_query1("SELECT id
                         FROM $tbl_room
-                       WHERE area_id=$area
+                       WHERE area_id=?
                          AND disabled=0
                     ORDER BY sort_key
-                       LIMIT 1");
+                       LIMIT 1", array($area));
   return ($room < 0 ? 0 : $room);
 }
 
@@ -1722,7 +1722,7 @@ function get_default_room($area)
 function get_area($room)
 {
   global $tbl_room;
-  $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$room LIMIT 1");
+  $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($room));
   return ($area < 0 ? 0 : $area);
 }
 
@@ -1813,10 +1813,10 @@ function get_area_settings($area)
                    
   $sql = "SELECT " . implode(',', $columns) . "
             FROM $tbl_area 
-           WHERE id=$area 
+           WHERE id=?
            LIMIT 1";
            
-  $res = sql_query($sql);
+  $res = sql_query($sql, array($area));
   if (!$res || (sql_count($res) == 0))
   {
     // We still need to set the timezone even if the query didn't
@@ -2236,12 +2236,12 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
   $out_html = '';
   $sql = "SELECT R.id, R.room_name, R.description
             FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=$area
+           WHERE R.area_id=?
              AND R.area_id=A.id
              AND R.disabled=0
              AND A.disabled=0
         ORDER BY R.sort_key";
-  $res = sql_query($sql);
+  $res = sql_query($sql, array($area));
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
   if ($res && (sql_count($res) > 1))

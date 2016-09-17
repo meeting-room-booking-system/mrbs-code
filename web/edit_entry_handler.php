@@ -414,7 +414,7 @@ if (isset($id))
 {
   // Editing an existing booking: get the room_id from the database (you can't
   // get it from $rooms because they are the new rooms)
-  $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+  $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
   if ($target_room < 0)
   {
     fatal_error(FALSE, get_vocab("fatal_db_error"));

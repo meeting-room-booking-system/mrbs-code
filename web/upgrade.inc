@@ -78,7 +78,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       // an empty query)
       if (preg_match("/\S/", $query))
       {
-        $res = sql_query($query, $upgrade_handle);
+        $res = sql_query($query, array(), $upgrade_handle);
         if ($res === FALSE)
         {
           // No need to localise, should hopefully never happen
@@ -93,8 +93,8 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      $res = sql_command("UPDATE $tbl_variables SET variable_content = '$ver' ".
-                         "WHERE variable_name = '$variable_name'");
+      $res = sql_command("UPDATE $tbl_variables SET variable_content = ? ".
+                         "WHERE variable_name = ?", array($ver, $variable_name));
       if ($res == -1)
       {
         // No need to localise, should never happen
@@ -112,4 +112,3 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
   }
   return TRUE;
 }
-

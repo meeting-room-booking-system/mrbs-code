@@ -536,8 +536,8 @@ if ($phase == 2)
               && sql_query1("SELECT COUNT(*)
                                FROM $tbl_room
                               WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name) . "
-                                AND area_id=$new_area
-                              LIMIT 1", array($room_name)) > 0)
+                                AND area_id=?
+                              LIMIT 1", array($room_name, $new_area)) > 0)
       {
         $valid_room_name = FALSE;
       }

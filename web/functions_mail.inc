@@ -235,11 +235,11 @@ function get_area_admin_email($id, $series=FALSE)
     // ...use the repeat table
     $sql .= ", $tbl_repeat rep ";
   }
-  $sql .= "WHERE ${id_table}.id=$id 
+  $sql .= "WHERE ${id_table}.id=?
              AND r.id=${id_table}.room_id
              AND a.id=r.area_id
            LIMIT 1";
-  $email = sql_query1($sql);
+  $email = sql_query1($sql, array($id));
 
   return ($email == -1) ? '' : $email;
 }
@@ -262,10 +262,10 @@ function get_room_admin_email($id, $series=FALSE)
     // ...use the repeat table
     $sql .= ", $tbl_repeat rep ";
   }
-  $sql .= "WHERE ${id_table}.id=$id 
+  $sql .= "WHERE ${id_table}.id=?
              AND r.id=${id_table}.room_id
            LIMIT 1";
-  $email = sql_query1($sql);
+  $email = sql_query1($sql, array($id));
 
   return ($email == -1) ? '' : $email;
 }

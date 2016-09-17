@@ -24,11 +24,11 @@ if ($type == "room")
     // They have confirmed it already, so go blast!
     sql_begin();
     // First take out all appointments for this room
-    sql_command("delete from $tbl_entry where room_id=$room");
-    sql_command("delete from $tbl_repeat where room_id=$room");
+    sql_command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
+    sql_command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
    
     // Now take out the room itself
-    sql_command("delete from $tbl_room where id=$room");
+    sql_command("DELETE FROM $tbl_room WHERE id=?",array($room));
     sql_commit();
    
     // Go back to the admin page
@@ -41,8 +41,8 @@ if ($type == "room")
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
    
-    $sql = "select name, start_time, end_time from $tbl_entry where room_id=$room";
-    $res = sql_query($sql);
+    $sql = "SELECT name, start_time, end_time FROM $tbl_entry WHERE room_id=?";
+    $res = sql_query($sql, array($room));
     if (! $res)
     {
       trigger_error(sql_error(), E_USER_WARNING);
@@ -81,11 +81,11 @@ if ($type == "area")
 {
   // We are only going to let them delete an area if there are
   // no rooms. its easier
-  $n = sql_query1("select count(*) from $tbl_room where area_id=$area");
+  $n = sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE area_id=?", array($area));
   if ($n == 0)
   {
     // OK, nothing there, lets blast it away
-    sql_command("delete from $tbl_area where id=$area");
+    sql_command("DELETE FROM $tbl_area WHERE id=?", array($area));
    
     // Redirect back to the admin page
     header("Location: admin.php");

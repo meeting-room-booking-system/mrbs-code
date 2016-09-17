@@ -816,10 +816,10 @@ if (isset($id))
     $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks,
                    month_absolute, month_relative
               FROM $tbl_repeat 
-             WHERE id=$rep_id
+             WHERE id=?
              LIMIT 1";
    
-    $res = sql_query($sql);
+    $res = sql_query($sql, array($rep_id));
     if (! $res)
     {
       trigger_error(sql_error(), E_USER_WARNING);
