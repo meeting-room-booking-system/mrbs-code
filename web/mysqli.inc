@@ -291,7 +291,7 @@ function sql_mysqli_cleanup($db_conn = null)
   }
   
   // Rollback any outstanding transactions
-//  sql_mysqli_rollback($db_conn);
+  sql_mysqli_rollback($db_conn);
 }
 
 
@@ -563,21 +563,12 @@ function sql_mysqli_connect($host, $username, $password,
   // there seems to be no way to supress the automatic error message output and
   // still be able to access the error text.
 
-  // PHP 5.3.0 and above support persistent connections in mysqli
-  if ($persist && (version_compare(PHP_VERSION, '5.3.0') >= 0))
-  {
-    $full_host = "p:$host";
-  }
-  else
-  {
-    $full_host = $host;
-  }
-  
-//  $db_conn = new mysqli($full_host, $username, $password, $db_name, $db_port);
-
   try
   {
-    $db_conn = new PDO("mysql:host=$host;port=$db_port;dbname=$db_name;charset=UTF8",$username,$password);
+    $db_conn = new PDO("mysql:host=$host;port=$db_port;dbname=$db_name;charset=UTF8",
+                       $username,
+                       $password
+                       array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
   }
   catch (PDOException $e)
   {

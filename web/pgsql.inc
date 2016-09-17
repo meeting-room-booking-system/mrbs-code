@@ -138,9 +138,9 @@ function sql_pgsql_query1 ($sql, $params = array(), $db_conn = null)
   if (($sth->rowCount() == 1) &&
       ($sth->columnCount() == 1))
   {
-	$row = $sth->fetch(PDO::FETCH_NUM);
-	if ($row != NULL)
-	{
+    $row = $sth->fetch(PDO::FETCH_NUM);
+    if ($row != NULL)
+    {
       $result = $row[0];
     }
   }
@@ -323,7 +323,7 @@ function sql_pgsql_cleanup($db_conn = NULL)
   
   if (!$db_conn)
   {
-	return;
+    return;
   }
   // Release any forgotten locks
   if (!empty($sql_pgsql_mutex_unlock_name))
@@ -477,7 +477,7 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   if (isset($table_parts['table_schema']))
   {
     $sql .= " AND table_schema = ?";
-	$sql_params[] = $table_parts['table_schema'];
+    $sql_params[] = $table_parts['table_schema'];
   }
 
   $res = sql_pgsql_query1($sql, $sql_params, $db_conn);
@@ -533,7 +533,7 @@ function sql_pgsql_field_info($table, $db_conn = null)
   if (isset($table_parts['table_schema']))
   {
     $sql .= " AND table_schema = ?";
-	$sql_params[] = $table_parts['table_schema'];
+    $sql_params[] = $table_parts['table_schema'];
   }
   $sql .= "ORDER BY ordinal_position";
   
@@ -606,9 +606,9 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
   try
   {
     $db_conn = new PDO("pgsql:host=$host;port=$db_port;dbname=$db_name",
-	                   $username,
-					   $password,
-					   array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
+                       $username,
+                       $password,
+                       array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
   }
   catch (PDOException $e)
   {
