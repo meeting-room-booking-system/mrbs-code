@@ -1130,11 +1130,10 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 }
 
 
-function get_match_condition($full_column_name, $match)
+function get_match_condition($full_column_name, $match, &$sql_params)
 {
   global $select_options, $field_natures, $field_lengths;
 
-  $sql_params = array();  
   $sql = '';
   
   // First simple case: no match required
