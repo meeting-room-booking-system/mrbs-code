@@ -151,6 +151,9 @@ function print_theme_header($day, $month, $year, $area, $room)
         if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
           $sql_approval_enabled = some_area_predicate('approval_enabled');
+
+          $sql_params = array();
+
           // Find out how many bookings are awaiting approval
           // (but only for areas where approval is required)
           $sql = "SELECT COUNT(*)
@@ -164,9 +167,10 @@ function print_theme_header($day, $month, $year, $area, $room)
           if (!$is_admin)
           {
             // Ordinary users can only see their own
-            $sql .= " AND create_by='" . sql_escape($user) . "'";
+            $sql .= " AND create_by=?";
+            $sql_params[] = $user;
           }
-          $n_outstanding = sql_query1($sql);
+          $n_outstanding = sql_query1($sql, $sql_params);
           if ($n_outstanding < 0)
           {
             fatal_error(FALSE, get_vocab("fatal_db_error"));
