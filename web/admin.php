@@ -43,7 +43,7 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 // Get the details we need for this area
 if (isset($area))
 {
-  $res = sql_query("SELECT area_name, custom_html FROM $tbl_area WHERE id=$area LIMIT 1");
+  $res = sql_query("SELECT area_name, custom_html FROM $tbl_area WHERE id=? LIMIT 1", array($area));
   if (! $res)
   {
     trigger_error(sql_error(), E_USER_WARNING);
@@ -211,7 +211,7 @@ if ($is_admin || ($n_displayable_areas > 0))
   echo "<div id=\"room_form\">\n";
   if (isset($area))
   {
-    $res = sql_query("SELECT * FROM $tbl_room WHERE area_id=$area ORDER BY sort_key");
+    $res = sql_query("SELECT * FROM $tbl_room WHERE area_id=? ORDER BY sort_key", array($area));
     if (! $res)
     {
       trigger_error(sql_error(), E_USER_WARNING);
