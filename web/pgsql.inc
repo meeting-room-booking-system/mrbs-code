@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use PDO;
+
 // $Id$
 
 // pgsql.inc - Simple PHP database support for PostgreSQL.
@@ -57,11 +59,11 @@ function sql_pgsql_resolve_table($table)
 // Free a results handle. You need not call this if you call sql_row or
 // sql_row_keyed until the row returns 0, since sql_row frees the results
 // handle when you finish reading the rows.
-function sql_pgsql_free ($r, $db_conn = null)
+function sql_pgsql_free ($sth, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  pg_free_result($r);
+  unset($sth);
 }
 
 
@@ -70,14 +72,7 @@ function sql_pgsql_escape($str, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
   
-  if (function_exists('pg_escape_string'))
-  {
-    return pg_escape_string($db_conn, $str);
-  }
-  else
-  {
-    return addslashes($str);
-  }
+  return addslashes($str);
 }
 
 
@@ -105,19 +100,21 @@ function sql_pgsql_quote($identifier)
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function sql_pgsql_command ($sql, $db_conn = null)
+function sql_pgsql_command ($sql, $params = array(), $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_conn, $sql);
+  
+  $sth = $db_conn->prepare($sql);
+  $sth->execute($params);
   error_reporting($e);
-  if (! $r)
+  if (! $sth)
   {
     return -1;
   }
-  $n = pg_affected_rows($r);
-  pg_free_result($r);
+  $n = $sth->rowCount();
+
   return $n;
 }
 
@@ -128,26 +125,34 @@ function sql_pgsql_command ($sql, $db_conn = null)
 // exactly one value, so error checking is somewhat limited.
 // It also returns -1 if the query returns a single NULL value, such as from
 // a MIN or MAX aggregate function applied over no rows.
-function sql_pgsql_query1 ($sql, $db_conn = null)
+function sql_pgsql_query1 ($sql, $params = array(), $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_conn, $sql);
+  
+  $sth = $db_conn->prepare($sql);
+  $sth->execute($params);
   error_reporting($e);
   
-  if (!$r)
+  if (!$sth)
   {
     trigger_error (sql_pgsql_error($db_conn), E_USER_WARNING);
     return -1;
   }
   
-  if (pg_num_rows($r) != 1 || pg_num_fields($r) != 1
-      || ($result = pg_fetch_result($r, 0, 0)) == "")
+  // Default to returning an error
+  $result = -1;
+
+  if (($sth->rowCount() == 1) &&
+      ($sth->columnCount() == 1))
   {
-    $result = -1;
+	$row = $sth->fetch(PDO::FETCH_NUM);
+	if ($row != NULL)
+	{
+      $result = $row[0];
+    }
   }
-  pg_free_result($r);
   return $result;
 }
 
@@ -155,14 +160,16 @@ function sql_pgsql_query1 ($sql, $db_conn = null)
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns FALSE on error; use sql_error to get the error message.
-function sql_pgsql_query ($sql, $db_conn = null)
+function sql_pgsql_query ($sql, $params = array(), $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
   $e = error_reporting(E_ALL & ~(E_WARNING|E_NOTICE));
-  $r = pg_query($db_conn, $sql);
+  
+  $sth = $db_conn->prepare($sql);
+  $sth->execute($params);
   error_reporting($e);
-  return $r;
+  return $sth;
 }
 
 
@@ -171,16 +178,16 @@ function sql_pgsql_query ($sql, $db_conn = null)
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
 // Typical usage: $i = 0; while ((a = sql_row($r, $i++))) { ... }
-function sql_pgsql_row ($r, $i, $db_conn = null)
+function sql_pgsql_row ($sth, $i, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  if ($i >= pg_num_rows($r))
+  if ($i >= $sth->rowCount())
   {
-    pg_free_result($r);
+    unset($sth);
     return 0;
   }
-  return pg_fetch_row($r, $i);
+  return $sth->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_ABS, $i);
 }
 
 
@@ -190,27 +197,25 @@ function sql_pgsql_row ($r, $i, $db_conn = null)
 // routing also stores the data under number indexes.
 // When called with i >= number of rows in the result, cleans up from
 // the query and returns 0.
-function sql_pgsql_row_keyed ($r, $i, $db_conn = null)
+function sql_pgsql_row_keyed ($sth, $i, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  if ($i >= pg_num_rows($r))
+  if ($i >= $sth->rowCount())
   {
-    pg_free_result($r);
+    unset($sth);
     return 0;
   }
-  // Use _array() rather _assoc() to ensure support
-  // for as many PHP versions as possible
-  return pg_fetch_array($r, $i, PGSQL_ASSOC);
+  return $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS, $i);
 }
 
 
 // Return the number of rows returned by a result handle from sql_query.
-function sql_pgsql_count ($r, $db_conn = null)
+function sql_pgsql_count ($sth, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return pg_num_rows($r);
+  return $sth->rowCount();
 }
 
 
@@ -221,7 +226,7 @@ function sql_pgsql_insert_id($table, $field, $db_conn = null)
   sql_pgsql_ensure_handle($db_conn);
 
   $seq_name = $table . "_" . $field . "_seq";
-  return sql_pgsql_query1("select last_value from $seq_name", $db_conn);
+  return $db_conn->lastInsertId($seq_name);
 }
 
 
@@ -230,7 +235,9 @@ function sql_pgsql_error($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return pg_last_error($db_conn);
+  $error_info = $db_conn->errorInfo();
+
+  return $error_info[2];
 }
 
 
@@ -240,7 +247,7 @@ function sql_pgsql_begin($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $result = sql_pgsql_command("BEGIN", $db_conn);
+  $result = sql_pgsql_command("BEGIN", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -254,7 +261,7 @@ function sql_pgsql_commit($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $result = sql_pgsql_command("COMMIT", $db_conn);
+  $result = sql_pgsql_command("COMMIT", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -268,7 +275,7 @@ function sql_pgsql_rollback($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $result = sql_pgsql_command("ROLLBACK", $db_conn);
+  $result = sql_pgsql_command("ROLLBACK", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -294,8 +301,8 @@ function sql_pgsql_mutex_lock($name, $db_conn = null)
   sql_pgsql_ensure_handle($db_conn);
 
   global $sql_pgsql_mutex_unlock_name;
-  if ((sql_pgsql_command("BEGIN", $db_conn) < 0) ||
-      (sql_pgsql_command("LOCK TABLE $name IN EXCLUSIVE MODE", $db_conn) < 0))
+  if ((sql_pgsql_command("BEGIN", array(), $db_conn) < 0) ||
+      (sql_pgsql_command("LOCK TABLE $name IN EXCLUSIVE MODE", array(), $db_conn) < 0))
   {
     return 0;
   }
@@ -313,7 +320,7 @@ function sql_pgsql_mutex_unlock($name, $db_conn = null)
   sql_pgsql_ensure_handle($db_conn);
 
   global $sql_pgsql_mutex_unlock_name;
-  sql_pgsql_command("COMMIT", $db_conn);
+  sql_pgsql_command("COMMIT", array(), $db_conn);
   $sql_pgsql_mutex_unlock_name = NULL;
 }
 
@@ -323,10 +330,14 @@ function sql_pgsql_cleanup($db_conn = NULL)
 {
   global $sql_pgsql_mutex_unlock_name;
   
+  if (!$db_conn)
+  {
+	return;
+  }
   // Release any forgotten locks
   if (!empty($sql_pgsql_mutex_unlock_name))
   {
-    sql_pgsql_command("ABORT", $db_conn);
+    sql_pgsql_command("ABORT", array(), $db_conn);
     $sql_pgsql_mutex_unlock_name = NULL;
   }
   
@@ -340,7 +351,7 @@ function sql_pgsql_version($db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $r = sql_pgsql_query("select version()", $db_conn);
+  $r = sql_pgsql_query("select version()", array(), $db_conn);
   $v = sql_pgsql_row($r, 0, $db_conn);
   sql_pgsql_free($r, $db_conn);
 
@@ -374,7 +385,7 @@ function sql_pgsql_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return " " . sql_pgsql_quote($fieldname) . "='" . sql_pgsql_escape($s) . "'";
+  return " " . sql_pgsql_quote($fieldname) . "=?";
 }
 
 
@@ -454,7 +465,7 @@ function sql_pgsql_num_fields($result, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  return pg_num_fields($result);
+  return $result->columnCount();
 }
 
 
@@ -467,17 +478,20 @@ function sql_pgsql_table_exists($table, $db_conn = null)
   // parts, the schema and table names
   $table_parts = sql_pgsql_resolve_table($table);
   
+  $sql_params = array();
   $sql = "SELECT COUNT(*)
             FROM information_schema.tables
-           WHERE table_name ='" . sql_pgsql_escape($table_parts['table_name']) . "'";
+           WHERE table_name = ?";
+  $sql_params[] = $table_parts['table_name'];
   if (isset($table_parts['table_schema']))
   {
-    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_parts['table_schema']) . "'";
+    $sql .= " AND table_schema = ?";
+	$sql_params[] = $table_parts['table_schema'];
   }
 
-  $res = sql_pgsql_query1($sql, $db_conn);
+  $res = sql_pgsql_query1($sql, $sql_params, $db_conn);
 
-  return ($res == 1) ? TRUE : FALSE;
+  return ($res == -1) ? FALSE : TRUE;
 }
 
 
@@ -516,19 +530,23 @@ function sql_pgsql_field_info($table, $db_conn = null)
   // $table can be a qualified name.  We need to resolve it if necessary into its component
   // parts, the schema and table names
   $table_parts = sql_pgsql_resolve_table($table);
-  
+
+  $sql_params = array();
+ 
   // $table_name and $table_schema should be trusted but escape them anyway for good measure
   $sql = "SELECT column_name, data_type, numeric_precision, character_maximum_length,
                  character_octet_length, is_nullable
             FROM information_schema.columns
-           WHERE table_name ='" . sql_pgsql_escape($table_parts['table_name']) . "'";
+           WHERE table_name = ?";
+  $sql_params[] = $table_parts['table_name'];
   if (isset($table_parts['table_schema']))
   {
-    $sql .= " AND table_schema = '" . sql_pgsql_escape($table_parts['table_schema']) . "'";
+    $sql .= " AND table_schema = ?";
+	$sql_params[] = $table_parts['table_schema'];
   }
   $sql .= "ORDER BY ordinal_position";
   
-  $res = sql_pgsql_query($sql, $db_conn);
+  $res = sql_pgsql_query($sql, $sql_params, $db_conn);
   if ($res === FALSE)
   {
     trigger_error(pg_result_error($res), E_USER_WARNING);
@@ -594,27 +612,21 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
   // there seems to be no way to supress the automatic error message output and
   // still be able to access the error text.
 
-  $conninfo = (empty($host) ? "" : "host=$host port=$db_port ") .
-    "dbname=$db_name user=$username password=$password";
-
-  if ($persist)
+  try
   {
-    $db_conn = pg_pconnect($conninfo);
+    $db_conn = new PDO("pgsql:host=$host;port=$db_port;dbname=$db_name",
+	                   $username,
+					   $password,
+					   array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
   }
-  else
+  catch (PDOException $e)
   {
-    $db_conn = pg_connect($conninfo);
-  }
-
-  unset($conninfo);
-
-  if (!$db_conn)
-  {
+    trigger_error($e->getMessage(), E_USER_WARNING);
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
   }
   
-  pg_set_client_encoding($db_conn, 'UTF8');
+  sql_pgsql_command("SET NAMES UTF8", array(), $db_conn);
   
   return $db_conn;
 }
@@ -646,6 +658,5 @@ function sql_pgsql_default_connect()
 // Close a connection
 function sql_pgsql_close($connection)
 {
-  pg_close($connection);
+  unset($connection);
 }
-
