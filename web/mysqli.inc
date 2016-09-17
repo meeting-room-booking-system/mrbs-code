@@ -567,7 +567,7 @@ function sql_mysqli_connect($host, $username, $password,
   {
     $db_conn = new PDO("mysql:host=$host;port=$db_port;dbname=$db_name;charset=UTF8",
                        $username,
-                       $password
+                       $password,
                        array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
   }
   catch (PDOException $e)
