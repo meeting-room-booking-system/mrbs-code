@@ -626,7 +626,7 @@ function sql_pgsql_connect($host, $username, $password, $db_name,
     exit;
   }
   
-  sql_pgsql_command("SET NAMES UTF8", array(), $db_conn);
+  sql_pgsql_command("SET NAMES 'UTF8'", array(), $db_conn);
   
   return $db_conn;
 }
