@@ -1223,10 +1223,11 @@ function mrbsApproveEntry($id, $series)
   // Then update the entry table.  First of all we get a list of the
   // start times that will be approved, then we do the approval.
   $condition = "$id_column=? AND status&" . STATUS_AWAITING_APPROVAL . "!=0";
+  $sql_params = array($id);
   $sql = "SELECT start_time
             FROM $tbl_entry
            WHERE $condition";
-  $start_times = sql_query_array($sql,array($id));
+  $start_times = sql_query_array($sql, $sql_params);
 
   if (($start_times !== FALSE) && (count($start_times) != 0))
   {
@@ -1235,7 +1236,7 @@ function mrbsApproveEntry($id, $series)
                    ical_sequence=ical_sequence+1
              WHERE $condition";  // PostgreSQL does not support LIMIT with UPDATE
     
-    if (sql_command($sql, $params) < 0)
+    if (sql_command($sql, $sql_params) < 0)
     {
       trigger_error(sql_error(), E_USER_WARNING);
       fatal_error(FALSE, get_vocab("fatal_db_error"));
