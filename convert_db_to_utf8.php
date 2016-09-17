@@ -160,21 +160,23 @@ else
       Updating '$table' table...
 ";
       $sql = "SELECT id,".implode(',',$columns)." FROM $table";
-      $res = sql_query($sql, $db_handle);
+      $res = sql_query($sql, array(), $db_handle);
 
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
+        $sql_params = array();
         $updates = array();
         $id = $row['id'];
         foreach ($columns as $col)
         {
-          $updates[] = "$col='".
-            addslashes(iconv($encoding,"utf-8",$row[$col]))."'";
+          $updates[] = "$col=?";
+          $sql_params[] = iconv($encoding,"utf-8",$row[$col]);
         }
         $upd_sql = "UPDATE $table SET ".
-          implode(',', $updates)." WHERE id=$id";
+          implode(',', $updates)." WHERE id=?";
+        $sql_params[] = $id;
 
-        sql_query($upd_sql, $db_handle);
+        sql_query($upd_sql, $sql_params, $db_handle);
         print "<!-- $upd_sql -->\n";
       }
       print "
@@ -222,7 +224,7 @@ function PMA_getDbCollation($db)
   global $db_handle;
 
   $sq='SHOW CREATE DATABASE `'.$db.'`;';
-  $res = sql_query($sq, $db_handle);
+  $res = sql_query($sq, array(), $db_handle);
   if(!$res)
   {
     echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
@@ -276,8 +278,8 @@ function convert_one_db($db)
     return;
   }
 
-  sql_command("USE $db", $db_handle);
-  $rs = sql_query("SHOW TABLES", $db_handle);
+  sql_command("USE $db", array(), $db_handle);
+  $rs = sql_query("SHOW TABLES", array(), $db_handle);
   if(!$rs)
   {
     echo "\n\n".sql_error($db_handle)."\n\n";
@@ -287,7 +289,7 @@ function convert_one_db($db)
     for ($i = 0; ($data = sql_row($rs, $i, $db_handle)); $i++)
     {
       echo "Converting '$data[0]' table...\n";
-      $rs1 = sql_query("show FULL columns from $data[0]", $db_handle);
+      $rs1 = sql_query("show FULL columns from $data[0]", array(), $db_handle);
       if(!$rs1)
       {
         echo "\n\n".sql_error($db_handle)."\n\n";
@@ -327,7 +329,7 @@ function convert_one_db($db)
                 (($data1['Null'] == 'YES') ? ' NULL ' : ' NOT NULL');
 
               if (!$printonly &&
-                  !sql_query($sq, $db_handle))
+                  !sql_query($sq, array(), $db_handle))
               {
                 echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
               }
@@ -354,7 +356,7 @@ function convert_one_db($db)
                     ' COMMENT \''.addslashes($data1['Comment']).'\'');
 
                 if (!$printonly &&
-                    !sql_query($sq, $db_handle))
+                    !sql_query($sq, array(), $db_handle))
                 {
                   echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
                 }
@@ -380,7 +382,7 @@ function convert_one_db($db)
         }
         else
         {
-          if (!sql_query($sq, $db_handle))
+          if (!sql_query($sq, array(), $db_handle))
           {
             echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
           }
@@ -401,7 +403,7 @@ function convert_one_db($db)
     }
     else
     {
-      if (!sql_query($sq, $db_handle))
+      if (!sql_query($sq, array(), $db_handle))
       {
         echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
       }
