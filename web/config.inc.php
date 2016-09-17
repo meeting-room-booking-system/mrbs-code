@@ -34,14 +34,17 @@ namespace MRBS;
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-//$timezone = "Europe/London";
+$timezone = "Europe/London";
 
 
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysqli"=MySQL
+// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL,
+// "mysqli"=MySQL via the mysqli PHP extension
 $dbsys = "mysqli";
+#$dbsys = "pgsql";
+
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
@@ -63,17 +66,76 @@ $db_password = 'mrbs-password';
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
 $db_tbl_prefix = "mrbs_";
-// Set $db_persist to TRUE to use PHP persistent (pooled) database connections.  Note
-// that persistent connections are not recommended unless your system suffers significant
-// performance problems without them.   They can cause problems with transactions and
-// locks (see http://php.net/manual/en/features.persistent-connections.php) and although
-// MRBS tries to avoid those problems, it is generally better not to use persistent
-// connections if you can.
-$db_persist = FALSE;
+// Uncomment this to use PHP persistent (pooled) database connections:
+// $db_persist = true;
 
 
 /* Add lines from systemdefaults.inc.php and areadefaults.inc.php below here
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
 
+$auth['type'] = 'db';
+#$auth['type'] = 'ldap';
+$ldap_host = "localhost";
+$ldap_user_attrib = "cn";
+$ldap_debug = true;
+$ldap_base_dn = 'dc=theberaneks,dc=org,dc=uk';
 
+/* Email settings */
+$mrbs_admin_email = 'john@redux.org.uk';
+$mail_settings['admin_on_bookings']      = true;
+
+$url_base = "https://home.redux.org.uk/mrbs/";
+
+$mail_settings['details']   = TRUE; // Set to TRUE if you want full booking details;
+                                     // otherwise you just get a link to the entry
+$mail_settings['html']      = TRUE; // Set to true if you want HTML mail
+$mail_settings['icalendar'] = TRUE; // Set to TRUE to include iCalendar details
+
+// Set the name of the backend used to transport your mails. Either 'mail',
+// 'smtp' or 'sendmail'. Default is 'mail'.
+#$mail_settings['admin_backend'] = 'mail';
+$mail_settings['admin_backend'] = 'sendmail';
+#$mail_settings['admin_backend'] = 'smtp';
+
+// Set the path of the Sendmail program (only used with "sendmail" backend).
+// Default is '/usr/bin/sendmail'
+$sendmail_settings['path'] = '/usr/sbin/sendmail';
+// Set additional Sendmail parameters (only used with "sendmail" backend).
+// (example "-t -i"). Default is ''
+$sendmail_settings['args'] = '-t -i';
+
+/*******************
+ * SMTP settings
+ */
+  
+// These settings are only used with the "smtp" backend
+$smtp_settings['host'] = 'smtp.gmail.com';  // SMTP server
+$smtp_settings['port'] = 587;           // SMTP port number
+$smtp_settings['auth'] = TRUE;        // Whether to use SMTP authentication
+$smtp_settings['secure'] = 'tls';      // Encryption method: 'tls' or 'ssl'
+$smtp_settings['username'] = 'john.redux@gmail.com';       // Username (if using authentication)
+$smtp_settings['password'] = 'LatticeC9';       // Password (if using authentication)
+ 
+// Set the email address of the From field. Default is 'admin_email@your.org'
+//$mail_settings['from'] = 'john@redux.org.uk';
+$mail_settings['from'] = 'webmaster@redux.org.uk';
+
+// The address to be used for the ORGANIZER in an iCalendar event.   Do not make
+// this email address the same as the admin email address or the recipients
+// email address because on some mail systems, eg IBM Domino, the iCalendar email
+// notification is silently discarded if the organizer's email address is the same
+// as the recipient's.  On other systems you may get a "Meeting not found" message.
+$mail_settings['organizer'] = 'webmaster@redux.org.uk';
+
+// Set the recipient email. Default is 'admin_email@your.org'. You can define
+// more than one recipient like this "john@doe.com,scott@tiger.com"
+//$mail_settings['recipients'] = 'johnb@press.net';
+$mail_settings['recipients'] = 'john@redux.org.uk';
+
+// Set email address of the Carbon Copy field. Default is ''. You can define
+// more than one recipient (see 'recipients')
+$mail_settings['cc'] = '';
+
+error_reporting(-1);
+ini_set('display_errors', '1');

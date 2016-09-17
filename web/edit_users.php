@@ -277,7 +277,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
   {
     // If it's an existing user then get the data from the database
-    $result = sql_query("select * from $tbl_users where id=$Id");
+    $result = sql_query("SELECT * FROM $tbl_users WHERE id=?", array($Id));
     $data = sql_row_keyed($result, 0);
     sql_free($result);
   }
@@ -322,7 +322,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // or admin rights are removed!
           if ($Action == "Edit")
           {
-            $n_admins = sql_query1("select count(*) from $tbl_users where level=$max_level");
+            $n_admins = sql_query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
             $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
           }
           else
@@ -523,7 +523,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 if (isset($Action) && ($Action == "Update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".sql_escape($user)."' LIMIT 1");
+  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
+                      array($user));
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
     Header("Location: edit_users.php");
@@ -623,17 +624,22 @@ if (isset($Action) && ($Action == "Update"))
             $valid_data = FALSE;
             $q_string .= "&name_empty=1";
           }
+
+          $sql_params = array();
+
           // Check that the name is unique.
           // If it's a new user, then to check to see if there are any rows with that name.
           // If it's an update, then check to see if there are any rows with that name, except
           // for that user.
-          $query = "SELECT id FROM $tbl_users WHERE name='" . sql_escape($value) . "'";
+          $query = "SELECT id FROM $tbl_users WHERE name=?";
+          $sql_params[] = $value;
           if ($Id >= 0)
           {
-            $query .= " AND id!='$Id'";
+            $query .= " AND id != ?";
+            $sql_params[] = $Id;
           }
           $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-          $result = sql_query($query);
+          $result = sql_query($query, $params);
           if (sql_count($result) > 0)
           {
             $valid_data = FALSE;
@@ -683,7 +689,8 @@ if (isset($Action) && ($Action == "Update"))
     
     // If we got here, then we've passed validation and we need to
     // enter the data into the database
-    
+
+    $sql_params = array();
     $sql_fields = array();
   
     // For each db column get the value ready for the database
@@ -708,11 +715,11 @@ if (isset($Action) && ($Action == "Update"))
               // Try and set it to NULL when we can because there will be cases when we
               // want to distinguish between NULL and 0 - especially when the field
               // is a genuine integer.
-              $value = ($field['is_nullable']) ? 'NULL' : 0;
+              $value = ($field['is_nullable']) ? null : 0;
             }
             break;
           default:
-            $value = "'" . sql_escape($value) . "'";
+            // No special handling
             break;
         }
        
@@ -733,9 +740,11 @@ if (isset($Action) && ($Action == "Update"))
   
       foreach ($sql_fields as $fieldname => $value)
       {
-        array_push($assign_array, sql_quote($fieldname) . "=$value");
+        array_push($assign_array, sql_quote($fieldname) . "=?");
+        $sql_params[] = $value;
       }
-      $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
+      $operation .= implode(",", $assign_array) . " WHERE id=?";
+      $sql_params[] = $Id;
     }
     else
     {
@@ -747,19 +756,20 @@ if (isset($Action) && ($Action == "Update"))
       foreach ($sql_fields as $fieldname => $value)
       {
         array_push($fields_list,$fieldname);
-        array_push($values_list,$value);
+        array_push($values_list,'?');
+        $sql_params[] = $value;
       }
 
       $fields_list = array_map(__NAMESPACE__ . "\\sql_quote", $fields_list);
       $operation = "INSERT INTO $tbl_users " .
         "(". implode(",", $fields_list) . ")" .
-        " VALUES " . "(" . implode(",", $values_list) . ");";
+        " VALUES " . "(" . implode(",", $values_list) . ")";
     }
   
     /* DEBUG lines - check the actual sql statement going into the db */
     //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
     //exit;
-    $r = sql_command($operation);
+    $r = sql_command($operation, $sql_params);
     if ($r == -1)
     {
       // Get the error message before the print_header() call because the print_header()
@@ -792,7 +802,7 @@ if (isset($Action) && ($Action == "Update"))
 
 if (isset($Action) && ($Action == "Delete"))
 {
-  $target_level = sql_query1("SELECT level FROM $tbl_users WHERE id=$Id LIMIT 1");
+  $target_level = sql_query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($Id));
   if ($target_level < 0)
   {
     fatal_error(TRUE, "Fatal error while deleting a user");
@@ -805,7 +815,7 @@ if (isset($Action) && ($Action == "Delete"))
     exit();
   }
 
-  $r = sql_command("delete from $tbl_users where id=$Id;");
+  $r = sql_command("DELETE FROM $tbl_users WHERE id=?", array($Id));
   if ($r == -1)
   {
     print_header(0, 0, 0, "", "");
