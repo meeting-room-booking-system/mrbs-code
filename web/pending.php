@@ -224,16 +224,19 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
            AND $sql_approval_enabled
            AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 
+$sql_params = array();
+
 // Ordinary users can only see their own bookings       
 if (!$is_admin)
 {
-  $sql .= " AND E.create_by='" . sql_escape($user) . "'";
+  $sql .= " AND E.create_by=?";
+  $sql_params[] = $user;
 }
 // We want entries for a series to appear together so that we can display
 // them as a separate table below the main entry for the series. 
 $sql .= " ORDER BY repeat_id, start_time";
 
-$res = sql_query($sql);
+$res = sql_query($sql, $sql_params);
 if (! $res)
 {
   trigger_error(sql_error(), E_USER_WARNING);

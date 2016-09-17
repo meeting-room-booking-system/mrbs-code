@@ -108,9 +108,9 @@ function sql_quote($identifier)
 
 
 // Run an SQL query that doesn't produce results
-function sql_command($sql)
+function sql_command($sql, $params = array())
 {
-  if (func_num_args() > 1)
+  if (func_num_args() > 2)
   {
     $handle = func_get_arg(1);
     $db_sys = $handle['system'];
@@ -125,15 +125,15 @@ function sql_command($sql)
   }
 
   $f = __NAMESPACE__ . "\\sql_${db_sys}_command";
-  return $f($sql, $db_conn);
+  return $f($sql, $params, $db_conn);
 }
 
 
 // Run an SQL query that returns only one result - returns the result
 // directly. SQL query must select only one column and one row.
-function sql_query1($sql)
+function sql_query1($sql, $params = array())
 {
-  if (func_num_args() > 1)
+  if (func_num_args() > 2)
   {
     $handle = func_get_arg(1);
     $db_sys = $handle['system'];
@@ -148,16 +148,16 @@ function sql_query1($sql)
   }
 
   $f = __NAMESPACE__ . "\\sql_${db_sys}_query1";
-  return $f($sql, $db_conn);
+  return $f($sql, $params, $db_conn);
 }
 
 
 // Run an SQL query that returns a simple one dimensional array of results.
 // The SQL query must select only one column.   Returns an empty array if
 // no results, or FALSE if there's an error
-function sql_query_array($sql)
+function sql_query_array($sql, $params = array())
 {
-  if (func_num_args() > 1)
+  if (func_num_args() > 2)
   {
     $handle = func_get_arg(1);
     $db_conn = $handle['connection'];
@@ -167,7 +167,7 @@ function sql_query_array($sql)
     $db_conn = NULL;
   }
   
-  $res = ($db_conn) ? sql_query($sql, $db_conn) : sql_query($sql);
+  $res = ($db_conn) ? sql_query($sql, $params, $db_conn) : sql_query($sql, $params);
   
   if ($res === FALSE)
   {
@@ -186,9 +186,9 @@ function sql_query_array($sql)
 
 
 // Run a SQL query, returns a result object or FALSE on failure
-function sql_query($sql)
+function sql_query($sql, $params = array())
 {
-  if (func_num_args() > 1)
+  if (func_num_args() > 2)
   {
     $handle = func_get_arg(1);
     $db_sys = $handle['system'];
@@ -202,7 +202,7 @@ function sql_query($sql)
     $db_conn = null;
   }
   $f = __NAMESPACE__ . "\\sql_${db_sys}_query";
-  return $f($sql, $db_conn);
+  return $f($sql, $params, $db_conn);
 }
 
 

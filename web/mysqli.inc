@@ -59,13 +59,18 @@ function sql_mysqli_quote($identifier)
 // Execute a non-SELECT SQL command (insert/update/delete).
 // Returns the number of tuples affected if OK (a number >= 0).
 // Returns -1 on error; use sql_error to get the error message.
-function sql_mysqli_command ($sql, $db_conn = null)
+function sql_mysqli_command ($sql, $params = array(), $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
   
   $ret = -1;
 
-  $sth = $db_conn->query($sql);
+  trigger_error($sql, E_USER_WARNING);
+  trigger_error(print_r($params, true), E_USER_WARNING);
+
+  $sth = $db_conn->prepare($sql);
+  $sth->execute($params);
+  trigger_error(print_r($sth->errorInfo(), true), E_USER_WARNING);
   if ($sth)
   {
     $ret = $sth->rowCount();
@@ -80,17 +85,17 @@ function sql_mysqli_command ($sql, $db_conn = null)
 // exactly one value, so error checking is somewhat limited.
 // It also returns -1 if the query returns a single NULL value, such as from
 // a MIN or MAX aggregate function applied over no rows.
-function sql_mysqli_query1 ($sql, $db_conn = null)
+function sql_mysqli_query1 ($sql, $params = array(), $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $sth = $db_conn->query($sql);
+  $sth = $db_conn->prepare($sql);
   if (!$sth)
   {
-    $error_code = $sth->errorInfo();
-    trigger_error($error_code[2], E_USER_WARNING);
+    trigger_error(mysql_mysqli_error($db_conn), E_USER_WARNING);
     return -1;
   }
+  $sth->execute($params);
 
   if (($sth->rowCount() != 1) || ($sth->columnCount() != 1) ||
       (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL))
@@ -109,7 +114,7 @@ function sql_mysqli_query1 ($sql, $db_conn = null)
 // Execute an SQL query. Returns a database-dependent result handle,
 // which should be passed back to sql_row or sql_row_keyed to get the results.
 // Returns FALSE on error; use sql_error to get the error message.
-function sql_mysqli_query ($sql, $db_conn = null, $params = array())
+function sql_mysqli_query ($sql, $params = array(), $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
@@ -191,7 +196,7 @@ function sql_mysqli_error($db_conn = null)
 // improve performance for multiple insert/delete/updates.
 function sql_mysqli_begin($db_conn = null)
 {
-  $result = sql_mysqli_command("START TRANSACTION", $db_conn);
+  $result = sql_mysqli_command("START TRANSACTION", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -203,7 +208,7 @@ function sql_mysqli_begin($db_conn = null)
 // Commit (end) a transaction. See sql_begin().
 function sql_mysqli_commit($db_conn = null)
 {
-  $result = sql_mysqli_command("COMMIT", $db_conn);
+  $result = sql_mysqli_command("COMMIT", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -215,7 +220,7 @@ function sql_mysqli_commit($db_conn = null)
 // Rollback a transaction. See sql_begin().
 function sql_mysqli_rollback($db_conn = null)
 {
-  $result = sql_mysqli_command("ROLLBACK", $db_conn);
+  $result = sql_mysqli_command("ROLLBACK", array(), $db_conn);
   
   if ($result < 0)
   {
@@ -278,7 +283,7 @@ function sql_mysqli_mutex_unlock($name, $db_conn = null)
   sql_mysqli_ensure_handle($db_conn);
 
   global $sql_mysqli_mutex_unlock_name;
-  sql_mysqli_query1("SELECT RELEASE_LOCK('$name')", $db_conn);
+  sql_mysqli_query1("SELECT RELEASE_LOCK('$name')", array(), $db_conn);
   $sql_mysqli_mutex_unlock_name = NULL;
 }
 
@@ -295,7 +300,7 @@ function sql_mysqli_cleanup($db_conn = null)
   }
   
   // Rollback any outstanding transactions
-  sql_mysqli_rollback($db_conn);
+//  sql_mysqli_rollback($db_conn);
 }
 
 
@@ -304,7 +309,7 @@ function sql_mysqli_version($db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $r = sql_mysqli_query("select version()", $db_conn);
+  $r = sql_mysqli_query("select version()", array(), $db_conn);
   $v = sql_mysqli_row($r, 0, $db_conn);
   sql_mysqli_free($r, $db_conn);
 
@@ -339,7 +344,7 @@ function sql_mysqli_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  return " BINARY " . sql_mysqli_quote($fieldname) . "='" . sql_mysqli_escape($s) . "'";
+  return " BINARY " . sql_mysqli_quote($fieldname) . "=?";
 }
 
 // Generate non-standard SQL to match a string anywhere in a field's value
@@ -441,7 +446,7 @@ function sql_mysqli_table_exists($table, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $res = sql_mysqli_query1("SHOW TABLES LIKE '" . sql_mysqli_escape($table) . "'", $db_conn);
+  $res = sql_mysqli_query1("SHOW TABLES LIKE ?", array($table), $db_conn);
   
   return ($res == -1) ? FALSE : TRUE;
 }
@@ -487,7 +492,7 @@ function sql_mysqli_field_info($table, $db_conn = null)
                      'smallint'  => 2,
                      'tinyint'   => 1);
   
-  $res = sql_mysqli_query("SHOW COLUMNS FROM $table");
+  $res = sql_mysqli_query("SHOW COLUMNS FROM $table", array(), $db_conn);
   if ($res === FALSE)
   {
     trigger_error(mysql_mysqi_error($db_conn), E_USER_WARNING);

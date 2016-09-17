@@ -6,7 +6,7 @@ namespace MRBS;
 global $admin_handle;
 global $tbl_users;
 
-$nusers = sql_query1("select count(*) from $tbl_users", $admin_handle);
+$nusers = sql_query1("select count(*) from $tbl_users", array(), $admin_handle);
 
 if ($nusers == -1)   /* If the table does not exist */
 {         /* Then create it */
@@ -25,7 +25,7 @@ CREATE TABLE $tbl_users
 
   PRIMARY KEY (id)
 );";
-  $r = sql_command($cmd, $admin_handle);
+  $r = sql_command($cmd, array(), $admin_handle);
   if ($r == -1)
   {
     // No need to localize this: Only the admin running this for the first time would see it.

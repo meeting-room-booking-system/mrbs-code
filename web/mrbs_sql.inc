@@ -178,7 +178,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
                 FROM $tbl_entry E, $tbl_room R
                WHERE E.start_time<$interval_end
                  AND E.end_time>$interval_start
-                 AND E.create_by='" . sql_escape($booking['create_by']) . "'
+                 AND E.create_by=?
                  AND E.room_id=R.id
                  AND R.disabled=0";
       if ($only_area)
@@ -194,7 +194,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
         $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> $repignore)";
       }
       
-      $existing[$location][$interval_type][$interval_start] = sql_query1($sql);
+      $existing[$location][$interval_type][$interval_start] = sql_query1($sql, array($booking['create_by']));
       if ($existing[$location][$interval_type][$interval_start] < 0)
       {
         fatal_error(FALSE, get_vocab("fatal_db_error"));
@@ -613,7 +613,9 @@ function mrbsCreateEntry($table, $data)
   $table_no_prefix = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
     
   $fields = sql_field_info($table);
-  
+
+  $sql_params = array();
+
   foreach ($fields as $field)
   {
     $key = $field['name'];
@@ -646,7 +648,8 @@ function mrbsCreateEntry($table, $data)
         case 'status':
         case 'ical_sequence':
           $sql_col[] = $key;
-          $sql_val[] = (isset($data[$key])) ? (int)$data[$key] : 'NULL';
+          $sql_val[] = '?';
+          $sql_params[] = (isset($data[$key])) ? (int)$data[$key] : null;
           break;
         
         // strings  
@@ -659,14 +662,16 @@ function mrbsCreateEntry($table, $data)
         case 'ical_uid':
         case 'ical_recur_id':
           $sql_col[] = $key;
-          $sql_val[] = (isset($data[$key])) ? "'" . sql_escape($data[$key]) . "'" : 'NULL';
+          $sql_val[] = '?';
+          $sql_params[] = (isset($data[$key])) ? $data[$key] : null;
           break;
       
         // special case - rep_opt
         case 'rep_opt':
           // pgsql doesn't like empty strings
           $sql_col[] = $key;
-          $sql_val[] = (empty($data[$key])) ? "'0'" : "'" . sql_escape($data[$key]) . "'";
+          $sql_val[] = '?';
+          $sql_params[] = (empty($data[$key])) ? "'0'" : $data[$key];
           break;
           
         // special case - rep_num_weeks
@@ -674,7 +679,8 @@ function mrbsCreateEntry($table, $data)
           if (!empty($data[$key]))
           {
             $sql_col[] = $key;
-            $sql_val[] = $data[$key];
+            $sql_val[] = '?';
+            $sql_params[] = $data[$key];
           }
           break;
         
@@ -693,7 +699,7 @@ function mrbsCreateEntry($table, $data)
                   // Try and set it to NULL when we can because there will be cases when we
                   // want to distinguish between NULL and 0 - especially when the field
                   // is a genuine integer.
-                  $value = ($field['is_nullable']) ? 'NULL' : 0;
+                  $value = ($field['is_nullable']) ? null : 0;
                 }
                 else
                 {
@@ -703,16 +709,17 @@ function mrbsCreateEntry($table, $data)
               default:
                 if (!isset($data[$key]))
                 {
-                  $value = ($field['is_nullable']) ? 'NULL' : '';
+                  $value = ($field['is_nullable']) ? null : '';
                 }
                 else
                 {
-                  $value = "'" . sql_escape($data[$key]) . "'";
+                  $value = $data[$key];
                 }
                 break;
             } // switch ($field_natures[$key])
             
-            $sql_val[] = $value;
+            $sql_val[] = '?';
+            $sql_params[] = $value;
           }
           // do nothing for fields that aren't custom or otherwise listed above
           break;
@@ -723,8 +730,8 @@ function mrbsCreateEntry($table, $data)
   
   $sql_col = array_map(__NAMESPACE__ . "\\sql_quote", $sql_col);
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-  
-  if (sql_command($sql) < 0)
+
+  if (sql_command($sql, $sql_params) < 0)
   {
     // probably because the table hasn't been created properly
     trigger_error(sql_error(), E_USER_WARNING);

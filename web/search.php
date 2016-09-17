@@ -195,10 +195,12 @@ $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
 // NOTE: sql_syntax_caseless_contains() does the SQL escaping
-    
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str);
+
+$sql_params = array();
+$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", '?')
+  . " OR " . sql_syntax_caseless_contains("E.name", '?')
+  . " OR " . sql_syntax_caseless_contains("E.description", '?');
+array_push($sql_params, $search_str, $search_str, $search_str);
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
@@ -218,7 +220,8 @@ foreach ($fields as $field)
         // assume PHP5
         if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
         {
-          $sql_pred .= " OR E." . sql_quote($field['name']) . "='" . sql_escape($key) . "'";
+          $sql_pred .= " OR E." . sql_quote($field['name']) . "=?";
+          array_push($sql_params, $key);
         }
       }
     }
@@ -246,8 +249,9 @@ if (!$is_admin)
     //   - their own bookings, and others' public bookings if private_override is set to 'none'
     //   - just their own bookings, if private_override is set to 'private'
     $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
-                        (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
+                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = ? OR
+                        (A.private_override='private' AND E.create_by = ?))";
+    array_push($sql_params, $user, $user);                
   }
   else
   {
@@ -266,7 +270,7 @@ if (!isset($total))
 {
   $total = sql_query1("SELECT count(*)
                        FROM $tbl_entry E, $tbl_room R, $tbl_area A
-                       WHERE $sql_pred");
+                       WHERE $sql_pred", $sql_params);
 }
 if ($total < 0)
 {
@@ -308,7 +312,7 @@ if (!$ajax_capable || $ajax)
 
 
   // this is a flag to tell us not to display a "Next" link
-  $result = sql_query($sql);
+  $result = sql_query($sql, $sql_params);
   if (! $result)
   {
     trigger_error(sql_error(), E_USER_WARNING);

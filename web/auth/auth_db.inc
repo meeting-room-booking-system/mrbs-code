@@ -50,7 +50,7 @@ function authValidateUser($user, $pass)
          "
            LIMIT 1";
 
-  $res = sql_query($sql);
+  $res = sql_query($sql, array(utf8_strtolower($user)));
   if ($res == FALSE)
   {
     trigger_error(sql_error(), E_USER_WARNING);
@@ -101,11 +101,12 @@ function authValidateUser($user, $pass)
   if ($do_rehash)
   {
     $sql = "UPDATE $tbl_users
-           SET password_hash='".
-      sql_escape(password_hash($pass, PASSWORD_DEFAULT)) ."'
+           SET password_hash=?
            WHERE " .
       sql_syntax_casesensitive_equals('name', utf8_strtolower($user));
-    sql_command($sql);
+    sql_command($sql,
+                array(password_hash($pass, PASSWORD_DEFAULT),
+                      utf8_strtolower($user)));
   }
 
   return $result;
@@ -129,7 +130,8 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . sql_escape(utf8_strtolower($user)) . "' LIMIT 1");
+  $result = sql_query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
+                       array(utf8_strtolower($user)));
 
   return ($result == -1) ? 0 : $result;
 }
@@ -148,10 +150,10 @@ function authGetUserEmail($user)
   
   $sql = "SELECT email 
             FROM $tbl_users 
-           WHERE name='" . sql_escape($user) . "'
+           WHERE name=?
            LIMIT 1";
            
-  $email = sql_query1($sql);
+  $email = sql_query1($sql, array($user));
   
   return ($email == -1) ? '' : $email;
 }
