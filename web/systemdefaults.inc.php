@@ -700,7 +700,7 @@ $auth["params"] = "";
 // In the future we might want a higher level of granularity, eg to distinguish between
 // different levels of admin
 $max_level = 2;
-// The lowest level of admin allowed to edit other users
+// The lowest level of admin allowed to view other users
 $min_user_viewing_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
