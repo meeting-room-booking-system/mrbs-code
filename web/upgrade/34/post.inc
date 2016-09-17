@@ -43,10 +43,10 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 foreach ($mods as $id => $month_relative)
 {
   $sql = "UPDATE $tbl_repeat
-             SET month_relative='" . sql_escape($month_relative) . "',
+             SET month_relative=?,
                  rep_type=" . REP_MONTHLY . "
-           WHERE id=$id";
-  if (sql_command($sql) < 0)
+           WHERE id=?";
+  if (sql_command($sqlm array($month_relative, $id)) < 0)
   {
     trigger_error(sql_error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));

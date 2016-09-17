@@ -72,28 +72,6 @@ function sql_free($r)
 }
 
 
-// Escapes special characters in a string for use in an SQL statement
-function sql_escape($str)
-{
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-  
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_escape";
-  return $f($str, $db_conn);
-}
-
-
 // Quote a table or column name
 // NOTE:  In PostgreSQL the identifier is also converted to lower case.  See
 // the comments in pgsql.inc for an explanation.

@@ -112,10 +112,10 @@ function get_vtimezone($tz)
   // Look and see if there's a component in the database
   $sql = "SELECT vtimezone, last_updated
             FROM $tbl_zoneinfo
-           WHERE timezone='" . sql_escape($tz) . "'
-             AND outlook_compatible=$zoneinfo_outlook_compatible
+           WHERE timezone=?
+             AND outlook_compatible=?
            LIMIT 1";
-  $res = sql_query($sql);
+  $res = sql_query($sql, array($tz,$zoneinfo_outlook_compatible));
   if ($res === FALSE)
   {
     trigger_error(sql_error(), E_USER_WARNING);
@@ -174,11 +174,11 @@ function get_vtimezone($tz)
       // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
       // access, so there's no point in retrying for a while).
       $sql = "UPDATE $tbl_zoneinfo
-                 SET vtimezone='" . sql_escape($vtimezone) . "',
-                     last_updated=" . time() . "
-               WHERE timezone='" . sql_escape($tz) . "'
-                 AND outlook_compatible=$zoneinfo_outlook_compatible";
-      if (sql_command($sql) < 0)
+                 SET vtimezone=?,
+                     last_updated=?
+               WHERE timezone=?
+                 AND outlook_compatible=?";
+      if (sql_command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible)) < 0)
       {
         trigger_error(sql_error(), E_USER_WARNING);
         fatal_error(FALSE, get_vocab("fatal_db_error"));
@@ -199,11 +199,11 @@ function get_vtimezone($tz)
       {
         $sql = "INSERT INTO $tbl_zoneinfo
                 (timezone, outlook_compatible, vtimezone, last_updated)
-                VALUES ('" . sql_escape($tz) . "', 
-                        $zoneinfo_outlook_compatible,
-                        '" . sql_escape($vtimezone) . "', " .
-                        time() . ")";
-        if (sql_command($sql) < 0)
+                VALUES (?,
+                        ?,
+                        ?,
+                        ?)";
+        if (sql_command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time())) < 0)
         {
           trigger_error(sql_error(), E_USER_WARNING);
           fatal_error(FALSE, get_vocab("fatal_db_error"));
@@ -311,8 +311,8 @@ function get_create_by($organizer)
   // If we're using the 'db' auth rtpe, then look the username up in the users table
   if ($auth['type'] == 'db')
   {
-    $sql = "SELECT name FROM $tbl_users WHERE email='" . sql_escape($email) . "'";
-    $res = sql_query($sql);
+    $sql = "SELECT name FROM $tbl_users WHERE email=?";
+    $res = sql_query($sql, array($email));
     if ($res === FALSE)
     {
       trigger_error(sql_error(), E_USER_WARNING);

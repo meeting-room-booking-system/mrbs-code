@@ -18,16 +18,12 @@ foreach ($fields as $field)
     {
       $sql_val = ($area_defaults[$key]) ? 1 : 0;
     }
-    elseif ($field['nature'] == 'integer')
+    else
     {
       $sql_val = $area_defaults[$key];
     }
-    else
-    {
-      $sql_val = "'" . sql_escape($area_defaults[$key]) . "'";
-    }
-    $sql = "UPDATE $tbl_area SET $key=$sql_val WHERE $key IS NULL";
-    $res = sql_command($sql);
+    $sql = "UPDATE $tbl_area SET $key=? WHERE $key IS NULL";
+    $res = sql_command($sql, array($sql_val));
     if ($res == -1)
     {
       // No need to localise, should never happen

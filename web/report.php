@@ -1133,7 +1133,8 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 function get_match_condition($full_column_name, $match)
 {
   global $select_options, $field_natures, $field_lengths;
-  
+
+  $sql_params = array();  
   $sql = '';
   
   // First simple case: no match required
@@ -1176,7 +1177,8 @@ function get_match_condition($full_column_name, $match)
       if (($option_key !== '') &&
           (strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
       {
-        $or_array[] = "$full_column_name='" . sql_escape($option_key) . "'";
+        $or_array[] = "$full_column_name=?";
+        $sql_params[] = $option_key;
       }
     }
     if (count($or_array) > 0)
@@ -1371,6 +1373,7 @@ if ($phase == 2)
   $report_end = mktime(0, 0, 0, $to_month+0, $to_day+1, $to_year+0);
   
   // Construct the SQL query
+  $sql_params = array();
   $sql = "SELECT E.*, "
        .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
@@ -1389,7 +1392,9 @@ if ($phase == 2)
     $sql .= " LEFT JOIN $tbl_repeat T ON E.repeat_id=T.id";
   }
   $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
-        . " AND E.start_time < $report_end AND E.end_time > $report_start";
+        . " AND E.start_time < ? AND E.end_time > ?";
+  $sql_params[] = $report_end;
+  $sql_params[] = $report_start;
   if ($output_format == OUTPUT_ICAL)
   {
     // We can't export periods in an iCalendar yet
@@ -1405,7 +1410,7 @@ if ($phase == 2)
                         
   foreach ($match_columns as $column => $match)
   {
-    $sql .= get_match_condition($column, $match);
+    $sql .= get_match_condition($column, $match, $sql_params);
   }
   
   // Then do the special cases
@@ -1417,6 +1422,7 @@ if ($phase == 2)
     {
       // sql_syntax_casesensitive_equals() does the SQL escaping
       $or_array[] = sql_syntax_casesensitive_equals('E.type', $type);
+      $sql_params[] = $type;
     }
     $sql .= "(". implode(" OR ", $or_array ) .")";
   }
@@ -1453,7 +1459,7 @@ if ($phase == 2)
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
-    $sql .= get_match_condition("E.$key", $$var);
+    $sql .= get_match_condition("E.$key", $$var, $sql_params);
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
@@ -1469,8 +1475,10 @@ if ($phase == 2)
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
-                     (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
+                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = ?)) OR
+                     (A.private_override='private' AND E.create_by = ?))";
+      $sql_params[] = $user;
+      $sql_params[] = $user;
     }
     else
     {
@@ -1501,7 +1509,7 @@ if ($phase == 2)
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
 
-  $res = sql_query($sql);
+  $res = sql_query($sql, $sql_params);
   if (! $res)
   {
     trigger_error(sql_error(), E_USER_WARNING);

@@ -67,15 +67,6 @@ function sql_pgsql_free ($sth, $db_conn = null)
 }
 
 
-// Escapes special characters in a string for use in an SQL statement
-function sql_pgsql_escape($str, $db_conn = null)
-{
-  sql_pgsql_ensure_handle($db_conn);
-  
-  return addslashes($str);
-}
-
-
 // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
 
 // NOTE:  We fold the identifier to lower case here even though it is quoted.   Unlike MySQL,

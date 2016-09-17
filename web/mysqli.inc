@@ -38,15 +38,6 @@ function sql_mysqli_free ($sth, $db_conn = null)
 }
 
 
-// Escapes special characters in a string for use in an SQL statement
-function sql_mysqli_escape($str, $db_conn = null)
-{
-  sql_mysqli_ensure_handle($db_conn);
-
-  return addslashes($str);
-}
-
-
 // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
 function sql_mysqli_quote($identifier)
 {
