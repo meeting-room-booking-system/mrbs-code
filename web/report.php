@@ -1154,8 +1154,8 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   // bother with complicated things such as custom fields or select_options
   if ($table != 'entry')
   { 
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
+    // sql_syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match, $sql_params);
     return $sql;
   }
   
@@ -1208,8 +1208,8 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   // (4) Strings
   else
   {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
+    // sql_syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match, $sql_params);
   }
   
   return $sql;

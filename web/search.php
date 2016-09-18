@@ -194,12 +194,12 @@ if (!$ajax)
 $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
-// NOTE: sql_syntax_caseless_contains() does the SQL escaping
+// NOTE: sql_syntax_caseless_contains() modifies our SQL params for us
 
 $sql_params = array();
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str);
+$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str, $sql_params)
+  . " OR " . sql_syntax_caseless_contains("E.name", $search_str, $sql_params)
+  . " OR " . sql_syntax_caseless_contains("E.description", $search_str, $sql_params);
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
@@ -226,7 +226,7 @@ foreach ($fields as $field)
     }
     elseif ($field['nature'] == 'character')
     {
-      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str);
+      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str, $sql_params);
     }
   }
 }

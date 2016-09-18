@@ -388,16 +388,20 @@ function sql_pgsql_syntax_casesensitive_equals($fieldname, $string, &$params, $d
 
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
+//
+// Also takes a required pass-by-reference parameter to modify the SQL
+// parameters appropriately.
+//
 // In PostgreSQL, we can do case insensitive regexp with ~*, but not case
 // insensitive LIKE matching.
 // Quotemeta escapes everything we need except for single quotes.
-function sql_pgsql_syntax_caseless_contains($fieldname, $s, $db_conn = null)
+function sql_pgsql_syntax_caseless_contains($fieldname, $string, &$params, $db_conn = null)
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $s = quotemeta($s);
-  $s = str_replace("'", "''", $s);
-  return " $fieldname ~* '$s' ";
+  $sql_params[] = quotemeta($string);
+
+  return " $fieldname ~* ? ";
 }
 
 

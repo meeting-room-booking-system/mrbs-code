@@ -523,11 +523,11 @@ function sql_syntax_casesensitive_equals($fieldname, $string, &$params)
 
 
 // Returns the syntax for a caseless "contains" function
-function sql_syntax_caseless_contains($fieldname, $s)
+function sql_syntax_caseless_contains($fieldname, $string, &$params)
 {
-  if (func_num_args() > 2)
+  if (func_num_args() > 3)
   {
-    $handle = func_get_arg(2);
+    $handle = func_get_arg(3);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -540,7 +540,7 @@ function sql_syntax_caseless_contains($fieldname, $s)
   }
 
   $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_caseless_contains";
-  return $f($fieldname, $s, $db_conn);
+  return $f($fieldname, $string, $params, $db_conn);
 }
 
 // Returns the syntax for adding a column after another column, in an

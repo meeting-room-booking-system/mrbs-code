@@ -346,17 +346,23 @@ function sql_mysqli_syntax_casesensitive_equals($fieldname, $string, &$params, $
 
 // Generate non-standard SQL to match a string anywhere in a field's value
 // in a case insensitive manner. $s is the un-escaped/un-slashed string.
+//
+// Also takes a required pass-by-reference parameter to modify the SQL
+// parameters appropriately.
+//
 // In MySQL, REGEXP seems to be case sensitive, so use LIKE instead. But this
 // requires quoting of % and _ in addition to the usual.
-function sql_mysqli_syntax_caseless_contains($fieldname, $s, $db_conn = null)
+function sql_mysqli_syntax_caseless_contains($fieldname, $string, &$params, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
 
-  $s = str_replace("\\", "\\\\", $s);
-  $s = str_replace("%", "\\%", $s);
-  $s = str_replace("_", "\\_", $s);
-  $s = str_replace("'", "''", $s);
-  return " $fieldname LIKE '%$s%' ";
+  $string = str_replace("\\", "\\\\", $string);
+  $string = str_replace("%", "\\%", $string);
+  $string = str_replace("_", "\\_", $string);
+
+  $params[] = "%$string%";
+
+  return " $fieldname LIKE ? ";
 }
 
 
