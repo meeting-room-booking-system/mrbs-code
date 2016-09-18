@@ -399,7 +399,7 @@ function sql_pgsql_syntax_caseless_contains($fieldname, $string, &$params, $db_c
 {
   sql_pgsql_ensure_handle($db_conn);
 
-  $sql_params[] = quotemeta($string);
+  $params[] = quotemeta($string);
 
   return " $fieldname ~* ? ";
 }
