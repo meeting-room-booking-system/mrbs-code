@@ -1419,9 +1419,8 @@ if ($phase == 2)
     $or_array = array();
     foreach ( $typematch as $type )
     {
-      // sql_syntax_casesensitive_equals() does the SQL escaping
-      $or_array[] = sql_syntax_casesensitive_equals('E.type', $type);
-      $sql_params[] = $type;
+      // sql_syntax_casesensitive_equals() modifies our SQL params array for us
+      $or_array[] = sql_syntax_casesensitive_equals('E.type', $type, $sql_params);
     }
     $sql .= "(". implode(" OR ", $or_array ) .")";
   }

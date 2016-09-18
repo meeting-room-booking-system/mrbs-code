@@ -39,6 +39,8 @@ function authValidateUser($user, $pass)
   global $tbl_users;
   $result = 0;
 
+  $sql_params = array();
+
   // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
@@ -46,11 +48,11 @@ function authValidateUser($user, $pass)
   $sql = "SELECT password_hash
             FROM $tbl_users
            WHERE " .
-         sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) .
+         sql_syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
          "
            LIMIT 1";
 
-  $res = sql_query($sql, array(utf8_strtolower($user)));
+  $res = sql_query($sql, $sql_params);
   if ($res == FALSE)
   {
     trigger_error(sql_error(), E_USER_WARNING);
@@ -100,13 +102,12 @@ function authValidateUser($user, $pass)
 
   if ($do_rehash)
   {
+    $sql_params = array(password_hash($pass, PASSWORD_DEFAULT));
     $sql = "UPDATE $tbl_users
            SET password_hash=?
            WHERE " .
-      sql_syntax_casesensitive_equals('name', utf8_strtolower($user));
-    sql_command($sql,
-                array(password_hash($pass, PASSWORD_DEFAULT),
-                      utf8_strtolower($user)));
+      sql_syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params);
+    sql_command($sql, $sql_params);
   }
 
   return $result;

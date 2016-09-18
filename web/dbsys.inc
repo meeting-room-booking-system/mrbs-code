@@ -90,7 +90,7 @@ function sql_command($sql, $params = array())
 {
   if (func_num_args() > 2)
   {
-    $handle = func_get_arg(1);
+    $handle = func_get_arg(2);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -113,7 +113,7 @@ function sql_query1($sql, $params = array())
 {
   if (func_num_args() > 2)
   {
-    $handle = func_get_arg(1);
+    $handle = func_get_arg(2);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -137,7 +137,7 @@ function sql_query_array($sql, $params = array())
 {
   if (func_num_args() > 2)
   {
-    $handle = func_get_arg(1);
+    $handle = func_get_arg(2);
     $db_conn = $handle['connection'];
   }
   else
@@ -168,7 +168,7 @@ function sql_query($sql, $params = array())
 {
   if (func_num_args() > 2)
   {
-    $handle = func_get_arg(1);
+    $handle = func_get_arg(2);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -475,7 +475,7 @@ function sql_syntax_timestamp_to_unix($fieldname)
 {
   if (func_num_args() > 1)
   {
-    $handle = func_get_arg(1);
+    $handle = func_get_arg(2);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -493,15 +493,19 @@ function sql_syntax_timestamp_to_unix($fieldname)
 
 
 // Returns the syntax for a case sensitive string "equals" function
+//
+// Also takes a required pass-by-reference parameter to modify the SQL
+// parameters appropriately.
+//
 // (By default MySQL is case insensitive, whereas PostgreSQL is not)
 // NB:  This function is also assumed to do a strict comparison, ie
 // take account of training spaces.  (The '=' comparison in MySQL allows
 // trailing spaces, eg 'john' = 'john ').
-function sql_syntax_casesensitive_equals($fieldname, $s)
+function sql_syntax_casesensitive_equals($fieldname, $string, &$params)
 {
-  if (func_num_args() > 2)
+  if (func_num_args() > 3)
   {
-    $handle = func_get_arg(2);
+    $handle = func_get_arg(3);
     $db_sys = $handle['system'];
     $db_conn = $handle['connection'];
   }
@@ -514,7 +518,7 @@ function sql_syntax_casesensitive_equals($fieldname, $s)
   }
 
   $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_casesensitive_equals";
-  return $f($fieldname, $s, $db_conn);
+  return $f($fieldname, $string, $params, $db_conn);
 }
 
 

@@ -516,6 +516,9 @@ if ($phase == 2)
       {
         $capacity = 0;
       }
+
+      // Used purely for the sql_syntax_casesensitive_equals() call below, and then ignored
+      $sql_params = array();
     
       // Acquire a mutex to lock out others who might be deleting the new area
       if (!sql_mutex_lock($tbl_area))
@@ -531,11 +534,12 @@ if ($phase == 2)
       // (only do this if you're changing the room name or the area - if you're
       // just editing the other details for an existing room we don't want to reject
       // the edit because the room already exists!)
-      // [sql_syntax_casesensitive_equals() inserts a param placeholder, so we must pass the param to sql_query1()]
+      // [sql_syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
+      //  keep the flow of this elseif block]
       elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
               && sql_query1("SELECT COUNT(*)
                                FROM $tbl_room
-                              WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name) . "
+                              WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
                                 AND area_id=?
                               LIMIT 1", array($room_name, $new_area)) > 0)
       {

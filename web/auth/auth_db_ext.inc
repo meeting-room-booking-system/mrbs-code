@@ -62,13 +62,18 @@ function authValidateUser($user, $pass)
                       $persist,
                       $port);
 
-  // sql_syntax_casesensitive_equals() inserts a param placeholder so we must pass the param.   We need an exact match -
+  // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
+
+  $sql_params = array();
+
   $query = "SELECT " . sql_quote($auth['db_ext']['column_name_password']) .
             " FROM " . sql_quote($auth['db_ext']['db_table']) .
-           " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user));
+           " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                       utf8_strtolower($user),
+                                                       $sql_params);
 
-  $r = sql_query($query, array(utf8_strtolower($user)), $conn);
+  $r = sql_query($query, $sql_params, $conn);
   
   if ($r === FALSE)
   {
@@ -173,14 +178,18 @@ function authGetUserLevel($user)
                          $persist,
                          $port);
 
-     // sql_syntax_casesensitive_equals() inserts a param placeholder, so we need to pass the param.   We need an exact match -
+     // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
      // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
+
+     $sql_params = array();
      $query = "SELECT " . sql_quote($auth['db_ext']['column_name_level']) . "
                  FROM " . sql_quote($auth['db_ext']['db_table']) . "
-                WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user)) . "
+                WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                          utf8_strtolower($user),
+                                                          $sql_params) . "
                 LIMIT 1";
 
-     $r = sql_query($query, array(utf8_strtolower($user), $conn);
+     $r = sql_query($query, $sql_params, $conn);
      
      if ($r === FALSE)
      {
@@ -235,14 +244,18 @@ function authGetUserEmail($user)
                       $persist,
                       $port);
 
-  // sql_syntax_casesensitive_equals() inserts a param placeholder, so we need to pass the param.   We need an exact match -
+  // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
+
+  $sql_params = array();
   $query = "SELECT " . sql_quote($auth['db_ext']['column_name_email']) . "
               FROM " . sql_quote($auth['db_ext']['db_table']) . "
-             WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'], utf8_strtolower($user)) . "
+             WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                       utf8_strtolower($user),
+                                                       $sql_params) . "
              LIMIT 1";
 
-  $r = sql_query($query, array(utf8_strtolower($user)), $conn);
+  $r = sql_query($query, $sql_params), $conn);
   
   if ($r === FALSE)
   {

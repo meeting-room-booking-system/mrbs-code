@@ -328,12 +328,18 @@ function sql_mysqli_syntax_timestamp_to_unix($fieldname, $db_conn = null)
 
 // Returns the syntax for a case sensitive string "equals" function
 // (By default MySQL is case insensitive, so we force a binary comparison)
+//
+// Also takes a required pass-by-reference parameter to modify the SQL
+// parameters appropriately.
+//
 // NB:  This function is also assumed to do a strict comparison, ie
 // take account of training spaces.  (The '=' comparison in MySQL allows
 // trailing spaces, eg 'john' = 'john ').
-function sql_mysqli_syntax_casesensitive_equals($fieldname, $s, $db_conn = null)
+function sql_mysqli_syntax_casesensitive_equals($fieldname, $string, &$params, $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
+
+  $params[] = $string;
 
   return " BINARY " . sql_mysqli_quote($fieldname) . "=?";
 }
