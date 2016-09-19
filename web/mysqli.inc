@@ -1,6 +1,6 @@
 <?php
 namespace MRBS;
-use PDO;
+use PDO, PDOException;
 
 // $Id$
 
