@@ -9,9 +9,7 @@ namespace MRBS;
 *
 *   Notes           To use this authentication scheme, set in config.inc.php:
 *         $auth["type"]  = "db_ext";
-*                   Assumes passwords are stored in the other table in
-*                   plaintext, authValidateUser() will need to be changed if
-*                   the password is stored differently.
+*                   Supports passwords stored in a variety of formats.
 *
 *   History
 *    Available in the source control system
@@ -111,6 +109,13 @@ function authValidateUser($user, $pass)
       case 'crypt':
         $recrypt = crypt($pass,$row[0]);
         if ($row[0] == $recrypt)
+        {
+          $retval = 1;
+        }
+        break;
+
+      case 'password_hash':
+        if (password_verify($pass, $row[0]))
         {
           $retval = 1;
         }
@@ -255,7 +260,7 @@ function authGetUserEmail($user)
                                                        $sql_params) . "
              LIMIT 1";
 
-  $r = sql_query($query, $sql_params), $conn);
+  $r = sql_query($query, $sql_params, $conn);
   
   if ($r === FALSE)
   {
