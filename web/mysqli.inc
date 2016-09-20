@@ -585,6 +585,13 @@ function sql_mysqli_connect($host, $username, $password,
   catch (PDOException $e)
   {
     trigger_error($e->getMessage(), E_USER_WARNING);
+    if ($e->getCode() == 2054)
+    {
+      $message = "It looks like you have an old style MySQL password stored, which cannot be " .
+                 "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
+                 "deleting the MySQL user and recreating it with the same password.";
+      trigger_error($message, E_USER_WARNING);
+    }
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
   }
