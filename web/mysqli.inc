@@ -53,19 +53,24 @@ function sql_mysqli_quote($identifier)
 function sql_mysqli_command ($sql, $params = array(), $db_conn = null)
 {
   sql_mysqli_ensure_handle($db_conn);
-  
+ 
   $ret = -1;
-
-  trigger_error($sql, E_USER_WARNING);
-  trigger_error(print_r($params, true), E_USER_WARNING);
-
-  $sth = $db_conn->prepare($sql);
-  $sth->execute($params);
-  trigger_error(print_r($sth->errorInfo(), true), E_USER_WARNING);
+  
+  try
+  {
+    $sth = $db_conn->prepare($sql);
+    $sth->execute($params);
+  }
+  catch (PDOException $e)
+  {
+    return $ret;
+  }
+  
   if ($sth)
   {
     $ret = $sth->rowCount();
   }
+  
   return $ret;
 }
 
@@ -585,6 +590,13 @@ function sql_mysqli_connect($host, $username, $password,
   catch (PDOException $e)
   {
     trigger_error($e->getMessage(), E_USER_WARNING);
+    if ($e->getCode() == 2054)
+    {
+      $message = "It looks like you have an old style MySQL password stored, which cannot be " .
+                 "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
+                 "deleting the MySQL user and recreating it with the same password.";
+      trigger_error($message, E_USER_WARNING);
+    }
     echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
     exit;
   }
