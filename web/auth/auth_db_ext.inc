@@ -16,6 +16,7 @@ namespace MRBS;
 *
 ******************************************************************************/
 
+global $auth;
 
 if (empty($auth['db_ext']['db_system']))
 {
@@ -25,13 +26,13 @@ if (empty($auth['db_ext']['db_system']))
 $persist = 0;
 $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
   
-static $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
-                                        $auth['db_ext']['db_host'],
-                                        $auth['db_ext']['db_username'],
-                                        $auth['db_ext']['db_password'],
-                                        $auth['db_ext']['db_name'],
-                                        $persist,
-                                        $port);
+$db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
+                                 $auth['db_ext']['db_host'],
+                                 $auth['db_ext']['db_username'],
+                                 $auth['db_ext']['db_password'],
+                                 $auth['db_ext']['db_name'],
+                                 $persist,
+                                 $port);
 
 
 /* authValidateUser($user, $pass)

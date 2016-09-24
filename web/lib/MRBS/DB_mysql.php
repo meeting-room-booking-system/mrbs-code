@@ -241,7 +241,7 @@ class DB_mysql extends DB
   // NB:  This function is also assumed to do a strict comparison, ie
   // take account of training spaces.  (The '=' comparison in MySQL allows
   // trailing spaces, eg 'john' = 'john ').
-  public function casesensitive_equals($fieldname, $string, &$params)
+  public function syntax_casesensitive_equals($fieldname, $string, &$params)
   {
     $params[] = $string;
 
