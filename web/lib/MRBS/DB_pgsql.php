@@ -2,6 +2,9 @@
 
 namespace MRBS;
 
+use PDO;
+use PDOException;
+
 //
 class DB_pgsql extends DB
 {
