@@ -11,8 +11,8 @@ class DB
 {
   const DB_DEFAULT_PORT = null;
   const DB_DBO_DRIVER = null;
-  private $dbh = null;
-  private $mutex_lock_name;
+  protected $dbh = null;
+  protected $mutex_lock_name;
   static private $default_db_obj;
 
   //
