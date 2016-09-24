@@ -141,9 +141,13 @@ else
     $admin_username = $db_login;
     $admin_password = $db_password;
   }
-  $db_handle = sql_connect($dbsys, $db_host,
-                           $admin_username, $admin_password, $db_database,
-                           0, $db_port);
+  $db_handle = new DBFactory::create($dbsys,
+                                     $db_host,
+                                     $admin_username,
+                                     $admin_password,
+                                     $db_database,
+                                     0,
+                                     $db_port);
   echo '
     <p>
       Starting update, this could take a while...
@@ -160,9 +164,9 @@ else
       Updating '$table' table...
 ";
       $sql = "SELECT id,".implode(',',$columns)." FROM $table";
-      $res = sql_query($sql, array(), $db_handle);
+      $res = $db_handle->query($sql);
 
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $db_handle->row_keyed($res, $i)); $i++)
       {
         $sql_params = array();
         $updates = array();
@@ -176,7 +180,7 @@ else
           implode(',', $updates)." WHERE id=?";
         $sql_params[] = $id;
 
-        sql_query($upd_sql, $sql_params, $db_handle);
+        $db_handle->query($upd_sql, $sql_params);
         print "<!-- $upd_sql -->\n";
       }
       print "
@@ -224,14 +228,14 @@ function PMA_getDbCollation($db)
   global $db_handle;
 
   $sq='SHOW CREATE DATABASE `'.$db.'`;';
-  $res = sql_query($sq, array(), $db_handle);
+  $res = $db_handle->query($sq);
   if(!$res)
   {
-    echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+    echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($row = sql_row_keyed($res, $i, $db_handle)); $i++)
+    for ($i = 0; ($row = $db_handle->row_keyed($res, $i)); $i++)
     {
       $tokenized = explode(' ', $row[1]);
 
@@ -278,25 +282,25 @@ function convert_one_db($db)
     return;
   }
 
-  sql_command("USE $db", array(), $db_handle);
-  $rs = sql_query("SHOW TABLES", array(), $db_handle);
+  $db_handle->command("USE $db");
+  $rs = $db_handle->query("SHOW TABLES");
   if(!$rs)
   {
-    echo "\n\n".sql_error($db_handle)."\n\n";
+    echo "\n\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($data = sql_row($rs, $i, $db_handle)); $i++)
+    for ($i = 0; ($data = $db_handle->row($rs, $i)); $i++)
     {
       echo "Converting '$data[0]' table...\n";
-      $rs1 = sql_query("show FULL columns from $data[0]", array(), $db_handle);
+      $rs1 = $db_handle->query("show FULL columns from $data[0]");
       if(!$rs1)
       {
-        echo "\n\n".sql_error($db_handle)."\n\n";
+        echo "\n\n".$db_handle->error()."\n\n";
       }
       else
       {
-        for ($j = 0; ($data1 = sql_row_keyed($rs1, $j, $db_handle)); $j++)
+        for ($j = 0; ($data1 = $db_handle->row_keyed($rs1, $j)); $j++)
         {
           if (in_array(array_shift(split("\\(",
                                          $data1['Type'],2)),
@@ -329,9 +333,9 @@ function convert_one_db($db)
                 (($data1['Null'] == 'YES') ? ' NULL ' : ' NOT NULL');
 
               if (!$printonly &&
-                  !sql_query($sq, array(), $db_handle))
+                  !$db_handle->query($sq))
               {
-                echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+                echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
               }
               else
               {
@@ -356,9 +360,9 @@ function convert_one_db($db)
                     ' COMMENT \''.addslashes($data1['Comment']).'\'');
 
                 if (!$printonly &&
-                    !sql_query($sq, array(), $db_handle))
+                    !$db_handle->query($sq))
                 {
-                  echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+                  echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
                 }
                 else if ($printonly)
                 {
@@ -382,9 +386,9 @@ function convert_one_db($db)
         }
         else
         {
-          if (!sql_query($sq, array(), $db_handle))
+          if (!$db_handle->query($sq))
           {
-            echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+            echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
           }
         }
       } // end of if ($altertablecharset)
@@ -403,9 +407,9 @@ function convert_one_db($db)
     }
     else
     {
-      if (!sql_query($sq, array(), $db_handle))
+      if (!$db_handle->query($sq))
       {
-        echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+        echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
       }
     }
   } // end of if ($alterdatabasecharset)
