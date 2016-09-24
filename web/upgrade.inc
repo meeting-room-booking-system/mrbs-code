@@ -78,12 +78,12 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       // an empty query)
       if (preg_match("/\S/", $query))
       {
-        $res = sql_query($query, array(), $upgrade_handle);
+        $res = $upgrade_handle->query($query);
         if ($res === FALSE)
         {
           // No need to localise, should hopefully never happen
           upgrade_echo("<br>Tried:<pre>" . htmlspecialchars($query) . "</pre> and got error:" .
-                       "<pre>" . sql_error($upgrade_handle) . "</pre>\n");
+                       "<pre>" . $upgrade_handle->error() . "</pre>\n");
           return FALSE;
         }
       }

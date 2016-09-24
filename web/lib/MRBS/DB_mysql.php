@@ -97,7 +97,7 @@ class DB_mysql extends DB
   // Destructor cleans up the connection
   function __destruct()
   {
-    print "MySQL destructor called\n";
+    //print "MySQL destructor called\n";
      // Release any forgotten locks
     if (isset($this->mutex_lock_name))
     {

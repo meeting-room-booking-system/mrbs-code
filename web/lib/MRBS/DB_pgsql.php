@@ -111,7 +111,7 @@ class DB_pgsql extends DB
   // Destructor cleans up the connection
   function __destruct()
   {
-    print "PostgreSQL destructor called\n";
+    //print "PostgreSQL destructor called\n";
     
     // Release any forgotten locks
     if (isset($this->mutex_lock_name))

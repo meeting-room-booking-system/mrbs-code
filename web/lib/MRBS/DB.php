@@ -32,7 +32,7 @@ class DB
     if (empty($db_port))
     {
       $db_port = static::DB_DEFAULT_PORT;
-      print "Setting default port to $db_port\n";
+      //print "Setting default port to $db_port\n";
     }
 
     // Establish a database connection.
@@ -48,6 +48,7 @@ class DB
                            $db_username,
                            $db_password,
                            array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
+      $this->command("SET NAMES 'UTF8'");
     }
     catch (PDOException $e)
     {
@@ -149,6 +150,28 @@ class DB
     return $result;
   }
 
+  // Run an SQL query that returns a simple one dimensional array of results.
+  // The SQL query must select only one column.   Returns an empty array if
+  // no results, or FALSE if there's an error
+  public function query_array($sql, $params = null)
+  {
+    $res = $this->query($sql, $params);
+
+    if ($res === FALSE)
+    {
+      return FALSE;
+    }
+    else
+    {
+      $result = array();
+      for ($i = 0; ($row = $this->row($res, $i)); $i++)
+      {
+        $result[] = $row[0];
+      }
+      return $result;
+    }
+  }
+
   
   // Execute an SQL query. Returns a result handle, which should be passed
   // back to row() or row_keyed() to get the results.
@@ -194,6 +217,21 @@ class DB
     return $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS, $i);
   }
 
+  // Return all the rows from a result object, as an array of arrays
+  // keyed on the column name
+  public function all_rows_keyed($r)
+  {
+    $result = array();
+
+    for ($i=0; $row = $this->row_keyed($r, $i); $i++)
+    {
+      $result[] = $row;
+    }
+
+    return $result;
+  }
+
+  
   // Free a results handle. You need not call this if you call row() or
   // row_keyed() until the row returns 0, since those methods free the results
   // handle when you finish reading the rows.

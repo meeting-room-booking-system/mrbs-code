@@ -16,14 +16,22 @@ namespace MRBS;
 *
 ******************************************************************************/
 
-// $Id$
 
-// We no longer have a 'mysql' abstraction, but to support people who upgrade MRBS and used to
-// use the 'mysql' abstraction, we change the abstraction to the supported 'mysqli'.
-if ($auth['db_ext']['db_system'] == 'mysql')
+if (empty($auth['db_ext']['db_system']))
 {
-  $auth['db_ext']['db_system'] = 'mysqli';
+  $auth['db_ext']['db_system'] = 'mysql';
 }
+
+$persist = 0;
+$port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
+  
+static $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
+                                        $auth['db_ext']['db_host'],
+                                        $auth['db_ext']['db_username'],
+                                        $auth['db_ext']['db_password'],
+                                        $auth['db_ext']['db_name'],
+                                        $persist,
+                                        $port);
 
 
 /* authValidateUser($user, $pass)
@@ -40,48 +48,33 @@ if ($auth['db_ext']['db_system'] == 'mysql')
 
 function authValidateUser($user, $pass)
 {
-  global $auth;
+  global $auth, $db_ext_conn;
 
   $retval = 0;
 
-  if (empty($auth['db_ext']['db_system']))
-  {
-    $auth['db_ext']['db_system'] = 'mysqli';
-  }
-
-  $persist = 0;
-  $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
-  
-  $conn = sql_connect($auth['db_ext']['db_system'],
-                      $auth['db_ext']['db_host'],
-                      $auth['db_ext']['db_username'],
-                      $auth['db_ext']['db_password'],
-                      $auth['db_ext']['db_name'],
-                      $persist,
-                      $port);
 
   // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
   $sql_params = array();
 
-  $query = "SELECT " . sql_quote($auth['db_ext']['column_name_password']) .
-            " FROM " . sql_quote($auth['db_ext']['db_table']) .
-           " WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                       utf8_strtolower($user),
-                                                       $sql_params);
+  $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_password']) .
+           "FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) .
+           "WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                                utf8_strtolower($user),
+                                                                $sql_params);
 
-  $r = sql_query($query, $sql_params, $conn);
+  $r = $db_ext_conn->query($query, $sql_params);
   
   if ($r === FALSE)
   {
-    trigger_error(sql_error($conn), E_USER_WARNING);
+    trigger_error($db_ext_conn->error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
-  if (sql_count($r, $conn) == 1) // force a unique match
+  if ($db_ext_conn->count($r) == 1) // force a unique match
   {
-    $row = sql_row($r, 0, $conn);
+    $row = $db_ext_conn->row($r, 0);
 
     switch ($auth['db_ext']['password_format'])
     {
@@ -152,7 +145,8 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user)
 {
-  global $auth;
+  global $auth, $db_ext_conn;
+
   $admins = $auth['admin'];
   // User not logged in, user level '0'
   if(!isset($user))
@@ -175,39 +169,31 @@ function authGetUserLevel($user)
      $persist = 0;
      $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
      
-     $conn = sql_connect($auth['db_ext']['db_system'],
-                         $auth['db_ext']['db_host'],
-                         $auth['db_ext']['db_username'],
-                         $auth['db_ext']['db_password'],
-                         $auth['db_ext']['db_name'],
-                         $persist,
-                         $port);
-
      // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
      // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
      $sql_params = array();
-     $query = "SELECT " . sql_quote($auth['db_ext']['column_name_level']) . "
-                 FROM " . sql_quote($auth['db_ext']['db_table']) . "
-                WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                          utf8_strtolower($user),
-                                                          $sql_params) . "
+     $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_level']) . "
+                 FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) . "
+                WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                                    utf8_strtolower($user),
+                                                                    $sql_params) . "
                 LIMIT 1";
 
-     $r = sql_query($query, $sql_params, $conn);
+     $r = $db_ext_conn->query($query, $sql_params);
      
      if ($r === FALSE)
      {
-       trigger_error(sql_error($conn), E_USER_WARNING);
+       trigger_error($db_ext_conn->error(), E_USER_WARNING);
        fatal_error(FALSE, get_vocab("fatal_db_error"));
      }
      
-     if (sql_count($r) == 0)
+     if ($db_ext_conn->count($r) == 0)
      {
        return 0;
      }
      
-     $row = sql_row($r, 0, $conn);
+     $row = $db_ext_conn->row($r, 0);
      
      return $row[0];
   }
@@ -221,7 +207,7 @@ function authGetUserLevel($user)
 // string if one can't be found
 function authGetUserEmail($user)
 {
-  global $auth;
+  global $auth, $db_ext_conn;
   
   if (!isset($user) || $user === '')
   {
@@ -233,48 +219,35 @@ function authGetUserEmail($user)
     return get_default_email($user);
   }
   
-  if (empty($auth['db_ext']['db_system']))
-  {
-    $auth['db_ext']['db_system'] = 'mysqli';
-  }
 
   $persist = 0;
   $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
   
-  $conn = sql_connect($auth['db_ext']['db_system'],
-                      $auth['db_ext']['db_host'],
-                      $auth['db_ext']['db_username'],
-                      $auth['db_ext']['db_password'],
-                      $auth['db_ext']['db_name'],
-                      $persist,
-                      $port);
-
   // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
   $sql_params = array();
-  $query = "SELECT " . sql_quote($auth['db_ext']['column_name_email']) . "
-              FROM " . sql_quote($auth['db_ext']['db_table']) . "
-             WHERE " . sql_syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                       utf8_strtolower($user),
-                                                       $sql_params) . "
+  $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_email']) . "
+              FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) . "
+             WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
+                                                                 utf8_strtolower($user),
+                                                                 $sql_params) . "
              LIMIT 1";
 
-  $r = sql_query($query, $sql_params, $conn);
+  $r = $db_ext_conn->query($query, $sql_params);
   
   if ($r === FALSE)
   {
-    trigger_error(sql_error($conn), E_USER_WARNING);
+    trigger_error($db_ext_conn->error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
   
-  if (sql_count($r) == 0)
+  if ($db_ext_conn->count($r) == 0)
   {
     return 0;
   }
   
-  $row = sql_row($r, 0, $conn);
+  $row = $db_ext_conn->row($r, 0);
   
   return $row[0];
 }
-

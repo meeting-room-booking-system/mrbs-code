@@ -27,763 +27,116 @@ foreach ($tables as $table)
 $db_schema_version = 49;
 $local_db_schema_version = 1;
 
-// Include the abstraction configured to be used for the default MRBS
-// database
-require_once "${dbsys}.inc";
 
+// Convenience wrapper functions
 
-// All the sql_* functions below apart from sql_connect(), sql_default_connect()
-// and sql_close() and take an optional final argument which is
-// the MRBS database handle to use. If this is not passed, the default
-// MRBS database connection is used.
-
-// The namespace needs to be prepended to the function names assigned to $f because
-// they are generated dynamically.
-
-
-// Free a result object
 function sql_free($r)
 {
-  global $dbsys;
-  
-  if (!is_resource($r))
-  {
-    // No need to do anything - resource has probably been
-    // freed automatically by reading to its end
-    return;
-  }
-  
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_free";
-  $f($r, $db_conn);
+  return DB::default_db()->free($r);
 }
-
-
-// Quote a table or column name
-// NOTE:  In PostgreSQL the identifier is also converted to lower case.  See
-// the comments in pgsql.inc for an explanation.
 function sql_quote($identifier)
 {
-  global $dbsys;
-  
-  $db_sys = $dbsys;
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_quote";
-  return $f($identifier);
+  return DB::default_db()->quote($identifier);
 }
-
-
-// Run an SQL query that doesn't produce results
-function sql_command($sql, $params = array())
+function sql_command($sql, $params = null)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_command";
-  return $f($sql, $params, $db_conn);
+  return DB::default_db()->command($sql, $params);
 }
-
-
-// Run an SQL query that returns only one result - returns the result
-// directly. SQL query must select only one column and one row.
-function sql_query1($sql, $params = array())
+function sql_query1($sql, $params = null)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_query1";
-  return $f($sql, $params, $db_conn);
+  return DB::default_db()->query1($sql, $params);
 }
-
-
-// Run an SQL query that returns a simple one dimensional array of results.
-// The SQL query must select only one column.   Returns an empty array if
-// no results, or FALSE if there's an error
-function sql_query_array($sql, $params = array())
+function sql_query_array($sql, $params = null)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    $db_conn = NULL;
-  }
-  
-  $res = ($db_conn) ? sql_query($sql, $params, $db_conn) : sql_query($sql, $params);
-  
-  if ($res === FALSE)
-  {
-    return FALSE;
-  }
-  else
-  {
-    $result = array();
-    for ($i = 0; ($row = sql_row($res, $i)); $i++)
-    {
-      $result[] = $row[0];
-    }
-    return $result;
-  }
+  return DB::default_db()->query_array($sql, $params);
 }
-
-
-// Run a SQL query, returns a result object or FALSE on failure
-function sql_query($sql, $params = array())
+function sql_query($sql, $params = null)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_query";
-  return $f($sql, $params, $db_conn);
+  return DB::default_db()->query($sql, $params);
 }
-
-
-// Return one row from a result object, as a numbered array
 function sql_row($r, $i)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_row";
-  return $f($r, $i, $db_conn);
+  return DB::default_db()->row($r, $i);
 }
-
-
-// Return one row from a result object, as an array keyed on the column
-// name
 function sql_row_keyed($r, $i)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_row_keyed";
-  return $f($r, $i, $db_conn);
+  return DB::default_db()->row_keyed($r, $i);
 }
-
-
-// Return all the rows from a result object, as an array of arrays
-// keyed on the column name
 function sql_all_rows_keyed($r)
 {
-  global $dbsys;
-  
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-  }
-  else
-  {
-    $handle = array('system'     => $dbsys,
-                    'connection' => null);
-  }
-  
-  $result = array();
-  
-  for ($i=0; $row = sql_row_keyed($r, $i, $handle); $i++)
-  {
-    $result[] = $row;
-  }
-  
-  return $result;
+  return DB::default_db()->all_rows_keyed($r);
 }
-
-
-// Return the number of rows in a result object
 function sql_count($r)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_count";
-  return $f($r, $db_conn);
+  return DB::default_db()->count($r);
 }
-
-
-// Get the last ID inserted into a table
 function sql_insert_id($table, $field)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_insert_id";
-  return $f($table, $field, $db_conn);
+  return DB::default_db()->insert_id($table, $field);
 }
-
-
-// Return the last SQL error for a connection
 function sql_error()
 {
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_error";
-  return $f($db_conn);
+  return DB::default_db()->error();
 }
-
-
-// Start a transaction
 function sql_begin()
 {
-  // Turn off ignore_user_abort until the transaction has been committed.  See
-  // the warning at http://php.net/manual/en/features.persistent-connections.php
-  // (Only applies to persistent connections, but we'll do it for all cases to keep
-  // things simple)
-  mrbs_ignore_user_abort(TRUE);
-  
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_begin";
-  $f($db_conn);
+  return DB::default_db()->begin();
 }
-
-
-// Finish a transaction
 function sql_commit()
 {
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_commit";
-  $f($db_conn);
-  
-  mrbs_ignore_user_abort(FALSE);
+  return DB::default_db()->commit();
 }
-
-
-// Get a mutex lock
 function sql_mutex_lock($name)
 {
-  // Turn off ignore_user_abort until the lock has been freed.  See
-  // the warning at http://php.net/manual/en/features.persistent-connections.php
-  // (Only applies to persistent connections, but we'll do it for all cases to keep
-  // things simple)
-  mrbs_ignore_user_abort(TRUE);
-  
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_mutex_lock";
-  return $f($name, $db_conn);
+  return DB::default_db()->mutex_lock($name);
 }
-
-
-// Return a mutex lock
 function sql_mutex_unlock($name)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_mutex_unlock";
-  $f($name, $db_conn);
-  
-  mrbs_ignore_user_abort(FALSE);
+  return DB::default_db()->mutex_unlock($name);
 }
-
-
-// Return the SQL database version for the connection
 function sql_version()
 {
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_version";
-  return $f($db_conn);
+  return DB::default_db()->version();
 }
-
-
-// Returns the syntax for a limit statement
 function sql_syntax_limit($count, $offset)
 {
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_limit";
-  return $f($count, $offset, $db_conn);
+  return DB::default_db()->syntax_limit($count, $offset);
 }
-
-
-// Returns the syntax for converting a timestamp into a "UNIX timestamp"
 function sql_syntax_timestamp_to_unix($fieldname)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_timestamp_to_unix";
-  return $f($fieldname, $db_conn);
+  return DB::default_db()->syntax_timestamp_to_unix($fieldname);
 }
-
-
-// Returns the syntax for a case sensitive string "equals" function
-//
-// Also takes a required pass-by-reference parameter to modify the SQL
-// parameters appropriately.
-//
-// (By default MySQL is case insensitive, whereas PostgreSQL is not)
-// NB:  This function is also assumed to do a strict comparison, ie
-// take account of training spaces.  (The '=' comparison in MySQL allows
-// trailing spaces, eg 'john' = 'john ').
-function sql_syntax_casesensitive_equals($fieldname, $string, &$params)
+function sql_syntax_casesensitive_equals($fieldname, $s)
 {
-  if (func_num_args() > 3)
-  {
-    $handle = func_get_arg(3);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_casesensitive_equals";
-  return $f($fieldname, $string, $params, $db_conn);
+  return DB::default_db()->syntax_casesensitive_equals($fieldname, $s);
 }
-
-
-// Returns the syntax for a caseless "contains" function
-function sql_syntax_caseless_contains($fieldname, $string, &$params)
+function sql_syntax_caseless_contains($fieldname, $s)
 {
-  if (func_num_args() > 3)
-  {
-    $handle = func_get_arg(3);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_caseless_contains";
-  return $f($fieldname, $string, $params, $db_conn);
+  return DB::default_db()->syntax_caseless_contains($fieldname, $s);
 }
-
-// Returns the syntax for adding a column after another column, in an
-// ALTER TABLE command
 function sql_syntax_addcolumn_after($fieldname)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_addcolumn_after";
-
-  if (function_exists($f))
-  {
-    return $f($fieldname, $db_conn);
-  }
-  else
-  {
-    return "";
-  }
+  return DB::default_db()->syntax_addcolumn_after($fieldname);
 }
-
-
-// Returns the syntax for a caseless "contains" function
 function sql_syntax_createtable_autoincrementcolumn()
 {
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_createtable_autoincrementcolumn";
-  return $f($db_conn);
+  return DB::default_db()->syntax_createtable_autoincrementcolumn();
 }
-
-
-// Returns the syntax for a bitwise XOR operator
 function sql_syntax_bitwise_xor()
 {
-  if (func_num_args() > 0)
-  {
-    $handle = func_get_arg(0);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_syntax_bitwise_xor";
-  return $f($db_conn);
+  return DB::default_db()->syntax_bitwise_xor();
 }
-
-
-// Return the name of a column in a result object
-function sql_field_name($result, $index)
-{
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_name";
-  return $f($result, $index, $db_conn);
-}
-
-
-// Return the type of a column in a result object
-function sql_field_type($result, $index)
-{
-  if (func_num_args() > 2)
-  {
-    $handle = func_get_arg(2);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_type";
-  return $f($result, $index, $db_conn);
-}
-
-
-// Return the number of columns in a result object
 function sql_num_fields($result)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_num_fields";
-  return $f($result, $db_conn);
+  return DB::default_db()->num_fields($result);
 }
-
-
-// Check if a table exists - returns TRUE if it exists, FALSE if it doesn't
 function sql_table_exists($table)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_table_exists";
-  return $f($table, $db_conn);
+  return DB::default_db()->table_exists($table);
 }
-
-
-// This function returns information about columns in the database in a manner
-// that is independent of the underlying database.    It was originally designed
-// for use by MRBS pages that have user defined columns in the relevant table
-// and to enable them to decide how to represent the column on a page.  For example
-// a smallint is often used to represent a boolean, which should be represented by a
-// checkbox. (Smallints are used by MRBS for booleans in PostgreSQL because booleans return
-// a PHP boolean type, rather than a 0 or 1 which MySQL does, and so this makes testing
-// of the results difficult).
-//
-// Returns an array with the following indices for each column
-//
-//  'name'        the column name
-//  'type'        the type as reported by MySQL or PostgreSQL
-//  'nature'      the type mapped onto one of a generic set of types
-//                (boolean, integer, real, character, binary).   This enables
-//                the nature to be used by MRBS code when deciding how to 
-//                display fields, without MRBS having to worry about the 
-//                differences between MySQL and PostgreSQL type names.
-//  'length'      the maximum length of the field in bytes, octets or characters
-//                (Note:  this could be NULL)
-//  'is_nullable' whether the column can be set to NULL (boolean)
-//
-//  NOTE: the type mapping is incomplete and just covers the types commonly
-//  used by MRBS
-// 
-// The difficulty is that MySQL and PostgreSQL return different formats
-// of answer for the type of field when using sql_field_type.    For example
-// for a smallint, PostgreSQL will just return int, and there is no exact equivalent
-// of the mysql_ field_ len() function.   Although pg_field_size is a close
-// approximation and returns 2 for a smallint, enabling it to be distinguished
-// from an int, when used with variable length character types such as text or 
-// varying character it returns -1.
-//
-// [There must be a better way of doing all this???!]
 function sql_field_info($table)
 {
-  if (func_num_args() > 1)
-  {
-    $handle = func_get_arg(1);
-    $db_sys = $handle['system'];
-    $db_conn = $handle['connection'];
-  }
-  else
-  {
-    global $dbsys;
-
-    $db_sys = $dbsys;
-    $db_conn = null;
-  }
-  
-  $f = __NAMESPACE__ . "\\sql_${db_sys}_field_info";
-  return $f($table, $db_conn);
-}
-
-
-// Connect to a database host and select the supplied database
-function sql_connect($system, $host, $username, $password, $db_name,
-                     $persist = 0, $db_port = null)
-{
-  require_once "$system.inc";
-
-  $f = __NAMESPACE__ . "\\sql_${system}_connect";
-
-  $db_conn = $f($host, $username, $password, $db_name, $persist, $db_port);
-
-  $handle = array('system' => $system, 'connection' => $db_conn);
-
-  return $handle;
-}
-
-
-// Close a database connection that was previously opened by sql_connect()
-function sql_close($handle)
-{
-  $system = $handle['system'];
-  require_once "$system.inc";
-  $f = __NAMESPACE__ . "\\sql_${system}_close";
-  $f($handle['connection']);
+  return DB::default_db()->field_info($table);
 }
 
 
@@ -812,12 +165,6 @@ function db_get_userpass()
   // Print footer and exit
   print_footer(TRUE);
 }
-
-
-//////////////////////////////////////////
-// Connect to the configured MRBS database
-$f = __NAMESPACE__ . "\\sql_${dbsys}_default_connect";
-$f();
 
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
@@ -863,6 +210,8 @@ if (($current_db_schema_version < $db_schema_version) ||
   echo "<h1>" . get_vocab("mrbs") . "</h1>\n";
   echo "<p class=\"error\">" . get_vocab("upgrade_required") . "</p>\n"; 
 
+  $admin_handle = null;
+
   // We need to open a connection to the database with a database
   // username that has admin rights.
   while (empty($admin_handle))
@@ -878,7 +227,7 @@ if (($current_db_schema_version < $db_schema_version) ||
     }
     else
     {
-      $admin_handle = sql_connect($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port);
+      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port);
     }
   }
 
@@ -896,7 +245,7 @@ if (($current_db_schema_version < $db_schema_version) ||
   }
   
   // close the database connection that has admin rights
-  sql_close($admin_handle);
+  unset($admin_handle);
 
   if ($ok)
   {
