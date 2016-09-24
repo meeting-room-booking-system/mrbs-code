@@ -259,7 +259,7 @@ class DB_mysql extends DB
   //
   // In MySQL, REGEXP seems to be case sensitive, so use LIKE instead. But this
   // requires quoting of % and _ in addition to the usual.
-  public function caseless_contains($fieldname, $string, &$params)
+  public function syntax_caseless_contains($fieldname, $string, &$params)
   {
     $string = str_replace("\\", "\\\\", $string);
     $string = str_replace("%", "\\%", $string);
