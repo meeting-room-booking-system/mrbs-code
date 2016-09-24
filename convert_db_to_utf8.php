@@ -141,13 +141,13 @@ else
     $admin_username = $db_login;
     $admin_password = $db_password;
   }
-  $db_handle = new DBFactory::create($dbsys,
-                                     $db_host,
-                                     $admin_username,
-                                     $admin_password,
-                                     $db_database,
-                                     0,
-                                     $db_port);
+  $db_handle = DBFactory::create($dbsys,
+                                 $db_host,
+                                 $admin_username,
+                                 $admin_password,
+                                 $db_database,
+                                 0,
+                                 $db_port);
   echo '
     <p>
       Starting update, this could take a while...
