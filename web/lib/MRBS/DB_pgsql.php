@@ -90,8 +90,8 @@ class DB_pgsql extends DB
   // It does not timeout, but waits forever for the lock.
   public function mutex_lock($name)
   {
-    if (($this->dbh->command("BEGIN", array()) < 0) ||
-        ($this->dbh->command("LOCK TABLE ? IN EXCLUSIVE MODE", array($name)) < 0))
+    if (($this->command("BEGIN") < 0) ||
+        ($this->command("LOCK TABLE $name IN EXCLUSIVE MODE") < 0))
     {
       return 0;
     }
@@ -106,7 +106,7 @@ class DB_pgsql extends DB
   // is no other way.
   public function mutex_unlock($name)
   {
-    $this->dbh->command("COMMIT", array());
+    $this->command("COMMIT");
     $this->mutex_lock_name = NULL;
   }
 
@@ -119,7 +119,7 @@ class DB_pgsql extends DB
     // Release any forgotten locks
     if (isset($this->mutex_lock_name))
     {
-      $this->dbh->command("ABORT", array());
+      $this->command("ABORT", array());
     }
   
     // Rollback any outstanding transactions
@@ -169,6 +169,8 @@ class DB_pgsql extends DB
   //  used by MRBS
   public function field_info($table)
   {
+    $fields = array();
+
     // Map PostgreSQL types on to a set of generic types
     $nature_map = array('bigint'            => 'integer',
                         'boolean'           => 'boolean',
@@ -208,7 +210,6 @@ class DB_pgsql extends DB
     }
     else
     {
-      $fields = array();
       for ($i = 0; ($row = $this->row_keyed($res, $i)); $i++)
       {
         $name = $row['column_name'];
@@ -282,7 +283,7 @@ class DB_pgsql extends DB
   // In PostgreSQL, we can do case insensitive regexp with ~*, but not case
   // insensitive LIKE matching.
   // Quotemeta escapes everything we need except for single quotes.
-  public function caseless_contains($fieldname, $string, &$params)
+  public function syntax_caseless_contains($fieldname, $string, &$params)
   {
     $params[] = quotemeta($string);
 

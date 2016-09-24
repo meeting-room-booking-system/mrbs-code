@@ -110,9 +110,9 @@ function sql_syntax_casesensitive_equals($fieldname, $s, &$params)
 {
   return DB::default_db()->syntax_casesensitive_equals($fieldname, $s, $params);
 }
-function sql_syntax_caseless_contains($fieldname, $s)
+function sql_syntax_caseless_contains($fieldname, $s, &$params)
 {
-  return DB::default_db()->syntax_caseless_contains($fieldname, $s);
+  return DB::default_db()->syntax_caseless_contains($fieldname, $s, $params);
 }
 function sql_syntax_addcolumn_after($fieldname)
 {
