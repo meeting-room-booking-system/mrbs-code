@@ -53,7 +53,7 @@ function authValidateUser($user, $pass)
   $retval = 0;
 
 
-  // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
+  // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
   $sql_params = array();
@@ -169,7 +169,7 @@ function authGetUserLevel($user)
      $persist = 0;
      $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
      
-     // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
+     // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
      // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
      $sql_params = array();
@@ -223,7 +223,7 @@ function authGetUserEmail($user)
   $persist = 0;
   $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
   
-  // sql_syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
+  // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
   $sql_params = array();

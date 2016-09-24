@@ -97,7 +97,7 @@ class DB
 
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
-  // Returns -1 on error; use sql_error to get the error message.
+  // Returns -1 on error; use error() to get the error message.
   public function command($sql, $params = array())
   {
     $ret = -1;
@@ -122,7 +122,7 @@ class DB
 
   
   // Execute an SQL query which should return a single non-negative number value.
-  // This is a lightweight alternative to sql_query, good for use with count(*)
+  // This is a lightweight alternative to query(), good for use with count(*)
   // and similar queries. It returns -1 on error or if the query did not return
   // exactly one value, so error checking is somewhat limited.
   // It also returns -1 if the query returns a single NULL value, such as from
@@ -203,7 +203,7 @@ class DB
 
   // Return a row from a result as an associative array keyed by field name.
   // The first row is 0.
-  // This is actually upward compatible with sql_row since the underlying
+  // This is actually upward compatible with row() since the underlying
   // routing also stores the data under number indexes.
   // When called with i >= number of rows in the result, cleans up from
   // the query and returns 0.

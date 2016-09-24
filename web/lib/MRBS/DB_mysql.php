@@ -47,9 +47,9 @@ class DB_mysql extends DB
   // It will lock out other callers of this routine with the same name argument.
   // It may timeout in 20 seconds and return 0, or may wait forever.
   // It returns 1 when the lock has been acquired.
-  // Caller must release the lock with sql_mutex_unlock().
+  // Caller must release the lock with mutex_unlock().
   // Caller must not have more than one mutex at any time.
-  // Do not mix this with sql_begin()/sql_end() calls.
+  // Do not mix this with begin()/end() calls.
   //
   // In MySQL, we avoid table locks, and use low-level locks instead.
   public function mutex_lock($name)

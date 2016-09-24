@@ -79,7 +79,7 @@ class DB_pgsql extends DB
   // It will lock out other callers of this routine with the same name argument.
   // It may timeout in 20 seconds and return 0, or may wait forever.
   // It returns 1 when the lock has been acquired.
-  // Caller must release the lock with sql_mutex_unlock().
+  // Caller must release the lock with mutex_unlock().
   // Caller must not have more than one mutex at any time.
   // Do not mix this with begin()/end() calls.
   //
