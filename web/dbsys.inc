@@ -106,9 +106,9 @@ function sql_syntax_timestamp_to_unix($fieldname)
 {
   return DB::default_db()->syntax_timestamp_to_unix($fieldname);
 }
-function sql_syntax_casesensitive_equals($fieldname, $s)
+function sql_syntax_casesensitive_equals($fieldname, $s, &$params)
 {
-  return DB::default_db()->syntax_casesensitive_equals($fieldname, $s);
+  return DB::default_db()->syntax_casesensitive_equals($fieldname, $s, $params);
 }
 function sql_syntax_caseless_contains($fieldname, $s)
 {

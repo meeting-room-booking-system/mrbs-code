@@ -46,7 +46,7 @@ foreach ($mods as $id => $month_relative)
              SET month_relative=?,
                  rep_type=" . REP_MONTHLY . "
            WHERE id=?";
-  if (sql_command($sqlm array($month_relative, $id)) < 0)
+  if (sql_command($sql, array($month_relative, $id)) < 0)
   {
     trigger_error(sql_error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
