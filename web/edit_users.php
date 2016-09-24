@@ -639,7 +639,7 @@ if (isset($Action) && ($Action == "Update"))
             $sql_params[] = $Id;
           }
           $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-          $result = sql_query($query, $params);
+          $result = sql_query($query, $sql_params);
           if (sql_count($result) > 0)
           {
             $valid_data = FALSE;

@@ -132,7 +132,7 @@ class DB
     $sth = $this->dbh->prepare($sql);
     if (!$sth)
     {
-      trigger_error($this->error(), E_USER_WARNING);
+      trigger_error($sql." ".$this->error(), E_USER_WARNING);
       return -1;
     }
     $sth->execute($params);

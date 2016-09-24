@@ -197,9 +197,9 @@ $now = mktime(0, 0, 0, $month, $day, $year);
 // NOTE: sql_syntax_caseless_contains() modifies our SQL params for us
 
 $sql_params = array();
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str, $sql_params)
-  . " OR " . sql_syntax_caseless_contains("E.name", $search_str, $sql_params)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str, $sql_params);
+$sql_pred = "(( " . sql_syntax_caseless_contains("E.create_by", $search_str, $sql_params)
+  . ") OR (" . sql_syntax_caseless_contains("E.name", $search_str, $sql_params)
+  . ") OR (" . sql_syntax_caseless_contains("E.description", $search_str, $sql_params). ")";
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
@@ -219,21 +219,21 @@ foreach ($fields as $field)
         // assume PHP5
         if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
         {
-          $sql_pred .= " OR E." . sql_quote($field['name']) . "=?";
+          $sql_pred .= " OR (E." . sql_quote($field['name']) . "=?)";
           $sql_params[] = $key;
         }
       }
     }
     elseif ($field['nature'] == 'character')
     {
-      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str, $sql_params);
+      $sql_pred .= " OR (" . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str, $sql_params).")";
     }
   }
 }
 
-$sql_pred .= ") AND E.end_time > ?";
+$sql_pred .= ") AND (E.end_time > ?)";
 $sql_params[] = $now;
-$sql_pred .= " AND E.room_id = R.id AND R.area_id = A.id";
+$sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
 
 // If we're not an admin (they are allowed to see everything), then we need
@@ -248,9 +248,17 @@ if (!$is_admin)
     //   - all bookings, if private_override is set to 'public'
     //   - their own bookings, and others' public bookings if private_override is set to 'none'
     //   - just their own bookings, if private_override is set to 'private'
-    $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = ? OR
-                        (A.private_override='private' AND E.create_by = ?))";
+    $sql_pred .= " AND (
+                        (A.private_override='public') OR
+                        (A.private_override='none') AND
+                        (
+                         (E.status&" . STATUS_PRIVATE . "=0) OR
+                         (E.create_by = ?) OR
+                         (
+                          (A.private_override='private') AND (E.create_by = ?)
+                         )
+                        )
+                       )";
     $sql_params[] = $user;
     $sql_params[] = $user;
   }
@@ -259,8 +267,12 @@ if (!$is_admin)
     // if the user is not logged in they can see:
     //   - all bookings, if private_override is set to 'public'
     //   - public bookings if private_override is set to 'none'
-    $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
+    $sql_pred .= " AND (
+                        (A.private_override='public') OR
+                        (
+                         (A.private_override='none') AND (E.status&" . STATUS_PRIVATE . "=0)
+                        )
+                       )";
   }
 }
 
@@ -311,7 +323,6 @@ if (!$ajax_capable || $ajax)
   {
     $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
   }
-
 
   // this is a flag to tell us not to display a "Next" link
   $result = sql_query($sql, $sql_params);
