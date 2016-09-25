@@ -3,12 +3,11 @@
 namespace MRBS;
 
 use PDO;
-use PDOStatement;
 use PDOException;
 
 
 //
-class DBStatement extends PDOStatement
+class DBStatement
 {
   protected $db_object = null;
   protected $statement = null;
