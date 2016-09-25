@@ -65,17 +65,17 @@ function authValidateUser($user, $pass)
                                                                 utf8_strtolower($user),
                                                                 $sql_params);
 
-  $r = $db_ext_conn->query($query, $sql_params);
+  $stmt = $db_ext_conn->query($query, $sql_params);
   
-  if ($r === FALSE)
+  if ($stmt === FALSE)
   {
     trigger_error($db_ext_conn->error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
 
-  if ($db_ext_conn->count($r) == 1) // force a unique match
+  if ($stmt->count() == 1) // force a unique match
   {
-    $row = $db_ext_conn->row($r, 0);
+    $row = $stmt->row(0);
 
     switch ($auth['db_ext']['password_format'])
     {
@@ -181,20 +181,20 @@ function authGetUserLevel($user)
                                                                     $sql_params) . "
                 LIMIT 1";
 
-     $r = $db_ext_conn->query($query, $sql_params);
+     $stmt = $db_ext_conn->query($query, $sql_params);
      
-     if ($r === FALSE)
+     if ($stmt === FALSE)
      {
        trigger_error($db_ext_conn->error(), E_USER_WARNING);
        fatal_error(FALSE, get_vocab("fatal_db_error"));
      }
      
-     if ($db_ext_conn->count($r) == 0)
+     if ($stmt->count() == 0)
      {
        return 0;
      }
      
-     $row = $db_ext_conn->row($r, 0);
+     $row = $stmt->row(0);
      
      return $row[0];
   }
@@ -235,20 +235,20 @@ function authGetUserEmail($user)
                                                                  $sql_params) . "
              LIMIT 1";
 
-  $r = $db_ext_conn->query($query, $sql_params);
+  $stmt = $db_ext_conn->query($query, $sql_params);
   
-  if ($r === FALSE)
+  if ($stmt === FALSE)
   {
     trigger_error($db_ext_conn->error(), E_USER_WARNING);
     fatal_error(FALSE, get_vocab("fatal_db_error"));
   }
   
-  if ($db_ext_conn->count($r) == 0)
+  if ($stmt->count() == 0)
   {
     return 0;
   }
   
-  $row = $db_ext_conn->row($r, 0);
+  $row = $stmt->row(0);
   
   return $row[0];
 }

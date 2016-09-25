@@ -61,16 +61,16 @@ class DB_mysql extends DB
     // timed out (for example, because another client has previously locked the name),
     // or NULL if an error occurred (such as running out of memory or the thread was
     // killed with mysqladmin kill)
-    $sth = $this->query("SELECT GET_LOCK(?, 20)", array($name));
-    if ($sth === FALSE)
+    $stmt = $this->query("SELECT GET_LOCK(?, 20)", array($name));
+    if ($stmt === FALSE)
     {
       trigger_error($this->error(), E_USER_WARNING);
       return FALSE;
     }
 
-    if (($sth->rowCount() != 1) || 
-        ($sth->columnCount() != 1) ||
-        (($row = $sth->fetch(PDO::FETCH_NUM)) === NULL))
+    if (($stmt->count() != 1) || 
+        ($stmt->num_fields() != 1) ||
+        (($row = $stmt->row(0)) === NULL))
     {
       return FALSE;
     }
@@ -165,8 +165,8 @@ class DB_mysql extends DB
                        'smallint'  => 2,
                        'tinyint'   => 1);
   
-    $res = $this->query("SHOW COLUMNS FROM $table", array());
-    if ($res === FALSE)
+    $stmt = $this->query("SHOW COLUMNS FROM $table", array());
+    if ($stmt === FALSE)
     {
       trigger_error($this->error(), E_USER_WARNING);
       fatal_error(TRUE, get_vocab("fatal_db_error"));
@@ -174,7 +174,7 @@ class DB_mysql extends DB
     else
     {
       $fields = array();
-      for ($i = 0; ($row = $this->row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
       {
         $name = $row['Field'];
         $type = $row['Type'];

@@ -202,15 +202,15 @@ class DB_pgsql extends DB
     }
     $sql .= "ORDER BY ordinal_position";
   
-    $res = $this->query($sql, $sql_params);
-    if ($res === FALSE)
+    $stmt = $this->query($sql, $sql_params);
+    if ($stmt === FALSE)
     {
       trigger_error($this->error(), E_USER_WARNING);
       fatal_error(TRUE, get_vocab("fatal_db_error"));
     }
     else
     {
-      for ($i = 0; ($row = $this->row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
       {
         $name = $row['column_name'];
         $type = $row['data_type'];

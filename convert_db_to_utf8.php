@@ -164,9 +164,9 @@ else
       Updating '$table' table...
 ";
       $sql = "SELECT id,".implode(',',$columns)." FROM $table";
-      $res = $db_handle->query($sql);
+      $stmt = $db_handle->query($sql);
 
-      for ($i = 0; ($row = $db_handle->row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
       {
         $sql_params = array();
         $updates = array();
@@ -228,14 +228,14 @@ function PMA_getDbCollation($db)
   global $db_handle;
 
   $sq='SHOW CREATE DATABASE `'.$db.'`;';
-  $res = $db_handle->query($sq);
-  if(!$res)
+  $stmt = $db_handle->query($sq);
+  if(!$stmt)
   {
     echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($row = $db_handle->row_keyed($res, $i)); $i++)
+    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
     {
       $tokenized = explode(' ', $row[1]);
 
@@ -283,24 +283,24 @@ function convert_one_db($db)
   }
 
   $db_handle->command("USE $db");
-  $rs = $db_handle->query("SHOW TABLES");
-  if(!$rs)
+  $stmt = $db_handle->query("SHOW TABLES");
+  if(!$stmt)
   {
     echo "\n\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($data = $db_handle->row($rs, $i)); $i++)
+    for ($i = 0; ($data = $stmt->row($i)); $i++)
     {
       echo "Converting '$data[0]' table...\n";
-      $rs1 = $db_handle->query("show FULL columns from $data[0]");
-      if(!$rs1)
+      $stmt1 = $db_handle->query("show FULL columns from $data[0]");
+      if(!$statement1)
       {
         echo "\n\n".$db_handle->error()."\n\n";
       }
       else
       {
-        for ($j = 0; ($data1 = $db_handle->row_keyed($rs1, $j)); $j++)
+        for ($j = 0; ($data1 = $stmt1->row_keyed($j)); $j++)
         {
           if (in_array(array_shift(split("\\(",
                                          $data1['Type'],2)),
@@ -372,7 +372,7 @@ function convert_one_db($db)
             } // end of if (substr)
           } // end of if (in_array)
         } // end of inner for
-      } // end of if ($rs1)
+      } // end of if ($stmt1)
 
       if ($altertablecharset)
       {
@@ -394,7 +394,7 @@ function convert_one_db($db)
       } // end of if ($altertablecharset)
 	  print "done.<br>\n";
     } // end of outer for
-  } // end of if (!$rs)
+  } // end of if (!$stmt)
   if ($alterdatabasecharset)
   {
     $sq='ALTER DATABASE `'.$db."` ".

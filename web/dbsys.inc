@@ -30,9 +30,9 @@ $local_db_schema_version = 1;
 
 // Convenience wrapper functions
 
-function sql_free($r)
+function sql_free($stmt)
 {
-  return DB::default_db()->free($r);
+  return $stmt->free();
 }
 function sql_quote($identifier)
 {
@@ -54,21 +54,21 @@ function sql_query($sql, $params = null)
 {
   return DB::default_db()->query($sql, $params);
 }
-function sql_row($r, $i)
+function sql_row($stmt, $i)
 {
-  return DB::default_db()->row($r, $i);
+  return $stmt->row($i);
 }
-function sql_row_keyed($r, $i)
+function sql_row_keyed($stmt, $i)
 {
-  return DB::default_db()->row_keyed($r, $i);
+  return $stmt->row_keyed($i);
 }
-function sql_all_rows_keyed($r)
+function sql_all_rows_keyed($stmt)
 {
-  return DB::default_db()->all_rows_keyed($r);
+  return $stmt->all_rows_keyed();
 }
-function sql_count($r)
+function sql_count($stmt)
 {
-  return DB::default_db()->count($r);
+  return $stmt->count();
 }
 function sql_insert_id($table, $field)
 {
@@ -126,9 +126,9 @@ function sql_syntax_bitwise_xor()
 {
   return DB::default_db()->syntax_bitwise_xor();
 }
-function sql_num_fields($result)
+function sql_num_fields($stmt)
 {
-  return DB::default_db()->num_fields($result);
+  return $stmt->num_fields();
 }
 function sql_table_exists($table)
 {

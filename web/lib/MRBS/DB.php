@@ -155,16 +155,16 @@ class DB
   // no results, or FALSE if there's an error
   public function query_array($sql, $params = null)
   {
-    $res = $this->query($sql, $params);
+    $stmt = $this->query($sql, $params);
 
-    if ($res === FALSE)
+    if ($stmt === FALSE)
     {
       return FALSE;
     }
     else
     {
       $result = array();
-      for ($i = 0; ($row = $this->row($res, $i)); $i++)
+      for ($i = 0; ($row = $stmt->row($i)); $i++)
       {
         $result[] = $row[0];
       }
@@ -181,64 +181,7 @@ class DB
     $sth = $this->dbh->prepare($sql);
     $sth->execute($params);
   
-    return $sth;
-  }
-
-
-  // Return a row from a result. The first row is 0.
-  // The row is returned as an array with index 0=first column, etc.
-  // When called with i >= number of rows in the result, cleans up from
-  // the query and returns 0.
-  // Typical usage: $i = 0; while ((a = $db_obj->row($r, $i++))) { ... }
-  public function row ($sth, $i)
-  {
-    if ($i >= $sth->rowCount())
-    {
-      $sth->closeCursor();
-      return 0;
-    }
-    return $sth->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_ABS, $i);
-  }
-
-
-  // Return a row from a result as an associative array keyed by field name.
-  // The first row is 0.
-  // This is actually upward compatible with row() since the underlying
-  // routing also stores the data under number indexes.
-  // When called with i >= number of rows in the result, cleans up from
-  // the query and returns 0.
-  public function row_keyed ($sth, $i)
-  {
-    if ($i >= $sth->rowCount())
-    {
-      $sth->closeCursor();
-      return 0;
-    }
-    return $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS, $i);
-  }
-
-  // Return all the rows from a result object, as an array of arrays
-  // keyed on the column name
-  public function all_rows_keyed($r)
-  {
-    $result = array();
-
-    for ($i=0; $row = $this->row_keyed($r, $i); $i++)
-    {
-      $result[] = $row;
-    }
-
-    return $result;
-  }
-
-  
-  // Free a results handle. You need not call this if you call row() or
-  // row_keyed() until the row returns 0, since those methods free the results
-  // handle when you finish reading the rows.
-  function free (&$sth)
-  {
-    $sth->closeCursor();
-    unset($sth);
+    return new DBStatement($this, $sth);
   }
 
   
@@ -266,30 +209,10 @@ class DB
   }
 
 
-  // Return the number of rows returned by a result handle from query().
-  public function count($sth)
-  {
-    return $sth->rowCount();
-  }
-
-  
-  // Returns the number of fields in a result.
-  public function num_fields($result)
-  {
-    return $result->columnCount();
-  }
-
-  
   // Return a string identifying the database version
   function version()
   {
     return $this->query1("SELECT VERSION()");
   }
 
-
-  //
-  public function special($foo)
-  {
-    return "nope";
-  }
 }
