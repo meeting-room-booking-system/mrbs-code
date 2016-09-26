@@ -43,7 +43,7 @@ namespace MRBS;
 // Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
 $dbsys = "mysql";
 // Hostname of database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
