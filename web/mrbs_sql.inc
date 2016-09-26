@@ -513,7 +513,8 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
            WHERE room_id = ?
              AND start_time <= ? AND end_time > ?
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
-    $res = sql_query($sql, array($room_id, $interval_end,  $interval_start));
+        
+  $res = sql_query($sql, array($room_id, $interval_end,  $interval_start));
     
   if ($res === FALSE)
   {
