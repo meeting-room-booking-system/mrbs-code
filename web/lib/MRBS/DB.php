@@ -47,7 +47,8 @@ class DB
       $this->dbh = new PDO(static::DB_DBO_DRIVER.":host=$db_host;port=$db_port;dbname=$db_name",
                            $db_username,
                            $db_password,
-                           array(PDO::ATTR_PERSISTENT => ($persist ? true : false)));
+                           array(PDO::ATTR_PERSISTENT => ($persist ? true : false),
+                                 PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
       $this->command("SET NAMES 'UTF8'");
     }
     catch (PDOException $e)
@@ -100,8 +101,6 @@ class DB
   // Returns -1 on error; use error() to get the error message.
   public function command($sql, $params = array())
   {
-    $ret = -1;
-  
     try
     {
       $sth = $this->dbh->prepare($sql);
@@ -110,15 +109,10 @@ class DB
     catch (PDOException $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
-      return $ret;
+      return -1;
     }
   
-    if ($sth)
-    {
-      $ret = $sth->rowCount();
-    }
-  
-    return $ret;
+    return $sth->rowCount();
   }
 
   
