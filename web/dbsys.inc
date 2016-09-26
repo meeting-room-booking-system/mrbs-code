@@ -86,6 +86,10 @@ function sql_commit()
 {
   return DB::default_db()->commit();
 }
+function sql_rollback()
+{
+  return DB::default_db()->rollback();
+}
 function sql_mutex_lock($name)
 {
   return DB::default_db()->mutex_lock($name);

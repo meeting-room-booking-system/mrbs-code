@@ -109,6 +109,7 @@ class DB
     }
     catch (PDOException $e)
     {
+      trigger_error($e->getMessage(), E_USER_WARNING);
       return $ret;
     }
   
