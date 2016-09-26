@@ -15,6 +15,7 @@ class DB
   protected $mutex_lock_name;
   static private $default_db_obj;
 
+
   //
   public function __construct($db_host, $db_username, $db_password,
                               $db_name, $persist = 0, $db_port = null)
@@ -96,6 +97,7 @@ class DB
     return $error;
   }
 
+
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Returns -1 on error; use error() to get the error message.
@@ -148,6 +150,7 @@ class DB
     return $result;
   }
 
+
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results, or FALSE if there's an error
@@ -171,8 +174,8 @@ class DB
   }
 
   
-  // Execute an SQL query. Returns a result handle, which should be passed
-  // back to row() or row_keyed() to get the results.
+  // Execute an SQL query. Returns a DBStatement object, a class with a number
+  // of methods like row() and row_keyed() to get the results.
   // Returns FALSE on error; use error() to get the error message.
   public function query ($sql, $params = array())
   {
@@ -182,7 +185,8 @@ class DB
     return new DBStatement($this, $sth);
   }
 
-  
+
+  //  
   public function begin()
   {
     // This method must be extended by the sub-classes, which must call the parent as the
@@ -211,7 +215,7 @@ class DB
   }
 
   
-  // Commit (end) a transaction. See begin().
+  // Roll back a transaction, aborting it. See begin().
   function rollback()
   {
     $result = $this->command("ROLLBACK", array());
