@@ -574,7 +574,7 @@ function mrbsDelEntry($user, $id, $series, $all)
     {
       continue;
     }
-   
+    
     if (sql_command("DELETE FROM $tbl_entry WHERE id=" . $row['id']) > 0)
     {
       $start_times[] = $row['start_time'];

@@ -75,6 +75,11 @@ function sql_mysqli_command ($sql, $db_conn = null)
   {
     $ret = $db_conn->affected_rows;
   }
+  else
+  {
+    trigger_error($db_conn->error, E_USER_WARNING);
+  }
+  
   return $ret;
 }
 

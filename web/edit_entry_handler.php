@@ -699,14 +699,32 @@ foreach ($rooms as $room_id)
 $just_check = $ajax && function_exists('json_encode') && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
 $send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
+
+// Wrap the editing process in a transaction, because if deleting the old booking should fail for
+// some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
+// if, for example, the database user hasn't been granted DELETE rights.
+sql_begin();
+$transaction_ok = true;
+
 $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
 // If we weren't just checking and this was a succesful booking and
 // we were editing an existing booking, then delete the old booking
 if (!$just_check && $result['valid_booking'] && isset($id))
 {
-  mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
+  $transaction_ok = mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
 }
+
+if ($transaction_ok)
+{
+  sql_commit();
+}
+else
+{
+  sql_rollback();
+  trigger_error('Edit failed.', E_USER_WARNING);
+}
+
 
 // If this is an Ajax request, output the result and finish
 if ($ajax && function_exists('json_encode'))

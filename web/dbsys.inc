@@ -347,8 +347,8 @@ function sql_error()
 // Start a transaction
 function sql_begin()
 {
-  // Turn off ignore_user_abort until the transaction has been committed.  See
-  // the warning at http://php.net/manual/en/features.persistent-connections.php
+  // Turn off ignore_user_abort until the transaction has been committed or rolled back.
+  // See the warning at http://php.net/manual/en/features.persistent-connections.php
   // (Only applies to persistent connections, but we'll do it for all cases to keep
   // things simple)
   mrbs_ignore_user_abort(TRUE);
@@ -390,6 +390,30 @@ function sql_commit()
   }
 
   $f = __NAMESPACE__ . "\\sql_${db_sys}_commit";
+  $f($db_conn);
+  
+  mrbs_ignore_user_abort(FALSE);
+}
+
+
+// Finish a transaction
+function sql_rollback()
+{
+  if (func_num_args() > 0)
+  {
+    $handle = func_get_arg(0);
+    $db_sys = $handle['system'];
+    $db_conn = $handle['connection'];
+  }
+  else
+  {
+    global $dbsys;
+
+    $db_sys = $dbsys;
+    $db_conn = null;
+  }
+
+  $f = __NAMESPACE__ . "\\sql_${db_sys}_rollback";
   $f($db_conn);
   
   mrbs_ignore_user_abort(FALSE);
