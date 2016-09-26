@@ -18,7 +18,8 @@ class DBFactory
       case 'pgsql':
         break;
       default:
-        // throw exception
+        throw new Exception("Unsupported database driver '$db_system'");
+        break;
     }
     $class = "MRBS\DB_${db_system}";
     return new $class($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
