@@ -180,15 +180,17 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
 
     if (!isset($existing[$location][$interval_type][$interval_start]))
     {
-      $sql_params = array();
       $sql = "SELECT COUNT(*)
                 FROM $tbl_entry E, $tbl_room R
-               WHERE E.start_time<$interval_end
-                 AND E.end_time>$interval_start
-                 AND E.create_by=?
-                 AND E.room_id=R.id
-                 AND R.disabled=0";
-      $sql_params[] = $booking['create_by'];
+               WHERE E.start_time < ?
+                 AND E.end_time > ?
+                 AND E.create_by = ?
+                 AND E.room_id = R.id
+                 AND R.disabled = 0";
+                 
+      $sql_params = array($interval_end,
+                          $interval_start,
+                          $booking['create_by']);
 
       if ($only_area)
       {
