@@ -35,6 +35,8 @@ class DB_mysql extends DB
   // improve performance for multiple insert/delete/updates.
   public function begin()
   {
+    parent::begin();
+    
     $result = $this->command("START TRANSACTION");
   
     if ($result < 0)

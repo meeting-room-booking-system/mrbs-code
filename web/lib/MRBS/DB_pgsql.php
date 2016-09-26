@@ -67,6 +67,8 @@ class DB_pgsql extends DB
   // improve performance for multiple insert/delete/updates.
   public function begin()
   {
+    parent::begin();
+    
     $result = $this->command("BEGIN");
   
     if ($result < 0)
