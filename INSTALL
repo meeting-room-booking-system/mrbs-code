@@ -354,7 +354,7 @@ as there is usually a week when Europe has changed but the USA has not.
 
 First, select your database system. Define one of the following:
 
-    $dbsys = "mysqli";
+    $dbsys = "mysql";
     $dbsys = "pgsql";
 
 Then define your database connection parameters. Set the values for:

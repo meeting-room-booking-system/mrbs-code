@@ -57,10 +57,11 @@ $zoneinfo_expiry = 60*60*24*7;    // 7 days
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysqli"=MySQL
-$dbsys = "mysqli";
+// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
+// ("mysqli" is also supported for historical reasons and is mapped to "mysql")
+$dbsys = "mysql";
 // Hostname of database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysqli "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
@@ -726,9 +727,9 @@ $auth['db']['protected_fields'] = array('level', 'name');
 // The 'db_system' variable is equivalent to the core MRBS $dbsys variable,
 // and allows you to use any of MRBS's database abstraction layers for
 // db_ext authentication.
-$auth['db_ext']['db_system'] = 'mysqli';
+$auth['db_ext']['db_system'] = 'mysql';
 // Hostname of external database server. For pgsql, can use "" instead of localhost
-// to use Unix Domain Sockets instead of TCP/IP. For mysqli "localhost"
+// to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $auth['db_ext']['db_host'] = 'localhost';

@@ -26,7 +26,7 @@ see the $persist parameter to sql_connect() below.
 
 To use this package, include "dbsys.inc" after defining the following
 variables:
-     $dbsys = The database abstraction to use, 'mysqli' or 'pgsql'
+     $dbsys = The database abstraction to use, 'mysql' or 'pgsql'
      $db_host = The hostname of the database server, or "localhost"
      $db_login = The username to use when connecting to the database
      $db_password = The database account password
@@ -50,7 +50,7 @@ reason the functions defined here will output an error message and exit.)
 
 The way MRBS uses this is to define a configuration file config.inc.php with
 the above variables plus:
-     $dbsys = "pgsql";  //  or: $dbsys = "mysqli";
+     $dbsys = "pgsql";  //  or: $dbsys = "mysql";
 Then, each PHP script which wants to connect to the database starts with:
      include "config.inc.php";
      include "dbsys.inc";

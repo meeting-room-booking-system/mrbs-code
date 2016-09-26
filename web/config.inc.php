@@ -40,8 +40,8 @@ namespace MRBS;
 /*******************
  * Database settings
  ******************/
-// Which database system: "pgsql"=PostgreSQL, "mysqli"=MySQL
-$dbsys = "mysqli";
+// Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
+$dbsys = "mysql";
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP. For mysql/mysqli "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
