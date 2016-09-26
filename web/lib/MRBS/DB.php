@@ -108,7 +108,7 @@ class DB
     }
     catch (PDOException $e)
     {
-      trigger_error($e->getMessage(), E_USER_WARNING);
+      trigger_error($sql . " " . $e->getMessage(), E_USER_WARNING);
       return -1;
     }
   
@@ -124,14 +124,17 @@ class DB
   // a MIN or MAX aggregate function applied over no rows.
   function query1($sql, $params = array())
   {
-    $sth = $this->dbh->prepare($sql);
-    if (!$sth)
+    try
     {
-      trigger_error($sql." ".$this->error(), E_USER_WARNING);
+      $sth = $this->dbh->prepare($sql);
+      $sth->execute($params);
+    }
+    catch (PDOException $e)
+    {
+      trigger_error($sql . " " . $e->getMessage(), E_USER_WARNING);
       return -1;
     }
-    $sth->execute($params);
-
+    
     if (($sth->rowCount() != 1) || ($sth->columnCount() != 1) ||
         (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL))
     {
