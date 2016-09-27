@@ -24,12 +24,25 @@ if ($type == "room")
     // They have confirmed it already, so go blast!
     sql_begin();
     // First take out all appointments for this room
-    sql_command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
-    sql_command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
+    $result = sql_command("delete from $tbl_entry where room_id=$room");
+    if ($result >= 0)
+    {
+      $result = sql_command("delete from $tbl_repeat where room_id=$room");
+      // Now take out the room itself
+      if ($result >= 0)
+      {
+        sql_command("delete from $tbl_room where id=$room");
+      }
+    }
    
-    // Now take out the room itself
-    sql_command("DELETE FROM $tbl_room WHERE id=?",array($room));
-    sql_commit();
+    if ($result >= 0)
+    {
+      sql_commit();
+    }
+    else
+    {
+      sql_rollback();
+    }
    
     // Go back to the admin page
     Header("Location: admin.php?area=$area");
