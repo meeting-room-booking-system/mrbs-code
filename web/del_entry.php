@@ -75,9 +75,9 @@ if ($info = get_booking_info($id, FALSE, TRUE))
         $mail_previous['entry_type'] = ENTRY_RPT_CHANGED;
       }
     }
-    sql_begin();
+    
     $start_times = mrbsDelEntry(getUserName(), $id, $series, 1);
-    sql_commit();
+    
     // [At the moment MRBS does not inform the user if it was not able to delete
     // an entry, or, for a series, some entries in a series.  This could happen for
     // example if a booking policy is in force that prevents the deletion of entries
