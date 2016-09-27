@@ -31,7 +31,7 @@ if ($type == "room")
       // Now take out the room itself
       if ($result >= 0)
       {
-        sql_command("delete from $tbl_room where id=$room");
+        $result = sql_command("delete from $tbl_room where id=$room");
       }
     }
    
