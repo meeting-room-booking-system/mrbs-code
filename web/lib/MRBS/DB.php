@@ -179,8 +179,15 @@ class DB
   // Returns FALSE on error; use error() to get the error message.
   public function query ($sql, $params = array())
   {
-    $sth = $this->dbh->prepare($sql);
-    $sth->execute($params);
+    try
+    {
+      $sth = $this->dbh->prepare($sql);
+      $sth->execute($params);
+    }
+    catch (PDOException $e)
+    {
+      throw new DBException($e->getMessage(), 0, $e, $sql, $params);
+    }
   
     return new DBStatement($this, $sth);
   }

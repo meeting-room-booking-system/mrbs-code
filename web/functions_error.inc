@@ -46,6 +46,7 @@ function exception_handler($exception)
   
   switch ($class)
   {
+    case __NAMESPACE__ . "\\DBException":
     case 'PDOException':
       $message = get_vocab("fatal_db_error");
       break;
