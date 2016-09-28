@@ -399,11 +399,7 @@ function create_field_entry_rooms($disabled=FALSE)
              AND A.disabled=0
         ORDER BY R.area_id, R.sort_key";
   $res = sql_query($sql);
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
+  
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
@@ -818,13 +814,9 @@ if (isset($id))
               FROM $tbl_repeat 
              WHERE id=?
              LIMIT 1";
-   
+             
     $res = sql_query($sql, array($rep_id));
-    if (! $res)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(TRUE, get_vocab("fatal_db_error"));
-    }
+    
     if (sql_count($res) != 1)
     {
       fatal_error(1,
@@ -1041,12 +1033,10 @@ $sql = "SELECT R.id, R.room_name, R.area_id
            AND A.disabled=0
       ORDER BY R.area_id, R.sort_key";
 $res = sql_query($sql);
-if ($res)
+
+for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-  {
-    $rooms[$row['id']] = $row;
-  }
+  $rooms[$row['id']] = $row;
 }
     
 // Get the details of all the enabled areas
@@ -1059,52 +1049,50 @@ $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all
          WHERE disabled=0
       ORDER BY sort_key";
 $res = sql_query($sql);
-if ($res)
+
+for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  // Make sure we've got the correct resolution when using periods (it's
+  // probably OK anyway, but just in case)
+  if ($row['enable_periods'])
   {
-    // Make sure we've got the correct resolution when using periods (it's
-    // probably OK anyway, but just in case)
-    if ($row['enable_periods'])
-    {
-      $row['resolution'] = 60;
-    }
-    // Generate some derived settings
-    $row['max_duration_qty']     = $row['max_duration_secs'];
-    toTimeString($row['max_duration_qty'], $row['max_duration_units']);
-    // Get the start and end of the booking day
-    if ($row['enable_periods'])
-    {
-      $first = 12*SECONDS_PER_HOUR;
-      // If we're using periods we just go to the end of the last slot
-      $last = $first + (count($periods) * $row['resolution']);
-    }
-    else
-    {
-      $first = (($row['morningstarts'] * 60) + $row['morningstarts_minutes']) * 60;
-      $last = ((($row['eveningends'] * 60) + $row['eveningends_minutes']) * 60) + $row['resolution'];
-      // If the end of the day is the same as or before the start time, then it's really on the next day
-      if ($first >= $last)
-      {
-        $last += SECONDS_PER_DAY;
-      }
-    }
-    $row['first'] = $first;
-    $row['last'] = $last;
-    // We don't show the all day checkbox if it's going to result in bookings that
-    // contravene the policy - ie if max_duration is enabled and an all day booking
-    // would be longer than the maximum duration allowed.
-    $row['show_all_day'] = $is_admin || 
-                           !$row['max_duration_enabled'] ||
-                           ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($periods))) ||
-                             (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
-    
-    // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
-    $row = clean_area_row($row);
-    
-    // Now assign the row to the area      
-    $areas[$row['id']] = $row;
+    $row['resolution'] = 60;
   }
+  // Generate some derived settings
+  $row['max_duration_qty']     = $row['max_duration_secs'];
+  toTimeString($row['max_duration_qty'], $row['max_duration_units']);
+  // Get the start and end of the booking day
+  if ($row['enable_periods'])
+  {
+    $first = 12*SECONDS_PER_HOUR;
+    // If we're using periods we just go to the end of the last slot
+    $last = $first + (count($periods) * $row['resolution']);
+  }
+  else
+  {
+    $first = (($row['morningstarts'] * 60) + $row['morningstarts_minutes']) * 60;
+    $last = ((($row['eveningends'] * 60) + $row['eveningends_minutes']) * 60) + $row['resolution'];
+    // If the end of the day is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += SECONDS_PER_DAY;
+    }
+  }
+  $row['first'] = $first;
+  $row['last'] = $last;
+  // We don't show the all day checkbox if it's going to result in bookings that
+  // contravene the policy - ie if max_duration is enabled and an all day booking
+  // would be longer than the maximum duration allowed.
+  $row['show_all_day'] = $is_admin || 
+                         !$row['max_duration_enabled'] ||
+                         ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($periods))) ||
+                           (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
+  
+  // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
+  $row = clean_area_row($row);
+  
+  // Now assign the row to the area      
+  $areas[$row['id']] = $row;
 }
 
 

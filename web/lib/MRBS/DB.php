@@ -176,7 +176,7 @@ class DB
   
   // Execute an SQL query. Returns a DBStatement object, a class with a number
   // of methods like row() and row_keyed() to get the results.
-  // Returns FALSE on error; use error() to get the error message.
+  // Throws a DBException on error
   public function query ($sql, $params = array())
   {
     try
@@ -240,6 +240,21 @@ class DB
   function version()
   {
     return $this->query1("SELECT VERSION()");
+  }
+  
+  
+  // Return a boolean depending on whether $field exists in $table
+  public function field_exists($table, $field)
+  {
+    $rows = $this->field_info($table);
+    foreach ($rows as $row)
+    {
+      if ($row['name'] === $field)
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

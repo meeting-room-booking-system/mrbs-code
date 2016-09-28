@@ -1508,11 +1508,6 @@ if ($phase == 2)
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
 
   $res = sql_query($sql, $sql_params);
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   $nmatch = sql_count($res);
 }
 

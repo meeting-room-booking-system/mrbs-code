@@ -18,12 +18,6 @@ $sql = "SELECT T.id, T.start_time, A.timezone
  
 $res = sql_query($sql);
 
-if ($res === FALSE)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
-
 // Save the current default timezone so that we can restore it at the end
 $old_tz = mrbs_default_timezone_get();
 

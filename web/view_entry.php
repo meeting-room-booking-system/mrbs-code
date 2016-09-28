@@ -233,11 +233,6 @@ if (isset($action) && ($action == "export"))
       $sql .= " ORDER BY E.ical_recur_id";
     }
     $res = sql_query($sql, $sql_params);
-    if ($res === FALSE)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
     
     // Export the calendar
     require_once "functions_ical.inc";

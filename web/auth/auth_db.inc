@@ -53,12 +53,7 @@ function authValidateUser($user, $pass)
            LIMIT 1";
 
   $res = sql_query($sql, $sql_params);
-  if ($res == FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return 0;
-  }
-
+  
   $row = sql_row_keyed($res, 0);
 
   $do_rehash = false;

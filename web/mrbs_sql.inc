@@ -53,12 +53,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   $sql .= " ORDER BY start_time";
 
   $res = sql_query($sql, $sql_params);
-  if (! $res)
-  {
-    // probably because the table hasn't been created properly
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
+
   if (sql_count($res) == 0)
   {
     sql_free($res);
@@ -459,12 +454,6 @@ function get_entry_by_id($id)
    
   $res = sql_query($sql, array($id));
   
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
-  
   $result = (sql_count($res) == 0) ? NULL : sql_row_keyed($res, 0);
   sql_free($res);
   return $result;
@@ -488,11 +477,6 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
 
   $res = sql_query($sql, array($area_id, $interval_end, $interval_start));
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   
   $result = sql_all_rows_keyed($res);
   sql_free($res);
@@ -515,12 +499,6 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
         
   $res = sql_query($sql, array($room_id, $interval_end,  $interval_start));
-    
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
   
   $result = sql_all_rows_keyed($res);
   sql_free($res);
@@ -550,7 +528,7 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   // Get the repeat_id and room_id for this entry
   $res = sql_query("SELECT repeat_id, room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
-  if (($res === FALSE) || (sql_count($res) <= 0))
+  if (sql_count($res) <= 0)
   {
     return FALSE;
   }
@@ -1094,11 +1072,6 @@ function get_repeat_id($entry_id)
            
   $res = sql_query($sql, array($entry_id));
   
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   if (sql_count($res) == 0)
   {
     // This should not happen
@@ -1353,9 +1326,13 @@ function get_booking_info($id, $series, $silent=FALSE)
              AND M.area_id = A.id
              AND T.id=?";
 
-  $res = sql_query($sql, array($id));
-  if (! $res)
+  try
   {
+    $res = sql_query($sql, array($id));
+  }
+  catch (DBException $e)
+  {
+    // Not sure why we've got the silent option in here.  Need to revisit this sometime.
     trigger_error(sql_error(), E_USER_WARNING);
     if ($silent)
     {
@@ -1413,7 +1390,7 @@ function get_booking_info($id, $series, $silent=FALSE)
       $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=? LIMIT 1", array($row['repeat_id']));
-      if (!$res || (!$extra_row = sql_row_keyed($res, 0)))
+      if (!$extra_row = sql_row_keyed($res, 0))
       {
         if (!$res)
         {
@@ -1466,12 +1443,6 @@ function get_area_name($id, $all=FALSE)
   
   $res = sql_query($sql, array($id));
   
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return FALSE;
-  }
-  
   if (sql_count($res) == 0)
   {
     return NULL;
@@ -1500,16 +1471,9 @@ function get_area_names($all=FALSE)
   
   $res = sql_query($sql);
   
-  if ($res === FALSE)
+  for ($i=0; $row = sql_row_keyed($res, $i); $i++)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
-  }
-  else
-  {
-    for ($i=0; $row = sql_row_keyed($res, $i); $i++)
-    {
-      $areas[$row['id']] = $row['area_name'];
-    }
+    $areas[$row['id']] = $row['area_name'];
   }
   
   return $areas;
@@ -1517,7 +1481,7 @@ function get_area_names($all=FALSE)
 
 
 // Get all the area details for $area_id.
-// Returns FALSE on error, NULL if $area_id does not exist.
+// Returns NULL if $area_id does not exist.
 function get_area_details($area_id)
 {
   global $tbl_area;
@@ -1528,12 +1492,6 @@ function get_area_details($area_id)
            LIMIT 1";
   
   $res = sql_query($sql, array($area_id));
-  
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return FALSE;
-  }
   
   if (sql_count($res) == 0)
   {
@@ -1549,7 +1507,7 @@ function get_area_details($area_id)
 
 // Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
-// Returns FALSE if there is an error, NULL if the id does not exist
+// Returns NULL if the id does not exist
 function get_room_name($room_id, $all=FALSE)
 {
   global $tbl_room, $tbl_area;
@@ -1568,12 +1526,6 @@ function get_room_name($room_id, $all=FALSE)
   $sql .= " LIMIT 1";
   
   $res = sql_query($sql, array($room_id));
-  
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return FALSE;
-  }
   
   if (sql_count($res) == 0)
   {
@@ -1633,12 +1585,6 @@ function get_rooms($area, $all=FALSE)
   $sql .= " ORDER BY R.sort_key";
 
   $res = sql_query($sql, array($area));
-
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   
   return sql_all_rows_keyed($res);
 }

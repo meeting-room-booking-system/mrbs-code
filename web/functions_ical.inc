@@ -116,12 +116,8 @@ function get_vtimezone($tz)
              AND outlook_compatible=?
            LIMIT 1";
   $res = sql_query($sql, array($tz,$zoneinfo_outlook_compatible));
-  if ($res === FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  elseif (sql_count($res) > 0)
+
+  if (sql_count($res) > 0)
   {
     // If there's something in the database and it hasn't expired, then
     // that's it.
@@ -313,12 +309,8 @@ function get_create_by($organizer)
   {
     $sql = "SELECT name FROM $tbl_users WHERE email=?";
     $res = sql_query($sql, array($email));
-    if ($res === FALSE)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
-    elseif (sql_count($res) == 0)
+
+    if (sql_count($res) == 0)
     {
       return NULL;
     }

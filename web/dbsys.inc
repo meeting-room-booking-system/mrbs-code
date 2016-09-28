@@ -138,6 +138,10 @@ function sql_table_exists($table)
 {
   return DB::default_db()->table_exists($table);
 }
+function sql_field_exists($table, $field)
+{
+  return DB::default_db()->field_exists($table, $field);
+}
 function sql_field_info($table)
 {
   return DB::default_db()->field_info($table);

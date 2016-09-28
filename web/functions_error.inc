@@ -20,7 +20,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
   $display_errors = ini_get('display_errors');
   
-  $title = get_error_name($errno) . " in $errfile at line $errline\n";
+  $title = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
   
   if ($display_errors)
   {
@@ -40,7 +40,7 @@ function exception_handler($exception)
   
   $message = "Uncaught exception ($class) in " . $exception->getFile() . " at line " . $exception->getLine() . "\n" .
              $exception->getMessage() . "\n" .
-             $exception->getTraceAsString();
+             $exception->getTraceAsString() . "\n";
              
   trigger_error($message, E_USER_WARNING);
   

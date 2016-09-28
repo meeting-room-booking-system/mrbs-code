@@ -237,11 +237,7 @@ if (!$is_admin)
 $sql .= " ORDER BY repeat_id, start_time";
 
 $res = sql_query($sql, $sql_params);
-if (! $res)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
+
 if (sql_count($res) == 0)
 {
   echo "<p>" .get_vocab("none_outstanding") . "</p>\n";

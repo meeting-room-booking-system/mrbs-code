@@ -83,11 +83,6 @@ $sql = "SELECT DISTINCT repeat_id
          WHERE repeat_id!=0
            AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 $res = sql_query($sql);
-if ($res === FALSE)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
-}
 
 for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 {

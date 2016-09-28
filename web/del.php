@@ -56,12 +56,8 @@ if ($type == "room")
    
     $sql = "SELECT name, start_time, end_time FROM $tbl_entry WHERE room_id=?";
     $res = sql_query($sql, array($room));
-    if (! $res)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
-    else if (sql_count($res) > 0)
+    
+    if (sql_count($res) > 0)
     {
       echo "<p>\n";
       echo get_vocab("deletefollowing") . ":\n";

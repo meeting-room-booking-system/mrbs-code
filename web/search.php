@@ -326,11 +326,6 @@ if (!$ajax_capable || $ajax)
 
   // this is a flag to tell us not to display a "Next" link
   $result = sql_query($sql, $sql_params);
-  if (! $result)
-  {
-    trigger_error("sql ".$sql." err ".sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   $num_records = sql_count($result);
 }
 

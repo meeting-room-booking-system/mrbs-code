@@ -1772,7 +1772,7 @@ function get_area_settings($area)
            LIMIT 1";
            
   $res = sql_query($sql, array($area));
-  if (!$res || (sql_count($res) == 0))
+  if (sql_count($res) == 0)
   {
     // We still need to set the timezone even if the query didn't
     // return any results
@@ -2199,7 +2199,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
   $res = sql_query($sql, array($area));
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
-  if ($res && (sql_count($res) > 1))
+  if (sql_count($res) > 1)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
