@@ -27,6 +27,7 @@ require_once "language.inc";
 require_once "trailer.inc";
 require_once "theme.inc";
 require_once "functions.inc";
+require_once "functions_error.inc";
 require_once "dbsys.inc";
 require_once("password_compat/password.php");
 require_once "mrbs_auth.inc";
