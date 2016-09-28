@@ -527,4 +527,5 @@ if (defined("E_STRICT"))
 }
 
 error_reporting ($error_level);
-
+set_error_handler(__NAMESPACE__ . "\\error_handler");
+set_exception_handler(__NAMESPACE__ . "\\exception_handler");

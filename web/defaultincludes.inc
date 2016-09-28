@@ -21,13 +21,13 @@ require_once 'lib/PHPMailer/PHPMailerAutoload.php';
 require "grab_globals.inc.php";   // this must be included before mrbs_auth.inc (due to WordPress - see comment in file)
 require_once "systemdefaults.inc.php";
 require_once "areadefaults.inc.php";
+require_once "functions_error.inc";
 require_once "config.inc.php";
 require_once "internalconfig.inc.php";
 require_once "language.inc";
 require_once "trailer.inc";
 require_once "theme.inc";
 require_once "functions.inc";
-require_once "functions_error.inc";
 require_once "dbsys.inc";
 require_once("password_compat/password.php");
 require_once "mrbs_auth.inc";
