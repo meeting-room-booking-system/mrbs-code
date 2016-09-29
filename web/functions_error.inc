@@ -55,7 +55,7 @@ function exception_handler($exception)
       break;
   }
   
-  fatal_error(true, $message, false, false);
+  fatal_error(false, $message, false, false);
 }
 
 
