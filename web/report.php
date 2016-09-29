@@ -97,11 +97,6 @@ function generate_search_criteria(&$vars)
         // (We need DISTINCT because it's possible to have two rooms of the same name
         // in different areas)
         $options = sql_query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
-        if ($options === FALSE)
-        {
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
         echo "<div id=\"div_roommatch\">\n";
         $params = array('label'         => get_vocab("match_room") . ':',
                         'name'          => 'roommatch',

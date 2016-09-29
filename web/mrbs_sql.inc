@@ -204,10 +204,6 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
       }
       
       $existing[$location][$interval_type][$interval_start] = sql_query1($sql, $sql_params);
-      if ($existing[$location][$interval_type][$interval_start] < 0)
-      {
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
       $proposed[$location][$interval_type][$interval_start] = 1;
     }
     else
@@ -1326,7 +1322,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
+      throw $e;
     }
   }
 

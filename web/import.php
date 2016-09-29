@@ -80,11 +80,8 @@ function get_room_id($location, &$error)
   {
     $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name=?";
     $count = sql_query1($sql, array($location_room));
-    if ($count < 0)
-    {
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
-    elseif ($count == 0)
+
+    if ($count == 0)
     {
       $error = "'$location_room': " . get_vocab("room_does_not_exist_no_area");
       return FALSE;
@@ -98,10 +95,6 @@ function get_room_id($location, &$error)
     {
       $sql = "SELECT id FROM $tbl_room WHERE room_name=? LIMIT 1";
       $id = sql_query1($sql, array($location_room));
-      if ($id < 0)
-      {
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
       return $id;
     }
   }
