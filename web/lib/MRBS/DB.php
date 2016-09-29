@@ -120,9 +120,9 @@ class DB
   
   // Execute an SQL query which should return a single non-negative number value.
   // This is a lightweight alternative to query(), good for use with count(*)
-  // and similar queries. 
-  // It returns -1 on error or if the query did not return
-  // exactly one value, so error checking is somewhat limited.
+  // and similar queries.
+  // It returns -1 if the query did not return exactly one value, so error checking
+  // is somewhat limited.
   // It also returns -1 if the query returns a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
