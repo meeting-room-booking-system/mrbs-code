@@ -286,10 +286,7 @@ if (!isset($total))
           WHERE $sql_pred";
   $total = sql_query1($sql, $sql_params);
 }
-if ($total < 0)
-{
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
+
 if (($total <= 0) && !$ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";

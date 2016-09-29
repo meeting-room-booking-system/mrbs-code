@@ -171,10 +171,6 @@ function print_theme_header($day, $month, $year, $area, $room)
             $sql_params[] = $user;
           }
           $n_outstanding = sql_query1($sql, $sql_params);
-          if ($n_outstanding < 0)
-          {
-            fatal_error(FALSE, get_vocab("fatal_db_error"));
-          }
           echo "<div id=\"n_outstanding\"" .
                (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
                ">\n";
