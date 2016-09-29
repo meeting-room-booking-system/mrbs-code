@@ -211,7 +211,7 @@ class DB
   
   
   // Commit (end) a transaction. See begin().
-  function commit()
+  public function commit()
   {
     $result = $this->command("COMMIT");
     mrbs_ignore_user_abort(FALSE);
@@ -219,7 +219,7 @@ class DB
 
   
   // Roll back a transaction, aborting it. See begin().
-  function rollback()
+  public function rollback()
   {
     $result = $this->command("ROLLBACK", array());
     mrbs_ignore_user_abort(FALSE);
@@ -227,7 +227,7 @@ class DB
 
 
   // Return a string identifying the database version
-  function version()
+  public function version()
   {
     return $this->query1("SELECT VERSION()");
   }
