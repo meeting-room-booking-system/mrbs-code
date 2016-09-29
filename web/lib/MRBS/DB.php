@@ -37,12 +37,6 @@ class DB
     }
 
     // Establish a database connection.
-
-    // On connection error, the message will be output without a proper HTML
-    // header. There is no way I can see around this; if track_errors isn't on
-    // there seems to be no way to supress the automatic error message output and
-    // still be able to access the error text.
-
     try
     {
       $this->dbh = new PDO(static::DB_DBO_DRIVER.":host=$db_host;port=$db_port;dbname=$db_name",
@@ -54,16 +48,14 @@ class DB
     }
     catch (PDOException $e)
     {
-      trigger_error($e->getMessage(), E_USER_WARNING);
+      $message = $e->getMessage();
       if ($e->getCode() == 2054)
       {
-        $message = "It looks like you have an old style MySQL password stored, which cannot be " .
-                   "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
-                   "deleting the MySQL user and recreating it with the same password.";
-        trigger_error($message, E_USER_WARNING);
+        $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
+                    "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
+                    "deleting the MySQL user and recreating it with the same password.";
       }
-      echo "\n<p>\n" . get_vocab("failed_connect_db") . "\n</p>\n";
-      exit;
+      throw new DBException($message, 0, $e);
     }
   }
 
@@ -76,7 +68,7 @@ class DB
     {
       global $db_persist, $db_host, $db_login, $db_password,
              $db_database, $db_port, $dbsys;
-
+      
       self::$default_db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
                                                 $db_database, $db_persist, $db_port);
     }
