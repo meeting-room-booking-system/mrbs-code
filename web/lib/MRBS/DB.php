@@ -50,7 +50,7 @@ class DB
       $message = $e->getMessage();
       
       // Add in some possible solutions for common problems when migrating to the PDO version of MRBS
-      // from an earlier version.      
+      // from an earlier version.
       if ($e->getCode() == 7)
       {
         if (($db_host === '') && (static::DB_DBO_DRIVER === DB_pgsql::DB_DBO_DRIVER))
