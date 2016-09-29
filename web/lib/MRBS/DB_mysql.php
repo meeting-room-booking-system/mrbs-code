@@ -36,13 +36,7 @@ class DB_mysql extends DB
   public function begin()
   {
     parent::begin();
-    
     $result = $this->command("START TRANSACTION");
-  
-    if ($result < 0)
-    {
-      trigger_error ($this->error(), E_USER_WARNING);
-    }
   }
 
   

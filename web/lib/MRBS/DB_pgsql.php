@@ -68,13 +68,7 @@ class DB_pgsql extends DB
   public function begin()
   {
     parent::begin();
-    
     $result = $this->command("BEGIN");
-  
-    if ($result < 0)
-    {
-      trigger_error ($this->error(), E_USER_WARNING);
-    }
   }
 
   
@@ -92,11 +86,16 @@ class DB_pgsql extends DB
   // It does not timeout, but waits forever for the lock.
   public function mutex_lock($name)
   {
-    if (($this->command("BEGIN") < 0) ||
-        ($this->command("LOCK TABLE $name IN EXCLUSIVE MODE") < 0))
+    try
+    {
+      $this->command("BEGIN");
+      $this->command("LOCK TABLE $name IN EXCLUSIVE MODE");
+    }
+    catch (DBException $e)
     {
       return 0;
     }
+
     $this->mutex_lock_name = $name;
 
     return 1;

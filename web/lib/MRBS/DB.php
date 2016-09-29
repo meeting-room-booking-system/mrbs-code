@@ -210,12 +210,6 @@ class DB
   function commit()
   {
     $result = $this->command("COMMIT");
-  
-    if ($result < 0)
-    {
-      trigger_error ($this->error(), E_USER_WARNING);
-    }
-    
     mrbs_ignore_user_abort(FALSE);
   }
 
@@ -224,12 +218,6 @@ class DB
   function rollback()
   {
     $result = $this->command("ROLLBACK", array());
-  
-    if ($result < 0)
-    {
-      trigger_error ($this->error(), E_USER_WARNING);
-    }
-    
     mrbs_ignore_user_abort(FALSE);
   }
 
