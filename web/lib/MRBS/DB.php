@@ -128,12 +128,12 @@ class DB
     
     if ($sth->rowCount() > 1)
     {
-      throw new DBException("sql_query1() returned more than one row.", 0, null, $sql, $params);
+      throw new DBException("query1() returned more than one row.", 0, null, $sql, $params);
     }
     
     if ($sth->columnCount() > 1)
     {
-      throw new DBException("sql_query1() returned more than one column.", 0, null, $sql, $params);
+      throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
     }
     
     if (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL)
