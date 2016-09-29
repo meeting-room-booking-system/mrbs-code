@@ -7,6 +7,11 @@ require "defaultincludes.inc";
 require_once "mincals.inc";
 require_once "functions_table.inc";
 
+$sql = "SELECT id FROM $tbl_entry WHERE id=?";
+$result = sql_query1($sql, array(571407));
+var_dump($result);
+exit;
+
 // Get non-standard form variables
 $timetohighlight = get_form_var('timetohighlight', 'int');
 $ajax = get_form_var('ajax', 'int');

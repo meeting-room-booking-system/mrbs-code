@@ -121,9 +121,7 @@ class DB
   // Execute an SQL query which should return a single non-negative number value.
   // This is a lightweight alternative to query(), good for use with count(*)
   // and similar queries.
-  // It returns -1 if the query did not return exactly one value, so error checking
-  // is somewhat limited.
-  // It also returns -1 if the query returns a single NULL value, such as from
+  // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
   function query1($sql, $params = array())
@@ -138,8 +136,17 @@ class DB
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
     
-    if (($sth->rowCount() != 1) || ($sth->columnCount() != 1) ||
-        (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL))
+    if ($sth->rowCount() > 1)
+    {
+      throw new DBException("sql_query1() returned more than one row.", 0, null, $sql, $params);
+    }
+    
+    if ($sth->columnCount() > 1)
+    {
+      throw new DBException("sql_query1() returned more than one column.", 0, null, $sql, $params);
+    }
+    
+    if (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL)
     {
       $result = -1;
     }
