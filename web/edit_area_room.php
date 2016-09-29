@@ -620,14 +620,9 @@ if ($phase == 2)
         
         $sql .= implode(",", $assign_array) . " WHERE id=?";
         $sql_params[] = $room;
-        if (sql_command($sql, $sql_params) < 0)
-        {
-          echo get_vocab("update_room_failed") . "<br>\n";
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
-        // if everything is OK, release the mutex and go back to
-        // the admin page (for the new area)
+        sql_command($sql, $sql_params);
+
+        // Release the mutex and go back to the admin page (for the new area)
         sql_mutex_unlock("$tbl_area");
         Header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area");
         exit();
@@ -888,15 +883,9 @@ if ($phase == 2)
       $sql .= implode(",", $assign_array) . " WHERE id=?";
       $sql_params[] = $area;
       
-      if (sql_command($sql, $sql_params) < 0)
-      {
-        echo $sql;
-        echo sql_error();
-        echo get_vocab("update_area_failed") . "<br>\n";
-        trigger_error(sql_error(), E_USER_WARNING);
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
-      // If the database update worked OK, go back to the admin page
+      sql_command($sql, $sql_params);
+
+      // Go back to the admin page
       Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
       exit();
     }

@@ -38,13 +38,7 @@ if (!sql_mutex_lock("$tbl_entry"))
 $sql = "UPDATE $tbl_entry
            SET status=(((~status)&1)<<1)|(private&1),
                timestamp=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update status column in entry table.</span>";
-}
+sql_command($sql);
 
 sql_mutex_unlock("$tbl_entry");
 
@@ -65,14 +59,7 @@ if (!sql_mutex_lock("$tbl_repeat"))
 $sql = "UPDATE $tbl_repeat
            SET status=private&1,
                timestamp=timestamp";
-$res = sql_command($sql);
-
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update status column in repeat table with privacy status.</span>";
-}
+sql_command($sql);
 
 // Now get the approval status for the repeat table.   A series is considered to be
 // awaiting approval if any one of its individual members is awaiting approval.
@@ -92,15 +79,10 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
                  timestamp=timestamp
            WHERE id=" . $row['repeat_id'];
   $result = sql_command($sql);
-  if ($result == -1)
-  {
-    // We've got an SQL error, so report it
-    trigger_error(sql_error(), E_USER_WARNING);
-  }
+
   if ($result != 1)
   {
-    // Something's gone wrong.   There's either been an SQL error, or else no rows have been
-    // affected, which should not be the case
+    // Something's gone wrong.  No rows have been affected, which should not be the case
     fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
   }
 }  

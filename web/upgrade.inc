@@ -93,14 +93,8 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      $res = sql_command("UPDATE $tbl_variables SET variable_content = ? ".
-                         "WHERE variable_name = ?", array($ver, $variable_name));
-      if ($res == -1)
-      {
-        // No need to localise, should never happen
-        upgrade_echo("<span class=\"error\">Failed to update database version variable.</span>");
-        return FALSE;
-      }
+      sql_command("UPDATE $tbl_variables SET variable_content = ? ".
+                  "WHERE variable_name = ?", array($ver, $variable_name));
     }
     upgrade_echo("</p>\n");
     

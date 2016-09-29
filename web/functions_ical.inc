@@ -174,12 +174,7 @@ function get_vtimezone($tz)
                      last_updated=?
                WHERE timezone=?
                  AND outlook_compatible=?";
-      if (sql_command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible)) < 0)
-      {
-        trigger_error(sql_error(), E_USER_WARNING);
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
-
+      sql_command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible));
     }
   }
   // There's nothing in the database, so try and get a VTIMEZONE component
@@ -194,16 +189,9 @@ function get_vtimezone($tz)
       if (!empty($vtimezone))
       {
         $sql = "INSERT INTO $tbl_zoneinfo
-                (timezone, outlook_compatible, vtimezone, last_updated)
-                VALUES (?,
-                        ?,
-                        ?,
-                        ?)";
-        if (sql_command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time())) < 0)
-        {
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
+                            (timezone, outlook_compatible, vtimezone, last_updated)
+                     VALUES (?, ?, ?, ?)";
+        sql_command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time()));
       }
     }
   }

@@ -18,10 +18,4 @@ $sql = "UPDATE $tbl_area SET
         eveningends = $eveningends,
         eveningends_minutes = $eveningends_minutes";
     
-$res = sql_command($sql);
-if ($res == -1)
-{
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set default values for new columns in area table.</span>";
-}
-
+sql_command($sql);

@@ -35,11 +35,7 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 foreach ($mods as $id => $month_absolute)
 {
   $sql = "UPDATE $tbl_repeat SET month_absolute=$month_absolute WHERE id=$id";
-  if (sql_command($sql) < 0)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
+  sql_command($sql);
 }
 
 // Restore the original timezone

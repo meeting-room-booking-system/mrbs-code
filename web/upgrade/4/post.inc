@@ -19,11 +19,4 @@ $sql = "UPDATE $tbl_area SET
         private_mandatory = $private_mandatory,
         private_override = '$private_override'";
     
-$res = sql_command($sql);
-if ($res == -1)
-{
-  echo sql_error();
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set default values for new columns in area table.</span>";
-}
-
+sql_command($sql);

@@ -100,7 +100,7 @@ class DB
 
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
-  // Returns -1 on error; use error() to get the error message.
+  // Throws a DBException on error.
   public function command($sql, $params = array())
   {
     try
@@ -110,8 +110,7 @@ class DB
     }
     catch (PDOException $e)
     {
-      trigger_error($sql . " " . $e->getMessage(), E_USER_WARNING);
-      return -1;
+      throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
   
     return $sth->rowCount();

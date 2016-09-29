@@ -769,27 +769,7 @@ if (isset($Action) && ($Action == "Update"))
     /* DEBUG lines - check the actual sql statement going into the db */
     //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
     //exit;
-    $r = sql_command($operation, $sql_params);
-    if ($r == -1)
-    {
-      // Get the error message before the print_header() call because the print_header()
-      // function can contain SQL queries and so reset the error message.
-      trigger_error(sql_error(), E_USER_WARNING);
-      print_header(0, 0, 0, "", "");
-  
-      // This is unlikely to happen in normal operation. Do not translate.
-       
-      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-      print "  <fieldset>\n";
-      print "  <legend></legend>\n";
-      print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
-      print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-      print "  </fieldset>\n";
-      print "</form>\n";
-  
-      // Print footer and exit
-      print_footer(TRUE);
-    }
+    sql_command($operation, $sql_params);
   
     /* Success. Redirect to the user list, to remove the form args */
     Header("Location: edit_users.php");
@@ -815,25 +795,7 @@ if (isset($Action) && ($Action == "Delete"))
     exit();
   }
 
-  $r = sql_command("DELETE FROM $tbl_users WHERE id=?", array($Id));
-  if ($r == -1)
-  {
-    print_header(0, 0, 0, "", "");
-
-    // This is unlikely to happen in normal  operation. Do not translate.
-    
-    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    print "  <fieldset>\n";
-    print "  <legend></legend>\n";
-    print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
-    print "    <p class=\"error\">" . sql_error() . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-    print "  </fieldset>\n";
-    print "</form>\n";
-
-    // Print footer and exit
-    print_footer(TRUE);
-  }
+  sql_command("DELETE FROM $tbl_users WHERE id=?", array($Id));
 
   /* Success. Do not display a message. Simply fall through into the list display. */
 }

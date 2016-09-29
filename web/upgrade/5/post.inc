@@ -25,13 +25,5 @@ CREATE TABLE $tbl_users
 
   PRIMARY KEY (id)
 );";
-  $r = sql_command($cmd, array(), $admin_handle);
-  if ($r == -1)
-  {
-    // No need to localize this: Only the admin running this for the first time would see it.
-    print "<p class=\"error\">Error creating the $tbl_users table.</p>\n";
-    print "<p class=\"error\">" . sql_error($admin_handle) . "</p>\n";
-    exit();
-  }
+  sql_command($cmd, array(), $admin_handle);
 }
-

@@ -36,12 +36,14 @@ function do_sql_command($sql)
   
   $step++;
   
-  if (sql_command($sql) < 0)
+  try
   {
-    // echo "$sql<br>\n";  // Debug line
-    // echo sql_error() . "<br>";  // Debug line
+    sql_command($sql);
+  }
+  catch (DBException $e)
+  {
     echo "<span class=\"error\">Step $step failed</span><br>";
-    // exit;  // Debug line
+    throw $e;
   }
 }
 

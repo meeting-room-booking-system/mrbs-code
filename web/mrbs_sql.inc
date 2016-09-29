@@ -728,12 +728,7 @@ function mrbsCreateEntry($table, $data)
   $sql_col = array_map(__NAMESPACE__ . "\\sql_quote", $sql_col);
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
 
-  if (sql_command($sql, $sql_params) < 0)
-  {
-    // probably because the table hasn't been created properly
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
+  sql_command($sql, $sql_params);
 
   return sql_insert_id($table, "id");
 }
@@ -1103,14 +1098,13 @@ function update_last_reminded($id, $series)
                SET reminded=?,
                    ical_sequence=ical_sequence+1
              WHERE id=?";
-    if (sql_command($sql, array($now, $id)) >= 0)
-    {
-      $sql = "UPDATE $tbl_entry
-                 SET reminded=?,
-                     ical_sequence=ical_sequence+1
-               WHERE repeat_id=?";
-      return sql_command($sql, array($now, $id));
-    }
+    sql_command($sql, array($now, $id));
+    
+    $sql = "UPDATE $tbl_entry
+               SET reminded=?,
+                   ical_sequence=ical_sequence+1
+             WHERE repeat_id=?";
+    return sql_command($sql, array($now, $id));
   }
   else
   {
@@ -1185,11 +1179,7 @@ function mrbsApproveEntry($id, $series)
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
              WHERE id=?";  // PostgreSQL does not support LIMIT with UPDATE
-    if (sql_command($sql, array($id)) < 0)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
+    sql_command($sql, array($id));
     $id_column = 'repeat_id';
   }
   else
@@ -1212,11 +1202,7 @@ function mrbsApproveEntry($id, $series)
                    ical_sequence=ical_sequence+1
              WHERE $condition";  // PostgreSQL does not support LIMIT with UPDATE
     
-    if (sql_command($sql, $sql_params) < 0)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
+    sql_command($sql, $sql_params);
   }
   
   if (is_array($start_times))
@@ -1666,11 +1652,7 @@ function mrbsAddArea($name, &$error)
     }
   }
   $sql = "INSERT INTO $tbl_area (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-  if (sql_command($sql, $sql_params) < 0)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
+  sql_command($sql, $sql_params);
   $area = sql_insert_id($tbl_area, 'id');
 
   // Release the mutex
@@ -1716,13 +1698,9 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
   // If so, insert the room into the database
   $sql = "INSERT INTO $tbl_room (room_name, sort_key, area_id, description, capacity)
           VALUES (?, ?, ?, ?, ?)";
-  if (sql_command($sql,
-                  array($name,$name,$area,$description,$capacity)) < 0)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(TRUE, get_vocab("fatal_db_error"));
-  }
+  sql_command($sql, array($name,$name,$area,$description,$capacity));
   $room = sql_insert_id($tbl_room, 'id');
+  
   // Release the mutex
   sql_mutex_unlock("$tbl_room");
   return $room;

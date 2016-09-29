@@ -16,11 +16,4 @@ $sql = "UPDATE $tbl_area SET
         provisional_enabled=$provisional_enabled,
         reminders_enabled=$reminders_enabled";
     
-$res = sql_command($sql);
-if ($res == -1)
-{
-  echo sql_error();
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set default values for new columns in area table.</span>";
-}
-
+sql_command($sql);
