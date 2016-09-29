@@ -48,12 +48,23 @@ class DB
     catch (PDOException $e)
     {
       $message = $e->getMessage();
-      if ($e->getCode() == 2054)
+      
+      // Add in some possible solutions for common problems when migrating to the PDO version of MRBS
+      // from an earlier version.      
+      if ($e->getCode() == 7)
+      {
+        if (($db_host === '') && (static::DB_DBO_DRIVER === DB_pgsql::DB_DBO_DRIVER))
+        {
+          $message .= ".\n[MRBS note] Try setting " . '$db_host' . " to '127.0.0.1'.";
+        }
+      }
+      elseif ($e->getCode() == 2054)
       {
         $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
                     "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
                     "deleting the MySQL user and recreating it with the same password.";
       }
+      
       throw new DBException($message, 0, $e);
     }
   }
