@@ -66,12 +66,6 @@ function authValidateUser($user, $pass)
                                                                 $sql_params);
 
   $stmt = $db_ext_conn->query($query, $sql_params);
-  
-  if ($stmt === FALSE)
-  {
-    trigger_error($db_ext_conn->error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
 
   if ($stmt->count() == 1) // force a unique match
   {
@@ -183,12 +177,6 @@ function authGetUserLevel($user)
 
      $stmt = $db_ext_conn->query($query, $sql_params);
      
-     if ($stmt === FALSE)
-     {
-       trigger_error($db_ext_conn->error(), E_USER_WARNING);
-       fatal_error(FALSE, get_vocab("fatal_db_error"));
-     }
-     
      if ($stmt->count() == 0)
      {
        return 0;
@@ -236,12 +224,6 @@ function authGetUserEmail($user)
              LIMIT 1";
 
   $stmt = $db_ext_conn->query($query, $sql_params);
-  
-  if ($stmt === FALSE)
-  {
-    trigger_error($db_ext_conn->error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   
   if ($stmt->count() == 0)
   {

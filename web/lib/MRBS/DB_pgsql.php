@@ -204,43 +204,37 @@ class DB_pgsql extends DB
     $sql .= "ORDER BY ordinal_position";
   
     $stmt = $this->query($sql, $sql_params);
-    if ($stmt === FALSE)
+
+    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
     {
-      trigger_error($this->error(), E_USER_WARNING);
-      fatal_error(TRUE, get_vocab("fatal_db_error"));
-    }
-    else
-    {
-      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
+      $name = $row['column_name'];
+      $type = $row['data_type'];
+      // map the type onto one of the generic natures, if a mapping exists
+      $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
+      // Get a length value;  one of these values should be set
+      if (isset($row['numeric_precision']))
       {
-        $name = $row['column_name'];
-        $type = $row['data_type'];
-        // map the type onto one of the generic natures, if a mapping exists
-        $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
-        // Get a length value;  one of these values should be set
-        if (isset($row['numeric_precision']))
-        {
-          $length = (int) floor($row['numeric_precision'] / 8);  // precision is in bits
-        }
-        elseif (isset($row['character_maximum_length']))
-        {
-          $length = $row['character_maximum_length'];
-        }
-        elseif (isset($row['character_octet_length']))
-        {
-          $length = $row['character_octet_length'];
-        }
-        // Convert the is_nullable field to a boolean
-        $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
-      
-        $fields[$i]['name'] = $name;
-        $fields[$i]['type'] = $type;
-        $fields[$i]['nature'] = $nature;
-        $fields[$i]['length'] = $length;
-        $fields[$i]['is_nullable'] = $is_nullable;
+        $length = (int) floor($row['numeric_precision'] / 8);  // precision is in bits
       }
-      return $fields;
+      elseif (isset($row['character_maximum_length']))
+      {
+        $length = $row['character_maximum_length'];
+      }
+      elseif (isset($row['character_octet_length']))
+      {
+        $length = $row['character_octet_length'];
+      }
+      // Convert the is_nullable field to a boolean
+      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
+    
+      $fields[$i]['name'] = $name;
+      $fields[$i]['type'] = $type;
+      $fields[$i]['nature'] = $nature;
+      $fields[$i]['length'] = $length;
+      $fields[$i]['is_nullable'] = $is_nullable;
     }
+    return $fields;
+
   }
   
   // Syntax methods

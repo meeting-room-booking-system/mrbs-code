@@ -151,24 +151,17 @@ class DB
 
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
-  // no results, or FALSE if there's an error
+  // no results; throws a DBException if there's an error
   public function query_array($sql, $params = null)
   {
     $stmt = $this->query($sql, $params);
 
-    if ($stmt === FALSE)
+    $result = array();
+    for ($i = 0; ($row = $stmt->row($i)); $i++)
     {
-      return FALSE;
+      $result[] = $row[0];
     }
-    else
-    {
-      $result = array();
-      for ($i = 0; ($row = $stmt->row($i)); $i++)
-      {
-        $result[] = $row[0];
-      }
-      return $result;
-    }
+    return $result;
   }
 
   

@@ -79,13 +79,6 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       if (preg_match("/\S/", $query))
       {
         $res = $upgrade_handle->query($query);
-        if ($res === FALSE)
-        {
-          // No need to localise, should hopefully never happen
-          upgrade_echo("<br>Tried:<pre>" . htmlspecialchars($query) . "</pre> and got error:" .
-                       "<pre>" . $upgrade_handle->error() . "</pre>\n");
-          return FALSE;
-        }
       }
     }
 

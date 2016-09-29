@@ -57,10 +57,13 @@ class DB_mysql extends DB
     // timed out (for example, because another client has previously locked the name),
     // or NULL if an error occurred (such as running out of memory or the thread was
     // killed with mysqladmin kill)
-    $stmt = $this->query("SELECT GET_LOCK(?, 20)", array($name));
-    if ($stmt === FALSE)
+    try
     {
-      trigger_error($this->error(), E_USER_WARNING);
+      $stmt = $this->query("SELECT GET_LOCK(?, 20)", array($name));
+    }
+    catch (DBException $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
       return FALSE;
     }
 
@@ -162,57 +165,51 @@ class DB_mysql extends DB
                        'tinyint'   => 1);
   
     $stmt = $this->query("SHOW COLUMNS FROM $table", array());
-    if ($stmt === FALSE)
+
+    $fields = array();
+    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
     {
-      trigger_error($this->error(), E_USER_WARNING);
-      fatal_error(TRUE, get_vocab("fatal_db_error"));
-    }
-    else
-    {
-      $fields = array();
-      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
+      $name = $row['Field'];
+      $type = $row['Type'];
+      // split the type (eg 'varchar(25)') around the opening '('
+      $parts = explode('(', $type);
+      // map the type onto one of the generic natures, if a mapping exists
+      $nature = (array_key_exists($parts[0], $nature_map)) ? $nature_map[$parts[0]] : $parts[0];
+      // now work out the length
+      if ($nature == 'integer')
       {
-        $name = $row['Field'];
-        $type = $row['Type'];
-        // split the type (eg 'varchar(25)') around the opening '('
-        $parts = explode('(', $type);
-        // map the type onto one of the generic natures, if a mapping exists
-        $nature = (array_key_exists($parts[0], $nature_map)) ? $nature_map[$parts[0]] : $parts[0];
-        // now work out the length
-        if ($nature == 'integer')
-        {
-          // if it's one of the ints, then look up the length in bytes
-          $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
-        }
-        elseif ($nature == 'character')
-        {
-          // if it's a character type then use the length that was in parentheses
-          // eg if it was a varchar(25), we want the 25
-          if (isset($parts[1]))
-          {
-            $length = preg_replace('/\)/', '', $parts[1]);  // strip off the closing ')'
-          }
-          // otherwise it could be any length (eg if it was a 'text')
-          else
-          {
-            $length = defined('PHP_INT_MAX') ? PHP_INT_MAX : 9999;
-          }
-        }
-        else  // we're only dealing with a few simple cases at the moment
-        {
-          $length = NULL;
-        }
-        // Convert the is_nullable field to a boolean
-        $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
-      
-        $fields[$i]['name'] = $name;
-        $fields[$i]['type'] = $type;
-        $fields[$i]['nature'] = $nature;
-        $fields[$i]['length'] = $length;
-        $fields[$i]['is_nullable'] = $is_nullable;
+        // if it's one of the ints, then look up the length in bytes
+        $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
       }
-      return $fields;
+      elseif ($nature == 'character')
+      {
+        // if it's a character type then use the length that was in parentheses
+        // eg if it was a varchar(25), we want the 25
+        if (isset($parts[1]))
+        {
+          $length = preg_replace('/\)/', '', $parts[1]);  // strip off the closing ')'
+        }
+        // otherwise it could be any length (eg if it was a 'text')
+        else
+        {
+          $length = defined('PHP_INT_MAX') ? PHP_INT_MAX : 9999;
+        }
+      }
+      else  // we're only dealing with a few simple cases at the moment
+      {
+        $length = NULL;
+      }
+      // Convert the is_nullable field to a boolean
+      $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
+    
+      $fields[$i]['name'] = $name;
+      $fields[$i]['type'] = $type;
+      $fields[$i]['nature'] = $nature;
+      $fields[$i]['length'] = $length;
+      $fields[$i]['is_nullable'] = $is_nullable;
     }
+    
+    return $fields;
   }
   
   // Syntax methods
