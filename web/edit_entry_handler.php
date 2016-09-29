@@ -417,7 +417,13 @@ if (isset($id))
   $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
   if ($target_room < 0)
   {
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
+    // Ideally we should give more feedback to the user when this happens, or
+    // even lock the entry once a user starts to edit it.
+    $message = "Tried to edit an entry that no longer exists - probably because " .
+               "somebody else has deleted it in the meantime.";
+    trigger_error($message, E_USER_NOTICE);
+    header("Location: $returl");
+    exit;
   }
 }
 else
@@ -561,7 +567,6 @@ if (!$ajax || !$commit)
   $year = $start_year;
 }
 
-
 // Set up the return URL.    As the user has tried to book a particular room and a particular
 // day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
 // return URL accordingly.
@@ -592,6 +597,7 @@ else
 {
   $returl = $returl_base[0];
 }
+
 
 // If we haven't been given a sensible date then get out of here and don't try and make a booking
 if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkdate($start_month, $start_day, $start_year))
