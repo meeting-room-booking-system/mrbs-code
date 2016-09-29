@@ -25,8 +25,7 @@ class DB
     if (is_null(static::DB_DBO_DRIVER) ||
         is_null(static::DB_DEFAULT_PORT))
     {
-      print "Encountered a fatal bug in DB abstraction code!\n";
-      return null;
+      throw new Exception("Encountered a fatal bug in DB abstraction code!");
     }
 
     // If no port has been provided, set a SQL variant dependent default
