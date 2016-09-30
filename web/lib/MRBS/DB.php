@@ -13,7 +13,6 @@ class DB
   const DB_DBO_DRIVER = null;
   protected $dbh = null;
   protected $mutex_lock_name;
-  static private $default_db_obj;
 
 
   //
@@ -70,22 +69,6 @@ class DB
   }
 
   
-  // Static function to return a DB object for the default MRBS database connection,
-  // will make the connection if it hasn't been made yet.
-  static public function default_db()
-  {
-    if (is_null(self::$default_db_obj))
-    {
-      global $db_persist, $db_host, $db_login, $db_password,
-             $db_database, $db_port, $dbsys;
-      
-      self::$default_db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
-                                                $db_database, $db_persist, $db_port);
-    }
-    return self::$default_db_obj;
-  }
-
-
   //
   public function error()
   {
