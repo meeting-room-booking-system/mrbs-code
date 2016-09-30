@@ -170,7 +170,7 @@ function print_theme_header($day, $month, $year, $area, $room)
             $sql .= " AND create_by=?";
             $sql_params[] = $user;
           }
-          $n_outstanding = sql_query1($sql, $sql_params);
+          $n_outstanding = db()->query1($sql, $sql_params);
           echo "<div id=\"n_outstanding\"" .
                (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
                ">\n";

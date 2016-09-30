@@ -28,13 +28,14 @@ function get_microtime()
 
 function do_sql_command($sql)
 {
+  global $admin_handle;
   static $step = 0;
   
   $step++;
   
   try
   {
-    sql_command($sql);
+    $admin_handle->command($sql);
   }
   catch (DBException $e)
   {
@@ -43,14 +44,14 @@ function do_sql_command($sql)
   }
 }
 
-global $dbsys, $tbl_entry, $tbl_repeat;
+global $dbsys, $tbl_entry, $tbl_repeat, $admin_handle;
 
 // There's the option here to display some timing information as this upgrade
 // could take a while
 $display_timing = FALSE;
 
-$n_entry = sql_query1("SELECT COUNT(*) FROM $tbl_entry");
-$n_repeat = sql_query1("SELECT COUNT(*) FROM $tbl_repeat");
+$n_entry = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_entry");
+$n_repeat = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_repeat");
 if ($display_timing)
 {
  echo "Upgrade 24: $n_entry entry rows and $n_repeat repeat rows";

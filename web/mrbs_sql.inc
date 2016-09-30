@@ -52,11 +52,10 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   }
   $sql .= " ORDER BY start_time";
 
-  $res = sql_query($sql, $sql_params);
+  $res = db()->query($sql, $sql_params);
 
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
-    sql_free($res);
     return "";
   }
   // Get the room's area ID for linking to day, week, and month views:
@@ -64,7 +63,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
   // Build an listing all the conflicts:
   $err = array();
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     $starts = getdate($row['start_time']);
     $param_ym = "area=$area&amp;year=$starts[year]&amp;month=".$starts['mon'];
@@ -203,7 +202,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
         $sql_params[] = $repignore;
       }
       
-      $existing[$location][$interval_type][$interval_start] = sql_query1($sql, $sql_params);
+      $existing[$location][$interval_type][$interval_start] = db()->query1($sql, $sql_params);
       $proposed[$location][$interval_type][$interval_start] = 1;
     }
     else
@@ -448,10 +447,9 @@ function get_entry_by_id($id)
            WHERE id=?
            LIMIT 1";
    
-  $res = sql_query($sql, array($id));
+  $res = db()->query($sql, array($id));
   
-  $result = (sql_count($res) == 0) ? NULL : sql_row_keyed($res, 0);
-  sql_free($res);
+  $result = ($res->count() == 0) ? NULL : $res->row_keyed(0);
   return $result;
 }
 
@@ -472,10 +470,9 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
              AND start_time <= ? AND end_time > ?
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
 
-  $res = sql_query($sql, array($area_id, $interval_end, $interval_start));
+  $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
   
-  $result = sql_all_rows_keyed($res);
-  sql_free($res);
+  $result = $res->all_rows_keyed();
   return $result;
 }
 
@@ -494,10 +491,9 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
              AND start_time <= ? AND end_time > ?
         ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
         
-  $res = sql_query($sql, array($room_id, $interval_end,  $interval_start));
+  $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
   
-  $result = sql_all_rows_keyed($res);
-  sql_free($res);
+  $result = $res->all_rows_keyed();
   return $result;
 }
 
@@ -523,12 +519,12 @@ function mrbsDelEntry($user, $id, $series, $all)
   $start_times = array();
 
   // Get the repeat_id and room_id for this entry
-  $res = sql_query("SELECT repeat_id, room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
-  if (sql_count($res) <= 0)
+  $res = db()->query("SELECT repeat_id, room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
+  if ($res->count() <= 0)
   {
     return FALSE;
   }
-  $row = sql_row_keyed($res, 0);
+  $row = $res->row_keyed(0);
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
 
@@ -547,9 +543,9 @@ function mrbsDelEntry($user, $id, $series, $all)
     $sql_params[] = $id;
   }
 
-  $res = sql_query($sql, $sql_params);
+  $res = db()->query($sql, $sql_params);
 
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     if(!getWritable($row['create_by'], $user, $room_id))
     {
@@ -568,7 +564,7 @@ function mrbsDelEntry($user, $id, $series, $all)
       continue;
     }
    
-    if (sql_command("DELETE FROM $tbl_entry WHERE id=?", array($row['id'])) > 0)
+    if (db()->command("DELETE FROM $tbl_entry WHERE id=?", array($row['id'])) > 0)
     {
       $start_times[] = $row['start_time'];
     }
@@ -576,9 +572,9 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   // Get rid of any orphaned rows in the repeat table
   if (!empty($repeat_id) &&
-      sql_query1("SELECT COUNT(*) FROM $tbl_entry WHERE repeat_id=?",array($repeat_id)) == 0)
+      db()->query1("SELECT COUNT(*) FROM $tbl_entry WHERE repeat_id=?",array($repeat_id)) == 0)
   {
-    sql_command("DELETE FROM $tbl_repeat WHERE id=?",array($repeat_id));
+    db()->command("DELETE FROM $tbl_repeat WHERE id=?",array($repeat_id));
   }
 
   asort($start_times);
@@ -605,7 +601,7 @@ function mrbsCreateEntry($table, $data)
   $sql_val = array();
   $table_no_prefix = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
     
-  $fields = sql_field_info($table);
+  $fields = db()->field_info($table);
 
   $sql_params = array();
 
@@ -721,12 +717,15 @@ function mrbsCreateEntry($table, $data)
     } // if
   } // foreach
   
-  $sql_col = array_map(__NAMESPACE__ . "\\sql_quote", $sql_col);
+  foreach ($sql_col as &$col)
+  {
+    $col = db()->quote($col);
+  }
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
 
-  sql_command($sql, $sql_params);
+  db()->command($sql, $sql_params);
 
-  return sql_insert_id($table, "id");
+  return db()->insert_id($table, "id");
 }
 
 /** mrbsCreateSingleEntry()
@@ -1061,15 +1060,15 @@ function get_repeat_id($entry_id)
            WHERE id=?
            LIMIT 1";
            
-  $res = sql_query($sql, array($entry_id));
+  $res = db()->query($sql, array($entry_id));
   
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
     // This should not happen
     trigger_error('$entry_id=' . "$entry_id does not exist.", E_USER_NOTICE);
     return NULL;
   }
-  $row = sql_row_keyed($res, 0);
+  $row = $res->row_keyed(0);
   return $row['repeat_id'];
 }
 
@@ -1082,7 +1081,7 @@ function get_repeat_id($entry_id)
 // prevent users bombarding admins with reminder emails)
 //
 // Returns the number of tuples affected if OK (a number >= 0).
-// Returns -1 on error; use sql_error to get the error message.
+// Returns -1 on error; use the DB class error() method to get the error message.
 function update_last_reminded($id, $series)
 {
   global $tbl_entry, $tbl_repeat;
@@ -1094,13 +1093,13 @@ function update_last_reminded($id, $series)
                SET reminded=?,
                    ical_sequence=ical_sequence+1
              WHERE id=?";
-    sql_command($sql, array($now, $id));
+    db()->command($sql, array($now, $id));
     
     $sql = "UPDATE $tbl_entry
                SET reminded=?,
                    ical_sequence=ical_sequence+1
              WHERE repeat_id=?";
-    return sql_command($sql, array($now, $id));
+    return db()->command($sql, array($now, $id));
   }
   else
   {
@@ -1108,7 +1107,7 @@ function update_last_reminded($id, $series)
                SET reminded=?,
                    ical_sequence=ical_sequence+1
              WHERE id=?";
-    if (sql_command($sql, array($now,$id)) > 0)
+    if (db()->command($sql, array($now,$id)) > 0)
     {
       $repeat_id = get_repeat_id($id);
       if (isset($repeat_id))
@@ -1117,7 +1116,7 @@ function update_last_reminded($id, $series)
                    SET reminded=?,
                        ical_sequence=ical_sequence+1
                  WHERE id=?";
-        return sql_command($sql, array($now,$id));
+        return db()->command($sql, array($now,$id));
       }
     }
   }
@@ -1132,7 +1131,8 @@ function update_last_reminded($id, $series)
 // entry table, which is updated.
 //
 // Returns the number of tuples affected if OK (a number >= 0).
-// Returns -1 on error; use sql_error to get the error message.
+// Returns -1 on error; use the DB class error() method to get the error
+// message.
 function update_more_info($id, $series, $user, $note)
 {
   global $tbl_entry, $tbl_repeat;
@@ -1150,7 +1150,7 @@ function update_more_info($id, $series, $user, $note)
   $sql_params[] = $note;
   $sql .= " WHERE id=?";
   $sql_params[] = $id;
-  return sql_command($sql, $sql_params);
+  return db()->command($sql, $sql_params);
 }
 
 // mrbsApproveEntry($id, $series)
@@ -1175,7 +1175,7 @@ function mrbsApproveEntry($id, $series)
                SET status=status&(~" . STATUS_AWAITING_APPROVAL . "),
                    ical_sequence=ical_sequence+1
              WHERE id=?";  // PostgreSQL does not support LIMIT with UPDATE
-    sql_command($sql, array($id));
+    db()->command($sql, array($id));
     $id_column = 'repeat_id';
   }
   else
@@ -1189,7 +1189,7 @@ function mrbsApproveEntry($id, $series)
   $sql = "SELECT start_time
             FROM $tbl_entry
            WHERE $condition";
-  $start_times = sql_query_array($sql, $sql_params);
+  $start_times = db()->query_array($sql, $sql_params);
 
   if (($start_times !== FALSE) && (count($start_times) != 0))
   {
@@ -1198,7 +1198,7 @@ function mrbsApproveEntry($id, $series)
                    ical_sequence=ical_sequence+1
              WHERE $condition";  // PostgreSQL does not support LIMIT with UPDATE
     
-    sql_command($sql, $sql_params);
+    db()->command($sql, $sql_params);
   }
   
   if (is_array($start_times))
@@ -1237,11 +1237,11 @@ function get_booking_info($id, $series, $silent=FALSE)
   }
 
   $table = ($series) ? $tbl_repeat : $tbl_entry;
-  $table_fields = sql_field_info($table);
+  $table_fields = db()->field_info($table);
 
   // Build an array of the field names in the repeat table so that
   // we'll be able to do some sanity checking later
-  $repeat_fields = sql_field_info($tbl_repeat);
+  $repeat_fields = db()->field_info($tbl_repeat);
   $rep_fields = array();
   foreach ($repeat_fields as $field)
   {
@@ -1270,7 +1270,7 @@ function get_booking_info($id, $series, $silent=FALSE)
         break;
 
       case 'timestamp':
-        array_push($terms, sql_syntax_timestamp_to_unix("timestamp") . "AS last_updated");
+        array_push($terms, db()->syntax_timestamp_to_unix("timestamp") . "AS last_updated");
         break;
 
       case 'info_time':
@@ -1297,7 +1297,7 @@ function get_booking_info($id, $series, $silent=FALSE)
           fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
         }
         
-        array_push($terms, "T." . sql_quote($field['name']));
+        array_push($terms, "T." . db()->quote($field['name']));
         break;
     }
   }
@@ -1310,12 +1310,12 @@ function get_booking_info($id, $series, $silent=FALSE)
 
   try
   {
-    $res = sql_query($sql, array($id));
+    $res = db()->query($sql, array($id));
   }
   catch (DBException $e)
   {
     // Not sure why we've got the silent option in here.  Need to revisit this sometime.
-    trigger_error(sql_error(), E_USER_WARNING);
+    trigger_error(db()->error(), E_USER_WARNING);
     if ($silent)
     {
       return FALSE;
@@ -1326,7 +1326,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  if (sql_count($res) < 1)
+  if ($res->count() < 1)
   {
     // It's quite possible that the id will have disappeared, eg if somebody
     // else has deleted or edited the entry, or if the back button is pressed
@@ -1341,8 +1341,8 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  $row = sql_row_keyed($res, 0);
-  sql_free($res);
+  $row = $res->row_keyed(0);
+  unset($res);
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
@@ -1369,14 +1369,14 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      $res = sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
+      $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=? LIMIT 1", array($row['repeat_id']));
-      if (!$extra_row = sql_row_keyed($res, 0))
+      if (!$extra_row = $res->row_keyed(0))
       {
         if (!$res)
         {
-          trigger_error(sql_error(), E_USER_WARNING);
+          trigger_error(db()->error(), E_USER_WARNING);
         }
         if ($silent)
         {
@@ -1396,7 +1396,7 @@ function get_booking_info($id, $series, $silent=FALSE)
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];
-      sql_free($res);
+      unset($res);
     }
   }
   
@@ -1423,14 +1423,14 @@ function get_area_name($id, $all=FALSE)
   }
   $sql .= " LIMIT 1";
   
-  $res = sql_query($sql, array($id));
+  $res = db()->query($sql, array($id));
   
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
     return NULL;
   }
   
-  $row = sql_row($res, 0);
+  $row = $res->row(0);
   return $row[0];
 }
 
@@ -1451,9 +1451,9 @@ function get_area_names($all=FALSE)
   }
   $sql .= " ORDER BY sort_key";
   
-  $res = sql_query($sql);
+  $res = db()->query($sql);
   
-  for ($i=0; $row = sql_row_keyed($res, $i); $i++)
+  for ($i=0; $row = $res->row_keyed($i); $i++)
   {
     $areas[$row['id']] = $row['area_name'];
   }
@@ -1473,15 +1473,14 @@ function get_area_details($area_id)
            WHERE id=?
            LIMIT 1";
   
-  $res = sql_query($sql, array($area_id));
+  $res = db()->query($sql, array($area_id));
   
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
     return NULL;
   }
   
-  $result = sql_row_keyed($res, 0);
-  sql_free($res);
+  $result = $res->row_keyed(0);
   
   return $result;
 }
@@ -1507,14 +1506,14 @@ function get_room_name($room_id, $all=FALSE)
   }
   $sql .= " LIMIT 1";
   
-  $res = sql_query($sql, array($room_id));
+  $res = db()->query($sql, array($room_id));
   
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
     return NULL;
   }
   
-  $row = sql_row($res, 0);
+  $row = $res->row(0);
   return $row[0];
 }
 
@@ -1529,21 +1528,20 @@ function get_room_details($room_id)
            WHERE id=?
            LIMIT 1";
   
-  $res = sql_query($sql, array($room_id));
+  $res = db()->query($sql, array($room_id));
   
   if ($res === FALSE)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
+    trigger_error(db()->error(), E_USER_WARNING);
     return FALSE;
   }
   
-  if (sql_count($res) == 0)
+  if ($res->count() == 0)
   {
     return NULL;
   }
   
-  $result = sql_row_keyed($res, 0);
-  sql_free($res);
+  $result = $res->row_keyed(0);
   
   return $result;
 }
@@ -1566,9 +1564,9 @@ function get_rooms($area, $all=FALSE)
   }
   $sql .= " ORDER BY R.sort_key";
 
-  $res = sql_query($sql, array($area));
+  $res = db()->query($sql, array($area));
   
-  return sql_all_rows_keyed($res);
+  return $res->all_rows_keyed();
 }
 
 
@@ -1576,7 +1574,7 @@ function mrbsGetRoomArea($id)
 {
   global $tbl_room;
 
-  $id = sql_query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($id));
+  $id = db()->query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($id));
 
   return ($id <= 0) ? 0 : $id;
 }
@@ -1598,14 +1596,14 @@ function mrbsAddArea($name, &$error)
   // Truncate the name field to the maximum length as a precaution.
   $name = utf8_substr($name, 0, $maxlength['area.area_name']);
   // Acquire a mutex to lock out others who might be editing the area
-  if (!sql_mutex_lock("$tbl_area"))
+  if (!db()->mutex_lock("$tbl_area"))
   {
     fatal_error(TRUE, get_vocab("failed_to_acquire"));
   }
   // Check that the area name is unique
-  if (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE area_name=? LIMIT 1", array($name)) > 0)
+  if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE area_name=? LIMIT 1", array($name)) > 0)
   {
-    sql_mutex_unlock("$tbl_area");
+    db()->mutex_unlock("$tbl_area");
     $error = "invalid_area_name";
     return FALSE;
   }
@@ -1617,7 +1615,7 @@ function mrbsAddArea($name, &$error)
   $sql_col = array();
   $sql_val = array();
   // Get the information about the fields in the room table
-  $fields = sql_field_info($tbl_area);
+  $fields = db()->field_info($tbl_area);
   // Loop through the fields and build up the arrays
   foreach ($fields as $field)
   {
@@ -1648,11 +1646,11 @@ function mrbsAddArea($name, &$error)
     }
   }
   $sql = "INSERT INTO $tbl_area (" . implode(', ',$sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-  sql_command($sql, $sql_params);
-  $area = sql_insert_id($tbl_area, 'id');
+  db()->command($sql, $sql_params);
+  $area = db()->insert_id($tbl_area, 'id');
 
   // Release the mutex
-  sql_mutex_unlock("$tbl_area");
+  db()->mutex_unlock($tbl_area);
   return $area;
 }
 
@@ -1679,26 +1677,26 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
     $capacity = 0;
   }
   // Acquire a mutex to lock out others who might be editing rooms
-  if (!sql_mutex_lock("$tbl_room"))
+  if (!db()->mutex_lock($tbl_room))
   {
     fatal_error(TRUE, get_vocab("failed_to_acquire"));
   }
   // Check that the room name is unique within the area
-  if (sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name=? AND area_id=? LIMIT 1",
-                 array($name, $area)) > 0)
+  if (db()->query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name=? AND area_id=? LIMIT 1",
+                   array($name, $area)) > 0)
   {
-    sql_mutex_unlock("$tbl_room");
+    db()->mutex_unlock($tbl_room);
     $error = "invalid_room_name";
     return FALSE;
   }
   // If so, insert the room into the database
   $sql = "INSERT INTO $tbl_room (room_name, sort_key, area_id, description, capacity)
           VALUES (?, ?, ?, ?, ?)";
-  sql_command($sql, array($name,$name,$area,$description,$capacity));
-  $room = sql_insert_id($tbl_room, 'id');
+  db()->command($sql, array($name,$name,$area,$description,$capacity));
+  $room = db()->insert_id($tbl_room, 'id');
   
   // Release the mutex
-  sql_mutex_unlock("$tbl_room");
+  db()->mutex_unlock($tbl_room);
   return $room;
 }
 
@@ -1767,7 +1765,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   }
 
   // Acquire mutex to lock out others trying to book the same slot(s).
-  if (!sql_mutex_lock("$tbl_entry"))
+  if (!db()->mutex_lock($tbl_entry))
   {
     fatal_error(1, get_vocab("failed_to_acquire"));
   }
@@ -1901,7 +1899,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   // booking, then stop here and return the results
   if ($just_check || !$valid_booking)
   {
-    sql_mutex_unlock("$tbl_entry");
+    db()->mutex_unlock($tbl_entry);
     return $result;
   }
     
@@ -2003,8 +2001,8 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
                     FROM $tbl_room R, $tbl_area A
                    WHERE R.id=? AND R.area_id = A.id
                    LIMIT 1";
-          $res = sql_query($sql, array($booking['room_id']));
-          $row = sql_row_keyed($res, 0);
+          $res = db()->query($sql, array($booking['room_id']));
+          $row = $res->row_keyed(0);
           $booking['room_name'] = $row['room_name'];
           $booking['area_name'] = $row['area_name'];
         }
@@ -2031,7 +2029,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     }   
   } // end foreach $bookings
 
-  sql_mutex_unlock("$tbl_entry");
+  db()->mutex_unlock($tbl_entry);
       
   $result['new_details'] = $new_details;
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
@@ -2047,10 +2045,10 @@ function get_bookings_in_series($repeat_id)
   $bookings = array();
   
   $sql = "SELECT id FROM $tbl_entry WHERE repeat_id = ?";
-  $res = sql_query_array($sql, array($repeat_id));
+  $res = db()->query_array($sql, array($repeat_id));
   if ($res === FALSE)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
+    trigger_error(db()->error(), E_USER_WARNING);
   }
   foreach ($res as $id)
   {
@@ -2058,4 +2056,3 @@ function get_bookings_in_series($repeat_id)
   }
   return $bookings;
 }
-

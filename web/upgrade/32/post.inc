@@ -5,7 +5,7 @@ namespace MRBS;
 
 require "standard_vars.inc.php"; // to ensure the timezone is set
 
-global $tbl_repeat, $tbl_area, $tbl_room;
+global $tbl_repeat, $tbl_area, $tbl_room, $admin_handle;
 
 // Get all the monthly repeats
 $sql = "SELECT T.id, T.start_time, A.timezone
@@ -14,14 +14,14 @@ $sql = "SELECT T.id, T.start_time, A.timezone
            AND T.room_id=M.id
            AND M.area_id=A.id";
  
-$res = sql_query($sql);
+$res = $admin_handle->query($sql);
 
 // Save the current default timezone so that we can restore it at the end
 $old_tz = mrbs_default_timezone_get();
 
 $mods = array();
 
-for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
   // We need to make sure that we have the correct timezone set when we work out
   // the day of the month that this series repeats on
@@ -35,7 +35,7 @@ for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
 foreach ($mods as $id => $month_absolute)
 {
   $sql = "UPDATE $tbl_repeat SET month_absolute=$month_absolute WHERE id=$id";
-  sql_command($sql);
+  $admin_handle->command($sql);
 }
 
 // Restore the original timezone

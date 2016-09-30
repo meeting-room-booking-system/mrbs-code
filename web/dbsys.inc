@@ -27,8 +27,8 @@ foreach ($tables as $table)
 $db_schema_version = 49;
 $local_db_schema_version = 1;
 
-// Convenience wrapper functions
-
+// Convenience wrapper function to provide access to a DB object for
+// default MRBS database
 function db()
 {
   static $db_obj = null;
@@ -42,124 +42,6 @@ function db()
                                 $db_database, $db_persist, $db_port);
   }
   return $db_obj;
-}
-
-
-function sql_free($stmt)
-{
-  return $stmt->free();
-}
-function sql_quote($identifier)
-{
-  return DB::default_db()->quote($identifier);
-}
-function sql_command($sql, $params = null)
-{
-  return DB::default_db()->command($sql, $params);
-}
-function sql_query1($sql, $params = null)
-{
-  return DB::default_db()->query1($sql, $params);
-}
-function sql_query_array($sql, $params = null)
-{
-  return DB::default_db()->query_array($sql, $params);
-}
-function sql_query($sql, $params = null)
-{
-  return DB::default_db()->query($sql, $params);
-}
-function sql_row($stmt, $i)
-{
-  return $stmt->row($i);
-}
-function sql_row_keyed($stmt, $i)
-{
-  return $stmt->row_keyed($i);
-}
-function sql_all_rows_keyed($stmt)
-{
-  return $stmt->all_rows_keyed();
-}
-function sql_count($stmt)
-{
-  return $stmt->count();
-}
-function sql_insert_id($table, $field)
-{
-  return DB::default_db()->insert_id($table, $field);
-}
-function sql_error()
-{
-  return DB::default_db()->error();
-}
-function sql_begin()
-{
-  return DB::default_db()->begin();
-}
-function sql_commit()
-{
-  return DB::default_db()->commit();
-}
-function sql_rollback()
-{
-  return DB::default_db()->rollback();
-}
-function sql_mutex_lock($name)
-{
-  return DB::default_db()->mutex_lock($name);
-}
-function sql_mutex_unlock($name)
-{
-  return DB::default_db()->mutex_unlock($name);
-}
-function sql_version()
-{
-  return DB::default_db()->version();
-}
-function sql_syntax_limit($count, $offset)
-{
-  return DB::default_db()->syntax_limit($count, $offset);
-}
-function sql_syntax_timestamp_to_unix($fieldname)
-{
-  return DB::default_db()->syntax_timestamp_to_unix($fieldname);
-}
-function sql_syntax_casesensitive_equals($fieldname, $s, &$params)
-{
-  return DB::default_db()->syntax_casesensitive_equals($fieldname, $s, $params);
-}
-function sql_syntax_caseless_contains($fieldname, $s, &$params)
-{
-  return DB::default_db()->syntax_caseless_contains($fieldname, $s, $params);
-}
-function sql_syntax_addcolumn_after($fieldname)
-{
-  return DB::default_db()->syntax_addcolumn_after($fieldname);
-}
-function sql_syntax_createtable_autoincrementcolumn()
-{
-  return DB::default_db()->syntax_createtable_autoincrementcolumn();
-}
-function sql_syntax_bitwise_xor()
-{
-  return DB::default_db()->syntax_bitwise_xor();
-}
-function sql_num_fields($stmt)
-{
-  return $stmt->num_fields();
-}
-function sql_table_exists($table)
-{
-  return DB::default_db()->table_exists($table);
-}
-function sql_field_exists($table, $field)
-{
-  return DB::default_db()->field_exists($table, $field);
-}
-function sql_field_info($table)
-{
-  return DB::default_db()->field_info($table);
 }
 
 

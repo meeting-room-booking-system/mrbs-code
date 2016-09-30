@@ -6,6 +6,7 @@ namespace MRBS;
 // Populate the new columns in the area table with the default values taken
 // from the config file.
 
+global $admin_handle;
 global $tbl_area;
 global $provisional_enabled, $reminders_enabled;
 
@@ -16,4 +17,4 @@ $sql = "UPDATE $tbl_area SET
         provisional_enabled=$provisional_enabled,
         reminders_enabled=$reminders_enabled";
     
-sql_command($sql);
+$admin_handle->command($sql);

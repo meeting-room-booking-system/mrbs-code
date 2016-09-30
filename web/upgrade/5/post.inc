@@ -16,7 +16,7 @@ if (!$exists)
 CREATE TABLE $tbl_users
 (
   /* The first four fields are required. Don't remove. */
-  id        ".sql_syntax_createtable_autoincrementcolumn().",
+  id        ".$admin_handle->syntax_createtable_autoincrementcolumn().",
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
   password  varchar(40),

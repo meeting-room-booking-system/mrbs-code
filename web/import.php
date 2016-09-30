@@ -79,7 +79,7 @@ function get_room_id($location, &$error)
   if ($location_area == '')
   {
     $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name=?";
-    $count = sql_query1($sql, array($location_room));
+    $count = db()->query1($sql, array($location_room));
 
     if ($count == 0)
     {
@@ -94,7 +94,7 @@ function get_room_id($location, &$error)
     else // we've got a unique room name
     {
       $sql = "SELECT id FROM $tbl_room WHERE room_name=? LIMIT 1";
-      $id = sql_query1($sql, array($location_room));
+      $id = db()->query1($sql, array($location_room));
       return $id;
     }
   }
@@ -107,7 +107,7 @@ function get_room_id($location, &$error)
               FROM $tbl_area
              WHERE area_name=?
              LIMIT 1";
-    $area_id = sql_query1($sql, array($location_area));
+    $area_id = db()->query1($sql, array($location_area));
     if ($area_id < 0)
     {
       // The area does not exist - create it if we are allowed to
@@ -135,7 +135,7 @@ function get_room_id($location, &$error)
            WHERE room_name=?
              AND area_id=?
            LIMIT 1";
-  $room_id = sql_query1($sql, array($location_room, $area_id));
+  $room_id = db()->query1($sql, array($location_room, $area_id));
   if ($room_id < 0)
   {
     // The room does not exist - create it if we are allowed to

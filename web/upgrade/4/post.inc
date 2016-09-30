@@ -8,6 +8,7 @@ namespace MRBS;
 
 global $tbl_area;
 global $private_enabled, $private_default, $private_mandatory, $private_override;
+global $admin_handle;
 
 $private_enabled = ($private_enabled) ? 1 : 0;
 $private_default = ($private_default) ? 1 : 0;
@@ -19,4 +20,4 @@ $sql = "UPDATE $tbl_area SET
         private_mandatory = $private_mandatory,
         private_override = '$private_override'";
     
-sql_command($sql);
+$admin_handle->command($sql);

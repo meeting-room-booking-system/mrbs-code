@@ -9,6 +9,7 @@ namespace MRBS;
 global $tbl_area;
 global $resolution, $default_duration;
 global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+global $admin_handle;
 
 $sql = "UPDATE $tbl_area SET
         resolution = $resolution,
@@ -18,4 +19,4 @@ $sql = "UPDATE $tbl_area SET
         eveningends = $eveningends,
         eveningends_minutes = $eveningends_minutes";
     
-sql_command($sql);
+$admin_handle->command($sql);
