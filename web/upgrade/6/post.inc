@@ -16,8 +16,7 @@ if (sql_field_exists($tbl_users, 'level'))
 {
   // Default is '0' because we want to play safe and give no rights.
   // In a moment we will go through the table and add users and admins.
-  sql_command("ALTER TABLE $tbl_users ADD COLUMN level smallint DEFAULT '0' NOT NULL ".sql_syntax_addcolumn_after("id"),
-              array(), $admin_handle);
+  $admin_handle->command("ALTER TABLE $tbl_users ADD COLUMN level smallint DEFAULT '0' NOT NULL ".sql_syntax_addcolumn_after("id"));
   
   // Assuming that all existing entries in the users table are at least users, 
   // make them all Level 1

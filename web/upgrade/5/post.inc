@@ -6,10 +6,12 @@ namespace MRBS;
 global $admin_handle;
 global $tbl_users;
 
-$nusers = sql_query1("select count(*) from $tbl_users", array(), $admin_handle);
+$exists = $admin_handle->table_exists($tbl_users);
 
-if ($nusers == -1)   /* If the table does not exist */
-{         /* Then create it */
+/* If the table does not exist */
+if (!$exists)
+{
+  /* Then create it */
   $cmd = "
 CREATE TABLE $tbl_users
 (
@@ -25,5 +27,5 @@ CREATE TABLE $tbl_users
 
   PRIMARY KEY (id)
 );";
-  sql_command($cmd, array(), $admin_handle);
+  $admin_handle->command($cmd);
 }
