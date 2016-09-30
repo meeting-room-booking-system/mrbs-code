@@ -66,7 +66,7 @@ if (!isset($encoding))
 <?php
   if ($dbsys == 'mysql' || $dbsys == 'mysqli')
   {
-    $ver = sql_version();
+    $ver = db()->version();
     // Sanitise the output to contain just the version number, hopefully
     $ver = preg_replace('/[^0-9.]/', '', $ver);
     // Pull out the floating point version number
@@ -74,8 +74,8 @@ if (!isset($encoding))
     if ($version >= 4.1)
     {
       $not_unicode = FALSE;
-      $res = sql_query("SHOW FULL COLUMNS FROM $tbl_entry");
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      $res = db()->query("SHOW FULL COLUMNS FROM $tbl_entry");
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         if (!is_null($row['Collation']) &&
             !preg_match('/utf8/', $row['Collation']))

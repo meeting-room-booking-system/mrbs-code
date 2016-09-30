@@ -1621,7 +1621,7 @@ function get_default_area()
   // corresponding area
   if (isset($default_room))
   {
-    $area = sql_query1("SELECT area_id
+    $area = db()->query1("SELECT area_id
                           FROM $tbl_room R, $tbl_area A
                          WHERE R.id=?
                            AND R.area_id = A.id
@@ -1634,7 +1634,7 @@ function get_default_area()
     }
   }
   // Otherwise return the first enabled area in sort key order in the database
-  $area = sql_query1("SELECT id
+  $area = db()->query1("SELECT id
                         FROM $tbl_area
                        WHERE disabled=0
                     ORDER BY sort_key
@@ -1652,7 +1652,7 @@ function get_default_room($area)
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    $room = sql_query1("SELECT id
+    $room = db()->query1("SELECT id
                           FROM $tbl_room
                          WHERE id=$default_room
                            AND area_id=?
@@ -1664,7 +1664,7 @@ function get_default_room($area)
     }
   }
   // Otherwise just return the first room (in sortkey order) in the area
-  $room = sql_query1("SELECT id
+  $room = db()->query1("SELECT id
                         FROM $tbl_room
                        WHERE area_id=?
                          AND disabled=0
@@ -1677,7 +1677,7 @@ function get_default_room($area)
 function get_area($room)
 {
   global $tbl_room;
-  $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($room));
+  $area = db()->query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($room));
   return ($area < 0 ? 0 : $area);
 }
 
@@ -1771,8 +1771,8 @@ function get_area_settings($area)
            WHERE id=?
            LIMIT 1";
            
-  $res = sql_query($sql, array($area));
-  if (sql_count($res) == 0)
+  $res = db()->query($sql, array($area));
+  if ($res->count() == 0)
   {
     // We still need to set the timezone even if the query didn't
     // return any results
@@ -1781,7 +1781,7 @@ function get_area_settings($area)
   }
   else
   {
-    $row = clean_area_row(sql_row_keyed($res, 0));
+    $row = clean_area_row($res->row_keyed(0));
     foreach ($row as $key => $value)
     {
       $$key = $value;
@@ -1836,7 +1836,7 @@ function some_area($field, $enabled=FALSE)
   $sql = "SELECT COUNT(*) FROM $tbl_area WHERE $predicate";
   $sql .= ($enabled) ? " AND disabled=0" : "";
   $sql .= " LIMIT 1";                                
-  return (sql_query1($sql) > 0);
+  return (db()->query1($sql) > 0);
 }
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
@@ -2196,10 +2196,10 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
              AND R.disabled=0
              AND A.disabled=0
         ORDER BY R.sort_key";
-  $res = sql_query($sql, array($area));
+  $res = db()->query($sql, array($area));
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
-  if (sql_count($res) > 1)
+  if ($res->count() > 1)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
@@ -2209,7 +2209,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
                    "<div>\n" .
                    "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
   
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
         $out_html .= "<option $selected value=\"". $row['id']. "\" title=\"". htmlspecialchars($row['description'])."\">" . htmlspecialchars($row['room_name']) . "</option>\n";
@@ -2227,7 +2227,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
     else  // list format
     {
       $out_html .= "<ul>\n";
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"". htmlspecialchars($row['description'])."\">";
         $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";

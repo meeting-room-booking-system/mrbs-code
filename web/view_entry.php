@@ -156,7 +156,7 @@ if ($series == 1)
           WHERE repeat_id=? AND entry_type=" . ENTRY_RPT_ORIGINAL . "
           ORDER BY start_time
           LIMIT 1";
-  $id = sql_query1($sql, array($id));
+  $id = db()->query1($sql, array($id));
   if ($id < 1)
   {
     // if all entries in series have been modified then
@@ -170,7 +170,7 @@ if ($series == 1)
             WHERE repeat_id=?
             ORDER BY start_time
             LIMIT 1";
-    $id = sql_query1($sql, array($id));
+    $id = db()->query1($sql, array($id));
   }
   $repeat_info_time = $row['repeat_info_time'];
   $repeat_info_user = $row['repeat_info_user'];
@@ -203,7 +203,7 @@ if (isset($action) && ($action == "export"))
     // Construct the SQL query
     $sql_params[] = array();
     $sql = "SELECT E.*, "
-         .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+         .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
          . "A.area_name, R.room_name, "
          . "A.approval_enabled, A.confirmation_enabled";
     if ($series)
@@ -232,7 +232,7 @@ if (isset($action) && ($action == "export"))
     {
       $sql .= " ORDER BY E.ical_recur_id";
     }
-    $res = sql_query($sql, $sql_params);
+    $res = db()->query($sql, $sql_params);
     
     // Export the calendar
     require_once "functions_ical.inc";

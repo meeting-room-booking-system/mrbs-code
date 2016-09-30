@@ -22,22 +22,22 @@ if ($type == "room")
   if (isset($confirm))
   {
     // They have confirmed it already, so go blast!
-    sql_begin();
+    db()->begin();
     try
     {
       // First take out all appointments for this room
-      sql_command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
-      sql_command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
+      db()->command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
+      db()->command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
       // Now take out the room itself
-      sql_command("DELETE FROM $tbl_room WHERE id=?", array($room));
+      db()->command("DELETE FROM $tbl_room WHERE id=?", array($room));
     }
     catch (DBException $e)
     {
-      sql_rollback();
+      db()->rollback();
       throw $e;
     }
    
-    sql_commit();
+    db()->commit();
    
     // Go back to the admin page
     Header("Location: admin.php?area=$area");
@@ -50,9 +50,9 @@ if ($type == "room")
     // Find out how many appointments would be deleted
    
     $sql = "SELECT name, start_time, end_time FROM $tbl_entry WHERE room_id=?";
-    $res = sql_query($sql, array($room));
+    $res = db()->query($sql, array($room));
     
-    if (sql_count($res) > 0)
+    if ($res->count() > 0)
     {
       echo "<p>\n";
       echo get_vocab("deletefollowing") . ":\n";
@@ -60,7 +60,7 @@ if ($type == "room")
       
       echo "<ul>\n";
       
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         echo "<li>".htmlspecialchars($row['name'])." (";
         echo time_date_string($row['start_time']) . " -> ";
@@ -85,11 +85,11 @@ if ($type == "area")
 {
   // We are only going to let them delete an area if there are
   // no rooms. its easier
-  $n = sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE area_id=?", array($area));
+  $n = db()->query1("SELECT COUNT(*) FROM $tbl_room WHERE area_id=?", array($area));
   if ($n == 0)
   {
     // OK, nothing there, lets blast it away
-    sql_command("DELETE FROM $tbl_area WHERE id=?", array($area));
+    db()->command("DELETE FROM $tbl_area WHERE id=?", array($area));
    
     // Redirect back to the admin page
     header("Location: admin.php");

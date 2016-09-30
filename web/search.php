@@ -194,16 +194,16 @@ if (!$ajax)
 $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
-// NOTE: sql_syntax_caseless_contains() modifies our SQL params for us
+// NOTE: syntax_caseless_contains() modifies our SQL params for us
 
 $sql_params = array();
-$sql_pred = "(( " . sql_syntax_caseless_contains("E.create_by", $search_str, $sql_params)
-  . ") OR (" . sql_syntax_caseless_contains("E.name", $search_str, $sql_params)
-  . ") OR (" . sql_syntax_caseless_contains("E.description", $search_str, $sql_params). ")";
+$sql_pred = "(( " . db()->syntax_caseless_contains("E.create_by", $search_str, $sql_params)
+  . ") OR (" . db()->syntax_caseless_contains("E.name", $search_str, $sql_params)
+  . ") OR (" . db()->syntax_caseless_contains("E.description", $search_str, $sql_params). ")";
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
 foreach ($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -219,14 +219,14 @@ foreach ($fields as $field)
         // assume PHP5
         if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
         {
-          $sql_pred .= " OR (E." . sql_quote($field['name']) . "=?)";
+          $sql_pred .= " OR (E." . db()->quote($field['name']) . "=?)";
           $sql_params[] = $key;
         }
       }
     }
     elseif ($field['nature'] == 'character')
     {
-      $sql_pred .= " OR (" . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str, $sql_params).")";
+      $sql_pred .= " OR (" . db()->syntax_caseless_contains("E." . db()->quote($field['name']), $search_str, $sql_params).")";
     }
   }
 }
@@ -284,7 +284,7 @@ if (!isset($total))
   $sql = "SELECT count(*)
           FROM $tbl_entry E, $tbl_room R, $tbl_area A
           WHERE $sql_pred";
-  $total = sql_query1($sql, $sql_params);
+  $total = db()->query1($sql, $sql_params);
 }
 
 if (($total <= 0) && !$ajax)
@@ -318,12 +318,12 @@ if (!$ajax_capable || $ajax)
   // the stuff we want.
   if (!$ajax)
   {
-    $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
+    $sql .= " " . db()->syntax_limit($search["count"], $search_pos);
   }
 
   // this is a flag to tell us not to display a "Next" link
-  $result = sql_query($sql, $sql_params);
-  $num_records = sql_count($result);
+  $result = db()->query($sql, $sql_params);
+  $num_records = $result->count();
 }
 
 if (!$ajax_capable)
@@ -352,7 +352,7 @@ if (!$ajax)
 // an Ajax request
 if (!$ajax_capable || $ajax)
 {
-  for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
+  for ($i = 0; ($row = $result->row_keyed($i)); $i++)
   {
     output_row($row);
   }

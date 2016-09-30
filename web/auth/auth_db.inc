@@ -41,20 +41,20 @@ function authValidateUser($user, $pass)
 
   $sql_params = array();
 
-  // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
+  // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
   $sql = "SELECT password_hash
             FROM $tbl_users
            WHERE " .
-         sql_syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
+         db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
          "
            LIMIT 1";
 
-  $res = sql_query($sql, $sql_params);
+  $res = db()->query($sql, $sql_params);
   
-  $row = sql_row_keyed($res, 0);
+  $row = $res->row_keyed(0);
 
   $do_rehash = false;
 
@@ -101,8 +101,8 @@ function authValidateUser($user, $pass)
     $sql = "UPDATE $tbl_users
            SET password_hash=?
            WHERE " .
-      sql_syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params);
-    sql_command($sql, $sql_params);
+      db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params);
+    db()->command($sql, $sql_params);
   }
 
   return $result;
@@ -126,7 +126,7 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
+  $result = db()->query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
                        array(utf8_strtolower($user)));
 
   return ($result == -1) ? 0 : $result;
@@ -149,7 +149,7 @@ function authGetUserEmail($user)
            WHERE name=?
            LIMIT 1";
            
-  $email = sql_query1($sql, array($user));
+  $email = db()->query1($sql, array($user));
   
   return ($email == -1) ? '' : $email;
 }

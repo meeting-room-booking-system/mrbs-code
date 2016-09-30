@@ -27,8 +27,23 @@ foreach ($tables as $table)
 $db_schema_version = 49;
 $local_db_schema_version = 1;
 
-
 // Convenience wrapper functions
+
+function db()
+{
+  static $db_obj = null;
+
+  if (is_null($db_obj))
+  {
+    global $db_persist, $db_host, $db_login, $db_password,
+           $db_database, $db_port, $dbsys;
+
+    $db_obj = DBFactory::create($dbsys, $db_host, $db_login, $db_password,
+                                $db_database, $db_persist, $db_port);
+  }
+  return $db_obj;
+}
+
 
 function sql_free($stmt)
 {
@@ -176,7 +191,7 @@ function db_get_userpass()
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
-if (!sql_table_exists($tbl_entry))
+if (!db()->table_exists($tbl_entry))
 {
   fatal_error(FALSE, get_vocab('fatal_no_tables'), FALSE);
 }
@@ -185,12 +200,12 @@ if (!sql_table_exists($tbl_entry))
 $current_db_schema_version = 0;
 $current_local_db_schema_version = 0;
 
-if (sql_table_exists($tbl_variables))
+if (db()->table_exists($tbl_variables))
 {
-  $current_db_schema_version = sql_query1("SELECT variable_content ".
+  $current_db_schema_version = db()->query1("SELECT variable_content ".
                                           "FROM $tbl_variables ".
                                           "WHERE variable_name = 'db_version'");
-  $current_local_db_schema_version = sql_query1("SELECT variable_content ".
+  $current_local_db_schema_version = db()->query1("SELECT variable_content ".
                                                 "FROM $tbl_variables ".
                                                 "WHERE variable_name = 'local_db_version'");                                            
   if ($current_local_db_schema_version < 0)
@@ -270,7 +285,7 @@ foreach ($table_vars as $table => $var)
 {
   // Find the maximum length of the CHAR and VARCHAR fields (we won't
   // worry about TEXT fields) 
-  $field_info = sql_field_info($$var);
+  $field_info = db()->field_info($$var);
   foreach ($field_info as $field)
   {
     if (($field['nature'] == 'character') && 

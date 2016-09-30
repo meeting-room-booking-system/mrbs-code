@@ -62,11 +62,11 @@ foreach ($ids as $id)
 // rows in the repeat table ourselves - but this does not take long.
 
 $sql = "DELETE FROM $tbl_entry WHERE id IN (" . implode(',', $ids) . ")";
-$result = sql_command($sql);
+$result = db()->command($sql);
 
 // And delete any orphaned rows in the repeat table
 $sql = "DELETE FROM $tbl_repeat WHERE id NOT IN (SELECT repeat_id FROM $tbl_entry)";
-$orphan_result = sql_command($sql);
+$orphan_result = db()->command($sql);
 
 
 echo $result;

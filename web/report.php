@@ -96,7 +96,7 @@ function generate_search_criteria(&$vars)
       case 'roommatch':
         // (We need DISTINCT because it's possible to have two rooms of the same name
         // in different areas)
-        $options = sql_query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
+        $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
         echo "<div id=\"div_roommatch\">\n";
         $params = array('label'         => get_vocab("match_room") . ':',
                         'name'          => 'roommatch',
@@ -1149,8 +1149,8 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   // bother with complicated things such as custom fields or select_options
   if ($table != 'entry')
   { 
-    // sql_syntax_caseless_contains() modifies the SQL params array too
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match, $sql_params);
+    // syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
     return $sql;
   }
   
@@ -1203,8 +1203,8 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   // (4) Strings
   else
   {
-    // sql_syntax_caseless_contains() modifies the SQL params array too
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match, $sql_params);
+    // syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
   }
   
   return $sql;
@@ -1281,8 +1281,8 @@ if ($ajax)
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
-$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
-$periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
+$times_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
+$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
 
 
 // Build the report search field order
@@ -1311,7 +1311,7 @@ foreach ($report_search_fields as $field)
 }
   
 // Get information about custom fields
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 $field_natures = array();
 $field_lengths = array();
@@ -1369,7 +1369,7 @@ if ($phase == 2)
   // Construct the SQL query
   $sql_params = array();
   $sql = "SELECT E.*, "
-       .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+       .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
        . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
   if ($output_format == OUTPUT_ICAL)
@@ -1414,8 +1414,8 @@ if ($phase == 2)
     $or_array = array();
     foreach ( $typematch as $type )
     {
-      // sql_syntax_casesensitive_equals() modifies our SQL params array for us
-      $or_array[] = sql_syntax_casesensitive_equals('E.type', $type, $sql_params);
+      // syntax_casesensitive_equals() modifies our SQL params array for us
+      $or_array[] = db()->syntax_casesensitive_equals('E.type', $type, $sql_params);
     }
     $sql .= "(". implode(" OR ", $or_array ) .")";
   }
@@ -1502,8 +1502,8 @@ if ($phase == 2)
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
 
-  $res = sql_query($sql, $sql_params);
-  $nmatch = sql_count($res);
+  $res = db()->query($sql, $sql_params);
+  $nmatch = $res->count();
 }
 
 $combination_not_supported = ($output == SUMMARY) && ($output_format == OUTPUT_ICAL);
@@ -1604,12 +1604,12 @@ if ($phase == 2)
     {
       echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     }
-    sql_free($res);
+    unset($res);
   }
   elseif ($combination_not_supported)
   {
     echo "<p>" . get_vocab("combination_not_supported") . "</p>\n";
-    sql_free($res);
+    unset($res);
   }
   else
   {
@@ -1634,7 +1634,7 @@ if ($phase == 2)
       open_report();
       report_header();
       $body_rows = array();
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         report_row($body_rows, $row);
       }
@@ -1647,7 +1647,7 @@ if ($phase == 2)
       open_summary();
       if ($nmatch > 0)
       {
-        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        for ($i = 0; ($row = $res->row_keyed($i)); $i++)
         {
           accumulate($row, $count, $hours,
                      $report_start, $report_end,

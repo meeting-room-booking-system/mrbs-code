@@ -430,7 +430,7 @@ foreach ($interval_types as $interval_type)
 }
 
 // Get the information about the fields in the room table
-$fields = sql_field_info($tbl_room);
+$fields = db()->field_info($tbl_room);
 
 // Get any user defined form variables
 foreach($fields as $field)
@@ -517,16 +517,16 @@ if ($phase == 2)
         $capacity = 0;
       }
 
-      // Used purely for the sql_syntax_casesensitive_equals() call below, and then ignored
+      // Used purely for the syntax_casesensitive_equals() call below, and then ignored
       $sql_params = array();
     
       // Acquire a mutex to lock out others who might be deleting the new area
-      if (!sql_mutex_lock($tbl_area))
+      if (!db()->mutex_lock($tbl_area))
       {
         fatal_error(TRUE, get_vocab("failed_to_acquire"));
       }
       // Check the new area still exists
-      if (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE id=? LIMIT 1", array($new_area)) < 1)
+      if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE id=? LIMIT 1", array($new_area)) < 1)
       {
         $valid_area = FALSE;
       }
@@ -534,12 +534,12 @@ if ($phase == 2)
       // (only do this if you're changing the room name or the area - if you're
       // just editing the other details for an existing room we don't want to reject
       // the edit because the room already exists!)
-      // [sql_syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
+      // [syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
       //  keep the flow of this elseif block]
       elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
-              && sql_query1("SELECT COUNT(*)
+              && db()->query1("SELECT COUNT(*)
                                FROM $tbl_room
-                              WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
+                              WHERE" . db()->syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
                                 AND area_id=?
                               LIMIT 1", array($room_name, $new_area)) > 0)
       {
@@ -611,7 +611,7 @@ if ($phase == 2)
                     // Do nothing
                     break;
                 }
-                $assign_array[] = sql_quote($field['name']) . "=?";
+                $assign_array[] = db()->quote($field['name']) . "=?";
                 $sql_params[] = $$var;
                 break;
             }
@@ -620,16 +620,16 @@ if ($phase == 2)
         
         $sql .= implode(",", $assign_array) . " WHERE id=?";
         $sql_params[] = $room;
-        sql_command($sql, $sql_params);
+        db()->command($sql, $sql_params);
 
         // Release the mutex and go back to the admin page (for the new area)
-        sql_mutex_unlock("$tbl_area");
+        db()->mutex_unlock($tbl_area);
         Header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area");
         exit();
       }
     
       // Release the mutex
-      sql_mutex_unlock("$tbl_area");
+      db()->mutex_unlock($tbl_area);
     }
   }
 
@@ -883,7 +883,7 @@ if ($phase == 2)
       $sql .= implode(",", $assign_array) . " WHERE id=?";
       $sql_params[] = $area;
       
-      sql_command($sql, $sql_params);
+      db()->command($sql, $sql_params);
 
       // Go back to the admin page
       Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");

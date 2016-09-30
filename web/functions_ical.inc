@@ -104,7 +104,7 @@ function get_vtimezone($tz)
   // Acquire a mutex to lock out others who might be accessing 
   // the table, to stop somebody inserting a record at the same
   // time as us (we want just one entry per timezone)
-  if (!sql_mutex_lock("$tbl_zoneinfo"))
+  if (!db()->mutex_lock($tbl_zoneinfo))
   {
     fatal_error(TRUE, get_vocab("failed_to_acquire"));
   }
@@ -115,13 +115,13 @@ function get_vtimezone($tz)
            WHERE timezone=?
              AND outlook_compatible=?
            LIMIT 1";
-  $res = sql_query($sql, array($tz,$zoneinfo_outlook_compatible));
+  $res = db()->query($sql, array($tz,$zoneinfo_outlook_compatible));
 
-  if (sql_count($res) > 0)
+  if ($res->count() > 0)
   {
     // If there's something in the database and it hasn't expired, then
     // that's it.
-    $row = sql_row_keyed($res, 0);
+    $row = $res->row_keyed(0);
     $vtimezone = $row['vtimezone'];
     if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
     {
@@ -174,7 +174,7 @@ function get_vtimezone($tz)
                      last_updated=?
                WHERE timezone=?
                  AND outlook_compatible=?";
-      sql_command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible));
+      db()->command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible));
     }
   }
   // There's nothing in the database, so try and get a VTIMEZONE component
@@ -191,12 +191,12 @@ function get_vtimezone($tz)
         $sql = "INSERT INTO $tbl_zoneinfo
                             (timezone, outlook_compatible, vtimezone, last_updated)
                      VALUES (?, ?, ?, ?)";
-        sql_command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time()));
+        db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time()));
       }
     }
   }
   // Tidy up and return
-  sql_mutex_unlock("$tbl_zoneinfo");  // Release the mutex
+  db()->mutex_unlock($tbl_zoneinfo);  // Release the mutex
   return $vtimezone;
 }
 
@@ -296,20 +296,20 @@ function get_create_by($organizer)
   if ($auth['type'] == 'db')
   {
     $sql = "SELECT name FROM $tbl_users WHERE email=?";
-    $res = sql_query($sql, array($email));
+    $res = db()->query($sql, array($email));
 
-    if (sql_count($res) == 0)
+    if ($res->count() == 0)
     {
       return NULL;
     }
     else
     {
-      if (sql_count($res) > 1)
+      if ($res->count() > 1)
       {
         // Could maybe do something better here
         trigger_error("ORGANIZER email address not unique", E_USER_NOTICE);
       }
-      $row = sql_row_keyed($res, 0);
+      $row = $res->row_keyed(0);
       return $row['name'];
     }
   }
@@ -1049,9 +1049,9 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   // Initialize an array to hold the events and a variable to keep track
   // of the last repeat id we've seen
   $ical_events = array();
-  $n_rows = sql_count($res);
+  $n_rows = $res->count();
   
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))

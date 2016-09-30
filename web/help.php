@@ -14,7 +14,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : "");
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
 echo "<table id=\"version_info\">\n";
 echo "<tr><td><a href=\"http://mrbs.sourceforge.net\">" . get_vocab("mrbs") . "</a>:</td><td>" . get_mrbs_version() . "</td></tr>\n";
-echo "<tr><td>" . get_vocab("database") . ":</td><td>" . sql_version() . "</td></tr>\n";
+echo "<tr><td>" . get_vocab("database") . ":</td><td>" . db()->version() . "</td></tr>\n";
 echo "<tr><td>" . get_vocab("system") . ":</td><td>" . php_uname() . "</td></tr>\n";
 echo "<tr><td>" . get_vocab("servertime") . ":</td><td>" .
      utf8_strftime($strftime_format['datetime'], time()) .

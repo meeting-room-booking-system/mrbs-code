@@ -86,8 +86,8 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      sql_command("UPDATE $tbl_variables SET variable_content = ? ".
-                  "WHERE variable_name = ?", array($ver, $variable_name));
+      $upgrade_handle->command("UPDATE $tbl_variables SET variable_content = ? ".
+                               "WHERE variable_name = ?", array($ver, $variable_name));
     }
     upgrade_echo("</p>\n");
     

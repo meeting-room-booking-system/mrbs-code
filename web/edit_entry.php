@@ -53,7 +53,7 @@ namespace MRBS;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
@@ -398,9 +398,9 @@ function create_field_entry_rooms($disabled=FALSE)
              AND R.disabled=0
              AND A.disabled=0
         ORDER BY R.area_id, R.sort_key";
-  $res = sql_query($sql);
+  $res = db()->query($sql);
   
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
   }
@@ -815,16 +815,16 @@ if (isset($id))
              WHERE id=?
              LIMIT 1";
              
-    $res = sql_query($sql, array($rep_id));
+    $res = db()->query($sql, array($rep_id));
     
-    if (sql_count($res) != 1)
+    if ($res->count() != 1)
     {
       fatal_error(1,
                   get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
     }
 
-    $row = sql_row_keyed($res, 0);
-    sql_free($res);
+    $row = $res->row_keyed(0);
+    unset($res);
    
     $rep_type = $row['rep_type'];
 
@@ -997,8 +997,8 @@ $start_min   = strftime('%M', $start_time);
 if (empty( $room_id ) )
 {
   $sql = "SELECT id FROM $tbl_room WHERE disabled=0 LIMIT 1";
-  $res = sql_query($sql);
-  $row = sql_row_keyed($res, 0);
+  $res = db()->query($sql);
+  $row = $res->row_keyed(0);
   $room_id = $row['id'];
 }
 
@@ -1032,9 +1032,9 @@ $sql = "SELECT R.id, R.room_name, R.area_id
            AND R.disabled=0
            AND A.disabled=0
       ORDER BY R.area_id, R.sort_key";
-$res = sql_query($sql);
+$res = db()->query($sql);
 
-for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
   $rooms[$row['id']] = $row;
 }
@@ -1048,9 +1048,9 @@ $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all
           FROM $tbl_area
          WHERE disabled=0
       ORDER BY sort_key";
-$res = sql_query($sql);
+$res = db()->query($sql);
 
-for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
   // Make sure we've got the correct resolution when using periods (it's
   // probably OK anyway, but just in case)

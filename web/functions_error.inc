@@ -77,7 +77,7 @@ function fatal_error($need_header, $message, $show_form_data = true, $show_debug
   {
     error_log("MRBS: $message");
     
-    $sql_error = sql_error();
+    $sql_error = db()->error();
     if (!empty($sql_error))
     {
       error_log("MRBS: $sql_error");
