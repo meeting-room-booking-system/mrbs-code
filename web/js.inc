@@ -1,6 +1,8 @@
 <?php 
 namespace MRBS;
 
+global $day, $month, $year, $room, $area, $page;
+
 // $Id$
 
 

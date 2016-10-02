@@ -3,6 +3,20 @@ namespace MRBS;
 
 // $Id$
 
+
+function print_head()
+{
+  echo "<head>\n";
+  echo "<meta charset=\"" . get_charset() . "\">\n";
+  echo "<title>" . get_vocab("mrbs") . "</title>\n";
+  
+  require_once "style.inc";
+  require_once "js.inc";
+  
+  echo "</head>\n";
+}
+
+
 function print_header_site_info()
 {
   global $mrbs_company,
@@ -210,25 +224,13 @@ function print_theme_header($day, $month, $year, $area, $room)
     $year  = date("Y");
   }
 
-  
   http_headers();
   echo DOCTYPE;
-?>
 
-<html>
-  <head>
+  echo "<html>\n";
   
-  <meta charset="<?php echo get_charset(); ?>">
-  <title><?php echo get_vocab("mrbs") ?></title>
-  
-  <?php
-  require_once "style.inc";
-  require_once "js.inc";
-  ?>
-  
-  </head>
-  
-  <?php
+  print_head();
+
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
   echo "<body class=\"non_js ".htmlspecialchars($page)."\">\n";
@@ -245,7 +247,7 @@ function print_theme_header($day, $month, $year, $area, $room)
 
     <div class="screenonly">
 
-<?php
+  <?php
   if (!empty($locale_warning))
   {
     echo "[Warning: ".$locale_warning."]";
