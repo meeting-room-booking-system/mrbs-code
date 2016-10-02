@@ -48,14 +48,14 @@ function exception_handler($exception)
   {
     case __NAMESPACE__ . "\\DBException":
     case 'PDOException':
-      $message = get_vocab("fatal_db_error");
+      $fatal_message = get_vocab("fatal_db_error");
       break;
     default:
-      $message = get_vocab("fatal_error");
+      $fatal_message = get_vocab("fatal_error");
       break;
   }
   
-  fatal_error($message, false, false);
+  fatal_error($fatal_message, false, false);
 }
 
 
@@ -71,31 +71,23 @@ function fatal_error($message, $show_form_data = true, $show_debug = true)
     
   if ($show_debug)
   {
-    error_log("MRBS: $message");
-    
-    $sql_error = db()->error();
-    if (!empty($sql_error))
-    {
-      error_log("MRBS: $sql_error");
-    }
-    
-    $e = new Exception();
-    error_log($e->getTraceAsString());
+    trigger_error("MRBS: $message", E_USER_WARNING);
+    trigger_error(print_r(debug_backtrace(), true));
     
     if ($show_form_data)
     {
       if (!empty($_GET))
       {
-        error_log("MRBS GET: " . print_r($_GET, true));
+        trigger_error("MRBS GET: " . print_r($_GET, true));
       }
       if (!empty($_POST))
       {
-        error_log("MRBS POST: " . print_r($_POST, true));
+        trigger_error("MRBS POST: " . print_r($_POST, true));
       }
     }
     if (!empty($_SESSION))
     {
-      error_log("MRBS SESSION: " . print_r($_SESSION, true));
+      trigger_error("MRBS SESSION: " . print_r($_SESSION, true));
     }
   }
   
