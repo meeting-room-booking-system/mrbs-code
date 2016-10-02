@@ -270,12 +270,9 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
   }
   echo "</header>\n";
 
-  if (!$simple)
-  {
-    // This <div> should really be moved out of here so that we can always see
-    // the matching closing </div>
-    echo "<div id=\"contents\">\n";
-  }
+  // This <div> should really be moved out of here so that we can always see
+  // the matching closing </div>
+  echo "<div id=\"contents\">\n";
 
 
 } // end of print_theme_header()
