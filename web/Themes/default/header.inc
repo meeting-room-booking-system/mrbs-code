@@ -245,21 +245,18 @@ function print_theme_header($day, $month, $year, $area, $room)
       //]]>
     </script> 
 
-    <div class="screenonly">
-
   <?php
   if (!empty($locale_warning))
   {
     echo "[Warning: ".$locale_warning."]";
   }
   
-  echo "<header id=\"banner\">\n";
+  echo "<header id=\"banner\" class=\"screenonly\">\n";
   print_header_site_info();
   print_nav($day, $month, $year, $room, $area, $search_str);
   echo "</header>\n";
 ?>
 
-</div>
 
 <div id="contents">
 <?php
