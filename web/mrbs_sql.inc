@@ -498,6 +498,37 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 }
 
 
+// Get the number of outstanding (ie waiting to be approved) for a user
+function get_entries_n_outstanding($user)
+{
+  global $tbl_entry, $tbl_room, $tbl_area,
+         $max_level;
+  
+  $is_admin = (authGetUserLevel($user) >= $max_level);
+  $sql_approval_enabled = some_area_predicate('approval_enabled');
+  $sql_params = array();
+
+  // Find out how many bookings are awaiting approval
+  // (but only for areas where approval is required)
+  $sql = "SELECT COUNT(*)
+            FROM $tbl_entry E, $tbl_room R, $tbl_area A
+           WHERE (status&" . STATUS_AWAITING_APPROVAL . " != 0)
+             AND E.room_id = R.id
+             AND R.area_id = A.id
+             AND R.disabled = 0
+             AND A.disabled = 0
+             AND $sql_approval_enabled";
+  if (!$is_admin)
+  {
+    // Ordinary users can only see their own
+    $sql .= " AND create_by=?";
+    $sql_params[] = $user;
+  }
+  
+  return db()->query1($sql, $sql_params);
+}
+
+
 /** mrbsDelEntry()
  * 
  * Delete an entry, or optionally all entries.   Will also delete any newly

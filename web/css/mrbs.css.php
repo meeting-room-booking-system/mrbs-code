@@ -844,6 +844,53 @@ form#add_new_user {margin-left: 1em}
 
 
 /* ------------ FUNCTIONS.INC -------------------*/
+
+header#banner {
+  display: table;
+  width: 100%;
+  background-color: <?php echo $banner_back_color ?>;
+  color: <?php echo $banner_font_color ?>;
+  border-color: <?php echo $banner_border_color ?>;
+  border-width: <?php echo $banner_border_width ?>px;
+  border-style: solid;
+}
+
+#banner #company {
+  display: table-cell;
+  font-size: large;
+  padding: 0.3em 1em;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#banner #company div {
+  width: 100%;
+}
+
+#banner nav {
+  display: table-cell;
+  height: 100%;
+}
+
+#banner ul {
+  list-style: none;
+  display: table;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding-left: 0;
+}
+
+#banner li {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  border-color: <?php echo $banner_border_color ?>;
+  border-style: solid;
+  border-width: 0 0 0 <?php echo $banner_border_cell_width ?>px;
+  padding: 0.3em 0.5em;
+}
+
 #logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
 table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
     border-color: <?php echo $banner_border_color ?>;
@@ -855,7 +902,7 @@ table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
     padding: 6px; color: <?php echo $banner_font_color ?>}
 #banner td:first-child {border-left-width: 0}
 #banner td#company {font-size: large}
-#banner #company div {width: 100%}
+
 #banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
 #banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
 #banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}

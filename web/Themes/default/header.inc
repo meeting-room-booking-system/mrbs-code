@@ -3,6 +3,162 @@ namespace MRBS;
 
 // $Id$
 
+function print_header_site_info()
+{
+  global $mrbs_company,
+         $mrbs_company_url,
+         $mrbs_company_logo,
+         $mrbs_company_more_info;
+  
+  echo "<div id=\"company\">\n";
+  
+  echo "<div id=\"logo\">\n";
+  if (!empty($mrbs_company_url))
+  {
+    echo "<a href=\"$mrbs_company_url\">\n";
+  }
+  if (empty($mrbs_company_logo))
+  {
+    echo "<span>$mrbs_company</span>\n";
+  }
+  else
+  {
+    // Suppress error messages in case the logo is a URL and allow_url_fopen
+    // is not enabled in php.ini
+    $logo_size = @getimagesize($mrbs_company_logo);
+    echo "<img src=\"$mrbs_company_logo\" " . $logo_size[3] . " alt=\"$mrbs_company\">\n";
+  }
+  if (!empty($mrbs_company_url))
+  {
+    echo "</a>\n";
+  }
+  echo "</div>\n";
+    
+  if (!empty($mrbs_company_more_info))
+  {
+    echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
+  }
+
+  echo "<div id=\"mrbs\">\n";
+  echo "<a href=\"index.php\">" . get_vocab("mrbs") . "</a>\n";
+  echo "</div>\n";
+  
+  echo "</div>\n";
+}
+
+
+function print_goto_date($day, $month, $year)
+{
+  echo "<form action=\"day.php\" method=\"get\" id=\"Form1\">\n";
+
+  // Give the form id as the optional fifth parameter because we want
+  // the form to be automatically submitted when the datepicker is closed
+  genDateSelector("", $day, $month, $year, "Form1");
+  if (!empty($area))
+  {
+    echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+  }
+  if (!empty($room))
+  {
+    echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+  }
+  // Although the datepicker will automatically go to the new date when
+  // the date is changed, we still need a submit button because there
+  // are occasions when you want to go to the date without changing it -
+  // for example when you've been on a Search or Report page
+  echo "<input type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
+
+  echo "</form>\n";
+}
+
+
+function print_help($query_string)
+{
+  echo "<a href=\"help.php?$query_string\">" . get_vocab("help") . "</a>\n";
+}
+
+
+function print_rooms($query_string)
+{
+  echo "<a href=\"admin.php?$query_string\">" . get_vocab("rooms") . "</a>\n";
+}
+
+
+function print_report($query_string)
+{
+  echo "<a href=\"report.php?$query_string\">" . get_vocab("report") . "</a>\n";
+}
+
+
+function print_search($day, $month, $year, $room, $area, $search_str)
+{
+  echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
+  echo "<div>\n";
+  echo "<a href=\"search.php?advanced=1\">" . get_vocab("search") . ":</a>\n";
+  echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";
+  echo "<input type=\"hidden\" name=\"day\" value=\"$day\">\n";
+  echo "<input type=\"hidden\" name=\"month\" value=\"$month\">\n";
+  echo "<input type=\"hidden\" name=\"year\" value=\"$year\">\n";
+  if (!empty($area))
+  {
+    echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+  }
+  if (!empty($room))
+  {
+    echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+  }
+  echo "</div>\n";
+  echo "</form>\n";
+}
+
+
+function print_logon()
+{
+    echo "<div id=\"logon_box\">\n";
+    PrintLogonBox(); 
+    echo "</div>\n";
+}
+
+
+function print_nav($day, $month, $year, $room, $area, $search_str)
+{
+  $query_string = "day=$day&amp;month=$month&amp;year=$year";
+  
+  echo "<nav>\n";
+  echo "<ul>\n";
+  
+  echo "<li>\n";
+  print_goto_date($day, $month, $year);
+  echo "</li>\n";
+  
+  echo "<li>\n";
+  print_help($query_string);
+  echo "</li>\n";
+  
+  echo "<li>\n";
+  print_rooms($query_string);
+  echo "</li>\n";
+  
+  echo "<li>\n";
+  print_report($query_string);
+  echo "</li>\n";
+  
+  echo "<li>\n";
+  print_search($day, $month, $year, $room, $area, $search_str);
+  echo "</li>\n";
+  
+  // For session protocols that define their own logon box...
+  if (function_exists(__NAMESPACE__ . "\PrintLogonBox"))
+  {
+    echo "<li>\n";
+    print_logon();
+    echo "</li>\n";
+  }
+  
+  echo "</ul>\n";
+  echo "</nav>\n";
+}
+
 
 // Print the page header
 function print_theme_header($day, $month, $year, $area, $room)
@@ -82,8 +238,14 @@ function print_theme_header($day, $month, $year, $area, $room)
   {
     echo "[Warning: ".$locale_warning."]";
   }
+  
+  echo "<header id=\"banner\">\n";
+  print_header_site_info();
+  print_nav($day, $month, $year, $room, $area, $search_str);
+  echo "</header>\n";
 ?>
 
+  
   <table id="banner">
     <tr>
       <td id="company">
@@ -150,27 +312,7 @@ function print_theme_header($day, $month, $year, $area, $room)
         $approval_somewhere = some_area('approval_enabled', TRUE);
         if ($approval_somewhere && (authGetUserLevel($user) >= 1))
         {
-          $sql_approval_enabled = some_area_predicate('approval_enabled');
-
-          $sql_params = array();
-
-          // Find out how many bookings are awaiting approval
-          // (but only for areas where approval is required)
-          $sql = "SELECT COUNT(*)
-                    FROM $tbl_entry E, $tbl_room R, $tbl_area A
-                   WHERE (status&" . STATUS_AWAITING_APPROVAL . " != 0)
-                     AND E.room_id = R.id
-                     AND R.area_id = A.id
-                     AND R.disabled = 0
-                     AND A.disabled = 0
-                     AND $sql_approval_enabled";
-          if (!$is_admin)
-          {
-            // Ordinary users can only see their own
-            $sql .= " AND create_by=?";
-            $sql_params[] = $user;
-          }
-          $n_outstanding = db()->query1($sql, $sql_params);
+          $n_outstanding = get_entries_n_outstanding($user);
           echo "<div id=\"n_outstanding\"" .
                (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
                ">\n";
