@@ -106,7 +106,7 @@ function get_vtimezone($tz)
   // time as us (we want just one entry per timezone)
   if (!db()->mutex_lock($tbl_zoneinfo))
   {
-    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+    fatal_error(get_vocab("failed_to_acquire"));
   }
   
   // Look and see if there's a component in the database

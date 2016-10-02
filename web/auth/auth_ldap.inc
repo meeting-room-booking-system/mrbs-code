@@ -99,8 +99,7 @@ function authLdapAction($callback, $user, &$object)
       if (count($value) != $count)
       {
         authLdapDebug("Count of LDAP array config variables doesn't match, aborting!");
-        fatal_error(TRUE,
-                    "MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!",
+        fatal_error("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!",
                     false);
         return 0;
       }

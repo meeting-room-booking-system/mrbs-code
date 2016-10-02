@@ -32,7 +32,7 @@ global $tbl_entry, $tbl_repeat, $admin_handle;
 // who know the database username and password, but just in case ...)
 if (!$admin_handle->mutex_lock($tbl_entry))
 {
-  fatal_error(1, get_vocab("failed_to_acquire"));
+  fatal_error(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE $tbl_entry
@@ -53,7 +53,7 @@ $admin_handle->mutex_unlock($tbl_entry);
 // who know the database username and password, but just in case ...)
 if (!$admin_handle->mutex_lock($tbl_repeat))
 {
-  fatal_error(1, get_vocab("failed_to_acquire"));
+  fatal_error(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE $tbl_repeat
@@ -83,7 +83,7 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   if ($result != 1)
   {
     // Something's gone wrong.  No rows have been affected, which should not be the case
-    fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
+    fatal_error("Failed to update status column in repeat table with approval status.");
   }
 }  
 

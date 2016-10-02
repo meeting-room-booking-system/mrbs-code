@@ -25,7 +25,7 @@ function mrbs_default_timezone_set($timezone)
     // to prevent people running into DST problems
     $message = 'MRBS configuration error: $timezone has not been set.';
     trigger_error($message, E_USER_WARNING);
-    fatal_error(FALSE, $message);
+    fatal_error($message);
   }
   else
   {
@@ -35,7 +35,7 @@ function mrbs_default_timezone_set($timezone)
       {
         $message = "MRBS configuration error: invalid timezone '$timezone'";
         trigger_error($message, E_USER_WARNING);
-        fatal_error(FALSE, $message);
+        fatal_error($message);
       }
     }
     else

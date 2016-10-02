@@ -137,7 +137,7 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
   // (Shouldn't be possible, but just in case ...)
   if (empty($area['resolution']) || ($area['resolution'] < 0))
   {
-    fatal_error(FALSE, "Internal error - resolution is NULL or <= 0");
+    fatal_error("Internal error - resolution is NULL or <= 0");
   }
   
   if ($area['enable_periods'])
@@ -695,7 +695,7 @@ if (isset($id))
   
   if (is_null($entry))
   {
-    fatal_error(1, get_vocab("entryid") . $id . get_vocab("not_found"));
+    fatal_error(get_vocab("entryid") . $id . get_vocab("not_found"));
   }
   
   // We've possibly got a new room and area, so we need to update the settings
@@ -819,8 +819,7 @@ if (isset($id))
     
     if ($res->count() != 1)
     {
-      fatal_error(1,
-                  get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
+      fatal_error(get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
     }
 
     $row = $res->row_keyed(0);

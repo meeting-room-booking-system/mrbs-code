@@ -646,7 +646,7 @@ function mrbsCreateEntry($table, $data)
     // allow custom fields with spaces in them (or else have custom fields created by MRBS).
     if (strpos($key, ' ') !== FALSE)
     {
-      fatal_error(FALSE, "Custom field names cannot contain spaces.", FALSE);
+      fatal_error("Custom field names cannot contain spaces.", FALSE);
     }
     
     // If the key doesn't exist in the $data array then the database will just use its
@@ -1263,7 +1263,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(TRUE, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      fatal_error(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
@@ -1325,7 +1325,7 @@ function get_booking_info($id, $series, $silent=FALSE)
         {
           // If this is the entry table then check that the custom field also
           // exists in the repeat table
-          fatal_error(0, "Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
+          fatal_error("Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
         }
         
         array_push($terms, "T." . db()->quote($field['name']));
@@ -1368,7 +1368,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      fatal_error(TRUE, ($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
+      fatal_error(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
 
@@ -1415,7 +1415,7 @@ function get_booking_info($id, $series, $silent=FALSE)
         }
         else
         {
-          fatal_error(TRUE, get_vocab("invalid_series_id"));
+          fatal_error(get_vocab("invalid_series_id"));
         }
       }
       $row['rep_type']         = $extra_row['rep_type'];
@@ -1629,7 +1629,7 @@ function mrbsAddArea($name, &$error)
   // Acquire a mutex to lock out others who might be editing the area
   if (!db()->mutex_lock("$tbl_area"))
   {
-    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+    fatal_error(get_vocab("failed_to_acquire"));
   }
   // Check that the area name is unique
   if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE area_name=? LIMIT 1", array($name)) > 0)
@@ -1710,7 +1710,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
   // Acquire a mutex to lock out others who might be editing rooms
   if (!db()->mutex_lock($tbl_room))
   {
-    fatal_error(TRUE, get_vocab("failed_to_acquire"));
+    fatal_error(get_vocab("failed_to_acquire"));
   }
   // Check that the room name is unique within the area
   if (db()->query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name=? AND area_id=? LIMIT 1",
@@ -1798,7 +1798,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   // Acquire mutex to lock out others trying to book the same slot(s).
   if (!db()->mutex_lock($tbl_entry))
   {
-    fatal_error(1, get_vocab("failed_to_acquire"));
+    fatal_error(get_vocab("failed_to_acquire"));
   }
 
   // Validate the booking for (a) conflicting bookings and (b) conformance to rules

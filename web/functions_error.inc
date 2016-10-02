@@ -55,16 +55,15 @@ function exception_handler($exception)
       break;
   }
   
-  fatal_error(false, $message, false, false);
+  fatal_error($message, false, false);
 }
 
 
 // Error handler - this is used to display serious errors such as database
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
-// If $need_header!=0 output the top of the page too, else assume the
-// caller did that. Always outputs the bottom of the page and exits.
-function fatal_error($need_header, $message, $show_form_data = true, $show_debug = true)
+// Always outputs the bottom of the page and exits.
+function fatal_error($message, $show_form_data = true, $show_debug = true)
 {
   global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
 

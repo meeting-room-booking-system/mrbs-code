@@ -523,7 +523,7 @@ if ($phase == 2)
       // Acquire a mutex to lock out others who might be deleting the new area
       if (!db()->mutex_lock($tbl_area))
       {
-        fatal_error(TRUE, get_vocab("failed_to_acquire"));
+        fatal_error(get_vocab("failed_to_acquire"));
       }
       // Check the new area still exists
       if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE id=? LIMIT 1", array($new_area)) < 1)
@@ -913,7 +913,7 @@ if (isset($change_room) && !empty($room))
 
   if (empty($room_data))
   {
-    fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
+    fatal_error(get_vocab("error_room") . $room . get_vocab("not_found"));
   }
   
   echo "<h2>\n";
@@ -945,7 +945,7 @@ if (isset($change_room) && !empty($room))
       $areas = get_area_names($all=TRUE);
       if (empty($areas))
       {
-        fatal_error(FALSE, get_vocab('noareas'));  // should not happen
+        fatal_error(get_vocab('noareas'));  // should not happen
       }
       
       // The area select box
@@ -1129,7 +1129,7 @@ if (isset($change_area) &&!empty($area))
   $area_data = get_area_details($area);
   if (empty($area_data))
   {
-    fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
+    fatal_error(get_vocab("error_area") . $area . get_vocab("not_found"));
   }
 
   // Get the settings for this area, from the database if they are there, otherwise from

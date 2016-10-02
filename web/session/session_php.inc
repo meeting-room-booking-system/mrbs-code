@@ -58,7 +58,7 @@ session_set_cookie_params($auth["session_php"]["session_expire_time"],
 if (FALSE === session_start())
 {
   trigger_error("MRBS: could not start session", E_USER_WARNING);
-  fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
+  fatal_error("MRBS: server configuration error.", FALSE);
 }
 
 // Check to see if we've been inactive for longer than allowed and if so logout

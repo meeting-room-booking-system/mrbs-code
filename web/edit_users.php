@@ -788,7 +788,7 @@ if (isset($Action) && ($Action == "Delete"))
   $target_level = db()->query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($Id));
   if ($target_level < 0)
   {
-    fatal_error(TRUE, "Fatal error while deleting a user");
+    fatal_error("Fatal error while deleting a user");
   }
   // you can't delete a user if you're not some kind of admin, and then you can't
   // delete someone higher than you

@@ -75,7 +75,7 @@ function db_get_userpass()
 // either because they don't exist or we don't have permission.
 if (!db()->table_exists($tbl_entry))
 {
-  fatal_error(FALSE, get_vocab('fatal_no_tables'), FALSE);
+  fatal_error(get_vocab('fatal_no_tables'), FALSE);
 }
 
 // Default version is 0, before we had schema versions
