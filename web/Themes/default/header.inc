@@ -49,7 +49,7 @@ function print_header_site_info()
 
 function print_goto_date($day, $month, $year, $room, $area)
 {
-  global $user;
+  $user = getUserName();
   
   echo "<form action=\"day.php\" method=\"get\" id=\"Form1\">\n";
 
@@ -107,7 +107,7 @@ function print_report($query_string)
 }
 
 
-function print_search($day, $month, $year, $room, $area, $search_str)
+function print_search($day, $month, $year, $room, $area, $search_str = '')
 {
   echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
   echo "<div>\n";
@@ -137,7 +137,7 @@ function print_logon()
 }
 
 
-function print_nav($day, $month, $year, $room, $area, $search_str)
+function print_nav($day, $month, $year, $room, $area, $search_str = '')
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
   if (!empty($area))
@@ -188,21 +188,11 @@ function print_nav($day, $month, $year, $room, $area, $search_str)
 // Print the page header
 function print_theme_header($day, $month, $year, $area, $room)
 {
-  global $mrbs_company, $mrbs_company_logo, $mrbs_company_url, $mrbs_company_more_info,
-         $search_str, $locale_warning;
-  global $tbl_entry, $tbl_room, $tbl_area;
-  global $PHP_SELF, $HTTP_HOST, $QUERY_STRING;
-  global $view_week_number, $weekstarts, $times_along_top, $periods, $enable_periods;
-  global $auth, $max_level;
-  global $select_options;
-  global $ajax_refresh_rate;
-  global $main_table_cell_border_width, $main_cell_height;
-  global $timetohighlight;
+  global $search_str, $locale_warning;
+  global $PHP_SELF;
   
   $page = basename($PHP_SELF, ".php");
-  $user = getUserName();
-  $is_admin = (authGetUserLevel($user) >= $max_level);
-  
+
   // Need to set the timezone before we can use date()
   get_area_settings($area);
 
@@ -219,10 +209,7 @@ function print_theme_header($day, $month, $year, $area, $room)
   {
     $year  = date("Y");
   }
-  if (!isset($search_str))
-  {
-    $search_str = "";
-  }
+
   
   http_headers();
   echo DOCTYPE;
