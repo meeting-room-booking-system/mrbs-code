@@ -1,6 +1,3 @@
-<?php
-  // $Id$
-?>
 <html>
 <head><title>Language File Checker</title></head>
 <body>
@@ -24,12 +21,12 @@ $lang = array();
 if (!empty($_GET))
 {
   $lang = $_GET['lang'];
-  $update = $_GET['update'];
+  $update = empty($_GET['update']) ? false : true;
 }
 else if (!empty($HTTP_GET_VARS))
 {
   $lang = (array)$HTTP_GET_VARS['lang'];
-  $update = $HTTP_GET_VARS['update'];
+  $update = empty($HTTP_GET_VARS['update']) ? false : true;
 }
 
 
@@ -116,16 +113,18 @@ foreach ($lang as $l)
     while (!feof($in))
     {
       $line = fgets($in);
+      $token_match = "";
       if (preg_match('/^\$vocab\["([^"]+)"\]/', $line, $matches))
       {
 // DEBUG        print "<tr><td>$matches[1]</td><td>".key($ref_lines);
+        $token_match = $matches[1];
 
-        if (!array_key_exists($matches[1], $ref_lines))
+        if (!array_key_exists($token_match, $ref_lines))
         {
           fwrite($out, "// REMOVED - ".$line);
           continue;
         }
-        while (($matches[1] != key($ref_lines)) &&
+        while (($token_match != key($ref_lines)) &&
                (!array_key_exists(key($ref_lines), $vocab)))
         {
           if (array_key_exists(key($ref_lines), $seen))
@@ -134,7 +133,7 @@ foreach ($lang as $l)
           }
           $seen[key($ref_lines)] = 1;
           fwrite($out, current($ref_lines));
-          $added[] = key($ref_lines);
+          $added[] = htmlspecialchars(key($ref_lines));
           $ret = next($ref_lines);
 // DEBUG          print " ".key($ref_lines);
           if (!$ret)
@@ -144,7 +143,7 @@ foreach ($lang as $l)
         }
         next($ref_lines);
       }
-      $seen[$matches[1]] = 1;
+      $seen[$token_match] = 1;
       fwrite($out, $line);
 // DEBUG      print "</td></tr>\n";
     }
@@ -170,11 +169,11 @@ foreach ($lang as $l)
       print "No token lines added.";
       unlink("$path_to_mrbs/$langs$l.new") or
         print "<span style=\"color: red; font-weight: bold\">
-               Failed to delete $path_to_mrbs/$langs$l.new</span>.\n";
+               Failed to delete $path_to_mrbs/$langs".htmlspecialchars($l).".new</span>.\n";
     }
   }
 ?>
-<h2>Language: <?php echo $l ?></h2>
+<h2>Language: <?php echo htmlspecialchars($l) ?></h2>
 <table border="1">
   <tr>
     <th>Problem</th>
