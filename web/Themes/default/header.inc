@@ -47,8 +47,10 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($day, $month, $year)
+function print_goto_date($day, $month, $year, $room, $area)
 {
+  global $user;
+  
   echo "<form action=\"day.php\" method=\"get\" id=\"Form1\">\n";
 
   // Give the form id as the optional fifth parameter because we want
@@ -69,6 +71,21 @@ function print_goto_date($day, $month, $year)
   echo "<input type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
 
   echo "</form>\n";
+  
+  // Provide a link to the list of bookings awaiting approval
+  // (if there are any enabled areas where we require bookings to be approved)
+  $approval_somewhere = some_area('approval_enabled', TRUE);
+  if ($approval_somewhere && (authGetUserLevel($user) >= 1))
+  {
+    $n_outstanding = get_entries_n_outstanding($user);
+    echo "<div id=\"n_outstanding\"" .
+         (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
+         ">\n";
+    echo "<a href=\"pending.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area" . 
+         ((!empty($room)) ? "&amp;room=$room" : "") . 
+         "\">$n_outstanding " . get_vocab("outstanding") . "</a>\n";
+    echo "</div>\n";
+  }
 }
 
 
@@ -123,12 +140,20 @@ function print_logon()
 function print_nav($day, $month, $year, $room, $area, $search_str)
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
+  if (!empty($area))
+  {
+    $query_string .= "&amp;area=$area";
+  }
+  if (!empty($room))
+  {
+    $query_string .= "&amp;room=$room";
+  }
   
   echo "<nav>\n";
   echo "<ul>\n";
   
   echo "<li>\n";
-  print_goto_date($day, $month, $year);
+  print_goto_date($day, $month, $year, $room, $area);
   echo "</li>\n";
   
   echo "<li>\n";
@@ -245,142 +270,6 @@ function print_theme_header($day, $month, $year, $area, $room)
   echo "</header>\n";
 ?>
 
-  
-  <table id="banner">
-    <tr>
-      <td id="company">
-        <div>
-          <?php
-          echo "<div id=\"logo\">\n";
-          if (!empty($mrbs_company_url))
-          {
-            echo "<a href=\"$mrbs_company_url\">\n";
-          }
-          if (empty($mrbs_company_logo))
-          {
-            echo "<span>$mrbs_company</span>\n";
-          }
-          else
-          {
-            // Suppress error messages in case the logo is a URL and allow_url_fopen
-            // is not enabled in php.ini
-            $logo_size = @getimagesize($mrbs_company_logo);
-            echo "<img src=\"$mrbs_company_logo\" " . $logo_size[3] . " alt=\"$mrbs_company\">\n";
-          }
-          if (!empty($mrbs_company_url))
-          {
-            echo "</a>\n";
-          }
-          echo "</div>\n";
-          if (!empty($mrbs_company_more_info))
-          {
-            echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
-          }
-          ?>
-          <div id="mrbs">
-            <a href="index.php"><?php echo get_vocab("mrbs") ?></a>
-          </div>
-        </div>
-      </td>
-      <td>
-        <form action="day.php" method="get" id="Form1">
-          <div>
-            <?php
-            // Give the form id as the optional fifth parameter because we want
-            // the form to be automatically submitted when the datepicker is closed
-            genDateSelector("", $day, $month, $year, "Form1");
-            if (!empty($area))
-            {
-              echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
-            }
-            if (!empty($room))
-            {
-              echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
-            }
-            // Although the datepicker will automatically go to the new date when
-            // the date is changed, we still need a submit button because there
-            // are occasions when you want to go to the date without changing it -
-            // for example when you've been on a Search or Report page
-            echo "<input type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
-            ?>
-           </div>
-        </form>
-        <?php
-        // Provide a link to the list of bookings awaiting approval
-        // (if there are any enabled areas where we require bookings to be approved)
-
-        $approval_somewhere = some_area('approval_enabled', TRUE);
-        if ($approval_somewhere && (authGetUserLevel($user) >= 1))
-        {
-          $n_outstanding = get_entries_n_outstanding($user);
-          echo "<div id=\"n_outstanding\"" .
-               (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
-               ">\n";
-          echo "<a href=\"pending.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area" . 
-               ((!empty($room)) ? "&amp;room=$room" : "") . 
-               "\">$n_outstanding " . get_vocab("outstanding") . "</a>\n";
-          echo "</div>\n";
-        }
-        ?>
-      </td>
-      <?php
-      $query_str = "day=$day&amp;month=$month&amp;year=$year";
-      if (!empty($area))
-      {
-        $query_str .= "&amp;area=$area";
-      }
-      if (!empty($room))
-      {
-        $query_str .= "&amp;room=$room";
-      }
-      
-      echo "<td>\n";
-      echo "<a href=\"help.php?$query_str\">" . get_vocab("help") . "</a>\n";
-      echo "</td>\n";
-      
-      echo "<td>\n";
-      echo "<a href=\"admin.php?$query_str\">" . get_vocab("rooms") . "</a>\n";
-      echo "</td>\n";
-      
-      echo "<td>\n";
-      echo "<a href=\"report.php?$query_str\">" . get_vocab("report") . "</a>\n";
-      echo "</td>\n";
-      ?>
-      
-      <td>
-        <form id="header_search" method="get" action="search.php">
-          <div>
-            <a href="search.php?advanced=1"><?php echo get_vocab("search") ?>:</a>
-            <input type="search" name="search_str" value="<?php echo htmlspecialchars($search_str) ?>" required>
-            <input type="hidden" name="day"        value="<?php echo $day        ?>">
-            <input type="hidden" name="month"      value="<?php echo $month      ?>">
-            <input type="hidden" name="year"       value="<?php echo $year       ?>">
-            <?php
-            if (!empty($area))
-            {
-              echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
-            }
-            if (!empty($room))
-            {
-              echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
-            }
-            ?>
-          </div>
-        </form>
-      </td>
-      <?php
-      // For session protocols that define their own logon box...
-      if (function_exists(__NAMESPACE__ . "\PrintLogonBox"))
-      {
-        echo "<td>\n";
-        echo "<div id=\"logon_box\">\n";
-        PrintLogonBox(); 
-        echo "</div>\n";
-        echo "</td>\n";
-      }
-      ?>
-    </tr>
-  </table>
 </div>
 
 <div id="contents">
