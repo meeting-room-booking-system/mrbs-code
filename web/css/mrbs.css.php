@@ -891,22 +891,35 @@ header#banner {
   padding: 0.3em 0.5em;
 }
 
-#logon_box a {display: block; width: 100%; padding-top: 0.3em; padding-bottom: 0.3em}
-table#banner {width: 100%; border-spacing: 0; border-collapse: collapse;
-    border-color: <?php echo $banner_border_color ?>;
-    border-width: <?php echo $banner_border_width ?>px;
-    border-style: solid}
-#banner td {text-align: center; vertical-align: middle; background-color: <?php echo $banner_back_color ?>;
-    border-color: <?php echo $banner_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: <?php echo $banner_border_cell_width ?>px;
-    padding: 6px; color: <?php echo $banner_font_color ?>}
-#banner td:first-child {border-left-width: 0}
-#banner td#company {font-size: large}
+#logon_box a {
+  display: block;
+  width: 100%;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+}
 
-#banner a:link    {color: <?php echo $anchor_link_color_banner ?>;    text-decoration: none; font-weight: normal}
-#banner a:visited {color: <?php echo $anchor_visited_color_banner ?>; text-decoration: none; font-weight: normal}
-#banner a:hover   {color: <?php echo $anchor_hover_color_banner ?>;   text-decoration:underline; font-weight: normal}
-#banner input.date {width: 6.5em; text-align: center}
+#banner a:link {
+  color: <?php echo $anchor_link_color_banner ?>;
+  text-decoration: none;
+  font-weight: normal;
+}
+
+#banner a:visited {
+  color: <?php echo $anchor_visited_color_banner ?>;
+  text-decoration: none;
+  font-weight: normal
+}
+
+#banner a:hover {
+  color: <?php echo $anchor_hover_color_banner ?>;
+  text-decoration:underline;
+  font-weight: normal
+}
+
+#banner input.date {
+  width: 6.5em;
+  text-align: center
+}
 
 <?php
 // The rules below are concerned with keeping the date selector in the header a constant width, so
