@@ -68,11 +68,8 @@ function fatal_error($need_header, $message, $show_form_data = true, $show_debug
 {
   global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
 
-  if ($need_header)
-  {
-    print_header(0, 0, 0, 0, "");
-  }
-  
+  print_simple_header();
+    
   if ($show_debug)
   {
     error_log("MRBS: $message");
