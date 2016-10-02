@@ -243,17 +243,20 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
   // (Use a class rather than id to avoid specificity problems)
   echo "<body class=\"non_js ".htmlspecialchars($page)."\">\n";
    
+  if (!$simple)
+  {
     // Add a class of "js" so that we know if we're using JavaScript or not
     // and remove the non_js class (it's sometimes useful to know that we're
     // not running JavaScript)
-  ?>
+    ?>
     <script type="text/javascript">
       //<![CDATA[
       $('body').addClass('js').removeClass('non_js');
       //]]>
     </script> 
-
-  <?php
+    <?php
+  }
+  
   if (!empty($locale_warning))
   {
     echo "[Warning: ".$locale_warning."]";
