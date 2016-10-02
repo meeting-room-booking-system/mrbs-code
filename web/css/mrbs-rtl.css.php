@@ -162,8 +162,12 @@ div#form_container, #form_edit_users label {
 
 /* ------------ FUNCTIONS.INC -------------------*/
 
-#banner td {
+#banner {
   direction: rtl;
+}
+
+#banner li {
+  border-width: 0 <?php echo $banner_border_cell_width ?>px 0 0;
 }
 
 /* ------------ MINCALS.PHP ---------------------*/

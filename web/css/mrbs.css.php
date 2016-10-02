@@ -898,22 +898,21 @@ header#banner {
   padding-bottom: 0.3em;
 }
 
-#banner a:link {
-  color: <?php echo $anchor_link_color_banner ?>;
+#banner a:link, #banner a:visited, #banner a:hover {
   text-decoration: none;
   font-weight: normal;
 }
 
+#banner a:link {
+  color: <?php echo $anchor_link_color_banner ?>;
+}
+
 #banner a:visited {
   color: <?php echo $anchor_visited_color_banner ?>;
-  text-decoration: none;
-  font-weight: normal
 }
 
 #banner a:hover {
   color: <?php echo $anchor_hover_color_banner ?>;
-  text-decoration:underline;
-  font-weight: normal
 }
 
 #banner input.date {
