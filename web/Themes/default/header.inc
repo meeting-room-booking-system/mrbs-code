@@ -17,6 +17,8 @@ function print_head()
 }
 
 
+// Print the basic site information.   This function is used for all headers, including
+// the simple header, and so mustn't require any database access.
 function print_header_site_info()
 {
   global $mrbs_company,
@@ -61,7 +63,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($day, $month, $year, $room, $area)
+function print_goto_date($day, $month, $year, $area, $room)
 {
   $user = getUserName();
   
@@ -121,7 +123,7 @@ function print_report($query_string)
 }
 
 
-function print_search($day, $month, $year, $room, $area, $search_str = '')
+function print_search($day, $month, $year, $area, $room, $search_str = '')
 {
   echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
   echo "<div>\n";
@@ -151,7 +153,7 @@ function print_logon()
 }
 
 
-function print_nav($day, $month, $year, $room, $area, $search_str = '')
+function print_nav($day, $month, $year, $area, $room, $search_str = '')
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
   if (!empty($area))
@@ -167,7 +169,7 @@ function print_nav($day, $month, $year, $room, $area, $search_str = '')
   echo "<ul>\n";
   
   echo "<li>\n";
-  print_goto_date($day, $month, $year, $room, $area);
+  print_goto_date($day, $month, $year, $area, $room);
   echo "</li>\n";
   
   echo "<li>\n";
@@ -183,7 +185,7 @@ function print_nav($day, $month, $year, $room, $area, $search_str = '')
   echo "</li>\n";
   
   echo "<li>\n";
-  print_search($day, $month, $year, $room, $area, $search_str);
+  print_search($day, $month, $year, $area, $room, $search_str);
   echo "</li>\n";
   
   // For session protocols that define their own logon box...
@@ -200,7 +202,9 @@ function print_nav($day, $month, $year, $room, $area, $search_str = '')
 
 
 // Print the page header
-function print_theme_header($day, $month, $year, $area, $room)
+// If $simple is true, then just print a simple header that doesn't require any database
+// access (useful for fatal errors and database upgrades).
+function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 {
   global $search_str, $locale_warning;
   global $PHP_SELF;
@@ -253,7 +257,10 @@ function print_theme_header($day, $month, $year, $area, $room)
   
   echo "<header id=\"banner\" class=\"screenonly\">\n";
   print_header_site_info();
-  print_nav($day, $month, $year, $room, $area, $search_str);
+  if (!$simple)
+  {
+    print_nav($day, $month, $year, $area, $room, $search_str);
+  }
   echo "</header>\n";
 ?>
 

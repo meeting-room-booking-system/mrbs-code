@@ -148,7 +148,7 @@ function print_simple_header()
 
 
 // Print the page header
-function print_header($day, $month, $year, $area, $room)
+function print_header($day, $month, $year, $area, $room, $simple=false)
 {
   global $theme, $done_header;
   
@@ -168,7 +168,7 @@ function print_header($day, $month, $year, $area, $room)
     require_once "Themes/default/header.inc";
   }
   // Now go and do it
-  print_theme_header($day, $month, $year, $area, $room);
+  print_theme_header($day, $month, $year, $area, $room, $simple);
   $done_header = TRUE;
 }
 
