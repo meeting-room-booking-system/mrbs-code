@@ -96,6 +96,7 @@ $vocab["rep_num_weeks"]      = "Wiederhole alle";
 $vocab["month_absolute"]     = "Am Tag";
 $vocab["month_relative"]     = "Am";
 $vocab["skip_conflicts"]     = "Termine überspringen, die mit bestehenden Terminen in Konflikt sind";
+$vocab["no_mail"]            = "Keine email schicken";
 $vocab["ctrl_click"]         = "Strg-Taste plus Mausklick um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Eintrags-ID. ";
 $vocab["repeat_id"]          = "ID wiederholen "; 
@@ -116,6 +117,7 @@ $vocab["start_after_end_long"] = "Fehler: Das Anfangsdatum liegt nach dem Enddat
 $vocab["description"]        = "Beschreibung";
 $vocab["room"]               = "Raum";
 $vocab["createdby"]          = "Erstellt von";
+$vocab["modifiedby"]          = "Modifiziert von";
 $vocab["lastupdate"]         = "Letzte Änderung";
 $vocab["repeat_on"]          = "Serientermin-Tag";
 $vocab["deleteentry"]        = "Eintrag löschen";
@@ -161,6 +163,7 @@ $vocab["returncal"]          = "Zurück zur Kalenderansicht";
 $vocab["failed_to_acquire"]  = "Konnte nicht exklusiv auf die Datenbank zugreifen";
 $vocab["invalid_booking"]    = "Ungültiger Eintrag";
 $vocab["must_set_description"] = "Sie müssen eine kurze Beschreibung für den Eintrag angeben.  Bitte gehen Sie zurück und korrigieren Sie Ihre Eingabe.";
+$vocab["no_rooms_selected"]    = "Sie müssen einen Raum wählen.";
 $vocab["mail_subject_approved"]  = "Eintrag für $mrbs_company MRBS genehmigt";
 $vocab["mail_subject_rejected"]  = "Eintrag für $mrbs_company MRBS abgelehnt";
 $vocab["mail_subject_more_info"] = "$mrbs_company MRBS: Weitere Informationen angefordert";
@@ -183,8 +186,13 @@ $vocab["old_value"]           = "Alt";
 $vocab["deleted_by"]          = "Gelöscht von";
 $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
-$vocab["min_time_before"]     = "Die minimale Zeit zwischen jetzt und dem Beginn des Eintrags ist";
-$vocab["max_time_before"]     = "Die maximale Zeit zwischen jetzt und dem Ende des Eintrags ist";
+// REMOVED - $vocab["min_time_before"]     = "Die minimale Zeit zwischen jetzt und dem Beginn des Eintrags ist";
+// REMOVED - $vocab["max_time_before"]     = "Die maximale Zeit zwischen jetzt und dem Ende des Eintrags ist";
+$vocab["min_create_time_before"]  = 'Sie können keine Buchung erstellen, die in weniger als %1$d %2$s beginnt';
+$vocab["max_create_time_before"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s endet';
+$vocab["min_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in weniger als %1$d %2$s beginnt';
+$vocab["max_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in mehr als %1$d %2$s endet';
+$vocab["earliest_booking_date"]   = "Der frühest mögliche Buchungstermin ist";
 $vocab["latest_booking_date"]     = "Der spätest mögliche Buchungstermin ist";
 $vocab["max_booking_duration"]    = "Die maximale Dauer einer Buchung beträgt";
 $vocab["max_per_day_global"]      = "Die maximale Anzahl an Buchungen pro Tag und Benutzer im gesamten System beträgt";
@@ -398,6 +406,11 @@ $vocab["treat_public"]            = "Alle Einträge als öffentlich betrachten, 
 $vocab["sort_key"]                = "Sortierschlüssel";
 $vocab["sort_key_note"]           = "Dieser ist der Schlüssel zum Sortieren der Räume";
 $vocab["booking_policies"]        = "Vorgaben für Einträge";
+$vocab["booking_creation"]        = "Buchung erstellen";
+$vocab["booking_deletion"]        = "Buchung löschen";
+$vocab["booking_limits"]          = "Limitierung der Buchungsanzahl";
+$vocab["booking_durations"]       = "Limitierung der Buchungsdauer";
+$vocab["max_duration"]            = "Maximale Dauer";
 $vocab["min_book_ahead"]          = "Vorausbuchung mindestens";
 $vocab["max_book_ahead"]          = "Vorausbuchung höchstens";
 $vocab["this_area"]               = "Dieser Bereich";
@@ -452,11 +465,17 @@ $vocab["import_intro"]              = "Dieses Formular erlaubt Ihnen eine RFC 55
                                      "iCalendar-Datei zu importieren.   Nur die Serientermine, " .
                                      "die einer MRBS-Regel entsprechen werden korrekt ins" .
                                      "MRBS importiert.";
-$vocab["file_name"]                 = "Datei";
+$vocab["supported_file_types"]        = "Die folgenden Dateitypen werden unterstützt:";
+$vocab["import_text_file"]            = "unkomprimiert iCalendar Dateien";
+$vocab["import_zip"]                  = "Zip-Archiv, einschließlich mehrerer Dateien in einem Archiv";
+$vocab["import_gzip"]                 = "gzip Dateien";
+$vocab["import_bzip2"]                = "bzip2 Dateien";
+$vocab["file_name"]                 = "Dateiname";
 $vocab["import"]                    = "Importieren";
 $vocab["upload_failed"]             = "Hochladen mit Fehler abgebrochen";
 $vocab["max_allowed_file_size"]     = "Die naximale Dateigröße beträgt";
 $vocab["no_file"]                   = "Keine Datei hochgeladen";
+$vocab["could_not_process"]         = "Import fehlgeschlagen: Datei konnte nicht verarbeiten werden";
 $vocab["badly_formed_ics"]          = "Fehlerhaft formatierte VCALENDAR-Datei";
 $vocab["area_room_order"]           = "Reihenfolge";
 $vocab["area_room_order_note"]      = "Reihenfolg der Bereichs- und Raumnamen in der LOCATION Eigenschaft";
@@ -497,10 +516,13 @@ $vocab["show_hide_columns"]  = "Anzeigen / Ausblenden von Spalten";
 $vocab["restore_original"]   = "Standard wieder herstellen";
 
 // Entry types
+$vocab["type."]             = "Bitte wählen Sie einen Typ";
 $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";
 
 // General
+$vocab["fatal_error"]        = "Oh je!  Leider ist in MRBS ein fataler Fehler aufgetreten.  Bitte konsultieren Sie Ihren Systemadministrator.";
 $vocab["fatal_db_error"]     = "Fataler Fehler: Leider steht die Datenbank im Moment nicht zur Verfügung.";
+$vocab["fatal_no_tables"]    = "Fataler Fehler: die MRBS Tabellen existieren nicht oder sind nicht zugänglich.";
 $vocab["back"]               = "Zurück";
 
