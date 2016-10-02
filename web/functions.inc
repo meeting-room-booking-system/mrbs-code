@@ -103,8 +103,6 @@ elseif ($private_override == "public" )
   $private_default=FALSE;
 }
 
-$done_header = FALSE;
-
 
 // Outputs the HTTP headers
 function http_headers()
@@ -130,7 +128,9 @@ function print_simple_header()
 // Print the page header
 function print_header($day, $month, $year, $area, $room, $simple=false)
 {
-  global $theme, $done_header;
+  global $theme;
+  
+  static $done_header = false;
   
   if ($done_header)
   {
@@ -147,11 +147,12 @@ function print_header($day, $month, $year, $area, $room, $simple=false)
   {
     require_once "Themes/default/header.inc";
   }
+  
   // Now go and do it
   print_theme_header($day, $month, $year, $area, $room, $simple);
-  $done_header = TRUE;
+  
+  $done_header = true;
 }
-
 
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
