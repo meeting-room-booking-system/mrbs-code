@@ -123,27 +123,7 @@ function http_headers()
 // header uses are not yet available.
 function print_simple_header()
 {
-  global $done_header;
- 
-  if ($done_header)
-  {
-    return;
-  } 
-  
-  http_headers();
-  echo DOCTYPE;
- ?>
-
-<html>
-  <head>
-    <?php
-      require_once "style.inc";
-    ?>
-    <title><?php echo get_vocab("mrbs") ?></title>
-  </head>
-  <body>
-  <?php
-  $done_header = TRUE; 
+  print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=true);
 }
 
 

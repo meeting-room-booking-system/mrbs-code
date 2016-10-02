@@ -4,14 +4,18 @@ namespace MRBS;
 // $Id$
 
 
-function print_head()
+function print_head($simple=false)
 {
   echo "<head>\n";
   echo "<meta charset=\"" . get_charset() . "\">\n";
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
   require_once "style.inc";
-  require_once "js.inc";
+  
+  if (!$simple)
+  {
+    require_once "js.inc";
+  }
   
   echo "</head>\n";
 }
@@ -203,7 +207,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
 
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
-// access (useful for fatal errors and database upgrades).
+// access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 {
   global $search_str, $locale_warning;
@@ -233,7 +237,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 
   echo "<html>\n";
   
-  print_head();
+  print_head($simple);
 
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
@@ -262,11 +266,14 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
     print_nav($day, $month, $year, $area, $room, $search_str);
   }
   echo "</header>\n";
-?>
 
+  if (!$simple)
+  {
+    // This <div> should really be moved out of here so that we can always see
+    // the matching closing </div>
+    echo "<div id=\"contents\">\n";
+  }
 
-<div id="contents">
-<?php
 
 } // end of print_theme_header()
 
