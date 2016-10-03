@@ -76,14 +76,9 @@ function fatal_error($message, $show_form_data = true, $show_debug = true)
     
     if ($show_form_data)
     {
-      if (!empty($_GET))
-      {
-        trigger_error("MRBS GET: " . print_r($_GET, true));
-      }
-      if (!empty($_POST))
-      {
-        trigger_error("MRBS POST: " . print_r($_POST, true));
-      }
+      $form_data = "MRBS GET: " . print_r($_GET, true) .
+                   "MRBS POST: " . print_r($_POST, true);
+      $form_data = trigger_error($form_data);
     }
     if (!empty($_SESSION))
     {
