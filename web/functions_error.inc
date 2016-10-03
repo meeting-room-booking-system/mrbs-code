@@ -78,7 +78,7 @@ function fatal_error($message, $show_form_data = true, $show_debug = true)
     {
       $form_data = "MRBS GET: " . print_r($_GET, true) .
                    "MRBS POST: " . print_r($_POST, true);
-      $form_data = trigger_error($form_data);
+      trigger_error($form_data);
     }
     if (!empty($_SESSION))
     {
