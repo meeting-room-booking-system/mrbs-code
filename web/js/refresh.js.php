@@ -125,7 +125,7 @@ if (!empty($refresh_rate))
     // whole window.   For example if we've got the datepicker open we don't want that
     // to be reset.
     ?>
-    $('table.dwm_main').load(function() {
+    $('table.dwm_main').on('load', function() {
         <?php
         // Set an interval timer to refresh the page, unless there's already one in place
         ?>

@@ -583,7 +583,7 @@ init = function(args) {
       // the window causes other things to be re-initialised, which we don't want.   For example
       // if we have the datepicker open we don't want that to be reset.
       ?>
-      $('table.dwm_main').load(function() {
+      $('table.dwm_main').on('load', function() {
           var table = $(this);
           
           createFloatingHeaders(table);
