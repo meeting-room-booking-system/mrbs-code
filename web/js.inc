@@ -35,13 +35,13 @@ $standard_query_string = "area=$area";
 if (DEBUG)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-2.1.0.js"></script>
+  <script type="text/javascript" src="jquery/jquery-2.2.4.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-2.1.0.min.js"></script>
+  <script type="text/javascript" src="jquery/jquery-2.2.4.min.js"></script>
   <?php
 }
 ?>
@@ -59,13 +59,13 @@ else
 if (DEBUG)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-1.2.1.js"></script>
+  <script type="text/javascript" src="jquery/jquery-migrate-1.4.1.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="jquery/jquery-migrate-1.4.1.min.js"></script>
   <?php
 }
 
