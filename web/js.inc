@@ -31,7 +31,20 @@ $standard_query_string = "area=$area";
 ?>
 
 <!--[if (!IE)|(gt IE 8)]><!-->
+<?php
+if (DEBUG)
+{
+  ?>
+  <script type="text/javascript" src="jquery/jquery-2.1.0.js"></script>
+  <?php
+}
+else
+{
+  ?>
   <script type="text/javascript" src="jquery/jquery-2.1.0.min.js"></script>
+  <?php
+}
+?>
 <!--<![endif]-->
 
 <!--[if lte IE 8]>
