@@ -905,6 +905,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 
 if ($ajax)
 {
+  header("Content-Type: application/json");
   echo json_encode($json_data);
 }
 else
