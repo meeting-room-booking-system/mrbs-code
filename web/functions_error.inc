@@ -14,23 +14,35 @@ function get_error_name($errno)
 }
 
 
-// Define our own error handler, to allow us to format the message nicely for the screen 
-// and also because it doesn't seem possible to get error_log() to output to the browser.
+function output_error($heading, $body, $show_data=false)
+{
+  if ($show_data)
+  {
+    $body .= "MRBS GET: " . print_r($_GET, true) .
+             "MRBS POST: " . print_r($_POST, true) .
+             "MRBS SESSION: " . print_r($_SESSION, true);
+  }
+  
+  if (ini_get('display_errors'))
+  {
+    echo nl2br("<b>$heading</b>");
+    echo nl2br($body);
+  }
+  if (ini_get('log_errors'))
+  {
+    error_log($heading . $body);
+  }
+}
+
+
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-  $display_errors = ini_get('display_errors');
+  $heading = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
   
-  $title = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
+  // Show the superglobal data unless the error is minor
+  $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
   
-  if ($display_errors)
-  {
-    echo nl2br("<b>$title</b>");
-    echo nl2br($errstr);
-  }
-  else
-  {
-    error_log($title . $errstr);
-  }
+  output_error($heading, $errstr, $show_data);
 }
 
 
@@ -38,11 +50,11 @@ function exception_handler($exception)
 {
   $class = get_class($exception);
   
-  $message = "Uncaught exception ($class) in " . $exception->getFile() . " at line " . $exception->getLine() . "\n" .
-             $exception->getMessage() . "\n" .
-             $exception->getTraceAsString() . "\n";
+  $heading = "Uncaught exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine() . "\n";
+  $body = $exception->getMessage() . "\n" .
+          $exception->getTraceAsString() . "\n";
              
-  trigger_error($message, E_USER_WARNING);
+  output_error($heading, $body, $show_data=true);
   
   switch ($class)
   {
@@ -65,27 +77,7 @@ function exception_handler($exception)
 // Always outputs the bottom of the page and exits.
 function fatal_error($message, $show_form_data = true, $show_debug = true)
 {
-  global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
-
   print_simple_header();
-    
-  if ($show_debug)
-  {
-    trigger_error("MRBS: $message", E_USER_WARNING);
-    trigger_error(print_r(debug_backtrace(), true));
-    
-    if ($show_form_data)
-    {
-      $form_data = "MRBS GET: " . print_r($_GET, true) .
-                   "MRBS POST: " . print_r($_POST, true);
-      trigger_error($form_data);
-    }
-    if (!empty($_SESSION))
-    {
-      trigger_error("MRBS SESSION: " . print_r($_SESSION, true));
-    }
-  }
-  
   echo "<p>$message</p>";
   output_trailer();
   exit;
