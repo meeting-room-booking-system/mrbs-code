@@ -67,7 +67,7 @@ function exception_handler($exception)
       break;
   }
   
-  fatal_error($fatal_message, false, false);
+  fatal_error($fatal_message);
 }
 
 
@@ -75,7 +75,7 @@ function exception_handler($exception)
 // errors without sending incomplete HTML pages. This is only used for
 // errors which "should never happen", not those caused by bad inputs.
 // Always outputs the bottom of the page and exits.
-function fatal_error($message, $show_form_data = true, $show_debug = true)
+function fatal_error($message)
 {
   print_simple_header();
   echo "<p>$message</p>";
