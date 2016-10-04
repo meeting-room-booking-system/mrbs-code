@@ -1561,12 +1561,6 @@ function get_room_details($room_id)
   
   $res = db()->query($sql, array($room_id));
   
-  if ($res === FALSE)
-  {
-    trigger_error(db()->error(), E_USER_WARNING);
-    return FALSE;
-  }
-  
   if ($res->count() == 0)
   {
     return NULL;
@@ -2077,13 +2071,11 @@ function get_bookings_in_series($repeat_id)
   
   $sql = "SELECT id FROM $tbl_entry WHERE repeat_id = ?";
   $res = db()->query_array($sql, array($repeat_id));
-  if ($res === FALSE)
-  {
-    trigger_error(db()->error(), E_USER_WARNING);
-  }
+
   foreach ($res as $id)
   {
     $bookings[] = get_entry_by_id($id);
   }
+  
   return $bookings;
 }
