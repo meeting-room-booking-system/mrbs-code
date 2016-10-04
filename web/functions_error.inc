@@ -14,6 +14,21 @@ function get_error_name($errno)
 }
 
 
+// Replace leading spaces in $string with non-breaking spaces
+function replace_leading_spaces($string)
+{
+  return preg_replace('/\G /', '&nbsp;', $string);
+}
+
+
+function to_html($string)
+{
+  $lines = explode("\n", $string);
+  $lines = array_map(__NAMESPACE__ . "\\replace_leading_spaces", $lines);
+  return implode("<br>\n", $lines);
+}
+
+
 function output_error($heading, $body, $show_data=false)
 {
   if ($show_data)
@@ -25,8 +40,8 @@ function output_error($heading, $body, $show_data=false)
   
   if (ini_get('display_errors'))
   {
-    echo nl2br("<b>$heading</b>");
-    echo nl2br($body);
+    echo "<b>" . to_html($heading) . "</b>\n";
+    echo to_html($body);
   }
   if (ini_get('log_errors'))
   {
