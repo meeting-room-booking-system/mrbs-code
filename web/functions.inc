@@ -78,14 +78,15 @@ function get_default_email($user)
 }
 
 
-// Returns the current page.    Separated out into a function to make it easier
+// Returns the current page.   If the page ends in suffix this will be cut off.
+// Separated out into a function to make it easier
 // to change for different situations.   We use basename() because the full name
 // causes problems when reverse proxies are being used.
-function this_page()
+function this_page($suffix=null)
 {
   global $PHP_SELF;
   
-  return basename($PHP_SELF);
+  return basename($PHP_SELF, $suffix);
 }
 
 
