@@ -749,6 +749,7 @@ if ($ajax && function_exists('json_encode'))
       $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
     }
   }
+  header("Content-Type: application/json");
   echo json_encode($result);
   exit;
 }

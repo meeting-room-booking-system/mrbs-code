@@ -576,6 +576,7 @@ function close_report()
   // If this is an Ajax request, we can now send the JSON data
   if ($ajax)
   {
+    header("Content-Type: application/json");
     echo json_encode($json_data);
   }
   elseif ($output_format == OUTPUT_HTML)
@@ -1598,6 +1599,7 @@ if ($phase == 2)
   {
     if ($ajax)
     {
+      header("Content-Type: application/json");
       echo json_encode($json_data);
     }
     else

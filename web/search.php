@@ -360,6 +360,7 @@ if (!$ajax_capable || $ajax)
 
 if ($ajax)
 {
+  header("Content-Type: application/json");
   echo json_encode($json_data);
 }
 else
