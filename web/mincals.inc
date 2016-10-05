@@ -51,9 +51,11 @@ class Calendar
 
     if (!isset($weekstarts)) $weekstarts = 0;
     $s = "";
+
+    $page = this_page();
       
     // For the week view we will need to know the start of the week that should be highlighted
-    if (preg_match("/week/i", basename($PHP_SELF)))
+    if (preg_match("/week/i", $page))
     {
         
       // First of all work out how many days we have to skip back to the
@@ -178,7 +180,7 @@ class Calendar
               
             // then work out whether to mark it as the current day/week/month
 
-            if (preg_match("/day/i", basename($PHP_SELF)))              // DAY VIEW
+            if (preg_match("/day/i", $page))              // DAY VIEW
             {
               if (($d == $this->day) and ($this->h))
               {
@@ -186,7 +188,7 @@ class Calendar
               }
             }             
 
-            elseif (preg_match("/week/i", basename($PHP_SELF)))         // WEEK VIEW
+            elseif (preg_match("/week/i", $page))         // WEEK VIEW
             {
               // work out current time and if we're up to 7 days after the
               // start of the week to be highlighted then mark it as the
@@ -203,7 +205,7 @@ class Calendar
               }         
             }             
 
-            elseif (preg_match("/month/i", basename($PHP_SELF)))        // MONTH VIEW
+            elseif (preg_match("/month/i", $page))        // MONTH VIEW
             {
               if ($this->h)
               {

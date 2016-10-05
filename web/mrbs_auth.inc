@@ -90,11 +90,13 @@ function checkAuthorised($just_check=FALSE)
   global $page_level, $max_level;
   global $day, $month, $year, $area, $room;
   global $PHP_SELF;
+
+  $page = this_page();
   
   // Get the minimum authorisation level for this page
-  if (isset($page_level[basename($PHP_SELF)]))
+  if (isset($page_level[$page]))
   {
-    $required_level = $page_level[basename($PHP_SELF)];
+    $required_level = $page_level[$page];
   }
   elseif (isset($max_level))
   {

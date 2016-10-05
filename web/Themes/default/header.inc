@@ -211,9 +211,6 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
 function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 {
   global $search_str, $locale_warning;
-  global $PHP_SELF;
-  
-  $page = basename($PHP_SELF, ".php");
 
   // Need to set the timezone before we can use date()
   get_area_settings($area);
@@ -241,7 +238,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"non_js ".htmlspecialchars($page)."\">\n";
+  echo "<body class=\"non_js ".htmlspecialchars(this_page('.php'))."\">\n";
    
   if (!$simple)
   {
