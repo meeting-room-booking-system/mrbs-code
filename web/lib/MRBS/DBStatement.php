@@ -72,15 +72,6 @@ class DBStatement
     return $this->statement->rowCount();
   }
 
-  // Free a statement. You need not call this if you call row() or
-  // row_keyed() until the row returns 0, since those methods free the 
-  // statement when you finish reading the rows.
-  public function free ()
-  {
-    $this->statement->closeCursor();
-  }
-
-
   // Returns the number of fields in a statement.
   public function num_fields()
   {

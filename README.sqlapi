@@ -240,30 +240,22 @@ DBStatement methods:
 ->row($rownumber)
   Return a row from a result. The first row is row number 0.
   The row is returned as an array with index 0=first column, etc.
-  When called with i >= number of rows in the result, this frees up the
-  results structure and returns 0. This is designed to be used in a loop
+  When called with i >= number of rows in the result, returns 0 to signify
+  the end of the result set. This is designed to be used in a loop
   like this to retrieve all the rows:
 
     for ($i = 0; (($row = $stmt->row($r, $i)); $i++) { ... process the row ... }
-
-  When used this way, there is no need to call $stmt->free(). But if
-  rows are accessed in other way, $stmt->free() must be called when you are
-  done with the statement object, unless the statement object falls out of
-  scope.
 
 ->row_keyed($rownumber)
   Return a row from a result. The first row is row number 0.
   The row is returned as an associative array with column (field) names as
   the indexes. (PHP also makes numeric indexes for the same data.)
-  When called with i >= number of rows in the result, this frees up the
-  results structure and returns 0. This is designed to be used in a loop
+  When called with i >= number of rows in the result, returns 0 to signify
+  the end of the result set. This is designed to be used in a loop
   like this to retrieve all the rows:
 
     for ($i = 0; (($row = $stmt->row_keyed($i)); $i++) { ... }
 
-  When used this way, there is no need to call $stmt->free(). But if
-  rows are accessed in other ways, $stmt->free() must be called when you are
-  done with the statement object, unless the statement object falls out of scope.
   NOTE: You should explicitly name each column in your SQL statement which
   is not a simple field name, because databases differ in how they assume
   a default name. For example, don't use ->row_keyed() on a query
@@ -280,7 +272,3 @@ DBStatement methods:
 
 ->num_fields()
   Returns the number of columns/fields returned by the statement.
-
-->free()
-  Frees the statement object. Not strictly necessary if the statement object
-  falls out of scope.
