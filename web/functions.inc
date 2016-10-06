@@ -1698,18 +1698,21 @@ function clean_area_row($row)
   
   foreach ($row as $key => $value)
   {
-    // If the "per area" setting is in the database, then use that.   Otherwise
-    // just stick with the default setting from the config file.
-    // (don't use the database setting if $force_resolution is TRUE 
-    // and we're looking at the resolution field)
-    if (($key != 'resolution') || empty($force_resolution))
+    if (array_key_exists($key, $area_defaults))
     {
-      $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
-    }
-    // Cast those fields which are booleans into booleans
-    if (in_array($key, $boolean_fields['area']))
-    {
-      $row[$key] = (bool) $row[$key];
+      // If the "per area" setting is in the database, then use that.   Otherwise
+      // just stick with the default setting from the config file.
+      // (don't use the database setting if $force_resolution is TRUE 
+      // and we're looking at the resolution field)
+      if (($key != 'resolution') || empty($force_resolution))
+      {
+        $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
+      }
+      // Cast those fields which are booleans into booleans
+      if (in_array($key, $boolean_fields['area']))
+      {
+        $row[$key] = (bool) $row[$key];
+      }
     }
   }
   // Do some sanity checking in case the area table is somehow messed up
