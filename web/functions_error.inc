@@ -49,8 +49,8 @@ function output_error($heading, $body, $show_data=false)
   
   if (ini_get('display_errors'))
   {
-    echo "<b>" . to_html($heading) . "</b>\n";
-    echo to_html($body);
+    echo "<b>" . to_html(htmlspecialchars($heading)) . "</b>\n";
+    echo to_html(htmlspecialchars($body));
   }
   if (ini_get('log_errors'))
   {
@@ -102,7 +102,7 @@ function exception_handler($exception)
 function fatal_error($message)
 {
   print_simple_header();
-  echo "<p>$message</p>";
+  echo "<p>\n". htmlspecialchars($message) . "</p>\n";
   output_trailer();
   exit;
 }
