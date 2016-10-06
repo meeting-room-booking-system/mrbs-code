@@ -1660,24 +1660,51 @@ function get_default_room($area)
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    $room = db()->query1("SELECT id
-                          FROM $tbl_room
-                         WHERE id=$default_room
-                           AND area_id=?
-                           AND disabled=0
-                         LIMIT 1", array($area));
+    try
+    {
+      // It's possible that this function is being called during
+      // an upgrade process before the disabled columns existed,
+      // so if it fails try again without the disabled columns.
+      $room = db()->query1("SELECT id
+                              FROM $tbl_room
+                             WHERE id=$default_room
+                               AND area_id=?
+                               AND disabled=0
+                             LIMIT 1", array($area));
+    }
+    catch (DBException $e)
+    {
+      $room = db()->query1("SELECT id
+                              FROM $tbl_room
+                             WHERE id=$default_room
+                               AND area_id=?
+                             LIMIT 1", array($area));
+    }
     if ($room >= 0)
     {
       return $room;
     }
   }
-  // Otherwise just return the first room (in sortkey order) in the area
-  $room = db()->query1("SELECT id
-                        FROM $tbl_room
-                       WHERE area_id=?
-                         AND disabled=0
-                    ORDER BY sort_key
-                       LIMIT 1", array($area));
+  
+  // Otherwise just return the first room in the area
+  try
+  {
+    $room = db()->query1("SELECT id
+                            FROM $tbl_room
+                           WHERE area_id=?
+                             AND disabled=0
+                        ORDER BY sort_key
+                           LIMIT 1", array($area));
+  }
+  catch (DBException $e)
+  {
+    // See comment above.  Cut the query down to the most basic.
+    $room = db()->query1("SELECT id
+                            FROM $tbl_room
+                           WHERE area_id=?
+                           LIMIT 1", array($area));
+  }
+  
   return ($room < 0 ? 0 : $room);
 }
 
