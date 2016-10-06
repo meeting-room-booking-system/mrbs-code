@@ -12,7 +12,7 @@ global $max_level;
 
 // If the 'level' field does not exist (as it won't if it was created pre-MRBS 1.4.2),
 // then create it and populate it with existing admins defined in the config file
-if ($admin_handle->field_exists($tbl_users, 'level'))
+if (!$admin_handle->field_exists($tbl_users, 'level'))
 {
   // Default is '0' because we want to play safe and give no rights.
   // In a moment we will go through the table and add users and admins.
