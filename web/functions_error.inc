@@ -33,9 +33,18 @@ function output_error($heading, $body, $show_data=false)
 {
   if ($show_data)
   {
-    $body .= "MRBS GET: " . print_r($_GET, true) .
-             "MRBS POST: " . print_r($_POST, true) .
-             "MRBS SESSION: " . print_r($_SESSION, true);
+      if (isset($_GET))
+      {
+        $body .= "MRBS GET: " . print_r($_GET, true);
+      }
+      if (isset($_POST))
+      {
+        $body .= "MRBS POST: " . print_r($_POST, true);
+      }
+      if (isset($_SESSION))
+      {
+        $body .= "MRBS SESSION: " . print_r($_SESSION, true);
+      }
   }
   
   if (ini_get('display_errors'))
