@@ -7,6 +7,20 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+function get_microtime()
+{
+  if (function_exists('microtime'))
+  {
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+  }
+  else
+  {
+    return time();
+  }
+}
+
+
 function function_disabled($name)
 {
   $disabled = explode(', ', ini_get('disable_functions'));

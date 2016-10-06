@@ -13,18 +13,6 @@ namespace MRBS;
 // have the date.   So I've taken the view here that it's not worth bothering about
 // as this upgrade procedure is only used once for existing entries).
 
-function get_microtime()
-{
-  if (function_exists('microtime'))
-  {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
-  }
-  else
-  {
-    return time();
-  }
-}
 
 function do_sql_command($sql)
 {
