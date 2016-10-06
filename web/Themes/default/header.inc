@@ -212,11 +212,8 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
 {
   global $search_str, $locale_warning;
 
-  if (!$simple)
-  {
-    // This makes a database query, so don't do it if we want a simple header
-    get_area_settings($area);
-  }
+  // Need to set the timezone before we can use date()
+  get_area_settings($area);
 
   // If we dont know the right date then make it up 
   if (!$day)

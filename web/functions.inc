@@ -1603,24 +1603,50 @@ function get_default_area()
   // corresponding area
   if (isset($default_room))
   {
-    $area = db()->query1("SELECT area_id
-                          FROM $tbl_room R, $tbl_area A
-                         WHERE R.id=?
-                           AND R.area_id = A.id
-                           AND R.disabled = 0
-                           AND A.disabled = 0
-                         LIMIT 1", array($default_room));
+    try 
+    {
+      $area = db()->query1("SELECT area_id
+                              FROM $tbl_room R, $tbl_area A
+                             WHERE R.id=?
+                               AND R.area_id = A.id
+                               AND R.disabled = 0
+                               AND A.disabled = 0
+                             LIMIT 1", array($default_room));
+    }
+    catch (DBException $e)
+    {
+      // It's possible that this function is being called during
+      // an upgrade process before the disabled columns existed,
+      // so if it fails try again without the disabled columns.
+      $area = db()->query1("SELECT area_id
+                              FROM $tbl_room R, $tbl_area A
+                             WHERE R.id=?
+                               AND R.area_id = A.id
+                             LIMIT 1", array($default_room));
+    }
     if ($area >= 0)
     {
       return $area;
     }
   }
-  // Otherwise return the first enabled area in sort key order in the database
-  $area = db()->query1("SELECT id
-                        FROM $tbl_area
-                       WHERE disabled=0
-                    ORDER BY sort_key
-                       LIMIT 1");
+  
+  // Otherwise return the first enabled area in the database
+  try
+  {
+    $area = db()->query1("SELECT id
+                            FROM $tbl_area
+                           WHERE disabled=0
+                        ORDER BY sort_key
+                           LIMIT 1");
+  }
+  catch (DBException $e)
+  {
+    // See comment above.  Cut the query down to the most basic.
+    $area = db()->query1("SELECT id
+                            FROM $tbl_area
+                           LIMIT 1");
+  }
+  
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
 
@@ -1748,7 +1774,7 @@ function get_area_settings($area)
                    'approval_enabled', 'reminders_enabled, enable_periods',
                    'confirmation_enabled', 'confirmed_default');
                    
-  $sql = "SELECT " . implode(',', $columns) . "
+  $sql = "SELECT *
             FROM $tbl_area 
            WHERE id=?
            LIMIT 1";
@@ -1764,9 +1790,12 @@ function get_area_settings($area)
   else
   {
     $row = clean_area_row($res->row_keyed(0));
-    foreach ($row as $key => $value)
+    foreach ($columns as $column)
     {
-      $$key = $value;
+      if (array_key_exists($column, $row))
+      {
+        $$column = $row[$column];
+      }
     }
   }
   // Set the timezone
@@ -1777,9 +1806,16 @@ function get_area_settings($area)
   foreach ($interval_types as $interval_type)
   {
     $var = "max_per_${interval_type}_enabled";
-    $max_per_interval_area_enabled[$interval_type] = $$var;
+    if (isset($$var))
+    {
+      $max_per_interval_area_enabled[$interval_type] = $$var;
+    }
+    
     $var = "max_per_${interval_type}";
-    $max_per_interval_area[$interval_type] = $$var;
+    if (isset($$var))
+    {
+      $max_per_interval_area[$interval_type] = $$var;
+    }
   }
   
   // If we're using periods then set the resolution to 60 seconds
