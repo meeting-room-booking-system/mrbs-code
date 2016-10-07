@@ -5,7 +5,7 @@ namespace MRBS;
 
 // Convert MONTHLY_SAMEDAY repeats into MONTHLY repeats with a specified month_relative (eg '2TU')
 
-require "standard_vars.inc.php"; // to ensure the timezone is set
+require_once "standard_vars.inc.php"; // to ensure the timezone is set
 
 global $tbl_repeat, $tbl_area, $tbl_room, $admin_handle;
 
