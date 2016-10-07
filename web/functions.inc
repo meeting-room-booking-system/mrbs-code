@@ -1737,6 +1737,9 @@ function clean_area_row($row)
 {
   global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
   
+  // This code can get called during the upgrade process and so must
+  // not make any assumptions about the existence of extra columns in
+  // the area table.
   foreach ($row as $key => $value)
   {
     if (array_key_exists($key, $area_defaults))
@@ -1795,6 +1798,9 @@ function get_area_settings($area)
   global $max_per_interval_area_enabled, $max_per_interval_area;
   global $interval_types;
   
+  // This code can get called during the upgrade process and so must
+  // not make any assumptions about the existence of extra columns in
+  // the area table.
   if (empty($area))
   {
     $area = get_default_area();
