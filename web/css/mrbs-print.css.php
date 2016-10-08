@@ -13,7 +13,9 @@ expires_header(60*30); // 30 minute expiry
 
 ?>
 
-div.screenonly { display: none; }
+div.screenonly, header#banner.screenonly {
+  display: none;
+}
 
 td.new a, a.new_booking img { display: none; }
 

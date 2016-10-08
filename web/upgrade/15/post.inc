@@ -8,9 +8,9 @@ namespace MRBS;
 
 require_once "standard_vars.inc.php";  // won't have been included yet and we need it for $area_defaults
 
-global $tbl_area, $area_defaults, $boolean_fields;
+global $tbl_area, $area_defaults, $boolean_fields, $admin_handle;
 
-$fields = sql_field_info($tbl_area);
+$fields = $admin_handle->field_info($tbl_area);
 foreach ($fields as $field)
 {
   $key = $field['name'];
@@ -20,21 +20,12 @@ foreach ($fields as $field)
     {
       $sql_val = ($area_defaults[$key]) ? 1 : 0;
     }
-    elseif ($field['nature'] == 'integer')
+    else
     {
       $sql_val = $area_defaults[$key];
     }
-    else
-    {
-      $sql_val = "'" . sql_escape($area_defaults[$key]) . "'";
-    }
-    $sql = "UPDATE $tbl_area SET $key=$sql_val WHERE $key IS NULL";
-    $res = sql_command($sql);
-    if ($res == -1)
-    {
-      // No need to localise, should never happen
-      print "<span class=\"error\">Failed to set default value for column '$key' in area table.</span><br>";
-    }
+    $sql = "UPDATE $tbl_area SET $key=? WHERE $key IS NULL";
+    $admin_handle->command($sql, array($sql_val));
   }
 }
 

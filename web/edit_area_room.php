@@ -430,7 +430,7 @@ foreach ($interval_types as $interval_type)
 }
 
 // Get the information about the fields in the room table
-$fields = sql_field_info($tbl_room);
+$fields = db()->field_info($tbl_room);
 
 // Get any user defined form variables
 foreach($fields as $field)
@@ -516,14 +516,17 @@ if ($phase == 2)
       {
         $capacity = 0;
       }
+
+      // Used purely for the syntax_casesensitive_equals() call below, and then ignored
+      $sql_params = array();
     
       // Acquire a mutex to lock out others who might be deleting the new area
-      if (!sql_mutex_lock("$tbl_area"))
+      if (!db()->mutex_lock($tbl_area))
       {
-        fatal_error(TRUE, get_vocab("failed_to_acquire"));
+        fatal_error(get_vocab("failed_to_acquire"));
       }
       // Check the new area still exists
-      if (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE id=$new_area LIMIT 1") < 1)
+      if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE id=? LIMIT 1", array($new_area)) < 1)
       {
         $valid_area = FALSE;
       }
@@ -531,13 +534,14 @@ if ($phase == 2)
       // (only do this if you're changing the room name or the area - if you're
       // just editing the other details for an existing room we don't want to reject
       // the edit because the room already exists!)
-      // [SQL escaping done by sql_syntax_casesensitive_equals()]
+      // [syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
+      //  keep the flow of this elseif block]
       elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
-              && sql_query1("SELECT COUNT(*)
+              && db()->query1("SELECT COUNT(*)
                                FROM $tbl_room
-                              WHERE" . sql_syntax_casesensitive_equals("room_name", $room_name) . "
-                                AND area_id=$new_area
-                              LIMIT 1") > 0)
+                              WHERE" . db()->syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
+                                AND area_id=?
+                              LIMIT 1", array($room_name, $new_area)) > 0)
       {
         $valid_room_name = FALSE;
       }
@@ -548,6 +552,7 @@ if ($phase == 2)
         $room_disabled = (!empty($room_disabled)) ? 1 : 0;
         $sql = "UPDATE $tbl_room SET ";
         $n_fields = count($fields);
+        $sql_params = array();
         $assign_array = array();
         foreach ($fields as $field)
         {
@@ -557,28 +562,36 @@ if ($phase == 2)
             {
               // first of all deal with the standard MRBS fields
               case 'area_id':
-                $assign_array[] = "area_id=$new_area";
+                $assign_array[] = "area_id=?";
+                $sql_params[] = $new_area;
                 break;
               case 'disabled':
-                $assign_array[] = "disabled=$room_disabled";
+                $assign_array[] = "disabled=?";
+                $sql_params[] = $room_disabled;
                 break;
               case 'room_name':
-                $assign_array[] = "room_name='" . sql_escape($room_name) . "'";
+                $assign_array[] = "room_name=?";
+                $sql_params[] =$room_name;
                 break;
               case 'sort_key':
-                $assign_array[] = "sort_key='" . sql_escape($sort_key) . "'";
+                $assign_array[] = "sort_key=?";
+                $sql_params[] = $sort_key;
                 break;
               case 'description':
-                $assign_array[] = "description='" . sql_escape($description) . "'";
+                $assign_array[] = "description=?";
+                $sql_params[] = $description;
                 break;
               case 'capacity':
-                $assign_array[] = "capacity=$capacity";
+                $assign_array[] = "capacity=?";
+                $sql_params[] = $capacity;
                 break;
               case 'room_admin_email':
-                $assign_array[] = "room_admin_email='" . sql_escape($room_admin_email) . "'";
+                $assign_array[] = "room_admin_email=?";
+                $sql_params[] = $room_admin_email;
                 break;
               case 'custom_html':
-                $assign_array[] = "custom_html='" . sql_escape($custom_html) . "'";
+                $assign_array[] = "custom_html=?";
+                $sql_params[] = $custom_html;
                 break;
               // then look at any user defined fields
               default:
@@ -591,35 +604,32 @@ if ($phase == 2)
                       // Try and set it to NULL when we can because there will be cases when we
                       // want to distinguish between NULL and 0 - especially when the field
                       // is a genuine integer.
-                      $$var = ($field['is_nullable']) ? 'NULL' : 0;
+                      $$var = ($field['is_nullable']) ? null : 0;
                     }
                     break;
                   default:
-                    $$var = "'" . sql_escape($$var) . "'";
+                    // Do nothing
                     break;
                 }
-                $assign_array[] = sql_quote($field['name']) . "=" . $$var;
+                $assign_array[] = db()->quote($field['name']) . "=?";
+                $sql_params[] = $$var;
                 break;
             }
           }
         }
         
-        $sql .= implode(",", $assign_array) . " WHERE id=$room";
-        if (sql_command($sql) < 0)
-        {
-          echo get_vocab("update_room_failed") . "<br>\n";
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
-        // if everything is OK, release the mutex and go back to
-        // the admin page (for the new area)
-        sql_mutex_unlock("$tbl_area");
+        $sql .= implode(",", $assign_array) . " WHERE id=?";
+        $sql_params[] = $room;
+        db()->command($sql, $sql_params);
+
+        // Release the mutex and go back to the admin page (for the new area)
+        db()->mutex_unlock($tbl_area);
         Header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area");
         exit();
       }
     
       // Release the mutex
-      sql_mutex_unlock("$tbl_area");
+      db()->mutex_unlock($tbl_area);
     }
   }
 
@@ -761,52 +771,77 @@ if ($phase == 2)
     if ((FALSE != $valid_email) && (FALSE != $valid_resolution) && (FALSE != $enough_slots))
     {
       $sql = "UPDATE $tbl_area SET ";
+      $sql_params = array();
       $assign_array = array();
-      $assign_array[] = "area_name='" . sql_escape($area_name) . "'";
-      $assign_array[] = "sort_key='" . sql_escape($sort_key) . "'";
-      $assign_array[] = "disabled=" . $area_disabled;
-      $assign_array[] = "timezone='" . sql_escape($area_timezone) . "'";
-      $assign_array[] = "area_admin_email='" . sql_escape($area_admin_email) . "'";
-      $assign_array[] = "custom_html='" . sql_escape($custom_html) . "'";
+      $assign_array[] = "area_name=?";
+      $sql_params[] = $area_name;
+      $assign_array[] = "sort_key=?";
+      $sql_params[] = $sort_key;
+      $assign_array[] = "disabled=?";
+      $sql_params[] = $area_disabled;
+      $assign_array[] = "timezone=?";
+      $sql_params[] = $area_timezone;
+      $assign_array[] = "area_admin_email=?";
+      $sql_params[] = $area_admin_email;
+      $assign_array[] = "custom_html=?";
+      $sql_params[] = $custom_html;
       if (!$area_enable_periods)
       {
-        $assign_array[] = "resolution=" . $area_res_mins * 60;
-        $assign_array[] = "default_duration=" . $area_def_duration_mins * 60;
-        $assign_array[] = "default_duration_all_day=" . $area_def_duration_all_day;
-        $assign_array[] = "morningstarts=" . $area_morningstarts;
-        $assign_array[] = "morningstarts_minutes=" . $area_morningstarts_minutes;
-        $assign_array[] = "eveningends=" . $area_eveningends;
-        $assign_array[] = "eveningends_minutes=" . $area_eveningends_minutes;
+        $assign_array[] = "resolution=?";
+        $sql_params[] = $area_res_mins * 60;
+        $assign_array[] = "default_duration=?";
+        $sql_params[] = $area_def_duration_mins * 60;
+        $assign_array[] = "default_duration_all_day=?";
+        $sql_params[] = $area_def_duration_all_day;
+        $assign_array[] = "morningstarts=?";
+        $sql_params[] = $area_morningstarts;
+        $assign_array[] = "morningstarts_minutes=?";
+        $sql_params[] = $area_morningstarts_minutes;
+        $assign_array[] = "eveningends=?";
+        $sql_params[] = $area_eveningends;
+        $assign_array[] = "eveningends_minutes=?";
+        $sql_params[] = $area_eveningends_minutes;
       }
       
       // only update the min and max *_ahead_secs fields if the form values
       // are set;  they might be NULL because they've been disabled by JavaScript
-      $assign_array[] = "min_create_ahead_enabled=" . $area_min_create_ahead_enabled;
-      $assign_array[] = "max_create_ahead_enabled=" . $area_max_create_ahead_enabled;
-      $assign_array[] = "min_delete_ahead_enabled=" . $area_min_delete_ahead_enabled;
-      $assign_array[] = "max_delete_ahead_enabled=" . $area_max_delete_ahead_enabled;
-      $assign_array[] = "max_duration_enabled=" . $area_max_duration_enabled;
+      $assign_array[] = "min_create_ahead_enabled=?";
+      $sql_params[] = $area_min_create_ahead_enabled;
+      $assign_array[] = "max_create_ahead_enabled=?";
+      $sql_params[] = $area_max_create_ahead_enabled;
+      $assign_array[] = "min_delete_ahead_enabled=?";
+      $sql_params[] = $area_min_delete_ahead_enabled;
+      $assign_array[] = "max_delete_ahead_enabled=?";
+      $sql_params[] = $area_max_delete_ahead_enabled;
+      $assign_array[] = "max_duration_enabled=?";
+      $sql_params[] = $area_max_duration_enabled;
 
       if (isset($area_min_create_ahead_value))
       {
-        $assign_array[] = "min_create_ahead_secs=" . $area_min_create_ahead_value;
+        $assign_array[] = "min_create_ahead_secs=?";
+        $sql_params[] = $area_min_create_ahead_value;
       }
       if (isset($area_max_create_ahead_value))
       {
-        $assign_array[] = "max_create_ahead_secs=" . $area_max_create_ahead_value;
+        $assign_array[] = "max_create_ahead_secs=?";
+        $sql_params[] = $area_max_create_ahead_value;
       }
       if (isset($area_min_delete_ahead_value))
       {
-        $assign_array[] = "min_delete_ahead_secs=" . $area_min_delete_ahead_value;
+        $assign_array[] = "min_delete_ahead_secs=?";
+        $sql_params[] = $area_min_delete_ahead_value;
       }
       if (isset($area_max_delete_ahead_value))
       {
-        $assign_array[] = "max_delete_ahead_secs=" . $area_max_delete_ahead_value;
+        $assign_array[] = "max_delete_ahead_secs=?";
+        $sql_params[] = $area_max_delete_ahead_value;
       }
       if (isset($area_max_duration_value))
       {
-        $assign_array[] = "max_duration_secs=" . $area_max_duration_value;
-        $assign_array[] = "max_duration_periods=" . $area_max_duration_periods;
+        $assign_array[] = "max_duration_secs=?";
+        $sql_params[] = $area_max_duration_value;
+        $assign_array[] = "max_duration_periods=?";
+        $sql_params[] = $area_max_duration_periods;
       }
       
       foreach($interval_types as $interval_type)
@@ -821,31 +856,36 @@ if ($phase == 2)
         {
           // only update these fields if they are set;  they might be NULL because
           // they have been disabled by JavaScript
-          $assign_array[] = "$var=" . $$area_var;
+          $assign_array[] = "$var=?";
+          $sql_params[] = $$area_var;
         }
       }
       
-      $assign_array[] = "private_enabled=" . $area_private_enabled;
-      $assign_array[] = "private_default=" . $area_private_default;
-      $assign_array[] = "private_mandatory=" . $area_private_mandatory;
-      $assign_array[] = "private_override='" . $area_private_override . "'";
-      $assign_array[] = "approval_enabled=" . $area_approval_enabled;
-      $assign_array[] = "reminders_enabled=" . $area_reminders_enabled;
-      $assign_array[] = "enable_periods=" . $area_enable_periods;
-      $assign_array[] = "confirmation_enabled=" . $area_confirmation_enabled;
-      $assign_array[] = "confirmed_default=" . $area_confirmed_default;
+      $assign_array[] = "private_enabled=?";
+      $sql_params[] = $area_private_enabled;
+      $assign_array[] = "private_default=?";
+      $sql_params[] = $area_private_default;
+      $assign_array[] = "private_mandatory=?";
+      $sql_params[] = $area_private_mandatory;
+      $assign_array[] = "private_override=?";
+      $sql_params[] = $area_private_override;
+      $assign_array[] = "approval_enabled=?";
+      $sql_params[] = $area_approval_enabled;
+      $assign_array[] = "reminders_enabled=?";
+      $sql_params[] = $area_reminders_enabled;
+      $assign_array[] = "enable_periods=?";
+      $sql_params[] = $area_enable_periods;
+      $assign_array[] = "confirmation_enabled=?";
+      $sql_params[] = $area_confirmation_enabled;
+      $assign_array[] = "confirmed_default=?";
+      $sql_params[] = $area_confirmed_default;
             
-      $sql .= implode(",", $assign_array) . " WHERE id=$area";
+      $sql .= implode(",", $assign_array) . " WHERE id=?";
+      $sql_params[] = $area;
       
-      if (sql_command($sql) < 0)
-      {
-        echo $sql;
-        echo sql_error();
-        echo get_vocab("update_area_failed") . "<br>\n";
-        trigger_error(sql_error(), E_USER_WARNING);
-        fatal_error(FALSE, get_vocab("fatal_db_error"));
-      }
-      // If the database update worked OK, go back to the admin page
+      db()->command($sql, $sql_params);
+
+      // Go back to the admin page
       Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
       exit();
     }
@@ -873,7 +913,7 @@ if (isset($change_room) && !empty($room))
 
   if (empty($room_data))
   {
-    fatal_error(0, get_vocab("error_room") . $room . get_vocab("not_found"));
+    fatal_error(get_vocab("error_room") . $room . get_vocab("not_found"));
   }
   
   echo "<h2>\n";
@@ -905,7 +945,7 @@ if (isset($change_room) && !empty($room))
       $areas = get_area_names($all=TRUE);
       if (empty($areas))
       {
-        fatal_error(FALSE, get_vocab('noareas'));  // should not happen
+        fatal_error(get_vocab('noareas'));  // should not happen
       }
       
       // The area select box
@@ -1089,7 +1129,7 @@ if (isset($change_area) &&!empty($area))
   $area_data = get_area_details($area);
   if (empty($area_data))
   {
-    fatal_error(0, get_vocab("error_area") . $area . get_vocab("not_found"));
+    fatal_error(get_vocab("error_area") . $area . get_vocab("not_found"));
   }
 
   // Get the settings for this area, from the database if they are there, otherwise from

@@ -43,19 +43,14 @@ print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $roo
 // Get the details we need for this area
 if (isset($area))
 {
-  $res = sql_query("SELECT area_name, custom_html FROM $tbl_area WHERE id=$area LIMIT 1");
-  if (! $res)
+  $res = db()->query("SELECT area_name, custom_html FROM $tbl_area WHERE id=? LIMIT 1", array($area));
+
+  if ($res->count() == 1)
   {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  if (sql_count($res) == 1)
-  {
-    $row = sql_row_keyed($res, 0);
+    $row = $res->row_keyed(0);
     $area_name = $row['area_name'];
     $custom_html = $row['custom_html'];
   }
-  sql_free($res);
 }
 
 
@@ -70,8 +65,8 @@ echo "<div id=\"area_form\">\n";
 $sql = "SELECT id, area_name, disabled
           FROM $tbl_area
       ORDER BY disabled, sort_key";
-$res = sql_query($sql);
-$areas_defined = $res && (sql_count($res) > 0);
+$res = db()->query($sql);
+$areas_defined = $res && ($res->count() > 0);
 if (!$areas_defined)
 {
   echo "<p>" . get_vocab("noareas") . "</p>\n";
@@ -83,7 +78,7 @@ else
   // admin whether any areas are enabled)
   $areas = array();
   $n_displayable_areas = 0;
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     $areas[] = $row;
     if ($is_admin || !$row['disabled'])
@@ -211,27 +206,23 @@ if ($is_admin || ($n_displayable_areas > 0))
   echo "<div id=\"room_form\">\n";
   if (isset($area))
   {
-    $res = sql_query("SELECT * FROM $tbl_room WHERE area_id=$area ORDER BY sort_key");
-    if (! $res)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
-    if (sql_count($res) == 0)
+    $res = db()->query("SELECT * FROM $tbl_room WHERE area_id=? ORDER BY sort_key", array($area));
+
+    if ($res->count() == 0)
     {
       echo "<p>" . get_vocab("norooms") . "</p>\n";
     }
     else
     {
        // Get the information about the fields in the room table
-      $fields = sql_field_info($tbl_room);
+      $fields = db()->field_info($tbl_room);
     
       // Build an array with the room info and also see if there are going
       // to be any rooms to display (in other words rooms if you are not an
       // admin whether any rooms are enabled)
       $rooms = array();
       $n_displayable_rooms = 0;
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $rooms[] = $row;
         if ($is_admin || !$row['disabled'])

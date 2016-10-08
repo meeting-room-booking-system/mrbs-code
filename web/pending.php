@@ -210,7 +210,7 @@ echo "<h1>" . get_vocab("pending") . "</h1>\n";
 $sql_approval_enabled = some_area_predicate('approval_enabled');
         
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
-               sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
+               db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
                M.room_name, M.area_id, A.area_name, A.enable_periods,
                E.info_time AS entry_info_time, E.info_user AS entry_info_user,
@@ -224,22 +224,21 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
            AND $sql_approval_enabled
            AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 
+$sql_params = array();
+
 // Ordinary users can only see their own bookings       
 if (!$is_admin)
 {
-  $sql .= " AND E.create_by='" . sql_escape($user) . "'";
+  $sql .= " AND E.create_by=?";
+  $sql_params[] = $user;
 }
 // We want entries for a series to appear together so that we can display
 // them as a separate table below the main entry for the series. 
 $sql .= " ORDER BY repeat_id, start_time";
 
-$res = sql_query($sql);
-if (! $res)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
-if (sql_count($res) == 0)
+$res = db()->query($sql, $sql_params);
+
+if ($res->count() == 0)
 {
   echo "<p>" .get_vocab("none_outstanding") . "</p>\n";
 }
@@ -252,7 +251,7 @@ else  // display them in a table
   echo "<tbody>\n";
   $last_repeat_id = NULL;
   $is_series = FALSE;
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   { 
     if ($row['repeat_id'] != $last_repeat_id)
     // there's some kind of change

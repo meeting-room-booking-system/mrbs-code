@@ -194,15 +194,16 @@ if (!$ajax)
 $now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
-// NOTE: sql_syntax_caseless_contains() does the SQL escaping
-    
-$sql_pred = "( " . sql_syntax_caseless_contains("E.create_by", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.name", $search_str)
-  . " OR " . sql_syntax_caseless_contains("E.description", $search_str);
+// NOTE: syntax_caseless_contains() modifies our SQL params for us
+
+$sql_params = array();
+$sql_pred = "(( " . db()->syntax_caseless_contains("E.create_by", $search_str, $sql_params)
+  . ") OR (" . db()->syntax_caseless_contains("E.name", $search_str, $sql_params)
+  . ") OR (" . db()->syntax_caseless_contains("E.description", $search_str, $sql_params). ")";
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
 foreach ($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -218,19 +219,21 @@ foreach ($fields as $field)
         // assume PHP5
         if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
         {
-          $sql_pred .= " OR E." . sql_quote($field['name']) . "='" . sql_escape($key) . "'";
+          $sql_pred .= " OR (E." . db()->quote($field['name']) . "=?)";
+          $sql_params[] = $key;
         }
       }
     }
     elseif ($field['nature'] == 'character')
     {
-      $sql_pred .= " OR " . sql_syntax_caseless_contains("E." . sql_quote($field['name']), $search_str);
+      $sql_pred .= " OR (" . db()->syntax_caseless_contains("E." . db()->quote($field['name']), $search_str, $sql_params).")";
     }
   }
 }
 
-$sql_pred .= ") AND E.end_time > $now";
-$sql_pred .= " AND E.room_id = R.id AND R.area_id = A.id";
+$sql_pred .= ") AND (E.end_time > ?)";
+$sql_params[] = $now;
+$sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
 
 // If we're not an admin (they are allowed to see everything), then we need
@@ -245,17 +248,31 @@ if (!$is_admin)
     //   - all bookings, if private_override is set to 'public'
     //   - their own bookings, and others' public bookings if private_override is set to 'none'
     //   - just their own bookings, if private_override is set to 'private'
-    $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
-                        (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
+    $sql_pred .= " AND (
+                        (A.private_override='public') OR
+                        (A.private_override='none') AND
+                        (
+                         (E.status&" . STATUS_PRIVATE . "=0) OR
+                         (E.create_by = ?) OR
+                         (
+                          (A.private_override='private') AND (E.create_by = ?)
+                         )
+                        )
+                       )";
+    $sql_params[] = $user;
+    $sql_params[] = $user;
   }
   else
   {
     // if the user is not logged in they can see:
     //   - all bookings, if private_override is set to 'public'
     //   - public bookings if private_override is set to 'none'
-    $sql_pred .= " AND ((A.private_override='public') OR
-                        (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
+    $sql_pred .= " AND (
+                        (A.private_override='public') OR
+                        (
+                         (A.private_override='none') AND (E.status&" . STATUS_PRIVATE . "=0)
+                        )
+                       )";
   }
 }
 
@@ -264,14 +281,12 @@ if (!$is_admin)
 // searches so that we don't have to run it for each page.
 if (!isset($total))
 {
-  $total = sql_query1("SELECT count(*)
-                       FROM $tbl_entry E, $tbl_room R, $tbl_area A
-                       WHERE $sql_pred");
+  $sql = "SELECT count(*)
+          FROM $tbl_entry E, $tbl_room R, $tbl_area A
+          WHERE $sql_pred";
+  $total = db()->query1($sql, $sql_params);
 }
-if ($total < 0)
-{
-  fatal_error(FALSE, get_vocab("fatal_db_error"));
-}
+
 if (($total <= 0) && !$ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
@@ -303,18 +318,12 @@ if (!$ajax_capable || $ajax)
   // the stuff we want.
   if (!$ajax)
   {
-    $sql .= " " . sql_syntax_limit($search["count"], $search_pos);
+    $sql .= " " . db()->syntax_limit($search["count"], $search_pos);
   }
-
 
   // this is a flag to tell us not to display a "Next" link
-  $result = sql_query($sql);
-  if (! $result)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  $num_records = sql_count($result);
+  $result = db()->query($sql, $sql_params);
+  $num_records = $result->count();
 }
 
 if (!$ajax_capable)
@@ -343,7 +352,7 @@ if (!$ajax)
 // an Ajax request
 if (!$ajax_capable || $ajax)
 {
-  for ($i = 0; ($row = sql_row_keyed($result, $i)); $i++)
+  for ($i = 0; ($row = $result->row_keyed($i)); $i++)
   {
     output_row($row);
   }
@@ -351,6 +360,7 @@ if (!$ajax_capable || $ajax)
 
 if ($ajax)
 {
+  header("Content-Type: application/json");
   echo json_encode($json_data);
 }
 else

@@ -97,9 +97,9 @@ if (isset($Action) && ($Action == "SetName"))
     $json_data = json_encode($session_data);
     if (!function_exists('hash_hmac'))
     {
-      fatal_error(FALSE, "It appears that your PHP has the hash functions ".
-                          "disabled, which are required for the 'cookie' ".
-                          "session scheme.");
+      fatal_error("It appears that your PHP has the hash functions " .
+                  "disabled, which are required for the 'cookie' " .
+                  "session scheme.");
     }
     $hash = hash_hmac(
                       $auth["session_cookie"]["hash_algorithm"],
@@ -207,7 +207,7 @@ function authGet()
 
   echo "<p>".get_vocab("norights")."</p>\n";
 
-  $TargetURL = basename($PHP_SELF);
+  $TargetURL = this_page();
   if (isset($QUERY_STRING))
   {
     $TargetURL = $TargetURL . "?" . $QUERY_STRING;
@@ -257,9 +257,9 @@ function getUserName()
 
     if (!function_exists('hash_hmac'))
     {
-      fatal_error(FALSE, "It appears that your PHP has the hash functions ".
-                          "disabled, which are required for the 'cookie' ".
-                          "session scheme.");
+      fatal_error("It appears that your PHP has the hash functions ".
+                  "disabled, which are required for the 'cookie' ".
+                  "session scheme.");
     }
     if (hash_hmac(
                   $auth["session_cookie"]["hash_algorithm"],
@@ -308,7 +308,7 @@ function PrintLogonBox()
 {
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
   
-  $TargetURL = basename($PHP_SELF);
+  $TargetURL = this_page();
   if (isset($url_base) && ($url_base !== ''))
   {
     $TargetURL = $url_base . '/' . $TargetURL;

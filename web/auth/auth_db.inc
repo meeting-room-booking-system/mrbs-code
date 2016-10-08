@@ -39,25 +39,22 @@ function authValidateUser($user, $pass)
   global $tbl_users;
   $result = 0;
 
-  // We use sql_syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
+  $sql_params = array();
+
+  // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
   $sql = "SELECT password_hash
             FROM $tbl_users
            WHERE " .
-         sql_syntax_casesensitive_equals('name', utf8_strtolower($user)) .
+         db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
          "
            LIMIT 1";
 
-  $res = sql_query($sql);
-  if ($res == FALSE)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    return 0;
-  }
-
-  $row = sql_row_keyed($res, 0);
+  $res = db()->query($sql, $sql_params);
+  
+  $row = $res->row_keyed(0);
 
   $do_rehash = false;
 
@@ -100,12 +97,12 @@ function authValidateUser($user, $pass)
 
   if ($do_rehash)
   {
+    $sql_params = array(password_hash($pass, PASSWORD_DEFAULT));
     $sql = "UPDATE $tbl_users
-           SET password_hash='".
-      sql_escape(password_hash($pass, PASSWORD_DEFAULT)) ."'
+           SET password_hash=?
            WHERE " .
-      sql_syntax_casesensitive_equals('name', utf8_strtolower($user));
-    sql_command($sql);
+      db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params);
+    db()->command($sql, $sql_params);
   }
 
   return $result;
@@ -129,7 +126,8 @@ function authGetUserLevel($user)
     return 0;
   }
   
-  $result = sql_query1("SELECT level FROM $tbl_users WHERE name='" . sql_escape(utf8_strtolower($user)) . "' LIMIT 1");
+  $result = db()->query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
+                       array(utf8_strtolower($user)));
 
   return ($result == -1) ? 0 : $result;
 }
@@ -148,10 +146,10 @@ function authGetUserEmail($user)
   
   $sql = "SELECT email 
             FROM $tbl_users 
-           WHERE name='" . sql_escape($user) . "'
+           WHERE name=?
            LIMIT 1";
            
-  $email = sql_query1($sql);
+  $email = db()->query1($sql, array($user));
   
   return ($email == -1) ? '' : $email;
 }

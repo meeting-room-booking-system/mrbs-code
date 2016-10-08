@@ -58,7 +58,7 @@ session_set_cookie_params($auth["session_php"]["session_expire_time"],
 if (FALSE === session_start())
 {
   trigger_error("MRBS: could not start session", E_USER_WARNING);
-  fatal_error(TRUE, "MRBS: server configuration error.", FALSE);
+  fatal_error("MRBS: server configuration error.");
 }
 
 // Check to see if we've been inactive for longer than allowed and if so logout
@@ -217,7 +217,7 @@ function authGet()
 
   echo "<p>".get_vocab("norights")."</p>\n";
 
-  $TargetURL = basename($PHP_SELF);
+  $TargetURL = this_page();
   if (isset($QUERY_STRING))
   {
     $TargetURL = $TargetURL . "?" . $QUERY_STRING;
@@ -248,7 +248,7 @@ function PrintLogonBox()
 {
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
 
-  $TargetURL = basename($PHP_SELF);
+  $TargetURL = this_page();
   if (isset($url_base) && ($url_base !== ''))
   {
     $TargetURL = $url_base . '/' . $TargetURL;

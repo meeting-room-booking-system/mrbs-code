@@ -22,27 +22,22 @@ if ($type == "room")
   if (isset($confirm))
   {
     // They have confirmed it already, so go blast!
-    sql_begin();
-    // First take out all appointments for this room
-    $result = sql_command("delete from $tbl_entry where room_id=$room");
-    if ($result >= 0)
+    db()->begin();
+    try
     {
-      $result = sql_command("delete from $tbl_repeat where room_id=$room");
+      // First take out all appointments for this room
+      db()->command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
+      db()->command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
       // Now take out the room itself
-      if ($result >= 0)
-      {
-        $result = sql_command("delete from $tbl_room where id=$room");
-      }
+      db()->command("DELETE FROM $tbl_room WHERE id=?", array($room));
+    }
+    catch (DBException $e)
+    {
+      db()->rollback();
+      throw $e;
     }
    
-    if ($result >= 0)
-    {
-      sql_commit();
-    }
-    else
-    {
-      sql_rollback();
-    }
+    db()->commit();
    
     // Go back to the admin page
     Header("Location: admin.php?area=$area");
@@ -54,14 +49,10 @@ if ($type == "room")
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
    
-    $sql = "select name, start_time, end_time from $tbl_entry where room_id=$room";
-    $res = sql_query($sql);
-    if (! $res)
-    {
-      trigger_error(sql_error(), E_USER_WARNING);
-      fatal_error(FALSE, get_vocab("fatal_db_error"));
-    }
-    else if (sql_count($res) > 0)
+    $sql = "SELECT name, start_time, end_time FROM $tbl_entry WHERE room_id=?";
+    $res = db()->query($sql, array($room));
+    
+    if ($res->count() > 0)
     {
       echo "<p>\n";
       echo get_vocab("deletefollowing") . ":\n";
@@ -69,7 +60,7 @@ if ($type == "room")
       
       echo "<ul>\n";
       
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         echo "<li>".htmlspecialchars($row['name'])." (";
         echo time_date_string($row['start_time']) . " -> ";
@@ -94,11 +85,11 @@ if ($type == "area")
 {
   // We are only going to let them delete an area if there are
   // no rooms. its easier
-  $n = sql_query1("select count(*) from $tbl_room where area_id=$area");
+  $n = db()->query1("SELECT COUNT(*) FROM $tbl_room WHERE area_id=?", array($area));
   if ($n == 0)
   {
     // OK, nothing there, lets blast it away
-    sql_command("delete from $tbl_area where id=$area");
+    db()->command("DELETE FROM $tbl_area WHERE id=?", array($area));
    
     // Redirect back to the admin page
     header("Location: admin.php");

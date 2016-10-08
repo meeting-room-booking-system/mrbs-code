@@ -66,7 +66,7 @@ if (!isset($encoding))
 <?php
   if ($dbsys == 'mysql' || $dbsys == 'mysqli')
   {
-    $ver = sql_version();
+    $ver = db()->version();
     // Sanitise the output to contain just the version number, hopefully
     $ver = preg_replace('/[^0-9.]/', '', $ver);
     // Pull out the floating point version number
@@ -74,8 +74,8 @@ if (!isset($encoding))
     if ($version >= 4.1)
     {
       $not_unicode = FALSE;
-      $res = sql_query("SHOW FULL COLUMNS FROM $tbl_entry");
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      $res = db()->query("SHOW FULL COLUMNS FROM $tbl_entry");
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         if (!is_null($row['Collation']) &&
             !preg_match('/utf8/', $row['Collation']))
@@ -141,9 +141,13 @@ else
     $admin_username = $db_login;
     $admin_password = $db_password;
   }
-  $db_handle = sql_connect($dbsys, $db_host,
-                           $admin_username, $admin_password, $db_database,
-                           0, $db_port);
+  $db_handle = DBFactory::create($dbsys,
+                                 $db_host,
+                                 $admin_username,
+                                 $admin_password,
+                                 $db_database,
+                                 0,
+                                 $db_port);
   echo '
     <p>
       Starting update, this could take a while...
@@ -160,21 +164,23 @@ else
       Updating '$table' table...
 ";
       $sql = "SELECT id,".implode(',',$columns)." FROM $table";
-      $res = sql_query($sql, $db_handle);
+      $stmt = $db_handle->query($sql);
 
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
       {
+        $sql_params = array();
         $updates = array();
         $id = $row['id'];
         foreach ($columns as $col)
         {
-          $updates[] = "$col='".
-            addslashes(iconv($encoding,"utf-8",$row[$col]))."'";
+          $updates[] = "$col=?";
+          $sql_params[] = iconv($encoding,"utf-8",$row[$col]);
         }
         $upd_sql = "UPDATE $table SET ".
-          implode(',', $updates)." WHERE id=$id";
+          implode(',', $updates)." WHERE id=?";
+        $sql_params[] = $id;
 
-        sql_query($upd_sql, $db_handle);
+        $db_handle->query($upd_sql, $sql_params);
         print "<!-- $upd_sql -->\n";
       }
       print "
@@ -222,14 +228,14 @@ function PMA_getDbCollation($db)
   global $db_handle;
 
   $sq='SHOW CREATE DATABASE `'.$db.'`;';
-  $res = sql_query($sq, $db_handle);
-  if(!$res)
+  $stmt = $db_handle->query($sq);
+  if(!$stmt)
   {
-    echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+    echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($row = sql_row_keyed($res, $i, $db_handle)); $i++)
+    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
     {
       $tokenized = explode(' ', $row[1]);
 
@@ -276,25 +282,25 @@ function convert_one_db($db)
     return;
   }
 
-  sql_command("USE $db", $db_handle);
-  $rs = sql_query("SHOW TABLES", $db_handle);
-  if(!$rs)
+  $db_handle->command("USE $db");
+  $stmt = $db_handle->query("SHOW TABLES");
+  if(!$stmt)
   {
-    echo "\n\n".sql_error($db_handle)."\n\n";
+    echo "\n\n".$db_handle->error()."\n\n";
   }
   else
   {
-    for ($i = 0; ($data = sql_row($rs, $i, $db_handle)); $i++)
+    for ($i = 0; ($data = $stmt->row($i)); $i++)
     {
       echo "Converting '$data[0]' table...\n";
-      $rs1 = sql_query("show FULL columns from $data[0]", $db_handle);
-      if(!$rs1)
+      $stmt1 = $db_handle->query("show FULL columns from $data[0]");
+      if(!$statement1)
       {
-        echo "\n\n".sql_error($db_handle)."\n\n";
+        echo "\n\n".$db_handle->error()."\n\n";
       }
       else
       {
-        for ($j = 0; ($data1 = sql_row_keyed($rs1, $j, $db_handle)); $j++)
+        for ($j = 0; ($data1 = $stmt1->row_keyed($j)); $j++)
         {
           if (in_array(array_shift(split("\\(",
                                          $data1['Type'],2)),
@@ -327,9 +333,9 @@ function convert_one_db($db)
                 (($data1['Null'] == 'YES') ? ' NULL ' : ' NOT NULL');
 
               if (!$printonly &&
-                  !sql_query($sq, $db_handle))
+                  !$db_handle->query($sq))
               {
-                echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+                echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
               }
               else
               {
@@ -354,9 +360,9 @@ function convert_one_db($db)
                     ' COMMENT \''.addslashes($data1['Comment']).'\'');
 
                 if (!$printonly &&
-                    !sql_query($sq, $db_handle))
+                    !$db_handle->query($sq))
                 {
-                  echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+                  echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
                 }
                 else if ($printonly)
                 {
@@ -366,7 +372,7 @@ function convert_one_db($db)
             } // end of if (substr)
           } // end of if (in_array)
         } // end of inner for
-      } // end of if ($rs1)
+      } // end of if ($stmt1)
 
       if ($altertablecharset)
       {
@@ -380,15 +386,15 @@ function convert_one_db($db)
         }
         else
         {
-          if (!sql_query($sq, $db_handle))
+          if (!$db_handle->query($sq))
           {
-            echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+            echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
           }
         }
       } // end of if ($altertablecharset)
 	  print "done.<br>\n";
     } // end of outer for
-  } // end of if (!$rs)
+  } // end of if (!$stmt)
   if ($alterdatabasecharset)
   {
     $sq='ALTER DATABASE `'.$db."` ".
@@ -401,9 +407,9 @@ function convert_one_db($db)
     }
     else
     {
-      if (!sql_query($sq, $db_handle))
+      if (!$db_handle->query($sq))
       {
-        echo "\n\n".$sq."\n".sql_error($db_handle)."\n\n";
+        echo "\n\n".$sq."\n".$db_handle->error()."\n\n";
       }
     }
   } // end of if ($alterdatabasecharset)

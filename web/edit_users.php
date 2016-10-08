@@ -234,9 +234,9 @@ if ($ajax)
 }
 
 // Get the information about the fields in the users table
-$fields = sql_field_info($tbl_users);
+$fields = db()->field_info($tbl_users);
 
-$nusers = sql_query1("SELECT COUNT(*) FROM $tbl_users");
+$nusers = db()->query1("SELECT COUNT(*) FROM $tbl_users");
 
 /*---------------------------------------------------------------------------*\
 |                         Authenticate the current user                         |
@@ -277,9 +277,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
   {
     // If it's an existing user then get the data from the database
-    $result = sql_query("select * from $tbl_users where id=$Id");
-    $data = sql_row_keyed($result, 0);
-    sql_free($result);
+    $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($Id));
+    $data = $result->row_keyed(0);
+    unset($result);
   }
   if (($Id == -1) || (!$data))
   {
@@ -322,7 +322,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // or admin rights are removed!
           if ($Action == "Edit")
           {
-            $n_admins = sql_query1("select count(*) from $tbl_users where level=$max_level");
+            $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
             $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
           }
           else
@@ -523,7 +523,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 if (isset($Action) && ($Action == "Update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".sql_escape($user)."' LIMIT 1");
+  $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
+                        array($user));
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
     Header("Location: edit_users.php");
@@ -623,18 +624,23 @@ if (isset($Action) && ($Action == "Update"))
             $valid_data = FALSE;
             $q_string .= "&name_empty=1";
           }
+
+          $sql_params = array();
+
           // Check that the name is unique.
           // If it's a new user, then to check to see if there are any rows with that name.
           // If it's an update, then check to see if there are any rows with that name, except
           // for that user.
-          $query = "SELECT id FROM $tbl_users WHERE name='" . sql_escape($value) . "'";
+          $query = "SELECT id FROM $tbl_users WHERE name=?";
+          $sql_params[] = $value;
           if ($Id >= 0)
           {
-            $query .= " AND id!='$Id'";
+            $query .= " AND id != ?";
+            $sql_params[] = $Id;
           }
           $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-          $result = sql_query($query);
-          if (sql_count($result) > 0)
+          $result = db()->query($query, $sql_params);
+          if ($result->count() > 0)
           {
             $valid_data = FALSE;
             $q_string .= "&name_not_unique=1";
@@ -683,7 +689,8 @@ if (isset($Action) && ($Action == "Update"))
     
     // If we got here, then we've passed validation and we need to
     // enter the data into the database
-    
+
+    $sql_params = array();
     $sql_fields = array();
   
     // For each db column get the value ready for the database
@@ -708,11 +715,11 @@ if (isset($Action) && ($Action == "Update"))
               // Try and set it to NULL when we can because there will be cases when we
               // want to distinguish between NULL and 0 - especially when the field
               // is a genuine integer.
-              $value = ($field['is_nullable']) ? 'NULL' : 0;
+              $value = ($field['is_nullable']) ? null : 0;
             }
             break;
           default:
-            $value = "'" . sql_escape($value) . "'";
+            // No special handling
             break;
         }
        
@@ -733,9 +740,11 @@ if (isset($Action) && ($Action == "Update"))
   
       foreach ($sql_fields as $fieldname => $value)
       {
-        array_push($assign_array, sql_quote($fieldname) . "=$value");
+        array_push($assign_array, db()->quote($fieldname) . "=?");
+        $sql_params[] = $value;
       }
-      $operation .= implode(",", $assign_array) . " WHERE id=$Id;";
+      $operation .= implode(",", $assign_array) . " WHERE id=?";
+      $sql_params[] = $Id;
     }
     else
     {
@@ -747,39 +756,23 @@ if (isset($Action) && ($Action == "Update"))
       foreach ($sql_fields as $fieldname => $value)
       {
         array_push($fields_list,$fieldname);
-        array_push($values_list,$value);
+        array_push($values_list,'?');
+        $sql_params[] = $value;
       }
 
-      $fields_list = array_map(__NAMESPACE__ . "\\sql_quote", $fields_list);
+      foreach ($fields_list as &$field)
+      {
+        $field = db()->quote($field);
+      }
       $operation = "INSERT INTO $tbl_users " .
         "(". implode(",", $fields_list) . ")" .
-        " VALUES " . "(" . implode(",", $values_list) . ");";
+        " VALUES " . "(" . implode(",", $values_list) . ")";
     }
   
     /* DEBUG lines - check the actual sql statement going into the db */
     //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
     //exit;
-    $r = sql_command($operation);
-    if ($r == -1)
-    {
-      // Get the error message before the print_header() call because the print_header()
-      // function can contain SQL queries and so reset the error message.
-      trigger_error(sql_error(), E_USER_WARNING);
-      print_header(0, 0, 0, "", "");
-  
-      // This is unlikely to happen in normal operation. Do not translate.
-       
-      print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-      print "  <fieldset>\n";
-      print "  <legend></legend>\n";
-      print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
-      print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-      print "  </fieldset>\n";
-      print "</form>\n";
-  
-      // Print footer and exit
-      print_footer(TRUE);
-    }
+    db()->command($operation, $sql_params);
   
     /* Success. Redirect to the user list, to remove the form args */
     Header("Location: edit_users.php");
@@ -792,10 +785,10 @@ if (isset($Action) && ($Action == "Update"))
 
 if (isset($Action) && ($Action == "Delete"))
 {
-  $target_level = sql_query1("SELECT level FROM $tbl_users WHERE id=$Id LIMIT 1");
+  $target_level = db()->query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($Id));
   if ($target_level < 0)
   {
-    fatal_error(TRUE, "Fatal error while deleting a user");
+    fatal_error("Fatal error while deleting a user");
   }
   // you can't delete a user if you're not some kind of admin, and then you can't
   // delete someone higher than you
@@ -805,25 +798,7 @@ if (isset($Action) && ($Action == "Delete"))
     exit();
   }
 
-  $r = sql_command("delete from $tbl_users where id=$Id;");
-  if ($r == -1)
-  {
-    print_header(0, 0, 0, "", "");
-
-    // This is unlikely to happen in normal  operation. Do not translate.
-    
-    print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    print "  <fieldset>\n";
-    print "  <legend></legend>\n";
-    print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
-    print "    <p class=\"error\">" . sql_error() . "</p>\n";
-    print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
-    print "  </fieldset>\n";
-    print "</form>\n";
-
-    // Print footer and exit
-    print_footer(TRUE);
-  }
+  db()->command("DELETE FROM $tbl_users WHERE id=?", array($Id));
 
   /* Success. Do not display a message. Simply fall through into the list display. */
 }
@@ -855,7 +830,7 @@ if (!$ajax)
 if ($initial_user_creation != 1)   // don't print the user table if there are no users
 {
   // Get the user information
-  $res = sql_query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
+  $res = db()->query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
   
   // Display the data in a table
   $ignore_columns = array('id', 'password_hash', 'name'); // We don't display these columns or they get special treatment
@@ -905,7 +880,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // an Ajax request
   if (!$ajax_capable || $ajax)
   {
-    for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+    for ($i = 0; ($row = $res->row_keyed($i)); $i++)
     {
       // You can only see this row if (a) we allow everybody to see all rows or
       // (b) you are an admin or (c) you are this user
@@ -930,6 +905,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 
 if ($ajax)
 {
+  header("Content-Type: application/json");
   echo json_encode($json_data);
 }
 else

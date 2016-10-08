@@ -78,14 +78,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       // an empty query)
       if (preg_match("/\S/", $query))
       {
-        $res = sql_query($query, $upgrade_handle);
-        if ($res === FALSE)
-        {
-          // No need to localise, should hopefully never happen
-          upgrade_echo("<br>Tried:<pre>" . htmlspecialchars($query) . "</pre> and got error:" .
-                       "<pre>" . sql_error($upgrade_handle) . "</pre>\n");
-          return FALSE;
-        }
+        $res = $upgrade_handle->query($query);
       }
     }
 
@@ -93,14 +86,8 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      $res = sql_command("UPDATE $tbl_variables SET variable_content = '$ver' ".
-                         "WHERE variable_name = '$variable_name'");
-      if ($res == -1)
-      {
-        // No need to localise, should never happen
-        upgrade_echo("<span class=\"error\">Failed to update database version variable.</span>");
-        return FALSE;
-      }
+      $upgrade_handle->command("UPDATE $tbl_variables SET variable_content = ? ".
+                               "WHERE variable_name = ?", array($ver, $variable_name));
     }
     upgrade_echo("</p>\n");
     
@@ -112,4 +99,3 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
   }
   return TRUE;
 }
-

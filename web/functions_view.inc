@@ -158,7 +158,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   // Last updated
   $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
   // The custom fields
-  $fields = sql_field_info($tbl_entry);
+  $fields = db()->field_info($tbl_entry);
   foreach ($fields as $field)
   {
     $key = $field['name'];

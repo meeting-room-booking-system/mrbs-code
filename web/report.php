@@ -96,12 +96,7 @@ function generate_search_criteria(&$vars)
       case 'roommatch':
         // (We need DISTINCT because it's possible to have two rooms of the same name
         // in different areas)
-        $options = sql_query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
-        if ($options === FALSE)
-        {
-          trigger_error(sql_error(), E_USER_WARNING);
-          fatal_error(FALSE, get_vocab("fatal_db_error"));
-        }
+        $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
         echo "<div id=\"div_roommatch\">\n";
         $params = array('label'         => get_vocab("match_room") . ':',
                         'name'          => 'roommatch',
@@ -581,6 +576,7 @@ function close_report()
   // If this is an Ajax request, we can now send the JSON data
   if ($ajax)
   {
+    header("Content-Type: application/json");
     echo json_encode($json_data);
   }
   elseif ($output_format == OUTPUT_HTML)
@@ -1130,10 +1126,10 @@ function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
 }
 
 
-function get_match_condition($full_column_name, $match)
+function get_match_condition($full_column_name, $match, &$sql_params)
 {
   global $select_options, $field_natures, $field_lengths;
-  
+
   $sql = '';
   
   // First simple case: no match required
@@ -1154,8 +1150,8 @@ function get_match_condition($full_column_name, $match)
   // bother with complicated things such as custom fields or select_options
   if ($table != 'entry')
   { 
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
+    // syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
     return $sql;
   }
   
@@ -1176,7 +1172,8 @@ function get_match_condition($full_column_name, $match)
       if (($option_key !== '') &&
           (strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
       {
-        $or_array[] = "$full_column_name='" . sql_escape($option_key) . "'";
+        $or_array[] = "$full_column_name=?";
+        $sql_params[] = $option_key;
       }
     }
     if (count($or_array) > 0)
@@ -1207,8 +1204,8 @@ function get_match_condition($full_column_name, $match)
   // (4) Strings
   else
   {
-    // sql_syntax_caseless_contains() does the SQL escaping
-    $sql .= " AND" . sql_syntax_caseless_contains("$full_column_name", $match);
+    // syntax_caseless_contains() modifies the SQL params array too
+    $sql .= " AND" . db()->syntax_caseless_contains("$full_column_name", $match, $sql_params);
   }
   
   return $sql;
@@ -1285,8 +1282,8 @@ if ($ajax)
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
-$times_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
-$periods_somewhere = (sql_query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
+$times_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
+$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
 
 
 // Build the report search field order
@@ -1315,7 +1312,7 @@ foreach ($report_search_fields as $field)
 }
   
 // Get information about custom fields
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 $field_natures = array();
 $field_lengths = array();
@@ -1371,8 +1368,9 @@ if ($phase == 2)
   $report_end = mktime(0, 0, 0, $to_month+0, $to_day+1, $to_year+0);
   
   // Construct the SQL query
+  $sql_params = array();
   $sql = "SELECT E.*, "
-       .  sql_syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
+       .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
        . "A.area_name, R.room_name, "
        . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
   if ($output_format == OUTPUT_ICAL)
@@ -1389,7 +1387,9 @@ if ($phase == 2)
     $sql .= " LEFT JOIN $tbl_repeat T ON E.repeat_id=T.id";
   }
   $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
-        . " AND E.start_time < $report_end AND E.end_time > $report_start";
+        . " AND E.start_time < ? AND E.end_time > ?";
+  $sql_params[] = $report_end;
+  $sql_params[] = $report_start;
   if ($output_format == OUTPUT_ICAL)
   {
     // We can't export periods in an iCalendar yet
@@ -1405,7 +1405,7 @@ if ($phase == 2)
                         
   foreach ($match_columns as $column => $match)
   {
-    $sql .= get_match_condition($column, $match);
+    $sql .= get_match_condition($column, $match, $sql_params);
   }
   
   // Then do the special cases
@@ -1415,8 +1415,8 @@ if ($phase == 2)
     $or_array = array();
     foreach ( $typematch as $type )
     {
-      // sql_syntax_casesensitive_equals() does the SQL escaping
-      $or_array[] = sql_syntax_casesensitive_equals('E.type', $type);
+      // syntax_casesensitive_equals() modifies our SQL params array for us
+      $or_array[] = db()->syntax_casesensitive_equals('E.type', $type, $sql_params);
     }
     $sql .= "(". implode(" OR ", $or_array ) .")";
   }
@@ -1453,7 +1453,7 @@ if ($phase == 2)
   foreach ($custom_fields as $key => $value)
   {
     $var = "match_$key";
-    $sql .= get_match_condition("E.$key", $$var);
+    $sql .= get_match_condition("E.$key", $$var, $sql_params);
   }
 
   // If we're not an admin (they are allowed to see everything), then we need
@@ -1469,8 +1469,10 @@ if ($phase == 2)
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = '" . sql_escape($user) . "')) OR
-                     (A.private_override='private' AND E.create_by = '" . sql_escape($user) . "'))";                
+                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = ?)) OR
+                     (A.private_override='private' AND E.create_by = ?))";
+      $sql_params[] = $user;
+      $sql_params[] = $user;
     }
     else
     {
@@ -1501,13 +1503,8 @@ if ($phase == 2)
 
   // echo "<p>DEBUG: SQL: <tt> $sql </tt></p>\n";
 
-  $res = sql_query($sql);
-  if (! $res)
-  {
-    trigger_error(sql_error(), E_USER_WARNING);
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
-  $nmatch = sql_count($res);
+  $res = db()->query($sql, $sql_params);
+  $nmatch = $res->count();
 }
 
 $combination_not_supported = ($output == SUMMARY) && ($output_format == OUTPUT_ICAL);
@@ -1602,18 +1599,19 @@ if ($phase == 2)
   {
     if ($ajax)
     {
+      header("Content-Type: application/json");
       echo json_encode($json_data);
     }
     else
     {
       echo "<p class=\"report_entries\">" . get_vocab("nothing_found") . "</p>\n";
     }
-    sql_free($res);
+    unset($res);
   }
   elseif ($combination_not_supported)
   {
     echo "<p>" . get_vocab("combination_not_supported") . "</p>\n";
-    sql_free($res);
+    unset($res);
   }
   else
   {
@@ -1638,7 +1636,7 @@ if ($phase == 2)
       open_report();
       report_header();
       $body_rows = array();
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         report_row($body_rows, $row);
       }
@@ -1651,7 +1649,7 @@ if ($phase == 2)
       open_summary();
       if ($nmatch > 0)
       {
-        for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+        for ($i = 0; ($row = $res->row_keyed($i)); $i++)
         {
           accumulate($row, $count, $hours,
                      $report_start, $report_end,

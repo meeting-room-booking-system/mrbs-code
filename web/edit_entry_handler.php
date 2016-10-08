@@ -122,7 +122,7 @@ if (!empty($back_button))
 $custom_fields = array();
 
 // Get the information about the fields in the entry table
-$fields = sql_field_info($tbl_entry);
+$fields = db()->field_info($tbl_entry);
           
 foreach($fields as $field)
 {
@@ -414,10 +414,16 @@ if (isset($id))
 {
   // Editing an existing booking: get the room_id from the database (you can't
   // get it from $rooms because they are the new rooms)
-  $target_room = sql_query1("SELECT room_id FROM $tbl_entry WHERE id=$id LIMIT 1");
+  $target_room = db()->query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
   if ($target_room < 0)
   {
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
+    // Ideally we should give more feedback to the user when this happens, or
+    // even lock the entry once a user starts to edit it.
+    $message = "Tried to edit an entry that no longer exists - probably because " .
+               "somebody else has deleted it in the meantime.";
+    trigger_error($message, E_USER_NOTICE);
+    header("Location: $returl");
+    exit;
   }
 }
 else
@@ -561,7 +567,6 @@ if (!$ajax || !$commit)
   $year = $start_year;
 }
 
-
 // Set up the return URL.    As the user has tried to book a particular room and a particular
 // day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
 // return URL accordingly.
@@ -592,6 +597,7 @@ else
 {
   $returl = $returl_base[0];
 }
+
 
 // If we haven't been given a sensible date then get out of here and don't try and make a booking
 if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkdate($start_month, $start_day, $start_year))
@@ -703,7 +709,7 @@ $send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
 // Wrap the editing process in a transaction, because if deleting the old booking should fail for
 // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
 // if, for example, the database user hasn't been granted DELETE rights.
-sql_begin();
+db()->begin();
 $transaction_ok = true;
 
 $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
@@ -717,11 +723,11 @@ if (!$just_check && $result['valid_booking'] && isset($id))
 
 if ($transaction_ok)
 {
-  sql_commit();
+  db()->commit();
 }
 else
 {
-  sql_rollback();
+  db()->rollback();
   trigger_error('Edit failed.', E_USER_WARNING);
 }
 
@@ -743,6 +749,7 @@ if ($ajax && function_exists('json_encode'))
       $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
     }
   }
+  header("Content-Type: application/json");
   echo json_encode($result);
   exit;
 }

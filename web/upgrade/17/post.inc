@@ -3,7 +3,7 @@ namespace MRBS;
 
 // $Id$
 
-global $tbl_entry, $tbl_repeat;
+global $tbl_entry, $tbl_repeat, $admin_handle;
 
 // We are about to introduce a new status, the confirmation status, for bookings
 // that are not 100% certain to happen.   Instead of introducing yet another column
@@ -30,23 +30,17 @@ global $tbl_entry, $tbl_repeat;
 // Acquire mutex to lock out others trying to update the entry table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
-if (!sql_mutex_lock("$tbl_entry"))
+if (!$admin_handle->mutex_lock($tbl_entry))
 {
-  fatal_error(1, get_vocab("failed_to_acquire"));
+  fatal_error(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE $tbl_entry
            SET status=(((~status)&1)<<1)|(private&1),
                timestamp=timestamp";
-$res = sql_command($sql);
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update status column in entry table.</span>";
-}
+$admin_handle->command($sql);
 
-sql_mutex_unlock("$tbl_entry");
+$admin_handle->mutex_unlock($tbl_entry);
 
 
 
@@ -57,22 +51,15 @@ sql_mutex_unlock("$tbl_entry");
 // Acquire mutex to lock out others trying to update the repeat table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
-if (!sql_mutex_lock("$tbl_repeat"))
+if (!$admin_handle->mutex_lock($tbl_repeat))
 {
-  fatal_error(1, get_vocab("failed_to_acquire"));
+  fatal_error(get_vocab("failed_to_acquire"));
 }
 
 $sql = "UPDATE $tbl_repeat
            SET status=private&1,
                timestamp=timestamp";
-$res = sql_command($sql);
-
-if ($res == -1)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to update status column in repeat table with privacy status.</span>";
-}
+$admin_handle->command($sql);
 
 // Now get the approval status for the repeat table.   A series is considered to be
 // awaiting approval if any one of its individual members is awaiting approval.
@@ -82,33 +69,23 @@ $sql = "SELECT DISTINCT repeat_id
           FROM $tbl_entry
          WHERE repeat_id!=0
            AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
-$res = sql_query($sql);
-if ($res === FALSE)
-{
-  trigger_error(sql_error(), E_USER_WARNING);
-  fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
-}
+$res = $admin_handle->query($sql);
 
-for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
   // Set the approval status for each one
   $sql = "UPDATE $tbl_repeat
              SET status=status|" . STATUS_AWAITING_APPROVAL . ",
                  timestamp=timestamp
            WHERE id=" . $row['repeat_id'];
-  $result = sql_command($sql);
-  if ($result == -1)
-  {
-    // We've got an SQL error, so report it
-    trigger_error(sql_error(), E_USER_WARNING);
-  }
+  $result = $admin_handle->command($sql);
+
   if ($result != 1)
   {
-    // Something's gone wrong.   There's either been an SQL error, or else no rows have been
-    // affected, which should not be the case
-    fatal_error(FALSE, "Failed to update status column in repeat table with approval status.");
+    // Something's gone wrong.  No rows have been affected, which should not be the case
+    fatal_error("Failed to update status column in repeat table with approval status.");
   }
 }  
 
-sql_mutex_unlock("$tbl_repeat");
+$admin_handle->mutex_unlock($tbl_repeat);
 

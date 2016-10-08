@@ -13,42 +13,15 @@ namespace MRBS;
 // have the date.   So I've taken the view here that it's not worth bothering about
 // as this upgrade procedure is only used once for existing entries).
 
-function get_microtime()
-{
-  if (function_exists('microtime'))
-  {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
-  }
-  else
-  {
-    return time();
-  }
-}
 
-function do_sql_command($sql)
-{
-  static $step = 0;
-  
-  $step++;
-  
-  if (sql_command($sql) < 0)
-  {
-    // echo "$sql<br>\n";  // Debug line
-    // echo sql_error() . "<br>";  // Debug line
-    echo "<span class=\"error\">Step $step failed</span><br>";
-    // exit;  // Debug line
-  }
-}
-
-global $dbsys, $tbl_entry, $tbl_repeat;
+global $dbsys, $tbl_entry, $tbl_repeat, $admin_handle;
 
 // There's the option here to display some timing information as this upgrade
 // could take a while
 $display_timing = FALSE;
 
-$n_entry = sql_query1("SELECT COUNT(*) FROM $tbl_entry");
-$n_repeat = sql_query1("SELECT COUNT(*) FROM $tbl_repeat");
+$n_entry = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_entry");
+$n_repeat = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_repeat");
 if ($display_timing)
 {
  echo "Upgrade 24: $n_entry entry rows and $n_repeat repeat rows";
@@ -68,14 +41,14 @@ if ($dbsys != "pgsql")
              SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
                  timestamp=timestamp
            WHERE ical_uid='' AND repeat_id=0";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
 
   // Give everything in the repeat table, that doesn't already have one, an ical uid
   $sql = "UPDATE $tbl_repeat
              SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
                  timestamp=timestamp
            WHERE ical_uid=''";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
 
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
@@ -86,7 +59,7 @@ if ($dbsys != "pgsql")
                  R.timestamp=R.timestamp
            WHERE E.ical_uid=''
              AND E.repeat_id=R.id";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
   
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series                      
@@ -95,7 +68,7 @@ if ($dbsys != "pgsql")
                  timestamp=timestamp
            WHERE repeat_id!=0
              AND ical_recur_id=''";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
 }
 
 // PostgreSQL
@@ -129,13 +102,13 @@ else
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''
              AND repeat_id=0";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
              
   // Give everything in the repeat table, that doesn't already have one, an ical uid
   $sql = "UPDATE $tbl_repeat
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
 
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
@@ -145,7 +118,7 @@ else
             FROM $tbl_repeat AS R
            WHERE $tbl_entry.ical_uid=''
              AND $tbl_entry.repeat_id=R.id";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
              
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series (The SQL is slightly
@@ -154,7 +127,7 @@ else
              SET ical_recur_id=TO_CHAR(TIMESTAMP 'epoch' + start_time * INTERVAL '1 second', 'YYYYMMDD\"T\"HH24MISS\"Z\"')
            WHERE repeat_id!=0
              AND ical_recur_id=''";
-  do_sql_command($sql);
+  $admin_handle->command($sql);
 }
 
 $stop_clock = get_microtime();

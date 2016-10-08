@@ -9,6 +9,7 @@ namespace MRBS;
 global $tbl_area;
 global $resolution, $default_duration;
 global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+global $admin_handle;
 
 $sql = "UPDATE $tbl_area SET
         resolution = $resolution,
@@ -18,10 +19,4 @@ $sql = "UPDATE $tbl_area SET
         eveningends = $eveningends,
         eveningends_minutes = $eveningends_minutes";
     
-$res = sql_command($sql);
-if ($res == -1)
-{
-  // No need to localise, should never happen
-  print "<span class=\"error\">Failed to set default values for new columns in area table.</span>";
-}
-
+$admin_handle->command($sql);

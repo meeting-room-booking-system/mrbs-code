@@ -1,6 +1,10 @@
 <?php 
 namespace MRBS;
 
+global $day, $month, $year, $room, $area;
+
+$page = this_page('.php');
+
 // $Id$
 
 

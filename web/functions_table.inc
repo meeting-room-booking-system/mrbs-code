@@ -967,11 +967,6 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
   
-  if ($room_name === FALSE)
-  {
-    // Should never happen
-    fatal_error(FALSE, get_vocab("fatal_db_error"));
-  }
   if (is_null($room_name))
   {
     // No rooms have been created yet, or else they are all disabled

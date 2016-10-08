@@ -122,14 +122,6 @@ if (isset($max_length))
   trigger_error($message, E_USER_NOTICE);
 }
 
-if ($dbsys == 'mysql')
-{
-  $dbsys = 'mysqli';
-  $message = "Please check your config file.   The  'mysql' option for " .
-             '$dbsys has been removed and you should now use ' . "'mysqli'";
-  trigger_error($message, E_USER_NOTICE);
-}
-
 // Variables no longer used in versions of MRBS > 1.5.0
 if (isset($db_nopersist))
 {
@@ -535,4 +527,5 @@ if (defined("E_STRICT"))
 }
 
 error_reporting ($error_level);
-
+set_error_handler(__NAMESPACE__ . "\\error_handler");
+set_exception_handler(__NAMESPACE__ . "\\exception_handler");

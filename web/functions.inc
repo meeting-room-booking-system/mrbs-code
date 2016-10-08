@@ -7,6 +7,20 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+function get_microtime()
+{
+  if (function_exists('microtime'))
+  {
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+  }
+  else
+  {
+    return time();
+  }
+}
+
+
 function function_disabled($name)
 {
   $disabled = explode(', ', ini_get('disable_functions'));
@@ -25,7 +39,7 @@ function mrbs_default_timezone_set($timezone)
     // to prevent people running into DST problems
     $message = 'MRBS configuration error: $timezone has not been set.';
     trigger_error($message, E_USER_WARNING);
-    fatal_error(FALSE, $message);
+    fatal_error($message);
   }
   else
   {
@@ -35,7 +49,7 @@ function mrbs_default_timezone_set($timezone)
       {
         $message = "MRBS configuration error: invalid timezone '$timezone'";
         trigger_error($message, E_USER_WARNING);
-        fatal_error(FALSE, $message);
+        fatal_error($message);
       }
     }
     else
@@ -78,14 +92,15 @@ function get_default_email($user)
 }
 
 
-// Returns the current page.    Separated out into a function to make it easier
+// Returns the current page.   If the page ends in suffix this will be cut off.
+// Separated out into a function to make it easier
 // to change for different situations.   We use basename() because the full name
 // causes problems when reverse proxies are being used.
-function this_page()
+function this_page($suffix=null)
 {
   global $PHP_SELF;
   
-  return basename($PHP_SELF);
+  return basename($PHP_SELF, $suffix);
 }
 
 
@@ -102,8 +117,6 @@ elseif ($private_override == "public" )
   $private_mandatory=TRUE;
   $private_default=FALSE;
 }
-
-$done_header = FALSE;
 
 
 // Outputs the HTTP headers
@@ -123,34 +136,16 @@ function http_headers()
 // header uses are not yet available.
 function print_simple_header()
 {
-  global $done_header;
- 
-  if ($done_header)
-  {
-    return;
-  } 
-  
-  http_headers();
-  echo DOCTYPE;
- ?>
-
-<html>
-  <head>
-    <?php
-      require_once "style.inc";
-    ?>
-    <title><?php echo get_vocab("mrbs") ?></title>
-  </head>
-  <body>
-  <?php
-  $done_header = TRUE; 
+  print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($day, $month, $year, $area, $room)
+function print_header($day, $month, $year, $area, $room, $simple=false)
 {
-  global $theme, $done_header;
+  global $theme;
+  
+  static $done_header = false;
   
   if ($done_header)
   {
@@ -167,11 +162,12 @@ function print_header($day, $month, $year, $area, $room)
   {
     require_once "Themes/default/header.inc";
   }
+  
   // Now go and do it
-  print_theme_header($day, $month, $year, $area, $room);
-  $done_header = TRUE;
+  print_theme_header($day, $month, $year, $area, $room, $simple);
+  
+  $done_header = true;
 }
-
 
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
@@ -1581,51 +1577,6 @@ function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FA
   echo "</span>\n";
 }
 
-// Error handler - this is used to display serious errors such as database
-// errors without sending incomplete HTML pages. This is only used for
-// errors which "should never happen", not those caused by bad inputs.
-// If $need_header!=0 output the top of the page too, else assume the
-// caller did that. Always outputs the bottom of the page and exits.
-function fatal_error($need_header, $message, $show_form_data = true)
-{
-  global $simple_trailer, $weekstarts, $view_week_number, $strftime_format;
-
-  if ($need_header)
-  {
-    print_header(0, 0, 0, 0, "");
-  }
-  
-  error_log("MRBS: $message");
-  
-  $sql_error = sql_error();
-  if (!empty($sql_error))
-  {
-    error_log("MRBS: $sql_error");
-  }
-  
-  $e = new Exception();
-  error_log($e->getTraceAsString());
-  
-  if ($show_form_data)
-  {
-    if (!empty($_GET))
-    {
-      error_log("MRBS GET: " . print_r($_GET, true));
-    }
-    if (!empty($_POST))
-    {
-      error_log("MRBS POST: " . print_r($_POST, true));
-    }
-  }
-  if (!empty($_SESSION))
-  {
-    error_log("MRBS SESSION: " . print_r($_SESSION, true));
-  }
-  echo "<p>$message</p>";
-  output_trailer();
-  exit;
-}
-
 
 // Escape a PHP string for use in JavaScript
 //
@@ -1666,24 +1617,50 @@ function get_default_area()
   // corresponding area
   if (isset($default_room))
   {
-    $area = sql_query1("SELECT area_id
-                          FROM $tbl_room R, $tbl_area A
-                         WHERE R.id=$default_room
-                           AND R.area_id = A.id
-                           AND R.disabled = 0
-                           AND A.disabled = 0
-                         LIMIT 1");
+    try 
+    {
+      $area = db()->query1("SELECT area_id
+                              FROM $tbl_room R, $tbl_area A
+                             WHERE R.id=?
+                               AND R.area_id = A.id
+                               AND R.disabled = 0
+                               AND A.disabled = 0
+                             LIMIT 1", array($default_room));
+    }
+    catch (DBException $e)
+    {
+      // It's possible that this function is being called during
+      // an upgrade process before the disabled columns existed,
+      // so if it fails try again without the disabled columns.
+      $area = db()->query1("SELECT area_id
+                              FROM $tbl_room R, $tbl_area A
+                             WHERE R.id=?
+                               AND R.area_id = A.id
+                             LIMIT 1", array($default_room));
+    }
     if ($area >= 0)
     {
       return $area;
     }
   }
-  // Otherwise return the first enabled area in sort key order in the database
-  $area = sql_query1("SELECT id
-                        FROM $tbl_area
-                       WHERE disabled=0
-                    ORDER BY sort_key
-                       LIMIT 1");
+  
+  // Otherwise return the first enabled area in the database
+  try
+  {
+    $area = db()->query1("SELECT id
+                            FROM $tbl_area
+                           WHERE disabled=0
+                        ORDER BY sort_key
+                           LIMIT 1");
+  }
+  catch (DBException $e)
+  {
+    // See comment above.  Cut the query down to the most basic.
+    $area = db()->query1("SELECT id
+                            FROM $tbl_area
+                           LIMIT 1");
+  }
+  
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
 
@@ -1697,24 +1674,51 @@ function get_default_room($area)
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    $room = sql_query1("SELECT id
-                          FROM $tbl_room
-                         WHERE id=$default_room
-                           AND area_id=$area
-                           AND disabled=0
-                         LIMIT 1");
+    try
+    {
+      // It's possible that this function is being called during
+      // an upgrade process before the disabled columns existed,
+      // so if it fails try again without the disabled columns.
+      $room = db()->query1("SELECT id
+                              FROM $tbl_room
+                             WHERE id=$default_room
+                               AND area_id=?
+                               AND disabled=0
+                             LIMIT 1", array($area));
+    }
+    catch (DBException $e)
+    {
+      $room = db()->query1("SELECT id
+                              FROM $tbl_room
+                             WHERE id=$default_room
+                               AND area_id=?
+                             LIMIT 1", array($area));
+    }
     if ($room >= 0)
     {
       return $room;
     }
   }
-  // Otherwise just return the first room (in sortkey order) in the area
-  $room = sql_query1("SELECT id
-                        FROM $tbl_room
-                       WHERE area_id=$area
-                         AND disabled=0
-                    ORDER BY sort_key
-                       LIMIT 1");
+  
+  // Otherwise just return the first room in the area
+  try
+  {
+    $room = db()->query1("SELECT id
+                            FROM $tbl_room
+                           WHERE area_id=?
+                             AND disabled=0
+                        ORDER BY sort_key
+                           LIMIT 1", array($area));
+  }
+  catch (DBException $e)
+  {
+    // See comment above.  Cut the query down to the most basic.
+    $room = db()->query1("SELECT id
+                            FROM $tbl_room
+                           WHERE area_id=?
+                           LIMIT 1", array($area));
+  }
+  
   return ($room < 0 ? 0 : $room);
 }
 
@@ -1722,7 +1726,7 @@ function get_default_room($area)
 function get_area($room)
 {
   global $tbl_room;
-  $area = sql_query1("SELECT area_id FROM $tbl_room WHERE id=$room LIMIT 1");
+  $area = db()->query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($room));
   return ($area < 0 ? 0 : $area);
 }
 
@@ -1733,20 +1737,26 @@ function clean_area_row($row)
 {
   global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
   
+  // This code can get called during the upgrade process and so must
+  // not make any assumptions about the existence of extra columns in
+  // the area table.
   foreach ($row as $key => $value)
   {
-    // If the "per area" setting is in the database, then use that.   Otherwise
-    // just stick with the default setting from the config file.
-    // (don't use the database setting if $force_resolution is TRUE 
-    // and we're looking at the resolution field)
-    if (($key != 'resolution') || empty($force_resolution))
+    if (array_key_exists($key, $area_defaults))
     {
-      $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
-    }
-    // Cast those fields which are booleans into booleans
-    if (in_array($key, $boolean_fields['area']))
-    {
-      $row[$key] = (bool) $row[$key];
+      // If the "per area" setting is in the database, then use that.   Otherwise
+      // just stick with the default setting from the config file.
+      // (don't use the database setting if $force_resolution is TRUE 
+      // and we're looking at the resolution field)
+      if (($key != 'resolution') || empty($force_resolution))
+      {
+        $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
+      }
+      // Cast those fields which are booleans into booleans
+      if (in_array($key, $boolean_fields['area']))
+      {
+        $row[$key] = (bool) $row[$key];
+      }
     }
   }
   // Do some sanity checking in case the area table is somehow messed up
@@ -1788,6 +1798,9 @@ function get_area_settings($area)
   global $max_per_interval_area_enabled, $max_per_interval_area;
   global $interval_types;
   
+  // This code can get called during the upgrade process and so must
+  // not make any assumptions about the existence of extra columns in
+  // the area table.
   if (empty($area))
   {
     $area = get_default_area();
@@ -1811,13 +1824,13 @@ function get_area_settings($area)
                    'approval_enabled', 'reminders_enabled, enable_periods',
                    'confirmation_enabled', 'confirmed_default');
                    
-  $sql = "SELECT " . implode(',', $columns) . "
+  $sql = "SELECT *
             FROM $tbl_area 
-           WHERE id=$area 
+           WHERE id=?
            LIMIT 1";
            
-  $res = sql_query($sql);
-  if (!$res || (sql_count($res) == 0))
+  $res = db()->query($sql, array($area));
+  if ($res->count() == 0)
   {
     // We still need to set the timezone even if the query didn't
     // return any results
@@ -1826,10 +1839,13 @@ function get_area_settings($area)
   }
   else
   {
-    $row = clean_area_row(sql_row_keyed($res, 0));
-    foreach ($row as $key => $value)
+    $row = clean_area_row($res->row_keyed(0));
+    foreach ($columns as $column)
     {
-      $$key = $value;
+      if (array_key_exists($column, $row))
+      {
+        $$column = $row[$column];
+      }
     }
   }
   // Set the timezone
@@ -1840,9 +1856,16 @@ function get_area_settings($area)
   foreach ($interval_types as $interval_type)
   {
     $var = "max_per_${interval_type}_enabled";
-    $max_per_interval_area_enabled[$interval_type] = $$var;
+    if (isset($$var))
+    {
+      $max_per_interval_area_enabled[$interval_type] = $$var;
+    }
+    
     $var = "max_per_${interval_type}";
-    $max_per_interval_area[$interval_type] = $$var;
+    if (isset($$var))
+    {
+      $max_per_interval_area[$interval_type] = $$var;
+    }
   }
   
   // If we're using periods then set the resolution to 60 seconds
@@ -1881,7 +1904,7 @@ function some_area($field, $enabled=FALSE)
   $sql = "SELECT COUNT(*) FROM $tbl_area WHERE $predicate";
   $sql .= ($enabled) ? " AND disabled=0" : "";
   $sql .= " LIMIT 1";                                
-  return (sql_query1($sql) > 0);
+  return (db()->query1($sql) > 0);
 }
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
@@ -2236,15 +2259,15 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
   $out_html = '';
   $sql = "SELECT R.id, R.room_name, R.description
             FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=$area
+           WHERE R.area_id=?
              AND R.area_id=A.id
              AND R.disabled=0
              AND A.disabled=0
         ORDER BY R.sort_key";
-  $res = sql_query($sql);
+  $res = db()->query($sql, array($area));
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
-  if ($res && (sql_count($res) > 1))
+  if ($res->count() > 1)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
@@ -2254,7 +2277,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
                    "<div>\n" .
                    "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
   
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
         $out_html .= "<option $selected value=\"". $row['id']. "\" title=\"". htmlspecialchars($row['description'])."\">" . htmlspecialchars($row['room_name']) . "</option>\n";
@@ -2272,7 +2295,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
     else  // list format
     {
       $out_html .= "<ul>\n";
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"". htmlspecialchars($row['description'])."\">";
         $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
