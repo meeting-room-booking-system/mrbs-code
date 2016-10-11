@@ -137,8 +137,8 @@ class DB_pgsql extends DB
   
     $sql_params = array();
     $sql = "SELECT COUNT(*)
-            FROM information_schema.tables
-            WHERE table_name = ?";
+              FROM information_schema.tables
+             WHERE table_name = ?";
     $sql_params[] = $table_parts['table_name'];
     if (isset($table_parts['table_schema']))
     {
@@ -148,7 +148,7 @@ class DB_pgsql extends DB
 
     $res = $this->query1($sql, $sql_params);
 
-    return ($res == -1) ? FALSE : TRUE;
+    return ($res <= 0) ? FALSE : TRUE;
   }
 
 
