@@ -23,12 +23,6 @@ if (!empty($_GET))
   $lang = $_GET['lang'];
   $update = empty($_GET['update']) ? false : true;
 }
-else if (!empty($HTTP_GET_VARS))
-{
-  $lang = (array)$HTTP_GET_VARS['lang'];
-  $update = empty($HTTP_GET_VARS['update']) ? false : true;
-}
-
 
 // Language file prefix
 $langs = "lang/lang.";
