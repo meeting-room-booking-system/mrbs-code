@@ -240,14 +240,6 @@ function getUserName()
   {
     $token = unslashes($_COOKIE["SessionToken"]);
   }
-  else
-  {
-    global $HTTP_COOKIE_VARS;
-    if (!empty($HTTP_COOKIE_VARS) && isset($HTTP_COOKIE_VARS["SessionToken"]))
-    {
-      $token = unslashes($HTTP_COOKIE_VARS["SessionToken"]);
-    }
-  }
 
   if (isset($token) && ($token != ""))
   {

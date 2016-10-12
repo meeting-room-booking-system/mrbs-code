@@ -65,7 +65,7 @@ if (FALSE === session_start())
 // the user
 if (!empty($auth["session_php"]["inactivity_expire_time"]))
 {
-  if (isset($_SESSION) && isset($_SESSION['LastActivity']) &&
+  if (isset($_SESSION['LastActivity']) &&
       ((time() - $_SESSION['LastActivity']) > $auth["session_php"]["inactivity_expire_time"]))
   {
     unset($_SESSION["UserName"]);
@@ -91,15 +91,8 @@ if (isset($Action) && ($Action == "SetName"))
   {
 
     // Unset the session variables
-    if (isset($_SESSION))
-    {
-      $_SESSION = array();
-    }
-    else
-    {
-      global $HTTP_SESSION_VARS;
-      $HTTP_SESSION_VARS = array();
-    }
+    session_unset();
+    session_destroy();
   }
   else
   {
@@ -111,15 +104,7 @@ if (isset($Action) && ($Action == "SetName"))
       exit();
     }
 
-    if (isset($_SESSION))
-    {
-      $_SESSION["UserName"] = $NewUserName;
-    }
-    else
-    {
-      global $HTTP_SESSION_VARS;
-      $HTTP_SESSION_VARS["UserName"] = $NewUserName;
-    }
+    $_SESSION["UserName"] = $NewUserName;
   }
   // preserve the original $HTTP_REFERER by sending it as a GET parameter
   if (!empty($returl))
@@ -229,15 +214,9 @@ function authGet()
 
 function getUserName()
 {
-  global $HTTP_SESSION_VARS;
-  
-  if (isset($_SESSION) && isset($_SESSION["UserName"]) && ($_SESSION["UserName"] !== ''))
+  if (isset($_SESSION["UserName"]) && ($_SESSION["UserName"] !== ''))
   {
     return $_SESSION["UserName"];
-  }
-  elseif (isset($HTTP_SESSION_VARS["UserName"]) && ($HTTP_SESSION_VARS["UserName"] !== ''))
-  {
-    return $HTTP_SESSION_VARS["UserName"];
   }
 
   return NULL;
