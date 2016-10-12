@@ -171,7 +171,10 @@ function output_row(&$row)
           break;
         case 'email':
           // we don't want to truncate the email address
-          $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
+          $escaped_email = htmlspecialchars($col_value);
+          $values[] = "<div class=\"string\">\n" .
+                      "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
+                      "</div>\n";
           break;
         default:
           // Where there's an associative array of options, display
