@@ -487,9 +487,6 @@ $vocab["no_indefinite_repeats"]       = "MRBS 尚不支持无限循环";
 $vocab["events_imported"]             = "事件已被导入";
 $vocab["events_not_imported"]         = "事件未被导入";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "致命错误: 无法连接数据库";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "显示/隐藏列";
 $vocab["restore_original"]   = "恢复原样";

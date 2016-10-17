@@ -217,9 +217,6 @@ $vocab["system"]             = "Σύστημα";
 $vocab["please_contact"]     = "Παρακαλώ επικοινωνήστε με ";
 $vocab["for_any_questions"]  = "για όσες ερωτήσεις δεν απαντώνται εδώ.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Κρίσιμο σφάλμα: Αποτυχία σύνδεσης στη βάση δεδομένων";
-
 // Entry types
 $vocab["type.I"]             = "Εσωτερικά";
 $vocab["type.E"]             = "Εξωτερικά";

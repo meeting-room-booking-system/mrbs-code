@@ -365,9 +365,6 @@ $vocab["servertime"]         = "Datum en tijd op de Server";
 $vocab["please_contact"]     = "Neem contact op met ";
 $vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Fatale Fout: Verbinding naar database server mislukt";
-
 // Entry types
 $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";

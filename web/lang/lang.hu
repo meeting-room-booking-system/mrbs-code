@@ -409,9 +409,6 @@ $vocab["servertime"]         = "Rendszeridő";
 $vocab["please_contact"]     = "Kérlek, vedd fel a kapcsolatot az adminisztrátorral (";
 $vocab["for_any_questions"]  = "), ha kérdésed van a rendszer működésével kapcsolatban.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Súlyos hiba történt: nem sikerült kapcsolódni az adatbázishoz.";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Oszlopok megjelenítése / elrejtése";
 $vocab["restore_original"]   = "Eredeti állapot visszaállítása";

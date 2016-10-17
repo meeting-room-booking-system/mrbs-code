@@ -487,9 +487,6 @@ $vocab["no_indefinite_repeats"]       = "Neomezené opakování není podporová
 $vocab["events_imported"]             = "události naimportovány";
 $vocab["events_not_imported"]         = "události nenaimportovány";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Závažná chyba: Nemůžu se připojit k databázi";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Zobrazit / skrýt sloupce";
 $vocab["restore_original"]   = "Obnovit původní";

@@ -217,9 +217,6 @@ $vocab["system"]             = "System";
 $vocab["please_contact"]     = "자세한 사항은 다음 관리자에게 연락주십시오: ";
 $vocab["for_any_questions"]  = " ";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "심각한 에러: 데이터베이스에 접속할 수 없습니다.";
-
 // Entry types
 $vocab["type.I"]            = "내부회의";
 $vocab["type.E"]            = "외부회의";

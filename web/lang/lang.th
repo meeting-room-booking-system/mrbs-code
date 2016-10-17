@@ -392,10 +392,7 @@ $vocab["database"]           = "ฐานข้อมูล";
 $vocab["system"]             = "ระบบ";
 $vocab["servertime"]         = "เวลา เซิร์ฟเวอร์";
 $vocab["please_contact"]     = "กรุณาติดต่อ ";
-$vocab["for_any_questions"]  = "สำหรับคำถามใด ๆ ที่ไม่ถูกตอบคำถามที่นี่.";			                   
-
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "ข้อผิดพลาดร้ายแรง : ไม่สามารถเชื่อมต่อกับฐานข้อมูล";			                   
+$vocab["for_any_questions"]  = "สำหรับคำถามใด ๆ ที่ไม่ถูกตอบคำถามที่นี่.";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "แสดง / ซ่อน คอลัมน์";

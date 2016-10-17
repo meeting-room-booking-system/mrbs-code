@@ -230,9 +230,6 @@ $vocab["servertime"]         = "Čas strežnika";
 $vocab["please_contact"]     = "Na dodatna vprašanja vam bo odgovoril ";
 $vocab["for_any_questions"]  = ".";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "NAPAKA: ni se možno povezati v podatkovno bazo";
-
 // Entry types
 $vocab["type.I"]             = "Interno";
 $vocab["type.E"]             = "Zunanje";

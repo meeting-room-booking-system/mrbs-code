@@ -217,9 +217,6 @@ $vocab["system"]             = "Sistema: ";
 $vocab["please_contact"]     = "Mesedez, harremanetan jarri: ";
 $vocab["for_any_questions"]  = "hemen erantzuten ez den edozein galdera egiteko.";
 
-// Used in mysql.php AND pgsql.php
-$vocab["failed_connect_db"]  = "Errorea: Ezin izan da datubasearekiko konexioa burutu";
-
 // Entry types
 $vocab["type.I"]            = "Arrunta";
 $vocab["type.E"]            = "Berezia";

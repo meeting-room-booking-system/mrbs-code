@@ -364,9 +364,6 @@ $vocab["servertime"]         = "Data/Horas no servido";
 $vocab["please_contact"]     = "Contacte por favor ";
 $vocab["for_any_questions"]  = "para qualquer informação adicional.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Erro: Failha ao ligar à base de dados";
-
 // Entry types
 $vocab["type.I"]             = "Interno";
 $vocab["type.E"]             = "Externo";

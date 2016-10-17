@@ -218,9 +218,6 @@ $vocab["system"]             = "Sistema";
 $vocab["please_contact"]     = "Si us plau contacta ";
 $vocab["for_any_questions"]  = "per a altres consultes.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Error Fatal: Fallada al conectar a la base de dades";
-
 // Entry types
 $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";

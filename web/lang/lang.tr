@@ -412,8 +412,6 @@ $vocab["servertime"]         = "Sunucu zamanı";
 $vocab["please_contact"]     = "Lütfen bağlantıya geçiniz ";
 $vocab["for_any_questions"]  = "henüz cevaplanmamış her bir soru için.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Ciddi Hata: VeriTabanına bağlanılamadı.";
 // General
 $vocab["fatal_db_error"]     = "Ciddi Hata: malesef VeriTabanı şu an ayakta değil.";
 

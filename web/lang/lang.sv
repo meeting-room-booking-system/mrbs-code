@@ -475,9 +475,6 @@ $vocab["no_indefinite_repeats"]       = "Obestämda upprepningar stöds ännu in
 $vocab["events_imported"]             = "importerade händelser";
 $vocab["events_not_imported"]         = "ej importerade händelser";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Fatalt fel: Kunde inte ansluta till databasen!";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Visa / dölj kolumner";
 $vocab["restore_original"]   = "Återställ allt";

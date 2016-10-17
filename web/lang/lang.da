@@ -218,9 +218,6 @@ $vocab["system"]             = "System";
 $vocab["please_contact"]     = "Kontakt ";
 $vocab["for_any_questions"]  = "for spørgsmål der ikke er besvaret her.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Fatal fejl: kunne ikke forbinde til databasen";
-
 // Entry types
 $vocab["type.I"]             = "Internt";
 $vocab["type.E"]             = "Eksternt";

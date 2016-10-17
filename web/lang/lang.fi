@@ -475,9 +475,6 @@ $vocab["no_indefinite_repeats"]       = "MRBS ei tue rajoittamattomia toistoja";
 $vocab["events_imported"]             = "varaukset tuotu"; //NOTE onko oikea
 $vocab["events_not_imported"]         = "tuomatta jääneet varaukset"; //NOTE onko oikea
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Järjestelmävirhe: Tietokantayhteyden avaaminen ei onnistu.";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Näytä / piilota sarakkeet";
 $vocab["restore_original"]   = "Palauta alkuperäinen";

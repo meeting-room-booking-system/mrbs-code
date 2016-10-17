@@ -498,9 +498,6 @@ $vocab["no_indefinite_repeats"]       = "Ripetizioni indefinite non ancora suppo
 $vocab["events_imported"]             = "eventi importati";
 $vocab["events_not_imported"]         = "eventi non importati";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Errore fatale: Fallita connessione al database";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Mostra / nascondi colonne";
 $vocab["restore_original"]   = "Ripristina originali";

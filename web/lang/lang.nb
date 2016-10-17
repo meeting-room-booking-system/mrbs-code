@@ -407,9 +407,6 @@ $vocab["servertime"]         = "Server tid";
 $vocab["please_contact"]     = "Vennligst ta kontakt med ";
 $vocab["for_any_questions"]  = "for spørsmål som ikke er besvart her.";
 
-// Used in mysql.inc AND pgsql.inc
-$vocab["failed_connect_db"]  = "Alvorlig feil: Kunne ikke koble til database";
-
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Vis / skjul kolonner";
 $vocab["restore_original"]   = "Tilbakestill visning";
