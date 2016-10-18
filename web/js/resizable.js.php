@@ -611,8 +611,11 @@ init = function(args) {
           var downHandler = function(e) {
               mouseDown = true;
               turnOffPageRefresh();
-              <?php // Build the map of booked cells ?>
-              table.find('td').not('td.new, td.row_labels').each(function() {
+              <?php
+              // Build the map of booked cells. (We select just the visible cells
+              // because there could be hidden days).
+              ?>
+              table.find('td:visible').not('td.new, td.row_labels').each(function() {
                   bookedMap.push(getSides($(this)));
                 });
               <?php // Apply a wrapper to turn off highlighting ?>
@@ -933,9 +936,10 @@ init = function(args) {
                       .appendTo($('div.resizing'));
                   <?php
                   // Build the map of booked cells, excluding this cell (because we're
-                  // allowed to be in our own cell
+                  // allowed to be in our own cell.   (We select just the visible cells
+                  // because there could be hidden days).
                   ?>
-                  table.find('td').not('td.new, td.row_labels').not(divBooking.closest('td')).each(function() {
+                  table.find('td:visible').not('td.new, td.row_labels').not(divBooking.closest('td')).each(function() {
                       bookedMap.push(getSides($(this)));
                     });
 
