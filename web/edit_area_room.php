@@ -1221,7 +1221,7 @@ if (isset($change_area) &&!empty($area))
                    '0' => get_vocab("mode_times"));
   $params = array('label'       => get_vocab("mode") . ":",
                   'name'        => 'area_enable_periods',
-                  'value'       => ($enable_periods) ? '1' : '0',
+                  'value'       => ($area_data['enable_periods']) ? '1' : '0',
                   'options'     => $options,
                   'force_assoc' => TRUE);
   generate_radio_group($params);

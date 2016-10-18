@@ -1821,7 +1821,7 @@ function get_area_settings($area)
                    'max_per_month_enabled', 'max_per_month',
                    'max_per_year_enabled', 'max_per_year',
                    'max_per_future_enabled', 'max_per_future',
-                   'approval_enabled', 'reminders_enabled, enable_periods',
+                   'approval_enabled', 'reminders_enabled', 'enable_periods',
                    'confirmation_enabled', 'confirmed_default');
                    
   $sql = "SELECT *
