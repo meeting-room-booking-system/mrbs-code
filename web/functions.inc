@@ -42,6 +42,8 @@ function mrbs_default_timezone_set($tz=null)
     }
     else
     {
+      // This should have been picked up before now, but just in case ...
+      
       // We don't just use a default default timezone such as UTC because then
       // people would start running into DST problems with their bookings.
       $message = 'MRBS configuration error: $timezone has not been set.';

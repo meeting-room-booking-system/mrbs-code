@@ -136,6 +136,12 @@ if (isset($db_nopersist))
  * Checking
  ********************************************************/
 
+// Check that $timezone has been set
+if (!isset($timezone))
+{
+  die('MRBS configuration error: $timezone has not been set.');
+}
+
 // Do some consistency checking of user settings from config.inc.php
 if ($enable_periods)
 {
