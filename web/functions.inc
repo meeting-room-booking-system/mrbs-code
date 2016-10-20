@@ -28,35 +28,35 @@ function function_disabled($name)
 }
 
 
-// Set the default timezone.   Caters for PHP servers that don't
-// have date_default_timezone_set()
-function mrbs_default_timezone_set($timezone)
+// Set the default timezone.   If $tz is not set, then the default MRBS
+// timezone from the config file is used.
+function mrbs_default_timezone_set($tz=null)
 {
-  global $area_defaults;
+  global $area_defaults, $timezone;
   
-  if (!isset($timezone))
+  if (!isset($tz))
   {
-    // to prevent people running into DST problems
-    $message = 'MRBS configuration error: $timezone has not been set.';
-    trigger_error($message, E_USER_WARNING);
-    fatal_error($message);
-  }
-  else
-  {
-    if (function_exists("date_default_timezone_set"))
+    if (isset($timezone))
     {
-      if (!date_default_timezone_set($timezone))
-      {
-        $message = "MRBS configuration error: invalid timezone '$timezone'";
-        trigger_error($message, E_USER_WARNING);
-        fatal_error($message);
-      }
+      $tz = $timezone;
     }
     else
     {
-      putenv("TZ=$timezone");
+      // We don't just use a default default timezone such as UTC because then
+      // people would start running into DST problems with their bookings.
+      $message = 'MRBS configuration error: $timezone has not been set.';
+      // Use die() rather than fatal_error() because unless we have set the timezone
+      // PHP starts complaining bitterly if we try and do anything remotely complicated.
+      die($message);
     }
   }
+  
+  if (!date_default_timezone_set($timezone))
+  {
+    $message = "MRBS configuration error: invalid timezone '$timezone'";
+    die($message);  // See comment above about use of die()
+  }
+
 }
 
 

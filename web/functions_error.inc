@@ -31,16 +31,14 @@ function to_html($string)
 
 function output_error($heading, $body, $show_data=false)
 {
-  static $date_default_timezone_set = false;
+  static $default_timezone_set = false;
   
   // We can't start outputting any error messages unless the default timezone has been set,
   // so if we are not sure that it has been set, then set it.
-  if (!$date_default_timezone_set)
+  if (!$default_timezone_set)
   {
-    // For some reason date_default_timezone_get() will produce an error message if
-    // date_default_timezone_set() hasn't already been called, so suppress any errors.
-    date_default_timezone_set(@date_default_timezone_get());
-    $date_default_timezone_set = true;
+    mrbs_default_timezone_set();
+    $default_timezone_set = true;
   }
   
   if ($show_data)

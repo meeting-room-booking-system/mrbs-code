@@ -213,7 +213,16 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
   global $search_str, $locale_warning;
 
   // Need to set the timezone before we can use date()
-  get_area_settings($area);
+  if ($simple)
+  {
+    // We don't really care what timezone is being used
+    mrbs_default_timezone_set();
+  }
+  else
+  {
+    // This will set the correct timezone for the area
+    get_area_settings($area);  
+  }
 
   // If we dont know the right date then make it up 
   if (!$day)
