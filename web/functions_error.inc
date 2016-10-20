@@ -78,7 +78,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
   // Show the superglobal data unless the error is minor
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
   
-  output_error($heading, $errstr, $show_data);
+  output_error($heading, $errstr . "\n", $show_data);
 }
 
 
