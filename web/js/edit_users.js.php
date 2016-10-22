@@ -29,10 +29,7 @@ init = function(args) {
   // Use an Ajax source if we can - gives much better performance for large tables
   if (function_exists('json_encode'))
   {
-    if (strpos($HTTP_REFERER, '?') !== FALSE)
-    {
-      list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
-    }
+    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
     $ajax_url = "edit_users.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.ajax = "<?php echo $ajax_url ?>";

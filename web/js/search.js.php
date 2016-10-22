@@ -55,7 +55,7 @@ init = function(args) {
     var tableOptions = {};
     <?php
     // Use an Ajax source - gives much better performance for large tables
-    list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
+    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
     $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
     tableOptions.ajax = "<?php echo $ajax_url ?>";
