@@ -126,10 +126,8 @@ $vars = array('PHP_SELF',
               
 foreach ($vars as $var)
 {
-  if (!empty($_SERVER) && isset($_SERVER[$var]))
-  {
-    $$var = $_SERVER[$var];
-  }
+  // Set the variable to null if it doesn't exist to avoid undefined variable errors
+  $$var = (!empty($_SERVER) && isset($_SERVER[$var])) ? $_SERVER[$var] : null;
 }
 
 
