@@ -77,7 +77,7 @@ init = function(args) {
   // performance for large tables
   if (function_exists('json_encode'))
   {
-    list( ,$query_string) = explode('?', $HTTP_REFERER, 2);
+    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
     $ajax_url = "report.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1&phase=2";
     ?>
     tableOptions.ajax = "<?php echo $ajax_url ?>";
