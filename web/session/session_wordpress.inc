@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-define('WP_USE_THEMES', false);
-require_once MRBS_ROOT . '/'. $auth['wordpress']['rel_path'] . '/wp-load.php';
+require_once MRBS_ROOT . '/wordpress.inc';
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
