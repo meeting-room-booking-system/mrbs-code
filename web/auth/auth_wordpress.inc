@@ -66,13 +66,10 @@ function authGetUserLevel($user)
     $admin_roles = array_map(__NAMESPACE__ . "\\standardise_role_name", $admin_roles);
     
     // Check to see if one of the user's roles is an admin role
-    foreach($wp_user->roles as $user_role)
+    if (count(array_intersect($wp_user->roles, $admin_roles)) > 0)
     {
-      if (in_array($user_role, $admin_roles))
-      {
-        $user_levels[$user] = 2;
-        return $user_levels[$user];
-      }
+      $user_levels[$user] = 2;
+      return $user_levels[$user];
     }
   }
   
