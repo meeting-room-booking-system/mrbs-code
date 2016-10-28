@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once MRBS_ROOT . '/wordpress.inc';
+require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
 /* authValidateUser($user, $pass)
  * 

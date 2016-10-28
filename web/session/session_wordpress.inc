@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once MRBS_ROOT . '/wordpress.inc';
+require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');

@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once MRBS_ROOT . '/joomla.inc';
+require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 $mainframe = JFactory::getApplication('site');
 $mainframe->initialise();
