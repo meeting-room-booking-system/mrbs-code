@@ -162,11 +162,16 @@ PHP authentication modules
 |         |                        |                   |  under Unix.           |
 |         |                        |                   |                        |
 +---------+------------------------+-------------------+------------------------+
+|joomla   |Users are validated     |                   |                        |
+|         |against a Joomla!       |                   |                        |
+|         |installation running on |                   |                        |
+|         |the same server         |                   |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
 |wordpress|Users are validated     |                   |                        |
 |         |against a WordPress     |                   |                        |
 |         |installation running on |                   |                        |
 |         |the same server         |                   |                        |
-|         |                        |                   |                        |
 |         |                        |                   |                        |
 +---------+------------------------+-------------------+------------------------+
 
@@ -338,6 +343,10 @@ The others are left in for historical reasons:
 |         |Use in combination of         |  evaluation.       |  from a        |
 |         |authentication "none" or      |                    |  different     |
 |         |"config".                     |                    |  computer.     |
+|         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|joomla   |Use when using Joomla!        |                    |                |
+|         |authentication.               |                    |                |
 |         |                              |                    |                |
 +---------+------------------------------+--------------------+----------------+
 |wordpress|Use when using WordPress      |                    |                |
@@ -840,6 +849,28 @@ If you want to display a logout link, set in config.inc.php:
   $auth['remote_user']['logout_link'] = '/logout/link.html'
   
   
+Joomla! Authentication
+----------------------
+
+Set in config.inc.php
+
+$auth['joomla']['rel_path'] = '..';   // Path to the Joomla! installation relative to MRBS.
+
+// [Note that although in Joomla! access levels are solely used for what users are allowed to *see*, we use
+// them in MRBS to determine what they can see and do, ie we map them onto MRBS user levels.  While this
+// does not strictly follow the Joomla! access control model, it does make it much simpler to give users
+// MRBS permissions.]
+
+// List of Joomla! viewing access level ids that have MRBS Admin capabilities.  You can if you wish use
+// the existing viewing access levels.  However we recommend creating a new access level, eg
+// "MRBS Administrator" and assigning that to user groups, as it will then be clearer which groups
+// have what kind of access to MRBS.
+$auth['joomla']['admin_access_levels'] = array(); // Can either be a single integer, or an array of integers.
+// As above, but for ordinary user rights.  Create for example a viewing access level called "MRBS User"
+// and assign that level to user groups as appropriate.
+$auth['joomla']['user_access_levels'] = array(); // Can either be a single integer, or an array of integers.
+
+
 WordPress Authentication
 ------------------------
 
