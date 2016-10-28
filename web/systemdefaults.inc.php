@@ -617,11 +617,11 @@ $report_presentation_field_order = array();
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "http", "php", "cookie", "ip", "host", "nt", "omni",
-                          // "remote_user" or "wordpress".
+                          // "remote_user", "joomla" or "wordpress".
 
 $auth["type"] = "db"; // How to validate the user/password. One of "none",
                       // "config", "db", "db_ext", "pop3", "imap", "ldap", "nis",
-                      // "nw", "ext" or "wordpress".
+                      // "nw", "ext", "joomla" or "wordpress".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -877,6 +877,25 @@ $pop3_port = "110";
 
 // 'auth_smtp' configuration settings
 $auth['smtp']['server'] = 'myserver.example.org';
+
+
+// 'auth_joomla' configuration settings
+$auth['joomla']['rel_path'] = '..';   // Path to the Joomla! installation relative to MRBS.
+
+// [Note that although in Joomla! access levels are solely used for what users are allowed to *see*, we use
+// them in MRBS to determine what they can see and do, ie we map them onto MRBS user levels.  While this
+// does not strictly follow the Joomla! access control model, it does make it much simpler to give users
+// MRBS permissions.]
+
+// List of Joomla! viewing access level ids that have MRBS Admin capabilities.  You can if you wish use
+// the existing viewing access levels.  However we recommend creating a new access level, eg
+// "MRBS Administrator" and assigning that to user groups, as it will then be clearer which groups
+// have what kind of access to MRBS.
+$auth['joomla']['admin_access_levels'] = array(); // Can either be a single integer, or an array of integers.
+// As above, but for ordinary user rights.  Create for example a viewing access level called "MRBS User"
+// and assign that level to user groups as appropriate.
+$auth['joomla']['user_access_levels'] = array(); // Can either be a single integer, or an array of integers.
+
 
 
 // 'auth_wordpress' configuration settings
