@@ -27,31 +27,23 @@ function authGetUserLevel($username)
   $authorised_levels = $user->getAuthorisedViewLevels();
   
   // Check if they have manager access
-  if (is_array($auth['joomla']['admin_access_levels']))
+  if (isset($auth['joomla']['admin_access_levels']))
   {
-    $admin_levels = $auth['joomla']['admin_access_levels'];
-  }
-  else
-  {
-    $admin_levels = array($auth['joomla']['admin_access_levels']);
-  }
-  if (count(array_intersect($authorised_levels, $admin_levels)) > 0)
-  {
-    return 2;
+    $admin_levels = (array)$auth['joomla']['admin_access_levels'];
+    if (count(array_intersect($authorised_levels, $admin_levels)) > 0)
+    {
+      return 2;
+    }
   }
   
   // Check if they have user access
-  if (is_array($auth['joomla']['user_access_levels']))
+  if (isset($auth['joomla']['user_access_levels']))
   {
-    $user_levels = $auth['joomla']['user_access_levels'];
-  }
-  else
-  {
-    $user_levels = array($auth['joomla']['user_access_levels']);
-  }
-  if (count(array_intersect($authorised_levels, $user_levels)) > 0)
-  {
-    return 1;
+    $user_levels = (array)$auth['joomla']['user_access_levels'];
+    if (count(array_intersect($authorised_levels, $user_levels)) > 0)
+    {
+      return 1;
+    }
   }
 
   // Everybody else is access level '0'
