@@ -107,7 +107,7 @@ function standardise_role_name($role)
 
 // Checks to see whether any of the user's roles are contained in $mrbs_roles, which can be a
 // string or an array of strings.
-function check_roles($wp_user, $mrbs_roles)
+function check_roles(\WP_User $wp_user, $mrbs_roles)
 {
   if (!isset($mrbs_roles))
   {
@@ -115,10 +115,8 @@ function check_roles($wp_user, $mrbs_roles)
   }
   
   // Turn $mrbs_roles into an array if it isn't already
-  if (!is_array($mrbs_roles))
-  {
-    $mrbs_roles = array($mrbs_roles);
-  }
+  $mrbs_roles = (array)$mrbs_roles;
+
   // Put the roles into the standard WordPress format
   $mrbs_roles = array_map(__NAMESPACE__ . "\\standardise_role_name", $mrbs_roles);
   
