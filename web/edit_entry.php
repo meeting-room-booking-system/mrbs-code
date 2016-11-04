@@ -1365,11 +1365,9 @@ if ($need_to_send_mail &&
 {
   echo "<div id=\"div_no_mail\">\n";
   
-  $no_mail_default = FALSE;
-  
   $params = array('label'    => get_vocab("no_mail") . ":",
                   'name'     => 'no_mail',
-                  'value'    => $no_mail_default);
+                  'value'    => $mail_settings['no_mail_default']);
   generate_checkbox($params);
 
   echo "</div>\n";

@@ -1001,6 +1001,9 @@ $mail_settings['on_delete'] = FALSE;  // when an entry is deleted
 // change is being made, or many bookings are being made at the beginning of a term or season.
 $mail_settings['allow_no_mail']        = FALSE;
 $mail_settings['allow_admins_no_mail'] = FALSE;  // Ignored if 'allow_no_mail' is TRUE
+$mail_settings['no_mail_default'] = FALSE; // Default value for the 'no mail' checkbox.  
+                                           // TRUE for checked (ie don't send mail),
+                                           // FALSE for unchecked (ie do send mail)
 
 
 // WHAT TO EMAIL
