@@ -175,13 +175,13 @@ function generate_search_criteria(&$vars)
           // the existence of private bookings)
           if (empty($user_level))
           {
-            echo "<input type=\"hidden\" name=\"match_private\" value=\"" . PRIVATE_NO . "\">\n";
+            echo "<input type=\"hidden\" name=\"match_private\" value=\"" . BOOLEAN_MATCH_FALSE . "\">\n";
           }
           // Otherwise give them the radio buttons
           else
           {
             echo "<div id=\"div_privacystatus\">\n";
-            $options = array(PRIVATE_BOTH => get_vocab("both"), PRIVATE_NO => get_vocab("default_public"), PRIVATE_YES => get_vocab("default_private"));
+            $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_FALSE => get_vocab("default_public"), BOOLEAN_MATCH_TRUE => get_vocab("default_private"));
             $params = array('label'       => get_vocab("privacy_status") . ':',
                             'name'        => 'match_private',
                             'options'     => $options,
@@ -200,7 +200,7 @@ function generate_search_criteria(&$vars)
         if ($confirmation_somewhere)
         {
           echo "<div id=\"div_confirmationstatus\">\n";
-          $options = array(CONFIRMED_BOTH => get_vocab("both"), CONFIRMED_YES => get_vocab("confirmed"), CONFIRMED_NO => get_vocab("tentative"));
+          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("confirmed"), BOOLEAN_MATCH_FALSE => get_vocab("tentative"));
           $params = array('label'       => get_vocab("confirmation_status") . ':',
                           'name'        => 'match_confirmed',
                           'options'     => $options,
@@ -218,7 +218,7 @@ function generate_search_criteria(&$vars)
         if ($approval_somewhere)
         {
           echo "<div id=\"div_approvalstatus\">\n";
-          $options = array(APPROVED_BOTH => get_vocab("both"), APPROVED_YES => get_vocab("approved"), APPROVED_NO => get_vocab("awaiting_approval"));
+          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("approved"), BOOLEAN_MATCH_FALSE => get_vocab("awaiting_approval"));
           $params = array('label'       => get_vocab("approval_status") . ':',
                           'name'        => 'match_approved',
                           'options'     => $options,
@@ -242,8 +242,8 @@ function generate_search_criteria(&$vars)
         if (($field_natures[$key] == 'boolean') || 
             (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
         {
-          $options = array(CUSTOM_BOTH => get_vocab("both"), CUSTOM_WITH => get_vocab("with"), CUSTOM_WITHOUT => get_vocab("without"));
-          $params['value'] = (isset($$var)) ? $$var : CUSTOM_BOTH;
+          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("with"), BOOLEAN_MATCH_FALSE => get_vocab("without"));
+          $params['value'] = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
           $params['options'] = $options;
           $params['force_assoc'] = true;
           generate_radio_group($params);
@@ -1193,10 +1193,10 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   elseif (($field_natures[$column] == 'boolean') || 
           (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] <= 2)) )
   {
-    if (($match != CUSTOM_BOTH) && ($match !== ''))
+    if (($match != BOOLEAN_MATCH_BOTH) && ($match !== ''))
     {
       $sql .= " AND ($full_column_name ";
-      $sql .= ($match == CUSTOM_WITH) ? "IS NOT NULL AND $full_column_name != 0" : "IS NULL OR $full_column_name = 0";
+      $sql .= ($match == BOOLEAN_MATCH_TRUE) ? "IS NOT NULL AND $full_column_name != 0" : "IS NULL OR $full_column_name = 0";
       $sql .= ")";
     }
   }
@@ -1247,9 +1247,9 @@ $output_format = get_form_var('output_format', 'int', (($cli_mode) ? OUTPUT_CSV 
 $typematch = get_form_var('typematch', 'array');
 $sortby = get_form_var('sortby', 'string', 'r');  // $sortby: r=room, s=start date/time.
 $sumby = get_form_var('sumby', 'string', 'd');  // $sumby: d=by brief description, c=by creator, t=by type.
-$match_approved = get_form_var('match_approved', 'int', APPROVED_BOTH);
-$match_confirmed = get_form_var('match_confirmed', 'int', CONFIRMED_BOTH);
-$match_private = get_form_var('match_private', 'int', PRIVATE_BOTH);
+$match_approved = get_form_var('match_approved', 'int', BOOLEAN_MATCH_BOTH);
+$match_confirmed = get_form_var('match_confirmed', 'int', BOOLEAN_MATCH_BOTH);
+$match_private = get_form_var('match_private', 'int', BOOLEAN_MATCH_BOTH);
 $phase = get_form_var('phase', 'int', 1);
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
@@ -1433,7 +1433,7 @@ if ($phase == 2)
   // an error in PostgreSQL as the expression is of the wrong type.
   
   // Match the privacy status
-  if (($match_private != PRIVATE_BOTH) && ($match_private !== ''))
+  if (($match_private != BOOLEAN_MATCH_BOTH) && ($match_private !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_PRIVATE;
@@ -1441,14 +1441,14 @@ if ($phase == 2)
   }
 
   // Match the confirmation status
-  if (($match_confirmed != CONFIRMED_BOTH) && ($match_confirmed !== ''))
+  if (($match_confirmed != BOOLEAN_MATCH_BOTH) && ($match_confirmed !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_TENTATIVE;
     $sql .= ($match_confirmed) ? "=0)" : "!=0)";
   }
   // Match the approval status
-  if (($match_approved != APPROVED_BOTH) && ($match_approved !== ''))
+  if (($match_approved != BOOLEAN_MATCH_BOTH) && ($match_approved !== ''))
   {
     $sql .= " AND ";
     $sql .= "(E.status&" . STATUS_AWAITING_APPROVAL;

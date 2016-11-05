@@ -218,25 +218,10 @@ define('OUTPUT_HTML',  0);
 define('OUTPUT_CSV',   1);
 define('OUTPUT_ICAL',  2);
 
-// Constants for booking privacy matching
-define('PRIVATE_NO',   0);
-define('PRIVATE_YES',  1);
-define('PRIVATE_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constants for booking confirmation matching
-define('CONFIRMED_NO',   0);
-define('CONFIRMED_YES',  1);
-define('CONFIRMED_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constants for booking approval matching
-define('APPROVED_NO',   0);
-define('APPROVED_YES',  1);
-define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
-
-// Constansts for custom checkbox fields
-define('CUSTOM_WITHOUT', 0);
-define('CUSTOM_WITH',    1);
-define('CUSTOM_BOTH',    2);
+// Constants for matching boolean fields
+define('BOOLEAN_MATCH_FALSE', 0);
+define('BOOLEAN_MATCH_TRUE',  1);
+define('BOOLEAN_MATCH_BOTH',  2);
 
 // Constants for mode
 define('MODE_TIMES',   1);
