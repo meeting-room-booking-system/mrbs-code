@@ -233,6 +233,11 @@ define('APPROVED_NO',   0);
 define('APPROVED_YES',  1);
 define('APPROVED_BOTH', 2);  // Can be anything other than 0 or 1
 
+// Constansts for custom checkbox fields
+define('CUSTOM_WITHOUT', 0);
+define('CUSTOM_WITH',    1);
+define('CUSTOM_BOTH',    2);
+
 // Constants for mode
 define('MODE_TIMES',   1);
 define('MODE_PERIODS', 2);

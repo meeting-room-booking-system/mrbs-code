@@ -238,12 +238,15 @@ function generate_search_criteria(&$vars)
                         'name'  => $var,
                         'value' => isset($$var) ? $$var : NULL);
         echo "<div>\n";
-        // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+        // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
         if (($field_natures[$key] == 'boolean') || 
             (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
         {
-          generate_checkbox($params);
+          $options = array(CUSTOM_BOTH => get_vocab("both"), CUSTOM_WITH => get_vocab("with"), CUSTOM_WITHOUT => get_vocab("without"));
+          $params['options'] = $options;
+          $params['force_assoc'] = true;
+          generate_radio_group($params);
         }
         // Otherwise output a text input of some kind
         else
@@ -1189,9 +1192,11 @@ function get_match_condition($full_column_name, $match, &$sql_params)
   elseif (($field_natures[$column] == 'boolean') || 
           (($field_natures[$column] == 'integer') && isset($field_lengths[$column]) && ($field_lengths[$column] <= 2)) )
   {
-    if ($match)
+    if (($match != CUSTOM_BOTH) && ($match !== ''))
     {
-      $sql .= " AND $full_column_name!=0";
+      $sql .= " AND ($full_column_name ";
+      $sql .= ($match == CUSTOM_WITH) ? "IS NOT NULL AND $full_column_name != 0" : "IS NULL OR $full_column_name = 0";
+      $sql .= ")";
     }
   }
   // (3) Integers
