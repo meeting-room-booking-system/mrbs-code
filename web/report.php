@@ -235,8 +235,7 @@ function generate_search_criteria(&$vars)
         $var = "match_$key";
         global $$var;
         $params = array('label' => get_loc_field_name($tbl_entry, $key) . ':',
-                        'name'  => $var,
-                        'value' => isset($$var) ? $$var : NULL);
+                        'name'  => $var);
         echo "<div>\n";
         // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
@@ -244,6 +243,7 @@ function generate_search_criteria(&$vars)
             (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
         {
           $options = array(CUSTOM_BOTH => get_vocab("both"), CUSTOM_WITH => get_vocab("with"), CUSTOM_WITHOUT => get_vocab("without"));
+          $params['value'] = (isset($$var)) ? $$var : CUSTOM_BOTH;
           $params['options'] = $options;
           $params['force_assoc'] = true;
           generate_radio_group($params);
@@ -251,6 +251,7 @@ function generate_search_criteria(&$vars)
         // Otherwise output a text input of some kind
         else
         {
+          $params['value'] = (isset($$var)) ? $$var : null;
           $params['field'] = "entry.$key";
           generate_report_input($params);
         }
