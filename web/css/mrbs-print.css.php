@@ -45,11 +45,6 @@ table.dwm_main {
 }
 
     
-<?php // Don't display the clome used for resizing when printing ?>    
-.dwm_main div.clone {
-  display: none;
-}
-    
 <?php
 // add a top margin to the colour key table to separate it from the main table
 // (in the screen view the separation is provided by the Goto Prev/This/Next links
