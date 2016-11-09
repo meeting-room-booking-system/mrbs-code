@@ -27,18 +27,28 @@ td.new a, a.new_booking img { display: none; }
 // (in the screen view the boundaries are visible due to the different background colours)
 ?>
 table.dwm_main {
-    border-width: 1px;
-    border-color: <?php echo $main_table_border_color_print ?>;}
+  border-width: 1px;
+  border-color: <?php echo $main_table_border_color_print ?>;
+}
 
 .dwm_main th {
-    border-left-color: <?php echo $main_table_header_border_color_print ?>}
+  border-left-color: <?php echo $main_table_header_border_color_print ?>;
+}
     
 .dwm_main td {
-    border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
-    border-left-color: <?php echo $main_table_body_v_border_color_print ?>}
+  border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
+  border-left-color: <?php echo $main_table_body_v_border_color_print ?>;
+}
 
 .dwm_main#month_main td {
-    border-top-color:  <?php echo $main_table_body_h_border_color_print ?>}
+  border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
+}
+
+    
+<?php // Don't display the clome used for resizing when printing ?>    
+.dwm_main div.clone {
+  display: none;
+}
     
 <?php
 // add a top margin to the colour key table to separate it from the main table
