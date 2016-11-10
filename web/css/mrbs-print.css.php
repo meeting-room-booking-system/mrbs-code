@@ -52,10 +52,11 @@ table.dwm_main {
 table#colour_key {margin-top: 1em}
 
 <?php
-// Generate the classes to give the colour coding by booking type in the day/week/month views
+// Generate the rules to give the colour coding by booking type in the day/week/month views
+// and the colour key
 foreach ($color_types as $type => $col)
 {
-  echo "td.$type, #month_main div.$type, #colour_key td.$type {border: 2px solid $col}\n";         // used in the day and week views
+  echo "td.$type, #month_main div.$type, #colour_key td.$type {border: 2px solid $col}\n";
 }
 
 // hide DataTable buttons in print
