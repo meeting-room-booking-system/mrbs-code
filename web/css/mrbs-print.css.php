@@ -44,6 +44,29 @@ table.dwm_main {
   border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
 }
 
+
+<?php
+// In the month view, get rid of horizontal and vertical scrollbars.   Make
+// horizontal overflow hidden and allow the table cell to grow to accommodate
+// vertical overflow.
+?>
+
+div.cell_container {
+  min-height: 100px;
+  height: auto;
+}
+
+div.cell_header {
+  min-height: 1.4em;
+  height: 1.4em;
+  max-height: 1.4em;
+}
+
+div.booking_list {
+  overflow: hidden;
+  max-height: none;
+}
+
     
 <?php
 // add a top margin to the colour key table to separate it from the main table
