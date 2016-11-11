@@ -326,9 +326,9 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
           if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
           {
             $class .= " tentative";
-          }  
-          $html .= "<div class=\"" . $class . "\"" .
-            " style=\"width: " . (($monthly_view_entries_details == "both") ? '100%' : '49.9%') . "\">\n";
+          }
+          $class .= " $monthly_view_entries_details";
+          $html .= "<div class=\"" . $class . "\">\n";
           $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
           $slot_text = $d[$cday]["data"][$i];
           $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);

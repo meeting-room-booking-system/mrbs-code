@@ -338,10 +338,39 @@ div.cell_header {position: relative; width: 100%; z-index: 20;         /* needs 
 #month_main div.cell_header a.monthday {font-size: medium}  /* the date in the top left corner */
 #month_main div.cell_header a.week_number {opacity: 0.5; padding: 2px 4px 0 4px}
 
-div.booking_list {position: relative; z-index: 20;                      /* contains the list of bookings */
-    max-height: 80%; font-size: x-small;                                /* needs to be above new_booking */
-    overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>}
-.booking_list a {font-size: x-small}
+div.booking_list {
+  position: relative;      /* contains the list of bookings */
+  z-index: 20;             /* needs to be above new_booking */
+  max-height: 80%;
+  font-size: x-small;                                
+  overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>;
+}
+
+<?php
+// We need to set the width of the bookings to be 50%.  However because of the way 
+// different browsers round, we need to set it just below 50%, because if they round up,
+// as some do, then two divs won't fit on a line and they will wrap.
+?>
+
+div.description, div.slot {
+  width: 49.9%;  <?php // Fallback for browsers that don't support calc() ?>
+}
+
+div.description:nth-child(odd), div.slot:nth-child(odd) {
+  width: calc(50%);
+}
+
+div.description:nth-child(even), div.slot:nth-child(even) {
+  width: calc(50% - 1px);
+}
+
+div.both {
+  width: 100%;
+}
+
+.booking_list a {
+  font-size: x-small;
+}
 
 
 <?php
