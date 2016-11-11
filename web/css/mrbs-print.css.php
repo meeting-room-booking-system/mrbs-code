@@ -67,6 +67,10 @@ div.booking_list {
   max-height: none;
 }
 
+div.booking_list div {
+  box-sizing: border-box;
+}
+
     
 <?php
 // add a top margin to the colour key table to separate it from the main table
