@@ -346,22 +346,8 @@ div.booking_list {
   overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>;
 }
 
-<?php
-// We need to set the width of the bookings to be 50%.  However because of the way 
-// different browsers round, we need to set it just below 50%, because if they round up,
-// as some do, then two divs won't fit on a line and they will wrap.
-?>
-
 div.description, div.slot {
-  width: 49.9%;  <?php // Fallback for browsers that don't support calc() ?>
-}
-
-div.description:nth-child(odd), div.slot:nth-child(odd) {
-  width: calc(50%);
-}
-
-div.description:nth-child(even), div.slot:nth-child(even) {
-  width: calc(50% - 1px);
+  width: 50%;
 }
 
 div.both {
