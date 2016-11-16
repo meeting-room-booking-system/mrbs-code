@@ -565,7 +565,7 @@ function mrbsDelEntry($user, $id, $series, $all)
   
   if ($series)
   {
-    $sql .= "repeat_id=";
+    $sql .= "repeat_id=?";
     $sql_params[] = $repeat_id;
   }
   else
