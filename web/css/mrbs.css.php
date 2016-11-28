@@ -862,6 +862,7 @@ form#add_new_user {margin-left: 1em}
 
 header#banner {
   display: table;
+  height: 100%;
   width: 100%;
   background-color: <?php echo $banner_back_color ?>;
   color: <?php echo $banner_font_color ?>;
@@ -898,6 +899,7 @@ header#banner {
 
 #banner li {
   display: table-cell;
+  height: 100%;
   text-align: center;
   vertical-align: middle;
   border-color: <?php echo $banner_border_color ?>;
