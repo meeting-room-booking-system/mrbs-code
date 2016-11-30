@@ -201,7 +201,7 @@ if (isset($action) && ($action == "export"))
   else
   {    
     // Construct the SQL query
-    $sql_params[] = array();
+    $sql_params = array();
     $sql = "SELECT E.*, "
          .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
          . "A.area_name, R.room_name, "
