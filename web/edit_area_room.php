@@ -571,7 +571,7 @@ if ($phase == 2)
                 break;
               case 'room_name':
                 $assign_array[] = "room_name=?";
-                $sql_params[] =$room_name;
+                $sql_params[] = $room_name;
                 break;
               case 'sort_key':
                 $assign_array[] = "sort_key=?";
