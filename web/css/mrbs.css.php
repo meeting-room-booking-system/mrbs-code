@@ -273,7 +273,7 @@ div#dwm {margin-bottom: 0.5em}
   text-align: center;
 }
 
-div.date_after {
+.date_after {
   float: right;
   text-align: right;
 }
