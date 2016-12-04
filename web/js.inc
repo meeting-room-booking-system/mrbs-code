@@ -228,7 +228,25 @@ if (in_array($page, array('day', 'week', 'month')))
   <script type="text/javascript" src="js/cell_click.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-?>  
+?>
+
+<!--[if lte IE 8]>
+  <?php
+  // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below
+  if (DEBUG)
+  {
+    ?>
+    <script src="js/html5shiv.js"></script>
+    <?php
+  }
+  else
+  {
+    ?>
+    <script src="js/html5shiv.min.js"></script>
+    <?php
+  }
+  ?>
+<![endif]-->
     
 <script type="text/javascript">
 
