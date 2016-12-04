@@ -256,6 +256,14 @@ div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
 div.date_after  {float: right; width: 33%; text-align: right}
 
+.date_before a:before {
+  content: '<<\0000a0';
+}
+
+.date_after a:after {
+  content: '\0000a0>>';
+}
+
 table.dwm_main {
   float: left;
   clear: both; 

@@ -83,18 +83,18 @@ $before_after_links_html = "
 <div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-      <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">
-          &lt;&lt;&nbsp;".get_vocab("weekbefore")."
+      <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">" . 
+        get_vocab("weekbefore") . "
       </a>
     </div>
     <div class=\"date_now\">
-      <a href=\"week.php?area=$area&amp;room=$room\">
-          ".get_vocab("gotothisweek")."
+      <a href=\"week.php?area=$area&amp;room=$room\">" .
+        get_vocab("gotothisweek") . "
       </a>
     </div>
     <div class=\"date_after\">
-      <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">
-          ".get_vocab("weekafter")."&nbsp;&gt;&gt;
+      <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">" .
+        get_vocab("weekafter") . "
       </a>
     </div>
   </div>

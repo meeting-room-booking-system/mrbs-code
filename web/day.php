@@ -91,14 +91,18 @@ echo "</div>\n";
 $before_after_links_html = "
 <div class=\"date_nav screenonly\">
   <div class=\"date_before\">
-    <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area$room_param\">&lt;&lt;&nbsp;". get_vocab("daybefore") ."
+    <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area$room_param\">" .
+      get_vocab("daybefore") . "
     </a>
   </div>
   <div class=\"date_now\">
-    <a href=\"day.php?area=$area$room_param\">" . get_vocab("gototoday") . "</a>
+    <a href=\"day.php?area=$area$room_param\">" .
+      get_vocab("gototoday") . "
+    </a>
   </div>
   <div class=\"date_after\">
-    <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area$room_param\">". get_vocab("dayafter") . "&nbsp;&gt;&gt;
+    <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area$room_param\">" .
+      get_vocab("dayafter") . "
     </a>
   </div>
 </div>\n";
