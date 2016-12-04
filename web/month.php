@@ -508,19 +508,13 @@ while (!checkdate($cm, $cd, $cy) && ($cd > 1))
 $before_after_links_html = "<div class=\"screenonly\">
   <div class=\"date_nav\">
     <div class=\"date_before\">
-      <a href=\"month.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">" .
-        get_vocab("monthbefore") . "
-      </a>
+      <a href=\"month.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">" . get_vocab("monthbefore") . "</a>
     </div>
     <div class=\"date_now\">
-      <a href=\"month.php?year=$cy&amp;month=$cm&amp;day=$cd&amp;area=$area&amp;room=$room\">" .
-        get_vocab("gotothismonth") . "
-      </a>
+      <a href=\"month.php?year=$cy&amp;month=$cm&amp;day=$cd&amp;area=$area&amp;room=$room\">" . get_vocab("gotothismonth") . "</a>
     </div>
     <div class=\"date_after\">
-      <a href=\"month.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">" .
-        get_vocab("monthafter") . "
-      </a>
+      <a href=\"month.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">" . get_vocab("monthafter") . "</a>
     </div>
   </div>
 </div>
