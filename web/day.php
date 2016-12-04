@@ -6,6 +6,8 @@ require "defaultincludes.inc";
 require_once "mincals.inc";
 require_once "functions_table.inc";
 
+throw new Exception('Testing');
+
 // Get non-standard form variables
 $timetohighlight = get_form_var('timetohighlight', 'int');
 $ajax = get_form_var('ajax', 'int');

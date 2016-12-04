@@ -268,7 +268,13 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
     echo "[Warning: ".$locale_warning."]";
   }
   
-  echo "<header id=\"banner\" class=\"screenonly\">\n";
+  $class = 'screenonly';
+  if ($simple)
+  {
+    $class .= ' simple';
+  }
+  
+  echo "<header id=\"banner\" class=\"$class\">\n";
   print_header_site_info();
   if (!$simple)
   {

@@ -860,7 +860,7 @@ form#add_new_user {margin-left: 1em}
 
 /* ------------ FUNCTIONS.INC -------------------*/
 
-header#banner {
+#banner {
   display: table;
   height: 100%;
   width: 100%;
@@ -869,6 +869,10 @@ header#banner {
   border-color: <?php echo $banner_border_color ?>;
   border-width: <?php echo $banner_border_width ?>px;
   border-style: solid;
+}
+
+#banner.simple {
+  height: auto;
 }
 
 #banner #company {
