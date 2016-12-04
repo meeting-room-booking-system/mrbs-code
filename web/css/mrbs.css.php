@@ -251,10 +251,32 @@ div#dwm {margin-bottom: 0.5em}
 #dwm h2 {margin-bottom: 0}
 #dwm div.timezone {opacity: 0.8}
 
-div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
-div.date_before {float: left;  width: 33%; text-align: left}
-div.date_now    {float: left;  width: 33%; text-align: center}
-div.date_after  {float: right; width: 33%; text-align: right}
+.date_nav {
+  float: left;
+  width: 100%;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: bold
+}
+
+.date_nav div {
+  width: 33%;
+}
+
+.date_before {
+  float: left;
+  text-align: left;
+}
+
+.date_now {
+  float: left;
+  text-align: center;
+}
+
+div.date_after {
+  float: right;
+  text-align: right;
+}
 
 .date_before a:before {
   content: '<<\0000a0';
