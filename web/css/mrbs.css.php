@@ -259,7 +259,8 @@ div#dwm {margin-bottom: 0.5em}
   font-weight: bold
 }
 
-.date_nav div {
+.date_nav a {
+  display: block;
   width: 33%;
 }
 
@@ -278,11 +279,11 @@ div#dwm {margin-bottom: 0.5em}
   text-align: right;
 }
 
-.date_before a:before {
+.date_before:before {
   content: '<<\0000a0';
 }
 
-.date_after a:after {
+.date_after:after {
   content: '\0000a0>>';
 }
 

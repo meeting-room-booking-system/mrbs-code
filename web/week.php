@@ -79,21 +79,16 @@ $tm = date("m",$i);
 $td = date("d",$i);
 
 // Show Go to week before and after links
+$href_before = "week.php?area=$area&amp;room=$room&amp;year=$yy&amp;month=$ym&amp;day=$yd";
+$href_now    = "week.php?area=$area&amp;room=$room";
+$href_after  = "week.php?area=$area&amp;room=$room&amp;year=$ty&amp;month=$tm&amp;day=$td";
+
 $before_after_links_html = "
-<div class=\"screenonly\">
-  <div class=\"date_nav\">
-    <div class=\"date_before\">
-      <a href=\"week.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">" . get_vocab("weekbefore") . "</a>
-    </div>
-    <div class=\"date_now\">
-      <a href=\"week.php?area=$area&amp;room=$room\">" . get_vocab("gotothisweek") . "</a>
-    </div>
-    <div class=\"date_after\">
-      <a href=\"week.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">" . get_vocab("weekafter") . "</a>
-    </div>
-  </div>
-</div>
-";
+<nav class=\"date_nav screenonly\">
+  <a class=\"date_before\" href=\"$href_before\">" . get_vocab("weekbefore") . "</a>
+  <a class=\"date_now\" href=\"$href_now\">" . get_vocab("gotothisweek") . "</a>
+  <a class=\"date_after\" href=\"$href_after\">" . get_vocab("weekafter") . "</a>
+</nav>\n";
 
 print $before_after_links_html;
 

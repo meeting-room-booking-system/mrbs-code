@@ -88,18 +88,16 @@ if ($display_timezone)
 echo "</div>\n";
   
 // Generate Go to day before and after links
+$href_before = "day.php?area=$area$room_param&amp;year=$yy&amp;month=$ym&amp;day=$yd";
+$href_now    = "day.php?area=$area$room_param";
+$href_after  = "day.php?area=$area$room_param&amp;year=$ty&amp;month=$tm&amp;day=$td";
+
 $before_after_links_html = "
-<div class=\"date_nav screenonly\">
-  <div class=\"date_before\">
-    <a href=\"day.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area$room_param\">" . get_vocab("daybefore") . "</a>
-  </div>
-  <div class=\"date_now\">
-    <a href=\"day.php?area=$area$room_param\">" . get_vocab("gototoday") . "</a>
-  </div>
-  <div class=\"date_after\">
-    <a href=\"day.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area$room_param\">" . get_vocab("dayafter") . "</a>
-  </div>
-</div>\n";
+<nav class=\"date_nav screenonly\">
+  <a class=\"date_before\" href=\"$href_before\">" . get_vocab("daybefore") . "</a>
+  <a class=\"date_now\" href=\"$href_now;\">" . get_vocab("gototoday") . "</a>
+  <a class=\"date_after\" href=\"$href_after\">" . get_vocab("dayafter") . "</a>
+</nav>\n";
 
 // and output them
 echo $before_after_links_html;

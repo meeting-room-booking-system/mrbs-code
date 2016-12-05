@@ -504,21 +504,16 @@ while (!checkdate($cm, $cd, $cy) && ($cd > 1))
   $cd--;
 }
 
+$href_before = "month.php?area=$area&amp;room=$room&amp;year=$yy&amp;month=$ym&amp;day=$yd";
+$href_now    = "month.php?area=$area&amp;room=$room&amp;year=$cy&amp;month=$cm&amp;day=$cd";
+$href_after  = "month.php?area=$area&amp;room=$room&amp;year=$ty&amp;month=$tm&amp;day=$td";
 
-$before_after_links_html = "<div class=\"screenonly\">
-  <div class=\"date_nav\">
-    <div class=\"date_before\">
-      <a href=\"month.php?year=$yy&amp;month=$ym&amp;day=$yd&amp;area=$area&amp;room=$room\">" . get_vocab("monthbefore") . "</a>
-    </div>
-    <div class=\"date_now\">
-      <a href=\"month.php?year=$cy&amp;month=$cm&amp;day=$cd&amp;area=$area&amp;room=$room\">" . get_vocab("gotothismonth") . "</a>
-    </div>
-    <div class=\"date_after\">
-      <a href=\"month.php?year=$ty&amp;month=$tm&amp;day=$td&amp;area=$area&amp;room=$room\">" . get_vocab("monthafter") . "</a>
-    </div>
-  </div>
-</div>
-";
+$before_after_links_html = "
+<nav class=\"date_nav screenonly\">
+  <a class=\"date_before\" href=\"$href_before\">" . get_vocab("monthbefore") . "</a>
+  <a class=\"date_now\" href=\"$href_now\">" . get_vocab("gotothismonth") . "</a>
+  <a class=\"date_after\" href=\"$href_after\">" . get_vocab("monthafter") . "</a>
+</nav>\n";
 
 echo $before_after_links_html;
 
