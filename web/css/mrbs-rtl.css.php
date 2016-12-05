@@ -62,17 +62,25 @@ div#area_form, div.header_columns, div.body_columns {
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
-div#dwm_header, div#dwm_areas, div#dwm_rooms,
-div.date_nav, div.date_before, div.date_now,
-div.cell_container {
+div#dwm_header, div#dwm_areas, div#dwm_rooms, div.cell_container {
   float: right;
 }
 
-div.date_before, div.date_after {
+.date_before {
+  float: right;
   text-align: right;
 }
 
-div#dwm_areas, div#dwm_rooms, div.date_before, div.date_after, table.dwm_main {
+.date_now {
+  float: right;
+}
+
+.date_after {
+  float: left;
+  text-align: left;
+}
+
+div#dwm_areas, div#dwm_rooms, .date_before, .date_after, table.dwm_main {
   direction: rtl;
 }
 
