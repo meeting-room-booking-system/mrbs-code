@@ -891,7 +891,7 @@ form#add_new_user {margin-left: 1em}
 
 /* ------------ FUNCTIONS.INC -------------------*/
 
-#banner {
+.banner {
   display: table;
   height: 100%;
   width: 100%;
@@ -902,11 +902,11 @@ form#add_new_user {margin-left: 1em}
   border-style: solid;
 }
 
-#banner.simple {
+.banner.simple {
   height: auto;
 }
 
-#banner #company {
+.banner #company {
   display: table-cell;
   font-size: large;
   padding: 0.3em 1em;
@@ -914,16 +914,16 @@ form#add_new_user {margin-left: 1em}
   vertical-align: middle;
 }
 
-#banner #company div {
+.banner #company div {
   width: 100%;
 }
 
-#banner nav {
+.banner nav {
   display: table-cell;
   height: 100%;
 }
 
-#banner ul {
+.banner ul {
   list-style: none;
   display: table;
   width: 100%;
@@ -932,7 +932,7 @@ form#add_new_user {margin-left: 1em}
   padding-left: 0;
 }
 
-#banner li {
+.banner li {
   display: table-cell;
   height: 100%;
   text-align: center;
@@ -950,24 +950,24 @@ form#add_new_user {margin-left: 1em}
   padding-bottom: 0.3em;
 }
 
-#banner a:link, #banner a:visited, #banner a:hover {
+.banner a:link, .banner a:visited, .banner a:hover {
   text-decoration: none;
   font-weight: normal;
 }
 
-#banner a:link {
+.banner a:link {
   color: <?php echo $anchor_link_color_banner ?>;
 }
 
-#banner a:visited {
+.banner a:visited {
   color: <?php echo $anchor_visited_color_banner ?>;
 }
 
-#banner a:hover {
+.banner a:hover {
   color: <?php echo $anchor_hover_color_banner ?>;
 }
 
-#banner input.date {
+.banner input.date {
   width: 6.5em;
   text-align: center
 }
@@ -977,16 +977,16 @@ form#add_new_user {margin-left: 1em}
 // that the header doesn't jump around when the page is loaded
 ?>
 
-.js #banner #Form1 select {
+.js .banner #Form1 select {
   display: none;
 }
 
-.js #banner #Form1 span {
+.js .banner #Form1 span {
   display: inline-block;
   min-width: 7.5em;
 }
 
-.js #banner #Form1 input[type=submit] {
+.js .banner #Form1 input[type=submit] {
   visibility: hidden;
 }
 
@@ -997,7 +997,7 @@ table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: 
 #colour_key td#row_padding {border-right: 0; border-bottom: 0}
 #header_search input {width: 6.0em}
 div#n_outstanding {margin-top: 0.5em}
-#banner .outstanding a {color: <?php echo $outstanding_color ?>}
+.banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
 /* ------------ HELP.PHP ------------------------*/
 table#version_info {border-spacing: 0; border-collapse: collapse}

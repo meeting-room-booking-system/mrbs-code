@@ -170,11 +170,11 @@ div#form_container, #form_edit_users label {
 
 /* ------------ FUNCTIONS.INC -------------------*/
 
-#banner {
+.banner {
   direction: rtl;
 }
 
-#banner li {
+.banner li {
   border-width: 0 <?php echo $banner_border_cell_width ?>px 0 0;
 }
 
