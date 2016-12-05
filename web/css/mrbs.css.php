@@ -1010,7 +1010,7 @@ table#version_info {border-spacing: 0; border-collapse: collapse}
 div.problem_report {border-bottom: 1px solid <?php echo $site_faq_entry_border_color ?>; margin-top: 1em}
 
 /* ------------ MINCALS.PHP ---------------------*/
-div#cals {float: right}
+#cals {float: right}
 div#cal_last {float: left}
 div#cal_this {float: left; margin-left: 1.0em}
 div#cal_next {float: left; margin-left: 1.0em}
