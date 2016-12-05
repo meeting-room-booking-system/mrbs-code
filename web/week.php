@@ -84,7 +84,7 @@ $href_now    = "week.php?area=$area&amp;room=$room";
 $href_after  = "week.php?area=$area&amp;room=$room&amp;year=$ty&amp;month=$tm&amp;day=$td";
 
 $before_after_links_html = "
-<nav class=\"date_nav screenonly\">
+<nav class=\"date_nav\">
   <a class=\"date_before\" href=\"$href_before\">" . get_vocab("weekbefore") . "</a>
   <a class=\"date_now\" href=\"$href_now\">" . get_vocab("gotothisweek") . "</a>
   <a class=\"date_after\" href=\"$href_after\">" . get_vocab("weekafter") . "</a>

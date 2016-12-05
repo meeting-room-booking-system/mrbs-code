@@ -13,7 +13,7 @@ expires_header(60*30); // 30 minute expiry
 
 ?>
 
-div.screenonly, header#banner.screenonly {
+.screenonly, header#banner.screenonly, nav {
   display: none;
 }
 

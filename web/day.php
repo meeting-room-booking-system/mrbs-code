@@ -93,7 +93,7 @@ $href_now    = "day.php?area=$area$room_param";
 $href_after  = "day.php?area=$area$room_param&amp;year=$ty&amp;month=$tm&amp;day=$td";
 
 $before_after_links_html = "
-<nav class=\"date_nav screenonly\">
+<nav class=\"date_nav\">
   <a class=\"date_before\" href=\"$href_before\">" . get_vocab("daybefore") . "</a>
   <a class=\"date_now\" href=\"$href_now;\">" . get_vocab("gototoday") . "</a>
   <a class=\"date_after\" href=\"$href_after\">" . get_vocab("dayafter") . "</a>
