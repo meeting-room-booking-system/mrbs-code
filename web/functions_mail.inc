@@ -777,7 +777,7 @@ function create_addresses($data, $action)
   }
   else
   {
-    $from = $mail_settings['from'];
+    $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
   }
   
   // if we're requiring bookings to be approved and this user needs approval
@@ -1148,7 +1148,14 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   }
   if (empty($addresses['from']))
   {
-    $addresses['from'] = $mail_settings['from'];
+    if (isset($mail_settings['from']))
+    {
+      $addresses['from'] = $mail_settings['from'];
+    }
+    else
+    {
+      trigger_error('$mail_settings["from"] has not been set in the config file.', E_USER_NOTICE);
+    }
   }
   
   // Need to put all the addresses into $recipients
@@ -1203,8 +1210,11 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $mail->AllowEmpty = true;  // remove this for production
   $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
   
-  $from_addresses = $mail->parseAddresses($addresses['from']);
-  $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
+  if (isset($addresses['from']))
+  {
+    $from_addresses = $mail->parseAddresses($addresses['from']);
+    $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
+  }
   
   $to_addresses = $mail->parseAddresses($addresses['to']);
   foreach ($to_addresses as $to_address)
