@@ -13,19 +13,20 @@ require_once "functions_table.inc";
 $timetohighlight = get_form_var('timetohighlight', 'int');
 $ajax = get_form_var('ajax', 'int');
 
+// Check the user is authorised for this page
+if (!checkAuthorised($just_check = $ajax))
+{
+  exit;
+}
+
 $inner_html = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
 
 if ($ajax)
 {
-  if (checkAuthorised(TRUE))
-  {
-    echo $inner_html;
-  }
+  echo $inner_html;
   exit;
 }
 
-// Check the user is authorised for this page
-checkAuthorised();
 
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");

@@ -394,19 +394,20 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
 $debug_flag = get_form_var('debug_flag', 'int');
 $ajax = get_form_var('ajax', 'int');
 
+// Check the user is authorised for this page
+if (!checkAuthorised($just_check = $ajax))
+{
+  exit;
+}
+
 $inner_html = month_table_innerhtml($day, $month, $year, $room, $area);
 
 if ($ajax)
 {
-  if (checkAuthorised(TRUE))
-  {
-    echo $inner_html;
-  }
+  echo $inner_html;
   exit;
 }
 
-// Check the user is authorised for this page
-checkAuthorised();
 
 $user = getUserName();
 
