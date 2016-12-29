@@ -71,6 +71,14 @@ function output_error($heading, $body, $show_data=false)
 
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
+  // Check to see whether error reporting has been disabled by
+  // the error suppression operator (@), because the custom error
+  // handler is still called even if errors are suppressed.
+  if (error_reporting(0) === 0)
+  {
+    return;
+  }
+  
   $heading = "\n" . get_error_name($errno) . " in $errfile at line $errline\n";
   
   // Show the superglobal data unless the error is minor
