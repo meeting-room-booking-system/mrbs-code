@@ -1360,7 +1360,11 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       return true;
     }
     
-    if ($mail->postSend())
+    // We need to suppress errors because PHPMailer will throw
+    // a warning if escapeshellcmd() has been disabled.   It seems
+    // to use it not just for the sendmail but also for the mail
+    // backend.
+    if (@$mail->postSend())
     {
       mail_debug('Email sent successfully');
       return true;
