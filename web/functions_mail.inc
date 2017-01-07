@@ -1360,11 +1360,34 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       return true;
     }
     
-    // We need to suppress errors because PHPMailer will throw
-    // a warning if escapeshellcmd() has been disabled.   It seems
-    // to use it not just for the sendmail but also for the mail
-    // backend.
-    if (@$mail->postSend())
+    // PHPMailer uses escapeshellarg() and escapeshellcmd().   In many installations these will
+    // have been disabled.    If they have been disabled PHP will generate a warning and the functions
+    // will return NULL.   PHPMailer uses the functions to test if the sender address is shell safe
+    // and can be used with the -f option.   If the escapeshell*() functions are disabled, mail
+    // will still be sent, but -f will not be used.   [Note that if a function is disabled you cannot
+    // redeclare it, so writing emulations of escapeshellarg() and escapeshellcmd() is not an option.]
+    
+    // As mail still gets through, the warning message will cause error logs to fill up rapidly, so we
+    // suppress the standard errors in the cases when they will be generated and issue our own NOTICE error.
+    
+    $disabled_functions = ini_get('disable_functions');
+    
+    if (!empty($disabled_functions) && (strpos($disabled_functions, 'escapeshell') !== FALSE)  &&
+        in_array($mail_settings['admin_backend'], array('mail', 'sendmail')))
+    {
+      $message = "Your PHP system has one or both of the escapeshellarg() and escapeshellcmd() functions " .
+                 "disabled and you are using the '" . $mail_settings['admin_backend'] . "' backend.  " .
+                 "PHPMailer will therefore not have used the -f option when sending mail.";
+      mail_debug($message);
+      trigger_error($message, E_USER_NOTICE);
+      $result = @$mail->postSend();
+    }
+    else
+    {
+      $result = $mail->postSend();
+    }
+
+    if ($result)
     {
       mail_debug('Email sent successfully');
       return true;
