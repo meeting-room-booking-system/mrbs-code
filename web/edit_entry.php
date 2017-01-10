@@ -959,8 +959,7 @@ else
     
     $end_time = $start_time + $duration;
     // The end time can't be past the end of the booking day
-    $pm7 = get_start_last_slot($month, $day, $year);
-    $end_time = min($end_time, $pm7 + $resolution);
+    $end_time = fit_to_booking_day($end_time, $back=true);
   }
   
   $rep_id        = 0;

@@ -574,6 +574,75 @@ function get_start_last_slot($month, $day, $year)
 }
 
 
+function get_end_last_slot($month, $day, $year)
+{
+  global $resolution;
+  
+  return get_start_last_slot() + $resolution;
+}
+
+
+// Determines with a given timestamp is within a booking day, ie between the start of
+// the first slot and end of the last slot.   Returns a boolean.
+function is_in_booking_day($t)
+{
+  global $morningstarts, $morningstarts_minutes,
+         $eveningends, $eveningends_minutes,
+         $resolution;
+  
+  $start_day_secs = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $end_day_secs = (((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution) % SECONDS_PER_DAY;
+  
+  $date = getdate($t);
+  $t_secs = (($date['hours'] * 60) + $date['minutes']) * 60;
+  
+  if ($start_day_secs == $end_day_secs)
+  {
+    return true;
+  }
+  elseif (day_past_midnight())
+  {
+    return (($t_secs >= $start_day_secs) || ($t_secs <= $end_day_secs));
+  }
+  else
+  {
+    return (($t_secs >= $start_day_secs) && ($t_secs <= $end_day_secs));
+  }
+}
+
+
+// Force a timestamp $t to be on a booking day, either by moving it back to the end
+// of the previous booking day, or forward to the start of the next.
+function fit_to_booking_day($t, $back=true)
+{
+  if (is_in_booking_day($t))
+  {
+    return $t;
+  }
+  
+  $date = getdate($t);
+  // Remember that we need to cater for days that stretch beyond midnight.
+  if ($back)
+  {
+    $new_t = get_end_last_slot($date['mon'], $date['mday'], $date['year']);
+    if ($new_t > t)
+    {
+      $new_t = get_end_last_slot($date['mon'], $date['mday'] - 1, $date['year']);
+    }
+  }
+  else
+  {
+    $new_t = get_start_first_slot($date['mon'], $date['mday'], $date['year']);
+    if ($new_t < t)
+    {
+      $new_t = get_start_first_slot($date['mon'], $date['mday'] + 1, $date['year']);
+    }
+  }
+ 
+  return $new_t;
+}
+
+
 // Get the duration of an interval given a start time and end time.  Corrects for
 // DST changes so that the duration is what the user would expect to see.  For
 // example 12 noon to 12 noon crossing a DST boundary is 24 hours.
