@@ -578,7 +578,7 @@ function get_end_last_slot($month, $day, $year)
 {
   global $resolution;
   
-  return get_start_last_slot() + $resolution;
+  return get_start_last_slot($month, $day, $year) + $resolution;
 }
 
 
