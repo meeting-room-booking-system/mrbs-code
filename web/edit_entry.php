@@ -958,8 +958,17 @@ else
     }
     
     $end_time = $start_time + $duration;
-    // The end time can't be past the end of the booking day
-    $end_time = fit_to_booking_day($end_time, $back=true);
+    // Make sure the end_time falls within a booking day.   So if there are no 
+    // restrictions, bring it back to the nearest booking day.   If the user is not
+    // allowed multi-day bookings then make sure it is on the first booking day.
+    if ($is_admin || !$auth['only_admin_can_book_multiday'])
+    {
+      $end_time = fit_to_booking_day($end_time, $back=true);
+    }
+    else
+    {
+      $end_time = min($end_time, get_end_last_slot($month, $day, $year));
+    }
   }
   
   $rep_id        = 0;
