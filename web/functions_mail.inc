@@ -1197,6 +1197,10 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       $mail->SMTPSecure = $smtp_settings['secure'];
       $mail->Username = $smtp_settings['username'];
       $mail->Password = $smtp_settings['password'];
+      if ($smtp_settings['disable_opportunistic_tls'])
+      {
+        $mail->SMTPAutoTLS = false;
+      }
       break;
     default:
       $mail->isMail();

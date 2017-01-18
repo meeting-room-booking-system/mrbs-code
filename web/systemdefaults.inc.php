@@ -1079,7 +1079,9 @@ $smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
 $smtp_settings['secure'] = 'tls';      // Encryption method: '', 'tls' or 'ssl'
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
-
+$smtp_settings['disable_opportunistic_tls'] = false; // Set this to true to disable
+                                                     // opportunistic TLS
+                                                     // https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting#opportunistic-tls
 
 // EMAIL - MISCELLANEOUS
 // ---------------------
