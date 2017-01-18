@@ -942,11 +942,21 @@ else
   }
   else
   {
-    if (!isset($default_duration))
+    // Set the duration
+    if ($enable_periods)
     {
-      $default_duration = SECONDS_PER_HOUR;
+      $duration = 60;  // one period
     }
-    $duration    = ($enable_periods ? 60 : $default_duration);
+    else
+    {
+      $duration = (isset($default_duration)) ? $default_duration : SECONDS_PER_HOUR;
+    }
+    
+    // Make sure the duration doesn't exceed the maximum
+    if (!$is_admin && $max_duration_enabled)
+    {
+      $duration = min($duration, (($enable_periods) ? $max_duration_periods : $max_duration_secs));
+    }
     
     // If the duration is not an integral number of slots, then make
     // it so.   And make the duration at least one slot long.
