@@ -133,7 +133,7 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
 {
   global $tbl_entry;
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
-  global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
+  global $enable_periods, $morningstarts, $morningstarts_minutes;
   global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
   global $user;
@@ -155,7 +155,7 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
   for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
   {
     $start_first_slot = get_start_first_slot($month, $day_num, $year);
-    $end_last_slot = get_start_last_slot($month, $day_num, $year) + $resolution;
+    $end_last_slot = get_end_last_slot($month, $day_num, $year);
     $entries = get_entries_by_room($room, $start_first_slot, $end_last_slot);
 
     // Build an array of information about each day in the month.
