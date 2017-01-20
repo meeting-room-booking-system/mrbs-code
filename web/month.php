@@ -399,6 +399,7 @@ if (!checkAuthorised($just_check = $ajax))
 {
   exit;
 }
+$user = getUserName();
 
 $inner_html = month_table_innerhtml($day, $month, $year, $room, $area);
 
@@ -408,8 +409,6 @@ if ($ajax)
   exit;
 }
 
-
-$user = getUserName();
 
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
