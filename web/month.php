@@ -174,42 +174,35 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
       {
         $html .= "<br>DEBUG: Entry ".$entry['id']." day $day_num\n";
       }
-      $d[$day_num]["id"][] = $entry['id'];
-      $d[$day_num]["color"][] = $entry['type'];
-      $d[$day_num]["is_repeat"][] = isset($entry['repeat_id']);
       
       // Handle private events
-      if (is_private_event($entry['status'] & STATUS_PRIVATE)) 
+      if (is_private_event($entry['status'] & STATUS_PRIVATE)  &&
+          !getWritable($entry['create_by'], $user, $room))
       {
-        if (getWritable($entry['create_by'], $user, $room)) 
+        $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
+        if ($is_private_field['entry.name'])
         {
-          $private = FALSE;
+          $entry['name'] = "[".get_vocab('unavailable')."]";
         }
-        else 
+        if (!empty($is_private_field['entry.type']))
         {
-          $private = TRUE;
+          $entry['type'] = 'private_type';
         }
-      }
-      else 
-      {
-        $private = FALSE;
-      }
-
-      if ($private & $is_private_field['entry.name']) 
-      {
-        $d[$day_num]["status"][] = $entry['status'] | STATUS_PRIVATE;  // Set the private bit
-        $d[$day_num]["shortdescrip"][] = '['.get_vocab('unavailable').']';
       }
       else
       {
-        $d[$day_num]["status"][] = $entry['status'] & ~STATUS_PRIVATE;  // Clear the private bit
-        $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
+        $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
       }
       
-      $d[$day_num]["data"][] = get_booking_summary($entry['start_time'],
-                                                   $entry['end_time'],
-                                                   $start_first_slot,
-                                                   $end_last_slot);
+      $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
+      $d[$day_num]["id"][]           = $entry['id'];
+      $d[$day_num]["color"][]        = $entry['type'];
+      $d[$day_num]["status"][]       = $entry['status'];
+      $d[$day_num]["is_repeat"][]    = isset($entry['repeat_id']);
+      $d[$day_num]["data"][]         = get_booking_summary($entry['start_time'],
+                                                           $entry['end_time'],
+                                                           $start_first_slot,
+                                                           $end_last_slot);
     }
   }
 

@@ -87,11 +87,15 @@ function map_add_booking ($entry, &$column, $am7, $pm7)
     $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
     if ($is_private_field['entry.name'])
     {
-      $entry['name']= "[".get_vocab('unavailable')."]";
+      $entry['name'] = "[".get_vocab('unavailable')."]";
     }
     if ($is_private_field['entry.description'])
     {
-      $entry['description']= "[".get_vocab('unavailable')."]";
+      $entry['description'] = "[".get_vocab('unavailable')."]";
+    }
+    if (!empty($is_private_field['entry.type']))
+    {
+      $entry['type'] = 'private_type';
     }
   }
   else

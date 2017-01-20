@@ -385,6 +385,25 @@ div.both {
   width: 100%;
 }
 
+.booking_list div {
+  float: left;
+  min-height: 1.3em;
+  overflow: hidden;
+}
+
+<?php
+if ($clipped_month)
+{
+  ?>
+  .booking_list div {
+    height: 1.3em;
+    max-height: 1.3em;
+  }
+  <?php
+}
+?>
+
+
 .booking_list a {
   font-size: x-small;
 }
@@ -394,14 +413,14 @@ div.both {
 // Generate the classes to give the colour coding by booking type in the day/week/month views
 foreach ($color_types as $type => $col)
 {
-  echo "td.$type {background-color: $col}\n";         // used in the day and week views
-  if( $clipped_month )
-    echo ".month div.$type {float: left; max-height: 1.3em; height: 1.3em; min-height: 1.3em; overflow: hidden; background-color: $col}\n";   // used in the month viewa
-  else
-    echo ".month div.$type {float: left; min-height: 1.3em; overflow: hidden; background-color: $col}\n";   // used in the month view
+  echo ".$type {background-color: $col}\n";
 }
 
 ?>
+
+.private_type {
+  background-color: <?php echo $main_table_slot_private_type_color;?>;
+}
 
 /* For floating header in the day and week views */
 
@@ -589,7 +608,10 @@ div.div_select.outside {
 }   
 
 /* booking privacy status */
-.private {opacity: 0.6; font-style: italic}
+.private {
+  opacity: 0.6;
+  font-style: italic;
+}
 
 /* booking approval status */
 .awaiting_approval {opacity: 0.6}
