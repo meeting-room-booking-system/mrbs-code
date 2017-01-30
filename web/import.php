@@ -239,6 +239,7 @@ function process_event($vevent)
 {
   global $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
+  global $booking_types;
   
   // We are going to cache the settings ($resolution etc.) for the rooms
   // in order to avoid lots of database lookups
@@ -249,6 +250,7 @@ function process_event($vevent)
   $booking['status'] = 0;
   $booking['rep_type'] = REP_NONE;
   $booking['type'] = $import_default_type;
+  
   // Parse all the lines first because we'll need to get the start date
   // for calculating some of the other settings
   $properties = array();
@@ -342,6 +344,16 @@ function process_event($vevent)
         if ($details['value'] == 'TENTATIVE')
         {
           $booking['status'] |= STATUS_TENTATIVE;
+        }
+        break;
+      case 'X-MRBS-TYPE':
+        foreach($booking_types as $type)
+        {
+          if ($details['value'] == get_type_vocab($type))
+          {
+            $booking['type'] = $type;
+            break;
+          }
         }
         break;
       case 'UID':
