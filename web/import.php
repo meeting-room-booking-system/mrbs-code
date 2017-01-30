@@ -61,11 +61,11 @@ function get_room_id($location, &$error)
   }
   elseif ($area_room_order == 'area_room')
   {
-    list($location_area, $location_room) = explode($area_room_delimiter, $location);
+    list($location_area, $location_room) = explode($area_room_delimiter, $location, 2);
   }
   else
   {
-    list($location_room, $location_area) = explode($area_room_delimiter, $location);
+    list($location_room, $location_area) = explode($area_room_delimiter, $location, 2);
   }
   $location_area = trim($location_area);
   $location_room = trim($location_room);
