@@ -237,7 +237,7 @@ function get_event($handle)
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
 function process_event($vevent)
 {
-  global $import_default_type, $skip;
+  global $import_default_room, $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
   
@@ -250,6 +250,7 @@ function process_event($vevent)
   $booking['status'] = 0;
   $booking['rep_type'] = REP_NONE;
   $booking['type'] = $import_default_type;
+  $booking['room_id'] = $import_default_room;
   
   // Parse all the lines first because we'll need to get the start date
   // for calculating some of the other settings
@@ -394,7 +395,9 @@ function process_event($vevent)
   }
   
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
-  // We could maybe have a default room on the form and use that
+  // If there is no LOCATION property we use the default_room specified on
+  // the form, but if there is no default room (most likely because no rooms
+  // have been created) then this error message is created).
   if (!isset($booking['room_id']))
   {
     $problems[] = get_vocab("no_LOCATION");
@@ -618,6 +621,7 @@ checkAuthorised();
 print_header($day, $month, $year, $area, $room);
 
 $import = get_form_var('import', 'string');
+$import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
@@ -742,6 +746,41 @@ echo "</div>\n";
 echo "<fieldset>\n";
 echo "<legend>" . get_vocab("area_room_settings") . "</legend>\n";
 
+// Default room
+$areas = get_area_names($all=true);
+if (count($areas) > 0)
+{
+  $options = array();
+  
+  foreach($areas as $area_id => $area_name)
+  {
+    $rooms = get_room_names($area_id, $all=true);
+    if (count($rooms) > 0)
+    {
+      $options[$area_name] = array();
+      foreach($rooms as $room_id => $room_name)
+      {
+        $options[$area_name][$room_id] = $room_name;
+      }
+    }
+  }
+  
+  if (count($options) > 0)
+  {
+    $params = array('name'        => 'import_default_room',
+                    'label'       => get_vocab("default_room") . ':',
+                    'label_title' => get_vocab("default_room_note"),
+                    'options'     => $options,
+                    'force_assoc' => true,
+                    'value'       => $default_room);
+    echo "<div>\n";
+    generate_select($params);
+    echo "</div>\n";
+  }
+}
+
+
+// Area-room order
 echo "<div>\n";
 echo "<label title=\"" . get_vocab("area_room_order_note") . "\">" . 
      get_vocab("area_room_order") . ":</label>\n";

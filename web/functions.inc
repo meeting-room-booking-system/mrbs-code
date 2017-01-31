@@ -1187,6 +1187,42 @@ function generate_checkbox_group($params)
   echo $html;
 }
 
+// Generates a set of <option> elements
+//
+//        $options        An array of options for the element.   Can be a simple
+//                        array or an associative array with value => text members for
+//                        each <option>.   Default is an empty array.
+//        $force_assoc    Boolean.  Forces the options array to be treated as an
+//                        associative array.  Default FALSE, ie it is treated as whatever
+//                        it looks like.  (This parameter is necessary because if you
+//                        index an array with strings that look like integers then PHP
+//                        casts the keys to integers and the array becomes a simple array)
+//        $value          The value of the input.  Default ''.   Can be a single value
+//                        or an array of values.
+function generate_options($options, $force_assoc=false, $value='')
+{
+  if (!is_array($value))
+  {
+    $value = array($value);
+  }
+  
+  $html = '';
+  
+  foreach ($options as $key => $text)
+  {
+    // We can cope with both associative and ordinary arrays
+    if (!$force_assoc && !is_assoc($options))
+    {
+      $key = $text;
+    }
+    $html .= "<option value=\"" . htmlspecialchars($key) . "\"";
+    $html .= (in_array($key, $value)) ? " selected=\"selected\"" : '';
+    $html .= ">".htmlspecialchars($text)."</option>\n";
+  }
+  
+  return $html;
+}
+
 
 // Generates a select box with an associated label
 //
@@ -1197,8 +1233,10 @@ function generate_checkbox_group($params)
 //        'id'            The id of the element.  Defaults to the same as the name.
 //        'label'         The text to be used for the field label.
 //        'label_title'   The text to be used for the title attribute for the field label
-//        'options'       An array of options for the select element.   Can be a simple
-//                        array or an associative array with value => text members for
+//        'options'       An array of options for the select element.   Can be a one-
+//                        or two-dimensional array.  If it's two-dimensional then the keys of
+//                        the outer level represent <optgroup> labels.  The inner level can be
+//                        a simple array or an associative array with value => text members for
 //                        each <option> in the <select> element.   Default is an empty array.
 //        'force_assoc'   Boolean.  Forces the options array to be treated as an
 //                        associative array.  Default FALSE, ie it is treated as whatever
@@ -1286,11 +1324,6 @@ function generate_select($params)
     }
   }
   
-  if (!is_array($params['value']))
-  {
-    $params['value'] = array($params['value']);
-  }
-  
   if (isset($params['attributes']) && is_array($params['attributes']))
   {
     $params['attributes'] = implode(' ', $params['attributes']);
@@ -1312,16 +1345,26 @@ function generate_select($params)
   $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
   $html .= ">\n";
 
-  foreach ($params['options'] as $value => $text)
+  if (count($params['options']) > 0)
   {
-    // We can cope with both associative and ordinary arrays
-    if (!$params['force_assoc'] && !is_assoc($params['options']))
+    // Test whether $params['options'] options is a one-dimeensial or two-dimensional array.
+    // If two-dimensional then we need to use <optgroup>s.
+    if (is_array(reset($params['options'])))   // cannot use $params['options'][0] because it may be associative
     {
-      $value = $text;
+      foreach($params['options'] as $label => $options)
+      {
+        if (count($options) > 0)
+        {
+          $html .= "<optgroup label=\"" . htmlspecialchars($label) . "\">\n";
+          $html .= generate_options($options, $params['force_assoc'], $params['value']);
+          $html .= "</optgroup>\n";
+        }
+      }
     }
-    $html .= "<option value=\"" . htmlspecialchars($value) . "\"";
-    $html .= (in_array($value, $params['value'])) ? " selected=\"selected\"" : '';
-    $html .= ">".htmlspecialchars($text)."</option>\n";
+    else
+    {
+      $html .= generate_options($params['options'], $params['force_assoc'], $params['value']);
+    }
   }
 
   $html .= "</select>\n";
