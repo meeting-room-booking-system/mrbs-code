@@ -796,7 +796,11 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 }
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general label.radio {font-weight: normal; width: auto}
-.form_general input.radio {margin-top: 0.1em; margin-right: 2px; width: auto}
+.form_general input.radio {
+  margin-top: 0.1em;
+  margin-right: 0.4em;
+  width: auto
+}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 4em}
