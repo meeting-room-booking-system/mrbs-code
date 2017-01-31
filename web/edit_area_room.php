@@ -68,76 +68,45 @@ function create_field_entry_timezone()
   $special_group = "Others";
   
   echo "<div>\n";
-  echo "<label for=\"area_timezone\">" . get_vocab("timezone") . ":</label>\n";
-
-  // If possible we'll present a list of timezones that this server supports and
-  // which also have a corresponding VTIMEZONE definition.
-  // Otherwise we'll just have to let the user type in a timezone, which introduces
-  // the possibility of an invalid timezone.
-  if (function_exists('timezone_identifiers_list'))
+  
+  $timezones = array();
+  $timezone_identifiers = timezone_identifiers_list();
+  foreach ($timezone_identifiers as $value)
   {
-    $timezones = array();
-    $timezone_identifiers = timezone_identifiers_list();
-    foreach ($timezone_identifiers as $value)
+    if (strpos($value, '/') === FALSE)
     {
-      if (strpos($value, '/') === FALSE)
-      {
-        // There are some timezone identifiers (eg 'UTC') on some operating
-        // systems that don't fit the Continent/City model.   We'll put them
-        // into the special group
-        $continent = $special_group;
-        $city = $value;
-      }
-      else
-      {
-        // Note: timezone identifiers can have three components, eg
-        // America/Argentina/Tucuman.    To keep things simple we will
-        // treat anything after the first '/' as a single city and
-        // limit the explosion to two
-        list($continent, $city) = explode('/', $value, 2);
-      }
-      // Check that there's a VTIMEZONE definition
-      $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
-      $tz_file = "$tz_dir/$value.ics";
-      // UTC is a special case because we can always produce UTC times in iCalendar
-      if (($city=='UTC') || is_readable($tz_file))
-      {
-        $timezones[$continent][] = $city;
-      }
+      // There are some timezone identifiers (eg 'UTC') on some operating
+      // systems that don't fit the Continent/City model.   We'll put them
+      // into the special group
+      $continent = $special_group;
+      $city = $value;
     }
-    
-    echo "<select id=\"area_timezone\" name=\"area_timezone\">\n";
-    foreach ($timezones as $continent => $cities)
+    else
     {
-      if (count($cities) > 0)
-      {
-        echo "<optgroup label=\"" . htmlspecialchars($continent) . "\">\n";
-        foreach ($cities as $city)
-        {
-          if ($continent == $special_group)
-          {
-            $timezone_identifier = $city;
-          }
-          else
-          {
-            $timezone_identifier = "$continent/$city";
-          }
-          echo "<option value=\"" . htmlspecialchars($timezone_identifier) . "\"" .
-               (($timezone_identifier == $timezone) ? " selected=\"selected\"" : "") .
-               ">" . htmlspecialchars($city) . "</option>\n";
-        }
-        echo "</optgroup>\n";
-      }
+      // Note: timezone identifiers can have three components, eg
+      // America/Argentina/Tucuman.    To keep things simple we will
+      // treat anything after the first '/' as a single city and
+      // limit the explosion to two
+      list($continent, $city) = explode('/', $value, 2);
     }
-    echo "</select>\n";
-  }
-  // There is no timezone_identifiers_list() function so we'll just let the
-  // user type in a timezone
-  else
-  {
-    echo "<input id=\"area_timezone\" name=\"area_timezone\" value=\"" . htmlspecialchars($timezone) . "\">\n";
+    // Check that there's a VTIMEZONE definition
+    $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
+    $tz_file = "$tz_dir/$value.ics";
+    // UTC is a special case because we can always produce UTC times in iCalendar
+    if (($city=='UTC') || is_readable($tz_file))
+    {
+      $key = ($continent == $special_group) ? $city : "$continent/$city";
+      $timezones[$continent][$key] = $city;
+    }
   }
   
+  $params = array('label'   => get_vocab('timezone') . ':',
+                  'name'    => 'area_timezone',
+                  'options' => $timezones,
+                  'value'   => $timezone);
+                  
+  generate_select($params);
+                  
   echo "</div>\n";
 }
 
