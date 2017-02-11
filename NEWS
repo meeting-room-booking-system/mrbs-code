@@ -7,6 +7,158 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.6.0 (Sat Feb 11th 2017):
+
+[*] Decreased cache expiry time for timezone files, to allow for more rapid
+ updated for timezone changes.
+[*] Caching added into LDAP authentication to improve performance, see SF bugs
+ #335
+[-] Fixed bug with unquoted column names. See SF Support Requests #816.
+[*] Added a check to make sure that custom field names don't contain
+ spaces. (See SF Support Requests #816)
+[*] Improved debugging in auth_ldap a bit, to show errors from the ldap
+ extension.  
+[-] Fixed a problem with the end time not being selected on the booking
+	form if the default duration is not an integral number of slots
+[-] Moved the PHP version check to happen earlier, otherwise MRBS will
+ fail with obscure error messages if the PHP version is too low. See
+ SF Bugs #337.
+[-] Fixed bug in reports: the case sensitivity of types was not being
+ recognised (see SF Support Requests #776)
+[-] Fixed problem with day links in the wek view. See SF bugs #339
+[-] Fixed bug that caused MRBS to miss conflicts with single entries
+ when modifying a series. See SF Bugs #338.
+[-] Fixed bug whereby the limit on the number of bookings isn't applied
+ properly if an existing series is being modified and there is at
+ least one single entry in the same interval.
+[-] Fixed bug whereby the conflict checker wasn't firing when the repeat
+ end date changed
+[*] Changed MRBS default behaviour to be *not* to use persistent
+ database connections, as they can cause problems with transactions
+ and locks. At the same time changed the config variable to be
+ $db_persist instead of $db_nopersist. 
+[*] Added sha256 authentication support for db_ext auth scheme. [Markus Gilli]
+[*] Added ablility to read user access level from external database to
+ db_ext auth scheme.[Markus Gilli]
+[-] Fixed bug in CSV reports when running on Windows (see SF Support
+ Requests 860)
+[-] Fixed bug causing a booking to be made even if the specified repeat
+ results in no bookings (eg a weekly repeat for Thursdays starting
+ and ending on the same day, which isn't a Thursday)
+[*] Changed the behaviour of MRBS when making a repeat booking that
+ results in just a single entry (for example a daily repeat starting
+ and ending on the same day). Previously this was treated as a
+ special case and converted into a single entry. However it seems
+ more logical to treat it as a series with just one entry. This
+ enables the repeat characteristics to be edited in the future.
+[+] Allowed the type field to be mandatory (see SF Support Requests 876)
+[-] Fixed problem whereby the locale could not be set when automatic
+ language changing was disabled and no override locale was set. See
+ SF Support Requests #891.
+[-] Fixed bug when requesting More Info. See SF Bugs #347.
+[*] Updated Polish translation. Thanks to Anonymous from SF Bugs #347.
+[*] Added room name to conflict details following suggestion on general
+ mailing list.
+[*] Added some email address validation (see SF Support Requests #897)
+[+] Added a sort key for the area table.
+[*] Changed the default character encoding for CSV files as the latest
+ versions of Excel now seem to recognise UTF-8 automatically.
+[*] Removed disabling off error reporting for the connection to the
+ database during a database upgrade. If the site admin wants errors to
+ go to the browser, eg for debugging, then they should.
+[-] Fixed datalists so that empty strings aren't presented as options
+[*] Added a datalist input to report inputs when the standard fields
+ have select_options or datalist_options defined. See SF Support
+ Requests #909
+[*] Improvements to debugging in LDAP auth scheme
+[*] Fixed problem with long words in brief descriptions causing unequal
+ width columns in the calendar views. See SF Support Requests #951.
+[*] Added '' as an option for $smtp_settings['secure']. See SF Support
+ Requests #954.
+[-] Fixed problem with week number link in mincals. See SF Bugs #357.
+[*] Modified show_colour_key() so that the colour key is not shown if
+ there are fewer than two types. (See SF Support Requests #1019)
+[*] Improved behaviour of MRBS when only one type is defined, so that
+ type options are not shown.
+[-] Fixed problem with Chrome not showing datalist options (see SF bugs
+ #360).
+[+] Added config options to allow users (or just admins) to specify that
+ an email shouldn't be sent when making a booking. Useful if you are
+ just making a minor change or are creating a whole lot of bookings
+ at the beginning of a term or season. See SF Support requests #974.
+[-] Fixed problem with the endtime selector not having a selected value
+ in the very rare case that the area's morningstarts or resolution is
+ changed in between refreshes of the browser on the edit_entry page.
+ See also SF Support Requests #983.
+[-] Fixed problem with Bulk Delete on the report page. See SF Bugs #361.
+[-] Fixed problem with Schedule and Policy tabs not appearing. See SF
+ Bugs #362.
+[-] Fixed potential problem with end time selector in edit_entry.php
+ being blank when coming from the month view. See SF Support Requests
+ #983. 
+[+] Added Wordpress authentication scheme.
+[*] Got rid of usage of $HTTP_GET_VARS, $HTTP_POST_VARS and
+ $HTTP_SERVER_VARS (no longer necessary)
+[*] Allowed custom fields in the users table to be writable only by
+ admins
+[-] Fixed bug causing password validation not to be performed in the user
+ admin page, and a few other minor issues.
+[*] Changed German translation for rep_num_weeks. Thanks to Michael
+ Hellwig.
+[*] Disabled page refresh if running over a metered network connection.
+[-] Fixed bug causing form validation to fail when using datalist inputs
+[*] Changed refresh mechanism for month view to Ajax from meta refresh.
+[-] Fixed bug whereby bookings for the last slot were not being
+ displayed properly in the month view
+[*] Wrapped the edit procedure in a transaction. See SF Support Requests
+ #1064
+[*] Updated German translations from Andrea Beranek
+[*] A few improvements to checklang.php
+[*] Upgraded to latest version of jQuery 2.x branch
+[*] MRBS now uses a DB abstraction class utilising PHP's PDO. All SQL
+ input is now parameterised, greatly improving security from SQL injection
+ attacks.
+[-] Fixed bug that resulted in possibly wrong values for enable_periods
+ and reminders_enabled being shown on the Edit Area form.
+[-] Fixed a performance problem when clicking on an empty cell in the
+ week view when using hidden days on a large table.
+[*] Improved formatting of error messages, including errors accessing the
+ MRBS database.
+[+] Added Joomla authentication scheme.
+[*] Made the default setting for the "Do not send email" checkbox a
+ configuration variable
+[*] Changed report form so that for custom checkbox fields you can now
+ select checked, unchecked or both. See SF Support Requests #1087
+[-] Fixed bug that gave a double border on printing. See SF Support
+ Requests #1078. Also fixed another bug at the same time - there was
+ no border around bookings in the month view on printing.
+[*] Changed the behaviour of the printed month view, getting rid of
+ horizontal and vertical scrollbars. Instead, horizontal overflow is
+ hidden and the table cell expands to accommodate vertical overflow.
+[-] Fixed problem with (a) right border of bookings not appearing when
+ using the 'both' option for monthly listings and (b) listings
+ wrapping when using 'slot' or 'description'.
+[-] Fixed bug causing fatal error when trying to delete a series.
+[-] Fixed fatal error when exporting an entry from the view_entry page
+[*] Improved error reporting when $mail_settings['from'] not set.
+[-] Fixed problem with default_duration not going past the end of a
+ booking day. See SF Support Requests #116
+[-] Fixed problem when the default duration takes a booking beyond the
+ start day and multiday bookings are not allowed.
+[*] Made sure that the default duration for new bookings doesn't exceed
+ the maximum duration
+[*] Added a new option to disable "Opportunistic TLS" in PHPMailer.
+[-] Fixed bug causing bookings to be shown as private when they weren't.
+[-] Fixed bug that allowed the type colour to be shown even when the
+ type was private. See SF bugs #372.
+[-] Fixed bug preventing an event whose room name includes the area-room
+ separator from being imported. 
+[*] Added the ability to recocgnise type information in imported .ics
+ files using the X-MRBS-TYPE property.
+[*] Added the ability to specify a default room if no LOCATION property
+ is given when importing a VEVENT
+  
+-------------------------------------------------------------------------------
 Version 1.5.0 (Fri Oct 23rd 2015):
 
 [*] Updated Simplified Chinese translation, provided by 'Tide'.
