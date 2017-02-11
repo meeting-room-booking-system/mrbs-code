@@ -1329,6 +1329,11 @@ function generate_select($params)
     $params['attributes'] = implode(' ', $params['attributes']);
   }
   
+  if (!is_array($params['value']))
+  {
+    $params['value'] = array($params['value']);
+  }
+  
   // generate the HTML
   // no HTML escaping for the label - it is trusted
   $html = '';
