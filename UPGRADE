@@ -33,6 +33,17 @@ the upgraded database.   You may therefore choose to make a copy of the
 database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
+Upgrading from prior to MRBS 1.6.0
+==================================
+
+If you upgrade to MRBS 1.6.0 and use your old config.inc.php file, you must
+add a line near to the top of the file, just after the <?php tag, to make
+the file read:
+
+<?php
+namespace MRBS;
+
+
 Upgrading from prior to MRBS 1.5.0
 ==================================
 
