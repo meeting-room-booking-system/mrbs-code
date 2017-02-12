@@ -9,3 +9,7 @@ syntax: regexp
 
 ^\.settings$
 ^\.project$
+^\.buildpath
+^\.idea
+^hg-code.iml
+^nbproject
