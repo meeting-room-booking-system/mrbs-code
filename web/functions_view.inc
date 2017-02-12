@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Returns a string containg a single line of data details, or if $as_html is set
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the 

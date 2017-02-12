@@ -5,8 +5,6 @@ global $day, $month, $year, $room, $area;
 
 $page = this_page('.php');
 
-// $Id$
-
 
 // We need to construct a standard query string that can be passed to the *.js.php
 // pages.  That's because some of the settings they use are area dependent.

@@ -1,4 +1,3 @@
--- $Id$
 
 -- Add columns so that details about the last request for More Info on
 -- provisional bookings can be recorded.

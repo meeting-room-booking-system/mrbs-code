@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 require_once "functions.inc";
 
 

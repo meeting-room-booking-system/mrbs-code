@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // This file contains internal configuration settings and checking.   You should not
 // need to change this file unless you are making changes to the MRBS code.
 

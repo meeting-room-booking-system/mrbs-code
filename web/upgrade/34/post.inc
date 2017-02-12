@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Convert MONTHLY_SAMEDAY repeats into MONTHLY repeats with a specified month_relative (eg '2TU')
 
 require_once "standard_vars.inc.php"; // to ensure the timezone is set

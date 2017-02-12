@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Dummy authentication scheme, that accepts any user.
  * Useful for using mrbs without authentication,
  * or in combination with a session scheme that already enforces

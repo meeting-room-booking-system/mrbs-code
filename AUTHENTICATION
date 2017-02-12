@@ -1302,7 +1302,7 @@ Still the initial authentication system had shortcomings:
     authentication servers are not available in the general case.
     - There was no way to log off.
 
-In MRBS 1.2, the authentication system was restructured by Jean-François
+In MRBS 1.2, the authentication system was restructured by Jean-FranÃ§ois
 Larvoire <jf.larvoire@sf.net>
 
 The main change was to separate the user/password acquisition (Also called
@@ -1318,5 +1318,3 @@ On the authentication side, most existing modules were carried on, with the
 session code removed. A simple module (auth_config.inc) was added, managing a
 simple list of users in config.inc.php. Eventually there will also be another
 authentication module, using a table of users in the MRBS database.
-
-$Id$

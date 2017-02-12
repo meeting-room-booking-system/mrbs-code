@@ -1,7 +1,5 @@
 <?php // -*-mode: PHP; coding:utf-8;-*-
 
-// $Id : lang.fi,v 1.1 Thu Jan 30 2003 thierry_bo Exp $
-
 // This file contains PHP code that specifies language specific strings
 // The default strings come from lang.en, and anything in a locale
 // specific file will overwrite the default. This is the Finnish version.

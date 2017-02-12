@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add some UNIQUE constraints
 
 ALTER TABLE %DB_TBL_PREFIX%room

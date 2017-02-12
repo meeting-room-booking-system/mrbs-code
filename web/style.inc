@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
 
 if (DEBUG)

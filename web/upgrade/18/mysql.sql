@@ -1,5 +1,3 @@
-# $Id$
-
 # Remove the private columns as they are no longer needed
 # (the privacy status is now held in the status column)
 

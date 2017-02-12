@@ -1,7 +1,5 @@
 #!/usr/bin/perl -w
 
-# $Id$
-
 my $server = shift;
 my $searchroot  = shift;
 my $uid = shift;

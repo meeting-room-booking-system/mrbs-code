@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Authentication scheme that uses NIS as the source for user
  * authentication.
  *

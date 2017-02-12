@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Populate the new columns in the area table with the default values taken
 // from the config file.
 

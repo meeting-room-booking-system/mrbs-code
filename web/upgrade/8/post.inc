@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Populate the room sort_key with the room name (the default value)
 
 global $tbl_room, $admin_handle;

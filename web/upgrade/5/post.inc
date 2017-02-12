@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 global $admin_handle;
 global $tbl_users;
 

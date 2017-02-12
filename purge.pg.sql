@@ -1,4 +1,3 @@
--- $Id$
 --
 -- mrbs/purge.pg.sql 2001-01-13 : Purge old MRBS entries, for PostgreSQL
 --

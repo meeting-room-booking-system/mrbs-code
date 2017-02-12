@@ -1,7 +1,5 @@
 #!/usr/bin/perl -w
 
-# $Id$
-
 $server = shift;
 $dn = shift;
 $password = shift;

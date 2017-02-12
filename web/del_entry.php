@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Deletes an entry, or a series.    The $id is always the id of
 // an individual entry.   If $series is set then the entire series
 // of wich $id is a member should be deleted. [Note - this use of

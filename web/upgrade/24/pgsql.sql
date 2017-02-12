@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add RECURRENCE-ID column for use with iCalendar
 
 ALTER TABLE %DB_TBL_PREFIX%entry 

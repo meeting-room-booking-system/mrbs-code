@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Update the area table getting rid of NULLs for enable_periods and replacing them
 // with the default setting.
 

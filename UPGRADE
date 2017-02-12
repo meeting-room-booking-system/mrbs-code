@@ -164,5 +164,3 @@ Upgrading from prior to MRBS 0.7
 ================================
 There was a change to the database schema at version 0.7. See the
 information in INSTALL on using the upgrade.my.sql script.
-
-$Id$

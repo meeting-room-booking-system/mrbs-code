@@ -1,5 +1,3 @@
-# $Id$
-
 # Make sure that the timestamps update automatically, just in case these are not the default settings
 
 ALTER TABLE %DB_TBL_PREFIX%entry

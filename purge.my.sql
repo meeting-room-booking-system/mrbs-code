@@ -1,4 +1,3 @@
--- $Id$
 --
 -- mrbs/purge.my.sql 2001-01-13 : Purge old MRBS entries, for MySQL
 --

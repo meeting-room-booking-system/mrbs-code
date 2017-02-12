@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Session management scheme that uses Windows NT domain users and Internet 
  * Information Server as the source for user authentication.
  *

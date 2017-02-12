@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // include the authentication wrappers
 require_once "auth/auth_$auth[type].inc";
 

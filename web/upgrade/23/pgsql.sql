@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add UID and SEQUENCE columns for use with iCalendar
 
 ALTER TABLE %DB_TBL_PREFIX%entry 

@@ -1,6 +1,4 @@
--- $Id$
-
-ALTER TABLE %DB_TBL_PREFIX%area 
+ALTER TABLE %DB_TBL_PREFIX%area
 ADD COLUMN resolution            int,
 ADD COLUMN default_duration      int,
 ADD COLUMN morningstarts         int,

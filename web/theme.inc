@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Gets the styling appropriate to the theme.     If there isn't a styling file
 // present for the theme then the default styling is used.
 

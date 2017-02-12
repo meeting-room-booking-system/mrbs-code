@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // An Ajax function to check which of an array of time slots is invalid.  (We need to do
 // this server side because the client does not have sophisticated enough timezone
 // handling facilities)

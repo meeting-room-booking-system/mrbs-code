@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Gets the standard variables of $day, $month, $year, $area and $room
 // Checks that they are valid and assigns sensible defaults if not
 

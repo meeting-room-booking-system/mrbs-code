@@ -1,5 +1,3 @@
--- $Id$
-
 CREATE TABLE %DB_TBL_PREFIX%zoneinfo
 (
   id                 serial primary key,

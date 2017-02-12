@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add some foreign keys
 
 -- First of all tidy up the database getting rid of any zombie rows which would prevent

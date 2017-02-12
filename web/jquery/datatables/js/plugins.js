@@ -1,4 +1,3 @@
-// $Id$
 
 // Selected plugins from http://datatables.net/plug-ins/api
 

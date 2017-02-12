@@ -1,5 +1,3 @@
-# $Id$
-
 # Convert all tables to InnoDB.   Although all new installations use InnoDB, some
 # older ones may still have tables using the MyISAM engine.
 

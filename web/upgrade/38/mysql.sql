@@ -1,5 +1,3 @@
-# $Id$
-
 # Add finer grained policies, to distinguish between creation and deletion of
 # bookings.  Note that deletion of max_book_ahead bookings was always
 # allowed which is why max_delete_ahead_enabled is set to FALSE.

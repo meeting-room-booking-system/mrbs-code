@@ -2,8 +2,6 @@
 namespace MRBS;
 use \DateTimeZone;
 
-// $Id$
-
 require_once "mrbs_sql.inc";
 
 

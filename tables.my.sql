@@ -1,8 +1,6 @@
 #
 # MySQL MRBS table creation script
 #
-# $Id$
-#
 # Notes:
 # (1) If you have decided to change the prefix of your tables from 'mrbs_'
 #     to something else using $db_tbl_prefix then you must edit each

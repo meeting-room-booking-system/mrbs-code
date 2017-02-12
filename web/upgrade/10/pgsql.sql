@@ -1,4 +1,3 @@
--- $Id$
 --
 -- Add column to record the last time a reminder was sent.
 -- (Unfortunately, timestamps in PostgreSQL are not automatically

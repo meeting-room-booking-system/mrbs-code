@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // If you want to add some extra columns to the room table to describe the room
 // then you can do so and this page should automatically recognise them and handle
 // them.    At the moment support is limited to the following column types:

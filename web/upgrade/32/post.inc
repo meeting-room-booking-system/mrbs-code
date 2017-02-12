@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 require_once "standard_vars.inc.php"; // to ensure the timezone is set
 
 global $tbl_repeat, $tbl_area, $tbl_room, $admin_handle;

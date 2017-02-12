@@ -12,11 +12,7 @@ namespace MRBS;
 // | USE : This file should be included in all files where emails functions    |
 // |        are likely to be used.                                             |
 // +---------------------------------------------------------------------------+
-// | @author    thierry_bo.                                                    |
-// | @version   $Revision: 797 $.                                              |
-// +---------------------------------------------------------------------------+
 //
-// $Id$
 
 global $mail_settings;
  

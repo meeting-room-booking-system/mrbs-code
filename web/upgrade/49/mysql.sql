@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add a sort_key for the area table and populate it with the area_name.
 -- Just in case the area_name column has been extended, truncate the area_name when copying it into the sort_key
 

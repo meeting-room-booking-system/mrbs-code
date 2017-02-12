@@ -14,13 +14,7 @@ namespace MRBS;
 *   Notes          To use this session mechanism, set in config.inc.php:     *
 *                  $auth["session"]  = "cookie";                             *
 *                                                                            *
-*   History                                                                  *
-*                  2003/11/09 JFL Created this file                          *
-*                  Remaining history in ChangeLog and CVS logs               *
-*                                                                            *
 \*****************************************************************************/
-
-// $Id$
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');

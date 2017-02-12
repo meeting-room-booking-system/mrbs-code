@@ -19,13 +19,7 @@ namespace MRBS;
 *                   If you want to display a logout link, set in config.inc.php:             *
 *                     $auth['remote_user']['logout_link'] = '/logout/link.html';             *
 *                                                                                            *
-*   History                                                                                  *
-*    2006-01-04 Bjorn.Wiberg@its.uu.se  Created based on session_http.inc                    *
-*    2006-02-16 Bjorn.Wiberg@its.uu.se  Made logout link a configuration item                *
-*                                                                                            *
 \*********************************************************************************************/
-
-// $Id$
 
 /* authGet()
  * 

@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 global $timezone;
 
 // Get the VTIMEZONE component because we'll need it for creating events

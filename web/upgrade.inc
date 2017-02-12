@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 
 // Upgrade between database schema versions.
 //

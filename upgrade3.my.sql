@@ -1,5 +1,3 @@
-# $Id$
-
 # Run this script to upgrade any postgresql or mysqlmrbs version prior to
 # 1.2-pre3.
 

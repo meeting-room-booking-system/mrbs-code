@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Session management scheme that uses IP addresses to identify users.
  * Anyone who can access the server can make bookings.
  * Administrators are also identified by their IP address.

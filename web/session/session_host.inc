@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * This is a slight variant of session_ip. 
  * Session management scheme that uses the DNS name of the computer
  * to identify users and administrators.

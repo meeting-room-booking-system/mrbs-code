@@ -1,5 +1,3 @@
-# $Id$
-
 # Restore the original timestamp at the beginning of the previous upgrade
 
 # We save the current value of the timestamp before updating and restore it 

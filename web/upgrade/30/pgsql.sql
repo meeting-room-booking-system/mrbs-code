@@ -1,5 +1,3 @@
--- $Id$
-
 -- Add the max number of bookings fields
 
 ALTER TABLE %DB_TBL_PREFIX%area 

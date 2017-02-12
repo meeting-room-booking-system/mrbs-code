@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
 // automatically recognise them and handle them.    NOTE: if you add a column to

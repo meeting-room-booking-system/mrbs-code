@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // This should probably be a class, but you can only have protected
 // class members in PHP 5, so we won't bother
 

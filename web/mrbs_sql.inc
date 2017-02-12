@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 define('INTERVAL_DAY', 0);
 
 /** mrbsCheckFree()

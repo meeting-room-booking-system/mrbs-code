@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Go through the area table and if any of the per-area settings are NULL then
 // set them to the area defaults
 

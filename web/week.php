@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // mrbs/week.php - Week-at-a-time view
 
 require "defaultincludes.inc";

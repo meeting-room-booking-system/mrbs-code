@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // A version of del_entry.php designed to be used in Ajax POST calls.  It
 // takes an array of ids to be deleted as input.   These are always assumed
 // to be single entries.   Returns the number of entries deleted, or some

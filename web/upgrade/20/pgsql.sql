@@ -1,4 +1,3 @@
--- $Id$
 
 -- Add two new settings to the area table.  (Note:  we could combine
 -- all the various 'booleans' into a integer field, in the same

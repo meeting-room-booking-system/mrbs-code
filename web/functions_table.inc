@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // width of the row label columns in the day and week views
 $first_last_width = 1;  // (%)
 $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);

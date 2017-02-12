@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Implements Ajax refreshing of the calendar view.   Only necessary, obviously,
 // if $refresh_rate has been set to something non-zero
 

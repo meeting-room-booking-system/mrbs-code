@@ -1,4 +1,3 @@
--- $Id$
 
 CREATE TABLE %DB_TBL_PREFIX%variables
 (

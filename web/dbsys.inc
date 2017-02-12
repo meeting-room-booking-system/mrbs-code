@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 global $dbsys, $db_tbl_prefix, $db_schema, $maxlength;
 
 $tables = array('area', 'entry', 'repeat', 'room', 'users', 'variables', 'zoneinfo');

@@ -1,5 +1,3 @@
--- $Id$
-
 -- Make max_duration a per-area setting
 
 ALTER TABLE %DB_TBL_PREFIX%area

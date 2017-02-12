@@ -1,5 +1,3 @@
--- $Id$
-
 -- Fixes a mistake in the previous upgrade.  If we've got an individual member of a
 -- series that has been modified, ie has entry_type=2, then the sequence number 
 -- cannot be 0.   We will set it to 1.

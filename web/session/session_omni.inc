@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Session management scheme that relies on OmniHttpd security for user 
  * authentication. THIS is suitable for few users because we have to create all
  * users connecting to MRBS, since they will have to login.

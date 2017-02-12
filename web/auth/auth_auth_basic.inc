@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Authentication scheme that uses an Apache "auth basic" password file
  * for user authentication.
  *

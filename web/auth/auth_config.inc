@@ -18,8 +18,6 @@ namespace MRBS;
 *
 ******************************************************************************/
 
-// $Id$
-
 /* authValidateUser($user, $pass)
  * 
  * Checks if the specified username/password pair are valid

@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Authentication scheme that uses POP3 as the source for user
  * authentication.
  *

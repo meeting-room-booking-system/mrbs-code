@@ -1,5 +1,3 @@
--- $Id$
-
 -- Make ical_recur_id nullable, so that we can give it a null value
 -- when there is no recurrence
 

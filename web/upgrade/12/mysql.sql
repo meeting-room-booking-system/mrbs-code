@@ -1,4 +1,3 @@
-# $Id$
 #
 # Adds a 'custom_html' field to the area and room tables.   Designed for
 # allowing, for example, an embedded Google Maps link to be displayed, but

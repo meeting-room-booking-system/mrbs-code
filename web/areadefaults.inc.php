@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 /**************************************************************************
  *   MRBS area defaults file (default settings for NEW areas)
  *

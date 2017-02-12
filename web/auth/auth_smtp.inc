@@ -1,8 +1,7 @@
 <?php
 namespace MRBS;
 
-/* $Id$
- *
+/*
  * Authentication scheme that uses SMTP as the source for user
  * authentication. Requires the Net_SMTP Pear package
  *

@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 function minicals($year, $month, $day, $area, $room, $dmy) {
 
 // PHP Calendar Class

@@ -1,5 +1,3 @@
-# $Id$
-
 # Add a month_absolute column so that monthly repeats can be converted to the
 # new format.   The conversion itself is done in post.inc
 

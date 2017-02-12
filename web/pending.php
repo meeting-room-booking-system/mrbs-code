@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)

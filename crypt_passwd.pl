@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# $Id$
-
 # Authentication script to use with MRBS's "ext" authentication
 # scheme. config.inc.php should include something like:
 #

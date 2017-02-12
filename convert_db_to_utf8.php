@@ -1,7 +1,5 @@
 <?php
 
-// $Id$
-
 // This script converts text in the database from a particular encoding
 // to UTF-8
 

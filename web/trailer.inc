@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 function generate_trailer()
 {
   global $year, $month, $day, $area, $room;

@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 require "../defaultincludes.inc";
 
 header("Content-type: application/x-javascript");

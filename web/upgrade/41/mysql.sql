@@ -1,5 +1,3 @@
-# $Id$
-
 # Make mrbs_entry.repeat_id a foreign key
 
 # Previously repeat_id was set to zero if there was no repeat.

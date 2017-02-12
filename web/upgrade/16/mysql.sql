@@ -1,4 +1,3 @@
-# $Id$
 #
 # Add a column for enable_periods
 

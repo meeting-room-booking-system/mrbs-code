@@ -1,5 +1,3 @@
-# $Id$
-
 # Add a modified_by column so that we can see who last edited a booking
 
 ALTER TABLE %DB_TBL_PREFIX%entry

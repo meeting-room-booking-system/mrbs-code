@@ -1,4 +1,3 @@
--- $Id$
 --
 -- grant.pg.sql - Edit this to grant rights on PostgreSQL MRBS tables.
 -- You should not need to use this file if you create the tables (using the

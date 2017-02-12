@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Check PHP version
 // Do it now before we start including code that might fail with a syntax error,
 // for example if anonymous functions are being used.

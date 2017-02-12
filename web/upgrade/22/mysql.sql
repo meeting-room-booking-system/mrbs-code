@@ -1,5 +1,3 @@
-# $Id$
-
 # Add a column to record whether the area/room is enabled or disabled for use
 
 ALTER TABLE %DB_TBL_PREFIX%area 

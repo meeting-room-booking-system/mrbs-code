@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Modifications to the standard CSS when using RTL languages (eg Hebrew)
 
 require_once "../systemdefaults.inc.php";

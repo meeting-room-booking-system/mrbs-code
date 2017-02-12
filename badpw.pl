@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# $Id$
-
 # Read AUTHENTICATION for more information
 # about this script
 

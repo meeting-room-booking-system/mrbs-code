@@ -1,5 +1,4 @@
 <?php // -*-mode: PHP; coding:utf8;-*-
-// $Id$
 
 // This file contains PHP code that specifies language specific strings
 // The default strings come from lang.en, and anything in a locale

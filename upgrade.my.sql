@@ -1,4 +1,3 @@
-# $Id$
 
 drop table mrbs_entry_tmp;
 

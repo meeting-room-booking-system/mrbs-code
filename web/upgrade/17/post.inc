@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 global $tbl_entry, $tbl_repeat, $admin_handle;
 
 // We are about to introduce a new status, the confirmation status, for bookings

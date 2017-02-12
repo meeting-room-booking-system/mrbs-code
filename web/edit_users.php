@@ -33,12 +33,7 @@ namespace MRBS;
 *                 To do:                                                     *
 *                     - Localisability                                       *
 *                                                                            *
-*   History                                                                  *
-*                 2003/12/29 JFL Created this file                           *
-*                                                                            *
 \*****************************************************************************/
-
-// $Id$
 
 require "defaultincludes.inc";
 

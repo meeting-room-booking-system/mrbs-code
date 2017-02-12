@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Update the area table getting rid of NULLs for the private settings and replacing them
 // with the default settings.
 

@@ -15,11 +15,7 @@ namespace MRBS;
 // |           it must also be added here.
 // +---------------------------------------------------------------------------+
 // | @author    Original Authors : PhpMyAdmin project.
-// | @author    thierry_bo.
-// | @version   $Revision: 797 $.
 // +---------------------------------------------------------------------------+
-//
-// $Id$
 
 
 // Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are

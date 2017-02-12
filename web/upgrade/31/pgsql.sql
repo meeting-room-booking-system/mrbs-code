@@ -1,5 +1,3 @@
--- $Id$
-
 -- Get rid of n-weekly repeats and make all weekly and n-weekly repeats weekly
 
 -- No need to save the current timestamp because timestamps do not auto-update

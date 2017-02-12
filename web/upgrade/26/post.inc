@@ -1,7 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
 ?>
 
 <script type="text/javascript">

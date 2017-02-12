@@ -1,5 +1,3 @@
-# $Id$
-
 # Get rid of n-weekly repeats and make all weekly and n-weekly repeats weekly
 
 # We save the current value of the timestamp before updating and restore it 

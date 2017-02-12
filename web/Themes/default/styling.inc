@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // DEFAULT THEME
 
 // ***** COLOURS ************************

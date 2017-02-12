@@ -1,5 +1,3 @@
-# $Id$
-
 # Change the status fields in the entry and repeat tables
 # to be unsigned rather than signed (they are used as bit fields)
 # Note:  PostgreSQL does not have unsigned, but as the status

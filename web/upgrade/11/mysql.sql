@@ -1,4 +1,3 @@
-# $Id$
 #
 # Add columns to record the minimum and maximum times in advance
 # that ordinary users may make bookings

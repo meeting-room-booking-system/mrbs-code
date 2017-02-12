@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-// $Id$
-
 // Assigns a UID to all existing bookings that don't already have one.   They should
 // do in theory, but a bug (https://sourceforge.net/p/mrbs/bugs/334/) resulted in some
 // not doing so.   The code is based on Upgrade 24.

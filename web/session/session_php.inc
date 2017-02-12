@@ -11,14 +11,7 @@ namespace MRBS;
 *                   config.inc.php:                                           *
 *                       $auth["session"]  = "php";                            *
 *                                                                             *
-*                                                                             *
-*   History                                                                   *
-*    2003/11/09 JFL Created this file                                         *
-*    Remaining history in ChangeLog and CVS logs                              *
-*                                                                             *
 \*****************************************************************************/
-
-// $Id$
 
 global $PHP_SELF, $auth;
 
