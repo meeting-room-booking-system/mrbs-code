@@ -409,6 +409,11 @@ if ($is_admin || ($n_displayable_areas > 0))
           <label for="room_capacity"><?php echo get_vocab("capacity") ?>:</label>
           <input type="text" id="room_capacity" name="capacity">
         </div>
+
+        <div>
+          <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
+          <input type="text" id="room_admin_email" name="room_admin_email">
+        </div>
        
         <div>
           <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
