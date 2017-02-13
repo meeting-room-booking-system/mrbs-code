@@ -1227,6 +1227,7 @@ $default_area_room_delimiter = '/';
 // Each type has a color which is defined in the array $color_types in the styling.inc
 // file in the Themes directory
 
+unset($booking_types);    // Include this line when copying to config.inc.php
 $booking_types[] = "E";
 $booking_types[] = "I";
 
