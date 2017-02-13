@@ -1710,7 +1710,7 @@ function mrbsAddArea($name, &$error)
 
 // Adds a room, returning the new id, or FALSE on failure with the
 // error in $error
-function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
+function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room_admin_email='')
 {
   global $maxlength, $tbl_room;
   
@@ -1743,9 +1743,9 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='')
     return FALSE;
   }
   // If so, insert the room into the database
-  $sql = "INSERT INTO $tbl_room (room_name, sort_key, area_id, description, capacity)
-          VALUES (?, ?, ?, ?, ?)";
-  db()->command($sql, array($name,$name,$area,$description,$capacity));
+  $sql = "INSERT INTO $tbl_room (room_name, sort_key, area_id, description, capacity, room_admin_email)
+          VALUES (?, ?, ?, ?, ?, ?)";
+  db()->command($sql, array($name,$name,$area,$description,$capacity,$room_admin_email));
   $room = db()->insert_id($tbl_room, 'id');
   
   // Release the mutex
