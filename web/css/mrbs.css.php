@@ -179,7 +179,7 @@ select.room_area_select {margin-right: 0.5em}
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
 // The input width can normally be left alone
-$admin_form_label_width       = '7.0';   // em
+$admin_form_label_width       = '10.0';   // em
 $admin_form_gap               = '1.0';   // em
 $admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
 
