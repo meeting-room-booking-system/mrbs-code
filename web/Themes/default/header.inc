@@ -191,7 +191,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
   echo "</li>\n";
   
   // For session protocols that define their own logon box...
-  if (function_exists(__NAMESPACE__ . "\PrintLogonBox"))
+  if (function_exists(__NAMESPACE__ . "\\PrintLogonBox"))
   {
     echo "<li>\n";
     print_logon();
