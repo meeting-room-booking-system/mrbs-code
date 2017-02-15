@@ -49,6 +49,8 @@ function authLdapAction($callback, $user, &$object)
         "Please check your MRBS and web server configuration.</b></p><hr>\n");
   }
 
+  $ns_callback = __NAMESPACE__ . "\\$callback";
+  
   // Transfer the values from the config variables into a local
   // associative array, turning them all into arrays
   
@@ -229,8 +231,8 @@ function authLdapAction($callback, $user, &$object)
       }
       else
       {
-        $res = $callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
-                         $user_search, $user, $object);
+        $res = $ns_callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
+                            $user_search, $user, $object);
         if ($res)
         {
           return $res;
