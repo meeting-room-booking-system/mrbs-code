@@ -89,7 +89,7 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
   /* Otherwise it's a legacy MD5 hash */
   else
   {
-    if (md5($pass) == $password_hash)
+    if (md5($password) == $password_hash)
     {
       $result = true;
 
@@ -116,8 +116,8 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   true     - The pair are invalid or do not exist
+ *   false    - The pair are valid
  */
 
 function authValidateUser($user, $pass)
@@ -140,6 +140,12 @@ function authValidateUser($user, $pass)
   $res = db()->query($sql, $sql_params);
   
   $row = $res->row_keyed(0);
+  
+  if (!isset($row['password_hash']))
+  {
+    // No user found with that name
+    return false;
+  }
 
   return checkPassword($pass, $row['password_hash'], 'name', $user);
 }
