@@ -20,49 +20,56 @@ namespace MRBS;
 $user_list_link = "edit_users.php";
 
 
-/* authValidateUser($user, $pass)
- * 
- * Checks if the specified username/password pair are valid
- * 
- * $user  - The user name
- * $pass  - The password
- * 
- * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
- */
-
-function authValidateUser($user, $pass)
+function rehash($password_hash, $column_name, $column_value)
 {
   global $tbl_users;
-  $result = 0;
-
-  $sql_params = array();
-
-  // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
-  // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
-  // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
-  // messy.  WE could use STRCMP, but that's MySQL only.
-  $sql = "SELECT password_hash
-            FROM $tbl_users
-           WHERE " .
-         db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
-         "
-           LIMIT 1";
-
-  $res = db()->query($sql, $sql_params);
   
-  $row = $res->row_keyed(0);
+  $sql_params = array(password_hash($password, PASSWORD_DEFAULT));
+  
+  switch ($column_name)
+  {
+    case 'name':
+      $condition = db()->syntax_casesensitive_equals($column_name, utf8_strtolower($column_value), $sql_params);
+      break;
+    case 'email':
+      // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
+      // on most systems, it isn't always true.  The domain part is case insensitive but the local part can
+      // be case sensitive.   But before we can take account of this, the email addresses in the database
+      // need to be normalised so that all the domain names are stored in lower case.  Then it will be possible
+      // to do a case sensitive comparison.
+      $sql_params[] = $column_value;
+      $condition = "LOWER($column_name)=LOWER(?)";
+      break;
+    default:
+      trigger_error("Unsupported column name '$column_name'.", E_USER_NOTICE);
+      return;
+      break;
+  }
+  
+  $sql = "UPDATE $tbl_users
+             SET password_hash=?
+           WHERE $condition";
+    
+  db()->command($sql, $sql_params);
+}
 
+
+// Checks $password against $password_hash for the row in the user table
+// where $column_name=$column_value.  Typically $column_name will be either
+// 'name' or 'email'.
+// Returns a boolean: true if they match, otherwise false.
+function checkPassword($password, $password_hash, $column_name, $column_value)
+{
+  $result = false;
   $do_rehash = false;
 
   /* If the hash starts '$' it's a PHP password hash */
-  if (substr($row['password_hash'], 0, 1) == '$')
+  if (substr($password_hash, 0, 1) == '$')
   {
-    if (password_verify($pass, $row['password_hash']))
+    if (password_verify($password, $password_hash))
     {
-      $result = 1;
-      if (password_needs_rehash($row['password_hash'], PASSWORD_DEFAULT))
+      $result = true;
+      if (password_needs_rehash($password_hash, PASSWORD_DEFAULT))
       {
         $do_rehash = true;
       }
@@ -82,9 +89,9 @@ function authValidateUser($user, $pass)
   /* Otherwise it's a legacy MD5 hash */
   else
   {
-    if (md5($pass) == $row['password_hash'])
+    if (md5($pass) == $password_hash)
     {
-      $result = 1;
+      $result = true;
 
       if (\PasswordCompat\binary\check())
       {
@@ -95,15 +102,46 @@ function authValidateUser($user, $pass)
 
   if ($do_rehash)
   {
-    $sql_params = array(password_hash($pass, PASSWORD_DEFAULT));
-    $sql = "UPDATE $tbl_users
-           SET password_hash=?
-           WHERE " .
-      db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params);
-    db()->command($sql, $sql_params);
+    rehash($password_hash, $column_name, $column_value);
   }
 
   return $result;
+}
+
+/* authValidateUser($user, $pass)
+ * 
+ * Checks if the specified username/password pair are valid
+ * 
+ * $user  - The user name
+ * $pass  - The password
+ * 
+ * Returns:
+ *   0        - The pair are invalid or do not exist
+ *   non-zero - The pair are valid
+ */
+
+function authValidateUser($user, $pass)
+{
+  global $tbl_users;
+
+  $sql_params = array();
+
+  // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
+  // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
+  // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
+  // messy.  WE could use STRCMP, but that's MySQL only.
+  $sql = "SELECT password_hash
+            FROM $tbl_users
+           WHERE " .
+         db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
+         "
+           LIMIT 1";
+
+  $res = db()->query($sql, $sql_params);
+  
+  $row = $res->row_keyed(0);
+
+  return checkPassword($pass, $row['password_hash'], 'name', $user);
 }
 
 /* authGetUserLevel($user)
