@@ -15,8 +15,8 @@ if (!isset($auth['session']))
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   true     - The pair are valid
  */
 function authValidateUser($user, $pass)
 {
@@ -25,7 +25,7 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if (empty($user) || empty($pass))
   {
-    return 0;
+    return false;
   }
 
   // Generate the command line
@@ -35,16 +35,16 @@ function authValidateUser($user, $pass)
   $p = popen($cmd, "w");
   if (!$p)
   {
-    return 0;
+    return false;
   }
   fputs($p, $pass);
   if (pclose($p) == 0)
   {
-    return 1;
+    return true;
   }
 
   // return failure
-  return 0;
+  return false;
 }
 
 /* authGetUserLevel($user)

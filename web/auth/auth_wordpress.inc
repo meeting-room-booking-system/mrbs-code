@@ -11,10 +11,9 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   true     - The pair are valid
  */
-
 function authValidateUser($user, $pass)
 {
   return !is_wp_error(wp_authenticate($user, $pass));

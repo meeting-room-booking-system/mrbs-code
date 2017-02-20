@@ -19,8 +19,8 @@ if (!isset($auth['session']))
  * &$object  - Reference to the generic object, type defined by caller
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false     - The pair are invalid or do not exist
+ *   true      - The pair are valid
  */
 function authLdapAction($callback, $user, &$object)
 {
@@ -100,7 +100,7 @@ function authLdapAction($callback, $user, &$object)
       {
         authLdapDebug("Count of LDAP array config variables doesn't match, aborting!");
         fatal_error("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!");
-        return 0;
+        return false;
       }
     }
     $count = count($value);
@@ -235,7 +235,7 @@ function authLdapAction($callback, $user, &$object)
                             $user_search, $user, $object);
         if ($res)
         {
-          return $res;
+          return true;
         }
       }
 
@@ -307,8 +307,8 @@ function authLdapGetEmail($user)
  * &$object     - Reference to the generic object
  * 
  * Returns:
- *   0        - Didn't find a user
- *   non-zero - Found a user
+ *   false    - Didn't find a user
+ *   true     - Found a user
  */
 function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
@@ -335,10 +335,10 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
       authLdapDebug("authLdapGetEmailCallback: email is '".
                     $object['email']."'");
       
-      return 1;
+      return true;
     }
   }
-  return 0;
+  return false;
 }
 
 
@@ -350,8 +350,8 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false     - The pair are invalid or do not exist
+ *   true      - The pair are valid
  */
 function authValidateUser($user, $pass)
 {
@@ -361,7 +361,7 @@ function authValidateUser($user, $pass)
   if (!isset($user) || !isset($pass) || strlen($pass)==0)
   {
     authLdapDebug("Empty username or password passed");
-    return 0;
+    return false;
   }
 
   $object = array();
@@ -384,8 +384,8 @@ function authValidateUser($user, $pass)
  * &$object     - Reference to the generic object
  * 
  * Returns:
- *   0        - Didn't find a user
- *   non-zero - Found a user
+ *   false      - Didn't find a user
+ *   true       - Found a user
  */
 function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
@@ -407,7 +407,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind with no \$ldap_filter");
-      return 1;
+      return true;
     }
     else
     {
@@ -444,7 +444,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
       if (@ldap_count_entries($ldap, $res) > 0)
       {
         authLdapDebug("authValidateUserCallback: Found entry with filter");
-        return 1;
+        return true;
       }
       authLdapDebug("authValidateUserCallback: No entry found with filter");
     }
@@ -460,7 +460,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   }
 
   // return failure if no connection is established
-  return 0;
+  return false;
 }
 
 
@@ -477,8 +477,8 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
  * &$object     - Reference to the generic object
  * 
  * Returns:
- *   0        - Not in the admin group
- *   non-zero - In the admin group
+ *   false    - Not in the admin group
+ *   true     - In the admin group
  */
 function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
                                          $user, &$object)
@@ -507,13 +507,13 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
         if (strcasecmp($group, $admin_group_dn) == 0)
         {
           authLdapDebug("authCheckAdminGroupCallback: Admin group successfully found in user object");
-          return 1;
+          return true;
         }
       }
       authLdapDebug("authCheckAdminGroupCallback: Admin group not found in user object");
     }
   }
-  return 0;
+  return false;
 }
 
 
@@ -583,12 +583,12 @@ function authLdapIsAdmin($user)
     {
       if (strcasecmp($user, $admin) == 0)
       {
-        return TRUE;
+        return true;
       }
     }
   }
   
-  return FALSE;
+  return false;
 }
   
   

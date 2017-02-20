@@ -26,10 +26,9 @@ namespace MRBS;
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   true     - The pair are valid
  */
-
 function authValidateUser($user, $pass)
 {
   global $auth;
@@ -37,7 +36,7 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if(!isset($user) || !isset($pass) || strlen($pass)==0)
   {
-    return 0;
+    return false;
   }
 
   if ((isset($auth["user"][$user]) &&
@@ -47,10 +46,10 @@ function authValidateUser($user, $pass)
        ($auth["user"][utf8_strtolower($user)] == $pass)
         ))
   {
-    return 1; // User validated
+    return true; // User validated
   }
 
-  return 0;      // User unknown or password invalid
+  return false;      // User unknown or password invalid
 }
 
 /* authGetUserLevel($user)

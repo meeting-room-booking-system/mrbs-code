@@ -119,7 +119,6 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  *   true     - The pair are invalid or do not exist
  *   false    - The pair are valid
  */
-
 function authValidateUser($user, $pass)
 {
   global $tbl_users;

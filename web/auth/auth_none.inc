@@ -28,11 +28,11 @@ namespace MRBS;
  * 
  * @param   string  $user   The user name
  * @param   string  $pass   The password
- * @return  int             non-zero - Always valid
+ * @return  boolean         true - Always valid
  */
 function authValidateUser($user, $pass)
 {
-  return 1;
+  return true;
 }
 
 /* authGetUserLevel($user)
