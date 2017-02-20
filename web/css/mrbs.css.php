@@ -693,7 +693,7 @@ $search_form_min_width         = number_format($search_form_min_width, 1, '.', '
 
 // Specific to the "logon" form
 $logon_left_col_max_width      = '8';       // em
-$logon_input_width             = '12';      // em
+$logon_input_width             = '14';      // em
 $logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
 $logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
 

@@ -116,8 +116,8 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  * $pass  - The password
  * 
  * Returns:
- *   true     - The pair are invalid or do not exist
- *   false    - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   true     - The pair are valid
  */
 function authValidateUser($user, $pass)
 {
@@ -148,6 +148,62 @@ function authValidateUser($user, $pass)
 
   return checkPassword($pass, $row['password_hash'], 'name', $user);
 }
+
+
+/* authValidateEmail($email, $pass)
+ * 
+ * Checks if the specified email/password pair are valid
+ * 
+ * $email - The email address
+ * $pass  - The password
+ * 
+ * Returns:
+ *   false    - The pair are invalid or do not exist
+ *   username - The pair are valid
+ */
+function authValidateEmail($email, $pass)
+{
+  global $tbl_users;
+
+  $sql_params = array($email);
+
+  // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
+  // on most systems, it isn't always true.  The domain part is case insensitive but the local part can
+  // be case sensitive.   But before we can take account of this, the email addresses in the database
+  // need to be normalised so that all the domain names are stored in lower case.  Then it will be possible
+  // to do a case sensitive comparison.
+  $sql = "SELECT password_hash, name
+            FROM $tbl_users
+           WHERE LOWER(email)=LOWER(?)";
+
+  $res = db()->query($sql, $sql_params);
+  
+  $rows = $res->all_rows_keyed();
+  
+  if (empty($rows))
+  {
+    return false;
+  }
+  
+  // Check all the users that have this email address and password hash.  If there are more
+  // than one then we don't know which user to login, so return false.
+  $possible_names = array();
+  foreach($rows as $row)
+  {
+    if (checkPassword($pass, $row['password_hash'], 'email', $email))
+    {
+      $possible_names[] = $row['name'];
+    }
+  }
+
+  if (count($possible_names) == 1)
+  {
+    return $possible_names[0];
+  }
+  
+  return false;
+}
+
 
 /* authGetUserLevel($user)
  * 

@@ -91,10 +91,19 @@ if (isset($Action) && ($Action == "SetName"))
   {
     if (!authValidateUser($NewUserName, $NewUserPassword))
     {
-      print_header(0, 0, 0, 0, "");
-      echo "<p>".get_vocab('unknown_user')."</p>\n";
-      printLoginForm($TargetURL);
-      exit();
+      // Maybe the username was an email address.  Try that if possible.
+      if (function_exists(__NAMESPACE__ . "\\authValidateEmail") &&
+          ($result = authValidateEmail($NewUserName, $NewUserPassword)) !== false)
+      {
+        $NewUserName = $result;
+      }
+      else
+      {
+        print_header(0, 0, 0, 0, "");
+        echo "<p>".get_vocab('unknown_user')."</p>\n";
+        printLoginForm($TargetURL);
+        exit();
+      }
     }
 
     $_SESSION["UserName"] = $NewUserName;
@@ -135,37 +144,54 @@ function printLoginForm($TargetURL)
 {
   global $HTTP_REFERER;
   global $returl;
-?>
-<form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(this_page()) ?>">
-  <fieldset>
-  <legend><?php echo get_vocab("please_login") ?></legend>
-    <div>
-      <label for="NewUserName"><?php echo get_vocab("users.name") ?>:</label>
-      <input type="text" id="NewUserName" name="NewUserName">
-    </div>
-    <div>
-      <label for="NewUserPassword"><?php echo get_vocab("users.password") ?>:</label>
-      <input type="password" id="NewUserPassword" name="NewUserPassword">
-    </div>
-    <?php
-    // We need to preserve the original calling page, so that it's there when we eventually get
-    // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-    // the original caller.    If this is the second time through we will have stored it in $returl.
-    if (!isset($returl))
-    {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-    }
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    ?>
-    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-    <input type="hidden" name="Action" value="SetName">
-    <div id="logon_submit">
-      <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
-    </div>
-  </fieldset>
-</form>
-<?php
-  echo "</div>";  // Close of the contents div
+  
+  $html = '';
+
+  $html .= "<form class=\"form_general\" id=\"logon\" method=\"post\" action=\"" .
+           htmlspecialchars(this_page()) . "\">\n";
+  $html .= "<fieldset>\n";
+  $html .= "<legend>" . get_vocab("please_login") . "</legend>\n";
+  
+  $html .= "<div>\n";
+  if (function_exists(__NAMESPACE__ . "\\authValidateEmail"))
+  {
+    $placeholder = get_vocab("username_or_email");
+  }
+  else
+  {
+    $placeholder = get_vocab("username");
+  }
+  $html .= "<label for=\"NewUserName\">" . get_vocab("user") . ":</label>\n";
+  $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" placeholder=\"$placeholder\">\n";
+  $html .= "</div>\n";
+  
+  $html .= "<div>\n";
+  $html .= "<label for=\"NewUserPassword\">" . get_vocab("users.password") . ":</label>\n";
+  $html .= "<input type=\"password\" id=\"NewUserPassword\" name=\"NewUserPassword\">\n";
+  $html .= "</div>\n";
+
+  // We need to preserve the original calling page, so that it's there when we eventually get
+  // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
+  // the original caller.    If this is the second time through we will have stored it in $returl.
+  if (!isset($returl))
+  {
+    $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+  }
+  $html .= "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
+  $html .= "<input type=\"hidden\" name=\"TargetURL\" value=\"" . htmlspecialchars($TargetURL) . "\">\n";
+  $html .= "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
+  
+  $html .= "<div id=\"logon_submit\">\n";
+  $html .= "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
+  $html .= "</div>\n";
+  
+  $html .= "</fieldset>\n";
+  $html .= "</form>\n";
+
+  $html .= "</div>";  // Close of the contents div
+  
+  echo $html;
+  
   // Print footer and exit
   print_footer(TRUE);
 }
