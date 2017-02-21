@@ -197,7 +197,7 @@ if (isset($Action) && ($Action == "QueryName"))
  */
 function authGet()
 {
-  global $PHP_SELF, $QUERY_STRING;
+  global $QUERY_STRING;
   global $returl;
 
   print_header(0, 0, 0, 0, "");
@@ -293,7 +293,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
+  global $QUERY_STRING, $user_list_link, $day, $month, $year;
   
   $target_url = this_page();
   if (isset($url_base) && ($url_base !== ''))
