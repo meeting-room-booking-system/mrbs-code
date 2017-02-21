@@ -21,7 +21,7 @@ function printLoginForm($action, $target_url, $returl)
   }
   else
   {
-    $placeholder = get_vocab("username");
+    $placeholder = get_vocab("users.name");
   }
   $html .= "<label for=\"NewUserName\">" . get_vocab("user") . ":</label>\n";
   $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" placeholder=\"$placeholder\">\n";

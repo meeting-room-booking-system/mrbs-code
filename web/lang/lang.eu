@@ -105,6 +105,7 @@ $vocab["users.level"]         = "Baimenak";
 $vocab["you_are"]            = "Zu zara ";
 $vocab["login"]              = "Sartu";
 $vocab["logoff"]             = "Irten";
+$vocab["username_or_email"]  = "Erabiltzaile-izena edo e-posta helbidea";
 
 // Authentication database
 $vocab["user_list"]          = "Erabiltzaileen zerrenda";

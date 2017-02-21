@@ -179,6 +179,7 @@ $vocab["unknown_user"]       = "Usuario Anónimo";
 $vocab["you_are"]            = "Hola";
 $vocab["login"]              = "Entrar";
 $vocab["logoff"]             = "Salir";
+$vocab["username_or_email"]  = "Nombre de usuario o dirección de correo electrónico";
 
 // Database upgrade code
 $vocab["database_login"]           = "Acceso a Base de Datos";

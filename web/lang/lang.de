@@ -222,6 +222,7 @@ $vocab["unknown_user"]       = "Unbekannter Benutzer";
 $vocab["you_are"]            = "Sie sind";
 $vocab["login"]              = "Anmelden";
 $vocab["logoff"]             = "Abmelden";
+$vocab["username_or_email"]  = "Benutzername oder E-Mail-Adresse";
 
 // Database upgrade code
 $vocab["database_login"]           = "Datenbankbenutzer";

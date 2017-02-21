@@ -198,6 +198,7 @@ $vocab["unknown_user"]       = "Nieznany użytkownik";
 $vocab["you_are"]            = "Zalogowany";
 $vocab["login"]              = "Zaloguj";
 $vocab["logoff"]             = "Wyloguj";
+$vocab["username_or_email"]  = "Nazwa użytkownika lub e-mail";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login bazy";

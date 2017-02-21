@@ -216,6 +216,7 @@ $vocab["unknown_user"]       = "Pengguna Anonim";
 $vocab["you_are"]            = "Anda Adalah";
 $vocab["login"]              = "Masuk";
 $vocab["logoff"]             = "Keluar";
+$vocab["username_or_email"]  = "Nama Pengguna atau Alamat Email";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login Database";

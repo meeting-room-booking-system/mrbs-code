@@ -203,6 +203,7 @@ $vocab["unknown_user"]       = "Okänd användare";
 $vocab["you_are"]            = "Du är";
 $vocab["login"]              = "Logga in";
 $vocab["logoff"]             = "Logga ut";
+$vocab["username_or_email"]  = "Användarnamn eller e-postadress";
 
 // Database upgrade code
 $vocab["database_login"]           = "Databasinloggning";

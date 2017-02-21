@@ -105,6 +105,7 @@ $vocab["unknown_user"]       = "Αγνωστος χρήστης";
 $vocab["you_are"]            = "Είστε";
 $vocab["login"]              = "Εισαγωγή (Log in)";
 $vocab["logoff"]             = "Έξοδος (Log Off)";
+$vocab["username_or_email"]  = "Ψευδώνυμο ή ηλεκ. διεύθυνση";
 
 // Authentication database
 $vocab["user_list"]          = "User list";

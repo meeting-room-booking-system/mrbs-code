@@ -219,7 +219,6 @@ $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log off";
-$vocab["username"]           = "Username";
 $vocab["username_or_email"]  = "Username or email address";
 
 // Database upgrade code

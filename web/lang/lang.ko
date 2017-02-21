@@ -106,6 +106,7 @@ $vocab["unknown_user"]       = "권한없는 사용자";
 $vocab["you_are"]            = "아이디: ";
 $vocab["login"]              = "로그인";
 $vocab["logoff"]             = "로그아웃";
+$vocab["username_or_email"]  = "사용자명 또는 이메일 주소";
 
 // Authentication database
 $vocab["user_list"]          = "사용자 리스트";
