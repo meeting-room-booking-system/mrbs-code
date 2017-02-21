@@ -10,6 +10,13 @@ $NewUserPassword = get_form_var('NewUserPassword', 'string');
 $target_url = get_form_var('target_url', 'string');
 $returl = get_form_var('returl', 'string');
 
+// We need to preserve the original calling page, so that it's there when we eventually get to the
+// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
+// holds the original caller.    If this is the second time through we will have stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
+}
 
 /*
   Target of the form with sets the URL argument "Action=QueryName".
@@ -18,7 +25,7 @@ $returl = get_form_var('returl', 'string');
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header(0, 0, 0, 0, "");
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url, $returl);
   exit();
 }
 
@@ -45,7 +52,7 @@ if (isset($Action) && ($Action == "SetName"))
       $errors = $wp_user;  // $errors is a WordPress global
       print_header(0, 0, 0, 0, "");
       echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
-      printLoginForm($target_url);
+      printLoginForm(this_page(), $target_url, $returl);
       exit();
     }
   }
@@ -81,14 +88,11 @@ if (isset($Action) && ($Action == "SetName"))
   Display the login form. Used by two routines below.
   Will eventually return to $target_url.
 */
-function printLoginForm($target_url)
+function printLoginForm($action, $target_url, $returl)
 {
-  global $HTTP_REFERER;
-  global $returl;
-
   // __() and esc_attr__() are WordPress functions
   
-  echo '<form class="form_general" id="logon" method="post" action="' . htmlspecialchars(this_page()) . "\">\n";
+  echo '<form class="form_general" id="logon" method="post" action="' . htmlspecialchars($action) . "\">\n";
   echo "<fieldset>\n";
   echo '<legend>' . get_vocab("please_login") . "</legend>\n";
   echo "<div>\n";
@@ -131,7 +135,8 @@ function printLoginForm($target_url)
  */
 function authGet()
 {
-  global $PHP_SELF, $QUERY_STRING;
+  global $QUERY_STRING;
+  global $returl;
 
   print_header(0, 0, 0, 0, "");
 
@@ -142,7 +147,7 @@ function authGet()
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url, $returl);
 
   exit();
 }
@@ -163,7 +168,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function PrintLogonBox()
 {
-  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
+  global $QUERY_STRING, $user_list_link, $day, $month, $year;
 
   $target_url = this_page();
   if (isset($url_base) && ($url_base !== ''))
