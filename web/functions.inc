@@ -623,7 +623,7 @@ function fit_to_booking_day($t, $back=true)
   if ($back)
   {
     $new_t = get_end_last_slot($date['mon'], $date['mday'], $date['year']);
-    if ($new_t > t)
+    if ($new_t > $t)
     {
       $new_t = get_end_last_slot($date['mon'], $date['mday'] - 1, $date['year']);
     }
@@ -631,7 +631,7 @@ function fit_to_booking_day($t, $back=true)
   else
   {
     $new_t = get_start_first_slot($date['mon'], $date['mday'], $date['year']);
-    if ($new_t < t)
+    if ($new_t < $t)
     {
       $new_t = get_start_first_slot($date['mon'], $date['mday'] + 1, $date['year']);
     }
