@@ -101,7 +101,7 @@ if (isset($Action) && ($Action == "SetName"))
       {
         print_header(0, 0, 0, 0, "");
         echo "<p>".get_vocab('unknown_user')."</p>\n";
-        printLoginForm($target_url);
+        printLoginForm(this_page(), $target_url);
         exit();
       }
     }
@@ -140,15 +140,15 @@ if (isset($Action) && ($Action == "SetName"))
   Display the login form. Used by two routines below.
   Will eventually return to $target_url.
 */
-function printLoginForm($target_url)
+function printLoginForm($action, $target_url)
 {
   global $HTTP_REFERER;
   global $returl;
   
   $html = '';
 
-  $html .= "<form class=\"form_general\" id=\"logon\" method=\"post\" action=\"" .
-           htmlspecialchars(this_page()) . "\">\n";
+  $html .= "<form class=\"form_general\" id=\"logon\" method=\"post\"".
+           " action=\"" . htmlspecialchars($action) . "\">\n";
   $html .= "<fieldset>\n";
   $html .= "<legend>" . get_vocab("please_login") . "</legend>\n";
   
@@ -203,7 +203,7 @@ function printLoginForm($target_url)
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header(0, 0, 0, 0, "");
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url);
   exit();
 }
 
@@ -226,7 +226,7 @@ function authGet()
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url);
 
   exit();
 }
