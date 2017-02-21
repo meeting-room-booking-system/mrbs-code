@@ -16,12 +16,23 @@ namespace MRBS;
 *                                                                            *
 \*****************************************************************************/
 
+global $PHP_SELF, $HTTP_REFERER;
+global $auth;
+
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');
 $target_url = get_form_var('target_url', 'string');
 $returl = get_form_var('returl', 'string');
+
+// We need to preserve the original calling page, so that it's there when we eventually get to the
+// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
+// holds the original caller.    If this is the second time through we will have stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
+}
 
 if (isset($cookie_path_override))
 {
@@ -63,7 +74,7 @@ if (isset($Action) && ($Action == "SetName"))
     {
       print_header(0, 0, 0, 0, "");
       echo "<p>".get_vocab('unknown_user')."</p>\n";
-      printLoginForm($target_url);
+      printLoginForm(this_page(), $target_url, $returl);
       exit();
     }
     else
@@ -134,15 +145,13 @@ if (isset($Action) && ($Action == "SetName"))
   Display the login form. Used by two routines below.
   Will eventually return to $target_url.
 */
-function printLoginForm($target_url)
+function printLoginForm($action, $target_url, $returl)
 {
-  global $HTTP_REFERER;
-  global $returl;
 ?>
 <p>
   
 </p>
-<form class="form_general" id="logon" method="post" action="<?php htmlspecialchars(this_page()) ?>">
+<form class="form_general" id="logon" method="post" action="<?php htmlspecialchars($action) ?>">
   <fieldset>
   <legend><?php echo get_vocab("please_login") ?></legend>
     <div>
@@ -154,13 +163,6 @@ function printLoginForm($target_url)
       <input type="password" id="NewUserPassword" name="NewUserPassword">
     </div>
     <?php
-    // We need to preserve the original calling page, so that it's there when we eventually get
-    // to the target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-    // the original caller.    If this is the second time through we will have stored it in $returl.
-    if (!isset($returl))
-    {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-    }
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
     ?>
     <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
@@ -183,7 +185,7 @@ function printLoginForm($target_url)
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header(0, 0, 0, 0, "");
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url, $returl);
   exit();
 }
 
@@ -196,17 +198,18 @@ if (isset($Action) && ($Action == "QueryName"))
 function authGet()
 {
   global $PHP_SELF, $QUERY_STRING;
+  global $returl;
 
   print_header(0, 0, 0, 0, "");
 
   echo "<p>".get_vocab("norights")."</p>\n";
-
+  
   $target_url = this_page();
   if (isset($QUERY_STRING))
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm($target_url);
+  printLoginForm(this_page(), $target_url, $returl);
 
   exit();
 }
@@ -216,19 +219,16 @@ function getUserName()
   global $REMOTE_ADDR, $auth;
   
   static $cached_username = null;
+  static $have_checked_cookie = false;
 
-  //error_log("Called getUserName()");
-
-  if (!is_null($cached_username))
+  if ($have_checked_cookie)
   {
-    //error_log("cached");
     return $cached_username;
   }
   
   // If the cached username isn't set, we have to decode the cookie, but
-  // first set the cached username to an empty string, so we will only do
-  // this once
-  $cached_username = "";
+  // first set the flag, so we will only do this once
+  $have_checked_cookie = true;
 
   if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
@@ -288,6 +288,7 @@ function getUserName()
 
   return $cached_username;
 }
+
 
 // Print the logon entry on the top banner.
 function PrintLogonBox()
