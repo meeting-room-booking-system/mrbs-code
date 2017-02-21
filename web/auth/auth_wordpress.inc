@@ -20,6 +20,16 @@ function authValidateUser($user, $pass)
 }
 
 
+// This function is just here so that MRBS knows that WordPress has the
+// capability of validating eithere a username or an email address.  It doesn't
+// do anything because wp_authenticate() in authValidateUser() does all the
+// work and copes with both types of input.
+function authValidateEmail()
+{
+  trigger_error("I was not expecting to be called!", E_USER_WARNING);
+}
+
+
 /* authGetUserLevel($user)
  * 
  * Determines the user's access level

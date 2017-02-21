@@ -84,49 +84,6 @@ if (isset($Action) && ($Action == "SetName"))
 }
 
 
-/*
-  Display the login form. Used by two routines below.
-  Will eventually return to $target_url.
-*/
-function printLoginForm($action, $target_url, $returl)
-{
-  // __() and esc_attr__() are WordPress functions
-  
-  echo '<form class="form_general" id="logon" method="post" action="' . htmlspecialchars($action) . "\">\n";
-  echo "<fieldset>\n";
-  echo '<legend>' . get_vocab("please_login") . "</legend>\n";
-  echo "<div>\n";
-  echo '<label for="NewUserName">' .  __('Username or Email') . ":</label>\n";
-  echo "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\">\n";
-  echo "</div>\n";
-  echo "<div>\n";
-  echo '<label for="NewUserPassword">' . __('Password') . ":</label>\n";
-  echo "<input type=\"password\" id=\"NewUserPassword\" name=\"NewUserPassword\">\n";
-  echo "</div>\n";
-
-  // We need to preserve the original calling page, so that it's there when we eventually get
-  // to the target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-  // the original caller.    If this is the second time through we will have stored it in $returl.
-  if (!isset($returl))
-  {
-    $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-  }
-  echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-
-  echo '<input type="hidden" name="target_url" value="' . htmlspecialchars($target_url) ."\">\n";
-  echo "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
-  echo "<div id=\"logon_submit\">\n";
-  echo '<input class="submit" type="submit" value="' . esc_attr__('Log In') . "\">\n";
-  echo "</div>\n";
-  echo "</fieldset>\n";
-  echo "</form>\n";
-  echo "</div>\n";  // Close of the contents div
-  
-  // Print footer and exit
-  print_footer(TRUE);
-}
-
-
 /* authGet()
  * 
  * Request the user name/password
