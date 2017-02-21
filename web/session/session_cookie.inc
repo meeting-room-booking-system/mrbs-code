@@ -16,6 +16,8 @@ namespace MRBS;
 *                                                                            *
 \*****************************************************************************/
 
+require_once MRBS_ROOT . '/functions_logon.inc';
+
 global $PHP_SELF, $HTTP_REFERER;
 global $auth;
 
@@ -70,17 +72,24 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (!authValidateUser($NewUserName, $NewUserPassword))
+    if (authValidateUser($NewUserName, $NewUserPassword))
+    {
+      $UserName     = $NewUserName;
+      $UserPassword = $NewUserPassword;
+    }
+    // Maybe the username was an email address.  Try that if possible.
+    elseif (function_exists(__NAMESPACE__ . "\\authValidateEmail") &&
+            ($result = authValidateEmail($NewUserName, $NewUserPassword)) !== false)
+    {
+      $UserName     = $result;
+      $UserPassword = $NewUserPassword;
+    }
+    else
     {
       print_header(0, 0, 0, 0, "");
       echo "<p>".get_vocab('unknown_user')."</p>\n";
       printLoginForm(this_page(), $target_url, $returl);
       exit();
-    }
-    else
-    {
-      $UserName     = $NewUserName;
-      $UserPassword = $NewUserPassword;
     }
 
     if ($auth['session_cookie']['session_expire_time'] == 0)
@@ -141,42 +150,6 @@ if (isset($Action) && ($Action == "SetName"))
     print_footer(TRUE);
 }
 
-/*
-  Display the login form. Used by two routines below.
-  Will eventually return to $target_url.
-*/
-function printLoginForm($action, $target_url, $returl)
-{
-?>
-<p>
-  
-</p>
-<form class="form_general" id="logon" method="post" action="<?php htmlspecialchars($action) ?>">
-  <fieldset>
-  <legend><?php echo get_vocab("please_login") ?></legend>
-    <div>
-      <label for="NewUserName"><?php echo get_vocab("users.name") ?>:</label>
-      <input type="text" id="NewUserName" name="NewUserName">
-    </div>
-    <div>
-      <label for="NewUserPassword"><?php echo get_vocab("users.password") ?>:</label>
-      <input type="password" id="NewUserPassword" name="NewUserPassword">
-    </div>
-    <?php
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    ?>
-    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
-    <input type="hidden" name="Action" value="SetName">
-    <div id="logon_submit">
-      <input class="submit" type="submit" value="<?php echo get_vocab('login') ?> ">
-    </div>
-  </fieldset>
-</form>
-<?php
-  echo "</div>";  // Close of the contents div
-  // Print footer and exit
-  print_footer(TRUE);
-}
 
 /*
   Target of the form with sets the URL argument "Action=QueryName".

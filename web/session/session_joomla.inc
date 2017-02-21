@@ -2,6 +2,7 @@
 namespace MRBS;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
+require_once MRBS_ROOT . '/functions_logon.inc';
 
 $mainframe = JFactory::getApplication('site');
 $mainframe->initialise();
@@ -74,46 +75,6 @@ if (isset($Action) && ($Action == "SetName"))
   print_footer(TRUE);
 }
 
-/*
-  Display the login form. Used by two routines below.
-  Will eventually return to $target_url.
-*/
-function printLoginForm($action, $target_url, $returl)
-{
-?>
-<form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars($action) ?>">
-  <fieldset>
-  <legend><?php echo get_vocab("please_login") ?></legend>
-    <div>
-      <label for="NewUserName"><?php echo get_vocab("users.name") ?>:</label>
-      <input type="text" id="NewUserName" name="NewUserName">
-    </div>
-    <div>
-      <label for="NewUserPassword"><?php echo get_vocab("users.password") ?>:</label>
-      <input type="password" id="NewUserPassword" name="NewUserPassword">
-    </div>
-    <?php
-    // We need to preserve the original calling page, so that it's there when we eventually get
-    // to the target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-    // the original caller.    If this is the second time through we will have stored it in $returl.
-    if (!isset($returl))
-    {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-    }
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    ?>
-    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
-    <input type="hidden" name="Action" value="SetName">
-    <div id="logon_submit">
-      <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
-    </div>
-  </fieldset>
-</form>
-<?php
-  echo "</div>";  // Close of the contents div
-  // Print footer and exit
-  print_footer(TRUE);
-}
 
 /*
   Target of the form with sets the URL argument "Action=QueryName".
