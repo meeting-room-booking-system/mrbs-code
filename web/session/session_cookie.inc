@@ -216,19 +216,16 @@ function getUserName()
   global $REMOTE_ADDR, $auth;
   
   static $cached_username = null;
+  static $have_checked_cookie = false;
 
-  //error_log("Called getUserName()");
-
-  if (!is_null($cached_username))
+  if ($have_checked_cookie)
   {
-    //error_log("cached");
     return $cached_username;
   }
   
   // If the cached username isn't set, we have to decode the cookie, but
-  // first set the cached username to an empty string, so we will only do
-  // this once
-  $cached_username = "";
+  // first set the flag, so we will only do this once
+  $have_checked_cookie = true;
 
   if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
