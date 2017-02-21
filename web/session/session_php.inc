@@ -19,7 +19,7 @@ global $PHP_SELF, $auth;
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');
-$TargetURL = get_form_var('TargetURL', 'string');
+$target_url = get_form_var('target_url', 'string');
 $returl = get_form_var('returl', 'string');
 
 if (isset($cookie_path_override))
@@ -75,7 +75,7 @@ if (!empty($auth["session_php"]["inactivity_expire_time"]))
 
 /*
   Target of the form with sets the URL argument "Action=SetName".
-  Will eventually return to URL argument "TargetURL=whatever".
+  Will eventually return to URL argument "target_url=whatever".
 */
 if (isset($Action) && ($Action == "SetName"))
 {
@@ -101,7 +101,7 @@ if (isset($Action) && ($Action == "SetName"))
       {
         print_header(0, 0, 0, 0, "");
         echo "<p>".get_vocab('unknown_user')."</p>\n";
-        printLoginForm($TargetURL);
+        printLoginForm($target_url);
         exit();
       }
     }
@@ -112,25 +112,25 @@ if (isset($Action) && ($Action == "SetName"))
   if (!empty($returl))
   {
     // check to see whether there's a query string already
-    if (strpos($TargetURL, '?') === false)
+    if (strpos($target_url, '?') === false)
     {
-      $TargetURL .= "?returl=" . urlencode($returl);
+      $target_url .= "?returl=" . urlencode($returl);
     }
     else
     {
-      $TargetURL .= "&returl=" . urlencode($returl);
+      $target_url .= "&returl=" . urlencode($returl);
     }
   }
   // Problems have been reported on Windows IIS with session data not being
   // written out without a call to session_write_close()
   session_write_close();
-  header ("Location: $TargetURL"); /* Redirect browser to initial page */
+  header ("Location: $target_url"); /* Redirect browser to initial page */
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
     Anyway, if the browser cannot redirect automatically, the manual link below will work. */
   print_header(0, 0, 0, 0, "");
   echo "<br>\n";
-  echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+  echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
 
   // Print footer and exit
   print_footer(TRUE);
@@ -138,9 +138,9 @@ if (isset($Action) && ($Action == "SetName"))
 
 /*
   Display the login form. Used by two routines below.
-  Will eventually return to $TargetURL.
+  Will eventually return to $target_url.
 */
-function printLoginForm($TargetURL)
+function printLoginForm($target_url)
 {
   global $HTTP_REFERER;
   global $returl;
@@ -171,14 +171,14 @@ function printLoginForm($TargetURL)
   $html .= "</div>\n";
 
   // We need to preserve the original calling page, so that it's there when we eventually get
-  // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
+  // to the target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
   // the original caller.    If this is the second time through we will have stored it in $returl.
   if (!isset($returl))
   {
     $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
   }
   $html .= "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"TargetURL\" value=\"" . htmlspecialchars($TargetURL) . "\">\n";
+  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
   $html .= "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
   
   $html .= "<div id=\"logon_submit\">\n";
@@ -198,12 +198,12 @@ function printLoginForm($TargetURL)
 
 /*
   Target of the form with sets the URL argument "Action=QueryName".
-  Will eventually return to URL argument "TargetURL=whatever".
+  Will eventually return to URL argument "target_url=whatever".
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header(0, 0, 0, 0, "");
-  printLoginForm($TargetURL);
+  printLoginForm($target_url);
   exit();
 }
 
@@ -221,12 +221,12 @@ function authGet()
 
   echo "<p>".get_vocab("norights")."</p>\n";
 
-  $TargetURL = this_page();
+  $target_url = this_page();
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm($TargetURL);
+  printLoginForm($target_url);
 
   exit();
 }
@@ -246,14 +246,14 @@ function PrintLogonBox()
 {
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
 
-  $TargetURL = this_page();
+  $target_url = this_page();
   if (isset($url_base) && ($url_base !== ''))
   {
-    $TargetURL = $url_base . '/' . $TargetURL;
+    $target_url = $url_base . '/' . $target_url;
   }
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
   $user=getUserName();
   if (isset($user))
@@ -271,7 +271,7 @@ function PrintLogonBox()
          . htmlspecialchars($user) ?></a>
                 <form method="post" action="admin.php">
                   <div>
-                    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+                    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
                     <input type="hidden" name="Action" value="SetName">
                     <input type="hidden" name="NewUserName" value="">
                     <input type="hidden" name="NewUserPassword" value="">
@@ -286,7 +286,7 @@ function PrintLogonBox()
                 <a href=""><?php echo get_vocab('unknown_user'); ?></a>
                 <form method="post" action="admin.php">
                   <div>
-                    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+                    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
                     <input type="hidden" name="Action" value="QueryName">
                     <input type="submit" value=" <?php echo get_vocab('login') ?> ">
                   </div>

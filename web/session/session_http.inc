@@ -75,14 +75,14 @@ function PrintLogonBox()
 {
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
   
-  $TargetURL = this_page();
+  $target_url = this_page();
   if (isset($url_base) && ($url_base !== ''))
   {
-    $TargetURL = $url_base . '/' . $TargetURL;
+    $target_url = $url_base . '/' . $target_url;
   }
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
   
   $user = getUserName();
@@ -109,7 +109,7 @@ function PrintLogonBox()
     <a href=""><?php echo get_vocab('unknown_user'); ?></a>
     <form method="post" action="admin.php">
       <div>
-        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
+        <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
         <input type="hidden" name="Action" value="QueryName">
         <input type="submit" value=" <?php echo get_vocab('login') ?> ">
       </div>
