@@ -8,13 +8,14 @@ namespace MRBS;
 function printLoginForm($action, $target_url, $returl)
 {
   $html = '';
-
+  
   $html .= "<form class=\"form_general\" id=\"logon\" method=\"post\"".
            " action=\"" . htmlspecialchars($action) . "\">\n";
   $html .= "<fieldset>\n";
   $html .= "<legend>" . get_vocab("please_login") . "</legend>\n";
   
   $html .= "<div>\n";
+  
   if (function_exists(__NAMESPACE__ . "\\canValidateByEmail")
       && canValidateByEmail())
   {
@@ -24,8 +25,11 @@ function printLoginForm($action, $target_url, $returl)
   {
     $placeholder = get_vocab("users.name");
   }
-  $html .= "<label for=\"NewUserName\">" . get_vocab("user") . ":</label>\n";
-  $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" placeholder=\"$placeholder\">\n";
+  
+  $html .= "<label for=\"NewUserName\" title=\"$placeholder\">" . 
+           get_vocab("user") . ":</label>\n";
+  $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" " .
+           " placeholder=\"$placeholder\">\n";
   $html .= "</div>\n";
   
   $html .= "<div>\n";
