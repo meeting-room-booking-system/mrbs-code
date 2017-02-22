@@ -15,10 +15,6 @@ namespace MRBS;
 *
 ******************************************************************************/
 
-/* session_php.inc and session_cookie.inc will add a link to the user list
-    in the logon box, if the value $user_list_link is set. */
-$user_list_link = "edit_users.php";
-
 
 function rehash($password_hash, $column_name, $column_value)
 {

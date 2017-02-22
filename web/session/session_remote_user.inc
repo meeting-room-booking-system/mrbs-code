@@ -49,8 +49,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $user_list_link, $day, $month, $year;
-  global $auth;
+  global $auth, $day, $month, $year;
   
   $user = getUserName();
 
@@ -68,10 +67,10 @@ function print_logon_box()
          . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
          . htmlspecialchars($user) ?></a>
 <?php
-    if (isset($user_list_link))
-    {
-      print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n" ;
-    }
+  if ($auth['type'] == 'db')
+  {
+    print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
+  }
 
     // Retrieve logout link from configuration, if specified
     if (isset($auth['remote_user']['logout_link']) &&

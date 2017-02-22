@@ -259,7 +259,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $QUERY_STRING, $user_list_link, $day, $month, $year;
+  global $QUERY_STRING, $auth, $day, $month, $year;
   
   $target_url = this_page();
   if (isset($url_base) && ($url_base !== ''))
@@ -310,9 +310,9 @@ function print_logon_box()
       </form>
   <?php 
   }
-  if (isset($user_list_link)) 
+  if ($auth['type'] == 'db')
   {
-    print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n";
+    print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
   }
 }
 
