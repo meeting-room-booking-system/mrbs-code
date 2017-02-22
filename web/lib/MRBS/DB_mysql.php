@@ -299,6 +299,7 @@ class DB_mysql extends DB
         break;
       case 2:
         $count = -1;
+        break;
       default:
         throw new Exception("Invalid value ($part) given for " . '$part.');
         break;
