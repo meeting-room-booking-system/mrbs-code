@@ -137,7 +137,7 @@ function authValidateUser($user, $pass)
 
   $valid_usernames = array_merge($valid_usernames, authValidateEmail($user, $pass));
   $valid_usernames = array_unique($valid_usernames);
-  
+
   return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
 }
 
@@ -199,6 +199,7 @@ function authValidateUsername($user, $pass)
 function authValidateEmail($email, $pass)
 {
   global $tbl_users;
+  global $auth;
   
   $valid_usernames = array();
   
@@ -209,11 +210,28 @@ function authValidateEmail($email, $pass)
   // be case sensitive.   But before we can take account of this, the email addresses in the database
   // need to be normalised so that all the domain names are stored in lower case.  Then it will be
   // possible to do a case sensitive comparison.
-  //
+  if (strpos($email, '@') === false)
+  {
+    if (!empty($auth['allow_local_part_email']))
+    {
+      // We're just checking the local-part of the email address
+      $condition = "LOWER(?)=LOWER(" . db()->syntax_simple_split('email', '@', 1, $sql_params) .")";
+    }
+    else
+    {
+      return $valid_usernames;
+    }
+  }
+  else
+  {
+    // Check the complete email address
+    $condition = "LOWER(?)=LOWER(email)";
+  }
+
   // Email addresses are not unique in the users table, so we need to find all of them.
   $sql = "SELECT password_hash, name
             FROM $tbl_users
-           WHERE LOWER(email)=LOWER(?)";
+           WHERE $condition";
 
   $res = db()->query($sql, $sql_params);
   

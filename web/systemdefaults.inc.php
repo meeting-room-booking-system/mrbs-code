@@ -39,12 +39,12 @@ namespace MRBS;
 // time to time to see if there is a later version available on the web.   If your
 // site prevents external access to the web, this check will time out.  However
 // you can avoid the timeout and stop MRBS checking for up to date versions by
-// setting $zoneinfo_update = FALSE;
-$zoneinfo_update = TRUE;
+// setting $zoneinfo_update = false;
+$zoneinfo_update = true;
 
 // The VTIMEZONE definitions exist in two forms - normal and Outlook compatible.
 // $zoneinfo_outlook_compatible determines which ones to use.
-$zoneinfo_outlook_compatible = TRUE;
+$zoneinfo_outlook_compatible = true;
 
 // The VTIMEZONE definitions are cached in the database with an expiry time
 // of $zoneinfo_expiry seconds.   If your server does not have external internet
@@ -79,13 +79,13 @@ $db_password = 'mrbs-password';
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
 $db_tbl_prefix = "mrbs_";
-// Set $db_persist to TRUE to use PHP persistent (pooled) database connections.  Note
+// Set $db_persist to true to use PHP persistent (pooled) database connections.  Note
 // that persistent connections are not recommended unless your system suffers significant
 // performance problems without them.   They can cause problems with transactions and
 // locks (see http://php.net/manual/en/features.persistent-connections.php) and although
 // MRBS tries to avoid those problems, it is generally better not to use persistent
 // connections if you can.
-$db_persist = FALSE;
+$db_persist = false;
 
 
 /*********************************
@@ -185,7 +185,7 @@ $theme = "default";
 // expect to see in the day and week views.    It is used by mrbs.css.php for
 // creating classes.    It does not matter if it is too large, except for the
 // fact that more CSS than necessary will be generated.  (The variable is ignored
-// if $times_along_top is set to TRUE).
+// if $times_along_top is set to true).
 
 $max_slots = 60;
 
@@ -201,7 +201,7 @@ $max_slots = 60;
 // PERIODS SETTINGS
 // ----------------
 
-// The "Periods" settings are ignored if $enable_periods is FALSE.
+// The "Periods" settings are ignored if $enable_periods is false.
 
 // Define the name or description for your periods in chronological order
 // For example:
@@ -245,19 +245,19 @@ $periods[] = "Period&nbsp;2";
 // by the $weekstarts setting).   These are global settings, but you can additionally
 // configure per area settings.   This would allow you to set policies such as allowing
 // a maximum of 10 bookings per month in total with a maximum of 1 per day in Area A.
-$max_per_interval_global_enabled['day']    = FALSE;
+$max_per_interval_global_enabled['day']    = false;
 $max_per_interval_global['day'] = 1;      // max 1 bookings per day in total
 
-$max_per_interval_global_enabled['week']   = FALSE;
+$max_per_interval_global_enabled['week']   = false;
 $max_per_interval_global['week'] = 5;     // max 5 bookings per week in total
 
-$max_per_interval_global_enabled['month']  = FALSE;
+$max_per_interval_global_enabled['month']  = false;
 $max_per_interval_global['month'] = 10;   // max 10 bookings per month in total
 
-$max_per_interval_global_enabled['year']   = FALSE;
+$max_per_interval_global_enabled['year']   = false;
 $max_per_interval_global['year'] = 50;    // max 50 bookings per year in total
 
-$max_per_interval_global_enabled['future'] = FALSE;
+$max_per_interval_global_enabled['future'] = false;
 $max_per_interval_global['future'] = 100; // max 100 bookings in the future in total
 
 // Set the latest date for which you can make a booking.    This can be useful if you
@@ -266,7 +266,7 @@ $max_per_interval_global['future'] = 100; // max 100 bookings in the future in t
 // using the area settings.   Note that it is possible to have both a relative and absolute
 // date, eg "no more than a week away and in any case not past the end of term".
 // Note that bookings are allowed on the $max_booking_date, but not after it.
-$max_booking_date_enabled = FALSE;
+$max_booking_date_enabled = false;
 $max_booking_date = "2012-07-23";  // Must be a string in the format "yyyy-mm-dd"
 
 // Set the earliest date for which you can make a booking.    This can be useful if you
@@ -275,7 +275,7 @@ $max_booking_date = "2012-07-23";  // Must be a string in the format "yyyy-mm-dd
 // using the area settings.   Note that it is possible to have both a relative and absolute
 // date, eg "no earlier than a week away and in any case not before the beginning of term".
 // Note that bookings are allowed on the $min_booking_date, but not before it.
-$min_booking_date_enabled = FALSE;
+$min_booking_date_enabled = false;
 $min_booking_date = "2012-04-23";  // Must be a string in the format "yyyy-mm-dd"
 
 /******************
@@ -323,7 +323,7 @@ $strftime_format['time24']       = "%H:%M";        // 24 hour clock
 $strftime_format['datetime']     = "%c";           // Used in Help
 $strftime_format['datetime12']   = "%I:%M:%S%p - %A %d %B %Y";  // 12 hour clock
 $strftime_format['datetime24']   = "%H:%M:%S - %A %d %B %Y";    // 24 hour clock
-// If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = TRUE in
+// If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
 // MRBS 1.4.5 and earlier) then use
 // $strftime_format['daymonth']     = "%d %b";
 $strftime_format['daymonth']     = "%b %d";        // Used in trailer
@@ -331,7 +331,7 @@ $strftime_format['monyear']      = "%b %Y";        // Used in trailer
 $strftime_format['monthyear']    = "%B %Y";        // Used in Month view
 
 // Whether or not to display the timezone
-$display_timezone = FALSE;
+$display_timezone = false;
 
 // Results per page for searching:
 $search["count"] = 20;
@@ -345,10 +345,10 @@ $refresh_rate = 0;
 // Set to 0 to disable
 $ajax_refresh_rate = 10;
 
-// Trailer type.   FALSE gives a trailer complete with links to days, weeks and months before
-// and after the current date.    TRUE gives a simpler trailer that just has links to the
+// Trailer type.   false gives a trailer complete with links to days, weeks and months before
+// and after the current date.    true gives a simpler trailer that just has links to the
 // current day, week and month.
-$simple_trailer = FALSE;
+$simple_trailer = false;
 
 // should areas be shown as a list or a drop-down select box?
 $area_list_format = "list";
@@ -361,33 +361,33 @@ $area_list_format = "list";
 $monthly_view_entries_details = "both";
 
 // To view weeks in the bottom trailer as week numbers (42) instead of
-// 'first day of the week' (13 Oct), set this to TRUE.  Will also give week
+// 'first day of the week' (13 Oct), set this to true.  Will also give week
 // numbers in the month view
-$view_week_number = FALSE;
+$view_week_number = false;
 
 // To display week numbers in the mini-calendars, set this to true. The week
 // numbers are only accurate if you set $weekstarts to 1, i.e. set the
 // start of the week to Monday
-$mincals_week_numbers = FALSE;
+$mincals_week_numbers = false;
 
 // To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
-// set to TRUE;   the default/traditional version of MRBS has rooms (or days) along the top and
+// set to true;   the default/traditional version of MRBS has rooms (or days) along the top and
 // times along the side.    Transposing the table can be useful if you have a large number of
 // rooms and not many time slots.
-$times_along_top = FALSE;
+$times_along_top = false;
 
 // To display the row labels (times, rooms or days) on the right hand side as well as the 
-// left hand side in the day and week views, set to TRUE;
+// left hand side in the day and week views, set to true;
 // (was called $times_right_side in earlier versions of MRBS)
-$row_labels_both_sides = FALSE;
+$row_labels_both_sides = false;
 
 // To display the column headers (times, rooms or days) on the bottom of the table as
-// well as the top in the day and week views, set to TRUE;
-$column_labels_both_ends = FALSE;
+// well as the top in the day and week views, set to true;
+$column_labels_both_ends = false;
 
 // To display the mini caldandars at the bottom of the day week and month views
-// set this value to TRUE
-$display_calendar_bottom = FALSE; 
+// set this value to true
+$display_calendar_bottom = false; 
 
 // Define default starting view (month, week or day)
 // Default is day
@@ -400,24 +400,24 @@ $default_view = "day";
 $default_room = 0;
 
 // Define clipping behaviour for the cells in the day and week views.
-// Set to TRUE if you want the cells in the day and week views to be clipped.   This
+// Set to true if you want the cells in the day and week views to be clipped.   This
 // gives a table where all the rows have the same height, regardless of content.
-// Alternatively set to FALSE if you want the cells to expand to fit the content.
-// (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
-$clipped = TRUE;                
+// Alternatively set to false if you want the cells to expand to fit the content.
+// (false not supported in IE6 and IE7 due to their incomplete CSS support)
+$clipped = true;                
 
 // Define clipping behaviour for the cells in the month view.
-// Set to TRUE if you want all entries to have the same height. The
-// short description may be clipped in this case. If set to FALSE,
+// Set to true if you want all entries to have the same height. The
+// short description may be clipped in this case. If set to false,
 // each booking entry will be large enough to display all information.
-$clipped_month = TRUE;
+$clipped_month = true;
 
-// Set to TRUE if you want the cells in the month view to scroll if there are too
-// many bookings to display; set to FALSE if you want the table cell to expand to
+// Set to true if you want the cells in the month view to scroll if there are too
+// many bookings to display; set to false if you want the table cell to expand to
 // accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
 // cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
-// the cell content is clipped when $month_cell_scrolling is set to TRUE.)
-$month_cell_scrolling = TRUE;
+// the cell content is clipped when $month_cell_scrolling is set to true.)
+$month_cell_scrolling = true;
 
 // Define the maximum length of a string that can be displayed in an admin table cell
 // (eg the rooms and users lists) before it is truncated.  (This is necessary because 
@@ -455,7 +455,7 @@ $max_rep_entrys = 365 + 1;
 // Default report span in days:
 $default_report_days = 60;
 
-$show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
+$show_plus_link = false;   // Change to true to always show the (+) link as in
                            // MRBS 1.1.
 
 
@@ -465,15 +465,15 @@ $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link as in
 // so appear in the areadefaults.inc.php file
 
 // Choose which fields should be private by setting 
-// $is_private_field['tablename.columnname'] = TRUE
+// $is_private_field['tablename.columnname'] = true
 // At the moment only fields in the entry table can be marked as private,
 // including custom fields, but with the exception of the following fields:
 // start_time, end_time, entry_type, repeat_id, room_id, timestamp, type, status,
 // reminded, info_time, info_user, info_text.
-$is_private_field['entry.name'] = TRUE;
-$is_private_field['entry.description'] = TRUE;
-$is_private_field['entry.create_by'] = TRUE;
-$is_private_field['entry.modified_by'] = TRUE;
+$is_private_field['entry.name'] = true;
+$is_private_field['entry.description'] = true;
+$is_private_field['entry.create_by'] = true;
+$is_private_field['entry.modified_by'] = true;
 
                   
 // SETTINGS FOR APPROVING BOOKINGS - PER-AREA
@@ -578,11 +578,11 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
-// Set $skip_default to TRUE if you want the "Skip past conflicts" box
+// Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
 // if you make a repeat booking and some of the repeat dates are already
 // booked, MRBS will just skip past those).
-$skip_default = FALSE;
+$skip_default = false;
 
 // $edit_entry_field_order can be used to change the order of fields in the 
 // edit_entry page. This is useful to insert custom fields somewhere other than 
@@ -631,7 +631,7 @@ $auth["session_cookie"]["session_expire_time"] = (60*60*24*30); // 30 days
 // Whether to include the user's IP address in their session cookie.
 // Increases security, but could cause problems with proxies/dynamic IP
 // machines
-$auth["session_cookie"]["include_ip"] = TRUE;
+$auth["session_cookie"]["include_ip"] = true;
 // The hash algorithm to use, must be supported by your version of PHP,
 // see http://php.net/manual/en/function.hash-algos.php
 $auth["session_cookie"]["hash_algorithm"] = 'sha512';
@@ -810,9 +810,9 @@ $ldap_tls = false;
 $ldap_filter_user_attr = "memberuid";
 // $ldap_filter = "cn=MRBS Users";
 
-// If you need to disable client referrals, this should be set to TRUE.
+// If you need to disable client referrals, this should be set to true.
 // Note: Active Directory for Windows 2003 forward requires this.
-// $ldap_disable_referrals = TRUE;
+// $ldap_disable_referrals = true;
 
 // LDAP option for dereferencing aliases
 // LDAP_DEREF_NEVER = 0 - (default) aliases are never dereferenced.
@@ -822,9 +822,9 @@ $ldap_filter_user_attr = "memberuid";
 // LDAP_DEREF_ALWAYS = 3 - aliases should be dereferenced always.
 //$ldap_deref = LDAP_DEREF_ALWAYS;
 
-// Set to TRUE to tell MRBS to look up a user's email address in LDAP.
+// Set to true to tell MRBS to look up a user's email address in LDAP.
 // Utilises $ldap_email_attrib below
-$ldap_get_user_email = FALSE;
+$ldap_get_user_email = false;
 // The LDAP attribute which holds a user's email address
 // This can be an array.
 $ldap_email_attrib = 'mail';
@@ -839,13 +839,13 @@ $ldap_email_attrib = 'mail';
 // This can be an array.
 $ldap_group_member_attrib = 'memberof';
   
-// Set to TRUE if you want MRBS to call ldap_unbind() between successive
+// Set to true if you want MRBS to call ldap_unbind() between successive
 // attempts to bind. Unbinding while still connected upsets some
 // LDAP servers
-$ldap_unbind_between_attempts = FALSE;
+$ldap_unbind_between_attempts = false;
 
 // Output debugging information for LDAP actions
-$ldap_debug = FALSE;
+$ldap_debug = false;
 
 // 'auth_imap' configuration settings
 // See AUTHENTICATION for details of how check against multiple servers
@@ -860,11 +860,11 @@ $auth["imap_php"]["hostname"] = "localhost";
 // Specifies the port number to connect to
 //$auth["imap_php"]["port"] = 993;
 // Use SSL
-//$auth["imap_php"]["ssl"] = TRUE;
+//$auth["imap_php"]["ssl"] = true;
 // Use TLS
-//$auth["imap_php"]["tls"] = TRUE;
+//$auth["imap_php"]["tls"] = true;
 // Turn off SSL/TLS certificate validation
-//$auth["imap_php"]["novalidate-cert"] = TRUE;
+//$auth["imap_php"]["novalidate-cert"] = true;
 
 // 'auth_pop3' configuration settings
 // See AUTHENTICATION for details of how check against multiple servers
@@ -928,34 +928,39 @@ define('COOKIEHASH', md5($domain_name));
 
 
 // General settings
+// Allow users just to enter the local-part of their email address (provided that
+// the authentication type supports validation by local-part).   For example, if user
+// with username 'john' has email address 'jsmith@example.com', then he would be able
+// to enter either 'john', 'jsmith' or 'jsmith@example.com' when logging in.
+$auth['allow_local_part_email'] = false;
 // If you want only administrators to be able to make and delete bookings,
-// set this variable to TRUE
-$auth['only_admin_can_book'] = FALSE;
+// set this variable to true
+$auth['only_admin_can_book'] = false;
 // If you want only administrators to be able to make repeat bookings,
-// set this variable to TRUE
-$auth['only_admin_can_book_repeat'] = FALSE;
+// set this variable to true
+$auth['only_admin_can_book_repeat'] = false;
 // If you want only administrators to be able to make bookings spanning
-// more than one day, set this variable to TRUE.
-$auth['only_admin_can_book_multiday'] = FALSE;
+// more than one day, set this variable to true.
+$auth['only_admin_can_book_multiday'] = false;
 // If you want only administrators to be able to select multiple rooms
-// on the booking form then set this to TRUE.  (It doesn't stop ordinary users
+// on the booking form then set this to true.  (It doesn't stop ordinary users
 // making separate bookings for the same time slot, but it does slow them down).
-$auth['only_admin_can_select_multiroom'] = FALSE;
+$auth['only_admin_can_select_multiroom'] = false;
 // If you don't want ordinary users to be able to see the other users'
-// details then set this to TRUE.  (Only relevant when using 'db' authentication]
-$auth['only_admin_can_see_other_users'] = FALSE;
+// details then set this to true.  (Only relevant when using 'db' authentication]
+$auth['only_admin_can_see_other_users'] = false;
 // If you want to prevent the public (ie un-logged in users) from
-// being able to view bookings, set this variable to TRUE
-$auth['deny_public_access'] = FALSE;
-// Set to TRUE if you want admins to be able to perform bulk deletions
+// being able to view bookings, set this variable to true
+$auth['deny_public_access'] = false;
+// Set to true if you want admins to be able to perform bulk deletions
 // on the Report page.  (It also only shows up if JavaScript is enabled)
-$auth['show_bulk_delete'] = FALSE;
+$auth['show_bulk_delete'] = false;
 
-// Set to TRUE if you want to allow MRBS to be run from the command line, for example
-// if you want to produce reports from a cron job.   (It is set to FALSE by default
+// Set to true if you want to allow MRBS to be run from the command line, for example
+// if you want to produce reports from a cron job.   (It is set to false by default
 // as a security measure, because when running from the CLI you are assumed to have
 // full admin access).
-$allow_cli = FALSE;
+$allow_cli = false;
 
 
 /**********************************************
@@ -966,52 +971,52 @@ $allow_cli = FALSE;
 // ------------
 // The following settings determine who should be emailed when a booking is made,
 // edited or deleted (though the latter two events depend on the "When" settings below).
-// Set to TRUE or FALSE as required
+// Set to true or false as required
 // (Note:  the email addresses for the room and area administrators are set from the
 // edit_area_room.php page in MRBS)
-$mail_settings['admin_on_bookings']      = FALSE;  // the addresses defined by $mail_settings['recipients'] below
-$mail_settings['area_admin_on_bookings'] = FALSE;  // the area administrator
-$mail_settings['room_admin_on_bookings'] = FALSE;  // the room administrator
-$mail_settings['booker']                 = FALSE;  // the person making the booking
-$mail_settings['book_admin_on_approval'] = FALSE;  // the booking administrator when booking approval is enabled
+$mail_settings['admin_on_bookings']      = false;  // the addresses defined by $mail_settings['recipients'] below
+$mail_settings['area_admin_on_bookings'] = false;  // the area administrator
+$mail_settings['room_admin_on_bookings'] = false;  // the room administrator
+$mail_settings['booker']                 = false;  // the person making the booking
+$mail_settings['book_admin_on_approval'] = false;  // the booking administrator when booking approval is enabled
                                                    // (which is the MRBS admin, but this setting allows MRBS
                                                    // to be extended to have separate booking approvers)     
 
 // WHEN TO EMAIL
 // -------------
 // These settings determine when an email should be sent.
-// Set to TRUE or FALSE as required
+// Set to true or false as required
 //
 // (Note:  (a) the variables $mail_settings['admin_on_delete'] and
 // $mail_settings['admin_all'], which were used in MRBS versions 1.4.5 and
 // before are now deprecated.   They are still supported for reasons of backward
 // compatibility, but they may be withdrawn in the future.  (b)  the default 
-// value of $mail_settings['on_new'] is TRUE for compatibility with MRBS 1.4.5
+// value of $mail_settings['on_new'] is true for compatibility with MRBS 1.4.5
 // and before, where there was no explicit config setting, but mails were always sent
 // for new bookings if there was somebody to send them to)
 
-$mail_settings['on_new']    = TRUE;   // when an entry is created
-$mail_settings['on_change'] = FALSE;  // when an entry is changed
-$mail_settings['on_delete'] = FALSE;  // when an entry is deleted
+$mail_settings['on_new']    = true;   // when an entry is created
+$mail_settings['on_change'] = false;  // when an entry is changed
+$mail_settings['on_delete'] = false;  // when an entry is deleted
 
 // It is also possible to allow all users or just admins to choose not to send an
 // email when creating or editing a booking.  This can be useful if an inconsequential
 // change is being made, or many bookings are being made at the beginning of a term or season.
-$mail_settings['allow_no_mail']        = FALSE;
-$mail_settings['allow_admins_no_mail'] = FALSE;  // Ignored if 'allow_no_mail' is TRUE
-$mail_settings['no_mail_default'] = FALSE; // Default value for the 'no mail' checkbox.  
-                                           // TRUE for checked (ie don't send mail),
-                                           // FALSE for unchecked (ie do send mail)
+$mail_settings['allow_no_mail']        = false;
+$mail_settings['allow_admins_no_mail'] = false;  // Ignored if 'allow_no_mail' is true
+$mail_settings['no_mail_default'] = false; // Default value for the 'no mail' checkbox.  
+                                           // true for checked (ie don't send mail),
+                                           // false for unchecked (ie do send mail)
 
 
 // WHAT TO EMAIL
 // -------------
 // These settings determine what should be included in the email
-// Set to TRUE or FALSE as required
-$mail_settings['details']   = FALSE; // Set to TRUE if you want full booking details;
+// Set to true or false as required
+$mail_settings['details']   = false; // Set to true if you want full booking details;
                                      // otherwise you just get a link to the entry
-$mail_settings['html']      = FALSE; // Set to true if you want HTML mail
-$mail_settings['icalendar'] = FALSE; // Set to TRUE to include iCalendar details
+$mail_settings['html']      = false; // Set to true if you want HTML mail
+$mail_settings['icalendar'] = false; // Set to true to include iCalendar details
                                      // which can be imported into a calendar.  (Note:
                                      // iCalendar details will not be sent for areas
                                      // that use periods as there isn't a mapping between
@@ -1029,7 +1034,7 @@ $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 // ------------------------
 // The email addresses of the MRBS administrator are set in the config file, and
 // those of the room and area administrators are set though the edit_area_room.php
-// in MRBS.    But if you have set $mail_settings['booker'] above to TRUE, MRBS will
+// in MRBS.    But if you have set $mail_settings['booker'] above to true, MRBS will
 // need the email addresses of ordinary users.   If you are using the "db" 
 // authentication method then MRBS will be able to get them from the users table.  But
 // if you are using any other authentication scheme then the following settings allow
@@ -1073,7 +1078,7 @@ $mail_settings['qmail']['qmail-inject-path'] = '/usr/bin/qmail-inject';
 // These settings are only used with the "smtp" backend
 $smtp_settings['host'] = 'localhost';  // SMTP server
 $smtp_settings['port'] = 25;           // SMTP port number
-$smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
+$smtp_settings['auth'] = false;        // Whether to use SMTP authentication
 $smtp_settings['secure'] = 'tls';      // Encryption method: '', 'tls' or 'ssl'
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
@@ -1102,26 +1107,26 @@ $mail_settings['recipients'] = 'admin_email@your.org';
 // more than one recipient (see 'recipients')
 $mail_settings['cc'] = '';
 
-// Set to TRUE if you want the cc addresses to be appended to the to line.
+// Set to true if you want the cc addresses to be appended to the to line.
 // (Some email servers are configured not to send emails if the cc or bcc
 // fields are set)
-$mail_settings['treat_cc_as_to'] = FALSE;
+$mail_settings['treat_cc_as_to'] = false;
 
 // The filename to be used for iCalendar attachments.   Will always have the
 // extension '.ics'
 $mail_settings['ics_filename'] = "booking";
 
-// Set this to TRUE if you want MRBS to output debug information when you are sending email.
+// Set this to true if you want MRBS to output debug information when you are sending email.
 // If you are not getting emails it can be helpful by telling you (a) whether the mail functions
 // are being called in the first place (b) whether there are addresses to send email to and (c)
 // the result of the mail sending operation.
-$mail_settings['debug'] = FALSE;
+$mail_settings['debug'] = false;
 // Where to send the debug output.  Can be 'browser' or 'log' (for the error_log)
 $mail_settings['debug_output'] = 'log';
 
-// Set this to TRUE if you do not want any email sent, whatever the rest of the settings.
+// Set this to true if you do not want any email sent, whatever the rest of the settings.
 // This is a global setting that will override anything else.   Useful when testing MRBS.
-$mail_settings['disabled'] = FALSE;
+$mail_settings['disabled'] = false;
  
  
 /**********
@@ -1190,9 +1195,9 @@ $csv_col_sep = ",";   // Separator between columns/fields
 // then CSV files are written using the MRBS default charset (utf-8).
 // Earlier versions of Microsoft Excel (at least up to Excel 2010 on Windows and 2011
 // on Mac) are not guaranteed to recognise utf-8, but do recognise utf-16, so for those
-// versions try setting $csv_charset to 'utf-16' and $csv_bom to TRUE.
+// versions try setting $csv_charset to 'utf-16' and $csv_bom to true.
 $csv_charset = 'utf-8';
-$csv_bom = FALSE;
+$csv_bom = false;
 
 
 /*************
