@@ -72,17 +72,17 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (($result = authValidateUser($NewUserName, $NewUserPassword)) !== false)
-    {
-      $UserName     = $result;
-      $UserPassword = $NewUserPassword;
-    }
-    else
+    if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
     {
       print_header(0, 0, 0, 0, "");
       echo "<p>".get_vocab('unknown_user')."</p>\n";
       printLoginForm(this_page(), $target_url, $returl);
       exit();
+    }
+    else
+    {
+      $UserName     = $valid_username;
+      $UserPassword = $NewUserPassword;
     }
 
     if ($auth['session_cookie']['session_expire_time'] == 0)
