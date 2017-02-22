@@ -32,7 +32,7 @@ if (!isset($auth['session']))
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -119,7 +119,7 @@ function authValidateUser($user, $pass)
         if( substr( $response, 0, 3 ) == '+OK' )
         {
           fputs( $stream, "QUIT\r\n" );
-          return true;
+          return $user;
         }
       }
     } // end shared secret if
@@ -144,7 +144,7 @@ function authValidateUser($user, $pass)
         $response = fgets( $stream, 1024 );
         if ( substr( $response, 0, 3 ) == '+OK' )
         {
-          return true;
+          return $user;
         }
       }
       fputs( $stream, "QUIT\r\n" );

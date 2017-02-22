@@ -53,7 +53,7 @@ function getUserName()
     $user = unslashes($PHP_AUTH_USER);
 
     if ((isset($authorised_user) && ($authorised_user == $user)) ||
-        authValidateUser($user,getAuthPassword()))
+        (authValidateUser($user, getAuthPassword()) !== false))
     {
       $authorised_user = $user;
     }

@@ -34,7 +34,7 @@ if (!isset($auth['session'])) $auth['session']='http';
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -64,14 +64,12 @@ function authValidateUser($user, $pass)
   $f->setMode($auth["auth_basic"]["mode"]);
   $f->load();
 
-  $ret = false;
-
   if ($f->verifyPasswd($user, $pass) === true)
   {
-    $ret = true;
+    return $user;
   }
 
-  return $ret;
+  return false;
 }
 
 /* authGetUserLevel($user)

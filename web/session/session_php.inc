@@ -100,24 +100,14 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (!authValidateUser($NewUserName, $NewUserPassword))
+    if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
     {
-      // Maybe the username was an email address.  Try that if possible.
-      if (function_exists(__NAMESPACE__ . "\\authValidateEmail") &&
-          ($result = authValidateEmail($NewUserName, $NewUserPassword)) !== false)
-      {
-        $NewUserName = $result;
-      }
-      else
-      {
-        print_header(0, 0, 0, 0, "");
-        echo "<p>".get_vocab('unknown_user')."</p>\n";
-        printLoginForm(this_page(), $target_url, $returl);
-        exit();
-      }
+      print_header(0, 0, 0, 0, "");
+      echo "<p>".get_vocab('unknown_user')."</p>\n";
+      printLoginForm(this_page(), $target_url, $returl);
+      exit();
     }
-
-    $_SESSION["UserName"] = $NewUserName;
+    $_SESSION["UserName"] = $valid_username;
   }
   // preserve the original $HTTP_REFERER by sending it as a GET parameter
   if (!empty($returl))

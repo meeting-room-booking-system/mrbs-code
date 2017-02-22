@@ -27,7 +27,7 @@ namespace MRBS;
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -46,7 +46,7 @@ function authValidateUser($user, $pass)
        ($auth["user"][utf8_strtolower($user)] == $pass)
         ))
   {
-    return true; // User validated
+    return $user;    // User validated
   }
 
   return false;      // User unknown or password invalid

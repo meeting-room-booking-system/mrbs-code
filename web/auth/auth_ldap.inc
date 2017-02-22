@@ -19,8 +19,8 @@ if (!isset($auth['session']))
  * &$object  - Reference to the generic object, type defined by caller
  * 
  * Returns:
- *   false     - The pair are invalid or do not exist
- *   true      - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authLdapAction($callback, $user, &$object)
 {
@@ -235,7 +235,7 @@ function authLdapAction($callback, $user, &$object)
                             $user_search, $user, $object);
         if ($res)
         {
-          return true;
+          return $user;
         }
       }
 
@@ -350,8 +350,8 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
  * $pass  - The password
  * 
  * Returns:
- *   false     - The pair are invalid or do not exist
- *   true      - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {

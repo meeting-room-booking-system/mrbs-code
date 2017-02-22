@@ -31,7 +31,7 @@ if (!isset($auth['session'])) $auth['session']='http';
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -48,12 +48,14 @@ function authValidateUser($user, $pass)
     error_log("auth_crypt: passwd file not specified");
     return false;
   }
+  
   $fh = fopen($auth["crypt"]["passwd_file"], "r");
   if (!$fh)
   {
     error_log("auth_crypt: couldn't open passwd file\n");
     return false;
   }
+  
   $ret = false; // Default to failure
   while ($line = fgets($fh))
   {
@@ -61,10 +63,11 @@ function authValidateUser($user, $pass)
     {
       if (crypt($pass, $matches[1]) == $matches[1])
       {
-        $ret = true; // Success!
+        $ret = $user; // Success!
       }
     }
   }
+  
   fclose($fh);
   return $ret;
 }

@@ -46,7 +46,7 @@ function quote_imap($str)
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -117,7 +117,7 @@ function authValidateUser($user, $pass)
         fputs( $stream, "a002 LOGOUT\r\n" );
         $response = fgets( $stream, 1024 );
         fclose( $stream );
-        return true;
+        return $user;
       }
       fputs( $stream, "a002 LOGOUT\r\n" );
       fclose( $stream );

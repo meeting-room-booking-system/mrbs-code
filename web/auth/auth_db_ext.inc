@@ -44,7 +44,7 @@ $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -75,21 +75,21 @@ function authValidateUser($user, $pass)
       case 'md5':
         if (md5($pass) == $row[0])
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
 
       case 'sha1':
         if (sha1($pass) == $row[0])
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
 
       case 'sha256':
         if (hash('sha256', $pass) == $row[0])
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
 
@@ -97,14 +97,14 @@ function authValidateUser($user, $pass)
         $recrypt = crypt($pass,$row[0]);
         if ($row[0] == $recrypt)
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
 
       case 'password_hash':
         if (password_verify($pass, $row[0]))
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
 
@@ -119,7 +119,7 @@ function authValidateUser($user, $pass)
 
         if ($pass == $row[0])
         {
-          $retval = true;
+          $retval = $user;
         }
         break;
     }

@@ -33,7 +33,7 @@ function rehash($password_hash, $column_name, $column_value)
       break;
     case 'email':
       // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
-      // on most systems, it isn't always true.  The domain part is case insensitive but the local part can
+      // on most systems, it isn't always true.  The domain is case insensitive but the local-part can
       // be case sensitive.   But before we can take account of this, the email addresses in the database
       // need to be normalised so that all the domain names are stored in lower case.  Then it will be possible
       // to do a case sensitive comparison.
@@ -117,9 +117,43 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
+{
+  global $tbl_users;
+  
+  // The string $user that the user logged on with could be either a username or
+  // an email address, or even possibly just the local part of an email address.
+  // So it's just possible that there is more than one user with this password and
+  // username | email address | local-part.    If we get more than one, then we don't
+  // know which user it is, so we return false.
+  $valid_usernames = array();
+  
+  if (($valid_username = authValidateUsername($user, $pass)) !== false)
+  {
+    $valid_usernames[] = $valid_username;
+  }
+
+  $valid_usernames = array_merge($valid_usernames, authValidateEmail($user, $pass));
+  $valid_usernames = array_unique($valid_usernames);
+  
+  return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
+}
+
+
+/* authValidateUsername($user, $pass)
+ * 
+ * Checks if the specified username/password pair are valid
+ * 
+ * $user  - The user name
+ * $pass  - The password
+ * 
+ * Returns:
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
+ */
+function authValidateUsername($user, $pass)
 {
   global $tbl_users;
 
@@ -129,6 +163,8 @@ function authValidateUser($user, $pass)
   // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
   // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
   // messy.  WE could use STRCMP, but that's MySQL only.
+  
+  // Usernames are unique in the users table, so we only look for one.
   $sql = "SELECT password_hash
             FROM $tbl_users
            WHERE " .
@@ -146,7 +182,7 @@ function authValidateUser($user, $pass)
     return false;
   }
 
-  return checkPassword($pass, $row['password_hash'], 'name', $user);
+  return (checkPassword($pass, $row['password_hash'], 'name', $user)) ? $user : false;
 }
 
 
@@ -158,20 +194,23 @@ function authValidateUser($user, $pass)
  * $pass  - The password
  * 
  * Returns:
- *   false    - The pair are invalid or do not exist
- *   username - The pair are valid
+ *   array    - An array of valid usernames, empty if none found
  */
 function authValidateEmail($email, $pass)
 {
   global $tbl_users;
-
+  
+  $valid_usernames = array();
+  
   $sql_params = array($email);
 
   // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
-  // on most systems, it isn't always true.  The domain part is case insensitive but the local part can
+  // on most systems, it isn't always true.  The domain is case insensitive but the local-part can
   // be case sensitive.   But before we can take account of this, the email addresses in the database
-  // need to be normalised so that all the domain names are stored in lower case.  Then it will be possible
-  // to do a case sensitive comparison.
+  // need to be normalised so that all the domain names are stored in lower case.  Then it will be
+  // possible to do a case sensitive comparison.
+  //
+  // Email addresses are not unique in the users table, so we need to find all of them.
   $sql = "SELECT password_hash, name
             FROM $tbl_users
            WHERE LOWER(email)=LOWER(?)";
@@ -180,28 +219,24 @@ function authValidateEmail($email, $pass)
   
   $rows = $res->all_rows_keyed();
   
-  if (empty($rows))
-  {
-    return false;
-  }
-  
-  // Check all the users that have this email address and password hash.  If there are more
-  // than one then we don't know which user to login, so return false.
-  $possible_names = array();
+  // Check all the users that have this email address and password hash. 
   foreach($rows as $row)
   {
     if (checkPassword($pass, $row['password_hash'], 'email', $email))
     {
-      $possible_names[] = $row['name'];
+      $valid_usernames[] = $row['name'];
     }
   }
-
-  if (count($possible_names) == 1)
-  {
-    return $possible_names[0];
-  }
   
-  return false;
+  return $valid_usernames;
+}
+
+
+// Checks whether validation of a user by email address is possible
+// and allowed.
+function canValidateByEmail()
+{
+  return true;
 }
 
 

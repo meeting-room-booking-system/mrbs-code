@@ -33,7 +33,7 @@ if (!isset($auth['session']))
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -55,7 +55,7 @@ function authValidateUser($user, $pass)
     $rs = explode ( ":", $rs );
     if ( $rs[1] == crypt ( $pass, $rs[1] ) )
     {
-      return true;
+      return $user;
     }
     else
     {

@@ -16,7 +16,7 @@ if (!isset($auth['session']))
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -40,7 +40,7 @@ function authValidateUser($user, $pass)
   fputs($p, $pass);
   if (pclose($p) == 0)
   {
-    return true;
+    return $user;
   }
 
   // return failure

@@ -33,7 +33,7 @@ if (!isset($auth['session']))
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -44,8 +44,6 @@ function authValidateUser($user, $pass)
   {
     return false;
   }
-
-  $ret = false;
 
   require 'Net/SMTP.php';
 
@@ -58,15 +56,14 @@ function authValidateUser($user, $pass)
     {
       if (!PEAR::isError($smtp->auth($user, $pass)))
       {
-        $ret = true;
+        return $user;
       }
 
       $smtp->disconnect();
     }
   }
 
-  // return status
-  return $ret;
+  return false;
 }
 
 /* authGetUserLevel($user)

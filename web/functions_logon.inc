@@ -15,7 +15,8 @@ function printLoginForm($action, $target_url, $returl)
   $html .= "<legend>" . get_vocab("please_login") . "</legend>\n";
   
   $html .= "<div>\n";
-  if (function_exists(__NAMESPACE__ . "\\authValidateEmail"))
+  if (function_exists(__NAMESPACE__ . "\\canValidateByEmail")
+      && canValidateByEmail())
   {
     $placeholder = get_vocab("username_or_email");
   }

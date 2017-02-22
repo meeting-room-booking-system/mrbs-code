@@ -12,21 +12,20 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
-  return !is_wp_error(wp_authenticate($user, $pass));
+  return (is_wp_error(wp_authenticate($user, $pass))) ? false : $user;
 }
 
 
-// This function is just here so that MRBS knows that WordPress has the
-// capability of validating eithere a username or an email address.  It doesn't
-// do anything because wp_authenticate() in authValidateUser() does all the
-// work and copes with both types of input.
-function authValidateEmail()
+// Checks whether validation of a user by email address is possible and
+// allowed.  In the case of WordPress, wp_authenticate() accepts either
+// a username or email address and so this function always returns true.
+function canValidateByEmail()
 {
-  trigger_error("I was not expecting to be called!", E_USER_WARNING);
+  return true;
 }
 
 

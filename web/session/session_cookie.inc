@@ -72,14 +72,7 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (authValidateUser($NewUserName, $NewUserPassword))
-    {
-      $UserName     = $NewUserName;
-      $UserPassword = $NewUserPassword;
-    }
-    // Maybe the username was an email address.  Try that if possible.
-    elseif (function_exists(__NAMESPACE__ . "\\authValidateEmail") &&
-            ($result = authValidateEmail($NewUserName, $NewUserPassword)) !== false)
+    if (($result = authValidateUser($NewUserName, $NewUserPassword)) !== false)
     {
       $UserName     = $result;
       $UserPassword = $NewUserPassword;

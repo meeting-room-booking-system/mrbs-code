@@ -54,7 +54,7 @@ function version_check($vercheck)
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
- *   true     - The pair are valid
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -77,7 +77,7 @@ function authValidateUser($user, $pass)
   // If it succeeded, return success
   if ($ret == 0)
   {
-    return true;
+    return $user;
   }
 
   // return failure
