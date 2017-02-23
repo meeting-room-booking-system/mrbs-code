@@ -300,8 +300,9 @@ function PrintLogonBox()
   {
     $TargetURL = $TargetURL . "?" . $QUERY_STRING;
   }
-  $user=getUserName();
-  if ($user != "")
+  
+  $user = getUserName();
+  if (isset($user))
   {
     // words 'you are xxxx' becomes a link to the
     // report page with only entries created by xxx. Past entries are not
