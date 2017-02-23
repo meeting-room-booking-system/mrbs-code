@@ -193,10 +193,7 @@ function print_logon_box()
   global $QUERY_STRING, $auth, $day, $month, $year;
 
   $target_url = this_page();
-  if (isset($url_base) && ($url_base !== ''))
-  {
-    $target_url = $url_base . '/' . $target_url;
-  }
+
   if (isset($QUERY_STRING))
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
