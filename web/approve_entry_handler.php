@@ -66,6 +66,8 @@ if (isset($action))
       {
         $returl .= "&error=approve_failed";
       }
+      // Get the new data, which will have the status changed
+      $data = get_booking_info($id, $series);
       break;
     
       
