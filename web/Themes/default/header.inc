@@ -171,6 +171,10 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
   echo "<ul>\n";
   
   echo "<li>\n";
+  print_header_site_info();
+  echo "</li>\n";
+  
+  echo "<li>\n";
   print_goto_date($day, $month, $year, $area, $room);
   echo "</li>\n";
   
@@ -273,7 +277,6 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
   }
   
   echo "<header class=\"$class\">\n";
-  print_header_site_info();
   if (!$simple)
   {
     print_nav($day, $month, $year, $area, $room, $search_str);

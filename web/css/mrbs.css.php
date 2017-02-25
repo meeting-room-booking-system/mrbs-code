@@ -916,7 +916,6 @@ form#add_new_user {margin-left: 1em}
 /* ------------ FUNCTIONS.INC -------------------*/
 
 .banner {
-  display: table;
   height: 100%;
   width: 100%;
   background-color: <?php echo $banner_back_color ?>;
@@ -931,7 +930,6 @@ form#add_new_user {margin-left: 1em}
 }
 
 .banner #company {
-  display: table-cell;
   font-size: large;
   padding: 0.3em 1em;
   text-align: center;
@@ -943,8 +941,9 @@ form#add_new_user {margin-left: 1em}
 }
 
 .banner nav {
-  display: table-cell;
+  display: table;
   height: 100%;
+  width: 100%;
 }
 
 .banner ul {
@@ -965,6 +964,10 @@ form#add_new_user {margin-left: 1em}
   border-style: solid;
   border-width: 0 0 0 <?php echo $banner_border_cell_width ?>px;
   padding: 0.3em 0.5em;
+}
+
+.banner li:first-child {
+  border-left-width: 0;
 }
 
 #logon_box a {
