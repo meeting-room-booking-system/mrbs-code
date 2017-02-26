@@ -169,6 +169,10 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
   if (!$simple)
   {
     echo "<li>\n";
+    print_goto_date($day, $month, $year, $area, $room);
+    echo "</li>\n";
+    
+    echo "<li>\n";
     print_help($query_string);
     echo "</li>\n";
     
