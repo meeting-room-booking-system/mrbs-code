@@ -166,31 +166,8 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
   print_header_site_info();
   echo "</li>\n";
   
-  echo "<li>\n";
-  print_help($query_string);
-  echo "</li>\n";
-  
-  echo "<li>\n";
-  print_rooms($query_string);
-  echo "</li>\n";
-  
-  echo "<li>\n";
-  print_report($query_string);
-  echo "</li>\n";
-  
-  echo "<li>\n";
-  print_search($day, $month, $year, $area, $room, $search_str);
-  echo "</li>\n";
-  
-  // For session protocols that define their own logon box...
-  if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
+  if (!$simple)
   {
-    echo "<li>\n";
-    echo "<div id=\"logon_box\">\n";
-    print_logon_box();
-    echo "</div>\n";
-    echo "</li>\n";
-    
     echo "<li>\n";
     print_help($query_string);
     echo "</li>\n";
@@ -208,7 +185,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
     echo "</li>\n";
     
     // For session protocols that define their own logon box...
-    if (function_exists(__NAMESPACE__ . "\\PrintLogonBox"))
+    if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
       echo "<li>\n";
       print_logon();
