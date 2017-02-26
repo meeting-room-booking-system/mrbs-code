@@ -13,7 +13,7 @@ namespace MRBS;
 *                                                                             *
 \*****************************************************************************/
 
-require_once MRBS_ROOT . '/functions_logon.inc';
+require_once MRBS_ROOT . '/session/functions_session.inc';
 
 global $PHP_SELF, $HTTP_REFERER;
 global $auth;
