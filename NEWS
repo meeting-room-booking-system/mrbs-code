@@ -7,6 +7,23 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.6.1 (Sun Feb 26th 2017):
+
+[-] Fixed bug with the LDAP authentication scheme. See SF Support Requests
+ #1143.
+[*] Added ability to specify the "Room admin email" on creating a room.
+ See SF Support Requests [support-requests:#1137]
+[*] Added an unset() for $booking_types in systemdefaults.inc.php to make it
+ clearer how they work - see SF Bugs #374
+[-] Fixed bug to do with the booking day.
+[-] Fixed bug in cookie session scheme causing getUserName() to return ''
+ instead of null in the	case of a user not being logged in when.
+[-] Fixed bug causing incorrect status to be given on mails sent out
+ when an entry is approved. See SF Bugs #320.
+[-] Fixed header layout problem in IE11 and below when using a tall
+ logo. See SF Support Requests #1158.
+
+-------------------------------------------------------------------------------
 Version 1.6.0 (Sat Feb 11th 2017):
 
 [*] Decreased cache expiry time for timezone files, to allow for more rapid
