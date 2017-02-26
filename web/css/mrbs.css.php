@@ -925,7 +925,7 @@ form#add_new_user {margin-left: 1em}
   border-style: solid;
 }
 
-.banner.simple {
+.banner.simple, .banner.simple nav {
   height: auto;
 }
 
