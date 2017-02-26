@@ -192,7 +192,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
     if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
       echo "<li>\n";
-      print_logon();
+      print_logon_box();
       echo "</li>\n";
     }
   }
