@@ -147,7 +147,7 @@ function print_search($day, $month, $year, $area, $room, $search_str = '')
 }
 
 
-function print_nav($day, $month, $year, $area, $room, $search_str = '')
+function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=false)
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
   if (!empty($area))
@@ -163,7 +163,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
   echo "<ul>\n";
   
   echo "<li>\n";
-  print_goto_date($day, $month, $year, $area, $room);
+  print_header_site_info();
   echo "</li>\n";
   
   echo "<li>\n";
@@ -190,6 +190,30 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '')
     print_logon_box();
     echo "</div>\n";
     echo "</li>\n";
+    
+    echo "<li>\n";
+    print_help($query_string);
+    echo "</li>\n";
+    
+    echo "<li>\n";
+    print_rooms($query_string);
+    echo "</li>\n";
+    
+    echo "<li>\n";
+    print_report($query_string);
+    echo "</li>\n";
+    
+    echo "<li>\n";
+    print_search($day, $month, $year, $area, $room, $search_str);
+    echo "</li>\n";
+    
+    // For session protocols that define their own logon box...
+    if (function_exists(__NAMESPACE__ . "\\PrintLogonBox"))
+    {
+      echo "<li>\n";
+      print_logon();
+      echo "</li>\n";
+    }
   }
   
   echo "</ul>\n";
@@ -267,11 +291,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
   }
   
   echo "<header class=\"$class\">\n";
-  print_header_site_info();
-  if (!$simple)
-  {
-    print_nav($day, $month, $year, $area, $room, $search_str);
-  }
+  print_nav($day, $month, $year, $area, $room, $search_str, $simple);
   echo "</header>\n";
 
   // This <div> should really be moved out of here so that we can always see
