@@ -1074,7 +1074,10 @@ $mail_settings['qmail']['qmail-inject-path'] = '/usr/bin/qmail-inject';
 $smtp_settings['host'] = 'localhost';  // SMTP server
 $smtp_settings['port'] = 25;           // SMTP port number
 $smtp_settings['auth'] = FALSE;        // Whether to use SMTP authentication
-$smtp_settings['secure'] = 'tls';      // Encryption method: '', 'tls' or 'ssl'
+$smtp_settings['secure'] = '';         // Encryption method: '', 'tls' or 'ssl' - note that 'tls' means TLS is used even if the SMTP
+                                       // server doesn't advertise it. Conversely if you specify '' and the server advertises TLS, TLS
+                                       // will be used, unless the 'disable_opportunistic_tls' configuration parameter shown below is
+                                       // set to true.
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
 $smtp_settings['disable_opportunistic_tls'] = false; // Set this to true to disable
