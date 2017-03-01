@@ -484,12 +484,13 @@ files but this is not essential, since critical files containing your
 database login and password use a ".php" extension like config.inc.php.
 See your web server documentation on how to do this.
 
-There is an Apache .htaccess file included, but Apache might ignore it because
-of the "AllowOverride None" in your httpd.conf. Either change "AllowOverride
-None" to "AllowOverride Limit", create a new <Directory> entry with the
-contents of the .htaccess file in it, or add the contents of the .htaccess
-to httpd.conf where it says "<Files ~ "^\.ht">". And then read the Apache
-docs five or six times, until you know what you just did.
+There are example Apache .htaccess files included, for different versions of
+Apache, but Apache might ignore a .htaccess file in your MRBS directory
+due to the setting of the "AllowOverride" directive in your web server
+configuration. Either change "AllowOverride None" to "AllowOverride Limit",
+or create a new <Directory> entry with the contents of the .htaccess example
+file in it for your MRBS installation. Then read the Apache docs five or six
+times, until you know what you just did.
 
 You may protect "config.inc.php" to only allow the web server to read it.
 For example:   # chown httpd config.inc.php; chmod 400 config.inc.php
