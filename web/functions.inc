@@ -119,6 +119,38 @@ elseif ($private_override == "public" )
 }
 
 
+// Format a timestamp in RFC 1123 format, for HTTP headers
+//
+// e.g. Wed, 28 Jul 2010 12:43:58 GMT
+function rfc1123_date($timestamp)
+{
+  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
+}
+
+
+// A little helper function to send an "Expires" header. Just one
+// parameter, the number of seconds in the future to set the expiry.
+// If $seconds is <= 0, then caching is disabled.
+function expires_header($seconds)
+{
+  if ($seconds > 0)
+  {
+    // We also send a couple of extra headers as the "Expires" header alone
+    // does not always result in caching.
+    header("Expires: " . rfc1123_date(time() + $seconds));
+    header("Pragma: cache");
+    header("Cache-Control: max-age=$seconds");
+  }
+  else
+  {
+    // Make sure that caching is disabled.   Setting the "Expires" header
+    // alone doesn't always turn off caching.
+    header("Pragma: no-cache");                          // HTTP 1.0
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
+  }
+}
+
+
 // Outputs the HTTP headers
 function http_headers()
 {
@@ -126,8 +158,7 @@ function http_headers()
   // We want to prevent IE8 offering "Compatability View" as that really
   // messes up MRBS, especially on the Report page
   header("X-UA-Compatible: IE=Edge");
-  header("Pragma: no-cache");                          // HTTP 1.0
-  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the pastt
+  expires_header(0);  // no caching
 }
 
 
@@ -195,26 +226,6 @@ function print_footer($and_exit)
   }
 }
 
-
-// Format a timestamp in RFC 1123 format, for HTTP headers
-//
-// e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date($timestamp)
-{
-  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
-}
-
-
-// A little helper function to send an "Expires" header. Just one
-// parameter, the number of seconds in the future to set the expiry
-// (We also send a couple of extra headers as the "Expires" header alone
-// does not always result in caching.)
-function expires_header($seconds)
-{
-  header("Expires: ".rfc1123_date(time()+$seconds));
-  header("Pragma: cache");
-  header("Cache-Control: max-age=$seconds");
-}
 
 // Converts a duration of $dur seconds into a duration of
 // $dur $units

@@ -2,3 +2,9 @@
    Order allow,deny
    Deny from all
 </Files>
+
+# Some web servers will use mod_expires and turn on caching for
+# pages that they think should be cached.  Occasionally these cache
+# instructions will override MRBS's own cache instructions.  As some
+# MRBS pages should definitely not be cached, we disable ExpiresActive.
+ExpiresActive Off
