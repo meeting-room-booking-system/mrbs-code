@@ -579,6 +579,7 @@ function close_report()
   if ($ajax)
   {
     header("Content-Type: application/json");
+    expires_header(0);  // no caching
     echo json_encode($json_data);
   }
   elseif ($output_format == OUTPUT_HTML)
@@ -1545,6 +1546,7 @@ else
   {
     header("Content-Type: $content_type");
     header("Content-Disposition: attachment; filename=\"$filename\"");
+    expires_header(0);  // no caching
   }
 
   if (($output_format == OUTPUT_CSV) && $csv_bom)
@@ -1604,6 +1606,7 @@ if ($phase == 2)
     if ($ajax)
     {
       header("Content-Type: application/json");
+      expires_header(0);  // no caching
       echo json_encode($json_data);
     }
     else

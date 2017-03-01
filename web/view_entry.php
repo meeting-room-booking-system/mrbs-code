@@ -236,6 +236,7 @@ if (isset($action) && ($action == "export"))
     require_once "functions_ical.inc";
     header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
     header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
+    expires_header(0);  // no caching
 
     export_icalendar($res, $keep_private);
     exit;

@@ -36,5 +36,6 @@ foreach ($slots as $s)
 }
 
 header("Content-Type: application/json");
+expires_header(0);  // no caching
 echo json_encode($result);
 
