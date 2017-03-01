@@ -358,8 +358,7 @@ if (!$ajax_capable || $ajax)
 
 if ($ajax)
 {
-  header("Content-Type: application/json");
-  expires_header(0);  // no caching
+  http_headers(array("Content-Type: application/json"));
   echo json_encode($json_data);
 }
 else

@@ -234,9 +234,11 @@ if (isset($action) && ($action == "export"))
     
     // Export the calendar
     require_once "functions_ical.inc";
-    header("Content-Type: application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"");
-    header("Content-Disposition: attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"");
-    expires_header(0);  // no caching
+    
+    $content_type = "application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"";
+    $content_disposition = "attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"";
+    http_headers(array("Content-Type: $content_type",
+                       "Content-Disposition: $content_disposition"));
 
     export_icalendar($res, $keep_private);
     exit;

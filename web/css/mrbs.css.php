@@ -6,8 +6,8 @@ require_once "../config.inc.php";
 require_once "../functions.inc";
 require_once "../theme.inc";
 
-header("Content-type: text/css"); 
-expires_header(60*30); // 30 minute expiry
+http_headers(array("Content-type: text/css"),
+             60*30);  // 30 minute cache expiry
                                 
 // IMPORTANT *************************************************************************************************
 // In order to avoid problems in locales where the decimal point is represented as a comma, it is important to

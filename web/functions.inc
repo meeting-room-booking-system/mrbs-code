@@ -151,14 +151,17 @@ function expires_header($seconds)
 }
 
 
-// Outputs the HTTP headers
-function http_headers()
+// Outputs the HTTP headers, passed in the array $headers, followed by
+// a set of headers to set the cache expiry date.  If $expiry_seconds <= 0
+// then caching is disabled.
+function http_headers(array $headers, $expiry_seconds=0)
 {
-  header("Content-Type: text/html; charset=" . get_charset());
-  // We want to prevent IE8 offering "Compatability View" as that really
-  // messes up MRBS, especially on the Report page
-  header("X-UA-Compatible: IE=Edge");
-  expires_header(0);  // no caching
+  foreach ($headers as $header)
+  {
+    header($header);
+  }
+
+  expires_header($expiry_seconds);
 }
 
 

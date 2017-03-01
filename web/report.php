@@ -578,8 +578,7 @@ function close_report()
   // If this is an Ajax request, we can now send the JSON data
   if ($ajax)
   {
-    header("Content-Type: application/json");
-    expires_header(0);  // no caching
+    http_headers(array("Content-Type: application/json"));
     echo json_encode($json_data);
   }
   elseif ($output_format == OUTPUT_HTML)
@@ -1544,9 +1543,8 @@ else
   }
   if (!$cli_mode)
   {
-    header("Content-Type: $content_type");
-    header("Content-Disposition: attachment; filename=\"$filename\"");
-    expires_header(0);  // no caching
+    http_headers(array("Content-Type: $content_type"),
+                       "Content-Disposition: attachment; filename=\"$filename\"");
   }
 
   if (($output_format == OUTPUT_CSV) && $csv_bom)
@@ -1605,8 +1603,7 @@ if ($phase == 2)
   {
     if ($ajax)
     {
-      header("Content-Type: application/json");
-      expires_header(0);  // no caching
+      http_headers(array("Content-Type: application/json"));
       echo json_encode($json_data);
     }
     else
