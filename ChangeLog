@@ -1,8 +1,232 @@
+2017-02-26  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Updated version number for release
+	[0068c1f9867d] [tip]
+
+2017-02-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Fixed the header height when there are error messages sent to the
+	browser
+	[a0651591b1f3]
+
+	* web/Themes/default/header.inc:
+	Made the "simple" banner work, used when there's a fatal error.
+	[754af658c049]
+
+2017-02-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php:
+	Fixed header layout problem in IE11 and below when using a tall
+	logo. See SF Support Requests #1158.
+	[69eb423578d1]
+
+2017-02-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/approve_entry_handler.php:
+	Fixed bug causing incorrect status to be given on mails sent out
+	when an entry is approved. See SF Bugs #320.
+	[67a6912f5789]
+
+	* web/session/session_cookie.inc:
+	Fixed checking of return value of getUserName()
+	[0ab691c6b12c]
+
+2017-02-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/session/session_cookie.inc:
+	Fixed bug causing getUserName() to return '' instead of null in the
+	case of a user not being logged in when using the cookie session
+	scheme.
+	[ef7604ce0988]
+
+	* web/functions.inc:
+	Fixed bug to do with the booking day. Haven't worked out what the
+	symptoms would be.
+	[41cae1cac811]
+
+2017-02-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc:
+	Tidied up escaping for consistency (makes no difference to the
+	result).
+	[91821fae5745]
+
+	* web/auth/auth_ldap.inc:
+	Fixed a namespace problem. See SF Support Requests #1143.
+	[ef7f8563f64f]
+
+2017-02-13  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/css/mrbs.css.php:
+	Tweaked $admin_form_label_width in the CSS, to stop the new label in
+	"Add Room" from wrapping in the English translation at least.
+	[abae2b322e39]
+
+2017-02-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[19b125d31c5e]
+
+	* web/systemdefaults.inc.php:
+	Merge
+	[57d1e460b0b8]
+
+	* web/systemdefaults.inc.php:
+	Added an unset() for $booking_types to make it clearer how they work
+	- see SF Bugs #374
+	[08582411d9fa]
+
+2017-02-13  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/add.php, web/admin.php, web/mrbs_sql.inc:
+	Added ability to specify the "Room admin email" on creating a room.
+	See SF Support Requests [support-requests:#1137].
+	[2acf048afe8c]
+
+2017-02-12  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgignore:
+	Added extra .hginore rules for IDE files.
+	[c94106d28d18]
+
+	* AUTHENTICATION, README, README.nwauth, UPGRADE, auth_ldap.pl,
+	auth_ldapsearch.pl, badpw.pl, convert_db_to_utf8.php,
+	crypt_passwd.pl, grant.pg.sql, help_report.html, purge.my.sql,
+	purge.pg.sql, tables.my.sql, tables.pg.sql, upgrade.my.sql,
+	upgrade2.my.sql, upgrade2.pg.sql, upgrade3.my.sql,
+	web/Themes/classic126/styling.inc, web/Themes/default/footer.inc,
+	web/Themes/default/header.inc, web/Themes/default/styling.inc,
+	web/add.php, web/admin.php, web/approve_entry_handler.php,
+	web/areadefaults.inc.php, web/auth/auth_auth_basic.inc,
+	web/auth/auth_config.inc, web/auth/auth_crypt.inc,
+	web/auth/auth_db.inc, web/auth/auth_ext.inc, web/auth/auth_imap.inc,
+	web/auth/auth_imap_php.inc, web/auth/auth_ldap.inc,
+	web/auth/auth_nis.inc, web/auth/auth_none.inc, web/auth/auth_nw.inc,
+	web/auth/auth_pop3.inc, web/auth/auth_smtp.inc,
+	web/check_slot_ajax.php, web/css/mrbs-ie-rtl.css, web/css/mrbs-
+	ie.css, web/css/mrbs-ie8.css, web/css/mrbs-ielte6.css, web/css/mrbs-
+	ielte7.css.php, web/css/mrbs-ielte8.css, web/css/mrbs-mail.css,
+	web/css/mrbs-print.css.php, web/css/mrbs-rtl.css.php,
+	web/css/mrbs.css.php, web/day.php, web/dbsys.inc,
+	web/defaultincludes.inc, web/del.php, web/del_entry.php,
+	web/del_entry_ajax.php, web/edit_area_room.php, web/edit_entry.php,
+	web/edit_entry_handler.php, web/edit_users.php, web/functions.inc,
+	web/functions_ical.inc, web/functions_mail.inc,
+	web/functions_table.inc, web/functions_view.inc,
+	web/grab_globals.inc.php, web/help.php, web/import.php,
+	web/index.php, web/internalconfig.inc.php,
+	web/jquery/datatables/js/plugins.js, web/js.inc,
+	web/js/admin.js.php, web/js/cell_click.js.php,
+	web/js/datatables.js.php, web/js/datepicker.js.php,
+	web/js/edit_area_room.js.php, web/js/edit_entry.js.php,
+	web/js/edit_users.js.php, web/js/functions.js.php,
+	web/js/general.js.php, web/js/multiple.js.php,
+	web/js/pending.js.php, web/js/refresh.js.php, web/js/report.js.php,
+	web/js/resizable.js.php, web/js/search.js.php, web/lang/lang.ca,
+	web/lang/lang.cs, web/lang/lang.da, web/lang/lang.de,
+	web/lang/lang.el, web/lang/lang.en, web/lang/lang.es,
+	web/lang/lang.eu, web/lang/lang.fi, web/lang/lang.fr,
+	web/lang/lang.hu, web/lang/lang.id, web/lang/lang.it,
+	web/lang/lang.nb, web/lang/lang.nl, web/lang/lang.nn,
+	web/lang/lang.no, web/lang/lang.pl, web/lang/lang.pt, web/lang/lang
+	.pt-br, web/lang/lang.ru, web/lang/lang.sl, web/lang/lang.sr-rs-
+	latin, web/lang/lang.sv, web/lang/lang.th, web/lang/lang.tr,
+	web/lang/lang.zh-tw, web/language.inc, web/lib/Locale.php,
+	web/lib/autoload.inc, web/mincals.inc, web/month.php,
+	web/mrbs_auth.inc, web/mrbs_sql.inc, web/pending.php,
+	web/record_activity_ajax.php, web/report.php, web/search.php,
+	web/session/session_cookie.inc, web/session/session_host.inc,
+	web/session/session_http.inc, web/session/session_ip.inc,
+	web/session/session_nt.inc, web/session/session_omni.inc,
+	web/session/session_php.inc, web/session/session_remote_user.inc,
+	web/site_faq/site_faq.html, web/site_faq/site_faq_cs.html,
+	web/site_faq/site_faq_de.html, web/site_faq/site_faq_es.html,
+	web/site_faq/site_faq_fr.html, web/site_faq/site_faq_it.html,
+	web/site_faq/site_faq_nl.html, web/site_faq/site_faq_sv.html,
+	web/standard_vars.inc.php, web/style.inc,
+	web/systemdefaults.inc.php, web/theme.inc, web/trailer.inc,
+	web/upgrade.inc, web/upgrade/1/mysql.sql, web/upgrade/1/pgsql.sql,
+	web/upgrade/10/mysql.sql, web/upgrade/10/pgsql.sql,
+	web/upgrade/11/mysql.sql, web/upgrade/11/pgsql.sql,
+	web/upgrade/12/mysql.sql, web/upgrade/12/pgsql.sql,
+	web/upgrade/13/mysql.sql, web/upgrade/13/pgsql.sql,
+	web/upgrade/13/post.inc, web/upgrade/14/mysql.sql,
+	web/upgrade/14/pgsql.sql, web/upgrade/15/mysql.sql,
+	web/upgrade/15/post.inc, web/upgrade/16/mysql.sql,
+	web/upgrade/16/pgsql.sql, web/upgrade/16/post.inc,
+	web/upgrade/17/mysql.sql, web/upgrade/17/pgsql.sql,
+	web/upgrade/17/post.inc, web/upgrade/18/mysql.sql,
+	web/upgrade/18/pgsql.sql, web/upgrade/19/mysql.sql,
+	web/upgrade/19/pgsql.sql, web/upgrade/2/mysql.sql,
+	web/upgrade/2/pgsql.sql, web/upgrade/2/post.inc,
+	web/upgrade/20/mysql.sql, web/upgrade/20/pgsql.sql,
+	web/upgrade/21/mysql.sql, web/upgrade/21/post.inc,
+	web/upgrade/22/mysql.sql, web/upgrade/22/pgsql.sql,
+	web/upgrade/23/mysql.sql, web/upgrade/23/pgsql.sql,
+	web/upgrade/24/mysql.sql, web/upgrade/24/pgsql.sql,
+	web/upgrade/24/post.inc, web/upgrade/25/mysql.sql,
+	web/upgrade/25/pgsql.sql, web/upgrade/26/mysql.sql,
+	web/upgrade/26/post.inc, web/upgrade/27/mysql.sql,
+	web/upgrade/27/pgsql.sql, web/upgrade/28/mysql.sql,
+	web/upgrade/28/pgsql.sql, web/upgrade/29/mysql.sql,
+	web/upgrade/29/pgsql.sql, web/upgrade/3/mysql.sql,
+	web/upgrade/3/pgsql.sql, web/upgrade/30/mysql.sql,
+	web/upgrade/30/pgsql.sql, web/upgrade/31/mysql.sql,
+	web/upgrade/31/pgsql.sql, web/upgrade/32/mysql.sql,
+	web/upgrade/32/pgsql.sql, web/upgrade/32/post.inc,
+	web/upgrade/33/mysql.sql, web/upgrade/34/mysql.sql,
+	web/upgrade/34/pgsql.sql, web/upgrade/34/post.inc,
+	web/upgrade/35/mysql.sql, web/upgrade/36/mysql.sql,
+	web/upgrade/36/pgsql.sql, web/upgrade/37/mysql.sql,
+	web/upgrade/38/mysql.sql, web/upgrade/38/pgsql.sql,
+	web/upgrade/39/mysql.sql, web/upgrade/4/mysql.sql,
+	web/upgrade/4/pgsql.sql, web/upgrade/4/post.inc,
+	web/upgrade/40/mysql.sql, web/upgrade/40/pgsql.sql,
+	web/upgrade/41/mysql.sql, web/upgrade/41/pgsql.sql,
+	web/upgrade/42/mysql.sql, web/upgrade/42/pgsql.sql,
+	web/upgrade/43/mysql.sql, web/upgrade/43/pgsql.sql,
+	web/upgrade/43/post.inc, web/upgrade/44/mysql.sql,
+	web/upgrade/44/pgsql.sql, web/upgrade/45/mysql.sql,
+	web/upgrade/45/pgsql.sql, web/upgrade/47/post.inc,
+	web/upgrade/49/mysql.sql, web/upgrade/49/pgsql.sql,
+	web/upgrade/5/mysql.sql, web/upgrade/5/post.inc,
+	web/upgrade/6/mysql.sql, web/upgrade/6/post.inc,
+	web/upgrade/7/mysql.sql, web/upgrade/7/post.inc,
+	web/upgrade/8/mysql.sql, web/upgrade/8/pgsql.sql,
+	web/upgrade/8/post.inc, web/upgrade/9/mysql.sql,
+	web/upgrade/9/pgsql.sql, web/upgrade/local/1/mysql.sql,
+	web/upgrade/local/1/pgsql.sql, web/version.inc, web/view_entry.php,
+	web/week.php:
+	Removed all occurrences of $Id$ in MRBS code, it doesn't work with
+	Mercurial source control.
+	[b6b7543a1ac5]
+
 2017-02-11  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_6_0 for changeset 04c083c470a1
+	[14f4f5b4b59c]
+
+	* Merged changes from default branch
+	[04c083c470a1] [mrbs-1_6_0]
+
+	* .hgtags:
+	Added tag mrbs-1_6_0 for changeset e71136a26776
+	[11333837a8ce]
+
+	* NEWS:
+	Fixed permissions on NEWS
+	[e71136a26776]
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for 1.6.0 release
+	[f2ba00a8841b]
 
 	* UPGRADE:
 	Added MRBS 1.6.0 upgrade step to UPGRADE.
-	[8de8b062a9d3] [tip]
+	[8de8b062a9d3]
 
 2017-02-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
 

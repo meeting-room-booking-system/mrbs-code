@@ -3,8 +3,8 @@ namespace MRBS;
 
 require "../defaultincludes.inc";
 
-header("Content-type: application/x-javascript");
-expires_header(0); // Cannot cache file because it depends on $HTTP_REFERER
+http_headers(array("Content-type: application/x-javascript"),
+             0);  // Cannot cache file because it depends on $HTTP_REFERER
 
 if ($use_strict)
 {

@@ -235,7 +235,12 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false)
     $year  = date("Y");
   }
 
-  http_headers();
+  // We want to prevent IE8 offering "Compatibility View" as that really
+  // messes up MRBS, especially on the Report page
+  $headers = array("Content-Type: text/html; charset=" . get_charset(),
+                   "X-UA-Compatible: IE=Edge");
+  http_headers($headers);
+  
   echo DOCTYPE;
 
   echo "<html>\n";

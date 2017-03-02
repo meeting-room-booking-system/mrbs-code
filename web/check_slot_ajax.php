@@ -35,6 +35,7 @@ foreach ($slots as $s)
   }
 }
 
-header("Content-Type: application/json");
+http_headers(array("Content-Type: application/json"));
+
 echo json_encode($result);
 

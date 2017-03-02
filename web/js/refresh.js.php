@@ -6,8 +6,8 @@ namespace MRBS;
 
 require "../defaultincludes.inc";
 
-header("Content-type: application/x-javascript");
-expires_header(60*30); // 30 minute expiry
+http_headers(array("Content-type: application/x-javascript"),
+             60*30);  // 30 minute expiry
 
 if ($use_strict)
 {
