@@ -133,17 +133,7 @@ function print_logon_box()
   if (isset($user))
   {
     print_report_link($user);
-    ?>
-                <form method="post" action="admin.php">
-                  <div>
-                    <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
-                    <input type="hidden" name="Action" value="SetName">
-                    <input type="hidden" name="NewUserName" value="">
-                    <input type="hidden" name="NewUserPassword" value="">
-                    <input type="submit" value=" <?php echo get_vocab('logoff') ?> ">
-                  </div>
-                </form>
-<?php
+    print_logoff_button($target_url);
   }
   else
   {

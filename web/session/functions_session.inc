@@ -67,3 +67,21 @@ function print_report_link($user)
           "</a>\n";
   echo $html;
 }
+
+
+function print_logoff_button($target_url)
+{
+  $html = '';
+  
+  $html .= "<form method=\"post\" action=\"admin.php\">\n";
+  $html .= "<div>\n";
+  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
+  $html .= "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
+  $html .= "<input type=\"hidden\" name=\"NewUserName\" value=\"\">\n";
+  $html .= "<input type=\"hidden\" name=\"NewUserPassword\" value=\"\">";
+  $html .= "<input type=\"submit\" value=\"" . get_vocab('logoff') . "\">\n";
+  $html .= "</div>\n";
+  $html .= "</form>\n";
+  
+  echo $html;
+}
