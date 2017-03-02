@@ -69,6 +69,29 @@ function print_report_link($user)
 }
 
 
+function print_unknown_user()
+{
+  $html = "<a href=\"\">" . get_vocab('unknown_user') . "</a>\n";
+  echo $html;
+}
+
+
+function print_logon_button($target_url)
+{
+  $html = '';
+  
+  $html .= "<form method=\"post\" action=\"admin.php\">\n";
+  $html .= "<div>\n";
+  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
+  $html .= "<input type=\"hidden\" name=\"Action\" value=\"QueryName\">\n";
+  $html .= "<input type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
+  $html .= "</div>\n";
+  $html .= "</form>\n";
+  
+  echo $html;
+}
+
+
 function print_logoff_button($target_url)
 {
   $html = '';

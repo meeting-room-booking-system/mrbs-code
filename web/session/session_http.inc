@@ -83,23 +83,17 @@ function print_logon_box()
   }
   
   $user = getUserName();
+  
   if (isset($user))
   {
     print_report_link($user);
   }
   else
   {
-?>
-    <a href=""><?php echo get_vocab('unknown_user'); ?></a>
-    <form method="post" action="admin.php">
-      <div>
-        <input type="hidden" name="target_url" value="<?php echo htmlspecialchars($target_url) ?>">
-        <input type="hidden" name="Action" value="QueryName">
-        <input type="submit" value=" <?php echo get_vocab('login') ?> ">
-      </div>
-    </form>
-<?php
+    print_unknown_user();
+    print_logon_button($target_url);
   }
+  
   if ($auth['type'] == 'db')
   {
     print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
