@@ -46,6 +46,7 @@ function getUserName()
   }
 }
 
+
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
@@ -57,8 +58,6 @@ function print_logon_box()
   {
     print_report_link($user);
 
-    print_userlist_link();
-
     // Retrieve logout link from configuration, if specified
     if (isset($auth['remote_user']['logout_link']) &&
         is_string($auth['remote_user']['logout_link']) &&
@@ -66,7 +65,6 @@ function print_logon_box()
     {
       print '<a href="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
     }
-
   }
   else
   {
@@ -82,5 +80,7 @@ function print_logon_box()
       exit;
     }
   }
+  
+  print_userlist_link();
 }
 
