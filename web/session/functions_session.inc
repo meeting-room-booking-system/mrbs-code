@@ -56,3 +56,14 @@ function printLoginForm($action, $target_url, $returl)
   // Print footer and exit
   print_footer(TRUE);
 }
+
+
+// Generate the "You are xxxx" link, which gives a report on the user's upcoming bookings.
+function print_report_link($user)
+{
+  $search_string = "report.php?creatormatch=" . urlencode($user) . "&amp;phase=2";
+  $html = "<a href=\"$search_string\" title=\"" . get_vocab('show_my_entries') . "\">" .
+           get_vocab('you_are') . " " . htmlspecialchars($user) .
+          "</a>\n";
+  echo $html;
+}

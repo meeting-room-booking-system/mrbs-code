@@ -49,28 +49,18 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $auth, $day, $month, $year;
+  global $auth;
   
   $user = getUserName();
 
   if (isset($user))
   {
-    // words 'you are xxxx' becomes a link to the
-    // report page with only entries created by xxx. Past entries are not
-    // displayed but this can be changed
-    $search_string = "report.php?from_day=$day&amp;from_month=$month&amp;".
-      "from_year=$year&amp;to_day=1&amp;to_month=12&amp;to_year=2030&amp;areamatch=&amp;".
-      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=$user"; ?>
+    print_report_link($user);
 
-      <a href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         . htmlspecialchars($user) ?></a>
-<?php
-  if ($auth['type'] == 'db')
-  {
-    print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
-  }
+    if ($auth['type'] == 'db')
+    {
+      print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
+    }
 
     // Retrieve logout link from configuration, if specified
     if (isset($auth['remote_user']['logout_link']) &&
