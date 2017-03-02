@@ -192,7 +192,7 @@ function print_header($day, $month, $year, $area, $room, $simple=false)
   {
     include_once "Themes/$theme/header.inc";
   }
-  if (!function_exists("print_theme_header"))
+  if (!function_exists(__NAMESPACE__ . "\\print_theme_header"))
   {
     require_once "Themes/default/header.inc";
   }
@@ -216,7 +216,7 @@ function print_footer($and_exit)
   {
     include_once "Themes/$theme/footer.inc";
   }
-  if (!function_exists("print_theme_footer"))
+  if (!function_exists(__NAMESPACE__ . "\\print_theme_footer"))
   {
     require_once "Themes/default/footer.inc";
   }
