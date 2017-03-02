@@ -12,6 +12,8 @@ namespace MRBS;
 *                                                                             *
 \*****************************************************************************/
 
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
 /* authGet()
  * 
  * Request the user name/password
