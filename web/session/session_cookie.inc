@@ -259,7 +259,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $QUERY_STRING, $auth;
+  global $QUERY_STRING;
   
   $target_url = this_page();
 
@@ -281,9 +281,6 @@ function print_logon_box()
     print_logon_button($target_url);
   }
   
-  if ($auth['type'] == 'db')
-  {
-    print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
-  }
+  print_userlist_link();
 }
 

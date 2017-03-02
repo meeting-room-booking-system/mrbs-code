@@ -57,10 +57,7 @@ function print_logon_box()
   {
     print_report_link($user);
 
-    if ($auth['type'] == 'db')
-    {
-      print "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
-    }
+    print_userlist_link();
 
     // Retrieve logout link from configuration, if specified
     if (isset($auth['remote_user']['logout_link']) &&
