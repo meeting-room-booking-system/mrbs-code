@@ -14,6 +14,7 @@ echo "<table id=\"version_info\">\n";
 echo "<tr><td><a href=\"http://mrbs.sourceforge.net\">" . get_vocab("mrbs") . "</a>:</td><td>" . get_mrbs_version() . "</td></tr>\n";
 echo "<tr><td>" . get_vocab("database") . ":</td><td>" . db()->version() . "</td></tr>\n";
 echo "<tr><td>" . get_vocab("system") . ":</td><td>" . php_uname() . "</td></tr>\n";
+echo "<tr><td>" . get_vocab("server_software") . ":</td><td>" . htmlspecialchars(get_server_software()) . "</td></tr>\n";
 echo "<tr><td>" . get_vocab("servertime") . ":</td><td>" .
      utf8_strftime($strftime_format['datetime'], time()) .
      "</td></tr>\n";

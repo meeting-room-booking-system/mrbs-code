@@ -2922,3 +2922,18 @@ function mrbs_ignore_user_abort($set)
 }
 
 
+// Gets the web server software type and version, if it can.
+function get_server_software()
+{
+  if (function_exists('apache_get_version'))
+  {
+    return apache_get_version();
+  }
+  
+  if (isset($_SERVER['SERVER_SOFTWARE']))
+  {
+    return $_SERVER['SERVER_SOFTWARE'];
+  }
+  
+  return '';
+}
