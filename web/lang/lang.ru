@@ -179,6 +179,7 @@ $vocab["unknown_user"]       = "неизвестный пользователь"
 $vocab["you_are"]            = "Вы вошли как ";
 $vocab["login"]              = "Войти в систему";
 $vocab["logoff"]             = "Выйти из системы";
+$vocab["username_or_email"]  = "Имя пользователя или Email адрес";
 
 // Database upgrade code
 $vocab["database_login"]           = "Логин базы данных";

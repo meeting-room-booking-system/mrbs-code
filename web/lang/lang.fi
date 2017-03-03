@@ -202,6 +202,7 @@ $vocab["unknown_user"]       = "Tuntematon käyttäjä";
 $vocab["you_are"]            = "Olet";
 $vocab["login"]              = "Kirjaudu sisään";
 $vocab["logoff"]             = "Kirjaudu ulos";
+$vocab["username_or_email"]  = "Käyttäjänimi tai sähköpostiosoite";
 
 // Database upgrade code
 $vocab["database_login"]           = "Tietokannan tunnus"; //Database login, mitä tarkottanee???

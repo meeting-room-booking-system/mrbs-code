@@ -180,6 +180,7 @@ $vocab["unknown_user"]       = "Utilisateur non identifié";
 $vocab["you_are"]            = "Vous êtes";
 $vocab["login"]              = "S'identifier";
 $vocab["logoff"]             = "Se déconnecter";
+$vocab["username_or_email"]  = "Nom d’utilisateur ou adresse e-mail";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login base de données";

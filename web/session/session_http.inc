@@ -12,6 +12,8 @@ namespace MRBS;
 *                                                                             *
 \*****************************************************************************/
 
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
 /* authGet()
  * 
  * Request the user name/password
@@ -53,7 +55,7 @@ function getUserName()
     $user = unslashes($PHP_AUTH_USER);
 
     if ((isset($authorised_user) && ($authorised_user == $user)) ||
-        authValidateUser($user,getAuthPassword()))
+        (authValidateUser($user, getAuthPassword()) !== false))
     {
       $authorised_user = $user;
     }
@@ -71,54 +73,29 @@ function getUserName()
 }
 
 // Print the logon entry on the top banner.
-function PrintLogonBox()
+function print_logon_box()
 {
-  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
+  global $QUERY_STRING;
   
-  $TargetURL = this_page();
-  if (isset($url_base) && ($url_base !== ''))
-  {
-    $TargetURL = $url_base . '/' . $TargetURL;
-  }
+  $target_url = this_page();
+
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
   
   $user = getUserName();
+  
   if (isset($user))
   {
-    // words 'you are xxxx' becomes a link to the
-    // report page with only entries created by xxx. Past entries are not
-    // displayed but this can be changed
-    $search_string = "report.php?from_day=$day&amp;from_month=$month&amp;".
-      "from_year=$year&amp;to_day=1&amp;to_month=12&amp;to_year=2030&amp;areamatch=&amp;".
-      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=$user";
-?>
-
-
-      <a href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         . htmlspecialchars($user) ?></a>
-<?php
+    print_report_link($user);
   }
   else
   {
-?>
-    <a href=""><?php echo get_vocab('unknown_user'); ?></a>
-    <form method="post" action="admin.php">
-      <div>
-        <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-        <input type="hidden" name="Action" value="QueryName">
-        <input type="submit" value=" <?php echo get_vocab('login') ?> ">
-      </div>
-    </form>
-<?php
+    print_unknown_user();
+    print_logon_button($target_url);
   }
-  if (isset($user_list_link))
-  {
-    print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n" ;
-  } 
+  
+  print_userlist_link();
 }
 

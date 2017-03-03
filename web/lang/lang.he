@@ -188,6 +188,7 @@ $vocab["unknown_user"]       = "נא להתחבר בבקשה";
 $vocab["you_are"]            = "שלום";
 $vocab["login"]              = "התחבר למערכת";
 $vocab["logoff"]             = "התנתק מהמערכת";
+$vocab["username_or_email"]  = "שם משתמש או כתובת אימייל";
 
 // Database upgrade code
 $vocab["database_login"]           = "כניסה למסד הנתונים";

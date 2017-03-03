@@ -201,6 +201,7 @@ $vocab["unknown_user"]       = "未知のユーザ";
 $vocab["you_are"]            = "あなたは";
 $vocab["login"]              = "ログイン";
 $vocab["logoff"]             = "ログオフ";
+$vocab["username_or_email"]  = "ユーザー名またはメールアドレス";
 
 // Database upgrade code
 $vocab["database_login"]           = "データベース ログイン";

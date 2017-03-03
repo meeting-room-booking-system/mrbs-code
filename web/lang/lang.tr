@@ -187,6 +187,8 @@ $vocab["unknown_user"]       = "Bilinmeyen kullanıcı";
 $vocab["you_are"]            = "Siz";
 $vocab["login"]              = "Giriş";
 $vocab["logoff"]             = "Çıkış";
+$vocab["username_or_email"]  = "Kullanıcı adı ya da e-posta adresi";
+
 // Database upgrade code
 $vocab["database_login"]           = "VeriTabanı girişi";
 $vocab["upgrade_required"]         = "VeriTabanının güncelle ihtiyacı var. Lütfen işlem öncesi VeriTabanını yedekleyiniz.";

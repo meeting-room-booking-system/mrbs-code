@@ -31,8 +31,8 @@ if (!isset($auth['session']))
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -47,7 +47,7 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if (!isset($user) || !isset($pass) || strlen($pass)==0)
   {
-    return 0;
+    return false;
   }
 
   // Check that if there is an array of hosts and an array of ports
@@ -55,7 +55,7 @@ function authValidateUser($user, $pass)
   if (is_array( $pop3_host ) && is_array( $pop3_port ) &&
       count($pop3_port) != count($pop3_host) )
   {
-    return 0;
+    return false;
   }
 
   // Transfer the list of pop3 hosts to an new value to ensure that
@@ -119,7 +119,7 @@ function authValidateUser($user, $pass)
         if( substr( $response, 0, 3 ) == '+OK' )
         {
           fputs( $stream, "QUIT\r\n" );
-          return 1;
+          return $user;
         }
       }
     } // end shared secret if
@@ -144,7 +144,7 @@ function authValidateUser($user, $pass)
         $response = fgets( $stream, 1024 );
         if ( substr( $response, 0, 3 ) == '+OK' )
         {
-          return 1;
+          return $user;
         }
       }
       fputs( $stream, "QUIT\r\n" );
@@ -152,7 +152,7 @@ function authValidateUser($user, $pass)
   }
 
   // return failure
-  return 0;
+  return false;
 }
 
 /* authGetUserLevel($user)

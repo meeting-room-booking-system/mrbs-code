@@ -105,6 +105,7 @@ $vocab["unknown_user"]       = "使用者不存在或密碼錯誤";
 $vocab["you_are"]            = "您是";
 $vocab["login"]              = "登入";
 $vocab["logoff"]             = "登出";
+$vocab["username_or_email"]  = "使用者名稱或電子郵件地址";
 
 // Authentication database
 $vocab["user_list"]          = "使用者清單";

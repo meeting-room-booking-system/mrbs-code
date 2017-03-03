@@ -33,8 +33,8 @@ if (!isset($auth['session'])) $auth['session']='http';
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -43,18 +43,18 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if(!isset($user) || !isset($pass))
   {
-    return 0;
+    return false;
   }
 
   if (!isset($auth["auth_basic"]["passwd_file"]))
   {
     error_log("auth_basic: passwd file not specified");
-    return 0;
+    return false;
   }
   if (!isset($auth["auth_basic"]["mode"]))
   {
     error_log("auth_basic: mode not specified");
-    return 0;
+    return false;
   }
 
   require_once "File/Passwd/Authbasic.php";
@@ -64,14 +64,12 @@ function authValidateUser($user, $pass)
   $f->setMode($auth["auth_basic"]["mode"]);
   $f->load();
 
-  $ret = 0;
-
   if ($f->verifyPasswd($user, $pass) === true)
   {
-    $ret = 1;
+    return $user;
   }
 
-  return $ret;
+  return false;
 }
 
 /* authGetUserLevel($user)

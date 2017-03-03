@@ -216,6 +216,7 @@ $vocab["unknown_user"]       = "用户不存在或密码错误";
 $vocab["you_are"]            = "您是";
 $vocab["login"]              = "登录";
 $vocab["logoff"]             = "注销";
+$vocab["username_or_email"]  = "用户名或电子邮件地址";
 
 // Database upgrade code
 $vocab["database_login"]           = "登录数据库";

@@ -45,8 +45,8 @@ function quote_imap($str)
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -59,7 +59,7 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if (!isset($user) || !isset($pass) || strlen($pass)==0)
   {
-    return 0;
+    return false;
   }
 
   // Check that if there is an array of hosts and an array of ports
@@ -68,7 +68,7 @@ function authValidateUser($user, $pass)
       is_array( $imap_port ) &&
       (count($imap_port) != count($imap_host)) )
   {
-    return 0;
+    return false;
   }
 
   // Transfer the list of imap hosts to an new value to ensure that
@@ -117,7 +117,7 @@ function authValidateUser($user, $pass)
         fputs( $stream, "a002 LOGOUT\r\n" );
         $response = fgets( $stream, 1024 );
         fclose( $stream );
-        return 1;
+        return $user;
       }
       fputs( $stream, "a002 LOGOUT\r\n" );
       fclose( $stream );
@@ -125,7 +125,7 @@ function authValidateUser($user, $pass)
   }
 
   // return failure
-  return 0;
+  return false;
 }
 
 /* authGetUserLevel($user)

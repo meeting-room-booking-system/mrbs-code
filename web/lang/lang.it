@@ -218,6 +218,7 @@ $vocab["users.level"]        = "Diritti";
 $vocab["you_are"]            = "Tu sei";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
+$vocab["username_or_email"]  = "Nome utente o indirizzo email";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login al Database";

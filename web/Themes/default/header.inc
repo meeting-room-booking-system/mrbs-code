@@ -147,14 +147,6 @@ function print_search($day, $month, $year, $area, $room, $search_str = '')
 }
 
 
-function print_logon()
-{
-    echo "<div id=\"logon_box\">\n";
-    PrintLogonBox(); 
-    echo "</div>\n";
-}
-
-
 function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=false)
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
@@ -197,10 +189,10 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
     echo "</li>\n";
     
     // For session protocols that define their own logon box...
-    if (function_exists(__NAMESPACE__ . "\\PrintLogonBox"))
+    if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
-      echo "<li>\n";
-      print_logon();
+      echo "<li id=\"logon_box\">\n";
+      print_logon_box();
       echo "</li>\n";
     }
   }

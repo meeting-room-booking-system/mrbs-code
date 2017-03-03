@@ -215,6 +215,7 @@ $vocab["unknown_user"]       = "Neznámý uživatel";
 $vocab["you_are"]            = "Login:";
 $vocab["login"]              = "Přihlásit se";
 $vocab["logoff"]             = "Odhlásit se";
+$vocab["username_or_email"]  = "Uživatelské jméno nebo email";
 
 // Database upgrade code
 $vocab["database_login"]           = "Přihlašovací jméno pro databázi";

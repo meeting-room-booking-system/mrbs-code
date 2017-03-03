@@ -173,6 +173,8 @@ $vocab["unknown_user"]       = "Onbekende gebruiker";
 $vocab["you_are"]            = "U bent";
 $vocab["login"]              = "Inloggen";
 $vocab["logoff"]             = "Uitloggen";
+$vocab["username_or_email"]  = "Gebruikersnaam of e-mailadres";
+
 // Database upgrade code
 $vocab["database_login"]           = "Database login";
 $vocab["upgrade_required"]         = "De database heeft een upgrade nodig. Maak aub een backup van de database voordat verder wordt gegaan.";

@@ -194,6 +194,7 @@ $vocab["unknown_user"]       = "Ismeretlen felhasználó";
 $vocab["you_are"]            = "Belépett felhasználó:";
 $vocab["login"]              = "Bejelentkezés";
 $vocab["logoff"]             = "Kijelentkezés";
+$vocab["username_or_email"]  = "Felhasználói név, vagy Email cím";
 
 // Database upgrade code
 $vocab["database_login"]           = "Adatbázis-hozzáférés";

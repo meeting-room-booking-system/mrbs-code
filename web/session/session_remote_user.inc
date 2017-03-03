@@ -21,6 +21,8 @@ namespace MRBS;
 *                                                                                            *
 \*********************************************************************************************/
 
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
 /* authGet()
  * 
  * Request the user name/password
@@ -46,32 +48,17 @@ function getUserName()
   }
 }
 
+
 // Print the logon entry on the top banner.
-function PrintLogonBox()
+function print_logon_box()
 {
-  global $user_list_link, $day, $month, $year;
   global $auth;
   
   $user = getUserName();
 
   if (isset($user))
   {
-    // words 'you are xxxx' becomes a link to the
-    // report page with only entries created by xxx. Past entries are not
-    // displayed but this can be changed
-    $search_string = "report.php?from_day=$day&amp;from_month=$month&amp;".
-      "from_year=$year&amp;to_day=1&amp;to_month=12&amp;to_year=2030&amp;areamatch=&amp;".
-      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=$user"; ?>
-
-      <a href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         . htmlspecialchars($user) ?></a>
-<?php
-    if (isset($user_list_link))
-    {
-      print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n" ;
-    }
+    print_report_link($user);
 
     // Retrieve logout link from configuration, if specified
     if (isset($auth['remote_user']['logout_link']) &&
@@ -80,7 +67,6 @@ function PrintLogonBox()
     {
       print '<a href="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
     }
-
   }
   else
   {
@@ -96,5 +82,7 @@ function PrintLogonBox()
       exit;
     }
   }
+  
+  print_userlist_link();
 }
 

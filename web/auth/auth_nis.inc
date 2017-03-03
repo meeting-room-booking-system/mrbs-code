@@ -32,8 +32,8 @@ if (!isset($auth['session']))
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
 function authValidateUser($user, $pass)
 {
@@ -42,7 +42,7 @@ function authValidateUser($user, $pass)
   // Check if we do not have a username/password
   if(!isset($user) || !isset($pass))
   {
-    return 0;
+    return false;
   }
 
   // untaint $user
@@ -55,16 +55,16 @@ function authValidateUser($user, $pass)
     $rs = explode ( ":", $rs );
     if ( $rs[1] == crypt ( $pass, $rs[1] ) )
     {
-      return 1;
+      return $user;
     }
     else
     {
-      return 0;
+      return false;
     }
   }
 
   // return failure
-  return 0;
+  return false;
 }
 
 /* authGetUserLevel($user)

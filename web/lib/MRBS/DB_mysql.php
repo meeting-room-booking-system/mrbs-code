@@ -285,4 +285,27 @@ class DB_mysql extends DB
   {
     return "^";
   }
+  
+  // Returns the syntax for a simple split of a column's value into two
+  // parts, separated by a delimiter.  $part can be 1 or 2.
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  public function syntax_simple_split($fieldname, $delimiter, $part, &$params)
+  {
+    switch ($part)
+    {
+      case 1:
+        $count = 1;
+        break;
+      case 2:
+        $count = -1;
+        break;
+      default:
+        throw new Exception("Invalid value ($part) given for " . '$part.');
+        break;
+    }
+    
+    $params[] = $delimiter;
+    return "SUBSTRING_INDEX($fieldname, ?, $count)";
+  }
 }

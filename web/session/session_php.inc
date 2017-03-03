@@ -13,15 +13,26 @@ namespace MRBS;
 *                                                                             *
 \*****************************************************************************/
 
-global $PHP_SELF, $auth;
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
+global $PHP_SELF, $HTTP_REFERER;
+global $auth;
 
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $NewUserName = get_form_var('NewUserName', 'string');
 $NewUserPassword = get_form_var('NewUserPassword', 'string');
-$TargetURL = get_form_var('TargetURL', 'string');
+$target_url = get_form_var('target_url', 'string');
 $returl = get_form_var('returl', 'string');
 
+// We need to preserve the original calling page, so that it's there when we eventually get to the
+// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
+// holds the original caller.    If this is the second time through we will have stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
+}
+  
 if (isset($cookie_path_override))
 {
   $cookie_path = $cookie_path_override;
@@ -75,7 +86,7 @@ if (!empty($auth["session_php"]["inactivity_expire_time"]))
 
 /*
   Target of the form with sets the URL argument "Action=SetName".
-  Will eventually return to URL argument "TargetURL=whatever".
+  Will eventually return to URL argument "target_url=whatever".
 */
 if (isset($Action) && ($Action == "SetName"))
 {
@@ -89,97 +100,55 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (!authValidateUser($NewUserName, $NewUserPassword))
+    if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
     {
       print_header(0, 0, 0, 0, "");
       echo "<p>".get_vocab('unknown_user')."</p>\n";
-      printLoginForm($TargetURL);
+      printLoginForm(this_page(), $target_url, $returl);
       exit();
     }
-
-    $_SESSION["UserName"] = $NewUserName;
+    $_SESSION["UserName"] = $valid_username;
   }
   // preserve the original $HTTP_REFERER by sending it as a GET parameter
   if (!empty($returl))
   {
     // check to see whether there's a query string already
-    if (strpos($TargetURL, '?') === false)
+    if (strpos($target_url, '?') === false)
     {
-      $TargetURL .= "?returl=" . urlencode($returl);
+      $target_url .= "?returl=" . urlencode($returl);
     }
     else
     {
-      $TargetURL .= "&returl=" . urlencode($returl);
+      $target_url .= "&returl=" . urlencode($returl);
     }
   }
   // Problems have been reported on Windows IIS with session data not being
   // written out without a call to session_write_close()
   session_write_close();
-  header ("Location: $TargetURL"); /* Redirect browser to initial page */
+  header ("Location: $target_url"); /* Redirect browser to initial page */
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
     Anyway, if the browser cannot redirect automatically, the manual link below will work. */
   print_header(0, 0, 0, 0, "");
   echo "<br>\n";
-  echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+  echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
 
   // Print footer and exit
   print_footer(TRUE);
 }
 
-/*
-  Display the login form. Used by two routines below.
-  Will eventually return to $TargetURL.
-*/
-function printLoginForm($TargetURL)
-{
-  global $HTTP_REFERER;
-  global $returl;
-?>
-<form class="form_general" id="logon" method="post" action="<?php echo htmlspecialchars(this_page()) ?>">
-  <fieldset>
-  <legend><?php echo get_vocab("please_login") ?></legend>
-    <div>
-      <label for="NewUserName"><?php echo get_vocab("users.name") ?>:</label>
-      <input type="text" id="NewUserName" name="NewUserName">
-    </div>
-    <div>
-      <label for="NewUserPassword"><?php echo get_vocab("users.password") ?>:</label>
-      <input type="password" id="NewUserPassword" name="NewUserPassword">
-    </div>
-    <?php
-    // We need to preserve the original calling page, so that it's there when we eventually get
-    // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-    // the original caller.    If this is the second time through we will have stored it in $returl.
-    if (!isset($returl))
-    {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-    }
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    ?>
-    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-    <input type="hidden" name="Action" value="SetName">
-    <div id="logon_submit">
-      <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
-    </div>
-  </fieldset>
-</form>
-<?php
-  echo "</div>";  // Close of the contents div
-  // Print footer and exit
-  print_footer(TRUE);
-}
 
 /*
   Target of the form with sets the URL argument "Action=QueryName".
-  Will eventually return to URL argument "TargetURL=whatever".
+  Will eventually return to URL argument "target_url=whatever".
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header(0, 0, 0, 0, "");
-  printLoginForm($TargetURL);
+  printLoginForm(this_page(), $target_url, $returl);
   exit();
 }
+
 
 /* authGet()
  * 
@@ -189,21 +158,23 @@ if (isset($Action) && ($Action == "QueryName"))
  */
 function authGet()
 {
-  global $PHP_SELF, $QUERY_STRING;
+  global $QUERY_STRING;
+  global $returl;
 
   print_header(0, 0, 0, 0, "");
 
   echo "<p>".get_vocab("norights")."</p>\n";
 
-  $TargetURL = this_page();
+  $target_url = this_page();
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm($TargetURL);
+  printLoginForm(this_page(), $target_url, $returl);
 
   exit();
 }
+
 
 function getUserName()
 {
@@ -215,61 +186,32 @@ function getUserName()
   return NULL;
 }
 
-// Print the logon entry on the top banner.
-function PrintLogonBox()
-{
-  global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
 
-  $TargetURL = this_page();
-  if (isset($url_base) && ($url_base !== ''))
-  {
-    $TargetURL = $url_base . '/' . $TargetURL;
-  }
+// Print the logon entry on the top banner.
+function print_logon_box()
+{
+  global $QUERY_STRING;
+
+  $target_url = this_page();
+
   if (isset($QUERY_STRING))
   {
-    $TargetURL = $TargetURL . "?" . $QUERY_STRING;
+    $target_url = $target_url . "?" . $QUERY_STRING;
   }
+  
   $user=getUserName();
+  
   if (isset($user))
   {
-    // words 'you are xxxx' becomes a link to the
-    // report page with only entries created by xxx. Past entries are not
-    // displayed but this can be changed
-    $search_string = "report.php?from_day=$day&amp;from_month=$month&amp;".
-      "from_year=$year&amp;to_day=1&amp;to_month=12&amp;to_year=2030&amp;areamatch=&amp;".
-      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=".urlencode($user); ?>
-
-                <a href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         . htmlspecialchars($user) ?></a>
-                <form method="post" action="admin.php">
-                  <div>
-                    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-                    <input type="hidden" name="Action" value="SetName">
-                    <input type="hidden" name="NewUserName" value="">
-                    <input type="hidden" name="NewUserPassword" value="">
-                    <input type="submit" value=" <?php echo get_vocab('logoff') ?> ">
-                  </div>
-                </form>
-<?php
+    print_report_link($user);
+    print_logoff_button($target_url);
   }
   else
   {
-?>
-                <a href=""><?php echo get_vocab('unknown_user'); ?></a>
-                <form method="post" action="admin.php">
-                  <div>
-                    <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
-                    <input type="hidden" name="Action" value="QueryName">
-                    <input type="submit" value=" <?php echo get_vocab('login') ?> ">
-                  </div>
-                </form>
-<?php
+    print_unknown_user();
+    print_logon_button($target_url);
   } 
-  if (isset($user_list_link))
-  {
-    print "<a id=\"user_list_link\" href=\"$user_list_link\">" . get_vocab('user_list') . "</a>\n";
-  }
+  
+  print_userlist_link();
 }
 

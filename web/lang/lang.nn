@@ -194,6 +194,7 @@ $vocab["you_are"]            = "Bruker: ";
 $vocab["login"]              = "Logg inn";
 $vocab["logoff"]             = "Logg ut";
 $vocab["user_level"]         = "Rettigheter";
+$vocab["username_or_email"]  = "Brukarnamn eller epostadresse";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";

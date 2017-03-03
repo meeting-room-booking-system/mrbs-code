@@ -43,15 +43,14 @@ $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
  * $pass  - The password
  * 
  * Returns:
- *   0        - The pair are invalid or do not exist
- *   non-zero - The pair are valid
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
-
 function authValidateUser($user, $pass)
 {
   global $auth, $db_ext_conn;
 
-  $retval = 0;
+  $retval = false;
 
 
   // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
@@ -76,21 +75,21 @@ function authValidateUser($user, $pass)
       case 'md5':
         if (md5($pass) == $row[0])
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
 
       case 'sha1':
         if (sha1($pass) == $row[0])
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
 
       case 'sha256':
         if (hash('sha256', $pass) == $row[0])
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
 
@@ -98,14 +97,14 @@ function authValidateUser($user, $pass)
         $recrypt = crypt($pass,$row[0]);
         if ($row[0] == $recrypt)
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
 
       case 'password_hash':
         if (password_verify($pass, $row[0]))
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
 
@@ -120,7 +119,7 @@ function authValidateUser($user, $pass)
 
         if ($pass == $row[0])
         {
-          $retval = 1;
+          $retval = $user;
         }
         break;
     }

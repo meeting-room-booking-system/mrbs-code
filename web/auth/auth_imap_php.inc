@@ -34,13 +34,14 @@ namespace MRBS;
  *
  * $auth["admin"][] = "imapuser1";
  * $auth["admin"][] = "imapuser2";
+ * 
+ * Returns:
+ *   false    - The pair are invalid or do not exist
+ *   string   - The validated username
  */
-
 function authValidateUser($user, $pass)
 {
   global $auth;
-    
-  $ret = 0;
 
   $location = "{".$auth["imap_php"]["hostname"];
 
@@ -70,12 +71,13 @@ function authValidateUser($user, $pass)
 
   $mbox = imap_open($location, $user, $pass);
 
-  if ($mbox != FALSE)
+  if ($mbox !== false)
   {
     imap_close($mbox);
-    $ret = 1;
+    return $user;
   }
-  return $ret;
+  
+  return false;
 }
 
 /* authGetUserLevel($user)
