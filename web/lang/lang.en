@@ -447,6 +447,9 @@ $vocab["delarea"]            = "You must delete all rooms in this area before yo
 
 // Used in help.php
 $vocab["about_mrbs"]         = "About MRBS";
+$vocab["mrbs_version"]       = "MRBS version";
+$vocab["config_details"]     = "Configuration details";
+$vocab["server_details"]     = "Server details";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
 $vocab["servertime"]         = "Server time";

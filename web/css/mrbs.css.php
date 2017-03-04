@@ -1027,9 +1027,36 @@ div#n_outstanding {margin-top: 0.5em}
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
 /* ------------ HELP.PHP ------------------------*/
-table#version_info {border-spacing: 0; border-collapse: collapse}
-#version_info td {padding: 0 1.0em 0 0; vertical-align: bottom}
-#version_info td:first-child {text-align: right}
+
+table.details {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+}
+
+table.details:first-child {
+  margin-bottom: 0;
+}
+
+table.details.has_caption {
+  margin-left: 2em;
+}
+
+.details caption {
+  text-align: left;
+  font-weight: bold;
+  margin-left: -2em;
+  margin-bottom: 0.2em;
+}
+
+.details td {
+  padding: 0 1.0em 0 0;
+  vertical-align: bottom;
+}
+
+.details td:first-child {
+  text-align: right;
+}
 
 
 /* ------------ IMPORT.PHP ------------------------*/
