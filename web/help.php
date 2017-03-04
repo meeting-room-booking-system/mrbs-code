@@ -7,18 +7,27 @@ require_once "version.inc";
 // Check the user is authorised for this page
 checkAuthorised();
 
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= $max_level);
+
 print_header($day, $month, $year, $area, isset($room) ? $room : "");
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
 echo "<table id=\"version_info\">\n";
 echo "<tr><td><a href=\"http://mrbs.sourceforge.net\">" . get_vocab("mrbs") . "</a>:</td><td>" . get_mrbs_version() . "</td></tr>\n";
-echo "<tr><td>" . get_vocab("database") . ":</td><td>" . db()->version() . "</td></tr>\n";
-echo "<tr><td>" . get_vocab("system") . ":</td><td>" . php_uname() . "</td></tr>\n";
-echo "<tr><td>" . get_vocab("server_software") . ":</td><td>" . htmlspecialchars(get_server_software()) . "</td></tr>\n";
-echo "<tr><td>" . get_vocab("servertime") . ":</td><td>" .
-     utf8_strftime($strftime_format['datetime'], time()) .
-     "</td></tr>\n";
-echo "<tr><td>PHP:</td><td>" . phpversion() . "</td></tr>\n";
+
+if ($is_admin)
+{
+  // Restrict the server and configuration details to admins, for security reasons.
+  echo "<tr><td>" . get_vocab("database") . ":</td><td>" . db()->version() . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("system") . ":</td><td>" . php_uname() . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("server_software") . ":</td><td>" . htmlspecialchars(get_server_software()) . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("servertime") . ":</td><td>" .
+       utf8_strftime($strftime_format['datetime'], time()) .
+       "</td></tr>\n";
+  echo "<tr><td>PHP:</td><td>" . phpversion() . "</td></tr>\n";
+}
+
 echo "</table>\n";
 
 echo "<p>\n" . get_vocab("browserlang") .":\n";
