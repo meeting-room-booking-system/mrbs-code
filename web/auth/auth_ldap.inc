@@ -548,6 +548,7 @@ function authGetUserLevel($user)
   
   if ($ldap_admin_group_dn)
   {
+    $object = array();
     $res = authLdapAction("authLdapCheckAdminGroupCallback", $user, $object);
     if ($res)
     {
@@ -609,4 +610,3 @@ function authLdapDebug($message)
     error_log($message);
   }
 }
-
