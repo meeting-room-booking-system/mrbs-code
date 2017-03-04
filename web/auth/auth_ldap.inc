@@ -243,6 +243,8 @@ function authLdapAction($callback, $user, &$object)
 
     @ldap_unbind($ldap);
   } // foreach
+  
+  return false;
 }
 
 
