@@ -4,7 +4,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             0);  // Cannot cache file because it depends on $HTTP_REFERER
+             60*30);  // 30 minute expiry
 
 if ($use_strict)
 {
@@ -50,13 +50,17 @@ init = function(args) {
         }).appendTo(searchForm);
     }
       
-    var tableOptions = {};
-    <?php
-    // Use an Ajax source - gives much better performance for large tables
-    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
-    $ajax_url = "search.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
-    ?>
-    tableOptions.ajax = "<?php echo $ajax_url ?>";
+    var tableOptions = {},
+        queryString;
+        
+    queryString = window.location.search;
+    if (queryString.length === 0)
+    {
+      queryString = '?';
+    }
+    queryString += '&ajax=1';
+    tableOptions.ajax = 'search.php' + queryString;
+
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.columnDefs = getTypes($('#search_results'));
       

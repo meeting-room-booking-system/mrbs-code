@@ -4,7 +4,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             0);  // Cannot cache file because it depends on $HTTP_REFERER
+             60*30);  // 30 minute expiry
 
 if ($use_strict)
 {
@@ -27,10 +27,14 @@ init = function(args) {
   // Use an Ajax source if we can - gives much better performance for large tables
   if (function_exists('json_encode'))
   {
-    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
-    $ajax_url = "edit_users.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1";
     ?>
-    tableOptions.ajax = "<?php echo $ajax_url ?>";
+    var queryString = window.location.search;
+    if (queryString.length === 0)
+    {
+      queryString = '?';
+    }
+    queryString += '&ajax=1';
+    tableOptions.ajax = 'edit_users.php' + queryString;
     <?php
   }
 

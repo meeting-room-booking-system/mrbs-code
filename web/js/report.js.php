@@ -4,7 +4,7 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             0);  // Cannot cache file because it depends on $HTTP_REFERER
+             60*30);  // 30 minute expiry
 
 if ($use_strict)
 {
@@ -33,6 +33,7 @@ init = function(args) {
   ?>
   var summaryDiv = $('#div_summary'),
       summaryHead = summaryDiv.find('thead'),
+      queryString,
       tableOptions;
       
   summaryHead.find('tr:first th:odd').attr('colspan', '2');
@@ -75,10 +76,14 @@ init = function(args) {
   // performance for large tables
   if (function_exists('json_encode'))
   {
-    $query_string = parse_url($HTTP_REFERER, PHP_URL_QUERY);
-    $ajax_url = "report.php?" . (empty($query_string) ? '' : "$query_string&") . "ajax=1&phase=2";
     ?>
-    tableOptions.ajax = "<?php echo $ajax_url ?>";
+    queryString = window.location.search;
+    if (queryString.length === 0)
+    {
+      queryString = '?phase=2';
+    }
+    queryString += '&ajax=1';
+    tableOptions.ajax = 'report.php' + queryString;
     <?php
   }
   // Add in a hidden input to the form so that we can tell if we are using DataTables
