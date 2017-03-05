@@ -170,12 +170,12 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=true);
+  print_header($day=null, $month=null, $year=null, $area=null, $room=null, $search_str=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=false, $search_str=null)
+function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $search_str=null, $simple=false)
 {
   global $theme;
   
