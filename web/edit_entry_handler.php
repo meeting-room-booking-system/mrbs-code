@@ -10,7 +10,7 @@ function invalid_booking($message)
 {
   global $day, $month, $year, $area, $room;
   
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  print_header($day, $month, $year, $area, isset($room) ? $room : null);
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
   // Print footer and exit
@@ -441,7 +441,7 @@ else
 }
 if (!getWritable($create_by, $user, $target_room))
 {
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -627,7 +627,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !$is_admin &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -761,7 +761,7 @@ if ($result['valid_booking'])
 
 else
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
+  print_header($day, $month, $year, $area, isset($room) ? $room : null);
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!empty($result['rules_broken']))

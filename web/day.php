@@ -31,7 +31,7 @@ $room_param = (empty($room)) ? "" : "&amp;room=$room";
 $timestamp = mktime(12, 0, 0, $month, $day, $year);
 
 // print the page header
-print_header($day, $month, $year, $area, isset($room) ? $room : "");
+print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
 echo "<div id=\"dwm_header\" class=\"screenonly\">\n";
 

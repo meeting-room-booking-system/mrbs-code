@@ -146,7 +146,7 @@ if (!isset($search_str))
   
 if (!$ajax)
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : "", false, $search_str);
+  print_header($day, $month, $year, $area, isset($room) ? $room : null, false, $search_str);
 
   if (!empty($advanced))
   {

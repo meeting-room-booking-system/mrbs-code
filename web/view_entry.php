@@ -248,7 +248,7 @@ if (isset($action) && ($action == "export"))
 // PHASE 1 - VIEW THE ENTRY
 // ------------------------
 
-print_header($day, $month, $year, $area, isset($room) ? $room : "");
+print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
 
 // Need to tell all the links where to go back to after an edit or delete

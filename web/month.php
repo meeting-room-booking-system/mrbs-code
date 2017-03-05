@@ -402,7 +402,7 @@ if ($ajax)
 
 
 // print the page header
-print_header($day, $month, $year, $area, isset($room) ? $room : "");
+print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
 
 // Note $room will be 0 if there are no rooms; this is checked for below.

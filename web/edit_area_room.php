@@ -461,7 +461,7 @@ if ($phase == 2)
   {
     if (!$is_admin)
     {
-      showAccessDenied($day, $month, $year, $area, "");
+      showAccessDenied($day, $month, $year, $area);
       exit();
     }
   }
@@ -862,7 +862,7 @@ if ($phase == 2)
 // PHASE 1 - GET THE USER INPUT
 // ----------------------------
 
-print_header($day, $month, $year, isset($area) ? $area : "", isset($room) ? $room : "");
+print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
 
 if ($is_admin)
 {
@@ -1088,7 +1088,7 @@ if (isset($change_area) &&!empty($area))
   // Only admins can see this form
   if (!$is_admin)
   {
-    showAccessDenied($day, $month, $year, $area, "");
+    showAccessDenied($day, $month, $year, $area);
     exit();
   }
   

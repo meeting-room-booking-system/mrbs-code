@@ -46,7 +46,7 @@ function db()
 // Get a database username and password
 function db_get_userpass()
 {
-  print_header(0, 0, 0, 0, "");
+  print_header();
   ?>
   <form class="form_general" id="db_logon" method="post" action="<?php htmlspecialchars(this_page()); ?>">
   <fieldset>

@@ -175,7 +175,7 @@ function print_simple_header()
 
 
 // Print the page header
-function print_header($day, $month, $year, $area, $room, $simple=false, $search_str='')
+function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=false, $search_str='')
 {
   global $theme;
   
@@ -199,15 +199,15 @@ function print_header($day, $month, $year, $area, $room, $simple=false, $search_
   }
 
   // If we dont know the right date then make it up 
-  if (!$day)
+  if (!isset($day))
   {
     $day   = date("d");
   }
-  if (!$month)
+  if (!isset($month))
   {
     $month = date("m");
   }
-  if (!$year)
+  if (!isset($year))
   {
     $year  = date("Y");
   }

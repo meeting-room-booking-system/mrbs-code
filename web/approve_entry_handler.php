@@ -46,7 +46,7 @@ if (isset($action))
   if ((($action == "approve") || ($action == "reject")) 
        && !auth_book_admin($user, $room_id))
   {
-    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
     exit;
   }
   

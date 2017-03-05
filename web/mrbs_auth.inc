@@ -129,7 +129,7 @@ function checkAuthorised($just_check=FALSE)
     {
       $area = get_default_area();
     }
-    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : "");
+    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
     exit();
   }
   
@@ -172,22 +172,18 @@ function getWritable($creator, $user, $room)
  * 
  * Returns: Nothing
  */
-function showAccessDenied($day, $month, $year, $area, $room)
+function showAccessDenied($day=null, $month=null, $year=null, $area=null, $room=null)
 {
   global $HTTP_REFERER;
 
-  print_header($day, $month, $year, $area, isset($room) ? $room : "");
-?>
-  <h1><?php echo get_vocab("accessdenied")?></h1>
-  <p>
-   <?php echo get_vocab("norights")?>
-  </p>
-  <p>
-    <a href="<?php echo htmlspecialchars($HTTP_REFERER); ?>">
-      <?php echo get_vocab("returnprev"); ?>
-    </a>
-  </p>
-<?php
+  print_header($day, $month, $year, $area, isset($room) ? $room : null);
+
+  echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
+  echo "<p>" . get_vocab("norights") . "</p>\n";
+  echo "<p>\n";
+  echo "<a href=\"" . htmlspecialchars($HTTP_REFERER) . "\">\n" . get_vocab("returnprev") . "</a>\n";
+  echo "</p>\n";
+
   // Print footer and exit
   print_footer(TRUE);
 }

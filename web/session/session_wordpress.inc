@@ -25,7 +25,7 @@ if (!isset($returl))
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
-  print_header(0, 0, 0, 0, "");
+  print_header();
   printLoginForm(this_page(), $target_url, $returl);
   exit();
 }
@@ -51,7 +51,7 @@ if (isset($Action) && ($Action == "SetName"))
     if (is_wp_error($wp_user))
     {
       $errors = $wp_user;  // $errors is a WordPress global
-      print_header(0, 0, 0, 0, "");
+      print_header();
       echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
       printLoginForm(this_page(), $target_url, $returl);
       exit();
@@ -77,7 +77,7 @@ if (isset($Action) && ($Action == "SetName"))
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
     Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-  print_header(0, 0, 0, 0, "");
+  print_header();
   echo "<br>\n";
   echo "<p>Please click <a href=\"" . htmlspecialchars($target_url) . "\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
   // Print footer and exit
@@ -96,7 +96,7 @@ function authGet()
   global $QUERY_STRING;
   global $returl;
 
-  print_header(0, 0, 0, 0, "");
+  print_header();
 
   echo "<p>".get_vocab("norights")."</p>\n";
 

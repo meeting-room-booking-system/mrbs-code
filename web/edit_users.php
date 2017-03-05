@@ -297,11 +297,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   /* First make sure the user is authorized */
   if (!$initial_user_creation && !auth_can_edit_user($user, $data['name']))
   {
-    showAccessDenied(0, 0, 0, "", "");
+    showAccessDenied();
     exit();
   }
 
-  print_header(0, 0, 0, 0, "");
+  print_header();
   
   if ($initial_user_creation == 1)
   {
@@ -792,7 +792,7 @@ if (isset($Action) && ($Action == "Delete"))
   // delete someone higher than you
   if (($level < $min_user_editing_level) || ($level < $target_level))
   {
-    showAccessDenied(0, 0, 0, "", "");
+    showAccessDenied();
     exit();
   }
 
@@ -809,7 +809,7 @@ if (isset($Action) && ($Action == "Delete"))
 
 if (!$ajax)
 {
-  print_header(0, 0, 0, "", "");
+  print_header();
 
   print "<h2>" . get_vocab("user_list") . "</h2>\n";
 
