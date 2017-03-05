@@ -186,6 +186,32 @@ function print_header($day, $month, $year, $area, $room, $simple=false, $search_
     return;
   }
   
+  // Need to set the timezone before we can use date()
+  if ($simple)
+  {
+    // We don't really care what timezone is being used
+    mrbs_default_timezone_set();
+  }
+  else
+  {
+    // This will set the correct timezone for the area
+    get_area_settings($area);  
+  }
+
+  // If we dont know the right date then make it up 
+  if (!$day)
+  {
+    $day   = date("d");
+  }
+  if (!$month)
+  {
+    $month = date("m");
+  }
+  if (!$year)
+  {
+    $year  = date("Y");
+  }
+  
   // Load the print_theme_header function appropriate to the theme.    If there
   // isn't one then fall back to the default header.
   if (is_readable("Themes/$theme/header.inc"))

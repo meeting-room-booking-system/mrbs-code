@@ -205,34 +205,8 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str)
+function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str='')
 {
-  // Need to set the timezone before we can use date()
-  if ($simple)
-  {
-    // We don't really care what timezone is being used
-    mrbs_default_timezone_set();
-  }
-  else
-  {
-    // This will set the correct timezone for the area
-    get_area_settings($area);  
-  }
-
-  // If we dont know the right date then make it up 
-  if (!$day)
-  {
-    $day   = date("d");
-  }
-  if (!$month)
-  {
-    $month = date("m");
-  }
-  if (!$year)
-  {
-    $year  = date("Y");
-  }
-
   // We want to prevent IE8 offering "Compatibility View" as that really
   // messes up MRBS, especially on the Report page
   $headers = array("Content-Type: text/html; charset=" . get_charset(),
