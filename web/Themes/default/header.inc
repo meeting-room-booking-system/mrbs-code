@@ -205,9 +205,9 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($day, $month, $year, $area, $room, $simple=false)
+function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str)
 {
-  global $search_str, $locale_warning;
+  global $locale_warning;
 
   // Need to set the timezone before we can use date()
   if ($simple)
