@@ -125,8 +125,13 @@ function print_report($query_string)
 }
 
 
-function print_search($day, $month, $year, $area, $room, $search_str = '')
+function print_search($day, $month, $year, $area, $room, $search_str=null)
 {
+  if (!isset($search_str))
+  {
+    $search_str = '';
+  }
+  
   echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
   echo "<div>\n";
   echo "<a href=\"search.php?advanced=1\">" . get_vocab("search") . ":</a>\n";
@@ -147,7 +152,7 @@ function print_search($day, $month, $year, $area, $room, $search_str = '')
 }
 
 
-function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=false)
+function print_nav($day, $month, $year, $area, $room, $search_str=null, $simple=false)
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
   if (!empty($area))
@@ -205,7 +210,7 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str='')
+function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str=null)
 {
   // We want to prevent IE8 offering "Compatibility View" as that really
   // messes up MRBS, especially on the Report page

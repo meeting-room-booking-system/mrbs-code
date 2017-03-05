@@ -174,7 +174,7 @@ if (!$ajax)
     exit;
   }
 
-  if (!isset($search_str) || ($search_str == ''))
+  if (!isset($search_str) || ($search_str === ''))
   {
     echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
     output_trailer();

@@ -175,7 +175,7 @@ function print_simple_header()
 
 
 // Print the page header
-function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=false, $search_str='')
+function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $simple=false, $search_str=null)
 {
   global $theme;
   
