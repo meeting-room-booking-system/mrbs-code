@@ -733,7 +733,6 @@ installed on your system.
 ');
 }
 
-$locale_warning = '';
 $windows_locale = "eng";
 set_mrbs_locale();
 
@@ -744,7 +743,7 @@ set_mrbs_locale();
 function get_os_locale($lang)
 {
   global $lang_map_unix, $lang_map_unix_postfix, $lang_map_windows;
-  global $locale_warning, $server_os;
+  global $server_os;
   
   $locale = FALSE;
   
@@ -756,8 +755,8 @@ function get_os_locale($lang)
     }
     else
     {
-      $locale_warning = "Server failed to map browser language '$lang' to a Windows locale specifier";
-      trigger_error($locale_warning, E_USER_NOTICE);
+      $message = "Server failed to map browser language '$lang' to a Windows locale specifier";
+      trigger_error($message, E_USER_NOTICE);
     }
   }
   /* All of these Unix OSes work in mostly the same way... */
@@ -837,8 +836,6 @@ function determine_mrbs_locale()
 // browser preferences
 function set_mrbs_locale()
 {
-  global $locale_warning;
-  
   static $locale = '';
   static $have_locale = FALSE;
   static $have_valid_locale = FALSE;
@@ -860,7 +857,8 @@ function set_mrbs_locale()
     $have_valid_locale = (setlocale(LC_ALL, $locale) !== FALSE);
     if (!$have_valid_locale)
     {
-      $locale_warning = "Server failed to set locale to '$locale'";
+      $message = "Server failed to set locale to '$locale'";
+      trigger_error($message, E_USER_NOTICE);
     }
   }
 }

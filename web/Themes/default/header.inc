@@ -207,8 +207,6 @@ function print_nav($day, $month, $year, $area, $room, $search_str = '', $simple=
 // access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str)
 {
-  global $locale_warning;
-
   // Need to set the timezone before we can use date()
   if ($simple)
   {
@@ -263,11 +261,6 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
       //]]>
     </script> 
     <?php
-  }
-  
-  if (!empty($locale_warning))
-  {
-    echo "[Warning: ".$locale_warning."]";
   }
   
   $class = 'banner';
