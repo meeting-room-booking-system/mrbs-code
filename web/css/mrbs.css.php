@@ -73,6 +73,10 @@ label::after {
   content: ':';
 }
 
+[lang="fr"] label::after {
+  content: '\00a0:';  <?php // &nbsp; before the colon ?>
+}
+
 label.no_suffix::after {
   content: '';
 }

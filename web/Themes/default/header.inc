@@ -220,7 +220,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
   
   echo DOCTYPE;
 
-  echo "<html>\n";
+  echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\">\n";
   
   print_head($simple);
 

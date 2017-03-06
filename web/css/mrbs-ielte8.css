@@ -8,6 +8,10 @@ label:after {
   content: ':';
 }
 
+[lang="fr"] label:after {
+  content: '\00a0:';
+}
+
 label.no_suffix:after {
   content: '';
 }
