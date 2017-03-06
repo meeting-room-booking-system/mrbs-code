@@ -134,7 +134,7 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
   
   echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
   echo "<div>\n";
-  echo "<a href=\"search.php?advanced=1\">" . get_vocab("search") . ":</a>\n";
+  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab("search") . "</a></label>\n";
   echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";
   echo "<input type=\"hidden\" name=\"day\" value=\"$day\">\n";
   echo "<input type=\"hidden\" name=\"month\" value=\"$month\">\n";
