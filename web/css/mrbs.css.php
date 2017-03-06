@@ -69,11 +69,13 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
-label::after {
+label::after,
+.list td:first-child::after {
   content: ':';
 }
 
-[lang="fr"] label::after {
+[lang="fr"] label::after,
+[lang="fr"] .list td:first-child::after  {
   content: '\00a0:';  <?php // &nbsp; before the colon ?>
 }
 
