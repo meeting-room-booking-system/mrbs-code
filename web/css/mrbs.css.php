@@ -76,7 +76,7 @@ label::after,
 
 [lang="fr"] label::after,
 [lang="fr"] .list td:first-child::after  {
-  content: '\00a0:';  <?php // &nbsp; before the colon ?>
+  content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }
 
 label.no_suffix::after {
