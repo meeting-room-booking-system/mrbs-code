@@ -45,7 +45,7 @@ $vocab["copyentry"]          = "Kayıt Kopyala";
 $vocab["editseries"]         = "Seri Düzenle";
 $vocab["copyseries"]         = "Serileri Kopyala";
 $vocab["namebooker"]         = "Kısa Tanım";
-$vocab["fulldescription"]    = "Tam Tanım:<br>&nbsp;&nbsp;(Kişi sayısı,<br>&nbsp;&nbsp;İç/Dış/Karma vb.)";
+$vocab["fulldescription"]    = "Tam Tanım";
 $vocab["date"]               = "Tarih";
 
 $vocab["start"]              = "Başlama";
