@@ -299,7 +299,7 @@ if (is_private_event($private) && $writeable)
 echo "</h3>\n";
 
 
-echo "<table id=\"entry\">\n";
+echo "<table id=\"entry\" class=\"list\">\n";
 
 // Output any error messages
 if (!empty($error))

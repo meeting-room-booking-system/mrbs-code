@@ -11,7 +11,7 @@ function create_details_row($label, $value, $as_html=FALSE, $class='')
   if ($as_html)
   {
     $result .= "<tr>\n";
-    $result .= "<td>$label:</td>\n";
+    $result .= "<td>$label</td>\n";
     $result .= "<td" .
                ((!empty($class)) ? " class=\"$class\"" : "") .
                ">" . mrbs_nl2br(htmlspecialchars($value)) . "</td>\n";
