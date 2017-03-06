@@ -291,11 +291,11 @@ div#dwm {margin-bottom: 0.5em}
   text-align: right;
 }
 
-.date_before:before {
+.date_before::before {
   content: '<<\0000a0';
 }
 
-.date_after:after {
+.date_after::after {
   content: '\0000a0>>';
 }
 
@@ -627,7 +627,7 @@ div.div_select.outside {
 
 /* booking approval status */
 .awaiting_approval {opacity: 0.6}
-.awaiting_approval a:before {content: "? "}
+.awaiting_approval a::before {content: "? "}
 
 /* booking confirmation status */
 .tentative {opacity: 0.6}

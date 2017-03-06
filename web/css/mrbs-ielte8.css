@@ -18,6 +18,17 @@ label.no_suffix:after {
   content: '';
 }
 
+.date_before:before {
+  content: '<<\0000a0';
+}
+
+.date_after:after {
+  content: '\0000a0>>';
+}
+
+.awaiting_approval a:before {content: "? "}
+
+
 /* ------------ PRIVATE BOOKINGS ---------------------------*/
 
 /* Opacity doesn't work well in IE8 and below, so we'll just change */
