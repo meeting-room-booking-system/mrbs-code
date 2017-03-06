@@ -27,13 +27,13 @@ function printLoginForm($action, $target_url, $returl)
   }
   
   $html .= "<label for=\"NewUserName\" title=\"$placeholder\">" . 
-           get_vocab("user") . ":</label>\n";
+           get_vocab("user") . "</label>\n";
   $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" " .
            " placeholder=\"$placeholder\">\n";
   $html .= "</div>\n";
   
   $html .= "<div>\n";
-  $html .= "<label for=\"NewUserPassword\">" . get_vocab("users.password") . ":</label>\n";
+  $html .= "<label for=\"NewUserPassword\">" . get_vocab("users.password") . "</label>\n";
   $html .= "<input type=\"password\" id=\"NewUserPassword\" name=\"NewUserPassword\">\n";
   $html .= "</div>\n";
 

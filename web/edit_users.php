@@ -331,7 +331,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           foreach ($fields as $field)
           {
             $key = $field['name'];
-            $params = array('label' => get_loc_field_name($tbl_users, $key) . ':',
+            $params = array('label' => get_loc_field_name($tbl_users, $key),
                             'name'  => VAR_PREFIX . $key,
                             'value' => $data[$key]);
             if (isset($maxlength["users.$key"]))
@@ -446,7 +446,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           for ($i=0; $i<2; $i++)
           {
             print "<div>\n";
-            print "<label for=\"password$i\">" . get_vocab("users.password") . ":</label>\n";
+            print "<label for=\"password$i\">" . get_vocab("users.password") . "</label>\n";
             print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
             print "</div>\n";
           }

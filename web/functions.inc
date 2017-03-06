@@ -796,7 +796,7 @@ function generate_checkbox($params)
   // no HTML escaping for the label - it is trusted
   $html  = "<label for=\"" . $params['id'] . "\"";
   $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-  $html .= ($params['label_after']) ? ' class="secondary"' : '';
+  $html .= ($params['label_after']) ? ' class="secondary no_suffix"' : '';
   $html .= ">";
   if (!$params['label_after'])
   {
@@ -1021,7 +1021,7 @@ function generate_radio($params)
   $option = each($params['options']);
   // generate the HTML
   // no HTML escaping for the label - it is trusted
-  $html  = "<label class=\"radio\">";
+  $html  = "<label class=\"radio no_suffix\">";
   $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . htmlspecialchars($option['key']) . "\"";          
   $html .= ($params['value'] == $option['key']) ? " checked=\"checked\"" : "";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
@@ -1207,7 +1207,7 @@ function generate_checkbox_group($params)
     {
       $value = $token;
     }
-    $html .= "<label>";
+    $html .= "<label class=\"no_suffix\">";
     $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\"";
     $html .= " value=\"" . htmlspecialchars($value) . "\"";          
     $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";

@@ -98,7 +98,7 @@ function create_field_entry_timezone()
     }
   }
   
-  $params = array('label'   => get_vocab('timezone') . ':',
+  $params = array('label'   => get_vocab('timezone'),
                   'name'    => 'area_timezone',
                   'options' => $timezones,
                   'value'   => $timezone);
@@ -145,7 +145,7 @@ function create_field_entry_advance_booking()
   echo "<legend>" . get_vocab("booking_creation") . "</legend>\n";
   // Minimum book ahead
   echo "<div>\n";
-  $params = array('label' => get_vocab("min_book_ahead") . ":",
+  $params = array('label' => get_vocab("min_book_ahead"),
                   'name'  => 'area_min_create_ahead_enabled',
                   'value' => $min_create_ahead_enabled,
                   'class' => 'enabler');
@@ -166,7 +166,7 @@ function create_field_entry_advance_booking()
   
   // Maximum book ahead
   echo "<div>\n";
-  $params = array('label' => get_vocab("max_book_ahead") . ":",
+  $params = array('label' => get_vocab("max_book_ahead"),
                   'name'  => 'area_max_create_ahead_enabled',
                   'value' => $max_create_ahead_enabled,
                   'class' => 'enabler');
@@ -191,7 +191,7 @@ function create_field_entry_advance_booking()
   echo "<legend>" . get_vocab("booking_deletion") . "</legend>\n";
   // Minimum book ahead
   echo "<div>\n";
-  $params = array('label' => get_vocab("min_book_ahead") . ":",
+  $params = array('label' => get_vocab("min_book_ahead"),
                   'name'  => 'area_min_delete_ahead_enabled',
                   'value' => $min_delete_ahead_enabled,
                   'class' => 'enabler');
@@ -211,7 +211,7 @@ function create_field_entry_advance_booking()
   
   // Maximum book ahead
   echo "<div>\n";
-  $params = array('label' => get_vocab("max_book_ahead") . ":",
+  $params = array('label' => get_vocab("max_book_ahead"),
                   'name'  => 'area_max_delete_ahead_enabled',
                   'value' => $max_delete_ahead_enabled,
                   'class' => 'enabler');
@@ -255,7 +255,7 @@ function create_field_entry_max_number()
   foreach ($interval_types as $interval_type)
   {
     echo "<tr>\n";
-    echo "<td><label>" . get_vocab("max_per_${interval_type}") . ":</label></td>\n";
+    echo "<td><label>" . get_vocab("max_per_${interval_type}") . "</label></td>\n";
     echo "<td><input class=\"enabler checkbox\" type=\"checkbox\" id=\"area_max_per_${interval_type}_enabled\" name=\"area_max_per_${interval_type}_enabled\"" .
          (($max_per_interval_area_enabled[$interval_type]) ? " checked=\"checked\"" : "") .
          ">\n";
@@ -284,7 +284,7 @@ function create_field_entry_max_duration()
   echo "<legend>" . get_vocab("booking_durations") . "</legend>\n";
 
   echo "<div>\n";
-  $params = array('label' => get_vocab("max_duration") . ":",
+  $params = array('label' => get_vocab("max_duration"),
                   'name'  => 'area_max_duration_enabled',
                   'value' => $max_duration_enabled,
                   'class' => 'enabler');
@@ -297,7 +297,7 @@ function create_field_entry_max_duration()
                       'min="0"',
                       'step="1"');
   $params = array('name'       => 'area_max_duration_periods',
-                  'label'      => get_vocab("mode_periods") . ':',
+                  'label'      => get_vocab("mode_periods"),
                   'value'      => $max_duration_periods,
                   'attributes' => $attributes);
   generate_input($params);
@@ -311,7 +311,7 @@ function create_field_entry_max_duration()
                       'min="0"',
                       'step="1"');
   $params = array('name'       => 'area_max_duration_value',
-                  'label'      => get_vocab("mode_times") . ':',
+                  'label'      => get_vocab("mode_times"),
                   'value'      => $max_duration_value,
                   'attributes' => $attributes);
   generate_input($params);
@@ -917,7 +917,7 @@ if (isset($change_room) && !empty($room))
       
       // The area select box
       echo "<div>\n";
-      $params = array('label'         => get_vocab("area") . ":",
+      $params = array('label'         => get_vocab("area"),
                       'name'          => 'new_area',
                       'options'       => $areas,
                       'force_assoc'   => TRUE,
@@ -931,7 +931,7 @@ if (isset($change_room) && !empty($room))
       // First of all deal with the standard MRBS fields
       // Room name
       echo "<div>\n";
-      $params = array('label'         => get_vocab("name") . ":",
+      $params = array('label'         => get_vocab("name"),
                       'name'          => 'room_name',
                       'value'         => $room_data['room_name'],
                       'disabled'      => $disabled,
@@ -944,7 +944,7 @@ if (isset($change_room) && !empty($room))
       if ($is_admin)
       {
         echo "<div>\n";
-        $params = array('label'         => get_vocab("sort_key") . ":",
+        $params = array('label'         => get_vocab("sort_key"),
                         'label_title'   => get_vocab("sort_key_note"),
                         'name'          => 'sort_key',
                         'value'         => $room_data['sort_key'],
@@ -960,7 +960,7 @@ if (isset($change_room) && !empty($room))
         echo "<div>\n";
         $options = array('0' => get_vocab("enabled"),
                          '1' => get_vocab("disabled"));
-        $params = array('label'         => get_vocab("status") . ":",
+        $params = array('label'         => get_vocab("status"),
                         'label_title'   => get_vocab("disabled_room_note"),
                         'name'          => 'room_disabled',
                         'value'         => ($room_data['disabled']) ? '1' : '0',
@@ -974,7 +974,7 @@ if (isset($change_room) && !empty($room))
 
       // Description
       echo "<div>\n";
-      $params = array('label'         => get_vocab("description") . ":",
+      $params = array('label'         => get_vocab("description"),
                       'name'          => 'description',
                       'value'         => $room_data['description'],
                       'disabled'      => $disabled,
@@ -984,7 +984,7 @@ if (isset($change_room) && !empty($room))
       
       // Capacity
       echo "<div>\n";
-      $params = array('label'         => get_vocab("capacity") . ":",
+      $params = array('label'         => get_vocab("capacity"),
                       'name'          => 'capacity',
                       'value'         => $room_data['capacity'],
                       'disabled'      => $disabled,
@@ -994,7 +994,7 @@ if (isset($change_room) && !empty($room))
       
       // Room admin email
       echo "<div>\n";
-      $params = array('label'         => get_vocab("room_admin_email") . ":",
+      $params = array('label'         => get_vocab("room_admin_email"),
                       'label_title'   => get_vocab("email_list_note"),
                       'name'          => 'room_admin_email',
                       'value'         => $room_data['room_admin_email'],
@@ -1009,7 +1009,7 @@ if (isset($change_room) && !empty($room))
       {
         // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
         echo "<div>\n";
-        $params = array('label'         => get_vocab("custom_html") . ":",
+        $params = array('label'         => get_vocab("custom_html"),
                         'label_title'   => get_vocab("custom_html_note"),
                         'name'          => 'custom_html',
                         'value'         => $room_data['custom_html'],
@@ -1026,7 +1026,7 @@ if (isset($change_room) && !empty($room))
         if (!in_array($field['name'], $standard_fields['room']))
         {
           echo "<div>\n";
-          $params = array('label'         => get_loc_field_name($tbl_room, $field['name']) . ":",
+          $params = array('label'         => get_loc_field_name($tbl_room, $field['name']),
                           'name'          => VAR_PREFIX . $field['name'],
                           'value'         => $room_data[$field['name']],
                           'disabled'      => $disabled,
@@ -1131,7 +1131,7 @@ if (isset($change_area) &&!empty($area))
   
   // Area name  
   echo "<div>\n";
-  $params = array('label' => get_vocab("name") . ":",
+  $params = array('label' => get_vocab("name"),
                   'name'  => 'area_name',
                   'value' => $area_data['area_name']);
   generate_input($params);
@@ -1139,7 +1139,7 @@ if (isset($change_area) &&!empty($area))
   
   // Sort key
   echo "<div>\n";
-  $params = array('label'       => get_vocab("sort_key") . ":",
+  $params = array('label'       => get_vocab("sort_key"),
                   'label_title' => get_vocab("sort_key_note"),
                   'name'        => 'sort_key',
                   'value'       => $area_data['sort_key']);
@@ -1150,7 +1150,7 @@ if (isset($change_area) &&!empty($area))
   echo "<div id=\"status\">\n";
   $options = array('0' => get_vocab("enabled"),
                    '1' => get_vocab("disabled"));
-  $params = array('label'       => get_vocab("status") . ":",
+  $params = array('label'       => get_vocab("status"),
                   'label_title' => get_vocab("disabled_area_note"),
                   'name'        => 'area_disabled',
                   'value'       => ($area_data['disabled']) ? '1' : '0',
@@ -1164,7 +1164,7 @@ if (isset($change_area) &&!empty($area))
   
   // Area admin email
   echo "<div>\n";
-  $params = array('label'       => get_vocab("area_admin_email") . ":",
+  $params = array('label'       => get_vocab("area_admin_email"),
                   'label_title' => get_vocab("email_list_note"),
                   'name'        => 'area_admin_email',
                   'value'       => $area_data['area_admin_email'],
@@ -1174,7 +1174,7 @@ if (isset($change_area) &&!empty($area))
       
   // The custom HTML
   echo "<div>\n";
-  $params = array('label'       => get_vocab("custom_html") . ":",
+  $params = array('label'       => get_vocab("custom_html"),
                   'label_title' => get_vocab("custom_html_note"),
                   'name'        => 'custom_html',
                   'value'       => $area_data['custom_html'],
@@ -1186,7 +1186,7 @@ if (isset($change_area) &&!empty($area))
   echo "<div id=\"mode\">\n";
   $options = array('1' => get_vocab("mode_periods"),
                    '0' => get_vocab("mode_times"));
-  $params = array('label'       => get_vocab("mode") . ":",
+  $params = array('label'       => get_vocab("mode"),
                   'name'        => 'area_enable_periods',
                   'value'       => ($area_data['enable_periods']) ? '1' : '0',
                   'options'     => $options,
@@ -1206,7 +1206,7 @@ if (isset($change_area) &&!empty($area))
   echo "</legend>\n";
   
   echo "<div class=\"div_time\">\n";
-  echo "<label>" . get_vocab("area_first_slot_start") . ":</label>\n";
+  echo "<label>" . get_vocab("area_first_slot_start") . "</label>\n";
   if ($twentyfourhour_format)
   {
     $value = sprintf("%02d", $morningstarts);
@@ -1252,7 +1252,7 @@ if (isset($change_area) &&!empty($area))
   echo "</div>\n";
       
   echo "<div class=\"div_dur_mins\">\n";
-  $params = array('label'      => get_vocab("area_res_mins") . ":",
+  $params = array('label'      => get_vocab("area_res_mins"),
                   'name'       => 'area_res_mins',
                   'value'      => $resolution/60,
                   'attributes' => 'type="number" min="1" step="1"');
@@ -1260,7 +1260,7 @@ if (isset($change_area) &&!empty($area))
   echo "</div>\n";
       
   echo "<div class=\"div_dur_mins\">\n";
-  $params = array('label'      => get_vocab("area_def_duration_mins") . ":",
+  $params = array('label'      => get_vocab("area_def_duration_mins"),
                   'name'       => 'area_def_duration_mins',
                   'value'      => $default_duration/60,
                   'attributes' => 'type="number" min="1" step="1"');
@@ -1295,7 +1295,7 @@ if (isset($change_area) &&!empty($area))
   {
     $value = $eveningends;
   } 
-  $params = array('label' => get_vocab("area_last_slot_start") . ":",
+  $params = array('label' => get_vocab("area_last_slot_start"),
                   'name'  => 'area_eveningends',
                   'value' => $value,
                   'attributes' => array('class="time_hour"', 'maxlength="2"'));
@@ -1342,7 +1342,7 @@ if (isset($change_area) &&!empty($area))
   
   // Confirmation enabled
   echo "<div>\n";
-  $params = array('label' => get_vocab("allow_confirmation") . ":",
+  $params = array('label' => get_vocab("allow_confirmation"),
                   'name'  => 'area_confirmation_enabled',
                   'value' => $confirmation_enabled);
   generate_checkbox($params);
@@ -1350,7 +1350,7 @@ if (isset($change_area) &&!empty($area))
   
   $options = array('1' => get_vocab("default_confirmed"),
                    '0' => get_vocab("default_tentative"));
-  $params = array('label'       => get_vocab("default_settings_conf") . ":",
+  $params = array('label'       => get_vocab("default_settings_conf"),
                   'name'        => 'area_confirmed_default',
                   'options'     => $options,
                   'force_assoc' => TRUE,
@@ -1362,14 +1362,14 @@ if (isset($change_area) &&!empty($area))
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("approval_settings") . "</legend>\n";
   echo "<div>\n";
-  $params = array('label' => get_vocab("enable_approval") . ":",
+  $params = array('label' => get_vocab("enable_approval"),
                   'name'  => 'area_approval_enabled',
                   'value' => $approval_enabled);
   generate_checkbox($params);
   echo "</div>\n";
 
   echo "<div>\n";
-  $params = array('label' => get_vocab("enable_reminders") . ":",
+  $params = array('label' => get_vocab("enable_reminders"),
                   'name'  => 'area_reminders_enabled',
                   'value' => $reminders_enabled);
   generate_checkbox($params);
@@ -1382,7 +1382,7 @@ if (isset($change_area) &&!empty($area))
   
   // Private enabled
   echo "<div>\n";
-  $params = array('label' => get_vocab("allow_private") . ":",
+  $params = array('label' => get_vocab("allow_private"),
                   'name'  => 'area_private_enabled',
                   'value' => $private_enabled);
   generate_checkbox($params);
@@ -1390,7 +1390,7 @@ if (isset($change_area) &&!empty($area))
 
   // Private mandatory
   echo "<div>\n";
-  $params = array('label' => get_vocab("force_private") . ":",
+  $params = array('label' => get_vocab("force_private"),
                   'name'  => 'area_private_mandatory',
                   'value' => $private_mandatory);
   generate_checkbox($params);
@@ -1410,7 +1410,7 @@ if (isset($change_area) &&!empty($area))
     
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("private_display") . "</legend>\n";
-  echo "<label>" . get_vocab("private_display_label");
+  echo "<label class=\"no_suffix\">" . get_vocab("private_display_label");
   echo "<span id=\"private_display_caution\">";
   echo get_vocab("private_display_caution");
   echo "</span>";

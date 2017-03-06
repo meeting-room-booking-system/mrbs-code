@@ -69,6 +69,14 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
+label::after {
+  content: ':';
+}
+
+label.no_suffix::after {
+  content: '';
+}
+
 <?php
 // DataTables don't work well with border-collapse: collapse and scrollX: 100%.   In fact they
 // don't work well either with a border round the table.   So we put the left and right borders

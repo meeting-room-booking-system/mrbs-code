@@ -155,12 +155,12 @@ if (!$ajax)
       <fieldset>
       <legend><?php echo get_vocab("advanced_search") ?></legend>
         <div id="div_search_str">
-          <label for="search_str"><?php echo get_vocab("search_for") ?>:</label>
+          <label for="search_str"><?php echo get_vocab("search_for") ?></label>
           <input type="search" id="search_str" name="search_str" required>
         </div>   
         <div id="div_search_from">
           <?php
-          echo "<label>" . get_vocab("from") . ":</label>\n";
+          echo "<label>" . get_vocab("from") . "</label>\n";
           genDateSelector ("from_", $day, $month, $year);
           ?>
         </div> 

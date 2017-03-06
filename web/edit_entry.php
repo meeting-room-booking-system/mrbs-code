@@ -240,7 +240,7 @@ function create_field_entry_name($disabled=FALSE)
   
   // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
   // there is something there).
-  $params = array('label'      => get_vocab("namebooker") . ":",
+  $params = array('label'      => get_vocab("namebooker"),
                   'name'       => 'name',
                   'field'      => 'entry.name',
                   'value'      => $name,
@@ -292,7 +292,7 @@ function create_field_entry_start_date($disabled=FALSE)
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
 
   echo "<div id=\"div_start_date\">\n";
-  echo "<label>" . get_vocab("start") . ":</label>\n";
+  echo "<label>" . get_vocab("start") . "</label>\n";
   echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
   gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
@@ -319,7 +319,7 @@ function create_field_entry_end_date($disabled=FALSE)
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
   echo "<div id=\"div_end_date\">\n";
-  echo "<label>" . get_vocab("end") . ":</label>\n";
+  echo "<label>" . get_vocab("end") . "</label>\n";
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
   gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
@@ -364,7 +364,7 @@ function create_field_entry_areas($disabled=FALSE)
       $options[$a['id']] = $a['area_name'];
     }
     
-    $params = array('label'       => get_vocab("area") . ":",
+    $params = array('label'       => get_vocab("area"),
                     'name'        => 'area',
                     'options'     => $options,
                     'force_assoc' => TRUE,
@@ -404,7 +404,7 @@ function create_field_entry_rooms($disabled=FALSE)
   }
 
   echo "<div id=\"div_rooms\">\n";
-  echo "<label for=\"rooms\">" . get_vocab("rooms") . ":</label>\n";
+  echo "<label for=\"rooms\">" . get_vocab("rooms") . "</label>\n";
   echo "<div class=\"group\">\n";
   
   // First of all generate the rooms for this area
@@ -470,7 +470,7 @@ function create_field_entry_type($disabled=FALSE)
   
   echo "<div id=\"div_type\">\n";
   
-  $params = array('label'       => get_vocab("type") . ":",
+  $params = array('label'       => get_vocab("type"),
                   'name'        => 'type',
                   'disabled'    => $disabled,
                   'mandatory'   => !empty($is_mandatory_field['entry.type']),
@@ -507,7 +507,7 @@ function create_field_entry_confirmation_status($disabled=FALSE)
     $buttons[0] = get_vocab("tentative");
     $buttons[1] = get_vocab("confirmed");
     
-    $params = array('label'       => get_vocab("confirmation_status") . ":",
+    $params = array('label'       => get_vocab("confirmation_status"),
                     'name'        => 'confirmed',
                     'value'       => ($confirmed) ? 1 : 0,
                     'options'     => $buttons,
@@ -533,7 +533,7 @@ function create_field_entry_privacy_status($disabled=FALSE)
     $buttons[0] = get_vocab("public");
     $buttons[1] = get_vocab("private");
     
-    $params = array('label'       => get_vocab("privacy_status") . ":",
+    $params = array('label'       => get_vocab("privacy_status"),
                     'name'        => 'private',
                     'value'       => ($private) ? 1 : 0,
                     'options'     => $buttons,
@@ -553,7 +553,7 @@ function create_field_entry_custom_field($field, $key, $disabled=FALSE)
   global $is_mandatory_field, $text_input_max, $maxlength;
   
   echo "<div>\n";
-  $params = array('label'      => get_loc_field_name($tbl_entry, $key) . ":",
+  $params = array('label'      => get_loc_field_name($tbl_entry, $key),
                   'name'       => VAR_PREFIX . $key,
                   'value'      => isset($custom_fields[$key]) ? $custom_fields[$key] : NULL,
                   'disabled'   => $disabled,
@@ -1216,7 +1216,7 @@ if (($edit_type == "series") && $repeats_allowed)
       
   // Repeat type
   echo "<div id=\"rep_type\">\n";
-  $params = array('label'         => get_vocab("rep_type") . ":",
+  $params = array('label'         => get_vocab("rep_type"),
                   'name'          => 'rep_type',
                   'value'         => $rep_type,
                   'disabled'      => $disabled,
@@ -1241,7 +1241,7 @@ if (($edit_type == "series") && $repeats_allowed)
       echo "<legend></legend>\n";
       // Repeat day
       echo "<div id=\"rep_day\">\n";
-      $params = array('label'    => get_vocab("rep_rep_day") . ":",
+      $params = array('label'    => get_vocab("rep_rep_day"),
                       'name'     => 'rep_day[]',
                       'value'    => $rep_day,
                       'disabled' => $disabled,
@@ -1259,7 +1259,7 @@ if (($edit_type == "series") && $repeats_allowed)
 
       // Repeat frequency
       echo "<div>\n";
-      $params = array('label'      => get_vocab("rep_num_weeks") . ":",
+      $params = array('label'      => get_vocab("rep_num_weeks"),
                       'name'       => 'rep_num_weeks',
                       'type'       => 'number',
                       'step'       => '1',
@@ -1353,7 +1353,7 @@ if (($edit_type == "series") && $repeats_allowed)
     
     // Repeat end date
     echo "<div id=\"rep_end_date\">\n";
-    echo "<label>" . get_vocab("rep_end_date") . ":</label>\n";
+    echo "<label>" . get_vocab("rep_end_date") . "</label>\n";
     genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year, '', $disabled);
     echo "</div>\n";
     
@@ -1361,7 +1361,7 @@ if (($edit_type == "series") && $repeats_allowed)
     if (!$disabled)
     {
       echo "<div>\n";
-      $params = array('label' => get_vocab("skip_conflicts") . ":",
+      $params = array('label' => get_vocab("skip_conflicts"),
                       'name' => 'skip',
                       'value' => !empty($skip_default));
       generate_checkbox($params);
@@ -1381,7 +1381,7 @@ if ($need_to_send_mail &&
 {
   echo "<div id=\"div_no_mail\">\n";
   
-  $params = array('label'    => get_vocab("no_mail") . ":",
+  $params = array('label'    => get_vocab("no_mail"),
                   'name'     => 'no_mail',
                   'value'    => $mail_settings['no_mail_default']);
   generate_checkbox($params);

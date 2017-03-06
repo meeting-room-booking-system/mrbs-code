@@ -97,7 +97,7 @@ else
     echo "<legend></legend>\n";
   
     // The area selector
-    echo "<label id=\"area_label\" for=\"area_select\">" . get_vocab("area") . ":</label>\n";
+    echo "<label id=\"area_label\" for=\"area_select\">" . get_vocab("area") . "</label>\n";
     echo "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
     if ($is_admin)
     {
@@ -167,7 +167,7 @@ if ($is_admin)
       <input type="hidden" name="type" value="area">
 
       <div>
-        <label for="area_name"><?php echo get_vocab("name") ?>:</label>
+        <label for="area_name"><?php echo get_vocab("name") ?></label>
         <input type="text" id="area_name" name="name" maxlength="<?php echo $maxlength['area.area_name'] ?>">
       </div>
           
@@ -396,22 +396,22 @@ if ($is_admin || ($n_displayable_areas > 0))
         <input type="hidden" name="area" value="<?php echo $area; ?>">
         
         <div>
-          <label for="room_name"><?php echo get_vocab("name") ?>:</label>
+          <label for="room_name"><?php echo get_vocab("name") ?></label>
           <input type="text" id="room_name" name="name" maxlength="<?php echo $maxlength['room.room_name'] ?>">
         </div>
         
         <div>
-          <label for="room_description"><?php echo get_vocab("description") ?>:</label>
+          <label for="room_description"><?php echo get_vocab("description") ?></label>
           <input type="text" id="room_description" name="description" maxlength="<?php echo $maxlength['room.description'] ?>">
         </div>
         
         <div>
-          <label for="room_capacity"><?php echo get_vocab("capacity") ?>:</label>
+          <label for="room_capacity"><?php echo get_vocab("capacity") ?></label>
           <input type="text" id="room_capacity" name="capacity">
         </div>
 
         <div>
-          <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?>:</label>
+          <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?></label>
           <input type="text" id="room_admin_email" name="room_admin_email">
         </div>
        

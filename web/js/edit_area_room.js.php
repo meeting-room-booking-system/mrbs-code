@@ -189,7 +189,7 @@ function generateLastSlotSelect()
   var lastPossible = minsPerDay + firstSlot - resMins;
   var id = 'area_eveningends_t';
   var label = $('<label>').attr('for', id)
-                          .text('<?php echo get_vocab("area_last_slot_start")?>:');
+                          .text('<?php echo get_vocab("area_last_slot_start")?>');
   var select = $('<select>').attr('id', id)
                             .attr('name', id);
                             

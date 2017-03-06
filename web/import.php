@@ -728,7 +728,7 @@ foreach ($compression_wrappers as $compression_wrapper)
 echo "</ul>\n";
   
 echo "<div>\n";
-echo "<label for=\"upload_file\">" . get_vocab("file_name") . ":</label>\n";
+echo "<label for=\"upload_file\">" . get_vocab("file_name") . "</label>\n";
 
 $accept_mime_types = array();
 foreach ($compression_wrappers as $compression_wrapper)
@@ -767,7 +767,7 @@ if (count($areas) > 0)
   {
     echo "<div>\n";
     $params = array('name'        => 'import_default_room',
-                    'label'       => get_vocab('default_room') . ':',
+                    'label'       => get_vocab('default_room'),
                     'label_title' => get_vocab('default_room_note'),
                     'options'     => $options,
                     'force_assoc' => true,
@@ -780,7 +780,7 @@ if (count($areas) > 0)
 
 // Area-room order
 echo "<div>\n";
-$params = array('label'       => get_vocab('area_room_order') . ':',
+$params = array('label'       => get_vocab('area_room_order'),
                 'label_title' => get_vocab('area_room_order_note'),
                 'name'        => 'area_room_order',
                 'options'     => array('area_room' => get_vocab('area_room'),
@@ -791,7 +791,7 @@ echo "</div>\n";
 
 // Area-room delimiter
 echo "<div>\n";
-$params = array('label'       => get_vocab('area_room_delimiter') . ':',
+$params = array('label'       => get_vocab('area_room_delimiter'),
                 'label_title' => get_vocab('area_room_delimiter_note'),
                 'name'        => 'area_room_delimiter',
                 'value'       => $area_room_delimiter);
@@ -800,7 +800,7 @@ echo "</div>\n";
 
 // Area/room create
 echo "<div>\n";
-$params = array('label' => get_vocab('area_room_create') . ':',
+$params = array('label' => get_vocab('area_room_create'),
                 'name'  => 'area_room_create',
                 'value' => $area_room_create);
 generate_checkbox($params);
@@ -819,7 +819,7 @@ foreach ($booking_types as $type)
 {
   $options[$type] = get_type_vocab($type);
 }
-$params = array('label'       => get_vocab('default_type') . ':',
+$params = array('label'       => get_vocab('default_type'),
                 'name'        => 'import_default_type',
                 'options'     => $options,
                 'force_assoc' => true,
@@ -829,7 +829,7 @@ echo "</div>\n";
 
 // Skip conflicts
 echo "<div>\n";
-$params = array('label' => get_vocab('skip_conflicts') . ':',
+$params = array('label' => get_vocab('skip_conflicts'),
                 'name'  => 'skip',
                 'value' => $skip);
 generate_checkbox($params);

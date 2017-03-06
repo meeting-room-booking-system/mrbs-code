@@ -64,7 +64,7 @@ function generate_search_criteria(&$vars)
     {
       case 'report_start':
         echo "<div id=\"div_report_start\">\n";
-        echo "<label>" . get_vocab("report_start") . ":</label>\n";
+        echo "<label>" . get_vocab("report_start") . "</label>\n";
         genDateSelector("from_", $vars['from_day'], $vars['from_month'], $vars['from_year']);
         echo "</div>\n";
         break;
@@ -72,7 +72,7 @@ function generate_search_criteria(&$vars)
         
       case 'report_end':  
         echo "<div id=\"div_report_end\">\n";
-        echo "<label>" . get_vocab("report_end") . ":</label>\n";
+        echo "<label>" . get_vocab("report_end") . "</label>\n";
         genDateSelector("to_", $vars['to_day'], $vars['to_month'], $vars['to_year']);
         echo "</div>\n";
         break;
@@ -81,7 +81,7 @@ function generate_search_criteria(&$vars)
       case 'areamatch':
         $options = get_area_names($all=TRUE);
         echo "<div id=\"div_areamatch\">\n";
-        $params = array('label'         => get_vocab("match_area") . ':',
+        $params = array('label'         => get_vocab("match_area"),
                         'name'          => 'areamatch',
                         'options'       => $options,
                         'force_indexed' => TRUE,
@@ -96,7 +96,7 @@ function generate_search_criteria(&$vars)
         // in different areas)
         $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
         echo "<div id=\"div_roommatch\">\n";
-        $params = array('label'         => get_vocab("match_room") . ':',
+        $params = array('label'         => get_vocab("match_room"),
                         'name'          => 'roommatch',
                         'options'       => $options,
                         'force_indexed' => TRUE,
@@ -115,7 +115,7 @@ function generate_search_criteria(&$vars)
           {
             $options[$type] = get_type_vocab($type);
           }
-          $params = array('label'        => get_vocab("match_type") . ':',
+          $params = array('label'        => get_vocab("match_type"),
                           'name'         => 'typematch[]',
                           'id'           => 'typematch',
                           'options'      => $options,
@@ -132,7 +132,7 @@ function generate_search_criteria(&$vars)
         
       case 'namematch':  
         echo "<div id=\"div_namematch\">\n";
-        $params = array('label' => get_vocab("match_entry") . ':',
+        $params = array('label' => get_vocab("match_entry"),
                         'name'  => 'namematch',
                         'value' => $vars['namematch'],
                         'field' => 'entry.name');
@@ -143,7 +143,7 @@ function generate_search_criteria(&$vars)
         
       case 'descrmatch':
         echo "<div id=\"div_descrmatch\">\n";
-        $params = array('label' => get_vocab("match_descr") . ':',
+        $params = array('label' => get_vocab("match_descr"),
                         'name'  => 'descrmatch',
                         'value' => $vars['descrmatch'],
                         'field' => 'entry.description');
@@ -154,7 +154,7 @@ function generate_search_criteria(&$vars)
       
       case 'creatormatch':
         echo "<div id=\"div_creatormatch\">\n";
-        $params = array('label' => get_vocab("createdby") . ':',
+        $params = array('label' => get_vocab("createdby"),
                         'name'  => 'creatormatch',
                         'value' => $vars['creatormatch'],
                         'field' => 'entry.create_by');
@@ -180,7 +180,7 @@ function generate_search_criteria(&$vars)
           {
             echo "<div id=\"div_privacystatus\">\n";
             $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_FALSE => get_vocab("default_public"), BOOLEAN_MATCH_TRUE => get_vocab("default_private"));
-            $params = array('label'       => get_vocab("privacy_status") . ':',
+            $params = array('label'       => get_vocab("privacy_status"),
                             'name'        => 'match_private',
                             'options'     => $options,
                             'force_assoc' => TRUE,
@@ -199,7 +199,7 @@ function generate_search_criteria(&$vars)
         {
           echo "<div id=\"div_confirmationstatus\">\n";
           $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("confirmed"), BOOLEAN_MATCH_FALSE => get_vocab("tentative"));
-          $params = array('label'       => get_vocab("confirmation_status") . ':',
+          $params = array('label'       => get_vocab("confirmation_status"),
                           'name'        => 'match_confirmed',
                           'options'     => $options,
                           'force_assoc' => TRUE,
@@ -217,7 +217,7 @@ function generate_search_criteria(&$vars)
         {
           echo "<div id=\"div_approvalstatus\">\n";
           $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("approved"), BOOLEAN_MATCH_FALSE => get_vocab("awaiting_approval"));
-          $params = array('label'       => get_vocab("approval_status") . ':',
+          $params = array('label'       => get_vocab("approval_status"),
                           'name'        => 'match_approved',
                           'options'     => $options,
                           'force_assoc' => TRUE,
@@ -232,7 +232,7 @@ function generate_search_criteria(&$vars)
         // Must be a custom field
         $var = "match_$key";
         global $$var;
-        $params = array('label' => get_loc_field_name($tbl_entry, $key) . ':',
+        $params = array('label' => get_loc_field_name($tbl_entry, $key),
                         'name'  => $var);
         echo "<div>\n";
         // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
@@ -279,7 +279,7 @@ function generate_presentation_options(&$vars)
         echo "<div id=\"div_output\">\n";
         $buttons = array(REPORT  => get_vocab('report'),
                          SUMMARY => get_vocab('summary'));
-        $params = array('label'       => get_vocab('output') . ":",
+        $params = array('label'       => get_vocab('output'),
                         'name'        => 'output',
                         'value'       => $vars['output'],
                         'options'     => $buttons,
@@ -298,7 +298,7 @@ function generate_presentation_options(&$vars)
         {
           $buttons[OUTPUT_ICAL] = get_vocab('ical');
         }
-        $params = array('label'       => get_vocab('format') . ":",
+        $params = array('label'       => get_vocab('format'),
                         'name'        => 'output_format',
                         'value'       => $vars['output_format'],
                         'options'     => $buttons,
@@ -312,7 +312,7 @@ function generate_presentation_options(&$vars)
         echo "<div id=\"div_sortby\">\n";
         $options = array('r' => get_vocab("sort_room"),
                          's' => get_vocab("sort_rep_time"));
-        $params = array('label'   => get_vocab("sort_rep") . ':',
+        $params = array('label'   => get_vocab("sort_rep"),
                         'name'    => 'sortby',
                         'options' => $options,
                         'value'   => $vars['sortby']);
@@ -326,7 +326,7 @@ function generate_presentation_options(&$vars)
         $options = array('d' => get_vocab("sum_by_descrip"),
                          'c' => get_vocab("sum_by_creator"),
                          't' => get_vocab("sum_by_type"));
-        $params = array('label'   => get_vocab("summarize_by") . ':',
+        $params = array('label'   => get_vocab("summarize_by"),
                         'name'    => 'sumby',
                         'options' => $options,
                         'value'   => $vars['sumby']);

@@ -1,6 +1,17 @@
 
 /* Fixes for Internet Explorer 8 and below */
 
+/* IE8 can't do pseudo-elements ('::') so use a
+   pseudo-class (':') */
+   
+label:after {
+  content: ':';
+}
+
+label.no_suffix:after {
+  content: '';
+}
+
 /* ------------ PRIVATE BOOKINGS ---------------------------*/
 
 /* Opacity doesn't work well in IE8 and below, so we'll just change */
