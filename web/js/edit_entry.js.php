@@ -266,7 +266,7 @@ function validationMessages()
       label = $("label[for=" + key + "]");
       if (label.length > 0)
       {
-        validationMessages.vocab[key] = label.html();
+        validationMessages.vocab[key] = label.text();
         validationMessages.vocab[key] = '"' + validationMessages.vocab[key].replace(/:$/, '') + '" ';
         validationMessages.vocab[key] += '<?php echo escape_js(get_vocab("is_mandatory_field")) ?>';
     
