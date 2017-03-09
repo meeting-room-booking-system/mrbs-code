@@ -1435,11 +1435,8 @@ echo "</fieldset>\n";
     echo "</div>\n";
     
     // divs to hold the results of the Ajax checking of the booking
-    echo "<div id=\"conflict_check\">\n";
-    echo "</div>\n";
-    
-    echo "<div id=\"policy_check\">\n";
-    echo "</div>\n";
+    echo "<div id=\"conflict_check\"></div>\n";
+    echo "<div id=\"policy_check\"></div>\n";
     
     echo "</fieldset>";
     

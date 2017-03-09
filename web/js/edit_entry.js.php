@@ -600,18 +600,16 @@ function checkConflicts(optional)
             var conflictDiv = $('#conflict_check');
             var scheduleDetails = $('#schedule_details');
             var policyDetails = $('#policy_details');
-            var checkMark = "\u2714";
-            var cross = "\u2718";
             var titleText, detailsHTML;
             if (result.conflicts.length === 0)
             {
-              conflictDiv.text(checkMark).attr('class', 'good');
+              conflictDiv.attr('class', 'good');
               titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
-              conflictDiv.text(cross).attr('class', 'bad');
+              conflictDiv.attr('class', 'bad');
               detailsHTML = "<p>";
               titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
               detailsHTML += titleText + "<\/p>";
@@ -624,13 +622,13 @@ function checkConflicts(optional)
             var policyDiv = $('#policy_check');
             if (result.rules_broken.length === 0)
             {
-              policyDiv.text(checkMark).attr('class', 'good');
+              policyDiv.attr('class', 'good');
               titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
-              policyDiv.text(cross).attr('class', 'bad');
+              policyDiv.attr('class', 'bad');
               detailsHTML = "<p>";
               titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
               detailsHTML += titleText + "<\/p>";

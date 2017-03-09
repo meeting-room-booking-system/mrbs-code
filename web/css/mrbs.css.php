@@ -861,8 +861,16 @@ fieldset#rep_info, fieldset#booking_controls {
 
 div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padding: 1em 0.5em; cursor: pointer}
 div#conflict_check {margin-left: 3em}
-div.good {color: green}
-div.bad {color: red}
+
+div.good::after {
+  content: '\002714';  <?php // checkmark ?>
+  color: green;
+}
+
+div.bad::after {
+  content: '\002718';  <?php // cross ?>
+  color: red;
+}
 
 .form_general table {border-collapse: collapse}
 .form_general table, .form_general tr, .form_general th, .form_general td {padding: 0; margin: 0; border: 0}

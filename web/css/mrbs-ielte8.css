@@ -11,7 +11,7 @@ label:after,
 
 [lang="fr"] label:after,
 [lang="fr"] .list td:first-child:after  {
-  content: '\0000a0:';  <?php // &nbsp; before the colon ?>
+  content: '\0000a0:';  /* &nbsp; before the colon */
 }
 
 label.no_suffix:after {
@@ -26,7 +26,19 @@ label.no_suffix:after {
   content: '\0000a0>>';
 }
 
-.awaiting_approval a:before {content: "? "}
+.awaiting_approval a:before {
+  content: '? ';
+}
+
+div.good:after {
+  content: '\002714';  /* checkmark */
+  color: green;
+}
+
+div.bad:after {
+  content: '\002718';  /* cross */
+  color: red;
+}
 
 
 /* ------------ PRIVATE BOOKINGS ---------------------------*/
