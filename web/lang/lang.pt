@@ -28,14 +28,14 @@ $vocab["dayafter"]           = "Ir para Dia Seguinte";
 $vocab["gototoday"]          = "Ir para dia de hoje";
 $vocab["goto"]               = "ir para";
 $vocab["highlight_line"]     = "Destaque esta linha";
-$vocab["click_to_reserve"]   = "Prima nesta céçlula para reservar.";
+$vocab["click_to_reserve"]   = "Prima neste campo para reservar.";
 $vocab["timezone"]           = "Fuso horário";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
 $vocab["viewweek"]           = "Ver Semana";
 $vocab["viewmonth"]          = "Ver Mês";
-$vocab["ppreview"]           = "Pré-visualizar Inpressão";
+$vocab["ppreview"]           = "Pré-visualizar Impressão";
 
 // Used in edit_entry.php
 $vocab["addentry"]           = "Nova reserva";
@@ -142,7 +142,7 @@ $vocab["mail_subject_more_info"] = "$mrbs_company MRBS: pedido de mais informaç
 $vocab["mail_subject_reminder"]  = "Alerta para $mrbs_company MRBS";
 $vocab["mail_body_approved"]     = "Uma reserva foi aprovada pelo administrador, mais detalhes:";
 $vocab["mail_body_rej_entry"]    = "Uma reserva foi rejeitada pelo administrador, mais detalhes:";
-$vocab["mail_body_more_info"]    = "The administrators require more information about an entry; here are the details:";
+$vocab["mail_body_more_info"]    = "O administrador requer mais informação acerca desta reserva; aqui estão os detalhes:";
 $vocab["mail_body_reminder"]     = "Alerta - Uma reserva aguarda aprovação; detalhes:";
 $vocab["mail_subject_new_entry"] = "Reserva de Salas";
 $vocab["mail_subject_changed_entry"] = "Reserva de Salas";
@@ -175,12 +175,12 @@ $vocab["username_or_email"]  = "Nome de utilizador ou endereço de email";
 
 // Database upgrade code
 $vocab["database_login"]           = "Login na base de dados";
-$vocab["upgrade_required"]         = "A base de dados necessita de uma subida de versão.";
+$vocab["upgrade_required"]         = "A base de dados necessita de uma versão mais recente.";
 $vocab["supply_userpass"]          = "Por favor insira um utilizador e senha de acesso com direitos de administração.";
-$vocab["contact_admin"]            = "Se não é o administrador deste sistema por contacte $mrbs_admin.";
-$vocab["upgrade_to_version"]       = "Subida de versão";
-$vocab["upgrade_to_local_version"] = "Subida de versão para versão local"; 
-$vocab["upgrade_completed"]        = "Subida de versão completa.";
+$vocab["contact_admin"]            = "Se não é o administrador deste sistema por favor contacte $mrbs_admin.";
+$vocab["upgrade_to_version"]       = "Actualize para a versão";
+$vocab["upgrade_to_local_version"] = "Actualize para versão local"; 
+$vocab["upgrade_completed"]        = "Actualização completa.";
 
 // User access levels
 $vocab["level_0"]            = "nenhum";
@@ -195,15 +195,15 @@ $vocab["delete_user"]        = "Eliminar utilizador";
 //$vocab["users.name"]       = Utilize o mesmo que em cima, para consistência.
 //$vocab["users.password"]   = Utilize o mesmo que em cima, para consistência.
 $vocab["users.email"]        = "Endereço de Email";
-$vocab["password_twice"]     = "Se quiser alterar a senha de acesso, por favor insira-o duas vezes";
+$vocab["password_twice"]     = "Se quiser alterar a senha de acesso, por favor insira-a duas vezes";
 $vocab["passwords_not_eq"]   = "Erro: As senhas de acesso não são iguais.";
 $vocab["password_invalid"]   = "A senha não está conforme a política definida. Tem que conter no mínimo:";
 $vocab["policy_length"]      = "caractere(s)";
-$vocab["policy_alpha"]       = "carta(s)";
+$vocab["policy_alpha"]       = "Alfanumerico(s)";
 $vocab["policy_lower"]       = "Letra(s) em minúsculas";
 $vocab["policy_upper"]       = "Letra(s) em maiúsculas";
 $vocab["policy_numeric"]     = "Caracteres numéricos";
-$vocab["policy_special"]     = "caracter especial";
+$vocab["policy_special"]     = "Caracter especial";
 $vocab["add_new_user"]       = "Inserir novo utilizador";
 $vocab["action"]             = "Acção";
 $vocab["user"]               = "Utilizador";
@@ -225,8 +225,8 @@ $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
 $vocab["next"]               = "Próximo";
 $vocab["entry"]              = "Entrada";
-$vocab["advanced_search"]    = "Pesquyisa Avançada";
-$vocab["search_button"]      = "Perquisar";
+$vocab["advanced_search"]    = "Pesquisa Avançada";
+$vocab["search_button"]      = "Pesquisar";
 $vocab["search_for"]         = "Pesquisar por";
 $vocab["from"]               = "De";
 
@@ -237,7 +237,7 @@ $vocab["report_end"]         = "Data termo";
 $vocab["match_area"]         = "Área";
 $vocab["match_room"]         = "Sala";
 $vocab["match_type"]         = "Tipo";
-$vocab["ctrl_click_type"]    = "Utilize Control-Click para escolher mais de um tipo";
+$vocab["ctrl_click_type"]    = "Utilize Control-Click para escolher mais do que um tipo";
 $vocab["match_entry"]        = "Breve Descrição";
 $vocab["match_descr"]        = "Descrição completa";
 $vocab["summarize_by"]       = "Sumário por";
@@ -259,12 +259,12 @@ $vocab["search_criteria"]       = "Critério de pesquisa";
 $vocab["presentation_options"]  = "opções de apresentação";
 
 // Used in week.php
-$vocab["weekbefore"]         = "Ir para a semana Anterior";
+$vocab["weekbefore"]         = "Ir para a semana anterior";
 $vocab["weekafter"]          = "Ir para a semana seguinte";
 $vocab["gotothisweek"]       = "Ir para esta semana";
 
 // Used in month.php
-$vocab["monthbefore"]        = "Ir para o mês Anterior";
+$vocab["monthbefore"]        = "Ir para o mês anterior";
 $vocab["monthafter"]         = "Ir para o mês seguinte";
 $vocab["gotothismonth"]      = "Ir para este mês";
 
@@ -318,7 +318,7 @@ $vocab["default_confirmed"]       = "Confirmado";
 $vocab["default_tentative"]       = "Não confirmado";
 $vocab["approval_settings"]       = "Aprovação";
 $vocab["enable_approval"]         = "Requerer aprovação de reservas";
-$vocab["enable_reminders"]        = "Permitir os ulizadores de relembrarem o admin";
+$vocab["enable_reminders"]        = "Permitir os ulizadores de relembrarem o administrador";
 $vocab["private_settings"]        = "Reservas privadas";
 $vocab["allow_private"]           = "Permitir reservads privadas";
 $vocab["force_private"]           = "Forçar reservas privadas";
