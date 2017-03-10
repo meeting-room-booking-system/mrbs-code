@@ -859,15 +859,32 @@ fieldset#rep_info, fieldset#booking_controls {
 
 .form_general label.secondary {font-weight: normal; width: auto}
 
-div#conflict_check, div#policy_check {float: left; clear: none; width: 2em; padding: 1em 0.5em; cursor: pointer}
-div#conflict_check {margin-left: 3em}
+div#checks {
+  float: left; 
+  clear: none; 
+  width: auto;
+  white-space: nowrap;
+  letter-spacing: 0.9em;
+  padding: 1em 0;
+  margin-left: 3em;
+}
 
-div.good::after {
+div#checks span {
+  cursor: pointer;
+}
+
+.good::after {
   content: '\002714';  <?php // checkmark ?>
   color: green;
 }
 
-div.bad::after {
+.notice::after {
+  content: '!';
+  font-weight: bold;
+  color: #ff5722;
+}
+
+.bad::after {
   content: '\002718';  <?php // cross ?>
   color: red;
 }

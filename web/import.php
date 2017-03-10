@@ -441,11 +441,11 @@ function process_event($vevent)
   {
     echo "<li>" . htmlspecialchars($problem) . "</li>\n";
   }
-  if (!empty($result['rules_broken']))
+  if (!empty($result['violations']['errors']))
   {
     echo "<li>" . get_vocab("rules_broken") . "\n";
     echo "<ul>\n";
-    foreach ($result['rules_broken'] as $rule)
+    foreach ($result['violations']['errors'] as $rule)
     {
       echo "<li>$rule</li>\n";
     }

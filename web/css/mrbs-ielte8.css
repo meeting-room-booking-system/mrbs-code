@@ -30,12 +30,18 @@ label.no_suffix:after {
   content: '? ';
 }
 
-div.good:after {
+.good:after {
   content: '\002714';  /* checkmark */
   color: green;
 }
 
-div.bad:after {
+.notice::after {
+  content: '!';
+  font-weight: bold;
+  color: #ff5722;
+}
+
+.bad:after {
   content: '\002718';  /* cross */
   color: red;
 }

@@ -1116,14 +1116,14 @@ init = function(args) {
                                   var conflictsList = getErrorList(result.conflicts);
                                   alertMessage += conflictsList.text;
                                 }
-                                if (result.rules_broken.length > 0)
+                                if (result.violations.errors.length > 0)
                                 {
                                   if (result.conflicts.length > 0)
                                   {
                                     alertMessage += "\n\n";
                                   }
                                   alertMessage += '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
-                                  var rulesList = getErrorList(result.rules_broken);
+                                  var rulesList = getErrorList(result.violations.errors);
                                   alertMessage += rulesList.text;
                                 }
                                 window.alert(alertMessage);

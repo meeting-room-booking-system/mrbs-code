@@ -1431,12 +1431,14 @@ echo "</fieldset>\n";
     // The Submit button
     echo "<div id=\"edit_entry_submit_save\">\n";
     echo "<input class=\"submit default_action\" type=\"submit\" name=\"save_button\" value=\"" .
-      get_vocab("save") . "\">\n";
+          get_vocab("save") . "\">\n";
     echo "</div>\n";
     
-    // divs to hold the results of the Ajax checking of the booking
-    echo "<div id=\"conflict_check\"></div>\n";
-    echo "<div id=\"policy_check\"></div>\n";
+    // div to hold the results of the Ajax checking of the booking
+    echo "<div id=\"checks\">\n";
+    echo "<span id=\"conflict_check\"></span>\n";
+    echo "<span id=\"policy_check\"></span>\n";
+    echo "</div>\n";
     
     echo "</fieldset>";
     

@@ -764,13 +764,13 @@ else
   print_header($day, $month, $year, $area, isset($room) ? $room : null);
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
-  if (!empty($result['rules_broken']))
+  if (!empty($result['violations']['errors']))
   {
     echo "<p>\n";
     echo get_vocab("rules_broken") . ":\n";
     echo "</p>\n";
     echo "<ul>\n";
-    foreach ($result['rules_broken'] as $rule)
+    foreach ($result['violations']['errors'] as $rule)
     {
       echo "<li>$rule</li>\n";
     }
@@ -802,7 +802,7 @@ echo "</form>\n";
 
 // Skip and Book button (to book the entries that don't conflict)
 // Only show this button if there were no policies broken and it's a series
-if (empty($result['rules_broken'])  &&
+if (empty($result['violations']['errors'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
   echo "<form method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";

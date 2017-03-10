@@ -620,11 +620,24 @@ function checkConflicts(optional)
             conflictDiv.attr('title', titleText);
             scheduleDetails.html(detailsHTML);
             var policyDiv = $('#policy_check');
-            if (result.rules_broken.length === 0)
+            if (result.violations.errors.length === 0)
             {
-              policyDiv.attr('class', 'good');
-              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
-              detailsHTML = titleText;
+              if (result.violations.notices.length === 0)
+              {
+                policyDiv.attr('class', 'good');
+                titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
+                detailsHTML = titleText;
+              }
+              else
+              {
+                policyDiv.attr('class', 'notice');
+                detailsHTML = "<p>";
+                titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken_notices"))) ?>' + ":  \n\n";
+                detailsHTML += titleText + "<\/p>";
+                var rulesList = getErrorList(result.violations.notices);
+                detailsHTML += rulesList.html;
+                titleText += rulesList.text;
+              }
             }
             else
             {
@@ -632,7 +645,7 @@ function checkConflicts(optional)
               detailsHTML = "<p>";
               titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
               detailsHTML += titleText + "<\/p>";
-              var rulesList = getErrorList(result.rules_broken);
+              var rulesList = getErrorList(result.violations.errors);
               detailsHTML += rulesList.html;
               titleText += rulesList.text;
             }

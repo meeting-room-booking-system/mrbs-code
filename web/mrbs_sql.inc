@@ -240,8 +240,8 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
  *            - FALSE:  We're intending to create an entry (the default)
  * 
  * Returns:
- *            - An array of human readable errors.   If no errors the array has
- *              length 0
+ *            - An array of human readable errors, index by 'notices' or 'errors'.
+ *              If there are no policy violations the array has length 0.
  */
 function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
 {
@@ -255,14 +255,16 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
   global $interval_types, $strftime_format;
 
-  $errors = array();
+  $result = array('notices' => array(),
+                  'errors'  => array());
+                  
+  $violations = array();
   
-  // The booking policies don't apply to booking admins for this room
+  // If the user is a booking admin for this room then we still check for policy
+  // violations, but they are for information only and are classed as 'notices'
   $user = getUserName();
-  if (auth_book_admin($user, $booking['room_id']))
-  {
-    return $errors;
-  }
+  $violation_status = (auth_book_admin($user, $booking['room_id'])) ? 'notices' : 'errors';
+
    
   // Because MRBS has no notion of where we are in the day if we're using periods,
   // we'll just assume that we're at the beginning of the day.
@@ -282,7 +284,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['start_time'] - $now) < $min_delete_ahead)
       {
         toTimeString($min_delete_ahead, $units);
-        $errors[] = get_vocab('min_delete_time_before', $min_delete_ahead, $units);
+        $violations[] = get_vocab('min_delete_time_before', $min_delete_ahead, $units);
       }
     }
     
@@ -296,7 +298,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['end_time'] - $now) > $max_delete_ahead)
       {
         toTimeString($max_delete_ahead, $units);
-        $errors[] = get_vocab('max_delete_time_before', $max_delete_ahead, $units);
+        $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead, $units);
       }
     }
   }
@@ -314,7 +316,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['start_time'] - $now) < $min_create_ahead)
       {
         toTimeString($min_create_ahead, $units);
-        $errors[] = get_vocab('min_create_time_before', $min_create_ahead, $units);
+        $violations[] = get_vocab('min_create_time_before', $min_create_ahead, $units);
       }
     }
     
@@ -331,7 +333,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       if (($booking['end_time'] - $now) > $max_create_ahead)
       {
         toTimeString($max_create_ahead, $units);
-        $errors[] = get_vocab('max_create_time_before', $max_create_ahead, $units);
+        $violations[] = get_vocab('max_create_time_before', $max_create_ahead, $units);
       }
     }
   }
@@ -344,7 +346,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       if ($booking['start_time'] < mktime(0, 0, 0, $m, $d, $y))
       {
-        $errors[] = get_vocab("earliest_booking_date") . " " . strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
+        $violations[] = get_vocab("earliest_booking_date") . " " . strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
       }
     }
     else
@@ -361,7 +363,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       if ($booking['end_time'] > mktime(0, 0, 0, $m, $d+1, $y))
       {
-        $errors[] = get_vocab("latest_booking_date") . " " . strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
+        $violations[] = get_vocab("latest_booking_date") . " " . strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
       }
     }
     else
@@ -391,7 +393,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
                             $start['mon'], $start['mday'], $start['year']);
       if ($booking['end_time'] > $max_endtime)
       {
-        $errors[] = get_vocab("max_booking_duration") . " $max_duration_periods " .
+        $violations[] = get_vocab("max_booking_duration") . " $max_duration_periods " .
                     (($max_duration_periods > 1) ? get_vocab("periods") : get_vocab("period_lc"));
       }
     }
@@ -399,7 +401,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       $max_duration = $max_duration_secs;
       toTimeString($max_duration, $units);
-      $errors[] = get_vocab("max_booking_duration") . " $max_duration $units";
+      $violations[] = get_vocab("max_booking_duration") . " $max_duration $units";
     }
   }
   
@@ -413,7 +415,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       $tmp = check_interval($booking, $ignore, $repignore, $interval_type, FALSE);
       if (isset($tmp))
       {
-        $errors[] = $tmp;
+        $violations[] = $tmp;
       }
     }
     // for the area
@@ -422,12 +424,14 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
       $tmp = check_interval($booking, $ignore, $repignore, $interval_type, TRUE);
       if (isset($tmp))
       {
-        $errors[] = $tmp;
+        $violations[] = $tmp;
       }
     }
   }
   
-  return $errors;
+  $result[$violation_status] = $violations;
+  
+  return $result;
 }
 
 
@@ -588,14 +592,13 @@ function mrbsDelEntry($user, $id, $series, $all)
     
     // check that the booking policies allow us to delete this entry
     $tmp = mrbsCheckPolicy($row, 0, 0, TRUE);
-    if (!empty($tmp))
+    
+    if (empty($tmp['errors']))
     {
-      continue;
-    }
-   
-    if (db()->command("DELETE FROM $tbl_entry WHERE id=?", array($row['id'])) > 0)
-    {
-      $start_times[] = $row['start_time'];
+      if (db()->command("DELETE FROM $tbl_entry WHERE id=?", array($row['id'])) > 0)
+      {
+        $start_times[] = $row['start_time'];
+      }
     }
   }
 
@@ -1823,10 +1826,11 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     fatal_error(get_vocab("failed_to_acquire"));
   }
 
-  // Validate the booking for (a) conflicting bookings and (b) conformance to rules
+  // Validate the booking for (a) conflicting bookings and (b) conformance to policy rules
   $valid_booking = TRUE;
-  $conflicts = array();     // Holds a list of all the conflicts
-  $rules_broken = array();  // Holds an array of the rules that have been broken
+  $conflicts  = array();                      // Holds a list of all the conflicts
+  $violations = array('notices' => array(),   // Holds an array of the policy rules that have been broken
+                      'errors'  => array());  // classified by 'notices' and 'errors'
   $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                             // by room id and start time
                           
@@ -1878,11 +1882,14 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
           // because we're never going to make it)
           if (!$skip_this_booking)
           {
-            $errors = mrbsCheckPolicy($this_booking, $ignore_id, $repeat_id);
-            if (count($errors) > 0)
+            $violations_this_booking = mrbsCheckPolicy($this_booking, $ignore_id, $repeat_id);
+            foreach (array('notices', 'errors') as $key)
+            {
+              $violations[$key] = array_merge($violations[$key], $violations_this_booking[$key]);
+            }
+            if (!empty($violations_this_booking['errors']))
             {
               $valid_booking = FALSE;
-              $rules_broken = array_merge($rules_broken, $errors);
             }
           }
         } // for
@@ -1890,24 +1897,27 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
       else
       {
         $valid_booking = FALSE;
-        $rules_broken[] = get_vocab("too_may_entrys");
+        $violations[] = get_vocab("too_may_entrys");
       }
     }
     else
     {
       $tmp = mrbsCheckFree($booking, $ignore_id, 0);
       if (!empty($tmp))
-        {
-          $valid_booking = FALSE;
-          $conflicts = array_merge($conflicts, $tmp);
-        }
-        // check that the booking conforms to the booking policy
-        $errors = mrbsCheckPolicy($booking, $ignore_id, 0);
-        if (count($errors) > 0)
-        {
-          $valid_booking = FALSE;
-          $rules_broken = array_merge($rules_broken, $errors);
-        }
+      {
+        $valid_booking = FALSE;
+        $conflicts = array_merge($conflicts, $tmp);
+      }
+      // check that the booking conforms to the booking policy
+      $violations_this_booking = mrbsCheckPolicy($booking, $ignore_id, 0);
+      foreach (array('notices', 'errors') as $key)
+      {
+        $violations[$key] = array_merge($violations[$key], $violations_this_booking[$key]);
+      }
+      if (!empty($violations_this_booking['errors']))
+      {
+        $valid_booking = FALSE;
+      }
     }
 
   } // end foreach bookings
@@ -1929,11 +1939,14 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     
     foreach ($old_bookings as $old_booking)
     {
-      $errors = mrbsCheckPolicy($old_booking, FALSE, FALSE, TRUE);
-      if (count($errors) > 0)
+      $violations_this_booking = mrbsCheckPolicy($old_booking, FALSE, FALSE, TRUE);
+      foreach (array('notices', 'errors') as $key)
+      {
+        $violations[$key] = array_merge($violations[$key], $violations_this_booking[$key]);
+      }
+      if (!empty($violations_this_booking['errors']))
       {
         $valid_booking = FALSE;
-        $rules_broken = array_merge($rules_broken, $errors);
       }
     }
     
@@ -1941,11 +1954,14 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
 
   // Tidy up the lists of conflicts and rules broken, getting rid of duplicates
   $conflicts = array_values(array_unique($conflicts));
-  $rules_broken = array_values(array_unique($rules_broken));
+  foreach (array('notices', 'errors') as $key)
+  {
+   $violations[$key] = array_values(array_unique($violations[$key]));
+  }
   
   $result = array();
   $result['valid_booking'] = $valid_booking;
-  $result['rules_broken'] = $rules_broken;
+  $result['violations'] = $violations;
   $result['conflicts'] = $conflicts;
   
   // If we've just been asked to check the bookings, or if it wasn't a valid
