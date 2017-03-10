@@ -135,9 +135,9 @@ $vocab["no"]                 = "Non";
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Erreur";
 $vocab["sched_conflict"]     = "Conflit entre réservations";
-$vocab["conflict"]           = "La nouvelle réservation entre en conflit avec la(les) réservation(s) suivante(s)";
+$vocab["conflict"]           = "La nouvelle réservation entre en conflit avec la(les) réservation(s) suivante(s)&nbsp;:";
 $vocab["no_conflicts"]       = "Aucun conflits";
-$vocab["rules_broken"]       = "La nouvelle réservation est en conflit avec les règles suivantes";
+$vocab["rules_broken"]       = "La nouvelle réservation est en conflit avec les règles suivantes&nbsp;:";
 $vocab["no_rules_broken"]    = "Aucun conflits";
 $vocab["schedule"]           = "Calendrier";
 $vocab["policy"]             = "Règles";

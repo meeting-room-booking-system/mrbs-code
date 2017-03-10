@@ -149,10 +149,10 @@ $vocab["no"]                  = "No";
 // Used in edit_entry_handler.php
 $vocab["error"]                  = "Error";
 $vocab["sched_conflict"]         = "Scheduling Conflict";
-$vocab["conflict"]               = "The new booking will conflict with the following entries";
+$vocab["conflict"]               = "The new booking will conflict with the following entries:";
 $vocab["no_conflicts"]           = "No scheduling conflicts";
-$vocab["rules_broken"]           = "The new booking will conflict with the following policies";
-$vocab["rules_broken_notices"]   = "[Information only] The new booking would conflict with the following policies";
+$vocab["rules_broken"]           = "The new booking will conflict with the following policies:";
+$vocab["rules_broken_notices"]   = "[Information only] The new booking would conflict with the following policies:";
 $vocab["no_rules_broken"]        = "No policy conflicts";
 $vocab["schedule"]               = "Schedule";
 $vocab["policy"]                 = "Policy";
