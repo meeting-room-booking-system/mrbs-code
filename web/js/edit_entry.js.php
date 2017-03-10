@@ -619,6 +619,13 @@ function checkConflicts(optional)
             }
             conflictDiv.attr('title', titleText);
             scheduleDetails.html(detailsHTML);
+            
+            <?php
+            // Display the results of the policy check.   Set the class to "good" if there
+            // are no policy violations at all.  To "notice" if there are no errors, but some
+            // notices (this happens when an admin user makes a booking that an ordinary user
+            // would not be allowed to.  Otherwise "bad".  Content and styling are supplied by CSS.
+            ?>
             var policyDiv = $('#policy_check');
             if (result.violations.errors.length === 0)
             {
