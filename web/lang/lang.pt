@@ -367,3 +367,5 @@ $vocab["for_any_questions"]  = "para qualquer informação adicional.";
 $vocab["type.I"]             = "Interno";
 $vocab["type.E"]             = "Externo";
 
+// General
+$vocab["back"]                = "Voltar";
