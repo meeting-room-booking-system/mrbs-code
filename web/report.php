@@ -1543,8 +1543,8 @@ else
   }
   if (!$cli_mode)
   {
-    http_headers(array("Content-Type: $content_type"),
-                       "Content-Disposition: attachment; filename=\"$filename\"");
+    http_headers(array("Content-Type: $content_type",
+                       "Content-Disposition: attachment; filename=\"$filename\""));
   }
 
   if (($output_format == OUTPUT_CSV) && $csv_bom)
