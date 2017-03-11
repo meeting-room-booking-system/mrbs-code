@@ -1,7 +1,5 @@
-<?php
+<?php // -*-mode: PHP; coding:utf-8;-*-
 namespace MRBS;
-
-// $Id$
 
 /**************************************************************************
  *   MRBS Configuration File
