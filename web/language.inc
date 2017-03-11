@@ -592,6 +592,8 @@ $datatable_lang_map = array(
 // A list of languages that use Right to Left text
 $rtl_languages = array('he');
 
+// Set the default character encoding
+ini_set('default_charset', 'UTF-8');
 
 // Set up mb_string internal encoding
 if (function_exists('mb_internal_encoding'))
