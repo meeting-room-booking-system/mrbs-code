@@ -1112,7 +1112,7 @@ init = function(args) {
                                 var alertMessage = '';
                                 if (result.conflicts.length > 0)
                                 {
-                                  alertMessage += '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
+                                  alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
                                   var conflictsList = getErrorList(result.conflicts);
                                   alertMessage += conflictsList.text;
                                 }
@@ -1122,7 +1122,7 @@ init = function(args) {
                                   {
                                     alertMessage += "\n\n";
                                   }
-                                  alertMessage += '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
+                                  alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
                                   var rulesList = getErrorList(result.violations.errors);
                                   alertMessage += rulesList.text;
                                 }

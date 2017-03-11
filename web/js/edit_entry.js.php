@@ -604,14 +604,14 @@ function checkConflicts(optional)
             if (result.conflicts.length === 0)
             {
               conflictDiv.attr('class', 'good');
-              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_conflicts"))) ?>';
+              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_conflicts"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
               conflictDiv.attr('class', 'bad');
               detailsHTML = "<p>";
-              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("conflict"))) ?>' + "\n\n";
+              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + "\n\n";
               detailsHTML += titleText + "<\/p>";
               var conflictsList = getErrorList(result.conflicts);
               detailsHTML += conflictsList.html;
@@ -632,14 +632,14 @@ function checkConflicts(optional)
               if (result.violations.notices.length === 0)
               {
                 policyDiv.attr('class', 'good');
-                titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("no_rules_broken"))) ?>';
+                titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_rules_broken"))) ?>';
                 detailsHTML = titleText;
               }
               else
               {
                 policyDiv.attr('class', 'notice');
                 detailsHTML = "<p>";
-                titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken_notices"))) ?>' + "\n\n";
+                titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken_notices"))) ?>' + "\n\n";
                 detailsHTML += titleText + "<\/p>";
                 var rulesList = getErrorList(result.violations.notices);
                 detailsHTML += rulesList.html;
@@ -650,7 +650,7 @@ function checkConflicts(optional)
             {
               policyDiv.attr('class', 'bad');
               detailsHTML = "<p>";
-              titleText = '<?php echo escape_js(mrbs_entity_decode(get_vocab("rules_broken"))) ?>' + "\n\n";
+              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + "\n\n";
               detailsHTML += titleText + "<\/p>";
               var rulesList = getErrorList(result.violations.errors);
               detailsHTML += rulesList.html;

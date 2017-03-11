@@ -2196,32 +2196,6 @@ function mrbs_nl2br($string)
   }
 }
 
-// Version of the standard PHP function html_entity_decode()
-// Although html_entity_decode() was introduced in PHP 4.3.0, support for
-// multi-byte character sets was only introduced in PHP 5.0.0.   
-// So if we're running PHP5 or higher we'll use the standard
-// PHP function; otherwise we'll do the best we can.   At the moment
-// we just replace &nbsp; with an ordinary space, which
-// should be sufficient in most MRBS circumstances.   This could
-// always be extended later to do something more sophisticated if
-// necessary.
-//
-// Note: the charset defaults to UTF-8.  This is slightly different from the
-// behaviour in the PHP html_entity_decode() function where the default charset
-// was only changed from ISO-8859-1 to UTF-8 in PHP 5.4.0
-function mrbs_entity_decode($string, $quote_style=ENT_COMPAT, $charset = 'UTF-8')
-{
-  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.0.0', 'ge'))
-  {
-    $string = html_entity_decode($string, $quote_style, $charset);
-  }
-  else
-  {
-    $string = str_replace('&nbsp;', ' ', $string);
-  }
-  return $string;
-}
-
 
 function validate_email($email)
 {

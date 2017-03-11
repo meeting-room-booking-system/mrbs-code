@@ -535,13 +535,13 @@ function report_header()
   
   // Find out what the non-breaking space is in this character set
   $charset = get_charset();
-  $nbsp = mrbs_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
+  $nbsp = html_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
   for ($i=0; $i < count($values); $i++)
   {
     if ($output_format != OUTPUT_HTML)
     {
       // Remove any HTML entities from the values
-      $values[$i] = mrbs_entity_decode($values[$i], ENT_NOQUOTES, $charset);
+      $values[$i] = html_entity_decode($values[$i], ENT_NOQUOTES, $charset);
       // Trim non-breaking spaces from the string
       $values[$i] = trim($values[$i], $nbsp);
       // And do an ordinary trim
