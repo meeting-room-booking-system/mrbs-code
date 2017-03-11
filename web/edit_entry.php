@@ -175,8 +175,14 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
   }
   for ($s = $area['first']; $s <= $last; $s += $area['resolution'])
   {
-    $slot_string = ($area['enable_periods']) ? $periods[intval(($s-$base)/60)] : hour_min($s);
-    $options[$s] = $slot_string;
+    if ($area['enable_periods'])
+    {
+      $options[$s] = mrbs_entity_decode($periods[intval(($s-$base)/60)]);
+    }
+    else
+    {
+      $options[$s] = hour_min($s);
+    }
   }
 
   // If $display_none or $disabled are set then we'll also disable the select so
