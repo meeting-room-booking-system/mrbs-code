@@ -1197,6 +1197,15 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       {
         $mail->SMTPAutoTLS = false;
       }
+      $mail->SMTPOptions = array
+      (
+        'ssl' => array
+        (
+          'verify_peer' => $smtp_settings['ssl_verify_peer'],
+          'verify_peer_name' => $smtp_settings['ssl_verify_peer_name'],
+          'allow_self_signed' => $smtp_settings['ssl_allow_self_signed']
+        )
+      );
       break;
     default:
       $mail->isMail();

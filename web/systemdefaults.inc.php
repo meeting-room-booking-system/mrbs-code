@@ -1085,6 +1085,12 @@ $smtp_settings['password'] = '';       // Password (if using authentication)
 $smtp_settings['disable_opportunistic_tls'] = false; // Set this to true to disable
                                                      // opportunistic TLS
                                                      // https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting#opportunistic-tls
+// If you're having problems with sending email to a TLS-enabled SMTP server *which you trust* you can change the following
+// settings, which reduce TLS security.
+// See https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting#php-56-certificate-verification-failure
+$smtp_settings['ssl_verify_peer'] = true;
+$smtp_settings['ssl_verify_peer_name'] = true;
+$smtp_settings['ssl_allow_self_signed'] = false;
 
 // EMAIL - MISCELLANEOUS
 // ---------------------
