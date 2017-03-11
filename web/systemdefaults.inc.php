@@ -205,16 +205,13 @@ $max_slots = 60;
 
 // Define the name or description for your periods in chronological order
 // For example:
-// $periods[] = "Period&nbsp;1"
-// $periods[] = "Period&nbsp;2"
+// $periods[] = "Period 1"
+// $periods[] = "Period 2"
 // ...
 // or
-// $periods[] = "09:15&nbsp;-&nbsp;09:50"
-// $periods[] = "09:55&nbsp;-&nbsp;10:35"
+// $periods[] = "09:15 - 09:50"
+// $periods[] = "09:55 - 10:35"
 // ...
-// &nbsp; is used to ensure that the name or description is not wrapped
-// when the browser determines the column widths to use in day and week
-// views
 //
 // NOTE:  MRBS assumes that the descriptions are valid HTML and can be output
 // directly without any encoding.    Please ensure that any special characters
@@ -223,8 +220,8 @@ $max_slots = 60;
 
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 unset($periods);    // Include this line when copying to config.inc.php
-$periods[] = "Period&nbsp;1";
-$periods[] = "Period&nbsp;2";
+$periods[] = "Period 1";
+$periods[] = "Period 2";
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 
 // NOTE:  See INSTALL for information on how to add or remove periods in an
