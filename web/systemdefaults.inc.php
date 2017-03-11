@@ -201,7 +201,8 @@ $max_slots = 60;
 // PERIODS SETTINGS
 // ----------------
 
-// The "Periods" settings are ignored if $enable_periods is false.
+// The "Periods" settings are used only in areas where the mode has
+// been set to "Periods".
 
 // Define the name or description for your periods in chronological order
 // For example:
@@ -212,11 +213,8 @@ $max_slots = 60;
 // $periods[] = "09:15 - 09:50"
 // $periods[] = "09:55 - 10:35"
 // ...
-//
-// NOTE:  MRBS assumes that the descriptions are valid HTML and can be output
-// directly without any encoding.    Please ensure that any special characters
-// are encoded, eg '&' to '&amp;', '>' to '&gt;', lower case e acute to 
-// '&eacute;' or '&#233;', etc.
+
+// Period names are encoded in UTF-8
 
 // NOTE:  The maximum number of periods is 60.   Do not define more than this.
 unset($periods);    // Include this line when copying to config.inc.php

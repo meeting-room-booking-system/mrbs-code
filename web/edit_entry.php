@@ -177,7 +177,7 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
   {
     if ($area['enable_periods'])
     {
-      $options[$s] = mrbs_entity_decode($periods[intval(($s-$base)/60)]);
+      $options[$s] = $periods[intval(($s-$base)/60)];
     }
     else
     {

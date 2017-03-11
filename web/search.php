@@ -84,7 +84,7 @@ function output_row($row)
   {
     list(,$link_str) = period_date_string($row['start_time']);
   }
-  $link .= "$link_str</a>";
+  $link .= htmlspecialchars($link_str) ."</a>";
   //    add a span with the numeric start time in the title for sorting
   $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . $link;
   // description

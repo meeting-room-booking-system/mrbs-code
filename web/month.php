@@ -42,8 +42,8 @@ function get_booking_summary($start, $end, $day_start, $day_end)
   
   if ($enable_periods)
   {
-    $start_str = period_time_string($start);
-    $end_str   = period_time_string($end, -1);
+    $start_str = htmlspecialchars(period_time_string($start));
+    $end_str   = htmlspecialchars(period_time_string($end, -1));
   }
   else
   {

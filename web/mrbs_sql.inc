@@ -71,7 +71,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
     {
       $p_num =$starts['minutes'];
       $startstr = utf8_strftime($strftime_format['date'] . ", ",
-                                $row['start_time']) . $periods[$p_num];
+                                $row['start_time']) . htmlspecialchars($periods[$p_num]);
     }
     else
     {

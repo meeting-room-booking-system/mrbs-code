@@ -567,7 +567,7 @@ function time_cell_html($s, $url)
     
     $html .= "<a href=\"$url\"  title=\""
              . get_vocab("highlight_line") . "\">"
-             . period_name($s) . "</a>\n";
+             . htmlspecialchars(period_name($s)) . "</a>\n";
   }
   else
   {
@@ -800,7 +800,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
       $header_inner .= "<span>";
       if ( $enable_periods )
       {
-        $header_inner .= period_name($s);
+        $header_inner .= htmlspecialchars(period_name($s));
       }
       else
       {
@@ -1070,7 +1070,7 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
       $header_inner .= "<span>";
       if ( $enable_periods )
       {
-        $header_inner .= period_name($s);
+        $header_inner .= htmlspecialchars(period_name($s));
       }
       else
       {

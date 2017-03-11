@@ -181,7 +181,7 @@ function display_entry_row($row)
   {
     list(,$link_str) = period_date_string($row['start_time']);
   }
-  echo "$link_str</a></td>";
+  echo htmlspecialchars($link_str) . "</a></td>";
     
   // action buttons
   echo "<td>\n";

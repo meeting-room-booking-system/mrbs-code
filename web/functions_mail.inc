@@ -78,11 +78,7 @@ function getMailPeriodDateString($t, $mod_time=0)
   // I have made the separator a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
   
-  // As HTML entities and tags are allowed in period names, we need to replace/strip
-  // them out before putting them in emails, which are sent as plain text
   $mailperiod = $periods[$p_num];
-  $mailperiod = mrbs_entity_decode($mailperiod, ENT_COMPAT, get_mail_charset());
-  $mailperiod = strip_tags($mailperiod);
   return array($p_num, $mailperiod . utf8_strftime(", " . $strftime_format['date'], $t, get_mail_locale()));
 }
 
@@ -316,7 +312,8 @@ function create_date_list($dates, $as_html)
   foreach ($dates as $date)
   {
     $result .= ($as_html) ? "<li>" : "";
-    $result .= getMailDateString($date);
+    $date_string = getMailDateString($date);
+    $result .= ($as_html) ? htmlspecialchars($date_string) : $date_string;
     $result .= ($as_html) ? "</li>" : "\n";
   }
   $result .= ($as_html) ? "</ul>\n" : "";
