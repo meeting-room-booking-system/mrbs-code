@@ -471,7 +471,6 @@ $vocab["import_text_file"]            = "uncompressed iCalendar files";
 $vocab["import_zip"]                  = "zip archives, including multiple files in an archive";
 $vocab["import_gzip"]                 = "gzip files";
 $vocab["import_bzip2"]                = "bzip2 files";
-
 $vocab["file_name"]                   = "File";
 $vocab["import"]                      = "Import";
 $vocab["upload_failed"]               = "Upload failed";
