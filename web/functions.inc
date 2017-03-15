@@ -2798,16 +2798,9 @@ function is_hidden_day($dow)
 // checks whether a given day of the week is a weekend day
 function is_weekend($dow)
 {
-  global $working_days;
+  global $weekdays;
   
-  // We are using $working_days to define weekdays and therefore weekend
-  // days. This may not be correct as people might want to define a weekend
-  // day (eg Saturday) to be a working day.
-  
-  // An alternative could be to use IntlCalendar::getDayOfWeekType(), but
-  // that isn't available on all systems.
-  
-  return !in_array($dow, $working_days);
+  return !in_array($dow, $weekdays);
 }
 
 

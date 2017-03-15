@@ -283,6 +283,9 @@ $min_booking_date = "2012-04-23";  // Must be a string in the format "yyyy-mm-dd
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 
+// Days of the week that are weekdays
+$weekdays = array(1, 2, 3, 4, 5);
+
 // Days of the week that should be hidden from display
 // 0 for Sunday, 1 for Monday, etc.
 // For example, if you want Saturdays and Sundays to be hidden set $hidden_days = array(0,6);
