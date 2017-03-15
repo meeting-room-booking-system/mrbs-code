@@ -304,7 +304,14 @@ class Calendar
   private function getDayNames()
   {
     global $weekstarts, $strftime_format;
-
+    
+    static $html = null;
+    
+    if (isset($html))
+    {
+      return $html;
+    }
+    
     $html = '';
     
     for ($i=$weekstarts; $i<$weekstarts+7; $i++)
