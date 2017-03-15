@@ -2785,12 +2785,31 @@ function working_time_diff($now, $then)
   return (int) $diff;
 }
 
+
 // checks whether a given day of the week is supposed to be hidden in the display
-function is_hidden_day ($dow)
+function is_hidden_day($dow)
 {
   global $hidden_days;
+  
   return (isset($hidden_days) && in_array($dow, $hidden_days));
 }
+
+
+// checks whether a given day of the week is a weekend day
+function is_weekend($dow)
+{
+  global $working_days;
+  
+  // We are using $working_days to define weekdays and therefore weekend
+  // days. This may not be correct as people might want to define a weekend
+  // day (eg Saturday) to be a working day.
+  
+  // An alternative could be to use IntlCalendar::getDayOfWeekType(), but
+  // that isn't available on all systems.
+  
+  return !in_array($dow, $working_days);
+}
+
 
 // returns true if event should be considered private based on
 // config settings and event's privacy status (passed to function)

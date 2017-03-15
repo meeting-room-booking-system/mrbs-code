@@ -139,10 +139,9 @@ class Calendar
       }
       for ($i = 0; $i < 7; $i++)
       {
-        $currentday = gmmktime (12, 0, 0, $this->month, $d, $this->year);
-        $baseclass = ((date('w', $currentday) == 0) ||
-                      (date('w', $currentday) == 6)) ? "day_weekend" : "day_weekday";
-        $hide_this_day = is_hidden_day(($i + $weekstarts) % 7);
+        $day_of_week = ($i + $weekstarts) % 7;
+        $baseclass = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
+        $hide_this_day = is_hidden_day($day_of_week);
 
         if ($hide_this_day)
         {
@@ -309,24 +308,24 @@ class Calendar
   {
     global $weekstarts, $strftime_format;
 
-    $basetime = mktime(12,0,0,6,11+$weekstarts,2000);
+    $basetime = mktime(12, 0, 0, 6, 11+$weekstarts, 2000);
+    
     for ($i = 0, $s = ""; $i < 7; $i++)
     {
       $show = $basetime + ($i * SECONDS_PER_DAY);
       $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
-      $baseclass = ((date('w', $show) == 0) ||
-                    (date('w', $show) == 6)) ? "day_weekend" : "day_weekday";
+      $day_of_week = ($i + $weekstarts) % 7;
+      $baseclass = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
 
       // add a class if it's a hidden day so that we can apply special styling
-      if (is_hidden_day(($i + $weekstarts) % 7))
+      if (is_hidden_day($day_of_week))
       {
-        $s .= "<th class=\"$baseclass hidden\">$fl</th>\n";
+        $baseclass .= " hidden";
       }
-      else
-      {
-        $s .= "<th class=\"$baseclass\">$fl</th>\n";
-      }
+      
+      $s .= "<th class=\"$baseclass\">$fl</th>\n";
     }
+    
     return $s;
   }
   
