@@ -139,13 +139,20 @@ class Calendar
       }
       for ($i = 0; $i < 7; $i++)
       {
+        $currentday = gmmktime (12, 0, 0, $this->month, $d, $this->year);
+        $baseclass = ((date('w', $currentday) == 0) ||
+                      (date('w', $currentday) == 6)) ? "day_weekend" : "day_weekday";
         $hide_this_day = is_hidden_day(($i + $weekstarts) % 7);
-        $s .= "<td";
 
         if ($hide_this_day)
         {
-          $s .= " class=\"hidden\"";
+          $baseclass .= " hidden";
         }
+        if (($d < 0) || ($d > $daysInMonth))
+        {
+          $baseclass .= " day_blank";
+        }
+        $s .= "<td class=\"$baseclass\"";
           
         // If this cell is the "sticky day" (ie the day passed through in GET parameters)
         // then assign an id so that we can apply some special styling
@@ -307,14 +314,17 @@ class Calendar
     {
       $show = $basetime + ($i * SECONDS_PER_DAY);
       $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
+      $baseclass = ((date('w', $show) == 0) ||
+                    (date('w', $show) == 6)) ? "day_weekend" : "day_weekday";
+
       // add a class if it's a hidden day so that we can apply special styling
       if (is_hidden_day(($i + $weekstarts) % 7))
       {
-        $s .= "<th class=\"hidden\">$fl</th>\n";
+        $s .= "<th class=\"$baseclass hidden\">$fl</th>\n";
       }
       else
       {
-        $s .= "<th>$fl</th>\n";
+        $s .= "<th class=\"$baseclass\">$fl</th>\n";
       }
     }
     return $s;
