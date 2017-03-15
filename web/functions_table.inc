@@ -783,7 +783,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   {
     // with times along the top and rooms down the side
     $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       get_vocab('room') . ":</th>\n";
+                       get_vocab('room') . "</th>\n";
     $header_inner .= $first_last_html;
     
     $column_width = get_main_column_width($n_time_slots);
@@ -821,7 +821,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   {
     // the standard view, with rooms along the top and times down the side
     $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . ":</th>\n";
+                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . "</th>\n";
     $header_inner .= $first_last_html;
   
     $column_width = get_main_column_width(count($rooms));
@@ -1053,7 +1053,7 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   {
     // with times along the top and days of the week down the side
     $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       get_vocab('date') . ":</th>\n";
+                       get_vocab('date') . "</th>\n";
     $header_inner .= $first_last_html;
     
     $column_width = get_main_column_width($n_time_slots);
@@ -1090,7 +1090,7 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   {
     // the standard view, with days along the top and times down the side
     $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . ':</th>';
+                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . '</th>';
     $header_inner .= $first_last_html;
     
     $column_width = get_main_column_width($num_of_days, count($hidden_days));
