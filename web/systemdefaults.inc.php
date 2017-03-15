@@ -319,8 +319,8 @@ $strftime_format['ampm']         = "%p";
 $strftime_format['time12']       = "%I:%M%p";      // 12 hour clock
 $strftime_format['time24']       = "%H:%M";        // 24 hour clock
 $strftime_format['datetime']     = "%c";           // Used in Help
-$strftime_format['datetime12']   = "%I:%M:%S%p - %A %d %B %Y";  // 12 hour clock
-$strftime_format['datetime24']   = "%H:%M:%S - %A %d %B %Y";    // 24 hour clock
+$strftime_format['datetime12']   = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
+$strftime_format['datetime24']   = "%H:%M - %A %d %B %Y";    // 24 hour clock
 // If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
 // MRBS 1.4.5 and earlier) then use
 // $strftime_format['daymonth']     = "%d %b";
