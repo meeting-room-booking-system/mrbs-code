@@ -228,11 +228,7 @@ class Calendar
             } 
           }
         }
-          
-        else    // invalid days of the month
-        {
-          $s .= "&nbsp;";
-        }
+        
         $s .= "</td>\n";
         $d++;
       }  // end for days in the week
