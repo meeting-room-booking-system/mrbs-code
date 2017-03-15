@@ -48,7 +48,7 @@ class Calendar
     global $strftime_format;
 
     if (!isset($weekstarts)) $weekstarts = 0;
-    $s = "";
+    $html = '';
 
     $page = this_page();
       
@@ -87,8 +87,8 @@ class Calendar
     $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;  // day number of the first day of the month
     $monthName = utf8_strftime($strftime_format['month_cal'], $date);
       
-    $s .= "<table class=\"calendar\">\n";
-    $s .= "<thead>\n";
+    $html .= "<table class=\"calendar\">\n";
+    $html .= "<thead>\n";
     // prints month name and year
       
     $cols = 7;
@@ -96,8 +96,8 @@ class Calendar
     {
       $cols++;
     }
-    $s .= "<tr>\n";   
-    $s .= "<th colspan=\"$cols\">";
+    $html .= "<tr>\n";   
+    $html .= "<th colspan=\"$cols\">";
     $link_day = $day;
     // decrement day until it's a valid one for the month, in case you're moving to a month with fewer
     // days than the current one
@@ -106,60 +106,60 @@ class Calendar
       $link_day--;
     }
     $link = $this->getDateLink($link_day, $this->month, $this->year, 'month');
-    $s .= "<a href=\"$link\">$monthName&nbsp;$this->year</a>";
-    $s .= "</th>\n"; 
-    $s .= "</tr>\n";
+    $html .= "<a href=\"$link\">$monthName&nbsp;$this->year</a>";
+    $html .= "</th>\n"; 
+    $html .= "</tr>\n";
       
-    $s .= "<tr>\n";
+    $html .= "<tr>\n";
     if ($mincals_week_numbers)
     {
-        $s .= "<th></th>\n";
+        $html .= "<th></th>\n";
     }
     // gets days of week
-    $s .= $this->getFirstDays();
-    $s .= "</tr>\n";
-    $s .= "</thead>\n";
+    $html .= $this->getDayNames();
+    $html .= "</tr>\n";
+    $html .= "</thead>\n";
 
-    $s .= "<tbody>\n";
+    $html .= "<tbody>\n";
     $d = 1 - $first;   // this is the date of the top left hand cell in the calendar (which may of course
                        // be negative and therefore not displayed)
           
     while ($d <= $daysInMonth)
     {
-      $s .= "<tr>\n";
+      $html .= "<tr>\n";
 
       if ($mincals_week_numbers)
       {
-          $s .= "<td class=\"mincals_week_number\">";
+          $html .= "<td class=\"mincals_week_number\">";
           $link = $this->getDateLink($d, $this->month, $this->year, 'week');
-          $s .= "<a href=\"$link\">";
-          $s .= date("W",gmmktime (12, 0, 0, $this->month, $d, $this->year));
-          $s .= "</a>";
-          $s .= "</td>\n";
+          $html .= "<a href=\"$link\">";
+          $html .= date("W",gmmktime (12, 0, 0, $this->month, $d, $this->year));
+          $html .= "</a>";
+          $html .= "</td>\n";
       }
       for ($i = 0; $i < 7; $i++)
       {
         $day_of_week = ($i + $weekstarts) % 7;
-        $baseclass = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
+        $class = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
         $hide_this_day = is_hidden_day($day_of_week);
 
         if ($hide_this_day)
         {
-          $baseclass .= " hidden";
+          $class .= " hidden";
         }
         if (($d < 0) || ($d > $daysInMonth))
         {
-          $baseclass .= " day_blank";
+          $class .= " day_blank";
         }
-        $s .= "<td class=\"$baseclass\"";
+        $html .= "<td class=\"$class\"";
           
         // If this cell is the "sticky day" (ie the day passed through in GET parameters)
         // then assign an id so that we can apply some special styling
         if (($d == $day) && ($this->month == $month) && ($this->year == $year))
         {
-          $s .= " id=\"sticky_day\"";
+          $html .= " id=\"sticky_day\"";
         }
-        $s .= ">";
+        $html .= ">";
           
         if ($d > 0 && $d <= $daysInMonth)   // valid days of the month
         {
@@ -167,7 +167,7 @@ class Calendar
 
           if ($link == "")
           {
-            $s .= $d;
+            $html .= $d;
           }     
             
           else   // we have a valid link
@@ -175,11 +175,11 @@ class Calendar
             // start the anchor or span, depending on whether it's a hidden day
             if ($hide_this_day)
             {
-              $s .= "<span";
+              $html .= "<span";
             }
             else
             {
-              $s .= "<a";
+              $html .= "<a";
             }
               
             // then work out whether to mark it as the current day/week/month
@@ -188,7 +188,7 @@ class Calendar
             {
               if (($d == $this->day) and ($this->h))
               {
-                $s .= " class=\"current\"";
+                $html .= " class=\"current\"";
               }
             }             
 
@@ -205,7 +205,7 @@ class Calendar
               $diff = $diff/86400;                           // days
               if (($diff >= 0) && ($diff < 7))             
               {
-                $s .= " class=\"current\"";
+                $html .= " class=\"current\"";
               }         
             }             
 
@@ -213,32 +213,32 @@ class Calendar
             {
               if ($this->h)
               {
-                $s .= " class=\"current\"";
+                $html .= " class=\"current\"";
               }
             }
               
             // Now finish the anchor or span, depending on whether it's a hidden day
             if ($hide_this_day)
             {
-              $s .= ">$d</span>";
+              $html .= ">$d</span>";
             }
             else
             {
-              $s .= " href=\"$link\">$d</a>";
+              $html .= " href=\"$link\">$d</a>";
             } 
           }
         }
         
-        $s .= "</td>\n";
+        $html .= "</td>\n";
         $d++;
       }  // end for days in the week
-      $s .= "</tr>\n";
+      $html .= "</tr>\n";
     } // end while days in the month
       
-    $s .= "</tbody>\n";
-    $s .= "</table>\n";
+    $html .= "</tbody>\n";
+    $html .= "</table>\n";
       
-    return $s;
+    return $html;
   }
   
   
@@ -300,29 +300,29 @@ class Calendar
       return $d;
   }
 
-  private function getFirstDays()
+  private function getDayNames()
   {
     global $weekstarts, $strftime_format;
 
-    $basetime = mktime(12, 0, 0, 6, 11+$weekstarts, 2000);
+    $html = '';
     
-    for ($i = 0, $s = ""; $i < 7; $i++)
+    for ($i=$weekstarts; $i<$weekstarts+7; $i++)
     {
-      $show = $basetime + ($i * SECONDS_PER_DAY);
-      $fl = utf8_strftime($strftime_format['dayname_cal'], $show);
-      $day_of_week = ($i + $weekstarts) % 7;
-      $baseclass = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
-
+      $day_name = utf8_strftime($strftime_format['dayname_cal'],
+                                strtotime('next sunday + ' . $i . ' days'));
+      $day_of_week = $i % 7;
+      $class = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
+      
       // add a class if it's a hidden day so that we can apply special styling
       if (is_hidden_day($day_of_week))
       {
-        $baseclass .= " hidden";
+        $class .= " hidden";
       }
       
-      $s .= "<th class=\"$baseclass\">$fl</th>\n";
+      $html .= "<th class=\"$class\">$day_name</th>\n";
     }
     
-    return $s;
+    return $html;
   }
   
 }
