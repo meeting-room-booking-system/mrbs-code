@@ -300,6 +300,7 @@ class Calendar
       return $d;
   }
 
+  
   private function getDayNames()
   {
     global $weekstarts, $strftime_format;
@@ -308,6 +309,7 @@ class Calendar
     
     for ($i=$weekstarts; $i<$weekstarts+7; $i++)
     {
+      // Sunday is Day 0
       $day_name = utf8_strftime($strftime_format['dayname_cal'],
                                 strtotime('next sunday + ' . $i . ' days'));
       $day_of_week = $i % 7;
