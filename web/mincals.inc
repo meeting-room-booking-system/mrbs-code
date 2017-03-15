@@ -318,7 +318,7 @@ class Calendar
     {
       // Sunday is Day 0
       $day_name = utf8_strftime($strftime_format['dayname_cal'],
-                                strtotime('next sunday + ' . $i . ' days'));
+                                strtotime("next sunday + $i days"));
       $day_of_week = $i % 7;
       $class = is_weekend($day_of_week) ? "day_weekend" : "day_weekday";
       
