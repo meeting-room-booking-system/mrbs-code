@@ -32,7 +32,7 @@ namespace MRBS;
 
 // Gets a form variable.   Takes an optional third parameter which
 // is the default value if nothing is found from the form.
-function get_form_var($variable, $type = 'string')
+function get_form_var($var, $var_type='string', $default=null)
 {
   // We use some functions from here
   require_once "functions.inc";
@@ -40,51 +40,50 @@ function get_form_var($variable, $type = 'string')
   global $cli_params, $allow_cli, $get, $post;
   
   // Set the default value, and make sure it's the right type
-  if (func_num_args() > 2)
+  if ($var_type == 'array')
   {
-    $value = func_get_arg(2);
-    $value = ($type == 'array') ? (array)$value : $value;
+    $value = isset($default) ? (array) $default : array();
   }
   else
   {
-    $value = ($type == 'array') ? array() : NULL;
+    $value = $default;
   }
   
    // Get the command line arguments if any (and we're allowed to),
    // otherwise get the POST variables
-  if ($allow_cli && (!empty($cli_params) && isset($cli_params[$variable])))
+  if ($allow_cli && (!empty($cli_params) && isset($cli_params[$var])))
   {
-    $value = $cli_params[$variable];
+    $value = $cli_params[$var];
   }
-  else if (!empty($post) && isset($post[$variable]))
+  else if (!empty($post) && isset($post[$var]))
   {
-    $value = $post[$variable];
+    $value = $post[$var];
   }
   
   // Then get the GET variables
-  if (!empty($get) && isset($get[$variable]))
+  if (!empty($get) && isset($get[$var]))
   {
-    $value = $get[$variable];
+    $value = $get[$var];
   }
   
   // Cast to an array if necessary
-  if ($type == 'array')
+  if ($var_type == 'array')
   {
-    $value = (array)$value;
+    $value = (array) $value;
   }
   
   // Clean up the variable
   if ($value != NULL)
   {
-    if ($type == 'int')
+    if ($var_type == 'int')
     {
       $value = intval(unslashes($value));
     }
-    else if ($type == 'string')
+    else if ($var_type == 'string')
     {
       $value = unslashes($value);
     }
-    else if ($type == 'array')
+    else if ($var_type == 'array')
     {
       foreach ($value as $arrkey => $arrvalue)
       {
@@ -92,6 +91,7 @@ function get_form_var($variable, $type = 'string')
       }
     }
   }
+  
   return $value;
 }
 
