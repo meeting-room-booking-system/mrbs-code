@@ -14,7 +14,6 @@ if (isset($auth['session']))
 // These pages are open to the public by default as they only contain
 // read features.   However if $auth['deny_public_access'] is TRUE then
 // access to the public is denied
-$page_level['check_slot_ajax.php']       = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['day.php']                   = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['help.php']                  = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['month.php']                 = ($auth['deny_public_access']) ? 1 : 0;
@@ -35,6 +34,7 @@ $page_level['approve_entry_handler.php'] = 1;  // Ordinary users are allowed to 
 $page_level['del_entry.php']             = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_area_room.php']        = 1;  // Ordinary users can view room details
 $page_level['edit_entry.php']            = ($auth['only_admin_can_book']) ? 2 : 1;
+$page_level['check_slot_ajax.php']       = $page_level['edit_entry.php'];  // only used by edit_entry.php
 $page_level['edit_entry_handler.php']    = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_users.php']            = 1;  // Ordinary users can edit their own details
 $page_level['pending.php']               = 1;  // Ordinary users can view their own entries
