@@ -18,10 +18,13 @@ $page_level['check_slot_ajax.php']       = ($auth['deny_public_access']) ? 1 : 0
 $page_level['day.php']                   = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['help.php']                  = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['month.php']                 = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['report.php']                = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['search.php']                = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['view_entry.php']            = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['week.php']                  = ($auth['deny_public_access']) ? 1 : 0;
+
+// These pages reveal usernames, which could be of assistance to someone trying to
+// break into the system, so users are required to be logged in before viewing them.
+$page_level['report.php']                = 1;
+$page_level['search.php']                = 1;
+$page_level['view_entry.php']            = 1;
 
 // These pages are set to have a minimum access level of 1 as ordinary users
 // should be able to access them because they will have read access and in some
