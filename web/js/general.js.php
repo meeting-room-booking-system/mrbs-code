@@ -151,9 +151,9 @@ init = function(args) {
   // if there's a logon box, set the username input field in focus
   ?>
   var logonForm = document.getElementById('logon');
-  if (logonForm && logonForm.NewUserName)
+  if (logonForm && logonForm.username)
   {
-    logonForm.NewUserName.focus();
+    logonForm.username.focus();
   }
   
   <?php

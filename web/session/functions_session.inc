@@ -33,21 +33,21 @@ function print_login_form($action, $target_url, $returl)
     $placeholder = get_vocab("users.name");
   }
   
-  $html .= "<label for=\"NewUserName\" title=\"$placeholder\">" . 
+  $html .= "<label for=\"username\" title=\"$placeholder\">" . 
            get_vocab("user") . "</label>\n";
-  $html .= "<input type=\"text\" id=\"NewUserName\" name=\"NewUserName\" " .
+  $html .= "<input type=\"text\" id=\"username\" name=\"username\" " .
            " placeholder=\"$placeholder\">\n";
   $html .= "</div>\n";
   
   $html .= "<div>\n";
-  $html .= "<label for=\"NewUserPassword\">" . get_vocab("users.password") . "</label>\n";
-  $html .= "<input type=\"password\" id=\"NewUserPassword\" name=\"NewUserPassword\">\n";
+  $html .= "<label for=\"password\">" . get_vocab("users.password") . "</label>\n";
+  $html .= "<input type=\"password\" id=\"password\" name=\"password\">\n";
   $html .= "</div>\n";
 
 
   $html .= "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
   $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
+  $html .= "<input type=\"hidden\" name=\"action\" value=\"SetName\">\n";
   
   $html .= "<div id=\"logon_submit\">\n";
   $html .= "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
@@ -90,7 +90,7 @@ function print_logon_button($target_url)
   $html .= "<form method=\"post\" action=\"admin.php\">\n";
   $html .= "<div>\n";
   $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"Action\" value=\"QueryName\">\n";
+  $html .= "<input type=\"hidden\" name=\"action\" value=\"QueryName\">\n";
   $html .= "<input type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
   $html .= "</div>\n";
   $html .= "</form>\n";
@@ -106,9 +106,9 @@ function print_logoff_button($target_url)
   $html .= "<form method=\"post\" action=\"admin.php\">\n";
   $html .= "<div>\n";
   $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"Action\" value=\"SetName\">\n";
-  $html .= "<input type=\"hidden\" name=\"NewUserName\" value=\"\">\n";
-  $html .= "<input type=\"hidden\" name=\"NewUserPassword\" value=\"\">";
+  $html .= "<input type=\"hidden\" name=\"action\" value=\"SetName\">\n";
+  $html .= "<input type=\"hidden\" name=\"username\" value=\"\">\n";
+  $html .= "<input type=\"hidden\" name=\"password\" value=\"\">";
   $html .= "<input type=\"submit\" value=\"" . get_vocab('logoff') . "\">\n";
   $html .= "</div>\n";
   $html .= "</form>\n";

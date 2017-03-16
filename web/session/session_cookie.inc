@@ -22,9 +22,9 @@ global $PHP_SELF, $HTTP_REFERER;
 global $auth;
 
 // Get non-standard form variables
-$Action = get_form_var('Action', 'string', null, INPUT_POST);
-$NewUserName = get_form_var('NewUserName', 'string', null, INPUT_POST);
-$NewUserPassword = get_form_var('NewUserPassword', 'string', null, INPUT_POST);
+$action = get_form_var('action', 'string', null, INPUT_POST);
+$username = get_form_var('username', 'string', null, INPUT_POST);
+$password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
@@ -54,25 +54,25 @@ if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
 }
 
 /*
-  Target of the form with sets the URL argument "Action=SetName".
+  Target of the form with sets the URL argument "action=SetName".
   Will eventually return to URL argument "target_url=whatever".
 */
-if (isset($Action) && ($Action == "SetName"))
+if (isset($action) && ($action == "SetName"))
 {
   // Avoid errors with error level ALL
-  if ( !isset( $NewUserName ) )
+  if ( !isset( $username ) )
   {
-    $NewUserName = "";
+    $username = "";
   }
   /* First make sure the password is valid */
-  if ($NewUserName == "") 
+  if ($username == "") 
   {
     // Delete cookie
     setcookie("SessionToken", '', time()-42000, $cookie_path);
   }
   else
   {
-    if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
+    if (($valid_username = authValidateUser($username, $password)) === false)
     {
       print_header();
       print_login_failed();
@@ -82,7 +82,7 @@ if (isset($Action) && ($Action == "SetName"))
     else
     {
       $UserName     = $valid_username;
-      $UserPassword = $NewUserPassword;
+      $UserPassword = $password;
     }
 
     if ($auth['session_cookie']['session_expire_time'] == 0)
@@ -145,10 +145,10 @@ if (isset($Action) && ($Action == "SetName"))
 
 
 /*
-  Target of the form with sets the URL argument "Action=QueryName".
+  Target of the form with sets the URL argument "action=QueryName".
   Will eventually return to URL argument "target_url=whatever".
 */
-if (isset($Action) && ($Action == "QueryName"))
+if (isset($action) && ($action == "QueryName"))
 {
   print_header();
   print_login_form(this_page(), $target_url, $returl);

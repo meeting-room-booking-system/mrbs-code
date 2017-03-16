@@ -19,9 +19,9 @@ global $PHP_SELF, $HTTP_REFERER;
 global $auth;
 
 // Get non-standard form variables
-$Action = get_form_var('Action', 'string', null, INPUT_POST);
-$NewUserName = get_form_var('NewUserName', 'string', null, INPUT_POST);
-$NewUserPassword = get_form_var('NewUserPassword', 'string', null, INPUT_POST);
+$action = get_form_var('action', 'string', null, INPUT_POST);
+$username = get_form_var('username', 'string', null, INPUT_POST);
+$password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
@@ -85,13 +85,13 @@ if (!empty($auth["session_php"]["inactivity_expire_time"]))
 }
 
 /*
-  Target of the form with sets the URL argument "Action=SetName".
+  Target of the form with sets the URL argument "action=SetName".
   Will eventually return to URL argument "target_url=whatever".
 */
-if (isset($Action) && ($Action == "SetName"))
+if (isset($action) && ($action == "SetName"))
 {
   /* First make sure the password is valid */
-  if ($NewUserName == "")
+  if ($username == "")
   {
 
     // Unset the session variables
@@ -100,7 +100,7 @@ if (isset($Action) && ($Action == "SetName"))
   }
   else
   {
-    if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
+    if (($valid_username = authValidateUser($username, $password)) === false)
     {
       print_header();
       print_login_failed();
@@ -139,10 +139,10 @@ if (isset($Action) && ($Action == "SetName"))
 
 
 /*
-  Target of the form with sets the URL argument "Action=QueryName".
+  Target of the form with sets the URL argument "action=QueryName".
   Will eventually return to URL argument "target_url=whatever".
 */
-if (isset($Action) && ($Action == "QueryName"))
+if (isset($action) && ($action == "QueryName"))
 {
   print_header();
   print_login_form(this_page(), $target_url, $returl);
