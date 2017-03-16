@@ -103,8 +103,8 @@ if (isset($Action) && ($Action == "SetName"))
     if (($valid_username = authValidateUser($NewUserName, $NewUserPassword)) === false)
     {
       print_header();
-      echo "<p>".get_vocab('unknown_user')."</p>\n";
-      printLoginForm(this_page(), $target_url, $returl);
+      print_login_failed();
+      print_login_form(this_page(), $target_url, $returl);
       exit();
     }
     $_SESSION["UserName"] = $valid_username;
@@ -145,7 +145,7 @@ if (isset($Action) && ($Action == "SetName"))
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header();
-  printLoginForm(this_page(), $target_url, $returl);
+  print_login_form(this_page(), $target_url, $returl);
   exit();
 }
 
@@ -170,7 +170,7 @@ function authGet()
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm(this_page(), $target_url, $returl);
+  print_login_form(this_page(), $target_url, $returl);
 
   exit();
 }

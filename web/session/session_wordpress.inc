@@ -26,7 +26,7 @@ if (!isset($returl))
 if (isset($Action) && ($Action == "QueryName"))
 {
   print_header();
-  printLoginForm(this_page(), $target_url, $returl);
+  print_login_form(this_page(), $target_url, $returl);
   exit();
 }
 
@@ -53,7 +53,7 @@ if (isset($Action) && ($Action == "SetName"))
       $errors = $wp_user;  // $errors is a WordPress global
       print_header();
       echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
-      printLoginForm(this_page(), $target_url, $returl);
+      print_login_form(this_page(), $target_url, $returl);
       exit();
     }
   }
@@ -105,7 +105,7 @@ function authGet()
   {
     $target_url = $target_url . "?" . $QUERY_STRING;
   }
-  printLoginForm(this_page(), $target_url, $returl);
+  print_login_form(this_page(), $target_url, $returl);
 
   exit();
 }

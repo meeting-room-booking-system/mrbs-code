@@ -1,11 +1,18 @@
 <?php
 namespace MRBS;
 
+
+function print_login_failed()
+{
+  echo "<p>" . get_vocab('unknown_user') . "</p>\n";
+}
+
+
 /*
   Display the login form. 
   Will eventually return to $target_url with query string returl=$returl
 */
-function printLoginForm($action, $target_url, $returl)
+function print_login_form($action, $target_url, $returl)
 {
   $html = '';
   
