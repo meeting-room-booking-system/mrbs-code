@@ -30,9 +30,13 @@ namespace MRBS;
 
 
 
-// Gets a form variable.   Takes an optional third parameter which
-// is the default value if nothing is found from the form.
-function get_form_var($var, $var_type='string', $default=null)
+// Gets a form variable.
+//    $var        The variable name
+//    $var_type   The type of the variable ('int', 'string' or 'array')
+//    $default    The default value for the variable
+//    $source     If set, then restrict the search to this source.  Can be
+//                INPUT_GET or INPUT_POST.
+function get_form_var($var, $var_type='string', $default=null, $source=null)
 {
   // We use some functions from here
   require_once "functions.inc";
@@ -55,13 +59,15 @@ function get_form_var($var, $var_type='string', $default=null)
   {
     $value = $cli_params[$var];
   }
-  else if (!empty($post) && isset($post[$var]))
+  else if ((!isset($source) || ($source === INPUT_POST)) &&
+           (!empty($post) && isset($post[$var])))
   {
     $value = $post[$var];
   }
   
   // Then get the GET variables
-  if (!empty($get) && isset($get[$var]))
+  if ((!isset($source) || ($source === INPUT_GET)) &&
+      (!empty($get) && isset($get[$var])))
   {
     $value = $get[$var];
   }

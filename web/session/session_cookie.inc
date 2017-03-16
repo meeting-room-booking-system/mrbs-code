@@ -22,11 +22,11 @@ global $PHP_SELF, $HTTP_REFERER;
 global $auth;
 
 // Get non-standard form variables
-$Action = get_form_var('Action', 'string');
-$NewUserName = get_form_var('NewUserName', 'string');
-$NewUserPassword = get_form_var('NewUserPassword', 'string');
-$target_url = get_form_var('target_url', 'string');
-$returl = get_form_var('returl', 'string');
+$Action = get_form_var('Action', 'string', null, INPUT_POST);
+$NewUserName = get_form_var('NewUserName', 'string', null, INPUT_POST);
+$NewUserPassword = get_form_var('NewUserPassword', 'string', null, INPUT_POST);
+$target_url = get_form_var('target_url', 'string', null, INPUT_POST);
+$returl = get_form_var('returl', 'string', null, INPUT_POST);
 
 // We need to preserve the original calling page, so that it's there when we eventually get to the
 // target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
