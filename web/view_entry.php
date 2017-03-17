@@ -43,7 +43,7 @@ function generateApproveButtons($id, $series)
   }
   
   echo "<tr>\n";
-  echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . ":</td>\n";
+  echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . "</td>\n";
   echo "<td>\n";
   generateButton("approve_entry_handler.php", $id, $series, "approve", $returl, get_vocab("approve"));
   generateButton($this_page, $id, $series, "reject", $returl, get_vocab("reject"));
