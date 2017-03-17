@@ -70,11 +70,13 @@ fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; bor
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 label::after,
+.trailer_label a::after,
 .list td:first-child::after {
   content: ':';
 }
 
 [lang="fr"] label::after,
+[lang="fr"] .trailer_label a::after,
 [lang="fr"] .list td:first-child::after  {
   content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }
@@ -1108,9 +1110,24 @@ div#cal_last {float: left}
 div#cal_this {float: left; margin-left: 1.0em}
 div#cal_next {float: left; margin-left: 1.0em}
 
-table.calendar {border-spacing: 0; border-collapse: collapse}
-.calendar th {min-width: 2.0em; text-align: center; font-weight: normal; background-color: transparent; color: <?php echo $standard_font_color ?>}
-.calendar td {text-align: center; font-size: x-small}
+table.calendar {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.calendar th {
+  min-width: 2.0em;
+  text-align: center;
+  font-weight: normal;
+  background-color: transparent;
+  color: <?php echo $standard_font_color ?>;
+}
+
+.calendar td {
+  text-align: center;
+  font-size: x-small;
+}
+
 <?php
 // set the styling for the "hidden" days in the mini-cals
 ?>
@@ -1189,25 +1206,62 @@ div#site_faq_body {margin-top: 2.0em}
 
 
 /* ------------ TRAILER.INC ---------------------*/
-div#trailer {border-top: 1px solid <?php echo $trailer_border_color ?>; 
-             border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
-             float: left;
-             clear: left;
-             margin-top: 1.0em; margin-bottom: 1.5em;
-             padding-top: 0.3em; padding-bottom: 0.3em}
-#trailer div {float: left; width: 100%}
-#trailer div.trailer_label {float: left; clear: left; width: 20%; max-width: 9.0em; font-weight: bold}
-#trailer div.trailer_links {float: left;              width: 79%}  /* 79 to avoid rounding problems */
-.trailer_label span {margin-right: 1.0em}
+div#trailer {
+  border-top: 1px solid <?php echo $trailer_border_color ?>; 
+  border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
+  float: left;
+  clear: left;
+  margin-top: 1.0em; margin-bottom: 1.5em;
+  padding-top: 0.3em; padding-bottom: 0.3em;
+}
 
-#trailer span.current {font-weight: bold}
-#trailer span.hidden {font-weight: normal; 
-    background-color: <?php echo $body_background_color ?>;  /* hack: only necessary for IE6 to prevent blurring with opacity */
-    opacity: 0.5}  /* if you change this value, change it in the IE sheets as well */
-#trailer .current a {color: <?php echo $highlight_font_color ?>}
+#trailer div {
+  float: left;
+  width: 100%;
+}
 
-div#simple_trailer {clear: both; text-align: center; padding-top: 1.0em; padding-bottom: 2.0em}
-#simple_trailer a {padding: 0 1.0em 0 1.0em}
+#trailer div.trailer_label {
+  float: left;
+  clear: left;
+  width: 20%;
+  max-width: 9.0em;
+  font-weight: bold;
+}
+
+#trailer div.trailer_links {
+  float: left;
+  width: 79%;  /* 79 to avoid rounding problems */
+  padding-left: 1em;
+}
+
+.trailer_label span {
+  margin-right: 1.0em;
+}
+
+#trailer span.current {
+  font-weight: bold;
+}
+
+#trailer span.hidden {
+  font-weight: normal; 
+  background-color: <?php echo $body_background_color ?>;  /* hack: only necessary for IE6 to prevent blurring with opacity */
+  opacity: 0.5;  /* if you change this value, change it in the IE sheets as well */
+}
+
+#trailer .current a {
+  color: <?php echo $highlight_font_color ?>;
+}
+
+div#simple_trailer {
+  clear: both;
+  text-align: center;
+  padding-top: 1.0em;
+  padding-bottom: 2.0em;
+}
+
+#simple_trailer a {
+  padding: 0 1.0em 0 1.0em;
+}
 
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/

@@ -58,7 +58,8 @@ function generate_trailer()
     // DAYS
     $output .= "<div id=\"viewday\">\n";
     $output .= "<div class=\"trailer_label\">\n";
-    $output .= "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">" . get_vocab("viewday") .":</a>\n";
+    $output .= "<a href=\"day.php?year=$year&amp;month=$month&amp;day=$day$params\">" . 
+                get_vocab("viewday") . "</a>\n";
     $output .= "</div>\n";
   
     $output .= "<div class=\"trailer_links\">\n";
@@ -113,7 +114,8 @@ function generate_trailer()
     // WEEKS
     $output .= "<div id=\"viewweek\">\n";
     $output .= "<div class=\"trailer_label\">\n";
-    $output .= "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewweek").":</a>\n";
+    $output .= "<a href=\"week.php?year=$year&amp;month=$month&amp;day=$day$params\">" .
+                get_vocab("viewweek") . "</a>\n";
     $output .= "</div>\n";
  
     $ctime = mktime(0, 0, 0, $month, $day, $year);
@@ -168,7 +170,8 @@ function generate_trailer()
     // MONTHS
     $output .= "<div id=\"viewmonth\">\n";
     $output .= "<div class=\"trailer_label\">\n";
-    $output .= "<a href=\"month.php?year=$year&amp;month=$month&amp;day=$day$params\">".get_vocab("viewmonth").":</a>\n";
+    $output .= "<a href=\"month.php?year=$year&amp;month=$month&amp;day=$day$params\">" . 
+                get_vocab("viewmonth") . "</a>\n";
     $output .= "</div>\n";
   
     $output .= "<div class=\"trailer_links\">\n";

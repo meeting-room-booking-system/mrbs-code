@@ -5,11 +5,13 @@
    pseudo-class (':') */
    
 label:after,
+.trailer_label a:after,
 .list td:first-child:after {
   content: ':';
 }
 
 [lang="fr"] label:after,
+[lang="fr"] .trailer_label a:after,
 [lang="fr"] .list td:first-child:after  {
   content: '\0000a0:';  /* &nbsp; before the colon */
 }
