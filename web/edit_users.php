@@ -40,8 +40,8 @@ require "defaultincludes.inc";
 // Get non-standard form variables
 $Action = get_form_var('Action', 'string');
 $Id = get_form_var('Id', 'int');
-$password0 = get_form_var('password0', 'string');
-$password1 = get_form_var('password1', 'string');
+$password0 = get_form_var('password0', 'string', null, INPUT_POST);
+$password1 = get_form_var('password1', 'string', null, INPUT_POST);
 $invalid_email = get_form_var('invalid_email', 'int');
 $name_empty = get_form_var('name_empty', 'int');
 $name_not_unique = get_form_var('name_not_unique', 'int');
