@@ -5,22 +5,39 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
 
-// Generates a single button
-function generateButton($form_action, $id, $series, $action_type, $returl, $submit_value, $title='')
+// Generates a single button.  Parameters in the array $params
+//
+//    Manadatory parameters
+//      action    The form action attribute
+//      value     The value of the button
+//      inputs    An array of hidden form inputs, each element indexed
+//                by 'name' and 'value'
+//
+//    Optional parameters
+//      title     a title
+function generate_button(array $params)
 {
-  if (!isset($form_id))
+  $html = '';
+  
+  $form_id = uniqid();
+  
+  $html .= "<button form=\"$form_id\" value=\"" . htmlspecialchars($params['value']) . '"';
+  $html .= (isset($params['title'])) ? ' title="' . htmlspecialchars($params['title']) . '"' : '';
+  $html .= '>' . htmlspecialchars($params['value']) . "</button>\n";
+
+  $html .= "<form id=\"$form_id\" method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
+
+  foreach ($params['inputs'] as $input)
   {
-    $form_id = uniqid();
+    $html .= '<input type="hidden" name="' . htmlspecialchars($input['name']) . '"' .
+             ' value="' . htmlspecialchars($input['value']) . "\">\n";
   }
   
-  echo "<button form=\"$form_id\" title=\"" . htmlspecialchars($title) . "\" value=\"$submit_value\">" .
-       $submit_value . "</button>\n";
-  echo "<form id=\"$form_id\" action=\"".htmlspecialchars($form_action).
-       "?id=$id&amp;series=$series\" method=\"post\">\n";
-  echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
-  echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-  echo "</form>\n";  
+  $html .= "</form>\n"; 
+  
+  echo $html;
 }
+
 
 // Generates the Approve, Reject and More Info buttons
 function generateApproveButtons($id, $series)
@@ -48,9 +65,29 @@ function generateApproveButtons($id, $series)
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . "</td>\n";
   echo "<td>\n";
-  generateButton("approve_entry_handler.php", $id, $series, "approve", $returl, get_vocab("approve"));
-  generateButton($this_page, $id, $series, "reject", $returl, get_vocab("reject"));
-  generateButton($this_page, $id, $series, "more_info", $returl, get_vocab("more_info"), $info_title);
+  
+  // Approve
+  $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
+                  'value'  => get_vocab('approve'),
+                  'inputs' => array(array('name' => 'action', 'value' => 'approve'),
+                                    array('name' => 'returl', 'value' => $returl)));
+  generate_button($params);
+  
+  // Reject
+  $params = array('action' => "$this_page?id=$id&series=$series",
+                  'value'  => get_vocab('reject'),
+                  'inputs' => array(array('name' => 'action', 'value' => 'reject'),
+                                    array('name' => 'returl', 'value' => $returl)));
+  generate_button($params);
+  
+  // More info
+  $params = array('action' => "$this_page?id=$id&series=$series",
+                  'value'  => get_vocab('more_info'),
+                  'inputs' => array(array('name' => 'action', 'value' => 'more_info'),
+                                    array('name' => 'returl', 'value' => $returl)),
+                  'title'  => $info_title);
+  generate_button($params);
+  
   echo "</td>\n";
   echo "</tr>\n";
 }
@@ -73,7 +110,13 @@ function generateOwnerButtons($id, $series)
     echo "<tr>\n";
     echo "<td>&nbsp;</td>\n";
     echo "<td>\n";
-    generateButton("approve_entry_handler.php", $id, $series, "remind", $this_page . "?id=$id&amp;area=$area", get_vocab("remind_admin"));
+    
+    $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
+                    'value'  => get_vocab('remind_admin'),
+                    'inputs' => array(array('name' => 'action', 'value' => 'remind'),
+                                      array('name' => 'returl', 'value' => "$this_page?id=$id&area=$area")));
+    generate_button($params);
+    
     echo "</td>\n";
     echo "</tr>\n";
   } 
