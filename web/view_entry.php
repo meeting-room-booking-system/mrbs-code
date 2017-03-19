@@ -453,8 +453,8 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
       echo "<div>\n";
       $params = array('action' => 'edit_entry.php',
                       'value'  => get_vocab('editentry'),
-                      'inputs' => array(array('name' => 'id', 'value' => $id),
-                                        array('name' => 'returl', 'value' => $returl))
+                      'inputs' => array('id' => $id,
+                                        'returl' => $returl)
                      );
       generate_button($params);
       echo "</div>\n";
