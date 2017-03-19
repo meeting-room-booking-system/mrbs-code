@@ -10,28 +10,28 @@ require_once "functions_view.inc";
 //    Manadatory parameters
 //      action    The form action attribute
 //      value     The value of the button
-//      inputs    An array of hidden form inputs, each element indexed
-//                by 'name' and 'value'
+//      inputs    An array of hidden form inputs
 //
 //    Optional parameters
-//      title     a title
-function generate_button(array $params)
+//      button_attributes   An array of attributes to be used for the button.
+function generate_button(array $params, array $button_attributes=array())
 {
   $html = '';
-  
-  $form_id = uniqid();
-  
-  $html .= "<button form=\"$form_id\" value=\"" . htmlspecialchars($params['value']) . '"';
-  $html .= (isset($params['title'])) ? ' title="' . htmlspecialchars($params['title']) . '"' : '';
-  $html .= '>' . htmlspecialchars($params['value']) . "</button>\n";
 
-  $html .= "<form id=\"$form_id\" method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
+  $html .= "<form method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
 
-  foreach ($params['inputs'] as $input)
+  foreach ($params['inputs'] as $key => $value)
   {
-    $html .= '<input type="hidden" name="' . htmlspecialchars($input['name']) . '"' .
-             ' value="' . htmlspecialchars($input['value']) . "\">\n";
+    $html .= '<input type="hidden" name="' . htmlspecialchars($key) . '"' .
+             ' value="' . htmlspecialchars($value) . "\">\n";
   }
+  
+  $html .= '<input type="submit" value="' . htmlspecialchars($params['value']) . '"';
+  foreach($button_attributes as $key => $value)
+  {
+    $html .= " $key=\"" . htmlspecialchars($value) . '"';
+  }
+  $html .= ">\n";
   
   $html .= "</form>\n"; 
   
@@ -69,24 +69,26 @@ function generateApproveButtons($id, $series)
   // Approve
   $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
                   'value'  => get_vocab('approve'),
-                  'inputs' => array(array('name' => 'action', 'value' => 'approve'),
-                                    array('name' => 'returl', 'value' => $returl)));
+                  'inputs' => array('action' => 'approve',
+                                    'returl' => $returl)
+                 );
   generate_button($params);
   
   // Reject
   $params = array('action' => "$this_page?id=$id&series=$series",
                   'value'  => get_vocab('reject'),
-                  'inputs' => array(array('name' => 'action', 'value' => 'reject'),
-                                    array('name' => 'returl', 'value' => $returl)));
+                  'inputs' => array('action' => 'reject',
+                                    'returl' => $returl)
+                 );
   generate_button($params);
   
   // More info
   $params = array('action' => "$this_page?id=$id&series=$series",
                   'value'  => get_vocab('more_info'),
-                  'inputs' => array(array('name' => 'action', 'value' => 'more_info'),
-                                    array('name' => 'returl', 'value' => $returl)),
-                  'title'  => $info_title);
-  generate_button($params);
+                  'inputs' => array('action' => 'more_info',
+                                    'returl' => $returl)
+                 );
+  generate_button($params, array('title' => $info_title));
   
   echo "</td>\n";
   echo "</tr>\n";
@@ -113,8 +115,9 @@ function generateOwnerButtons($id, $series)
     
     $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
                     'value'  => get_vocab('remind_admin'),
-                    'inputs' => array(array('name' => 'action', 'value' => 'remind'),
-                                      array('name' => 'returl', 'value' => "$this_page?id=$id&area=$area")));
+                    'inputs' => array('action' => 'remind',
+                                      'returl' => "$this_page?id=$id&area=$area")
+                   );
     generate_button($params);
     
     echo "</td>\n";
@@ -322,6 +325,7 @@ if (!isset($returl))
     $returl .= "?year=$year&month=$month&day=$day&area=$area";
   }
 }
+
 $link_returl = urlencode($returl);  // for use in links
 
 if (empty($series))
@@ -446,15 +450,26 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
     echo "<div>\n";
     if (!$series)
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;returl=$link_returl\">". get_vocab("editentry") ."</a>";
+      echo "<div>\n";
+      $params = array('action' => 'edit_entry.php',
+                      'value'  => get_vocab('editentry'),
+                      'inputs' => array(array('name' => 'id', 'value' => $id),
+                                        array('name' => 'returl', 'value' => $returl))
+                     );
+      generate_button($params);
+      echo "</div>\n";
     } 
-    if (!empty($repeat_id)  && !$series && $repeats_allowed)
-    {
-      echo " - ";
-    }  
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
-      echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("editseries")."</a>";
+      echo "<div>\n";
+      $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
+                      'value'  => get_vocab('editseries'),
+                      'inputs' => array('id' => $id,
+                                        'edit_type' => 'series',
+                                        'returl' => $returl)
+                     );
+      generate_button($params);
+      echo "</div>\n";
     }
     echo "</div>\n";
     
@@ -462,15 +477,33 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
     echo "<div>\n";
     if (!$series)
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=0&amp;returl=$link_returl\" onclick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteentry")."</a>";
-    }
-    if (!empty($repeat_id) && !$series && $repeats_allowed)
-    {
-      echo " - ";
+      echo "<div>\n";
+      $params = array('action' => 'del_entry.php',
+                      'value'  => get_vocab('deleteentry'),
+                      'inputs' => array('id' => $id,
+                                        'series' => 0,
+                                        'returl' => $returl)
+                     );
+                                        
+      $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+                                       
+      generate_button($params, $button_attributes);
+      echo "</div>\n";
     }
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
-      echo "<a href=\"del_entry.php?id=$id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\" onClick=\"return confirm('".get_vocab("confirmdel")."');\">".get_vocab("deleteseries")."</a>";
+      echo "<div>\n";
+      $params = array('action' => "del_entry.php?day=$day&month=$month&year=$year",
+                      'value'  => get_vocab('deleteseries'),
+                      'inputs' => array('id' => $id,
+                                        'series' => 1,
+                                        'returl' => $returl)
+                     );
+                     
+      $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+                                       
+      generate_button($params, $button_attributes);
+      echo "</div>\n";
     }
     echo "</div>\n";
   }
@@ -479,15 +512,28 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
   echo "<div>\n";
   if (!$series)
   {
-    echo "<a href=\"edit_entry.php?id=$id&amp;copy=1&amp;returl=$link_returl\">". get_vocab("copyentry") ."</a>";
-  }      
-  if (!empty($repeat_id) && !$series && $repeats_allowed)
-  {
-    echo " - ";
-  }     
+    echo "<div>\n";
+    $params = array('action' => 'edit_entry.php',
+                    'value'  => get_vocab('copyentry'),
+                    'inputs' => array('id' => $id,
+                                      'copy' => 1,
+                                      'returl' => $returl)
+                   );
+    generate_button($params);
+    echo "</div>\n";
+  }          
   if ((!empty($repeat_id) || $series) && $repeats_allowed) 
   {
-    echo "<a href=\"edit_entry.php?id=$id&amp;edit_type=series&amp;day=$day&amp;month=$month&amp;year=$year&amp;copy=1&amp;returl=$link_returl\">".get_vocab("copyseries")."</a>";
+    echo "<div>\n";
+    $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
+                    'value'  => get_vocab('copyseries'),
+                    'inputs' => array('id' => $id,
+                                      'edit_type' => 'series',
+                                      'copy' => 1,
+                                      'returl' => $returl)
+                   );
+    generate_button($params);
+    echo "</div>\n";
   }
   echo "</div>\n";
   
@@ -500,31 +546,40 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
     echo "<div>\n";
     if (!$series)
     {
-      echo "<a href=\"view_entry.php?action=export&amp;id=$id&amp;returl=$link_returl\">". get_vocab("exportentry") ."</a>";
+      echo "<div>\n";
+      $params = array('action' => 'view_entry.php',
+                      'value'  => get_vocab('exportentry'),
+                      'inputs' => array('id' => $id,
+                                        'action' => 'export',
+                                        'returl' => $returl)
+                     );
+      generate_button($params);
+      echo "</div>\n";
     } 
-    if (!empty($repeat_id)  && !$series)
-    {
-      echo " - ";
-    }  
     if (!empty($repeat_id) || $series)
     {
-      echo "<a href=\"view_entry.php?action=export&amp;id=$repeat_id&amp;series=1&amp;day=$day&amp;month=$month&amp;year=$year&amp;returl=$link_returl\">".get_vocab("exportseries")."</a>";
+      echo "<div>\n";
+      $params = array('action' => "view_entry.php?day=$day&month=$month&year=$year",
+                      'value'  => get_vocab('exportseries'),
+                      'inputs' => array('id' => $repeat_id,
+                                        'action' => 'export',
+                                        'series' => 1,
+                                        'returl' => $returl)
+                     );
+      generate_button($params);
+      echo "</div>\n";
     }
     echo "</div>\n";
   }
-  ?>
-  <div id="returl">
-    <?php
-    if (isset($HTTP_REFERER)) //remove the link if displayed from an email
-    {
-    ?>
-    <a href="<?php echo htmlspecialchars($HTTP_REFERER) ?>"><?php echo get_vocab("returnprev") ?></a>
-    <?php
-    }
-    ?>
-  </div>
-</div>
+echo "</div>\n";
 
-<?php
+if (isset($HTTP_REFERER)) //remove the link if displayed from an email
+{
+  echo "<div id=\"returl\">\n";
+  echo '<a href="' . htmlspecialchars($HTTP_REFERER) . '">' . get_vocab('returnprev') . "</a>\n";
+  echo "</div>\n";
+}
+
+
 output_trailer();
 

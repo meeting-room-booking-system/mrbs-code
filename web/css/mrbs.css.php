@@ -1267,9 +1267,27 @@ div#simple_trailer {
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
-.view_entry div#view_entry_nav {margin-top: 1.0em}
 
-.view_entry #approve_buttons button {
+.view_entry div#view_entry_nav {
+  display: table;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+div#view_entry_nav > div {
+  display: table-row;
+}
+
+div#view_entry_nav > div > div {
+  display: table-cell;
+  padding: 0.5em 1em;
+}
+
+#view_entry_nav input[type="submit"] {
+  width: 100%;
+}
+
+.view_entry #approve_buttons form {
   float: left;
   margin-right: 2em;
 }
@@ -1278,7 +1296,10 @@ div#simple_trailer {
   float: left;
 }
 
-.view_entry div#returl {margin-top: 1em}
+div#returl {
+  margin-bottom: 1em;
+}
+
 #approve_buttons td {vertical-align: middle; padding-top: 1em}
 #approve_buttons td#caption {text-align: left}
 #approve_buttons td#note {padding-top: 0}
