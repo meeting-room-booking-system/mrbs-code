@@ -1267,8 +1267,16 @@ div#simple_trailer {
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 .view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
 .view_entry div#view_entry_nav {margin-top: 1.0em}
-.view_entry #approve_buttons form {float: left; margin-right: 2em}
-.view_entry #approve_buttons legend {font-size: 0}
+
+.view_entry #approve_buttons button {
+  float: left;
+  margin-right: 2em;
+}
+
+.view_entry #approve_buttons form {
+  float: left;
+}
+
 .view_entry div#returl {margin-top: 1em}
 #approve_buttons td {vertical-align: middle; padding-top: 1em}
 #approve_buttons td#caption {text-align: left}
