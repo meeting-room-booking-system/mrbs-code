@@ -310,6 +310,8 @@ if (!empty($error))
   echo "<tr><td>&nbsp;</td><td class=\"error\">" . get_vocab($error) . "</td></tr>\n";
 }
 
+echo create_details_body($row, TRUE, $keep_private, $room_disabled);
+
 // If bookings require approval, and the room is enabled, put the buttons
 // to do with managing the bookings in the footer
 if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL))
@@ -386,8 +388,6 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
   }
   echo "</tfoot>\n";
 }
-
-echo create_details_body($row, TRUE, $keep_private, $room_disabled);
 
 ?>
 </table>
