@@ -12,10 +12,10 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 // Get non-standard form variables
-$id = get_form_var('id', 'int');
-$series = get_form_var('series', 'int');
-$returl = get_form_var('returl', 'string');
-$action = get_form_var('action', 'string');
+$id = get_form_var('id', 'int', null, INPUT_POST);
+$series = get_form_var('series', 'int', null, INPUT_POST);
+$returl = get_form_var('returl', 'string', null, INPUT_POST);
+$action = get_form_var('action', 'string', null, INPUT_POST);
 $note = get_form_var('note', 'string', '');
 
 // Check the user is authorised for this page
