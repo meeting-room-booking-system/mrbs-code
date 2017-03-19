@@ -36,7 +36,7 @@ if ($level < $max_level)
 }
 
 // Get non-standard form variables
-$ids = get_form_var('ids', 'array');
+$ids = get_form_var('ids', 'array', null, INPUT_POST);
 
 // Check that $ids consists of an array of integers, to guard against SQL injection
 foreach ($ids as $id)
