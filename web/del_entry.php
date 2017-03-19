@@ -16,7 +16,7 @@ $id = get_form_var('id', 'int', null, INPUT_POST);
 $series = get_form_var('series', 'int', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 $action = get_form_var('action', 'string', null, INPUT_POST);
-$note = get_form_var('note', 'string', '');
+$note = get_form_var('note', 'string', '', INPUT_POST);
 
 // Check the user is authorised for this page
 checkAuthorised();
