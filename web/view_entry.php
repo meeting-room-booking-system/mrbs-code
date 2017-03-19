@@ -127,9 +127,9 @@ function generateOwnerButtons($id, $series)
 
 function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption, $value='')
 {
-  echo "<tr><td id=\"caption\" colspan=\"2\">$caption:</td></tr>\n";
+  echo "<tr><td id=\"caption\" colspan=\"2\">$caption</td></tr>\n";
   echo "<tr>\n";
-  echo "<td id=\"note\" colspan=\"2\">\n";
+  echo "<td id=\"note\" class=\"no_suffix\" colspan=\"2\">\n";
   echo "<form action=\"$form_action\" method=\"post\">\n";
   echo "<fieldset>\n";
   echo "<legend></legend>\n";
