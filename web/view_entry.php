@@ -108,7 +108,7 @@ function generateOwnerButtons($id, $series)
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
     echo "<tr>\n";
-    echo "<td>&nbsp;</td>\n";
+    echo "<td class=\"no_suffix\"></td>\n";
     echo "<td>\n";
     
     $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",

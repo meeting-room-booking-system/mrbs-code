@@ -81,7 +81,8 @@ label::after,
   content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }
 
-label.no_suffix::after {
+label.no_suffix::after,
+.list td.no_suffix:first-child::after {
   content: '';
 }
 
