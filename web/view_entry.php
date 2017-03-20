@@ -326,7 +326,6 @@ if (!isset($returl))
   }
 }
 
-$link_returl = urlencode($returl);  // for use in links
 
 if (empty($series))
 {
