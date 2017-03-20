@@ -16,6 +16,10 @@ require_once "functions_view.inc";
 //      button_attributes   An array of attributes to be used for the button.
 function generate_button(array $params, array $button_attributes=array())
 {
+  // Note that until IE supports the form attribute on the button tag, we can't
+  // use a <button> here and have to use the <input type="submit"> to create the
+  // button.   This unfortunately means that styling options on the button are limited.
+  
   $html = '';
 
   $html .= "<form method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
