@@ -335,9 +335,12 @@ table.dwm_main {
 .dwm_main a {
   display: block;
   min-height: inherit;
-  word-wrap: break-word;
   word-break: break-all;
+  word-break: break-word;  /* Better for those browsers, eg webkit, that support it */
+  hyphens: auto;
 }
+
+
 
 .dwm_main tbody a {padding: 0 2px}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
