@@ -575,25 +575,33 @@ if (!$ajax || !$commit)
 //   (2) Avoid an endless loop.   It shouldn't happen, but just in case ...
 //   (3) If you've come from search, you probably don't want to go back there (and if you did we'd
 //       have to preserve the search parameter in the query string)
-$returl_base   = explode('?', basename($returl));
-if (empty($returl) || ($returl_base[0] == "edit_entry.php") || ($returl_base[0] == "edit_entry_handler.php")
-                   || ($returl_base[0] == "search.php"))
+if (isset($returl) && ($returl !== ''))
+{
+  $returl = parse_url($returl, PHP_URL_PATH);
+  if ($returl !== false)
+  {
+    $returl = explode('/', $returl);
+    $returl = end($returl);
+  }
+}
+
+if (empty($returl) || 
+    in_array($returl, array('edit_entry.php',
+                            'edit_entry_handler.php',
+                            'search.php')))
 {
   switch ($default_view)
   {
-    case "month":
-      $returl = "month.php";
+    case 'month':
+      $returl = 'month.php';
       break;
-    case "week":
-      $returl = "week.php";
+    case 'week':
+      $returl = 'week.php';
       break;
     default:
-      $returl = "day.php";
+      $returl = 'day.php';
+      break;
   }
-}
-else
-{
-  $returl = $returl_base[0];
 }
 
 
