@@ -604,6 +604,11 @@ if (empty($returl) ||
   }
 }
 
+// Turn the location into an absolute location, to keep IE8 happy.
+$scheme = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] !== 'off')) ? 'https' : 'http';
+$host = $HTTP_HOST;
+$dir = dirname($PHP_SELF);
+$returl = "$scheme://$host$dir/$returl";
 
 // If we haven't been given a sensible date then get out of here and don't try and make a booking
 if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkdate($start_month, $start_day, $start_year))
