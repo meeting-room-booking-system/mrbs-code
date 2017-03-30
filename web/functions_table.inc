@@ -6,15 +6,15 @@ $first_last_width = 1;  // (%)
 $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
                             //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 
-function map_add_booking ($entry, &$column, $am7, $pm7)
+function map_add_booking ($entry, &$column, $start_first_slot, $end_last_slot)
 {
   // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
   //
   // $column    the column of the map that is being prepared (see below)
   // $entry     a booking from the database
-  // $am7       the start of the first slot of the booking day (Unix timestamp)
-  // $pm7       the start of the last slot of the booking day (Unix timestamp)
+  // $start_first_slot       the start of the first slot of the booking day (Unix timestamp)
+  // $end_last_slot       the start of the last slot of the booking day (Unix timestamp)
   
   // $entry is expected to have the following keys, when present:
   //       room_id
@@ -101,11 +101,11 @@ function map_add_booking ($entry, &$column, $am7, $pm7)
     $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
-  $is_multiday_start = ($entry['start_time'] < $am7);
-  $is_multiday_end = ($entry['end_time'] > ($pm7 + $resolution));
+  $is_multiday_start = ($entry['start_time'] < $start_first_slot);
+  $is_multiday_end = ($entry['end_time'] > ($end_last_slot + $resolution));
               
-  $start_t = max(round_t_down($entry['start_time'], $resolution, $am7), $am7);
-  $end_t = min(round_t_up($entry['end_time'], $resolution, $am7) - $resolution, $pm7);
+  $start_t = max(round_t_down($entry['start_time'], $resolution, $start_first_slot), $start_first_slot);
+  $end_t = min(round_t_up($entry['end_time'], $resolution, $start_first_slot) - $resolution, $end_last_slot);
   
   // calculate the times used for indexing - we index by nominal seconds since the start
   // of the calendar day which has the start of the booking day
@@ -202,7 +202,7 @@ function map_add_booking ($entry, &$column, $am7, $pm7)
       $r = $start_s;
       // If you've got to the first slot of the day then that must be the
       // first slot of the first booking
-      while ($r > $am7)
+      while ($r > $start_first_slot)
       {
         // Otherwise, step back one slot.
         $r -= $resolution;
@@ -749,17 +749,17 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
     $eveningends_minutes = count($periods) - 1;
   }
 
-  $am7 = get_start_first_slot($month, $day, $year);
-  $pm7 = get_start_last_slot($month, $day, $year);
+  $start_first_slot = get_start_first_slot($month, $day, $year);
+  $end_last_slot = get_end_last_slot($month, $day, $year);
   
   // Work out whether there's a possibility that a time slot is invalid,
   // in other words whether the booking day includes a transition into DST.
   // If we know that there's a transition into DST then some of the slots are
   // going to be invalid.   Knowing whether or not there are possibly invalid slots
   // saves us bothering to do the detailed calculations of which slots are invalid.
-  $is_possibly_invalid = !$enable_periods && is_possibly_invalid($am7, $pm7);
+  $is_possibly_invalid = !$enable_periods && is_possibly_invalid($start_first_slot, $end_last_slot);
   
-  $entries = get_entries_by_area($area_id, $am7, $pm7);
+  $entries = get_entries_by_area($area_id, $start_first_slot, $end_last_slot);
   
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -767,7 +767,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
 
   foreach ($entries as $entry)
   {
-    map_add_booking($entry, $today[$entry['room_id']][$day], $am7, $pm7);
+    map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $end_last_slot);
   }
 
   $n_time_slots = get_n_time_slots();
@@ -1006,14 +1006,14 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   // affected by daylight saving...
   for ($j = 0; $j<=($num_of_days-1); $j++)
   {
-    $am7[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
-    $pm7[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
+    $start_first_slot[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
+    $end_last_slot[$j] = get_end_last_slot($month, $day_start_week+$j, $year);
     // Work out whether there's a possibility that a time slot is invalid,
     // in other words whether the booking day includes a transition into DST.
     // If we know that there's a transition into DST then some of the slots are
     // going to be invalid.   Knowing whether or not there are possibly invalid slots
     // saves us bothering to do the detailed calculations of which slots are invalid.
-    $is_possibly_invalid[$j] = !$enable_periods && is_possibly_invalid($am7[$j], $pm7[$j]);
+    $is_possibly_invalid[$j] = !$enable_periods && is_possibly_invalid($start_first_slot[$j], $end_last_slot[$j]);
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
@@ -1022,10 +1022,10 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
 
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
-    $entries = get_entries_by_room($room_id, $am7[$j], $pm7[$j]);
+    $entries = get_entries_by_room($room_id, $start_first_slot[$j], $end_last_slot[$j]);
     foreach ($entries as $entry)
     {
-      map_add_booking($entry, $week_map[$room_id][$j], $am7[$j], $pm7[$j]);
+      map_add_booking($entry, $week_map[$room_id][$j], $start_first_slot[$j], $end_last_slot[$j]);
     }
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
