@@ -759,7 +759,7 @@ function day_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohig
   // saves us bothering to do the detailed calculations of which slots are invalid.
   $is_possibly_invalid = !$enable_periods && is_possibly_invalid($am7, $pm7);
   
-  $entries = get_entries_by_area($area_id, $am7, $pm7);
+  $entries = get_entries_by_area($area_id, $am7, $pm7 + $resolution);
   
   // We want to build an array containing all the data we want to show
   // and then spit it out. 
@@ -1022,7 +1022,7 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
 
   for ($j = 0; $j<=($num_of_days-1) ; $j++)
   {
-    $entries = get_entries_by_room($room_id, $am7[$j], $pm7[$j]);
+    $entries = get_entries_by_room($room_id, $am7[$j], $pm7[$j] + $resolution);
     foreach ($entries as $entry)
     {
       map_add_booking($entry, $week_map[$room_id][$j], $am7[$j], $pm7[$j]);
