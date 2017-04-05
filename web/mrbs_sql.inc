@@ -1763,7 +1763,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
-  global $tbl_entry, $tbl_room, $tbl_area;
+  global $tbl_room, $tbl_area;
 
   // All the data, except for the status and room id, will be common
   // across the bookings
@@ -1818,12 +1818,6 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   {
     $ignore_id = 0;
     $repeat_id = NULL;
-  }
-
-  // Acquire mutex to lock out others trying to book the same slot(s).
-  if (!db()->mutex_lock($tbl_entry))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
   }
 
   // Validate the booking for (a) conflicting bookings and (b) conformance to policy rules
@@ -1968,7 +1962,6 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
   // booking, then stop here and return the results
   if ($just_check || !$valid_booking)
   {
-    db()->mutex_unlock($tbl_entry);
     return $result;
   }
     
@@ -2097,8 +2090,6 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
       }
     }   
   } // end foreach $bookings
-
-  db()->mutex_unlock($tbl_entry);
       
   $result['new_details'] = $new_details;
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);

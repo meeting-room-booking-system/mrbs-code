@@ -98,10 +98,7 @@ class DB_mysql extends DB
     }
   
     // Rollback any outstanding transactions
-    if ($this->dbh->inTransaction())
-    {
-      $this->rollback();
-    }
+    $this->rollback();
   }
 
   

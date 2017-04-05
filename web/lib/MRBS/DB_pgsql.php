@@ -79,7 +79,11 @@ class DB_pgsql extends DB
   {
     try
     {
-      $this->command("BEGIN");
+      // LOCK TABLE can only be used in transaction blocks
+      if (!$this->dbh->inTransaction())
+      {
+        $this->begin();
+      }
       $this->command("LOCK TABLE $name IN EXCLUSIVE MODE");
     }
     catch (DBException $e)
@@ -98,7 +102,10 @@ class DB_pgsql extends DB
   // is no other way.
   public function mutex_unlock($name)
   {
-    $this->command("COMMIT");
+    if ($this->dbh->inTransaction())
+    {
+      $this->commit();
+    }
     $this->mutex_lock_name = NULL;
   }
 
@@ -115,10 +122,7 @@ class DB_pgsql extends DB
     }
   
     // Rollback any outstanding transactions
-    if ($this->dbh->inTransaction())
-    {
-      $this->rollback();
-    }
+    $this->rollback();
   }
 
 

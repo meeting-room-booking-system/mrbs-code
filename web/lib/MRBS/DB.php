@@ -194,14 +194,20 @@ class DB
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
     mrbs_ignore_user_abort(TRUE);
-    $this->dbh->beginTransaction();
+    if (!$this->dbh->inTransaction())
+    {
+      $this->dbh->beginTransaction();
+    }
   }
   
   
   // Commit (end) a transaction. See begin().
   public function commit()
   {
-    $this->dbh->commit();
+    if ($this->dbh->inTransaction())
+    {
+      $this->dbh->commit();
+    }
     mrbs_ignore_user_abort(FALSE);
   }
 
@@ -209,8 +215,18 @@ class DB
   // Roll back a transaction, aborting it. See begin().
   public function rollback()
   {
-    $this->dbh->rollBack();
+    if ($this->dbh->inTransaction())
+    {
+      $this->dbh->rollBack();
+    }
     mrbs_ignore_user_abort(FALSE);
+  }
+  
+  
+  // Checks if inside a transaction
+  public function inTransaction()
+  {
+    return $this->dbh->inTransaction();
   }
 
 
