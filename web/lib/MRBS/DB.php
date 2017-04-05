@@ -37,7 +37,15 @@ class DB
     // Establish a database connection.
     try
     {
-      $this->dbh = new PDO(static::DB_DBO_DRIVER.":host=$db_host;port=$db_port;dbname=$db_name",
+      if (!isset($db_host) || ($db_host == ""))
+      {
+        $hostpart = "";
+      }
+      else
+      {
+        $hostpart = "host=$db_host;";
+      }
+      $this->dbh = new PDO(static::DB_DBO_DRIVER.":$hostpart;port=$db_port;dbname=$db_name",
                            $db_username,
                            $db_password,
                            array(PDO::ATTR_PERSISTENT => ($persist ? true : false),
