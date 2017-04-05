@@ -189,22 +189,19 @@ class DB
   //  
   public function begin()
   {
-    // This method must be extended by the sub-classes, which must call the parent as the
-    // first thing they do.   It only exists here in the parent class in order that all the
-    // calls to mrbs_ignore_user_abort() are grouped together.
-    
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
     mrbs_ignore_user_abort(TRUE);
+    $this->dbh->beginTransaction();
   }
   
   
   // Commit (end) a transaction. See begin().
   public function commit()
   {
-    $result = $this->command("COMMIT");
+    $this->dbh->commit();
     mrbs_ignore_user_abort(FALSE);
   }
 
@@ -212,7 +209,7 @@ class DB
   // Roll back a transaction, aborting it. See begin().
   public function rollback()
   {
-    $result = $this->command("ROLLBACK", array());
+    $this->dbh->rollBack();
     mrbs_ignore_user_abort(FALSE);
   }
 

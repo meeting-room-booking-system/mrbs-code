@@ -31,15 +31,6 @@ class DB_mysql extends DB
   }
 
   
-  // Begin a transaction, if the database supports it. This is used to
-  // improve performance for multiple insert/delete/updates.
-  public function begin()
-  {
-    parent::begin();
-    $result = $this->command("START TRANSACTION");
-  }
-
-  
   // Acquire a mutual-exclusion lock on the named table. For portability:
   // This will not lock out SELECTs.
   // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
@@ -107,7 +98,10 @@ class DB_mysql extends DB
     }
   
     // Rollback any outstanding transactions
-    $this->rollback();
+    if ($this->dbh->inTransaction())
+    {
+      $this->rollback();
+    }
   }
 
   

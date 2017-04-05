@@ -62,15 +62,6 @@ class DB_pgsql extends DB
     return $this->dbh->lastInsertId($seq_name);
   }
 
-
-  // Begin a transaction, if the database supports it. This is used to
-  // improve performance for multiple insert/delete/updates.
-  public function begin()
-  {
-    parent::begin();
-    $result = $this->command("BEGIN");
-  }
-
   
   // Acquire a mutual-exclusion lock on the named table. For portability:
   // This will not lock out SELECTs.
@@ -124,7 +115,10 @@ class DB_pgsql extends DB
     }
   
     // Rollback any outstanding transactions
-    $this->rollback();
+    if ($this->dbh->inTransaction())
+    {
+      $this->rollback();
+    }
   }
 
 
