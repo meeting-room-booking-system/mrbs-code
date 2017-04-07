@@ -16,7 +16,7 @@ $vocab["mrbs"]               = "Baliabideen Erreserba Sistema";
 $vocab["report"]             = "Txostenak";
 $vocab["admin"]              = "Kudeaketa";
 $vocab["help"]               = "Laguntza";
-$vocab["search"]             = "Bilatu:";
+$vocab["search"]             = "Bilatu";
 
 // Used in day.php
 $vocab["bookingsfor"]        = "Noiz erreserbatu: ";
@@ -136,20 +136,20 @@ $vocab["next"]               = "Hurrengoa";
 $vocab["entry"]              = "Sarrera";
 $vocab["advanced_search"]    = "Bilaketa aurreratua";
 $vocab["search_button"]      = "Bilatu";
-$vocab["search_for"]         = "Bilaketa aurreratua: ";
-$vocab["from"]               = "Noiztik: ";
+$vocab["search_for"]         = "Bilaketa aurreratua";
+$vocab["from"]               = "Noiztik";
 
 // Used in report.php
 $vocab["report_on"]          = "Baliabideen erabilpen-txostena:";
-$vocab["report_start"]       = "Hasiera data:";
-$vocab["report_end"]         = "Amaiera data:";
-$vocab["match_area"]         = "Baliabide mota bilatu:";
-$vocab["match_room"]         = "Baliabidea bilatu:";
-$vocab["match_type"]         = "Mota aukeratu:";
+$vocab["report_start"]       = "Hasiera data";
+$vocab["report_end"]         = "Amaiera data";
+$vocab["match_area"]         = "Baliabide mota bilatu";
+$vocab["match_room"]         = "Baliabidea bilatu";
+$vocab["match_type"]         = "Mota aukeratu";
 $vocab["ctrl_click_type"]    = "Mota bat baino gehiago aukeratzeko Kontrol-klik egin";
-$vocab["match_entry"]        = "Deskribapen laburra aurkitu:";
-$vocab["match_descr"]        = "Deskribapen osoa aurkitu:";
-$vocab["summarize_by"]       = "Honen arabera laburbildu:";
+$vocab["match_entry"]        = "Deskribapen laburra aurkitu";
+$vocab["match_descr"]        = "Deskribapen osoa aurkitu";
+$vocab["summarize_by"]       = "Honen arabera laburbildu";
 $vocab["sum_by_descrip"]     = "Deskribapen laburra";
 $vocab["sum_by_creator"]     = "Egilea";
 $vocab["entry_found"]        = "aurkitutako erregistroa";
@@ -158,7 +158,7 @@ $vocab["summary_header"]     = "(Orduen) tarteen laburpena";
 $vocab["summary_header_per"] = "(Orduen) tarteen laburpena";
 $vocab["total"]              = "Guztira";
 $vocab["submitquery"]        = "Bidali";
-$vocab["sort_rep"]           = "Zeren arabera:";
+$vocab["sort_rep"]           = "Zeren arabera";
 $vocab["sort_rep_time"]      = "Hasiera data/ordua";
 
 // Used in week.php
@@ -198,8 +198,8 @@ $vocab["editroom"]           = "Elementua editatu";
 $vocab["error_room"]         = "Errorea: gela ";
 $vocab["not_found"]          = " ez da aurkitu";
 $vocab["error_area"]         = "Error: eraikina ";
-$vocab["room_admin_email"]   = "Elementuaren kudeatzailearen emaila:";
-$vocab["area_admin_email"]   = "Baliabidearen kudeatzailearen emaila:";
+$vocab["room_admin_email"]   = "Elementuaren kudeatzailearen emaila";
+$vocab["area_admin_email"]   = "Baliabidearen kudeatzailearen emaila";
 $vocab["invalid_email"]      = "Email okerra!";
 
 // Used in del.php
@@ -211,8 +211,8 @@ $vocab["delarea"]            = "Hau ezabatu aurretik baliabide honetako gela guz
 
 // Used in help.php
 $vocab["about_mrbs"]         = "MRBSri buruz";
-$vocab["database"]           = "Datubasea: ";
-$vocab["system"]             = "Sistema: ";
+$vocab["database"]           = "Datubasea";
+$vocab["system"]             = "Sistema";
 $vocab["please_contact"]     = "Mesedez, harremanetan jarri: ";
 $vocab["for_any_questions"]  = "hemen erantzuten ez den edozein galdera egiteko.";
 
