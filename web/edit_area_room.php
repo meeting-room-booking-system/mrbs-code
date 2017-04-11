@@ -332,20 +332,11 @@ function create_field_entry_max_duration()
 }
 
 
-function create_fieldset_time_period_settings()
+function create_fields_time_settings()
 {
-  global $enable_periods, $twentyfourhour_format, $strftime_format;
+  global $twentyfourhour_format, $strftime_format;
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution;
   global $default_duration, $default_duration_all_day;
-  
-  // If we're using JavaScript, don't display the time settings section
-  // if we're using periods (the JavaScript will display it if we change)
-  echo "<fieldset id=\"time_settings\"" .
-       (($enable_periods) ? ' class="js_none"' : '') .
-       ">\n";
-  echo "<legend>" . get_vocab("time_settings");
-  echo "<span class=\"js_none\">&nbsp;&nbsp;(" . get_vocab("times_only") . ")</span>";
-  echo "</legend>\n";
   
   echo "<div class=\"div_time\">\n";
   
@@ -466,6 +457,24 @@ function create_fieldset_time_period_settings()
   }
   echo "</div>\n";  
   echo "</div>\n";  // last_slot
+}
+
+
+function create_fieldset_time_period_settings()
+{
+  global $enable_periods;
+  
+  // If we're using JavaScript, don't display the time settings section
+  // if we're using periods (the JavaScript will display it if we change)
+  echo "<fieldset id=\"time_settings\"" .
+       (($enable_periods) ? ' class="js_none"' : '') .
+       ">\n";
+  echo "<legend>" . get_vocab("time_settings");
+  echo "<span class=\"js_none\">&nbsp;&nbsp;(" . get_vocab("times_only") . ")</span>";
+  echo "</legend>\n";
+  
+  create_fields_time_settings();
+
 
   echo "</fieldset>\n";
 }
