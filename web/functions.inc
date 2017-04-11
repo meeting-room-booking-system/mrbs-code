@@ -1950,7 +1950,7 @@ function get_area_settings($area)
   global $min_create_ahead_enabled, $max_create_ahead_enabled, $min_create_ahead_secs, $max_create_ahead_secs;
   global $min_delete_ahead_enabled, $max_delete_ahead_enabled, $min_delete_ahead_secs, $max_delete_ahead_secs;
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
-  global $approval_enabled, $reminders_enabled, $enable_periods;
+  global $approval_enabled, $reminders_enabled, $enable_periods, $periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
   global $interval_types;
@@ -1978,7 +1978,7 @@ function get_area_settings($area)
                    'max_per_month_enabled', 'max_per_month',
                    'max_per_year_enabled', 'max_per_year',
                    'max_per_future_enabled', 'max_per_future',
-                   'approval_enabled', 'reminders_enabled', 'enable_periods',
+                   'approval_enabled', 'reminders_enabled', 'enable_periods', 'periods',
                    'confirmation_enabled', 'confirmed_default');
                    
   $sql = "SELECT *
@@ -2024,6 +2024,9 @@ function get_area_settings($area)
       $max_per_interval_area[$interval_type] = $$var;
     }
   }
+  
+  // Periods are stored as a JSON encoded string in the database
+  $periods = json_decode($periods);
   
   // If we're using periods then set the resolution to 60 seconds
   if ($enable_periods)

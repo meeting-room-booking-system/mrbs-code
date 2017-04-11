@@ -56,6 +56,7 @@ CREATE TABLE mrbs_area
   approval_enabled          tinyint(1),
   reminders_enabled         tinyint(1),
   enable_periods            tinyint(1),
+  periods                   text CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   confirmation_enabled      tinyint(1),
   confirmed_default         tinyint(1),
 
@@ -189,6 +190,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '49');
+  VALUES ( 'db_version', '50');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

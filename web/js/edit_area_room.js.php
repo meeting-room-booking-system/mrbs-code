@@ -24,11 +24,13 @@ function toggleMode(speed)
   {
     $('#book_ahead_periods_note').hide(speed);
     $('#time_settings').show(speed);
+    $('#period_settings').hide(speed);
   }
   else
   {
     $('#book_ahead_periods_note').show(speed);
     $('#time_settings').hide(speed);
+    $('#period_settings').show(speed);
   }
 }
 

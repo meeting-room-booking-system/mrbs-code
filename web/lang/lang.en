@@ -380,6 +380,7 @@ $vocab["invalid_resolution"]      = "Invalid combination of first slot, last slo
 $vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
 $vocab["general_settings"]        = "General";
 $vocab["time_settings"]           = "Slot times";
+$vocab["period_settings"]         = "Period names";
 $vocab["confirmation_settings"]   = "Confirmation settings";
 $vocab["allow_confirmation"]      = "Allow tentative bookings";
 $vocab["default_settings_conf"]   = "Default setting";

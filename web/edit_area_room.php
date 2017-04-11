@@ -460,6 +460,20 @@ function create_fields_time_settings()
 }
 
 
+function create_fields_period_settings()
+{
+  global $periods;
+  
+  foreach ($periods as $period)
+  {
+    echo "<div>\n";
+    echo "<label class=\"no_suffix\"></label>";
+    echo "<input name=\"area_periods[]\" value=\"" . htmlspecialchars($period) . "\">\n";
+    echo "</div>\n";
+  }
+}
+
+
 function create_fieldset_time_period_settings()
 {
   global $enable_periods;
@@ -475,6 +489,15 @@ function create_fieldset_time_period_settings()
   
   create_fields_time_settings();
 
+  echo "</fieldset>\n";
+  
+  // and vice versa for the period settings
+  echo "<fieldset id=\"period_settings\"" .
+       (($enable_periods) ? '' : ' class="js_none"') .
+       ">\n";
+  echo "<legend>" . get_vocab("period_settings") . "</legend>\n";
+  
+  create_fields_period_settings();
 
   echo "</fieldset>\n";
 }
@@ -528,6 +551,7 @@ $area_private_override = get_form_var('area_private_override', 'string');
 $area_approval_enabled = get_form_var('area_approval_enabled', 'string');
 $area_reminders_enabled = get_form_var('area_reminders_enabled', 'string');
 $area_enable_periods = get_form_var('area_enable_periods', 'string');
+$area_periods = get_form_var('area_periods', 'array');
 $area_confirmation_enabled = get_form_var('area_confirmation_enabled', 'string');
 $area_confirmed_default = get_form_var('area_confirmed_default', 'string');
 $custom_html = get_form_var('custom_html', 'string');  // Used for both area and room, but you only ever have one or the other
@@ -990,6 +1014,8 @@ if ($phase == 2)
       $sql_params[] = $area_reminders_enabled;
       $assign_array[] = "enable_periods=?";
       $sql_params[] = $area_enable_periods;
+      $assign_array[] = "periods=?";
+      $sql_params[] = json_encode($area_periods);
       $assign_array[] = "confirmation_enabled=?";
       $sql_params[] = $area_confirmation_enabled;
       $assign_array[] = "confirmed_default=?";

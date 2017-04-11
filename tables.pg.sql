@@ -61,6 +61,7 @@ CREATE TABLE mrbs_area
   approval_enabled          smallint,
   reminders_enabled         smallint,
   enable_periods            smallint,
+  periods                   text DEFAULT NULL,
   confirmation_enabled      smallint,
   confirmed_default         smallint,
   
@@ -181,6 +182,6 @@ CREATE TABLE mrbs_users
 );
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '49');
+  VALUES ('db_version', '50');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
