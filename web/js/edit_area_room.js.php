@@ -217,6 +217,22 @@ function generateLastSlotSelect()
                  .css('visibility', 'visible');
 }
 
+
+<?php
+// Check to see if there's only one period name left and, if so,
+// disable the delete button, to make sure there's always at least one
+// period.  (We could in theory have no period names, but it doesn't
+// have a practical use.  Besides, always having at least one makes the
+// code a little simpler because there will always be something to clone.
+?>
+function checkForLastPeriodName()
+{
+  if ($('.period_name').length === 1)
+  {
+    $('.delete_period').hide();
+  }
+}
+
 <?php
 
 
@@ -241,10 +257,12 @@ init = function() {
       toggleMode('fast');
     });
   toggleMode(0);
+  checkForLastPeriodName();
 
   <?php
   // When the Add Period button is clicked, duplicate the last period
-  // name input field, clearing its contents.
+  // name input field, clearing its contents.  Re-enable all the delete
+  // icons because there must be more than one having added one.
   ?>
   $('#add_period').click(function() {
       var lastPeriodName = $('#period_settings .period_name').last(),
@@ -252,10 +270,13 @@ init = function() {
           
       clone.find('input').val('');
       clone.insertAfter(lastPeriodName);
+      $('.delete_period').show();
     });
-    
+  
+  <?php // Delete a period name input field ?>  
   $('.delete_period').click(function() {
       $(this).parent().remove();
+      checkForLastPeriodName();
     });
     
   <?php
