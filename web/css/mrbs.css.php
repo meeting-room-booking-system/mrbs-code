@@ -690,6 +690,10 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   color: red;
 }
 
+.delete_period:hover {
+  cursor: pointer;
+}
+
 .js #period_settings button {
   display: inline-block;
   margin-left: 1em;
