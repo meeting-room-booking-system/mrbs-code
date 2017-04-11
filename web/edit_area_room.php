@@ -498,7 +498,6 @@ function create_fieldset_time_period_settings()
 
   echo "</fieldset>\n";
   
-  /*
   // and vice versa for the period settings
   echo "<fieldset id=\"period_settings\"" .
        (($enable_periods) ? '' : ' class="js_none"') .
@@ -508,7 +507,6 @@ function create_fieldset_time_period_settings()
   create_fields_period_settings();
 
   echo "</fieldset>\n";
-  */
 }
 
 
