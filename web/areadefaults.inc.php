@@ -97,6 +97,33 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // and resolution = 1800.
 
 
+// PERIODS SETTINGS
+// ----------------
+
+// The "Periods" settings are used only in areas where the mode has
+// been set to "Periods".
+
+// Define the name or description for your periods in chronological order
+// For example:
+// $periods[] = "Period 1"
+// $periods[] = "Period 2"
+// ...
+// or
+// $periods[] = "09:15 - 09:50"
+// $periods[] = "09:55 - 10:35"
+// ...
+
+// Period names are encoded in UTF-8
+
+// NOTE:  The maximum number of periods is 60.   Do not define more than this.
+unset($periods);    // Include this line when copying to config.inc.php
+$periods[] = "Period 1";
+$periods[] = "Period 2";
+// NOTE:  The maximum number of periods is 60.   Do not define more than this.
+
+// NOTE:  See INSTALL for information on how to add or remove periods in an
+// existing database.
+
 
 /******************
  * Booking policies

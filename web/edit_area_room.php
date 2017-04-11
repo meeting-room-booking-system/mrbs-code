@@ -466,11 +466,18 @@ function create_fields_period_settings()
   
   foreach ($periods as $period)
   {
-    echo "<div>\n";
+    echo "<div class=\"period_name\">\n";
     echo "<label class=\"no_suffix\"></label>";
-    echo "<input name=\"area_periods[]\" value=\"" . htmlspecialchars($period) . "\">\n";
+    echo "<input name=\"area_periods[]\" required value=\"" . htmlspecialchars($period) . "\">";
+    echo "<span class=\"delete_period\"><span>\n";
     echo "</div>\n";
   }
+  
+  echo "<div>\n";
+  echo "<label class=\"no_suffix\"></label>";
+  echo "<button type=\"button\" id=\"add_period\">" . get_vocab("add_period") . "</button>\n";
+  echo "</div>\n";
+  
 }
 
 

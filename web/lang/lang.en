@@ -381,6 +381,7 @@ $vocab["too_many_slots"]          = 'You need to increase the value of $max_slot
 $vocab["general_settings"]        = "General";
 $vocab["time_settings"]           = "Slot times";
 $vocab["period_settings"]         = "Period names";
+$vocab["add_period"]              = "Add period";
 $vocab["confirmation_settings"]   = "Confirmation settings";
 $vocab["allow_confirmation"]      = "Allow tentative bookings";
 $vocab["default_settings_conf"]   = "Default setting";

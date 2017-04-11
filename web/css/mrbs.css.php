@@ -676,6 +676,25 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 .edit_area_room .form_general textarea {height: 6em; width: 25em}
 .edit_area_room div#custom_html {margin-top: 8px}
 
+.delete_period, #period_settings button {
+  display: none;
+}
+
+.js .delete_period {
+  display: inline-block;
+  margin-left: 1em;
+}
+
+.delete_period::after {
+  content: '\002718';  <?php // cross ?>
+  color: red;
+}
+
+.js #period_settings button {
+  display: inline-block;
+  margin-left: 1em;
+}
+
 
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */

@@ -242,6 +242,21 @@ init = function() {
     });
   toggleMode(0);
 
+  <?php
+  // When the Add Period button is clicked, duplicate the last period
+  // name input field, clearing its contents.
+  ?>
+  $('#add_period').click(function() {
+      var lastPeriodName = $('#period_settings .period_name').last(),
+          clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
+          
+      clone.find('input').val('');
+      clone.insertAfter(lastPeriodName);
+    });
+    
+  $('.delete_period').click(function() {
+      $(this).parent().remove();
+    });
     
   <?php
   // Where we've got enabling checkboxes, apply a change event to them so that

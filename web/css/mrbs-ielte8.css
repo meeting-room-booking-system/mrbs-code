@@ -38,13 +38,18 @@ label.no_suffix:after,
   color: green;
 }
 
-.notice::after {
+.notice:after {
   content: '!';
   font-weight: bold;
   color: #ff5722;
 }
 
 .bad:after {
+  content: '\002718';  /* cross */
+  color: red;
+}
+
+.delete_period:after {
   content: '\002718';  /* cross */
   color: red;
 }
