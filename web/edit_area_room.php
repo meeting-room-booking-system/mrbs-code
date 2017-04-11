@@ -131,7 +131,7 @@ function create_field_entry_advance_booking()
   echo "<div id=\"book_ahead_periods_note\"" .
        (($enable_periods) ? '' : ' class="js_none"') .
        ">\n";
-  echo "<label></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
+  echo "<label class=\"no_suffix\"></label><span>" . get_vocab("book_ahead_note_periods") . "</span>";
   echo "</div>\n";
   
   $units = array("seconds", "minutes", "hours", "days", "weeks");
