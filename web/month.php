@@ -29,7 +29,7 @@ function cmp3($a, $b)
 
 function get_booking_summary($start, $end, $day_start, $day_end)
 {
-  global $enable_periods;
+  global $enable_periods, $area;
   
   // Use ~ (not -) to separate the start and stop times, because MSIE
   // will incorrectly line break after a -.
@@ -42,8 +42,8 @@ function get_booking_summary($start, $end, $day_start, $day_end)
   
   if ($enable_periods)
   {
-    $start_str = htmlspecialchars(period_time_string($start));
-    $end_str   = htmlspecialchars(period_time_string($end, -1));
+    $start_str = htmlspecialchars(period_time_string($start, $area));
+    $end_str   = htmlspecialchars(period_time_string($end, $area, -1));
   }
   else
   {

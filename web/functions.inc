@@ -2162,9 +2162,9 @@ function period_date_string($t, $area_id, $mod_time=0)
 }
 
 
-function period_time_string($t, $mod_time=0)
+function period_time_string($t, $area_id, $mod_time=0)
 {
-  global $periods;
+  $period_names = get_period_names();
 
   $time = getdate($t);
   $p_num = $time["minutes"] + $mod_time;
@@ -2172,11 +2172,11 @@ function period_time_string($t, $mod_time=0)
   {
     $p_num = 0;
   }
-  if ( $p_num >= count($periods) - 1 )
+  if ( $p_num >= count($period_names[$area_id]) - 1 )
   {
-    $p_num = count($periods ) - 1;
+    $p_num = count($period_names[$area_id]) - 1;
   }
-  return $periods[$p_num];
+  return $period_names[$area_id][$p_num];
 }
 
 function time_date_string($t)
