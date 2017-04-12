@@ -1626,6 +1626,26 @@ function get_rooms($area, $all=FALSE)
 }
 
 
+// Gets a two-dimensional array of period names indexed by area id.
+function get_period_names()
+{
+  global $tbl_area;
+  
+  $period_names = array();
+  
+  $sql = "SELECT id, periods FROM $tbl_area";
+  
+  $res = db()->query($sql);
+  
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    $period_names[$row['id']] = json_decode($row['periods']);
+  }
+  
+  return $period_names;
+}
+
+
 function mrbsGetRoomArea($id)
 {
   global $tbl_room;

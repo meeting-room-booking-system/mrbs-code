@@ -2140,24 +2140,32 @@ function hour_min($s)
 }
 
 
-function period_date_string($t, $mod_time=0)
+function period_date_string($t, $area_id, $mod_time=0)
 {
-  global $periods, $strftime_format;
-
+  global $strftime_format;
+  
+  static $period_names = null;
+  
+  if (!isset($period_names))
+  {
+    $period_names = get_period_names();
+  }
+  
   $time = getdate($t);
   $p_num = $time["minutes"] + $mod_time;
   if( $p_num < 0 )
   {
     $p_num = 0;
   }
-  if( $p_num >= count($periods) - 1 )
+  if( $p_num >= count($period_names[$area_id]) - 1 )
   {
-    $p_num = count($periods ) - 1;
+    $p_num = count($period_names[$area_id]) - 1;
   }
-  // I have made the separator a ',' as a '-' leads to an ambiguious
+  // The separator is a ',' as a '-' leads to an ambiguious
   // display in report.php when showing end times.
-  return array($p_num, $periods[$p_num] . utf8_strftime(", " . $strftime_format['date'], $t));
+  return array($p_num, $period_names[$area_id][$p_num] . utf8_strftime(", " . $strftime_format['date'], $t));
 }
+
 
 function period_time_string($t, $mod_time=0)
 {

@@ -754,7 +754,7 @@ function report_row(&$rows, &$data)
         $mod_time = ($field == 'start_time') ? 0 : -1;
         if ($data['enable_periods'])
         {
-          list( , $date) =  period_date_string($value, $mod_time);
+          list( , $date) =  period_date_string($value, $data['area_id'], $mod_time);
         }
         else
         {
@@ -1375,7 +1375,7 @@ if ($phase == 2)
   $sql_params = array();
   $sql = "SELECT E.*, "
        .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
-       . "A.area_name, R.room_name, "
+       . "A.area_name, R.room_name, R.area_id, "
        . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
   if ($output_format == OUTPUT_ICAL)
   {
