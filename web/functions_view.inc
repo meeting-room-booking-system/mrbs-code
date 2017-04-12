@@ -5,7 +5,7 @@ namespace MRBS;
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the 
 // second column.
-function create_details_row($label, $value, $as_html=FALSE, $class='')
+function create_details_row($label, $value, $as_html=false, $class='')
 {
   $result = '';
   if ($as_html)
@@ -27,13 +27,13 @@ function create_details_row($label, $value, $as_html=FALSE, $class='')
 
 
 // Returns a string containg a set of details for $data consisting of a label/value
-// pair for each data element in the array $data.   If $as_html is TRUE then the string
+// pair for each data element in the array $data.   If $as_html is true then the string
 // is the HTML for a table body, ie looks like "<tbody> ... </tbody>".
-//    $keep_private   boolean   if TRUE then any private fields will be given the class 'private';
+//    $keep_private   boolean   if true then any private fields will be given the class 'private';
 //                              note that $data must already have had values substituted
 //                              for private fields
-//    $room_disabled  boolean   if TRUE then a note will be added that the room is disabled
-function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_disabled=FALSE)
+//    $room_disabled  boolean   if true then a note will be added that the room is disabled
+function create_details_body($data, $as_html=false, $keep_private=false, $room_disabled=false)
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields;
@@ -45,7 +45,7 @@ function create_details_body($data, $as_html=FALSE, $keep_private=FALSE, $room_d
   if (!isset($data['duration']))
   {
     // We will translate the units later
-    $d = get_duration($data['start_time'], $data['end_time'], $enable_periods, FALSE);
+    $d = get_duration($data['start_time'], $data['end_time'], $enable_periods, $data['area_id'], false);
     $data['duration'] = $d['duration'];
     $data['dur_units'] = $d['dur_units'];
   }

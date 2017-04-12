@@ -691,15 +691,15 @@ function fit_to_booking_day($t, $back=true)
 //    $end_time       int     end time as a Unix timestamp
 //    $enable_periods boolean whether we are using periods
 //    $translate      boolean whether to translate into the browser language
-function get_duration($start_time, $end_time, $enable_periods, $translate=TRUE)
+function get_duration($start_time, $end_time, $enable_periods, $area_id, $translate=true)
 {
-  global $periods;
-  
   $result = array();
+  
+  $period_names = get_period_names();
 
   if ($enable_periods)
   {
-    $periods_per_day = count($periods);
+    $periods_per_day = count($period_names[$area_id]);
     $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
@@ -2144,12 +2144,7 @@ function period_date_string($t, $area_id, $mod_time=0)
 {
   global $strftime_format;
   
-  static $period_names = null;
-  
-  if (!isset($period_names))
-  {
-    $period_names = get_period_names();
-  }
+  $period_names = get_period_names();
   
   $time = getdate($t);
   $p_num = $time["minutes"] + $mod_time;

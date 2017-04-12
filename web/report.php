@@ -747,7 +747,7 @@ function report_row(&$rows, &$data)
         // changes so that the user sees what he expects to see
         $duration_seconds = $data['end_time'] - $data['start_time'];
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
-        $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods']);
+        $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods'], $data['area_id']);
         $d_string = $d['duration'] . ' ' . $d['dur_units'];
         $d_string = escape($d_string);
       case 'start_time':
