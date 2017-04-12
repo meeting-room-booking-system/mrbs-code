@@ -1684,6 +1684,11 @@ function mrbsAddArea($name, &$error)
       $sql_val[] = "?";
       $sql_params[] = $name;
       break;
+    case 'periods':
+      $sql_col[] = $key;
+      $sql_val[] = "?";
+      $sql_params[] = json_encode($area_defaults[$key]);
+      break;
     default:
       if (array_key_exists($key, $area_defaults))
       {
