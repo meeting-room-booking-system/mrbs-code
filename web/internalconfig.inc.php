@@ -438,6 +438,7 @@ $area_defaults_keys = array('timezone',
                             'approval_enabled',
                             'reminders_enabled',
                             'enable_periods',
+                            'periods',
                             'confirmation_enabled',
                             'confirmed_default');
 

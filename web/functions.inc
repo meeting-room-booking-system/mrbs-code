@@ -1996,7 +1996,15 @@ function get_area_settings($area)
   }
   else
   {
-    $row = clean_area_row($res->row_keyed(0));
+    $row = $res->row_keyed(0);
+    
+    // Periods are stored as a JSON encoded string in the database
+    if (isset($row['periods']))
+    {
+      $row['periods'] = json_decode($row['periods']);
+    }
+    
+    $row = clean_area_row($row);
     foreach ($columns as $column)
     {
       if (array_key_exists($column, $row))
@@ -2024,9 +2032,6 @@ function get_area_settings($area)
       $max_per_interval_area[$interval_type] = $$var;
     }
   }
-  
-  // Periods are stored as a JSON encoded string in the database
-  $periods = json_decode($periods);
   
   // If we're using periods then set the resolution to 60 seconds
   if ($enable_periods)
