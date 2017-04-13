@@ -682,7 +682,8 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .js .delete_period {
   display: inline-block;
-  margin-left: 1em;
+  padding: 0 1em;
+  opacity: 0.7;
 }
 
 .delete_period::after {
@@ -692,6 +693,8 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .delete_period:hover {
   cursor: pointer;
+  opacity: 1;
+  font-weight: bold;
 }
 
 .js #period_settings button {
