@@ -432,6 +432,7 @@ function create_field_entry_rooms($disabled=FALSE)
     $attributes[] = 'style="display: none"';
     // Put in some data about the area for use by the JavaScript
     $attributes[] = 'data-enable_periods='           . (($areas[$a]['enable_periods']) ? 1 : 0);
+    $attributes[] = 'data-n_periods='                . count($areas[$a]['periods']);
     $attributes[] = 'data-default_duration='         . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR);
     $attributes[] = 'data-default_duration_all_day=' . (($areas[$a]['default_duration_all_day']) ? 1 : 0);
     $attributes[] = 'data-max_duration_enabled='     . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
