@@ -50,7 +50,7 @@ namespace MRBS;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
-
+  
 $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
@@ -127,8 +127,6 @@ function getbookingdate($t, $is_end=FALSE)
 //    $is_start                   Boolean.  Whether this is the start selector.  Default FALSE
 function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $disabled=FALSE, $is_start=FALSE)
 {
-  global $periods;
-
   $html = '';
   
   // Check that $resolution is positive to avoid an infinite loop below.
@@ -177,7 +175,7 @@ function genSlotSelector($area, $id, $name, $current_s, $display_none=FALSE, $di
   {
     if ($area['enable_periods'])
     {
-      $options[$s] = $periods[intval(($s-$base)/60)];
+      $options[$s] = $area['periods'][intval(($s-$base)/60)];
     }
     else
     {
@@ -292,7 +290,7 @@ function create_field_entry_description($disabled=FALSE)
 
 function create_field_entry_start_date($disabled=FALSE)
 {
-  global $start_time, $areas, $area_id, $periods, $id;
+  global $start_time, $areas, $area_id;
   
   $date = getbookingdate($start_time);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -319,7 +317,7 @@ function create_field_entry_start_date($disabled=FALSE)
 
 function create_field_entry_end_date($disabled=FALSE)
 {
-  global $end_time, $areas, $area_id, $periods, $multiday_allowed;
+  global $end_time, $areas, $area_id, $multiday_allowed;
   
   $date = getbookingdate($end_time, TRUE);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -972,6 +970,7 @@ else
     }
     
     $end_time = $start_time + $duration;
+
     // Make sure the end_time falls within a booking day.   So if there are no 
     // restrictions, bring it back to the nearest booking day.   If the user is not
     // allowed multi-day bookings then make sure it is on the first booking day.
@@ -984,7 +983,7 @@ else
       $end_time = min($end_time, get_end_last_slot($month, $day, $year));
     }
   }
-  
+
   $rep_id        = 0;
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
@@ -1063,7 +1062,7 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 // Get the details of all the enabled areas
 $areas = array();
 $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all_day,
-               enable_periods, timezone,
+               enable_periods, periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes,
                max_duration_enabled, max_duration_secs, max_duration_periods
           FROM $tbl_area
@@ -1073,6 +1072,9 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
+  // Periods are JSON encoded in the database
+  $row['periods'] = json_decode($row['periods']);
+  
   // Make sure we've got the correct resolution when using periods (it's
   // probably OK anyway, but just in case)
   if ($row['enable_periods'])
@@ -1087,7 +1089,7 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     $first = 12*SECONDS_PER_HOUR;
     // If we're using periods we just go to the end of the last slot
-    $last = $first + (count($periods) * $row['resolution']);
+    $last = $first + (count($row['periods']) * $row['resolution']);
   }
   else
   {
@@ -1106,7 +1108,7 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   // would be longer than the maximum duration allowed.
   $row['show_all_day'] = $is_admin || 
                          !$row['max_duration_enabled'] ||
-                         ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($periods))) ||
+                         ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($row['periods']))) ||
                            (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
   
   // Clean up the settings, getting rid of any nulls and casting boolean fields into bools

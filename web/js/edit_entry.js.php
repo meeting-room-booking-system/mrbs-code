@@ -76,7 +76,7 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
 // by default the current area
 var areaConfig = function areaConfig(property, areaId) {
 
-    var properties = ['enable_periods', 'default_duration', 'max_duration_enabled',
+    var properties = ['enable_periods', 'periods', 'default_duration', 'max_duration_enabled',
                       'max_duration_secs', 'max_duration_periods', 'max_duration_qty',
                       'max_duration_units', 'timezone'];
     var i, p, room;
