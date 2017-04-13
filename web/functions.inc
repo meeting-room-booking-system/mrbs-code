@@ -626,7 +626,12 @@ function is_in_booking_day($t)
 {
   global $morningstarts, $morningstarts_minutes,
          $eveningends, $eveningends_minutes,
-         $resolution;
+         $resolution, $enable_periods;
+  
+  if ($enable_periods)
+  {
+    return true;
+  }
   
   $start_day_secs = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $end_day_secs = (((($eveningends * 60) + $eveningends_minutes) * 60) + $resolution) % SECONDS_PER_DAY;
