@@ -257,7 +257,14 @@ init = function() {
       toggleMode('fast');
     });
   toggleMode(0);
+  
+  <?php
+  // Work out if we can display the delete symbols, and then only
+  // after we have done that make them visible.  (This stops the
+  // delete symbol appearing for a moment and then being removed).
+  ?>
   checkForLastPeriodName();
+  $('.delete_period').css('visibility', 'visible');
 
   <?php
   // When the Add Period button is clicked, duplicate the last period

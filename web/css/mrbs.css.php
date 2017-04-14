@@ -682,6 +682,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .js .delete_period {
   display: inline-block;
+  visibility: hidden; <?php // gets switched on by JavaScript ?>
   padding: 0 1em;
   opacity: 0.7;
 }
