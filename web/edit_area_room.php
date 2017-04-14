@@ -464,11 +464,18 @@ function create_fields_period_settings()
 {
   global $periods;
   
-  foreach ($periods as $period)
+  // For the JavaScript to work, and MRBS to make sense, there has to be at least
+  // one period defined.  So if for some reason, which shouldn't happen, there aren't
+  // any periods defined, then force there to be one by creating a single period name
+  // with an empty string.   Because the input is a required input, then it will have
+  // to be saved with a period name.
+  $period_names = empty($periods) ? array('') : $periods;
+  
+  foreach ($period_names as $period_name)
   {
     echo "<div class=\"period_name\">\n";
     echo "<label class=\"no_suffix\"></label>";
-    echo "<input name=\"area_periods[]\" required value=\"" . htmlspecialchars($period) . "\">";
+    echo "<input name=\"area_periods[]\" required value=\"" . htmlspecialchars($period_name) . "\">";
     echo "<span class=\"delete_period\"><span>\n";
     echo "</div>\n";
   }
