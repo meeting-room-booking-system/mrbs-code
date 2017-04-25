@@ -766,7 +766,8 @@ $ldap_tls = false;
 // If you need to bind as a particular user to do the search described
 // above, specify the DN and password in the variables below
 // These two parameters can be arrays.
-// $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=example,dc=com";
+// $ldap_dn_search_dn = "cn=Search User,ou=Users,dc=example,dc=com"; // Any compliant LDAP
+// $ldap_dn_search_dn = "searchuser@example.com"; // A form which could work for AD LDAP
 // $ldap_dn_search_password = "some-password";
 
 // 'auth_ldap' extra configuration for ldap configuration of who can use
