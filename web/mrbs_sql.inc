@@ -1378,7 +1378,7 @@ function get_booking_info($id, $series, $silent=FALSE)
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
-  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], FALSE);
+  $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], $row['area_id'], false);
   $row['duration'] = $d['duration'];
   $row['dur_units'] = $d['dur_units'];
     
@@ -1623,6 +1623,33 @@ function get_rooms($area, $all=FALSE)
   $res = db()->query($sql, array($area));
   
   return $res->all_rows_keyed();
+}
+
+
+// Gets a two-dimensional array of period names indexed by area id.
+function get_period_names()
+{
+  global $tbl_area;
+  
+  static $period_names = null;
+  
+  if (isset($period_names))
+  {
+    return $period_names;
+  }
+  
+  $period_names = array();
+  
+  $sql = "SELECT id, periods FROM $tbl_area";
+  
+  $res = db()->query($sql);
+  
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    $period_names[$row['id']] = json_decode($row['periods']);
+  }
+  
+  return $period_names;
 }
 
 

@@ -76,7 +76,7 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
 // by default the current area
 var areaConfig = function areaConfig(property, areaId) {
 
-    var properties = ['enable_periods', 'default_duration', 'max_duration_enabled',
+    var properties = ['enable_periods', 'n_periods', 'default_duration', 'max_duration_enabled',
                       'max_duration_secs', 'max_duration_periods', 'max_duration_qty',
                       'max_duration_units', 'timezone'];
     var i, p, room;
@@ -1046,6 +1046,7 @@ function adjustSlotSelectors()
   $('#end_seconds' + currentArea).find('option').each(function(i) {
   
       var thisValue = parseInt($(this).val(), 10),
+          nPeriods           = areaConfig('n_periods'),
           maxDurationEnabled = areaConfig('max_duration_enabled'),
           maxDurationSecs    = areaConfig('max_duration_secs'),
           maxDurationPeriods = areaConfig('max_duration_periods'),
@@ -1070,7 +1071,7 @@ function adjustSlotSelectors()
           if (enablePeriods)
           {
             duration = duration/60 + 1;  <?php // because of the way periods work ?>
-            duration += dateDifference * <?php echo count($periods) ?>;
+            duration += dateDifference * nPeriods;
           }
           else
           {
