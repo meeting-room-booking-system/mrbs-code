@@ -179,7 +179,7 @@ function display_entry_row($row)
   }
   else
   {
-    list(,$link_str) = period_date_string($row['start_time']);
+    list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
   }
   echo htmlspecialchars($link_str) . "</a></td>";
     
