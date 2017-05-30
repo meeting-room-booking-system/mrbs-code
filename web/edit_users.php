@@ -522,7 +522,7 @@ if (isset($Action) && ($Action == "Update"))
 {
   // If you haven't got the rights to do this, then exit
   $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                        array($user));
+                        array(utf8_strtolower($user)));
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
     Header("Location: edit_users.php");
