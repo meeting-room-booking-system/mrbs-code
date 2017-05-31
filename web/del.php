@@ -38,7 +38,7 @@ if ($type == "room")
     db()->commit();
    
     // Go back to the admin page
-    Header("Location: admin.php?area=$area");
+    header("Location: admin.php?area=$area");
   }
   else
   {

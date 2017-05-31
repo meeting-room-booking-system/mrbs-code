@@ -624,7 +624,7 @@ if (isset($change_done))
   {
     $area = mrbsGetRoomArea($room);
   }
-  Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
+  header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
   exit();
 }
 
@@ -777,7 +777,7 @@ if ($phase == 2)
 
         // Release the mutex and go back to the admin page (for the new area)
         db()->mutex_unlock($tbl_area);
-        Header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area");
+        header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area");
         exit();
       }
     
@@ -1041,7 +1041,7 @@ if ($phase == 2)
       db()->command($sql, $sql_params);
 
       // Go back to the admin page
-      Header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
+      header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
       exit();
     }
   }
