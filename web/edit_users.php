@@ -525,6 +525,8 @@ if (isset($Action) && ($Action == "Update"))
                         array(utf8_strtolower($user)));
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
+    // It shouldn't normally be possible to get here.
+    trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
     header("Location: edit_users.php");
     exit;
   }
