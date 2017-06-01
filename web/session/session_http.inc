@@ -24,7 +24,7 @@ function authGet()
 {
   global $auth;
   header("WWW-Authenticate: Basic realm=\"$auth[realm]\"");
-  Header("HTTP/1.0 401 Unauthorized");
+  header("HTTP/1.0 401 Unauthorized");
 }
 
 function getAuthPassword()

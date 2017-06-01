@@ -532,7 +532,9 @@ if (isset($Action) && ($Action == "Update"))
                         array(utf8_strtolower($user)));
   if (($level < $min_user_editing_level) && ($Id != $my_id ))
   {
-    Header("Location: edit_users.php");
+    // It shouldn't normally be possible to get here.
+    trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
+    header("Location: edit_users.php");
     exit;
   }
   
@@ -606,7 +608,7 @@ if (isset($Action) && ($Action == "Update"))
           // but someone might have spoofed the input in the edit form
           if ($values[$fieldname] > $level)
           {
-            Header("Location: edit_users.php");
+            header("Location: edit_users.php");
             exit;
           }
           break;
@@ -692,7 +694,7 @@ if (isset($Action) && ($Action == "Update"))
     // form values 
     if (!$valid_data)
     { 
-      Header("Location: edit_users.php?$q_string");
+      header("Location: edit_users.php?$q_string");
       exit;
     }
 
@@ -785,7 +787,7 @@ if (isset($Action) && ($Action == "Update"))
     db()->command($operation, $sql_params);
   
     /* Success. Redirect to the user list, to remove the form args */
-    Header("Location: edit_users.php");
+    header("Location: edit_users.php");
   }
 }
 

@@ -105,7 +105,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       }
 
     }
-    Header("Location: $returl");
+    header("Location: $returl");
     exit();
   }
 }
