@@ -216,6 +216,7 @@ $vocab["please_login"]       = "Please log in";
 $vocab["users.name"]         = "Name";
 $vocab["users.password"]     = "Password";
 $vocab["users.level"]        = "Rights";
+$vocab["users.timestamp"]    = "Last updated";
 $vocab["unknown_user"]       = "Unknown user";
 $vocab["you_are"]            = "You are";
 $vocab["login"]              = "Log in";

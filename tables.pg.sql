@@ -99,7 +99,7 @@ CREATE TABLE mrbs_repeat
                    REFERENCES mrbs_room(id)
                    ON UPDATE CASCADE
                    ON DELETE RESTRICT,
-  timestamp      timestamp DEFAULT current_timestamp,
+  timestamp      timestamptz DEFAULT current_timestamp,
   create_by      varchar(80) NOT NULL,
   modified_by    varchar(80) NOT NULL,
   name           varchar(80) NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE mrbs_entry
                    REFERENCES mrbs_room(id)
                    ON UPDATE CASCADE
                    ON DELETE RESTRICT,
-  timestamp      timestamp DEFAULT current_timestamp,
+  timestamp      timestamptz DEFAULT current_timestamp,
   create_by      varchar(80) NOT NULL,
   modified_by    varchar(80) NOT NULL,
   name           varchar(80) NOT NULL,
@@ -177,11 +177,24 @@ CREATE TABLE mrbs_users
   name      varchar(30),
   password_hash  varchar(255),
   email     varchar(75),
+  timestamp timestamptz DEFAULT current_timestamp,
   
   CONSTRAINT mrbs_uq_name UNIQUE (name)
 );
 
+CREATE OR REPLACE FUNCTION update_timestamp_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.timestamp = NOW();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_mrbs_entry_timestamp BEFORE UPDATE ON mrbs_entry FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
+CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
+CREATE TRIGGER update_mrbs_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
+
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '51');
+  VALUES ('db_version', '52');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');

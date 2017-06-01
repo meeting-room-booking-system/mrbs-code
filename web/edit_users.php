@@ -171,6 +171,10 @@ function output_row(&$row)
                       "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
                       "</div>\n";
           break;
+        case 'timestamp':
+          // Convert the SQL timestamp into a time value and back into a localised string
+          $values[] = time_date_string(strtotime($col_value));
+          break;
         default:
           // Where there's an associative array of options, display
           // the value rather than the key
@@ -347,6 +351,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 break;
               case 'password_hash':
                 echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
+                break;
+              case 'timestamp':
+                // Don't show timestamp in the form at all
                 break;
               default:
                 echo "<div>\n";
@@ -534,7 +541,7 @@ if (isset($Action) && ($Action == "Update"))
   {
     $values = array();
     $q_string = ($Id >= 0) ? "Action=Edit" : "Action=Add";
-    foreach ($fields as $field)
+    foreach ($fields as $index => $field)
     {
       $fieldname = $field['name'];
       $type = get_form_var_type($field);
@@ -602,6 +609,11 @@ if (isset($Action) && ($Action == "Update"))
             Header("Location: edit_users.php");
             exit;
           }
+          break;
+        case 'timestamp':
+          // Don't update this field ourselves at all
+          unset($fields[$index]);
+          unset($values[$fieldname]);
           break;
         default:
           $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
