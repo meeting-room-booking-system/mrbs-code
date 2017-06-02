@@ -9,6 +9,34 @@ global $dbsys, $tbl_entry, $tbl_repeat, $tbl_users, $admin_handle;
 // is split by semi-colons.
 if ($dbsys == "pgsql")
 {
+  // Ensure plpgsql language is installed
+  $sql = <<<END_OF_SQL
+CREATE OR REPLACE FUNCTION create_language_plpgsql()
+RETURNS BOOLEAN AS \$\$
+    CREATE LANGUAGE plpgsql;
+    SELECT TRUE;
+\$\$ LANGUAGE SQL;
+
+SELECT CASE WHEN NOT
+    (
+        SELECT  TRUE AS exists
+        FROM    pg_language
+        WHERE   lanname = 'plpgsql'
+        UNION
+        SELECT  FALSE AS exists
+        ORDER BY exists DESC
+        LIMIT 1
+    )
+THEN
+    create_language_plpgsql()
+ELSE
+    FALSE
+END AS plpgsql_created;
+
+DROP FUNCTION create_language_plpgsql();
+END_OF_SQL;
+  $admin_handle->command($sql);
+
   // Add function to update timestamp column
   $sql = <<<END_OF_SQL
 CREATE OR REPLACE FUNCTION update_timestamp_column()	
