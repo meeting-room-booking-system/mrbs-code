@@ -172,8 +172,15 @@ function output_row(&$row)
                       "</div>\n";
           break;
         case 'timestamp':
-          // Convert the SQL timestamp into a time value and back into a localised string
-          $values[] = time_date_string(strtotime($col_value));
+          // Convert the SQL timestamp into a time value and back into a localised string and
+          // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
+          $unix_timestamp = strtotime($col_value);
+          if ($unix_timestamp === false)
+          {
+            // To cater for timestamps before the start of the Unix Epoch
+            $unix_timestamp = 0;
+          }
+          $values[] = "<span title=\"$unix_timestamp\"></span>" . time_date_string($unix_timestamp);
           break;
         default:
           // Where there's an associative array of options, display
@@ -871,6 +878,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
         switch ($fieldname)
         {
           case 'level':
+          case 'timestamp':
             $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
             break;
           default:
