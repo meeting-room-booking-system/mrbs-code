@@ -16,7 +16,11 @@ RETURNS BOOLEAN AS \$\$
     CREATE LANGUAGE plpgsql;
     SELECT TRUE;
 \$\$ LANGUAGE SQL;
+END_OF_SQL;
 
+   $admin_handle->command($sql);
+
+  $sql = <<<END_OF_SQL
 SELECT CASE WHEN NOT
     (
         SELECT  TRUE AS exists
@@ -32,9 +36,14 @@ THEN
 ELSE
     FALSE
 END AS plpgsql_created;
+END_OF_SQL;
 
+   $admin_handle->command($sql);
+
+  $sql = <<<END_OF_SQL
 DROP FUNCTION create_language_plpgsql();
 END_OF_SQL;
+
   $admin_handle->command($sql);
 
   // Add function to update timestamp column
