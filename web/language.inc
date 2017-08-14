@@ -24,7 +24,7 @@ $lang_aliases = array
 // corresponding key.
 //
 // These locale TLAs found at:
-// http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
+// https://www.microsoft.com/resources/msdn/goglobal/default.mspx
 $lang_map_windows = array
 (
   'bg' => 'bgr',
