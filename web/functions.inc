@@ -2219,8 +2219,9 @@ function validate_email($email)
 }
 
 
-// validates a comma separated list of email addresses
-// returns FALSE if any one of them is invalid, otherwise TRUE
+// Validates a comma separated list of email addresses.  (The individual email
+// addresses are 'trimmed' before validation, so spaces are allowed after the commas).
+// Returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
 {
   if (isset($list) && ($list !== ''))
@@ -2228,7 +2229,7 @@ function validate_email_list($list)
     $emails = explode(',', $list);
     foreach ($emails as $email)
     {
-      if (!validate_email($email))
+      if (!validate_email(trim($email)))
       {
         return FALSE;
       }
