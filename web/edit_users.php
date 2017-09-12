@@ -289,6 +289,15 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($Id));
     $data = $result->row_keyed(0);
     unset($result);
+    // Check that we've got a valid result.   We should do normally, but if somebody alters
+    // the id parameter in the query string then we won't.   If the result is invalid, go somewhere
+    // safe.
+    if (!$data)
+    {
+      trigger_error("Invalid user id $Id", E_USER_NOTICE);
+      header("Location: " . this_page());
+      exit;
+    }
   }
   if (($Id == -1) || (!$data))
   {
