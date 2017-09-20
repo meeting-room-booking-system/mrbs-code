@@ -16,7 +16,7 @@ namespace MRBS;
 ******************************************************************************/
 
 
-function rehash($password_hash, $column_name, $column_value)
+function rehash($password, $column_name, $column_value)
 {
   global $tbl_users;
   
@@ -98,7 +98,7 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
 
   if ($do_rehash)
   {
-    rehash($password_hash, $column_name, $column_value);
+    rehash($password, $column_name, $column_value);
   }
 
   return $result;
