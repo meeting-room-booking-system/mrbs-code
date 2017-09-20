@@ -117,8 +117,6 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  */
 function authValidateUser($user, $pass)
 {
-  global $tbl_users;
-  
   // The string $user that the user logged on with could be either a username or
   // an email address, or even possibly just the local part of an email address.
   // So it's just possible that there is more than one user with this password and
