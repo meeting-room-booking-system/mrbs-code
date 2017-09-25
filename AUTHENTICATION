@@ -174,6 +174,12 @@ PHP authentication modules
 |         |the same server         |                   |                        |
 |         |                        |                   |                        |
 +---------+------------------------+-------------------+------------------------+
+|saml     |Users are validated     |  - Federated login|  - Must set up         |
+|         |against a SimpleSamlPhp |  - Single signon  |    SimpleSamlPhp       |
+|         |installation running on |  - Signle signoff |  - SAML knowlege       |
+|         |the same server         |  - Hooks into     |    recommended         |
+|         |                        |    SAML infra     |                        |
++---------+------------------------+-------------------+------------------------+
 
 External authentication programs
 --------------------------------
@@ -352,6 +358,12 @@ The others are left in for historical reasons:
 |wordpress|Use when using WordPress      |                    |                |
 |         |authentication.               |                    |                |
 |         |                              |                    |                |
++---------+------------------------------+--------------------+----------------+
+|saml     |Use when using SAML           |  - Federated login | - Must set up  |
+|         |authentication.               |  - Single signon   |   SimpleSamlPhp|
+|         |                              |  - Signle signoff  | - SAML knowlege|
+|         |                              |  - Hooks into      |   recommended  |
+|         |                              |    SAML infra      |                |
 +---------+------------------------------+--------------------+----------------+
 
 How to configure authentication
@@ -903,6 +915,28 @@ define('SITECOOKIEPATH', '/');
 // http://php.net/manual/en/function.setcookie.php).
 define('COOKIE_DOMAIN', ".$domain_name");  
 define('COOKIEHASH', md5($domain_name));
+
+
+SAML Authentication
+-------------------
+
+Set in config.inc.php
+
+$auth['type'] = 'saml';
+$auth['session'] = 'saml';
+$auth['saml']['ssp_path'] = '/opt/simplesamlphp';
+$auth['saml']['authsource'] = 'default-sp';
+$auth['saml']['attr']['username'] = 'sAMAccountName';
+$auth['saml']['attr']['mail'] = 'mail';
+$auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+
+This scheme assumes that you've already configured SimpleSamlPhp,
+and that you have set up aliases in your webserver so that SimpleSamlPhp
+can handle incoming assertions.  Refer to the SimpleSamlPhp documentation
+for more information on how to do that.
+
+https://simplesamlphp.org/docs/stable/simplesamlphp-install
+https://simplesamlphp.org/docs/stable/simplesamlphp-sp
 
 
 
