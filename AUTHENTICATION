@@ -176,7 +176,7 @@ PHP authentication modules
 +---------+------------------------+-------------------+------------------------+
 |saml     |Users are validated     |  - Federated login|  - Must set up         |
 |         |against a SimpleSamlPhp |  - Single signon  |    SimpleSamlPhp       |
-|         |installation running on |  - Signle signoff |  - SAML knowlege       |
+|         |installation running on |  - Single signoff |  - SAML knowledge      |
 |         |the same server         |  - Hooks into     |    recommended         |
 |         |                        |    SAML infra     |                        |
 +---------+------------------------+-------------------+------------------------+
@@ -361,9 +361,9 @@ The others are left in for historical reasons:
 +---------+------------------------------+--------------------+----------------+
 |saml     |Use when using SAML           |  - Federated login | - Must set up  |
 |         |authentication.               |  - Single signon   |   SimpleSamlPhp|
-|         |                              |  - Signle signoff  | - SAML knowlege|
-|         |                              |  - Hooks into      |   recommended  |
-|         |                              |    SAML infra      |                |
+|         |                              |  - Single signoff  | - SAML         |
+|         |                              |  - Hooks into      |   knowledge    |
+|         |                              |    SAML infra      |   recommended  |
 +---------+------------------------------+--------------------+----------------+
 
 How to configure authentication
