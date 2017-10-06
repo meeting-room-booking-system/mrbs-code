@@ -37,13 +37,13 @@ $standard_query_string = "area=$area";
 if (DEBUG)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-2.2.4.js"></script>
+  <script type="text/javascript" src="jquery/jquery-3.2.1.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="jquery/jquery-3.2.1.min.js"></script>
   <?php
 }
 ?>
@@ -54,20 +54,20 @@ else
 <![endif]-->
 
 <?php
-// We need the migration script now that we are running jQuery 1.9+, or at least
+// We need the migration script now that we are running jQuery 3.0+, or at least
 // until we are confident that our JavaScript is not using any features that have
 // been removed.   The uncompressed version will output warnings about removed and
 // deprecated features to the console
 if (DEBUG)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-1.4.1.js"></script>
+  <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-1.4.1.min.js"></script>
+  <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.min.js"></script>
   <?php
 }
 
