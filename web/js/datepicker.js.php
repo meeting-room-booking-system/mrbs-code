@@ -117,7 +117,7 @@ init = function() {
       $('<input>').attr('type', 'hidden')
                   .attr('id', baseId + '_alt')
                   .attr('name', prefix + '_alt')
-                  .attr('disabled', 'disabled')
+                  .prop('disabled', true)
                   .val(dateData.year + '-' + dateData.month + '-' + dateData.day)
                   .appendTo(span);
       <?php

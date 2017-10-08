@@ -188,7 +188,7 @@ function onAllDayClick()
     onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
     onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
     startSelect.val(firstSlot);
-    startSelect.attr('disabled', 'disabled');
+    startSelect.prop('disabled', true);
     onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
     onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
     endSelect.val(lastSlot);
@@ -212,16 +212,16 @@ function onAllDayClick()
         endDatepicker.datepicker('setDate', date);
       }
     }
-    endSelect.attr('disabled', 'disabled');
+    endSelect.prop('disabled', true);
   }
   else  <?php // restore the old values and re-enable the inputs ?>
   {
     startSelect.val(onAllDayClick.oldStart);
     startDatepicker.datepicker('setDate', onAllDayClick.oldStartDatepicker);
-    startSelect.removeAttr('disabled');
+    startSelect.prop('disabled', false);
     endSelect.val(onAllDayClick.oldEnd);
     endDatepicker.datepicker('setDate', onAllDayClick.oldEndDatepicker);
-    endSelect.removeAttr('disabled');
+    endSelect.prop('disabled', false);
   }
 
   adjustSlotSelectors(); <?php // need to get the duration right ?>
@@ -451,7 +451,7 @@ function validate(form)
   // like clicking more than one time on submit button, we hide it as soon
   // it is clicked.
   ?>
-  form.find('input[type=submit]').attr('disabled', 'disabled');
+  form.find('input[type=submit]').prop('disabled', true);
   
   <?php
   // would be nice to also check date to not allow Feb 31, etc...
@@ -914,8 +914,8 @@ function adjustSlotSelectors()
     ?>
     if (oldArea !== currentArea)
     {
-      startSelect.attr('disabled', 'disabled');
-      endSelect.attr('disabled', 'disabled');
+      startSelect.prop('disabled', true);
+      endSelect.prop('disabled', true);
     }
   }
   <?php
@@ -1009,27 +1009,27 @@ function adjustSlotSelectors()
     var newState = (dateDifference < 0);
     if (newState || startKeepDisabled)
     {
-      startSelect.attr('disabled', 'disabled');
+      startSelect.prop('disabled', true);
     }
     else
     {
-      startSelect.removeAttr('disabled');
+      startSelect.prop('disabled', false);
     }
     if (newState || endKeepDisabled)
     {
-      endSelect.attr('disabled', 'disabled');
+      endSelect.prop('disabled', true);
     }
     else
     {
-      endSelect.removeAttr('disabled');
+      endSelect.prop('disabled', false);
     }
     if (newState || allDayKeepDisabled)
     {
-      allDay.attr('disabled', 'disabled');
+      allDay.prop('disabled', true);
     }
     else
     {
-      allDay.removeAttr('disabled');
+      allDay.prop('disabled', false);
     }
   }
 
@@ -1243,8 +1243,8 @@ init = function(args) {
       (endSelect.val() === endSelect.find('option').last().val()))
   {
     allDay.attr('checked', 'checked');
-    startSelect.attr('disabled', 'disabled');
-    endSelect.attr('disabled', 'disabled');
+    startSelect.prop('disabled', true);
+    endSelect.prop('disabled', true);
     onAllDayClick.oldStart = startSelect.val();
     onAllDayClick.oldEnd = endSelect.val();
     onAllDayClick.oldStartDatepicker = form.find('#start_datepicker').datepicker('getDate');

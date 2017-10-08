@@ -55,7 +55,7 @@ init = function(args) {
           
       if (output === '<?php echo SUMMARY ?>')
       {
-        icalButton.attr('disabled', 'disabled');
+        icalButton.prop('disabled', true);
         if (icalButton.is(':checked'))
         {
           formatButtons.filter('[value="' + <?php echo OUTPUT_HTML ?> + '"]').attr('checked', 'checked');
@@ -63,7 +63,7 @@ init = function(args) {
       }
       else
       {
-        icalButton.removeAttr('disabled');
+        icalButton.prop('disabled', false);
       }
     }).trigger('change');
   
