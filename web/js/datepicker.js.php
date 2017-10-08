@@ -139,6 +139,7 @@ init = function() {
                   .attr('type', 'text')
                   .attr('id', baseId)
                   .datepicker({altField: '#' + baseId + '_alt',
+                               altFormat: 'yy-mm-dd',
                                disabled: disabled,
                                yearRange: minYear + ':' + maxYear})
                   .datepicker('setDate', initialDate)
