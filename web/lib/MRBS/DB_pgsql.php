@@ -18,9 +18,9 @@ class DB_pgsql extends DB
   // 'table_schema' can be NULL
   static private function resolve_table($table)
   {
-    if (strpos($table, '.') === FALSE)
+    if (strpos($table, '.') === false)
     {
-      $table_schema = NULL;
+      $table_schema = null;
       $table_name = $table;
     }
     else
@@ -67,8 +67,8 @@ class DB_pgsql extends DB
   // This will not lock out SELECTs.
   // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
   // It will lock out other callers of this routine with the same name argument.
-  // It may timeout in 20 seconds and return 0, or may wait forever.
-  // It returns 1 when the lock has been acquired.
+  // It may timeout and return false, or may wait forever.
+  // It returns true when the lock has been acquired.
   // Caller must release the lock with mutex_unlock().
   // Caller must not have more than one mutex at any time.
   // Do not mix this with begin()/end() calls.
@@ -88,12 +88,11 @@ class DB_pgsql extends DB
     }
     catch (DBException $e)
     {
-      return 0;
+      return false;
     }
 
     $this->mutex_lock_name = $name;
-
-    return 1;
+    return true;
   }
 
 
@@ -106,7 +105,7 @@ class DB_pgsql extends DB
     {
       $this->commit();
     }
-    $this->mutex_lock_name = NULL;
+    $this->mutex_lock_name = null;
   }
 
   
@@ -178,7 +177,7 @@ class DB_pgsql extends DB
   //                display fields, without MRBS having to worry about the 
   //                differences between MySQL and PostgreSQL type names.
   //  'length'      the maximum length of the field in bytes, octets or characters
-  //                (Note:  this could be NULL)
+  //                (Note:  this could be null)
   //  'is_nullable' whether the column can be set to NULL (boolean)
   //
   //  NOTE: the type mapping is incomplete and just covers the types commonly
@@ -240,7 +239,7 @@ class DB_pgsql extends DB
         $length = $row['character_octet_length'];
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? TRUE : FALSE;
+      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? true : false;
     
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;
