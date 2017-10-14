@@ -35,8 +35,8 @@ class DB_mysql extends DB
   // This will not lock out SELECTs.
   // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
   // It will lock out other callers of this routine with the same name argument.
-  // It may timeout in 20 seconds and return 0, or may wait forever.
-  // It returns 1 when the lock has been acquired.
+  // It will timeout in 20 seconds and return false.
+  // It returns true when the lock has been acquired.
   // Caller must release the lock with mutex_unlock().
   // Caller must not have more than one mutex at any time.
   // Do not mix this with begin()/end() calls.
@@ -44,37 +44,57 @@ class DB_mysql extends DB
   // In MySQL, we avoid table locks, and use low-level locks instead.
   public function mutex_lock($name)
   {
+    $timeout = 20;  // seconds
+    
     // GET_LOCK returns 1 if the lock was obtained successfully, 0 if the attempt
     // timed out (for example, because another client has previously locked the name),
     // or NULL if an error occurred (such as running out of memory or the thread was
     // killed with mysqladmin kill)
     try
     {
-      $stmt = $this->query("SELECT GET_LOCK(?, 20)", array($name));
+      $sql_params = array(':str' => $name,
+                          ':timeout' => $timeout);
+      $stmt = $this->query("SELECT GET_LOCK(:str, :timeout)", $sql_params);
     }
     catch (DBException $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
-      return FALSE;
+      return false;
     }
 
     if (($stmt->count() != 1) || 
-        ($stmt->num_fields() != 1) ||
-        (($row = $stmt->row(0)) === NULL))
+        ($stmt->num_fields() != 1))
     {
-      return FALSE;
+      trigger_error("Unexpected number of rows and columns in result", E_USER_WARNING);
+      return false;
     }
-    else
-    {
-      $result = $row[0];
-    }
-  
-    if ($result == 1)
+    
+    $row = $stmt->row(0);
+    $result = $row[0];
+    
+    if ($result == '1')
     {
       $this->mutex_lock_name = $name;
+      return true;
     }
-
-    return $result;
+    
+    // Otherwise there's been some kind of failure to get a lock
+    switch ($result)
+    {
+      case '0':
+        $message = "GET_LOCK timed out after $timeout seconds";
+        break;
+      case null:
+        $message = "GET_LOCK: an error occurred (such as running out of memory " .
+                   "or the thread was killed with mysqladmin kill)";
+        break;
+      default:
+        $message = "GET_LOCK: unexpected result";
+        break;
+    }
+        
+    trigger_error($message, E_USER_WARNING);
+    return false;
   }
 
 
@@ -83,7 +103,7 @@ class DB_mysql extends DB
   {
     // Detect unlocking a mutex which is different from the stored mutex?
     $this->query1("SELECT RELEASE_LOCK(?)", array($name));
-    $this->mutex_lock_name = NULL;
+    $this->mutex_lock_name = null;
   }
 
 
@@ -113,7 +133,7 @@ class DB_mysql extends DB
   {
     $res = $this->query1("SHOW TABLES LIKE ?", array($table));
   
-    return ($res == -1) ? FALSE : TRUE;
+    return ($res == -1) ? false : true;
   }
 
 
@@ -188,10 +208,10 @@ class DB_mysql extends DB
       }
       else  // we're only dealing with a few simple cases at the moment
       {
-        $length = NULL;
+        $length = null;
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? TRUE : FALSE;
+      $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? true : false;
     
       $fields[$i]['name'] = $name;
       $fields[$i]['type'] = $type;

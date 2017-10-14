@@ -1679,14 +1679,14 @@ function mrbsAddArea($name, &$error)
   // Truncate the name field to the maximum length as a precaution.
   $name = utf8_substr($name, 0, $maxlength['area.area_name']);
   // Acquire a mutex to lock out others who might be editing the area
-  if (!db()->mutex_lock("$tbl_area"))
+  if (!db()->mutex_lock($tbl_area))
   {
     fatal_error(get_vocab("failed_to_acquire"));
   }
   // Check that the area name is unique
   if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE area_name=? LIMIT 1", array($name)) > 0)
   {
-    db()->mutex_unlock("$tbl_area");
+    db()->mutex_unlock($tbl_area);
     $error = "invalid_area_name";
     return FALSE;
   }
