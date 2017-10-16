@@ -484,7 +484,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 // It is possible to constrain some form values to be selected from a drop-
 // down select box, rather than allowing free form input.   This is done by
 // putting the permitted options in an array as part of the $select_options
-// two dimensional array.   The first index specifies the form field in the
+// two-dimensional array.   The first index specifies the form field in the
 // format tablename.columnname.    For example to restrict the name of a booking
 // to 'Physics', 'Chemistry' or 'Biology' uncomment the line below.
 
