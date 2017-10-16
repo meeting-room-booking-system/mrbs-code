@@ -100,7 +100,7 @@ class DB_mysql extends DB
                    "or the thread was killed with mysqladmin kill)";
         break;
       default:
-        $message = "GET_LOCK: unexpected result";
+        $message = "GET_LOCK: unexpected result '$result'";
         break;
     }
         
@@ -166,7 +166,7 @@ class DB_mysql extends DB
         $message = "RELEASE_LOCK: the lock '$name' does not exist";
         break;
       default:
-        $message = "RELEASE_LOCK: unexpected result";
+        $message = "RELEASE_LOCK: unexpected result '$result'";
         break;
     }
         
