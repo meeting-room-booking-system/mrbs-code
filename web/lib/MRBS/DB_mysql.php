@@ -155,7 +155,7 @@ class DB_mysql extends DB
       return true;
     }
     
-    // Otherwise there's been some kind of failure to release a lock.    These should in theory
+    // Otherwise there's been some kind of failure to release a lock.  These should in theory
     // have been caught by the sanity checking above, but just in case ...
     switch ($result)
     {
