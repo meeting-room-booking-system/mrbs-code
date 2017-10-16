@@ -102,8 +102,49 @@ class DB_mysql extends DB
   public function mutex_unlock($name)
   {
     // Detect unlocking a mutex which is different from the stored mutex?
-    $this->query1("SELECT RELEASE_LOCK(?)", array($name));
-    $this->mutex_lock_name = null;
+    
+    try
+    {
+      $stmt = $this->query("SELECT RELEASE_LOCK(?)", array($name));
+    }
+    catch (DBException $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      return false;
+    }
+
+    if (($stmt->count() != 1) || 
+        ($stmt->num_fields() != 1))
+    {
+      trigger_error("Unexpected number of rows and columns in result", E_USER_WARNING);
+      return false;
+    }
+    
+    $row = $stmt->row(0);
+    $result = $row[0];
+    
+    if ($result == '1')
+    {
+      $this->mutex_lock_name = null;
+      return true;
+    }
+    
+    // Otherwise there's been some kind of failure to release a lock
+    switch ($result)
+    {
+      case '0':
+        $message = "RELEASE_LOCK: the lock '$name' was not established by this thread and so could not be released";
+        break;
+      case null:
+        $message = "RELEASE_LOCK: the lock '$name' does not exist";
+        break;
+      default:
+        $message = "RELEASE_LOCK: unexpected result";
+        break;
+    }
+        
+    trigger_error($message, E_USER_WARNING);
+    return false;
   }
 
 
