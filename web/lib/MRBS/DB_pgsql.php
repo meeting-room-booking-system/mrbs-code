@@ -99,13 +99,16 @@ class DB_pgsql extends DB
   // Release a mutual-exclusion lock on the named table. See mutex_lock().
   // In PostgreSQL, all locks are released by closing the transaction; there
   // is no other way.
+  // Returns true if the lock is released successfully, otherwise false
   public function mutex_unlock($name)
   {
     if ($this->dbh->inTransaction())
     {
       $this->commit();
     }
+    
     $this->mutex_lock_name = null;
+    return true;
   }
 
   
