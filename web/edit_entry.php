@@ -298,7 +298,7 @@ function create_field_entry_start_date($disabled=FALSE)
   echo "<div id=\"div_start_date\">\n";
   echo "<label>" . get_vocab("start") . "</label>\n";
   echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
-  gendateselector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
+  genDateSelector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
 
   // Generate the live slot selector and all day checkbox
@@ -326,7 +326,7 @@ function create_field_entry_end_date($disabled=FALSE)
   echo "<label>" . get_vocab("end") . "</label>\n";
   // Don't show the end date selector if multiday is not allowed
   echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
-  gendateselector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
+  genDateSelector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
   echo "</div>\n";
   
   // Generate the live slot selector
