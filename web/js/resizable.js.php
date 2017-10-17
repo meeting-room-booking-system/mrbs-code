@@ -930,8 +930,8 @@ init = function(args) {
                   $('<div class="outline"><\/div>')
                       .width(divClone.outerWidth() - 2)
                       .height(divClone.outerHeight() - 2)
-                      .offset(divClone.offsetRound())
-                      .appendTo($('div.resizing'));
+                      .appendTo($('div.resizing'))
+                      .offset(divClone.offsetRound());
                   <?php
                   // Build the map of booked cells, excluding this cell (because we're
                   // allowed to be in our own cell.   (We select just the visible cells
