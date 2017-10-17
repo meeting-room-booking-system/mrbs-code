@@ -830,8 +830,8 @@ init = function(args) {
               $(this).mousedown(function(event) {
                   event.preventDefault();
                   downHandler(event);
-                  $(document).bind('mousemove', moveHandler);
-                  $(document).bind('mouseup', upHandler);
+                  $(document).on('mousemove', moveHandler);
+                  $(document).on('mouseup', upHandler);
                 });
             });
             

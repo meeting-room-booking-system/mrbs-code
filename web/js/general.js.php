@@ -142,7 +142,7 @@ init = function(args) {
         }
       };
       
-    $(document).bind('keydown mousemove mousedown', function() {
+    $(document).on('keydown mousemove mousedown', function() {
         recordActivity();
       });
     <?php
