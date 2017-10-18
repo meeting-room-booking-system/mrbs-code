@@ -1518,7 +1518,7 @@ function generate_datalist($params)
   
   $html .= "<input id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
   $html .= " list=\"" . $params['id'] . "_options\"";
-  $html .= " value=\"" . $params['value'] . "\"";
+  $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
   $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
   $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
   $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
