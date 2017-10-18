@@ -830,8 +830,8 @@ init = function(args) {
               $(this).mousedown(function(event) {
                   event.preventDefault();
                   downHandler(event);
-                  $(document).bind('mousemove', moveHandler);
-                  $(document).bind('mouseup', upHandler);
+                  $(document).on('mousemove', moveHandler);
+                  $(document).on('mouseup', upHandler);
                 });
             });
             
@@ -930,8 +930,8 @@ init = function(args) {
                   $('<div class="outline"><\/div>')
                       .width(divClone.outerWidth() - 2)
                       .height(divClone.outerHeight() - 2)
-                      .offset(divClone.offsetRound())
-                      .appendTo($('div.resizing'));
+                      .appendTo($('div.resizing'))
+                      .offset(divClone.offsetRound());
                   <?php
                   // Build the map of booked cells, excluding this cell (because we're
                   // allowed to be in our own cell.   (We select just the visible cells

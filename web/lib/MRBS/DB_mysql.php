@@ -42,9 +42,20 @@ class DB_mysql extends DB
   // Do not mix this with begin()/end() calls.
   //
   // In MySQL, we avoid table locks, and use low-level locks instead.
+  //
+  // Note that MySQL 5.7.5 allows multiple locks, but we only allow one in case the
+  // MySQL version is earlier than 5.7.5.
   public function mutex_lock($name)
   {
     $timeout = 20;  // seconds
+    
+    if (isset($this->mutex_lock_name))
+    {
+      $message = "Trying to set lock '$name', but lock '" . $this->mutex_lock_name . 
+                 "' already exists.  Only one lock is allowed at any one time.";
+      trigger_error($message, E_USER_WARNING);
+      return false;
+    }
     
     // GET_LOCK returns 1 if the lock was obtained successfully, 0 if the attempt
     // timed out (for example, because another client has previously locked the name),
@@ -89,7 +100,7 @@ class DB_mysql extends DB
                    "or the thread was killed with mysqladmin kill)";
         break;
       default:
-        $message = "GET_LOCK: unexpected result";
+        $message = "GET_LOCK: unexpected result '$result'";
         break;
     }
         
@@ -98,12 +109,69 @@ class DB_mysql extends DB
   }
 
 
-  // Release a mutual-exclusion lock on the named table. See mutex_unlock.
+  // Release a mutual-exclusion lock on the named table.
+  // Returns true if the lock is released successfully, otherwise false
   public function mutex_unlock($name)
   {
-    // Detect unlocking a mutex which is different from the stored mutex?
-    $this->query1("SELECT RELEASE_LOCK(?)", array($name));
-    $this->mutex_lock_name = null;
+    // First do some sanity checking before executing the SQL query
+    if (!isset($this->mutex_lock_name))
+    {
+      trigger_error("Trying to release a lock ('$name') which hasn't been set", E_USER_WARNING);
+      return false;
+    }
+    
+    if ($this->mutex_lock_name != $name)
+    {
+      $message = "Trying to release lock '$name' when the lock that has been set is '" . 
+                 $this->mutex_lock_name . "'";
+      trigger_error($message, E_USER_WARNING);
+      return false;
+    }
+    
+    // If this request looks OK, then execute the SQL query
+    try
+    {
+      $stmt = $this->query("SELECT RELEASE_LOCK(?)", array($name));
+    }
+    catch (DBException $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      return false;
+    }
+
+    if (($stmt->count() != 1) || 
+        ($stmt->num_fields() != 1))
+    {
+      trigger_error("Unexpected number of rows and columns in result", E_USER_WARNING);
+      return false;
+    }
+    
+    $row = $stmt->row(0);
+    $result = $row[0];
+    
+    if ($result == '1')
+    {
+      $this->mutex_lock_name = null;
+      return true;
+    }
+    
+    // Otherwise there's been some kind of failure to release a lock.  These should in theory
+    // have been caught by the sanity checking above, but just in case ...
+    switch ($result)
+    {
+      case '0':
+        $message = "RELEASE_LOCK: the lock '$name' was not established by this thread and so could not be released";
+        break;
+      case null:
+        $message = "RELEASE_LOCK: the lock '$name' does not exist";
+        break;
+      default:
+        $message = "RELEASE_LOCK: unexpected result '$result'";
+        break;
+    }
+        
+    trigger_error($message, E_USER_WARNING);
+    return false;
   }
 
 

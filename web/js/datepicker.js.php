@@ -11,26 +11,6 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// Set the default values for datepicker
-?>
-$(function() {
-
-  $.datepicker.setDefaults({
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    duration: 'fast',
-    showWeek: <?php echo ($view_week_number) ? 'true' : 'false' ?>,
-    firstDay: <?php echo $weekstarts ?>,
-    altFormat: 'yy-mm-dd',
-    onSelect: function(dateText, inst) {datepickerSelect(inst);}
-  });
-  
-});
-
-
-<?php
 // Populate the three sub-fields associated with the alt input altID
 ?>
 function populateAltComponents(altId)
@@ -87,6 +67,18 @@ var oldInitDatepicker = init;
 init = function() {
   oldInitDatepicker.apply(this);
 
+  $.datepicker.setDefaults({
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      duration: 'fast',
+      showWeek: <?php echo ($view_week_number) ? 'true' : 'false' ?>,
+      firstDay: <?php echo $weekstarts ?>,
+      altFormat: 'yy-mm-dd',
+      onSelect: function(dateText, inst) {datepickerSelect(inst);}
+    });
+    
   <?php
   // Overwrite the date selectors with a datepicker
   ?>
@@ -139,7 +131,6 @@ init = function() {
                   .attr('type', 'text')
                   .attr('id', baseId)
                   .datepicker({altField: '#' + baseId + '_alt',
-                               altFormat: 'yy-mm-dd',
                                disabled: disabled,
                                yearRange: minYear + ':' + maxYear})
                   .datepicker('setDate', initialDate)

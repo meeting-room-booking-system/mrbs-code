@@ -282,7 +282,7 @@ function validationMessages()
           // 'input' event for checkboxes or select elements because it is not triggered
           // on them.
           ?>
-          $(field).bind('validate', function(e) {
+          $(field).on('validate', function(e) {
             <?php
             // need to clear the custom error message otherwise the browser will
             // assume the field is invalid
@@ -293,10 +293,10 @@ function validationMessages()
               e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
             }
           });
-          $(field).filter('select, [type="checkbox"]').bind('change', function() {
+          $(field).filter('select, [type="checkbox"]').on('change', function() {
             $(this).trigger('validate');
           });
-          $(field).not('select, [type="checkbox"]').bind('input', function() {
+          $(field).not('select, [type="checkbox"]').on('input', function() {
             $(this).trigger('validate');
           });
           <?php
@@ -304,7 +304,7 @@ function validationMessages()
           // otherwise checkConflicts() won't do anything (because we don't check
           // for conflicts on a submit)
           ?>
-          $(field).bind('invalid', function() {
+          $(field).on('invalid', function() {
             $(this).closest('form').removeData('submit');
           });
           <?php
@@ -1272,7 +1272,7 @@ init = function(args) {
     $(this).closest('form').data('submit', trigger);
   });
 
-  form.bind('submit', function() {
+  form.on('submit', function() {
       if ($(this).data('submit') === 'save_button')
       {
         <?php // Only validate the form if the Save button was pressed ?>
@@ -1384,7 +1384,7 @@ init = function(args) {
   // Actions to take when the repeat end datepicker is updated (it doesn't fire
   // a change event so won't be caught by the general handler above)
   ?>
-  $('#rep_end_datepicker').bind('datePickerUpdated', function() {
+  $('#rep_end_datepicker').on('datePickerUpdated', function() {
     checkConflicts();
   });
   
@@ -1392,7 +1392,7 @@ init = function(args) {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_datepicker, #end_datepicker').bind('datePickerUpdated', function() {
+  $('#start_datepicker, #end_datepicker').on('datePickerUpdated', function() {
     
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
