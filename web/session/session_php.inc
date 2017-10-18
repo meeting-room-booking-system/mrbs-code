@@ -107,6 +107,9 @@ if (isset($action) && ($action == "SetName"))
       print_login_form(this_page(), $target_url, $returl);
       exit();
     }
+    // Successful login.  As a defence against session fixation, regenerate
+    // the session id and delete the old session.
+    session_regenerate_id(true);
     $_SESSION["UserName"] = $valid_username;
   }
   // preserve the original $HTTP_REFERER by sending it as a GET parameter
