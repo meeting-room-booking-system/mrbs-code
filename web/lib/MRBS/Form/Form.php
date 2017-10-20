@@ -39,7 +39,7 @@ class Form extends Element
       return bin2hex(openssl_random_pseudo_bytes($length));
     }
     
-    return md5(uniqid(rand(), TRUE));
+    return md5(uniqid(rand(), true));
   }
   
   
