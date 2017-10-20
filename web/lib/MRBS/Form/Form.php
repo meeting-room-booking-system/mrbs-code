@@ -4,6 +4,7 @@ namespace MRBS\Form;
 
 class Form extends Element
 {
+  private static $token = null;
   
   public function __construct()
   {
@@ -14,11 +15,22 @@ class Form extends Element
   
   private function addCSRFToken()
   {
-    $token = self::generateToken();
-    self::storeToken($token);
+    $token = self::getToken();
     $this->addElement(new ElementHidden('csrf_token', $token));
   }
   
+
+  // Get a CSRF token
+  private static function getToken()
+  {
+    if (!isset(self::$token))
+    {
+      self::$token = self::generateToken();
+      self::storeToken(self::$token);
+    }
+    
+    return self::$token;
+  }
   
   private static function generateToken()
   {
