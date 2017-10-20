@@ -68,7 +68,7 @@ abstract class Element
     
     if ($this->self_closing)
     {
-      $html .= ">\n";
+      $html .= "\n";
     }
     else
     {
