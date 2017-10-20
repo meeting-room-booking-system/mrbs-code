@@ -1,7 +1,48 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementHidden;
+use MRBS\Form\FieldSubmit;
+use MRBS\Form\FieldText;
+
 require "defaultincludes.inc";
+
+function generate_new_area_form()
+{
+  global $maxlength;
+  
+  $form = new Form();
+  
+  $attributes = array('id'     => 'add_area',
+                      'class'  => 'form_admin',
+                      'action' => 'add.php',
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+  
+  $fieldset = new ElementFieldset(get_vocab('addarea'));
+  $fieldset->addElement(new ElementHidden('type', 'area'));
+  
+  // The name field
+  $params = array('label'     => get_vocab('name'),
+                  'id'        => 'area_name',
+                  'name'      => 'name',
+                  'maxlength' => $maxlength['area.area_name']);               
+  $fieldset->addElement(new FieldText($params));
+  
+  // The submit button
+  $params = array('value' => get_vocab('addarea'),
+                  'class' => 'submit');
+  $submit = new FieldSubmit($params);
+  $fieldset-> addElement($submit);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
+}
+
 
 // Get non-standard form variables
 $area_name = get_form_var('area_name', 'string');
@@ -159,25 +200,7 @@ else
 if ($is_admin)
 {
   // New area form
-  ?>
-  <form id="add_area" class="form_admin" action="add.php" method="post">
-    <fieldset>
-    <legend><?php echo get_vocab("addarea") ?></legend>
-        
-      <input type="hidden" name="type" value="area">
-
-      <div>
-        <label for="area_name"><?php echo get_vocab("name") ?></label>
-        <input type="text" id="area_name" name="name" maxlength="<?php echo $maxlength['area.area_name'] ?>">
-      </div>
-          
-      <div>
-        <input type="submit" class="submit" value="<?php echo get_vocab("addarea") ?>">
-      </div>
-
-    </fieldset>
-  </form>
-  <?php
+  generate_new_area_form();
 }
 echo "</div>";  // area_form
 
