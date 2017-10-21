@@ -33,7 +33,7 @@ if (isset($action) && ($action == "SetName"))
   /* First make sure the password is valid */
   if ($username == "")
   {
-    $mainframe->logout();
+    logoff_user();
   }
   else
   {
@@ -145,3 +145,8 @@ function print_logon_box()
   print_userlist_link();
 }
 
+
+function logoff_user()
+{
+  $mainframe->logout();
+}

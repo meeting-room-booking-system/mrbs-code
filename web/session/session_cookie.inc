@@ -36,18 +36,10 @@ if (!isset($returl))
   $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
 }
 
-if (isset($cookie_path_override))
-{
-  $cookie_path = $cookie_path_override;
-}
-else
-{
-  $cookie_path = $PHP_SELF;
-  // Strip off everything after the last '/' in $PHP_SELF
-  $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
-}
+$cookie_path = get_cookie_path();
 
-/* Delete old-style cookies */
+
+// Delete old-style cookies
 if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
 {
   setcookie("UserName", '', time()-42000, $cookie_path);
@@ -67,8 +59,7 @@ if (isset($action) && ($action == "SetName"))
   /* First make sure the password is valid */
   if ($username == "") 
   {
-    // Delete cookie
-    setcookie("SessionToken", '', time()-42000, $cookie_path);
+    logoff_user();
   }
   else
   {
@@ -284,3 +275,29 @@ function print_logon_box()
   print_userlist_link();
 }
 
+
+function get_cookie_path()
+{
+  global $cookie_path_override, $PHP_SELF;
+  
+  if (isset($cookie_path_override))
+  {
+    $cookie_path = $cookie_path_override;
+  }
+  else
+  {
+    $cookie_path = $PHP_SELF;
+    // Strip off everything after the last '/' in $PHP_SELF
+    $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
+  }
+  
+  return $cookie_path;
+}
+
+
+function logoff_user()
+{
+  // Delete cookie
+  $cookie_path = get_cookie_path();
+  setcookie("SessionToken", '', time()-42000, $cookie_path);
+}

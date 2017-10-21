@@ -39,7 +39,7 @@ if (isset($action) && ($action == "SetName"))
 {
   if ($username == "")
   {
-    wp_logout();
+    logoff_user();
   }
   else
   {
@@ -151,3 +151,8 @@ function print_logon_box()
   print_userlist_link();
 }
 
+
+function logoff_user()
+{
+  wp_logout();
+}

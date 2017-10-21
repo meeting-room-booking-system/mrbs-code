@@ -24,8 +24,10 @@ class Form extends Element
     if (!self::compareTokens($token, $stored_token))
     {
       trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
-      // TO DO:  Need to log the user out here as an additional security measure,
-      // but we don't yet have a logout function
+      if (function_exists("\\MRBS\\logoff_user"))
+      {
+        \MRBS\logoff_user();
+      }
       \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }

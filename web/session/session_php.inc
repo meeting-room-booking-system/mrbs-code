@@ -93,10 +93,7 @@ if (isset($action) && ($action == "SetName"))
   /* First make sure the password is valid */
   if ($username == "")
   {
-
-    // Unset the session variables
-    session_unset();
-    session_destroy();
+    logoff_user();
   }
   else
   {
@@ -216,5 +213,13 @@ function print_logon_box()
   } 
   
   print_userlist_link();
+}
+
+
+function logoff_user()
+{
+  // Unset the session variables
+  session_unset();
+  session_destroy();
 }
 
