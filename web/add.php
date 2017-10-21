@@ -1,8 +1,18 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Check the CSRF token
+Form::checkToken();
+
 
 // Get non-standard form variables
 $name = get_form_var('name', 'string');
@@ -11,11 +21,7 @@ $capacity = get_form_var('capacity', 'int');
 $room_admin_email = get_form_var('room_admin_email', 'string');
 $type = get_form_var('type', 'string');
 
-// Check the user is authorised for this page
-checkAuthorised();
-
 // This file is for adding new areas/rooms
-
 $error = '';
 
 // First of all check that we've got an area or room name

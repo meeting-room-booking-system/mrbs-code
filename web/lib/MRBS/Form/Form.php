@@ -5,6 +5,7 @@ namespace MRBS\Form;
 class Form extends Element
 {
   private static $token = null;
+  private static $token_name = 'csrf_token';  // As of PHP 7.1 this would be a private const
   
   public function __construct()
   {
@@ -13,10 +14,27 @@ class Form extends Element
   }
   
   
+  public static function checkToken()
+  {
+    global $REMOTE_ADDR;
+    
+    $token = \MRBS\get_form_var(self::$token_name, 'string');
+    $stored_token = self::getStoredToken();
+    
+    if (!self::compareTokens($token, $stored_token))
+    {
+      trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+      // TO DO:  Need to log the user out here as an additional security measure,
+      // but we don't yet have a logout function
+      \MRBS\fatal_error("Your session has expired.");
+    }
+  }
+  
+  
   private function addCSRFToken()
   {
     $token = self::getToken();
-    $this->addElement(new ElementHidden('csrf_token', $token));
+    $this->addElement(new ElementHidden(self::$token_name, $token));
   }
   
 
@@ -31,6 +49,7 @@ class Form extends Element
     
     return self::$token;
   }
+  
   
   private static function generateToken()
   {
@@ -55,12 +74,38 @@ class Form extends Element
   }
   
   
+  // Compare two tokens in a timing attack safe manner.
+  // Returns true if they are equal, otherwise false.
+  private static function compareTokens($token1, $token2)
+  {
+    if (function_exists('hash_equals'))
+    {
+      return hash_equals($token1, $token2);
+    }
+    
+    // Could do fancier things here to give a timing attack safe comparison,
+    // For example https://github.com/indigophp/hash-compat
+    return ($token1 === $token2);
+  }
+  
+  
   private static function storeToken($token)
   {
     if ((session_id() !== '') || session_start())
     {
-      $_SESSION['csrf_token'] = $token;
+      $_SESSION[self::$token_name] = $token;
       return;
+    }
+    
+    throw new \Exception("Need to do something with cookies here!");
+  }
+  
+  
+  private static function getStoredToken()
+  {
+    if ((session_id() !== '') || session_start())
+    {
+      return $_SESSION[self::$token_name];
     }
     
     throw new \Exception("Need to do something with cookies here!");
