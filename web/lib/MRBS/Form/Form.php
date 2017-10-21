@@ -26,7 +26,7 @@ class Form extends Element
       trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
       // TO DO:  Need to log the user out here as an additional security measure,
       // but we don't yet have a logout function
-      \MRBS\fatal_error("Your session has expired.");
+      \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }
   
