@@ -33,16 +33,7 @@ if (!isset($returl))
   $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
 }
   
-if (isset($cookie_path_override))
-{
-  $cookie_path = $cookie_path_override;
-}
-else
-{
-  $cookie_path = $PHP_SELF;
-  // Strip off everything after the last '/' in $PHP_SELF
-  $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
-}
+$cookie_path = get_cookie_path();
 
 if (!isset($auth["session_php"]["session_expire_time"]))
 {
