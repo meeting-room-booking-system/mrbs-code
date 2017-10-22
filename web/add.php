@@ -7,12 +7,11 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
-// Check the user is authorised for this page
-checkAuthorised();
-
 // Check the CSRF token
 Form::checkToken();
 
+// Check the user is authorised for this page
+checkAuthorised();
 
 // Get non-standard form variables
 $name = get_form_var('name', 'string');
