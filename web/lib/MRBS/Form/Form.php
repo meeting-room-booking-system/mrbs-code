@@ -18,7 +18,7 @@ class Form extends Element
   {
     global $REMOTE_ADDR;
     
-    $token = \MRBS\get_form_var(self::$token_name, 'string');
+    $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
     $stored_token = self::getStoredToken();
     
     if (!self::compareTokens($token, $stored_token))
