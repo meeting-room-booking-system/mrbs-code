@@ -4,6 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementHidden;
+use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSubmit;
 use MRBS\Form\FieldText;
 
@@ -22,21 +23,28 @@ function generate_new_area_form()
                       
   $form->setAttributes($attributes);
   
-  $fieldset = new ElementFieldset(get_vocab('addarea'));
-  $fieldset->addElement(new ElementHidden('type', 'area'));
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('addarea'));
+  
+  // Hidden field for the type of operation
+  $element = new ElementHidden();
+  $element->setAttributes(array('name'  => 'type',
+                                'value' => 'area'));
+  $fieldset->addElement($element);
   
   // The name field
-  $params = array('label'     => get_vocab('name'),
-                  'id'        => 'area_name',
-                  'name'      => 'name',
-                  'maxlength' => $maxlength['area.area_name']);               
-  $fieldset->addElement(new FieldText($params));
+  $field = new FieldText();
+  $field->setLabel(get_vocab('name'));
+  $field->setFieldAttributes(array('id'        => 'area_name',
+                                   'name'      => 'name',
+                                   'maxlength' => $maxlength['area.area_name']));               
+  $fieldset->addElement($field);
   
   // The submit button
-  $params = array('value' => get_vocab('addarea'),
-                  'class' => 'submit');
-  $submit = new FieldSubmit($params);
-  $fieldset-> addElement($submit);
+  $field = new FieldSubmit();
+  $field->setFieldAttributes(array('value' => get_vocab('addarea'),
+                                   'class' => 'submit'));
+  $fieldset-> addElement($field);
   
   $form->addElement($fieldset);
   
@@ -105,19 +113,82 @@ $sql = "SELECT id, area_name, disabled
           FROM $tbl_area
       ORDER BY disabled, sort_key";
 $res = db()->query($sql);
-$areas_defined = $res && ($res->count() > 0);
+
+$enabled_areas = array();
+$disabled_areas = array();
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+{
+  if ($row['disabled'])
+  {
+    $disabled_areas[$row['id']] = $row['area_name'];
+  }
+  else
+  {
+    $enabled_areas[$row['id']] = $row['area_name'];
+  }
+}
+
+$areas_defined = !empty($enabled_areas) || !empty($disabled_areas);
+
+$sql = "SELECT id, area_name, disabled
+          FROM $tbl_area
+      ORDER BY disabled, sort_key";
+$res2 = db()->query($sql);
+$areas_defined = $res2 && ($res2->count() > 0);
 if (!$areas_defined)
 {
   echo "<p>" . get_vocab("noareas") . "</p>\n";
 }
 else
 {
+  if (!$is_admin && empty($enabled_areas))
+  {
+    echo "<p>" . get_vocab("noareas_enabled") . "</p>\n";
+  }
+  else
+  {
+    $form = new Form();
+    
+    $attributes = array('id'     => 'areaChangeForm',
+                        'action' => this_page(),
+                        'method' => 'post');
+                        
+    $form->setAttributes($attributes);
+    
+    $fieldset = new ElementFieldset();
+    $fieldset->addLegend('');
+    
+    // The area select
+    if ($is_admin)
+    {
+      $options = array(get_vocab("enabled") => $enabled_areas,
+                       get_vocab("disabled") => $disabled_areas);
+    }
+    else
+    {
+      $options = $enabled_areas;
+    }
+    
+    $field = new FieldSelect();
+    $field->setLabel(get_vocab('area'));
+    $field->setFieldAttributes(array('id'       => 'area_select',
+                                     'name'     => 'area',
+                                     'class'    => 'room_area_select',
+                                     'onchange' => 'this.form.submit()'));
+    $fieldset->addElement($field);
+    
+    $form->addElement($fieldset);
+    // TO DO:  ADD IN OPTIONS
+    // $form->render();
+    
+    // If there are some areas displayable, then show the area form
+    
   // Build an array with the area info and also see if there are going
   // to be any areas to display (in other words rooms if you are not an
   // admin whether any areas are enabled)
   $areas = array();
   $n_displayable_areas = 0;
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  for ($i = 0; ($row = $res2->row_keyed($i)); $i++)
   {
     $areas[] = $row;
     if ($is_admin || !$row['disabled'])
@@ -125,20 +196,14 @@ else
       $n_displayable_areas++;
     }
   }
-
-  if ($n_displayable_areas == 0)
-  {
-    echo "<p>" . get_vocab("noareas_enabled") . "</p>\n";
-  }
-  else
-  {
-    // If there are some areas displayable, then show the area form
+  
+  
     echo "<form id=\"areaChangeForm\" method=\"get\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
     echo "<fieldset>\n";
     echo "<legend></legend>\n";
   
     // The area selector
-    echo "<label id=\"area_label\" for=\"area_select\">" . get_vocab("area") . "</label>\n";
+    echo "<label for=\"area_select\">" . get_vocab("area") . "</label>\n";
     echo "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
     if ($is_admin)
     {
@@ -439,6 +504,7 @@ if ($is_admin || ($n_displayable_areas > 0))
         </div>
        
         <div>
+          <label></label>
           <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
         </div>
         

@@ -2,12 +2,12 @@
 
 namespace MRBS\Form;
 
-class ElementLabel extends Element
+class ElementSelect extends Element
 {
 
   public function __construct()
   {
-    parent::__construct('label');
+    parent::__construct('select');
   }
  
 }

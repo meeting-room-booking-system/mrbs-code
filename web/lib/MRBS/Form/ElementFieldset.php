@@ -6,13 +6,18 @@ namespace MRBS\Form;
 class ElementFieldset extends Element
 {
   
-  public function __construct($legend=null)
+  public function __construct()
   {
     parent::__construct('fieldset');
-    if (isset($legend))
-    {
-      $this->addElement(new ElementLegend($legend));
-    }
+  }
+  
+  
+  public function addLegend($text)
+  {
+    $legend = new ElementLegend();
+    $legend->setText($text);
+    $this->addElement($legend);
+    return $this;
   }
   
 }

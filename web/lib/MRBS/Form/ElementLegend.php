@@ -5,10 +5,9 @@ namespace MRBS\Form;
 class ElementLegend extends Element
 {
 
-  public function __construct($legend)
+  public function __construct()
   {
     parent::__construct('legend');
-    $this->text = $legend;
   }
  
 }

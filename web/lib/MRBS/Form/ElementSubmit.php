@@ -7,7 +7,8 @@ class ElementSubmit extends ElementInput
 
   public function __construct()
   {
-    parent::__construct('submit');
+    parent::__construct();
+    $this->setAttribute('type', 'submit');
   }
  
 }

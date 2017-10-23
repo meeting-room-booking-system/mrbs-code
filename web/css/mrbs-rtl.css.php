@@ -26,7 +26,7 @@ legend {
 /* ------------ ADMIN.PHP ---------------------------*/
 
 form.form_admin, .form_admin div, div#custom_html,
-#area_form form, #area_form label#area_label,
+#area_form form, #area_form label[for="area_select"],
 #areaChangeForm select, #areaChangeForm input, #areaChangeForm input.button,
 div.header_columns, div.body_columns {
   float: right;

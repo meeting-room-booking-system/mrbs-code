@@ -2,25 +2,30 @@
 
 namespace MRBS\Form;
 
-abstract class Element
+class Element
 {
-  protected $tag;
-  protected $self_closing;
-  protected $attributes = array();
-  protected $text = null;
-  protected $elements = array();
+  private $tag = null;
+  private $self_closing;
+  private $attributes = array();
+  private $text = null;
+  private $elements = array();
   
   
   public function __construct($tag, $self_closing=false)
   {
     $this->tag = $tag;
-    $this->self_closing = false;
+    $this->self_closing = $self_closing;
   }
   
+  public function setText($text)
+  {
+    $this->text = $text;
+    return $this;
+  }
   
   public function setAttribute($name, $value=null)
   {
-    $this->attributes[] = array('name' => $name, 'value' => $value);
+    $this->attributes[$name] = $value;
     return $this;
   }
   
@@ -36,6 +41,19 @@ abstract class Element
   }
   
 
+  public function getElements()
+  {
+    return $this->elements;
+  }
+  
+  
+  public function setElements(array $elements)
+  {
+    $this->elements = $elements;
+    return $this;
+  }
+  
+  
   public function addElement(Element $element)
   {
     $this->elements[] = $element;
@@ -56,12 +74,12 @@ abstract class Element
     
     $html .= "<" . $this->tag;
     
-    foreach ($this->attributes as $attribute)
+    foreach ($this->attributes as $key => $value)
     {
-      $html .= " " . $attribute['name'];
-      if (isset($attribute['value']))
+      $html .= " $key";
+      if (isset($value))
       {
-        $html .= '="' . htmlspecialchars($attribute['value']) . '"';
+        $html .= '="' . htmlspecialchars($value) . '"';
       }
     }
     $html .= ">";
@@ -79,7 +97,7 @@ abstract class Element
       {
         $html .= htmlspecialchars($this->text);
       }
-      else
+      elseif (!empty($this->elements))
       {
         $html .= "\n";
         foreach ($this->elements as $element)

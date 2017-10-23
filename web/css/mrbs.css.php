@@ -69,10 +69,15 @@ fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
 fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
+
 label::after,
 .trailer_label a::after,
 .list td:first-child::after {
   content: ':';
+}
+
+label:empty::after {
+  visibility: hidden;
 }
 
 [lang="fr"] label::after,
@@ -209,22 +214,33 @@ form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
     display: block; float: left; clear: left; 
     width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
 }
+
 .form_admin input {
     display: block; float: left; clear: right;
     width: <?php echo $admin_form_input_width ?>em;
     margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
     font-family: <?php echo $standard_font_family ?>; font-size: small;
 }
+
 .form_admin input.submit {
-    width: auto; margin-top: 1.2em; margin-left: <?php echo number_format(($admin_form_gap + $admin_form_label_width), 1, '.', '')?>em
+    width: auto;
+    margin-top: 1.2em; 
 }
+
 .admin h2 {clear: left}
 div#area_form, div#room_form {float: left; padding: 0 0 2em 0}
 div#area_form {width: auto}
 div#room_form {width: 100%}
 div#custom_html {float: left; padding: 0 0 3em 1em}
 #area_form form {float: left; margin-right: 1em}
-#area_form label#area_label {display: block; float: left; font-weight: bold; margin-right: <?php echo $admin_form_gap ?>em}
+
+#area_form label[for="area_select"] {
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin-right: <?php echo $admin_form_gap ?>em;
+  }
+  
 #roomChangeForm select, #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
 #roomChangeForm input, #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
 #roomChangeForm input.button, #areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}

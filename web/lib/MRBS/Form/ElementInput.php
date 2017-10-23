@@ -5,11 +5,10 @@ namespace MRBS\Form;
 abstract class ElementInput extends Element
 {
   
-  public function __construct($type='text', $self_closing=true)
+  public function __construct()
   {
-    parent::__construct('input');
-    $this->self_closing = $self_closing;
-    $this->setAttribute('type', $type);
+    parent::__construct('input', $self_closing=true);
+    $this->setAttribute('type', 'text');
   }
  
 }
