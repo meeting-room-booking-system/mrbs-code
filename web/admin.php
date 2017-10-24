@@ -194,6 +194,7 @@ if (!empty($error))
 
 // TOP SECTION:  THE FORM FOR SELECTING AN AREA
 echo "<div id=\"area_form\">\n";
+
 $sql = "SELECT id, area_name, disabled
           FROM $tbl_area
       ORDER BY disabled, sort_key";
@@ -215,11 +216,6 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 
 $areas_defined = !empty($enabled_areas) || !empty($disabled_areas);
 
-$sql = "SELECT id, area_name, disabled
-          FROM $tbl_area
-      ORDER BY disabled, sort_key";
-$res2 = db()->query($sql);
-$areas_defined = $res2 && ($res2->count() > 0);
 if (!$areas_defined)
 {
   echo "<p>" . get_vocab("noareas") . "</p>\n";
