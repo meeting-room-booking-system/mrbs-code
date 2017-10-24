@@ -211,9 +211,8 @@ function generate_new_room_form()
 }
 
 
-// Get non-standard form variables
-$error = get_form_var('error', 'string');
-
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();
@@ -222,6 +221,9 @@ checkAuthorised();
 $user = getUserName();
 $required_level = (isset($max_level) ? $max_level : 2);
 $is_admin = (authGetUserLevel($user) >= $required_level);
+
+// Get non-standard form variables
+$error = get_form_var('error', 'string');
 
 print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
 

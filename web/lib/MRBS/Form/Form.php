@@ -16,19 +16,26 @@ class Form extends Element
   
   public static function checkToken()
   {
-    global $REMOTE_ADDR;
+    global $REMOTE_ADDR, $REQUEST_METHOD;
     
-    $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
-    $stored_token = self::getStoredToken();
-    
-    if (!self::compareTokens($token, $stored_token))
+    // Only check the token if data has been POSTED
+    // Accessing a page by other means, eg GET, is assumed to be an operation
+    // that cannot do anything (eg modify data) and GET should only be used
+    // for such cases.
+    if ($REQUEST_METHOD == 'POST')
     {
-      trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
-      if (function_exists("\\MRBS\\logoff_user"))
+      $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
+      $stored_token = self::getStoredToken();
+      
+      if (!self::compareTokens($token, $stored_token))
       {
-        \MRBS\logoff_user();
+        trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+        if (function_exists("\\MRBS\\logoff_user"))
+        {
+          \MRBS\logoff_user();
+        }
+        \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
       }
-      \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }
   

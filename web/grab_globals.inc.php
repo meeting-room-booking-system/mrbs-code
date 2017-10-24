@@ -115,16 +115,18 @@ $post = $_POST;
 
 
 // Get useful $_SERVER variables
-$vars = array('PHP_SELF',
-              'PHP_AUTH_USER',
-              'PHP_AUTH_PW',
-              'REMOTE_USER',
-              'REMOTE_ADDR',
-              'QUERY_STRING',
-              'HTTP_ACCEPT_LANGUAGE',
+$vars = array('HTTP_ACCEPT_LANGUAGE',
+              'HTTP_HOST',
               'HTTP_REFERER',
               'HTTP_USER_AGENT',
-              'HTTP_HOST');
+              'PHP_AUTH_PW',
+              'PHP_AUTH_USER',
+              'PHP_SELF',
+              'QUERY_STRING',
+              'REMOTE_ADDR',
+              'REMOTE_USER',
+              'REQUEST_METHOD'
+              );
               
 foreach ($vars as $var)
 {
