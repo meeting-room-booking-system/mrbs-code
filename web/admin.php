@@ -305,7 +305,7 @@ echo "</div>\n";
 // BOTTOM SECTION: ROOMS IN THE SELECTED AREA
 // Only display the bottom section if the user is an admin or
 // else if there are some areas that can be displayed
-if ($is_admin || ($n_displayable_areas > 0))
+if ($is_admin || !empty($enabled_areas))
 {
   echo "<h2>\n";
   echo get_vocab("rooms");
