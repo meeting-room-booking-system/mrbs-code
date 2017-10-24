@@ -18,10 +18,9 @@ class Form extends Element
   {
     global $REMOTE_ADDR, $REQUEST_METHOD;
     
-    // Only check the token if data has been POSTED
-    // Accessing a page by other means, eg GET, is assumed to be an operation
-    // that cannot do anything (eg modify data) and GET should only be used
-    // for such cases.
+    // Only check the token if data has been POSTed
+    // Accessing a page by any other means, eg GET, is assumed to be an operation
+    // that cannot do anything (eg modify data) and should only be used for such cases.
     if ($REQUEST_METHOD == 'POST')
     {
       $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
