@@ -68,27 +68,26 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   $fieldset-> addElement($field);
   
   // If they're an admin then give them edit and delete buttons for the area
-  // and also a form for adding a new area
   if ($is_admin)
   {
     // Can't use <button> because IE6 does not support those properly
     // (But we don't support IE6 any more - so this can change!)
     $element = new ElementInputImage();
-    $element->setAttributes(array('class' => 'button',
-                                  'name'  => 'edit',
-                                  'src'   => 'images/edit.png',
+    $element->setAttributes(array('class'      => 'button',
+                                  'name'       => 'edit',
+                                  'src'        => 'images/edit.png',
                                   'formaction' => 'edit_area_room.php?change_area=1',
-                                  'title' => get_vocab('edit'),
-                                  'alt'   => get_vocab('edit')));
+                                  'title'      => get_vocab('edit'),
+                                  'alt'        => get_vocab('edit')));
     $fieldset->addElement($element);
     
     $element = new ElementInputImage();
-    $element->setAttributes(array('class' => 'button',
-                                  'name'  => 'delete',
-                                  'src'   => 'images/delete.png',
+    $element->setAttributes(array('class'      => 'button',
+                                  'name'       => 'delete',
+                                  'src'        => 'images/delete.png',
                                   'formaction' => 'del.php?type=area',
-                                  'title' => get_vocab('delete'),
-                                  'alt'   => get_vocab('delete')));
+                                  'title'      => get_vocab('delete'),
+                                  'alt'        => get_vocab('delete')));
     $fieldset->addElement($element);
   }
   
