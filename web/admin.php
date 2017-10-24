@@ -77,6 +77,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     $element->setAttributes(array('class' => 'button',
                                   'name'  => 'edit',
                                   'src'   => 'images/edit.png',
+                                  'formaction' => 'edit_area_room.php?change_area=1',
                                   'title' => get_vocab('edit'),
                                   'alt'   => get_vocab('edit')));
     $fieldset->addElement($element);
@@ -85,6 +86,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     $element->setAttributes(array('class' => 'button',
                                   'name'  => 'delete',
                                   'src'   => 'images/delete.png',
+                                  'formaction' => 'del.php?type=area',
                                   'title' => get_vocab('delete'),
                                   'alt'   => get_vocab('delete')));
     $fieldset->addElement($element);
@@ -213,27 +215,7 @@ function generate_new_room_form()
 // Get non-standard form variables
 $area_name = get_form_var('area_name', 'string');
 $error = get_form_var('error', 'string');
-// the image buttons:  need to specify edit_x rather than edit etc. because
-// IE6 only returns _x and _y
-$edit_x = get_form_var('edit_x', 'int');
-$delete_x = get_form_var('delete_x', 'int');
 
-
-// Check to see whether the Edit or Delete buttons have been pressed and redirect
-// as appropriate
-$std_query_string = "area=$area&day=$day&month=$month&year=$year";
-if (isset($edit_x))
-{
-  $location = $location = "edit_area_room.php?change_area=1&phase=1&$std_query_string";
-  header("Location: $location");
-  exit;
-}
-if (isset($delete_x))
-{
-  $location = "del.php?type=area&$std_query_string";
-  header("Location: $location");
-  exit;
-}
   
 // Check the user is authorised for this page
 checkAuthorised();
