@@ -249,6 +249,10 @@ div#custom_html {float: left; padding: 0 0 3em 1em}
   font-weight: bold;
   margin-right: <?php echo $admin_form_gap ?>em;
 }
+
+#areaChangeForm div {
+  float: left;
+}
   
 #roomChangeForm select, #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
 #roomChangeForm input, #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
