@@ -12,6 +12,89 @@ use MRBS\Form\FieldSubmit;
 
 require "defaultincludes.inc";
 
+
+function generate_area_select_form($enabled_areas, $disabled_areas)
+{
+  global $is_admin;
+  global $area, $day, $month, $year;
+  
+  $form = new Form();
+  
+  $attributes = array('id'     => 'areaChangeForm',
+                      'action' => this_page(),
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend('');
+  
+  // The area select
+  if ($is_admin)
+  {
+    $options = array(get_vocab("enabled") => $enabled_areas,
+                     get_vocab("disabled") => $disabled_areas);
+  }
+  else
+  {
+    $options = $enabled_areas;
+  }
+  
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('area'))
+        ->setControlAttributes(array('id'       => 'area_select',
+                                     'name'     => 'area',
+                                     'class'    => 'room_area_select',
+                                     'onchange' => 'this.form.submit()'))
+        ->addOptions($options, $area);
+  $fieldset->addElement($field);
+  
+  // Hidden inputs for page day, month, year
+  $vars = array('day', 'month', 'year');
+  foreach ($vars as $var)
+  {
+    $element = new ElementInputHidden();
+    $element->setAttributes(array('name'  => $var,
+                                  'value' => $$var));
+    $fieldset->addElement($element);
+  }
+
+  // The change area button (won't be needed or displayed if JavaScript is enabled)
+  $field = new FieldSubmit();
+  $field->setAttribute('class', 'js_none')
+        ->setControlAttributes(array('value' => get_vocab('change'),
+                                     'name'  => 'change'));
+  $fieldset-> addElement($field);
+  
+  // If they're an admin then give them edit and delete buttons for the area
+  // and also a form for adding a new area
+  if ($is_admin)
+  {
+    // Can't use <button> because IE6 does not support those properly
+    // (But we don't support IE6 any more - so this can change!)
+    $element = new ElementInputImage();
+    $element->setAttributes(array('class' => 'button',
+                                  'name'  => 'edit',
+                                  'src'   => 'images/edit.png',
+                                  'title' => get_vocab('edit'),
+                                  'alt'   => get_vocab('edit')));
+    $fieldset->addElement($element);
+    
+    $element = new ElementInputImage();
+    $element->setAttributes(array('class' => 'button',
+                                  'name'  => 'delete',
+                                  'src'   => 'images/delete.png',
+                                  'title' => get_vocab('delete'),
+                                  'alt'   => get_vocab('delete')));
+    $fieldset->addElement($element);
+  }
+  
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
+
 function generate_new_area_form()
 {
   global $maxlength;
@@ -150,80 +233,7 @@ else
   else
   {
     // If there are some areas to display, then show the area form
-    $form = new Form();
-    
-    $attributes = array('id'     => 'areaChangeForm',
-                        'action' => this_page(),
-                        'method' => 'post');
-                        
-    $form->setAttributes($attributes);
-    
-    $fieldset = new ElementFieldset();
-    $fieldset->addLegend('');
-    
-    // The area select
-    if ($is_admin)
-    {
-      $options = array(get_vocab("enabled") => $enabled_areas,
-                       get_vocab("disabled") => $disabled_areas);
-    }
-    else
-    {
-      $options = $enabled_areas;
-    }
-    
-    $field = new FieldSelect();
-    $field->setLabel(get_vocab('area'))
-          ->setControlAttributes(array('id'       => 'area_select',
-                                       'name'     => 'area',
-                                       'class'    => 'room_area_select',
-                                       'onchange' => 'this.form.submit()'))
-          ->addOptions($options, $area);
-    $fieldset->addElement($field);
-    
-    // Hidden inputs for page day, month, year
-    $vars = array('day', 'month', 'year');
-    foreach ($vars as $var)
-    {
-      $element = new ElementInputHidden();
-      $element->setAttributes(array('name'  => $var,
-                                    'value' => $$var));
-      $fieldset->addElement($element);
-    }
-
-    // The change area button (won't be needed or displayed if JavaScript is enabled)
-    $field = new FieldSubmit();
-    $field->setAttribute('class', 'js_none')
-          ->setControlAttributes(array('value' => get_vocab('change'),
-                                       'name'  => 'change'));
-    $fieldset-> addElement($field);
-    
-    // If they're an admin then give them edit and delete buttons for the area
-    // and also a form for adding a new area
-    if ($is_admin)
-    {
-      // Can't use <button> because IE6 does not support those properly
-      // (But we don't support IE6 any more - so this can change!)
-      $element = new ElementInputImage();
-      $element->setAttributes(array('class' => 'button',
-                                    'name'  => 'edit',
-                                    'src'   => 'images/edit.png',
-                                    'title' => get_vocab('edit'),
-                                    'alt'   => get_vocab('edit')));
-      $fieldset->addElement($element);
-      
-      $element = new ElementInputImage();
-      $element->setAttributes(array('class' => 'button',
-                                    'name'  => 'delete',
-                                    'src'   => 'images/delete.png',
-                                    'title' => get_vocab('delete'),
-                                    'alt'   => get_vocab('delete')));
-      $fieldset->addElement($element);
-    }
-    
-    $form->addElement($fieldset);
-
-    $form->render();
+    generate_area_select_form($enabled_areas, $disabled_areas);
   }
 }
 
