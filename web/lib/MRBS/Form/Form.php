@@ -36,7 +36,7 @@ class Form extends Element
   private function addCSRFToken()
   {
     $token = self::getToken();
-    $element = new ElementHidden();
+    $element = new ElementInputHidden();
     $element->setAttributes(array('name'  => self::$token_name,
                                   'value' => $token));
     $this->addElement($element);

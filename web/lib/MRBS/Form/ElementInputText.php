@@ -2,14 +2,13 @@
 
 namespace MRBS\Form;
 
-
-class FieldText extends Field
+class ElementInputText extends ElementInput
 {
-  
+
   public function __construct()
   {
     parent::__construct();
-    $this->addElement(new ElementText());
+    $this->setAttribute('type', 'text');
   }
-  
+ 
 }

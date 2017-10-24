@@ -3,10 +3,12 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
-use MRBS\Form\ElementHidden;
+use MRBS\Form\ElementInputHidden;
+use MRBS\Form\ElementInputImage;
+use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSubmit;
-use MRBS\Form\FieldText;
+
 
 require "defaultincludes.inc";
 
@@ -27,23 +29,23 @@ function generate_new_area_form()
   $fieldset->addLegend(get_vocab('addarea'));
   
   // Hidden field for the type of operation
-  $element = new ElementHidden();
+  $element = new ElementInputHidden();
   $element->setAttributes(array('name'  => 'type',
                                 'value' => 'area'));
   $fieldset->addElement($element);
   
   // The name field
-  $field = new FieldText();
-  $field->setLabel(get_vocab('name'));
-  $field->setFieldAttributes(array('id'        => 'area_name',
-                                   'name'      => 'name',
-                                   'maxlength' => $maxlength['area.area_name']));               
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('name'))
+        ->setControlAttributes(array('id'        => 'area_name',
+                                     'name'      => 'name',
+                                     'maxlength' => $maxlength['area.area_name']));               
   $fieldset->addElement($field);
   
   // The submit button
   $field = new FieldSubmit();
-  $field->setFieldAttributes(array('value' => get_vocab('addarea'),
-                                   'class' => 'submit'));
+  $field->setControlAttributes(array('value' => get_vocab('addarea'),
+                                     'class' => 'submit'));
   $fieldset-> addElement($field);
   
   $form->addElement($fieldset);
@@ -147,6 +149,7 @@ else
   }
   else
   {
+    // If there are some areas to display, then show the area form
     $form = new Form();
     
     $attributes = array('id'     => 'areaChangeForm',
@@ -170,95 +173,57 @@ else
     }
     
     $field = new FieldSelect();
-    $field->setLabel(get_vocab('area'));
-    $field->setFieldAttributes(array('id'       => 'area_select',
-                                     'name'     => 'area',
-                                     'class'    => 'room_area_select',
-                                     'onchange' => 'this.form.submit()'));
+    $field->setLabel(get_vocab('area'))
+          ->setControlAttributes(array('id'       => 'area_select',
+                                       'name'     => 'area',
+                                       'class'    => 'room_area_select',
+                                       'onchange' => 'this.form.submit()'))
+          ->addOptions($options, $area);
     $fieldset->addElement($field);
     
-    $form->addElement($fieldset);
-    // TO DO:  ADD IN OPTIONS
-    // $form->render();
-    
-    // If there are some areas displayable, then show the area form
-    
-  // Build an array with the area info and also see if there are going
-  // to be any areas to display (in other words rooms if you are not an
-  // admin whether any areas are enabled)
-  $areas = array();
-  $n_displayable_areas = 0;
-  for ($i = 0; ($row = $res2->row_keyed($i)); $i++)
-  {
-    $areas[] = $row;
-    if ($is_admin || !$row['disabled'])
+    // Hidden inputs for page day, month, year
+    $vars = array('day', 'month', 'year');
+    foreach ($vars as $var)
     {
-      $n_displayable_areas++;
+      $element = new ElementInputHidden();
+      $element->setAttributes(array('name'  => $var,
+                                    'value' => $$var));
+      $fieldset->addElement($element);
     }
-  }
-  
-  
-    echo "<form id=\"areaChangeForm\" method=\"get\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    echo "<fieldset>\n";
-    echo "<legend></legend>\n";
-  
-    // The area selector
-    echo "<label for=\"area_select\">" . get_vocab("area") . "</label>\n";
-    echo "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
-    if ($is_admin)
-    {
-      if ($areas[0]['disabled'])
-      {
-        $done_change = TRUE;
-        echo "<optgroup label=\"" . get_vocab("disabled") . "\">\n";
-      }
-      else
-      {
-        $done_change = FALSE;
-        echo "<optgroup label=\"" . get_vocab("enabled") . "\">\n";
-      }
-    }
-    foreach ($areas as $a)
-    {
-      if ($is_admin || !$a['disabled'])
-      {
-        if ($is_admin && !$done_change && $a['disabled'])
-        {
-          echo "</optgroup>\n";
-          echo "<optgroup label=\"" . get_vocab("disabled") . "\">\n";
-          $done_change = TRUE;
-        }
-        $selected = ($a['id'] == $area) ? "selected=\"selected\"" : "";
-        echo "<option $selected value=\"". $a['id']. "\">" . htmlspecialchars($a['area_name']) . "</option>";
-      }
-    }
-    if ($is_admin)
-    {
-      echo "</optgroup>\n";
-    }
-    echo "</select>\n";
-  
-    // Some hidden inputs for current day, month, year
-    echo "<input type=\"hidden\" name=\"day\" value=\"$day\">\n";
-    echo "<input type=\"hidden\" name=\"month\" value=\"$month\">\n";
-    echo "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n";
-  
+
     // The change area button (won't be needed or displayed if JavaScript is enabled)
-    echo "<input type=\"submit\" name=\"change\" class=\"js_none\" value=\"" . get_vocab("change") . "\">\n";
-  
+    $field = new FieldSubmit();
+    $field->setAttribute('class', 'js_none')
+          ->setControlAttributes(array('value' => get_vocab('change'),
+                                       'name'  => 'change'));
+    $fieldset-> addElement($field);
+    
     // If they're an admin then give them edit and delete buttons for the area
     // and also a form for adding a new area
     if ($is_admin)
     {
       // Can't use <button> because IE6 does not support those properly
-      echo "<input type=\"image\" class=\"button\" name=\"edit\" src=\"images/edit.png\"
-             title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-      echo "<input type=\"image\" class=\"button\" name=\"delete\" src=\"images/delete.png\"
-             title=\"" . get_vocab("delete") . "\" alt=\"" . get_vocab("delete") . "\">\n";
+      // (But we don't support IE6 any more - so this can change!)
+      $element = new ElementInputImage();
+      $element->setAttributes(array('class' => 'button',
+                                    'name'  => 'edit',
+                                    'src'   => 'images/edit.png',
+                                    'title' => get_vocab('edit'),
+                                    'alt'   => get_vocab('edit')));
+      $fieldset->addElement($element);
+      
+      $element = new ElementInputImage();
+      $element->setAttributes(array('class' => 'button',
+                                    'name'  => 'delete',
+                                    'src'   => 'images/delete.png',
+                                    'title' => get_vocab('delete'),
+                                    'alt'   => get_vocab('delete')));
+      $fieldset->addElement($element);
     }
-  
-    echo "</fieldset>\n";
-    echo "</form>\n";
+    
+    $form->addElement($fieldset);
+
+    $form->render();
   }
 }
 

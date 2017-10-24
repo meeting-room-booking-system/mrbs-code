@@ -41,6 +41,19 @@ class Element
   }
   
 
+  public function getElement($key)
+  {
+    return $this->elements[$key];
+  }
+  
+  
+  public function setElement($key, Element $element)
+  {
+    $this->elements[$key] = $element;
+    return $this;
+  }
+  
+  
   public function getElements()
   {
     return $this->elements;
@@ -54,10 +67,75 @@ class Element
   }
   
   
-  public function addElement(Element $element)
+  public function addElement(Element $element, $key=null)
   {
-    $this->elements[] = $element;
+    if (isset($key))
+    {
+      $this->elements[$key] = $element;
+    }
+    else
+    {
+      $this->elements[] = $element;
+    }
     return $this;
+  }
+  
+  
+  // Add a set of options to an element, eg to a <select> element.
+  //    $options      An array of options for the select element.   Can be a one- or two-dimensional
+  //                  array.  If it's two-dimensional then the keys of the outer level represent
+  //                  <optgroup> labels.  The inner level can be a simple array or an associative
+  //                  array with value => text members for each <option> in the <select> element.
+  //    $selected     The value(s) of the option(s) that are selected.  Can be a single value
+  //                  or an array of values.
+  //    $associative  Whether to treat the options as a simple or an associative array.  (This 
+  //                  parameter is necessary because if you index an array with strings that look
+  //                  like integers then PHP casts the keys to integers and the array becomes a 
+  //                  simple array).
+  public function addOptions($options, $selected=null, $associative=true)
+  {
+    // Trivial case
+    if (empty($options))
+    {
+      return;
+    }
+    
+    // It's possible to have multiple options selected
+    if (!is_array($selected))
+    {
+      $selected = array($selected);
+    }
+    
+    // Test whether $options is a one-dimensional or two-dimensional array.
+    // If two-dimensional then we need to use <optgroup>s.
+    if (is_array(reset($options)))   // cannot use $options[0] because $options may be associative
+    {
+      foreach ($options as $group => $group_options)
+      {
+        $optgroup = new ElementOptgroup();
+        $optgroup->setAttribute('label', $group)
+                 ->addOptions($group_options, $selected, $associative);
+        $this->addElement($optgroup);
+      }
+    }
+    else
+    {
+      foreach ($options as $key => $value)
+      {
+        if (!$associative)
+        {
+          $key = $value;
+        }
+        $option = new ElementOption();
+        $option->setAttribute('value', $key)
+               ->setText($value);
+        if (in_array($key, $selected))
+        {
+          $option->setAttribute('selected');
+        }
+        $this->addElement($option);
+      }
+    }
   }
   
   

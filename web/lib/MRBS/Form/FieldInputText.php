@@ -2,13 +2,14 @@
 
 namespace MRBS\Form;
 
-class ElementHidden extends ElementInput
-{
 
+class FieldInputText extends Field
+{
+  
   public function __construct()
   {
     parent::__construct();
-    $this->setAttribute('type', 'hidden');
+    $this->addControl(new ElementInputText());
   }
- 
+  
 }

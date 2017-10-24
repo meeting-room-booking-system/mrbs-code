@@ -3,6 +3,13 @@
 namespace MRBS\Form;
 
 
+// Fields consider of a 'label' element, ie a <label>, and a control
+// element, eg an <input> or <select>, all wrapped in a <div>.  For example
+//    <div>
+//      <label></label>
+//      <input>
+//    </div>
+
 abstract class Field extends Element
 {
   
@@ -10,20 +17,42 @@ abstract class Field extends Element
   {
     // Wrap all fields in a <div> ... </div>
     parent::__construct('div');
-    $this->addElement(new ElementLabel());
+    $this->addElement(new ElementLabel(), 'label');
+  }
+  
+  
+  public function addControl(Element $element)
+  {
+    $this->addElement($element, 'control');
+    return $this;
+  }
+  
+  
+  public function getControl()
+  {
+    return $this->getElement('control');
+  }
+  
+  
+  public function setControl(Element $element)
+  {
+    $this->setElement('control', $element);
+    return $this;
   }
   
   
   public function setLabel($text)
   {
-    $elements = $this->getElements();
-    $elements[0]->setText($text);
-    $this->setElements($elements);
+    $label = $this->getElement('label');
+    $label->setText($text);
+    $this->setElement('label', $label);
     return $this;
   }
   
   
-  public function setFieldAttributes($attributes)
+  // Sets the attributes for the field control.  Also takes care of the label
+  // by associating the label with the control using a 'for' attribute.
+  public function setControlAttributes($attributes)
   {
     $elements = $this->getElements();
     
@@ -31,9 +60,9 @@ abstract class Field extends Element
     {
       if ($key == 'id')
       {
-        $elements[0]->setAttribute('for', $value);
+        $elements['label']->setAttribute('for', $value);
       }
-      $elements[1]->setAttribute($key, $value);
+      $elements['control']->setAttribute($key, $value);
     }
     
     $this->setElements($elements);
