@@ -213,10 +213,9 @@ function generate_new_room_form()
 
 
 // Get non-standard form variables
-$area_name = get_form_var('area_name', 'string');
 $error = get_form_var('error', 'string');
 
-  
+
 // Check the user is authorised for this page
 checkAuthorised();
 
