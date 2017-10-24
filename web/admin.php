@@ -137,6 +137,77 @@ function generate_new_area_form()
 }
 
 
+function generate_new_room_form()
+{
+  global $maxlength;
+  global $area;
+  
+  $form = new Form();
+  
+  $attributes = array('id'     => 'add_room',
+                      'class'  => 'form_admin',
+                      'action' => 'add.php',
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('addroom'));
+  
+  // Hidden field for the type of operation
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'type',
+                                'value' => 'room'));
+  $fieldset->addElement($element);
+  
+  // Hidden field for the area
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'area',
+                                'value' => $area));
+  $fieldset->addElement($element);
+  
+  // The name field
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('name'))
+        ->setControlAttributes(array('id'        => 'room_name',
+                                     'name'      => 'name',
+                                     'maxlength' => $maxlength['room.room_name']));               
+  $fieldset->addElement($field);
+  
+  // The description field
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('description'))
+        ->setControlAttributes(array('id'        => 'room_description',
+                                     'name'      => 'description',
+                                     'maxlength' => $maxlength['room.description']));               
+  $fieldset->addElement($field);
+  
+  // The capacity field
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('capacity'))
+        ->setControlAttributes(array('id'        => 'room_capacity',
+                                     'name'      => 'capacity'));               
+  $fieldset->addElement($field);
+        
+  // The email field
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('room_admin_email'))
+        ->setControlAttributes(array('id'        => 'room_admin_email',
+                                     'name'      => 'room_admin_email'));               
+  $fieldset->addElement($field);
+  
+  // The submit button
+  $field = new FieldSubmit();
+  $field->setControlAttributes(array('value' => get_vocab('addroom'),
+                                     'class' => 'submit'));
+  $fieldset-> addElement($field);
+      
+  $form->addElement($fieldset);
+  
+  $form->render();
+}
+
+
 // Get non-standard form variables
 $area_name = get_form_var('area_name', 'string');
 $error = get_form_var('error', 'string');
@@ -446,42 +517,7 @@ if ($is_admin || ($n_displayable_areas > 0))
   // there's an area selected
   if ($is_admin && $areas_defined && !empty($area))
   {
-  ?>
-    <form id="add_room" class="form_admin" action="add.php" method="post">
-      <fieldset>
-      <legend><?php echo get_vocab("addroom") ?></legend>
-        
-        <input type="hidden" name="type" value="room">
-        <input type="hidden" name="area" value="<?php echo $area; ?>">
-        
-        <div>
-          <label for="room_name"><?php echo get_vocab("name") ?></label>
-          <input type="text" id="room_name" name="name" maxlength="<?php echo $maxlength['room.room_name'] ?>">
-        </div>
-        
-        <div>
-          <label for="room_description"><?php echo get_vocab("description") ?></label>
-          <input type="text" id="room_description" name="description" maxlength="<?php echo $maxlength['room.description'] ?>">
-        </div>
-        
-        <div>
-          <label for="room_capacity"><?php echo get_vocab("capacity") ?></label>
-          <input type="text" id="room_capacity" name="capacity">
-        </div>
-
-        <div>
-          <label for="room_admin_email"><?php echo get_vocab("room_admin_email") ?></label>
-          <input type="text" id="room_admin_email" name="room_admin_email">
-        </div>
-       
-        <div>
-          <label></label>
-          <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
-        </div>
-        
-      </fieldset>
-    </form>
-  <?php
+    generate_new_room_form();
   }
   echo "</div>\n";
 }
