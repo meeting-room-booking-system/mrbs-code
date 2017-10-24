@@ -13,7 +13,7 @@ use MRBS\Form\FieldSubmit;
 require "defaultincludes.inc";
 
 
-function generate_area_select_form($enabled_areas, $disabled_areas)
+function generate_area_change_form($enabled_areas, $disabled_areas)
 {
   global $is_admin;
   global $area, $day, $month, $year;
@@ -233,7 +233,7 @@ else
   else
   {
     // If there are some areas to display, then show the area form
-    generate_area_select_form($enabled_areas, $disabled_areas);
+    generate_area_change_form($enabled_areas, $disabled_areas);
   }
 }
 
