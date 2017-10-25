@@ -115,7 +115,6 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     // (But we don't support IE6 any more - so this can change!)
     $element = new ElementInputImage();
     $element->setAttributes(array('class'      => 'button',
-                                  'name'       => 'edit',
                                   'src'        => 'images/edit.png',
                                   'formaction' => 'edit_area_room.php?change_area=1',
                                   'title'      => get_vocab('edit'),
@@ -124,7 +123,6 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     
     $element = new ElementInputImage();
     $element->setAttributes(array('class'      => 'button',
-                                  'name'       => 'delete',
                                   'src'        => 'images/delete.png',
                                   'formaction' => 'del.php?type=area',
                                   'title'      => get_vocab('delete'),
