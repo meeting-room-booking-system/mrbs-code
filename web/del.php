@@ -136,7 +136,7 @@ if ($type == "room")
     // has come from, but for the general case MRBS needs to provide the ability
     // to bind it as an integer.
     //
-    // Order in descending order because the latest bookings are probanly the most
+    // Order in descending order because the latest bookings are probably the most
     // important.
     $sql = "SELECT name, start_time, end_time
               FROM $tbl_entry WHERE room_id=?
