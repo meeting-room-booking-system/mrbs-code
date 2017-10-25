@@ -11,8 +11,11 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// Show or Hide the settings for Times and the note about Periods 
-// as appropriate ?>
+// Show or Hide the settings for Times and the note about Periods as
+// appropriate.  Also toggle the required property on the area_periods[]
+// inputs: if they are left as required when they are hidden, then the
+// browser will try and make you complete them, but throw an error because
+// they cannot be brought in to focus. ?>
 function toggleMode(speed)
 {
   if (typeof speed === 'undefined')
@@ -25,12 +28,14 @@ function toggleMode(speed)
     $('#book_ahead_periods_note').hide(speed);
     $('#time_settings').show(speed);
     $('#period_settings').hide(speed);
+    $('input[name="area_periods[]"]').prop('required', false);
   }
   else
   {
     $('#book_ahead_periods_note').show(speed);
     $('#time_settings').hide(speed);
     $('#period_settings').show(speed);
+    $('input[name="area_periods[]"]').prop('required', true);
   }
 }
 

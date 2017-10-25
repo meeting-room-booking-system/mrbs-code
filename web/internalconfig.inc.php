@@ -143,7 +143,7 @@ if (!isset($timezone))
 // Do some consistency checking of user settings from config.inc.php
 if ($enable_periods)
 {
-  if (count($periods) > 60)
+  if (isset($periods) && (count($periods) > 60))
   {
     die('Configuration error: too many periods defined');
   }
@@ -446,7 +446,7 @@ $area_defaults = array();
 
 foreach ($area_defaults_keys as $key)
 {
-  $area_defaults[$key] = $$key;
+  $area_defaults[$key] = (isset($$key)) ? $$key : null;
 }
 
 $area_defaults['max_per_day_enabled']      = $max_per_interval_area_enabled['day'];
