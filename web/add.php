@@ -14,11 +14,11 @@ Form::checkToken();
 checkAuthorised();
 
 // Get non-standard form variables
-$name = get_form_var('name', 'string');
-$description = get_form_var('description', 'string');
-$capacity = get_form_var('capacity', 'int');
-$room_admin_email = get_form_var('room_admin_email', 'string');
-$type = get_form_var('type', 'string');
+$name = get_form_var('name', 'string', null, INPUT_POST);
+$description = get_form_var('description', 'string', null, INPUT_POST);
+$capacity = get_form_var('capacity', 'int', null, INPUT_POST);
+$room_admin_email = get_form_var('room_admin_email', 'string', null, INPUT_POST);
+$type = get_form_var('type', 'string', null, INPUT_POST);
 
 // This file is for adding new areas/rooms
 $error = '';
