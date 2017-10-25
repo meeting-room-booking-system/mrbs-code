@@ -669,14 +669,24 @@ div.div_select.outside {
 .tentative a {font-weight: normal}
 
 
+
 /* ------------ DEL.PHP -----------------------------*/
-div#del_room_confirm {padding-bottom: 3em}
-#del_room_confirm p {text-align: center; font-size: large; font-weight: bold}
-div#del_room_confirm_links {position: relative; margin-left: auto; margin-right: auto}
-span#del_yes {display:block; position: absolute; right: 50%; margin-right: 1em; font-size: large}
-span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; font-size: large}
-#del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
-#del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
+div#del_room_confirm {
+  text-align: center;
+  padding-bottom: 3em;
+}
+
+#del_room_confirm p, #del_room_confirm input[type="submit"] {
+  font-size: large;
+  font-weight: bold;
+}
+
+#del_room_confirm form {
+  display: inline-block;
+  margin: 1em 2em;
+}
+
+
 
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/

@@ -1,15 +1,94 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementInputHidden;
+use MRBS\Form\ElementInputSubmit;
+
 require "defaultincludes.inc";
 
-// Get non-standard form variables
-$type = get_form_var('type', 'string');
-$confirm = get_form_var('confirm', 'string');
 
+function generate_no_form($room, $area)
+{
+  $form = new Form();
+  
+  $attributes = array('action' => 'admin.php',
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+
+  // Hidden input - 'area'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'area',
+                                'value' => $area));
+  $form->addElement($element);
+  
+  // Hidden input - 'room'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'room',
+                                'value' => $room));
+  $form->addElement($element);
+  
+  // The button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab("NO"));
+  $form->addElement($element);
+
+  $form->render();
+}
+
+
+function generate_yes_form($room, $area)
+{
+  $form = new Form();
+  
+  $attributes = array('action' => 'del.php',
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+  
+  // Hidden input - 'type'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'type',
+                                'value' => 'room'));
+  $form->addElement($element);
+
+  // Hidden input - 'area'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'area',
+                                'value' => $area));
+  $form->addElement($element);
+  
+  // Hidden input - 'room'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'room',
+                                'value' => $room));
+  $form->addElement($element);
+  
+  // Hidden input - 'confirm'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'confirm',
+                                'value' => '1'));
+  $form->addElement($element);
+  
+  // The button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab("YES"));
+  $form->addElement($element);
+
+  $form->render();
+}
+
+
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();
+
+// Get non-standard form variables
+$type = get_form_var('type', 'string', null, INPUT_POST);
+$confirm = get_form_var('confirm', 'string', null, INPUT_POST);
 
 // This is gonna blast away something. We want them to be really
 // really sure that this is what they want to do.
@@ -17,7 +96,7 @@ checkAuthorised();
 if ($type == "room")
 {
   // We are supposed to delete a room
-  if (isset($confirm))
+  if (!empty($confirm))
   {
     // They have confirmed it already, so go blast!
     db()->begin();
@@ -70,10 +149,10 @@ if ($type == "room")
    
     echo "<div id=\"del_room_confirm\">\n";
     echo "<p>" .  get_vocab("sure") . "</p>\n";
-    echo "<div id=\"del_room_confirm_links\">\n";
-    echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
-    echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
-    echo "</div>\n";
+    
+    generate_yes_form($room, $area);
+    generate_no_form($room, $area);
+
     echo "</div>\n";
     output_trailer();
   }

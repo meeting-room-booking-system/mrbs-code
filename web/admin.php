@@ -7,8 +7,8 @@ use MRBS\Form\ElementInputHidden;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldSelect;
-use MRBS\Form\FieldSubmit;
 
 
 require "defaultincludes.inc";
@@ -35,7 +35,7 @@ function generate_room_delete_form($room, $area)
                                 'value' => $area));
   $form->addElement($element);
   
-  // Hidden input - 'area'
+  // Hidden input - 'room'
   $element = new ElementInputHidden();
   $element->setAttributes(array('name'  => 'room',
                                 'value' => $room));
@@ -102,11 +102,11 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   }
 
   // The change area button (won't be needed or displayed if JavaScript is enabled)
-  $field = new FieldSubmit();
+  $field = new FieldInputSubmit();
   $field->setAttribute('class', 'js_none')
         ->setControlAttributes(array('value' => get_vocab('change'),
                                      'name'  => 'change'));
-  $fieldset-> addElement($field);
+  $fieldset->addElement($field);
   
   // If they're an admin then give them edit and delete buttons for the area
   if ($is_admin)
@@ -167,7 +167,7 @@ function generate_new_area_form()
   $fieldset->addElement($field);
   
   // The submit button
-  $field = new FieldSubmit();
+  $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('addarea'),
                                      'class' => 'submit'));
   $fieldset-> addElement($field);
@@ -239,7 +239,7 @@ function generate_new_room_form()
   $fieldset->addElement($field);
   
   // The submit button
-  $field = new FieldSubmit();
+  $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('addroom'),
                                      'class' => 'submit'));
   $fieldset-> addElement($field);

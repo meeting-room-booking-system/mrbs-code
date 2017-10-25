@@ -2,13 +2,14 @@
 
 namespace MRBS\Form;
 
-class ElementSubmit extends ElementInput
-{
 
+class FieldInputSubmit extends Field
+{
+  
   public function __construct()
   {
     parent::__construct();
-    $this->setAttribute('type', 'submit');
+    $this->addControl(new ElementInputSubmit());
   }
- 
+  
 }
