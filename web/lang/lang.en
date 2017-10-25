@@ -444,6 +444,7 @@ $vocab["name_not_unique"]    = "already exists.   Please choose another name.";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
+$vocab["and_n_more"]         = "and %s more";  // %s rather than %d because n is the output of number_format()
 $vocab["sure"]               = "Are you sure?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";

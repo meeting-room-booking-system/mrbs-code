@@ -125,8 +125,23 @@ if ($type == "room")
    
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
-   
-    $sql = "SELECT name, start_time, end_time FROM $tbl_entry WHERE room_id=?";
+    $limit = 20;
+    
+    $sql = "SELECT COUNT(*) FROM $tbl_entry WHERE room_id=?";
+    $n_bookings = db()->query1($sql, array($room));
+    
+    // The LIMIT parameter should ideally be one of the parameters to the
+    // query, but MySQL throws an error at the moment because it gets bound
+    // as a string.  Doesn't matter in this case because we know where $limit
+    // has come from, but for the general case MRBS needs to provide the ability
+    // to bind it as an integer.
+    //
+    // Order in descending order because the latest bookings are probanly the most
+    // important.
+    $sql = "SELECT name, start_time, end_time
+              FROM $tbl_entry WHERE room_id=?
+          ORDER BY start_time DESC
+             LIMIT $limit";
     $res = db()->query($sql, array($room));
     
     if ($res->count() > 0)
@@ -145,6 +160,13 @@ if ($type == "room")
       }
       
       echo "</ul>\n";
+    }
+    
+    if ($n_bookings > $limit)
+    {
+      echo "<p>";
+      echo get_vocab("and_n_more", number_format_locale($n_bookings - $limit)) . '.';
+      echo "</p>";
     }
    
     echo "<div id=\"del_room_confirm\">\n";
