@@ -211,8 +211,10 @@ function generate_new_room_form()
 }
 
 
-// Check the CSRF token
-Form::checkToken();
+// Check the CSRF token.
+// Only check the token if the page is accessed via a POST request.  Therefore
+// this page should not take any action, but only display data.
+Form::checkToken($post_only=true);
 
 // Check the user is authorised for this page
 checkAuthorised();

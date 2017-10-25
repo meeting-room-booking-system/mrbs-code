@@ -14,27 +14,40 @@ class Form extends Element
   }
   
   
-  public static function checkToken()
+  // Checks the CSRF token against the stored value and dies with a fatal error
+  // if they do not match.   Note that:
+  //    (1) The CSRF token is always looked for in the POST data, never anywhere else.
+  //        GET requests should only be used for operations that do not modify data or
+  //        grant access.
+  //    (2) Forms should never use a GET method.  Instead redirect to a URL with query string.
+  //    (3) Actions should normally be taken by handler pages which are not designed to be
+  //        accessed directly by the user and are only expecting POST requests.  These pages
+  //        will look for the CSRF token however they are requested.  If they are requested via
+  //        GET then they will still look for the token in the POST data and so fail.
+  //    (4) There are some MRBS pages that can be accessed either via a URL with query string,
+  //        or via a POST request.   These pages should not take any action, but as a matter of
+  //        good practice should check the token anyway if they have been requested by a POST.
+  //        To cater for these pages the $post_only parameter should be set to TRUE.
+  public static function checkToken($post_only=false)
   {
     global $REMOTE_ADDR, $REQUEST_METHOD;
     
-    // Only check the token if data has been POSTed
-    // Accessing a page by any other means, eg GET, is assumed to be an operation
-    // that cannot do anything (eg modify data) and should only be used for such cases.
-    if ($REQUEST_METHOD == 'POST')
+    if ($post_only && ($REQUEST_METHOD != 'POST'))
     {
-      $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
-      $stored_token = self::getStoredToken();
+      return;
+    }
       
-      if (!self::compareTokens($token, $stored_token))
+    $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
+    $stored_token = self::getStoredToken();
+    
+    if (!self::compareTokens($token, $stored_token))
+    {
+      trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+      if (function_exists("\\MRBS\\logoff_user"))
       {
-        trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
-        if (function_exists("\\MRBS\\logoff_user"))
-        {
-          \MRBS\logoff_user();
-        }
-        \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
+        \MRBS\logoff_user();
       }
+      \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }
   
@@ -116,7 +129,7 @@ class Form extends Element
   {
     if ((session_id() !== '') || session_start())
     {
-      return $_SESSION[self::$token_name];
+      return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
     }
     
     throw new \Exception("Need to do something with cookies here!");
