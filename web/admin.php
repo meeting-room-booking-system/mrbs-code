@@ -14,6 +14,47 @@ use MRBS\Form\FieldSubmit;
 require "defaultincludes.inc";
 
 
+function generate_room_delete_form($room, $area)
+{
+  $form = new Form();
+
+  $attributes = array('action' => 'del.php',
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+  
+  // Hidden input - 'type'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'type',
+                                'value' => 'room'));
+  $form->addElement($element);
+  
+  // Hidden input - 'area'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'area',
+                                'value' => $area));
+  $form->addElement($element);
+  
+  // Hidden input - 'area'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'room',
+                                'value' => $room));
+  $form->addElement($element);
+  
+  // The button
+  $element = new ElementInputImage();
+  $element->setAttributes(array('class'  => 'button',
+                                'src'    => 'images/delete.png',
+                                'width'  => '16',
+                                'height' => '16',
+                                'title'  => get_vocab('delete'),
+                                'alt'    => get_vocab('delete')));
+  $form->addElement($element);
+
+  $form->render();
+}
+
+
 function generate_area_change_form($enabled_areas, $disabled_areas)
 {
   global $is_admin;
@@ -470,17 +511,14 @@ if ($is_admin || !empty($enabled_areas))
               }  // if
             }  // foreach
             
-            // Give admins a delete link
+            // Give admins a delete button
             if ($is_admin)
             {
-              // Delete link
-              echo "<td><div>\n";
-              echo "<a href=\"del.php?type=room&amp;area=$area&amp;room=" . $r['id'] . "\">\n";
-              echo "<img src=\"images/delete.png\" width=\"16\" height=\"16\" 
-                         alt=\"" . get_vocab("delete") . "\"
-                         title=\"" . get_vocab("delete") . "\">\n";
-              echo "</a>\n";
-              echo "</div></td>\n";
+              echo "<td>\n<div>\n";
+              generate_room_delete_form($r['id'], $area);
+
+
+              echo "</div>\n</td>\n";
             }
             
             echo "</tr>\n";
