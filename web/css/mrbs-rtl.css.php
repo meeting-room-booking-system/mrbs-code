@@ -137,7 +137,7 @@ div#edit_area_room_submit_back, div#edit_area_room_submit_save,
 }
 
 #edit_entry_submit input, #report_submit input, #search_submit input,
-#logon_submit input, #db_logon_submit input {
+#db_logon_submit input {
   left: 300%;
 }
 

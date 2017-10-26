@@ -856,11 +856,11 @@ fieldset.rep_type_details fieldset {padding-top: 0}
     display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
-.edit_entry     .form_general input {width: <?php echo $edit_entry_textarea_width ?>em; margin-right: 1em}
-.report         .form_general input {width: <?php echo $report_input_width ?>em}
-.search         .form_general input {width: <?php echo $search_input_width ?>em}
-.edit_area_room .form_general input {width: <?php echo $edit_area_room_input_width ?>em}
-#logon                    input {width: <?php echo $logon_input_width ?>em}
+.edit_entry     .form_general input:not([type="submit"]) {width: <?php echo $edit_entry_textarea_width ?>em; margin-right: 1em}
+.report         .form_general input:not([type="submit"]) {width: <?php echo $report_input_width ?>em}
+.search         .form_general input:not([type="submit"]) {width: <?php echo $search_input_width ?>em}
+.edit_area_room .form_general input:not([type="submit"]) {width: <?php echo $edit_area_room_input_width ?>em}
+#logon input:not([type="submit"]) {width: <?php echo $logon_input_width ?>em}
 #db_logon                 input {width: <?php echo $db_logon_input_width ?>em}
 
 .form_general .group input {
@@ -888,14 +888,23 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 4em}
-.form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
+
+.form_general input.submit {
+  display: block;
+  width: auto;
+  float: left;
+  clear: left;
+}
+
+.form_general input[type="submit"] {
+  margin-top: 1em;
+}
 
 div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
 div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
 div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
-div#logon_submit      {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $logon_left_col_max_width ?>em}
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#import_submit input, #report_submit input, #search_submit input, #logon_submit input, #db_logon_submit input
+#import_submit input, #report_submit input, #search_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
 div#edit_area_room_submit_save {float: left; clear: none; width: auto}

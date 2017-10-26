@@ -77,9 +77,7 @@ function print_login_form($action, $target_url, $returl)
   
   // The submit button
   $field = new FieldInputSubmit();
-  $field->setAttribute('id', 'logon_submit')
-        ->setControlAttributes(array('value' => get_vocab('login'),
-                                     'class' => 'submit'));
+  $field->setControlAttributes(array('value' => get_vocab('login')));
   $fieldset-> addElement($field);
   
   $form->addElement($fieldset);
