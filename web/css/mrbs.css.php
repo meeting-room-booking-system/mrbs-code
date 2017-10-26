@@ -754,10 +754,11 @@ $general_label_height          = '1.0';     // em
 $general_left_col_width        = '20';      // %
 $general_right_col_width       = '79';      // %  (79 to avoid rounding problems)
 $general_gap                   = '1.0';     // em  (gap between left and right columns)
+$input_width                   = '20';      // em
 
 // Specific to the "edit_entry" form
 $edit_entry_left_col_max_width = '10';      // em
-$edit_entry_textarea_width     = '26';      // em
+$edit_entry_textarea_width     = '20';      // em
 $edit_entry_ampm_width         = '16';      // em
 $edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
 $edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
@@ -767,33 +768,28 @@ $import_left_col_max_width     = '12';      // em
 
 // Specific to the "report" form
 $report_left_col_max_width     = '12';      // em
-$report_input_width            = '12';      // em
-$report_form_min_width         = $report_left_col_max_width + $report_input_width + $general_gap;
+$report_form_min_width         = $report_left_col_max_width + $input_width + $general_gap;
 $report_form_min_width         = number_format($report_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "search" form
 $search_left_col_max_width     = '8';       // em
-$search_input_width            = '12';      // em
-$search_form_min_width         = $search_left_col_max_width + $search_input_width + $general_gap;
+$search_form_min_width         = $search_left_col_max_width + $input_width + $general_gap;
 $search_form_min_width         = number_format($search_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "logon" form
 $logon_left_col_max_width      = '8';       // em
-$logon_input_width             = '14';      // em
-$logon_form_min_width          = $logon_left_col_max_width + $logon_input_width + $general_gap;
+$logon_form_min_width          = $logon_left_col_max_width + $input_width + $general_gap;
 $logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "db_logon" form
 $db_logon_left_col_max_width   = '12';      // em
-$db_logon_input_width          = '12';      // em
-$db_logon_form_min_width       = $db_logon_left_col_max_width + $db_logon_input_width + $general_gap;
+$db_logon_form_min_width       = $db_logon_left_col_max_width + $input_width + $general_gap;
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 // Specific to the "edit_area_room" form
 $edit_area_room_left_col_width      = '17';      // em
 $edit_area_room_left_col_max_width  = '30';      // em
-$edit_area_room_input_width         = '12';      // em
-$edit_area_room_form_min_width      = $edit_area_room_left_col_width + $edit_area_room_input_width + $general_gap;
+$edit_area_room_form_min_width      = $edit_area_room_left_col_width + $input_width + $general_gap;
 $edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
 
 
@@ -853,15 +849,13 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 .rep_type_details label {text-align: left}
 
 .form_general input {
-    display: block; float: left; margin-left: <?php echo $general_gap ?>em; 
-    font-family: <?php echo $standard_font_family ?>; font-size: small
+    display: block;
+    float: left;
+    width: <?php echo $input_width ?>em;
+    margin-left: <?php echo $general_gap ?>em; 
+    font-family: <?php echo $standard_font_family ?>;
+    font-size: small
 }
-.edit_entry     .form_general input:not([type="submit"]) {width: <?php echo $edit_entry_textarea_width ?>em; margin-right: 1em}
-.report         .form_general input:not([type="submit"]) {width: <?php echo $report_input_width ?>em}
-.search         .form_general input:not([type="submit"]) {width: <?php echo $search_input_width ?>em}
-.edit_area_room .form_general input:not([type="submit"]) {width: <?php echo $edit_area_room_input_width ?>em}
-#logon input:not([type="submit"]) {width: <?php echo $logon_input_width ?>em}
-#db_logon                 input {width: <?php echo $db_logon_input_width ?>em}
 
 .form_general .group input {
   clear: none;
@@ -869,7 +863,9 @@ fieldset.rep_type_details fieldset {padding-top: 0}
   margin-right: 0.5em;
 }
 
-.form_general input.date {width: 6em}
+.form_general input.date {
+  width: 6em;
+}
 
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
 .form_general textarea {
@@ -878,6 +874,7 @@ fieldset.rep_type_details fieldset {padding-top: 0}
     margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
+
 .form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
 .form_general label.radio {font-weight: normal; width: auto}
 .form_general input.radio {
@@ -891,12 +888,12 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 
 .form_general input.submit {
   display: block;
-  width: auto;
   float: left;
   clear: left;
 }
 
 .form_general input[type="submit"] {
+  width: auto;
   margin-top: 1em;
 }
 
