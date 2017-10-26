@@ -848,13 +848,20 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 
 .rep_type_details label {text-align: left}
 
+.form_general input, .form_general textarea, .form_general select {
+  float: left;
+  margin-left: <?php echo $general_gap ?>em; 
+}
+
+/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
+.form_general input, .form_general textarea {
+  display: block;
+  font-family: <?php echo $standard_font_family ?>;
+  font-size: small;
+}
+
 .form_general input {
-    display: block;
-    float: left;
-    width: <?php echo $input_width ?>em;
-    margin-left: <?php echo $general_gap ?>em; 
-    font-family: <?php echo $standard_font_family ?>;
-    font-size: small
+  width: <?php echo $input_width ?>em;
 }
 
 .form_general .group input {
@@ -867,15 +874,17 @@ fieldset.rep_type_details fieldset {padding-top: 0}
   width: 6em;
 }
 
-/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
 .form_general textarea {
-    display: block; float: left; 
-    width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
-    margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
-    font-family: <?php echo $standard_font_family ?>; font-size: small
+    width: <?php echo $edit_entry_textarea_width ?>em;
+    height: 11em; 
+    margin-bottom: 0.5em;
 }
 
-.form_general select {float: left; margin-left: <?php echo $general_gap ?>em; margin-right: -0.5em; margin-bottom: 0.5em}
+.form_general select {
+  margin-right: -0.5em;
+  margin-bottom: 0.5em;
+}
+
 .form_general label.radio {font-weight: normal; width: auto}
 .form_general input.radio {
   margin-top: 0.1em;
@@ -887,8 +896,6 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 .edit_area_room .form_general #booking_policies input.text {width: 4em}
 
 .form_general input.submit {
-  display: block;
-  float: left;
   clear: left;
 }
 
