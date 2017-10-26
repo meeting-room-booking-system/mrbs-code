@@ -17,12 +17,16 @@ class Element
     $this->self_closing = $self_closing;
   }
   
+  
   public function setText($text)
   {
     $this->text = $text;
     return $this;
   }
   
+  
+  // A value of null allows for the setting of attributes such as
+  // 'required' and 'disabled'
   public function setAttribute($name, $value=null)
   {
     $this->attributes[$name] = $value;

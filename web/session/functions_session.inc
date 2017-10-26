@@ -1,6 +1,13 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputHidden;
+use MRBS\Form\FieldInputPassword;
+use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
+
 
 function print_login_failed()
 {
@@ -14,15 +21,35 @@ function print_login_failed()
 */
 function print_login_form($action, $target_url, $returl)
 {
-  $html = '';
+  $form = new Form();
+  $form->setAttributes(array('class'  => 'form_general',
+                             'id'     => 'logon',
+                             'method' => 'post',
+                             'action' => $action));
   
-  $html .= "<form class=\"form_general\" id=\"logon\" method=\"post\"".
-           " action=\"" . htmlspecialchars($action) . "\">\n";
-  $html .= "<fieldset>\n";
-  $html .= "<legend>" . get_vocab("please_login") . "</legend>\n";
+  // Hidden input - 'returl'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'returl',
+                                'value' => $returl));
+  $form->addElement($element);
   
-  $html .= "<div>\n";
+  // Hidden input - 'target_url'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'target_url',
+                                'value' => $target_url));
+  $form->addElement($element);
   
+  // Hidden input - 'action'
+  $element = new ElementInputHidden();
+  $element->setAttributes(array('name'  => 'action',
+                                'value' => 'SetName'));
+  $form->addElement($element);
+  
+  // Now for the visible fields
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('please_login'));
+  
+  // The username field
   if (function_exists(__NAMESPACE__ . "\\canValidateByEmail")
       && canValidateByEmail())
   {
@@ -33,32 +60,37 @@ function print_login_form($action, $target_url, $returl)
     $placeholder = get_vocab("users.name");
   }
   
-  $html .= "<label for=\"username\" title=\"$placeholder\">" . 
-           get_vocab("user") . "</label>\n";
-  $html .= "<input type=\"text\" id=\"username\" name=\"username\" " .
-           " placeholder=\"$placeholder\">\n";
-  $html .= "</div>\n";
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('user'))
+        ->setLabelAttributes(array('title' => $placeholder))
+        ->setControlAttributes(array('id'          => 'username',
+                                     'name'        => 'username',
+                                     'placeholder' => $placeholder));               
+  $fieldset->addElement($field);
   
-  $html .= "<div>\n";
-  $html .= "<label for=\"password\">" . get_vocab("users.password") . "</label>\n";
-  $html .= "<input type=\"password\" id=\"password\" name=\"password\">\n";
-  $html .= "</div>\n";
+  // The password field
+  $field = new FieldInputPassword();
+  $field->setLabel(get_vocab('users.password'))
+        ->setControlAttributes(array('id'          => 'password',
+                                     'name'        => 'password'));               
+  $fieldset->addElement($field);
+  
+  // The submit button
+  $field = new FieldInputSubmit();
+  $field->setAttribute('id', 'logon_submit')
+        ->setControlAttributes(array('value' => get_vocab('login'),
+                                     'class' => 'submit'));
+  $fieldset-> addElement($field);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
+  
+  
+  // The code below doesn't really belong here and ideally ought to be moved
+  // to somewhere where you can see the opening <div> etc.
 
-
-  $html .= "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"action\" value=\"SetName\">\n";
-  
-  $html .= "<div id=\"logon_submit\">\n";
-  $html .= "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
-  $html .= "</div>\n";
-  
-  $html .= "</fieldset>\n";
-  $html .= "</form>\n";
-
-  $html .= "</div>";  // Close of the contents div
-  
-  echo $html;
+  echo "</div>\n";  // Close of the contents div
   
   // Print footer and exit
   print_footer(TRUE);
