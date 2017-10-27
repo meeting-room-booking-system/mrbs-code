@@ -170,7 +170,7 @@ function generate_new_area_form()
   $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('addarea'),
                                      'class' => 'submit'));
-  $fieldset-> addElement($field);
+  $fieldset->addElement($field);
   
   $form->addElement($fieldset);
   
@@ -242,7 +242,7 @@ function generate_new_room_form()
   $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('addroom'),
                                      'class' => 'submit'));
-  $fieldset-> addElement($field);
+  $fieldset->addElement($field);
       
   $form->addElement($fieldset);
   

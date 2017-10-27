@@ -4,6 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputHidden;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
@@ -78,7 +79,7 @@ function print_login_form($action, $target_url, $returl)
   // The submit button
   $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('login')));
-  $fieldset-> addElement($field);
+  $fieldset->addElement($field);
   
   $form->addElement($fieldset);
   
@@ -131,19 +132,30 @@ function print_logon_button($target_url)
 
 function print_logoff_button($target_url)
 {
-  $html = '';
+  $form = new Form();
+  $form->setAttributes(array('method' => 'post',
+                             'action' => 'admin.php'));
   
-  $html .= "<form method=\"post\" action=\"admin.php\">\n";
-  $html .= "<div>\n";
-  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"action\" value=\"SetName\">\n";
-  $html .= "<input type=\"hidden\" name=\"username\" value=\"\">\n";
-  $html .= "<input type=\"hidden\" name=\"password\" value=\"\">";
-  $html .= "<input type=\"submit\" value=\"" . get_vocab('logoff') . "\">\n";
-  $html .= "</div>\n";
-  $html .= "</form>\n";
+  // Add the hidden fields
+  $hidden_fields = array('target_url' => $target_url,
+                         'action'     => 'SetName',
+                         'username'   => '',
+                         'password'   => '');
+                         
+  foreach($hidden_fields as $key => $value)
+  {
+    $element = new ElementInputHidden();
+    $element->setAttributes(array('name'  => $key,
+                                  'value' => $value));
+    $form->addElement($element);
+  }
   
-  echo $html;
+  // The submit button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('logoff'));
+  $form->addElement($element);
+  
+  $form->render();
 }
 
 
