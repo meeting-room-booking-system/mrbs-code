@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 /*****************************************************************************\
 *                                                                            *
 *   File name      session_cookie.inc                                        *
@@ -45,105 +47,109 @@ if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
   setcookie("UserName", '', time()-42000, $cookie_path);
 }
 
-/*
-  Target of the form with sets the URL argument "action=SetName".
-  Will eventually return to URL argument "target_url=whatever".
-*/
-if (isset($action) && ($action == "SetName"))
+
+if (isset($action))
 {
-  // Avoid errors with error level ALL
-  if ( !isset( $username ) )
+  // If we're going to do something then check the CSRF token first
+  Form::checkToken();
+  
+  // Target of the form with sets the URL argument "action=SetName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "SetName")
   {
-    $username = "";
-  }
-  /* First make sure the password is valid */
-  if ($username == "") 
-  {
-    logoff_user();
-  }
-  else
-  {
-    if (($valid_username = authValidateUser($username, $password)) === false)
+    // Avoid errors with error level ALL
+    if ( !isset( $username ) )
     {
-      print_header();
-      print_login_failed();
-      print_login_form(this_page(), $target_url, $returl);
-      exit();
+      $username = "";
+    }
+    /* First make sure the password is valid */
+    if ($username == "") 
+    {
+      logoff_user();
     }
     else
     {
-      $UserName     = $valid_username;
-      $UserPassword = $password;
-    }
-
-    if ($auth['session_cookie']['session_expire_time'] == 0)
-    {
-      $expiry_time = 0;
-    }
-    else
-    {
-      $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
-    }
-
-    $session_data = array();
-    $session_data['user'] = $UserName;
-    $session_data['expiry'] = $expiry_time;
-    if ($auth['session_cookie']['include_ip'])
-    {
-      $session_data['ip'] = $REMOTE_ADDR;
-    }
-    $json_data = json_encode($session_data);
-    if (!function_exists('hash_hmac'))
-    {
-      fatal_error("It appears that your PHP has the hash functions " .
-                  "disabled, which are required for the 'cookie' " .
-                  "session scheme.");
-    }
-    $hash = hash_hmac(
-                      $auth["session_cookie"]["hash_algorithm"],
-                      $json_data,
-                      $auth['session_cookie']['secret']
-                     );
-
-    setcookie("SessionToken",
-              "${hash}_".base64_encode($json_data),
-              $expiry_time,
-              $cookie_path);
-    }
-    // preserve the original $HTTP_REFERER by sending it as a GET parameter
-    if (!empty($returl))
-    {
-      // check to see whether there's a query string already
-      if (strpos($target_url, '?') === false)
+      if (($valid_username = authValidateUser($username, $password)) === false)
       {
-        $target_url .= "?returl=" . urlencode($returl);
+        print_header();
+        print_login_failed();
+        print_login_form(this_page(), $target_url, $returl);
+        exit();
       }
       else
       {
-        $target_url .= "&returl=" . urlencode($returl);
+        $UserName     = $valid_username;
+        $UserPassword = $password;
       }
-    }
-    header ("Location: $target_url"); /* Redirect browser to initial page */
-    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
-        which allows to work around problems with DNS inconsistencies in the server name.
-        Anyway, if the browser cannot redirect automatically, the manual link below will work. */
+
+      if ($auth['session_cookie']['session_expire_time'] == 0)
+      {
+        $expiry_time = 0;
+      }
+      else
+      {
+        $expiry_time = time()+$auth['session_cookie']['session_expire_time'];
+      }
+
+      $session_data = array();
+      $session_data['user'] = $UserName;
+      $session_data['expiry'] = $expiry_time;
+      if ($auth['session_cookie']['include_ip'])
+      {
+        $session_data['ip'] = $REMOTE_ADDR;
+      }
+      $json_data = json_encode($session_data);
+      if (!function_exists('hash_hmac'))
+      {
+        fatal_error("It appears that your PHP has the hash functions " .
+                    "disabled, which are required for the 'cookie' " .
+                    "session scheme.");
+      }
+      $hash = hash_hmac(
+                        $auth["session_cookie"]["hash_algorithm"],
+                        $json_data,
+                        $auth['session_cookie']['secret']
+                       );
+
+      setcookie("SessionToken",
+                "${hash}_".base64_encode($json_data),
+                $expiry_time,
+                $cookie_path);
+      }
+      // preserve the original $HTTP_REFERER by sending it as a GET parameter
+      if (!empty($returl))
+      {
+        // check to see whether there's a query string already
+        if (strpos($target_url, '?') === false)
+        {
+          $target_url .= "?returl=" . urlencode($returl);
+        }
+        else
+        {
+          $target_url .= "&returl=" . urlencode($returl);
+        }
+      }
+      header ("Location: $target_url"); /* Redirect browser to initial page */
+      /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
+          which allows to work around problems with DNS inconsistencies in the server name.
+          Anyway, if the browser cannot redirect automatically, the manual link below will work. */
+      print_header();
+      echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+
+      // Print footer and exit
+      print_footer(TRUE);
+  }
+
+
+
+  // Target of the form with sets the URL argument "action=QueryName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "QueryName")
+  {
     print_header();
-    echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
-
-    // Print footer and exit
-    print_footer(TRUE);
-}
-
-
-/*
-  Target of the form with sets the URL argument "action=QueryName".
-  Will eventually return to URL argument "target_url=whatever".
-*/
-if (isset($action) && ($action == "QueryName"))
-{
-  print_header();
-  print_login_form(this_page(), $target_url, $returl);
-  exit();
+    print_login_form(this_page(), $target_url, $returl);
+    exit();
+  }
 }
 
 /* authGet()

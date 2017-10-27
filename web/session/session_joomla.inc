@@ -1,8 +1,11 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 require_once MRBS_ROOT . '/session/functions_session.inc';
+
 
 /* authGet()
  * 
@@ -89,65 +92,68 @@ if (!isset($returl))
   $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
 }
 
-/*
-  Target of the form with sets the URL argument "action=SetName".
-  Will eventually return to URL argument "target_url=whatever".
-*/
-if (isset($action) && ($action == "SetName"))
+
+if (isset($action))
 {
-  /* First make sure the password is valid */
-  if ($username == "")
+  // If we're going to do something then check the CSRF token first
+  Form::checkToken();
+  
+  // Target of the form with sets the URL argument "action=SetName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "SetName")
   {
-    logoff_user();
-  }
-  else
-  {
-    $credentials = array();
-    $credentials['username'] = $username;
-    $credentials['password'] = $password;
- 
-    if (!$mainframe->login($credentials))
+    /* First make sure the password is valid */
+    if ($username == "")
     {
-      print_header();
-      print_login_failed();
-      print_login_form(this_page(), $target_url, $returl);
-      exit();
-    }
-  }
-  // preserve the original $HTTP_REFERER by sending it as a GET parameter
-  if (!empty($returl))
-  {
-    // check to see whether there's a query string already
-    if (strpos($target_url, '?') === false)
-    {
-      $target_url .= "?returl=" . urlencode($returl);
+      logoff_user();
     }
     else
     {
-      $target_url .= "&returl=" . urlencode($returl);
+      $credentials = array();
+      $credentials['username'] = $username;
+      $credentials['password'] = $password;
+   
+      if (!$mainframe->login($credentials))
+      {
+        print_header();
+        print_login_failed();
+        print_login_form(this_page(), $target_url, $returl);
+        exit();
+      }
     }
+    // preserve the original $HTTP_REFERER by sending it as a GET parameter
+    if (!empty($returl))
+    {
+      // check to see whether there's a query string already
+      if (strpos($target_url, '?') === false)
+      {
+        $target_url .= "?returl=" . urlencode($returl);
+      }
+      else
+      {
+        $target_url .= "&returl=" . urlencode($returl);
+      }
+    }
+
+    header ("Location: $target_url"); /* Redirect browser to initial page */
+    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
+      which allows to work around problems with DNS inconsistencies in the server name.
+      Anyway, if the browser cannot redirect automatically, the manual link below will work. */
+    print_header();
+    echo "<br>\n";
+    echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+
+    // Print footer and exit
+    print_footer(TRUE);
   }
 
-  header ("Location: $target_url"); /* Redirect browser to initial page */
-  /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
-    which allows to work around problems with DNS inconsistencies in the server name.
-    Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-  print_header();
-  echo "<br>\n";
-  echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
-
-  // Print footer and exit
-  print_footer(TRUE);
-}
-
-
-/*
-  Target of the form with sets the URL argument "action=QueryName".
-  Will eventually return to URL argument "target_url=whatever".
-*/
-if (isset($action) && ($action == "QueryName"))
-{
-  print_header();
-  print_login_form(this_page(), $target_url, $returl);
-  exit();
+   
+  // Target of the form with sets the URL argument "action=QueryName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "QueryName")
+  {
+    print_header();
+    print_login_form(this_page(), $target_url, $returl);
+    exit();
+  }
 }
