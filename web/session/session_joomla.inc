@@ -4,6 +4,71 @@ namespace MRBS;
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
+/* authGet()
+ * 
+ * Request the user name/password
+ * 
+ * Returns: Nothing
+ */
+function authGet()
+{
+  global $QUERY_STRING;
+  global $returl;
+
+  print_header();
+
+  echo "<p>".get_vocab("norights")."</p>\n";
+
+  $target_url = this_page();
+  if (isset($QUERY_STRING))
+  {
+    $target_url = $target_url . "?" . $QUERY_STRING;
+  }
+  print_login_form(this_page(), $target_url, $returl);
+
+  exit();
+}
+
+function getUserName()
+{
+  return JFactory::getUser()->username;
+}
+
+// Print the logon entry on the top banner.
+function print_logon_box()
+{
+  global $QUERY_STRING;
+  
+  $target_url = this_page();
+
+  if (isset($QUERY_STRING))
+  {
+    $target_url = $target_url . "?" . $QUERY_STRING;
+  }
+  
+  $user=getUserName();
+  
+  if (isset($user))
+  {
+    print_report_link($user);
+    print_logoff_button($target_url);
+  }
+  else
+  {
+    print_unknown_user();
+    print_logon_button($target_url);
+  } 
+  
+  print_userlist_link();
+}
+
+
+function logoff_user()
+{
+  $mainframe->logout();
+}
+
+
 $mainframe = JFactory::getApplication('site');
 $mainframe->initialise();
 
@@ -85,68 +150,4 @@ if (isset($action) && ($action == "QueryName"))
   print_header();
   print_login_form(this_page(), $target_url, $returl);
   exit();
-}
-
-/* authGet()
- * 
- * Request the user name/password
- * 
- * Returns: Nothing
- */
-function authGet()
-{
-  global $QUERY_STRING;
-  global $returl;
-
-  print_header();
-
-  echo "<p>".get_vocab("norights")."</p>\n";
-
-  $target_url = this_page();
-  if (isset($QUERY_STRING))
-  {
-    $target_url = $target_url . "?" . $QUERY_STRING;
-  }
-  print_login_form(this_page(), $target_url, $returl);
-
-  exit();
-}
-
-function getUserName()
-{
-  return JFactory::getUser()->username;
-}
-
-// Print the logon entry on the top banner.
-function print_logon_box()
-{
-  global $QUERY_STRING;
-  
-  $target_url = this_page();
-
-  if (isset($QUERY_STRING))
-  {
-    $target_url = $target_url . "?" . $QUERY_STRING;
-  }
-  
-  $user=getUserName();
-  
-  if (isset($user))
-  {
-    print_report_link($user);
-    print_logoff_button($target_url);
-  }
-  else
-  {
-    print_unknown_user();
-    print_logon_button($target_url);
-  } 
-  
-  print_userlist_link();
-}
-
-
-function logoff_user()
-{
-  $mainframe->logout();
 }
