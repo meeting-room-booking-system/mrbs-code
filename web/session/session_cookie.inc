@@ -189,10 +189,6 @@ if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
 
 if (isset($action))
 {
-  // If we're going to do something then check the CSRF token first
-  Form::checkToken();
-  
-
   // Target of the form with sets the URL argument "action=QueryName".
   // Will eventually return to URL argument "target_url=whatever".
   if ($action == "QueryName")
@@ -207,6 +203,9 @@ if (isset($action))
   // Will eventually return to URL argument "target_url=whatever".
   if ($action == "SetName")
   {
+    // If we're going to do something then check the CSRF token first
+    Form::checkToken();
+    
     // Avoid errors with error level ALL
     if ( !isset( $username ) )
     {

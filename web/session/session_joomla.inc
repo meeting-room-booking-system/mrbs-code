@@ -95,10 +95,6 @@ if (!isset($returl))
 
 if (isset($action))
 {
-  // If we're going to do something then check the CSRF token first
-  Form::checkToken();
-
-  
   // Target of the form with sets the URL argument "action=QueryName".
   // Will eventually return to URL argument "target_url=whatever".
   if ($action == "QueryName")
@@ -113,6 +109,9 @@ if (isset($action))
   // Will eventually return to URL argument "target_url=whatever".
   if ($action == "SetName")
   {
+    // If we're going to do something then check the CSRF token first
+    Form::checkToken();
+    
     /* First make sure the password is valid */
     if ($username == "")
     {
