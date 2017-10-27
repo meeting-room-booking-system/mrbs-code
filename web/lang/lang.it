@@ -359,7 +359,6 @@ $vocab["editroom"]           = "Modifica stanza";
 $vocab["viewroom"]           = "Vedi stanza";
 $vocab["error_room"]         = "Errore: stanza ";
 $vocab["not_found"]          = " non trovata";
-$vocab["error_area"]         = "Errore: area ";
 $vocab["room_admin_email"]   = "Email del gestore della stanza";
 $vocab["area_admin_email"]   = "Email del gestore dell'area";
 $vocab["area_first_slot_start"] = "Inizio primo slot";

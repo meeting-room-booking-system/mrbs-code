@@ -340,7 +340,6 @@ $vocab["editroom"]           = "Edycja Pokoju";
 $vocab["viewroom"]                = "Zobacz pokój";
 $vocab["error_room"]         = "Błąd: Pokój ";
 $vocab["not_found"]          = " nie znaleziono";
-$vocab["error_area"]         = "Błąd: strefa ";
 $vocab["room_admin_email"]   = "Email do administratora pokoju";
 $vocab["area_admin_email"]   = "Email do administratora strefy";
 $vocab["area_first_slot_start"]   = "Początek pierwszego slotu";

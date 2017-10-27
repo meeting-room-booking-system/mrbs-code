@@ -323,7 +323,6 @@ $vocab["editroom"]                = "עדכן חדר";
 $vocab["viewroom"]                = "הצג חדר";
 $vocab["error_room"]              = "תקלה: חדר";
 $vocab["not_found"]               = "לא נמצא";
-$vocab["error_area"]              = "תקלה: אזור";
 $vocab["room_admin_email"]        = "דואר אלקטרוני של מנהל חדר";
 $vocab["area_admin_email"]        = "דואר אלקטרוני של מנהל אזור";
 $vocab["area_first_slot_start"]   = "שעה התחלתית";

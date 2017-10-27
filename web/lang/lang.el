@@ -197,7 +197,6 @@ $vocab["editroomarea"]       = "Τροποποίηση περιγραφής πε
 $vocab["editroom"]           = "Τροποποίηση αίθουσας";
 $vocab["error_room"]         = "Σφάλμα: Η αίθουσα ";
 $vocab["not_found"]          = " δεν βρέθηκε";
-$vocab["error_area"]         = "Σφάλμα: Η περιοχή ";
 $vocab["room_admin_email"]   = "Room admin email";
 $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "Invalid email!";

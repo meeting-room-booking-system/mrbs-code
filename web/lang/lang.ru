@@ -314,7 +314,6 @@ $vocab["editroom"]                = "Изменить помещение";
 $vocab["viewroom"]                = "Просмотр помещение";
 $vocab["error_room"]              = "Ошибка: помещение ";
 $vocab["not_found"]               = " не найдено";
-$vocab["error_area"]              = "Ошибка: корпус ";
 $vocab["room_admin_email"]        = "Электронный адрес администратора помещения";
 $vocab["area_admin_email"]        = "Электронный адрес администратора корпуса";
 $vocab["area_first_slot_start"]   = "Начало первого бронирования";

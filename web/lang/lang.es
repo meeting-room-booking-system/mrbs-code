@@ -368,7 +368,6 @@ $vocab["editroom"]           = "Editar Sala";
 $vocab["viewroom"]                = "Ver Sala";
 $vocab["error_room"]         = "Error: Sala ";
 $vocab["not_found"]          = " no encontrado";
-$vocab["error_area"]         = "Error: Agrupación ";
 $vocab["room_admin_email"]   = "Correo Electrónico del Administrador de Sala";
 $vocab["area_admin_email"]   = "Correo Electrónico del Administrador de Agrupación";
 $vocab["area_first_slot_start"]   = "Comienzo del primer periodo";

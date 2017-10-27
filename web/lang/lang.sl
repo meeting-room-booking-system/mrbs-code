@@ -209,7 +209,6 @@ $vocab["editroomarea"]       = "Uredi opis področja ali prostora";
 $vocab["editroom"]           = "Uredi prostor";
 $vocab["error_room"]         = "Napaka: prostor ";
 $vocab["not_found"]          = " ne najdem";
-$vocab["error_area"]         = "Napaka: področje ";
 $vocab["room_admin_email"]   = "e-pošta upravnika prostora";
 $vocab["area_admin_email"]   = "e-pošta upravnika področja";
 $vocab["invalid_email"]      = "Napačen e-pošni naslov!";

@@ -198,7 +198,6 @@ $vocab["editroomarea"]       = "Editar descripció de família o recurs";
 $vocab["editroom"]           = "Editar recurs";
 $vocab["error_room"]         = "Error: recurs ";
 $vocab["not_found"]          = " no trobat";
-$vocab["error_area"]         = "Error: area ";
 $vocab["room_admin_email"]   = "Recuros admin email";
 $vocab["area_admin_email"]   = "Area admin email";
 $vocab["invalid_email"]      = "email invàlid!";

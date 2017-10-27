@@ -332,7 +332,6 @@ $vocab["editroom"]           = "Endre rom";
 $vocab["viewroom"]           = "Se rom";
 $vocab["error_room"]         = "Feil: rommet ";
 $vocab["not_found"]          = " ble ikke funnet";
-$vocab["error_area"]         = "Feil: område ";
 $vocab["room_admin_email"]   = "Rom-admins e-post";
 $vocab["area_admin_email"]   = "Områdeadmins e-post";
 $vocab["area_first_slot_start"]   = "Start på første luke";

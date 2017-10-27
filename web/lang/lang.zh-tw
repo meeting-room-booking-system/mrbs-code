@@ -197,7 +197,6 @@ $vocab["editroomarea"]       = "修改描述";
 $vocab["editroom"]           = "修改會議室/設備";
 $vocab["error_room"]         = "錯誤: 會議室/設備 ";
 $vocab["not_found"]          = "找不到";
-$vocab["error_area"]         = "錯誤: 區域 ";
 $vocab["room_admin_email"]   = "會議室管理者email";
 $vocab["area_admin_email"]   = "區域管理者email";
 $vocab["invalid_email"]      = "不合法的email!";

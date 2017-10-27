@@ -366,7 +366,6 @@ $vocab["editroom"]           = "Raum bearbeiten";
 $vocab["viewroom"]           = "Raum ansehen";
 $vocab["error_room"]         = "Fehler: Raum ";
 $vocab["not_found"]          = " nicht gefunden";
-$vocab["error_area"]         = "Fehler: Bereich ";
 $vocab["room_admin_email"]   = "E-Mail des Raumadministrators";
 $vocab["area_admin_email"]   = "E-Mail des Bereichsadministrators";
 $vocab["area_first_slot_start"]   = "Beginn des ersten Abschnitts";

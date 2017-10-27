@@ -347,7 +347,6 @@ $vocab["editroom"]                = "Izmeni prostoriju";
 $vocab["viewroom"]                = "Pogledaj prostoriju";
 $vocab["error_room"]              = "Greška: prostorija ";
 $vocab["not_found"]               = " nije pronađena";
-$vocab["error_area"]              = "Greška: oblast ";
 $vocab["room_admin_email"]        = "imejl adresa administratora sobe";
 $vocab["area_admin_email"]        = "Imejl aresa administratora oblasti";
 $vocab["area_first_slot_start"]   = "Početak prvog slota (vremena)";

@@ -323,7 +323,6 @@ $vocab["editroom"]                = "แก้ไขห้อง";
 $vocab["viewroom"]                = "ดูห้อง";
 $vocab["error_room"]              = "ล้มเหลว: ห้อง";
 $vocab["not_found"]               = "ไม่พบ";
-$vocab["error_area"]              = "ล้มเหลว: พื้นที่ ";
 $vocab["room_admin_email"]        = "อีเมล์ผู้ดูแลห้อง";
 $vocab["area_admin_email"]        = "พื้นที่อีเมล์ผู้ใช้งาน";
 $vocab["area_first_slot_start"]   = "เริ่มกำหนดเวลาแรก";

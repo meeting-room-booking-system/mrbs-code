@@ -360,7 +360,6 @@ $vocab["editroom"]                = "Upraviť zdroj";
 $vocab["viewroom"]                = "Zobraziť zdroj";
 $vocab["error_room"]              = "Chyba: zdroj ";
 $vocab["not_found"]               = " nenájdený";
-$vocab["error_area"]              = "Chyba: oblasť ";
 $vocab["room_admin_email"]        = "E-mail administrátora zdroja";
 $vocab["area_admin_email"]        = "E-mail administrátora oblasti";
 $vocab["area_first_slot_start"]   = "Začiatok prvej pozície";

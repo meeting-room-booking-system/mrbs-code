@@ -359,7 +359,6 @@ $vocab["editroom"]                = "Upravit místnost/zdroj";
 $vocab["viewroom"]                = "Zobrazit místnost/zdroj";
 $vocab["error_room"]              = "Chyba: místnost/zdroj ";
 $vocab["not_found"]               = " nenalezeno";
-$vocab["error_area"]              = "Chyba: oblast ";
 $vocab["room_admin_email"]        = "E-mail administrátora místnosti/zdroje";
 $vocab["area_admin_email"]        = "E-mail administrátora oblasti";
 $vocab["area_first_slot_start"]   = "Začátek první pozice";

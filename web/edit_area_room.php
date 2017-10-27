@@ -1284,7 +1284,7 @@ if (isset($change_area) &&!empty($area))
   $area_data = get_area_details($area);
   if (empty($area_data))
   {
-    fatal_error(get_vocab("error_area") . $area . get_vocab("not_found"));
+    fatal_error(get_vocab("invalid_area"));
   }
 
   // Get the settings for this area, from the database if they are there, otherwise from

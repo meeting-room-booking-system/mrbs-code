@@ -368,7 +368,6 @@ $vocab["editroom"]                = "Modifica Sala";
 $vocab["viewroom"]                = "Vizualizeaza Sala";
 $vocab["error_room"]              = "Eroare: sala";
 $vocab["not_found"]               = " nu a fost gasita";
-$vocab["error_area"]              = "Eroare:zona ";
 $vocab["room_admin_email"]        = "Sala admin email";
 $vocab["area_admin_email"]        = "Zona admin email";
 $vocab["area_first_slot_start"]   = "Incepere primul slot";

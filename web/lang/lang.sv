@@ -365,7 +365,6 @@ $vocab["editroom"]                = "Ändra rum";
 $vocab["viewroom"]                = "Visa rum";
 $vocab["error_room"]              = "Fel: rum ";
 $vocab["not_found"]               = "hittades ej";
-$vocab["error_area"]              = "Fel: område";
 $vocab["room_admin_email"]        = "E-postadress till rumsansvarig";
 $vocab["area_admin_email"]        = "E-postadress till områdesansvarig";
 $vocab["area_first_slot_start"]   = "Start för första tid";

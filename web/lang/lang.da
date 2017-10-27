@@ -198,7 +198,6 @@ $vocab["editroomarea"]       = "Ændre rum- eller område beskrivelse";
 $vocab["editroom"]           = "Ændre rum";
 $vocab["error_room"]         = "Fejl: rum ";
 $vocab["not_found"]          = " ikke fundet";
-$vocab["error_area"]         = "Fejl: område ";
 $vocab["room_admin_email"]   = "Rum administrators email";
 $vocab["area_admin_email"]   = "Område administrators email";
 $vocab["invalid_email"]      = "Ugyldig email!";

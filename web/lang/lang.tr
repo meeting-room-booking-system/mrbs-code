@@ -336,7 +336,6 @@ $vocab["editroom"]           = "Toplantı Salonu Düzenle";
 $vocab["viewroom"]                = "Toplantı odasını gör";
 $vocab["error_room"]         = "Hata: Toplantı Salonu ";
 $vocab["not_found"]          = " bulunamadı";
-$vocab["error_area"]         = "Hata: Bölge ";
 $vocab["room_admin_email"]   = "Toplantı Salonu yönetici epostası";
 $vocab["area_admin_email"]   = "Bölge yönetici epostası";
 

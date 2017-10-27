@@ -344,7 +344,6 @@ $vocab["editroom"]                = "部屋を編集";
 $vocab["viewroom"]                = "部屋を見る";
 $vocab["error_room"]              = "エラー: 部屋 ";
 $vocab["not_found"]               = "は見つかりませんでした";
-$vocab["error_area"]              = "エラー: 部署 ";
 $vocab["room_admin_email"]        = "部屋の管理者のEメール";
 $vocab["area_admin_email"]        = "部署の管理者のEメール";
 $vocab["area_first_slot_start"]   = "最初の時間枠の開始時刻";

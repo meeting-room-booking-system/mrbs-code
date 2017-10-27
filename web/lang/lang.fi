@@ -345,7 +345,6 @@ $vocab["editroom"]                = "Muokkaa huoneen tietoja";
 $vocab["viewroom"]                = "Näytä huoneen tiedot";
 $vocab["error_room"]              = "Virhe: huonetta ";
 $vocab["not_found"]               = " ei löytynyt";
-$vocab["error_area"]              = "Virhe: aluetta ";
 $vocab["room_admin_email"]        = "Huonevastaavan sähköposti";
 $vocab["area_admin_email"]        = "Aluevastaavan sähköposti";
 $vocab["area_first_slot_start"]   = "Kalenterin alkamisaika";

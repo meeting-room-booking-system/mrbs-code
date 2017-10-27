@@ -299,7 +299,6 @@ $vocab["editroom"]           = "Kamer wijzigen";
 $vocab["viewroom"]           = "Bekijk Kamer";
 $vocab["error_room"]         = "Fout: kamer ";
 $vocab["not_found"]          = " niet gevonden";
-$vocab["error_area"]         = "Fout: gebouw ";
 $vocab["room_admin_email"]   = "Kamer beheer email";
 $vocab["area_admin_email"]   = "Gebouw beheer email";
 $vocab["area_first_slot_start"]   = "Start van eerste slot";

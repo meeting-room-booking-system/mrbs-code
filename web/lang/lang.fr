@@ -317,7 +317,6 @@ $vocab["editroom"]           = "Modifier la salle";
 $vocab["viewroom"]           = "Voir la salle";
 $vocab["error_room"]         = "Erreur&nbsp;: salle ";
 $vocab["not_found"]          = " non trouvée";
-$vocab["error_area"]         = "Erreur&nbsp;: lieu ";
 $vocab["room_admin_email"]   = "Courriels des responsables";
 $vocab["area_admin_email"]   = "Courriels des responsables";
 $vocab["area_first_slot_start"]   = "Début de la première case";

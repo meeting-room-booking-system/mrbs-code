@@ -360,7 +360,6 @@ $vocab["editroom"]                = "Ubah Ruangan";
 $vocab["viewroom"]                = "Lihat Ruangan";
 $vocab["error_room"]              = "Error: ruangan ";
 $vocab["not_found"]               = " tidak ditemukan";
-$vocab["error_area"]              = "Error: area ";
 $vocab["room_admin_email"]        = "Surel admin ruangan";
 $vocab["area_admin_email"]        = "Surel admin area";
 $vocab["area_first_slot_start"]   = "Dimulai dari slot pertama";

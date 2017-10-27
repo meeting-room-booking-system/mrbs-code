@@ -360,7 +360,6 @@ $vocab["editroom"]                = "修改房间";
 $vocab["viewroom"]                = "查看房间";
 $vocab["error_room"]              = "错误: 房间 ";
 $vocab["not_found"]               = "找不到";
-$vocab["error_area"]              = "错误: 区域 ";
 $vocab["room_admin_email"]        = "会议室管理员 Email";
 $vocab["area_admin_email"]        = "区域管理员 Email";
 $vocab["area_first_slot_start"]   = "第一时段的起始时间（上班时间）";

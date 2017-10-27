@@ -333,7 +333,6 @@ $vocab["editroom"]                = "Tárgyaló szerkesztése";
 $vocab["viewroom"]                = "Tárgyaló megtekintése";
 $vocab["error_room"]              = "Hiba: a tárgyaló ";
 $vocab["not_found"]               = " nem található.";
-$vocab["error_area"]              = "Hiba: A helyszín ";
 $vocab["room_admin_email"]        = "Tárgyaló admin email címe";
 $vocab["area_admin_email"]        = "Helszín admin email címe";
 $vocab["area_first_slot_start"]   = "Első slot kezdete";

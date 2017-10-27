@@ -197,7 +197,6 @@ $vocab["editroomarea"]       = "Baliabidearen deskribapena editatu";
 $vocab["editroom"]           = "Elementua editatu";
 $vocab["error_room"]         = "Errorea: gela ";
 $vocab["not_found"]          = " ez da aurkitu";
-$vocab["error_area"]         = "Error: eraikina ";
 $vocab["room_admin_email"]   = "Elementuaren kudeatzailearen emaila";
 $vocab["area_admin_email"]   = "Baliabidearen kudeatzailearen emaila";
 $vocab["invalid_email"]      = "Email okerra!";
