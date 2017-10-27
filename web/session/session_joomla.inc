@@ -97,6 +97,17 @@ if (isset($action))
 {
   // If we're going to do something then check the CSRF token first
   Form::checkToken();
+
+  
+  // Target of the form with sets the URL argument "action=QueryName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "QueryName")
+  {
+    print_header();
+    print_login_form(this_page(), $target_url, $returl);
+    exit();
+  }
+  
   
   // Target of the form with sets the URL argument "action=SetName".
   // Will eventually return to URL argument "target_url=whatever".
@@ -145,15 +156,5 @@ if (isset($action))
 
     // Print footer and exit
     print_footer(TRUE);
-  }
-
-   
-  // Target of the form with sets the URL argument "action=QueryName".
-  // Will eventually return to URL argument "target_url=whatever".
-  if ($action == "QueryName")
-  {
-    print_header();
-    print_login_form(this_page(), $target_url, $returl);
-    exit();
   }
 }
