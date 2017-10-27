@@ -103,17 +103,21 @@ function print_unknown_user()
 
 function print_logon_button($target_url)
 {
-  $html = '';
+  $form = new Form();
+  $form->setAttributes(array('method' => 'post',
+                             'action' => 'admin.php'));
   
-  $html .= "<form method=\"post\" action=\"admin.php\">\n";
-  $html .= "<div>\n";
-  $html .= "<input type=\"hidden\" name=\"target_url\" value=\"" . htmlspecialchars($target_url) . "\">\n";
-  $html .= "<input type=\"hidden\" name=\"action\" value=\"QueryName\">\n";
-  $html .= "<input type=\"submit\" value=\"" . get_vocab('login') . "\">\n";
-  $html .= "</div>\n";
-  $html .= "</form>\n";
+  // Add the hidden fields
+  $hidden_inputs = array('target_url' => $target_url,
+                         'action'     => 'QueryName');
+  $form->addHiddenInputs($hidden_inputs);
   
-  echo $html;
+  // The submit button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('login'));
+  $form->addElement($element);
+  
+  $form->render();
 }
 
 
