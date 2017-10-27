@@ -3,7 +3,6 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
-use MRBS\Form\ElementInputHidden;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputText;
@@ -23,23 +22,11 @@ function generate_room_delete_form($room, $area)
                       
   $form->setAttributes($attributes);
   
-  // Hidden input - 'type'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'type',
-                                'value' => 'room'));
-  $form->addElement($element);
-  
-  // Hidden input - 'area'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'area',
-                                'value' => $area));
-  $form->addElement($element);
-  
-  // Hidden input - 'room'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'room',
-                                'value' => $room));
-  $form->addElement($element);
+  // Hidden inputs
+  $hidden_inputs = array('type' => 'room',
+                         'area' => $area,
+                         'room' => $room);
+  $form->addHiddenInputs($hidden_inputs);
   
   // The button
   $element = new ElementInputImage();
@@ -68,6 +55,13 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
                       
   $form->setAttributes($attributes);
   
+  // Hidden inputs for page day, month, year
+  $hidden_inputs = array('day'   => $day,
+                         'month' => $month,
+                         'year'  => $year);
+  $form->addHiddenInputs($hidden_inputs);
+
+  // Now the visible fields
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('');
   
@@ -90,16 +84,6 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
                                      'onchange' => 'this.form.submit()'))
         ->addOptions($options, $area);
   $fieldset->addElement($field);
-  
-  // Hidden inputs for page day, month, year
-  $vars = array('day', 'month', 'year');
-  foreach ($vars as $var)
-  {
-    $element = new ElementInputHidden();
-    $element->setAttributes(array('name'  => $var,
-                                  'value' => $$var));
-    $fieldset->addElement($element);
-  }
 
   // The change area button (won't be needed or displayed if JavaScript is enabled)
   $field = new FieldInputSubmit();
@@ -149,14 +133,12 @@ function generate_new_area_form()
                       
   $form->setAttributes($attributes);
   
+  // Hidden field for the type of operation
+  $form->addHiddenInput('type', 'area');
+  
+  // Now the visible fields
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('addarea'));
-  
-  // Hidden field for the type of operation
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'type',
-                                'value' => 'area'));
-  $fieldset->addElement($element);
   
   // The name field
   $field = new FieldInputText();
@@ -192,20 +174,14 @@ function generate_new_room_form()
                       
   $form->setAttributes($attributes);
 
+  // Hidden inputs
+  $hidden_inputs = array('type' => 'room',
+                         'area' => $area);
+  $form->addHiddenInputs($hidden_inputs);
+  
+  // Visible fields
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('addroom'));
-  
-  // Hidden field for the type of operation
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'type',
-                                'value' => 'room'));
-  $fieldset->addElement($element);
-  
-  // Hidden field for the area
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'area',
-                                'value' => $area));
-  $fieldset->addElement($element);
   
   // The name field
   $field = new FieldInputText();

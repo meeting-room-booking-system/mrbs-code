@@ -3,7 +3,6 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
-use MRBS\Form\ElementInputHidden;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
@@ -28,23 +27,11 @@ function print_login_form($action, $target_url, $returl)
                              'method' => 'post',
                              'action' => $action));
   
-  // Hidden input - 'returl'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'returl',
-                                'value' => $returl));
-  $form->addElement($element);
-  
-  // Hidden input - 'target_url'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'target_url',
-                                'value' => $target_url));
-  $form->addElement($element);
-  
-  // Hidden input - 'action'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'action',
-                                'value' => 'SetName'));
-  $form->addElement($element);
+  // Hidden inputs
+  $hidden_inputs = array('returl'     => $returl,
+                         'target_url' => $target_url,
+                         'action'     => 'SetName');
+  $form->addHiddenInputs($hidden_inputs);
   
   // Now for the visible fields
   $fieldset = new ElementFieldset();
@@ -137,18 +124,11 @@ function print_logoff_button($target_url)
                              'action' => 'admin.php'));
   
   // Add the hidden fields
-  $hidden_fields = array('target_url' => $target_url,
+  $hidden_inputs = array('target_url' => $target_url,
                          'action'     => 'SetName',
                          'username'   => '',
                          'password'   => '');
-                         
-  foreach($hidden_fields as $key => $value)
-  {
-    $element = new ElementInputHidden();
-    $element->setAttributes(array('name'  => $key,
-                                  'value' => $value));
-    $form->addElement($element);
-  }
+  $form->addHiddenInputs($hidden_inputs);
   
   // The submit button
   $element = new ElementInputSubmit();

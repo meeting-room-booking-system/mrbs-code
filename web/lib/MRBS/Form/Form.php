@@ -7,10 +7,33 @@ class Form extends Element
   private static $token = null;
   private static $token_name = 'csrf_token';  // As of PHP 7.1 this would be a private const
   
+  
   public function __construct()
   {
     parent::__construct('form');
     $this->addCSRFToken();
+  }
+  
+  
+  // Adds a hidden input to the form
+  public function addHiddenInput($name, $value)
+  {
+    $element = new ElementInputHidden();
+    $element->setAttributes(array('name'  => $name,
+                                  'value' => $value));
+    $this->addElement($element);
+    return $this;
+  }
+  
+  
+  // Adds an array of hidden inputs to the form
+  public function addHiddenInputs(array $hidden_inputs)
+  {
+    foreach ($hidden_inputs as $key => $value)
+    {
+      $this->addHiddenInput($key, $value);
+    }
+    return $this;
   }
   
   
@@ -54,11 +77,8 @@ class Form extends Element
   
   private function addCSRFToken()
   {
-    $token = self::getToken();
-    $element = new ElementInputHidden();
-    $element->setAttributes(array('name'  => self::$token_name,
-                                  'value' => $token));
-    $this->addElement($element);
+    $this->addHiddenInput(self::$token_name, self::getToken());
+    return $this;
   }
   
 

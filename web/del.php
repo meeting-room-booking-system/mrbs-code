@@ -2,7 +2,6 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
-use MRBS\Form\ElementInputHidden;
 use MRBS\Form\ElementInputSubmit;
 
 require "defaultincludes.inc";
@@ -17,17 +16,10 @@ function generate_no_form($room, $area)
                       
   $form->setAttributes($attributes);
 
-  // Hidden input - 'area'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'area',
-                                'value' => $area));
-  $form->addElement($element);
-  
-  // Hidden input - 'room'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'room',
-                                'value' => $room));
-  $form->addElement($element);
+  // Hidden inputs
+  $hidden_inputs = array('area' => $area,
+                         'room' => $room);
+  $form->addHiddenInputs($hidden_inputs);
   
   // The button
   $element = new ElementInputSubmit();
@@ -47,29 +39,12 @@ function generate_yes_form($room, $area)
                       
   $form->setAttributes($attributes);
   
-  // Hidden input - 'type'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'type',
-                                'value' => 'room'));
-  $form->addElement($element);
-
-  // Hidden input - 'area'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'area',
-                                'value' => $area));
-  $form->addElement($element);
-  
-  // Hidden input - 'room'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'room',
-                                'value' => $room));
-  $form->addElement($element);
-  
-  // Hidden input - 'confirm'
-  $element = new ElementInputHidden();
-  $element->setAttributes(array('name'  => 'confirm',
-                                'value' => '1'));
-  $form->addElement($element);
+  // Hidden inputs
+  $hidden_inputs = array('type'    => 'room',
+                         'area'    => $area,
+                         'room'    => $room,
+                         'confirm' => '1');
+  $form->addHiddenInputs($hidden_inputs);
   
   // The button
   $element = new ElementInputSubmit();
