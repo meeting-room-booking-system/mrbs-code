@@ -70,6 +70,15 @@ abstract class Field extends Element
   }
   
   
+  public function setControlText($text)
+  {
+    $elements = $this->getElements();
+    $elements['control']->setText($text);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   // Sets the attributes for the field label.  No need to do
   // the 'for' attribute, as that is done automatically when you
   // set the 'id' in the control attrributes.

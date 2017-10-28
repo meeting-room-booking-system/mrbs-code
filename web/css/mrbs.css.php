@@ -768,7 +768,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .standard fieldset > div > label, .standard fieldset > div > div {
   display: table-cell;
-  padding-bottom: 0.8em;
+  padding-bottom: 1em;
 }
 
 .standard fieldset > div > label {
@@ -776,15 +776,26 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   padding-left: 2em;
   padding-right: 1em;
   text-align: right;
+  vertical-align: top;
 }
 
 .standard fieldset > div > div {
   text-align: left;
 }
 
+.standard input {
+  width: 20em;
+}
+
 .standard input[type="radio"] {
+  width: auto;
   vertical-align: middle;
   margin: -0.17em 0.4em 0 0;
+}
+
+.standard textarea {
+  height: 6em;
+  width: 20em;
 }
 
 .standard .group label {
