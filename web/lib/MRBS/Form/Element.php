@@ -85,7 +85,7 @@ class Element
   }
   
   
-  // Add a set of options to an element, eg to a <select> element.
+  // Add a set of select options to an element, eg to a <select> or <datalist> element.
   //    $options      An array of options for the select element.   Can be a one- or two-dimensional
   //                  array.  If it's two-dimensional then the keys of the outer level represent
   //                  <optgroup> labels.  The inner level can be a simple array or an associative
@@ -96,12 +96,12 @@ class Element
   //                  parameter is necessary because if you index an array with strings that look
   //                  like integers then PHP casts the keys to integers and the array becomes a 
   //                  simple array).
-  public function addOptions($options, $selected=null, $associative=true)
+  public function addSelectOptions(array $options, $selected=null, $associative=true)
   {
     // Trivial case
     if (empty($options))
     {
-      return;
+      return $this;
     }
     
     // It's possible to have multiple options selected
@@ -118,7 +118,7 @@ class Element
       {
         $optgroup = new ElementOptgroup();
         $optgroup->setAttribute('label', $group)
-                 ->addOptions($group_options, $selected, $associative);
+                 ->addSelectOptions($group_options, $selected, $associative);
         $this->addElement($optgroup);
       }
     }
@@ -140,6 +140,40 @@ class Element
         $this->addElement($option);
       }
     }
+    
+    return $this;
+  }
+  
+  
+  public function addRadioOptions(array $options, $name, $checked=null, $associative=true)
+  {
+    // Trivial case
+    if (empty($options))
+    {
+      return $this;
+    }
+    
+    foreach ($options as $key => $value)
+    {
+      if (!$associative)
+      {
+        $key = $value;
+      }
+      $radio = new ElementInputRadio();
+      $radio->setAttributes(array('name'  => $name,
+                                  'value' => $key));
+      if (isset($checked) && ($key == $checked))
+      {
+        $radio->setAttribute('checked');
+      }
+      $label = new ElementLabel();
+      $label->setText($value)
+            ->addElement($radio);
+            
+      $this->addElement($label);
+    }
+    
+    return $this;
   }
   
   
@@ -150,10 +184,14 @@ class Element
   
   
   // Turns the form into HTML.   HTML escaping is done here.
-  public function toHTML()
+  // If $no_whitespace is true, then don't put any whitespace after opening or
+  // closing tags.   This is useful for structures such as
+  // <label><input>text</label> where whitespace after the <input> tag would
+  // affect what the browser displays on the screen.
+  public function toHTML($no_whitespace=false)
   {
+    $terminator = ($no_whitespace) ? '' : "\n";
     $html = "";
-    
     $html .= "<" . $this->tag;
     
     foreach ($this->attributes as $key => $value)
@@ -164,30 +202,37 @@ class Element
         $html .= '="' . htmlspecialchars($value) . '"';
       }
     }
+    
     $html .= ">";
     
     if ($this->self_closing)
     {
-      $html .= "\n";
+      $html .= $terminator;
     }
     else
     {
-      // This code assumes that an element contains either text or other elements.
-      // In fact the real HTML definition allows both, but we will impose this
-      // restriction to keep things simple.
+      // This code assumes that the text always comes after the other elements, though it
+      // could be that other possibilities are allowed by the HTML5 syntax?
+      if (!empty($this->elements))
+      {
+        // If this element contains text, then don't use a terminator, otherwise
+        // unwanted whitespace will be introduced.
+        if (!isset($this->text))
+        {
+          $html .= $terminator;
+        }
+        foreach ($this->elements as $element)
+        {
+          $html .= $element->toHTML(isset($this->text));
+        }
+      }
+      
       if (isset($this->text))
       {
         $html .= htmlspecialchars($this->text);
       }
-      elseif (!empty($this->elements))
-      {
-        $html .= "\n";
-        foreach ($this->elements as $element)
-        {
-          $html .= $element->toHTML();
-        }
-      }
-      $html .= "</" . $this->tag . ">\n";
+
+      $html .= "</" . $this->tag . ">$terminator";
     }
     
     return $html;

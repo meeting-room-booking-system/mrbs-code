@@ -4,6 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementP;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputText;
 
 // TO DO -------------------------------------------
@@ -53,6 +54,17 @@ function get_fieldset_general($data)
                                      'name'  => 'sort_key',
                                      'value' => $data['sort_key']));
   $fieldset->addElement($field);
+                                     
+  // Status - Enabled or Disabled
+  $options = array('0' => get_vocab("enabled"),
+                   '1' => get_vocab("disabled"));
+  $value = ($data['disabled']) ? '1' : '0';
+  $field = new FieldInputRadioGroup();
+  $field->setAttribute('id', 'status')
+        ->setLabel(get_vocab('status'))
+        ->setLabelAttributes(array('title' => get_vocab('disabled_area_note')))
+        ->addRadioOptions($options, 'area_disabled', $value, true);
+  $fieldset->addElement($field);
   
   return $fieldset;
 }
@@ -60,11 +72,6 @@ function get_fieldset_general($data)
 
 // Check the user is authorised for this page
 checkAuthorised();
-
-// Also need to know whether they have admin rights
-$user = getUserName();
-$required_level = (isset($max_level) ? $max_level : 2);
-$is_admin = (authGetUserLevel($user) >= $required_level);
 
 print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
 
@@ -78,7 +85,7 @@ if (!isset($area) || is_null($data = get_area_details($area)))
 $form = new Form();
 
 $attributes = array('id'     => 'edit_area',
-                    'class'  => 'form_general',
+                    'class'  => 'standard',
                     'action' => 'edit_area_handler.php',
                     'method' => 'post');
                     
@@ -86,8 +93,7 @@ $form->setAttributes($attributes)
      ->addHiddenInput('area', $area);
 
 $outer_fieldset = new ElementFieldset();
-$outer_fieldset->addLegend(get_vocab('editarea'))
-               ->setAttribute('class', 'admin');
+$outer_fieldset->addLegend(get_vocab('editarea'));
                
 $outer_fieldset->addElement(get_fieldset_errors($errors));
 $outer_fieldset->addElement(get_fieldset_general($data));

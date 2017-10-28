@@ -76,7 +76,7 @@ label::after,
   content: ':';
 }
 
-label:empty::after {
+label:empty::after, .group label::after {
   visibility: hidden;
 }
 
@@ -688,7 +688,6 @@ div#del_room_confirm {
 
 
 
-
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 .edit_area_room .form_general fieldset fieldset {
   padding-top: 0.5em;
@@ -740,6 +739,56 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 .js #period_settings button {
   display: inline-block;
   margin-left: 1em;
+}
+
+
+<?php // The standard form ?>
+
+.standard {
+  margin-top: 2.0em;
+}
+
+.standard fieldset {
+  padding: 1em;
+}
+
+.standard fieldset fieldset {
+  padding: 0.5em 0;
+}
+
+.standard fieldset fieldset legend{
+  font-size: small;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.standard fieldset > div {
+  display: table-row;
+}
+
+.standard fieldset > div > label, .standard fieldset > div > div {
+  display: table-cell;
+  padding-bottom: 0.8em;
+}
+
+.standard fieldset > div > label {
+  font-weight: bold;
+  padding-left: 2em;
+  padding-right: 1em;
+  text-align: right;
+}
+
+.standard fieldset > div > div {
+  text-align: left;
+}
+
+.standard input[type="radio"] {
+  vertical-align: middle;
+  margin: -0.17em 0.4em 0 0;
+}
+
+.standard .group label {
+  margin-right: 0.5em;
 }
 
 

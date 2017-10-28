@@ -52,7 +52,7 @@ abstract class Field extends Element
   
   // Sets the attributes for the field control.  Also takes care of the label
   // by associating the label with the control using a 'for' attribute.
-  public function setControlAttributes($attributes)
+  public function setControlAttributes(array $attributes)
   {
     $elements = $this->getElements();
     
@@ -73,7 +73,7 @@ abstract class Field extends Element
   // Sets the attributes for the field label.  No need to do
   // the 'for' attribute, as that is done automatically when you
   // set the 'id' in the control attrributes.
-  public function setLabelAttributes($attributes)
+  public function setLabelAttributes(array $attributes)
   {
     $elements = $this->getElements();
     

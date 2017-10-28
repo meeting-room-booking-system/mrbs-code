@@ -13,10 +13,10 @@ class FieldSelect extends Field
   }
   
   
-  public function addOptions($options, $selected=null, $associative=true)
+  public function addSelectOptions(array $options, $selected=null, $associative=true)
   {
     $select = $this->getControl();
-    $select->addOptions($options, $selected, $associative);
+    $select->addSelectOptions($options, $selected, $associative);
     $this->setControl($select);
     return $this;
   }
