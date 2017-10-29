@@ -783,7 +783,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   text-align: left;
 }
 
-.standard input {
+.standard input, .standard textarea {
   width: 20em;
 }
 
@@ -795,7 +795,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .standard textarea {
   height: 6em;
-  width: 20em;
+  margin-bottom: 0.5em;
 }
 
 .standard .group label {
