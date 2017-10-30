@@ -776,7 +776,11 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   padding-left: 2em;
   padding-right: 1em;
   text-align: right;
+}
+
+.field_text_area label {
   vertical-align: top;
+  padding-top: 0.2em;
 }
 
 .standard fieldset > div > div {
