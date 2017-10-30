@@ -8,7 +8,9 @@ use MRBS\Form\ElementP;
 use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldTextarea;
 
@@ -157,6 +159,9 @@ function get_fieldset_general($data)
 function get_fieldset_times($data)
 {
   global $enable_periods;
+  global $morningstarts, $morningstarts_minutes;
+  global $eveningends, $eveningends_minutes;
+  global $resolution;
   
   $fieldset = new ElementFieldset();
   
@@ -177,7 +182,40 @@ function get_fieldset_times($data)
   
   $fieldset->addLegend($legend);
   
+  // First slot start
+  $field = new FieldInputTime();
+  $value = sprintf('%02d:%02d', $morningstarts, $morningstarts_minutes);
+  $field->setLabel(get_vocab('area_first_slot_start'))
+        ->setControlAttributes(array('id'    => 'area_morningstarts',
+                                     'name'  => 'area_morningstarts',
+                                     'value' => $value));
+  $fieldset->addElement($field);
   
+  // Resolution
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('area_res_mins'))
+        ->setControlAttributes(array('id'    => 'area_res_mins',
+                                     'name'  => 'area_res_mins',
+                                     'min'   => '1',
+                                     'step'  => '1',
+                                     'value' => (int) $resolution/60));
+  $fieldset->addElement($field);
+        
+  // Last slot start
+  // The contents of this field will be overwritten by JavaScript if enabled.    The JavaScript version is a drop-down
+  // select input with options limited to those times for the last slot start that are valid.   The options are
+  // dynamically regenerated if the start of the first slot or the resolution change.    The code below is
+  // therefore an alternative for non-JavaScript browsers.
+  $field = new FieldInputTime();
+  $value = sprintf('%02d:%02d', $eveningends, $eveningends_minutes);
+  $field->setAttributes(array('id'    => 'last_slot',
+                              'class' => 'js_hidden'))
+        ->setLabel(get_vocab('area_last_slot_start'))
+        ->setControlAttributes(array('id'    => 'area_eveningends',
+                                     'name'  => 'area_eveningends',
+                                     'value' => $value));
+  $fieldset->addElement($field);
+        
   
   return $fieldset;
 }

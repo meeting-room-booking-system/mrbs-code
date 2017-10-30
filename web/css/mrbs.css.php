@@ -783,12 +783,16 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   text-align: left;
 }
 
-.standard input, .standard textarea {
+.standard input[type="text"], .standard input[type="email"], .standard textarea {
+  box-sizing: border-box;
   width: 20em;
 }
 
+.standard input[type="number"] {
+  width: 4em;
+}
+
 .standard input[type="radio"] {
-  width: auto;
   vertical-align: middle;
   margin: -0.17em 0.4em 0 0;
 }
