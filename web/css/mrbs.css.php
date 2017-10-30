@@ -798,7 +798,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   width: 4em;
 }
 
-.standard input[type="radio"] {
+.standard input[type="radio"], .standard input[type="checkbox"] {
   vertical-align: middle;
   margin: -0.17em 0.4em 0 0;
 }
