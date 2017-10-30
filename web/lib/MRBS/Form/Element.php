@@ -166,6 +166,38 @@ class Element
   }
   
   
+  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=true)
+  {
+    // Trivial case
+    if (empty($options))
+    {
+      return $this;
+    }
+    
+    foreach ($options as $key => $value)
+    {
+      if (!$associative)
+      {
+        $key = $value;
+      }
+      $checkbox = new ElementInputCheckbox();
+      $checkbox->setAttributes(array('name'  => $name,
+                                     'value' => $key));
+      if (isset($checked) && ($key == $checked))
+      {
+        $checkbox->setAttribute('checked');
+      }
+      $label = new ElementLabel();
+      $label->setText($value)
+            ->addElement($checkbox);
+            
+      $this->addElement($label);
+    }
+    
+    return $this;
+  }
+  
+  
   public function addRadioOptions(array $options, $name, $checked=null, $associative=true)
   {
     // Trivial case

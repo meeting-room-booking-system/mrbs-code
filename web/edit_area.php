@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSpan;
+use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
@@ -161,7 +162,7 @@ function get_fieldset_times($data)
   global $enable_periods;
   global $morningstarts, $morningstarts_minutes;
   global $eveningends, $eveningends_minutes;
-  global $resolution;
+  global $resolution, $default_duration, $default_duration_all_day;
   
   $fieldset = new ElementFieldset();
   
@@ -199,6 +200,20 @@ function get_fieldset_times($data)
                                      'min'   => '1',
                                      'step'  => '1',
                                      'value' => (int) $resolution/60));
+  $fieldset->addElement($field);
+                                     
+  // Duration
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('area_def_duration_mins'))
+        ->setControlAttributes(array('id'    => 'area_def_duration_mins',
+                                     'name'  => 'area_def_duration_mins',
+                                     'min'   => '1',
+                                     'step'  => '1',
+                                     'value' => (int) $default_duration/60));
+  $options = array('1' => get_vocab('all_day'));
+  $checkbox_group = new FieldInputCheckboxGroup();
+  $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $default_duration_all_day);
+  $field->addElement($checkbox_group);
   $fieldset->addElement($field);
         
   // Last slot start

@@ -766,9 +766,9 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   display: table-row;
 }
 
-.standard fieldset > div > label, .standard fieldset > div > div {
+.standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
   display: table-cell;
-  padding-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 
 .standard fieldset > div > label {
@@ -780,7 +780,13 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard fieldset > div > div {
+  display: inline-block;
   text-align: left;
+  padding-bottom: 0.5em
+}
+
+.standard div.group {
+  display: inline-block;
 }
 
 .standard input[type="text"], .standard input[type="email"], .standard textarea {
