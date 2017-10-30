@@ -12,11 +12,22 @@ class ElementFieldset extends Element
   }
   
   
-  public function addLegend($text)
+  // $legend can either be a string or an element
+  public function addLegend($legend)
   {
-    $legend = new ElementLegend();
-    $legend->setText($text);
-    $this->addElement($legend);
+    $element = new ElementLegend();
+    
+    if (is_string($legend))
+    {
+      $element->setText($legend);
+    }
+    else
+    {
+      // Assumed to be an object of class 'Element' if it is not a string
+      $element->addElement($legend);
+    }
+    
+    $this->addElement($element);
     return $this;
   }
   

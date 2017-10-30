@@ -3,7 +3,9 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
+use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputText;
@@ -152,6 +154,35 @@ function get_fieldset_general($data)
 }
 
 
+function get_fieldset_times($data)
+{
+  global $enable_periods;
+  
+  $fieldset = new ElementFieldset();
+  
+  // If we're using JavaScript, don't display the time settings section
+  // if we're using periods (the JavaScript will display it if we change)
+  if (!$enable_periods)
+  {
+    $fieldset->setAttribute('class', 'js_none');
+  }
+  
+  $span = new ElementSpan();
+  $span->setAttribute('class', 'js_none')
+       ->setText(' (' . get_vocab('times_only') . ')');
+       
+  $legend = new ElementLegend();
+  $legend->setText(get_vocab('time_settings'), $text_at_start=true)
+         ->addElement($span);
+  
+  $fieldset->addLegend($legend);
+  
+  
+  
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -175,10 +206,11 @@ $form->setAttributes($attributes)
      ->addHiddenInput('area', $area);
 
 $outer_fieldset = new ElementFieldset();
-$outer_fieldset->addLegend(get_vocab('editarea'));
-               
-$outer_fieldset->addElement(get_fieldset_errors($errors));
-$outer_fieldset->addElement(get_fieldset_general($data));
+
+$outer_fieldset->addLegend(get_vocab('editarea'))
+               ->addElement(get_fieldset_errors($errors))
+               ->addElement(get_fieldset_general($data))
+               ->addElement(get_fieldset_times($data));
 
 $form->addElement($outer_fieldset);
 

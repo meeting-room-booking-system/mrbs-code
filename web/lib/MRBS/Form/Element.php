@@ -2,12 +2,27 @@
 
 namespace MRBS\Form;
 
+// This is a limited implementation of the HTML5 DOM and is optimised for use by
+// MRBS forms.   It makes a number of simplifications and restrictions.  In particular
+// it assumes that:
+
+//    (a) an element can only contain one text node, and
+//    (b) that text node either comes before or after all the element nodes that it contains
+//
+// In the full DOM an element can contain multiple text nodes, for example
+
+//    <p>Some text<b>a bold bit</b>some more text</p>
+//
+// If structures like these are required ten they can usually be achieved by wrapping the raw
+// text nodes in a <span>.
+
 class Element
 {
   private $tag = null;
-  private $self_closing;
+  private $self_closing = false;
   private $attributes = array();
   private $text = null;
+  private $text_at_start = false;
   private $elements = array();
   
   
@@ -18,9 +33,15 @@ class Element
   }
   
   
-  public function setText($text)
+  public function setText($text, $text_at_start=false)
   {
+    if ($this->self_closing)
+    {
+      throw new \Exception("A self closing element cannot contain text.");
+    }
+    
     $this->text = $text;
+    $this->text_at_start = $text_at_start;
     return $this;
   }
   
@@ -211,8 +232,11 @@ class Element
     }
     else
     {
-      // This code assumes that the text always comes after the other elements, though it
-      // could be that other possibilities are allowed by the HTML5 syntax?
+      if (isset($this->text) && $this->text_at_start)
+      {
+        $html .= htmlspecialchars($this->text);
+      }
+      
       if (!empty($this->elements))
       {
         // If this element contains text, then don't use a terminator, otherwise
@@ -227,7 +251,7 @@ class Element
         }
       }
       
-      if (isset($this->text))
+      if (isset($this->text) && !$this->text_at_start)
       {
         $html .= htmlspecialchars($this->text);
       }
