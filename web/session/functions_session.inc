@@ -152,22 +152,3 @@ function print_userlist_link()
     echo "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
   }
 }
-
-
-function get_cookie_path()
-{
-  global $cookie_path_override, $PHP_SELF;
-  
-  if (isset($cookie_path_override))
-  {
-    $cookie_path = $cookie_path_override;
-  }
-  else
-  {
-    $cookie_path = $PHP_SELF;
-    // Strip off everything after the last '/' in $PHP_SELF
-    $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
-  }
-  
-  return $cookie_path;
-}

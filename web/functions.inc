@@ -5,6 +5,25 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+function get_cookie_path()
+{
+  global $cookie_path_override, $PHP_SELF;
+  
+  if (isset($cookie_path_override))
+  {
+    $cookie_path = $cookie_path_override;
+  }
+  else
+  {
+    $cookie_path = $PHP_SELF;
+    // Strip off everything after the last '/' in $PHP_SELF
+    $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
+  }
+  
+  return $cookie_path;
+}
+
+
 // Formats a number taking into account the current locale.  (Could use
 // the NumberFormatter class, but the intl extension isn't always installed.)
 function number_format_locale($number, $decimals=0)

@@ -145,7 +145,7 @@ class Form extends Element
   
   private static function storeToken($token)
   {
-    if ((session_id() !== '') || session_start())
+    if (session_id() !== '')
     {
       $_SESSION[self::$token_name] = $token;
       return;
@@ -157,7 +157,7 @@ class Form extends Element
   
   private static function getStoredToken()
   {
-    if ((session_id() !== '') || session_start())
+    if (session_id() !== '')
     {
       return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
     }
