@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 if (version_compare(PHP_VERSION, '5.0.0', '<'))
 {
   // We use stream_get_line() which is only available in PHP 5
@@ -613,10 +615,6 @@ function get_archive_details($file)
   return $result;
 }
 
-// Check the user is authorised for this page
-checkAuthorised();
-
-print_header($day, $month, $year, $area, $room);
 
 $import = get_form_var('import', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
@@ -625,6 +623,17 @@ $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_ar
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
+
+// Check the CSRF token if we're being asked to import data
+if (!empty($import))
+{
+  Form::checkToken();
+}
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+print_header($day, $month, $year, $area, $room);
 
 
 // PHASE 2 - Process the files
@@ -713,7 +722,7 @@ if (!empty($import))
 $compression_wrappers = get_compression_wrappers();
 
 echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-
+echo Form::getTokenHTML() . "\n";
 echo "<fieldset class=\"admin\">\n";
 echo "<legend>" . get_vocab("import_icalendar") . "</legend>\n";
 
