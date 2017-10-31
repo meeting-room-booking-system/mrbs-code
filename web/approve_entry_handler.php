@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 // Handles actions on bookings awaiting approval
 
 require "defaultincludes.inc";
@@ -14,6 +16,8 @@ $series = get_form_var('series', 'int');
 $returl = get_form_var('returl', 'string');
 $note = get_form_var('note', 'string');
 
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();

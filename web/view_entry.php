@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
@@ -159,6 +161,12 @@ $series = get_form_var('series', 'int');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
+
+// Check the CSRF token if we're going to do something
+if (isset($action))
+{
+  Form::checkToken();
+}
 
 // Check the user is authorised for this page
 checkAuthorised();

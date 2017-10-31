@@ -1,6 +1,9 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
+
 require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)
@@ -17,28 +20,46 @@ function display_buttons($row, $is_series)
   // pages called by view_entry use HTTP_REFERER to form a return URL, and
   // view_entry needs to have a valid id.
   $query_string = "id=$target_id";
-  $query_string .= ($is_series) ? "&amp;series=1" : "";
+  $query_string .= ($is_series) ? "&series=1" : "";
   
   if (auth_book_admin($user, $row['room_id']))
   {
     // approve
-    echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
-    echo "<div>\n";
-    echo "<input type=\"hidden\" name=\"action\" value=\"approve\">\n";
-    echo "<input type=\"hidden\" name=\"id\" value=\"$target_id\">\n";
-    echo "<input type=\"hidden\" name=\"series\" value=\"$is_series\">\n";
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" value=\"" . get_vocab("approve") . "\">\n";
-    echo "</div>\n";
-    echo "</form>\n";
+    $form = new Form();
+
+    $attributes = array('action' => 'approve_entry_handler.php',
+                        'method' => 'post');                   
+    $form->setAttributes($attributes);
+    
+    $hidden_inputs = array('action' => 'approve',
+                           'id'     => $target_id,
+                           'series' => $is_series,
+                           'returl' => $returl);
+    $form->addHiddenInputs($hidden_inputs);
+    
+    $element = new ElementInputSubmit();
+    $element->setAttribute('value', get_vocab('approve'));
+    $form->addElement($element);
+
+    $form->render();
+    
     // reject
-    echo "<form action=\"view_entry.php?$query_string\" method=\"post\">\n";
-    echo "<div>\n";
-    echo "<input type=\"hidden\" name=\"action\" value=\"reject\">\n";
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" value=\"" . get_vocab("reject") . "\">\n";
-    echo "</div>\n";
-    echo "</form>\n";
+    $form = new Form();
+
+    $attributes = array('action' => "view_entry.php?$query_string",
+                        'method' => 'post');                   
+    $form->setAttributes($attributes);
+    
+    $hidden_inputs = array('action' => 'reject',
+                           'returl' => $returl);
+    $form->addHiddenInputs($hidden_inputs);
+    
+    $element = new ElementInputSubmit();
+    $element->setAttribute('value', get_vocab('reject'));
+    $form->addElement($element);
+
+    $form->render();
+    
     // more info
     $info_time = ($is_series) ? $row['repeat_info_time'] : $row['entry_info_time'];
     $info_user = ($is_series) ? $row['repeat_info_user'] : $row['entry_info_user'];
@@ -54,13 +75,23 @@ function display_buttons($row, $is_series)
         $info_title .= " " . get_vocab("by") . " $info_user";
       }
     }
-    echo "<form action=\"view_entry.php?$query_string\" method=\"post\">\n";
-    echo "<div>\n";
-    echo "<input type=\"hidden\" name=\"action\" value=\"more_info\">\n";
-    echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-    echo "<input type=\"submit\" title=\"" . htmlspecialchars($info_title) . "\" value=\"" . get_vocab("more_info") . "\">\n";
-    echo "</div>\n";
-    echo "</form>\n";
+    
+    $form = new Form();
+
+    $attributes = array('action' => "view_entry.php?$query_string",
+                        'method' => 'post');                   
+    $form->setAttributes($attributes);
+    
+    $hidden_inputs = array('action' => 'more_info',
+                           'returl' => $returl);
+    $form->addHiddenInputs($hidden_inputs);
+    
+    $element = new ElementInputSubmit();
+    $element->setAttributes(array('value' => get_vocab('more_info'),
+                                  'title' => $info_title));
+    $form->addElement($element);
+
+    $form->render();
   }
   else
   {
@@ -71,14 +102,22 @@ function display_buttons($row, $is_series)
     if ($reminders_enabled  && 
         (working_time_diff(time(), $last_reminded) >= $reminder_interval))
     {
-      echo "<form action=\"approve_entry_handler.php\" method=\"post\">\n";
-      echo "<div>\n";
-      echo "<input type=\"hidden\" name=\"action\" value=\"remind_admin\">\n";
-      echo "<input type=\"hidden\" name=\"id\" value=\"" . $row['id'] . "\">\n";
-      echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
-      echo "<input type=\"submit\" value=\"" . get_vocab("remind_admin") . "\">\n";
-      echo "</div>\n";
-      echo "</form>\n";
+      $form = new Form();
+
+      $attributes = array('action' => 'approve_entry_handler.php',
+                          'method' => 'post');                   
+      $form->setAttributes($attributes);
+      
+      $hidden_inputs = array('action' => 'remind_admin',
+                             'id'     => $row['id'],
+                             'returl' => $returl);
+      $form->addHiddenInputs($hidden_inputs);
+      
+      $element = new ElementInputSubmit();
+      $element->setAttribute('value', get_vocab('remind_admin'));
+      $form->addElement($element);
+
+      $form->render();
     }
     else
     {
