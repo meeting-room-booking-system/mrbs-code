@@ -1,6 +1,9 @@
 <?php
 namespace MRBS;
+
 use \DateTimeZone;
+use MRBS\Form\Form;
+
 
 require_once "mrbs_sql.inc";
 
@@ -2395,6 +2398,7 @@ function make_area_select_html($link, $current, $year, $month, $day)
     if ($area_list_format == "select")
     {
       $out_html .= "<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">\n" .
+                   Form::getTokenHTML() . "\n" .
                    "<div>\n" .
                    "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
       foreach ($areas as $area_id => $area_name)
@@ -2450,6 +2454,7 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
     if ($area_list_format == "select")
     {
       $out_html .= "<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">\n" .
+                   Form::getTokenHTML() . "\n" .
                    "<div>\n" .
                    "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
   
