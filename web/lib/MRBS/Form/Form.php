@@ -37,6 +37,16 @@ class Form extends Element
   }
   
   
+  // Returns the HTML for a hidden field containing a CSRF token
+  public static function getTokenHTML()
+  {
+    $element = new ElementInputHidden();
+    $element->setAttributes(array('name'  => self::$token_name,
+                                  'value' => self::getToken()));
+    return $element->toHTML();
+  }
+  
+  
   // Checks the CSRF token against the stored value and dies with a fatal error
   // if they do not match.   Note that:
   //    (1) The CSRF token is always looked for in the POST data, never anywhere else.
