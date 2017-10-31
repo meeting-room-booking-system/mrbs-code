@@ -154,6 +154,9 @@ if (($current_db_schema_version < $db_schema_version) ||
     }
   }
 
+  // Check the CSRF token before we make any changes
+  Form::checkToken();
+    
   $ok = TRUE;
 
   // Do any MRBS upgrades first
