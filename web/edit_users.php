@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 /*****************************************************************************\
 *                                                                            *
 *   File name     edit_users.php                                             *
@@ -251,6 +253,12 @@ $nusers = db()->query1("SELECT COUNT(*) FROM $tbl_users");
 |                         Authenticate the current user                         |
 \*---------------------------------------------------------------------------*/
 
+// Check the CSRF token if we're going to be altering the database
+if (isset($Action) && in_array($Action, array('Delete', 'Update')))
+{
+  Form::checkToken();
+}
+
 $initial_user_creation = 0;
 
 if ($nusers > 0)
@@ -331,7 +339,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   
   print "<div id=\"form_container\">";
   print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    ?>
+  echo Form::getTokenHTML() . "\n";
+  ?>
         <fieldset class="admin">
         <legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
         <div id="edit_users_input_container">
@@ -509,6 +518,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
       {
         echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
+        echo Form::getTokenHTML() . "\n";
         echo "<div>\n";
         echo "<input type=\"hidden\" name=\"Action\" value=\"Delete\">\n";
         echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
@@ -523,6 +533,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       else
       {
         echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
+        echo Form::getTokenHTML() . "\n";
         echo "<div>\n";
         echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
         echo "</div>\n";
@@ -841,17 +852,18 @@ if (!$ajax)
 {
   print_header();
 
-  print "<h2>" . get_vocab("user_list") . "</h2>\n";
+  echo "<h2>" . get_vocab("user_list") . "</h2>\n";
 
   if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
   {
-    print "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    print "  <div>\n";
-    print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
-    print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
-    print "    <input type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
-    print "  </div>\n";
-    print "</form>\n";
+    echo "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
+    echo Form::getTokenHTML() . "\n";
+    echo "  <div>\n";
+    echo "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
+    echo "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
+    echo "    <input type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
+    echo "  </div>\n";
+    echo "</form>\n";
   }
 }
 
