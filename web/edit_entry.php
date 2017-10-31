@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
 // automatically recognise them and handle them.    NOTE: if you add a column to
@@ -1149,14 +1151,13 @@ else
     $token = "addentry";
   }
 }
-?>
 
 
-<form class="form_general" id="main" action="edit_entry_handler.php" method="post">
-  <fieldset>
-  <legend><?php echo get_vocab($token); ?></legend>
+echo "<form class=\"form_general\" id=\"main\" action=\"edit_entry_handler.php\" method=\"post\">\n";
+echo Form::getTokenHTML() . "\n";
+echo "<fieldset>\n";
+echo "<legend>" . get_vocab($token) . "</legend>\n";
 
-<?php
 
 foreach ($edit_entry_field_order as $key)
 {
