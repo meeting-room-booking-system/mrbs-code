@@ -66,8 +66,9 @@ function db_get_userpass()
   // The username field
   $field = new FieldInputText();
   $field->setLabel('Database username')
-        ->setControlAttributes(array('id'   => 'form_username',
-                                     'name' => 'form_username'));               
+        ->setControlAttributes(array('id'       => 'form_username',
+                                     'name'     => 'form_username',
+                                     'required' => null));               
   $fieldset->addElement($field);
   
   // The password field
