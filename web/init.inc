@@ -34,3 +34,6 @@ function session_init()
 
 // Start up sessions 
 session_init();
+
+use MRBS\Form\Form;
+$dummy_form = new Form;

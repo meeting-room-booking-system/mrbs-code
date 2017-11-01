@@ -6,7 +6,7 @@ class Form extends Element
 {
   private static $token = null;
   private static $token_name = 'csrf_token';  // As of PHP 7.1 this would be a private const
-  
+  private static $cookie_set = false;
   
   public function __construct()
   {
@@ -150,8 +150,33 @@ class Form extends Element
       $_SESSION[self::$token_name] = $token;
       return;
     }
-    
-    throw new \Exception("Need to do something with cookies here!");
+
+    if (!self::$cookie_set)
+    {
+      $session_data[self::$token_name] = $token;
+      $json_data = json_encode($session_data);
+      if (!function_exists('hash_hmac'))
+      {
+        fatal_error("It appears that your PHP has the hash functions " .
+                    "disabled, which are required for the CSRF prevention " .
+                    "cookie fallback code.");
+      }
+      global $csrf_cookie;
+      $hash = hash_hmac(
+                        $csrf_cookie["hash_algorithm"],
+                        $json_data,
+                        $csrf_cookie['secret']
+                       );
+
+      $cookie_path = \MRBS\get_cookie_path();
+      $cookie_data = "${hash}_".base64_encode($json_data);
+
+      setcookie("MRBS_CSRF",
+                $cookie_data,
+                0 /* Always a session cookie */,
+                $cookie_path);
+      self::$cookie_set = true;
+    }
   }
   
   
@@ -162,6 +187,44 @@ class Form extends Element
       return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
     }
     
-    throw new \Exception("Need to do something with cookies here!");
+    global $csrf_cookie;
+
+    if (!empty($_COOKIE) && isset($_COOKIE["MRBS_CSRF"]))
+    {
+      $token = \MRBS\unslashes($_COOKIE["MRBS_CSRF"]);
+    }
+    
+    //error_log("Checking CSRF cookie");
+
+    if (isset($token) && ($token != ""))
+    {
+      list($hash, $base64_data) = explode("_", $token);
+
+      $json_data = base64_decode($base64_data);
+
+      if (!function_exists('hash_hmac'))
+      {
+        fatal_error("It appears that your PHP has the hash functions " .
+                    "disabled, which are required for the CSRF prevention " .
+                    "cookie fallback code.");
+      }
+      if (hash_hmac(
+                    $csrf_cookie["hash_algorithm"],
+                    $json_data,
+                    $csrf_cookie['secret']
+                   ) == $hash)
+      {
+        $session_data = json_decode($json_data, true);
+        
+        //error_log("Cookie decoded OK");
+
+        return (isset($session_data[self::$token_name])) ? $session_data[self::$token_name] : null;
+      }
+      else
+      {
+        throw new \Exception("CSRF cookie token tampering detected");
+      }
+    }
+    throw new \Exception("Cookie fallback for CSRF prevention failed");
   }
 }
