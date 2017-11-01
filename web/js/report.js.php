@@ -76,10 +76,11 @@ init = function(args) {
   // performance for large tables
   if (function_exists('json_encode'))
   {
+    // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
+    // for older browsers
     ?>
-
     tableOptions.ajax = {url: 'report.php',
-                         type: 'POST', 
+                         method: 'POST', 
                          processData: false,
                          contentType: false,
                          data: function() {
