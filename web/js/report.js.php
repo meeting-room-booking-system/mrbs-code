@@ -33,7 +33,6 @@ init = function(args) {
   ?>
   var summaryDiv = $('#div_summary'),
       summaryHead = summaryDiv.find('thead'),
-      queryString,
       tableOptions;
       
   summaryHead.find('tr:first th:odd').attr('colspan', '2');
@@ -67,6 +66,7 @@ init = function(args) {
       }
     }).trigger('change');
   
+  
   <?php
   // Turn the list of users into a dataTable
   ?>
@@ -76,14 +76,18 @@ init = function(args) {
   // performance for large tables
   if (function_exists('json_encode'))
   {
+    // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
+    // for older browsers
     ?>
-    queryString = window.location.search;
-    if (queryString.length === 0)
-    {
-      queryString = '?phase=2';
-    }
-    queryString += '&ajax=1';
-    tableOptions.ajax = 'report.php' + queryString;
+    tableOptions.ajax = {url: 'report.php',
+                         method: 'POST', 
+                         processData: false,
+                         contentType: false,
+                         data: function() {
+                             var formdata = new FormData($('#report_form')[0]);
+                             formdata.append('ajax', '1');
+                             return formdata;
+                           } };
     <?php
   }
   // Add in a hidden input to the form so that we can tell if we are using DataTables
