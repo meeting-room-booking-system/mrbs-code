@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 function session_init()
 {
   global $auth;
@@ -35,5 +37,8 @@ function session_init()
 // Start up sessions 
 session_init();
 
-use MRBS\Form\Form;
-$dummy_form = new Form;
+// If sessions didn't work, then set a cookie containing the CSRF token
+if (session_id() === '')
+{
+  $dummy_form = new Form();
+}
