@@ -1,11 +1,14 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
 
 function print_head($simple=false)
 {
   echo "<head>\n";
   echo "<meta charset=\"" . get_charset() . "\">\n";
+  // Add the CSRF token so that JavaScript can use it
+  echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
   require_once "style.inc";
@@ -132,7 +135,8 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
     $search_str = '';
   }
   
-  echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
+  echo "<form id=\"header_search\" method=\"post\" action=\"search.php\">\n";
+  echo Form::getTokenHTML() . "\n";
   echo "<div>\n";
   echo "<label><a href=\"search.php?advanced=1\">" . get_vocab("search") . "</a></label>\n";
   echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";

@@ -93,7 +93,7 @@ class Form extends Element
   
 
   // Get a CSRF token
-  private static function getToken()
+  public static function getToken()
   {
     if (!isset(self::$token))
     {

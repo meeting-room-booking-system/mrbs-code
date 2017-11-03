@@ -50,16 +50,20 @@ init = function(args) {
         }).appendTo(searchForm);
     }
       
-    var tableOptions = {},
-        queryString;
-        
-    queryString = window.location.search;
-    if (queryString.length === 0)
-    {
-      queryString = '?';
-    }
-    queryString += '&ajax=1';
-    tableOptions.ajax = 'search.php' + queryString;
+    var tableOptions = {};
+    var data = {ajax: '1', datatable: '1'};
+    
+    data.csrf_token = $('meta[name="csrf_token"]').attr('content');
+    
+    <?php // Get the search parameters so that we can use them in an Ajax post ?>
+    $.each(['search_str', 'from_day', 'from_month', 'from_year'],
+           function(i, value) {
+             data[value] = $('#search_results').data(value);
+            });
+    
+    tableOptions.ajax = {url: 'search.php',
+                         method: 'POST', 
+                         data: data};
 
     <?php // Get the types and feed those into dataTables ?>
     tableOptions.columnDefs = getTypes($('#search_results'));
