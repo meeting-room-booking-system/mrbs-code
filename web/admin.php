@@ -312,11 +312,15 @@ if ($is_admin)
 }
 echo "</div>";  // area_form
 
+
 // Now the custom HTML
-echo "<div id=\"custom_html\">\n";
-// no htmlspecialchars() because we want the HTML!
-echo (!empty($custom_html)) ? "$custom_html\n" : "";
-echo "</div>\n";
+if ($auth['allow_custom_html'])
+{
+  echo "<div id=\"custom_html\">\n";
+  // no htmlspecialchars() because we want the HTML!
+  echo (!empty($custom_html)) ? "$custom_html\n" : "";
+  echo "</div>\n";
+}
 
 
 // BOTTOM SECTION: ROOMS IN THE SELECTED AREA

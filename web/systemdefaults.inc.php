@@ -908,33 +908,47 @@ define('COOKIEHASH', md5($domain_name));
 
 
 // General settings
+
 // Allow users just to enter the local-part of their email address (provided that
 // the authentication type supports validation by local-part).   For example, if user
 // with username 'john' has email address 'jsmith@example.com', then he would be able
 // to enter either 'john', 'jsmith' or 'jsmith@example.com' when logging in.
 $auth['allow_local_part_email'] = false;
+
 // If you want only administrators to be able to make and delete bookings,
 // set this variable to true
 $auth['only_admin_can_book'] = false;
+
 // If you want only administrators to be able to make repeat bookings,
 // set this variable to true
 $auth['only_admin_can_book_repeat'] = false;
+
 // If you want only administrators to be able to make bookings spanning
 // more than one day, set this variable to true.
 $auth['only_admin_can_book_multiday'] = false;
+
 // If you want only administrators to be able to select multiple rooms
 // on the booking form then set this to true.  (It doesn't stop ordinary users
 // making separate bookings for the same time slot, but it does slow them down).
 $auth['only_admin_can_select_multiroom'] = false;
+
 // If you don't want ordinary users to be able to see the other users'
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
+
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to true
 $auth['deny_public_access'] = false;
+
 // Set to true if you want admins to be able to perform bulk deletions
 // on the Report page.  (It also only shows up if JavaScript is enabled)
 $auth['show_bulk_delete'] = false;
+
+// Allow admins to insert custom HTML on the area and room pages.  This can be useful for
+// displaying information about an area or room, eg with a picture or a map.   But it
+// also presents a security risk as the HTML is output as is, and could therefore contain
+// malicious scripts.   Only set $auth['allow_custom_html'] to true if you trust your admins.
+$auth['allow_custom_html'] = false;
 
 // Set to true if you want to allow MRBS to be run from the command line, for example
 // if you want to produce reports from a cron job.   (It is set to false by default
