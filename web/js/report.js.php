@@ -165,7 +165,8 @@ init = function(args) {
                         for (j=0; j<nBatches; j++)
                         {
                           $.post('del_entry_ajax.php',
-                                 {ids: batches[j]},
+                                 {csrf_token: $('meta[name="csrf_token"]').attr('content'),
+                                  ids: batches[j]},
                                  function(result) {
                                     var nDeleted,
                                         isInt,
