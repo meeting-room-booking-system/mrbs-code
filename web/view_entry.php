@@ -2,6 +2,8 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
+
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -22,26 +24,23 @@ function generate_button(array $params, array $button_attributes=array())
   // use a <button> here and have to use the <input type="submit"> to create the
   // button.   This unfortunately means that styling options on the button are limited.
   
-  $html = '';
+  $form = new Form();
+  
+  $attributes = array('action' => $params['action'],
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
 
-  $html .= "<form method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
+  // Hidden inputs
+  $form->addHiddenInputs($params['inputs']);
+  
+  // Submit button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', $params['value'])
+          ->setAttributes($button_attributes);
+  $form->addElement($element);
 
-  foreach ($params['inputs'] as $key => $value)
-  {
-    $html .= '<input type="hidden" name="' . htmlspecialchars($key) . '"' .
-             ' value="' . htmlspecialchars($value) . "\">\n";
-  }
-  
-  $html .= '<input type="submit" value="' . htmlspecialchars($params['value']) . '"';
-  foreach($button_attributes as $key => $value)
-  {
-    $html .= " $key=\"" . htmlspecialchars($value) . '"';
-  }
-  $html .= ">\n";
-  
-  $html .= "</form>\n"; 
-  
-  echo $html;
+  $form->render();
 }
 
 

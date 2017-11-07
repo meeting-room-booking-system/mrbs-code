@@ -626,6 +626,11 @@ $start_date = get_form_var('start_date', 'string');
 $end_date = get_form_var('end_date', 'string');
 
 
+// Check the CSRF token.
+// Only check the token if the page is accessed via a POST request.  Therefore
+// this page should not take any action, but only display data.
+Form::checkToken($post_only=true);
+
 // Check the user is authorised for this page
 checkAuthorised();
 
