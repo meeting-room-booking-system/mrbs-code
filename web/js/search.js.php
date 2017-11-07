@@ -61,7 +61,7 @@ init = function(args) {
                                  var data = table.data();
                                  data.ajax = '1';
                                  data.datatable = '1';
-                                 data.csrf_token = $('meta[name="csrf_token"]').attr('content');
+                                 data.csrf_token = getCSRFToken();
                                  return data;
                                }}};
       

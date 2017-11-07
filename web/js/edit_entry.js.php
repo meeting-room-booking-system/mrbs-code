@@ -135,7 +135,7 @@ function checkTimeSlots(jqDate)
       // We pass the id of the element as the request id so that we can match
       // the result to the request
       ?>
-      var params = {csrf_token: $('meta[name="csrf_token"]').attr('content'),
+      var params = {csrf_token: getCSRFToken(),
                     id: select.attr('id'),
                     day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
                     month: parseInt(siblings.filter('input[id*="month"]').val(), 10),

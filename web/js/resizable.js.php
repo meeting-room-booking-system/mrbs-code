@@ -990,7 +990,8 @@ init = function(args) {
                     // We've got a change to the booking, so we need to send an Ajax
                     // request to the server to make the new booking
                     ?>
-                    var data = {ajax: 1, 
+                    var data = {csrf_token: getCSRFToken(),
+                                ajax: 1, 
                                 commit: 1,
                                 day: args.day,
                                 month: args.month,
