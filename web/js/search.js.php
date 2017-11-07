@@ -24,7 +24,9 @@ init = function(args) {
   <?php
   // put the search string field in focus
   ?>
-  var searchForm = $('#search_form');
+  var searchForm = $('#search_form'),
+      table = $('#search_results'),
+      tableOptions;
   searchForm.find('#search_str').focus();
     
   <?php
@@ -50,26 +52,29 @@ init = function(args) {
         }).appendTo(searchForm);
     }
       
-    var tableOptions = {};
-    var data = {ajax: '1', datatable: '1'};
-    
-    data.csrf_token = $('meta[name="csrf_token"]').attr('content');
-    
-    <?php // Get the search parameters so that we can use them in an Ajax post ?>
-    $.each(['search_str', 'from_day', 'from_month', 'from_year'],
-           function(i, value) {
-             data[value] = $('#search_results').data(value);
-            });
-    
-    tableOptions.ajax = {url: 'search.php',
-                         method: 'POST', 
-                         data: data};
-
-    <?php // Get the types and feed those into dataTables ?>
-    tableOptions.columnDefs = getTypes($('#search_results'));
+    if (table.length)
+    {
+      tableOptions = {ajax: {url: 'search.php',
+                             method: 'POST',
+                             data: function() {
+                                 <?php
+                                 // Get the search parameters, which are all in data- attributes, so
+                                 // that we can use them in an Ajax post; add in the ajax and datatable
+                                 // flags and also the CSRF token
+                                 ?>
+                                 var data = table.data();
+                                 data.ajax = '1';
+                                 data.datatable = '1';
+                                 data.csrf_token = $('meta[name="csrf_token"]').attr('content');
+                                 return data;
+                               }}};
       
-    makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
-
+      <?php // Get the types and feed those into dataTables ?>
+      tableOptions.columnDefs = getTypes(table);
+        
+      makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
+    }
+    
     <?php
   }  //  if (function_exists('json_encode')) ?>
 };
