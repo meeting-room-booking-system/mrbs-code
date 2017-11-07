@@ -147,16 +147,7 @@ init = function(args) {
       });
     <?php
   }
-  
-  // if there's a logon box, set the username input field in focus
-  ?>
-  var logonForm = document.getElementById('logon');
-  if (logonForm && logonForm.username)
-  {
-    logonForm.username.focus();
-  }
-  
-  <?php
+
   // Add in a hidden input to the header search form so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
   // need to know this because when we're using an Ajax data source we don't want to send

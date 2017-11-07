@@ -53,7 +53,9 @@ function print_login_form($action, $target_url, $returl)
         ->setLabelAttributes(array('title' => $placeholder))
         ->setControlAttributes(array('id'          => 'username',
                                      'name'        => 'username',
-                                     'placeholder' => $placeholder));               
+                                     'placeholder' => $placeholder,
+                                     'required'    => null,
+                                     'autofocus'   => null));               
   $fieldset->addElement($field);
   
   // The password field

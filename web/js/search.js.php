@@ -21,14 +21,10 @@ var oldInitSearch = init;
 init = function(args) {
   oldInitSearch.apply(this, [args]);
   
-  <?php
-  // put the search string field in focus
-  ?>
   var searchForm = $('#search_form'),
       table = $('#search_results'),
       tableOptions;
-  searchForm.find('#search_str').focus();
-    
+  
   <?php
   // Turn the list of users into a dataTable, provided that we can use
   // an Ajax source.  Otherwise they just get the old style search page
