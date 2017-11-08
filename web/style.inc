@@ -59,9 +59,6 @@ else
     <!--[if lte IE 7]>
     <link rel="stylesheet" href="css/mrbs-ielte7.css.php" type="text/css">
     <![endif]-->
-    <!--[if lte IE 6]>
-    <link rel="stylesheet" href="css/mrbs-ielte6.css" type="text/css">
-    <![endif]-->
     <?php
     if (isset($custom_css_url))
     {
