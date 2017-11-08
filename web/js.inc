@@ -209,13 +209,7 @@ if (in_array($page, array('day', 'week')))
   <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-    
-if (in_array($page, array('day', 'week', 'month')))
-{
-  ?>
-  <script type="text/javascript" src="js/cell_click.js.php?<?php echo $standard_query_string ?>"></script>
-  <?php
-}
+
 ?>
 
 <!--[if lte IE 8]>
