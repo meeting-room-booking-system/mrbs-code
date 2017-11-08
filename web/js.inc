@@ -171,7 +171,9 @@ if (in_array($page, array('day', 'week')))
 
 <!--[if lte IE 8]>
   <?php
-  // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below
+  // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
+  // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the 
+  // page which says we don't support them!).
   if (DEBUG)
   {
     ?>
