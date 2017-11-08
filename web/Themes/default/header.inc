@@ -216,15 +216,19 @@ function print_nav($day, $month, $year, $area, $room, $search_str=null, $simple=
 // access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str=null)
 {
-  // We want to prevent IE8 offering "Compatibility View" as that really
-  // messes up MRBS, especially on the Report page
-  $headers = array("Content-Type: text/html; charset=" . get_charset(),
-                   "X-UA-Compatible: IE=Edge");
+  $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
   
-  echo DOCTYPE;
+  echo DOCTYPE . "\n";;
 
+  // We produce two <html> tags: one for versions of IE that we don't support and one for all
+  // other browsers.  This enables us to use CSS to hide and show the appropriate text.
+  echo "<!--[if lte IE 9]>\n";
+  echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\" class=\"unsupported_browser\">\n";
+  echo "<![endif]-->\n";
+  echo "<!--[if (!IE)|(gt IE 9)]><!-->\n";
   echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\">\n";
+  echo "<!--<![endif]-->\n";
   
   print_head($simple);
 
@@ -251,6 +255,10 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
   {
     $class .= ' simple';
   }
+  
+  echo "<div class=\"unsupported_message\">\n";
+  echo "<p>Not supported</p>\n";
+  echo "</div>\n";
   
   echo "<header class=\"$class\">\n";
   print_nav($day, $month, $year, $area, $room, $search_str, $simple);

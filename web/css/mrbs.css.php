@@ -20,6 +20,18 @@ http_headers(array("Content-type: text/css"),
 
 /* ------------ GENERAL -----------------------------*/
 
+.unsupported_browser body > * {
+  display: none;
+}
+
+.unsupported_message {
+  display: none;
+}
+
+.unsupported_browser body .unsupported_message {
+  display: block;
+}
+
 body {
   font-size: small;
   margin: 0;
