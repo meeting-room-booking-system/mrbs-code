@@ -30,10 +30,7 @@ $standard_query_string = "area=$area";
 //   - Sunny theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
-?>
 
-<!--[if (!IE)|(gt IE 8)]><!-->
-<?php
 if (DEBUG)
 {
   ?>
@@ -46,14 +43,7 @@ else
   <script type="text/javascript" src="jquery/jquery-3.2.1.min.js"></script>
   <?php
 }
-?>
-<!--<![endif]-->
 
-<!--[if lte IE 8]>
-  <script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
-<![endif]-->
-
-<?php
 // We need the migration script now that we are running jQuery 3.0+, or at least
 // until we are confident that our JavaScript is not using any features that have
 // been removed.   The uncompressed version will output warnings about removed and
