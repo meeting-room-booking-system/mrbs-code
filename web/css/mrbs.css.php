@@ -20,6 +20,15 @@ http_headers(array("Content-type: text/css"),
 
 /* ------------ GENERAL -----------------------------*/
 
+body {
+  font-size: small;
+  margin: 0;
+  padding: 0;
+  color:            <?php echo $standard_font_color ?>;
+  font-family:      <?php echo $standard_font_family ?>;
+  background-color: <?php echo $body_background_color ?>;
+}
+
 .unsupported_browser body > * {
   display: none;
 }
@@ -30,15 +39,6 @@ http_headers(array("Content-type: text/css"),
 
 .unsupported_browser body .unsupported_message {
   display: block;
-}
-
-body {
-  font-size: small;
-  margin: 0;
-  padding: 0;
-  color:            <?php echo $standard_font_color ?>;
-  font-family:      <?php echo $standard_font_family ?>;
-  background-color: <?php echo $body_background_color ?>;
 }
 
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
