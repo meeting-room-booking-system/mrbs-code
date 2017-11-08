@@ -79,21 +79,6 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
   echo "<script type=\"text/javascript\" src=\"${datepicker_lang_file}\"></script>";
 }
 ?>
-
-    
-<?php // Work out if we're using IE8 or below ?>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE8 = false;
-  //]]>
-</script>
-<!--[if lte IE 8]>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE8 = true;
-  //]]>
-</script>
-<![endif]-->
     
 <script type="text/javascript">
   //<![CDATA[
