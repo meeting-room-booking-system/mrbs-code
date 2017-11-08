@@ -80,20 +80,6 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
 }
 ?>
 
-
-<?php // Work out if we're using IE6 or below ?>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE6 = false;
-  //]]>
-</script>
-<!--[if lte IE 6]>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE6 = true;
-  //]]>
-</script>
-<![endif]-->
     
 <?php // Work out if we're using IE7 or below ?>
 <script type="text/javascript">

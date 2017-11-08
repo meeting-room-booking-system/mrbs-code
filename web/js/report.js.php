@@ -91,19 +91,16 @@ init = function(args) {
     <?php
   }
   // Add in a hidden input to the form so that we can tell if we are using DataTables
-  // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
-  // need to know this because when we're using an Ajax data source we don't want to send
-  // the HTML version of the table data.
+  // (which will be if JavaScript is enabled).   We need to know this because when we're using an 
+  // Ajax data source we don't want to send the HTML version of the table data.
   ?>
-  if (!lteIE6)
-  {
-    $('<input>').attr({
-        type: 'hidden',
-        name: 'datatable',
-        value: '1'
-      }).appendTo('#report_form');
-  }
-  
+
+  $('<input>').attr({
+      type: 'hidden',
+      name: 'datatable',
+      value: '1'
+    }).appendTo('#report_form');
+
   var table = $('#report_table'),
       reportTable;
   

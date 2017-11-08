@@ -149,27 +149,24 @@ init = function(args) {
   }
 
   // Add in a hidden input to the header search form so that we can tell if we are using DataTables
-  // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
-  // need to know this because when we're using an Ajax data source we don't want to send
-  // the HTML version of the table data.
-  //
+  // (which will be if JavaScript is enabled).   We need to know this because when we're using an
+  // an Ajax data source we don't want to send the HTML version of the table data.
+  // 
   // Also add 'datatable=1' to the link for the user list for the same reason
   ?>
-  if (!lteIE6)
-  {
-    $('<input>').attr({
-        type: 'hidden',
-        name: 'datatable',
-        value: '1'
-      }).appendTo('#header_search');
-      
-    $('#user_list_link').each(function() {
-        var href = $(this).attr('href');
-        href += (href.indexOf('?') < 0) ? '?' : '&';
-        href += 'datatable=1';
-        $(this).attr('href', href);
-      });
-  }
+
+  $('<input>').attr({
+      type: 'hidden',
+      name: 'datatable',
+      value: '1'
+    }).appendTo('#header_search');
+    
+  $('#user_list_link').each(function() {
+      var href = $(this).attr('href');
+      href += (href.indexOf('?') < 0) ? '?' : '&';
+      href += 'datatable=1';
+      $(this).attr('href', href);
+    });
   
   <?php
   // There are some forms that have multiple submit buttons, eg a "Back" and "Save"
@@ -256,14 +253,11 @@ init = function(args) {
     });
     
   }
-  else if (!lteIE6)
+  else
   {
     <?php 
     // Add jQuery UI Autocomplete functionality for those browsers that do not
-    // support the <datalist> element.  (We don't support autocomplete in IE6 and
-    // below because the browser doesn't render the autocomplete box properly - it
-    // gets hidden behind other elements.   Although there are fixes for this,
-    // it's not worth it ...)
+    // support the <datalist> element.
     ?> 
     $('datalist').each(function() {
         var datalist = $(this);

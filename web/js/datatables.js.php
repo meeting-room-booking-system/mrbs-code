@@ -69,144 +69,137 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       dataTable,
       fixedColumns;
   
-  if (lteIE6)
+  table = $(id);
+  if (table.length === 0)
   {
-    $('.js div.datatable_container').css('visibility', 'visible');
     return false;
+  }
+  <?php
+  // Remove the <colgroup>.  This is only needed to assist in the formatting
+  // of the non-datatable version of the table.   When we have a datatable,
+  // the datatable sorts out its own formatting.
+  ?>
+  table.find('colgroup').remove();
+  
+  <?php // Set up the default options ?>
+  defaultOptions = {
+    buttons: [{extend: 'colvis', 
+               text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
+    deferRender: true,
+    paging: true,
+    pageLength: 25,
+    pagingType: 'full_numbers',
+    processing: true,
+    scrollCollapse: true,
+    stateSave: true,
+    dom: 'B<"clear">lfrtip',
+    scrollX: '100%',
+    colReorder: {}
+  };
+  
+  <?php
+  // Set the language file to be used
+  if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
+  {
+    // If using the language.url way of loading a DataTables language file,
+    // then the file must be valid JSON.   The .lang files that can be 
+    // downloaded from GitHub are not valid JSON as they contain comments.  They
+    // therefore cannot be used with language.url, but instead have to be
+    // included directly.   Note that if ever we go back to using the url
+    // method then the '../' would need to be stripped off the pathname, as in
+    //    $lang_file = substr($lang_file, 3); // strip off the '../'
+    ?>
+    defaultOptions.language = <?php include $lang_file ?>;
+    <?php
+  }
+  ?>
+
+            
+  <?php
+  // Construct the set of columns to be included in the column visibility
+  // button.  If specificOptions is set then use that.  Otherwise include
+  // all columns except any fixed columns.
+  ?>
+  if (specificOptions && 
+      specificOptions.buttons &&
+      specificOptions.buttons[0] &&
+      specificOptions.buttons[0].columns)
+  {
+    defaultOptions.buttons[0].columns = specificOptions.buttons;
   }
   else
   {
-    table = $(id);
-    if (table.length === 0)
+    colVisIncludeCols = [];
+    nCols = table.find('tr:first-child th').length;
+    for (i=0; i<nCols; i++)
     {
-      return false;
-    }
-    <?php
-    // Remove the <colgroup>.  This is only needed to assist in the formatting
-    // of the non-datatable version of the table.   When we have a datatable,
-    // the datatable sorts out its own formatting.
-    ?>
-    table.find('colgroup').remove();
-    
-    <?php // Set up the default options ?>
-    defaultOptions = {
-      buttons: [{extend: 'colvis', 
-                 text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
-      deferRender: true,
-      paging: true,
-      pageLength: 25,
-      pagingType: 'full_numbers',
-      processing: true,
-      scrollCollapse: true,
-      stateSave: true,
-      dom: 'B<"clear">lfrtip',
-      scrollX: '100%',
-      colReorder: {}
-    };
-    
-    <?php
-    // Set the language file to be used
-    if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
-    {
-      // If using the language.url way of loading a DataTables language file,
-      // then the file must be valid JSON.   The .lang files that can be 
-      // downloaded from GitHub are not valid JSON as they contain comments.  They
-      // therefore cannot be used with language.url, but instead have to be
-      // included directly.   Note that if ever we go back to using the url
-      // method then the '../' would need to be stripped off the pathname, as in
-      //    $lang_file = substr($lang_file, 3); // strip off the '../'
-      ?>
-      defaultOptions.language = <?php include $lang_file ?>;
-      <?php
-    }
-    ?>
-
-              
-    <?php
-    // Construct the set of columns to be included in the column visibility
-    // button.  If specificOptions is set then use that.  Otherwise include
-    // all columns except any fixed columns.
-    ?>
-    if (specificOptions && 
-        specificOptions.buttons &&
-        specificOptions.buttons[0] &&
-        specificOptions.buttons[0].columns)
-    {
-      defaultOptions.buttons[0].columns = specificOptions.buttons;
-    }
-    else
-    {
-      colVisIncludeCols = [];
-      nCols = table.find('tr:first-child th').length;
-      for (i=0; i<nCols; i++)
+      if (fixedColumnsOptions)
       {
-        if (fixedColumnsOptions)
+        if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
         {
-          if (fixedColumnsOptions.leftColumns && (i < fixedColumnsOptions.leftColumns))
-          {
-            continue;
-          }
-          if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
-          {
-            continue;
-          }
+          continue;
         }
-        colVisIncludeCols.push(i);
+        if (fixedColumnsOptions.rightColumns && (i >= nCols-fixedColumnsOptions.rightColumns))
+        {
+          continue;
+        }
       }
-      defaultOptions.buttons[0].columns = colVisIncludeCols;
+      colVisIncludeCols.push(i);
     }
-    <?php
-    // Merge the specific options with the default options.  We do a deep
-    // merge.
-    ?>
-    mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
-    dataTable = table.DataTable(mergedOptions);
-    
-    if (fixedColumnsOptions)
-    {
-      fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
-    }
-
-    <?php
-    // If we're using an Ajax data source then don't offer column reordering.
-    // This is a problem at the moment in DataTables because if you reorder a column
-    // DataTables doesn't know that the Ajax data is still in the original order.
-    // May be fixed in a future release of DataTables
-    ?>
-    if (!specificOptions.ajax)
-    {
-      <?php
-      /*
-      // In fact we don't use column reordering at all, because (a) it doesn't
-      // work with an Ajax source (b) there's no way of fixing the right hand column
-      // (c) iFixedColumns doesn't seem to work properly and (d) it's confusing
-      // for the user having reordering enabled sometimes and sometimes not.  Better
-      // to wait for a future release of DataTables when these issues have been
-      // fixed.  In the meantime the line of code we need is there below so we can see
-      // how it is done, but commented out.
-              
-      var oCR = new ColReorder(oTable, mergedOptions);
-              
-      */
-      ?>
-    }
-
-    $('.js div.datatable_container').css('visibility', 'visible');
-    <?php // Need to adjust column sizing after the table is made visible ?>
-    dataTable.columns.adjust();
-    
-    <?php
-    // Adjust the column sizing on a window resize.   We shouldn't have to do this because
-    // columns.adjust() is called automatically by DataTables on a window resize, but if we
-    // don't then a right hand fixed column appears twice when a window's width is increased.
-    // I have tried to create a simple test case, but everything works OK in the test case, so
-    // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
-    // JavaScript.
-    ?>
-    $(window).resize(function () {
-      dataTable.columns.adjust();
-    });
-    
-    return dataTable;
+    defaultOptions.buttons[0].columns = colVisIncludeCols;
   }
+  <?php
+  // Merge the specific options with the default options.  We do a deep
+  // merge.
+  ?>
+  mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+  dataTable = table.DataTable(mergedOptions);
+  
+  if (fixedColumnsOptions)
+  {
+    fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
+  }
+
+  <?php
+  // If we're using an Ajax data source then don't offer column reordering.
+  // This is a problem at the moment in DataTables because if you reorder a column
+  // DataTables doesn't know that the Ajax data is still in the original order.
+  // May be fixed in a future release of DataTables
+  ?>
+  if (!specificOptions.ajax)
+  {
+    <?php
+    /*
+    // In fact we don't use column reordering at all, because (a) it doesn't
+    // work with an Ajax source (b) there's no way of fixing the right hand column
+    // (c) iFixedColumns doesn't seem to work properly and (d) it's confusing
+    // for the user having reordering enabled sometimes and sometimes not.  Better
+    // to wait for a future release of DataTables when these issues have been
+    // fixed.  In the meantime the line of code we need is there below so we can see
+    // how it is done, but commented out.
+            
+    var oCR = new ColReorder(oTable, mergedOptions);
+            
+    */
+    ?>
+  }
+
+  $('.js div.datatable_container').css('visibility', 'visible');
+  <?php // Need to adjust column sizing after the table is made visible ?>
+  dataTable.columns.adjust();
+  
+  <?php
+  // Adjust the column sizing on a window resize.   We shouldn't have to do this because
+  // columns.adjust() is called automatically by DataTables on a window resize, but if we
+  // don't then a right hand fixed column appears twice when a window's width is increased.
+  // I have tried to create a simple test case, but everything works OK in the test case, so
+  // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
+  // JavaScript.
+  ?>
+  $(window).resize(function () {
+    dataTable.columns.adjust();
+  });
+  
+  return dataTable;
+
 }
