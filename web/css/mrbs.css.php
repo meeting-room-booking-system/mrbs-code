@@ -46,7 +46,7 @@ body {
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
-div#contents, div.trailer {
+div.contents, div.trailer {
   float: left;
   width: 100%;
   box-sizing: border-box;
@@ -1139,14 +1139,14 @@ form#add_new_user {margin-left: 1em}
   height: auto;
 }
 
-.banner #company {
+.banner .company {
   font-size: large;
   padding: 0.3em 1em;
   text-align: center;
   vertical-align: middle;
 }
 
-.banner #company div {
+.banner .company div {
   width: 100%;
 }
 

@@ -31,9 +31,9 @@ function print_header_site_info()
          $mrbs_company_logo,
          $mrbs_company_more_info;
   
-  echo "<div id=\"company\">\n";
+  echo "<div class=\"company\">\n";
   
-  echo "<div id=\"logo\">\n";
+  echo "<div class=\"logo\">\n";
   if (!empty($mrbs_company_url))
   {
     echo "<a href=\"$mrbs_company_url\">\n";
@@ -60,7 +60,7 @@ function print_header_site_info()
     echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
   }
 
-  echo "<div id=\"mrbs\">\n";
+  echo "<div class=\"mrbs\">\n";
   echo "<a href=\"index.php\">" . get_vocab("mrbs") . "</a>\n";
   echo "</div>\n";
   
@@ -211,6 +211,22 @@ function print_nav($day, $month, $year, $area, $room, $search_str=null, $simple=
 }
 
 
+
+// Print a message which will only be displayed (thanks to CSS) if the user is
+// using an unsupported browser.
+function print_unsupported_message()
+{
+  echo "<div class=\"unsupported_message\">\n";
+  echo "<header class=\"banner simple\">\n";
+  print_nav(null, null, null, null, null, null, $simple=true);
+  echo "</header>\n";
+  echo "<div class=\"contents\">\n";
+  echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
+  echo "</div>\n";
+  echo "</div>\n";
+}
+
+
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
@@ -256,9 +272,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
     $class .= ' simple';
   }
   
-  echo "<div class=\"unsupported_message\">\n";
-  echo "<p>Not supported</p>\n";
-  echo "</div>\n";
+  print_unsupported_message();
   
   echo "<header class=\"$class\">\n";
   print_nav($day, $month, $year, $area, $room, $search_str, $simple);
@@ -266,7 +280,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>
-  echo "<div id=\"contents\">\n";
+  echo "<div class=\"contents\">\n";
 
 
 } // end of print_theme_header()
