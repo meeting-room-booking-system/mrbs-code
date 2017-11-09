@@ -386,6 +386,10 @@ if (!empty($all_day))
     $start_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $end_seconds = (($eveningends * 60) + $eveningends_minutes) *60;
     $end_seconds += $resolution;  // We want the end of the last slot, not the beginning
+    if (day_past_midnight())
+    {
+      $end_seconds += SECONDS_PER_DAY;
+    }
   }
 }
 
