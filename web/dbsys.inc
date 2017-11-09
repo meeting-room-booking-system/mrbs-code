@@ -1,6 +1,12 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputPassword;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldInputSubmit;
+
 global $dbsys, $db_tbl_prefix, $db_schema, $maxlength;
 
 $tables = array('area', 'entry', 'repeat', 'room', 'users', 'variables', 'zoneinfo');
@@ -47,24 +53,40 @@ function db()
 function db_get_userpass()
 {
   print_header();
-  ?>
-  <form class="form_general" id="db_logon" method="post" action="<?php htmlspecialchars(this_page()); ?>">
-  <fieldset>
-  <legend><?php echo get_vocab("database_login") ?></legend>
-    <div>
-      <label for="form_username">Database username</label>
-      <input id="form_username" name="form_username" type="text">
-    </div>
-    <div>
-      <label for="form_password">Database password</label>
-      <input id="form_password" name="form_password" type="password">
-    </div>
-    <div id="db_logon_submit">
-      <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?>">
-    </div>
-  </fieldset>
-  </form>
-  <?php
+  
+  $form = new Form();
+  $form->setAttributes(array('class'  => 'form_general',
+                             'id'     => 'db_logon',
+                             'method' => 'post',
+                             'action' => this_page()));
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('database_login'));
+  
+  // The username field
+  $field = new FieldInputText();
+  $field->setLabel('Database username')
+        ->setControlAttributes(array('id'       => 'form_username',
+                                     'name'     => 'form_username',
+                                     'required' => null));               
+  $fieldset->addElement($field);
+  
+  // The password field
+  $field = new FieldInputPassword();
+  $field->setLabel('Database password')
+        ->setControlAttributes(array('id'   => 'form_password',
+                                     'name' => 'form_password'));               
+  $fieldset->addElement($field);
+  
+  // The submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('value' => get_vocab('login')));
+  $fieldset->addElement($field);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
+
   // Print footer and exit
   print_footer(TRUE);
 }
@@ -133,6 +155,9 @@ if (($current_db_schema_version < $db_schema_version) ||
     }
   }
 
+  // Check the CSRF token before we make any changes
+  Form::checkToken();
+    
   $ok = TRUE;
 
   // Do any MRBS upgrades first

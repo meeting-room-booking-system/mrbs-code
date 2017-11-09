@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 require "defaultincludes.inc";
 
 
@@ -1259,6 +1261,12 @@ if ($cli_mode)
 }
 else
 {
+  // Check the CSRF token if this is Phase 2
+  if ($phase == 2)
+  {
+    Form::checkToken();
+  }
+  
   checkAuthorised();
   // Also need to know whether they have admin rights
   $user = getUserName();
@@ -1560,7 +1568,8 @@ if ($output_form)
 
   echo "<div class=\"screenonly\">\n";
  
-  echo "<form class=\"form_general\" id=\"report_form\" method=\"get\" action=\"report.php\">\n";
+  echo "<form class=\"form_general\" id=\"report_form\" method=\"post\" action=\"report.php\">\n";
+  echo Form::getTokenHTML() . "\n";
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("report_on") . "</legend>\n";
   

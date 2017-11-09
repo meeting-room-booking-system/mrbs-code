@@ -1,6 +1,9 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
+
 // An Ajax function to check which of an array of time slots is invalid.  (We need to do
 // this server side because the client does not have sophisticated enough timezone
 // handling facilities)
@@ -16,6 +19,9 @@ namespace MRBS;
 //  Returns an array of slots which are invalid
 
 require "defaultincludes.inc";
+
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();

@@ -29,12 +29,24 @@ body {
   background-color: <?php echo $body_background_color ?>;
 }
 
+.unsupported_browser body > * {
+  display: none;
+}
+
+.unsupported_message {
+  display: none;
+}
+
+.unsupported_browser body .unsupported_message {
+  display: block;
+}
+
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
 .error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
-div#contents, div.trailer {
+div.contents, div.trailer {
   float: left;
   width: 100%;
   box-sizing: border-box;
@@ -499,9 +511,6 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
-
-// The *hover classes are applied by JavaScript when running IE6 because IE6 does
-// not support the :hover pseudo class on anything other than an anchor.
 ?>
 .dwm_main td:hover.new, .dwm_main td.new_hover {background-color: <?php echo $row_highlight_color ?>}
 .dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
@@ -1127,14 +1136,14 @@ form#add_new_user {margin-left: 1em}
   height: auto;
 }
 
-.banner #company {
+.banner .company {
   font-size: large;
   padding: 0.3em 1em;
   text-align: center;
   vertical-align: middle;
 }
 
-.banner #company div {
+.banner .company div {
   width: 100%;
 }
 

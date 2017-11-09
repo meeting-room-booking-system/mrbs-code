@@ -29,17 +29,11 @@ init = function(args) {
   <?php
   // Turn the list of rooms into a dataTable
   // If we're an admin, then fix the right hand column
-  // (but not if we're running IE8 or below because for some reason I can't
-  // get a fixed right hand column to work there.  It should do though, as it
-  // works on the DataTables examples page)
   
   if ($is_admin)
   {
     ?>
-    if (!lteIE8)
-    {
-      fixedColumnsOptions.rightColumns = 1;
-    }
+    fixedColumnsOptions.rightColumns = 1;
     <?php
   }
   ?>

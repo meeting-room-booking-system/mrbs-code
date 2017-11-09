@@ -5,6 +5,7 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
+use MRBS\Form\Form;
 
 function invalid_booking($message)
 {
@@ -22,6 +23,11 @@ if ($ajax && !checkAuthorised(TRUE))
 {
   exit;
 }
+
+
+// Check the CSRF token
+Form::checkToken();
+
 
 // (1) Check the user is authorised for this page
 //  ---------------------------------------------
@@ -811,6 +817,7 @@ echo "<div id=\"submit_buttons\">\n";
 
 // Back button
 echo "<form method=\"post\" action=\"" . htmlspecialchars($returl) . "\">\n";
+echo Form::getTokenHTML() . "\n";
 echo "<fieldset><legend></legend>\n";
 echo "<input type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
 echo "</fieldset>\n";
@@ -823,6 +830,7 @@ if (empty($result['violations']['errors'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
   echo "<form method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
+  echo Form::getTokenHTML() . "\n";
   echo "<fieldset><legend></legend>\n";
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round

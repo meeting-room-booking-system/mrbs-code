@@ -157,3 +157,9 @@ function isMeteredConnection()
   
   return false;
 }
+
+
+function getCSRFToken()
+{
+  return $('meta[name="csrf_token"]').attr('content');
+}

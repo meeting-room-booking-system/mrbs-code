@@ -21,12 +21,10 @@ var oldInitSearch = init;
 init = function(args) {
   oldInitSearch.apply(this, [args]);
   
-  <?php
-  // put the search string field in focus
-  ?>
-  var searchForm = $('#search_form');
-  searchForm.find('#search_str').focus();
-    
+  var searchForm = $('#search_form'),
+      table = $('#search_results'),
+      tableOptions;
+  
   <?php
   // Turn the list of users into a dataTable, provided that we can use
   // an Ajax source.  Otherwise they just get the old style search page
@@ -37,35 +35,39 @@ init = function(args) {
   if (function_exists('json_encode'))
   {
     // Add in a hidden input to the search form so that we can tell if we are using DataTables
-    // (which will be if JavaScript is enabled and we're not running IE6 or below).   We
-    // need to know this because when we're using an Ajax data source we don't want to send
-    // the HTML version of the table data.
+    // (which will be if JavaScript is enabled).   We need to know this because when we're using an 
+    // Ajax data source we don't want to send the HTML version of the table data.
     ?>
-    if (!lteIE6)
-    {
-      $('<input>').attr({
-          type: 'hidden',
-          name: 'datatable',
-          value: '1'
-        }).appendTo(searchForm);
-    }
+
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'datatable',
+        value: '1'
+      }).appendTo(searchForm);
       
-    var tableOptions = {},
-        queryString;
+    if (table.length)
+    {
+      tableOptions = {ajax: {url: 'search.php',
+                             method: 'POST',
+                             data: function() {
+                                 <?php
+                                 // Get the search parameters, which are all in data- attributes, so
+                                 // that we can use them in an Ajax post; add in the ajax and datatable
+                                 // flags and also the CSRF token
+                                 ?>
+                                 var data = table.data();
+                                 data.ajax = '1';
+                                 data.datatable = '1';
+                                 data.csrf_token = getCSRFToken();
+                                 return data;
+                               }}};
+      
+      <?php // Get the types and feed those into dataTables ?>
+      tableOptions.columnDefs = getTypes(table);
         
-    queryString = window.location.search;
-    if (queryString.length === 0)
-    {
-      queryString = '?';
+      makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
     }
-    queryString += '&ajax=1';
-    tableOptions.ajax = 'search.php' + queryString;
-
-    <?php // Get the types and feed those into dataTables ?>
-    tableOptions.columnDefs = getTypes($('#search_results'));
-      
-    makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
-
+    
     <?php
   }  //  if (function_exists('json_encode')) ?>
 };

@@ -1,6 +1,9 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
+
 // Deletes an entry, or a series.    The $id is always the id of
 // an individual entry.   If $series is set then the entire series
 // of wich $id is a member should be deleted. [Note - this use of
@@ -17,6 +20,9 @@ $series = get_form_var('series', 'int', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 $action = get_form_var('action', 'string', null, INPUT_POST);
 $note = get_form_var('note', 'string', '', INPUT_POST);
+
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();

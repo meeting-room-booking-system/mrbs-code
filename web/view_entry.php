@@ -1,6 +1,13 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldTextarea;
+
+
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
@@ -20,26 +27,23 @@ function generate_button(array $params, array $button_attributes=array())
   // use a <button> here and have to use the <input type="submit"> to create the
   // button.   This unfortunately means that styling options on the button are limited.
   
-  $html = '';
+  $form = new Form();
+  
+  $attributes = array('action' => $params['action'],
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
 
-  $html .= "<form method=\"post\" action=\"" . htmlspecialchars($params['action']) . "\">\n";
+  // Hidden inputs
+  $form->addHiddenInputs($params['inputs']);
+  
+  // Submit button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', $params['value'])
+          ->setAttributes($button_attributes);
+  $form->addElement($element);
 
-  foreach ($params['inputs'] as $key => $value)
-  {
-    $html .= '<input type="hidden" name="' . htmlspecialchars($key) . '"' .
-             ' value="' . htmlspecialchars($value) . "\">\n";
-  }
-  
-  $html .= '<input type="submit" value="' . htmlspecialchars($params['value']) . '"';
-  foreach($button_attributes as $key => $value)
-  {
-    $html .= " $key=\"" . htmlspecialchars($value) . '"';
-  }
-  $html .= ">\n";
-  
-  $html .= "</form>\n"; 
-  
-  echo $html;
+  $form->render();
 }
 
 
@@ -134,17 +138,39 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   echo "<tr><td id=\"caption\" colspan=\"2\">$caption</td></tr>\n";
   echo "<tr>\n";
   echo "<td id=\"note\" class=\"no_suffix\" colspan=\"2\">\n";
-  echo "<form action=\"$form_action\" method=\"post\">\n";
-  echo "<fieldset>\n";
-  echo "<legend></legend>\n";
-  echo "<textarea name=\"note\">" . htmlspecialchars($value) . "</textarea>\n";
-  echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
-  echo "<input type=\"hidden\" name=\"series\" value=\"$series\">\n";
-  echo "<input type=\"hidden\" name=\"returl\" value=\"$returl\">\n";
-  echo "<input type=\"hidden\" name=\"action\" value=\"$action_type\">\n";
-  echo "<input type=\"submit\" value=\"$submit_value\">\n";
-  echo "</fieldset>\n";
-  echo "</form>\n";
+  
+  $form = new Form();
+
+  $attributes = array('action' => $form_action,
+                      'method' => 'post');
+                      
+  $form->setAttributes($attributes);
+  
+  // Hidden inputs
+  $hidden_inputs = array('id'     => $id,
+                         'series' => $series,
+                         'returl' => $returl,
+                         'action' => $action_type);
+  $form->addHiddenInputs($hidden_inputs);
+  
+  // Visible fields
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend('');
+  
+  $field = new FieldTextarea();
+  $field->setControlAttributes(array('name'  => 'note',
+                                     'value' => $value));     
+  $fieldset->addElement($field);
+  
+  // The submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttribute('value', $submit_value);
+  $fieldset->addElement($field);
+  
+  $form->addElement($fieldset);
+    
+  $form->render();
+  
   echo "</td>\n";
   echo "<tr>\n";
 }
@@ -159,6 +185,12 @@ $series = get_form_var('series', 'int');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
+
+// Check the CSRF token if we're going to do something
+if (isset($action))
+{
+  Form::checkToken();
+}
 
 // Check the user is authorised for this page
 checkAuthorised();

@@ -30,10 +30,7 @@ $standard_query_string = "area=$area";
 //   - Sunny theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
-?>
 
-<!--[if (!IE)|(gt IE 8)]><!-->
-<?php
 if (DEBUG)
 {
   ?>
@@ -46,14 +43,7 @@ else
   <script type="text/javascript" src="jquery/jquery-3.2.1.min.js"></script>
   <?php
 }
-?>
-<!--<![endif]-->
 
-<!--[if lte IE 8]>
-  <script type="text/javascript" src="jquery/jquery-1.11.0.min.js"></script>
-<![endif]-->
-
-<?php
 // We need the migration script now that we are running jQuery 3.0+, or at least
 // until we are confident that our JavaScript is not using any features that have
 // been removed.   The uncompressed version will output warnings about removed and
@@ -89,49 +79,6 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
   echo "<script type=\"text/javascript\" src=\"${datepicker_lang_file}\"></script>";
 }
 ?>
-
-
-<?php // Work out if we're using IE6 or below ?>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE6 = false;
-  //]]>
-</script>
-<!--[if lte IE 6]>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE6 = true;
-  //]]>
-</script>
-<![endif]-->
-    
-<?php // Work out if we're using IE7 or below ?>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE7 = false;
-  //]]>
-</script>
-<!--[if lte IE 7]>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE7 = true;
-  //]]>
-</script>
-<![endif]-->
-    
-<?php // Work out if we're using IE8 or below ?>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE8 = false;
-  //]]>
-</script>
-<!--[if lte IE 8]>
-<script type="text/javascript">
-  //<![CDATA[
-  var lteIE8 = true;
-  //]]>
-</script>
-<![endif]-->
     
 <script type="text/javascript">
   //<![CDATA[
@@ -219,18 +166,14 @@ if (in_array($page, array('day', 'week')))
   <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-    
-if (in_array($page, array('day', 'week', 'month')))
-{
-  ?>
-  <script type="text/javascript" src="js/cell_click.js.php?<?php echo $standard_query_string ?>"></script>
-  <?php
-}
+
 ?>
 
 <!--[if lte IE 8]>
   <?php
-  // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below
+  // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
+  // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the 
+  // page which says we don't support them!).
   if (DEBUG)
   {
     ?>

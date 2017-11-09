@@ -1,11 +1,14 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
 
 function print_head($simple=false)
 {
   echo "<head>\n";
   echo "<meta charset=\"" . get_charset() . "\">\n";
+  // Add the CSRF token so that JavaScript can use it
+  echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
   require_once "style.inc";
@@ -28,9 +31,9 @@ function print_header_site_info()
          $mrbs_company_logo,
          $mrbs_company_more_info;
   
-  echo "<div id=\"company\">\n";
+  echo "<div class=\"company\">\n";
   
-  echo "<div id=\"logo\">\n";
+  echo "<div class=\"logo\">\n";
   if (!empty($mrbs_company_url))
   {
     echo "<a href=\"$mrbs_company_url\">\n";
@@ -57,7 +60,7 @@ function print_header_site_info()
     echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
   }
 
-  echo "<div id=\"mrbs\">\n";
+  echo "<div class=\"mrbs\">\n";
   echo "<a href=\"index.php\">" . get_vocab("mrbs") . "</a>\n";
   echo "</div>\n";
   
@@ -132,7 +135,8 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
     $search_str = '';
   }
   
-  echo "<form id=\"header_search\" method=\"get\" action=\"search.php\">\n";
+  echo "<form id=\"header_search\" method=\"post\" action=\"search.php\">\n";
+  echo Form::getTokenHTML() . "\n";
   echo "<div>\n";
   echo "<label><a href=\"search.php?advanced=1\">" . get_vocab("search") . "</a></label>\n";
   echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";
@@ -207,20 +211,40 @@ function print_nav($day, $month, $year, $area, $room, $search_str=null, $simple=
 }
 
 
+
+// Print a message which will only be displayed (thanks to CSS) if the user is
+// using an unsupported browser.
+function print_unsupported_message()
+{
+  echo "<div class=\"unsupported_message\">\n";
+  echo "<header class=\"banner simple\">\n";
+  print_nav(null, null, null, null, null, null, $simple=true);
+  echo "</header>\n";
+  echo "<div class=\"contents\">\n";
+  echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
+  echo "</div>\n";
+  echo "</div>\n";
+}
+
+
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str=null)
 {
-  // We want to prevent IE8 offering "Compatibility View" as that really
-  // messes up MRBS, especially on the Report page
-  $headers = array("Content-Type: text/html; charset=" . get_charset(),
-                   "X-UA-Compatible: IE=Edge");
+  $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
   
-  echo DOCTYPE;
+  echo DOCTYPE . "\n";;
 
+  // We produce two <html> tags: one for versions of IE that we don't support and one for all
+  // other browsers.  This enables us to use CSS to hide and show the appropriate text.
+  echo "<!--[if lte IE 9]>\n";
+  echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\" class=\"unsupported_browser\">\n";
+  echo "<![endif]-->\n";
+  echo "<!--[if (!IE)|(gt IE 9)]><!-->\n";
   echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\">\n";
+  echo "<!--<![endif]-->\n";
   
   print_head($simple);
 
@@ -248,13 +272,15 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
     $class .= ' simple';
   }
   
+  print_unsupported_message();
+  
   echo "<header class=\"$class\">\n";
   print_nav($day, $month, $year, $area, $room, $search_str, $simple);
   echo "</header>\n";
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>
-  echo "<div id=\"contents\">\n";
+  echo "<div class=\"contents\">\n";
 
 
 } // end of print_theme_header()

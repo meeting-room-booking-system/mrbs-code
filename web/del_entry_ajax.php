@@ -1,6 +1,9 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
+
 // A version of del_entry.php designed to be used in Ajax POST calls.  It
 // takes an array of ids to be deleted as input.   These are always assumed
 // to be single entries.   Returns the number of entries deleted, or some
@@ -23,6 +26,9 @@ namespace MRBS;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+
+// Check the CSRF token
+Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised();

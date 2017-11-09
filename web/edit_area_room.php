@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 // If you want to add some extra columns to the room table to describe the room
 // then you can do so and this page should automatically recognise them and handle
 // them.    At the moment support is limited to the following column types:
@@ -641,6 +643,9 @@ $valid_room_name = TRUE;
 // -------
 if ($phase == 2)
 {
+  // Check the CSRF token
+  Form::checkToken();
+  
   // Unauthorised users shouldn't normally be able to reach Phase 2, but just in case
   // they have, check again that they are allowed to be here
   if (isset($change_room) || isset($change_area))
@@ -1074,8 +1079,10 @@ if (isset($change_room) && !empty($room))
   echo "<h2>\n";
   echo ($is_admin) ? get_vocab("editroom") : get_vocab("viewroom");
   echo "</h2>\n";
+  
+  echo "<form class=\"form_general\" id=\"edit_room\" action=\"edit_area_room.php\" method=\"post\">\n";
+  echo Form::getTokenHTML() . "\n";
   ?>
-  <form class="form_general" id="edit_room" action="edit_area_room.php" method="post">
     <fieldset class="admin">
     <legend></legend>
   
@@ -1193,7 +1200,7 @@ if (isset($change_room) && !empty($room))
       echo "</div>\n";
       
       // Custom HTML
-      if ($is_admin)
+      if ($is_admin && $auth['allow_custom_html'])
       {
         // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
         echo "<div>\n";
@@ -1263,11 +1270,14 @@ if (isset($change_room) && !empty($room))
   </form>
 
   <?php
-  // Now the custom HTML
-  echo "<div id=\"custom_html\">\n";
-  // no htmlspecialchars() because we want the HTML!
-  echo (!empty($room_data['custom_html'])) ? $room_data['custom_html'] . "\n" : "";
-  echo "</div>\n";
+  if ($auth['allow_custom_html'])
+  {
+    // Now the custom HTML
+    echo "<div id=\"custom_html\">\n";
+    // no htmlspecialchars() because we want the HTML!
+    echo (!empty($room_data['custom_html'])) ? $room_data['custom_html'] . "\n" : "";
+    echo "</div>\n";
+  }
 }
 
 // THE AREA FORM
@@ -1293,6 +1303,7 @@ if (isset($change_area) &&!empty($area))
   get_area_settings($area);
 
   echo "<form class=\"form_general\" id=\"edit_area\" action=\"edit_area_room.php\" method=\"post\">\n";
+  echo Form::getTokenHTML() . "\n";
   echo "<fieldset class=\"admin\">\n";
   echo "<legend>" . get_vocab("editarea") . "</legend>\n";
   
@@ -1361,14 +1372,17 @@ if (isset($change_area) &&!empty($area))
   echo "</div>\n";
       
   // The custom HTML
-  echo "<div>\n";
-  $params = array('label'       => get_vocab("custom_html"),
-                  'label_title' => get_vocab("custom_html_note"),
-                  'name'        => 'custom_html',
-                  'value'       => $area_data['custom_html'],
-                  'attributes'  => array('rows="4"', 'cols="40"'));
-  generate_textarea($params);
-  echo "</div>\n";
+  if ($auth['allow_custom_html'])
+  {
+    echo "<div>\n";
+    $params = array('label'       => get_vocab("custom_html"),
+                    'label_title' => get_vocab("custom_html_note"),
+                    'name'        => 'custom_html',
+                    'value'       => $area_data['custom_html'],
+                    'attributes'  => array('rows="4"', 'cols="40"'));
+    generate_textarea($params);
+    echo "</div>\n";
+  }
         
   // Mode - Times or Periods
   echo "<div id=\"mode\">\n";

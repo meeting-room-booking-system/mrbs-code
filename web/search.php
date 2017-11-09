@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+
 require "defaultincludes.inc";
 
 
@@ -122,6 +124,12 @@ if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, 
   $year  = date("Y");
 }
 
+// If we're going to be doing something then check the CSRF token
+if (isset($search_str) && ($search_str !== ''))
+{
+  Form::checkToken();
+}
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -150,13 +158,14 @@ if (!$ajax)
 
   if (!empty($advanced))
   {
+    echo "<form class=\"form_general\" id=\"search_form\" method=\"post\" action=\"search.php\">\n";
+    echo Form::getTokenHTML() . "\n";
     ?>
-    <form class="form_general" id="search_form" method="get" action="search.php">
       <fieldset>
       <legend><?php echo get_vocab("advanced_search") ?></legend>
         <div id="div_search_str">
           <label for="search_str"><?php echo get_vocab("search_for") ?></label>
-          <input type="search" id="search_str" name="search_str" required>
+          <input type="search" id="search_str" name="search_str" required autofocus>
         </div>   
         <div id="div_search_from">
           <?php
@@ -332,7 +341,15 @@ if (!$ajax_capable)
 if (!$ajax)
 {
   echo "<div id=\"search_output\" class=\"datatable_container\">\n";
-  echo "<table id=\"search_results\" class=\"admin_table display\">\n";
+  echo "<table id=\"search_results\" class=\"admin_table display\"";
+  
+  // Put the search parameters as data attributes so that the JavaScript can use them
+  echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
+  echo ' data-from_day="' . htmlspecialchars($day) . '"';
+  echo ' data-from_month="' . htmlspecialchars($month) . '"';
+  echo ' data-from_year="' . htmlspecialchars($year) . '"';
+  
+  echo ">\n";
   echo "<thead>\n";
   echo "<tr>\n";
   // We give some columns a type data value so that the JavaScript knows how to sort them
