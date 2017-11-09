@@ -97,8 +97,16 @@ class Form extends Element
   {
     if (!isset(self::$token))
     {
-      self::$token = self::generateToken();
-      self::storeToken(self::$token);
+      $stored_token = self::getStoredToken();
+      if (isset($stored_token))
+      {
+        self::$token = $stored_token;
+      }
+      else
+      {
+        self::$token = self::generateToken();
+        self::storeToken(self::$token);
+      }
     }
     
     return self::$token;
@@ -225,6 +233,6 @@ class Form extends Element
         throw new \Exception("CSRF cookie token tampering detected");
       }
     }
-    throw new \Exception("Cookie fallback for CSRF prevention failed");
+    return null;
   }
 }
