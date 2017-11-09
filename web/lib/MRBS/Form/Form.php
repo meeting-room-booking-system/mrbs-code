@@ -207,8 +207,20 @@ class Form extends Element
     if (isset($token) && ($token != ""))
     {
       list($hash, $base64_data) = explode("_", $token);
+      
+      if (!isset($hash) || !isset($base64_data))
+      {
+        //error_log("Failed to unpack cookie");
+        return null;
+      }
 
       $json_data = base64_decode($base64_data);
+      
+      if ($json_data === FALSE)
+      {
+        //error_log("base64_decode failed");
+        return null;
+      }
 
       if (!function_exists('hash_hmac'))
       {
@@ -224,9 +236,7 @@ class Form extends Element
       {
         $session_data = json_decode($json_data, true);
         
-        //error_log("Cookie decoded OK");
-
-        return (isset($session_data[self::$token_name])) ? $session_data[self::$token_name] : null;
+        return (isset($session_data) && isset($session_data[self::$token_name])) ? $session_data[self::$token_name] : null;
       }
       else
       {
