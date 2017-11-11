@@ -34,7 +34,7 @@ database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
 
-Upgrading from prior to MRBS 1.6.2
+Upgrading from prior to MRBS 1.7.0
 ==================================
 
 As a security measure, custom HTML for areas and rooms has been disabled by
