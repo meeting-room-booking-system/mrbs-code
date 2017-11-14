@@ -160,6 +160,11 @@ class Form extends Element
     
     if ($auth['session'] == 'joomla')
     {
+      // Joomla has its own session handling and will clear the $_SESSION variable,
+      // so if we are using Joomla authentication we need to do sessions the Joomla
+      // way.   (Maybe MRBS should abstract session handling into a separate Session 
+      // class in due course?   Note also that Joomla's JSession class has methods for
+      // getting and checking form tokens, so maybe that's another way of doing it?)
       require_once MRBS_ROOT . '/auth/cms/joomla.inc';
       
       $session = JFactory::getSession();
