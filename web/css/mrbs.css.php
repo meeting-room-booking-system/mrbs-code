@@ -46,6 +46,10 @@ body {
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
+input[type="text"], input[type="email"], textarea {
+  box-sizing: border-box;
+}
+
 button.image {
   background-color: transparent;
   border: 0;
@@ -814,10 +818,8 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard input[type="text"], .standard input[type="email"], .standard textarea {
-  box-sizing: border-box;
   width: 20em;
 }
-
 .standard input[type="number"] {
   width: 4em;
 }
@@ -1484,7 +1486,6 @@ div#returl {
 #approve_buttons td#note textarea {
   width: 100%;
   height: 6em;
-  box-sizing: border-box;
   margin-bottom: 0.5em;
 }
 
