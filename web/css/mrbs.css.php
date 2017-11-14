@@ -1480,7 +1480,13 @@ div#returl {
 #approve_buttons td#caption {text-align: left}
 #approve_buttons td#note {padding-top: 0}
 #approve_buttons td#note form {width: 100%}
-#approve_buttons td#note textarea {width: 100%; height: 6em}
+
+#approve_buttons td#note textarea {
+  width: 100%;
+  height: 6em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+}
 
 
 /*-------------DataTables-------------------------*/
