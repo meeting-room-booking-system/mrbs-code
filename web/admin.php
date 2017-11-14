@@ -99,20 +99,20 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   {
     $img = new ElementImg();
     $img->setAttributes(array('src'   => 'images/edit.png',
-                              'title' => get_vocab('edit'),
                               'alt'   => get_vocab('edit')));
     $button = new ElementButton();
     $button->setAttributes(array('class'      => 'image',
+                                 'title' => get_vocab('edit'),
                                  'formaction' => 'edit_area_room.php?change_area=1'))
            ->addElement($img);
     $fieldset->addElement($button);
     
     $img = new ElementImg();
     $img->setAttributes(array('src'   => 'images/delete.png',
-                              'title' => get_vocab('delete'),
                               'alt'   => get_vocab('delete')));
     $button = new ElementButton();
     $button->setAttributes(array('class'      => 'image',
+                                 'title' => get_vocab('delete'),
                                  'formaction' => 'del.php?type=area'))
            ->addElement($img);
     $fieldset->addElement($button);
