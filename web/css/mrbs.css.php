@@ -46,6 +46,16 @@ body {
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
+input[type="text"], input[type="email"], textarea {
+  box-sizing: border-box;
+}
+
+button.image {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
 div.contents, div.trailer {
   float: left;
   width: 100%;
@@ -268,7 +278,12 @@ div#custom_html {float: left; padding: 0 0 3em 1em}
   
 #roomChangeForm select, #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
 #roomChangeForm input, #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
-#roomChangeForm input.button, #areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}
+
+#roomChangeForm input.button, #areaChangeForm button.image {
+  display: block;
+  float: left;
+  margin: 0 0.7em
+}
 
 div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
 div.header_columns {max-width: 20%}
@@ -803,10 +818,8 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard input[type="text"], .standard input[type="email"], .standard textarea {
-  box-sizing: border-box;
   width: 20em;
 }
-
 .standard input[type="number"] {
   width: 4em;
 }
@@ -1469,7 +1482,12 @@ div#returl {
 #approve_buttons td#caption {text-align: left}
 #approve_buttons td#note {padding-top: 0}
 #approve_buttons td#note form {width: 100%}
-#approve_buttons td#note textarea {width: 100%; height: 6em}
+
+#approve_buttons td#note textarea {
+  width: 100%;
+  height: 6em;
+  margin-bottom: 0.5em;
+}
 
 
 /*-------------DataTables-------------------------*/

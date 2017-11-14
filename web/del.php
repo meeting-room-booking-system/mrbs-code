@@ -62,7 +62,7 @@ Form::checkToken();
 checkAuthorised();
 
 // Get non-standard form variables
-$type = get_form_var('type', 'string', null, INPUT_POST);
+$type = get_form_var('type', 'string');
 $confirm = get_form_var('confirm', 'string', null, INPUT_POST);
 
 // This is gonna blast away something. We want them to be really
@@ -93,6 +93,7 @@ if ($type == "room")
    
     // Go back to the admin page
     header("Location: admin.php?area=$area");
+    exit;
   }
   else
   {
@@ -152,6 +153,7 @@ if ($type == "room")
 
     echo "</div>\n";
     output_trailer();
+    exit;
   }
 }
 
@@ -167,6 +169,7 @@ if ($type == "area")
    
     // Redirect back to the admin page
     header("Location: admin.php");
+    exit;
   }
   else
   {
@@ -177,6 +180,9 @@ if ($type == "area")
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
     echo "</p>\n";
     output_trailer();
+    exit;
   }
 }
+
+throw new \Exception ("Unknown type");
 

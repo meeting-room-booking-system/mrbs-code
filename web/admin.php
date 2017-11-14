@@ -2,7 +2,9 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementButton;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputText;
@@ -95,31 +97,25 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   // If they're an admin then give them edit and delete buttons for the area
   if ($is_admin)
   {
-    // Can't use <button> because IE6 does not support those properly
-    // (But we don't support IE6 any more - so this can change!)
-    $element = new ElementInputImage();
-    $element->setAttributes(array('class'      => 'button',
-                                  'src'        => 'images/edit.png',
-                                  'formaction' => 'edit_area_room.php?change_area=1',
-                                  'title'      => get_vocab('edit'),
-                                  'alt'        => get_vocab('edit')));
-    $fieldset->addElement($element);
+    $img = new ElementImg();
+    $img->setAttributes(array('src'   => 'images/edit.png',
+                              'alt'   => get_vocab('edit')));
+    $button = new ElementButton();
+    $button->setAttributes(array('class'      => 'image',
+                                 'title' => get_vocab('edit'),
+                                 'formaction' => 'edit_area_room.php?change_area=1'))
+           ->addElement($img);
+    $fieldset->addElement($button);
     
-    $element = new ElementInputImage();
-    $element->setAttributes(array('class'      => 'button',
-                                  'src'        => 'images/edit.png',
-                                  'formaction' => 'edit_area.php',
-                                  'title'      => get_vocab('edit'),
-                                  'alt'        => get_vocab('edit')));
-    $fieldset->addElement($element);
-    
-    $element = new ElementInputImage();
-    $element->setAttributes(array('class'      => 'button',
-                                  'src'        => 'images/delete.png',
-                                  'formaction' => 'del.php?type=area',
-                                  'title'      => get_vocab('delete'),
-                                  'alt'        => get_vocab('delete')));
-    $fieldset->addElement($element);
+    $img = new ElementImg();
+    $img->setAttributes(array('src'   => 'images/delete.png',
+                              'alt'   => get_vocab('delete')));
+    $button = new ElementButton();
+    $button->setAttributes(array('class'      => 'image',
+                                 'title' => get_vocab('delete'),
+                                 'formaction' => 'del.php?type=area'))
+           ->addElement($img);
+    $fieldset->addElement($button);
   }
   
   $form->addElement($fieldset);

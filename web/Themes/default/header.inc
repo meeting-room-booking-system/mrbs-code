@@ -6,9 +6,19 @@ use MRBS\Form\Form;
 function print_head($simple=false)
 {
   echo "<head>\n";
+  
   echo "<meta charset=\"" . get_charset() . "\">\n";
+  // Set IE=edge so that IE10 will display MRBS properly, even if compatibility mode is used
+  // on the browser.  If we don't do this then MRBS will treat IE10 as an unsupported browser
+  // when compatibility mode is turned on, potentially confusing users who may have forgotten
+  // that they are using compatibility mode.   Unfortunately we can't set IE=edge in the header,
+  // which is where we would normally do it, because then we won't be able to detect IE9 using
+  // conditional comments.  So we have to do it in a <meta> tag, after the conditional comments
+  // around the <html> tags.
+  echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
   // Add the CSRF token so that JavaScript can use it
   echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
+  
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
   require_once "style.inc";

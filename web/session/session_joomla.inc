@@ -68,6 +68,8 @@ function print_logon_box()
 
 function logoff_user()
 {
+  global $mainframe;
+  
   $mainframe->logout();
 }
 
