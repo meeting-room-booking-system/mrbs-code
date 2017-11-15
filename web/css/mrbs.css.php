@@ -46,7 +46,7 @@ body {
 .warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
 .note    {font-style: italic}
 
-input[type="text"], input[type="email"], textarea {
+input, textarea {
   box-sizing: border-box;
 }
 

@@ -28,7 +28,7 @@ foreach ($tables as $table)
 }
 
 
-$db_schema_version = 52;
+$db_schema_version = 53;
 $local_db_schema_version = 1;
 
 // Convenience wrapper function to provide access to a DB object for
@@ -86,7 +86,7 @@ function db_get_userpass()
   $form->addElement($fieldset);
   
   $form->render();
-
+  
   // Print footer and exit
   print_footer(TRUE);
 }
@@ -125,6 +125,12 @@ if (($current_db_schema_version < $db_schema_version) ||
 
   require_once "functions.inc";
   require_once "upgrade.inc";
+  if (isset($auth['session']))
+  {
+    // We need this to get any session initialisation out of the way before we start
+    // sending content.
+    require_once "session/session_$auth[session].inc";
+  }
 
   // Just use a simple header as the normal header may (a) use features
   // which are not available until after the database upgrade or (b) use
