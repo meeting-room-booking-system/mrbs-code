@@ -23,7 +23,7 @@ function session_init()
   // Sessions are only essential if we're using the 'php' session scheme.   For other schemes
   // they are desirable as if they are working we will use them for storing CSRF tokens, but
   // if they are not working we will fall back to other techniques, eg cookies.
-  if (($auth['session'] == 'php') && (false === session_start()))
+  if ((false === session_start()) && ($auth['session'] == 'php'))
   {
     // Checking the result of session_start() is not very reliable.   Before PHP 5.3.0
     // it always returned TRUE.   Even after 5.3.0 it seems to return TRUE even if the
