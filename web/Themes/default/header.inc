@@ -16,8 +16,12 @@ function print_head($simple=false)
   // conditional comments.  So we have to do it in a <meta> tag, after the conditional comments
   // around the <html> tags.
   echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
-  // Add the CSRF token so that JavaScript can use it
-  echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
+  
+  if (!$simple)
+  {
+    // Add the CSRF token so that JavaScript can use it
+    echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
+  }
   
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
