@@ -78,11 +78,19 @@ class Form extends Element
     
     if (!self::compareTokens($token, $stored_token))
     {
-      trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+      if (isset($stored_token))
+      {
+        // Only report a possible CSRF attack if the stored token exists.   If it doesn't
+        // it's normally because the user session has expired in between the form being
+        // displayed and submitted.
+        trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+      }
+      
       if (function_exists("\\MRBS\\logoff_user"))
       {
         \MRBS\logoff_user();
       }
+      
       \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }
@@ -143,6 +151,11 @@ class Form extends Element
   // Returns true if they are equal, otherwise false.
   private static function compareTokens($token1, $token2)
   {
+    if (is_null($token1) || is_null($token2))
+    {
+      return false;
+    }
+    
     if (function_exists('hash_equals'))
     {
       return hash_equals($token1, $token2);
