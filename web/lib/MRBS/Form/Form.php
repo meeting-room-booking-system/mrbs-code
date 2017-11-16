@@ -76,7 +76,7 @@ class Form extends Element
     $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
     $stored_token = self::getStoredToken();
     
-    if (!self::compareTokens($token, $stored_token))
+    if (!self::compareTokens($stored_token, $token))
     {
       if (isset($stored_token))
       {
@@ -149,21 +149,23 @@ class Form extends Element
   
   // Compare two tokens in a timing attack safe manner.
   // Returns true if they are equal, otherwise false.
-  private static function compareTokens($token1, $token2)
-  {
-    if (is_null($token1) || is_null($token2))
+  // Note: it is important to provide the user-supplied string as the
+  // second parameter, rather than the first. 
+  private static function compareTokens($known_token, $user_token)
+  { 
+    if (is_null($known_token) || is_null($user_token))
     {
       return false;
     }
     
     if (function_exists('hash_equals'))
     {
-      return hash_equals($token1, $token2);
+      return hash_equals($known_token, $user_token);
     }
     
     // Could do fancier things here to give a timing attack safe comparison,
     // For example https://github.com/indigophp/hash-compat
-    return ($token1 === $token2);
+    return ($known_token === $user_token);
   }
   
   
