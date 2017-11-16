@@ -7,7 +7,7 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.7.0 (Sat Nov 11th 2017):
+Version 1.7.0 (Thu Nov 16th 2017):
 
 [-] Set the default value of $smtp_settings['secure'] to '', so that TLS
  will not be attempted without the SMTP server advertising TLS support.
