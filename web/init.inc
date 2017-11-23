@@ -29,8 +29,12 @@ function session_init()
     // it always returned TRUE.   Even after 5.3.0 it seems to return TRUE even if the
     // session_save_path is not writable.  A warning is generated, but session_start()
     // still returns TRUE.
-    trigger_error("MRBS: could not start session", E_USER_WARNING);
-    fatal_error("MRBS: server configuration error.");
+    $message = "MRBS: could not start session.  The most likely causes are that session.save_path " .
+               "has not been set properly in your php.ini file, or else that the session.save_path " .
+               "directory is not writable.  Check your php.ini file and the file permissions on the ".
+               "session save path.";
+    trigger_error($message, E_USER_WARNING);
+    fatal_error("MRBS: server configuration error. Check your error log for more details.");
   }
 }
 
