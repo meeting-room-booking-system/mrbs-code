@@ -1,8 +1,1621 @@
-2017-02-26  John Beranek  <jberanek@users.sourceforge.net>
+2017-11-16  John Beranek  <jberanek@users.sourceforge.net>
 
 	* web/version_num.inc:
 	Updated version number for release
-	[0068c1f9867d] [tip]
+	[8417b7c732b3] [tip]
+
+2017-11-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Form.php:
+	Corrected the order of parameters supplied to hash_equals().
+	[4754cfbf5b83]
+
+	* web/lib/MRBS/Form/Form.php:
+	Fixed a problem with a CSRF attack warning being incorrectly
+	generated if a user session has expired. Bug could be reproduced if
+	usingh Joomla and the Joomla user session expires between the form
+	being displayed and submitted.
+	[d0e6b182403d]
+
+	* web/Themes/default/header.inc:
+	Fixed problem with white screen being shown in the event of CSRF
+	cookie tampering. (The white screen was caused by an infinite loop
+	trying to generate the header).
+	[67ffacac7de1]
+
+2017-11-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[63e67c51b55d]
+
+	* web/dbsys.inc:
+	Fixed bug when upgrading a database using Joomla authentication
+	(headers already sent)
+	[9c1226429c2f]
+
+	* web/init.inc:
+	Fixed problem that meant that sessions were only being used when
+	$auth['session'] was set to 'php'.
+	[9cb147aac2f2]
+
+	* tables.my.sql, tables.pg.sql, web/dbsys.inc,
+	web/upgrade/53/mysql.sql, web/upgrade/53/pgsql.sql,
+	web/upgrade/53/post.inc:
+	Added an upgrade step to warn site administrators that custom HTML
+	is now disabled by default.
+	[84cdb062025c]
+
+2017-11-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Form.php:
+	Added comment
+	[cd47871e7ea2]
+
+	* web/lib/MRBS/Form/Form.php, web/session/session_joomla.inc:
+	Made tokens work with Joomla authentication
+	[03e5b6e3057f]
+
+	* web/css/mrbs.css.php, web/functions.inc:
+	Tweaked CSS some more
+	[e7e8a0c7f666]
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[4e53015ee2b2]
+
+	* web/Themes/default/header.inc:
+	Added meta tag to stop IE10 using compatibility mode.
+	[09df8e59cdbb]
+
+	* web/admin.php:
+	Moved the title attribute to the button element so that it shows up
+	in Firefox.
+	[1c3dcdae93f6]
+
+	* web/lib/MRBS/Form/ElementButton.php,
+	web/lib/MRBS/Form/ElementImg.php:
+	Added files that should have been part of the last commit
+	[4af770f564b0]
+
+	* web/admin.php, web/css/mrbs.css.php:
+	Replaced inputs with buttons as the formaction attribute does not
+	seem to work in IE11 and below when the input is of type image. It
+	only works with type submit.
+	[1a43fc63dd95]
+
+	* web/del.php:
+	Fixed bug leading to a blank screen when deleting an area.
+	[846d67214062]
+
+2017-11-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/day.php:
+	Removed unwanted semicolon from query string
+	[1c69cf224e4c]
+
+	* UPGRADE:
+	Changed release number
+	[671726235e7a]
+
+2017-11-09  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/lib/MRBS/Form/Form.php:
+	Added extra error checking into CSRF cookie code path.
+	[b050d529c900]
+
+2017-11-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Ported fix from main default branch. See SF Patches #62.
+	[f92a6ff2e8ca]
+
+	* web/lib/MRBS/Form/Form.php:
+	Fixed a problem with token mismatches when opening another tab (and
+	also when refreshing a page, eg the Report page when it has
+	results).
+	[9b36a9323e62]
+
+2017-11-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* UPGRADE:
+	Added a note about custom HTML.
+	[94084a09a09c]
+
+	* web/css/mrbs.css.php:
+	Removed comment about IE6
+	[45f76a48cae4]
+
+	* web/css/mrbs-ie8.css, web/css/mrbs-ielte7.css.php, web/css/mrbs-
+	ielte8.css, web/style.inc:
+	Removed CSS support for IE7 and IE8
+	[268f86c3e6f6]
+
+	* web/css/mrbs-ielte6.css, web/style.inc:
+	Removed CSS support for IE6 and below
+	[aacabdc2b2ad]
+
+	* web/js.inc:
+	Added comment explaining why the HTML5 Shiv is still necessary
+	[193c09cbab53]
+
+	* web/js.inc, web/js/admin.js.php, web/js/resizable.js.php:
+	Removed JavaScript support for IE8
+	[e4846216b315]
+
+	* web/js.inc, web/js/pending.js.php:
+	Removed JavaScript support for IE7
+	[a670cc0e6ac9]
+
+	* web/js.inc, web/js/datatables.js.php, web/js/general.js.php,
+	web/js/report.js.php, web/js/search.js.php:
+	Removed JavaScript support for IE6 and below
+	[696e8315ca9d]
+
+	* web/js.inc, web/js/cell_click.js.php:
+	Removed cell_click.js.php now that we are not supporting IE6 and
+	below.
+	[fe7d5aea6d2f]
+
+	* web/jquery/jquery-1.11.0.min.js, web/js.inc:
+	Removed loading of old jQuery file now that support of IE8 has been
+	removed.
+	[070fe182678b]
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[b1e4a8613127]
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php,
+	web/lang/lang.en:
+	Added styling and internationalisation to the unsupported browser
+	message.
+	[803f9c06061b]
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php:
+	Basic message in place for browsers that we don't support (IE9 and
+	less)
+	[8c11dab771ef]
+
+2017-11-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/admin.php, web/edit_area_room.php, web/systemdefaults.inc.php:
+	Added a new config setting, $auth['allow_custom_html'], to determine
+	whether or not custom HTML can be used for areas and rooms. By
+	default it is set to false as it presents a potential security risk
+	if admins are not trusted.
+	[b1d797fb8a7f]
+
+	* web/js/edit_entry.js.php, web/js/functions.js.php,
+	web/js/report.js.php, web/js/resizable.js.php, web/js/search.js.php:
+	Added CSRF token and checking and created the JavaScript function
+	getCSRFToken()
+	[0caa01fb03b2]
+
+	* web/del_entry_ajax.php, web/js/report.js.php:
+	Added CSRF token and checking
+	[523609647b7e]
+
+	* web/check_slot_ajax.php, web/js/edit_entry.js.php:
+	Added CSRF token and checking
+	[3efeefa3d7b7]
+
+	* web/lib/MRBS/Form/Field.php, web/view_entry.php:
+	Completed addition of CSRF tokens to view_entry.php
+	[c9927a1710aa]
+
+	* web/del_entry.php, web/edit_entry.php, web/view_entry.php:
+	Added CSRF tokens and checking to view_entry.php (not yet complete -
+	more to come).
+	[06f511ec728c]
+
+	* web/js/general.js.php, web/js/search.js.php, web/search.php,
+	web/session/functions_session.inc:
+	Used HTML5 autofocus attribute where possible instead of .focus() in
+	the JavaScript.
+	[c8df70ddbbf4]
+
+	* web/js/search.js.php:
+	Simplified code, removing the need for a knowledge of the names of
+	the data- attributes.
+	[69e210809159]
+
+2017-11-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/js/search.js.php,
+	web/lib/MRBS/Form/Form.php, web/search.php:
+	Added CSRF token and checking to search.php
+	[1dc6c86ca08f]
+
+	* web/init.inc:
+	Added a comment explaining earlier fix.
+	[854e4db282eb]
+
+	* web/defaultincludes.inc:
+	Fixed problem with fatal_error() being called too early if sessions
+	don't work.
+	[c33122728e3f]
+
+2017-11-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Fixed bug when using sessions
+	[42e15bbd79ac]
+
+2017-11-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* Merge
+	[c70d23ee7aca]
+
+	* web/init.inc, web/lib/MRBS/Form/Form.php,
+	web/systemdefaults.inc.php:
+	Proof-of-concept for cookie fallback for CSRF prevention
+	[df14882c3971]
+
+2017-11-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/report.js.php:
+	Tweaked (updated to use the newer 'method' instead of the older
+	'type' setting in jQuery.ajax()
+	[92086a2f2321]
+
+	* web/js/report.js.php, web/report.php:
+	Added CRSF token and checking to report.php
+	[e4beafc15868]
+
+2017-10-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/approve_entry_handler.php, web/pending.php, web/view_entry.php:
+	Added CSRF token and checking for pending.php
+	[ba0e54782f61]
+
+	* web/import.php:
+	Added CSRF token and checking to import.php
+	[39a111ee076a]
+
+	* web/functions.inc:
+	Added CSRF tokens to the area and room change selects. (No need
+	really as they don't change any data, but it's good practice).
+	[18defb0d6258]
+
+	* web/edit_users.php:
+	Added CSRF token and checking to edit_users
+	[2c7c5949efa4]
+
+	* web/edit_entry.php, web/edit_entry_handler.php:
+	Added CSRF token and checking to edit_entry page and handler.
+	[80570538efbe]
+
+	* web/dbsys.inc:
+	Changed the db schema version back to normal (it had only been
+	incremented for testing).
+	[2369146e0e9c]
+
+	* web/dbsys.inc:
+	Made the database username a required field
+	[5d0d95343c5b]
+
+	* web/dbsys.inc:
+	Added token checking
+	[3c9e56d17ab1]
+
+	* web/dbsys.inc, web/defaultincludes.inc, web/functions.inc,
+	web/init.inc, web/lib/MRBS/Form/Form.php,
+	web/session/functions_session.inc, web/session/session_php.inc:
+	Added a token to the database upgrade form (token checking yet to
+	come). Added an init.inc file to make sure that sessions are running
+	before we reach the form.
+	[0fed1b4e5cda]
+
+	* web/edit_area_room.php, web/lib/MRBS/Form/Form.php:
+	Added CSRF tokens and checking to edit_area_room.php
+	[82c5dcb9eaae]
+
+	* web/admin.php, web/edit_area.php:
+	Removed new edit_area page
+	[d66b5e79be4d]
+
+2017-10-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/lib/MRBS/Form/FieldTextarea.php:
+	Tweaked layout
+	[079633e4a09b]
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[bd1f65213146]
+
+	* web/css/mrbs.css.php, web/edit_area.php,
+	web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementInputCheckbox.php,
+	web/lib/MRBS/Form/FieldInputCheckboxGroup.php:
+	Completed Times fieldset
+	[517589b74c15]
+
+	* web/css/mrbs.css.php, web/edit_area.php,
+	web/lib/MRBS/Form/ElementInputNumber.php,
+	web/lib/MRBS/Form/ElementInputTime.php,
+	web/lib/MRBS/Form/FieldInputNumber.php,
+	web/lib/MRBS/Form/FieldInputTime.php:
+	Added fields in times fieldset
+	[ae9ba0187909]
+
+	* web/edit_area.php, web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementFieldset.php,
+	web/lib/MRBS/Form/ElementSpan.php:
+	Started on Times fieldset
+	[ba3bfc6c2360]
+
+2017-10-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[eb0b4dd217e5]
+
+2017-10-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/edit_area.php,
+	web/lib/MRBS/Form/ElementTextarea.php, web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldTextarea.php:
+	Completed general settings fieldset
+	[a3c0e578c7a0]
+
+	* web/admin.php, web/css/mrbs.css.php, web/edit_area.php,
+	web/lib/MRBS/Form/Element.php, web/lib/MRBS/Form/ElementDiv.php,
+	web/lib/MRBS/Form/ElementInputRadio.php,
+	web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldInputRadioGroup.php,
+	web/lib/MRBS/Form/FieldSelect.php:
+	Added a RadioGroup class. Added a bit more of the new edit_area
+	form. Introduced the new 'standard' class for the form which will
+	simplify the form CSS.
+	[ed66313688a1]
+
+2017-10-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/admin.php, web/edit_area.php, web/edit_area_room.php,
+	web/lang/lang.ca, web/lang/lang.cs, web/lang/lang.da,
+	web/lang/lang.de, web/lang/lang.el, web/lang/lang.en,
+	web/lang/lang.es, web/lang/lang.eu, web/lang/lang.fi,
+	web/lang/lang.fr, web/lang/lang.he, web/lang/lang.hu,
+	web/lang/lang.id, web/lang/lang.it, web/lang/lang.ja,
+	web/lang/lang.ko, web/lang/lang.nb, web/lang/lang.nl,
+	web/lang/lang.nn, web/lang/lang.no, web/lang/lang.pl,
+	web/lang/lang.pt, web/lang/lang.pt-br, web/lang/lang.ro,
+	web/lang/lang.ru, web/lang/lang.sk, web/lang/lang.sl, web/lang/lang
+	.sr-rs-latin, web/lang/lang.sv, web/lang/lang.th, web/lang/lang.tr,
+	web/lang/lang.zh-cn, web/lang/lang.zh-tw,
+	web/lib/MRBS/Form/ElementP.php, web/mrbs_auth.inc:
+	Decided to split edit_area_room.php into four different files:
+	edit_area.php, edit_room.php and handlers for both. Started on
+	edit_area.php and put a temporary second Edit button in admin.php
+	for testing the new file.
+	[39d5c1b80236]
+
+	* web/session/session_cookie.inc, web/session/session_joomla.inc,
+	web/session/session_php.inc, web/session/session_wordpress.inc:
+	Removed the token checking from the QueryName action (which just
+	prints a login form). Otherwise you end up with false CSRF attack
+	alerts if you just refresh the browser on the login page.
+	[b5744f4b2da1]
+
+	* web/session/session_cookie.inc, web/session/session_joomla.inc,
+	web/session/session_php.inc, web/session/session_wordpress.inc:
+	Made the order of the QueryName and SetName actions consistent
+	[9fd5f916a0f8]
+
+	* web/session/session_cookie.inc, web/session/session_wordpress.inc:
+	Moved functions to the top for consistency with the rest of MRBS
+	[8b66db6ce727]
+
+	* web/session/session_cookie.inc, web/session/session_joomla.inc,
+	web/session/session_wordpress.inc:
+	Added token checking
+	[faaef842bf44]
+
+	* web/session/session_joomla.inc:
+	Moved functions to top for consistency with the rest of MRBS
+	[5f1c84fe23ee]
+
+	* web/session/session_php.inc:
+	Moved session initialisation code into a function.
+	[c8ed4738b405]
+
+	* web/session/session_php.inc:
+	Added CSRF token checking
+	[2e7f92a6ed19]
+
+	* web/session/functions_session.inc:
+	Converted the login button to use the Form classes
+	[b053872af204]
+
+	* web/admin.php, web/del.php, web/lib/MRBS/Form/Form.php,
+	web/session/functions_session.inc:
+	Simplified code by introducing the addHiddenInput() and
+	addHiddenInputs() methods.
+	[7593e726f0a4]
+
+	* web/admin.php, web/session/functions_session.inc:
+	Converted logoff_button to use Form classes
+	[6bd8900ff895]
+
+2017-10-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Further simplified the CSS
+	[5060b74654c9]
+
+	* web/css/mrbs.css.php:
+	Fixed a CSS problem introduced during the last change and further
+	simplified the CSS.
+	[efaf33525a3d]
+
+	* web/css/mrbs-rtl.css.php, web/css/mrbs.css.php,
+	web/session/functions_session.inc:
+	Simplified the markup and CSS a little
+	[c127d2cf1c7c]
+
+	* web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementInputPassword.php,
+	web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldInputPassword.php,
+	web/session/functions_session.inc:
+	Converted the login form to use the Form classes
+	[2c23764fad28]
+
+2017-10-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/del.php:
+	Corrected typo in comment.
+	[46067f72a388]
+
+	* web/del.php, web/functions.inc, web/lang/lang.en:
+	Improved the usability of the delete room confirmation page by
+	limiting the list of bookings to 20.
+	[d6ac68c335c4]
+
+	* web/admin.php, web/css/mrbs.css.php, web/del.php,
+	web/lib/MRBS/Form/ElementInputSubmit.php,
+	web/lib/MRBS/Form/ElementSubmit.php,
+	web/lib/MRBS/Form/FieldInputSubmit.php,
+	web/lib/MRBS/Form/FieldSubmit.php:
+	Changed the Yes/No confirmation links for deleting a room into forms
+	and buttons (and therefore with a CSRF token).
+	[06dea91d552c]
+
+	* web/add.php:
+	Made all form variables POST only
+	[f966e4e74e29]
+
+	* web/admin.php:
+	Removed redundant attributes
+	[6639c12ba015]
+
+	* web/admin.php:
+	Converted the link to delete a room into a form.
+	[e2d5418bfb0b]
+
+	* web/admin.php, web/lib/MRBS/Form/Form.php:
+	Added the $post_only parameter to Form::check() in order to cater
+	for pages that can be accessed by both GET and POST requests, eg
+	admin.php.
+	[12d44fd9174f]
+
+2017-10-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/admin.php:
+	Fixed bug introduced in recent changes
+	[ee02f83e5c54]
+
+	* web/lib/MRBS/Form/Form.php:
+	Tweaked comment
+	[e0b7762684db]
+
+	* web/admin.php, web/grab_globals.inc.php, web/lib/MRBS/Form/Form.php:
+	Added CSRF token checking to admin.php. (Not strictly necessary as
+	admin.php can't do anything by itself, but it's good practice as
+	somebody may change its behaviour in the future and forget to check
+	the token).
+
+	Also modified token checking so that it is only carried out on POST
+	requests. Any other type of request should only be used for safe
+	operations that don't modify data.
+	[24ed20450713]
+
+	* web/admin.php:
+	Tweaked layout and comments
+	[85d69a222b0e]
+
+	* web/admin.php:
+	Removed redundant code.
+	[523e239a3555]
+
+	* web/admin.php:
+	Simplified code by using the 'formaction' attribute on buttons.
+	[96b7681c58c5]
+
+	* web/css/mrbs.css.php:
+	Fixed layout of area change form on admin.php when JavaScript is
+	disabled.
+	[4c861c7dc73a]
+
+	* web/admin.php, web/lib/MRBS/Form/ElementInputEmail.php,
+	web/lib/MRBS/Form/FieldInputEmail.php:
+	Upgraded the room_admin_email field to be an HTML 'email' input (ie
+	with client side validation).
+	[b664ea347260]
+
+	* web/admin.php:
+	Converted the Add Room form to use the Form classes
+	[c769bad1c42b]
+
+	* web/admin.php:
+	Removed some redundant code
+	[16b17ef64b40]
+
+	* web/admin.php:
+	Renamed the function
+	[c49c0b2e213c]
+
+	* web/admin.php:
+	Moved the area select form into a function
+	[78869925a03d]
+
+	* web/admin.php, web/css/mrbs.css.php, web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementHidden.php,
+	web/lib/MRBS/Form/ElementInputHidden.php,
+	web/lib/MRBS/Form/ElementInputImage.php,
+	web/lib/MRBS/Form/ElementInputText.php,
+	web/lib/MRBS/Form/ElementOptgroup.php,
+	web/lib/MRBS/Form/ElementOption.php,
+	web/lib/MRBS/Form/ElementText.php, web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldInputText.php,
+	web/lib/MRBS/Form/FieldSelect.php,
+	web/lib/MRBS/Form/FieldSubmit.php, web/lib/MRBS/Form/FieldText.php,
+	web/lib/MRBS/Form/Form.php:
+	Completed Select Fields and converted the area selector form to use
+	the Form classes.
+	[0a72ad9911f7]
+
+2017-10-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/admin.php, web/css/mrbs-rtl.css.php, web/css/mrbs.css.php,
+	web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementFieldset.php,
+	web/lib/MRBS/Form/ElementHidden.php,
+	web/lib/MRBS/Form/ElementInput.php,
+	web/lib/MRBS/Form/ElementLabel.php,
+	web/lib/MRBS/Form/ElementLegend.php,
+	web/lib/MRBS/Form/ElementSelect.php,
+	web/lib/MRBS/Form/ElementSubmit.php,
+	web/lib/MRBS/Form/ElementText.php, web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldSelect.php,
+	web/lib/MRBS/Form/FieldSubmit.php, web/lib/MRBS/Form/FieldText.php,
+	web/lib/MRBS/Form/Form.php:
+	Revamped Forms classes to simplify them and also make the
+	constructor class signatures identical. Started on select elements.
+	[ad3588e04707]
+
+2017-10-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Form.php:
+	Made the CSRF token a POST variable. All forms will be POST forms.
+	[79d47d0cbd84]
+
+	* web/add.php:
+	Swapped the order of token and authorisation checking. Token
+	checking is a simple check, whereas authorisation checking goes on
+	to invite the user to log in.
+	[ae868e028bc4]
+
+2017-10-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/session/functions_session.inc, web/session/session_cookie.inc,
+	web/session/session_php.inc:
+	Restructured
+	[0fbb352615c9]
+
+	* web/lib/MRBS/Form/Form.php, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc:
+	Added logging off of the user, when possible, in the event of a CSRF
+	token mismatch.
+	[b397c6dd2819]
+
+	* web/lang/lang.en, web/lib/MRBS/Form/Form.php:
+	Internationalised the token error message.
+	[c2f8ee48bcee]
+
+	* web/add.php, web/lib/MRBS/Form/Form.php:
+	Added CSRF token checking
+	[a5925f75cc41]
+
+2017-10-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Form.php:
+	Made the token a static variable so that the same token is used for
+	all forms on a page.
+	[7ea46b9376dc]
+
+	* web/lib/MRBS/Form/Element.php, web/lib/MRBS/Form/ElementInput.php,
+	web/lib/MRBS/Form/FieldText.php:
+	Fixed various bugs
+	[83e1f10f4c80]
+
+	* web/lib/MRBS/Form/ElementHidden.php:
+	Fixed HTML5 validation error. Made hidden inputs self-closing.
+	[b1c386fa4128]
+
+	* web/lib/MRBS/Form/Form.php:
+	Trivial change
+	[bbedf4ff579b]
+
+	* web/lib/MRBS/Form/Form.php:
+	Added a CSRF token (support for sessions only at the moment - will
+	need to do do add cookie support later)
+	[fcc95c12929b]
+
+	* web/admin.php, web/lib/MRBS/Form/Element.php,
+	web/lib/MRBS/Form/ElementFieldset.php,
+	web/lib/MRBS/Form/ElementHidden.php,
+	web/lib/MRBS/Form/ElementInput.php,
+	web/lib/MRBS/Form/ElementLabel.php,
+	web/lib/MRBS/Form/ElementLegend.php,
+	web/lib/MRBS/Form/ElementSubmit.php,
+	web/lib/MRBS/Form/ElementText.php, web/lib/MRBS/Form/Field.php,
+	web/lib/MRBS/Form/FieldSubmit.php, web/lib/MRBS/Form/FieldText.php,
+	web/lib/MRBS/Form/Form.php:
+	Started implementing the Form classes and converted the add_area
+	form on the admin page to use them.
+	[3c64a25eb762]
+
+2017-10-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/internalconfig.inc.php:
+	Added comment
+	[b1e6c47c32db]
+
+	* web/internalconfig.inc.php:
+	Set some ini settings, as a further defence against session
+	fixation.
+	[079684d944bd]
+
+	* web/session/session_php.inc:
+	Regenerated the session id on login, as a defence against session
+	fixation.
+	[718121fe21c6]
+
+	* web/functions.inc:
+	Added missing escaping to datalist value
+	[ad6f7079bc0d]
+
+	* Merge
+	[89253f8a8594]
+
+2017-10-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/resizable.js.php:
+	Fixed problem with resizable boiokings not working after the upgrade
+	to JQuery 3 - caused by the fact that jQuery.fn.offset() now
+	requires an element to be connected to a document.
+	[d0074dc61378]
+
+	* web/edit_entry.php:
+	Tidied up capitalisation when calling genDateSelector() [not a bug,
+	as function names are case insensitive]
+	[19bc8e13776f]
+
+	* web/js/edit_entry.js.php, web/js/general.js.php,
+	web/js/resizable.js.php:
+	Replaced use of jQuery .bind (now deprecated) with .on
+	[fc11fdf610f8]
+
+2017-10-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/datepicker.js.php:
+	Put in a proper fix for the NaN problem (see changeset
+	8c1f0f3677c8). The problem was caused by timing differences between
+	document.ready and window.load.
+	[76063f806133]
+
+	* web/lib/MRBS/DB_mysql.php:
+	Trivial change to test commit emails
+	[e6db28b41868]
+
+	* web/lib/MRBS/DB_mysql.php:
+	Very minor enhancement to error messages
+	[72b7e7875c65]
+
+	* Merge
+	[4b6f0ac3ebaf]
+
+	* web/lib/MRBS/DB_mysql.php, web/lib/MRBS/DB_pgsql.php:
+	Added yet more error checking. See SF Support Requests #1332.
+	[6c4733b284bc]
+
+	* web/lib/MRBS/DB_mysql.php:
+	Added error checking to mutex_unlock()
+	[00fd0297229e]
+
+	* web/systemdefaults.inc.php:
+	Trivial change to test set-up.
+	[e712cadf6f00]
+
+2017-10-14  John Beranek  <jberanek@users.sourceforge.net>
+
+	* Merged with default
+	[475b830cbdff]
+
+	* web/Mail/mime.php, web/Mail/mimePart.php, web/auth/auth_joomla.inc,
+	web/auth/cms/joomla.inc, web/auth/cms/wordpress.inc,
+	web/functions_error.inc, web/functions_table.inc, web/lang/lang.sr-
+	rs-latin, web/lib/MRBS/DBException.php, web/lib/MRBS/Exception.php,
+	web/lib/MRBS/JFactory.php, web/lib/MRBS/JUser.php,
+	web/session/functions_session.inc, web/session/session_joomla.inc,
+	web/session/session_wordpress.inc, web/upgrade/50/post.inc,
+	web/upgrade/51/post.inc:
+	Converted a few files to UNIX line-endings, to match the rest of the
+	files.
+	[86318bac8138]
+
+2017-10-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php, web/lib/MRBS/DB_pgsql.php:
+	Added more error reporting to mutex_lock()
+	[2db57fb4aa7d]
+
+	* web/mrbs_sql.inc:
+	Removed redundant quotes
+	[065b57031020]
+
+2017-10-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/datepicker.js.php:
+	Fixed bug introduced during the upgrade of jQuery UI causing the
+	duration on the edit_entry form to be displayed as NaN.
+	[8c1f0f3677c8]
+
+	* web/js/datepicker.js.php, web/js/edit_entry.js.php,
+	web/js/report.js.php:
+	Switched to using .prop instead of .attr/.removeAttr for
+	setting/clearing the disabled property (jQuery 3 change)
+	[017c08a24cf0]
+
+2017-10-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[43288041fe95]
+
+	* web/jquery/jquery-2.2.4.js, web/jquery/jquery-2.2.4.min.js,
+	web/jquery/jquery-migrate-1.4.1.js, web/jquery/jquery-
+	migrate-1.4.1.min.js, web/jquery/ui/css/sunny/images/ui-
+	bg_flat_30_cccccc_40x100.png, web/jquery/ui/css/sunny/images/ui-
+	bg_flat_50_5c5c5c_40x100.png:
+	Merge with jquery_update
+	[f92a4e49899b]
+
+2017-09-27  John Beranek  <john.beranek@pressassociation.com>
+
+	* AUTHENTICATION:
+	Fixed a few typos in the SAML auth documentation
+	[978e4d044281]
+
+2017-09-25  Jørn Åne  <hg@jornane.no>
+
+	* AUTHENTICATION, web/auth/auth_saml.inc,
+	web/session/session_saml.inc:
+	Add SAML auth and session schemes
+	[31199c4a3a27]
+
+2017-09-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_db.inc:
+	Removed redundant global statement
+	[8bae804fc677]
+
+	* web/auth/auth_db.inc:
+	Fixed bug in password rehashing
+	[71c66a212f4b]
+
+2017-09-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Added some error handling in the event of an invalid user id
+	[82773ae95b38]
+
+2017-08-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed problem with validation of multiple email addresses - see SF
+	Support Requests #1290. [The problem only manifests itself with
+	certain values of $patternselect, eg 'php', used in
+	PHPMailer::validateAddress()]
+	[e54c3241331a]
+
+2017-08-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Updated link to Microsoft language codes
+	[6e6706430815]
+
+2017-08-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.ro, web/language.inc:
+	Added a Romanian language trtanslation, thanks to Mihai Andreana.
+	See SF Support requests 1285.
+	[08e4cce04c5c]
+
+2017-07-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[a9cf8a66e4ff]
+
+	* web/del_entry.php:
+	Fixed theoretical bug
+	[b6c9c2d547bf]
+
+	* web/view_entry.php:
+	Fixed a problem with buttons not appearing if the user is logged in
+	with a username in a different case to the creator of the booking.
+	[5c160dbec435]
+
+2017-06-23  John Beranek  <jberanek@users.sourceforge.net>
+
+	* tables.pg.sql:
+	Corrected name of PostgreSQL trigger in the schema definition.
+	[66b4241c362f]
+
+2017-06-06  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/upgrade/52/post.inc:
+	Split the "CREATE LANGUAGE" section of the Postgresql db schema 52
+	upgrade into 3 SQL commands.
+	[c6cd951e0a44]
+
+2017-06-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[372d2538aa69]
+
+	* web/edit_users.php:
+	Added sorting by the real date on the timestamp column in the users
+	table.
+	[836f12a17665]
+
+2017-06-02  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/upgrade/52/post.inc:
+	Upgrade 52 improved to install plpgsql language, if required, before
+	creating a plpgsql function.
+	[37d6d1f56691]
+
+2017-06-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/edit_users.php:
+	Merged with default.
+	[666f5a0c7bd3]
+
+	* tables.my.sql, tables.pg.sql, web/dbsys.inc, web/edit_users.php,
+	web/lang/lang.en, web/upgrade/52/mysql.sql,
+	web/upgrade/52/pgsql.sql, web/upgrade/52/post.inc:
+	Added a timestamp column to the users table, and support for viewing
+	it.
+
+	Added function and triggers for updating the timestamp columns when
+	using PostgreSQL.
+	[9b872faec92c]
+
+2017-05-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Added an error message which would have helped in debugging SF
+	Support Requests #1238.
+	[667eae378df5]
+
+	* web/del.php, web/del_entry.php, web/edit_area_room.php,
+	web/edit_users.php, web/session/session_http.inc:
+	Made all calls to header() use the lowercase version of the function
+	name,for consistency within MRBS and with the function declaration.
+	[ac4e4b9b927f]
+
+2017-05-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed bug causing ordinary users sometimes not to be able to change
+	their own passwords. See SF Support Requests #1238.
+	[d15543350b4a]
+
+2017-05-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[84a027ad97c1]
+
+	* Merging periods_per_area branch back into the default branch
+	[1b132bd10e5d]
+
+2017-04-25  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/systemdefaults.inc.php:
+	Added a little more description around $ldap_dn_search_dn config
+	[d3c2becfe197]
+
+2017-04-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug causing an error on the edit_entry page when using periods
+	when the times settings fall within certain bounds.
+	[76d9c6b86f02]
+
+2017-04-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/dbsys.inc,
+	web/upgrade/50/mysql.sql, web/upgrade/50/pgsql.sql,
+	web/upgrade/50/post.inc, web/upgrade/51/mysql.sql,
+	web/upgrade/51/pgsql.sql, web/upgrade/51/post.inc:
+	Fixed a problem with null values in the periods column (and at the
+	same time discovered that upgrade 50 had never been added).
+	[4b175e59a81b]
+
+	* web/mrbs_sql.inc:
+	Fixed creation of areas so that the correect default is used for
+	periods,
+	[51691c542d73]
+
+	* web/functions.inc, web/internalconfig.inc.php:
+	Added handling for null values of periods
+	[6c4f074c6d3e]
+
+2017-04-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area_room.php:
+	Disabled the facility to have different periods in each area
+	[3f616956f135]
+
+	* web/js/edit_area_room.js.php:
+	Made sure there's always at least one period.
+	[e39eb47cf7a4]
+
+	* web/css/mrbs.css.php:
+	Made the cursor a pointer when you hover over the delete period
+	symbol.
+	[c32bad59e4ba]
+
+	* web/areadefaults.inc.php, web/css/mrbs-ielte8.css,
+	web/css/mrbs.css.php, web/edit_area_room.php,
+	web/js/edit_area_room.js.php, web/lang/lang.en,
+	web/systemdefaults.inc.php:
+	Added the ability to add and remove period names in an area.
+	[b6e5421acc75]
+
+	* tables.my.sql, tables.pg.sql, web/dbsys.inc, web/edit_area_room.php,
+	web/functions.inc, web/js/edit_area_room.js.php, web/lang/lang.en:
+	Added the ability to have different period names in each area. See
+	SF Support Requests 1214. For the moment every area has to have the
+	same number of periods.
+	[accc8367b2cd]
+
+	* web/edit_area_room.php:
+	Restructured
+	[ebe6cb7cedc8]
+
+	* web/edit_area_room.php:
+	Restructured
+	[e81ce4831d23]
+
+	* web/edit_area_room.php:
+	Fixed problem with colon appearing when it shouldn't.
+	[3b654cad03f0]
+
+2017-04-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.eu, web/lang/lang.sv:
+	Removed colons which are now provided by CSS (they must have been
+	missed the last time).
+	[d70a4b0db506]
+
+	* web/lang/lang.ca, web/lang/lang.es, web/lang/lang.eu,
+	web/lang/lang.nb, web/lang/lang.nn, web/lang/lang.no,
+	web/lang/lang.sv:
+	Removed colons which are now provided by CSS (they must have been
+	missed the last time).
+	[f7b05599cc73]
+
+	* web/lang/lang.es:
+	Fixed syntax errors
+	[cde81ecad035]
+
+	* web/lang/lang.es:
+	Updated Spanish language file. Thanks to JLMartin. See SF Feature
+	Requests #355.
+	[bde7a5085ae4]
+
+2017-04-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php, web/lib/MRBS/DB.php,
+	web/lib/MRBS/DB_mysql.php, web/lib/MRBS/DB_pgsql.php,
+	web/mrbs_sql.inc:
+	Fixed transaction problems. See SF Support Requests #977.
+	[bca0b4f5b042]
+
+	* web/lib/MRBS/DB.php, web/lib/MRBS/DB_mysql.php,
+	web/lib/MRBS/DB_pgsql.php:
+	Altered transaction methods to use PDO transaction methods.
+	[0b445cca4b04]
+
+2017-04-05  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/lib/MRBS/DB.php:
+	Made the DB connection DSN more strictly correct.
+	[e9376b765aa2]
+
+	* web/lib/MRBS/DB.php:
+	Support setting $db_host to "" (or unset), to indicate you'd like
+	MRBS to use the default Unix domain socket instead of TCP. See
+	[bugs:#384]. On Linux at least, this works for both MySQL and
+	PostgreSQL.
+	[0fe8e6c91c84]
+
+2017-03-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_table.inc:
+	Renamed variables
+	[fb96328cb346]
+
+	* web/functions_table.inc:
+	Fixed (hopefully properly this time) bug causing a booking occupying
+	a single slot at the end of the day not to show in the day and week
+	views. See SF Support Requests 1207.
+	[c398a4904bc9]
+
+	* web/functions_table.inc:
+	Reverted last change
+	[9da195f06ef7]
+
+	* web/functions_table.inc:
+	Fixed bug causing a booking occupying a single slot at the end of
+	the day not to show in the day and week views. See SF Support
+	Requests 1207.
+	[3c92a9d2a538]
+
+	* web/edit_entry_handler.php:
+	Reverted previous change as it didn't solve the problem. See SF Bugs
+	#383.
+	[6b7c9093ee1b]
+
+2017-03-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Made the return URL an absolute instead of relative location. See SF
+	Bugs #383.
+	[ebe0e8bd02a1]
+
+2017-03-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Rewrote the code for getting $returl - see SF Bugs #383
+	[6960bb033647]
+
+2017-03-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Improved word breaking slightly on webkit browsers. See SF Support
+	Requests #951 and #1200.
+	[53347eb130d1]
+
+2017-03-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Added comment.
+	[72e19dde3e61]
+
+	* web/view_entry.php:
+	Removed redundant line of code
+	[0c686356c109]
+
+2017-03-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/del_entry_ajax.php:
+	Restricted passing of ids parameter to del_entry_ajax to POST.
+	[deef880268e7]
+
+	* web/del_entry.php:
+	Made the note form variable POST-only for good measure
+	[c4d8a3903f61]
+
+	* web/del_entry.php:
+	Restricted passing of id parameter to del_entry to POST.
+	[83b31ab4154f]
+
+	* web/view_entry.php:
+	Fixed problem with extra colons
+	[8fed4546ccfe]
+
+	* web/view_entry.php:
+	Fixed bug introduced in recent changes.
+	[5d2923fee89b]
+
+	* web/css/mrbs.css.php, web/view_entry.php:
+	Restructured and made the view_entry links line up.
+	[b25e26ddf9af]
+
+	* web/lang/lang.ca, web/lang/lang.cs, web/lang/lang.da,
+	web/lang/lang.de, web/lang/lang.el, web/lang/lang.en,
+	web/lang/lang.fi, web/lang/lang.fr, web/lang/lang.he,
+	web/lang/lang.hu, web/lang/lang.id, web/lang/lang.it,
+	web/lang/lang.nb, web/lang/lang.nl, web/lang/lang.nn,
+	web/lang/lang.no, web/lang/lang.pl, web/lang/lang.pt, web/lang/lang
+	.pt-br, web/lang/lang.ru, web/lang/lang.sk, web/lang/lang.sl,
+	web/lang/lang.sr-rs-latin, web/lang/lang.sv, web/lang/lang.tr,
+	web/lang/lang.zh-cn, web/lang/lang.zh-tw:
+	Removed new lines from JavaScript confirm messages. Modern browsers
+	can handle long lines.
+	[b5c294306cad]
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php, web/view_entry.php:
+	Fixed problem with an extra colon on Remind Admin line
+	[d07ebb609e20]
+
+	* web/view_entry.php:
+	Restructured
+	[1bc83a43d623]
+
+	* web/view_entry.php:
+	Fixed HTML5 validation error
+	[a1520fac8671]
+
+	* web/css/mrbs.css.php, web/view_entry.php:
+	Restructured
+	[31fbf04b3a6c]
+
+2017-03-18  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/edit_users.php:
+	Disallow password changes from edit_users.php via GET.
+	[2e745e6cdcc9]
+
+2017-03-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php, web/trailer.inc:
+	Moved colons in trailer out of HTML and into CSS.
+	[83560c204a88]
+
+	* web/view_entry.php:
+	Fixed problem with double colon
+	[40787df1fa35]
+
+2017-03-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/general.js.php, web/session/functions_session.inc,
+	web/session/session_cookie.inc, web/session/session_joomla.inc,
+	web/session/session_php.inc, web/session/session_wordpress.inc:
+	Restructured
+	[df3e77c185ba]
+
+	* web/grab_globals.inc.php, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc:
+	Restricted passing of username and password to POST variables as a
+	security measure. See SF Feature Requests #351.
+	[9fe6d6ffe075]
+
+	* web/grab_globals.inc.php:
+	Restructured code
+	[0c7a8ece7592]
+
+	* web/session/functions_session.inc, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc:
+	Restructured code
+	[553b69e54c49]
+
+	* web/mrbs_auth.inc:
+	Changed access level for check_slot_ajax to match edit_entry.
+	[60eca9fd7e31]
+
+	* web/mrbs_auth.inc:
+	Made the default access level 1 for the report, search and
+	view_entry pages to prevent usernames being revealed. See SF Feature
+	Requests #351.
+	[835ed3018d6f]
+
+2017-03-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mincals.inc:
+	Minor restructuring
+	[055b07e16a40]
+
+	* web/mincals.inc:
+	Made $html a static variable so that the day names are calculated
+	only once, instead of three times.
+	[73c16d65dcd6]
+
+	* web/mincals.inc:
+	Added a comment
+	[34421a853e7c]
+
+	* web/mincals.inc:
+	Restructured to improve readability.
+	[b9fee9549d8b]
+
+	* web/systemdefaults.inc.php:
+	Excluded seconds from the default representation of start and end
+	time. See SF Bugs #381.
+	[06606446e393]
+
+	* web/functions_table.inc:
+	Removed colon from row label header. See SF Feature Requests #349.
+	[c5b1ce556f98]
+
+	* web/functions.inc, web/systemdefaults.inc.php:
+	Added new config variable $weekdays to define weekdays and weekends,
+	allowing for the possibility that weekdays are not the same as
+	woreking days.
+	[f05820862a08]
+
+	* web/mincals.inc:
+	Removed &nbsp; from blank cells. No longer necessary with today's
+	browsers.
+	[3c25afbae66d]
+
+	* web/functions.inc, web/mincals.inc:
+	Changed calculation of whether a day is a weeekend day to use
+	$working_days, instead of Saturday and Sunday, to allow for locales,
+	eg Saudi Arabia, where the weekend does not fall on Sat and Sun.
+	[1a178d511adc]
+
+2017-03-15  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/mincals.inc:
+	Added some CSS classes to the minicals.
+	[f279a0acaebb]
+
+2017-03-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.sv:
+	Amended translation.
+	[c91e26f04d09]
+
+	* web/lang/lang.sv:
+	Added Swedish translations. Thanks to Lars Olsson. See SF Support
+	Requests 1188.
+	[8d3e1e28054c]
+
+	* web/lang/lang.en:
+	Removed whitespace
+	[1f625f508196]
+
+2017-03-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Fixed a bug with the display of entries starting at 0000 in the
+	month view. See SF Support Requests #1186.
+	[82397e6891f3]
+
+2017-03-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/js/edit_entry.js.php,
+	web/js/resizable.js.php, web/report.php:
+	Eliminated the function mrbs_entity_decode() as it's unnecessary now
+	that the PHP version is at least 5.3.3.
+	[6bfad1d8c4d2]
+
+	* web/language.inc:
+	Set PHP's default charset
+	[9a9c4e996b03]
+
+	* web/report.php:
+	Fixed bug with production of a .csv report, introduced during a
+	recent change.
+	[0b8911af95bf]
+
+	* web/edit_entry.php, web/functions_mail.inc, web/functions_table.inc,
+	web/js/functions.js.php, web/month.php, web/mrbs_sql.inc,
+	web/pending.php, web/search.php, web/systemdefaults.inc.php:
+	Changed the way that period names are defined so that they can now
+	contain special chars and are put through htmlspecialchars() before
+	being output to the browser. (Previously the site administrator had
+	to encode special chars).
+	[fef4827b4456]
+
+2017-03-11  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/functions_mail.inc, web/systemdefaults.inc.php:
+	Added even more options for configuring PHPMailer TLS settings.
+	[4667e94f6722]
+
+	* web/config.inc.php:
+	Added mode/coding hint and removed $Id$ from config.inc.php
+	[d7825f877dcb]
+
+2017-03-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Removed the '&nbsp;' characters from the default period descriptions
+	as they are unnecessary: CSS ensures that the descriptions don't
+	wrap.
+	[86341539068a]
+
+	* web/edit_entry.php:
+	Fixed problem of '&nbsp;' appearing in period description in slot
+	selector.
+	[24aed4a02c78]
+
+2017-03-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.pt:
+	Added the translation for "back".
+	[4af65c950230]
+
+	* web/js/edit_entry.js.php, web/lang/lang.en, web/lang/lang.fr:
+	Moved colons out of .js files and into lang files. (Can't very
+	easily produce colons using CSS content property because we're also
+	using these strings in the title attribute for a tooltip).
+	[a93f1be83329]
+
+	* web/lang/lang.pt:
+	Updated Portuguese translation. Thanks to Paulo Resende. See SF
+	Support Requests #1178.
+	[b3d5d069208d]
+
+	* web/js/edit_entry.js.php:
+	Added a comment
+	[603fad9aeeec]
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php, web/edit_entry.php,
+	web/edit_entry_handler.php, web/import.php,
+	web/js/edit_entry.js.php, web/js/resizable.js.php, web/lang/lang.en,
+	web/mrbs_sql.inc:
+	Added a warning symbol on the edit_entry page instead of a green
+	tick when an admin makes a booking that would normally violate one
+	or more of the policy rules. See SF Support Requests 1171.
+	[3dcb50054078]
+
+2017-03-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php, web/edit_entry.php,
+	web/js/edit_entry.js.php:
+	Moved checkmark and cross on booking form out of HTML and into CSS.
+	[9b016fa1083d]
+
+2017-03-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/edit_entry.js.php:
+	Removed an unnecessary replacement of the colon at the end of the
+	label, now that the colon is not part of the label but generated as
+	a CSS pseudo-element.
+	[7f24e8633cd0]
+
+	* web/js/edit_entry.js.php:
+	Stripped out HTML tags and entities from validation messages. See SF
+	Bugs #380.
+	[40312b9f58a0]
+
+2017-03-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php:
+	Made use of nbsp hex value in CSS consistent.
+	[c14e2a2e995d]
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php:
+	Used pseudo-elements instead of pseudo-classes for before and after.
+	[391b2844321f]
+
+	* web/lang/lang.cs, web/lang/lang.da, web/lang/lang.de,
+	web/lang/lang.el, web/lang/lang.en, web/lang/lang.fi,
+	web/lang/lang.fr, web/lang/lang.hu, web/lang/lang.id,
+	web/lang/lang.it, web/lang/lang.ja, web/lang/lang.ko,
+	web/lang/lang.nl, web/lang/lang.pl, web/lang/lang.pt, web/lang/lang
+	.pt-br, web/lang/lang.ru, web/lang/lang.sk, web/lang/lang.sl,
+	web/lang/lang.sr-rs-latin, web/lang/lang.th, web/lang/lang.tr,
+	web/lang/lang.zh-cn, web/lang/lang.zh-tw:
+	Removed the supplementary information in the 'fulldescription' text
+	string. It didn't help and indeed was misleading as things like the
+	type have their own form field.
+	[33c8b31d8591]
+
+	* web/Themes/default/header.inc:
+	Moved colons out of HTML and into CSS
+	[d12e8e029b0c]
+
+	* web/functions_view.inc, web/lang/lang.fr, web/view_entry.php:
+	Moved colons out of HTML and into CSS
+	[db4e7812c046]
+
+	* web/css/mrbs-ielte8.css, web/css/mrbs.css.php, web/help.php:
+	Moved colons out of HTML and into CSS
+	[4457f4583da2]
+
+	* web/site_faq/site_faq.html, web/site_faq/site_faq_cs.html,
+	web/site_faq/site_faq_de.html, web/site_faq/site_faq_es.html,
+	web/site_faq/site_faq_fr.html, web/site_faq/site_faq_it.html,
+	web/site_faq/site_faq_nl.html, web/site_faq/site_faq_sv.html:
+	Added lang attributes to the Help pages.
+	[ea842f2046d0]
+
+	* web/Themes/default/header.inc, web/css/mrbs-ielte8.css,
+	web/css/mrbs.css.php, web/language.inc:
+	Added a language attribute to the <html> element and then adjusted
+	the CSS for labels for French.
+	[bb9a49995c99]
+
+	* web/admin.php, web/css/mrbs-ielte8.css, web/css/mrbs.css.php,
+	web/edit_area_room.php, web/edit_entry.php, web/edit_users.php,
+	web/functions.inc, web/import.php, web/js/edit_area_room.js.php,
+	web/report.php, web/search.php, web/session/functions_session.inc:
+	Moved the colon after form labels out of HTML and into CSS so that
+	it can easily be changed for languages that expect a different
+	treatment (eg French).
+	[b851618aee0c]
+
+2017-03-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/search.php:
+	Made parameter order consistent with other functions.
+	[f3e264491bb1]
+
+	* web/Themes/default/header.inc, web/functions.inc, web/search.php:
+	Restructured
+	[02451c91f114]
+
+	* web/admin.php, web/approve_entry_handler.php, web/day.php,
+	web/dbsys.inc, web/del.php, web/del_entry.php,
+	web/edit_area_room.php, web/edit_entry.php,
+	web/edit_entry_handler.php, web/edit_users.php, web/functions.inc,
+	web/help.php, web/month.php, web/mrbs_auth.inc, web/pending.php,
+	web/report.php, web/search.php, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc, web/view_entry.php, web/week.php:
+	Restuctured code, changing calls to print_header().
+	[65b140aa769b]
+
+	* web/Themes/default/header.inc, web/functions.inc:
+	Restructured
+	[f35a17b2b760]
+
+	* web/Themes/default/header.inc, web/language.inc:
+	Eliminated $locale_warning global and moved reporting of locale
+	setting problems to the error mechanism rather than the browser.
+	[13d639904fc0]
+
+	* web/Themes/default/header.inc, web/functions.inc, web/search.php:
+	Eliminated a global.
+	[631561099f00]
+
+	* web/session/functions_session.inc:
+	Renamed variable
+	[244739bbe907]
+
+	* web/.htaccess-apache-2.4, web/.htaccess-apache-pre-2.4:
+	Removed "ExpiresActive Off" directive as it is no longer necessary
+	given other fixes and could interfere with a site's caching policy.
+	See SF Bugs #379.
+	[a2bb229020c5]
+
+2017-03-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[53d2a63e0ae7]
+
+	* web/css/mrbs.css.php, web/help.php, web/lang/lang.en:
+	Added some configuration information to the Help page (for admins
+	only)
+	[0cbeff4bdbd3]
+
+2017-03-04  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/auth/auth_ldap.inc:
+	Added missing variable declaration.
+	[26b61e6bce67]
+
+2017-03-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/help.php:
+	Restricted server details to admins, for security reasons
+	[316e73eb000e]
+
+	* web/auth/auth_ldap.inc:
+	Added an explicit return.
+	[aa2cd6bd259a]
+
+	* web/js/edit_users.js.php, web/js/report.js.php,
+	web/js/search.js.php:
+	Eliminated use of $HTTP_REFERER, thus allowing the files to be
+	cached.
+	[b900be2194ae]
+
+2017-03-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/help.php, web/lang/lang.en:
+	Added Server Software information to the Help information, to help
+	with determining the Apache version for choosing a .htaccess file -
+	as well as being generally useful for support.
+	[635a6c61b6b9]
+
+	* Reintegrated login_with_email_address named branch. MRBS now
+	supports login by username or email address, when the authentication
+	type allows it. If login by email address is supported then it is
+	also possible to login using just the local-part of the email
+	address - but this feature has to be enabled by a config variable
+	setting.
+	[f26a70a2b158]
+
+2017-03-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug when using custom themes. See SF Support Requests #1170.
+	[3bfd711c5fa5]
+
+2017-03-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* INSTALL, web/.htaccess, web/.htaccess-apache-2.4, web/.htaccess-
+	apache-pre-2.4:
+	Moved MRBS's .htaccess file into 2 separate example .htaccess files
+	for different versions of Apache. The old .htaccess caused 500
+	errors with a stock Apache 2.4 configuration.
+	[75e96fcd3e67]
+
+2017-03-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en:
+	Capitalised "goto" button. See SF Support Requests 1167.
+	[d47a9f85fb60]
+
+	* web/Themes/default/header.inc, web/check_slot_ajax.php, web/css
+	/mrbs-ielte7.css.php, web/css/mrbs-print.css.php, web/css/mrbs-
+	rtl.css.php, web/css/mrbs.css.php, web/edit_entry_handler.php,
+	web/edit_users.php, web/functions.inc, web/js/admin.js.php,
+	web/js/cell_click.js.php, web/js/datatables.js.php,
+	web/js/datepicker.js.php, web/js/edit_area_room.js.php,
+	web/js/edit_entry.js.php, web/js/edit_users.js.php,
+	web/js/functions.js.php, web/js/general.js.php,
+	web/js/multiple.js.php, web/js/pending.js.php,
+	web/js/refresh.js.php, web/js/report.js.php,
+	web/js/resizable.js.php, web/js/search.js.php, web/report.php,
+	web/search.php, web/view_entry.php:
+	Restructured code so that when the HTTP headers are sent caching is
+	disabled by default. For files that can be cached then the expiry
+	date has to be set explicitly in http_headers(). This is to avoid
+	problems with files being cached when they shouldn't be.
+	[34a7b75dc8c7]
+
+	* web/check_slot_ajax.php, web/edit_users.php, web/report.php,
+	web/search.php, web/view_entry.php:
+	Added headers to disable caching when sending application data, eg
+	JSON or iCalendar. Although the PHP session scheme will normally add
+	these headers when $auth['session'] is set to 'php', this won't
+	happen in some other session schemes, eg 'cookie'. So MRBS
+	explicitly adds the headers itself just to make sure.
+	[9e1f7e31c5f5]
+
+	* Merge with 1.6.1
+	[9a30929fe771]
+
+	* web/.htaccess, web/functions.inc:
+	Made sure that caching is disabled when it should be. See SF Bugs
+	#379.
+	[b16bd29d0236]
+
+2017-02-27  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/systemdefaults.inc.php:
+	Set the default value of $smtp_settings['secure'] to '', so that TLS
+	will not be attempted without the SMTP server advertising TLS
+	support.
+	[23726c727625]
+
+2017-02-26  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_6_1 for changeset f392e68914ab
+	[623bbe92e607]
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for release
+	[f392e68914ab] [mrbs-1_6_1]
+
+	* web/version_num.inc:
+	Updated version number for release
+	[0068c1f9867d]
 
 2017-02-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
@@ -228,17 +1841,15 @@
 	Added MRBS 1.6.0 upgrade step to UPGRADE.
 	[8de8b062a9d3]
 
+	* web/version_num.inc:
+	Updated version number in preparation for release
+	[7346e8dfc1d6]
+
 2017-02-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/functions.inc:
 	Fixed bug introduced in recent commit
 	[ce506efb8fac]
-
-2017-02-11  John Beranek  <jberanek@users.sourceforge.net>
-
-	* web/version_num.inc:
-	Updated version number in preparation for release
-	[7346e8dfc1d6]
 
 2017-01-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
@@ -707,6 +2318,12 @@
 	* Merge
 	[ea4eaf635cf5]
 
+	* checklang.php, web/session/session_cookie.inc,
+	web/session/session_php.inc:
+	Removed unnecessary uses of $HTTP_SESSION_VARS and
+	$HTTP_COOKIE_VARS.
+	[dec2897a7762]
+
 2016-10-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/edit_users.php:
@@ -723,14 +2340,6 @@
 	Fixed bug in DB_pgsql::table_exists() which meant that it always
 	returned true and thus broke the upgrade process, for example.
 	[fe0d186d752f]
-
-2016-10-12  John Beranek  <jberanek@users.sourceforge.net>
-
-	* checklang.php, web/session/session_cookie.inc,
-	web/session/session_php.inc:
-	Removed unnecessary uses of $HTTP_SESSION_VARS and
-	$HTTP_COOKIE_VARS.
-	[dec2897a7762]
 
 2016-10-08  John Beranek  <jberanek@users.sourceforge.net>
 
@@ -2534,6 +4143,11 @@
 	* Merged with default
 	[0fc7b1032d41]
 
+	* web/systemdefaults.inc.php:
+	Improved systemdefautls.inc.php comments about new LDAP filter
+	options.
+	[95deadcd3d44]
+
 2015-10-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* sample-data.sql, testdata.php:
@@ -2547,13 +4161,6 @@
 	(2) Flushed output when debug output is being sent to the browser
 	(see SF Support Requests #799)
 	[8fd4e3906c36]
-
-2015-10-16  John Beranek  <jberanek@users.sourceforge.net>
-
-	* web/systemdefaults.inc.php:
-	Improved systemdefautls.inc.php comments about new LDAP filter
-	options.
-	[95deadcd3d44]
 
 2015-10-14  John Beranek  <jberanek@users.sourceforge.net>
 

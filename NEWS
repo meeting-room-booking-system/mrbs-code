@@ -7,6 +7,115 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.0 (Thu Nov 16th 2017):
+
+[-] Set the default value of $smtp_settings['secure'] to '', so that TLS
+ will not be attempted without the SMTP server advertising TLS support.
+[-] A number of different changes to improve behaviour of browsers caching
+ MRBS resources which shouldn't be cached.
+[*] Capitalised "goto" button. See SF Support Requests 1167.
+[*] Moved MRBS's .htaccess file into 2 separate example .htaccess files
+ for different versions of Apache. The old .htaccess caused 500
+ errors with a stock Apache 2.4 configuration.
+[-] Fixed bug when using custom themes. See SF Support Requests #1170.
+[+] Added ability to authenticate with either username or email address,
+ if the authentication scheme supports it.
+[+] Added Server Software information to the Help information.
+[*] Restricted server details to admins, for security reasons.
+[*] Removed "ExpiresActive Off" directive as it is no longer necessary
+ given other fixes and could interfere with a site's caching policy.
+ See SF Bugs #379.
+[*] Eliminated $locale_warning global and moved reporting of locale
+ setting problems to the error mechanism rather than the browser.
+[*] Improved localisation, especially for French, colons are no longer 
+ hard-coded in HTML and instead populated by CSS.
+[*] Removed the supplementary information in the 'fulldescription' text
+ string. It didn't help and indeed was misleading as things like the
+ type have their own form field.
+[-] Stripped out HTML tags and entities from validation messages. See SF
+ Bugs #380.
+[*] Added a warning symbol on the edit_entry page instead of a green
+ tick when an admin makes a booking that would normally violate one
+ or more of the policy rules. See SF Support Requests 1171.
+[*] Updated Portuguese translation. Thanks to Paulo Resende.
+[*] Added even more options for configuring PHPMailer TLS settings.
+[*] Set PHP's default charset.
+[*] Changed the way that period names are defined so that they can now
+ contain special chars and are put through htmlspecialchars() before
+ being output to the browser. (Previously the site administrator had
+ to encode special chars).
+[-] Fixed a bug with the display of entries starting at 0000 in the
+ month view. See SF Support Requests #1186.
+[*] Added Swedish translations. Thanks to Lars Olsson.
+[*] Added some CSS classes to the minicals.
+[-] Excluded seconds from the default representation of start and end
+ time. See SF Bugs #381.
+[+] Added new config variable $weekdays to define weekdays and weekends,
+ allowing for the possibility that weekdays are not the same as
+ working days.
+[*] Restricted passing of username and password to POST variables as a
+ security measure. See SF Feature Requests #351.
+[-] Changed access level for check_slot_ajax to match edit_entry.
+[*] Made the default access level 1 for the report, search and
+ view_entry pages to prevent usernames being revealed. See SF Feature
+ Requests #351.
+[*] Disallow password changes from edit_users.php via GET.
+[*] Removed new lines from JavaScript confirm messages. Modern browsers
+ can handle long lines.
+[*] Restricted more form handlers to only accept POSTs.
+[*] Improved word breaking slightly on webkit browsers. See SF Support
+ Requests #951 and #1200.
+[-] Fixed bug causing a booking occupying a single slot at the end of
+ the day not to show in the day and week views. See SF Support Requests 1207.
+[*] Made the DB connection DSN more strictly correct, and also support
+ setting $db_host to "" (or unset), to indicate you'd like
+ MRBS to use the default Unix domain socket instead of TCP. See
+ [bugs:#384]. On Linux at least, this works for both MySQL and
+ PostgreSQL.
+[-] Fixed database transaction problems. See SF Support Requests #977.
+[*] Altered transaction methods to use PDO transaction methods.
+[*] Updated Spanish language file. Thanks to JLMartin.
+[+] Added the ability to have different period names in each area. See
+ SF Support Requests 1214.
+[*] Added a little more description around $ldap_dn_search_dn config
+ variable.
+[-] Fixed bug causing ordinary users sometimes not to be able to change
+ their own passwords. See SF Support Requests #1238.
+[*] Added a timestamp column to the users table, and support for viewing
+ it. Added function and triggers for updating the timestamp columns when
+ using PostgreSQL.
+[*] Added sorting by the real date on the timestamp column in the users
+ table.
+[-] Fixed a problem with buttons not appearing if the user is logged in
+ with a username in a different case to the creator of the booking.
+[+] Added a Romanian language translation, thanks to Mihai Andreana.
+ See SF Support requests 1285.
+[-] Fixed problem with validation of multiple email addresses - see SF
+ Support Requests #1290.
+[*] Added some error handling in the event of an invalid user id in
+ edit_users.php.
+[-] Fixed bug in password rehashing (auth_db).
+[+] Add SAML auth and session schemes, thanks to Jørn Åne.
+[*] Updated to jQuery 3.2.1 and jQueryUI 1.12.1, which includes XSS fixes.
+[*] Added more error reporting to mutex_lock() [DB classes].
+[-] Fixed a number of security issues in MRBS that were disclosed to
+ the project by SySS GmbH, including XSS, CSRF protection and session
+ fixation.
+ [SYSS-2017-021, SYSS-2017-022, SYSS-2017-023, SYSS-2017-024]
+[*] Improved error reporting around database mutexes.
+[*] All forms now only accept POST submission.
+[*] Implemented a new set of Form classes, though not all sections of
+ MRBS are using them yet.
+[*] Added CSRF protection throughout MRBS.
+[*] Added a new config setting, $auth['allow_custom_html'], to determine whether
+ custom HTML is allowed in rooms/areas. This defaults to off, so if you
+ are using this feature and upgrade to 1.6.2 you will need to set
+ the variable to true in your config.inc.php.
+[*] Dropped support for Internet Explorer 9 and lower.
+[-] Implemented a fix for when "All day" is checked and the area "eveningends"
+ is past midnight. See SF Patches #62.
+
+-------------------------------------------------------------------------------
 Version 1.6.1 (Sun Feb 26th 2017):
 
 [-] Fixed bug with the LDAP authentication scheme. See SF Support Requests
