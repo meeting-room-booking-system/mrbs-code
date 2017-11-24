@@ -14,6 +14,7 @@ use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 
 // TO DO -------------------------------------------
@@ -285,9 +286,22 @@ function get_fieldset_periods($data)
 
 function get_fieldset_booking_policies($data)
 {
+  global $enable_periods;
+  
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'booking_policies')
            ->addLegend(get_vocab('booking_policies'));
+  
+  // Note when using periods
+  $field = new FieldSpan();
+  if (!$enable_periods)
+  {
+    $field->setAttribute('class', 'js_none');
+  }
+  $field->setAttribute('id', 'book_ahead_periods_note')
+        ->setControlText(get_vocab('book_ahead_note_periods'));
+
+  $fieldset->addElement($field);
   
   return $fieldset;
 }
