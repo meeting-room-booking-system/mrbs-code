@@ -283,6 +283,16 @@ function get_fieldset_periods($data)
 }
 
 
+function get_fieldset_booking_policies($data)
+{
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'booking_policies')
+           ->addLegend(get_vocab('booking_policies'));
+  
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -311,7 +321,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_errors($errors))
                ->addElement(get_fieldset_general($data))
                ->addElement(get_fieldset_times($data))
-               ->addElement(get_fieldset_periods($data));
+               ->addElement(get_fieldset_periods($data))
+               ->addElement(get_fieldset_booking_policies($data));
 
 $form->addElement($outer_fieldset);
 
