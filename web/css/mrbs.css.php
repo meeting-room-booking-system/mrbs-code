@@ -786,6 +786,10 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   font-weight: normal;
 }
 
+.standard fieldset fieldset fieldset legend {
+  padding-left: 2em;
+}
+
 .standard fieldset > div {
   display: table-row;
 }
@@ -827,6 +831,10 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 .standard input[type="radio"], .standard input[type="checkbox"] {
   vertical-align: middle;
   margin: -0.17em 0.4em 0 0;
+}
+
+.standard input, .standard input.enabler, .standard select {
+  margin-right: 1em;
 }
 
 .standard textarea {

@@ -2,7 +2,7 @@
 
 namespace MRBS\Form;
 
-
+// Defaults to step="1"
 class FieldInputNumber extends Field
 {
   
