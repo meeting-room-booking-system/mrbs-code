@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
 use MRBS\Form\ElementSpan;
+use MRBS\Form\FieldButton;
 use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
@@ -165,10 +166,11 @@ function get_fieldset_times($data)
   global $resolution, $default_duration, $default_duration_all_day;
   
   $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'time_settings');
   
   // If we're using JavaScript, don't display the time settings section
   // if we're using periods (the JavaScript will display it if we change)
-  if (!$enable_periods)
+  if ($enable_periods)
   {
     $fieldset->setAttribute('class', 'js_none');
   }
@@ -236,6 +238,51 @@ function get_fieldset_times($data)
 }
 
 
+function get_fieldset_periods($data)
+{
+  global $enable_periods, $periods;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'period_settings');
+  
+  // If we're using JavaScript, don't display the periods settings section
+  // if we're using rimes (the JavaScript will display it if we change)
+  if (!$enable_periods)
+  {
+    $fieldset->setAttribute('class', 'js_none');
+  }
+  $fieldset->addLegend(get_vocab('period_settings'));
+  
+  // For the JavaScript to work, and MRBS to make sense, there has to be at least
+  // one period defined.  So if for some reason, which shouldn't happen, there aren't
+  // any periods defined, then force there to be one by creating a single period name
+  // with an empty string.   Because the input is a required input, then it will have
+  // to be saved with a period name.
+  $period_names = empty($periods) ? array('') : $periods;
+  
+  foreach ($period_names as $period_name)
+  {
+    $field = new FieldInputText();
+    $span = new ElementSpan();
+    $span->setAttribute('class', 'delete_period');
+    $field->setAttribute('class', 'period_name')
+          ->setControlAttributes(array('name'     => 'area_periods[]',
+                                       'value'    => $period_name,
+                                       'required' => null))
+          ->addElement($span);
+    $fieldset->addElement($field);
+  }
+  
+  $field = new FieldButton();
+  $field->setControlAttributes(array('type' => 'button',
+                                     'id'   => 'add_period'))
+        ->setControlText(get_vocab('add_period'));
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -263,7 +310,8 @@ $outer_fieldset = new ElementFieldset();
 $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_errors($errors))
                ->addElement(get_fieldset_general($data))
-               ->addElement(get_fieldset_times($data));
+               ->addElement(get_fieldset_times($data))
+               ->addElement(get_fieldset_periods($data));
 
 $form->addElement($outer_fieldset);
 

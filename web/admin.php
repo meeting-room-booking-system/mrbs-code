@@ -108,6 +108,16 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     $fieldset->addElement($button);
     
     $img = new ElementImg();
+    $img->setAttributes(array('src'   => 'images/edit.png',
+                              'alt'   => get_vocab('edit')));
+    $button = new ElementButton();
+    $button->setAttributes(array('class'      => 'image',
+                                 'title' => get_vocab('edit'),
+                                 'formaction' => 'edit_area.php'))
+           ->addElement($img);
+    $fieldset->addElement($button);
+    
+    $img = new ElementImg();
     $img->setAttributes(array('src'   => 'images/delete.png',
                               'alt'   => get_vocab('delete')));
     $button = new ElementButton();
