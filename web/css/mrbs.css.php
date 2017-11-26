@@ -846,11 +846,27 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   margin-right: 0.5em;
 }
 
-#max_number div:first-of-type span {
-  display: block;
-  float: left;
+#max_number div:first-of-type span, #max_number div div div {
+  display: inline-block;
   width: 50%;
+}
+
+#max_number div:first-of-type span {
+  white-space: normal;
   font-style: italic;
+}
+
+#max_number div div {
+  white-space: nowrap;
+}
+
+#max_number div div div {
+  display: inline-block;
+  width: 50%;
+}
+
+#max_number input {
+  display: inline-block;
 }
 
 

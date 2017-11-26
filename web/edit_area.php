@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementFieldset;
@@ -469,6 +470,10 @@ function get_fieldset_max_number($data)
     $number_area->setAttributes(array('min'   => '0',
                                       'name'  => "area_max_per_${interval_type}",
                                       'value' => $max_per_interval_area[$interval_type]));
+                                      
+    $div_area = new ElementDiv();
+    $div_area->addElement($checkbox_area)
+             ->addElement($number_area);
     
     // The global settings can't be changed here: they are just shown for information.  The global
     // settings have to be changed in the config file.    
@@ -480,11 +485,13 @@ function get_fieldset_max_number($data)
     $number_global->setAttributes(array('value' => $max_per_interval_global[$interval_type],
                                         'disabled' => null));
                                         
+    $div_global = new ElementDiv();
+    $div_global->addElement($checkbox_global)
+               ->addElement($number_global);
+                                        
     $field->setLabel(get_vocab("max_per_${interval_type}"))
-          ->addControlElement($checkbox_area)
-          ->addControlElement($number_area)
-          ->addControlElement($checkbox_global)
-          ->addControlElement($number_global);
+          ->addControlElement($div_area)
+          ->addControlElement($div_global);
     
     $fieldset->addElement($field);
   }
