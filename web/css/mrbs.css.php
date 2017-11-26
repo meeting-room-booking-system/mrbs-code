@@ -846,6 +846,13 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   margin-right: 0.5em;
 }
 
+#max_number div:first-of-type span {
+  display: block;
+  float: left;
+  width: 50%;
+  font-style: italic;
+}
+
 
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */

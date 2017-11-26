@@ -429,6 +429,70 @@ function get_fieldset_delete_ahead($data)
 }
 
 
+function get_fieldset_max_number($data)
+{
+  global $interval_types,
+         $max_per_interval_area_enabled, $max_per_interval_global_enabled,
+         $max_per_interval_area, $max_per_interval_global;
+         
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'max_number')
+           ->addLegend(get_vocab('booking_limits'));
+  
+  // Add the column headings
+  $field = new FieldDiv;
+  
+  $span_area = new ElementSpan();
+  $span_area->setText(get_vocab('this_area'));
+  
+  $span_global = new ElementSpan();
+  $span_global->setAttribute('title', get_vocab('whole_system_note'))
+              ->setText(get_vocab('whole_system'));
+  
+  $field->addControlElement($span_area)
+        ->addControlElement($span_global);
+           
+  $fieldset->addElement($field);
+  
+  // Then do the individual settings
+  foreach ($interval_types as $interval_type)
+  {
+    $field = new FieldDiv;
+    
+    $checkbox_area = new ElementInputCheckbox();
+    $checkbox_area->setAttributes(array('name'  => "area_max_per_${interval_type}_enabled",
+                                        'value' => $max_per_interval_area_enabled[$interval_type],
+                                        'id'    => "area_max_per_${interval_type}_enabled",
+                                        'class' => 'enabler'));
+                                        
+    $number_area = new ElementInputNumber();
+    $number_area->setAttributes(array('min'   => '0',
+                                      'name'  => "area_max_per_${interval_type}",
+                                      'value' => $max_per_interval_area[$interval_type]));
+    
+    // The global settings can't be changed here: they are just shown for information.  The global
+    // settings have to be changed in the config file.    
+    $checkbox_global = new ElementInputCheckbox();
+    $checkbox_global->setAttributes(array('value' => $max_per_interval_global_enabled[$interval_type],
+                                          'disabled' => null));
+                                        
+    $number_global = new ElementInputNumber();
+    $number_global->setAttributes(array('value' => $max_per_interval_global[$interval_type],
+                                        'disabled' => null));
+                                        
+    $field->setLabel(get_vocab("max_per_${interval_type}"))
+          ->addControlElement($checkbox_area)
+          ->addControlElement($number_area)
+          ->addControlElement($checkbox_global)
+          ->addControlElement($number_global);
+    
+    $fieldset->addElement($field);
+  }
+  
+  return $fieldset;
+}
+
+
 function get_fieldset_booking_policies($data)
 {
   global $enable_periods;
@@ -448,7 +512,8 @@ function get_fieldset_booking_policies($data)
 
   $fieldset->addElement($field)
            ->addElement(get_fieldset_create_ahead($data))
-           ->addElement(get_fieldset_delete_ahead($data));
+           ->addElement(get_fieldset_delete_ahead($data))
+           ->addElement(get_fieldset_max_number($data));
   
   return $fieldset;
 }
