@@ -470,7 +470,8 @@ function get_fieldset_max_number($data)
     $number_area->setAttributes(array('min'   => '0',
                                       'name'  => "area_max_per_${interval_type}",
                                       'value' => $max_per_interval_area[$interval_type]));
-                                      
+    
+    // Wrap the area and global controls in <div>s.  It'll make the CSS easier.    
     $div_area = new ElementDiv();
     $div_area->addElement($checkbox_area)
              ->addElement($number_area);

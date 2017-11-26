@@ -846,6 +846,11 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   margin-right: 0.5em;
 }
 
+<?php
+// The max number of bookings policy fieldset, where we want to display the
+// controls in tabular form
+?>
+
 #max_number div:first-of-type span, #max_number div div div {
   display: inline-block;
   width: 50%;
@@ -858,11 +863,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 #max_number div div {
   white-space: nowrap;
-}
-
-#max_number div div div {
-  display: inline-block;
-  width: 50%;
 }
 
 #max_number input {
