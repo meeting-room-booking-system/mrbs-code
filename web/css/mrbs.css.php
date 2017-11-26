@@ -777,7 +777,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard fieldset fieldset {
-  padding: 0.5em 0;
+  padding: 1em 0;
 }
 
 .standard fieldset fieldset legend{
