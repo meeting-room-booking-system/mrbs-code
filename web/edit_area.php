@@ -12,6 +12,7 @@ use MRBS\Form\ElementSelect;
 use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldButton;
 use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
@@ -501,6 +502,56 @@ function get_fieldset_max_number($data)
 }
 
 
+function get_fieldset_max_duration($data)
+{
+  global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('booking_durations'));
+  
+  // Enable checkbox
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('max_duration'))
+        ->setControlAttributes(array('name'  => 'area_max_duration_enabled',
+                                     'value' => $max_duration_enabled,
+                                     'class' => 'enabler'));
+  $fieldset->addElement($field);
+  
+  // Periods  
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('mode_periods'))
+        ->setControlAttributes(array('name'  => 'area_max_duration_periods',
+                                     'value' => $max_duration_periods,
+                                     'min'   => '0'));
+  $fieldset->addElement($field);
+  
+  // Times
+  $max_duration_value = $max_duration_secs;
+  toTimeString($max_duration_value, $max_duration_units);
+  
+  $units = array("seconds", "minutes", "hours", "days", "weeks");
+  $options = array();
+  foreach ($units as $unit)
+  {
+    $options[$unit] = get_vocab($unit);
+  }
+  
+  $select = new ElementSelect();
+  $select->setAttribute('name', 'area_max_duration_units')
+         ->addSelectOptions($options, array_search($max_duration_units, $options));
+         
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('mode_times'))
+        ->setControlAttributes(array('name'  => 'area_max_duration_value',
+                                     'value' => $max_duration_value,
+                                     'min'   => '0'))
+        ->addElement($select);
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 function get_fieldset_booking_policies($data)
 {
   global $enable_periods;
@@ -521,7 +572,8 @@ function get_fieldset_booking_policies($data)
   $fieldset->addElement($field)
            ->addElement(get_fieldset_create_ahead($data))
            ->addElement(get_fieldset_delete_ahead($data))
-           ->addElement(get_fieldset_max_number($data));
+           ->addElement(get_fieldset_max_number($data))
+           ->addElement(get_fieldset_max_duration($data));
   
   return $fieldset;
 }
