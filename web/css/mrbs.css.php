@@ -783,7 +783,7 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   display: table-row;
 }
 
-.standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
+.standard fieldset > div > * {
   display: table-cell;
 }
 
@@ -814,7 +814,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard fieldset > div > div {
-  display: inline-block;
   text-align: left;
 }
 
