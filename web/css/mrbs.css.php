@@ -779,6 +779,14 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   padding: 1em;
 }
 
+.standard fieldset > div {
+  display: table-row;
+}
+
+.standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
+  display: table-cell;
+}
+
 .standard fieldset fieldset {
   padding: 1em 0;
 }
@@ -791,14 +799,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .standard fieldset fieldset fieldset legend {
   padding-left: 2em;
-}
-
-.standard fieldset > div {
-  display: table-row;
-}
-
-.standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
-  display: table-cell;
 }
 
 .standard fieldset > div > label {
