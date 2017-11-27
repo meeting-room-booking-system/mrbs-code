@@ -773,6 +773,9 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 }
 
 .standard fieldset {
+  display: table;
+  border-spacing: 0 0.75em;
+  border-collapse: separate;
   padding: 1em;
 }
 
@@ -796,7 +799,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
   display: table-cell;
-  margin-bottom: 0.5em;
 }
 
 .standard fieldset > div > label {
@@ -814,7 +816,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 .standard fieldset > div > div {
   display: inline-block;
   text-align: left;
-  padding-bottom: 0.5em
 }
 
 .standard div.group {
@@ -839,7 +840,6 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 
 .standard textarea {
   height: 6em;
-  margin-bottom: 0.5em;
 }
 
 .standard .group label {
