@@ -32,6 +32,20 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
+function get_time_unit_options()
+{
+  $options = array();
+  $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
+  
+  foreach ($units as $unit)
+  {
+    $options[$unit] = get_vocab($unit);
+  }
+  
+  return $options;
+}
+
+
 function get_timezone_options()
 {
   global $zoneinfo_outlook_compatible;
@@ -298,12 +312,7 @@ function get_fieldset_create_ahead($data)
   $max_create_ahead_value = $max_create_ahead_secs;
   toTimeString($max_create_ahead_value, $max_create_ahead_units);
   
-  $units = array("seconds", "minutes", "hours", "days", "weeks");
-  $options = array();
-  foreach ($units as $unit)
-  {
-    $options[$unit] = get_vocab($unit);
-  }
+  $options = get_time_unit_options();
   
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('booking_creation'));
@@ -370,12 +379,7 @@ function get_fieldset_delete_ahead($data)
   $max_delete_ahead_value = $max_delete_ahead_secs;
   toTimeString($max_delete_ahead_value, $max_delete_ahead_units);
   
-  $units = array("seconds", "minutes", "hours", "days", "weeks");
-  $options = array();
-  foreach ($units as $unit)
-  {
-    $options[$unit] = get_vocab($unit);
-  }
+  $options = get_time_unit_options();
   
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('booking_deletion'));
@@ -528,13 +532,7 @@ function get_fieldset_max_duration($data)
   // Times
   $max_duration_value = $max_duration_secs;
   toTimeString($max_duration_value, $max_duration_units);
-  
-  $units = array("seconds", "minutes", "hours", "days", "weeks");
-  $options = array();
-  foreach ($units as $unit)
-  {
-    $options[$unit] = get_vocab($unit);
-  }
+  $options = get_time_unit_options();
   
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_duration_units')
