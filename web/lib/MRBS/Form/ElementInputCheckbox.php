@@ -10,5 +10,20 @@ class ElementInputCheckbox extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'checkbox');
   }
+  
+  
+  public function setChecked($checked=true)
+  {
+    if ($checked)
+    {
+      $this->setAttribute('checked');
+    }
+    else
+    {
+      $this->removeAttribute('checked');
+    }
+    
+    return $this;
+  }
  
 }

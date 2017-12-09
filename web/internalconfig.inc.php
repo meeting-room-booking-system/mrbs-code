@@ -181,7 +181,7 @@ else
  * Debugging
  ***********/
  
- define('DEBUG', FALSE);
+ define('DEBUG', true);
  
  
 /***************************************
@@ -486,7 +486,7 @@ global $maxlength;
 
 // Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
 // for debugging.
-$use_strict = FALSE;
+$use_strict = true;
        
 
 /********************************************************
@@ -529,3 +529,6 @@ if (defined("E_STRICT"))
 error_reporting ($error_level);
 set_error_handler(__NAMESPACE__ . "\\error_handler");
 set_exception_handler(__NAMESPACE__ . "\\exception_handler");
+
+error_reporting(-1);
+ini_set('display_errors', '1');

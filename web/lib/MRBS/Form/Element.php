@@ -65,6 +65,13 @@ class Element
     return $this;
   }
   
+  
+  public function removeAttribute($name)
+  {
+    unset($this->attributes[$name]);
+    return $this;
+  }
+  
 
   public function getElement($key)
   {

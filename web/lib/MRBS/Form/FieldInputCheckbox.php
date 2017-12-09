@@ -12,4 +12,10 @@ class FieldInputCheckbox extends Field
     $this->addControl(new ElementInputCheckbox());
   }
   
+  public function setChecked($checked=true)
+  {
+    $control = $this->getControl();
+    $control->setChecked($checked);
+    $this->setControl($control);
+  }
 }

@@ -587,9 +587,8 @@ function get_fieldset_confirmation_settings($data)
   // Confirmation enabled
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('allow_confirmation'))
-        ->setControlAttributes(array('name'  => 'area_confirmation_enabled',
-                                     'value' => $confirmation_enabled));
-      
+        ->setControlAttributes(array('name'  => 'area_confirmation_enabled'))
+        ->setChecked($confirmation_enabled);
   $fieldset->addElement($field);
   
   // Default settings
