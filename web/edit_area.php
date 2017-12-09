@@ -577,6 +577,34 @@ function get_fieldset_booking_policies($data)
 }
 
 
+function get_fieldset_confirmation_settings($data)
+{
+  global $confirmation_enabled, $confirmed_default;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('confirmation_settings'));
+  
+  // Confirmation enabled
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('allow_confirmation'))
+        ->setControlAttributes(array('name'  => 'area_confirmation_enabled',
+                                     'value' => $confirmation_enabled));
+      
+  $fieldset->addElement($field);
+  
+  // Default settings
+  $options = array('1' => get_vocab('default_confirmed'),
+                   '0' => get_vocab('default_tentative'));
+  $value = ($confirmed_default) ? '1' : '0';
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('default_settings_conf'))
+        ->addRadioOptions($options, 'area_confirmed_default', $value, true);
+  $fieldset->addElement($field);
+           
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -606,7 +634,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_general($data))
                ->addElement(get_fieldset_times($data))
                ->addElement(get_fieldset_periods($data))
-               ->addElement(get_fieldset_booking_policies($data));
+               ->addElement(get_fieldset_booking_policies($data))
+               ->addElement(get_fieldset_confirmation_settings($data));
 
 $form->addElement($outer_fieldset);
 
