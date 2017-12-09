@@ -323,8 +323,8 @@ function get_fieldset_create_ahead($data)
   
   $checkbox = new ElementInputCheckbox();
   $checkbox->setAttributes(array('name'  => 'area_min_create_ahead_enabled',
-                                 'value' => $min_create_ahead_enabled,
-                                 'class' => 'enabler'));
+                                 'class' => 'enabler'))
+           ->setChecked($min_create_ahead_enabled);
   
   $input = new ElementInputNumber();
   $input->setAttributes(array('name'  => 'area_min_create_ahead_value',
@@ -347,8 +347,8 @@ function get_fieldset_create_ahead($data)
   
   $checkbox = new ElementInputCheckbox();
   $checkbox->setAttributes(array('name'  => 'area_max_create_ahead_enabled',
-                                 'value' => $max_create_ahead_enabled,
-                                 'class' => 'enabler'));
+                                 'class' => 'enabler'))
+           ->setChecked($max_create_ahead_enabled);
   
   $input = new ElementInputNumber();
   $input->setAttributes(array('name'  => 'area_max_create_ahead_value',
@@ -389,8 +389,8 @@ function get_fieldset_delete_ahead($data)
   
   $checkbox = new ElementInputCheckbox();
   $checkbox->setAttributes(array('name'  => 'area_min_delete_ahead_enabled',
-                                 'value' => $min_delete_ahead_enabled,
-                                 'class' => 'enabler'));
+                                 'class' => 'enabler'))
+           ->setChecked($min_delete_ahead_enabled);
   
   $input = new ElementInputNumber();
   $input->setAttributes(array('name'  => 'area_min_delete_ahead_value',
@@ -413,8 +413,8 @@ function get_fieldset_delete_ahead($data)
   
   $checkbox = new ElementInputCheckbox();
   $checkbox->setAttributes(array('name'  => 'area_max_delete_ahead_enabled',
-                                 'value' => $max_delete_ahead_enabled,
-                                 'class' => 'enabler'));
+                                 'class' => 'enabler'))
+           ->setChecked($max_delete_ahead_enabled);
   
   $input = new ElementInputNumber();
   $input->setAttributes(array('name'  => 'area_max_delete_ahead_value',
@@ -467,9 +467,9 @@ function get_fieldset_max_number($data)
     
     $checkbox_area = new ElementInputCheckbox();
     $checkbox_area->setAttributes(array('name'  => "area_max_per_${interval_type}_enabled",
-                                        'value' => $max_per_interval_area_enabled[$interval_type],
                                         'id'    => "area_max_per_${interval_type}_enabled",
-                                        'class' => 'enabler'));
+                                        'class' => 'enabler'))
+                  ->setChecked($max_per_interval_area_enabled[$interval_type]);
                                         
     $number_area = new ElementInputNumber();
     $number_area->setAttributes(array('min'   => '0',
@@ -484,8 +484,8 @@ function get_fieldset_max_number($data)
     // The global settings can't be changed here: they are just shown for information.  The global
     // settings have to be changed in the config file.    
     $checkbox_global = new ElementInputCheckbox();
-    $checkbox_global->setAttributes(array('value' => $max_per_interval_global_enabled[$interval_type],
-                                          'disabled' => null));
+    $checkbox_global->setAttributes(array('disabled' => null))
+                    ->setChecked($max_per_interval_global_enabled[$interval_type]);
                                         
     $number_global = new ElementInputNumber();
     $number_global->setAttributes(array('value' => $max_per_interval_global[$interval_type],
@@ -517,8 +517,8 @@ function get_fieldset_max_duration($data)
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('max_duration'))
         ->setControlAttributes(array('name'  => 'area_max_duration_enabled',
-                                     'value' => $max_duration_enabled,
-                                     'class' => 'enabler'));
+                                     'class' => 'enabler'))
+        ->setChecked($max_duration_enabled);
   $fieldset->addElement($field);
   
   // Periods  

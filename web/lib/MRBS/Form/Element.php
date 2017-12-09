@@ -192,7 +192,7 @@ class Element
                                      'value' => $key));
       if (isset($checked) && ($key == $checked))
       {
-        $checkbox->setAttribute('checked');
+        $checkbox->setChecked(true);
       }
       $label = new ElementLabel();
       $label->setText($value)
