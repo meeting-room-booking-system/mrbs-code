@@ -662,6 +662,26 @@ function get_fieldset_privacy_settings($data)
   return $fieldset;
 }
 
+
+function get_fieldset_privacy_display($data)
+{
+  global $private_override;
+
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('private_display'));
+  
+  $options = array('none'    => get_vocab('treat_respect'),
+                   'private' => get_vocab('treat_private'),
+                   'public'  => get_vocab('treat_public'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('private_display_label'))
+        ->addRadioOptions($options, 'area_private_override', $private_override, true);
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -694,7 +714,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_booking_policies($data))
                ->addElement(get_fieldset_confirmation_settings($data))
                ->addElement(get_fieldset_approval_settings($data))
-               ->addElement(get_fieldset_privacy_settings($data));
+               ->addElement(get_fieldset_privacy_settings($data))
+               ->addElement(get_fieldset_privacy_display($data));
 
 $form->addElement($outer_fieldset);
 
