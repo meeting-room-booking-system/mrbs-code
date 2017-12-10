@@ -123,6 +123,15 @@ abstract class Field extends Element
   }
   
   
+  public function setLabelAttribute($name, $value=null)
+  {
+    $elements = $this->getElements();
+    $elements['label']->setAttribute($name, $value);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   // Sets the attributes for the field label.  No need to do
   // the 'for' attribute, as that is done automatically when you
   // set the 'id' in the control attrributes.
