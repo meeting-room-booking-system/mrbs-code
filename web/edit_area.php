@@ -181,7 +181,7 @@ function get_fieldset_general($data)
 }
 
 
-function get_fieldset_times($data)
+function get_fieldset_times()
 {
   global $enable_periods;
   global $morningstarts, $morningstarts_minutes;
@@ -259,7 +259,7 @@ function get_fieldset_times($data)
 }
 
 
-function get_fieldset_periods($data)
+function get_fieldset_periods()
 {
   global $enable_periods, $periods;
   
@@ -304,7 +304,7 @@ function get_fieldset_periods($data)
 }
 
 
-function get_fieldset_create_ahead($data)
+function get_fieldset_create_ahead()
 {
   global $min_create_ahead_secs, $max_create_ahead_secs,
          $min_create_ahead_enabled, $max_create_ahead_enabled;
@@ -371,7 +371,7 @@ function get_fieldset_create_ahead($data)
 }
 
 
-function get_fieldset_delete_ahead($data)
+function get_fieldset_delete_ahead()
 {
   global $min_delete_ahead_secs, $max_delete_ahead_secs,
          $min_delete_ahead_enabled, $max_delete_ahead_enabled;
@@ -437,7 +437,7 @@ function get_fieldset_delete_ahead($data)
 }
 
 
-function get_fieldset_max_number($data)
+function get_fieldset_max_number()
 {
   global $interval_types,
          $max_per_interval_area_enabled, $max_per_interval_global_enabled,
@@ -508,7 +508,7 @@ function get_fieldset_max_number($data)
 }
 
 
-function get_fieldset_max_duration($data)
+function get_fieldset_max_duration()
 {
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   
@@ -552,7 +552,7 @@ function get_fieldset_max_duration($data)
 }
 
 
-function get_fieldset_booking_policies($data)
+function get_fieldset_booking_policies()
 {
   global $enable_periods;
   
@@ -570,16 +570,16 @@ function get_fieldset_booking_policies($data)
         ->setControlText(get_vocab('book_ahead_note_periods'));
 
   $fieldset->addElement($field)
-           ->addElement(get_fieldset_create_ahead($data))
-           ->addElement(get_fieldset_delete_ahead($data))
-           ->addElement(get_fieldset_max_number($data))
-           ->addElement(get_fieldset_max_duration($data));
+           ->addElement(get_fieldset_create_ahead())
+           ->addElement(get_fieldset_delete_ahead())
+           ->addElement(get_fieldset_max_number())
+           ->addElement(get_fieldset_max_duration());
   
   return $fieldset;
 }
 
 
-function get_fieldset_confirmation_settings($data)
+function get_fieldset_confirmation_settings()
 {
   global $confirmation_enabled, $confirmed_default;
   
@@ -606,7 +606,7 @@ function get_fieldset_confirmation_settings($data)
 }
 
 
-function get_fieldset_approval_settings($data)
+function get_fieldset_approval_settings()
 {
   global $approval_enabled, $reminders_enabled;
   
@@ -631,7 +631,7 @@ function get_fieldset_approval_settings($data)
 }
 
 
-function get_fieldset_privacy_settings($data)
+function get_fieldset_privacy_settings()
 {
   global $private_enabled, $private_mandatory, $private_default;
 
@@ -665,7 +665,7 @@ function get_fieldset_privacy_settings($data)
 }
 
 
-function get_fieldset_privacy_display($data)
+function get_fieldset_privacy_display()
 {
   global $private_override;
 
@@ -734,13 +734,13 @@ $outer_fieldset = new ElementFieldset();
 $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_errors($errors))
                ->addElement(get_fieldset_general($data))
-               ->addElement(get_fieldset_times($data))
-               ->addElement(get_fieldset_periods($data))
-               ->addElement(get_fieldset_booking_policies($data))
-               ->addElement(get_fieldset_confirmation_settings($data))
-               ->addElement(get_fieldset_approval_settings($data))
-               ->addElement(get_fieldset_privacy_settings($data))
-               ->addElement(get_fieldset_privacy_display($data))
+               ->addElement(get_fieldset_times())
+               ->addElement(get_fieldset_periods())
+               ->addElement(get_fieldset_booking_policies())
+               ->addElement(get_fieldset_confirmation_settings())
+               ->addElement(get_fieldset_approval_settings())
+               ->addElement(get_fieldset_privacy_settings())
+               ->addElement(get_fieldset_privacy_display())
                ->addElement(get_fieldset_submit_buttons());
 
 $form->addElement($outer_fieldset);
