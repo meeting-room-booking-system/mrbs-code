@@ -813,12 +813,22 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   padding-top: 0.2em;
 }
 
+.multiline label {
+  vertical-align: top;
+}
+
 .standard fieldset > div > div {
   text-align: left;
 }
 
 .standard div.group {
   display: inline-block;
+}
+
+.standard div.group.long label {
+  float: left;
+  clear: left;
+  margin-bottom: 0.5em;
 }
 
 .standard input[type="text"], .standard input[type="email"], .standard textarea {
