@@ -46,6 +46,12 @@ class Element
   }
   
   
+  public function getAttribute($name)
+  {
+    return (isset($this->attributes[$name])) ? $this->attributes[$name] : null;
+  }
+  
+  
   // A value of null allows for the setting of attributes such as
   // 'required' and 'disabled'
   public function setAttribute($name, $value=null)
@@ -109,6 +115,18 @@ class Element
     {
       $this->elements[] = $element;
     }
+    return $this;
+  }
+  
+  
+  public function addClass($class)
+  {
+    $classes = $this->getAttribute('class');
+    
+    $classes = (isset($classes)) ? explode(' ', $classes) : array();
+    $classes[] = $class;
+    $this->setAttribute('class', implode(' ', $classes));
+    
     return $this;
   }
   

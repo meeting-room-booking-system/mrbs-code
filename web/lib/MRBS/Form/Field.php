@@ -87,6 +87,15 @@ abstract class Field extends Element
   }
   
   
+  public function addControlClass($class)
+  {
+    $elements = $this->getElements();
+    $elements['control']->addClass($class);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   public function setControlText($text)
   {
     $elements = $this->getElements();
