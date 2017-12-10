@@ -96,6 +96,15 @@ abstract class Field extends Element
   }
   
   
+  public function addLabelClass($class)
+  {
+    $elements = $this->getElements();
+    $elements['label']->addClass($class);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   public function setControlText($text)
   {
     $elements = $this->getElements();

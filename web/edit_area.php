@@ -675,6 +675,7 @@ function get_fieldset_privacy_display($data)
                    'public'  => get_vocab('treat_public'));
   $field = new FieldInputRadioGroup();
   $field->setLabel(get_vocab('private_display_label'))
+        ->addLabelClass('no_suffix')
         ->setAttribute('class', 'multiline')
         ->addControlClass('long')
         ->addRadioOptions($options, 'area_private_override', $private_override, true);
