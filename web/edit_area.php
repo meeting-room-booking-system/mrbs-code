@@ -287,7 +287,7 @@ function get_fieldset_periods($data)
     $field->setAttribute('class', 'period_name')
           ->setControlAttributes(array('name'     => 'area_periods[]',
                                        'value'    => $period_name,
-                                       'required' => null))
+                                       'required' => true))
           ->addElement($span);
     $fieldset->addElement($field);
   }
@@ -484,12 +484,12 @@ function get_fieldset_max_number($data)
     // The global settings can't be changed here: they are just shown for information.  The global
     // settings have to be changed in the config file.    
     $checkbox_global = new ElementInputCheckbox();
-    $checkbox_global->setAttributes(array('disabled' => null))
+    $checkbox_global->setAttributes(array('disabled' => true))
                     ->setChecked($max_per_interval_global_enabled[$interval_type]);
                                         
     $number_global = new ElementInputNumber();
     $number_global->setAttributes(array('value' => $max_per_interval_global[$interval_type],
-                                        'disabled' => null));
+                                        'disabled' => true));
                                         
     $div_global = new ElementDiv();
     $div_global->addElement($checkbox_global)

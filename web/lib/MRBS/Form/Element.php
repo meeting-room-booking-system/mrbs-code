@@ -52,9 +52,9 @@ class Element
   }
   
   
-  // A value of null allows for the setting of attributes such as
+  // A value of true allows for the setting of boolean attributes such as
   // 'required' and 'disabled'
-  public function setAttribute($name, $value=null)
+  public function setAttribute($name, $value=true)
   {
     $this->attributes[$name] = $value;
     return $this;
@@ -274,9 +274,16 @@ class Element
     
     foreach ($this->attributes as $key => $value)
     {
-      $html .= " $key";
-      if (isset($value))
+      if (isset($value) && ($value === false))
       {
+        // a boolean attribute that should be omitted
+        continue;
+      }
+      
+      $html .= " $key";
+      if (isset($value) && ($value !== true))
+      {
+        // boolean attributes, eg 'required', don't need a value
         $html .= '="' . htmlspecialchars($value) . '"';
       }
     }
