@@ -5,6 +5,7 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputNumber;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
@@ -17,6 +18,7 @@ use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
@@ -686,6 +688,25 @@ function get_fieldset_privacy_display($data)
 }
 
 
+function get_fieldset_submit_buttons()
+{
+  $fieldset = new ElementFieldset();
+  
+  // The back and submit buttons
+  $field = new FieldInputSubmit();
+  
+  $back = new ElementInputSubmit();
+  $back->setAttributes(array('value'      => get_vocab('backadmin'),
+                             'formaction' => 'admin.php'));
+  $field->addLabelClass('no_suffix')
+        ->addLabelElement($back)
+        ->setControlAttribute('value', get_vocab('change'));
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised();
 
@@ -719,7 +740,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_confirmation_settings($data))
                ->addElement(get_fieldset_approval_settings($data))
                ->addElement(get_fieldset_privacy_settings($data))
-               ->addElement(get_fieldset_privacy_display($data));
+               ->addElement(get_fieldset_privacy_display($data))
+               ->addElement(get_fieldset_submit_buttons());
 
 $form->addElement($outer_fieldset);
 

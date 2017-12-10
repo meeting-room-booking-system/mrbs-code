@@ -123,6 +123,15 @@ abstract class Field extends Element
   }
   
   
+  public function addLabelElement(Element $element)
+  {
+    $elements = $this->getElements();
+    $elements['label']->addElement($element);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   public function setLabelAttribute($name, $value=true)
   {
     $elements = $this->getElements();
