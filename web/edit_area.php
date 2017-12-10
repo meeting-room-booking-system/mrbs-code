@@ -587,7 +587,7 @@ function get_fieldset_confirmation_settings($data)
   // Confirmation enabled
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('allow_confirmation'))
-        ->setControlAttributes(array('name'  => 'area_confirmation_enabled'))
+        ->setControlAttribute('name', 'area_confirmation_enabled')
         ->setChecked($confirmation_enabled);
   $fieldset->addElement($field);
   
@@ -600,6 +600,31 @@ function get_fieldset_confirmation_settings($data)
         ->addRadioOptions($options, 'area_confirmed_default', $value, true);
   $fieldset->addElement($field);
            
+  return $fieldset;
+}
+
+
+function get_fieldset_approval_settings($data)
+{
+  global $approval_enabled, $reminders_enabled;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('approval_settings'));
+  
+  // Approval enabled
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('enable_approval'))
+        ->setControlAttribute('name',  'area_approval_enabled')
+        ->setChecked($approval_enabled);
+  $fieldset->addElement($field);
+  
+  // Reminders enabled
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('enable_reminders'))
+        ->setControlAttribute('name', 'area_reminders_enabled')
+        ->setChecked($reminders_enabled);
+  $fieldset->addElement($field);
+  
   return $fieldset;
 }
 
@@ -634,7 +659,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_times($data))
                ->addElement(get_fieldset_periods($data))
                ->addElement(get_fieldset_booking_policies($data))
-               ->addElement(get_fieldset_confirmation_settings($data));
+               ->addElement(get_fieldset_confirmation_settings($data))
+               ->addElement(get_fieldset_approval_settings($data));
 
 $form->addElement($outer_fieldset);
 
