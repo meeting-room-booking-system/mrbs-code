@@ -614,7 +614,7 @@ function get_fieldset_approval_settings($data)
   // Approval enabled
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('enable_approval'))
-        ->setControlAttribute('name',  'area_approval_enabled')
+        ->setControlAttribute('name', 'area_approval_enabled')
         ->setChecked($approval_enabled);
   $fieldset->addElement($field);
   
@@ -628,6 +628,39 @@ function get_fieldset_approval_settings($data)
   return $fieldset;
 }
 
+
+function get_fieldset_privacy_settings($data)
+{
+  global $private_enabled, $private_mandatory, $private_default;
+
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('private_settings'));
+  
+  // Private enabled
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('allow_private'))
+        ->setControlAttribute('name', 'area_private_enabled')
+        ->setChecked($private_enabled);
+  $fieldset->addElement($field);
+  
+  // Private mandatory
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('force_private'))
+        ->setControlAttribute('name', 'area_private_mandatory')
+        ->setChecked($private_mandatory);
+  $fieldset->addElement($field);
+  
+  // Default settings
+  $options = array('1' => get_vocab('default_private'),
+                   '0' => get_vocab('default_public'));
+  $value = ($private_default) ? '1' : '0';
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('default_settings'))
+        ->addRadioOptions($options, 'area_private_default', $value, true);
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
 
 // Check the user is authorised for this page
 checkAuthorised();
@@ -660,7 +693,8 @@ $outer_fieldset->addLegend(get_vocab('editarea'))
                ->addElement(get_fieldset_periods($data))
                ->addElement(get_fieldset_booking_policies($data))
                ->addElement(get_fieldset_confirmation_settings($data))
-               ->addElement(get_fieldset_approval_settings($data));
+               ->addElement(get_fieldset_approval_settings($data))
+               ->addElement(get_fieldset_privacy_settings($data));
 
 $form->addElement($outer_fieldset);
 
