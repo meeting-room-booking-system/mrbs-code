@@ -44,6 +44,7 @@ $page_level['add.php']                   = 2;
 $page_level['del.php']                   = 2;
 $page_level['del_entry_ajax.php']        = 2;
 $page_level['edit_area.php']             = 2;
+$page_level['edit_area_handler.php']     = 2;
 $page_level['import.php']                = 2;
 
 

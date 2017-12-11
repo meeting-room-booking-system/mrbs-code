@@ -25,11 +25,6 @@ use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
 
-// TO DO -------------------------------------------
-$errors = array();  // Temporary measure (should come from trying to update the database)
-//$errors = array('invalid_email', 'invalid_resolution', 'too_many_slots');  // testing
-// -------------------------------------------------
-
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
@@ -212,8 +207,8 @@ function get_fieldset_times()
   $field = new FieldInputTime();
   $value = sprintf('%02d:%02d', $morningstarts, $morningstarts_minutes);
   $field->setLabel(get_vocab('area_first_slot_start'))
-        ->setControlAttributes(array('id'    => 'area_morningstarts',
-                                     'name'  => 'area_morningstarts',
+        ->setControlAttributes(array('id'    => 'area_start_first_slot',
+                                     'name'  => 'area_start_first_slot',
                                      'value' => $value));
   $fieldset->addElement($field);
   
@@ -249,8 +244,8 @@ function get_fieldset_times()
   $field->setAttributes(array('id'    => 'last_slot',
                               'class' => 'js_hidden'))
         ->setLabel(get_vocab('area_last_slot_start'))
-        ->setControlAttributes(array('id'    => 'area_eveningends',
-                                     'name'  => 'area_eveningends',
+        ->setControlAttributes(array('id'    => 'area_start_last_slot',
+                                     'name'  => 'area_start_last_slot',
                                      'value' => $value));
   $fieldset->addElement($field);
         
@@ -717,6 +712,8 @@ if (!isset($area) || is_null($data = get_area_details($area)))
 {
   echo "<p>" . get_vocab('invalid_area') . "</p>\n";
 }
+
+$errors = get_form_var('errors', 'array');
 
 // Generate the form
 $form = new Form();
