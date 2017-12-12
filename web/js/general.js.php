@@ -307,8 +307,19 @@ init = function(args) {
       });
   }
   
-
+  <?php 
+  // Make sure that the left hand column in the standard form is of
+  // constant width.  If there are multiple fieldsets then each fieldset
+  // will have its own width, as the display:table only applies to that
+  // fieldset.
+  ?>
+  var maxLabelWidth = Math.max.apply(null, $('.standard fieldset > div > label').map(function() {
+      return $(this).width();
+  }).get());
   
+  $('.standard fieldset > div > label').width(maxLabelWidth);
+  
+
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
 
   
