@@ -315,11 +315,13 @@ init = function(args) {
   ?>
   var labels = $('.standard fieldset > div > label');
   
-  var maxLabelWidth = Math.max.apply(null, labels.map(function() {
+  function getMaxWidth (selection) {
+    return Math.max.apply(null, selection.map(function() {
       return $(this).width();
     }).get());
+  };
   
-  labels.width(maxLabelWidth);
+  labels.width(getMaxWidth(labels));
   
 
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
@@ -334,6 +336,8 @@ init = function(args) {
     .resize(throttle(function() {
         createFloatingHeaders(floatingTables);
         updateTableHeaders(floatingTables);
+        labels.width('auto');
+        labels.width(getMaxWidth(labels));
       }, 100))
     .scroll(function() {
         updateTableHeaders(floatingTables);
