@@ -313,11 +313,13 @@ init = function(args) {
   // will have its own width, as the display:table only applies to that
   // fieldset.
   ?>
-  var maxLabelWidth = Math.max.apply(null, $('.standard fieldset > div > label').map(function() {
-      return $(this).width();
-  }).get());
+  var labels = $('.standard fieldset > div > label');
   
-  $('.standard fieldset > div > label').width(maxLabelWidth);
+  var maxLabelWidth = Math.max.apply(null, labels.map(function() {
+      return $(this).width();
+    }).get());
+  
+  labels.width(maxLabelWidth);
   
 
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
