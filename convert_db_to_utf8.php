@@ -124,7 +124,7 @@ else
                         'info_text'),
     $tbl_repeat => array('create_by', 'name', 'description', 'info_user',
                          'info_text'),
-    $tbl_users => array('name', 'password', 'email')
+    $tbl_users => array('name', 'password_hash', 'email')
   );
 
   $admin_username = get_form_var('admin_username', 'string');
