@@ -308,14 +308,12 @@ $vocab["administration"]     = "Administration";
 $vocab["invalid_area_name"]  = "Ce nom de lieu a déjà été utilisé!";
 $vocab["empty_name"]         = "Vous n'avez pas saisi de nom !";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Modifier le lieu";
 $vocab["change"]             = "Changer";
 $vocab["backadmin"]          = "Revenir à l'écran de gestion";
-$vocab["editroomarea"]       = "Modifiez la description d'un lieu ou d'une salle";
 $vocab["editroom"]           = "Modifier la salle";
 $vocab["viewroom"]           = "Voir la salle";
-$vocab["error_room"]         = "Erreur&nbsp;: salle ";
 $vocab["not_found"]          = " non trouvée";
 $vocab["room_admin_email"]   = "Courriels des responsables";
 $vocab["area_admin_email"]   = "Courriels des responsables";

@@ -710,7 +710,7 @@ print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $r
 // Get the details for this area
 if (!isset($area) || is_null($data = get_area_details($area)))
 {
-  echo "<p>" . get_vocab('invalid_area') . "</p>\n";
+  fatal_error(get_vocab('invalid_area'));
 }
 
 $errors = get_form_var('errors', 'array');

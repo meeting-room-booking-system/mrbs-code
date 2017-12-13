@@ -290,14 +290,12 @@ $vocab["administration"]     = "Beheer";
 $vocab["invalid_area_name"]  = "Deze naam voor een ruimte is al gebruikt!";
 $vocab["empty_name"]         = "Er is geen naam ingevoerd!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Gebouw Wijzigen";
 $vocab["change"]             = "Wijzig";
 $vocab["backadmin"]          = "Terug naar Beheer";
-$vocab["editroomarea"]       = "Gebouw of Kamer wijzigen";
 $vocab["editroom"]           = "Kamer wijzigen";
 $vocab["viewroom"]           = "Bekijk Kamer";
-$vocab["error_room"]         = "Fout: kamer ";
 $vocab["not_found"]          = " niet gevonden";
 $vocab["room_admin_email"]   = "Kamer beheer email";
 $vocab["area_admin_email"]   = "Gebouw beheer email";

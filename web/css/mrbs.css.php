@@ -937,7 +937,7 @@ form.form_general {margin-top: 2.0em; width: 100%}
 .edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
-form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
+.edit_area_room form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
@@ -948,8 +948,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
-#edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
-#edit_room fieldset.submit_buttons {margin-top: 1em}
+.edit_area_room #edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
+.edit_area_room #edit_room fieldset.submit_buttons {margin-top: 1em}
 
 .form_general label {
     display: block; float: left; overflow: hidden;

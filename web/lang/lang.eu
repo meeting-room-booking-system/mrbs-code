@@ -189,13 +189,11 @@ $vocab["capacity"]           = "Zenbat pertsonentzat";
 $vocab["norooms"]            = "Ez dago elementurik.";
 $vocab["administration"]     = "Kudeaketa";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Baliabidea editatu";
 $vocab["change"]             = "Aldatu";
 $vocab["backadmin"]          = "Kudeaketara itzuli";
-$vocab["editroomarea"]       = "Baliabidearen deskribapena editatu";
 $vocab["editroom"]           = "Elementua editatu";
-$vocab["error_room"]         = "Errorea: gela ";
 $vocab["not_found"]          = " ez da aurkitu";
 $vocab["room_admin_email"]   = "Elementuaren kudeatzailearen emaila";
 $vocab["area_admin_email"]   = "Baliabidearen kudeatzailearen emaila";

@@ -359,14 +359,12 @@ $vocab["administration"]     = "Administración";
 $vocab["invalid_area_name"]  = "Este nombre de Agrupación ya está siendo utilizado";
 $vocab["empty_name"]         = "¡No se ha escrito un nombre!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Editar Agrupación";
 $vocab["change"]             = "Cambiar";
 $vocab["backadmin"]          = "Volver a Admin";
-$vocab["editroomarea"]       = "Editar descripción de Agrupación o Sala";
 $vocab["editroom"]           = "Editar Sala";
 $vocab["viewroom"]                = "Ver Sala";
-$vocab["error_room"]         = "Error: Sala ";
 $vocab["not_found"]          = " no encontrado";
 $vocab["room_admin_email"]   = "Correo Electrónico del Administrador de Sala";
 $vocab["area_admin_email"]   = "Correo Electrónico del Administrador de Agrupación";

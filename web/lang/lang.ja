@@ -335,14 +335,12 @@ $vocab["administration"]     = "部屋の詳細";
 $vocab["invalid_area_name"]  = "この部署名は既に使用されています!";
 $vocab["empty_name"]         = "名前が入力されていません!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "部署を編集";
 $vocab["change"]                  = "変更";
 $vocab["backadmin"]               = "部屋に戻る";
-$vocab["editroomarea"]            = "部署や部屋の説明";
 $vocab["editroom"]                = "部屋を編集";
 $vocab["viewroom"]                = "部屋を見る";
-$vocab["error_room"]              = "エラー: 部屋 ";
 $vocab["not_found"]               = "は見つかりませんでした";
 $vocab["room_admin_email"]        = "部屋の管理者のEメール";
 $vocab["area_admin_email"]        = "部署の管理者のEメール";

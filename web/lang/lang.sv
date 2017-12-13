@@ -356,14 +356,12 @@ $vocab["administration"]     = "Administration";
 $vocab["invalid_area_name"]  = "Detta områdes namn finns redan.";
 $vocab["empty_name"]         = "Du har inte angett ett namn!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Ändra område";
 $vocab["change"]                  = "Ändra";
 $vocab["backadmin"]               = "Tillbaka till administration";
-$vocab["editroomarea"]            = "Ändra område eller rum";
 $vocab["editroom"]                = "Ändra rum";
 $vocab["viewroom"]                = "Visa rum";
-$vocab["error_room"]              = "Fel: rum ";
 $vocab["not_found"]               = "hittades ej";
 $vocab["room_admin_email"]        = "E-postadress till rumsansvarig";
 $vocab["area_admin_email"]        = "E-postadress till områdesansvarig";

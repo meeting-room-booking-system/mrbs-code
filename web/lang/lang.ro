@@ -359,14 +359,12 @@ $vocab["administration"]     = "Detalii sala";
 $vocab["invalid_area_name"]  = "Acest nume de sala a fost deja folosit";
 $vocab["empty_name"]         = "Nu ai introdus un nume!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Modifica Zona";
 $vocab["change"]                  = "Modificare";
 $vocab["backadmin"]               = "Inapoi La Sali";
-$vocab["editroomarea"]            = "Modifica Zona Sau Descriere Sala";
 $vocab["editroom"]                = "Modifica Sala";
 $vocab["viewroom"]                = "Vizualizeaza Sala";
-$vocab["error_room"]              = "Eroare: sala";
 $vocab["not_found"]               = " nu a fost gasita";
 $vocab["room_admin_email"]        = "Sala admin email";
 $vocab["area_admin_email"]        = "Zona admin email";

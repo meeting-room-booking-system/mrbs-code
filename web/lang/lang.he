@@ -314,14 +314,12 @@ $vocab["administration"]     = "פרטי חדר";
 $vocab["invalid_area_name"]  = "קיים כבר שם כזה לאזור";
 $vocab["empty_name"]         = "לא הכנסת שם";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "עדכן אזור";
 $vocab["change"]                  = "עדכן";
 $vocab["backadmin"]               = "חזור לחדרים";
-$vocab["editroomarea"]            = "עדכן תיאור אזור או חדר";
 $vocab["editroom"]                = "עדכן חדר";
 $vocab["viewroom"]                = "הצג חדר";
-$vocab["error_room"]              = "תקלה: חדר";
 $vocab["not_found"]               = "לא נמצא";
 $vocab["room_admin_email"]        = "דואר אלקטרוני של מנהל חדר";
 $vocab["area_admin_email"]        = "דואר אלקטרוני של מנהל אזור";

@@ -305,14 +305,12 @@ $vocab["administration"]     = "Подробности помещения";
 $vocab["invalid_area_name"]  = "Это имя корпуса уже использовано!";
 $vocab["empty_name"]         = "Вы не ввели имя!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Изменить корпус";
 $vocab["change"]                  = "Изменить";
 $vocab["backadmin"]               = "Вернуться к помещениям";
-$vocab["editroomarea"]            = "Изменить описание корпуса или помещения";
 $vocab["editroom"]                = "Изменить помещение";
 $vocab["viewroom"]                = "Просмотр помещение";
-$vocab["error_room"]              = "Ошибка: помещение ";
 $vocab["not_found"]               = " не найдено";
 $vocab["room_admin_email"]        = "Электронный адрес администратора помещения";
 $vocab["area_admin_email"]        = "Электронный адрес администратора корпуса";

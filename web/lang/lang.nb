@@ -323,14 +323,12 @@ $vocab["administration"]     = "Administrasjon";
 $vocab["invalid_area_name"]  = "Dette område-navnet er allerede i bruk!";
 $vocab["empty_name"]         = "Du har ikke skrevet et navn!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Endre område";
 $vocab["change"]             = "Endre";
 $vocab["backadmin"]          = "Tilbake til admin";
-$vocab["editroomarea"]       = "Endre områdeavn eller ressursbeskrivelse";
 $vocab["editroom"]           = "Endre rom";
 $vocab["viewroom"]           = "Se rom";
-$vocab["error_room"]         = "Feil: rommet ";
 $vocab["not_found"]          = " ble ikke funnet";
 $vocab["room_admin_email"]   = "Rom-admins e-post";
 $vocab["area_admin_email"]   = "Områdeadmins e-post";

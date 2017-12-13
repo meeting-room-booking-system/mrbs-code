@@ -201,13 +201,11 @@ $vocab["capacity"]           = "Število mest";
 $vocab["norooms"]            = "Ni prostorov.";
 $vocab["administration"]     = "Administracija";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Uredi področje";
 $vocab["change"]             = "Uporabi";
 $vocab["backadmin"]          = "Nazaj v Admin";
-$vocab["editroomarea"]       = "Uredi opis področja ali prostora";
 $vocab["editroom"]           = "Uredi prostor";
-$vocab["error_room"]         = "Napaka: prostor ";
 $vocab["not_found"]          = " ne najdem";
 $vocab["room_admin_email"]   = "e-pošta upravnika prostora";
 $vocab["area_admin_email"]   = "e-pošta upravnika področja";

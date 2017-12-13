@@ -327,14 +327,12 @@ $vocab["invalid_area_name"]  = "Bu alan adı  zaten kullanılmakta!";
 $vocab["empty_name"]         = "Ad girmediniz!";
 
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Bölge düzenle";
 $vocab["change"]             = "Değiştir";
 $vocab["backadmin"]          = "Yönetim'e git";
-$vocab["editroomarea"]       = "Bölge düzenle veya Toplantı Salonu tanımı.";
 $vocab["editroom"]           = "Toplantı Salonu Düzenle";
 $vocab["viewroom"]                = "Toplantı odasını gör";
-$vocab["error_room"]         = "Hata: Toplantı Salonu ";
 $vocab["not_found"]          = " bulunamadı";
 $vocab["room_admin_email"]   = "Toplantı Salonu yönetici epostası";
 $vocab["area_admin_email"]   = "Bölge yönetici epostası";

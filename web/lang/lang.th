@@ -313,15 +313,13 @@ $vocab["norooms_enabled"]    = "ห้องไม่ได้ถูกให้
 $vocab["administration"]     = "ลบห้อง";
 $vocab["invalid_area_name"]  = "ชื่อพื้นที่นี้ถูกใช้งานแล้ว";
 $vocab["empty_name"]         = "คุณยังไม่ได้ป้อนชื่อ!";
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 
 $vocab["editarea"]                = "แก้ไขพื้นที่";
 $vocab["change"]                  = "เปลี่ยน";
 $vocab["backadmin"]               = "กลับไปยังห้อง";
-$vocab["editroomarea"]            = "แก้ไขรายละเอียดพื้นที่หรือแก้ไขรายละเอียดห้อง";
 $vocab["editroom"]                = "แก้ไขห้อง";
 $vocab["viewroom"]                = "ดูห้อง";
-$vocab["error_room"]              = "ล้มเหลว: ห้อง";
 $vocab["not_found"]               = "ไม่พบ";
 $vocab["room_admin_email"]        = "อีเมล์ผู้ดูแลห้อง";
 $vocab["area_admin_email"]        = "พื้นที่อีเมล์ผู้ใช้งาน";

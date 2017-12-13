@@ -189,13 +189,11 @@ $vocab["capacity"]           = "Χωρητικότητα";
 $vocab["norooms"]            = "Καμιά αίθουσα.";
 $vocab["administration"]     = "Διαχείριση";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Τροποποίηση περιοχής";
 $vocab["change"]             = "Αλλαγή";
 $vocab["backadmin"]          = "Επιστροφή στην διαχείριση";
-$vocab["editroomarea"]       = "Τροποποίηση περιγραφής περιοχής ή αίθουσας";
 $vocab["editroom"]           = "Τροποποίηση αίθουσας";
-$vocab["error_room"]         = "Σφάλμα: Η αίθουσα ";
 $vocab["not_found"]          = " δεν βρέθηκε";
 $vocab["room_admin_email"]   = "Room admin email";
 $vocab["area_admin_email"]   = "Area admin email";
