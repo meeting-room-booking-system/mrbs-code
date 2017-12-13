@@ -92,20 +92,6 @@ function getTimeString(time, twentyfourhour_format)
 } // function getTimeString()
 
 
-function convertTo24(hour, ampm)
-{
-  if ((ampm === "pm") && (hour < 12))
-  {
-    hour += 12;
-  }
-  if ((ampm === "am") && (hour > 11))
-  {
-    hour -= 12;
-  }
-  return hour; 
-}
-
-
 <?php // Get the resolution in minutes ?>
 function getResolutionMinutes()
 {
