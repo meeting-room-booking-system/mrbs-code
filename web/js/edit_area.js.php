@@ -144,11 +144,11 @@ function generateLastSlotSelect()
   // next first slot.
   ?>
   var lastPossible = minsPerDay + firstSlot - resMins;
-  var id = 'area_start_last_slot';
-  var label = $('<label>').attr('for', id)
-                          .text('<?php echo get_vocab("area_last_slot_start")?>');
-  var select = $('<select>').attr('id', id)
-                            .attr('name', id);
+  var name = 'area_start_last_slot';
+  var element = $('[name="' + name + '"]');
+  var parent = element.parent();
+  
+  var select = $('<select>').attr('name', name);
                             
   for (var t=firstSlot; t <= lastPossible; t += resMins)
   {
@@ -165,11 +165,9 @@ function generateLastSlotSelect()
   
   <?php // and make the selected option the new last slot value ?>
   select.val(getTimeString(lastSlot, true));
-  <?php // finally, replace the contents of the <div> with the new <select> ?>
-  $('#last_slot').empty()
-                 .append(label)
-                 .append(select)
-                 .css('visibility', 'visible');
+  <?php // finally, replace the element with the new <select> ?>
+  element.replaceWith(select);
+  $('#last_slot').css('visibility', 'visible');
 }
 
 
