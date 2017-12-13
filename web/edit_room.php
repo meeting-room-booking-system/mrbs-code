@@ -1,0 +1,135 @@
+<?php
+namespace MRBS;
+
+use MRBS\Form\Form;
+//use MRBS\Form\ElementDiv;
+//use MRBS\Form\ElementInputCheckbox;
+//use MRBS\Form\ElementInputNumber;
+//use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementFieldset;
+//use MRBS\Form\ElementLegend;
+use MRBS\Form\ElementP;
+//use MRBS\Form\ElementSelect;
+//use MRBS\Form\ElementSpan;
+//use MRBS\Form\FieldButton;
+//use MRBS\Form\FieldDiv;
+//use MRBS\Form\FieldInputCheckbox;
+//use MRBS\Form\FieldInputCheckboxGroup;
+//use MRBS\Form\FieldInputRadioGroup;
+//use MRBS\Form\FieldInputEmail;
+//use MRBS\Form\FieldInputNumber;
+//use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
+//use MRBS\Form\FieldInputTime;
+use MRBS\Form\FieldSelect;
+//use MRBS\Form\FieldSpan;
+//use MRBS\Form\FieldTextarea;
+
+require "defaultincludes.inc";
+require_once "mrbs_sql.inc";
+
+
+function get_fieldset_errors($errors)
+{
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend('')
+           ->setAttribute('class', 'error');
+  
+  foreach ($errors as $error)
+  {
+    $element = new ElementP();
+    $element->setText(get_vocab($error));
+    $fieldset-> addElement($element);
+  }
+  
+  return $fieldset;
+}
+
+
+function get_fieldset_general($data)
+{
+  global $is_admin;
+  
+  $disabled = !$is_admin;
+  
+  $fieldset = new ElementFieldset();
+
+  // The area select
+  $areas = get_area_names($all=true);
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('area'))
+        ->setControlAttributes(array('name'     => 'new_area',
+                                     'disabled' => $disabled))
+        ->addSelectOptions($areas, $data['area_id']);
+  $fieldset->addElement($field);
+  
+  // Room name
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('name'))
+        ->setControlAttributes(array('name'     => 'room_name',
+                                     'value'    => $data['room_name'],
+                                     'disabled' => $disabled));
+  $fieldset->addElement($field);
+  
+  // Sort key
+  if ($is_admin)
+  {
+    $field = new FieldInputText();
+    $field->setLabel(get_vocab('sort_key'))
+          ->setLabelAttribute('title', get_vocab('sort_key_note'))
+          ->setControlAttributes(array('name'     => 'sort_key',
+                                       'value'    => $data['sort_key'],
+                                       'disabled' => $disabled));
+    $fieldset->addElement($field);
+  }
+  
+  return $fieldset;
+}
+
+
+// Check the user is authorised for this page
+checkAuthorised();
+
+// Also need to know whether they have admin rights
+$user = getUserName();
+$required_level = (isset($max_level) ? $max_level : 2);
+$is_admin = (authGetUserLevel($user) >= $required_level);
+
+print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
+
+// Get the details for this room
+if (empty($room) || is_null($data = get_room_details($room)))
+{
+  fatal_error(get_vocab('invalid_room'));
+}
+
+$errors = get_form_var('errors', 'array');
+
+// Generate the form
+$form = new Form();
+
+$attributes = array('id'     => 'edit_room',
+                    'class'  => 'standard',
+                    'action' => 'edit_room_handler.php',
+                    'method' => 'post');
+                    
+// Non-admins will only be allowed to view room details, not change them
+$legend = ($is_admin) ? get_vocab('editroom') : get_vocab('viewroom');
+                    
+$form->setAttributes($attributes)
+     ->addHiddenInput('room', $data['id'])
+     ->addHiddenInput('old_area', $data['area_id'])
+     ->addHiddenInput('old_room_name', $data['room_name']);
+
+$outer_fieldset = new ElementFieldset();
+
+$outer_fieldset->addLegend($legend)
+               ->addElement(get_fieldset_errors($errors))
+               ->addElement(get_fieldset_general($data));
+
+$form->addElement($outer_fieldset);
+
+$form->render();
+
+
+output_trailer();
