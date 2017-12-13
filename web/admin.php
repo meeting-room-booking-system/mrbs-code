@@ -451,7 +451,8 @@ if ($is_admin || !empty($enabled_areas))
             // be sorted properly
             echo "<td><div>" .
                  "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
-                 "<a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a>" .
+                 "<a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a>" . ' ' .
+                 "<a title=\"$html_name\" href=\"edit_room.php?room=" . $r['id'] . "\">$html_name</a>" .
                  "</div></td>\n";
             if ($is_admin)
             {
