@@ -147,10 +147,11 @@ function get_fieldset_general($data)
   // Area admin email
   $field = new FieldInputEmail();
   $field->setLabel(get_vocab('area_admin_email'))
+        ->setLabelAttribute('title', get_vocab('email_list_note'))
         ->setControlAttributes(array('id'       => 'area_admin_email',
                                      'name'     => 'area_admin_email',
                                      'value'    => $data['area_admin_email'],
-                                     'multiple' => null));
+                                     'multiple' => true));
   $fieldset->addElement($field);
   
   // The custom HTML

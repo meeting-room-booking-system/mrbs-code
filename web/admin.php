@@ -7,6 +7,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldSelect;
@@ -212,20 +213,21 @@ function generate_new_room_form()
                                      'name'      => 'description',
                                      'maxlength' => $maxlength['room.description']));               
   $fieldset->addElement($field);
-  
-  // The capacity field
-  $field = new FieldInputText();
+   
+  // Capacity
+  $field = new FieldInputNumber();
   $field->setLabel(get_vocab('capacity'))
-        ->setControlAttributes(array('id'   => 'room_capacity',
-                                     'name' => 'capacity'));               
+        ->setControlAttributes(array('name' => 'capacity',
+                                     'min'  => '0'));
   $fieldset->addElement($field);
         
   // The email field
   $field = new FieldInputEmail();
   $field->setLabel(get_vocab('room_admin_email'))
+        ->setLabelAttribute('title', get_vocab('email_list_note'))
         ->setControlAttributes(array('id'       => 'room_admin_email',
                                      'name'     => 'room_admin_email',
-                                     'multiple' => null));           
+                                     'multiple' => true));           
   $fieldset->addElement($field);
   
   // The submit button

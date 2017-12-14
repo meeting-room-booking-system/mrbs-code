@@ -14,10 +14,10 @@ class FieldInputRadioGroup extends Field
   }
   
   
-  public function addRadioOptions(array $options, $name, $checked=null, $associative=true)
+  public function addRadioOptions(array $options, $name, $checked=null, $associative=true, $disabled=false)
   {
     $element = $this->getControl();
-    $element->addRadioOptions($options, $name, $checked, $associative);
+    $element->addRadioOptions($options, $name, $checked, $associative, $disabled);
     $this->setControl($element);
     return $this;
   }

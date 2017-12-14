@@ -15,9 +15,9 @@ use MRBS\Form\ElementP;
 //use MRBS\Form\FieldDiv;
 //use MRBS\Form\FieldInputCheckbox;
 //use MRBS\Form\FieldInputCheckboxGroup;
-//use MRBS\Form\FieldInputRadioGroup;
-//use MRBS\Form\FieldInputEmail;
-//use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputNumber;
 //use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 //use MRBS\Form\FieldInputTime;
@@ -82,6 +82,46 @@ function get_fieldset_general($data)
                                        'disabled' => $disabled));
     $fieldset->addElement($field);
   }
+  
+  // Status - Enabled or Disabled
+  if ($is_admin)
+  {
+    $options = array('0' => get_vocab('enabled'),
+                     '1' => get_vocab('disabled'));
+    $value = ($data['disabled']) ? '1' : '0';
+    $field = new FieldInputRadioGroup();
+    $field->setLabel(get_vocab('status'))
+          ->setLabelAttributes(array('title' => get_vocab('disabled_room_note')))
+          ->addRadioOptions($options, 'room_disabled', $value, true, $disabled);
+    $fieldset->addElement($field);
+  }
+  
+  // Description
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('description'))
+        ->setControlAttributes(array('name'     => 'description',
+                                     'value'    => $data['description'],
+                                     'disabled' => $disabled));
+  $fieldset->addElement($field);
+  
+  // Capacity
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('capacity'))
+        ->setControlAttributes(array('name'     => 'capacity',
+                                     'min'      => '0',
+                                     'value'    => $data['capacity'],
+                                     'disabled' => $disabled));
+  $fieldset->addElement($field);
+  
+  // Area admin email
+  $field = new FieldInputEmail();
+  $field->setLabel(get_vocab('room_admin_email'))
+        ->setLabelAttribute('title', get_vocab('email_list_note'))
+        ->setControlAttributes(array('name'     => 'room_admin_email',
+                                     'value'    => $data['room_admin_email'],
+                                     'multiple' => true,
+                                     'disabled' => $disabled));
+  $fieldset->addElement($field);
   
   return $fieldset;
 }
