@@ -160,6 +160,7 @@ function generate_new_area_form()
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('id'        => 'area_name',
                                      'name'      => 'name',
+                                     'required'  => true,
                                      'maxlength' => $maxlength['area.area_name']));               
   $fieldset->addElement($field);
   
@@ -203,6 +204,7 @@ function generate_new_room_form()
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('id'        => 'room_name',
                                      'name'      => 'name',
+                                     'required'  => true,
                                      'maxlength' => $maxlength['room.room_name']));               
   $fieldset->addElement($field);
   

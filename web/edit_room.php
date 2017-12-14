@@ -68,6 +68,7 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('name'     => 'room_name',
                                      'value'    => $data['room_name'],
+                                     'required' => true,
                                      'disabled' => $disabled));
   $fieldset->addElement($field);
   

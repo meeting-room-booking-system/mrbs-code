@@ -111,9 +111,10 @@ function get_fieldset_general($data)
   // Area name
   $field = new FieldInputText();
   $field->setLabel(get_vocab('name'))
-        ->setControlAttributes(array('id'    => 'area_name',
-                                     'name'  => 'area_name',
-                                     'value' => $data['area_name']));
+        ->setControlAttributes(array('id'       => 'area_name',
+                                     'name'     => 'area_name',
+                                     'required' => true,
+                                     'value'    => $data['area_name']));
   $fieldset->addElement($field);
   
   // Sort key
