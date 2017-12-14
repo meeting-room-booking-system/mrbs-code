@@ -260,5 +260,14 @@ $form->addElement($outer_fieldset);
 
 $form->render();
 
+if ($auth['allow_custom_html'])
+{
+  // Now the custom HTML
+  echo "<div id=\"custom_html\">\n";
+  // no htmlspecialchars() because we want the HTML!
+  echo (isset($data['custom_html'])) ? $data['custom_html'] . "\n" : "";
+  echo "</div>\n";
+}
+
 
 output_trailer();
