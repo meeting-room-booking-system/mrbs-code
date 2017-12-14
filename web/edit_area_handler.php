@@ -5,15 +5,6 @@ require "defaultincludes.inc";
 
 use MRBS\Form\Form;
 
-// Take a string of email addresses separated by commas 
-// and return a comma separated list with duplicates removed.
-function clean_address_list($string)
-{
-  $array = explode(',', $string);
-  array_walk($array, 'trim');
-  return implode(', ', array_unique($array));
-}
-
 // Check the CSRF token.
 Form::checkToken();
 

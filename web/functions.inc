@@ -2244,6 +2244,16 @@ function mrbs_nl2br($string)
 }
 
 
+// Take a string of email addresses separated by commas 
+// and return a comma separated list with duplicates removed.
+function clean_address_list($string)
+{
+  $array = explode(',', $string);
+  array_walk($array, 'trim');
+  return implode(', ', array_unique($array));
+}
+
+
 function validate_email($email)
 {
   return \PHPMailer::validateAddress($email);
