@@ -18,6 +18,50 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
+// If you want to add some extra columns to the room table to describe the room
+// then you can do so and this page should automatically recognise them and handle
+// them.    At the moment support is limited to the following column types:
+//
+// MySQL        PostgreSQL            Form input type
+// -----        ----------            ---------------
+// bigint       bigint                text
+// int          integer               text
+// mediumint                          text
+// smallint     smallint              checkbox
+// tinyint                            checkbox
+// text         text                  textarea
+// tinytext                           textarea
+//              character varying     textarea
+// varchar(n)   character varying(n)  text/textarea, depending on the value of n
+//              character             text
+// char(n)      character(n)          text/textarea, depending on the value of n
+//
+// NOTE 1: For char(n) and varchar(n) fields, a text input will be presented if
+// n is less than or equal to $text_input_max, otherwise a textarea box will be
+// presented.
+//
+// NOTE 2: PostgreSQL booleans are not supported, due to difficulties in
+// handling the fields in a database independent way (a PostgreSQL boolean
+// will return a PHP boolean type when read by a PHP query, whereas a MySQL
+// tinyint returns an int).   In order to have a boolean field in the room
+// table you should use a smallint in PostgreSQL or a smallint or a tinyint
+// in MySQL.
+//
+// You can put a description of the column that will be used as the label in
+// the form in the $vocab_override variable in the config file using the tag
+// 'room.[columnname]'.
+//
+// For example if you want to add a column specifying whether or not a room
+// has a coffee machine you could add a column to the room table called
+// 'coffee_machine' of type tinyint(1), in MySQL, or smallint in PostgreSQL.
+// Then in the config file you would add the line
+//
+// $vocab_override['en']['room.coffee_machine'] = "Coffee machine";  // or appropriate translation
+//
+// If MRBS can't find an entry for the field in the lang file or vocab overrides, then
+// it will use the fieldname, eg 'coffee_machine'.
+
+
 function get_custom_fields($data)
 {
   global $tbl_room, $standard_fields, $text_input_max;
