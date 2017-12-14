@@ -13,7 +13,7 @@ use MRBS\Form\ElementP;
 //use MRBS\Form\ElementSpan;
 //use MRBS\Form\FieldButton;
 //use MRBS\Form\FieldDiv;
-//use MRBS\Form\FieldInputCheckbox;
+use MRBS\Form\FieldInputCheckbox;
 //use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
@@ -27,6 +27,58 @@ use MRBS\Form\FieldTextarea;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+
+
+function get_custom_fields($data)
+{
+  global $tbl_room, $standard_fields, $text_input_max;
+  
+  $result = array();
+  
+  // Get the information about the fields in the room table
+  $fields = db()->field_info($tbl_room);
+  
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $standard_fields['room']))
+    {
+      $label = get_loc_field_name($tbl_room, $field['name']);
+      $name = VAR_PREFIX . $field['name'];
+      $value = $data[$field['name']];
+      
+      // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+      // assume are intended to be booleans)
+      if (($field['nature'] == 'boolean') || 
+          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+      {
+        $field = new FieldInputCheckbox();
+        $field->setLabel($label)
+              ->setControlAttribute('name', $name)
+              ->setChecked($value);
+      }
+      // Output a textarea if it's a character string longer than the limit for a
+      // text input
+      elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+      {
+        $field = new FieldTextarea();
+        $field->setLabel($label)
+              ->setControlAttribute('name', $name)
+              ->setControlText($value);
+      }
+      // Otherwise output a text input
+      else
+      {
+        $field = new FieldInputText();
+        $field->setLabel($label)
+              ->setControlAttributes(array('name'  => $name,
+                                           'value' => $value));
+      }
+      $result[] = $field;
+    }
+  }
+  
+  return $result;
+}
 
 
 function get_fieldset_errors($errors)
@@ -135,6 +187,10 @@ function get_fieldset_general($data)
           ->setControlText($data['custom_html']);
     $fieldset->addElement($field);
   }
+  
+  // Then the custom fields
+  $fields = get_custom_fields($data);
+  $fieldset->addElements($fields);
   
   return $fieldset;
 }

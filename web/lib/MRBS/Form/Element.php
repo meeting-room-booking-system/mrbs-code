@@ -119,6 +119,16 @@ class Element
   }
   
   
+  public function addElements(array $elements)
+  {
+    foreach ($elements as $element)
+    {
+      $this->addElement($element);
+    }
+    return $this;
+  }
+  
+  
   public function addClass($class)
   {
     $classes = $this->getAttribute('class');
