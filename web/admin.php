@@ -142,7 +142,7 @@ function generate_new_area_form()
   $form = new Form();
   
   $attributes = array('id'     => 'add_area',
-                      'class'  => 'form_admin',
+                      'class'  => 'form_admin standard',
                       'action' => 'add.php',
                       'method' => 'post');
                       
@@ -184,7 +184,7 @@ function generate_new_room_form()
   $form = new Form();
   
   $attributes = array('id'     => 'add_room',
-                      'class'  => 'form_admin',
+                      'class'  => 'form_admin standard',
                       'action' => 'add.php',
                       'method' => 'post');
                       

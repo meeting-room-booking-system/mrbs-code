@@ -228,28 +228,14 @@ $admin_form_gap               = '1.0';   // em
 $admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
 
 ?>
-form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
-.form_admin fieldset {float: left; width: auto; border: 1px solid <?php echo $admin_table_border_color ?>; padding: 1em}
-.form_admin legend {font-size: small}
-.form_admin div {float: left; clear: left} 
-.form_admin label {
-    display: block; float: left; clear: left; 
-    width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
+
+.form_admin fieldset {
+  border: 1px solid <?php echo $admin_table_border_color ?>;
 }
 
-.form_admin input {
-    display: block; float: left; clear: right;
-    width: <?php echo $admin_form_input_width ?>em;
-    margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
-    font-family: <?php echo $standard_font_family ?>; font-size: small;
+.admin h2 {
+  clear: left
 }
-
-.form_admin input.submit {
-    width: auto;
-    margin-top: 1.2em; 
-}
-
-.admin h2 {clear: left}
 
 div#area_form, div#room_form {
   width: 100%;
@@ -769,11 +755,14 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 <?php // The standard form ?>
 
 .standard {
+  float:left;
   margin-top: 2.0em;
 }
 
 .standard fieldset {
   display: table;
+  float: left;
+  width: auto;
   border-spacing: 0 0.75em;
   border-collapse: separate;
   padding: 1em;
