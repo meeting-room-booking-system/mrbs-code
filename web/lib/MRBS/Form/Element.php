@@ -129,6 +129,13 @@ class Element
   }
   
   
+  public function removeElement($key)
+  {
+    unset($this->elements[$key]);
+    return $this;
+  }
+  
+  
   public function addClass($class)
   {
     $classes = $this->getAttribute('class');

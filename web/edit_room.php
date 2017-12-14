@@ -5,7 +5,7 @@ use MRBS\Form\Form;
 //use MRBS\Form\ElementDiv;
 //use MRBS\Form\ElementInputCheckbox;
 //use MRBS\Form\ElementInputNumber;
-//use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementFieldset;
 //use MRBS\Form\ElementLegend;
 use MRBS\Form\ElementP;
@@ -18,7 +18,7 @@ use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
-//use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 //use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
@@ -32,8 +32,10 @@ require_once "mrbs_sql.inc";
 function get_custom_fields($data)
 {
   global $tbl_room, $standard_fields, $text_input_max;
+  global $is_admin;
   
   $result = array();
+  $disabled = !$is_admin;
   
   // Get the information about the fields in the room table
   $fields = db()->field_info($tbl_room);
@@ -53,7 +55,8 @@ function get_custom_fields($data)
       {
         $field = new FieldInputCheckbox();
         $field->setLabel($label)
-              ->setControlAttribute('name', $name)
+              ->setControlAttributes(array('name'     => $name,
+                                           'disabled' => $disabled))
               ->setChecked($value);
       }
       // Output a textarea if it's a character string longer than the limit for a
@@ -62,7 +65,8 @@ function get_custom_fields($data)
       {
         $field = new FieldTextarea();
         $field->setLabel($label)
-              ->setControlAttribute('name', $name)
+              ->setControlAttributes(array('name'     => $name,
+                                           'disabled' => $disabled))
               ->setControlText($value);
       }
       // Otherwise output a text input
@@ -70,8 +74,9 @@ function get_custom_fields($data)
       {
         $field = new FieldInputText();
         $field->setLabel($label)
-              ->setControlAttributes(array('name'  => $name,
-                                           'value' => $value));
+              ->setControlAttributes(array('name'     => $name,
+                                           'value'    => $value,
+                                           'disabled' => $disabled));
       }
       $result[] = $field;
     }
@@ -191,6 +196,21 @@ function get_fieldset_general($data)
   // Then the custom fields
   $fields = get_custom_fields($data);
   $fieldset->addElements($fields);
+  
+  // The Submit and Back buttons
+  $field = new FieldInputSubmit();
+  
+  $back = new ElementInputSubmit();
+  $back->setAttributes(array('value'      => get_vocab('backadmin'),
+                             'formaction' => 'admin.php'));
+  $field->addLabelClass('no_suffix')
+        ->addLabelElement($back)
+        ->setControlAttribute('value', get_vocab('change'));
+  if (!$is_admin)
+  {
+    $field->removeControl();
+  }
+  $fieldset->addElement($field);
   
   return $fieldset;
 }

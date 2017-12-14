@@ -41,6 +41,13 @@ abstract class Field extends Element
   }
   
   
+  public function removeControl()
+  {
+    $this->removeElement('control');
+    return $this;
+  }
+  
+  
   public function setLabel($text)
   {
     $label = $this->getElement('label');
