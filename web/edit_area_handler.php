@@ -60,6 +60,7 @@ $area_confirmation_enabled = get_form_var('area_confirmation_enabled', 'string')
 $area_confirmed_default = get_form_var('area_confirmed_default', 'string');
 $custom_html = get_form_var('custom_html', 'string');
 
+
 // Get the max_per_interval form variables
 foreach ($interval_types as $interval_type)
 {
@@ -208,8 +209,15 @@ $assign_array[] = "timezone=?";
 $sql_params[] = $area_timezone;
 $assign_array[] = "area_admin_email=?";
 $sql_params[] = $area_admin_email;
-$assign_array[] = "custom_html=?";
-$sql_params[] = $custom_html;
+
+if (isset($custom_html))
+{
+  // The custom HTML field won't be present if it has been
+  // disabled in the config file
+  $assign_array[] = "custom_html=?";
+  $sql_params[] = $custom_html;
+}
+
 if (!$area_enable_periods)
 {
   $assign_array[] = "resolution=?";

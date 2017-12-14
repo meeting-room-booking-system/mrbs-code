@@ -23,7 +23,7 @@ use MRBS\Form\FieldInputText;
 //use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
 //use MRBS\Form\FieldSpan;
-//use MRBS\Form\FieldTextarea;
+use MRBS\Form\FieldTextarea;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -48,7 +48,7 @@ function get_fieldset_errors($errors)
 
 function get_fieldset_general($data)
 {
-  global $is_admin;
+  global $is_admin, $auth;
   
   $disabled = !$is_admin;
   
@@ -123,6 +123,18 @@ function get_fieldset_general($data)
                                      'multiple' => true,
                                      'disabled' => $disabled));
   $fieldset->addElement($field);
+  
+  // The custom HTML
+  if ($is_admin && $auth['allow_custom_html'])
+  {
+    // Only show the raw HTML to admins.  Non-admins will see the rendered HTML
+    $field = new FieldTextarea();
+    $field->setLabel(get_vocab('custom_html'))
+          ->setLabelAttribute('title', get_vocab('custom_html_note'))
+          ->setControlAttribute('name', 'custom_html')
+          ->setControlText($data['custom_html']);
+    $fieldset->addElement($field);
+  }
   
   return $fieldset;
 }

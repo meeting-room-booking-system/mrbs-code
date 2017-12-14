@@ -103,7 +103,7 @@ function get_fieldset_errors($errors)
 
 function get_fieldset_general($data)
 {
-  global $timezone;
+  global $timezone, $auth;
   
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('general_settings'));
@@ -127,8 +127,8 @@ function get_fieldset_general($data)
   $fieldset->addElement($field);
                                      
   // Status - Enabled or Disabled
-  $options = array('0' => get_vocab("enabled"),
-                   '1' => get_vocab("disabled"));
+  $options = array('0' => get_vocab('enabled'),
+                   '1' => get_vocab('disabled'));
   $value = ($data['disabled']) ? '1' : '0';
   $field = new FieldInputRadioGroup();
   $field->setAttribute('id', 'status')
@@ -156,13 +156,15 @@ function get_fieldset_general($data)
   $fieldset->addElement($field);
   
   // The custom HTML
-  $field = new FieldTextarea();
-  $field->setLabel(get_vocab('custom_html'))
-        ->setLabelAttributes(array('title' => get_vocab('custom_html_note')))
-        ->setControlAttributes(array('id'       => 'custom_html',
-                                     'name'     => 'custom_html'))
-        ->setControlText($data['custom_html']);
-  $fieldset->addElement($field);
+  if ($auth['allow_custom_html'])
+  {
+    $field = new FieldTextarea();
+    $field->setLabel(get_vocab('custom_html'))
+          ->setLabelAttribute('title', get_vocab('custom_html_note'))
+          ->setControlAttribute('name', 'custom_html')
+          ->setControlText($data['custom_html']);
+    $fieldset->addElement($field);
+  }
   
   // Mode - Times or Periods
   $options = array('1' => get_vocab('mode_periods'),
