@@ -92,7 +92,7 @@ foreach ($color_types as $type => $col)
 }
 ?>
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+/* ------------ EDIT_AREA.PHP ------------------*/
 
 #book_ahead_periods_note span {
   float: right;
@@ -102,7 +102,6 @@ foreach ($color_types as $type => $col)
 
 form#edit_room, .form_general input, .form_general textarea,
 .form_general select, .form_general input.submit,
-div#edit_area_room_submit_back, div#edit_area_room_submit_save,
 .form_general .div_time span, .form_general div#ad,
 .form_general #div_rooms select, .form_general #div_typematch select {
   float: right;
@@ -112,7 +111,7 @@ div#edit_area_room_submit_back, div#edit_area_room_submit_save,
   float: none;
 }
 
-.form_general div.group_container, .edit_area_room div.group,
+.form_general div.group_container,
 #edit_room fieldset, .form_general label {
   float: right;
 }
@@ -122,7 +121,7 @@ div#edit_area_room_submit_back, div#edit_area_room_submit_save,
 }
 
 .edit_entry .form_general label, .report .form_general label,
-.edit_area_room .form_general label, #logon label {
+#logon label {
   direction: rtl;
 }
 

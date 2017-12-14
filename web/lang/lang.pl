@@ -331,7 +331,7 @@ $vocab["administration"]     = "Administracja";
 $vocab["invalid_area_name"]  = "Taki budynek juz istnieje!";
 $vocab["empty_name"]         = "Nie podałeś nazwy!";
 
-// Uzyte w edit_area_room.php
+// Uzyte w edit_area.php edit_room.php 
 $vocab["editarea"]           = "Edytuj Strefę";
 $vocab["change"]             = "Zmień";
 $vocab["backadmin"]          = "Powrót do Admin";

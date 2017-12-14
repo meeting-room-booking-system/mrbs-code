@@ -225,7 +225,7 @@ select.room_area_select {margin-right: 0.5em}
 // The input width can normally be left alone
 $admin_form_label_width       = '10.0';   // em
 $admin_form_gap               = '1.0';   // em
-$admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
+$admin_form_input_width       = '10.5';   // em
 
 ?>
 
@@ -698,30 +698,15 @@ div#del_room_confirm {
 
 
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
-.edit_area_room .form_general fieldset fieldset {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em
-}
+/* ------ EDIT_AREA.PHP AND EDIT_ROOM.PHP ----------*/
 
-.edit_area_room .form_general fieldset fieldset fieldset {
-  margin-bottom: 1em;
-}
-
-.edit_area_room .form_general fieldset fieldset legend {
-  font-size: small;
+#book_ahead_periods_note span {
+  display: block;
+  float: left;
+  width: 24em;
+  margin: 0 0 1em 1em;
   font-style: italic;
-  font-weight: normal
 }
-
-.edit_area_room .form_general fieldset fieldset fieldset legend {
-  padding-left: 2em;
-}
-
-.edit_area_room fieldset#time_settings {padding:0; margin: 0}
-span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
-#book_ahead_periods_note span {display: block; float: left; width: 24em; margin: 0 0 1em 1em; font-style: italic}
-.edit_area_room .form_general textarea {height: 6em; width: 25em}
 
 div#custom_html {
   margin-top: 2em;
@@ -874,7 +859,7 @@ div#custom_html {
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */
 /*   used in EDIT_ENTRY.PHP, REPORT.PHP,             */
-/*   SEARCH.PHP and EDIT_AREA_ROOM.PHP               */
+/*   SEARCH.PHP                                      */
 
 <?php
 // Common to all forms in the class "form_general"
@@ -914,22 +899,13 @@ $db_logon_left_col_max_width   = '12';      // em
 $db_logon_form_min_width       = $db_logon_left_col_max_width + $input_width + $general_gap;
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
-// Specific to the "edit_area_room" form
-$edit_area_room_left_col_width      = '17';      // em
-$edit_area_room_left_col_max_width  = '30';      // em
-$edit_area_room_form_min_width      = $edit_area_room_left_col_width + $input_width + $general_gap;
-$edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
-
-
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 .edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
 .report         form.form_general {min-width: <?php echo $report_form_min_width ?>em}
 .search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
-.edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
-.edit_area_room form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
 .form_general div {float: left; clear: left; width: 100%}
 .form_general div div {float: none; clear: none; width: auto}
@@ -937,11 +913,7 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 .form_general div.group_container {float: left}
 .form_general .group_container div.group {clear: left}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
-.edit_area_room div.group {clear: none; width: auto}
-.edit_area_room div.group#private_override div {clear: left}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
-.edit_area_room #edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
-.edit_area_room #edit_room fieldset.submit_buttons {margin-top: 1em}
 
 .form_general label {
     display: block; float: left; overflow: hidden;
@@ -958,7 +930,7 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
-.edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em; width: <?php echo $edit_area_room_left_col_width ?>em}
+
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
 
@@ -1020,8 +992,6 @@ fieldset.rep_type_details fieldset {padding-top: 0}
   width: auto
 }
 .form_general input.checkbox {width: auto; margin-top: 0.2em}
-.edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
-.edit_area_room .form_general #booking_policies input.text {width: 4em}
 
 .form_general input.submit {
   clear: left;
@@ -1038,9 +1008,7 @@ div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width:
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
 #import_submit input, #report_submit input, #search_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
-div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
-div#edit_area_room_submit_save {float: left; clear: none; width: auto}
-#edit_area_room_submit_back input {float: right}
+
 div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 div#edit_entry_submit_save {float: left; clear: none; width: auto}
 #edit_entry_submit_back input {float: right}
@@ -1068,7 +1036,6 @@ fieldset#rep_info, fieldset#booking_controls {
 .form_general input#rep_num_weeks, .form_general input#month_absolute {width: 4em}
 
 .edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
-.edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
 
 .form_general label.secondary {font-weight: normal; width: auto}
 

@@ -966,8 +966,8 @@ $allow_cli = false;
 // The following settings determine who should be emailed when a booking is made,
 // edited or deleted (though the latter two events depend on the "When" settings below).
 // Set to true or false as required
-// (Note:  the email addresses for the room and area administrators are set from the
-// edit_area_room.php page in MRBS)
+// (Note:  the email addresses for the area and room administrators are set from the
+// edit_area.php and edit_room.php pages in MRBS)
 $mail_settings['admin_on_bookings']      = false;  // the addresses defined by $mail_settings['recipients'] below
 $mail_settings['area_admin_on_bookings'] = false;  // the area administrator
 $mail_settings['room_admin_on_bookings'] = false;  // the room administrator
@@ -1026,9 +1026,9 @@ $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 
 // HOW TO EMAIL - ADDRESSES
 // ------------------------
-// The email addresses of the MRBS administrator are set in the config file, and
-// those of the room and area administrators are set though the edit_area_room.php
-// in MRBS.    But if you have set $mail_settings['booker'] above to true, MRBS will
+// The email addresses of the MRBS administrator are set in the config file, and those of
+// the room and area administrators are set though the edit_area.php and edit_room.php
+// pages in MRBS.  But if you have set $mail_settings['booker'] above to true, MRBS will
 // need the email addresses of ordinary users.   If you are using the "db" 
 // authentication method then MRBS will be able to get them from the users table.  But
 // if you are using any other authentication scheme then the following settings allow
