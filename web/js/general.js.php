@@ -328,7 +328,7 @@ init = function(args) {
     if ($(this).prop('type') != 'time')
     {
       $(this).attr('placeholder', 'hh:mm')
-             .attr('pattern', '^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$')
+             .attr('pattern', '<?php echo trim(REGEX_HHMM, '/') ?>')
              .on('input', function(e) {
                  e.target.setCustomValidity('');
                  if (!e.target.validity.valid)

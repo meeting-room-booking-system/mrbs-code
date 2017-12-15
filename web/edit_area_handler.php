@@ -83,9 +83,8 @@ if (!validate_email_list($area_admin_email))
 // the HTML5 element or polyfill will force them to be, but just in case ...
 // (for example if we are relying on a polyfill and JavaScript is disabled)
 
-$pattern= '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/';
-if (!preg_match($pattern, $area_start_first_slot) ||
-    !preg_match($pattern, $area_start_first_slot))
+if (!preg_match(REGEX_HHMM, $area_start_first_slot) ||
+    !preg_match(REGEX_HHMM, $area_start_first_slot))
 {
   $errors[] = 'invalid_time_format';
 }

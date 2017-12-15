@@ -110,7 +110,7 @@ function hhmmToMins(hhmm)
     return null;
   }
   
-  if (!/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(hhmm))
+  if (!<?php echo REGEX_HHMM ?>.test(hhmm))
   {
     return null;
   }
