@@ -323,6 +323,21 @@ init = function(args) {
   
   labels.width(getMaxWidth(labels));
   
+  <?php // Add a fallback for browsers that don't support the time input ?>
+  $('[type="time"]').each(function() {
+    if ($(this).prop('type') != 'time')
+    {
+      $(this).attr('placeholder', 'hh:mm')
+             .attr('pattern', '^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$')
+             .on('input', function(e) {
+                 e.target.setCustomValidity('');
+                 if (!e.target.validity.valid)
+                 {
+                   e.target.setCustomValidity('<?php echo escape_js(get_vocab('invalid_time_format'))?>');
+                 }
+               });
+    }
+  });
 
   $('#Form1 input[type="submit"]').css('visibility', 'visible');
 

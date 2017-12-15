@@ -99,8 +99,22 @@ function getResolutionMinutes()
 }
 
 
+<?php
+// Converts a time string in the format 'hh:mm' to minutes.
+// Returns null if the string is not properly formed.
+?> 
 function hhmmToMins(hhmm)
 {
+  if (hhmm === null)
+  {
+    return null;
+  }
+  
+  if (!/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(hhmm))
+  {
+    return null;
+  }
+  
   var array = hhmm.split(':');
   return (parseInt(array[0], 10) * 60) + parseInt(array[1], 10);
 }
@@ -137,6 +151,11 @@ function generateLastSlotSelect()
   }
   firstSlot = getStartFirstSlot();
   lastSlot = getStartLastSlot();
+  
+  if (firstSlot === null)
+  {
+    return;
+  }
                
   <?php 
   // Construct the <select> element.
