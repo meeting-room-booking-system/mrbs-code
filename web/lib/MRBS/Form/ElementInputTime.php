@@ -8,7 +8,8 @@ class ElementInputTime extends ElementInput
   public function __construct()
   {
     parent::__construct();
-    $this->setAttribute('type', 'time');
+    $this->setAttributes(array('type'     => 'time',
+                               'required' => true));
   }
  
 }
