@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
 
 require "defaultincludes.inc";
 
@@ -1566,9 +1567,26 @@ else
 if ($output_form)
 {
 
+
   echo "<div class=\"screenonly\">\n";
  
-  echo "<form class=\"form_general\" id=\"report_form\" method=\"post\" action=\"report.php\">\n";
+  $form = new Form();
+  
+  $attributes = array('id'     => 'report_form',
+                      'class'  => 'standard',
+                      'action' => 'report.php',
+                      'method' => 'post');
+                    
+  $form->setAttributes($attributes);
+  
+  $outer_fieldset = new ElementFieldset();
+  $outer_fieldset->addLegend(get_vocab('report_on'));
+  
+  $form->addElement($outer_fieldset);
+  
+  $form->render();
+  
+  echo "<form style=\"clear: left\" class=\"form_general\" id=\"report_form\" method=\"post\" action=\"report.php\">\n";
   echo Form::getTokenHTML() . "\n";
   echo "<fieldset>\n";
   echo "<legend>" . get_vocab("report_on") . "</legend>\n";

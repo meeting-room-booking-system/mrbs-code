@@ -51,7 +51,6 @@ $area_confirmation_enabled = get_form_var('area_confirmation_enabled', 'string')
 $area_confirmed_default = get_form_var('area_confirmed_default', 'string');
 $custom_html = get_form_var('custom_html', 'string');
 
-
 // Get the max_per_interval form variables
 foreach ($interval_types as $interval_type)
 {
@@ -80,95 +79,108 @@ if (!validate_email_list($area_admin_email))
   $errors[] = 'invalid_email';
 }
 
-// Get morningstarts and eveningends
-list($area_morningstarts, $area_morningstarts_minutes) = explode(':', $area_start_first_slot);
-list($area_eveningends, $area_eveningends_minutes) = explode(':', $area_start_last_slot);
+// Check that the time formats are correct (hh:mm).  They should be, because
+// the HTML5 element or polyfill will force them to be, but just in case ...
+// (for example if we are relying on a polyfill and JavaScript is disabled)
 
-// Convert the book ahead times into seconds
-fromTimeString($area_min_create_ahead_value, $area_min_create_ahead_units);
-fromTimeString($area_max_create_ahead_value, $area_max_create_ahead_units);
-fromTimeString($area_min_delete_ahead_value, $area_min_delete_ahead_units);
-fromTimeString($area_max_delete_ahead_value, $area_max_delete_ahead_units);
-
-fromTimeString($area_max_duration_value, $area_max_duration_units);
-
-// If we are using periods, round these down to the nearest whole day
-// (anything less than a day is meaningless when using periods)
-if ($area_enable_periods)
+$pattern= '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/';
+if (!preg_match($pattern, $area_start_first_slot) ||
+    !preg_match($pattern, $area_start_first_slot))
 {
-  $vars = array('area_min_create_ahead_value',
-                'area_max_create_ahead_value',
-                'area_min_delete_ahead_value',
-                'area_max_delete_ahead_value');
-                
+  $errors[] = 'invalid_time_format';
+}
+else
+{   
+  // Get morningstarts and eveningends
+  list($area_morningstarts, $area_morningstarts_minutes) = explode(':', $area_start_first_slot);
+  list($area_eveningends, $area_eveningends_minutes) = explode(':', $area_start_last_slot);
+
+  // Convert the book ahead times into seconds
+  fromTimeString($area_min_create_ahead_value, $area_min_create_ahead_units);
+  fromTimeString($area_max_create_ahead_value, $area_max_create_ahead_units);
+  fromTimeString($area_min_delete_ahead_value, $area_min_delete_ahead_units);
+  fromTimeString($area_max_delete_ahead_value, $area_max_delete_ahead_units);
+
+  fromTimeString($area_max_duration_value, $area_max_duration_units);
+
+  // If we are using periods, round these down to the nearest whole day
+  // (anything less than a day is meaningless when using periods)
+  if ($area_enable_periods)
+  {
+    $vars = array('area_min_create_ahead_value',
+                  'area_max_create_ahead_value',
+                  'area_min_delete_ahead_value',
+                  'area_max_delete_ahead_value');
+                  
+    foreach ($vars as $var)
+    {
+      if (isset($$var))
+      {
+        $$var -= $$var % SECONDS_PER_DAY;
+      }
+    }
+  }
+
+  // Convert booleans into 0/1 (necessary for PostgreSQL)
+  $vars = array('area_disabled',
+                'area_def_duration_all_day',
+                'area_min_create_ahead_enabled',
+                'area_max_create_ahead_enabled',
+                'area_min_delete_ahead_enabled',
+                'area_max_delete_ahead_enabled',
+                'area_max_duration_enabled',
+                'area_private_enabled',
+                'area_private_default',
+                'area_private_mandatory',
+                'area_approval_enabled',
+                'area_reminders_enabled',
+                'area_enable_periods',
+                'area_confirmation_enabled',
+                'area_confirmed_default');
+  foreach ($interval_types as $interval_type)
+  {
+    $vars[] = "area_max_per_${interval_type}_enabled";
+  }
   foreach ($vars as $var)
   {
-    if (isset($$var))
-    {
-      $$var -= $$var % SECONDS_PER_DAY;
-    }
+    $$var = (!empty($$var)) ? 1 : 0;
   }
-}
-
-// Convert booleans into 0/1 (necessary for PostgreSQL)
-$vars = array('area_disabled',
-              'area_def_duration_all_day',
-              'area_min_create_ahead_enabled',
-              'area_max_create_ahead_enabled',
-              'area_min_delete_ahead_enabled',
-              'area_max_delete_ahead_enabled',
-              'area_max_duration_enabled',
-              'area_private_enabled',
-              'area_private_default',
-              'area_private_mandatory',
-              'area_approval_enabled',
-              'area_reminders_enabled',
-              'area_enable_periods',
-              'area_confirmation_enabled',
-              'area_confirmed_default');
-foreach ($interval_types as $interval_type)
-{
-  $vars[] = "area_max_per_${interval_type}_enabled";
-}
-foreach ($vars as $var)
-{
-  $$var = (!empty($$var)) ? 1 : 0;
-}
 
 
-if (!$area_enable_periods)
-{ 
-  // Avoid divide by zero errors
-  if ($area_res_mins == 0)
-  {
-    $errors[] = 'invalid_resolution';
-  }
-  else
-  {
-    // Check morningstarts, eveningends, and resolution for consistency
-    $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
-    $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-    
-    // If eveningends is before morningstarts then it's really on the next day
-    if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
-                  array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
-    {
-      $start_last_slot += MINUTES_PER_DAY;
-    }
-    
-    $start_difference = ($start_last_slot - $start_first_slot);         // minutes
-    
-    if ($start_difference%$area_res_mins != 0)
+  if (!$area_enable_periods)
+  { 
+    // Avoid divide by zero errors
+    if ($area_res_mins == 0)
     {
       $errors[] = 'invalid_resolution';
     }
-  
-    // Check that the number of slots we now have is no greater than $max_slots
-    // defined in the config file - otherwise we won't generate enough CSS classes
-    $n_slots = ($start_difference/$area_res_mins) + 1;
-    if ($n_slots > $max_slots)
+    else
     {
-      $errors[] = 'too_many_slots';
+      // Check morningstarts, eveningends, and resolution for consistency
+      $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
+      $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
+      
+      // If eveningends is before morningstarts then it's really on the next day
+      if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
+                    array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
+      {
+        $start_last_slot += MINUTES_PER_DAY;
+      }
+      
+      $start_difference = ($start_last_slot - $start_first_slot);         // minutes
+      
+      if ($start_difference%$area_res_mins != 0)
+      {
+        $errors[] = 'invalid_resolution';
+      }
+    
+      // Check that the number of slots we now have is no greater than $max_slots
+      // defined in the config file - otherwise we won't generate enough CSS classes
+      $n_slots = ($start_difference/$area_res_mins) + 1;
+      if ($n_slots > $max_slots)
+      {
+        $errors[] = 'too_many_slots';
+      }
     }
   }
 }
