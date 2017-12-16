@@ -145,10 +145,11 @@ function generateLastSlotSelect()
       minsPerDay = <?php echo MINUTES_PER_DAY ?>;
       
   resMins = getResolutionMinutes();
-  if (resMins === 0)
+  if (isNaN(resMins) || (resMins === null) || (resMins === 0))
   {
     return;  <?php // avoid endless loops and divide by zero errors ?>
   }
+  
   firstSlot = getStartFirstSlot();
   lastSlot = getStartLastSlot();
   
