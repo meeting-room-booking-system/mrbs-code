@@ -211,9 +211,10 @@ function get_fieldset_times()
   $field = new FieldInputTime();
   $value = sprintf('%02d:%02d', $morningstarts, $morningstarts_minutes);
   $field->setLabel(get_vocab('area_first_slot_start'))
-        ->setControlAttributes(array('id'    => 'area_start_first_slot',
-                                     'name'  => 'area_start_first_slot',
-                                     'value' => $value));
+        ->setControlAttributes(array('id'       => 'area_start_first_slot',
+                                     'name'     => 'area_start_first_slot',
+                                     'value'    => $value,
+                                     'required' => true));
   $fieldset->addElement($field);
   
   // Resolution
@@ -248,9 +249,10 @@ function get_fieldset_times()
   $field->setAttributes(array('id'    => 'last_slot',
                               'class' => 'js_hidden'))
         ->setLabel(get_vocab('area_last_slot_start'))
-        ->setControlAttributes(array('id'    => 'area_start_last_slot',
-                                     'name'  => 'area_start_last_slot',
-                                     'value' => $value));
+        ->setControlAttributes(array('id'       => 'area_start_last_slot',
+                                     'name'     => 'area_start_last_slot',
+                                     'value'    => $value,
+                                     'required' => true));
   $fieldset->addElement($field);
         
   
