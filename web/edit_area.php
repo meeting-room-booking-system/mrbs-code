@@ -220,19 +220,21 @@ function get_fieldset_times()
   // Resolution
   $field = new FieldInputNumber();
   $field->setLabel(get_vocab('area_res_mins'))
-        ->setControlAttributes(array('id'    => 'area_res_mins',
-                                     'name'  => 'area_res_mins',
-                                     'min'   => '1',
-                                     'value' => (int) $resolution/60));
+        ->setControlAttributes(array('id'       => 'area_res_mins',
+                                     'name'     => 'area_res_mins',
+                                     'min'      => '1',
+                                     'value'    => (int) $resolution/60,
+                                     'required' => true));
   $fieldset->addElement($field);
                                      
   // Duration
   $field = new FieldInputNumber();
   $field->setLabel(get_vocab('area_def_duration_mins'))
-        ->setControlAttributes(array('id'    => 'area_def_duration_mins',
-                                     'name'  => 'area_def_duration_mins',
-                                     'min'   => '1',
-                                     'value' => (int) $default_duration/60));
+        ->setControlAttributes(array('id'       => 'area_def_duration_mins',
+                                     'name'     => 'area_def_duration_mins',
+                                     'min'      => '1',
+                                     'value'    => (int) $default_duration/60,
+                                     'required' => true));
   $options = array('1' => get_vocab('all_day'));
   $checkbox_group = new FieldInputCheckboxGroup();
   $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $default_duration_all_day);
