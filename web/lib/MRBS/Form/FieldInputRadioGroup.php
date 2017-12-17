@@ -11,6 +11,7 @@ class FieldInputRadioGroup extends Field
     parent::__construct();
     $this->addControl(new ElementDiv())
          ->setControlAttributes(array('class' => 'group'));
+    $this->is_group = true;
   }
   
   

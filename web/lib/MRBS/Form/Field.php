@@ -12,6 +12,10 @@ namespace MRBS\Form;
 
 abstract class Field extends Element
 {
+  // $is_group records whether the field consists of a group of controls
+  // (eg radio buttons) or just a single control, in which case a label
+  // can be associated with it.
+  protected $is_group = false;
   
   public function __construct()
   {
@@ -58,15 +62,27 @@ abstract class Field extends Element
   
   
   // Sets an attribute for the field control.  Also takes care of the label
-  // by associating the label with the control using a 'for' attribute.
+  // by associating the label with the control using a 'for' attribute, by
+  // using the 'id' if one is given, or if not, by assuming that the 'id'
+  // is the same as the 'name'.
   public function setControlAttribute($name, $value=true)
   {
     $elements = $this->getElements();
     
-    if ($name == 'id')
+    // If this is the name attribute and we haven't yet got an id, then
+    // make the id the same as the name
+    if (($name == 'name') && (null === $elements['control']->getAttribute('id')))
+    {
+      $this->setControlAttribute('id', $value);
+    }
+    
+    // If this is an id and it;s not a group field, then associate the
+    // label with the id
+    if (!$this->is_group && ($name == 'id'))
     {
       $elements['label']->setAttribute('for', $value);
     }
+    
     $elements['control']->setAttribute($name, $value);
     
     $this->setElements($elements);
@@ -74,22 +90,13 @@ abstract class Field extends Element
   }
   
   
-  // Sets the attributes for the field control.  Also takes care of the label
-  // by associating the label with the control using a 'for' attribute.
+  // Sets the attributes for the field control.
   public function setControlAttributes(array $attributes)
-  {
-    $elements = $this->getElements();
-    
+  { 
     foreach ($attributes as $key => $value)
     {
-      if ($key == 'id')
-      {
-        $elements['label']->setAttribute('for', $value);
-      }
-      $elements['control']->setAttribute($key, $value);
+      $this->setControlAttribute($key, $value);
     }
-    
-    $this->setElements($elements);
     return $this;
   }
   
