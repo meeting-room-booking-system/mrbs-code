@@ -3,8 +3,11 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldSelect;
+
 
 require "defaultincludes.inc";
 
@@ -71,6 +74,35 @@ function get_field_roommatch($data)
 }
 
 
+function get_field_typematch($data)
+{
+  global $booking_types;
+  
+  if (count($booking_types) <=1)
+  {
+    return null;
+  }
+  
+  $options = array();
+  foreach ($booking_types as $type)
+  {
+    $options[$type] = get_type_vocab($type);
+  }
+  
+  $field = new FieldSelect();
+  $field->setAttribute('class', 'multiline')
+        ->setLabel(get_vocab('match_type'))
+        ->setLabelAttribute('title', get_vocab('ctrl_click_type'))
+        ->setControlAttributes(array('id'       => 'typematch',
+                                     'name'     => 'typematch[]',
+                                     'multiple' => true,
+                                     'size'     => '5'))
+        ->addSelectOptions($options, $data['typematch']);
+  
+  return $field;
+}
+
+
 function get_fieldset_search_criteria($data)
 {
   global $report_search_field_order;
@@ -96,6 +128,10 @@ function get_fieldset_search_criteria($data)
         
       case 'roommatch':
         $fieldset->addElement(get_field_roommatch($data));
+        break;
+        
+      case 'typematch':
+        $fieldset->addElement(get_field_typematch($data));
         break;
         
       default:

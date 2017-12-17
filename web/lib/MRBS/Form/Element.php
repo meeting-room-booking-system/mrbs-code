@@ -109,14 +109,18 @@ class Element
   
   public function addElement(Element $element, $key=null)
   {
-    if (isset($key))
+    if (isset($element))
     {
-      $this->elements[$key] = $element;
+      if (isset($key))
+      {
+        $this->elements[$key] = $element;
+      }
+      else
+      {
+        $this->elements[] = $element;
+      }
     }
-    else
-    {
-      $this->elements[] = $element;
-    }
+    
     return $this;
   }
   
