@@ -3,8 +3,83 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputDatalist;
+use MRBS\Form\FieldInputDate;
 
 require "defaultincludes.inc";
+
+
+function format_date($year, $month, $day)
+{
+  return sprintf("%04d-%02d-%02d", $year, $month, $day);
+}
+
+
+function get_field_from_date($data)
+{
+  $value = format_date($data['from_year'], $data['from_month'], $data['from_day']);
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('report_start'))
+        ->setControlAttributes(array('name'     => 'from_date',
+                                     'value'    => $value,
+                                     'required' => true));
+  return $field;
+}
+
+
+function get_field_to_date($data)
+{
+  $value = format_date($data['to_year'], $data['to_month'], $data['to_day']);
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('report_end'))
+        ->setControlAttributes(array('name'     => 'to_date',
+                                     'value'    => $value,
+                                     'required' => true));
+  return $field;
+}
+
+
+function get_field_areamatch($data)
+{        
+  $field = new FieldInputDatalist();
+  $options = get_area_names($all=true);
+  $field->setLabel(get_vocab('match_area'))
+        ->setControlAttributes(array('name'     => 'areamatch',
+                                     'value'    => $data['areamatch']));
+  return $field;
+}
+
+
+function get_fieldset_search_criteria($data)
+{
+  global $report_search_field_order;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('search_criteria'));
+  
+  foreach ($report_search_field_order as $key)
+  {
+    switch ($key)
+    {
+      case 'report_start':
+        $fieldset->addElement(get_field_from_date($data));
+        break;
+        
+      case 'report_end':
+        $fieldset->addElement(get_field_to_date($data));
+        break;
+        
+      case 'areamatch':
+        $fieldset->addElement(get_field_areamatch($data));
+        break;
+        
+      default:
+        break;
+    } // switch
+  } // foreach
+  
+  return $fieldset; 
+}
 
 
 // Generates a text input field of some kind.   If $select_options or $datalist_options
@@ -1572,6 +1647,18 @@ if ($output_form)
  
   $form = new Form();
   
+  $search_var_keys = array('from_day', 'from_month', 'from_year',
+                           'to_day', 'to_month', 'to_year',
+                           'areamatch', 'roommatch',
+                           'typematch', 'namematch', 'descrmatch', 'creatormatch',
+                           'match_private', 'match_confirmed', 'match_approved',
+                           'custom_fields');
+  $search_vars = array();
+  foreach($search_var_keys as $var)
+  {
+    $search_vars[$var] = $$var;
+  }
+  
   $attributes = array('id'     => 'report_form',
                       'class'  => 'standard',
                       'action' => 'report.php',
@@ -1580,7 +1667,8 @@ if ($output_form)
   $form->setAttributes($attributes);
   
   $outer_fieldset = new ElementFieldset();
-  $outer_fieldset->addLegend(get_vocab('report_on'));
+  $outer_fieldset->addLegend(get_vocab('report_on'))
+                 ->addElement(get_fieldset_search_criteria($search_vars));
   
   $form->addElement($outer_fieldset);
   

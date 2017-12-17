@@ -314,14 +314,18 @@ init = function(args) {
   // fieldset.
   ?>
   var labels = $('.standard fieldset > div > label');
-  
+   
   function getMaxWidth (selection) {
     return Math.max.apply(null, selection.map(function() {
       return $(this).width();
     }).get());
   };
   
-  labels.width(getMaxWidth(labels));
+  <?php
+  // Add on one pixel to avoid what look to be like rounding
+  // problems in some browsers
+  ?>
+  labels.width(getMaxWidth(labels) + 1);
   
   <?php // Add a fallback for browsers that don't support the time input ?>
   $('[type="time"]').each(function() {
