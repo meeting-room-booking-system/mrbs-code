@@ -3,7 +3,7 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
-use MRBS\Form\FieldDatalist;
+use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 
 require "defaultincludes.inc";
@@ -41,7 +41,7 @@ function get_field_to_date($data)
 
 function get_field_areamatch($data)
 {        
-  $field = new FieldDatalist();
+  $field = new FieldInputDatalist();
   $options = get_area_names($all=true);
   $field->setLabel(get_vocab('match_area'))
         ->setControlAttributes(array('name'  => 'areamatch',

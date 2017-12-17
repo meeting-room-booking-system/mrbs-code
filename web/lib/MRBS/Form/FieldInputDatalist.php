@@ -3,13 +3,13 @@
 namespace MRBS\Form;
 
 
-class FieldDatalist extends Field
+class FieldInputDatalist extends Field
 {
   
   public function __construct()
   {
     parent::__construct();
-    $this->addControl(new ElementDatalist());
+    $this->addControl(new ElementInputDatalist());
   }
   
   
