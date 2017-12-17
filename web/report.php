@@ -47,6 +47,26 @@ function get_field_areamatch($data)
         ->setControlAttributes(array('name'  => 'areamatch',
                                      'value' => $data['areamatch']))
         ->addDatalistOptions($options, false);
+        
+  return $field;
+}
+
+
+function get_field_roommatch($data)
+{
+  global $tbl_room;
+  
+  $field = new FieldInputDatalist();
+  
+  // (We need DISTINCT because it's possible to have two rooms of the same name
+  // in different areas)
+  $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
+  
+  $field->setLabel(get_vocab('match_room'))
+        ->setControlAttributes(array('name'  => 'roommatch',
+                                     'value' => $data['roommatch']))
+        ->addDatalistOptions($options, false);
+        
   return $field;
 }
 
@@ -72,6 +92,10 @@ function get_fieldset_search_criteria($data)
         
       case 'areamatch':
         $fieldset->addElement(get_field_areamatch($data));
+        break;
+        
+      case 'roommatch':
+        $fieldset->addElement(get_field_roommatch($data));
         break;
         
       default:
