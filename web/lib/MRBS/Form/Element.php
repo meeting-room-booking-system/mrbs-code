@@ -345,9 +345,10 @@ class Element
     
     foreach ($this->attributes as $key => $value)
     {
-      if (isset($value) && ($value === false))
+      if (!isset($value) || ($value === false) || ($value === ''))
       {
-        // a boolean attribute that should be omitted
+        // a boolean attribute, or else an empty attribute, that
+        // should be omitted
         continue;
       }
       
