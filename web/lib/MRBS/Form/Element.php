@@ -24,6 +24,8 @@ class Element
   private $text = null;
   private $text_at_start = false;
   private $elements = array();
+  private $next = null;
+  private $prev = null;
   
   
   public function __construct($tag, $self_closing=false)
@@ -134,6 +136,42 @@ class Element
     unset($this->elements[$key]);
     return $this;
   }
+   
+  
+  public function next(Element $element=null)
+  {
+    if (isset($element))
+    {
+      $this->next = $element;
+      return $this;
+    }
+    elseif (isset($this->next))
+    {
+      return $this->next;
+    }
+    else
+    {
+      return null;
+    }
+  }
+  
+  
+  public function prev(Element $element=null)
+  {
+    if (isset($element))
+    {
+      $this->prev = $element;
+      return $this;
+    }
+    elseif (isset($this->prev))
+    {
+      return $this->prev;
+    }
+    else
+    {
+      return null;
+    }
+  }
   
   
   public function addClass($class)
@@ -189,17 +227,25 @@ class Element
     {
       foreach ($options as $key => $value)
       {
+        $option = new ElementOption();
+        
+        if ($associative)
+        {
+          $option->setAttribute('value', $key);
+        }
+        
+        $option->setText($value);
+        
         if (!$associative)
         {
           $key = $value;
         }
-        $option = new ElementOption();
-        $option->setAttribute('value', $key)
-               ->setText($value);
+        
         if (in_array($key, $selected))
         {
           $option->setAttribute('selected');
         }
+        
         $this->addElement($option);
       }
     }
@@ -286,8 +332,15 @@ class Element
   // affect what the browser displays on the screen.
   public function toHTML($no_whitespace=false)
   {
-    $terminator = ($no_whitespace) ? '' : "\n";
     $html = "";
+        
+    $prev = $this->prev();
+    if (isset($prev))
+    {
+      $html .= $prev->toHTML();
+    }
+    
+    $terminator = ($no_whitespace) ? '' : "\n";
     $html .= "<" . $this->tag;
     
     foreach ($this->attributes as $key => $value)
@@ -339,6 +392,12 @@ class Element
       }
 
       $html .= "</" . $this->tag . ">$terminator";
+    }
+    
+    $next = $this->next();
+    if (isset($next))
+    {
+      $html .= $next->toHTML();
     }
     
     return $html;
