@@ -21,6 +21,18 @@ function format_date($year, $month, $day)
 }
 
 
+function trim_leading_zeros($string)
+{
+  return ltrim($string, '0');
+}
+
+
+function split_date($date)
+{
+  return array_map(__NAMESPACE__ . "\\trim_leading_zeros", explode('-', $date));
+}
+
+
 function get_field_from_date($data)
 {
   $value = format_date($data['from_year'], $data['from_month'], $data['from_day']);
@@ -1317,15 +1329,14 @@ if ($cli_mode)
   ini_set("include_path", dirname($PHP_SELF));
 }
 
-$to_date = getdate(mktime(0, 0, 0, $month, $day + $default_report_days, $year));
+$default_from_time = mktime(0, 0, 0, $month, $day, $year);
+$default_to_time = mktime(0, 0, 0, $month, $day + $default_report_days, $year);
+$default_from_date = date('Y-m-d', $default_from_time);
+$default_to_date = date('Y-m-d', $default_to_time);
 
 // Get non-standard form variables
-$from_day = get_form_var('from_day', 'int', $day);
-$from_month = get_form_var('from_month', 'int', $month);
-$from_year = get_form_var('from_year', 'int', $year);
-$to_day = get_form_var('to_day', 'int', $to_date['mday']);
-$to_month = get_form_var('to_month', 'int', $to_date['mon']);
-$to_year = get_form_var('to_year', 'int', $to_date['year']);
+$from_date = get_form_var('from_date', 'string', $default_from_date);
+$to_date = get_form_var('to_date', 'string', $default_to_date);
 $creatormatch = get_form_var('creatormatch', 'string');
 $areamatch = get_form_var('areamatch', 'string');
 $roommatch = get_form_var('roommatch', 'string');
@@ -1342,6 +1353,9 @@ $match_private = get_form_var('match_private', 'int', BOOLEAN_MATCH_BOTH);
 $phase = get_form_var('phase', 'int', 1);
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
+
+list($from_year, $from_month, $from_day) = split_date($from_date);
+list($to_year, $to_month, $to_day) = split_date($to_date);
 
 // Check the user is authorised for this page
 if ($cli_mode)

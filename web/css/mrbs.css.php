@@ -1353,7 +1353,13 @@ div#div_summary {padding-top: 3em}
 #div_summary td {text-align: right}
 #div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
-p.report_entries {font-weight: bold}
+
+p.report_entries {
+  float: left;
+  clear: left;
+  font-weight: bold
+}
+
 button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
