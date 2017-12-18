@@ -180,6 +180,43 @@ function get_field_match_approved($data)
 }
 
 
+function get_field_custom($data, $key)
+{
+  $var = "match_$key";
+  global $$var;
+  
+  global $tbl_entry,
+         $field_natures, $field_lengths;
+         
+  $name = $var;
+  $label = get_loc_field_name($tbl_entry, $key);
+         
+  // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($field_natures[$key] == 'boolean') || 
+      (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+  {
+    $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                     BOOLEAN_MATCH_TRUE  => get_vocab('with'),
+                     BOOLEAN_MATCH_FALSE => get_vocab('without'));
+    $value = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
+    $field = new FieldInputRadioGroup();
+    $field->setLabel($label)
+          ->addRadioOptions($options, $name, $value, true);
+  }
+  else
+  {
+    $params = array('label' => $label,
+                    'name'  => $name,
+                    'value' => (isset($$var)) ? $$var : null,
+                    'field' => "entry.$key");
+    $field = get_field_report_input($params);
+  }
+  
+  return $field;
+}
+
+
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
 //   $params  an array indexed by 'label', 'name', 'value' and 'field'
@@ -296,6 +333,8 @@ function get_fieldset_search_criteria($data)
         break;
         
       default:
+        // Must be a custom field
+        $fieldset->addElement(get_field_custom($data, $key));
         break;
     } // switch
   } // foreach
