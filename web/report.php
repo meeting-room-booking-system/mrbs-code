@@ -373,6 +373,17 @@ function get_field_output_format($data)
 }
 
 
+function get_field_sortby($data)
+{
+  $options = array('r' => get_vocab('sort_room'),
+                   's' => get_vocab('sort_rep_time'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('sort_rep'))
+        ->addRadioOptions($options, 'sortby', $data['sortby'], true);
+  return $field;
+}
+
+
 function get_fieldset_presentation_options($data)
 {
   global $report_presentation_field_order;
@@ -392,6 +403,9 @@ function get_fieldset_presentation_options($data)
         $fieldset->addElement(get_field_output_format($data));
         break;
       
+      case 'sortby':
+        $fieldset->addElement(get_field_sortby($data));
+        break;
         
       default:
         break;  
