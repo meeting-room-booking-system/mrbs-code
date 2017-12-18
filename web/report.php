@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
 
@@ -187,6 +188,14 @@ function get_fieldset_search_criteria($data)
                         'name'  => 'namematch',
                         'value' => $data['namematch'],
                         'field' => 'entry.name');
+        $fieldset->addElement(get_field_report_input($params));
+        break;
+        
+      case 'descrmatch':
+        $params = array('label' => get_vocab('match_descr'),
+                        'name'  => 'descrmatch',
+                        'value' => $data['descrmatch'],
+                        'field' => 'entry.description');
         $fieldset->addElement(get_field_report_input($params));
         break;
       
