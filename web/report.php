@@ -198,6 +198,14 @@ function get_fieldset_search_criteria($data)
                         'field' => 'entry.description');
         $fieldset->addElement(get_field_report_input($params));
         break;
+        
+      case 'creatormatch':
+        $params = array('label' => get_vocab('createdby'),
+                        'name'  => 'creatormatch',
+                        'value' => $data['creatormatch'],
+                        'field' => 'entry.create_by');
+        $fieldset->addElement(get_field_report_input($params));
+        break;
       
         
       default:
