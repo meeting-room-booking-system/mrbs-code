@@ -159,6 +159,27 @@ function get_field_match_confirmed($data)
 }
 
 
+function get_field_match_approved($data)
+{
+  global $approval_somewhere;
+  
+  // Only show this part of the form if there are areas that require approval
+  if (!$approval_somewhere)
+  {
+    return null;
+  }
+  
+  $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                   BOOLEAN_MATCH_TRUE  => get_vocab('approved'),
+                   BOOLEAN_MATCH_FALSE => get_vocab('awaiting_approval'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('approval_status'))
+        ->addRadioOptions($options, 'match_approved', $data['match_approved'], true);
+  
+  return $field;
+}
+
+
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
 //   $params  an array indexed by 'label', 'name', 'value' and 'field'
@@ -269,7 +290,10 @@ function get_fieldset_search_criteria($data)
       case 'match_confirmed':
         $fieldset->addElement(get_field_match_confirmed($data));
         break;
-      
+        
+      case 'match_approved':
+        $fieldset->addElement(get_field_match_approved($data));
+        break;
         
       default:
         break;
