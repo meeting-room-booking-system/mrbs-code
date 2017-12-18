@@ -343,10 +343,36 @@ function get_fieldset_search_criteria($data)
 }
 
 
+function get_field_output($data)
+{
+  $options = array(REPORT  => get_vocab('report'),
+                   SUMMARY => get_vocab('summary'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('output'))
+        ->addRadioOptions($options, 'output', $data['output'], true);
+  return $field;
+}
+
+
 function get_fieldset_presentation_options($data)
 {
+  global $report_presentation_field_order;
+  
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('presentation_options'));
+  
+  foreach ($report_presentation_field_order as $key)
+  {
+    switch ($key)
+    {
+      case 'output':
+        $fieldset->addElement(get_field_output($data));
+        break;
+        
+      default:
+        break;  
+    } // switch
+  } // foreach
   
   return $fieldset;
 }
@@ -1916,6 +1942,7 @@ if ($output_form)
  
   $form = new Form();
   
+  // Search variables
   $search_var_keys = array('from_day', 'from_month', 'from_year',
                            'to_day', 'to_month', 'to_year',
                            'areamatch', 'roommatch',
@@ -1928,6 +1955,15 @@ if ($output_form)
     $search_vars[$var] = $$var;
   }
   
+  // Presentation variables
+  $presentation_var_keys = array('output', 'output_format',
+                                 'sortby', 'sumby');
+  $presentation_vars = array();
+  foreach($presentation_var_keys as $var)
+  {
+    $presentation_vars[$var] = $$var;
+  }
+  
   $attributes = array('id'     => 'report_form',
                       'class'  => 'standard',
                       'action' => 'report.php',
@@ -1938,7 +1974,7 @@ if ($output_form)
   $outer_fieldset = new ElementFieldset();
   $outer_fieldset->addLegend(get_vocab('report_on'))
                  ->addElement(get_fieldset_search_criteria($search_vars))
-                 ->addElement(get_fieldset_presentation_options($presentatation_vars));
+                 ->addElement(get_fieldset_presentation_options($presentation_vars));
   
   $form->addElement($outer_fieldset);
   
@@ -1963,14 +1999,7 @@ if ($output_form)
   }
   generate_search_criteria($search_vars);
   
-  // Then the presentation options fieldset
-  $presentation_var_keys = array('output', 'output_format',
-                                 'sortby', 'sumby');
-  $presentation_vars = array();
-  foreach($presentation_var_keys as $var)
-  {
-    $presentation_vars[$var] = $$var;
-  }
+
   generate_presentation_options($presentation_vars);
         
   // Then the submit buttons
