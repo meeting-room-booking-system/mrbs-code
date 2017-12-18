@@ -343,6 +343,14 @@ function get_fieldset_search_criteria($data)
 }
 
 
+function get_fieldset_presentation_options($data)
+{
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('presentation_options'));
+  
+  return $fieldset;
+}
+
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
 function generate_report_input($params)
@@ -1929,7 +1937,8 @@ if ($output_form)
   
   $outer_fieldset = new ElementFieldset();
   $outer_fieldset->addLegend(get_vocab('report_on'))
-                 ->addElement(get_fieldset_search_criteria($search_vars));
+                 ->addElement(get_fieldset_search_criteria($search_vars))
+                 ->addElement(get_fieldset_presentation_options($presentatation_vars));
   
   $form->addElement($outer_fieldset);
   
