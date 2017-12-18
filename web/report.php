@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -99,6 +100,41 @@ function get_field_typematch($data)
                                      'multiple' => true,
                                      'size'     => '5'))
         ->addSelectOptions($options, $data['typematch']);
+  
+  return $field;
+}
+
+
+function get_field_match_private($data)
+{
+  global $user_level;
+  
+  $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
+  
+  // Only show this part of the form if there are areas that allow private bookings
+  if (!$private_somewhere)
+  {
+    return null;
+  }
+  
+  // If they're not logged in then there's no point in showing this part of the form because
+  // they'll only be able to see public bookings anyway (and we don't want to alert them to
+  // the existence of private bookings)
+  if (empty($user_level))
+  {
+    $field = new ElementInputHidden();
+    $field->setAttributes(array('name'  => 'match_private',
+                                'value' => BOOLEAN_MATCH_FALSE));
+  }
+  else
+  {
+    $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                     BOOLEAN_MATCH_FALSE => get_vocab('default_public'),
+                     BOOLEAN_MATCH_TRUE  => get_vocab('default_private'));
+    $field = new FieldInputRadioGroup();
+    $field->setLabel(get_vocab('privacy_status'))
+          ->addRadioOptions($options, 'match_private', $data['match_private'], true);
+  }
   
   return $field;
 }
@@ -205,6 +241,10 @@ function get_fieldset_search_criteria($data)
                         'value' => $data['creatormatch'],
                         'field' => 'entry.create_by');
         $fieldset->addElement(get_field_report_input($params));
+        break;
+        
+      case 'match_private':
+        $fieldset->addElement(get_field_match_private($data));
         break;
       
         
