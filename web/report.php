@@ -384,6 +384,18 @@ function get_field_sortby($data)
 }
 
 
+function get_field_sumby($data)
+{
+  $options = array('d' => get_vocab('sum_by_descrip'),
+                   'c' => get_vocab('sum_by_creator'),
+                   't' => get_vocab('sum_by_type'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('summarize_by'))
+        ->addRadioOptions($options, 'sumby', $data['sumby'], true);
+  return $field;
+}
+
+
 function get_fieldset_presentation_options($data)
 {
   global $report_presentation_field_order;
@@ -405,6 +417,10 @@ function get_fieldset_presentation_options($data)
       
       case 'sortby':
         $fieldset->addElement(get_field_sortby($data));
+        break;
+        
+      case 'sumby':
+        $fieldset->addElement(get_field_sumby($data));
         break;
         
       default:
