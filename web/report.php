@@ -354,6 +354,25 @@ function get_field_output($data)
 }
 
 
+function get_field_output_format($data)
+{
+  global $times_somewhere;
+  
+  $options = array(OUTPUT_HTML => get_vocab('html'),
+                   OUTPUT_CSV  => get_vocab('csv'));
+  // The iCal output button
+  if ($times_somewhere) // We can't do iCalendars for periods yet
+  {
+    $options[OUTPUT_ICAL] = get_vocab('ical');
+  }
+  
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('format'))
+        ->addRadioOptions($options, 'output_format', $data['output_format'], true);
+  return $field;
+}
+
+
 function get_fieldset_presentation_options($data)
 {
   global $report_presentation_field_order;
@@ -368,6 +387,11 @@ function get_fieldset_presentation_options($data)
       case 'output':
         $fieldset->addElement(get_field_output($data));
         break;
+        
+      case 'output_format':
+        $fieldset->addElement(get_field_output_format($data));
+        break;
+      
         
       default:
         break;  
