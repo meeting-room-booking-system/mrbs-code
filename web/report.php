@@ -107,9 +107,7 @@ function get_field_typematch($data)
 
 function get_field_match_private($data)
 {
-  global $user_level;
-  
-  $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
+  global $user_level, $private_somewhere;
   
   // Only show this part of the form if there are areas that allow private bookings
   if (!$private_somewhere)
@@ -135,6 +133,27 @@ function get_field_match_private($data)
     $field->setLabel(get_vocab('privacy_status'))
           ->addRadioOptions($options, 'match_private', $data['match_private'], true);
   }
+  
+  return $field;
+}
+
+
+function get_field_match_confirmed($data)
+{
+  global $confirmation_somewhere;
+  
+  // Only show this part of the form if there are areas that allow tentative bookings
+  if (!$confirmation_somewhere)
+  {
+    return null;
+  }
+  
+  $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                   BOOLEAN_MATCH_TRUE  => get_vocab('confirmed'),
+                   BOOLEAN_MATCH_FALSE => get_vocab('tentative'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('confirmation_status'))
+        ->addRadioOptions($options, 'match_confirmed', $data['match_confirmed'], true);
   
   return $field;
 }
@@ -245,6 +264,10 @@ function get_fieldset_search_criteria($data)
         
       case 'match_private':
         $fieldset->addElement(get_field_match_private($data));
+        break;
+        
+      case 'match_confirmed':
+        $fieldset->addElement(get_field_match_confirmed($data));
         break;
       
         
