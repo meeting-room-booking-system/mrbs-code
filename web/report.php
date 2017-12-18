@@ -7,6 +7,7 @@ use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -430,6 +431,20 @@ function get_fieldset_presentation_options($data)
   
   return $fieldset;
 }
+
+
+function get_fieldset_submit_buttons()
+{
+  $fieldset = new ElementFieldset();
+
+  $field = new FieldInputSubmit();
+  $field->setControlAttribute('value', get_vocab('submitquery'));
+  
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
 
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
@@ -2023,12 +2038,14 @@ if ($output_form)
                       'action' => 'report.php',
                       'method' => 'post');
                     
-  $form->setAttributes($attributes);
+  $form->setAttributes($attributes)
+       ->addHiddenInput('phase', '2');
   
   $outer_fieldset = new ElementFieldset();
   $outer_fieldset->addLegend(get_vocab('report_on'))
                  ->addElement(get_fieldset_search_criteria($search_vars))
-                 ->addElement(get_fieldset_presentation_options($presentation_vars));
+                 ->addElement(get_fieldset_presentation_options($presentation_vars))
+                 ->addElement(get_fieldset_submit_buttons());
   
   $form->addElement($outer_fieldset);
   
