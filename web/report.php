@@ -103,6 +103,54 @@ function get_field_typematch($data)
 }
 
 
+// Generates a text input field of some kind.   If $select_options or $datalist_options
+// is set then it will be a datalist, otherwise it will be a simple input field
+//   $params  an array indexed by 'label', 'name', 'value' and 'field'
+function get_field_report_input($params)
+{
+  global $select_options, $datalist_options;
+  
+  // If $select_options is defined we want to force a <datalist> and not a
+  // <select>.  That's because if we have options such as
+  // ('tea', 'white coffee', 'black coffee') we want the user to be able to type
+  // 'coffee' which will match both 'white coffee' and 'black coffee'.
+  if (isset($params['field']))
+  {
+    if (!empty($select_options[$params['field']]))
+    {
+      $options = $select_options[$params['field']];
+    }
+    elseif (!empty($datalist_options[$params['field']]))
+    {
+      $options = $datalist_options[$params['field']];
+    }
+  }
+  
+  if (isset($options))
+  {
+    // Remove any element with an empty key.  This will just be associated with a
+    // required select element and the value will be meaningless for a search.
+    unset($options['']);
+    // Remove any elements with an empty value.   These will be meaningless for a search.
+    $options = array_diff($options, array(''));
+    $field = new FieldInputDatalist();
+    // We force the values to be used and not the keys.   We will convert
+    // back to values when we construct the SQL query.
+    $field->addDatalistOptions($options, false);
+  }
+  else
+  {
+    $field = new FieldInputText();
+  }
+  
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name'  => $params['name'],
+                                     'value' => $params['value']));
+  
+  return $field;
+}
+
+
 function get_fieldset_search_criteria($data)
 {
   global $report_search_field_order;
@@ -133,6 +181,15 @@ function get_fieldset_search_criteria($data)
       case 'typematch':
         $fieldset->addElement(get_field_typematch($data));
         break;
+        
+      case 'namematch':
+        $params = array('label' => get_vocab('match_entry'),
+                        'name'  => 'namematch',
+                        'value' => $data['namematch'],
+                        'field' => 'entry.name');
+        $fieldset->addElement(get_field_report_input($params));
+        break;
+      
         
       default:
         break;
