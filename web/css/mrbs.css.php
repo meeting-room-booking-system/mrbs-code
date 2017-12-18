@@ -858,7 +858,7 @@ div#custom_html {
 
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */
-/*   used in EDIT_ENTRY.PHP, REPORT.PHP,             */
+/*   used in EDIT_ENTRY.PHP                          */
 /*   SEARCH.PHP                                      */
 
 <?php
@@ -879,11 +879,6 @@ $edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.
 // Specific to the "import" form
 $import_left_col_max_width     = '12';      // em
 
-// Specific to the "report" form
-$report_left_col_max_width     = '12';      // em
-$report_form_min_width         = $report_left_col_max_width + $input_width + $general_gap;
-$report_form_min_width         = number_format($report_form_min_width, 1, '.', '');   // get rid of any commas
-
 // Specific to the "search" form
 $search_left_col_max_width     = '8';       // em
 $search_form_min_width         = $search_left_col_max_width + $input_width + $general_gap;
@@ -902,7 +897,6 @@ $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.',
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 .edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
-.report         form.form_general {min-width: <?php echo $report_form_min_width ?>em}
 .search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
@@ -928,7 +922,6 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 }
 
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
-.report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
@@ -1003,10 +996,9 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 }
 
 div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
-div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
 div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#import_submit input, #report_submit input, #search_submit input, #db_logon_submit input
+#import_submit input, #search_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 
 div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
@@ -1362,8 +1354,6 @@ div#div_summary {padding-top: 3em}
 #div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
 p.report_entries {font-weight: bold}
-.report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
-.report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
 button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
