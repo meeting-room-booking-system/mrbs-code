@@ -157,5 +157,25 @@ init = function() {
       
       $('.ui-datepicker').draggable();
     });
+    
+  <?php // New style datepickers ?>
+  $('input[type="date"]').each(function() {
+      var input = $(this);
+      var thisDate = $(this).val();
+      input.attr('type', 'text')
+           .addClass('date')
+           .datepicker();
+      <?php
+      // Initialise the date in the field.   Our date is in yy-mm-dd
+      // format, so we have to save the current datepicker format,
+      // change the format, set the date and then restore the old format.
+      // (Note: the other way of doing it by using a Date object presents
+      // timezone complications).
+      ?>
+      var dateFormat = input.datepicker('option', 'dateFormat');
+      input.datepicker('option', 'dateFormat', 'yy-mm-dd');
+      input.datepicker('setDate', new Date(thisDate));
+      input.datepicker('option', 'dateFormat', dateFormat);
+    });
 };
 

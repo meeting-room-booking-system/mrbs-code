@@ -811,6 +811,12 @@ div#custom_html {
 .standard input[type="text"], .standard input[type="email"], .standard textarea {
   width: 20em;
 }
+
+.standard input.date {
+  width: 6.5em;
+  text-align: center;
+}
+
 .standard input[type="number"] {
   width: 4em;
 }
