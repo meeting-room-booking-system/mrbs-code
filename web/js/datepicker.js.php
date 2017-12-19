@@ -75,8 +75,7 @@ init = function() {
       duration: 'fast',
       showWeek: <?php echo ($view_week_number) ? 'true' : 'false' ?>,
       firstDay: <?php echo $weekstarts ?>,
-      altFormat: 'yy-mm-dd',
-      onSelect: function(dateText, inst) {datepickerSelect(inst);}
+      altFormat: 'yy-mm-dd'
     });
     
   <?php
@@ -130,9 +129,10 @@ init = function() {
       $('<input>').attr('class', 'date')
                   .attr('type', 'text')
                   .attr('id', baseId)
-                  .datepicker({altField: '#' + baseId + '_alt',
-                               disabled: disabled,
-                               yearRange: minYear + ':' + maxYear})
+                  .datepicker({altField:  '#' + baseId + '_alt',
+                               disabled:  disabled,
+                               yearRange: minYear + ':' + maxYear,
+                               onSelect:  function(dateText, inst) {datepickerSelect(inst);}})
                   .datepicker('setDate', initialDate)
                   .change(function() {
                       <?php // Allow the input field to be updated manually ?>
