@@ -160,11 +160,26 @@ init = function() {
     
   <?php // New style datepickers ?>
   $('input[type="date"]').each(function() {
-      var input = $(this);
-      var thisDate = $(this).val();
-      input.attr('type', 'text')
+      var input = $(this),
+          thisDate = input.val(),
+          thisName = input.attr('name'),
+          altId = thisName + '_alt';
+      
+      <?php
+      // Create a hidden field, which will be the alt field, that will
+      // hold the date value in the standard format.
+      ?>
+      $('<input>').attr('type', 'hidden')
+                  .attr('id', altId)
+                  .attr('name', thisName)
+                  .val(thisDate)
+                  .insertAfter(input);
+          
+      input.attr('type','text')
+           .removeAttr('name')
            .addClass('date')
-           .datepicker();
+           .datepicker({altField: '#' + altId});
+           
       <?php
       // Initialise the date in the field.   Our date is in yy-mm-dd
       // format, so we have to save the current datepicker format,
