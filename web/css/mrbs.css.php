@@ -1219,6 +1219,15 @@ form#add_new_user {margin-left: 1em}
   text-align: center
 }
 
+form#show_my_entries input[type="submit"] {
+  display: inline;
+  border: none;
+  background: none;
+  color: <?php echo $anchor_link_color_banner ?>;
+  cursor: pointer;
+  padding: 0.3em 0;
+}
+
 <?php
 // The rules below are concerned with keeping the date selector in the header a constant width, so
 // that the header doesn't jump around when the page is loaded

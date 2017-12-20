@@ -88,11 +88,19 @@ function print_login_form($action, $target_url, $returl)
 // Generate the "You are xxxx" link, which gives a report on the user's upcoming bookings.
 function print_report_link($user)
 {
-  $href = "report.php?creatormatch=" . urlencode($user) . "&amp;phase=2";
-  $html = "<a href=\"$href\" title=\"" . get_vocab('show_my_entries') . "\">" .
-           get_vocab('you_are') . " " . htmlspecialchars($user) .
-          "</a>\n";
-  echo $html;
+  $form = new Form();
+  $form->setAttributes(array('id'     => 'show_my_entries',
+                             'action' => 'report.php',
+                             'method' => 'post'))
+       ->addHiddenInputs(array('phase'        => '2',
+                               'creatormatch' => $user));
+                               
+  $submit = new ElementInputSubmit();
+  $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
+                               'value' => get_vocab('you_are') . " $user"));
+  $form->addElement($submit);
+                               
+  $form->render();
 }
 
 
