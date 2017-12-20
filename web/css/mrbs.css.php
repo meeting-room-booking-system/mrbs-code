@@ -1219,6 +1219,22 @@ form#add_new_user {margin-left: 1em}
 #form_nav input[type="submit"]
 {
   margin-left: 0.5em;
+form#show_my_entries input[type="submit"] {
+  display: inline;
+  border: none;
+  background: none;
+  color: <?php echo $anchor_link_color_banner ?>;
+  cursor: pointer;
+  padding: 0.3em 0;
+}
+
+<?php
+// The rules below are concerned with keeping the date selector in the header a constant width, so
+// that the header doesn't jump around when the page is loaded
+?>
+
+.js .banner #Form1 select {
+  display: none;
 }
 
 table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}

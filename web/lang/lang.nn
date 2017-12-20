@@ -190,7 +190,6 @@ $vocab["users.email"]        = "Epost-adresse";
 $vocab["users.password"]     = "Passord";
 $vocab["users.level"]        = "Rettigheter";
 $vocab["unknown_user"]       = "ikke innlogget";
-$vocab["you_are"]            = "Bruker: ";
 $vocab["login"]              = "Logg inn";
 $vocab["logoff"]             = "Logg ut";
 $vocab["user_level"]         = "Rettigheter";

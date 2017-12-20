@@ -215,7 +215,6 @@ $vocab["users.name"]         = "Utente";
 $vocab["users.password"]     = "Password";
 $vocab["unknown_user"]       = "Utente sconosciuto";
 $vocab["users.level"]        = "Diritti";
-$vocab["you_are"]            = "Tu sei";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log Off";
 $vocab["username_or_email"]  = "Nome utente o indirizzo email";

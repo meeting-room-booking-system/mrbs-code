@@ -198,7 +198,6 @@ $vocab["users.name"]          = "名前";
 $vocab["users.password"]      = "パスワード";
 $vocab["users.level"]         = "権限";
 $vocab["unknown_user"]       = "未知のユーザ";
-$vocab["you_are"]            = "あなたは";
 $vocab["login"]              = "ログイン";
 $vocab["logoff"]             = "ログオフ";
 $vocab["username_or_email"]  = "ユーザー名またはメールアドレス";

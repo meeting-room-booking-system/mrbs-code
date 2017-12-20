@@ -184,7 +184,6 @@ $vocab["users.name"]          = "Ad";
 $vocab["users.password"]      = "Şifre";
 $vocab["users.level"]         = "Haklar";
 $vocab["unknown_user"]       = "Bilinmeyen kullanıcı";
-$vocab["you_are"]            = "Siz";
 $vocab["login"]              = "Giriş";
 $vocab["logoff"]             = "Çıkış";
 $vocab["username_or_email"]  = "Kullanıcı adı ya da e-posta adresi";

@@ -219,7 +219,6 @@ $vocab["users.password"]     = "Parola";
 $vocab["users.level"]        = "Drepturi";
 $vocab["users.timestamp"]    = "Ultima actualizare";
 $vocab["unknown_user"]       = "Utilizator necunoscut";
-$vocab["you_are"]            = "Esti";
 $vocab["login"]              = "Autentificare";
 $vocab["logoff"]             = "Deconectare";
 $vocab["username_or_email"]  = "Nume sau adresa de email";

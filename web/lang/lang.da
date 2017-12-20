@@ -103,7 +103,6 @@ $vocab["users.name"]          = "Navn";
 $vocab["users.password"]      = "Kodeord";
 $vocab["users.level"]         = "Rettigheder";
 $vocab["unknown_user"]       = "Ukendt bruger";
-$vocab["you_are"]            = "Du er";
 $vocab["login"]              = "Log ind";
 $vocab["logoff"]             = "Log ud";
 $vocab["username_or_email"]  = "Brugernavn eller e-mailadresse";

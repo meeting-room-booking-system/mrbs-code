@@ -112,7 +112,6 @@ $vocab["users.name"]          = "Uporabniško ime";
 $vocab["users.password"]      = "Geslo";
 $vocab["users.level"]         = "Pravice";
 $vocab["unknown_user"]       = "Neznan uporabnik";
-$vocab["you_are"]            = "Prijavljen";
 $vocab["login"]              = "Prijava";
 $vocab["logoff"]             = "Odjava";
 $vocab["username_or_email"]  = "Uporabniško ime ali e-poštni naslo";
