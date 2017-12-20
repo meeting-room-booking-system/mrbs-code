@@ -1216,9 +1216,10 @@ form#add_new_user {margin-left: 1em}
   text-align: center
 }
 
-#form_nav input[type="submit"]
-{
+#form_nav input[type="submit"] {
   margin-left: 0.5em;
+}
+
 form#show_my_entries input[type="submit"] {
   display: inline;
   border: none;
