@@ -1216,22 +1216,9 @@ form#add_new_user {margin-left: 1em}
   text-align: center
 }
 
-<?php
-// The rules below are concerned with keeping the date selector in the header a constant width, so
-// that the header doesn't jump around when the page is loaded
-?>
-
-.js .banner #Form1 select {
-  display: none;
-}
-
-.js .banner #Form1 span {
-  display: inline-block;
-  min-width: 7.5em;
-}
-
-.js .banner #Form1 input[type=submit] {
-  visibility: hidden;
+#form_nav input[type="submit"]
+{
+  margin-left: 0.5em;
 }
 
 table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}

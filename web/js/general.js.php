@@ -343,9 +343,7 @@ init = function(args) {
     }
   });
 
-  $('#Form1 input[type="submit"]').css('visibility', 'visible');
 
-  
   var floatingTables = $('table#day_main, table#week_main');
 
   createFloatingHeaders(floatingTables);

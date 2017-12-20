@@ -2108,6 +2108,28 @@ function some_area($field, $enabled=FALSE)
   return (db()->query1($sql) > 0);
 }
 
+
+// Returns a date in ISO 8601 format ('yyyy-mm-dd')
+function format_iso_date($year, $month, $day)
+{
+  return sprintf("%04d-%02d-%02d", $year, $month, $day);
+}
+
+
+function trim_leading_zeros($string)
+{
+  return ltrim($string, '0');
+}
+
+
+// Splits a date in ISO 8601 format ('yyyy-mm-dd') and returns an
+// array of year, month, day with leading zeros removed.
+function split_iso_date($date)
+{
+  return array_map(__NAMESPACE__ . "\\trim_leading_zeros", explode('-', $date));
+}
+
+
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber, $format=NULL)
 {

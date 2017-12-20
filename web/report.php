@@ -15,27 +15,9 @@ use MRBS\Form\FieldSelect;
 require "defaultincludes.inc";
 
 
-function format_date($year, $month, $day)
-{
-  return sprintf("%04d-%02d-%02d", $year, $month, $day);
-}
-
-
-function trim_leading_zeros($string)
-{
-  return ltrim($string, '0');
-}
-
-
-function split_date($date)
-{
-  return array_map(__NAMESPACE__ . "\\trim_leading_zeros", explode('-', $date));
-}
-
-
 function get_field_from_date($data)
 {
-  $value = format_date($data['from_year'], $data['from_month'], $data['from_day']);
+  $value = format_iso_date($data['from_year'], $data['from_month'], $data['from_day']);
   $field = new FieldInputDate();
   $field->setLabel(get_vocab('report_start'))
         ->setControlAttributes(array('name'     => 'from_date',
@@ -47,7 +29,7 @@ function get_field_from_date($data)
 
 function get_field_to_date($data)
 {
-  $value = format_date($data['to_year'], $data['to_month'], $data['to_day']);
+  $value = format_iso_date($data['to_year'], $data['to_month'], $data['to_day']);
   $field = new FieldInputDate();
   $field->setLabel(get_vocab('report_end'))
         ->setControlAttributes(array('name'     => 'to_date',
@@ -1354,8 +1336,8 @@ $phase = get_form_var('phase', 'int', 1);
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 
-list($from_year, $from_month, $from_day) = split_date($from_date);
-list($to_year, $to_month, $to_day) = split_date($to_date);
+list($from_year, $from_month, $from_day) = split_iso_date($from_date);
+list($to_year, $to_month, $to_day) = split_iso_date($to_date);
 
 // Check the user is authorised for this page
 if ($cli_mode)
