@@ -199,7 +199,6 @@ $vocab["users.name"]          = "Käyttäjätunnus";
 $vocab["users.password"]      = "Salasana";
 $vocab["users.level"]         = "Käyttöoikeudet";
 $vocab["unknown_user"]       = "Tuntematon käyttäjä";
-$vocab["you_are"]            = "Olet";
 $vocab["login"]              = "Kirjaudu sisään";
 $vocab["logoff"]             = "Kirjaudu ulos";
 $vocab["username_or_email"]  = "Käyttäjänimi tai sähköpostiosoite";

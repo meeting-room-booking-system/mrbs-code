@@ -168,7 +168,6 @@ $vocab["users.name"]         = "Nome utilizador";
 $vocab["users.password"]     = "Senha acesso";
 $vocab["users.level"]        = "Direitos";
 $vocab["unknown_user"]       = "Utilizador não identificado";
-$vocab["you_are"]            = "";
 $vocab["login"]              = "Aceder";
 $vocab["logoff"]             = "Sair";
 $vocab["username_or_email"]  = "Nome de utilizador ou endereço de email";

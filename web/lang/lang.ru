@@ -176,7 +176,6 @@ $vocab["users.name"]          = "Имя";
 $vocab["users.password"]      = "Пароль";
 $vocab["users.level"]         = "Права";
 $vocab["unknown_user"]       = "неизвестный пользователь";
-$vocab["you_are"]            = "Вы вошли как ";
 $vocab["login"]              = "Войти в систему";
 $vocab["logoff"]             = "Выйти из системы";
 $vocab["username_or_email"]  = "Имя пользователя или Email адрес";

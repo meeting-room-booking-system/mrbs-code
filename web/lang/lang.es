@@ -218,7 +218,6 @@ $vocab["users.name"]          = "Nombre";
 $vocab["users.password"]      = "Contraseña";
 $vocab["users.level"]         = "Privilegios";
 $vocab["unknown_user"]       = "Usuario Anónimo";
-$vocab["you_are"]            = "Hola";
 $vocab["login"]              = "Entrar";
 $vocab["logoff"]             = "Salir";
 

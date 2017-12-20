@@ -186,7 +186,6 @@ $vocab["users.name"]          = "ชื่อ";
 $vocab["users.password"]      = "พาสเวิร์ด";
 $vocab["users.level"]         = "สิทธิ";
 $vocab["unknown_user"]       = "ไม่รู้จักผู้ใช้";
-$vocab["you_are"]            = "คุณคือ";
 $vocab["login"]              = "เข้าสู่ระบบ";
 $vocab["logoff"]             = "ออกจากระบบ";
 $vocab["username_or_email"]  = "ชื่อผู้หรือที่อยู่อีเมล";

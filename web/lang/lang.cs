@@ -212,7 +212,6 @@ $vocab["users.name"]         = "Jméno";
 $vocab["users.password"]     = "Heslo";
 $vocab["users.level"]        = "Práva";
 $vocab["unknown_user"]       = "Neznámý uživatel";
-$vocab["you_are"]            = "Login:";
 $vocab["login"]              = "Přihlásit se";
 $vocab["logoff"]             = "Odhlásit se";
 $vocab["username_or_email"]  = "Uživatelské jméno nebo email";

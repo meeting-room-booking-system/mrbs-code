@@ -85,7 +85,7 @@ function print_login_form($action, $target_url, $returl)
 }
 
 
-// Generate the "You are xxxx" link, which gives a report on the user's upcoming bookings.
+// Generate the username link, which gives a report on the user's upcoming bookings.
 function print_report_link($user)
 {
   $form = new Form();
@@ -97,7 +97,7 @@ function print_report_link($user)
                                
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
-                               'value' => get_vocab('you_are') . " $user"));
+                               'value' => $user));
   $form->addElement($submit);
                                
   $form->render();

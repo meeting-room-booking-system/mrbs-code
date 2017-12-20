@@ -102,7 +102,6 @@ $vocab["users.name"]          = "Όνομα Χρήστη";
 $vocab["users.password"]      = "Κωδικός Πρόσβασης";
 $vocab["users.level"]         = "Rights";
 $vocab["unknown_user"]       = "Αγνωστος χρήστης";
-$vocab["you_are"]            = "Είστε";
 $vocab["login"]              = "Εισαγωγή (Log in)";
 $vocab["logoff"]             = "Έξοδος (Log Off)";
 $vocab["username_or_email"]  = "Ψευδώνυμο ή ηλεκ. διεύθυνση";

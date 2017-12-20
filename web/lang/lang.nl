@@ -170,7 +170,6 @@ $vocab["users.name"]          = "Naam";
 $vocab["users.password"]      = "Wachtwoord";
 $vocab["users.level"]         = "Rechten";
 $vocab["unknown_user"]       = "Onbekende gebruiker";
-$vocab["you_are"]            = "U bent";
 $vocab["login"]              = "Inloggen";
 $vocab["logoff"]             = "Uitloggen";
 $vocab["username_or_email"]  = "Gebruikersnaam of e-mailadres";

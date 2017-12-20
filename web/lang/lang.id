@@ -213,7 +213,6 @@ $vocab["users.name"]         = "Nama";
 $vocab["users.password"]     = "Kata sandi";
 $vocab["users.level"]        = "Hak";
 $vocab["unknown_user"]       = "Pengguna Anonim";
-$vocab["you_are"]            = "Anda Adalah";
 $vocab["login"]              = "Masuk";
 $vocab["logoff"]             = "Keluar";
 $vocab["username_or_email"]  = "Nama Pengguna atau Alamat Email";

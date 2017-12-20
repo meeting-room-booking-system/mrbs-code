@@ -213,7 +213,6 @@ $vocab["users.name"]         = "Meno (v tvare axxxxxx)";
 $vocab["users.password"]     = "Heslo";
 $vocab["users.level"]        = "Práva";
 $vocab["unknown_user"]       = "Neznámy užívateľ";
-$vocab["you_are"]            = "Login:";
 $vocab["login"]              = "Prihlásiť sa";
 $vocab["logoff"]             = "Odhlásiť sa";
 $vocab["username_or_email"]  = "Prihlasovacie meno alebo e-mailová adresa";

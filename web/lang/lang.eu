@@ -102,7 +102,6 @@ $vocab["users.name"]          = "Izena";
 $vocab["users.password"]      = "Pasahitza";
 $vocab["unknown_user"]       = "Erabiltzaile ezezaguna";
 $vocab["users.level"]         = "Baimenak";
-$vocab["you_are"]            = "Zu zara ";
 $vocab["login"]              = "Sartu";
 $vocab["logoff"]             = "Irten";
 $vocab["username_or_email"]  = "Erabiltzaile-izena edo e-posta helbidea";
