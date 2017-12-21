@@ -135,7 +135,7 @@ form#edit_room, .form_general input, .form_general textarea,
   width: 90%;
 }
 
-#edit_entry_submit input, #report_submit input, #search_submit input,
+#edit_entry_submit input, #report_submit input,
 #db_logon_submit input {
   left: 300%;
 }

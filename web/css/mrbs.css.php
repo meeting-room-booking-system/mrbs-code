@@ -880,7 +880,7 @@ div#custom_html {
 /* ------------ FORM_GENERAL ------------------------*/
 /*                                                   */
 /*   used in EDIT_ENTRY.PHP                          */
-/*   SEARCH.PHP                                      */
+/*                                                   */
 
 <?php
 // Common to all forms in the class "form_general"
@@ -900,11 +900,6 @@ $edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.
 // Specific to the "import" form
 $import_left_col_max_width     = '12';      // em
 
-// Specific to the "search" form
-$search_left_col_max_width     = '8';       // em
-$search_form_min_width         = $search_left_col_max_width + $input_width + $general_gap;
-$search_form_min_width         = number_format($search_form_min_width, 1, '.', '');   // get rid of any commas
-
 // Specific to the "logon" form
 $logon_left_col_max_width      = '8';       // em
 $logon_form_min_width          = $logon_left_col_max_width + $input_width + $general_gap;
@@ -918,10 +913,7 @@ $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.',
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 .edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
-.search         form.form_general {
-  min-width: <?php echo $search_form_min_width ?>em;
-  clear: left;
-}
+
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
 
@@ -946,8 +938,6 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 }
 
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
-
-.search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
 #db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
@@ -1021,9 +1011,8 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 }
 
 div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
-div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#import_submit input, #search_submit input, #db_logon_submit input
+#import_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
 
 div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
@@ -1388,10 +1377,22 @@ button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
-span#search_str {color: <?php echo $highlight_font_color ?>}
-p#nothing_found {font-weight: bold}
-div#record_numbers {font-weight: bold}
-div#record_nav {font-weight: bold; margin-bottom: 1.0em}
+span#search_str {
+  color: <?php echo $highlight_font_color ?>;
+}
+
+p#nothing_found {
+  font-weight: bold;
+}
+
+div#record_numbers {
+  font-weight: bold;
+}
+
+div#record_nav {
+  font-weight: bold;
+  margin-bottom: 1.0em;
+}
 
 /* ------------ SITE_FAQ ------------------------*/
 .help q {font-style: italic}
