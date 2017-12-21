@@ -178,10 +178,18 @@ init = function() {
       input.attr('type','text')
            .removeAttr('name')
            .addClass('date')
-           .datepicker({altField: '#' + altId});
+           .datepicker({altField: '#' + altId,
+                        onSelect: function(dateText, inst) {
+                            var submit = $(this).data('submit');
+                            if (submit)
+                            {
+                              $('#' + submit).submit();
+                            }
+                          }
+                        });
            
       <?php
-      // Initialise the date in the field.   Our date is in yy-mm-dd
+      // Initialise the date in the field.   Our date is in yy-mm-ddSelect
       // format, so we have to save the current datepicker format,
       // change the format, set the date and then restore the old format.
       // (Note: the other way of doing it by using a Date object presents

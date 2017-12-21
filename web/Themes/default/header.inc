@@ -90,7 +90,9 @@ function print_goto_date($day, $month, $year, $area, $room)
   
   $form = new Form();
   
-  $form->setAttributes(array('id'     => 'form_nav',
+  $form_id = 'form_nav';
+  
+  $form->setAttributes(array('id'     => $form_id,
                              'method' => 'get',
                              'action' => 'day.php'));
   if (isset($area))
@@ -104,9 +106,10 @@ function print_goto_date($day, $month, $year, $area, $room)
   }
   
   $input = new ElementInputDate();
-  $input->setAttributes(array('name'     => 'page_date',
-                              'value'    => format_iso_date($year, $month, $day),
-                              'required' => true));
+  $input->setAttributes(array('name'        => 'page_date',
+                              'value'       => format_iso_date($year, $month, $day),
+                              'required'    => true,
+                              'data-submit' => $form_id));
   
   $form->addElement($input);
   
