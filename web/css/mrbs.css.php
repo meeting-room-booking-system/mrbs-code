@@ -825,7 +825,10 @@ div#custom_html {
   margin-bottom: 0.5em;
 }
 
-.standard input[type="text"]:not(.date), .standard input[type="email"], .standard textarea {
+.standard input[type="text"]:not(.date),
+.standard input[type="email"],
+.standard input[type="search"],
+.standard textarea {
   width: 20em;
 }
 
@@ -915,7 +918,10 @@ $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.',
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
 .edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
-.search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
+.search         form.form_general {
+  min-width: <?php echo $search_form_min_width ?>em;
+  clear: left;
+}
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
 
@@ -940,6 +946,7 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 }
 
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
+
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 
 #logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}

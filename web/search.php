@@ -2,6 +2,10 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputSearch;
+use MRBS\Form\FieldInputSubmit;
 
 require "defaultincludes.inc";
 
@@ -112,9 +116,11 @@ $advanced = get_form_var('advanced', 'int');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
-$day = get_form_var('from_day', 'int');
-$month = get_form_var('from_month', 'int');
-$year = get_form_var('from_year', 'int');
+$from_date = get_form_var('from_date', 'string');
+if (isset($from_date))
+{
+  list($year, $month, $day) = split_iso_date($from_date);
+}
 
 // If we haven't been given a sensible date then use today's
 if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
@@ -158,27 +164,40 @@ if (!$ajax)
 
   if (!empty($advanced))
   {
-    echo "<form class=\"form_general\" id=\"search_form\" method=\"post\" action=\"search.php\">\n";
-    echo Form::getTokenHTML() . "\n";
-    ?>
-      <fieldset>
-      <legend><?php echo get_vocab("advanced_search") ?></legend>
-        <div id="div_search_str">
-          <label for="search_str"><?php echo get_vocab("search_for") ?></label>
-          <input type="search" id="search_str" name="search_str" required autofocus>
-        </div>   
-        <div id="div_search_from">
-          <?php
-          echo "<label>" . get_vocab("from") . "</label>\n";
-          genDateSelector ("from_", $day, $month, $year);
-          ?>
-        </div> 
-        <div id="search_submit">
-          <input class="submit" type="submit" value="<?php echo get_vocab("search_button") ?>">
-        </div>
-      </fieldset>
-    </form>
-    <?php
+    $form = new Form();
+    $form->setAttributes(array('class'  => 'standard',
+                               'id'     => 'search_form',
+                               'method' => 'post',
+                               'action' => 'search.php'));
+                               
+    $fieldset = new ElementFieldset();
+    $fieldset->addLegend(get_vocab('advanced_search'));
+    
+    // Search string
+    $field = new FieldInputSearch();
+    $field->setLabel(get_vocab('search_for'))
+          ->setControlAttributes(array('name'      => 'search_str',
+                                       'required'  => true,
+                                       'autofocus' => true));
+    $fieldset->addElement($field);
+    
+    // From date
+    $field = new FieldInputDate();
+    $field->setLabel(get_vocab('from'))
+          ->setControlAttributes(array('name'      => 'from_date',
+                                       'value'     => format_iso_date($year, $month, $day),
+                                       'required'  => true));
+    $fieldset->addElement($field);
+    
+    // Submit button
+    $field = new FieldInputSubmit();
+    $field->setControlAttribute('value', get_vocab('search_button'));
+    $fieldset->addElement($field);
+    
+    $form->addElement($fieldset);
+    
+    $form->render();
+    
     output_trailer();
     exit;
   }
