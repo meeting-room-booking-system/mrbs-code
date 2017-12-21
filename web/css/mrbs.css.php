@@ -50,6 +50,23 @@ input, textarea {
   box-sizing: border-box;
 }
 
+<?php
+// <input> elements of type 'date' are converted by the JavaScript into datepickers.
+// In order to prevent the display shifting about during the conversion process we set
+// the widths of both to be the same.
+?>
+input.date, .js input[type="date"] {
+  width: 6.5em;
+}
+
+.js input[type="date"] {
+  visibility: hidden;
+}
+
+input.date {
+  text-align: center;
+}
+
 button.image {
   background-color: transparent;
   border: 0;
@@ -808,13 +825,8 @@ div#custom_html {
   margin-bottom: 0.5em;
 }
 
-.standard input[type="text"], .standard input[type="email"], .standard textarea {
+.standard input[type="text"]:not(.date), .standard input[type="email"], .standard textarea {
   width: 20em;
-}
-
-.standard input.date {
-  width: 6.5em;
-  text-align: center;
 }
 
 .standard input[type="number"] {
@@ -1209,11 +1221,6 @@ form#add_new_user {margin-left: 1em}
 
 .banner a:hover {
   color: <?php echo $anchor_hover_color_banner ?>;
-}
-
-.banner input.date {
-  width: 6.5em;
-  text-align: center
 }
 
 #form_nav input[type="submit"] {

@@ -158,7 +158,13 @@ init = function() {
       $('.ui-datepicker').draggable();
     });
     
-  <?php // New style datepickers ?>
+  <?php
+  // New style datepickers.  We convert all inputs of type 'date' into
+  // jQueryUI datepickers.   In the future we might want to do something a bit
+  // more sophisticated and only convert the inputs for some browsers, because
+  // the native date controls on some modern browsers, eg Chrome mobile, are
+  // better than the jQueryUI datepicker.
+  ?>
   $('input[type="date"]').each(function() {
       var input = $(this),
           thisDate = input.val(),
