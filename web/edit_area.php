@@ -142,7 +142,7 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('timezone'))
         ->setControlAttributes(array('id'   => 'area_timezone',
                                      'name' => 'area_timezone'))
-        ->addSelectOptions(get_timezone_options(), $timezone);
+        ->addSelectOptions(get_timezone_options(), $timezone, true);
   $fieldset->addElement($field);
   
   // Area admin email
@@ -237,7 +237,7 @@ function get_fieldset_times()
                                      'required' => true));
   $options = array('1' => get_vocab('all_day'));
   $checkbox_group = new FieldInputCheckboxGroup();
-  $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $default_duration_all_day);
+  $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $default_duration_all_day, true);
   $field->addElement($checkbox_group);
   $fieldset->addElement($field);
         
@@ -337,7 +337,7 @@ function get_fieldset_create_ahead()
                               
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_min_create_ahead_units')
-         ->addSelectOptions($options, array_search($min_create_ahead_units, $options));
+         ->addSelectOptions($options, array_search($min_create_ahead_units, $options), true);
          
   $field->setLabel(get_vocab('min_book_ahead'))
         ->addControlElement($checkbox)
@@ -361,7 +361,7 @@ function get_fieldset_create_ahead()
                               
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_create_ahead_units')
-         ->addSelectOptions($options, array_search($max_create_ahead_units, $options));
+         ->addSelectOptions($options, array_search($max_create_ahead_units, $options), true);
          
   $field->setLabel(get_vocab('max_book_ahead'))
         ->addControlElement($checkbox)
@@ -403,7 +403,7 @@ function get_fieldset_delete_ahead()
                               
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_min_delete_ahead_units')
-         ->addSelectOptions($options, array_search($min_delete_ahead_units, $options));
+         ->addSelectOptions($options, array_search($min_delete_ahead_units, $options), true);
          
   $field->setLabel(get_vocab('min_book_ahead'))
         ->addControlElement($checkbox)
@@ -427,7 +427,7 @@ function get_fieldset_delete_ahead()
                               
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_delete_ahead_units')
-         ->addSelectOptions($options, array_search($max_delete_ahead_units, $options));
+         ->addSelectOptions($options, array_search($max_delete_ahead_units, $options), true);
          
   $field->setLabel(get_vocab('max_book_ahead'))
         ->addControlElement($checkbox)
@@ -541,7 +541,7 @@ function get_fieldset_max_duration()
   
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_duration_units')
-         ->addSelectOptions($options, array_search($max_duration_units, $options));
+         ->addSelectOptions($options, array_search($max_duration_units, $options), true);
          
   $field = new FieldInputNumber();
   $field->setLabel(get_vocab('mode_times'))

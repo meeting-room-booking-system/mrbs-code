@@ -13,7 +13,7 @@ class FieldInputDatalist extends Field
   }
   
   
-  public function addDatalistOptions(array $options, $associative=true)
+  public function addDatalistOptions(array $options, $associative=null)
   {
     $datalist = $this->getControl();
     $datalist->addDatalistOptions($options, $associative);

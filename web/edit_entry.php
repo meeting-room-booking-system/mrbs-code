@@ -84,9 +84,35 @@ foreach ($fields as $field)
 }
 
 
+function get_field_entry_input($params)
+{
+  global $select_options, $datalist_options;
+  
+  if (isset($params['field']))
+  {
+    if (!empty($select_options[$params['field']]))
+    {
+      $options = $select_options[$params['field']];
+      $field = new FieldSelect();
+      $field->addSelectOptions($options, £££££!!!!!! true);
+    }
+    elseif (!empty($datalist_options[$params['field']]))
+    {
+      $options = $datalist_options[$params['field']];
+      $field = new FieldInputDatalist();
+      $field->addDatalistOptions($options, £££££!!!!! true);
+    }
+  }
+  
+  return $field;
+}
+
+
 function get_field_name()
 {
-  return null;
+  $params = array();
+  
+  return get_field_entry_input($params);
 }
 
 

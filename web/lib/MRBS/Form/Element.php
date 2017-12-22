@@ -200,13 +200,21 @@ class Element
   //    $associative  Whether to treat the options as a simple or an associative array.  (This 
   //                  parameter is necessary because if you index an array with strings that look
   //                  like integers then PHP casts the keys to integers and the array becomes a 
-  //                  simple array).
-  public function addSelectOptions(array $options, $selected=null, $associative=true)
+  //                  simple array).   Can take the following values:
+  //                      true    treat as an associative array
+  //                      false   treat as a simple array
+  //                      null    auto-detect
+  public function addSelectOptions(array $options, $selected=null, $associative=null)
   {
     // Trivial case
     if (empty($options))
     {
       return $this;
+    }
+    
+    if (!isset($associative))
+    {
+      $associative = \MRBS\is_assoc($options);
     }
     
     // It's possible to have multiple options selected
@@ -258,12 +266,17 @@ class Element
   }
   
   
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=true)
+  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null)
   {
     // Trivial case
     if (empty($options))
     {
       return $this;
+    }
+    
+    if (!isset($associative))
+    {
+      $associative = \MRBS\is_assoc($options);
     }
     
     foreach ($options as $key => $value)
@@ -290,12 +303,17 @@ class Element
   }
   
   
-  public function addRadioOptions(array $options, $name, $checked=null, $associative=true, $disabled=false)
+  public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     // Trivial case
     if (empty($options))
     {
       return $this;
+    }
+    
+    if (!isset($associative))
+    {
+      $associative = \MRBS\is_assoc($options);
     }
     
     foreach ($options as $key => $value)

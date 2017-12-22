@@ -94,7 +94,7 @@ function get_field_typematch($data)
                                      'name'     => 'typematch[]',
                                      'multiple' => true,
                                      'size'     => '5'))
-        ->addSelectOptions($options, $data['typematch']);
+        ->addSelectOptions($options, $data['typematch'], true);
   
   return $field;
 }

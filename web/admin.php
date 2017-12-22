@@ -85,7 +85,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
                                      'name'     => 'area',
                                      'class'    => 'room_area_select',
                                      'onchange' => 'this.form.submit()'))
-        ->addSelectOptions($options, $area);
+        ->addSelectOptions($options, $area, true);
   $fieldset->addElement($field);
 
   // The change area button (won't be needed or displayed if JavaScript is enabled)

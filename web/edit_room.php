@@ -150,7 +150,7 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('area'))
         ->setControlAttributes(array('name'     => 'new_area',
                                      'disabled' => $disabled))
-        ->addSelectOptions($areas, $data['area_id']);
+        ->addSelectOptions($areas, $data['area_id'], true);
   $fieldset->addElement($field);
   
   // Room name
