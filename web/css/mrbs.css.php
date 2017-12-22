@@ -912,7 +912,10 @@ $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.',
 
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
-.edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
+.edit_entry     form.form_general {
+  min-width: <?php echo $edit_entry_form_min_width ?>em;
+  float: left;
+}
 
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}

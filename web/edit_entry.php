@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
 
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
@@ -1157,6 +1158,20 @@ else
   }
 }
 
+
+$form = new Form();
+
+$form->setAttributes(array('class'  => 'standard',
+                           'id'     => 'main',
+                           'action' => 'edit_entry_handler.php',
+                           'method' => 'post'));
+
+$fieldset = new ElementFieldset();
+$fieldset->addLegend(get_vocab($token));
+
+$form->addElement($fieldset);
+
+$form->render();
 
 echo "<form class=\"form_general\" id=\"main\" action=\"edit_entry_handler.php\" method=\"post\">\n";
 echo Form::getTokenHTML() . "\n";
