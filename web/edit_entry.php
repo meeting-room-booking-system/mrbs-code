@@ -84,6 +84,13 @@ foreach ($fields as $field)
 }
 
 
+function get_field_name()
+{
+  return null;
+}
+
+
+
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
@@ -1168,6 +1175,16 @@ $form->setAttributes(array('class'  => 'standard',
 
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab($token));
+
+foreach ($edit_entry_field_order as $key)
+{
+  switch( $key )
+  {
+    case 'name':
+      $fieldset->addElement(get_field_name());
+      break;
+  } // switch
+} // foreach
 
 $form->addElement($fieldset);
 
