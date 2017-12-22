@@ -3,6 +3,9 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputDatalist;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
 
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
@@ -87,30 +90,78 @@ foreach ($fields as $field)
 function get_field_entry_input($params)
 {
   global $select_options, $datalist_options;
+  global $maxlength;
   
   if (isset($params['field']))
   {
     if (!empty($select_options[$params['field']]))
     {
-      $options = $select_options[$params['field']];
-      $field = new FieldSelect();
-      $field->addSelectOptions($options, £££££!!!!!! true);
+      $class = 'FieldSelect';
     }
     elseif (!empty($datalist_options[$params['field']]))
     {
-      $options = $datalist_options[$params['field']];
-      $field = new FieldInputDatalist();
-      $field->addDatalistOptions($options, £££££!!!!! true);
+      $class = 'FieldInputDatalist';
+    }
+    else
+    {
+      $class = 'FieldInputText';
     }
   }
   
+  $full_class = __NAMESPACE__ . "\\Form\\$class";
+  $field = new $full_class();
+  $field->setLabel($params['label'])
+        ->setControlAttribute('name', $params['name']);
+  
+  if (!empty($params['required']))
+  {
+    // Set a pattern as well as required to prevent a string of whitespace
+    $field->setControlAttribute('required', REGEX_TEXT_POS);
+  }
+  if (!empty($params['disabled']))
+  {
+    $field->setControlAttribute('disabled', true);
+  }
+  
+  switch ($class)
+  {
+    case 'FieldSelect':
+      $options = $select_options[$params['field']];
+      $field->addSelectOptions($options, $params['value']);
+      break;
+      
+    case 'FieldInputDatalist':
+      $options = $datalist_options[$params['field']];
+      $field->addDatalistOptions($options);
+      // Drop through
+      
+    case 'FieldInputText':
+      $field->setControlAttributes(array('value'     => $params['value'],
+                                         'maxlength' => $maxlength[$params['field']]));
+      if (!empty($params['required']))
+      {
+        // Set a pattern as well as required to prevent a string of whitespace
+        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
+      }
+      break;
+      
+    default:
+      throw new \Exception("Unknown class '$class'");
+      break;
+  }
+
   return $field;
 }
 
 
-function get_field_name()
+function get_field_name($value, $disabled=false)
 {
-  $params = array();
+  $params = array('label'    => get_vocab('namebooker'),
+                  'name'     => 'name',
+                  'field'    => 'entry.name',
+                  'value'    => $value,
+                  'required' => true,
+                  'disabled' => $disabled);
   
   return get_field_entry_input($params);
 }
@@ -287,7 +338,6 @@ function create_field_entry_name($disabled=FALSE)
                   'type'       => 'text',
                   'pattern'    => REGEX_TEXT_POS,
                   'disabled'   => $disabled,
-                  'mandatory'  => TRUE,
                   'maxlength'  => $maxlength['entry.name']);
                   
   generate_input($params);
@@ -1204,11 +1254,12 @@ $fieldset->addLegend(get_vocab($token));
 
 foreach ($edit_entry_field_order as $key)
 {
-  switch( $key )
+  switch ($key)
   {
     case 'name':
-      $fieldset->addElement(get_field_name());
+      $fieldset->addElement(get_field_name($name));
       break;
+      
   } // switch
 } // foreach
 
