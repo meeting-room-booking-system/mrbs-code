@@ -102,6 +102,10 @@ function get_field_entry_input($params)
     {
       $class = 'FieldInputDatalist';
     }
+    elseif ($params['field'] == 'entry.description')
+    {
+      $class = 'FieldTextarea';
+    }
     else
     {
       $class = 'FieldInputText';
@@ -136,8 +140,12 @@ function get_field_entry_input($params)
       // Drop through
       
     case 'FieldInputText':
-      $field->setControlAttributes(array('value'     => $params['value'],
-                                         'maxlength' => $maxlength[$params['field']]));
+    case 'FieldTextarea':
+      $field->setControlAttribute('value', $params['value']);
+      if (isset($maxlength[$params['field']]))
+      {
+        $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
+      }
       if (!empty($params['required']))
       {
         // Set a pattern as well as required to prevent a string of whitespace
@@ -161,6 +169,21 @@ function get_field_name($value, $disabled=false)
                   'field'    => 'entry.name',
                   'value'    => $value,
                   'required' => true,
+                  'disabled' => $disabled);
+  
+  return get_field_entry_input($params);
+}
+
+
+function get_field_description($value, $disabled=false)
+{
+  global $is_mandatory_field;
+  
+  $params = array('label'    => get_vocab('fulldescription'),
+                  'name'     => 'description',
+                  'field'    => 'entry.description',
+                  'value'    => $value,
+                  'required' => !empty($is_mandatory_field['entry.description']),
                   'disabled' => $disabled);
   
   return get_field_entry_input($params);
@@ -1258,6 +1281,10 @@ foreach ($edit_entry_field_order as $key)
   {
     case 'name':
       $fieldset->addElement(get_field_name($name));
+      break;
+      
+    case 'description':
+      $fieldset->addElement(get_field_description($description));
       break;
       
   } // switch
