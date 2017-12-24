@@ -947,31 +947,6 @@ function create_field_entry_rooms($disabled=FALSE)
   echo "</div>\n";
 }
 
-function create_field_entry_privacy_status($disabled=FALSE)
-{
-  global $private_enabled, $private, $private_mandatory;
-  
-  // Privacy status
-  if ($private_enabled)
-  {
-    echo "<div id=\"div_privacy_status\">\n";
-    
-    $buttons[0] = get_vocab("public");
-    $buttons[1] = get_vocab("private");
-    
-    $params = array('label'       => get_vocab("privacy_status"),
-                    'name'        => 'private',
-                    'value'       => ($private) ? 1 : 0,
-                    'options'     => $buttons,
-                    'force_assoc' => TRUE,
-                    'disabled'    => $private_mandatory || $disabled);
-                    
-    generate_radio_group($params);
-
-    echo "</div>\n";
-  }
-}
-
 
 function create_field_entry_custom_field($field, $key, $disabled=FALSE)
 {
@@ -1679,10 +1654,7 @@ foreach ($edit_entry_field_order as $key)
 
   case 'type':
   case 'confirmation_status':
-    break;
-
   case 'privacy_status':
-    create_field_entry_privacy_status();
     break;
 
   default:
