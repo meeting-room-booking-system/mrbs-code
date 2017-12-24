@@ -515,6 +515,39 @@ function get_field_privacy_status($value, $disabled=false)
 }
 
 
+function get_field_custom($key)
+{
+  global $custom_fields, $custom_fields_map, $tbl_entry;
+  global $is_mandatory_field, $text_input_max, $maxlength;
+  
+  $field = $custom_fields_map[$key];
+  
+  // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($field['nature'] == 'boolean') || 
+    (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+  {
+    $class = 'FieldInputCheckbox';
+  }
+  
+  if (!isset($class))
+  {
+    return null;
+  }
+  
+  $full_class = __NAMESPACE__ . "\\Form\\$class";
+  $field = new $full_class();
+  
+  $field->setLabel(get_loc_field_name($tbl_entry, $key))
+        ->setControlAttributes(array('name'     => VAR_PREFIX . $key,
+                                     'value'    => (isset($custom_fields[$key])) ? $custom_fields[$key] : null,
+                                     'disabled' => $disabled,
+                                     'required' => !empty($is_mandatory_field["entry.$key"])));
+  
+  return $field;
+}
+
+
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
@@ -1642,6 +1675,10 @@ foreach ($edit_entry_field_order as $key)
       
     case 'privacy_status':
       $fieldset->addElement(get_field_privacy_status($private));
+      break;
+      
+    default:
+      $fieldset->addElement(get_field_custom($key));
       break;
       
   } // switch
