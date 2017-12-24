@@ -529,6 +529,13 @@ function get_field_custom($key)
   {
     $class = 'FieldInputCheckbox';
   }
+  // Output a textarea if it's a character string longer than the limit for a
+  // text input
+  elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+  {
+    // HTML5 does not allow a pattern attribute for the textarea element
+    $class = 'FieldTextarea';
+  }
   
   if (!isset($class))
   {
