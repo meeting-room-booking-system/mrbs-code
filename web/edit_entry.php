@@ -515,7 +515,7 @@ function get_field_privacy_status($value, $disabled=false)
 }
 
 
-function get_field_custom($key)
+function get_field_custom($key, $disabled=false)
 {
   global $custom_fields, $custom_fields_map, $tbl_entry;
   global $is_mandatory_field, $text_input_max, $maxlength;
@@ -946,32 +946,6 @@ function create_field_entry_rooms($disabled=FALSE)
 
   echo "</div>\n";
 }
-
-function create_field_entry_confirmation_status($disabled=FALSE)
-{
-  global $confirmation_enabled, $confirmed;
-  
-  // Confirmation status
-  if ($confirmation_enabled)
-  {
-    echo "<div id=\"div_confirmation_status\">\n";
-    
-    $buttons[0] = get_vocab("tentative");
-    $buttons[1] = get_vocab("confirmed");
-    
-    $params = array('label'       => get_vocab("confirmation_status"),
-                    'name'        => 'confirmed',
-                    'value'       => ($confirmed) ? 1 : 0,
-                    'options'     => $buttons,
-                    'force_assoc' => TRUE,
-                    'disabled'    => $disabled);
-                    
-    generate_radio_group($params);
-
-    echo "</div>\n";
-  }
-}
-
 
 function create_field_entry_privacy_status($disabled=FALSE)
 {
@@ -1704,10 +1678,7 @@ foreach ($edit_entry_field_order as $key)
     break;
 
   case 'type':
-    break;
-
   case 'confirmation_status':
-    create_field_entry_confirmation_status();
     break;
 
   case 'privacy_status':
