@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -464,6 +465,29 @@ function get_field_type($value, $disabled=false)
                                      'required' => !empty($is_mandatory_field['entry.type'])))
         ->addSelectOptions($options, $value, true);
         
+  return $field;
+}
+
+
+function get_field_confirmation_status($value, $disabled=false)
+{
+  global $confirmation_enabled;
+  
+  if (!$confirmation_enabled)
+  {
+    return null;
+  }
+  
+  $options = array(0 => get_vocab('tentative'),
+                   1 => get_vocab('confirmed'));
+                   
+  $value = ($value) ? 1 : 0;
+                   
+  $field = new FieldInputRadioGroup();
+  
+  $field->setLabel(get_vocab('confirmation_status'))
+        ->addRadioOptions($options, 'confirmed', $value, true, $disabled);
+  
   return $field;
 }
 
@@ -1587,7 +1611,11 @@ foreach ($edit_entry_field_order as $key)
 
     case 'type':
       $fieldset->addElement(get_field_type($type));
-      break;      
+      break;
+      
+    case 'confirmation_status':
+      $fieldset->addElement(get_field_confirmation_status($confirmed));
+      break;
       
   } // switch
 } // foreach
