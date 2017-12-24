@@ -542,7 +542,7 @@ function get_field_custom($key, $disabled=false)
     $class = 'FieldInputNumber';
   }
   // Otherwise it's a text input of some kind (which includes <select>s and
-  // <datalist>s
+  // <datalist>s)
   else
   {
     $params = array('label'    => get_loc_field_name($tbl_entry, $key),
@@ -944,61 +944,6 @@ function create_field_entry_rooms($disabled=FALSE)
   }
   echo "</div>\n";
 
-  echo "</div>\n";
-}
-
-
-function create_field_entry_custom_field($field, $key, $disabled=FALSE)
-{
-  global $custom_fields, $tbl_entry;
-  global $is_mandatory_field, $text_input_max, $maxlength;
-  
-  echo "<div>\n";
-  $params = array('label'      => get_loc_field_name($tbl_entry, $key),
-                  'name'       => VAR_PREFIX . $key,
-                  'value'      => isset($custom_fields[$key]) ? $custom_fields[$key] : NULL,
-                  'disabled'   => $disabled,
-                  'attributes' => array(),
-                  'maxlength'  => isset($maxlength["entry.$key"]) ? $maxlength["entry.$key"] : NULL,
-                  'mandatory'  => !empty($is_mandatory_field["entry.$key"]));
-  // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-  // assume are intended to be booleans)
-  if (($field['nature'] == 'boolean') || 
-    (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-  {
-    generate_checkbox($params);
-  }
-  // Output a textarea if it's a character string longer than the limit for a
-  // text input
-  elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
-  {
-    // HTML5 does not allow a pattern attribute for the textarea element
-    $params['attributes'][] = 'rows="8"';
-    $params['attributes'][] = 'cols="40"';
-    generate_textarea($params);   
-  }
-  // Otherwise output an input
-  else
-  {
-    $is_integer_field = ($field['nature'] == 'integer') && ($field['length'] > 2);
-    if ($is_integer_field)
-    {
-      $params['type'] = 'number';
-      $params['step'] = '1';
-    }
-    else
-    {
-      $params['type'] = 'text';
-      if ($params['mandatory'])
-      {
-        // 'required' is not sufficient for strings, because we also want to make sure
-        // that the string contains at least one non-whitespace character
-        $params['pattern'] = REGEX_TEXT_POS;
-      }
-    }
-    $params['field'] = "entry.$key";
-    generate_input($params);
-  }
   echo "</div>\n";
 }
 
@@ -1655,10 +1600,7 @@ foreach ($edit_entry_field_order as $key)
   case 'type':
   case 'confirmation_status':
   case 'privacy_status':
-    break;
-
   default:
-    create_field_entry_custom_field($custom_fields_map[$key], $key);
     break;
   }
 }
