@@ -536,10 +536,22 @@ function get_field_custom($key)
     // HTML5 does not allow a pattern attribute for the textarea element
     $class = 'FieldTextarea';
   }
-  
-  if (!isset($class))
+  // Otherwise check if it's an integer field
+  elseif (($field['nature'] == 'integer') && ($field['length'] > 2))
   {
-    return null;
+    $class = 'FieldInputNumber';
+  }
+  // Otherwise it's a text input of some kind (which includes <select>s and
+  // <datalist>s
+  else
+  {
+    $params = array('label'    => get_loc_field_name($tbl_entry, $key),
+                    'name'     => VAR_PREFIX . $key,
+                    'field'    => "entry.$key",
+                    'value'    => (isset($custom_fields[$key])) ? $custom_fields[$key] : NULL,
+                    'required' => !empty($is_mandatory_field["entry.$key"]),
+                    'disabled' => $disabled);
+    return get_field_entry_input($params);
   }
   
   $full_class = __NAMESPACE__ . "\\Form\\$class";
