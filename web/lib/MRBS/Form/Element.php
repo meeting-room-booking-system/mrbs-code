@@ -107,7 +107,7 @@ class Element
   }
   
   
-  public function addElement(Element $element, $key=null)
+  public function addElement(Element $element=null, $key=null)
   {
     if (isset($element))
     {

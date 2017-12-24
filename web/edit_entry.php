@@ -3,7 +3,9 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementSelect;
 use MRBS\Form\FieldInputDatalist;
+use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -190,6 +192,247 @@ function get_field_description($value, $disabled=false)
 }
 
 
+// Generate a time or period selector starting with $first and ending with $last.
+// $time is a full Unix timestamp and is the current value.  The selector returns
+// the start time in seconds since the beginning of the day for the start of that slot.
+// Note that these are nominal seconds and do not take account of any DST changes that
+// may have happened earlier in the day.  (It's this way because we don't know what day
+// it is as that's controlled by the date selector - and we can't assume that we have
+// JavaScript enabled to go and read it)
+//
+//    $display_none parameter     sets the display style of the <select> to "none"
+//    $disabled parameter         disables the input and also generate a hidden input, provided
+//                                that $display_none is FALSE.  (This prevents multiple inputs
+//                                of the same name)
+//    $is_start                   Boolean.  Whether this is the start selector.  Default FALSE
+function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $disabled=false, $is_start=false)
+{
+  // Check that $resolution is positive to avoid an infinite loop below.
+  // (Shouldn't be possible, but just in case ...)
+  if (empty($area['resolution']) || ($area['resolution'] < 0))
+  {
+    throw new \Exception("Internal error - resolution is NULL or <= 0");
+  }
+  
+  if ($area['enable_periods'])
+  {
+    $base = 12*SECONDS_PER_HOUR;  // The start of the first period of the day
+  }
+  else
+  {
+    $format = hour_min_format();
+  }
+  
+  // Build the options
+  $options = array();
+  // If we're using periods then the last slot is actually the start of the last period,
+  // or if we're using times and this is the start selector, then we don't show the last
+  // time
+  if ($area['enable_periods'] || $is_start)
+  {
+    $last = $area['last'] - $area['resolution'];
+  }
+  else
+  {
+    $last = $area['last'];
+  }
+  for ($s = $area['first']; $s <= $last; $s += $area['resolution'])
+  {
+    if ($area['enable_periods'])
+    {
+      $options[$s] = $area['periods'][intval(($s-$base)/60)];
+    }
+    else
+    {
+      $options[$s] = hour_min($s);
+    }
+  }
+  
+  $field = new ElementSelect();
+  $field->setAttributes(array('id'   => $id,
+                              'name' => $name))
+        ->addSelectOptions($options, $current_s, true);
+  
+  return $field;
+}
+
+
+function get_field_start_date($value, $disabled=false)
+{
+  global $areas, $area_id;
+  
+  $date = getbookingdate($value);
+  $start_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+  
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('start'))
+        ->setControlAttributes(array('name'     => 'start_date',
+                                     'value'    => $start_date,
+                                     'disabled' => $disabled,
+                                     'required' => true));
+                                     
+  // Generate the live slot selector and all day checkbox
+  $field->addElement(get_slot_selector($areas[$area_id],
+                                       'start_seconds',
+                                       'start_seconds',
+                                       $current_s,
+                                       false,
+                                       $disabled,
+                                       true));
+
+  
+  return $field;
+}
+
+
+function get_field_end_date($value, $disabled=false)
+{
+  global $areas, $area_id;
+  global $multiday_allowed;
+  
+  if (!$multiday_allowed)
+  {
+    return null;
+  }
+  
+  $date = getbookingdate($value);
+  $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
+  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+  
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('end'))
+        ->setControlAttributes(array('name'     => 'end_date',
+                                     'value'    => $end_date,
+                                     'disabled' => $disabled));
+                                     
+  // Generate the live slot selector
+  // If we're using periods the booking model is slightly different,
+  // so subtract one period because the "end" period is actually the beginning
+  // of the last period booked
+  $a = $areas[$area_id];
+  $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
+  $field->addElement(get_slot_selector($areas[$area_id],
+                                       'end_seconds',
+                                       'end_seconds',
+                                       $this_current_s,
+                                       false,
+                                       $disabled,
+                                       false));
+
+  return $field;
+}
+
+
+function get_field_areas($value, $disabled=false)
+{
+  global $areas;
+  
+  // No point in being able to choose an area if there aren't more
+  // than one of them.
+  if (count($areas) < 2)
+  {
+    return null;
+  }
+  
+  $field = new FieldSelect();
+  
+  $options = array();
+  // go through the areas and create the options
+  foreach ($areas as $a)
+  {
+    $options[$a['id']] = $a['area_name'];
+  }
+  
+  // We will set the display to none and then turn it on in the JavaScript.  That's
+  // because if there's no JavaScript we don't want to display it because we won't
+  // have any means of changing the rooms if the area is changed.
+  $field->setAttributes(array('id'    => 'div_areas',
+                              'style' => 'display: none'))
+        ->setLabel(get_vocab('area'))
+        ->setControlAttributes(array('name'     => 'area',
+                                     'disabled' => $disabled))
+        ->addSelectOptions($options, $value, true);
+  
+  return $field;
+}
+
+
+function get_field_rooms($value, $disabled=false)
+{
+  global $tbl_room, $tbl_area;
+  global $multiroom_allowed, $area_id, $areas;
+  
+  // Get the details of all the enabled rooms
+  $all_rooms = array();
+  $sql = "SELECT R.id, R.room_name, R.area_id
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id = A.id
+             AND R.disabled=0
+             AND A.disabled=0
+        ORDER BY R.area_id, R.sort_key";
+  $res = db()->query($sql);
+  
+  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  {
+    $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
+  }
+  
+  // First of all generate the rooms for this area
+  $field = new FieldSelect();
+  
+  $field->setLabel(get_vocab('rooms'));
+  
+  // No point telling them how to select multiple rooms if the input
+  // is disabled
+  if ($multiroom_allowed && !$disabled)
+  {
+    $field->setLabelAttribute('title', get_vocab('ctrl_click'));
+  }
+  
+  $field->setAttribute('class', 'multiline')
+        ->setControlAttributes(array('id'       => 'rooms',
+                                     'name'     => 'rooms[]',
+                                     'multiple' => $multiroom_allowed, // If multiple is not set then required is unnecessary
+                                     'required' => $multiroom_allowed, // and also causes an HTML5 validation error
+                                     'disabled' => $disabled,
+                                     'size'     => '5'))
+        ->addSelectOptions($all_rooms[$area_id], $value, true);
+  
+  // Then generate templates for all the rooms
+  foreach ($all_rooms as $a => $rooms)
+  {
+    $room_ids = array_keys($rooms);
+    
+    $select = new ElementSelect();
+    $select->setAttributes(array('id'       => 'rooms' . $a,
+                                 'style'    => 'display: none',
+                                 'name'     => 'rooms[]',
+                                 'multiple' => $multiroom_allowed, // If multiple is not set then required is unnecessary
+                                 'required' => $multiroom_allowed, // and also causes an HTML5 validation error
+                                 'disabled' => true,
+                                 'size'     => '5'))
+           ->addSelectOptions($rooms, $room_ids[0], true);
+    // Put in some data about the area for use by the JavaScript
+    $select->setAttributes(array(
+        'data-enable_periods'           => ($areas[$a]['enable_periods']) ? 1 : 0,
+        'data-n_periods='               => count($areas[$a]['periods']),
+        'data-default_duration'         => (isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR,
+        'data-default_duration_all_day' => ($areas[$a]['default_duration_all_day']) ? 1 : 0,
+        'data-max_duration_enabled'     => ($areas[$a]['max_duration_enabled']) ? 1 : 0,
+        'data-max_duration_secs'        => $areas[$a]['max_duration_secs'],
+        'data-max_duration_periods'     => $areas[$a]['max_duration_periods'],
+        'data-max_duration_qty'         => $areas[$a]['max_duration_qty'],
+        'data-max_duration_units'       => $areas[$a]['max_duration_units'],
+        'data-timezone'                 => $areas[$a]['timezone']
+      ));
+    $field->addElement($select);
+    
+  } // foreach
+    
+  return $field;
+}
+
 
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
@@ -198,7 +441,7 @@ function get_field_description($value, $disabled=false)
 // If $is_end is set then this is the end time and so if the booking day happens to
 // last exactly 24 hours, when there will be two possible answers, we want the later 
 // one.
-function getbookingdate($t, $is_end=FALSE)
+function getbookingdate($t, $is_end=false)
 {
   global $eveningends, $eveningends_minutes, $resolution;
   
@@ -1286,6 +1529,27 @@ foreach ($edit_entry_field_order as $key)
     case 'description':
       $fieldset->addElement(get_field_description($description));
       break;
+      
+    case 'start_date':
+      $fieldset->addElement(get_field_start_date($start_time));
+      break;
+
+    case 'end_date':
+      $fieldset->addElement(get_field_end_date($end_time));
+      break;
+
+    case 'areas':
+      $fieldset->addElement(get_field_areas($area_id));
+      break;
+
+    case 'rooms':
+      // $selected_rooms will be populated if we've come from a drag selection
+      if (empty($selected_rooms))
+      {
+        $selected_rooms = array($room_id);
+      }
+      $fieldset->addElement(get_field_rooms($selected_rooms));
+      break;       
       
   } // switch
 } // foreach
