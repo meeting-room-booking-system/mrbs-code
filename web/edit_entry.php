@@ -385,7 +385,7 @@ function get_field_rooms($value, $disabled=false)
   $field->setLabel(get_vocab('rooms'));
   
   // No point telling them how to select multiple rooms if the input
-  // is disabled
+  // is disabled or they aren't allowed to
   if ($multiroom_allowed && !$disabled)
   {
     $field->setLabelAttribute('title', get_vocab('ctrl_click'));
@@ -564,6 +564,33 @@ function get_field_custom($key, $disabled=false)
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
   
   return $field;
+}
+
+
+function get_field_rep_type()
+{
+}
+
+
+function get_fieldset_repeat()
+{
+  global $edit_type, $repeats_allowed;
+  
+  // If repeats aren't allowed or this is not a series then disable
+  // the repeat fields - they're for information only
+  // (NOTE: when repeat bookings are restricted to admins, an ordinary user
+  // would not normally be able to get to the stage of trying to edit a series.
+  // But we have to cater for the possibility because it could happen if (a) the
+  // series was created before the policy was introduced or (b) the user has
+  // been demoted since the series was created).
+  $disabled = ($edit_type != "series") || !$repeats_allowed;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'rep_info');
+  
+  $fieldset->addElement(get_field_rep_type());
+  
+  return $fieldset;
 }
 
 
@@ -1560,6 +1587,15 @@ foreach ($edit_entry_field_order as $key)
 } // foreach
 
 $form->addElement($fieldset);
+
+// Show the repeat fields if (a) it's a new booking and repeats are allowed,
+// or else if it's an existing booking and it's a series.  (It's not particularly obvious but
+// if edit_type is "series" then it means that either you're editing an existing
+// series or else you're making a new booking.  This should be tidied up sometime!)
+if (($edit_type == "series") && $repeats_allowed)
+{
+  $form->addElement(get_fieldset_repeat());
+}
 
 $form->render();
 
