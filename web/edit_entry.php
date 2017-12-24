@@ -492,6 +492,29 @@ function get_field_confirmation_status($value, $disabled=false)
 }
 
 
+function get_field_privacy_status($value, $disabled=false)
+{
+  global $private_enabled, $private_mandatory;
+  
+  if (!$private_enabled)
+  {
+    return null;
+  }
+  
+  $options = array(0 => get_vocab('public'),
+                   1 => get_vocab('private'));
+                   
+  $value = ($value) ? 1 : 0;
+                   
+  $field = new FieldInputRadioGroup();
+  
+  $field->setLabel(get_vocab('privacy_status'))
+        ->addRadioOptions($options, 'private', $value, true, $private_mandatory || $disabled);
+  
+  return $field;
+}
+
+
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
@@ -1615,6 +1638,10 @@ foreach ($edit_entry_field_order as $key)
       
     case 'confirmation_status':
       $fieldset->addElement(get_field_confirmation_status($confirmed));
+      break;
+      
+    case 'privacy_status':
+      $fieldset->addElement(get_field_privacy_status($private));
       break;
       
   } // switch
