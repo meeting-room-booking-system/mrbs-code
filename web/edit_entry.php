@@ -434,6 +434,40 @@ function get_field_rooms($value, $disabled=false)
 }
 
 
+function get_field_type($value, $disabled=false)
+{
+  global $booking_types, $is_mandatory_field;
+  
+  // Don't bother with types if there's only one of them (or even none)
+  if (count($booking_types) < 2)
+  {
+    return null;
+  }
+  
+  // Get the options
+  if (!empty($is_mandatory_field['entry.type']))
+  {
+    // Add a blank option to force a selection
+    $options[''] = get_type_vocab('');
+  }
+  
+  foreach ($booking_types as $key)
+  {
+    $options[$key] = get_type_vocab($key);
+  }
+  
+  $field = new FieldSelect();
+  
+  $field->setLabel(get_vocab('type'))
+        ->setControlAttributes(array('name'     => 'type',
+                                     'disabled' => $disabled,
+                                     'required' => !empty($is_mandatory_field['entry.type'])))
+        ->addSelectOptions($options, $value, true);
+        
+  return $field;
+}
+
+
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
@@ -1549,7 +1583,11 @@ foreach ($edit_entry_field_order as $key)
         $selected_rooms = array($room_id);
       }
       $fieldset->addElement(get_field_rooms($selected_rooms));
-      break;       
+      break;
+
+    case 'type':
+      $fieldset->addElement(get_field_type($type));
+      break;      
       
   } // switch
 } // foreach
