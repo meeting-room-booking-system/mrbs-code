@@ -4,6 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementSelect;
+use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputRadioGroup;
@@ -576,11 +577,48 @@ function get_field_rep_type($value, $disabled=false)
     $options[$i] = get_vocab("rep_type_$i");
   }
   
-  $field->setAttribute('id', 'rep_type')
+  $field->setAttributes(array('id'    => 'rep_type',
+                              'class' => 'multiline'))
+        ->setLabel(get_vocab('rep_type'))
         ->addControlClass('long')
         ->addRadioOptions($options, 'rep_type', $value, true);
         
   return $field;
+}
+
+
+function get_field_rep_day($disabled=false)
+{
+  global $weekstarts, $strftime_format;
+  global $rep_day;
+  
+  for ($i = 0; $i < 7; $i++)
+  {
+    // Display day name checkboxes according to language and preferred weekday start.
+    $wday = ($i + $weekstarts) % 7;
+    // We need to ensure the index is a string to force the array to be associative
+    $options[$wday] = day_name($wday, $strftime_format['dayname_edit']);
+  }
+  
+  $field = new FieldInputCheckboxGroup();
+  
+  $field->setAttribute('id', 'rep_day')
+        ->setLabel(get_vocab('rep_rep_day'))
+        ->addCheckboxOptions($options, 'rep_day[]', $rep_day, true, $disabled);
+  
+  return $field;
+}
+
+
+function get_fieldset_rep_type_details($disabled=false)
+{
+  $fieldset = new ElementFieldset();
+  
+  $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
+                                 'id'    => 'rep_weekly'));
+  $fieldset->addElement(get_field_rep_day($disabled));
+  
+  return $fieldset;
 }
 
 
@@ -602,6 +640,18 @@ function get_fieldset_repeat()
   $fieldset->setAttribute('id', 'rep_info');
   
   $fieldset->addElement(get_field_rep_type($rep_type, $disabled));
+  
+  // No point in showing anything more if the repeat fields are disabled
+  // and the repeat type is None
+  if (!$disabled || ($rep_type != REP_NONE))
+  {
+    // And no point in showing the weekly repeat details if the repeat
+    // fields are disabled and the repeat type is not a weekly repeat
+    if (!$disabled || ($rep_type == REP_WEEKLY))
+    {
+      $fieldset->addElement(get_fieldset_rep_type_details($disabled));
+    }
+  }
   
   return $fieldset;
 }

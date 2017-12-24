@@ -266,7 +266,7 @@ class Element
   }
   
   
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null)
+  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     // Trivial case
     if (empty($options))
@@ -292,6 +292,12 @@ class Element
       {
         $checkbox->setChecked(true);
       }
+      
+      if ($disabled)
+      {
+        $checkbox->setAttribute('disabled', true);
+      }
+      
       $label = new ElementLabel();
       $label->setText($value)
             ->addElement($checkbox);
