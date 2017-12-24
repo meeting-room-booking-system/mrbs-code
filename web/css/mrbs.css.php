@@ -767,6 +767,7 @@ div#custom_html {
 .standard fieldset {
   display: table;
   float: left;
+  clear: left;
   width: auto;
   border-spacing: 0 0.75em;
   border-collapse: separate;

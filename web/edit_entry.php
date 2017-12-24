@@ -567,14 +567,27 @@ function get_field_custom($key, $disabled=false)
 }
 
 
-function get_field_rep_type()
+function get_field_rep_type($value, $disabled=false)
 {
+  $field = new FieldInputRadioGroup();
+  
+  foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
+  {
+    $options[$i] = get_vocab("rep_type_$i");
+  }
+  
+  $field->setAttribute('id', 'rep_type')
+        ->addControlClass('long')
+        ->addRadioOptions($options, 'rep_type', $value, true);
+        
+  return $field;
 }
 
 
 function get_fieldset_repeat()
 {
   global $edit_type, $repeats_allowed;
+  global $rep_type;
   
   // If repeats aren't allowed or this is not a series then disable
   // the repeat fields - they're for information only
@@ -588,7 +601,7 @@ function get_fieldset_repeat()
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'rep_info');
   
-  $fieldset->addElement(get_field_rep_type());
+  $fieldset->addElement(get_field_rep_type($rep_type, $disabled));
   
   return $fieldset;
 }
