@@ -947,44 +947,6 @@ function create_field_entry_rooms($disabled=FALSE)
   echo "</div>\n";
 }
 
-
-function create_field_entry_type($disabled=FALSE)
-{
-  global $booking_types, $type, $is_mandatory_field;
-  
-  // Don't bother with types if there's only one of them (or even none)
-  if (count($booking_types) < 2)
-  {
-    return;
-  }
-  
-  echo "<div id=\"div_type\">\n";
-  
-  $params = array('label'       => get_vocab("type"),
-                  'name'        => 'type',
-                  'disabled'    => $disabled,
-                  'mandatory'   => !empty($is_mandatory_field['entry.type']),
-                  'options'     => array(),
-                  'force_assoc' => TRUE,  // in case the type keys happen to be digits
-                  'value'       => $type);
-  
-  if (!empty($is_mandatory_field['entry.type']))
-  {
-    // Add a blank option to force a selection
-    $params['options'][''] = get_type_vocab('');
-  }
-  
-  foreach ($booking_types as $key)
-  {
-    $params['options'][$key] = get_type_vocab($key);
-  }
-  
-  generate_select($params);
-  
-  echo "</div>\n";
-}
-
-
 function create_field_entry_confirmation_status($disabled=FALSE)
 {
   global $confirmation_enabled, $confirmed;
@@ -1742,7 +1704,6 @@ foreach ($edit_entry_field_order as $key)
     break;
 
   case 'type':
-    create_field_entry_type();
     break;
 
   case 'confirmation_status':
