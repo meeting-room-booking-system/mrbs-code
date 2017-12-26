@@ -586,7 +586,26 @@ function get_field_rep_type($value, $disabled=false)
         ->setLabel(get_vocab('rep_type'))
         ->addControlClass('long')
         ->addRadioOptions($options, 'rep_type', $value, true);
-        
+  
+  // No point in showing anything more if the repeat fields are disabled
+  // and the repeat type is None
+  if (!$disabled || ($value != REP_NONE))
+  {
+    // And no point in showing the weekly repeat details if the repeat
+    // fields are disabled and the repeat type is not a weekly repeat
+    if (!$disabled || ($value == REP_WEEKLY))
+    {
+      $field->addControlElement(get_fieldset_rep_weekly_details($disabled));
+    }
+    
+    // And no point in showing the monthly repeat details if the repeat
+    // fields are disabled and the repeat type is not a monthly repeat
+    if (!$disabled || ($value == REP_MONTHLY))
+    {
+      $field->addControlElement(get_fieldset_rep_monthly_details($disabled));
+    }
+  }
+  
   return $field;
 }
 
@@ -781,25 +800,6 @@ function get_fieldset_repeat()
   $fieldset->setAttribute('id', 'rep_info');
   
   $fieldset->addElement(get_field_rep_type($rep_type, $disabled));
-  
-  // No point in showing anything more if the repeat fields are disabled
-  // and the repeat type is None
-  if (!$disabled || ($rep_type != REP_NONE))
-  {
-    // And no point in showing the weekly repeat details if the repeat
-    // fields are disabled and the repeat type is not a weekly repeat
-    if (!$disabled || ($rep_type == REP_WEEKLY))
-    {
-      $fieldset->addElement(get_fieldset_rep_weekly_details($disabled));
-    }
-    
-    // And no point in showing the monthly repeat details if the repeat
-    // fields are disabled and the repeat type is not a monthly repeat
-    if (!$disabled || ($rep_type == REP_MONTHLY))
-    {
-      $fieldset->addElement(get_fieldset_rep_monthly_details($disabled));
-    }
-  }
   
   return $fieldset;
 }

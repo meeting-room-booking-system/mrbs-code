@@ -818,6 +818,7 @@ div#custom_html {
 
 .standard div.group {
   display: inline-block;
+  float: left;
 }
 
 .standard div.group.long label {
