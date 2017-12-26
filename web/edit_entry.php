@@ -2056,16 +2056,6 @@ if (($edit_type == "series") && $repeats_allowed)
     genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year, '', $disabled);
     echo "</div>\n";
     
-    // Checkbox for skipping past conflicts
-    if (!$disabled)
-    {
-      echo "<div>\n";
-      $params = array('label' => get_vocab("skip_conflicts"),
-                      'name' => 'skip',
-                      'value' => !empty($skip_default));
-      generate_checkbox($params);
-      echo "</div>\n";
-    }
   }
 
   echo "</fieldset>\n";
