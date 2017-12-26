@@ -2,11 +2,13 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementLabel;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\ElementSpan;
+use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
@@ -574,18 +576,21 @@ function get_field_custom($key, $disabled=false)
 
 function get_field_rep_type($value, $disabled=false)
 {
-  $field = new FieldInputRadioGroup();
+  $field = new FieldDiv();
+  
+  $field->setAttributes(array('id'    => 'rep_type',
+                              'class' => 'multiline'))
+        ->setLabel(get_vocab('rep_type'));
   
   foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
   {
     $options[$i] = get_vocab("rep_type_$i");
-  }
+  }  
+  $radio_group = new ElementDiv();
+  $radio_group->setAttribute('class', 'group long')
+              ->addRadioOptions($options, 'rep_type', $value, true);
   
-  $field->setAttributes(array('id'    => 'rep_type',
-                              'class' => 'multiline'))
-        ->setLabel(get_vocab('rep_type'))
-        ->addControlClass('long')
-        ->addRadioOptions($options, 'rep_type', $value, true);
+  $field->addControlElement($radio_group);
   
   // No point in showing anything more if the repeat fields are disabled
   // and the repeat type is None
@@ -640,7 +645,8 @@ function get_field_rep_num_weeks($disabled=false)
   $field = new FieldInputNumber();
   
   $span = new ElementSpan();
-  $span->setText(get_vocab('weeks'));
+  $span->setAttribute('id', 'num_weeks')
+       ->setText(get_vocab('weeks'));
   
   $field->setLabel(get_vocab('rep_num_weeks'))
         ->setControlAttributes(array('name'     => 'rep_num_weeks',

@@ -313,7 +313,7 @@ init = function(args) {
   // will have its own width, as the display:table only applies to that
   // fieldset.
   ?>
-  var labels = $('.standard fieldset > div > label');
+  var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
    
   function getMaxWidth (selection) {
     return Math.max.apply(null, selection.map(function() {

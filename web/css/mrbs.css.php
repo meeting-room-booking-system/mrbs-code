@@ -949,13 +949,12 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 
 .form_general .group      label {clear: none; width: auto; max-width: none; font-weight: normal; overflow: visible; text-align: left}
 .form_general #rep_type .group label {clear: left}
-div#rep_type {
-    width: auto;
-    border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
-    margin-right: 1em;
-    margin-bottom: 0.5em;
-    padding-right: 1em;
+
+div#rep_type div.long{
+  border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  padding-right: 1em;
 }
+
 fieldset.rep_type_details {clear: none; padding-top: 0}
 fieldset.rep_type_details fieldset {padding-top: 0}
 
@@ -1045,6 +1044,11 @@ fieldset#rep_info, fieldset#booking_controls {
 }
 
 .form_general input#rep_num_weeks, .form_general input#month_absolute {width: 4em}
+
+span#num_weeks, input#rep_num_weeks {
+  display: inline-block;
+  float: left;
+}
 
 .edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
 
