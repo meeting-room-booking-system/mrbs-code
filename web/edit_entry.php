@@ -2050,12 +2050,6 @@ if (($edit_type == "series") && $repeats_allowed)
       echo "</fieldset>\n";
     }
     
-    // Repeat end date
-    echo "<div id=\"rep_end_date\">\n";
-    echo "<label>" . get_vocab("rep_end_date") . "</label>\n";
-    genDateSelector("rep_end_", $rep_end_day, $rep_end_month, $rep_end_year, '', $disabled);
-    echo "</div>\n";
-    
   }
 
   echo "</fieldset>\n";
