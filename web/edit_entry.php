@@ -9,6 +9,7 @@ use MRBS\Form\ElementLabel;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
@@ -788,6 +789,39 @@ function get_fieldset_rep_monthly_details($disabled=false)
 }
 
 
+function get_field_rep_end_date($disabled=false)
+{
+  global $rep_end_year, $rep_end_month, $rep_end_day;
+  
+  $field = new FieldInputDate();
+  
+  $field->setAttribute('id', 'rep_end_date')
+        ->setLabel(get_vocab('rep_end_date'))
+        ->setControlAttributes(array('name'     => 'rep_end_date',
+                                     'value'    => format_iso_date($rep_end_year, $rep_end_month, $rep_end_day),
+                                     'disabled' => $disabled));
+  
+  return $field;
+}
+
+
+function get_field_skip_conflicts($disabled=false)
+{
+  if ($disabled)
+  {
+    return null;
+  }
+  
+  $field = new FieldInputCheckbox();
+  
+  $field->setLabel(get_vocab('skip_conflicts'))
+        ->setControlAttribute('name', 'skip')
+        ->setChecked(!empty($skip_default));
+  
+  return $field;
+}
+
+
 function get_fieldset_repeat()
 {
   global $edit_type, $repeats_allowed;
@@ -805,7 +839,9 @@ function get_fieldset_repeat()
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'rep_info');
   
-  $fieldset->addElement(get_field_rep_type($rep_type, $disabled));
+  $fieldset->addElement(get_field_rep_type($rep_type, $disabled))
+           ->addElement(get_field_rep_end_date($disabled))
+           ->addElement(get_field_skip_conflicts($disabled));
   
   return $fieldset;
 }
