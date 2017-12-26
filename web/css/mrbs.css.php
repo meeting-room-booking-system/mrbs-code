@@ -960,6 +960,14 @@ fieldset.rep_type_details fieldset {padding-top: 0}
 
 .rep_type_details label {text-align: left}
 
+#rep_monthly input[type="radio"] {
+  margin-left: 2em;
+}
+
+.standard fieldset fieldset.rep_type_details {
+  padding-top: 0;
+}
+
 .form_general input, .form_general textarea, .form_general select {
   float: left;
   margin-left: <?php echo $general_gap ?>em; 
