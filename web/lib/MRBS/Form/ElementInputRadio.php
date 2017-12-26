@@ -10,5 +10,5 @@ class ElementInputRadio extends ElementInput
     parent::__construct();
     $this->setAttribute('type', 'radio');
   }
- 
+  
 }

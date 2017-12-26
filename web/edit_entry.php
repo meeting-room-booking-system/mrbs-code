@@ -3,10 +3,14 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputRadio;
+use MRBS\Form\ElementLabel;
 use MRBS\Form\ElementSelect;
+use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
@@ -610,13 +614,150 @@ function get_field_rep_day($disabled=false)
 }
 
 
-function get_fieldset_rep_type_details($disabled=false)
+function get_field_rep_num_weeks($disabled=false)
+{
+  global $rep_num_weeks;
+  
+  $field = new FieldInputNumber();
+  
+  $span = new ElementSpan();
+  $span->setText(get_vocab('weeks'));
+  
+  $field->setLabel(get_vocab('rep_num_weeks'))
+        ->setControlAttributes(array('name'     => 'rep_num_weeks',
+                                     'min'      => REP_NUM_WEEKS_MIN,
+                                     'value'    => $rep_num_weeks,
+                                     'disabled' => $disabled))
+        ->addElement($span);
+  
+  return $field;
+}
+
+
+function get_fieldset_rep_weekly_details($disabled=false)
 {
   $fieldset = new ElementFieldset();
   
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_weekly'));
-  $fieldset->addElement(get_field_rep_day($disabled));
+  $fieldset->addElement(get_field_rep_day($disabled))
+           ->addElement(get_field_rep_num_weeks($disabled));
+  
+  return $fieldset;
+}
+
+
+// MONTH ABSOLUTE (eg Day 15 of every month)
+function get_fieldset_month_absolute($disabled=false)
+{
+  global $month_type, $month_absolute;
+  
+  $fieldset = new ElementFieldset();
+  
+  $label = new ElementLabel();
+  $label->setAttribute('class', 'no_suffix')
+        ->setText(get_vocab('month_absolute'));
+  
+  $radio = new ElementInputRadio();
+  $radio->setAttributes(array('name'     => 'month_type',
+                              'value'    => REP_MONTH_ABSOLUTE,
+                              'checked'  => ($month_type == REP_MONTH_ABSOLUTE),
+                              'disabled' => $disabled));
+  
+  $label->addElement($radio);
+  
+  $fieldset->addElement($label);
+  
+  // We could in the future allow -1 to -31, meaning "the nth last day of
+  // the month", but for the moment we'll keep it simple
+  $options = array();
+  for ($i=1; $i<=31; $i++)
+  {
+    $options[] = $i;
+  }
+  $select = new ElementSelect();
+  $select->setAttributes(array('name'     => 'month_absolute',
+                               'disabled' => $disabled))
+         ->addSelectOptions($options, $month_absolute, false);
+         
+  $fieldset->addElement($select);
+    
+  return $fieldset;
+}
+
+
+// MONTH RELATIVE (eg the second Thursday of every month)
+function get_fieldset_month_relative($disabled=false)
+{
+  global $month_type, $month_relative_ord, $month_relative_day;
+  global $weekstarts, $RFC_5545_days;
+  
+  $fieldset = new ElementFieldset();
+  
+  $label = new ElementLabel();
+  $label->setAttribute('class', 'no_suffix')
+        ->setText(get_vocab('month_relative'));
+  
+  $radio = new ElementInputRadio();
+  $radio->setAttributes(array('name'     => 'month_type',
+                              'value'    => REP_MONTH_RELATIVE,
+                              'checked'  => ($month_type == REP_MONTH_RELATIVE),
+                              'disabled' => $disabled));
+  
+  $label->addElement($radio);
+  
+  $fieldset->addElement($label);
+  
+  // Note: the select box order does not internationalise very well and could
+  // do with revisiting.   It assumes all languages have the same order as English
+  // eg "the second Wednesday" which is probably not true.
+  $options = array();
+  foreach (array('1', '2', '3', '4', '5', '-1', '-2', '-3', '-4', '-5') as $i)
+  {
+    $options[$i] = get_vocab("ord_" . $i);
+  }
+  $select = new ElementSelect();
+  $select->setAttributes(array('name'     => 'month_relative_ord',
+                               'disabled' => $disabled))
+         ->addSelectOptions($options, $month_relative_ord, true);
+         
+  $fieldset->addElement($select);
+  
+  $options = array();
+  for ($i=0; $i<7; $i++)
+  {
+    $i_offset = ($i + $weekstarts)%7;
+    $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
+  }
+  $select = new ElementSelect();
+  $select->setAttributes(array('name'     => 'month_relative_day',
+                               'disabled' => $disabled))
+         ->addSelectOptions($options, $month_relative_day, true);
+         
+  $fieldset->addElement($select);
+  
+  return $fieldset;
+}
+
+
+function get_fieldset_rep_monthly_details($disabled=false)
+{
+  global $month_type;
+  
+  $fieldset = new ElementFieldset();
+  
+  // If the existing repeat type is other than a monthly repeat, we'll
+  // need to define a default month type in case the user decides to change
+  // to a monthly repeat
+  if (!isset($month_type))
+  {
+    $month_type = REP_MONTH_ABSOLUTE;
+  }
+  
+  $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
+                                 'id'    => 'rep_monthly'));
+  $fieldset->addElement(get_fieldset_month_absolute($disabled))
+           ->addElement(get_fieldset_month_relative($disabled));
   
   return $fieldset;
 }
@@ -649,7 +790,14 @@ function get_fieldset_repeat()
     // fields are disabled and the repeat type is not a weekly repeat
     if (!$disabled || ($rep_type == REP_WEEKLY))
     {
-      $fieldset->addElement(get_fieldset_rep_type_details($disabled));
+      $fieldset->addElement(get_fieldset_rep_weekly_details($disabled));
+    }
+    
+    // And no point in showing the monthly repeat details if the repeat
+    // fields are disabled and the repeat type is not a monthly repeat
+    if (!$disabled || ($rep_type == REP_MONTHLY))
+    {
+      $fieldset->addElement(get_fieldset_rep_monthly_details($disabled));
     }
   }
   

@@ -15,10 +15,10 @@ class FieldInputCheckboxGroup extends Field
   }
   
   
-  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null)
+  public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     $element = $this->getControl();
-    $element->addCheckboxOptions($options, $name, $checked, $associative);
+    $element->addCheckboxOptions($options, $name, $checked, $associative, $disabled);
     $this->setControl($element);
     return $this;
   }
