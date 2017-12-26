@@ -575,6 +575,7 @@ function get_field_custom($key, $disabled=false)
 }
 
 
+// Repeat type
 function get_field_rep_type($value, $disabled=false)
 {
   $field = new FieldDiv();
@@ -616,6 +617,7 @@ function get_field_rep_type($value, $disabled=false)
 }
 
 
+// Repeat day
 function get_field_rep_day($disabled=false)
 {
   global $weekstarts, $strftime_format;
@@ -639,6 +641,7 @@ function get_field_rep_day($disabled=false)
 }
 
 
+// Repeat frequency
 function get_field_rep_num_weeks($disabled=false)
 {
   global $rep_num_weeks;
@@ -1892,88 +1895,6 @@ foreach ($edit_entry_field_order as $key)
   default:
     break;
   }
-}
-
-
-// Show the repeat fields if (a) it's a new booking and repeats are allowed,
-// or else if it's an existing booking and it's a series.  (It's not particularly obvious but
-// if edit_type is "series" then it means that either you're editing an existing
-// series or else you're making a new booking.  This should be tidied up sometime!)
-if (($edit_type == "series") && $repeats_allowed)
-{
-  // If repeats aren't allowed or this is not a series then disable
-  // the repeat fields - they're for information only
-  // (NOTE: when repeat bookings are restricted to admins, an ordinary user
-  // would not normally be able to get to the stage of trying to edit a series.
-  // But we have to cater for the possibility because it could happen if (a) the
-  // series was created before the policy was introduced or (b) the user has
-  // been demoted since the series was created).
-  $disabled = ($edit_type != "series") || !$repeats_allowed;
-  
-  echo "<fieldset id=\"rep_info\">\n";
-  echo "<legend></legend>\n";
-      
-  // Repeat type
-  echo "<div id=\"rep_type\">\n";
-  $params = array('label'         => get_vocab("rep_type"),
-                  'name'          => 'rep_type',
-                  'value'         => $rep_type,
-                  'disabled'      => $disabled,
-                  'options'       => array(),
-                  'force_assoc'   => TRUE);
-  foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
-  {
-    $params['options'][$i] = get_vocab("rep_type_$i");
-  }
-  generate_radio_group($params);
-  echo "</div>\n";
-  
-  // No point in showing anything more if the repeat fields are disabled
-  // and the repeat type is None
-  if (!$disabled || ($rep_type != REP_NONE))
-  {
-    // And no point in showing the weekly repeat details if the repeat
-    // fields are disabled and the repeat type is not a weekly repeat
-    if (!$disabled || ($rep_type == REP_WEEKLY))
-    {
-      echo "<fieldset class= \"rep_type_details js_none\" id=\"rep_weekly\">\n";
-      echo "<legend></legend>\n";
-      // Repeat day
-      echo "<div id=\"rep_day\">\n";
-      $params = array('label'    => get_vocab("rep_rep_day"),
-                      'name'     => 'rep_day[]',
-                      'value'    => $rep_day,
-                      'disabled' => $disabled,
-                      'options'  => array());
-      for ($i = 0; $i < 7; $i++)
-      {
-        // Display day name checkboxes according to language and preferred weekday start.
-        $wday = ($i + $weekstarts) % 7;
-        // We need to ensure the index is a string to force the array to be associative
-        $params['options'][$wday] = day_name($wday, $strftime_format['dayname_edit']);
-      }
-      $params['force_assoc'] = TRUE;
-      generate_checkbox_group($params);
-      echo "</div>\n";
-
-      // Repeat frequency
-      echo "<div>\n";
-      $params = array('label'      => get_vocab("rep_num_weeks"),
-                      'name'       => 'rep_num_weeks',
-                      'type'       => 'number',
-                      'step'       => '1',
-                      'min'        => REP_NUM_WEEKS_MIN,
-                      'value'      => $rep_num_weeks,
-                      'suffix'     => get_vocab("weeks"),
-                      'disabled'   => $disabled);
-      generate_input($params);
-    
-      echo "</div>\n";
-      echo "</fieldset>\n";
-    }
-  }
-
-  echo "</fieldset>\n";
 }
 
 echo "<fieldset id=\"booking_controls\">\n";
