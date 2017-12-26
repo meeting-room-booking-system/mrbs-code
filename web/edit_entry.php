@@ -1807,6 +1807,30 @@ $form->setAttributes(array('class'  => 'standard',
                            'action' => 'edit_entry_handler.php',
                            'method' => 'post'));
 
+$form->addHiddenInputs(array('returl'    => $returl,
+                             'create_by' => $create_by,
+                             'rep_id'    => $rep_id,
+                             'edit_type' => $edit_type));
+
+// The original_room_id will only be set if this was an existing booking.
+// If it is an existing booking then edit_entry_handler needs to know the
+// original room id and the ical_uid and the ical_sequence, because it will
+// have to keep the ical_uid and increment the ical_sequence for the room that
+// contained the original booking.  If it's a new booking it will generate a new
+// ical_uid and start the ical_sequence at 0.
+if (isset($original_room_id))
+{
+  $form->addHiddenInputs(array('original_room_id' => $original_room_id,
+                               'ical_uid'         => $ical_uid,
+                               'ical_sequence'    => $ical_sequence,
+                               'ical_recur_id'    => $ical_recur_id));
+}
+
+if(isset($id) && !isset($copy))
+{
+  $form->addHiddenInput('id', $id);
+}
+
 $fieldset = new ElementFieldset();
 $fieldset->addLegend(get_vocab($token));
 
@@ -1924,34 +1948,6 @@ foreach ($edit_entry_field_order as $key)
   }
 }
 
-
-    ?>
-    <input type="hidden" name="returl" value="<?php echo htmlspecialchars($returl) ?>">
-    <input type="hidden" name="create_by" value="<?php echo htmlspecialchars($create_by)?>">
-    <input type="hidden" name="rep_id" value="<?php echo $rep_id?>">
-    <input type="hidden" name="edit_type" value="<?php echo $edit_type?>">
-    <?php
-    // The original_room_id will only be set if this was an existing booking.
-    // If it is an existing booking then edit_entry_handler needs to know the
-    // original room id and the ical_uid and the ical_sequence, because it will
-    // have to keep the ical_uid and increment the ical_sequence for the room that
-    // contained the original booking.  If it's a new booking it will generate a new
-    // ical_uid and start the ical_sequence at 0.
-    if (isset($original_room_id))
-    {
-      echo "<input type=\"hidden\" name=\"original_room_id\" ".
-        "value=\"$original_room_id\">\n";
-      echo "<input type=\"hidden\" name=\"ical_uid\" value=\"".
-        htmlspecialchars($ical_uid)."\">\n";
-      echo "<input type=\"hidden\" name=\"ical_sequence\" value=\"".
-        htmlspecialchars($ical_sequence)."\">\n";
-      echo "<input type=\"hidden\" name=\"ical_recur_id\" value=\"".
-        htmlspecialchars($ical_recur_id)."\">\n";
-    }
-    if(isset($id) && !isset($copy))
-    {
-      echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
-    }
 
     // Buttons
     echo "<fieldset class=\"submit_buttons\">\n";
