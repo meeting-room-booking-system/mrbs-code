@@ -850,6 +850,26 @@ function get_fieldset_repeat()
 }
 
 
+function get_fieldset_booking_controls()
+{
+  global $mail_settings;
+  
+  $fieldset = new ElementFieldset();
+  
+  $fieldset->setAttribute('id', 'booking_controls');
+  
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('no_mail'))
+        ->setControlAttribute('name', 'no_mail')
+        ->setChecked($mail_settings['no_mail_default']);
+        
+  $fieldset->addElement($field);
+        
+  return $fieldset;
+}
+
+
+
 // Returns the booking date for a given time.   If the booking day spans midnight and
 // $t is in the interval between midnight and the end of the day then the booking date
 // is really the day before.
@@ -1851,6 +1871,13 @@ $form->addElement($fieldset);
 if (($edit_type == "series") && $repeats_allowed)
 {
   $form->addElement(get_fieldset_repeat());
+}
+
+// Checkbox for no email
+if ($need_to_send_mail &&
+    ($mail_settings['allow_no_mail'] || ($is_admin && $mail_settings['allow_admins_no_mail'])))
+{
+  $form->addElement(get_fieldset_booking_controls());
 }
 
 $form->render();
