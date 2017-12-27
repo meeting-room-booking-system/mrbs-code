@@ -5,6 +5,7 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputRadio;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\ElementSpan;
@@ -15,6 +16,7 @@ use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -868,6 +870,28 @@ function get_fieldset_booking_controls()
   return $fieldset;
 }
 
+
+function get_fieldset_submit_buttons()
+{
+  $fieldset = new ElementFieldset();
+  
+  // The back and submit buttons
+  $field = new FieldInputSubmit();
+  
+  $back = new ElementInputSubmit();
+  $back->setAttributes(array('name'           => 'back_button',
+                             'value'          => get_vocab('back'),
+                             'formnovalidate' => true));
+  $field->addLabelClass('no_suffix')
+        ->addLabelElement($back)
+        ->setControlAttributes(array('class' => 'default_action',
+                                     'name'  => 'save_button',
+                                     'value' => get_vocab('save')));
+        
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
 
 
 // Returns the booking date for a given time.   If the booking day spans midnight and
@@ -1903,6 +1927,8 @@ if ($need_to_send_mail &&
 {
   $form->addElement(get_fieldset_booking_controls());
 }
+
+$form->addElement(get_fieldset_submit_buttons());
 
 $form->render();
 
