@@ -782,6 +782,10 @@ div#custom_html {
   display: table-cell;
 }
 
+.standard fieldset > div > div > * {
+  float: left;
+}
+
 .standard fieldset fieldset {
   padding: 1em 0;
 }
@@ -808,7 +812,7 @@ div#custom_html {
   padding-top: 0.2em;
 }
 
-.multiline label {
+.multiline label, .submit_buttons label {
   vertical-align: top;
 }
 
@@ -1063,12 +1067,8 @@ span#num_weeks, input#rep_num_weeks {
 .form_general label.secondary {font-weight: normal; width: auto}
 
 div#checks {
-  float: left; 
-  clear: none; 
-  width: auto;
   white-space: nowrap;
   letter-spacing: 0.9em;
-  padding: 1em 0;
   margin-left: 3em;
 }
 

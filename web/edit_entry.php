@@ -876,19 +876,37 @@ function get_fieldset_submit_buttons()
   $fieldset = new ElementFieldset();
   
   // The back and submit buttons
-  $field = new FieldInputSubmit();
+  $field = new FieldDiv();
   
   $back = new ElementInputSubmit();
   $back->setAttributes(array('name'           => 'back_button',
                              'value'          => get_vocab('back'),
                              'formnovalidate' => true));
-  $field->addLabelClass('no_suffix')
+  
+  $submit = new ElementInputSubmit();
+  $submit->setAttributes(array('class' => 'default_action',
+                               'name'  => 'save_button',
+                               'value' => get_vocab('save')));
+  
+  // div to hold the results of the Ajax checking of the booking
+  $div = new ElementDiv();
+  $span_conflict = new ElementSpan();
+  $span_conflict->setAttribute('id', 'conflict_check');
+  $span_policy = new ElementSpan();
+  $span_policy->setAttribute('id', 'policy_check');
+  $div->setAttribute('id', 'checks')
+      ->addElement($span_conflict)
+      ->addElement($span_policy);
+  
+  $field->setAttribute('class', 'submit_buttons')
+        ->addLabelClass('no_suffix')
         ->addLabelElement($back)
-        ->setControlAttributes(array('class' => 'default_action',
-                                     'name'  => 'save_button',
-                                     'value' => get_vocab('save')));
+        ->addControlElement($submit)
+        ->addControlElement($div);
         
   $fieldset->addElement($field);
+  
+      
   
   return $fieldset;
 }
