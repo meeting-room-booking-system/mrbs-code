@@ -1991,45 +1991,6 @@ foreach ($edit_entry_field_order as $key)
     break;
   }
 }
-
-
-    // Buttons
-    echo "<fieldset class=\"submit_buttons\">\n";
-    echo "<legend></legend>\n";
-    // The Back button
-    echo "<div id=\"edit_entry_submit_back\">\n";
-    echo "<input class=\"submit\" type=\"submit\" name=\"back_button\" value=\"" . get_vocab("back") . "\" formnovalidate>\n";
-    echo "</div>\n";
-    
-    // The Submit button
-    echo "<div id=\"edit_entry_submit_save\">\n";
-    echo "<input class=\"submit default_action\" type=\"submit\" name=\"save_button\" value=\"" .
-          get_vocab("save") . "\">\n";
-    echo "</div>\n";
-    
-    // div to hold the results of the Ajax checking of the booking
-    echo "<div id=\"checks\">\n";
-    echo "<span id=\"conflict_check\"></span>\n";
-    echo "<span id=\"policy_check\"></span>\n";
-    echo "</div>\n";
-    
-    echo "</fieldset>";
-    
-    // and a div to hold the dialog box which gives more details.    The dialog
-    // box contains a set of tabs.   And because we want the tabs to act as the
-    // dialog box we add an extra tab where we're going to put the dialog close
-    // button and then we hide the dialog itself
-    echo "<div id=\"check_results\" style=\"display: none\">\n";
-    echo "<div id=\"check_tabs\">\n";
-    echo "<ul id=\"details_tabs\">\n";
-    echo "<li><a href=\"#schedule_details\">" . get_vocab("schedule") . "</a></li>\n";
-    echo "<li><a href=\"#policy_details\">" . get_vocab("policy") . "</a></li>\n";
-    echo "<li id=\"ui-tab-dialog-close\"></li>\n";
-    echo "</ul>\n";
-    echo "<div id=\"schedule_details\"></div>\n";
-    echo "<div id=\"policy_details\"></div>\n";
-    echo "</div>\n";
-    echo "</div>\n";
     ?>
   </fieldset>
 </form>
