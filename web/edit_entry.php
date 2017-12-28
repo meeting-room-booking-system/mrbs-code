@@ -1067,34 +1067,6 @@ function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FA
 }
 
 
-function create_field_entry_description($disabled=FALSE)
-{
-  global $description, $select_options, $datalist_options, $is_mandatory_field, $maxlength;
-  
-  echo "<div id=\"div_description\">\n";
-  
-  $params = array('label'       => get_vocab("fulldescription"),
-                  'name'        => 'description',
-                  'value'       => $description,
-                  'disabled'    => $disabled,
-                  'maxlength'   => isset($maxlength['entry.description']) ? $maxlength['entry.description'] : NULL,
-                  'mandatory'   => !empty($is_mandatory_field['entry.description']));
-  
-  if (isset($select_options['entry.description']) ||
-      isset($datalist_options['entry.description']) )
-  {
-    $params['field'] = 'entry.description';
-    generate_input($params);
-  }
-  else
-  {
-    $params['attributes'] = array('rows="8"', 'cols="40"');
-    generate_textarea($params);
-  }
-  echo "</div>\n";
-}
-
-
 function create_field_entry_start_date($disabled=FALSE)
 {
   global $start_time, $areas, $area_id;
@@ -1856,10 +1828,7 @@ foreach ($edit_entry_field_order as $key)
   switch( $key )
   {
   case 'name':
-    break;
-
   case 'description':
-    create_field_entry_description();
     break;
 
   case 'start_date':
