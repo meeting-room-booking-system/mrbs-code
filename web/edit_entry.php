@@ -1067,29 +1067,6 @@ function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FA
 }
 
 
-function create_field_entry_name($disabled=FALSE)
-{
-  global $name, $maxlength, $is_mandatory_field;
-  
-  echo "<div id=\"div_name\">\n";
-  
-  // 'mandatory' is there to prevent null input (pattern doesn't seem to be triggered until
-  // there is something there).
-  $params = array('label'      => get_vocab("namebooker"),
-                  'name'       => 'name',
-                  'field'      => 'entry.name',
-                  'value'      => $name,
-                  'type'       => 'text',
-                  'pattern'    => REGEX_TEXT_POS,
-                  'disabled'   => $disabled,
-                  'maxlength'  => $maxlength['entry.name']);
-                  
-  generate_input($params);
-
-  echo "</div>\n";
-}
-
-
 function create_field_entry_description($disabled=FALSE)
 {
   global $description, $select_options, $datalist_options, $is_mandatory_field, $maxlength;
@@ -1879,7 +1856,6 @@ foreach ($edit_entry_field_order as $key)
   switch( $key )
   {
   case 'name':
-    create_field_entry_name();
     break;
 
   case 'description':
