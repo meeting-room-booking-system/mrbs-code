@@ -1211,88 +1211,6 @@ function create_field_entry_areas($disabled=FALSE)
 }
 
 
-function create_field_entry_rooms($disabled=FALSE)
-{
-  global $multiroom_allowed, $room_id, $area_id, $selected_rooms, $areas;
-  global $tbl_room, $tbl_area;
-  
-  // $selected_rooms will be populated if we've come from a drag selection
-  if (empty($selected_rooms))
-  {
-    $selected_rooms = array($room_id);
-  }
-  
-  // Get the details of all the enabled rooms
-  $all_rooms = array();
-  $sql = "SELECT R.id, R.room_name, R.area_id
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id = A.id
-             AND R.disabled=0
-             AND A.disabled=0
-        ORDER BY R.area_id, R.sort_key";
-  $res = db()->query($sql);
-  
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
-  {
-    $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
-  }
-
-  echo "<div id=\"div_rooms\">\n";
-  echo "<label for=\"rooms\">" . get_vocab("rooms") . "</label>\n";
-  echo "<div class=\"group\">\n";
-  
-  // First of all generate the rooms for this area
-  $params = array('name'        => 'rooms[]',
-                  'id'          => 'rooms',
-                  'options'     => $all_rooms[$area_id],
-                  'force_assoc' => TRUE,
-                  'value'       => $selected_rooms,
-                  'multiple'    => $multiroom_allowed,  // If multiple is not set then mandatory (HTML "required")
-                  'mandatory'   => $multiroom_allowed,  // is unnecessary and also causes an HTML5 validation error
-                  'disabled'    => $disabled,
-                  'attributes'  => array('size="5"'));
-  generate_select($params);
-  
-  // Then generate templates for all the rooms
-  $params['disabled']      = TRUE;
-  $params['create_hidden'] = FALSE;
-  foreach ($all_rooms as $a => $rooms)
-  {
-    $attributes = array();
-    $attributes[] = 'style="display: none"';
-    // Put in some data about the area for use by the JavaScript
-    $attributes[] = 'data-enable_periods='           . (($areas[$a]['enable_periods']) ? 1 : 0);
-    $attributes[] = 'data-n_periods='                . count($areas[$a]['periods']);
-    $attributes[] = 'data-default_duration='         . ((isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR);
-    $attributes[] = 'data-default_duration_all_day=' . (($areas[$a]['default_duration_all_day']) ? 1 : 0);
-    $attributes[] = 'data-max_duration_enabled='     . (($areas[$a]['max_duration_enabled']) ? 1 : 0);
-    $attributes[] = 'data-max_duration_secs='        . $areas[$a]['max_duration_secs'];
-    $attributes[] = 'data-max_duration_periods='     . $areas[$a]['max_duration_periods'];
-    $attributes[] = 'data-max_duration_qty='         . $areas[$a]['max_duration_qty'];
-    $attributes[] = 'data-max_duration_units="'      . htmlspecialchars($areas[$a]['max_duration_units']) . '"';
-    $attributes[] = 'data-timezone="'                . htmlspecialchars($areas[$a]['timezone']) . '"';
-    
-    $room_ids = array_keys($rooms);
-    $params['id']         = 'rooms' . $a;
-    $params['options']    = $rooms;
-    $params['value']      = $room_ids[0];
-    $params['attributes'] = $attributes;
-    generate_select($params);
-  }
-  
-
-  // No point telling them how to select multiple rooms if the input
-  // is disabled
-  if ($multiroom_allowed && !$disabled)
-  {
-    echo "<span>" . get_vocab("ctrl_click") . "</span>\n";
-  }
-  echo "</div>\n";
-
-  echo "</div>\n";
-}
-
-
 // Get non-standard form variables
 $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
@@ -1981,9 +1899,6 @@ foreach ($edit_entry_field_order as $key)
     break;
 
   case 'rooms':
-    create_field_entry_rooms();
-    break;
-
   case 'type':
   case 'confirmation_status':
   case 'privacy_status':
