@@ -6,6 +6,7 @@ use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputDate;
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
@@ -267,8 +268,6 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
                               'disabled' => $disabled || $display_none))
         ->addSelectOptions($options, $current_s, true);
         
-        WHAT ABOUT CREATE_HIDDEN?
-        
   if ($disabled)
   {
     // If $disabled is set, give the element a class so that the JavaScript
@@ -278,6 +277,14 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   if ($display_none)
   {
     $field->setAttribute('style', 'display: none');
+  }
+  
+  if ($disabled && !$display_none)
+  {
+    $hidden = new ElementInputHidden();
+    $hidden->setAttributes(array('name'  => $name,
+                                 'value' => $current_s));
+    $field->next($hidden);
   }
   
   return $field;
@@ -317,7 +324,8 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
   }
   
   $label = new ElementLabel();
-  $label->setText(get_vocab('all_day'));
+  $label->setText(get_vocab('all_day'))
+        ->setAttribute('class', 'no_suffix');
   
   $label->addElement($checkbox);
   $element->addElement($label);
@@ -1149,33 +1157,6 @@ function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FA
 }
 
 
-function create_field_entry_start_date($disabled=FALSE)
-{
-  global $start_time, $areas, $area_id;
-  
-  $date = getbookingdate($start_time);
-  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
-
-  echo "<div id=\"div_start_date\">\n";
-  echo "<label>" . get_vocab("start") . "</label>\n";
-  echo "<div>\n"; // Needed so that the structure is the same as for the end date to help the JavaScript
-  genDateSelector("start_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
-  echo "</div>\n";
-
-  // Generate the live slot selector and all day checkbox
-  genSlotSelector($areas[$area_id], 'start_seconds', 'start_seconds', $current_s, FALSE, $disabled, TRUE);
-  genAllDay($areas[$area_id], 'all_day', 'all_day', FALSE, $disabled);
-  
-  // Generate the templates for each area
-  foreach ($areas as $a)
-  {
-    genSlotSelector($a, 'start_seconds' . $a['id'], 'start_seconds', $current_s, TRUE, TRUE, TRUE);
-    genAllDay($a, 'all_day' . $a['id'], 'all_day', TRUE, TRUE);
-  }
-  echo "</div>\n";
-}
-
-
 function create_field_entry_end_date($disabled=FALSE)
 {
   global $end_time, $areas, $area_id, $multiday_allowed;
@@ -1911,10 +1892,7 @@ foreach ($edit_entry_field_order as $key)
   {
   case 'name':
   case 'description':
-    break;
-
   case 'start_date':
-    create_field_entry_start_date();
     break;
 
   case 'end_date':
