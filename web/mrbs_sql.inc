@@ -346,7 +346,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       if ($booking['start_time'] < mktime(0, 0, 0, $m, $d, $y))
       {
-        $violations[] = get_vocab("earliest_booking_date") . " " . utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
+        $violations[] = get_vocab("earliest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
       }
     }
     else
@@ -363,7 +363,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     {
       if ($booking['end_time'] > mktime(0, 0, 0, $m, $d+1, $y))
       {
-        $violations[] = get_vocab("latest_booking_date") . " " . utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y));
+        $violations[] = get_vocab("latest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
       }
     }
     else
