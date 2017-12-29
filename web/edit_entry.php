@@ -401,25 +401,29 @@ function get_field_end_date($value, $disabled=false)
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
-  $field = new FieldInputDate();
-  $field->setLabel(get_vocab('end'))
-        ->setControlAttributes(array('name'     => 'end_date',
-                                     'value'    => $end_date,
-                                     'disabled' => $disabled));
-                                     
+  $field = new FieldDiv();
+  
   // Generate the live slot selector
   // If we're using periods the booking model is slightly different,
   // so subtract one period because the "end" period is actually the beginning
   // of the last period booked
+  $element_date = new FieldInputDate();
+  $element_date->setAttributes(array('name'     => 'end_date',
+                                     'value'    => $end_date,
+                                     'disabled' => $disabled));
+                                     
   $a = $areas[$area_id];
   $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
-  $field->addElement(get_slot_selector($areas[$area_id],
-                                       'end_seconds',
-                                       'end_seconds',
-                                       $this_current_s,
-                                       false,
-                                       $disabled,
-                                       false));
+  
+  $field->setLabel(get_vocab('end'))
+        ->addControlElement($element_date)
+        ->addControlElement(get_slot_selector($areas[$area_id],
+                                              'end_seconds',
+                                              'end_seconds',
+                                              $this_current_s,
+                                              false,
+                                              $disabled,
+                                              false));
 
   return $field;
 }
