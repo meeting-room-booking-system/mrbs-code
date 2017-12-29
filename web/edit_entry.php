@@ -4,6 +4,8 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputCheckbox;
+use MRBS\Form\ElementInputDate;
 use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
@@ -260,11 +262,67 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   }
   
   $field = new ElementSelect();
-  $field->setAttributes(array('id'   => $id,
-                              'name' => $name))
+  $field->setAttributes(array('id'       => $id,
+                              'name'     => $name,
+                              'disabled' => $disabled || $display_none))
         ->addSelectOptions($options, $current_s, true);
+        
+        WHAT ABOUT CREATE_HIDDEN?
+        
+  if ($disabled)
+  {
+    // If $disabled is set, give the element a class so that the JavaScript
+    // knows to keep it disabled
+    $field->setAttribute('class', 'keep_disabled');
+  }
+  if ($display_none)
+  {
+    $field->setAttribute('style', 'display: none');
+  }
   
   return $field;
+}
+
+
+// Generate the All Day checkbox for an area
+function get_all_day($area, $input_id, $input_name, $display_none=false, $disabled=false)
+{
+  global $drag, $id;
+  
+  $element = new ElementDiv();
+  
+  if ($display_none || !$area['show_all_day'])
+  {
+    $element->setAttribute('style', 'display: none');
+  }
+  
+  // (1) If $display_none or $disabled are set then we'll also disable the select so
+  //     that there is only one select passing through the variable to the handler.
+  // (2) If this is an existing booking that we are editing or copying, then we do
+  //     not want the default duration applied
+  $disable_field = $disabled || $display_none || !$area['show_all_day'];
+  
+  $checkbox = new ElementInputCheckbox();
+  $checkbox->setAttributes(array('name'      => $input_name,
+                                 'id'        => $input_id,
+                                 'data-show' => ($area['show_all_day']) ? '1' : '0',
+                                 'disabled'  => $disable_field))
+           ->setChecked($area['default_duration_all_day'] && !isset($id) && !$drag);
+  
+  if ($disable_field)
+  {
+    // and if $disabled is set, give the element a class so that the JavaScript
+    // knows to keep it disabled
+    $checkbox->addClass('keep_disabled');
+  }
+  
+  $label = new ElementLabel();
+  $label->setText(get_vocab('all_day'));
+  
+  $label->addElement($checkbox);
+  $element->addElement($label);
+  
+  return $element;
 }
 
 
@@ -276,22 +334,46 @@ function get_field_start_date($value, $disabled=false)
   $start_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
   
-  $field = new FieldInputDate();
-  $field->setLabel(get_vocab('start'))
-        ->setControlAttributes(array('name'     => 'start_date',
+  $field = new FieldDiv();
+  
+  // Generate the live slot selector and all day checkbox
+  $element_date = new ElementInputDate();
+  $element_date->setAttributes(array('name'     => 'start_date',
                                      'value'    => $start_date,
                                      'disabled' => $disabled,
                                      'required' => true));
-                                     
-  // Generate the live slot selector and all day checkbox
-  $field->addElement(get_slot_selector($areas[$area_id],
-                                       'start_seconds',
-                                       'start_seconds',
-                                       $current_s,
-                                       false,
-                                       $disabled,
-                                       true));
-
+  
+  $field->setLabel(get_vocab('start'))
+        ->addControlElement($element_date)
+        ->addControlElement(get_slot_selector($areas[$area_id],
+                                              'start_seconds',
+                                              'start_seconds',
+                                              $current_s,
+                                              false,
+                                              $disabled,
+                                              true))
+        ->addControlElement(get_all_day($areas[$area_id],
+                                        'all_day',
+                                        'all_day',
+                                        false,
+                                        $disabled));
+                                        
+  // Generate the templates for each area
+  foreach ($areas as $a)
+  {
+    $field->addControlElement(get_slot_selector($a,
+                                                'start_seconds' . $a['id'],
+                                                'start_seconds',
+                                                $current_s,
+                                                true,
+                                                true,
+                                                true))
+          ->addControlElement(get_all_day($a,
+                                          'all_day' . $a['id'],
+                                          'all_day',
+                                          true,
+                                          true));
+  }
   
   return $field;
 }
