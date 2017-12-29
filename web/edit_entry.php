@@ -424,6 +424,25 @@ function get_field_end_date($value, $disabled=false)
                                               false,
                                               $disabled,
                                               false));
+                                              
+  // Generate the templates
+  foreach ($areas as $a)
+  {
+    $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
+    $field->addControlElement(get_slot_selector($a,
+                                                'end_seconds' . $a['id'],
+                                                'end_seconds',
+                                                $this_current_s,
+                                                true,
+                                                true,
+                                                false));
+  }
+  
+  // An empty <span> to hold JavaScript messages
+  $span = new ElementSpan();
+  $span->setAttributes(array('id'    => 'end_time_error',
+                             'class' => 'error'));
+  $field->addControlElement($span);
 
   return $field;
 }
