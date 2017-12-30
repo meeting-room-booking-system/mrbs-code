@@ -981,10 +981,7 @@ init = function(args) {
                   ?>
                   var data = {csrf_token: getCSRFToken(),
                               ajax: 1, 
-                              commit: 1,
-                              day: args.day,
-                              month: args.month,
-                              year: args.year};
+                              commit: 1};
                   <?php // get the booking id and type ?>
                   data.id = divClone.data('id');
                   data.type = divClone.data('type');
