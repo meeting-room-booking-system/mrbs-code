@@ -1180,40 +1180,6 @@ function genAllDay($a, $input_id, $input_name, $display_none=FALSE, $disabled=FA
 }
 
 
-function create_field_entry_end_date($disabled=FALSE)
-{
-  global $end_time, $areas, $area_id, $multiday_allowed;
-  
-  $date = getbookingdate($end_time, TRUE);
-  $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
-  
-  echo "<div id=\"div_end_date\">\n";
-  echo "<label>" . get_vocab("end") . "</label>\n";
-  // Don't show the end date selector if multiday is not allowed
-  echo "<div" . (($multiday_allowed) ? '' : " style=\"visibility: hidden\"") . ">\n";
-  genDateSelector("end_", $date['mday'], $date['mon'], $date['year'], '', $disabled);
-  echo "</div>\n";
-  
-  // Generate the live slot selector
-  // If we're using periods the booking model is slightly different,
-  // so subtract one period because the "end" period is actually the beginning
-  // of the last period booked
-  $a = $areas[$area_id];
-  $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
-  genSlotSelector($areas[$area_id], 'end_seconds', 'end_seconds', $this_current_s, FALSE, $disabled);
- 
-  // Generate the templates
-  foreach ($areas as $a)
-  {
-    $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
-    genSlotSelector($a, 'end_seconds' . $a['id'], 'end_seconds', $this_current_s, TRUE, TRUE);
-  }
-  
-  echo "<span id=\"end_time_error\" class=\"error\"></span>\n";
-  echo "</div>\n";
-}
-
-
 function create_field_entry_areas($disabled=FALSE)
 {
   global $areas, $area_id, $rooms;
@@ -1916,10 +1882,7 @@ foreach ($edit_entry_field_order as $key)
   case 'name':
   case 'description':
   case 'start_date':
-    break;
-
   case 'end_date':
-    create_field_entry_end_date();
     break;
 
   case 'areas':
