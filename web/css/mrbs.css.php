@@ -1026,6 +1026,7 @@ div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width:
 
 fieldset#rep_info, fieldset#booking_controls {
   border-top: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  border-radius: 0;
   padding-top: 0.7em;
 }
 
