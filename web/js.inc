@@ -201,7 +201,8 @@ $(window).on('load', function() {
               year: '<?php echo $year?>',
               area: '<?php echo $area?>',
               room: '<?php echo $room?>',
-              page: '<?php echo $page?>'};
+              page: '<?php echo $page?>',
+              page_date: '<?php echo format_iso_date($year, $month, $day) ?>'};
   <?php
   // We need $timetohighlight for the day and week pages
   $timetohighlight = get_form_var('timetohighlight', 'int');

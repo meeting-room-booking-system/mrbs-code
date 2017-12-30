@@ -26,7 +26,6 @@ div.booking_list {overflow-x: hidden}       /* we don't want IE to give us the h
 .form_general div#div_period,
 .form_general div#div_areas,
 .form_general div#div_rooms,
-.form_general div#rep_end_date,
 .form_general div#div_report_start,
 .form_general div#div_report_end,
 .form_general div#div_typematch {margin-bottom: 0.5em}

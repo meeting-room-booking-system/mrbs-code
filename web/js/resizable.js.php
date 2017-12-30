@@ -794,9 +794,7 @@ init = function(args) {
               {
                 queryString += '&rooms[]=' + params.room[i];
               }
-              queryString += '&day=' + args.day;
-              queryString += '&month=' + args.month;
-              queryString += '&year=' + args.year;
+              queryString += '&start_date=' + args.page_date;
             }
             else <?php // it's a week ?>
             {
@@ -1025,17 +1023,13 @@ init = function(args) {
                   if (args.page === 'day')
                   {
                     data.page = 'day';
-                    data.start_day = args.day;
-                    data.start_month = args.month;
-                    data.start_year = args.year;
+                    data.start_date = args.page_date;
+    
                   }
                   else  <?php // it's 'week' ?>
                   {
                     data.page = 'week';
-                    var startDate = newParams.date[0].split('-');
-                    data.start_year = startDate[0];
-                    data.start_month = startDate[1];
-                    data.start_day = startDate[2];
+                    data.start_date = newParams.date[0];
                     <?php
                     if ($is_admin || !$auth['only_admin_can_book_repeat'])
                     {
@@ -1043,18 +1037,13 @@ init = function(args) {
                       if (newParams.date.length > 1)
                       {
                         data.rep_type = <?php echo REP_DAILY ?>;
-                        var repEndDate = newParams.date[newParams.date.length - 1].split('-');
-                        data.rep_end_year = repEndDate[0];
-                        data.rep_end_month = repEndDate[1];
-                        data.rep_end_day = repEndDate[2];
+                        data.rep_end_date = newParams.date[newParams.date.length - 1];
                       }
                       <?php
                     }
                     ?>
                   }
-                  data.end_day = data.start_day;
-                  data.end_month = data.start_month;
-                  data.end_year = data.start_year;
+                  data.end_date = data.start_date;
                   data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
                   <?php
                   if (isset($timetohighlight))

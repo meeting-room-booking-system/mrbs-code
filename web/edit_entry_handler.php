@@ -107,7 +107,10 @@ foreach($formvars as $var => $var_type)
 
 list($start_year, $start_month, $start_day) = split_iso_date($start_date);
 list($end_year, $end_month, $end_day) = split_iso_date($end_date);
-list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
+if (isset($rep_end_date))
+{
+  list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
+}
 
 // BACK:  we didn't really want to be here - send them to the returl
 if (!empty($back_button))

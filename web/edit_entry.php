@@ -915,8 +915,7 @@ function get_field_rep_end_date($disabled=false)
   
   $field = new FieldInputDate();
   
-  $field->setAttribute('id', 'rep_end_date')
-        ->setLabel(get_vocab('rep_end_date'))
+  $field->setLabel(get_vocab('rep_end_date'))
         ->setControlAttributes(array('name'     => 'rep_end_date',
                                      'value'    => format_iso_date($rep_end_year, $rep_end_month, $rep_end_day),
                                      'disabled' => $disabled));
