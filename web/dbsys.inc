@@ -55,7 +55,7 @@ function db_get_userpass()
   print_header();
   
   $form = new Form();
-  $form->setAttributes(array('class'  => 'form_general',
+  $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'db_logon',
                              'method' => 'post',
                              'action' => this_page()));

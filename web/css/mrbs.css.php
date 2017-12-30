@@ -771,7 +771,7 @@ div#custom_html {
   width: auto;
   border-spacing: 0 0.75em;
   border-collapse: separate;
-  padding: 1em;
+  padding: 1em 1em 1em 0;
 }
 
 .standard fieldset > div {
