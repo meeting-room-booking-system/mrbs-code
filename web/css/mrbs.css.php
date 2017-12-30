@@ -897,13 +897,6 @@ $general_right_col_width       = '79';      // %  (79 to avoid rounding problems
 $general_gap                   = '1.0';     // em  (gap between left and right columns)
 $input_width                   = '20';      // em
 
-// Specific to the "edit_entry" form
-$edit_entry_left_col_max_width = '10';      // em
-$edit_entry_textarea_width     = '20';      // em
-$edit_entry_ampm_width         = '16';      // em
-$edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
-$edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
-
 // Specific to the "import" form
 $import_left_col_max_width     = '12';      // em
 
@@ -919,10 +912,6 @@ $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.',
 
 ?>
 form.form_general {margin-top: 2.0em; width: 100%}
-.edit_entry     form.form_general {
-  min-width: <?php echo $edit_entry_form_min_width ?>em;
-  float: left;
-}
 
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
@@ -932,7 +921,6 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
 .form_general div.group {float: left}
 .form_general div.group_container {float: left}
 .form_general .group_container div.group {clear: left}
-.form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
 
 .form_general label {
@@ -940,11 +928,6 @@ form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>
     min-height: <?php echo $general_label_height ?>em; 
     width: <?php echo $general_left_col_width ?>%; 
     text-align: right; padding-bottom: 0.8em; font-weight: bold;
-}
-
-.edit_entry     .form_general label {
-    width: <?php echo $edit_entry_left_col_max_width ?>em;
-    max-width: <?php echo $edit_entry_left_col_max_width ?>em;
 }
 
 .import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
@@ -999,12 +982,6 @@ fieldset.rep_type_details fieldset {padding-top: 0}
   width: 6em;
 }
 
-.form_general textarea {
-    width: <?php echo $edit_entry_textarea_width ?>em;
-    height: 11em; 
-    margin-bottom: 0.5em;
-}
-
 .form_general select {
   margin-right: -0.5em;
   margin-bottom: 0.5em;
@@ -1031,10 +1008,6 @@ div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width:
 div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
 #import_submit input, #db_logon_submit input
     {position: relative; left: 100%; width: auto}
-
-div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
-div#edit_entry_submit_save {float: left; clear: none; width: auto}
-#edit_entry_submit_back input {float: right}
 
 
 .form_general .div_dur_mins input{width: 4.0em}

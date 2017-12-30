@@ -120,13 +120,9 @@ form#edit_room, .form_general input, .form_general textarea,
   clear: inherit;
 }
 
-.edit_entry .form_general label, .report .form_general label,
+.report .form_general label,
 #logon label {
   direction: rtl;
-}
-
-.edit_entry .form_general label {
-  width: 250px;
 }
 
 .form_general .group label {
@@ -135,7 +131,7 @@ form#edit_room, .form_general input, .form_general textarea,
   width: 90%;
 }
 
-#edit_entry_submit input, #report_submit input,
+#report_submit input,
 #db_logon_submit input {
   left: 300%;
 }
