@@ -407,7 +407,7 @@ function get_field_end_date($value, $disabled=false)
   // If we're using periods the booking model is slightly different,
   // so subtract one period because the "end" period is actually the beginning
   // of the last period booked
-  $element_date = new FieldInputDate();
+  $element_date = new ElementInputDate();
   $element_date->setAttributes(array('name'     => 'end_date',
                                      'value'    => $end_date,
                                      'disabled' => $disabled));

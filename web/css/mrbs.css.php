@@ -780,6 +780,16 @@ div#custom_html {
 
 .standard fieldset > div > * {
   display: table-cell;
+  vertical-align: middle;
+}
+
+.standard fieldset .multiline label {
+  vertical-align: top;
+}
+
+.standard fieldset .field_text_area label {
+  vertical-align: top;
+  padding-top: 0.2em;
 }
 
 .standard fieldset > div > div > * {
@@ -805,15 +815,6 @@ div#custom_html {
   padding-left: 2em;
   padding-right: 1em;
   text-align: right;
-}
-
-.field_text_area label {
-  vertical-align: top;
-  padding-top: 0.2em;
-}
-
-.multiline label, .submit_buttons label {
-  vertical-align: top;
 }
 
 .standard fieldset > div > div {
