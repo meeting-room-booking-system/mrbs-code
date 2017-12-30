@@ -135,8 +135,7 @@ function get_field_entry_input($params)
   
   if (!empty($params['required']))
   {
-    // Set a pattern as well as required to prevent a string of whitespace
-    $field->setControlAttribute('required', REGEX_TEXT_POS);
+    $field->setControlAttribute('required', true);
   }
   if (!empty($params['disabled']))
   {
@@ -156,16 +155,18 @@ function get_field_entry_input($params)
       // Drop through
       
     case 'FieldInputText':
+      if (!empty($params['required']))
+      {
+        // Set a pattern as well as required to prevent a string of whitespace
+        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
+      }
+      // Drop through
+      
     case 'FieldTextarea':
       $field->setControlAttribute('value', $params['value']);
       if (isset($maxlength[$params['field']]))
       {
         $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
-      }
-      if (!empty($params['required']))
-      {
-        // Set a pattern as well as required to prevent a string of whitespace
-        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
       }
       break;
       
