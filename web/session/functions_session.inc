@@ -22,7 +22,7 @@ function print_login_failed()
 function print_login_form($action, $target_url, $returl)
 {
   $form = new Form();
-  $form->setAttributes(array('class'  => 'form_general',
+  $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'logon',
                              'method' => 'post',
                              'action' => $action));
