@@ -542,7 +542,7 @@ function get_field_rooms($value, $disabled=false)
     // Put in some data about the area for use by the JavaScript
     $select->setAttributes(array(
         'data-enable_periods'           => ($areas[$a]['enable_periods']) ? 1 : 0,
-        'data-n_periods='               => count($areas[$a]['periods']),
+        'data-n_periods'                => count($areas[$a]['periods']),
         'data-default_duration'         => (isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR,
         'data-default_duration_all_day' => ($areas[$a]['default_duration_all_day']) ? 1 : 0,
         'data-max_duration_enabled'     => ($areas[$a]['max_duration_enabled']) ? 1 : 0,
