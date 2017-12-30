@@ -834,6 +834,7 @@ div#custom_html {
 
 .standard input[type="text"]:not(.date),
 .standard input[type="email"],
+.standard input[type="password"],
 .standard input[type="search"],
 .standard textarea {
   width: 20em;
