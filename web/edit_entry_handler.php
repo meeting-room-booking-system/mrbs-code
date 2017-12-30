@@ -63,13 +63,9 @@ $formvars = array('create_by'          => 'string',
                   'name'               => 'string',
                   'description'        => 'string',
                   'start_seconds'      => 'int',
-                  'start_day'          => 'int',
-                  'start_month'        => 'int',
-                  'start_year'         => 'int',
+                  'start_date'         => 'string',
                   'end_seconds'        => 'int',
-                  'end_day'            => 'int',
-                  'end_month'          => 'int',
-                  'end_year'           => 'int',
+                  'end_date'           => 'string',
                   'all_day'            => 'string',  // bool, actually
                   'type'               => 'string',
                   'rooms'              => 'array',
@@ -82,9 +78,7 @@ $formvars = array('create_by'          => 'string',
                   'rep_id'             => 'int',
                   'edit_type'          => 'string',
                   'rep_type'           => 'int',
-                  'rep_end_day'        => 'int',
-                  'rep_end_month'      => 'int',
-                  'rep_end_year'       => 'int',
+                  'rep_end_date'       => 'string',
                   'rep_id'             => 'int',
                   'rep_day'            => 'array',   // array of bools
                   'rep_num_weeks'      => 'int',
@@ -110,6 +104,10 @@ foreach($formvars as $var => $var_type)
     $$var = trim($$var);
   }
 }
+
+list($start_year, $start_month, $start_day) = split_iso_date($start_date);
+list($end_year, $end_month, $end_day) = split_iso_date($end_date);
+list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
 
 // BACK:  we didn't really want to be here - send them to the returl
 if (!empty($back_button))

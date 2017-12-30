@@ -346,7 +346,8 @@ function get_field_start_date($value, $disabled=false)
   
   // Generate the live slot selector and all day checkbox
   $element_date = new ElementInputDate();
-  $element_date->setAttributes(array('name'     => 'start_date',
+  $element_date->setAttributes(array('id'       => 'start_date',
+                                     'name'     => 'start_date',
                                      'value'    => $start_date,
                                      'disabled' => $disabled,
                                      'required' => true));
@@ -408,7 +409,8 @@ function get_field_end_date($value, $disabled=false)
   // so subtract one period because the "end" period is actually the beginning
   // of the last period booked
   $element_date = new ElementInputDate();
-  $element_date->setAttributes(array('name'     => 'end_date',
+  $element_date->setAttributes(array('id'       => 'end_date',
+                                     'name'     => 'end_date',
                                      'value'    => $end_date,
                                      'disabled' => $disabled));
                                      
