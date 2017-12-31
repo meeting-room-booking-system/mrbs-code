@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
 
 /*****************************************************************************\
 *                                                                            *
@@ -856,14 +857,20 @@ if (!$ajax)
 
   if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
   {
-    echo "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    echo Form::getTokenHTML() . "\n";
-    echo "  <div>\n";
-    echo "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
-    echo "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
-    echo "    <input type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
-    echo "  </div>\n";
-    echo "</form>\n";
+    $form = new Form();
+    
+    $form->setAttributes(array('id'     => 'add_new_user',
+                               'method' => 'post',
+                               'action' => this_page()));
+                               
+    $form->addHiddenInputs(array('Action' => 'Add',
+                                 'Id'     => '-1'));
+                                 
+    $submit = new ElementInputSubmit();
+    $submit->setAttribute('value', get_vocab('add_new_user'));
+    $form->addElement($submit);
+    
+    $form->render();
   }
 }
 
