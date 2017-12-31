@@ -6,6 +6,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputFile;
 use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -693,6 +694,54 @@ function get_fieldset_location_settings()
 }
 
 
+function get_fieldset_other_settings()
+{
+  global $booking_types;
+  global $import_default_type, $skip;
+  
+  $fieldset = new ElementFieldset();
+  
+  $fieldset->addLegend(get_vocab('other_settings'));
+  
+  // Default type
+  $field = new FieldSelect();
+  
+  $options = array();
+  foreach ($booking_types as $type)
+  {
+    $options[$type] = get_type_vocab($type);
+  }
+  
+  $field->setLabel(get_vocab('default_type'))
+        ->setControlAttribute('name', 'import_default_type')
+        ->addSelectOptions($options, $import_default_type, true);
+  $fieldset->addElement($field);
+  
+  // Skip conflicts
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('skip_conflicts'))
+        ->setControlAttribute('name', 'skip')
+        ->setChecked($skip);
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
+function get_fieldset_submit_button()
+{
+  $fieldset = new ElementFieldset();
+  
+  // The Submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('name'  => 'import',
+                                     'value' => get_vocab('import')));
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
 $import = get_form_var('import', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
@@ -835,147 +884,15 @@ $field->setLabel(get_vocab('file_name'))
                                    'name'   => 'upload_file',
                                    'id'     => 'upload_file'));
 
-$fieldset->addElement($field);
-
-$fieldset->addElement(get_fieldset_location_settings());
+$fieldset->addElement($field)
+         ->addElement(get_fieldset_location_settings())
+         ->addElement(get_fieldset_other_settings())
+         ->addElement(get_fieldset_submit_button());
 
 $form->addElement($fieldset);
 
 $form->render();
 
-echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-echo Form::getTokenHTML() . "\n";
-echo "<fieldset class=\"admin\">\n";
-echo "<legend>" . get_vocab("import_icalendar") . "</legend>\n";
-
-echo "<p>\n" . get_vocab("import_intro") . "</p>\n";
-echo "<p>\n" . get_vocab("supported_file_types") . "</p>\n";
-echo "<ul>\n";
-echo "<li>" . $wrapper_descriptions['file'] . "</li>\n";
-foreach ($compression_wrappers as $compression_wrapper)
-{
-  echo "<li>" . $wrapper_descriptions[$compression_wrapper] . "</li>\n";
-}
-echo "</ul>\n";
-  
-echo "<div>\n";
-echo "<label for=\"upload_file\">" . get_vocab("file_name") . "</label>\n";
-
-$accept_mime_types = array();
-foreach ($compression_wrappers as $compression_wrapper)
-{
-  $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
-}
-// 'file' will always be available.  Put it at the beginning of the array.
-array_unshift($accept_mime_types, $wrapper_mime_types['file']);
-
-echo "<input type=\"file\" accept=\"" . implode(',', $accept_mime_types). "\" name=\"upload_file\" id=\"upload_file\">\n";
-echo "</div>\n";
-
-echo "<fieldset>\n";
-echo "<legend>" . get_vocab("area_room_settings") . "</legend>\n";
-
-// Default room
-$areas = get_area_names($all=true);
-if (count($areas) > 0)
-{
-  $options = array();
-  
-  foreach($areas as $area_id => $area_name)
-  {
-    $rooms = get_room_names($area_id, $all=true);
-    if (count($rooms) > 0)
-    {
-      $options[$area_name] = array();
-      foreach($rooms as $room_id => $room_name)
-      {
-        $options[$area_name][$room_id] = $room_name;
-      }
-    }
-  }
-  
-  if (count($options) > 0)
-  {
-    echo "<div>\n";
-    $params = array('name'        => 'import_default_room',
-                    'label'       => get_vocab('default_room'),
-                    'label_title' => get_vocab('default_room_note'),
-                    'options'     => $options,
-                    'force_assoc' => true,
-                    'value'       => $default_room);
-    generate_select($params);
-    echo "</div>\n";
-  }
-}
-
-
-// Area-room order
-echo "<div>\n";
-$params = array('label'       => get_vocab('area_room_order'),
-                'label_title' => get_vocab('area_room_order_note'),
-                'name'        => 'area_room_order',
-                'options'     => array('area_room' => get_vocab('area_room'),
-                                       'room_area' => get_vocab('room_area')),
-                'value'       => $area_room_order);
-generate_radio_group($params);
-echo "</div>\n";
-
-// Area-room delimiter
-echo "<div>\n";
-$params = array('label'       => get_vocab('area_room_delimiter'),
-                'label_title' => get_vocab('area_room_delimiter_note'),
-                'name'        => 'area_room_delimiter',
-                'value'       => $area_room_delimiter);
-generate_input($params);
-echo "</div>\n";
-
-// Area/room create
-echo "<div>\n";
-$params = array('label' => get_vocab('area_room_create'),
-                'name'  => 'area_room_create',
-                'value' => $area_room_create);
-generate_checkbox($params);
-echo "</div>\n";
-
-echo "</fieldset>\n";
-
-
-echo "<fieldset>\n";
-echo "<legend>" . get_vocab("other_settings") . "</legend>\n";
-
-// Default type
-echo "<div>\n";
-$options = array();
-foreach ($booking_types as $type)
-{
-  $options[$type] = get_type_vocab($type);
-}
-$params = array('label'       => get_vocab('default_type'),
-                'name'        => 'import_default_type',
-                'options'     => $options,
-                'force_assoc' => true,
-                'value'       => $import_default_type);
-generate_select($params);
-echo "</div>\n";
-
-// Skip conflicts
-echo "<div>\n";
-$params = array('label' => get_vocab('skip_conflicts'),
-                'name'  => 'skip',
-                'value' => $skip);
-generate_checkbox($params);
-echo "</div>\n";
-
-echo "</fieldset>\n";
-
-// The Submit button
-echo "<div id=\"import_submit\">\n";
-echo "<input class=\"submit\" type=\"submit\" name=\"import\" value=\"" . get_vocab("import") . "\">\n";
-echo "</div>\n";
-
-echo "</fieldset>\n";
-
-echo "</form>\n";
   
 output_trailer();
 
