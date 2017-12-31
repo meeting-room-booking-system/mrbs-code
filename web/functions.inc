@@ -2474,53 +2474,52 @@ function make_area_select_html($link, $current, $year, $month, $day)
 
 function make_room_select_html ($link, $area, $current, $year, $month, $day)
 {
-  global $tbl_room, $tbl_area, $area_list_format;
+  global $area_list_format;
   
   $out_html = '';
-  $sql = "SELECT R.id, R.room_name, R.description
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=?
-             AND R.area_id=A.id
-             AND R.disabled=0
-             AND A.disabled=0
-        ORDER BY R.sort_key";
-  $res = db()->query($sql, array($area));
+  $rooms = get_room_names($area);
+  
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
-  if ($res->count() > 1)
+  if (count($rooms) > 1)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
     if ($area_list_format == "select")
     {
-      $out_html .= "<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">\n" .
-                   Form::getTokenHTML() . "\n" .
-                   "<div>\n" .
-                   "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
-  
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
-      {
-        $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $row['id']. "\" title=\"". htmlspecialchars($row['description'])."\">" . htmlspecialchars($row['room_name']) . "</option>\n";
-      }
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'roomChangeForm',
+                                 'method' => 'get',
+                                 'action' => $link));
+                                 
+      $form->addHiddenInputs(array('page_date' => format_iso_date($year, $month, $day),
+                                   'area'      => $area));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'area_select',
+                                   'name'     => 'room',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($rooms, $current, true);
+      $form->addElement($select);
+      
       // Note:  the submit button will not be displayed if JavaScript is enabled
-      $out_html .= "</select>\n" .
-                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
-                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
-                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
-                   "<input type=\"hidden\" name=\"area\"  value=\"$area\">\n" .
-                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
-                   "</div>\n" .
-                   "</form>\n";
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
     }
     else  // list format
     {
       $out_html .= "<ul>\n";
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+      foreach ($rooms as $room_id => $room_name)
       {
-        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"". htmlspecialchars($row['description'])."\">";
-        $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
-        $out_html .= htmlspecialchars($row['room_name']) . "</span></a></li>\n";
+        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room_id . "\">";
+        $out_html .= "<span" . (($room_id == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($room_name) . "</span></a></li>\n";
       }
       $out_html .= "</ul>\n";
     }
