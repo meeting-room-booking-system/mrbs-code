@@ -840,6 +840,10 @@ div#custom_html {
   width: 20em;
 }
 
+.standard input[type="text"].short {
+  width: 4em;
+}
+
 .standard input[type="number"] {
   width: 4em;
 }

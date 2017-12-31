@@ -678,6 +678,7 @@ function get_fieldset_location_settings()
         ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
         ->setControlAttributes(array('name'     => 'area_room_delimiter',
                                      'value'    => $area_room_delimiter,
+                                     'class'    => 'short',
                                      'required' => true));
   $fieldset->addElement($field);
   
