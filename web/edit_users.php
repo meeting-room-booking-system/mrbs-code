@@ -14,9 +14,7 @@ use MRBS\Form\FieldSelect;
 *                                                                            *
 *   Description   Edit the user database                                     *
 *                                                                            *
-*   Notes         Automatically creates the database if it's not present.    *
-*                                                                            *
-*                 Designed to be easily extensible:                          *
+*   Notes         Designed to be easily extensible:                          *
 *                 Adding more fields for each user does not require          *
 *                 modifying the editor code. Only to add the fields in       *
 *                 the database creation code.                                *
@@ -37,8 +35,6 @@ use MRBS\Form\FieldSelect;
 *                 $min_user_editing_level) can edit other users, and they    *
 *                 cannot edit users with a higher level than themselves      *
 *                                                                            *
-*                 To do:                                                     *
-*                     - Localisability                                       *
 *                                                                            *
 \*****************************************************************************/
 
