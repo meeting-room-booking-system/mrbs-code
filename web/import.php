@@ -2,6 +2,12 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputCheckbox;
+use MRBS\Form\FieldInputFile;
+use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
 
 if (version_compare(PHP_VERSION, '5.0.0', '<'))
 {
@@ -616,6 +622,76 @@ function get_archive_details($file)
 }
 
 
+function get_fieldset_location_settings()
+{
+  global $default_room;
+  global $area_room_order, $area_room_delimiter, $area_room_create;
+  
+  $fieldset = new ElementFieldset();
+  
+  $fieldset->addLegend(get_vocab('area_room_settings'));
+  
+  // Default room
+  $areas = get_area_names($all=true);
+  if (count($areas) > 0)
+  {
+    $options = array();
+    
+    foreach($areas as $area_id => $area_name)
+    {
+      $rooms = get_room_names($area_id, $all=true);
+      if (count($rooms) > 0)
+      {
+        $options[$area_name] = array();
+        foreach($rooms as $room_id => $room_name)
+        {
+          $options[$area_name][$room_id] = $room_name;
+        }
+      }
+    }
+    
+    if (count($options) > 0)
+    {
+      $field = new FieldSelect();
+      
+      $field->setLabel(get_vocab('default_room'))
+            ->setLabelAttribute('title', get_vocab('default_room_note'))
+            ->setControlAttribute('name', 'import_default_room')
+            ->addSelectOptions($options, $default_room, true);
+      
+      $fieldset->addElement($field);
+    }
+  }
+  
+  // Area-room order
+  $field = new FieldInputRadioGroup();
+  $options = array('area_room' => get_vocab('area_room'),
+                   'room_area' => get_vocab('room_area'));
+  $field->setLabel(get_vocab('area_room_order'))
+        ->setLabelAttribute('title', get_vocab('area_room_order_note'))
+        ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
+  $fieldset->addElement($field);
+  
+  // Area-room delimiter
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('area_room_delimiter'))
+        ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
+        ->setControlAttributes(array('name'     => 'area_room_delimiter',
+                                     'value'    => $area_room_delimiter,
+                                     'required' => true));
+  $fieldset->addElement($field);
+  
+  // Area/room create
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('area_room_create'))
+        ->setControlAttribute('name', 'area_room_create')
+        ->setChecked($area_room_create);
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 $import = get_form_var('import', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
@@ -719,7 +795,52 @@ if (!empty($import))
 // PHASE 1 - Get the user input
 // ----------------------------
 
+echo "<h2>" . get_vocab('import_icalendar') . "</h2>\n";
+
 $compression_wrappers = get_compression_wrappers();
+
+echo "<p>\n" . get_vocab('import_intro') . "</p>\n";
+echo "<p>\n" . get_vocab('supported_file_types') . "</p>\n";
+echo "<ul>\n";
+echo "<li>" . $wrapper_descriptions['file'] . "</li>\n";
+foreach ($compression_wrappers as $compression_wrapper)
+{
+  echo "<li>" . $wrapper_descriptions[$compression_wrapper] . "</li>\n";
+}
+echo "</ul>\n";
+
+$form = new Form();
+
+$form->setAttributes(array('class'   => 'standard',
+                           'method'  => 'post',
+                           'enctype' => 'multipart/form-data',
+                           'action'  => this_page()));
+                           
+$fieldset = new ElementFieldset();
+
+// The file
+$field = new FieldInputFile();
+
+$accept_mime_types = array();
+foreach ($compression_wrappers as $compression_wrapper)
+{
+  $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
+}
+// 'file' will always be available.  Put it at the beginning of the array.
+array_unshift($accept_mime_types, $wrapper_mime_types['file']);
+
+$field->setLabel(get_vocab('file_name'))
+      ->setControlAttributes(array('accept' => implode(',', $accept_mime_types),
+                                   'name'   => 'upload_file',
+                                   'id'     => 'upload_file'));
+
+$fieldset->addElement($field);
+
+$fieldset->addElement(get_fieldset_location_settings());
+
+$form->addElement($fieldset);
+
+$form->render();
 
 echo "<form class=\"form_general\" method=\"POST\" enctype=\"multipart/form-data\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
 echo Form::getTokenHTML() . "\n";

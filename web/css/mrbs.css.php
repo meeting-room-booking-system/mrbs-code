@@ -912,7 +912,7 @@ $db_logon_form_min_width       = $db_logon_left_col_max_width + $input_width + $
 $db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
 
 ?>
-form.form_general {margin-top: 2.0em; width: 100%}
+form.form_general {margin-top: 2.0em; width: 100%; float: left; clear: left}
 
 form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
 form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
