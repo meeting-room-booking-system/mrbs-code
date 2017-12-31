@@ -3,6 +3,8 @@ namespace MRBS;
 
 use \DateTimeZone;
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementSelect;
 
 
 require_once "mrbs_sql.inc";
@@ -2429,23 +2431,29 @@ function make_area_select_html($link, $current, $year, $month, $day)
     $out_html .= "<h3>" . get_vocab("areas") . "</h3>\n";
     if ($area_list_format == "select")
     {
-      $out_html .= "<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">\n" .
-                   Form::getTokenHTML() . "\n" .
-                   "<div>\n" .
-                   "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
-      foreach ($areas as $area_id => $area_name)
-      {
-        $selected = ($area_id == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $area_id . "\">" . htmlspecialchars($area_name) . "</option>\n";
-      }
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'areaChangeForm',
+                                 'method' => 'get',
+                                 'action' => $link));
+                                 
+      $form->addHiddenInput('page_date', format_iso_date($year, $month, $day));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'area_select',
+                                   'name'     => 'area',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($areas, $current, true);
+      $form->addElement($select);
+      
       // Note:  the submit button will not be displayed if JavaScript is enabled
-      $out_html .= "</select>\n" .
-                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
-                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
-                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
-                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
-                   "</div>\n" .
-                   "</form>\n";
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
     }
     else // list format
     {
