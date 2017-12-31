@@ -98,48 +98,6 @@ foreach ($color_types as $type => $col)
   float: right;
 }
 
-/* ------------ FORM_GENERAL ------------------------*/
-
-form#edit_room, .form_general input, .form_general textarea,
-.form_general select, .form_general input.submit,
-.form_general .div_time span, .form_general div#ad,
-.form_general #div_rooms select, .form_general #div_typematch select {
-  float: right;
-}
-
-.form_general div.group {
-  float: none;
-}
-
-.form_general div.group_container,
-#edit_room fieldset, .form_general label {
-  float: right;
-}
-
-.form_general .group_container div.group {
-  clear: inherit;
-}
-
-.report .form_general label,
-#logon label {
-  direction: rtl;
-}
-
-.form_general .group label {
-  text-align: right;
-  margin-left:30px;
-  width: 90%;
-}
-
-#report_submit input,
-#db_logon_submit input {
-  left: 300%;
-}
-
-.form_general input#all_day {
-  margin-left: 1em;
-  margin-right: 3em;
-}
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 
@@ -210,8 +168,8 @@ table#pending_list {
 
 /* ------------ REPORT.PHP ----------------------*/
 
-.div_report h3, .div_report table, div.report_entry_name,
-.report .form_general fieldset fieldset {
+.div_report h3, .div_report table,
+div.report_entry_name {
   direction: rtl;
 }
 
