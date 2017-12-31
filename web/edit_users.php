@@ -4,6 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
 /*****************************************************************************\
@@ -262,6 +263,28 @@ function get_field_level($params, $disabled=false)
 }
 
 
+function get_field_name($params, $disabled=false)
+{
+  global $maxlength;
+  
+  $field = new FieldInputText();
+  
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name'     => $params['name'],
+                                     'value'    => $params['value'],
+                                     'disabled' => $disabled,
+                                     'required' => true,
+                                     'pattern'  => REGEX_TEXT_POS));
+  
+  if (isset($maxlength['users.name']))
+  {
+    $field->setControlAttribute('maxlength', $maxlength['users.name']);
+  }    
+  
+  return $field;
+}
+
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if (a) the browser is using DataTables and (b)
 // we can do JSON encoding.    We also need to initialise the JSON data array.
@@ -423,6 +446,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         $fieldset->addElement(get_field_level($params, ($initial_user_creation || 
                                                         $editing_last_admin ||
                                                         $disabled)));
+        break;
+        
+      case 'name':
+        // you cannot change a username (even your own) unless you have user editing rights
+        $fieldset->addElement(get_field_name($params, ($level < $min_user_editing_level)));
         break;
         
     }
