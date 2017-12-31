@@ -2,7 +2,9 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\FieldSelect;
 
 /*****************************************************************************\
 *                                                                            *
@@ -235,6 +237,36 @@ function output_row(&$row)
   }
 }
 
+
+function get_field_level($params, $disabled=false)
+{
+  global $initial_user_creation, $editing_last_admin, $level;
+  
+  // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
+  // We don't want the user to be able to change the level if (a) it's the first user being created or
+  // (b) it's the last admin left or (c) they don't have admin rights
+  $disabled = $initial_user_creation || $editing_last_admin || $disabled;
+  
+  // Only display options up to and including one's own level (you can't upgrade yourself).
+  // If you're not some kind of admin then the select will also be disabled.
+  // (Note - disabling individual options doesn't work in older browsers, eg IE6)
+  $options = array();
+  
+  for ($i=0; $i<=$level; $i++)
+  {
+    $options[$i] = get_vocab("level_$i");
+  }
+  
+  $field = new FieldSelect();
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name' => $params['name'],
+                                     'disabled' => $disabled))
+        ->addSelectOptions($options, $params['value'], true);
+
+  return $field;
+}
+
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if (a) the browser is using DataTables and (b)
 // we can do JSON encoding.    We also need to initialise the JSON data array.
@@ -339,6 +371,67 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
   
   print "<div id=\"form_container\">";
+  
+  // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
+  // or admin rights are removed!
+  if ($Action == "Edit")
+  {
+    $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
+    $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
+  }
+  else
+  {
+    $editing_last_admin = FALSE;
+  }
+  
+  $form = new Form();
+  
+  $form->setAttributes(array('id'     => 'form_edit_users',
+                             'class'  => 'standard',
+                             'method' => 'post',
+                             'action' => this_page()));
+                             
+  $form->addHiddenInput('Id', $Id);
+                             
+  $fieldset = new ElementFieldset();
+  
+  $legend_text = ($Action == 'Edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
+  $fieldset->addLegend($legend_text);
+  
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    
+    $params = array('label' => get_loc_field_name($tbl_users, $key),
+                    'name'  => VAR_PREFIX . $key,
+                    'value' => $data[$key]);
+                    
+    $disabled = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
+    
+    switch ($key)
+    {
+      case 'id':            // We've already got this in a hidden input
+      case 'password_hash': // We don't want to do anything with this
+      case 'timestamp':     // Nor this
+        break;
+        
+      case 'level':
+        if ($Action == 'Add')
+        {
+          // If we're creating a new user and it's the very first user, then they
+          // should have maximum rights.  Otherwise make them an ordinary user.
+          $params['value'] = ($initial_user_creation) ? $max_level : 1;
+        }
+        $fieldset->addElement(get_field_level($params, $disabled));
+        break;
+        
+    }
+  }
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
+  
   print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
   echo Form::getTokenHTML() . "\n";
   ?>
