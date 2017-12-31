@@ -240,12 +240,7 @@ function output_row(&$row)
 
 function get_field_level($params, $disabled=false)
 {
-  global $initial_user_creation, $editing_last_admin, $level;
-  
-  // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
-  // We don't want the user to be able to change the level if (a) it's the first user being created or
-  // (b) it's the last admin left or (c) they don't have admin rights
-  $disabled = $initial_user_creation || $editing_last_admin || $disabled;
+  global $level;
   
   // Only display options up to and including one's own level (you can't upgrade yourself).
   // If you're not some kind of admin then the select will also be disabled.
@@ -422,7 +417,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
           // should have maximum rights.  Otherwise make them an ordinary user.
           $params['value'] = ($initial_user_creation) ? $max_level : 1;
         }
-        $fieldset->addElement(get_field_level($params, $disabled));
+        // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
+        // We don't want the user to be able to change the level if (a) it's the first user being created or
+        // (b) it's the last admin left or (c) they don't have admin rights
+        $fieldset->addElement(get_field_level($params, ($initial_user_creation || 
+                                                        $editing_last_admin ||
+                                                        $disabled)));
         break;
         
     }
