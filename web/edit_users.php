@@ -4,7 +4,10 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputPassword;
+use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 
@@ -391,6 +394,46 @@ function get_field_custom($custom_field, $params, $disabled=false)
 }
 
 
+function get_fieldset_password()
+{
+  $fieldset = new ElementFieldset();
+  
+  $p = new ElementP();
+  $p->setText(get_vocab('password_twice'));
+  $fieldset->addElement($p);
+  
+  for ($i=0; $i<2; $i++)
+  {
+    $field = new FieldInputPassword();
+    $field->setLabel(get_vocab('users.password'))
+          ->setControlAttributes(array('id'   => "password$i",
+                                       'name' => "password$i"));
+    $fieldset->addElement($field);
+  }
+  
+  return $fieldset;
+}
+
+
+function get_fieldset_submit_buttons()
+{
+  global $editing_last_admin;
+  
+  $fieldset = new ElementFieldset();
+  
+  $p = new ElementP();
+  $p->setText(get_vocab('warning_last_admin'));
+  $fieldset->addElement($p);
+  
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('class' => 'default_action',
+                                     'value' => get_vocab('save')));
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if (a) the browser is using DataTables and (b)
 // we can do JSON encoding.    We also need to initialise the JSON data array.
@@ -515,7 +558,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                              'method' => 'post',
                              'action' => this_page()));
                              
-  $form->addHiddenInput('Id', $Id);
+  $form->addHiddenInputs(array('Id'     => $Id,
+                               'Action' => 'Update'));
                              
   $fieldset = new ElementFieldset();
   
@@ -571,7 +615,9 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     }
   }
   
-  $form->addElement($fieldset);
+  $form->addElement($fieldset)
+       ->addElement(get_fieldset_password())
+       ->addElement(get_fieldset_submit_buttons());
   
   $form->render();
   
