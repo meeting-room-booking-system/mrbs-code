@@ -655,13 +655,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             switch($key)
             {
               case 'id':
-                echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
-                break;
               case 'password_hash':
-                echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
-                break;
               case 'timestamp':
-                // Don't show timestamp in the form at all
                 break;
               default:
                 echo "<div>\n";
@@ -669,41 +664,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                 switch($key)
                 {
                   case 'level':
-                    // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
-                    // We don't want the user to be able to change the level if (a) it's the first user being created or
-                    // (b) it's the last admin left or (c) they don't have admin rights
-                    $params['disabled'] = $initial_user_creation || $editing_last_admin || $params['disabled'];
-                    // Only display options up to and including one's own level (you can't upgrade yourself).
-                    // If you're not some kind of admin then the select will also be disabled.
-                    // (Note - disabling individual options doesn't work in older browsers, eg IE6)
-                    $params['options'] = array();     
-                    for ($i=0; $i<=$level; $i++)
-                    {
-                      $params['options'][$i] = get_vocab("level_$i");
-                      // Work out which option should be selected by default:
-                      //   if we're editing an existing entry, then it should be the current value;
-                      //   if we're adding the very first entry, then it should be an admin;
-                      //   if we're adding a subsequent entry, then it should be an ordinary user;
-                      if ( (($Action == "Edit")  && ($i == $data[$key])) ||
-                           (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
-                           (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
-                      {
-                        $params['value'] = $i;
-                      }
-                    }
-                    $params['force_assoc'] = TRUE;
-                    generate_select($params);
-                    break;
                   case 'name':
-                    // you cannot change a username (even your own) unless you have user editing rights
-                    $params['disabled'] = ($level < $min_user_editing_level);
-                    $params['mandatory'] = TRUE;
-                    generate_input($params);
-                    break;
                   case 'email':
-                    $params['type'] = 'email';
-                    $params['attributes'] = 'multiple';
-                    generate_input($params);
                     break;
                   default:    
                     // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
