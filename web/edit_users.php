@@ -459,7 +459,7 @@ if (isset($Action) && in_array($Action, array('Delete', 'Update')))
   Form::checkToken();
 }
 
-$initial_user_creation = 0;
+$initial_user_creation = false;
 
 if ($nusers > 0)
 {
@@ -473,7 +473,7 @@ else
 // and then send them through to the screen to add the first user (which we'll force
 // to be an admin)
 {
-  $initial_user_creation = 1;
+  $initial_user_creation = true;
   if (!isset($Action))   // second time through it will be set to "Update"
   {
     $Action = "Add";
@@ -531,10 +531,20 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 
   print_header();
   
-  if ($initial_user_creation == 1)
+  echo "<h2>";
+  if ($initial_user_creation)
   {
-    print "<h3>" . get_vocab("no_users_initial") . "</h3>\n";
-    print "<p>" . get_vocab("no_users_create_first_admin") . "</p>\n";
+    echo get_vocab('no_users_initial');
+  }
+  else
+  {
+    echo ($Action == 'Edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
+  }
+  echo "</h2>\n";
+  
+  if ($initial_user_creation)
+  {
+    echo "<p>" . get_vocab('no_users_create_first_admin') . "</p>\n";
   }
   
   // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
@@ -549,6 +559,39 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     $editing_last_admin = FALSE;
   }
   
+  // Error messages
+  if (!empty($invalid_email))
+  {
+    echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
+  }
+  if (!empty($name_not_unique))
+  {
+    echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
+  }
+  if (!empty($name_empty))
+  {
+    echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
+  }
+
+  // Now do any password error messages
+  if (!empty($pwd_not_match))
+  {
+    echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
+  }
+  if (!empty($pwd_invalid))
+  {
+    echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
+    if (isset($pwd_policy))
+    {
+      echo "<ul class=\"error\">\n";
+      foreach ($pwd_policy as $rule => $value)
+      {
+        echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
+      }
+      echo "</ul>\n";
+    }
+  }
+  
   $form = new Form();
   
   $form->setAttributes(array('id'     => 'form_edit_users',
@@ -560,9 +603,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                                'Action' => 'Update'));
                              
   $fieldset = new ElementFieldset();
-  
-  $legend_text = ($Action == 'Edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
-  $fieldset->addLegend($legend_text);
   
   foreach ($fields as $field)
   {
