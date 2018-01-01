@@ -650,49 +650,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             {
               $params['maxlength'] = $maxlength["users.$key"];
             }
-            // First of all output the input for the field
-            // The ID field cannot change; The password field must not be shown.
-            switch($key)
-            {
-              case 'id':
-              case 'password_hash':
-              case 'timestamp':
-                break;
-              default:
-                echo "<div>\n";
-                $params['disabled'] = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
-                switch($key)
-                {
-                  case 'level':
-                  case 'name':
-                  case 'email':
-                    break;
-                  default:    
-                    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-                    // assume are intended to be booleans)
-                    if (($field['nature'] == 'boolean') || 
-                        (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-                    {
-                      generate_checkbox($params);
-                    }
-                    // Output a textarea if it's a character string longer than the limit for a
-                    // text input
-                    elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
-                    {
-                      $params['attributes'] = array('rows="8"', 'cols="40"');
-                      generate_textarea($params);   
-                    }
-                    // Otherwise output a text input
-                    else
-                    {
-                      $params['field'] = "users.$key";
-                      generate_input($params);
-                    }
-                    break;
-                } // end switch
-                echo "</div>\n";
-            } // end switch
-            
             
             // Then output any error messages associated with the field
             // except for the password field which is a special case
