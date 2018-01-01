@@ -434,9 +434,6 @@ function get_fieldset_password()
 // if $delete is true.
 function get_fieldset_submit_buttons($delete=false, $disabled=false)
 {
-  global $min_user_editing_level;
-  global $Id, $level, $data, $editing_last_admin;
-  
   $fieldset = new ElementFieldset();
   
   $p = new ElementP();
