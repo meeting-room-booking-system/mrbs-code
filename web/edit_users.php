@@ -688,48 +688,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             {
               $params['maxlength'] = $maxlength["users.$key"];
             }
-            
-            // Then output any error messages associated with the field
-            // except for the password field which is a special case
-            switch($key)
-            {
-              case 'email':
-                if (!empty($invalid_email))
-                {
-                  echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
-                }
-                break;
-              case 'name':
-                if (!empty($name_not_unique))
-                {
-                  echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
-                }
-                if (!empty($name_empty))
-                {
-                  echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
-                }
-                break;
-            }
-                     
-          } // end foreach
-          
-          // Now do any password error messages
-          if (!empty($pwd_not_match))
-          {
-            echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
-          }
-          if (!empty($pwd_invalid))
-          {
-            echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
-            if (isset($pwd_policy))
-            {
-              echo "<ul class=\"error\">\n";
-              foreach ($pwd_policy as $rule => $value)
-              {
-                echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
-              }
-              echo "</ul>\n";
-            }
           }
           
           ?>
