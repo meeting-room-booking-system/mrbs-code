@@ -672,16 +672,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             }
                      
           } // end foreach
-      
-          print "<div><p>" . get_vocab("password_twice") . "...</p></div>\n";
-
-          for ($i=0; $i<2; $i++)
-          {
-            print "<div>\n";
-            print "<label for=\"password$i\">" . get_vocab("users.password") . "</label>\n";
-            print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
-            print "</div>\n";
-          }
           
           // Now do any password error messages
           if (!empty($pwd_not_match))
@@ -702,10 +692,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
             }
           }
           
-          if ($editing_last_admin)
-          {
-            echo "<p><em>(" . get_vocab("warning_last_admin") . ")</em></p>\n";
-          }
           ?>
           <input type="hidden" name="Action" value="Update">    
           <input class="submit default_action" type="submit" value="<?php echo(get_vocab("save")); ?>">
