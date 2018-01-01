@@ -430,7 +430,9 @@ function get_fieldset_password()
 }
 
 
-function get_fieldset_submit_buttons()
+// Adds the submit buttons.  The second button is a Delete button
+// if $delete is true.
+function get_fieldset_submit_buttons($delete=false, $disabled=false)
 {
   global $min_user_editing_level;
   global $Id, $level, $data, $editing_last_admin;
@@ -444,23 +446,20 @@ function get_fieldset_submit_buttons()
   $field = new FieldInputSubmit();
   
   $button = new ElementInputSubmit();
-  // Administrators get the right to delete users, but only those at the same level as them or lower
-  if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
+  
+  if ($delete) 
   {
     $name = 'delete_button';
     $value = get_vocab('delete_user');
-    if ($editing_last_admin)
-    {
-      $button->setAttribute('disabled', true);
-    }
   }
   else
   {
     $name = 'back_button';
     $value = get_vocab('back');
   }
-  $button->setAttributes(array('name'  => $name,
-                               'value' => $value));
+  $button->setAttributes(array('name'     => $name,
+                               'value'    => $value,
+                               'disabled' => $disabled));
   
   $field->setLabelAttribute('class', 'no_suffix')
         ->addLabelElement($button)
@@ -692,8 +691,18 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
   
   $form->addElement($fieldset)
-       ->addElement(get_fieldset_password())
-       ->addElement(get_fieldset_submit_buttons());
+       ->addElement(get_fieldset_password());
+       
+  // Administrators get the right to delete users, but only those at the
+  // the same level as them or lower.  Otherwise present a Back button.
+  $delete = ($Id >= 0) &&
+            ($level >= $min_user_editing_level) &&
+            ($level >= $data['level']);
+  
+  // Don't let the last admin be deleted, otherwise you'll be locked out.
+  $button_disabled = $delete && $editing_last_admin;
+  
+  $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled));
   
   $form->render();
   
