@@ -56,7 +56,22 @@ $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
+$back_button = get_form_var('back_button', 'string');
+$delete_button = get_form_var('delete_button', 'string');
+$update_button = get_form_var('update_button', 'string');
 
+if (isset($update_button))
+{
+  $Action = 'Update';
+}
+elseif (isset($delete_button))
+{
+  $Action = 'Delete';
+}
+elseif (isset($back_button))
+{
+  unset($Action);
+}
 
 // Validates that the password conforms to the password policy
 // (Ideally this function should also be matched by client-side
@@ -417,7 +432,8 @@ function get_fieldset_password()
 
 function get_fieldset_submit_buttons()
 {
-  global $editing_last_admin;
+  global $min_user_editing_level;
+  global $Id, $level, $data, $editing_last_admin;
   
   $fieldset = new ElementFieldset();
   
@@ -426,7 +442,30 @@ function get_fieldset_submit_buttons()
   $fieldset->addElement($p);
   
   $field = new FieldInputSubmit();
-  $field->setControlAttributes(array('class' => 'default_action',
+  
+  $button = new ElementInputSubmit();
+  // Administrators get the right to delete users, but only those at the same level as them or lower
+  if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
+  {
+    $name = 'delete_button';
+    $value = get_vocab('delete_user');
+    if ($editing_last_admin)
+    {
+      $button->setAttribute('disabled', true);
+    }
+  }
+  else
+  {
+    $name = 'back_button';
+    $value = get_vocab('back');
+  }
+  $button->setAttributes(array('name'  => $name,
+                               'value' => $value));
+  
+  $field->setLabelAttribute('class', 'no_suffix')
+        ->addLabelElement($button)
+        ->setControlAttributes(array('class' => 'default_action',
+                                     'name'  => 'update_button',
                                      'value' => get_vocab('save')));
   $fieldset->addElement($field);
   
@@ -599,8 +638,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                              'method' => 'post',
                              'action' => this_page()));
                              
-  $form->addHiddenInputs(array('Id'     => $Id,
-                               'Action' => 'Update'));
+  $form->addHiddenInput('Id', $Id);
                              
   $fieldset = new ElementFieldset();
   
