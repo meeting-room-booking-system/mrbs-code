@@ -537,8 +537,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     print "<p>" . get_vocab("no_users_create_first_admin") . "</p>\n";
   }
   
-  print "<div id=\"form_container\">";
-  
   // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
   // or admin rights are removed!
   if ($Action == "Edit")
@@ -741,9 +739,6 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         echo "</div>\n";
         echo "</form>\n";
       }
-?>
-      </div>
-<?php
 
   // Print footer and exit
   output_trailer();

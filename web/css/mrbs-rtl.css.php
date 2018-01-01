@@ -98,26 +98,6 @@ foreach ($color_types as $type => $col)
   float: right;
 }
 
-
-/* ------------ EDIT_USERS.PHP ------------------*/
-
-<?php
-$edit_users_label_width      = '20.0';   // em
-?>
-
-div#form_container, #form_edit_users label {
-  float: right;
-}
-
-#form_edit_users div, #form_edit_users input {
-  float: inherit;
-}
-
-#form_edit_users label {
-  width: 20em;
-  direction: rtl;
-}
-
 /* ------------ FUNCTIONS.INC -------------------*/
 
 .banner {

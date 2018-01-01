@@ -959,51 +959,7 @@ div#checks span {
 
 
 /* ------------ EDIT_USERS.PHP ------------------*/
-<?php
-$edit_users_label_height     = '2.0';    // em
-$edit_users_label_width      = '10.0';   // em
-$edit_users_gap              = '1.0';    // em
-$edit_users_input_width      = '10.0';   // em
-// This CSS works by using absolute positioning to bring the Delete button up into the main form.
-// Logically the HTML for the Delete button is implemented and because you can't nest a form within
-// a form it appears as a second form after the main form.    However, to the user it is more logical to
-// see it within the main form, which we achieve through CSS.    [Actually it would probably be better
-// to have the Delete button in a column on the User List page, just like the Edit button is.  However
-// if you put it there you probably also need a confirmation screen, otherwise it is too easy to delete
-// users by mistake.    Having it on the edit form at least means that you have to press two buttons to
-// delete a user (the Edit button followed by the Delete button)]
-?>
-div#form_container {width: auto; position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
-#form_container input.submit {width: auto; position: absolute; bottom: 2.0em}  /* bring both buttons up          */
-form#form_edit_users {width: auto; margin-top: 2.0em}
-#form_edit_users fieldset {float: left; width: auto}  
-#form_edit_users div {float: left; clear: left; width: auto}
-#form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
-                                                                           /* Apply it to the div because applying it to the     */
-                                                                           /* fieldset does not work in all browsers (eg Safari) */
-#form_edit_users label{
-    display: block; float: left;
-    min-height: <?php echo $edit_users_label_height ?>em; 
-    width: <?php echo $edit_users_label_width ?>em;  
-    text-align: right;
-}
-#form_edit_users input {
-    display: block; float: left;
-    width: <?php echo $edit_users_input_width ?>em; 
-    margin-left: <?php echo $edit_users_gap ?>em; 
-}
-#form_edit_users select, #form_edit_users textarea {
-    margin-left: <?php echo $edit_users_gap ?>em;
-}
-#form_edit_users textarea {margin-bottom: 0.5em}
 
-#form_edit_users p {display: block; float: left; clear: left; padding: 0.5em 0 0.7em 0; margin: 0;
-                    width: <?php echo $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5?>em}
-#form_edit_users ul {clear: left}
-#form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
-#form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
-#form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
-form.edit_users_error {width: 10em; margin-top: 2.0em}
 div#user_list {padding: 2em 0}
 form#add_new_user {margin-left: 1em}
 #users_table td {text-align: right}
