@@ -303,6 +303,94 @@ function get_field_email($params, $disabled=false)
 }
 
 
+function get_field_custom($custom_field, $params, $disabled=false)
+{
+  global $select_options, $datalist_options, $is_mandatory_field;
+  global $maxlength, $text_input_max;
+  
+  $key = $custom_field['name'];
+  
+  // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($custom_field['nature'] == 'boolean') || 
+      (($custom_field['nature'] == 'integer') && isset($custom_field['length']) && ($custom_field['length'] <= 2)) )
+  {
+    $class = 'FieldInputCheckbox';
+  }
+  // Output a textarea if it's a character string longer than the limit for a
+  // text input
+  elseif (($custom_field['nature'] == 'character') && isset($custom_field['length']) && ($custom_field['length'] > $text_input_max))
+  {
+    $class = 'FieldTextarea';
+  }
+  elseif (!empty($select_options[$params['field']]))
+  {
+    $class = 'FieldSelect';
+  }
+  elseif (!empty($datalist_options[$params['field']]))
+  {
+    $class = 'FieldInputDatalist';
+  }
+  else
+  {
+    $class = 'FieldInputText';
+  }
+  
+  $full_class = __NAMESPACE__ . "\\Form\\$class";
+  $field = new $full_class();
+  $field->setLabel($params['label'])
+          ->setControlAttribute('name', $params['name']);
+  
+  if (!empty($is_mandatory_field[$params['field']]))
+  {
+    $field->setControlAttribute('required', true);
+  }
+  if (!empty($params['disabled']))
+  {
+    $field->setControlAttribute('disabled', true);
+  }
+  
+  switch ($class)
+  {
+    case 'FieldInputCheckbox':
+      $field->setChecked($params['value']);
+      break;
+      
+    case 'FieldSelect':
+      $options = $select_options[$params['field']];
+      $field->addSelectOptions($options, $params['value']);
+      break;
+      
+    case 'FieldInputDatalist':
+      $options = $datalist_options[$params['field']];
+      $field->addDatalistOptions($options);
+      // Drop through
+      
+    case 'FieldInputText':
+      if (!empty($is_mandatory_field[$params['field']]))
+      {
+        // Set a pattern as well as required to prevent a string of whitespace
+        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
+      }
+      // Drop through
+      
+    case 'FieldTextarea':
+      $field->setControlAttribute('value', $params['value']);
+      if (isset($maxlength[$params['field']]))
+      {
+        $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
+      }
+      break;
+      
+    default:
+      throw new \Exception("Unknown class '$class'");
+      break;
+  }
+  
+  return $field;
+}
+
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if (a) the browser is using DataTables and (b)
 // we can do JSON encoding.    We also need to initialise the JSON data array.
@@ -473,6 +561,11 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         
       case 'email':
         $fieldset->addElement(get_field_email($params, $disabled));
+        break;
+        
+      default:
+        $params['field'] = "users.$key";
+        $fieldset->addElement(get_field_custom($field, $params, $disabled));
         break;
         
     }

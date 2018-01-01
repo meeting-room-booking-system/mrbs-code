@@ -646,24 +646,26 @@ function get_field_custom($key, $disabled=false)
   global $custom_fields, $custom_fields_map, $tbl_entry;
   global $is_mandatory_field, $text_input_max, $maxlength;
   
-  $field = $custom_fields_map[$key];
+  $custom_field = $custom_fields_map[$key];
   
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
-  if (($field['nature'] == 'boolean') || 
-    (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+  if (($custom_field['nature'] == 'boolean') || 
+    (($custom_field['nature'] == 'integer') && isset($custom_field['length']) && ($custom_field['length'] <= 2)) )
   {
     $class = 'FieldInputCheckbox';
   }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
-  elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+  elseif (($custom_field['nature'] == 'character') &&
+           isset($custom_field['length']) &&
+           ($custom_field['length'] > $text_input_max))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
     $class = 'FieldTextarea';
   }
   // Otherwise check if it's an integer field
-  elseif (($field['nature'] == 'integer') && ($field['length'] > 2))
+  elseif (($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2))
   {
     $class = 'FieldInputNumber';
   }
