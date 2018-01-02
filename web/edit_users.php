@@ -58,20 +58,27 @@ $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 $back_button = get_form_var('back_button', 'string');
 $delete_button = get_form_var('delete_button', 'string');
+$edit_button = get_form_var('edit_button', 'string');
 $update_button = get_form_var('update_button', 'string');
 
-if (isset($update_button))
+if (isset($back_button))
 {
-  $Action = 'Update';
+  unset($Action);
 }
 elseif (isset($delete_button))
 {
   $Action = 'Delete';
 }
-elseif (isset($back_button))
+elseif (isset($edit_button))
 {
-  unset($Action);
+  $Action = 'Edit';
 }
+elseif (isset($update_button))
+{
+  $Action = 'Update';
+}
+
+
 
 // Validates that the password conforms to the password policy
 // (Ideally this function should also be matched by client-side
@@ -161,8 +168,18 @@ function output_row(&$row)
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
   {
+    $form = new Form();
+    $form->setAttributes(array('method' => 'post',
+                               'action' => this_page()));
+    $form->addHiddenInput('Id', $row['id']);
+    $submit = new ElementInputSubmit();
+    $submit->setAttributes(array('class' => 'link',
+                                 'name'  => 'edit_button',
+                                 'value' => $row['name']));
+    $form->addElement($submit);
+    $values[] = $form->toHTML();
     $link = htmlspecialchars(this_page()) . "?Action=Edit&amp;Id=" . $row['id'];
-    $values[] = "<a title=\"$html_name\" href=\"$link\">$html_name</a>";
+    //$values[] = "<a title=\"$html_name\" href=\"$link\">$html_name</a>";
   }
   else
   {
