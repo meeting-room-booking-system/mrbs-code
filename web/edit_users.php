@@ -164,7 +164,6 @@ function output_row(&$row)
   $values = array();
   
   // First column, which is the name
-  $html_name = htmlspecialchars($row['name']);
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
   {
@@ -178,12 +177,10 @@ function output_row(&$row)
                                  'value' => $row['name']));
     $form->addElement($submit);
     $values[] = $form->toHTML();
-    $link = htmlspecialchars(this_page()) . "?Action=Edit&amp;Id=" . $row['id'];
-    //$values[] = "<a title=\"$html_name\" href=\"$link\">$html_name</a>";
   }
   else
   {
-    $values[] = "<span class=\"normal\" title=\"$html_name\">$html_name</span>";
+    $values[] = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
   }
     
   // Other columns
