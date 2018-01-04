@@ -407,7 +407,14 @@ function get_field_custom($custom_field, $params, $disabled=false)
       // Drop through
       
     case 'FieldTextarea':
-      $field->setControlAttribute('value', $params['value']);
+      if ($class == 'FieldTextarea')
+      {
+        $field->setControlText($params['value']);
+      }
+      else
+      {
+        $field->setControlAttribute('value', $params['value']);
+      }
       if (isset($maxlength[$params['field']]))
       {
         $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
