@@ -835,7 +835,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  * Returns a list of the repeating entries
  * 
  * $time          The start time
- * $enddate       When the repeat ends
+ * $rep_end_time  When the repeat ends (Unix timestamp)
  * $rep_details   An associative array containing the repeat details, indexed by
  *                  rep_type        What type of repeat is it
  *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one 
@@ -849,7 +849,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *   an array  - This is a list of start times of each of the repeat entrys
  */
 
-function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
+function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
 {
   $entries = array();
   
@@ -906,7 +906,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
   {
     $time = mktime($hour, $min, $sec, $month, $day, $year);
 
-    if ($time > $enddate)
+    if ($time > $rep_end_time)
     {
       break;
     }
