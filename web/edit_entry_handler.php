@@ -6,6 +6,7 @@ require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
 
 function invalid_booking($message)
 {
@@ -821,12 +822,16 @@ else
 echo "<div id=\"submit_buttons\">\n";
 
 // Back button
-echo "<form method=\"post\" action=\"" . htmlspecialchars($returl) . "\">\n";
-echo Form::getTokenHTML() . "\n";
-echo "<fieldset><legend></legend>\n";
-echo "<input type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
-echo "</fieldset>\n";
-echo "</form>\n";
+$form = new Form();
+
+$form->setAttributes(array('method' => 'post',
+                           'action' => $returl));
+                           
+$submit = new ElementInputSubmit(); 
+$submit->setAttribute('value', get_vocab('back'));
+$form->addElement($submit);
+                 
+$form->render();
 
 
 // Skip and Book button (to book the entries that don't conflict)
