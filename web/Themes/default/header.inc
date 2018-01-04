@@ -3,6 +3,7 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementInputDate;
+use MRBS\Form\ElementInputSearch;
 use MRBS\Form\ElementInputSubmit;
 
 function print_head($simple=false)
@@ -162,24 +163,34 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
     $search_str = '';
   }
   
-  echo "<form id=\"header_search\" method=\"post\" action=\"search.php\">\n";
-  echo Form::getTokenHTML() . "\n";
-  echo "<div>\n";
-  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab("search") . "</a></label>\n";
-  echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";
-  echo "<input type=\"hidden\" name=\"day\" value=\"$day\">\n";
-  echo "<input type=\"hidden\" name=\"month\" value=\"$month\">\n";
-  echo "<input type=\"hidden\" name=\"year\" value=\"$year\">\n";
+  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab('search') . "</a></label>\n";
+  
+  $form = new Form();
+  
+  $form->setAttributes(array('id'     => 'header_search',
+                             'method' => 'post',
+                             'action' => 'search.php'))
+       ->addHiddenInputs(array('day'   => $day,
+                               'month' => $month,
+                               'year'  => $year));
   if (!empty($area))
   {
-    echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+    $form->addHiddenInput('area', $area);
   }
   if (!empty($room))
   {
-    echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+    $form->addHiddenInput('room', $room);
   }
-  echo "</div>\n";
-  echo "</form>\n";
+  
+  $input = new ElementInputSearch();
+  
+  $input->setAttributes(array('name'     => 'search_str',
+                              'value'    => $search_str,
+                              'required' => true));
+                              
+  $form->addElement($input);
+  
+  $form->render();
 }
 
 

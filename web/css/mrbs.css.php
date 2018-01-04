@@ -1082,7 +1082,15 @@ table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: 
     color: <?php echo $colour_key_font_color ?>;
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
 #colour_key td#row_padding {border-right: 0; border-bottom: 0}
-#header_search input {width: 6.0em}
+
+form#header_search {
+  display: inline-block;
+}
+
+#header_search input {
+  width: 6em;
+}
+
 div#n_outstanding {margin-top: 0.5em}
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
