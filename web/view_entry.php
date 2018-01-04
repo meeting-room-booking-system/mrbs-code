@@ -158,8 +158,9 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   $fieldset->addLegend('');
   
   $field = new FieldTextarea();
-  $field->setControlAttributes(array('name'  => 'note',
-                                     'value' => $value));     
+  $field->setControlAttribute('name', 'note')
+        ->setControlText($value);
+       
   $fieldset->addElement($field);
   
   // The submit button
