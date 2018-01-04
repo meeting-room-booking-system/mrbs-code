@@ -324,7 +324,7 @@ echo "</div>";  // area_form
 // Now the custom HTML
 if ($auth['allow_custom_html'])
 {
-  echo "<div id=\"custom_html\">\n";
+  echo "<div id=\"div_custom_html\">\n";
   // no htmlspecialchars() because we want the HTML!
   echo (isset($custom_html)) ? "$custom_html\n" : "";
   echo "</div>\n";

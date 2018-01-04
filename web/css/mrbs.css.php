@@ -261,7 +261,10 @@ div#area_form, div#room_form {
   padding: 0 0 2em 0;
 }
 
-div#custom_html {float: left; padding: 0 0 3em 1em}
+div#div_custom_html {
+  float: left;
+  padding: 0 0 3em 1em;
+}
 
 #area_form form {
   width: 100%;
@@ -726,7 +729,7 @@ div#del_room_confirm {
   font-style: italic;
 }
 
-div#custom_html {
+div#div_custom_html {
   margin-top: 2em;
 }
 
