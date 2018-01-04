@@ -109,6 +109,7 @@ label:empty::after, .group label::after {
 }
 
 label.no_suffix::after,
+.dataTables_wrapper label::after,
 .list td.no_suffix:first-child::after {
   content: '';
 }
