@@ -464,29 +464,29 @@ if ($enable_periods)
 }
 
 // Now work out the start and times
-$starttime = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
-$endtime   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
+$start_time = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
+$end_time   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
 
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
 // so we need to add on 60 seconds (1 period)
 if ($enable_periods)
 {
-  $endtime = $endtime + 60;
+  $end_time = $end_time + 60;
 }
 
 // Round down the starttime and round up the endtime to the nearest slot boundaries
 // (This step is probably unnecesary now that MRBS always returns times aligned
 // on slot boundaries, but is left in for good measure).
 $am7 = get_start_first_slot($start_month, $start_day, $start_year);                 
-$starttime = round_t_down($starttime, $resolution, $am7);
-$endtime = round_t_up($endtime, $resolution, $am7);
+$start_time = round_t_down($start_time, $resolution, $am7);
+$end_time = round_t_up($end_time, $resolution, $am7);
 
 // If they asked for 0 minutes, and even after the rounding the slot length is still
 // 0 minutes, push that up to 1 resolution unit.
-if ($endtime == $starttime)
+if ($end_time == $start_time)
 {
-  $endtime += $resolution;
+  $end_time += $resolution;
 }
 
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
@@ -521,7 +521,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
     // as the day of the week of the start of the period
     if (count($rep_day) == 0)
     {
-      $rep_day[] = date('w', $starttime);
+      $rep_day[] = date('w', $start_time);
     }
     // Build string of weekdays to repeat on:
     for ($i = 0; $i < 7; $i++)
@@ -554,17 +554,17 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   }
 
   // Get the first entry in the series and make that the start time
-  $reps = mrbsGetRepeatEntryList($starttime, $rep_end_time, $rep_details, 1);
+  $reps = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, 1);
 
   if (count($reps) > 0)
   {
-    $duration = $endtime - $starttime;
-    $duration -= cross_dst($starttime, $endtime);
-    $starttime = $reps[0];
-    $endtime = $starttime + $duration;
-    $start_day = date('j', $starttime);
-    $start_month = date('n', $starttime);
-    $start_year = date('Y', $starttime);
+    $duration = $end_time - $start_time;
+    $duration -= cross_dst($start_time, $end_time);
+    $start_time = $reps[0];
+    $end_time = $start_time + $duration;
+    $start_day = date('j', $start_time);
+    $start_month = date('n', $start_time);
+    $start_year = date('Y', $start_time);
   }
 }
 
@@ -665,8 +665,8 @@ foreach ($rooms as $room_id)
   $booking['type'] = $type;
   $booking['description'] = $description;
   $booking['room_id'] = $room_id;
-  $booking['start_time'] = $starttime;
-  $booking['end_time'] = $endtime;
+  $booking['start_time'] = $start_time;
+  $booking['end_time'] = $end_time;
   $booking['rep_type'] = $rep_type;
   $booking['rep_opt'] = $rep_opt;
   $booking['rep_num_weeks'] = $rep_num_weeks;
