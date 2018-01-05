@@ -319,7 +319,7 @@ init = function(args) {
     return Math.max.apply(null, selection.map(function() {
       return $(this).width();
     }).get());
-  };
+  }
   
   <?php
   // Add on one pixel to avoid what look to be like rounding
