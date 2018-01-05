@@ -101,7 +101,7 @@ function throttle(fn, threshold, scope) {
   
   return function () {
     var context = scope || this,
-        now = +new Date,
+        now = +new Date(),
         args = arguments;
         
     if (last && now < last + threshold)
