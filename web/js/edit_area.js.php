@@ -166,7 +166,6 @@ function generateLastSlotSelect()
   var lastPossible = minsPerDay + firstSlot - resMins;
   var name = 'area_start_last_slot';
   var element = $('[name="' + name + '"]');
-  var parent = element.parent();
   
   var select = $('<select>').attr('name', name);
                             
