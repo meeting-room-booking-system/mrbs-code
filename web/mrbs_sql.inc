@@ -1052,8 +1052,8 @@ function mrbsCreateRepeatingEntrys($data)
   {
     $data['entry_type'] = ENTRY_RPT_ORIGINAL;
     $data['repeat_id'] = $id;
-    $starttime = $data['start_time'];
-    $endtime = $data['end_time'];
+    $start_time = $data['start_time'];
+    $end_time = $data['end_time'];
     // Even if there is only one entry in the series we treat the booking
     // as a series rather than a single booking.   It allows the series to
     // be extended later.
@@ -1065,7 +1065,7 @@ function mrbsCreateRepeatingEntrys($data)
       {
         // calculate diff each time and correct where events
         // cross DST
-        $diff = $endtime - $starttime;
+        $diff = $end_time - $start_time;
         $diff += cross_dst($reps[$i], $reps[$i] + $diff);  
         $data['start_time'] = $reps[$i];
         $data['end_time'] = $reps[$i] + $diff;
