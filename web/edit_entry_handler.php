@@ -719,7 +719,7 @@ foreach ($rooms as $room_id)
   $bookings[] = $booking;
 }
 
-$just_check = $ajax && function_exists('json_encode') && !$commit;
+$just_check = $ajax && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
 $send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
 
@@ -760,7 +760,7 @@ db()->mutex_unlock($tbl_entry);
 
 
 // If this is an Ajax request, output the result and finish
-if ($ajax && function_exists('json_encode'))
+if ($ajax)
 {
   // If this was a successful commit generate the new HTML
   if ($result['valid_booking'] && $commit)

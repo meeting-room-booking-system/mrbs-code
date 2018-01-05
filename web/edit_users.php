@@ -491,9 +491,9 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false)
 
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
-// requests, which will only be if (a) the browser is using DataTables and (b)
-// we can do JSON encoding.    We also need to initialise the JSON data array.
-$ajax_capable = $datatable && function_exists('json_encode');
+// requests, which will only be if the browser is using DataTables.    We also need
+// to initialise the JSON data array.
+$ajax_capable = $datatable;
 
 if ($ajax)
 {

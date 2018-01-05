@@ -22,8 +22,7 @@ $is_admin = (authGetUserLevel($user) >= $max_level);
 ?>
 var conflictTimer = function conflictTimer(set) {
     <?php
-    if (function_exists('json_encode') &&
-        !empty($ajax_refresh_rate))
+    if (!empty($ajax_refresh_rate))
     {
       ?>
       if (set)
@@ -118,43 +117,37 @@ var areaConfig = function areaConfig(property, areaId) {
 ?>
 function checkTimeSlots(jqDate)
 {
-  <?php
-  // Only do something if we can return a JSON result
-  if (function_exists('json_encode'))
+  if (!areaConfig('enable_periods'))
   {
+    var siblings = jqDate.siblings();
+    var select = jqDate.parent().parent().siblings('select:visible');
+    var slots = [];
+    select.find('option').each(function() {
+        slots.push($(this).val());
+      });
+    <?php
+    // We pass the id of the element as the request id so that we can match
+    // the result to the request
     ?>
-    if (!areaConfig('enable_periods'))
-    {
-      var siblings = jqDate.siblings();
-      var select = jqDate.parent().parent().siblings('select:visible');
-      var slots = [];
-      select.find('option').each(function() {
-          slots.push($(this).val());
-        });
-      <?php
-      // We pass the id of the element as the request id so that we can match
-      // the result to the request
-      ?>
-      var params = {csrf_token: getCSRFToken(),
-                    id: select.attr('id'),
-                    day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
-                    month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
-                    year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
-                    tz: areaConfig('timezone'),
-                    slots: slots};
-      $.post('check_slot_ajax.php', params, function(result) {
-          $.each(result.slots, function(key, value) {
-              $('#' + result.id).find('option[value="' + value + '"]').remove();
-            });
-          <?php
-          // Now that we've removed some options we need to equalise the widths
-          ?>
-          adjustWidth($('#start_seconds'),
-                      $('#end_seconds'));
-        }, 'json');
-    } <?php // if (!areaConfig('enable_periods'))
-  } // if (function_exists('json_encode'))
-  ?>
+    var params = {csrf_token: getCSRFToken(),
+                  id: select.attr('id'),
+                  day: parseInt(siblings.filter('input[id*="day"]').val(), 10),
+                  month: parseInt(siblings.filter('input[id*="month"]').val(), 10),
+                  year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
+                  tz: areaConfig('timezone'),
+                  slots: slots};
+    $.post('check_slot_ajax.php', params, function(result) {
+        $.each(result.slots, function(key, value) {
+            $('#' + result.id).find('option[value="' + value + '"]').remove();
+          });
+        <?php
+        // Now that we've removed some options we need to equalise the widths
+        ?>
+        adjustWidth($('#start_seconds'),
+                    $('#end_seconds'));
+      }, 'json');
+  } <?php // if (!areaConfig('enable_periods')) ?>
+
 }
   
   
@@ -472,197 +465,191 @@ function validate(form)
 ?>
 function checkConflicts(optional)
 {
-  <?php
-  // Only do something if we can the result as a JSON object
-  if (function_exists('json_encode'))
+  <?php // Get the value of the field in the form ?>
+  function getFormValue(formInput)
   {
-    // Get the value of the field in the form
+    var value;
+    <?php 
+    // Scalar parameters (three types - checkboxes, radio buttons and the rest)
     ?>
-    function getFormValue(formInput)
+    if (formInput.attr('name').indexOf('[]') === -1)
     {
-      var value;
-      <?php 
-      // Scalar parameters (three types - checkboxes, radio buttons and the rest)
-      ?>
-      if (formInput.attr('name').indexOf('[]') === -1)
+      if (formInput.filter(':checkbox').length > 0)
       {
-        if (formInput.filter(':checkbox').length > 0)
-        {
-          value = formInput.is(':checked') ? '1' : '';
-        }
-        else if (formInput.filter(':radio').length > 0)
-        {
-          value = formInput.filter(':checked').val();
-        }
-        else
-        {
-          value = formInput.val();
-        }
+        value = formInput.is(':checked') ? '1' : '';
       }
-      <?php
-      // Array parameters (two types - checkboxes and the rest, which could be
-      // <select> elements or else multiple ordinary inputs with a *[] name
-      ?>
+      else if (formInput.filter(':radio').length > 0)
+      {
+        value = formInput.filter(':checked').val();
+      }
       else
       {
-        value = [];
-        formInput.each(function() {
-            if ((formInput.filter(':checkbox').length === 0) || $(this).is(':checked'))
-            {
-              var thisValue = $(this).val();
-              if ($.isArray(thisValue))
-              {
-                $.merge(value, thisValue);
-              }
-              else
-              {
-                value.push($(this).val());
-              }
-            }
-          });
+        value = formInput.val();
       }
-      return value;
-    } <?php // function getFormValue()
-
-
-    // Keep track of how many requests are still with the server.   We don't want
-    // to keep sending them if they're not coming back
-    ?>
-    if (checkConflicts.nOutstanding === undefined)
-    {
-      checkConflicts.nOutstanding = 0;
     }
     <?php
-    // If this is an optional request and there are already some check requests
-    // in the queue, then don't bother with this one.
+    // Array parameters (two types - checkboxes and the rest, which could be
+    // <select> elements or else multiple ordinary inputs with a *[] name
     ?>
-    if (optional && checkConflicts.nOutstanding)
+    else
+    {
+      value = [];
+      formInput.each(function() {
+          if ((formInput.filter(':checkbox').length === 0) || $(this).is(':checked'))
+          {
+            var thisValue = $(this).val();
+            if ($.isArray(thisValue))
+            {
+              $.merge(value, thisValue);
+            }
+            else
+            {
+              value.push($(this).val());
+            }
+          }
+        });
+    }
+    return value;
+  } <?php // function getFormValue()
+
+
+  // Keep track of how many requests are still with the server.   We don't want
+  // to keep sending them if they're not coming back
+  ?>
+  if (checkConflicts.nOutstanding === undefined)
+  {
+    checkConflicts.nOutstanding = 0;
+  }
+  <?php
+  // If this is an optional request and there are already some check requests
+  // in the queue, then don't bother with this one.
+  ?>
+  if (optional && checkConflicts.nOutstanding)
+  {
+    return;
+  }
+  
+  <?php
+  // We set a small timeout on checking the booking in order to allow time for
+  // the click handler on the Submit buttons to set the data in the form.  We then
+  // test the data and if it is set we don't validate the booking because we're going off
+  // somewhere else.  [This isn't an ideal way of doing this.   The problem is that
+  // the change event for a text input can be fired when the user clicks the submit
+  // button - but how can you tell that it was the clicking of the submit button that
+  // caused the change event?]
+  ?>
+  var timeout = 200; <?php // ms ?>
+  window.setTimeout(function() {
+    var params = {'ajax': 1}; <?php // This is an Ajax request ?>
+    var form = $('form#main');
+    <?php
+    // Don't do anything if (a) the form doesn't exist (which it won't if the user
+    // hasn't logged in) or (b) if the submit button has been pressed
+    ?>
+    if ((form.length === 0) || form.data('submit'))
     {
       return;
     }
     
     <?php
-    // We set a small timeout on checking the booking in order to allow time for
-    // the click handler on the Submit buttons to set the data in the form.  We then
-    // test the data and if it is set we don't validate the booking because we're going off
-    // somewhere else.  [This isn't an ideal way of doing this.   The problem is that
-    // the change event for a text input can be fired when the user clicks the submit
-    // button - but how can you tell that it was the clicking of the submit button that
-    // caused the change event?]
+    // Load the params object with the values of all the form fields that are not
+    // disabled and are not submit buttons of one kind or another
     ?>
-    var timeout = 200; <?php // ms ?>
-    window.setTimeout(function() {
-      var params = {'ajax': 1}; <?php // This is an Ajax request ?>
-      var form = $('form#main');
-      <?php
-      // Don't do anything if (a) the form doesn't exist (which it won't if the user
-      // hasn't logged in) or (b) if the submit button has been pressed
-      ?>
-      if ((form.length === 0) || form.data('submit'))
-      {
-        return;
-      }
+    var relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+    relevantFields.each(function() {
+        <?php
+        // Go through each of the fields and if we haven't got the value for a name
+        // then go and get it.  (Remember that arrays can give more than one field
+        // with the same name
+        ?>
+        var fieldName = $(this).attr('name');
+        if (params[fieldName] === undefined)
+        {
+          params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'));
+        }
+      });
       
-      <?php
-      // Load the params object with the values of all the form fields that are not
-      // disabled and are not submit buttons of one kind or another
-      ?>
-      var relevantFields = form.find('[name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
-      relevantFields.each(function() {
+    <?php
+    // For some reason I don't understand, posting an empty array will
+    // give you a PHP array of ('') at the other end.    So to avoid
+    // that problem, delete the property if the array (really an object) is empty
+    ?>
+    $.each(params, function(i, val) {
+        if ((typeof(val) === 'object') && ((val === null) || (val.length === 0)))
+        {
+          delete params[i];
+        }
+      });
+    
+    checkConflicts.nOutstanding++; 
+    $.post('edit_entry_handler.php', params, function(result) {
+        if (result)
+        {
+          checkConflicts.nOutstanding--;
+          var conflictDiv = $('#conflict_check');
+          var scheduleDetails = $('#schedule_details');
+          var policyDetails = $('#policy_details');
+          var titleText, detailsHTML;
+          if (result.conflicts.length === 0)
+          {
+            conflictDiv.attr('class', 'good');
+            titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_conflicts"))) ?>';
+            detailsHTML = titleText;
+          }
+          else
+          {
+            conflictDiv.attr('class', 'bad');
+            detailsHTML = "<p>";
+            titleText = '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + "\n\n";
+            detailsHTML += titleText + "<\/p>";
+            var conflictsList = getErrorList(result.conflicts);
+            detailsHTML += conflictsList.html;
+            titleText += conflictsList.text;
+          }
+          conflictDiv.attr('title', titleText);
+          scheduleDetails.html(detailsHTML);
+          
           <?php
-          // Go through each of the fields and if we haven't got the value for a name
-          // then go and get it.  (Remember that arrays can give more than one field
-          // with the same name
+          // Display the results of the policy check.   Set the class to "good" if there
+          // are no policy violations at all.  To "notice" if there are no errors, but some
+          // notices (this happens when an admin user makes a booking that an ordinary user
+          // would not be allowed to.  Otherwise "bad".  Content and styling are supplied by CSS.
           ?>
-          var fieldName = $(this).attr('name');
-          if (params[fieldName] === undefined)
+          var policyDiv = $('#policy_check');
+          if (result.violations.errors.length === 0)
           {
-            params[fieldName] = getFormValue(relevantFields.filter('[name=' + fieldName.replace('[', '\\[').replace(']', '\\]') + ']'));
-          }
-        });
-        
-      <?php
-      // For some reason I don't understand, posting an empty array will
-      // give you a PHP array of ('') at the other end.    So to avoid
-      // that problem, delete the property if the array (really an object) is empty
-      ?>
-      $.each(params, function(i, val) {
-          if ((typeof(val) === 'object') && ((val === null) || (val.length === 0)))
-          {
-            delete params[i];
-          }
-        });
-      
-      checkConflicts.nOutstanding++; 
-      $.post('edit_entry_handler.php', params, function(result) {
-          if (result)
-          {
-            checkConflicts.nOutstanding--;
-            var conflictDiv = $('#conflict_check');
-            var scheduleDetails = $('#schedule_details');
-            var policyDetails = $('#policy_details');
-            var titleText, detailsHTML;
-            if (result.conflicts.length === 0)
+            if (result.violations.notices.length === 0)
             {
-              conflictDiv.attr('class', 'good');
-              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_conflicts"))) ?>';
+              policyDiv.attr('class', 'good');
+              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_rules_broken"))) ?>';
               detailsHTML = titleText;
             }
             else
             {
-              conflictDiv.attr('class', 'bad');
+              policyDiv.attr('class', 'notice');
               detailsHTML = "<p>";
-              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + "\n\n";
+              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken_notices"))) ?>' + "\n\n";
               detailsHTML += titleText + "<\/p>";
-              var conflictsList = getErrorList(result.conflicts);
-              detailsHTML += conflictsList.html;
-              titleText += conflictsList.text;
-            }
-            conflictDiv.attr('title', titleText);
-            scheduleDetails.html(detailsHTML);
-            
-            <?php
-            // Display the results of the policy check.   Set the class to "good" if there
-            // are no policy violations at all.  To "notice" if there are no errors, but some
-            // notices (this happens when an admin user makes a booking that an ordinary user
-            // would not be allowed to.  Otherwise "bad".  Content and styling are supplied by CSS.
-            ?>
-            var policyDiv = $('#policy_check');
-            if (result.violations.errors.length === 0)
-            {
-              if (result.violations.notices.length === 0)
-              {
-                policyDiv.attr('class', 'good');
-                titleText = '<?php echo escape_js(html_entity_decode(get_vocab("no_rules_broken"))) ?>';
-                detailsHTML = titleText;
-              }
-              else
-              {
-                policyDiv.attr('class', 'notice');
-                detailsHTML = "<p>";
-                titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken_notices"))) ?>' + "\n\n";
-                detailsHTML += titleText + "<\/p>";
-                var rulesList = getErrorList(result.violations.notices);
-                detailsHTML += rulesList.html;
-                titleText += rulesList.text;
-              }
-            }
-            else
-            {
-              policyDiv.attr('class', 'bad');
-              detailsHTML = "<p>";
-              titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + "\n\n";
-              detailsHTML += titleText + "<\/p>";
-              var rulesList = getErrorList(result.violations.errors);
+              var rulesList = getErrorList(result.violations.notices);
               detailsHTML += rulesList.html;
               titleText += rulesList.text;
             }
-            policyDiv.attr('title', titleText);
-            policyDetails.html(detailsHTML);
-          }  <?php // if (result) ?>
-        }, 'json');
-    }, timeout);  <?php // setTimeout()
-  } // if (function_exists('json_encode')) ?>
+          }
+          else
+          {
+            policyDiv.attr('class', 'bad');
+            detailsHTML = "<p>";
+            titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + "\n\n";
+            detailsHTML += titleText + "<\/p>";
+            var rulesList = getErrorList(result.violations.errors);
+            detailsHTML += rulesList.html;
+            titleText += rulesList.text;
+          }
+          policyDiv.attr('title', titleText);
+          policyDetails.html(detailsHTML);
+        }  <?php // if (result) ?>
+      }, 'json');
+  }, timeout);  <?php // setTimeout() ?>
   
 } <?php // function checkConflicts()
 
@@ -1289,37 +1276,34 @@ init = function(args) {
     });
       
   <?php
-  // Add Ajax capabilities (but only if we can return the result as a JSON object)
-  if (function_exists('json_encode'))
-  {
-    // Add a change event handler to each of the form fields - except for those that
-    // are disabled and anything that might be a submit button - so that when they change
-    // the validity of the booking is re-checked.   (This probably causes more checking
-    // than is really necessary, eg when the brief description is changed, but on the other
-    // hand it (a) removes the need to know the names of the fields you want and (b) keeps
-    // the data available for policy checking as complete as possible just in case somebody
-    // decides to set a policy based on for example the brief description, for some reason).
-    //
-    // Use a click event for checkboxes as it seems that in some browsers the event fires
-    // before the value is changed.
-    ?>
-    var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
-    formFields.filter(':checkbox')
-              .click(function() {
-                  checkConflicts();
-                });
-    formFields.not(':checkbox')
-              .change(function() {
-                  checkConflicts();
-                });
-    
-    <?php
-    // and a div to hold the dialog box which gives more details.    The dialog
-    // box contains a set of tabs.   And because we want the tabs to act as the
-    // dialog box we add an extra tab where we're going to put the dialog close
-    // button and then we hide the dialog itself
-    ?>
-    var tabsHTML =
+  // Add a change event handler to each of the form fields - except for those that
+  // are disabled and anything that might be a submit button - so that when they change
+  // the validity of the booking is re-checked.   (This probably causes more checking
+  // than is really necessary, eg when the brief description is changed, but on the other
+  // hand it (a) removes the need to know the names of the fields you want and (b) keeps
+  // the data available for policy checking as complete as possible just in case somebody
+  // decides to set a policy based on for example the brief description, for some reason).
+  //
+  // Use a click event for checkboxes as it seems that in some browsers the event fires
+  // before the value is changed.
+  ?>
+  var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+  formFields.filter(':checkbox')
+            .click(function() {
+                checkConflicts();
+              });
+  formFields.not(':checkbox')
+            .change(function() {
+                checkConflicts();
+              });
+  
+  <?php
+  // and a div to hold the dialog box which gives more details.    The dialog
+  // box contains a set of tabs.   And because we want the tabs to act as the
+  // dialog box we add an extra tab where we're going to put the dialog close
+  // button and then we hide the dialog itself
+  ?>
+  var tabsHTML =
 '<div id="check_tabs">' +
 '<ul id="details_tabs">' +
 '<li><a href="#schedule_details"><?php echo get_vocab('schedule') ?></a></li>' +
@@ -1330,80 +1314,78 @@ init = function(args) {
 '<div id="policy_details"></div>' +
 '</div>';
 
-    $('<div>').attr('id', 'check_results')
-              .css('display', 'none')
-              .html(tabsHTML)
-              .appendTo($('form#main'));
-    
-    $('#conflict_check, #policy_check').click(function manageTabs() {
-        var tabId,
-            tabIndex,
-            checkResults = $('#check_results'),
-            checkTabs = $('#check_tabs');
-        <?php 
-        // Work out which tab should be selected
-        // (Slightly long-winded using a switch, but there may be more tabs in future)
-        ?>
-        switch ($(this).attr('id'))
-        {
-          case 'policy_check':
-            tabId = 'policy_details';
-            break;
-          case 'conflict_check':
-          default:
-            tabId = 'schedule_details';
-            break;
-        }
-        tabIndex = $('#details_tabs a[href="#' + tabId + '"]').parent().index();
+  $('<div>').attr('id', 'check_results')
+            .css('display', 'none')
+            .html(tabsHTML)
+            .appendTo($('form#main'));
+  
+  $('#conflict_check, #policy_check').click(function manageTabs() {
+      var tabId,
+          tabIndex,
+          checkResults = $('#check_results'),
+          checkTabs = $('#check_tabs');
+      <?php 
+      // Work out which tab should be selected
+      // (Slightly long-winded using a switch, but there may be more tabs in future)
+      ?>
+      switch ($(this).attr('id'))
+      {
+        case 'policy_check':
+          tabId = 'policy_details';
+          break;
+        case 'conflict_check':
+        default:
+          tabId = 'schedule_details';
+          break;
+      }
+      tabIndex = $('#details_tabs a[href="#' + tabId + '"]').parent().index();
 
-        <?php
-        // If we've already created the dialog and tabs, then all we have
-        // to do is re-open the dialog if it has previously been closed and
-        // select the tab corresponding to the div that was clicked
-        ?>
-        if (manageTabs.alreadyExists)
+      <?php
+      // If we've already created the dialog and tabs, then all we have
+      // to do is re-open the dialog if it has previously been closed and
+      // select the tab corresponding to the div that was clicked
+      ?>
+      if (manageTabs.alreadyExists)
+      {
+        if (!checkResults.dialog("isOpen"))
         {
-          if (!checkResults.dialog("isOpen"))
-          {
-            checkResults.dialog("open");
-          }
-          checkTabs.tabs('option', 'active', tabIndex);
-          return;
+          checkResults.dialog("open");
         }
-        <?php
-        // We want to create a set of tabs that appear inside a dialog box,
-        // with the whole structure being draggable.   Thanks to dbroox at
-        // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
-        ?>
-        checkTabs.tabs();
         checkTabs.tabs('option', 'active', tabIndex);
-        checkResults.dialog({'width': 400,
-                             'height': 200, 
-                             'minWidth': 300,
-                             'minHeight': 150, 
-                             'draggable': true});
-        <?php //steal the close button ?>
-        $('#details_tabs').append($('button.ui-dialog-titlebar-close'));
-        <?php //move the tabs out of the content and make them draggable ?>
-        $('.ui-dialog').addClass('ui-tabs')
-                       .prepend($('#details_tabs'))
-                       .draggable('option', 'handle', '#details_tabs');
-        <?php //switch the titlebar class ?>
-        $('.ui-dialog-titlebar').remove();
-        $('#details_tabs').addClass('ui-dialog-titlebar');
-        
-        manageTabs.alreadyExists=true;
-      });
-    
-    <?php
-    // Finally, set a timer so that conflicts are periodically checked for,
-    // in case someone else books that slot before you press Save.
-    ?>
-    conflictTimer(true);
-    
-    <?php
-  } // if (function_exists('json_encode'))
-
+        return;
+      }
+      <?php
+      // We want to create a set of tabs that appear inside a dialog box,
+      // with the whole structure being draggable.   Thanks to dbroox at
+      // http://forum.jquery.com/topic/combining-ui-dialog-and-tabs for the solution.
+      ?>
+      checkTabs.tabs();
+      checkTabs.tabs('option', 'active', tabIndex);
+      checkResults.dialog({'width': 400,
+                           'height': 200, 
+                           'minWidth': 300,
+                           'minHeight': 150, 
+                           'draggable': true});
+      <?php //steal the close button ?>
+      $('#details_tabs').append($('button.ui-dialog-titlebar-close'));
+      <?php //move the tabs out of the content and make them draggable ?>
+      $('.ui-dialog').addClass('ui-tabs')
+                     .prepend($('#details_tabs'))
+                     .draggable('option', 'handle', '#details_tabs');
+      <?php //switch the titlebar class ?>
+      $('.ui-dialog-titlebar').remove();
+      $('#details_tabs').addClass('ui-dialog-titlebar');
+      
+      manageTabs.alreadyExists=true;
+    });
+  
+  <?php
+  // Finally, set a timer so that conflicts are periodically checked for,
+  // in case someone else books that slot before you press Save.
+  ?>
+  conflictTimer(true);
+  
+  <?php
   // Actions to take when the repeat end datepicker is updated (it doesn't fire
   // a change event so won't be caught by the general handler above)
   ?>
