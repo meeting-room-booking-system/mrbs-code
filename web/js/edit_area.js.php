@@ -248,7 +248,7 @@ init = function() {
           clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
           
       clone.find('input').val('');
-      clone.insertAfter(lastPeriodName);
+      clone.insertAfter(lastPeriodName).find('input').focus();
       $('.delete_period').show();
     });
   
