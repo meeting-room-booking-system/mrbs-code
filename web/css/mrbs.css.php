@@ -910,6 +910,7 @@ fieldset.rep_type_details fieldset {
 
 .standard fieldset fieldset.rep_type_details {
   padding-top: 0;
+  clear: none;
 }
 
 fieldset#rep_info, fieldset#booking_controls {
