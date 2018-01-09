@@ -1287,7 +1287,7 @@ init = function(args) {
   // Use a click event for checkboxes as it seems that in some browsers the event fires
   // before the value is changed.
   ?>
-  var formFields = $('form#main [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+  var formFields = $('form#main').find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
   formFields.filter(':checkbox')
             .click(function() {
                 checkConflicts();
@@ -1397,7 +1397,7 @@ init = function(args) {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_date, #end_date').on('change', function() {
+  $('#start_date, #end_date').change(function() {
     
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
