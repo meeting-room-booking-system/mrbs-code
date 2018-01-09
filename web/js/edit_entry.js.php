@@ -1386,15 +1386,6 @@ init = function(args) {
   conflictTimer(true);
   
   <?php
-  // Actions to take when the repeat end datepicker is updated (it doesn't fire
-  // a change event so won't be caught by the general handler above)
-  ?>
-  $('#rep_end_date').on('datePickerUpdated', function() {
-    checkConflicts();
-  });
-  
-  
-  <?php
   // Actions to take when the start and end datepickers are closed
   ?>
   $('#start_date, #end_date').change(function() {
