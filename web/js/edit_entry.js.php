@@ -1397,7 +1397,7 @@ init = function(args) {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_date, #end_date').on('datePickerUpdated', function() {
+  $('#start_date, #end_date').on('change', function() {
     
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,

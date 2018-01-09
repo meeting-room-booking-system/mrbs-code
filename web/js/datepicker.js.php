@@ -65,6 +65,10 @@ init = function() {
                             {
                               $('#' + submit).submit();
                             }
+                            else
+                            {
+                              $(this).change();
+                            }
                           }
                         });
            
