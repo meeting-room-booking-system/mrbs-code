@@ -842,6 +842,11 @@ $auth["imap_php"]["hostname"] = "localhost";
 // Turn off SSL/TLS certificate validation
 //$auth["imap_php"]["novalidate-cert"] = true;
 
+// Restrict authentication to usernames from a particular domain.  Useful
+// when authenticating against a server such as outlook.office365.com which
+// supports usernames from many domains.
+//$auth['imap_php']['user_domain'] = 'example.com';
+
 // 'auth_pop3' configuration settings
 // See AUTHENTICATION for details of how check against multiple servers
 // Where is the POP3 server

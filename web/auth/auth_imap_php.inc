@@ -43,6 +43,22 @@ function authValidateUser($user, $pass)
 {
   global $auth;
 
+  // If required, check that the username is from the permitted domain
+  if (isset($auth['imap_php']['user_domain']))
+  {
+    if (!filter_var($user, FILTER_VALIDATE_EMAIL))
+    {
+      return false;
+    }
+    
+    list($local_part, $domain) = explode('@', $user);
+    
+    if ($domain != $auth['imap_php']['user_domain'])
+    {
+      return false;
+    }
+  }
+  
   $location = "{".$auth["imap_php"]["hostname"];
 
   if (isset($auth["imap_php"]["port"]))
