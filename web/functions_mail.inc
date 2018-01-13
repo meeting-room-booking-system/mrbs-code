@@ -1357,7 +1357,10 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   {
     $mail->set('MIMEBody', $mime['body']);
     mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
-    mail_debug("Recipients: '$recipients'");
+    mail_debug("From: " . (isset($addresses['from']) ? $addresses['from'] : ''));
+    mail_debug("To: " . (isset($addresses['to']) ? $addresses['to'] : ''));
+    mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
+    mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
     
     // Don't do aything if mail has been disabled.   Useful for testing MRBS without
     // sending emails to those who don't want them
