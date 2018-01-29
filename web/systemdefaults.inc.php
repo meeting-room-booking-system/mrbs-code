@@ -558,7 +558,9 @@ $skip_default = false;
 
 // $edit_entry_field_order can be used to change the order of fields in the 
 // edit_entry page. This is useful to insert custom fields somewhere other than 
-// the end. For example: To place a custom field 'in_charge' directly after the 
+// the end.  The same order is used for the view_entry page.
+
+// For example: To place a custom field 'in_charge' directly after the 
 // booking name, set the following in config.inc.php:
 // 
 // $edit_entry_field_order = array('name', 'in_charge');
