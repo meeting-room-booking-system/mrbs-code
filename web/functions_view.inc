@@ -26,7 +26,7 @@ function create_details_row($label, $value, $as_html=false, $class='')
 }
 
 
-// Returns a string containg a set of details for $data consisting of a label/value
+// Returns a string containing a set of details for $data consisting of a label/value
 // pair for each data element in the array $data.   If $as_html is true then the string
 // is the HTML for a table body, ie looks like "<tbody> ... </tbody>".
 //    $keep_private   boolean   if true then any private fields will be given the class 'private';
@@ -40,6 +40,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
   global $strftime_format;
   global $tbl_entry;
   global $select_options, $booking_types;
+  global $edit_entry_field_order;
   
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -93,117 +94,181 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     }
   }
 
+  $fields = db()->field_info($tbl_entry);
+  
+  // Get the order in which to display fields
+  $field_order = (isset($edit_entry_field_order)) ? $edit_entry_field_order : array();
+  foreach ($fields as $field)
+  {
+    if (!in_array($field['name'], $field_order))
+    {
+      $field_order[] = $field['name'];
+    }
+  }
   
   $tbody = '';
   $tbody .= ($as_html) ? "<tbody>\n" : "";
-  // Description
-  $class = ($keep_private & !empty($is_private_field['entry.description'])) ? "private" : "";
-  $tbody .= create_details_row(get_vocab("description"), $data['description'], $as_html, $class);
-  // Confirmation status
-  if ($confirmation_enabled)
+
+  foreach ($field_order as $key)
   {
-    $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
-    $tbody .= create_details_row(get_vocab("confirmation_status"), $value, $as_html);
-  }
-  // Approval status
-  if ($approval_enabled)
-  {
-    $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
-    $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
-  }
-  // Room
-  $value = $data['area_name'] . " - " . $data['room_name'];
-  if ($room_disabled)
-  {
-    $value .= " (" . get_vocab("disabled") . ")";
-  }
-  $tbody .= create_details_row(get_vocab("room"), $value, $as_html);
-  // Start date
-  if ($enable_periods)
-  {
-    list($start_period, $start_date) =  period_date_string($data['start_time'], $data['area_id']);
-  }
-  else
-  {
-    $start_date = time_date_string($data['start_time']);
-  }
-  $tbody .= create_details_row(get_vocab("start_date"), $start_date, $as_html);
-  // Duration
-  $tbody .= create_details_row(get_vocab("duration"), $data['duration'] . " " . get_vocab($data['dur_units']), $as_html);
-  // End date
-  if ($enable_periods)
-  {
-    list( , $end_date) =  period_date_string($data['end_time'], $data['area_id'], -1);
-  }
-  else
-  {
-    $end_date = time_date_string($data['end_time']);
-  }
-  $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
-  // Type
-  if (count($booking_types) > 1)
-  {
-    $type = get_type_vocab($data['type']);
-    $value = (empty($type)) ? "?${data['type']}?" : $type;
-    $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
-  }
-  // Created by
-  $class = ($keep_private && !empty($is_private_field['entry.create_by'])) ? "private" : "";
-  $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
-  // Modified by
-  $class = ($keep_private && !empty($is_private_field['entry.modified_by'])) ? "private" : "";
-  $tbody .= create_details_row(get_vocab("modifiedby"), $data['modified_by'], $as_html, $class);
-  // Last updated
-  $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
-  // The custom fields
-  $fields = db()->field_info($tbl_entry);
-  foreach ($fields as $field)
-  {
-    $key = $field['name'];
-    if (!in_array($key, $standard_fields['entry']))
+    switch ($key)
     {
-      $label = get_loc_field_name($tbl_entry, $key);
-      // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
-      // assume are intended to be booleans)
-      if (($field['nature'] == 'boolean') || 
-          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-      {
-        if ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"])
+      // Ignore these
+      case 'name':  // in the heading
+      case 'id':
+      case 'entry_type':
+      case 'reminded':
+      case 'repeat_id':
+      case 'info_time':
+      case 'info_user':
+      case 'info_text':
+      case 'ical_uid':
+      case 'ical_sequence':
+      case 'ical_recur_id':
+        break;
+        
+      case 'description':
+        // Description
+        $class = ($keep_private & !empty($is_private_field['entry.description'])) ? "private" : "";
+        $tbody .= create_details_row(get_vocab("description"), $data['description'], $as_html, $class);
+        break;
+        
+      case 'status':
+        // Confirmation status
+        if ($confirmation_enabled)
         {
-          $value = $data[$key];  // Will have been set previously
+          $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+          $tbody .= create_details_row(get_vocab("confirmation_status"), $value, $as_html);
+        }
+        // Approval status
+        if ($approval_enabled)
+        {
+          $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+          $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
+        }
+        break;
+        
+      case 'room_id':
+        // Room
+        $value = $data['area_name'] . " - " . $data['room_name'];
+        if ($room_disabled)
+        {
+          $value .= " (" . get_vocab("disabled") . ")";
+        }
+        $tbody .= create_details_row(get_vocab("room"), $value, $as_html);
+        break;
+        
+      case 'start_time':
+        // Start date
+        if ($enable_periods)
+        {
+          list($start_period, $start_date) =  period_date_string($data['start_time'], $data['area_id']);
         }
         else
         {
-          $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
+          $start_date = time_date_string($data['start_time']);
         }
-      }
-      // Otherwise output a string
-      else
-      {
-        if (isset($data[$key]))
+        $tbody .= create_details_row(get_vocab("start_date"), $start_date, $as_html);
+        // Duration
+        $tbody .= create_details_row(get_vocab("duration"), $data['duration'] . " " . get_vocab($data['dur_units']), $as_html);
+        break;
+      
+      case 'end_time':
+        // End date
+        if ($enable_periods)
         {
-          // If the custom field is an associative array then we want
-          // the value rather than the array key
-          if (isset($select_options["entry.$key"]) &&
-              is_assoc($select_options["entry.$key"]) && 
-              array_key_exists($data[$key], $select_options["entry.$key"]))
+          list( , $end_date) =  period_date_string($data['end_time'], $data['area_id'], -1);
+        }
+        else
+        {
+          $end_date = time_date_string($data['end_time']);
+        }
+        $tbody .= create_details_row(get_vocab("end_date"), $end_date, $as_html);
+        break;
+        
+      case 'type':
+        // Type
+        if (count($booking_types) > 1)
+        {
+          $type = get_type_vocab($data['type']);
+          $value = (empty($type)) ? "?${data['type']}?" : $type;
+          $tbody .= create_details_row(get_vocab("type"), $value, $as_html);
+        }
+        break;
+        
+      case 'create_by':
+        // Created by
+        $class = ($keep_private && !empty($is_private_field['entry.create_by'])) ? "private" : "";
+        $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
+        break;
+        
+      case 'modified_by':
+        // Modified by
+        $class = ($keep_private && !empty($is_private_field['entry.modified_by'])) ? "private" : "";
+        $tbody .= create_details_row(get_vocab("modifiedby"), $data['modified_by'], $as_html, $class);
+        break;
+        
+      case 'timestamp':
+        // Last updated
+        $tbody .= create_details_row(get_vocab("lastupdate"), time_date_string($data['last_updated']), $as_html);
+        break;
+        
+      default:
+        // The custom fields
+        foreach ($fields as $field)
+        {
+          // Get this field
+          if ($field['name'] == $key)
           {
-            $value = $select_options["entry.$key"][$data[$key]];
+            break;
+          }
+        }
+        
+        $label = get_loc_field_name($tbl_entry, $key);
+        // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
+        // assume are intended to be booleans)
+        if (($field['nature'] == 'boolean') || 
+            (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+        {
+          if ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"])
+          {
+            $value = $data[$key];  // Will have been set previously
           }
           else
           {
-            $value = $data[$key];
+            $value = empty($data[$key]) ? get_vocab("no") : get_vocab("yes");
           }
         }
+        // Otherwise output a string
         else
         {
-          $value = "";
+          if (isset($data[$key]))
+          {
+            // If the custom field is an associative array then we want
+            // the value rather than the array key
+            if (isset($select_options["entry.$key"]) &&
+                is_assoc($select_options["entry.$key"]) && 
+                array_key_exists($data[$key], $select_options["entry.$key"]))
+            {
+              $value = $select_options["entry.$key"][$data[$key]];
+            }
+            else
+            {
+              $value = $data[$key];
+            }
+          }
+          else
+          {
+            $value = "";
+          }
         }
-      }
-      $class = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? "private" : "";
-      $tbody .= create_details_row($label, $value, $as_html, $class);
-    }
-  }
+        $class = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? "private" : "";
+        $tbody .= create_details_row($label, $value, $as_html, $class);
+        break;
+    }  // switch
+  }  // foreach
+  
+  
   // Repeat type
   $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
   // Repeat details
