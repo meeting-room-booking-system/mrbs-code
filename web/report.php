@@ -236,7 +236,7 @@ function generate_search_criteria(&$vars)
         global $$var;
         $params = array('label' => get_loc_field_name($tbl_entry, $key),
                         'name'  => $var);
-        echo "<div>\n";
+        echo "<div id=\"div_$var\">\n";
         // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
         if (($field_natures[$key] == 'boolean') || 
