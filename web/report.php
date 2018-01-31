@@ -19,7 +19,8 @@ function get_field_from_date($data)
 {
   $value = format_iso_date($data['from_year'], $data['from_month'], $data['from_day']);
   $field = new FieldInputDate();
-  $field->setLabel(get_vocab('report_start'))
+  $field->setAttribute('id', 'div_report_start')
+        ->setLabel(get_vocab('report_start'))
         ->setControlAttributes(array('name'     => 'from_date',
                                      'value'    => $value,
                                      'required' => true));
@@ -31,7 +32,8 @@ function get_field_to_date($data)
 {
   $value = format_iso_date($data['to_year'], $data['to_month'], $data['to_day']);
   $field = new FieldInputDate();
-  $field->setLabel(get_vocab('report_end'))
+  $field->setAttribute('id', 'div_report_end')
+        ->setLabel(get_vocab('report_end'))
         ->setControlAttributes(array('name'     => 'to_date',
                                      'value'    => $value,
                                      'required' => true));
@@ -43,7 +45,8 @@ function get_field_areamatch($data)
 {        
   $field = new FieldInputDatalist();
   $options = get_area_names($all=true);
-  $field->setLabel(get_vocab('match_area'))
+  $field->setAttribute('id', 'div_areamatch')
+        ->setLabel(get_vocab('match_area'))
         ->setControlAttributes(array('name'  => 'areamatch',
                                      'value' => $data['areamatch']))
         ->addDatalistOptions($options, false);
@@ -62,7 +65,8 @@ function get_field_roommatch($data)
   // in different areas)
   $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
   
-  $field->setLabel(get_vocab('match_room'))
+  $field->setAttribute('id', 'div_roommatch')
+        ->setLabel(get_vocab('match_room'))
         ->setControlAttributes(array('name'  => 'roommatch',
                                      'value' => $data['roommatch']))
         ->addDatalistOptions($options, false);
@@ -87,7 +91,8 @@ function get_field_typematch($data)
   }
   
   $field = new FieldSelect();
-  $field->setAttribute('class', 'multiline')
+  $field->setAttributes(array('id'    => 'div_typematch',
+                              'class' => 'multiline'))
         ->setLabel(get_vocab('match_type'))
         ->setLabelAttribute('title', get_vocab('ctrl_click_type'))
         ->setControlAttributes(array('id'       => 'typematch',
@@ -125,7 +130,8 @@ function get_field_match_private($data)
                      BOOLEAN_MATCH_FALSE => get_vocab('default_public'),
                      BOOLEAN_MATCH_TRUE  => get_vocab('default_private'));
     $field = new FieldInputRadioGroup();
-    $field->setLabel(get_vocab('privacy_status'))
+    $field->setAttribute('id', 'div_privacystatus')
+          ->setLabel(get_vocab('privacy_status'))
           ->addRadioOptions($options, 'match_private', $data['match_private'], true);
   }
   
@@ -147,7 +153,8 @@ function get_field_match_confirmed($data)
                    BOOLEAN_MATCH_TRUE  => get_vocab('confirmed'),
                    BOOLEAN_MATCH_FALSE => get_vocab('tentative'));
   $field = new FieldInputRadioGroup();
-  $field->setLabel(get_vocab('confirmation_status'))
+  $field->setAttribute('id', 'div_confirmationstatus')
+        ->setLabel(get_vocab('confirmation_status'))
         ->addRadioOptions($options, 'match_confirmed', $data['match_confirmed'], true);
   
   return $field;
@@ -168,7 +175,8 @@ function get_field_match_approved($data)
                    BOOLEAN_MATCH_TRUE  => get_vocab('approved'),
                    BOOLEAN_MATCH_FALSE => get_vocab('awaiting_approval'));
   $field = new FieldInputRadioGroup();
-  $field->setLabel(get_vocab('approval_status'))
+  $field->setAttribute('id', 'div_approvalstatus')
+        ->setLabel(get_vocab('approval_status'))
         ->addRadioOptions($options, 'match_approved', $data['match_approved'], true);
   
   return $field;
@@ -196,7 +204,8 @@ function get_field_custom($data, $key)
                      BOOLEAN_MATCH_FALSE => get_vocab('without'));
     $value = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
     $field = new FieldInputRadioGroup();
-    $field->setLabel($label)
+    $field->setAttribute('id', "div_$name")
+          ->setLabel($label)
           ->addRadioOptions($options, $name, $value, true);
   }
   else
@@ -252,7 +261,8 @@ function get_field_report_input($params)
     $field = new FieldInputText();
   }
   
-  $field->setLabel($params['label'])
+  $field->setAttribute('id', 'div_' . $params['name'])
+        ->setLabel($params['label'])
         ->setControlAttributes(array('name'  => $params['name'],
                                      'value' => $params['value']));
   
