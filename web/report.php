@@ -329,7 +329,34 @@ function get_fieldset_search_criteria($data)
         
       default:
         // Must be a custom field
+<<<<<<< working copy
         $fieldset->addElement(get_field_custom($data, $key));
+=======
+        $var = "match_$key";
+        global $$var;
+        $params = array('label' => get_loc_field_name($tbl_entry, $key),
+                        'name'  => $var);
+        echo "<div id=\"div_$var\">\n";
+        // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
+        // assume are intended to be booleans)
+        if (($field_natures[$key] == 'boolean') || 
+            (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+        {
+          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("with"), BOOLEAN_MATCH_FALSE => get_vocab("without"));
+          $params['value'] = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
+          $params['options'] = $options;
+          $params['force_assoc'] = true;
+          generate_radio_group($params);
+        }
+        // Otherwise output a text input of some kind
+        else
+        {
+          $params['value'] = (isset($$var)) ? $$var : null;
+          $params['field'] = "entry.$key";
+          generate_report_input($params);
+        }
+        echo "</div>\n";
+>>>>>>> merge rev
         break;
     } // switch
   } // foreach
