@@ -92,20 +92,6 @@ function getTimeString(time, twentyfourhour_format)
 } // function getTimeString()
 
 
-function convertTo24(hour, ampm)
-{
-  if ((ampm === "pm") && (hour < 12))
-  {
-    hour += 12;
-  }
-  if ((ampm === "am") && (hour > 11))
-  {
-    hour -= 12;
-  }
-  return hour; 
-}
-
-
 <?php // Get the resolution in minutes ?>
 function getResolutionMinutes()
 {
@@ -113,60 +99,38 @@ function getResolutionMinutes()
 }
 
 
+<?php
+// Converts a time string in the format 'hh:mm' to minutes.
+// Returns null if the string is not properly formed.
+?> 
+function hhmmToMins(hhmm)
+{
+  if (hhmm === null)
+  {
+    return null;
+  }
+  
+  if (!<?php echo REGEX_HHMM ?>.test(hhmm))
+  {
+    return null;
+  }
+  
+  var array = hhmm.split(':');
+  return (parseInt(array[0], 10) * 60) + parseInt(array[1], 10);
+}
+
+
 <?php // Gets the start of the first slot in minutes past midnight  ?>
 function getStartFirstSlot()
 {
-  var morningStarts, result;
-  
-  <?php // Get the first slot time, adjusting for a 12 hour clock if necessary ?> 
-  morningStarts = parseInt($('#area_morningstarts').val(), 10);
-  <?php
-  if (!$twentyfourhour_format)
-  {
-    ?>
-    morningStarts = convertTo24(morningStarts, 
-                                $('input:radio[name=area_morning_ampm]:checked').val());
-    <?php
-  }
-  ?>
-  result = (morningStarts * 60) +
-           parseInt($('#area_morningstarts_minutes').val(), 10);
-           
-  return result;
+  return hhmmToMins($('input[name="area_start_first_slot"]').val());
 }
 
 
 <?php // Gets the start of the last slot in minutes past midnight  ?>
 function getStartLastSlot()
 {
-  var eveningEnds, eveningEndsInput, result;
-  <?php 
-  // Get the last slot time, adjusting for a 12 hour clock if necessary.
-  // We need to check whether the non-JavaScript input is still there, or 
-  // whether it has been overwritten by a select box
-  ?> 
-  eveningEndsInput = $('#area_eveningends');
-  if (eveningEndsInput.length > 0)
-  {
-    eveningEnds = parseInt(eveningEndsInput.val(), 10);
-    <?php
-    if (!$twentyfourhour_format)
-    {
-      ?>
-      eveningEnds = convertTo24(eveningEnds,
-                                $('input:radio[name=area_evening_ampm]:checked').val());
-      <?php
-    }
-    ?>
-    result = (eveningEnds * 60) +
-             parseInt($('#area_eveningends_minutes').val(), 10);
-  }
-  else
-  {
-    result = parseInt($('#area_eveningends_t').val(), 10);
-  }
-  
-  return result;
+  return hhmmToMins($('[name="area_start_last_slot"]').val());
 }
 
 
@@ -181,12 +145,18 @@ function generateLastSlotSelect()
       minsPerDay = <?php echo MINUTES_PER_DAY ?>;
       
   resMins = getResolutionMinutes();
-  if (resMins === 0)
+  if (isNaN(resMins) || (resMins === null) || (resMins === 0))
   {
     return;  <?php // avoid endless loops and divide by zero errors ?>
   }
+  
   firstSlot = getStartFirstSlot();
   lastSlot = getStartLastSlot();
+  
+  if (firstSlot === null)
+  {
+    return;
+  }
                
   <?php 
   // Construct the <select> element.
@@ -194,11 +164,10 @@ function generateLastSlotSelect()
   // next first slot.
   ?>
   var lastPossible = minsPerDay + firstSlot - resMins;
-  var id = 'area_eveningends_t';
-  var label = $('<label>').attr('for', id)
-                          .text('<?php echo get_vocab("area_last_slot_start")?>');
-  var select = $('<select>').attr('id', id)
-                            .attr('name', id);
+  var name = 'area_start_last_slot';
+  var element = $('[name="' + name + '"]');
+  
+  var select = $('<select>').attr('name', name);
                             
   for (var t=firstSlot; t <= lastPossible; t += resMins)
   {
@@ -209,17 +178,15 @@ function generateLastSlotSelect()
       lastSlot = tCorrected;
     }
     select.append($('<option>')
-                  .val(tCorrected)
+                  .val(getTimeString(tCorrected, true))
                   .text(getTimeString(tCorrected, <?php echo ($twentyfourhour_format ? "true" : "false") ?>)));
   }
   
   <?php // and make the selected option the new last slot value ?>
-  select.val(lastSlot);
-  <?php // finally, replace the contents of the <div> with the new <select> ?>
-  $('#last_slot').empty()
-                 .append(label)
-                 .append(select)
-                 .css('visibility', 'visible');
+  select.val(getTimeString(lastSlot, true));
+  <?php // finally, replace the element with the new <select> ?>
+  element.replaceWith(select);
+  $('#last_slot').css('visibility', 'visible');
 }
 
 
@@ -311,7 +278,7 @@ init = function() {
     })
     .change();
     
-  $('#area_morningstarts, #area_morningstarts_minutes, input[name=area_morning_ampm], #area_res_mins')
+  $('input[name="area_start_first_slot"], input[name="area_res_mins"]')
       .change(function() {
           generateLastSlotSelect();
         });

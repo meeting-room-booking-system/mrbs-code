@@ -7,6 +7,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldSelect;
@@ -84,7 +85,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
                                      'name'     => 'area',
                                      'class'    => 'room_area_select',
                                      'onchange' => 'this.form.submit()'))
-        ->addSelectOptions($options, $area);
+        ->addSelectOptions($options, $area, true);
   $fieldset->addElement($field);
 
   // The change area button (won't be needed or displayed if JavaScript is enabled)
@@ -103,7 +104,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
     $button = new ElementButton();
     $button->setAttributes(array('class'      => 'image',
                                  'title' => get_vocab('edit'),
-                                 'formaction' => 'edit_area_room.php?change_area=1'))
+                                 'formaction' => 'edit_area.php'))
            ->addElement($img);
     $fieldset->addElement($button);
     
@@ -131,7 +132,7 @@ function generate_new_area_form()
   $form = new Form();
   
   $attributes = array('id'     => 'add_area',
-                      'class'  => 'form_admin',
+                      'class'  => 'form_admin standard',
                       'action' => 'add.php',
                       'method' => 'post');
                       
@@ -149,6 +150,7 @@ function generate_new_area_form()
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('id'        => 'area_name',
                                      'name'      => 'name',
+                                     'required'  => true,
                                      'maxlength' => $maxlength['area.area_name']));               
   $fieldset->addElement($field);
   
@@ -172,7 +174,7 @@ function generate_new_room_form()
   $form = new Form();
   
   $attributes = array('id'     => 'add_room',
-                      'class'  => 'form_admin',
+                      'class'  => 'form_admin standard',
                       'action' => 'add.php',
                       'method' => 'post');
                       
@@ -192,6 +194,7 @@ function generate_new_room_form()
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('id'        => 'room_name',
                                      'name'      => 'name',
+                                     'required'  => true,
                                      'maxlength' => $maxlength['room.room_name']));               
   $fieldset->addElement($field);
   
@@ -202,20 +205,21 @@ function generate_new_room_form()
                                      'name'      => 'description',
                                      'maxlength' => $maxlength['room.description']));               
   $fieldset->addElement($field);
-  
-  // The capacity field
-  $field = new FieldInputText();
+   
+  // Capacity
+  $field = new FieldInputNumber();
   $field->setLabel(get_vocab('capacity'))
-        ->setControlAttributes(array('id'   => 'room_capacity',
-                                     'name' => 'capacity'));               
+        ->setControlAttributes(array('name' => 'capacity',
+                                     'min'  => '0'));
   $fieldset->addElement($field);
         
   // The email field
   $field = new FieldInputEmail();
   $field->setLabel(get_vocab('room_admin_email'))
+        ->setLabelAttribute('title', get_vocab('email_list_note'))
         ->setControlAttributes(array('id'       => 'room_admin_email',
                                      'name'     => 'room_admin_email',
-                                     'multiple' => null));           
+                                     'multiple' => true));           
   $fieldset->addElement($field);
   
   // The submit button
@@ -320,9 +324,9 @@ echo "</div>";  // area_form
 // Now the custom HTML
 if ($auth['allow_custom_html'])
 {
-  echo "<div id=\"custom_html\">\n";
+  echo "<div id=\"div_custom_html\">\n";
   // no htmlspecialchars() because we want the HTML!
-  echo (!empty($custom_html)) ? "$custom_html\n" : "";
+  echo (isset($custom_html)) ? "$custom_html\n" : "";
   echo "</div>\n";
 }
 
@@ -441,7 +445,7 @@ if ($is_admin || !empty($enabled_areas))
             // be sorted properly
             echo "<td><div>" .
                  "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
-                 "<a title=\"$html_name\" href=\"edit_area_room.php?change_room=1&amp;phase=1&amp;room=" . $r['id'] . "\">$html_name</a>" .
+                 "<a title=\"$html_name\" href=\"edit_room.php?room=" . $r['id'] . "\">$html_name</a>" .
                  "</div></td>\n";
             if ($is_admin)
             {

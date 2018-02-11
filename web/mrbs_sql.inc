@@ -835,7 +835,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  * Returns a list of the repeating entries
  * 
  * $time          The start time
- * $enddate       When the repeat ends
+ * $rep_end_time  When the repeat ends (Unix timestamp)
  * $rep_details   An associative array containing the repeat details, indexed by
  *                  rep_type        What type of repeat is it
  *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one 
@@ -849,7 +849,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *   an array  - This is a list of start times of each of the repeat entrys
  */
 
-function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
+function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
 {
   $entries = array();
   
@@ -906,7 +906,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_details, $n)
   {
     $time = mktime($hour, $min, $sec, $month, $day, $year);
 
-    if ($time > $enddate)
+    if ($time > $rep_end_time)
     {
       break;
     }
@@ -1052,8 +1052,8 @@ function mrbsCreateRepeatingEntrys($data)
   {
     $data['entry_type'] = ENTRY_RPT_ORIGINAL;
     $data['repeat_id'] = $id;
-    $starttime = $data['start_time'];
-    $endtime = $data['end_time'];
+    $start_time = $data['start_time'];
+    $end_time = $data['end_time'];
     // Even if there is only one entry in the series we treat the booking
     // as a series rather than a single booking.   It allows the series to
     // be extended later.
@@ -1065,7 +1065,7 @@ function mrbsCreateRepeatingEntrys($data)
       {
         // calculate diff each time and correct where events
         // cross DST
-        $diff = $endtime - $starttime;
+        $diff = $end_time - $start_time;
         $diff += cross_dst($reps[$i], $reps[$i] + $diff);  
         $data['start_time'] = $reps[$i];
         $data['end_time'] = $reps[$i] + $diff;

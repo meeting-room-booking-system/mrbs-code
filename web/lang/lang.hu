@@ -323,14 +323,12 @@ $vocab["administration"]     = "Tárgyalók részletei";
 $vocab["invalid_area_name"]  = "Ez a helyszínnév már használatban van!";
 $vocab["empty_name"]         = "Nem adtál meg nevet!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Helyszín szerkesztése";
 $vocab["change"]                  = "Módosítás";
 $vocab["backadmin"]               = "Vissza a tárgyalókhoz";
-$vocab["editroomarea"]            = "Helyszín vagy tárgyaló leírásának szerkesztése";
 $vocab["editroom"]                = "Tárgyaló szerkesztése";
 $vocab["viewroom"]                = "Tárgyaló megtekintése";
-$vocab["error_room"]              = "Hiba: a tárgyaló ";
 $vocab["not_found"]               = " nem található.";
 $vocab["room_admin_email"]        = "Tárgyaló admin email címe";
 $vocab["area_admin_email"]        = "Helszín admin email címe";

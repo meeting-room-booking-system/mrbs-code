@@ -189,13 +189,11 @@ $vocab["capacity"]           = "Capacitat (persones)";
 $vocab["norooms"]            = "No hi han recursos.";
 $vocab["administration"]     = "Administració";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Editar familia";
 $vocab["change"]             = "Canviar";
 $vocab["backadmin"]          = "Tornar a admintració";
-$vocab["editroomarea"]       = "Editar descripció de família o recurs";
 $vocab["editroom"]           = "Editar recurs";
-$vocab["error_room"]         = "Error: recurs ";
 $vocab["not_found"]          = " no trobat";
 $vocab["room_admin_email"]   = "Recuros admin email";
 $vocab["area_admin_email"]   = "Area admin email";

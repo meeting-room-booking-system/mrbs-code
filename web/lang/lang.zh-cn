@@ -350,14 +350,12 @@ $vocab["administration"]     = "房间明细";
 $vocab["invalid_area_name"]  = "这个区域名已被使用!";
 $vocab["empty_name"]         = "你还没有输入一个名称!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "修改区域";
 $vocab["change"]                  = "修改";
 $vocab["backadmin"]               = "回到房间首页";
-$vocab["editroomarea"]            = "修改区域或房间详细";
 $vocab["editroom"]                = "修改房间";
 $vocab["viewroom"]                = "查看房间";
-$vocab["error_room"]              = "错误: 房间 ";
 $vocab["not_found"]               = "找不到";
 $vocab["room_admin_email"]        = "会议室管理员 Email";
 $vocab["area_admin_email"]        = "区域管理员 Email";

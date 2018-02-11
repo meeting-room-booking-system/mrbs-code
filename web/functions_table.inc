@@ -1098,7 +1098,7 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
     for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
       $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
-      $date = date('Y-n-d', $t);
+      $date = date('Y-m-d', $t);
     
       if (is_hidden_day(($j + $weekstarts) % 7))
       {

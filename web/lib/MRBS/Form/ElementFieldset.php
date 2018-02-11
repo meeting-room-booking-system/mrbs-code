@@ -12,19 +12,31 @@ class ElementFieldset extends Element
   }
   
   
-  // $legend can either be a string or an element
+  // $legend can be
+  //    (a) an ElementLegend object, or
+  //    (b) another element, or
+  //    (c) a string
+  // If it is (b) or (c) then it is wrapped inside a Legend element.
   public function addLegend($legend)
   {
-    $element = new ElementLegend();
-    
-    if (is_string($legend))
+    if (is_object($legend) &&
+        (__NAMESPACE__ . "\\ElementLegend" == get_class($legend)))
     {
-      $element->setText($legend);
+      $element = $legend;
     }
     else
     {
-      // Assumed to be an object of class 'Element' if it is not a string
-      $element->addElement($legend);
+      $element = new ElementLegend();
+      
+      if (is_string($legend))
+      {
+        $element->setText($legend);
+      }
+      else
+      {
+        // Assumed to be an object of class 'Element' if it is not a string
+        $element->addElement($legend);
+      }
     }
     
     $this->addElement($element);

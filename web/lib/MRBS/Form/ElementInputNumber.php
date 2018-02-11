@@ -8,7 +8,8 @@ class ElementInputNumber extends ElementInput
   public function __construct()
   {
     parent::__construct();
-    $this->setAttribute('type', 'number');
+    $this->setAttributes(array('type' => 'number',
+                               'step' => '1'));
   }
  
 }

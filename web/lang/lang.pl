@@ -330,14 +330,12 @@ $vocab["administration"]     = "Administracja";
 $vocab["invalid_area_name"]  = "Taki budynek juz istnieje!";
 $vocab["empty_name"]         = "Nie podałeś nazwy!";
 
-// Uzyte w edit_area_room.php
+// Uzyte w edit_area.php edit_room.php 
 $vocab["editarea"]           = "Edytuj Strefę";
 $vocab["change"]             = "Zmień";
 $vocab["backadmin"]          = "Powrót do Admin";
-$vocab["editroomarea"]       = "Edycja Strefy lub Opis Pokoju";
 $vocab["editroom"]           = "Edycja Pokoju";
 $vocab["viewroom"]                = "Zobacz pokój";
-$vocab["error_room"]         = "Błąd: Pokój ";
 $vocab["not_found"]          = " nie znaleziono";
 $vocab["room_admin_email"]   = "Email do administratora pokoju";
 $vocab["area_admin_email"]   = "Email do administratora strefy";

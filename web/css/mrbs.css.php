@@ -50,6 +50,23 @@ input, textarea {
   box-sizing: border-box;
 }
 
+<?php
+// <input> elements of type 'date' are converted by the JavaScript into datepickers.
+// In order to prevent the display shifting about during the conversion process we set
+// the widths of both to be the same.
+?>
+input.date, .js input[type="date"] {
+  width: 6.5em;
+}
+
+.js input[type="date"] {
+  visibility: hidden;
+}
+
+input.date {
+  text-align: center;
+}
+
 button.image {
   background-color: transparent;
   border: 0;
@@ -226,31 +243,17 @@ select.room_area_select {margin-right: 0.5em}
 // The input width can normally be left alone
 $admin_form_label_width       = '10.0';   // em
 $admin_form_gap               = '1.0';   // em
-$admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
+$admin_form_input_width       = '10.5';   // em
 
 ?>
-form.form_admin {float: left; clear: left; margin: 2em 0 0 0}
-.form_admin fieldset {float: left; width: auto; border: 1px solid <?php echo $admin_table_border_color ?>; padding: 1em}
-.form_admin legend {font-size: small}
-.form_admin div {float: left; clear: left} 
-.form_admin label {
-    display: block; float: left; clear: left; 
-    width: <?php echo $admin_form_label_width ?>em; min-height: 2.0em; text-align: right;
+
+.form_admin fieldset {
+  border: 1px solid <?php echo $admin_table_border_color ?>;
 }
 
-.form_admin input {
-    display: block; float: left; clear: right;
-    width: <?php echo $admin_form_input_width ?>em;
-    margin-top: -0.2em; margin-left: <?php echo $admin_form_gap ?>em;
-    font-family: <?php echo $standard_font_family ?>; font-size: small;
+.admin h2 {
+  clear: left
 }
-
-.form_admin input.submit {
-    width: auto;
-    margin-top: 1.2em; 
-}
-
-.admin h2 {clear: left}
 
 div#area_form, div#room_form {
   width: 100%;
@@ -258,7 +261,10 @@ div#area_form, div#room_form {
   padding: 0 0 2em 0;
 }
 
-div#custom_html {float: left; padding: 0 0 3em 1em}
+div#div_custom_html {
+  float: left;
+  padding: 0 0 3em 1em;
+}
 
 #area_form form {
   width: 100%;
@@ -713,31 +719,19 @@ div#del_room_confirm {
 
 
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
-.edit_area_room .form_general fieldset fieldset {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em
-}
+/* ------ EDIT_AREA.PHP AND EDIT_ROOM.PHP ----------*/
 
-.edit_area_room .form_general fieldset fieldset fieldset {
-  margin-bottom: 1em;
-}
-
-.edit_area_room .form_general fieldset fieldset legend {
-  font-size: small;
+#book_ahead_periods_note span {
+  display: block;
+  float: left;
+  width: 24em;
+  margin: 0 0 1em 1em;
   font-style: italic;
-  font-weight: normal
 }
 
-.edit_area_room .form_general fieldset fieldset fieldset legend {
-  padding-left: 2em;
+div#div_custom_html {
+  margin-top: 2em;
 }
-
-.edit_area_room fieldset#time_settings {padding:0; margin: 0}
-span#private_display_caution {display: block; margin-top: 1em; font-style: italic; font-weight: normal}
-#book_ahead_periods_note span {display: block; float: left; width: 24em; margin: 0 0 1em 1em; font-style: italic}
-.edit_area_room .form_general textarea {height: 6em; width: 25em}
-.edit_area_room div#custom_html {margin-top: 8px}
 
 .delete_period, #period_settings button {
   display: none;
@@ -770,15 +764,44 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
 <?php // The standard form ?>
 
 .standard {
+  float:left;
   margin-top: 2.0em;
 }
 
 .standard fieldset {
-  padding: 1em;
+  display: table;
+  float: left;
+  clear: left;
+  width: auto;
+  border-spacing: 0 0.75em;
+  border-collapse: separate;
+  padding: 1em 1em 1em 0;
+}
+
+.standard fieldset > div {
+  display: table-row;
+}
+
+.standard fieldset > div > * {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.standard fieldset .multiline label {
+  vertical-align: top;
+}
+
+.standard fieldset .field_text_area label {
+  vertical-align: top;
+  padding-top: 0.2em;
+}
+
+.standard fieldset > div > div > * {
+  float: left;
 }
 
 .standard fieldset fieldset {
-  padding: 0.5em 0;
+  padding: 1em 0;
 }
 
 .standard fieldset fieldset legend{
@@ -787,13 +810,8 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   font-weight: normal;
 }
 
-.standard fieldset > div {
-  display: table-row;
-}
-
-.standard fieldset > div > :first-child, .standard fieldset > div > :nth-child(2) {
-  display: table-cell;
-  margin-bottom: 0.5em;
+.standard fieldset fieldset fieldset legend {
+  padding-left: 2em;
 }
 
 .standard fieldset > div > label {
@@ -803,24 +821,33 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   text-align: right;
 }
 
-.field_text_area label {
-  vertical-align: top;
-  padding-top: 0.2em;
-}
-
 .standard fieldset > div > div {
-  display: inline-block;
   text-align: left;
-  padding-bottom: 0.5em
 }
 
 .standard div.group {
   display: inline-block;
+  float: left;
 }
 
-.standard input[type="text"], .standard input[type="email"], .standard textarea {
+.standard div.group.long label {
+  float: left;
+  clear: left;
+  margin-bottom: 0.5em;
+}
+
+.standard input[type="text"]:not(.date),
+.standard input[type="email"],
+.standard input[type="password"],
+.standard input[type="search"],
+.standard textarea {
   width: 20em;
 }
+
+.standard input[type="text"].short {
+  width: 4em;
+}
+
 .standard input[type="number"] {
   width: 4em;
 }
@@ -830,224 +857,83 @@ span#private_display_caution {display: block; margin-top: 1em; font-style: itali
   margin: -0.17em 0.4em 0 0;
 }
 
+.standard input, .standard input.enabler, .standard select {
+  margin-right: 1em;
+}
+
 .standard textarea {
   height: 6em;
-  margin-bottom: 0.5em;
 }
 
 .standard .group label {
   margin-right: 0.5em;
 }
 
-
-/* ------------ FORM_GENERAL ------------------------*/
-/*                                                   */
-/*   used in EDIT_ENTRY.PHP, REPORT.PHP,             */
-/*   SEARCH.PHP and EDIT_AREA_ROOM.PHP               */
-
 <?php
-// Common to all forms in the class "form_general"
-$general_label_height          = '1.0';     // em
-$general_left_col_width        = '20';      // %
-$general_right_col_width       = '79';      // %  (79 to avoid rounding problems)
-$general_gap                   = '1.0';     // em  (gap between left and right columns)
-$input_width                   = '20';      // em
-
-// Specific to the "edit_entry" form
-$edit_entry_left_col_max_width = '10';      // em
-$edit_entry_textarea_width     = '20';      // em
-$edit_entry_ampm_width         = '16';      // em
-$edit_entry_form_min_width     = $edit_entry_left_col_max_width + $edit_entry_textarea_width + $general_gap;
-$edit_entry_form_min_width     = number_format($edit_entry_form_min_width, 1, '.', '');   // get rid of any commas
-
-// Specific to the "import" form
-$import_left_col_max_width     = '12';      // em
-
-// Specific to the "report" form
-$report_left_col_max_width     = '12';      // em
-$report_form_min_width         = $report_left_col_max_width + $input_width + $general_gap;
-$report_form_min_width         = number_format($report_form_min_width, 1, '.', '');   // get rid of any commas
-
-// Specific to the "search" form
-$search_left_col_max_width     = '8';       // em
-$search_form_min_width         = $search_left_col_max_width + $input_width + $general_gap;
-$search_form_min_width         = number_format($search_form_min_width, 1, '.', '');   // get rid of any commas
-
-// Specific to the "logon" form
-$logon_left_col_max_width      = '8';       // em
-$logon_form_min_width          = $logon_left_col_max_width + $input_width + $general_gap;
-$logon_form_min_width          = number_format($logon_form_min_width, 1, '.', '');   // get rid of any commas
-
-// Specific to the "db_logon" form
-$db_logon_left_col_max_width   = '12';      // em
-$db_logon_form_min_width       = $db_logon_left_col_max_width + $input_width + $general_gap;
-$db_logon_form_min_width       = number_format($db_logon_form_min_width, 1, '.', '');   // get rid of any commas
-
-// Specific to the "edit_area_room" form
-$edit_area_room_left_col_width      = '17';      // em
-$edit_area_room_left_col_max_width  = '30';      // em
-$edit_area_room_form_min_width      = $edit_area_room_left_col_width + $input_width + $general_gap;
-$edit_area_room_form_min_width      = number_format($edit_area_room_form_min_width, 1, '.', '');   // get rid of any commas
-
-
+// The max number of bookings policy fieldset, where we want to display the
+// controls in tabular form
 ?>
-form.form_general {margin-top: 2.0em; width: 100%}
-.edit_entry     form.form_general {min-width: <?php echo $edit_entry_form_min_width ?>em}
-.report         form.form_general {min-width: <?php echo $report_form_min_width ?>em}
-.search         form.form_general {min-width: <?php echo $search_form_min_width ?>em}
-.edit_area_room form.form_general {min-width: <?php echo $edit_area_room_form_min_width ?>em}
-form.form_general#logon       {min-width: <?php echo $logon_form_min_width ?>em}
-form.form_general#db_logon    {min-width: <?php echo $db_logon_form_min_width ?>em}
-form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 
-.form_general div {float: left; clear: left; width: 100%}
-.form_general div div {float: none; clear: none; width: auto}
-.form_general div.group {float: left}
-.form_general div.group_container {float: left}
-.form_general .group_container div.group {clear: left}
-.form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
-.edit_area_room div.group {clear: none; width: auto}
-.edit_area_room div.group#private_override div {clear: left}
-.form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
-#edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
-#edit_room fieldset.submit_buttons {margin-top: 1em}
-
-.form_general label {
-    display: block; float: left; overflow: hidden;
-    min-height: <?php echo $general_label_height ?>em; 
-    width: <?php echo $general_left_col_width ?>%; 
-    text-align: right; padding-bottom: 0.8em; font-weight: bold;
+#max_number div:first-of-type span, #max_number div div div {
+  display: inline-block;
+  width: 50%;
 }
 
-.edit_entry     .form_general label {
-    width: <?php echo $edit_entry_left_col_max_width ?>em;
-    max-width: <?php echo $edit_entry_left_col_max_width ?>em;
+#max_number div:first-of-type span {
+  white-space: normal;
+  font-style: italic;
 }
 
-.import         .form_general label {max-width: <?php echo $import_left_col_max_width ?>em}
-.report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
-.search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
-.edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em; width: <?php echo $edit_area_room_left_col_width ?>em}
-#logon                    label {max-width: <?php echo $logon_left_col_max_width ?>em}
-#db_logon                 label {max-width: <?php echo $db_logon_left_col_max_width ?>em}
-
-.form_general .group      label {clear: none; width: auto; max-width: none; font-weight: normal; overflow: visible; text-align: left}
-.form_general #rep_type .group label {clear: left}
-div#rep_type {
-    width: auto;
-    border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
-    margin-right: 1em;
-    margin-bottom: 0.5em;
-    padding-right: 1em;
-}
-fieldset.rep_type_details {clear: none; padding-top: 0}
-fieldset.rep_type_details fieldset {padding-top: 0}
-
-.rep_type_details label {text-align: left}
-
-.form_general input, .form_general textarea, .form_general select {
-  float: left;
-  margin-left: <?php echo $general_gap ?>em; 
+#max_number div div {
+  white-space: nowrap;
 }
 
-/* font family and size needs to be the same for input and textarea as their widths are defined in ems */
-.form_general input, .form_general textarea {
-  display: block;
-  font-family: <?php echo $standard_font_family ?>;
-  font-size: small;
+#max_number input {
+  display: inline-block;
 }
 
-.form_general input {
-  width: <?php echo $input_width ?>em;
+
+
+
+div#rep_type div.long{
+  border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  padding-right: 1em;
 }
 
-.form_general .group input {
+fieldset.rep_type_details fieldset {
+  padding-top: 0
+}
+
+#rep_monthly input[type="radio"] {
+  margin-left: 2em;
+}
+
+.standard fieldset fieldset.rep_type_details {
+  padding-top: 0;
   clear: none;
-  width: auto;
-  margin-right: 0.5em;
 }
-
-.form_general input.date {
-  width: 6em;
-}
-
-.form_general textarea {
-    width: <?php echo $edit_entry_textarea_width ?>em;
-    height: 11em; 
-    margin-bottom: 0.5em;
-}
-
-.form_general select {
-  margin-right: -0.5em;
-  margin-bottom: 0.5em;
-}
-
-.form_general label.radio {font-weight: normal; width: auto}
-.form_general input.radio {
-  margin-top: 0.1em;
-  margin-right: 0.4em;
-  width: auto
-}
-.form_general input.checkbox {width: auto; margin-top: 0.2em}
-.edit_area_room .form_general input.checkbox {margin-left: <?php echo $general_gap ?>em}
-.edit_area_room .form_general #booking_policies input.text {width: 4em}
-
-.form_general input.submit {
-  clear: left;
-}
-
-.form_general input[type="submit"] {
-  width: auto;
-  margin-top: 1em;
-}
-
-div#import_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $import_left_col_max_width ?>em}
-div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
-div#search_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $search_left_col_max_width ?>em}
-div#db_logon_submit   {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $db_logon_left_col_max_width ?>em}
-#import_submit input, #report_submit input, #search_submit input, #db_logon_submit input
-    {position: relative; left: 100%; width: auto}
-div#edit_area_room_submit_back {float: left; width: <?php echo $edit_area_room_left_col_width ?>em; max-width: <?php echo $edit_area_room_left_col_max_width ?>em}
-div#edit_area_room_submit_save {float: left; clear: none; width: auto}
-#edit_area_room_submit_back input {float: right}
-div#edit_entry_submit_back {float: left; width: <?php echo $general_left_col_width ?>em; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
-div#edit_entry_submit_save {float: left; clear: none; width: auto}
-#edit_entry_submit_back input {float: right}
-
-
-.form_general .div_dur_mins input{width: 4.0em}
-.form_general .div_time input {width: 2.0em}
-.form_general .div_time input.time_hour {text-align: right}
-.form_general .div_time input.time_minute {text-align: left; margin-left: 0}
-.form_general .div_time span + input {margin-left: 0}
-.form_general .div_time span {display: block; float: left; width: 0.5em; text-align: center}
-.form_general input#duration {width: 2.0em; text-align: right}
-.form_general select#dur_units {margin-right: 1.0em; margin-left: 0.5em}
-.form_general div#ad {float: left}
-.form_general #ad label {clear: none; text-align: left; font-weight: normal}
-.form_general input.all_day, .form_general input#area_def_duration_all_day {width: auto; margin-left: 1em; margin-right: 0.5em}
-.form_general select#start_seconds, input#area_def_duration_mins {margin-right: 2em}
-.form_general #div_rooms select, .form_general #div_typematch select {float: left; margin-right: 2.0em}
 
 fieldset#rep_info, fieldset#booking_controls {
   border-top: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  border-radius: 0;
   padding-top: 0.7em;
 }
 
-.form_general input#rep_num_weeks, .form_general input#month_absolute {width: 4em}
+span#num_weeks, input#rep_num_weeks {
+  display: inline-block;
+  float: left;
+}
 
-.edit_entry span#end_time_error {display: block; float: left; margin-left: 2em; font-weight: normal}
-.edit_area_room span.error {display: block; width: 100%; margin-bottom: 0.5em}
-
-.form_general label.secondary {font-weight: normal; width: auto}
+.edit_entry span#end_time_error {
+  display: block;
+  float: left;
+  margin-left: 2em;
+  font-weight: normal;
+}
 
 div#checks {
-  float: left; 
-  clear: none; 
-  width: auto;
   white-space: nowrap;
   letter-spacing: 0.9em;
-  padding: 1em 0;
   margin-left: 3em;
 }
 
@@ -1071,10 +957,6 @@ div#checks span {
   color: red;
 }
 
-.form_general table {border-collapse: collapse}
-.form_general table, .form_general tr, .form_general th, .form_general td {padding: 0; margin: 0; border: 0}
-.form_general th {font-weight: normal; font-style: italic; text-align: left; padding: 0.2em 0 0.2em 1em}
-
 
 /* ------------ EDIT_ENTRY_HANDLER.PHP ------------------*/
 .edit_entry_handler div#submit_buttons {float: left}
@@ -1082,51 +964,7 @@ div#checks span {
 
 
 /* ------------ EDIT_USERS.PHP ------------------*/
-<?php
-$edit_users_label_height     = '2.0';    // em
-$edit_users_label_width      = '10.0';   // em
-$edit_users_gap              = '1.0';    // em
-$edit_users_input_width      = '10.0';   // em
-// This CSS works by using absolute positioning to bring the Delete button up into the main form.
-// Logically the HTML for the Delete button is implemented and because you can't nest a form within
-// a form it appears as a second form after the main form.    However, to the user it is more logical to
-// see it within the main form, which we achieve through CSS.    [Actually it would probably be better
-// to have the Delete button in a column on the User List page, just like the Edit button is.  However
-// if you put it there you probably also need a confirmation screen, otherwise it is too easy to delete
-// users by mistake.    Having it on the edit form at least means that you have to press two buttons to
-// delete a user (the Edit button followed by the Delete button)]
-?>
-div#form_container {width: auto; position: relative; float: left}    /* this is the containing block against which the absolute positioning works */
-#form_container input.submit {width: auto; position: absolute; bottom: 2.0em}  /* bring both buttons up          */
-form#form_edit_users {width: auto; margin-top: 2.0em}
-#form_edit_users fieldset {float: left; width: auto}  
-#form_edit_users div {float: left; clear: left; width: auto}
-#form_edit_users div#edit_users_input_container {padding-bottom: 4.0em}    /* padding-bottom leaves room for the submit buttons. */
-                                                                           /* Apply it to the div because applying it to the     */
-                                                                           /* fieldset does not work in all browsers (eg Safari) */
-#form_edit_users label{
-    display: block; float: left;
-    min-height: <?php echo $edit_users_label_height ?>em; 
-    width: <?php echo $edit_users_label_width ?>em;  
-    text-align: right;
-}
-#form_edit_users input {
-    display: block; float: left;
-    width: <?php echo $edit_users_input_width ?>em; 
-    margin-left: <?php echo $edit_users_gap ?>em; 
-}
-#form_edit_users select, #form_edit_users textarea {
-    margin-left: <?php echo $edit_users_gap ?>em;
-}
-#form_edit_users textarea {margin-bottom: 0.5em}
 
-#form_edit_users p {display: block; float: left; clear: left; padding: 0.5em 0 0.7em 0; margin: 0;
-                    width: <?php echo $edit_users_label_width + $edit_users_gap + $edit_users_input_width + 5?>em}
-#form_edit_users ul {clear: left}
-#form_edit_users input.submit {right: 2.0em}                                   /* and put the OK on the right     */
-#form_delete_users input.submit {left: 2.0em}                                  /* and put the Delete on the left */
-#form_edit_users input.checkbox {width: auto; margin-left: <?php echo $edit_users_gap ?>em}
-form.edit_users_error {width: 10em; margin-top: 2.0em}
 div#user_list {padding: 2em 0}
 form#add_new_user {margin-left: 1em}
 #users_table td {text-align: right}
@@ -1215,19 +1053,25 @@ form#add_new_user {margin-left: 1em}
   color: <?php echo $anchor_hover_color_banner ?>;
 }
 
-.banner input.date {
-  width: 6.5em;
-  text-align: center
+#form_nav input[type="submit"] {
+  margin-left: 0.5em;
 }
 
-form#show_my_entries input[type="submit"] {
+input.link[type="submit"] {
   display: inline;
   border: none;
   background: none;
-  color: <?php echo $anchor_link_color_banner ?>;
   cursor: pointer;
-  padding: 0.3em 0;
+  font-weight: bold;
+  padding: 0;
 }
+
+form#show_my_entries input.link[type="submit"] {
+  color: <?php echo $anchor_link_color_banner ?>;
+  padding: 0.3em 0;
+  font-weight: normal;
+}
+  
 
 <?php
 // The rules below are concerned with keeping the date selector in the header a constant width, so
@@ -1238,21 +1082,20 @@ form#show_my_entries input[type="submit"] {
   display: none;
 }
 
-.js .banner #Form1 span {
-  display: inline-block;
-  min-width: 7.5em;
-}
-
-.js .banner #Form1 input[type=submit] {
-  visibility: hidden;
-}
-
 table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     color: <?php echo $colour_key_font_color ?>;
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
 #colour_key td#row_padding {border-right: 0; border-bottom: 0}
-#header_search input {width: 6.0em}
+
+form#header_search {
+  display: inline-block;
+}
+
+#header_search input {
+  width: 6em;
+}
+
 div#n_outstanding {margin-top: 0.5em}
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
@@ -1290,8 +1133,10 @@ table.details.has_caption {
 
 
 /* ------------ IMPORT.PHP ------------------------*/
-.import .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
-div.problem_report {border-bottom: 1px solid <?php echo $site_faq_entry_border_color ?>; margin-top: 1em}
+div.problem_report {
+  border-bottom: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  margin-top: 1em;
+}
 
 /* ------------ MINCALS.PHP ---------------------*/
 #cals {float: right}
@@ -1372,17 +1217,33 @@ div#div_summary {padding-top: 3em}
 #div_summary td {text-align: right}
 #div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
 #div_summary td:first-child {font-weight: bold}
-p.report_entries {font-weight: bold}
-.report .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
-.report .form_general fieldset fieldset legend {font-size: small; font-style: italic; font-weight: normal}
+
+p.report_entries {
+  float: left;
+  clear: left;
+  font-weight: bold
+}
+
 button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
-span#search_str {color: <?php echo $highlight_font_color ?>}
-p#nothing_found {font-weight: bold}
-div#record_numbers {font-weight: bold}
-div#record_nav {font-weight: bold; margin-bottom: 1.0em}
+span#search_str {
+  color: <?php echo $highlight_font_color ?>;
+}
+
+p#nothing_found {
+  font-weight: bold;
+}
+
+div#record_numbers {
+  font-weight: bold;
+}
+
+div#record_nav {
+  font-weight: bold;
+  margin-bottom: 1.0em;
+}
 
 /* ------------ SITE_FAQ ------------------------*/
 .help q {font-style: italic}

@@ -3,6 +3,8 @@ namespace MRBS;
 
 use \DateTimeZone;
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementSelect;
 
 
 require_once "mrbs_sql.inc";
@@ -760,1017 +762,6 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
 }
 
 
-// Generate a checkbox with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'label'         The text to be used for the field label.
-//        'name'          The name of the element.
-//      OPTIONAL
-//        'label_after'   Whether to put the label before or after the checkbox.  Default FALSE
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'id'            The id of the element.  Defaults to be the same as the name.
-//        'value'         The value of the input.  Default ''
-//        'class'         A class (or array of classes) to give the element.  Default NULL
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
-//                        Can be either a simple string or an array of attributes.
-//
-function generate_checkbox($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'id', 'label_after', 'value', 'class',
-                 'disabled', 'create_hidden', 'mandatory', 'attributes') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'label':
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'id':
-          $params[$key] = $params['name'];
-          break;
-        case 'value':
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'disabled':
-        case 'label_after':
-        case 'mandatory':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        case 'class':
-          $params[$key] = array();
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  if (isset($params['attributes']) && is_array($params['attributes']))
-  {
-    $params['attributes'] = implode(' ', $params['attributes']);
-  }
-  
-  if (!is_array($params['class']))
-  {
-    $params['class'] = array($params['class']);
-  }
-  $params['class'][] = 'checkbox';
-  
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['id'] . "\"";
-  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-  $html .= ($params['label_after']) ? ' class="secondary no_suffix"' : '';
-  $html .= ">";
-  if (!$params['label_after'])
-  {
-    $html .= $params['label'] . "</label>";
-  }
-  $html .= "<input type=\"checkbox\"";
-  $html .= (count($params['class']) > 0) ? ' class="' . implode(' ', $params['class']) . '"' : '';
-  $html .= " id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\" value=\"1\"";
-  $html .= (empty($params['value'])) ? "" : " checked=\"checked\"";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
-  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : '';
-  $html .= ">";
-  if ($params['label_after'])
-  {
-    $html .= $params['label'] . "</label>";
-  }
-  $html .= "\n";
-  
-  // and a hidden input if the input box is disabled and the value is true
-  // (the checkbox isn't posted if not checked)
-  if (($params['disabled']) && $params['create_hidden'] && !empty($params['value']))
-  {
-    $html .= "<input type=\"hidden\" value=\"1\" name=\"" . $params['name'] . "\">\n";
-  }
-  
-  echo $html;
-}
-
-
-// Generate an ordinary input field, ie an <input>, with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'name'          The name of the input.
-//      OPTIONAL
-//        'label'         The text to be used for the field label.
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'value'         The value of the input.  Default ''
-//        'type'          The type of input, eg 'text', 'number', etc.  Default NULL
-//        'step'          The value of the 'step' attribute.  Default NULL
-//        'min'           The value of the 'min' attribute.  Default NULL
-//        'max'           The value of the 'max' attribute.  Default NULL
-//        'suffix'        A string that is displayed after the input field
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
-//                        Can be either a simple string or an array of attributes.
-//
-function generate_simple_input($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'value', 'type', 'step', 'disabled',
-                 'create_hidden', 'mandatory', 'maxlength', 'attributes', 'suffix') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'value':
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'disabled':
-        case 'mandatory':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  if (isset($params['attributes']) && is_array($params['attributes']))
-  {
-    $params['attributes'] = implode(' ', $params['attributes']);
-  }
-  
-  // generate the HTML
-  $html = '';
-  if (isset($params['label']))
-  {
-    // no HTML escaping for the label - it is trusted
-    $html .= "<label for=\"" . $params['name'] . "\"";
-    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-    $html .= ">" . $params['label'] . "</label>\n";
-  }
-  $html .= "<input";
-  $html .= (isset($params['type'])) ? " type=\"" . $params['type'] . "\"" : "";
-  $html .= (isset($params['step'])) ? " step=\"" . $params['step'] . "\"" : "";
-  $html .= (isset($params['min'])) ? " min=\"" . $params['min'] . "\"" : "";
-  $html .= (isset($params['max'])) ? " max=\"" . $params['max'] . "\"" : "";
-  $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
-  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  $html .= " id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
-  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
-  $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
-  // Don't give an empty string if it's a number as that's not a valid floating point number
-  // and will fail HTML5 validation
-  if (($params['value'] !== '') ||
-      (isset($params['type']) && ($params['type'] != 'number')) )
-  {
-    $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
-  }
-  $html .= ">";
-  if (isset($params['suffix']))
-  {
-    $html .= "<span>" . $params['suffix'] . "</span>";
-  }
-  $html .= "\n";
-  // and a hidden input if the input box is disabled
-  if ($params['disabled'] && $params['create_hidden'])
-  {
-    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
-      htmlspecialchars($params['value'])."\">\n";
-  }
-  echo $html;
-}
-
-
-// Generate an input which will be a <select> element if $select_options is set
-// for the field, otherwise a <datalist> element if $datalist_options is set,
-// otherwise an ordinary <input> field.
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'name'          The name of the input.
-//      OPTIONAL
-//        'field'         The name of the field, eg 'entry.name' as used by
-//                        $select_options and $datalist_options
-//        'label'         The text to be used for the field label.
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'value'         The value of the input.  Default ''
-//        'suffix'        A string that is displayed after the input field
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'    Additional attributes, allowing HTML5 input types such as number and
-//                        email to be used.   Note that additional attributes such as min, etc.
-//                        can also be included in the string, eg 'type="number" min="1" step="1"'.
-//                        Default NULL.  Can be either a simple string or an array of attributes
-function generate_input($params)
-{
-  global $select_options, $datalist_options;
-  
-  if (isset($params['field']) && isset($select_options[$params['field']]))
-  {
-    $params['options']   = $select_options[$params['field']];
-    generate_select($params);
-  }
-  elseif (isset($params['field']) && isset($datalist_options[$params['field']]))
-  {
-    $params['options']   = $datalist_options[$params['field']];
-    generate_datalist($params);
-  }
-  else
-  {
-    generate_simple_input($params);
-  }
-}
-
-
-// Generate a single radio button (useful when you want to arrange the members
-// of a radio group slightly differently from the standard way)
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'name'          The name of the input.
-//      OPTIONAL
-//        'value'         The value of the input.  Default ''
-//        'options'       An associative array where the key is the value of the
-//                        button and the value is the button text
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//
-function generate_radio($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'value', 'disabled', 'create_hidden') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'options':
-          $params[$key] = array();
-          break;
-        case 'value':
-          $params[$key] = '';
-          break;
-        case 'disabled':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
-  // get the value and the text for the button.   Although there should only
-  // be one element in the options array we use an array for consistency
-  // with the other functions
-  $option = each($params['options']);
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label class=\"radio no_suffix\">";
-  $html .= "<input class=\"radio\" type=\"radio\" name=\"" . $params['name'] . "\" value=\"" . htmlspecialchars($option['key']) . "\"";          
-  $html .= ($params['value'] == $option['key']) ? " checked=\"checked\"" : "";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-  $html .= ">" . htmlspecialchars($option['value']);
-  $html .= "</label>\n";
-  
-  // and a hidden input if the input box is disabled and the value is true
-  // (the checkbox isn't posted if not checked)
-  if ($params['disabled'] && $params['create_hidden'] && ($params['value'] == $option['key']))
-  {
-    $html .= "<input type=\"hidden\" value=\"" . htmlspecialchars($option['key']) . "\" name=\"" . $params['name'] . "\">\n";
-  }
-  echo $html;
-}
-
-
-// Generate a group of radio buttons with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'label'         The text to be used for the field label.
-//        'name'          The name of the input.
-//        'options'       An array of options for the radio buttons.   Can be a simple
-//                        array or an associative array with value => label members for
-//                        each button.
-//      OPTIONAL
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'value'         The value of the input.  Defaults to the first element of 'options'
-//                        (mirroring the behaviour of a <select> element)
-//        'force_assoc'   Boolean.  Forces the options array to be treated as an
-//                        associative array.  Default FALSE, ie it is treated as whatever
-//                        it looks like.  (This parameter is necessary because if you
-//                        index an array with strings that look like integers then PHP
-//                        casts the keys to integers and the array becomes a simple array)
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//
-function generate_radio_group($params)
-{
-  // some sanity checking on params
-  // 'options' and 'force_assoc' must come before 'value' in the array
-  foreach (array('label', 'label_title', 'name', 'options', 'force_assoc', 'value',
-                 'disabled', 'create_hidden') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'label':
-        case 'name':
-        case 'options':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'options':
-          $params[$key] = array();
-          break;
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'value':
-          if (is_assoc($params['options']) || $params['force_assoc'])
-          {
-            $array_keys = array_keys($params['options']);
-            $params[$key] = $array_keys[0];
-          }
-          else
-          {
-            $params[$key] = $params['options'][0];
-          }
-          break;
-        case 'disabled':
-        case 'force_assoc':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label";
-  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-  $html .= ">" . $params['label'] . "</label>\n";
-  $html .= "<div class=\"group\">\n";
-  echo $html;
-  
-  // Output each radio button
-  while ($option = each($params['options']))
-  {
-    // We can cope with both associative and ordinary arrays
-    $button_label = $option['value'];
-    if (is_assoc($params['options']) || $params['force_assoc'])
-    {
-      $button_value = $option['key'];
-    }
-    else
-    {
-      $button_value = $button_label;
-    }
-    generate_radio(array('name'          => $params['name'],
-                         'options'       => array($button_value => $button_label),
-                         'value'         => $params['value'],
-                         'disabled'      => $params['disabled'],
-                         'create_hidden' => $params['create_hidden']));
-  }
-
-  $html = "</div>\n";
-  if ($params['disabled'] && $params['create_hidden'])
-  {
-    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
-    $html .= " value=\"" . htmlspecialchars($params['value']) . "\">\n";
-  }
-  echo $html;
-}
-
-
-// Generate a group of checkboxes with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'label'       The text to be used for the field label.
-//        'name'        The name of the input.
-//      OPTIONAL
-//        'value'       The value of the input.  Can be an array. Default array()
-//        'options'     An array of options for the checkboxes.   Can be a simple
-//                      array or an associative array with value => label members for
-//                      each checkbox.   Default is an empty array.
-//        'force_assoc' Boolean.  Forces the options array to be treated as an
-//                      associative array.  Default FALSE, ie it is treated as whatever
-//                      it looks like.  (This parameter is necessary because if you
-//                      index an array with strings that look like integers then PHP
-//                      casts the keys to integers and the array becomes a simple array)
-//        'disabled'    Whether the field should be disabled.  Default FALSE
-//
-function generate_checkbox_group($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'name', 'options', 'force_assoc', 'value', 'disabled') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'label':
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'options':
-          $params[$key] = array();
-          break;
-        case 'value':
-          $params[$key] = array();
-          break;
-        case 'force_assoc':
-        case 'disabled':
-          $params[$key] = FALSE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  if (!is_array($params['value']))
-  {
-    $params['value'] = array($params['value']);
-  }
-  
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label>" . $params['label'] . "</label>\n";
-  $html .= "<div class=\"group\">\n";
-  // Output each checkbox
-  foreach ($params['options'] as $value => $token)
-  {
-    // We can cope with both associative and ordinary arrays
-    if (!$params['force_assoc'] && !is_assoc($params['options']))
-    {
-      $value = $token;
-    }
-    $html .= "<label class=\"no_suffix\">";
-    $html .= "<input class=\"checkbox\" type=\"checkbox\" name=\"" . $params['name'] . "\"";
-    $html .= " value=\"" . htmlspecialchars($value) . "\"";          
-    $html .= (in_array($value, $params['value'])) ? " checked=\"checked\"" : "";
-    $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-    $html .= ">" . htmlspecialchars($token);
-    $html .= "</label>\n";
-    if ($params['disabled'] && in_array($value, $params['value']))
-    {
-      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\"";
-      $html .= " value=\"" . htmlspecialchars($value) . "\">\n";
-    }
-  }
-  $html .= "</div>\n";
-  
-  echo $html;
-}
-
-// Generates a set of <option> elements
-//
-//        $options        An array of options for the element.   Can be a simple
-//                        array or an associative array with value => text members for
-//                        each <option>.   Default is an empty array.
-//        $force_assoc    Boolean.  Forces the options array to be treated as an
-//                        associative array.  Default FALSE, ie it is treated as whatever
-//                        it looks like.  (This parameter is necessary because if you
-//                        index an array with strings that look like integers then PHP
-//                        casts the keys to integers and the array becomes a simple array)
-//        $value          The value of the input.  Default ''.   Can be a single value
-//                        or an array of values.
-function generate_options($options, $force_assoc=false, $value='')
-{
-  if (!is_array($value))
-  {
-    $value = array($value);
-  }
-  
-  $html = '';
-  
-  foreach ($options as $key => $text)
-  {
-    // We can cope with both associative and ordinary arrays
-    if (!$force_assoc && !is_assoc($options))
-    {
-      $key = $text;
-    }
-    $html .= "<option value=\"" . htmlspecialchars($key) . "\"";
-    $html .= (in_array($key, $value)) ? " selected=\"selected\"" : '';
-    $html .= ">".htmlspecialchars($text)."</option>\n";
-  }
-  
-  return $html;
-}
-
-
-// Generates a select box with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'name'          The name of the element.
-//      OPTIONAL
-//        'id'            The id of the element.  Defaults to the same as the name.
-//        'label'         The text to be used for the field label.
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'options'       An array of options for the select element.   Can be a one-
-//                        or two-dimensional array.  If it's two-dimensional then the keys of
-//                        the outer level represent <optgroup> labels.  The inner level can be
-//                        a simple array or an associative array with value => text members for
-//                        each <option> in the <select> element.   Default is an empty array.
-//        'force_assoc'   Boolean.  Forces the options array to be treated as an
-//                        associative array.  Default FALSE, ie it is treated as whatever
-//                        it looks like.  (This parameter is necessary because if you
-//                        index an array with strings that look like integers then PHP
-//                        casts the keys to integers and the array becomes a simple array)
-//        'value'         The value of the input.  Default ''.   Can be a single value
-//                        or an array of values.
-//        'size'          The value of the 'size' attribute.  Default NULL
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'multiple'      Whether multiple selections are allowed.  Default FALSE
-//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
-//                        Can be either a simple string or an array of attributes.
-//
-function generate_select($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'id', 'options', 'force_assoc',
-                 'value', 'size', 'disabled', 'create_hidden', 'mandatory',
-                 'multiple', 'attributes') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'id':
-          $params[$key] = $params['name'];
-          break;
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'options':
-          $params[$key] = array();
-          break;
-        case 'value':
-          $params[$key] = array();
-          break;
-        case 'force_assoc':
-        case 'disabled':
-        case 'mandatory':
-        case 'multiple':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  // Some checking that we're obeying the HTML5 rules.   A bit pedantic, but
-  // helps with debugging.  Only carry out these checks if we're going to be
-  // able to report them.
-  if (error_reporting() & E_USER_NOTICE)
-  {
-    if ((!isset($params['size']) || ($params['size'] == 1)) &&
-        $params['mandatory'] &&
-        !$params['multiple'])
-    {
-      if (count($params['options']) == 0)
-      {
-        $message =  "A select element with a required attribute and without a multiple " .
-                    "attribute, and whose size is 1, must have a child option element.";
-        trigger_error($message, E_USER_NOTICE);
-      }
-      else
-      {
-        $first_child = each($params['options']);
-        if (($first_child['key'] !== '') && ($first_child['value'] !== ''))
-        {
-          $message = "The first child option element of a select element with a required " .
-                     "attribute and without a multiple attribute, and whose size is 1, " .
-                     "must have either an empty value attribute, or must have no text content.";
-          trigger_error($message, E_USER_NOTICE);
-        }
-      }
-    }
-  }
-  
-  if (isset($params['attributes']) && is_array($params['attributes']))
-  {
-    $params['attributes'] = implode(' ', $params['attributes']);
-  }
-  
-  if (!is_array($params['value']))
-  {
-    $params['value'] = array($params['value']);
-  }
-  
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html = '';
-  if (isset($params['label']))
-  {
-    $html .= "<label for=\"" .$params['id'] . "\"";
-    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-    $html .= ">" . $params['label'] . "</label>\n";
-  }
-  $html .= "<select id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
-  $html .= ($params['multiple']) ? " multiple" : "";
-  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  $html .= ">\n";
-
-  if (count($params['options']) > 0)
-  {
-    // Test whether $params['options'] options is a one-dimeensial or two-dimensional array.
-    // If two-dimensional then we need to use <optgroup>s.
-    if (is_array(reset($params['options'])))   // cannot use $params['options'][0] because it may be associative
-    {
-      foreach($params['options'] as $label => $options)
-      {
-        if (count($options) > 0)
-        {
-          $html .= "<optgroup label=\"" . htmlspecialchars($label) . "\">\n";
-          $html .= generate_options($options, $params['force_assoc'], $params['value']);
-          $html .= "</optgroup>\n";
-        }
-      }
-    }
-    else
-    {
-      $html .= generate_options($params['options'], $params['force_assoc'], $params['value']);
-    }
-  }
-
-  $html .= "</select>\n";
-  
-  // and hidden inputs if the select box is disabled
-  if ($params['disabled'] && $params['create_hidden'])
-  {
-    foreach ($params['value'] as $value)
-    {
-      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
-               htmlspecialchars($value)."\">\n";
-    }
-  }
-  
-  echo $html;
-}
-
-
-// Generates a datalist element with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'name'          The name of the element.
-//      OPTIONAL
-//        'id'            The id of the element.  Defaults to the same as the name.
-//        'label'         The text to be used for the field label.
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'options'       An array of options for the select element.   Can be a simple
-//                        array or an associative array with value => text members for
-//                        each <option> in the <select> element.   Default is an empty array.
-//        'force_assoc'   Boolean.  Forces the options array to be treated as an
-//                        associative array.  Default FALSE, ie it is treated as whatever
-//                        it looks like.  (This parameter is necessary because if you
-//                        index an array with strings that look like integers then PHP
-//                        casts the keys to integers and the array becomes a simple indexed array)
-//        'force_indexed' Boolean.  Forces the options array to be treated as a simple
-//                        indexed array, ie just the values are used and the keys are
-//                        ignored.   Default FALSE, ie it is treated as whatever it looks
-//                        like.
-//        'value'         The value of the input.  Default ''.
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
-//                        Can be either a simple string or an array of attributes.
-//
-function generate_datalist($params)
-{
-  global $HTTP_USER_AGENT;
-  
-  // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'id', 'options', 'force_assoc',
-                 'force_indexed', 'value', 'disabled', 'create_hidden', 'mandatory',
-                 'attributes') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'id':
-          $params[$key] = $params['name'];
-          break;
-        case 'options':
-          $params[$key] = array();
-          break;
-        case 'value':
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'force_assoc':
-        case 'force_indexed':
-        case 'disabled':
-        case 'mandatory':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  if (isset($params['attributes']) && is_array($params['attributes']))
-  {
-    $params['attributes'] = implode(' ', $params['attributes']);
-  }
-  
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html = '';
-  if (isset($params['label']))
-  {
-    $html .= "<label for=\"" .$params['id'] . "\"";
-    $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-    $html .= ">" . $params['label'] . "</label>\n";
-  }
-  
-  $html .= "<input type=\"text\" id=\"" . $params['id'] . "\" name=\"" . $params['name'] . "\"";
-  $html .= " list=\"" . $params['id'] . "_options\"";
-  $html .= " value=\"" . htmlspecialchars($params['value']) . "\"";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : "";
-  $html .= (isset($params['pattern'])) ? " pattern=\"" . htmlspecialchars($params['pattern']) . "\"" : "";
-  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : "";
-  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  $html .= ">\n";
-  
-  // One problem with using a datalist with an input element is the way different browsers
-  // handle autocomplete.  If you have autocomplete on, and also an id or name attribute, then some
-  // browsers, eg Edge, will bring the history up on top of the datalist options so that you can't
-  // see the first few options.  But if you have autocomplete off, then other browsers, eg Chrome,
-  // will not present the datalist options at all.  This can be fixed in JavaScript by having a second,
-  // hidden, input which holds the actual form value and mirrors the visible input.  Because we can't
-  // rely on JavaScript being enabled we will create the basic HTML using autocomplete on, ie the default,
-  // which is the least bad alternative.   One disadvantage of this method is that the label is no longer
-  // tied to the visible input, but this isn't as important for a text input as it is, say, for a checkbox
-  // or radio button.
-  
-  $html .= "<datalist id=\"" . $params['id'] . "_options\">";
-  
-  // Put a <select> wrapper around the options so that browsers that don't
-  // support <datalist> will still have the options in their DOM and then
-  // the JavaScript polyfill can find them and do something with them
-  $html .= "<select style=\"display: none\">\n";
-
-  foreach ($params['options'] as $value => $text)
-  {
-    if ($text !== '')
-    {
-      // We can cope with both associative and ordinary arrays
-      if (!$params['force_assoc'] && !is_assoc($params['options']))
-      {
-        $value = $text;
-      }
-      $html .= "<option";
-      if (!$params['force_indexed'])
-      {
-        $html .= " value=\"" . htmlspecialchars($value) . "\"";
-      }
-      $html .= ">" . htmlspecialchars($text) . "</option>\n";
-    }
-  }
-  $html .= "</select>\n";
-  $html .= "</datalist>\n";
-  
-  // and hidden inputs if the input is disabled
-  if ($params['disabled'] && $params['create_hidden'])
-  {
-      $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
-               htmlspecialchars($params['value']) . "\">\n";
-  }
-  
-  echo $html;
-}
-
-
-// Generate a textarea with an associated label
-//
-//   $params    an associative array holding the function parameters:
-//      MANDATORY
-//        'label'         The text to be used for the field label.
-//        'name'          The name of the input.
-//      OPTIONAL
-//        'value'         The value of the input.  Default ''
-//        'label_title'   The text to be used for the title attribute for the field label
-//        'disabled'      Whether the field should be disabled.  Default FALSE
-//        'create_hidden' Boolean.  If TRUE hidden inputs are created if 'disabled' is set
-//                        Default TRUE
-//        'mandatory'     Whether the field is a required field.  Default FALSE
-//        'maxlength'     The maximum length of input allowed.   Default NULL (no limit)
-//        'attributes'    Additional attributes not covered explicitly above.  Default NULL.
-//                        Can be either a simple string or an array of attributes.
-//
-function generate_textarea($params)
-{
-  // some sanity checking on params
-  foreach (array('label', 'label_title', 'name', 'value', 'disabled', 'create_hidden',
-                 'mandatory', 'maxlength', 'attributes') as $key)
-  {
-    if (!isset($params[$key]))
-    {
-      switch ($key)
-      {
-        case 'label':
-        case 'name':
-          trigger_error('Missing mandatory parameters', E_USER_NOTICE);
-          break;
-        case 'value':
-        case 'label_title':
-          $params[$key] = '';
-          break;
-        case 'disabled':
-        case 'mandatory':
-          $params[$key] = FALSE;
-          break;
-        case 'create_hidden':
-          $params[$key] = TRUE;
-          break;
-        default:
-          break;
-      }
-    }
-  }
-  
-  if (isset($params['attributes']) && is_array($params['attributes']))
-  {
-    $params['attributes'] = implode(' ', $params['attributes']);
-  }
-  
-  // generate the HTML
-  // no HTML escaping for the label - it is trusted
-  $html  = "<label for=\"" . $params['name'] . "\"";
-  $html .= (empty($params['label_title'])) ? '' : ' title="' . htmlspecialchars($params['label_title']) . '"';
-  $html .= ">" . $params['label'] . "</label>\n";
-  // textarea rows and cols are overridden by CSS height and width
-  $html .= "<textarea id=\"" . $params['name'] . "\" name=\"" . $params['name'] . "\"";
-  $html .= (isset($params['attributes'])) ? " " . $params['attributes'] : "";
-  $html .= ($params['disabled']) ? " disabled=\"disabled\"" : '';
-  $html .= ($params['mandatory']) ? " required aria-required=\"true\"" : '';
-  $html .= (isset($params['maxlength'])) ? " maxlength=\"" . $params['maxlength'] . "\"" : '';
-  $html .= ">" . htmlspecialchars($params['value']) . "</textarea>\n";
-  // and a hidden input if the textarea is disabled
-  if ($params['disabled'] && $params['create_hidden'])
-  {
-    $html .= "<input type=\"hidden\" name=\"" . $params['name'] . "\" value=\"".
-      htmlspecialchars($params['value'])."\">\n";
-  }
-  echo $html;
-}
-
-// Generates a date selector for use on a form.   If JavaScript is enabled
-// then it will generate a calendar picker using jQuery UI datepicker.   If not,
-// it will generate three separate select boxes, one each for day, month and year.
-//
-// $form_id is an optional fifth parameter.   If set it specifies the id of
-// a form to submit when the datepicker is closed.
-//
-// $disabled:  TRUE if the SELECT is to be disabled (Note: hidden inputs will be
-// created if the SELECT is disabled)
-//
-// Whether or not JavaScript is enabled the date is passed back in three separate
-// variables:  ${prefix}day, ${prefix}month and ${prefix}year
-//
-// The function passes back three separate variables, rather than a single date 
-// variable, partly for compatibility with previous implementations of genDateSelector()
-// and partly because it's easier to do this for the non-JavaScript version.
-function genDateSelector($prefix, $day, $month, $year, $form_id='', $disabled=FALSE)
-{
-  global $strftime_format, $year_range;
-  
-  // Make sure we've got a date
-  if (empty($day) or empty($month) or empty($year))
-  {
-    $day   = date("d");
-    $month = date("m");
-    $year  = date("Y");
-  }
-
-  // Cast the dates to ints to remove any leading zeroes (otherwise
-  // JavaScript will treat them as octal numbers)
-  $day = (int) $day;
-  $month = (int) $month;
-  $year = (int) $year;
-  
-  // First and last dates to show in year select
-  $min = min($year, date("Y")) - $year_range['back'];
-  $max = max($year, date("Y")) + $year_range['ahead'];
-  
-  // We'll put the date selector in a span.    First of all we'll generate
-  // day, month and year selectors.   These will be used if JavaScript is
-  // disabled.    If JavaScript is enabled it will overwrite these with a
-  // datepicker calendar.
-  echo "<span class=\"dateselector js_hidden\"" .
-            " data-prefix=\"$prefix\"" .
-            " data-day=\"$day\"" .
-            " data-month=\"$month\"" .
-            " data-year=\"$year\"" .
-            " data-min-year=\"$min\"" .
-            " data-max-year=\"$max\"" .
-            " data-form-id=\"$form_id\">\n";
-            
-  // the day selector
-  $options = array();
-  for ($i = 1; $i <= 31; $i++)
-  {
-    $options[] = $i;
-  }
-  $params = array('name'     => $prefix . 'day',
-                  'options'  => $options,
-                  'value'    => $day,
-                  'disabled' => $disabled);
-  generate_select($params);
-
-  // the month selector
-  $options = array();
-  for ($i = 1; $i <= 12; $i++)
-  {
-    $options[$i] = utf8_strftime($strftime_format['mon'], mktime(0, 0, 0, $i, 1, $year));
-  }
-  $params = array('name'        => $prefix . 'month',
-                  'options'     => $options,
-                  'force_assoc' => TRUE,
-                  'value'       => $month,
-                  'disabled'    => $disabled);
-  generate_select($params);
-
-  // the year selector
-  $options = array();
-  for ($i = $min; $i <= $max; $i++)
-  {
-    $options[] = $i;
-  }
-  $params = array('name'     => $prefix . 'year',
-                  'options'  => $options,
-                  'value'    => $year,
-                  'disabled' => $disabled);
-  generate_select($params);
-
-  echo "</span>\n";
-}
-
-
 // Escape a PHP string for use in JavaScript
 //
 // Based on a function contributed by kongaspar at gmail dot com at 
@@ -2108,6 +1099,28 @@ function some_area($field, $enabled=FALSE)
   return (db()->query1($sql) > 0);
 }
 
+
+// Returns a date in ISO 8601 format ('yyyy-mm-dd')
+function format_iso_date($year, $month, $day)
+{
+  return sprintf("%04d-%02d-%02d", $year, $month, $day);
+}
+
+
+function trim_leading_zeros($string)
+{
+  return ltrim($string, '0');
+}
+
+
+// Splits a date in ISO 8601 format ('yyyy-mm-dd') and returns an
+// array of year, month, day with leading zeros removed.
+function split_iso_date($date)
+{
+  return array_map(__NAMESPACE__ . "\\trim_leading_zeros", explode('-', $date));
+}
+
+
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber, $format=NULL)
 {
@@ -2241,6 +1254,16 @@ function mrbs_nl2br($string)
   {
     return nl2br($string);
   }
+}
+
+
+// Take a string of email addresses separated by commas 
+// and return a comma separated list with duplicates removed.
+function clean_address_list($string)
+{
+  $array = explode(',', $string);
+  array_walk($array, 'trim');
+  return implode(', ', array_unique($array));
 }
 
 
@@ -2397,23 +1420,29 @@ function make_area_select_html($link, $current, $year, $month, $day)
     $out_html .= "<h3>" . get_vocab("areas") . "</h3>\n";
     if ($area_list_format == "select")
     {
-      $out_html .= "<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">\n" .
-                   Form::getTokenHTML() . "\n" .
-                   "<div>\n" .
-                   "<select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
-      foreach ($areas as $area_id => $area_name)
-      {
-        $selected = ($area_id == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $area_id . "\">" . htmlspecialchars($area_name) . "</option>\n";
-      }
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'areaChangeForm',
+                                 'method' => 'get',
+                                 'action' => $link));
+                                 
+      $form->addHiddenInput('page_date', format_iso_date($year, $month, $day));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'area_select',
+                                   'name'     => 'area',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($areas, $current, true);
+      $form->addElement($select);
+      
       // Note:  the submit button will not be displayed if JavaScript is enabled
-      $out_html .= "</select>\n" .
-                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
-                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
-                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
-                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
-                   "</div>\n" .
-                   "</form>\n";
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
     }
     else // list format
     {
@@ -2434,53 +1463,52 @@ function make_area_select_html($link, $current, $year, $month, $day)
 
 function make_room_select_html ($link, $area, $current, $year, $month, $day)
 {
-  global $tbl_room, $tbl_area, $area_list_format;
+  global $area_list_format;
   
   $out_html = '';
-  $sql = "SELECT R.id, R.room_name, R.description
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=?
-             AND R.area_id=A.id
-             AND R.disabled=0
-             AND A.disabled=0
-        ORDER BY R.sort_key";
-  $res = db()->query($sql, array($area));
+  $rooms = get_room_names($area);
+  
   // Only show the rooms if there's more than one of them, otherwise
   // there's no point
-  if ($res->count() > 1)
+  if (count($rooms) > 1)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
     if ($area_list_format == "select")
     {
-      $out_html .= "<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">\n" .
-                   Form::getTokenHTML() . "\n" .
-                   "<div>\n" .
-                   "<select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">\n";
-  
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
-      {
-        $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "<option $selected value=\"". $row['id']. "\" title=\"". htmlspecialchars($row['description'])."\">" . htmlspecialchars($row['room_name']) . "</option>\n";
-      }
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'roomChangeForm',
+                                 'method' => 'get',
+                                 'action' => $link));
+                                 
+      $form->addHiddenInputs(array('page_date' => format_iso_date($year, $month, $day),
+                                   'area'      => $area));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'room_select',
+                                   'name'     => 'room',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($rooms, $current, true);
+      $form->addElement($select);
+      
       // Note:  the submit button will not be displayed if JavaScript is enabled
-      $out_html .= "</select>\n" .
-                   "<input type=\"hidden\" name=\"day\"   value=\"$day\">\n" .
-                   "<input type=\"hidden\" name=\"month\" value=\"$month\">\n" .
-                   "<input type=\"hidden\" name=\"year\"  value=\"$year\">\n" .
-                   "<input type=\"hidden\" name=\"area\"  value=\"$area\">\n" .
-                   "<input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">\n" .
-                   "</div>\n" .
-                   "</form>\n";
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
     }
     else  // list format
     {
       $out_html .= "<ul>\n";
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+      foreach ($rooms as $room_id => $room_name)
       {
-        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=".$row['id']."\" title=\"". htmlspecialchars($row['description'])."\">";
-        $out_html .= "<span" . (($row['id'] == $current) ? ' class="current"' : '') . ">";
-        $out_html .= htmlspecialchars($row['room_name']) . "</span></a></li>\n";
+        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room_id . "\">";
+        $out_html .= "<span" . (($room_id == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($room_name) . "</span></a></li>\n";
       }
       $out_html .= "</ul>\n";
     }

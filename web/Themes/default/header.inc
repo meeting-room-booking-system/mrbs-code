@@ -2,6 +2,9 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputDate;
+use MRBS\Form\ElementInputSearch;
+use MRBS\Form\ElementInputSubmit;
 
 function print_head($simple=false)
 {
@@ -86,26 +89,37 @@ function print_goto_date($day, $month, $year, $area, $room)
 {
   $user = getUserName();
   
-  echo "<form action=\"day.php\" method=\"get\" id=\"Form1\">\n";
-
-  // Give the form id as the optional fifth parameter because we want
-  // the form to be automatically submitted when the datepicker is closed
-  genDateSelector("", $day, $month, $year, "Form1");
-  if (!empty($area))
+  $form = new Form();
+  
+  $form_id = 'form_nav';
+  
+  $form->setAttributes(array('id'     => $form_id,
+                             'method' => 'get',
+                             'action' => 'day.php'));
+  if (isset($area))
   {
-    echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+    $form->addHiddenInput('area', $area);
   }
-  if (!empty($room))
+  
+  if (isset($room))
   {
-    echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+    $form->addHiddenInput('room', $room);
   }
-  // Although the datepicker will automatically go to the new date when
-  // the date is changed, we still need a submit button because there
-  // are occasions when you want to go to the date without changing it -
-  // for example when you've been on a Search or Report page
-  echo "<input type=\"submit\" value=\"" . get_vocab("goto") . "\">\n";
-
-  echo "</form>\n";
+  
+  $input = new ElementInputDate();
+  $input->setAttributes(array('name'        => 'page_date',
+                              'value'       => format_iso_date($year, $month, $day),
+                              'required'    => true,
+                              'data-submit' => $form_id));
+  
+  $form->addElement($input);
+  
+  $submit = new ElementInputSubmit();
+  $submit->setAttribute('value', get_vocab('goto'));
+  $form->addElement($submit);
+  
+  $form->render();
+  
   
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
@@ -149,24 +163,34 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
     $search_str = '';
   }
   
-  echo "<form id=\"header_search\" method=\"post\" action=\"search.php\">\n";
-  echo Form::getTokenHTML() . "\n";
-  echo "<div>\n";
-  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab("search") . "</a></label>\n";
-  echo "<input type=\"search\" name=\"search_str\" value=\"" . htmlspecialchars($search_str) . "\" required>\n";
-  echo "<input type=\"hidden\" name=\"day\" value=\"$day\">\n";
-  echo "<input type=\"hidden\" name=\"month\" value=\"$month\">\n";
-  echo "<input type=\"hidden\" name=\"year\" value=\"$year\">\n";
+  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab('search') . "</a></label>\n";
+  
+  $form = new Form();
+  
+  $form->setAttributes(array('id'     => 'header_search',
+                             'method' => 'post',
+                             'action' => 'search.php'))
+       ->addHiddenInputs(array('day'   => $day,
+                               'month' => $month,
+                               'year'  => $year));
   if (!empty($area))
   {
-    echo "<input type=\"hidden\" name=\"area\" value=\"$area\">\n";
+    $form->addHiddenInput('area', $area);
   }
   if (!empty($room))
   {
-    echo "<input type=\"hidden\" name=\"room\" value=\"$room\">\n";
+    $form->addHiddenInput('room', $room);
   }
-  echo "</div>\n";
-  echo "</form>\n";
+  
+  $input = new ElementInputSearch();
+  
+  $input->setAttributes(array('name'     => 'search_str',
+                              'value'    => $search_str,
+                              'required' => true));
+                              
+  $form->addElement($input);
+  
+  $form->render();
 }
 
 

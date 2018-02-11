@@ -28,7 +28,7 @@ foreach ($tables as $table)
 }
 
 
-$db_schema_version = 53;
+$db_schema_version = 54;
 $local_db_schema_version = 1;
 
 // Convenience wrapper function to provide access to a DB object for
@@ -55,7 +55,7 @@ function db_get_userpass()
   print_header();
   
   $form = new Form();
-  $form->setAttributes(array('class'  => 'form_general',
+  $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'db_logon',
                              'method' => 'post',
                              'action' => this_page()));
@@ -68,7 +68,7 @@ function db_get_userpass()
   $field->setLabel('Database username')
         ->setControlAttributes(array('id'       => 'form_username',
                                      'name'     => 'form_username',
-                                     'required' => null));               
+                                     'required' => true));               
   $fieldset->addElement($field);
   
   // The password field

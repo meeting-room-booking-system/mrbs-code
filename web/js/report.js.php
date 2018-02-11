@@ -72,24 +72,21 @@ init = function(args) {
   ?>
   tableOptions = {};
   <?php
-  // Use an Ajax source if we're able to - gives much better
-  // performance for large tables
-  if (function_exists('json_encode'))
-  {
-    // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
-    // for older browsers
-    ?>
-    tableOptions.ajax = {url: 'report.php',
-                         method: 'POST', 
-                         processData: false,
-                         contentType: false,
-                         data: function() {
-                             var formdata = new FormData($('#report_form')[0]);
-                             formdata.append('ajax', '1');
-                             return formdata;
-                           } };
-    <?php
-  }
+  // Use an Ajax source - gives much better performance for large tables
+
+  // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
+  // for older browsers
+  ?>
+  tableOptions.ajax = {url: 'report.php',
+                       method: 'POST', 
+                       processData: false,
+                       contentType: false,
+                       data: function() {
+                           var formdata = new FormData($('#report_form')[0]);
+                           formdata.append('ajax', '1');
+                           return formdata;
+                         } };
+  <?php
   // Add in a hidden input to the form so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled).   We need to know this because when we're using an 
   // Ajax data source we don't want to send the HTML version of the table data.

@@ -350,14 +350,12 @@ $vocab["administration"]     = "Detaily zdroja";
 $vocab["invalid_area_name"]  = "Toto meno oblasti je už použité!";
 $vocab["empty_name"]         = "Nevložili ste meno!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Upraviť oblasť";
 $vocab["change"]                  = "Potvrdiť";
 $vocab["backadmin"]               = "Späť do zdrojov";
-$vocab["editroomarea"]            = "Upraviť popis oblasti alebo místnosti/zdrojů";
 $vocab["editroom"]                = "Upraviť zdroj";
 $vocab["viewroom"]                = "Zobraziť zdroj";
-$vocab["error_room"]              = "Chyba: zdroj ";
 $vocab["not_found"]               = " nenájdený";
 $vocab["room_admin_email"]        = "E-mail administrátora zdroja";
 $vocab["area_admin_email"]        = "E-mail administrátora oblasti";

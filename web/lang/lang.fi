@@ -335,14 +335,12 @@ $vocab["administration"]     = "Ylläpito";
 $vocab["invalid_area_name"]  = "Alueen nimi on jo käytössä!";
 $vocab["empty_name"]         = "Nimi puuttuu!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Muokkaa alueen tietoja";
 $vocab["change"]                  = "Tallenna";
 $vocab["backadmin"]               = "Takaisin ylläpitoon";
-$vocab["editroomarea"]            = "Muokkaa alueen tai huoneen kuvausta";
 $vocab["editroom"]                = "Muokkaa huoneen tietoja";
 $vocab["viewroom"]                = "Näytä huoneen tiedot";
-$vocab["error_room"]              = "Virhe: huonetta ";
 $vocab["not_found"]               = " ei löytynyt";
 $vocab["room_admin_email"]        = "Huonevastaavan sähköposti";
 $vocab["area_admin_email"]        = "Aluevastaavan sähköposti";

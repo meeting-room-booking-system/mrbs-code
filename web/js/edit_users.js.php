@@ -23,23 +23,17 @@ init = function(args) {
   <?php // Turn the list of users into a dataTable ?>
   
   var tableOptions = {};
-  <?php
-  // Use an Ajax source if we can - gives much better performance for large tables
-  if (function_exists('json_encode'))
+  
+  <?php // Use an Ajax source - gives much better performance for large tables ?>
+  var queryString = window.location.search;
+  if (queryString.length === 0)
   {
-    ?>
-    var queryString = window.location.search;
-    if (queryString.length === 0)
-    {
-      queryString = '?';
-    }
-    queryString += '&ajax=1';
-    tableOptions.ajax = 'edit_users.php' + queryString;
-    <?php
+    queryString = '?';
   }
-
-  // Get the types and feed those into dataTables
-  ?>
+  queryString += '&ajax=1';
+  tableOptions.ajax = 'edit_users.php' + queryString;
+  
+  <?php // Get the types and feed those into dataTables ?>
   tableOptions.columnDefs = getTypes($('#users_table'));
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 };

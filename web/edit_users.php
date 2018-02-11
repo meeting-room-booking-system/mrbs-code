@@ -2,6 +2,14 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementP;
+use MRBS\Form\FieldInputEmail;
+use MRBS\Form\FieldInputPassword;
+use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
 
 /*****************************************************************************\
 *                                                                            *
@@ -9,9 +17,7 @@ use MRBS\Form\Form;
 *                                                                            *
 *   Description   Edit the user database                                     *
 *                                                                            *
-*   Notes         Automatically creates the database if it's not present.    *
-*                                                                            *
-*                 Designed to be easily extensible:                          *
+*   Notes         Designed to be easily extensible:                          *
 *                 Adding more fields for each user does not require          *
 *                 modifying the editor code. Only to add the fields in       *
 *                 the database creation code.                                *
@@ -32,8 +38,6 @@ use MRBS\Form\Form;
 *                 $min_user_editing_level) can edit other users, and they    *
 *                 cannot edit users with a higher level than themselves      *
 *                                                                            *
-*                 To do:                                                     *
-*                     - Localisability                                       *
 *                                                                            *
 \*****************************************************************************/
 
@@ -52,6 +56,28 @@ $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
+$back_button = get_form_var('back_button', 'string');
+$delete_button = get_form_var('delete_button', 'string');
+$edit_button = get_form_var('edit_button', 'string');
+$update_button = get_form_var('update_button', 'string');
+
+if (isset($back_button))
+{
+  unset($Action);
+}
+elseif (isset($delete_button))
+{
+  $Action = 'Delete';
+}
+elseif (isset($edit_button))
+{
+  $Action = 'Edit';
+}
+elseif (isset($update_button))
+{
+  $Action = 'Update';
+}
+
 
 
 // Validates that the password conforms to the password policy
@@ -138,16 +164,23 @@ function output_row(&$row)
   $values = array();
   
   // First column, which is the name
-  $html_name = htmlspecialchars($row['name']);
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
   {
-    $link = htmlspecialchars(this_page()) . "?Action=Edit&amp;Id=" . $row['id'];
-    $values[] = "<a title=\"$html_name\" href=\"$link\">$html_name</a>";
+    $form = new Form();
+    $form->setAttributes(array('method' => 'post',
+                               'action' => this_page()));
+    $form->addHiddenInput('Id', $row['id']);
+    $submit = new ElementInputSubmit();
+    $submit->setAttributes(array('class' => 'link',
+                                 'name'  => 'edit_button',
+                                 'value' => $row['name']));
+    $form->addElement($submit);
+    $values[] = $form->toHTML();
   }
   else
   {
-    $values[] = "<span class=\"normal\" title=\"$html_name\">$html_name</span>";
+    $values[] = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
   }
     
   // Other columns
@@ -234,10 +267,233 @@ function output_row(&$row)
   }
 }
 
+
+function get_field_level($params, $disabled=false)
+{
+  global $level;
+  
+  // Only display options up to and including one's own level (you can't upgrade yourself).
+  // If you're not some kind of admin then the select will also be disabled.
+  // (Note - disabling individual options doesn't work in older browsers, eg IE6)
+  $options = array();
+  
+  for ($i=0; $i<=$level; $i++)
+  {
+    $options[$i] = get_vocab("level_$i");
+  }
+  
+  $field = new FieldSelect();
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name' => $params['name'],
+                                     'disabled' => $disabled))
+        ->addSelectOptions($options, $params['value'], true);
+
+  return $field;
+}
+
+
+function get_field_name($params, $disabled=false)
+{
+  global $maxlength;
+  
+  $field = new FieldInputText();
+  
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name'     => $params['name'],
+                                     'value'    => $params['value'],
+                                     'disabled' => $disabled,
+                                     'required' => true,
+                                     'pattern'  => REGEX_TEXT_POS));
+  
+  if (isset($maxlength['users.name']))
+  {
+    $field->setControlAttribute('maxlength', $maxlength['users.name']);
+  }    
+  
+  return $field;
+}
+
+
+function get_field_email($params, $disabled=false)
+{
+  global $maxlength;
+  
+  $field = new FieldInputEmail();
+  
+  $field->setLabel($params['label'])
+        ->setControlAttributes(array('name'     => $params['name'],
+                                     'value'    => $params['value'],
+                                     'disabled' => $disabled,
+                                     'multiple' => true));
+  
+  if (isset($maxlength['users.email']))
+  {
+    $field->setControlAttribute('maxlength', $maxlength['users.email']);
+  }    
+  
+  return $field;
+}
+
+
+function get_field_custom($custom_field, $params, $disabled=false)
+{
+  global $select_options, $datalist_options, $is_mandatory_field;
+  global $maxlength, $text_input_max;
+  
+  $key = $custom_field['name'];
+  
+  // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($custom_field['nature'] == 'boolean') || 
+      (($custom_field['nature'] == 'integer') && isset($custom_field['length']) && ($custom_field['length'] <= 2)) )
+  {
+    $class = 'FieldInputCheckbox';
+  }
+  // Output a textarea if it's a character string longer than the limit for a
+  // text input
+  elseif (($custom_field['nature'] == 'character') && isset($custom_field['length']) && ($custom_field['length'] > $text_input_max))
+  {
+    $class = 'FieldTextarea';
+  }
+  elseif (!empty($select_options[$params['field']]))
+  {
+    $class = 'FieldSelect';
+  }
+  elseif (!empty($datalist_options[$params['field']]))
+  {
+    $class = 'FieldInputDatalist';
+  }
+  else
+  {
+    $class = 'FieldInputText';
+  }
+  
+  $full_class = __NAMESPACE__ . "\\Form\\$class";
+  $field = new $full_class();
+  $field->setLabel($params['label'])
+          ->setControlAttribute('name', $params['name']);
+  
+  if (!empty($is_mandatory_field[$params['field']]))
+  {
+    $field->setControlAttribute('required', true);
+  }
+  if (!empty($params['disabled']))
+  {
+    $field->setControlAttribute('disabled', true);
+  }
+  
+  switch ($class)
+  {
+    case 'FieldInputCheckbox':
+      $field->setChecked($params['value']);
+      break;
+      
+    case 'FieldSelect':
+      $options = $select_options[$params['field']];
+      $field->addSelectOptions($options, $params['value']);
+      break;
+      
+    case 'FieldInputDatalist':
+      $options = $datalist_options[$params['field']];
+      $field->addDatalistOptions($options);
+      // Drop through
+      
+    case 'FieldInputText':
+      if (!empty($is_mandatory_field[$params['field']]))
+      {
+        // Set a pattern as well as required to prevent a string of whitespace
+        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
+      }
+      // Drop through
+      
+    case 'FieldTextarea':
+      if ($class == 'FieldTextarea')
+      {
+        $field->setControlText($params['value']);
+      }
+      else
+      {
+        $field->setControlAttribute('value', $params['value']);
+      }
+      if (isset($maxlength[$params['field']]))
+      {
+        $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
+      }
+      break;
+      
+    default:
+      throw new \Exception("Unknown class '$class'");
+      break;
+  }
+  
+  return $field;
+}
+
+
+function get_fieldset_password()
+{
+  $fieldset = new ElementFieldset();
+  
+  $p = new ElementP();
+  $p->setText(get_vocab('password_twice'));
+  $fieldset->addElement($p);
+  
+  for ($i=0; $i<2; $i++)
+  {
+    $field = new FieldInputPassword();
+    $field->setLabel(get_vocab('users.password'))
+          ->setControlAttributes(array('id'   => "password$i",
+                                       'name' => "password$i"));
+    $fieldset->addElement($field);
+  }
+  
+  return $fieldset;
+}
+
+
+// Adds the submit buttons.  The second button is a Delete button
+// if $delete is true.
+function get_fieldset_submit_buttons($delete=false, $disabled=false)
+{
+  $fieldset = new ElementFieldset();
+  
+  $p = new ElementP();
+  $p->setText(get_vocab('warning_last_admin'));
+  $fieldset->addElement($p);
+  
+  $field = new FieldInputSubmit();
+  
+  $button = new ElementInputSubmit();
+  
+  if ($delete) 
+  {
+    $name = 'delete_button';
+    $value = get_vocab('delete_user');
+  }
+  else
+  {
+    $name = 'back_button';
+    $value = get_vocab('back');
+  }
+  $button->setAttributes(array('name'     => $name,
+                               'value'    => $value,
+                               'disabled' => $disabled));
+  
+  $field->setLabelAttribute('class', 'no_suffix')
+        ->addLabelElement($button)
+        ->setControlAttributes(array('class' => 'default_action',
+                                     'name'  => 'update_button',
+                                     'value' => get_vocab('save')));
+  $fieldset->addElement($field);
+  
+  return $fieldset;
+}
+
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
-// requests, which will only be if (a) the browser is using DataTables and (b)
-// we can do JSON encoding.    We also need to initialise the JSON data array.
-$ajax_capable = $datatable && function_exists('json_encode');
+// requests, which will only be if the browser is using DataTables.    We also need
+// to initialise the JSON data array.
+$ajax_capable = $datatable;
 
 if ($ajax)
 {
@@ -259,7 +515,7 @@ if (isset($Action) && in_array($Action, array('Delete', 'Update')))
   Form::checkToken();
 }
 
-$initial_user_creation = 0;
+$initial_user_creation = false;
 
 if ($nusers > 0)
 {
@@ -273,7 +529,7 @@ else
 // and then send them through to the screen to add the first user (which we'll force
 // to be an admin)
 {
-  $initial_user_creation = 1;
+  $initial_user_creation = true;
   if (!isset($Action))   // second time through it will be set to "Update"
   {
     $Action = "Add";
@@ -331,218 +587,143 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 
   print_header();
   
-  if ($initial_user_creation == 1)
+  echo "<h2>";
+  if ($initial_user_creation)
   {
-    print "<h3>" . get_vocab("no_users_initial") . "</h3>\n";
-    print "<p>" . get_vocab("no_users_create_first_admin") . "</p>\n";
+    echo get_vocab('no_users_initial');
+  }
+  else
+  {
+    echo ($Action == 'Edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
+  }
+  echo "</h2>\n";
+  
+  if ($initial_user_creation)
+  {
+    echo "<p>" . get_vocab('no_users_create_first_admin') . "</p>\n";
   }
   
-  print "<div id=\"form_container\">";
-  print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-  echo Form::getTokenHTML() . "\n";
-  ?>
-        <fieldset class="admin">
-        <legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
-        <div id="edit_users_input_container">
-          <?php
-          // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
-          // or admin rights are removed!
-          if ($Action == "Edit")
-          {
-            $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
-            $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
-          }
-          else
-          {
-            $editing_last_admin = FALSE;
-          }
-          
-          foreach ($fields as $field)
-          {
-            $key = $field['name'];
-            $params = array('label' => get_loc_field_name($tbl_users, $key),
-                            'name'  => VAR_PREFIX . $key,
-                            'value' => $data[$key]);
-            if (isset($maxlength["users.$key"]))
-            {
-              $params['maxlength'] = $maxlength["users.$key"];
-            }
-            // First of all output the input for the field
-            // The ID field cannot change; The password field must not be shown.
-            switch($key)
-            {
-              case 'id':
-                echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
-                break;
-              case 'password_hash':
-                echo "<input type=\"hidden\" name=\"" . $params['name'] ."\" value=\"". htmlspecialchars($params['value']) . "\">\n";
-                break;
-              case 'timestamp':
-                // Don't show timestamp in the form at all
-                break;
-              default:
-                echo "<div>\n";
-                $params['disabled'] = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
-                switch($key)
-                {
-                  case 'level':
-                    // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
-                    // We don't want the user to be able to change the level if (a) it's the first user being created or
-                    // (b) it's the last admin left or (c) they don't have admin rights
-                    $params['disabled'] = $initial_user_creation || $editing_last_admin || $params['disabled'];
-                    // Only display options up to and including one's own level (you can't upgrade yourself).
-                    // If you're not some kind of admin then the select will also be disabled.
-                    // (Note - disabling individual options doesn't work in older browsers, eg IE6)
-                    $params['options'] = array();     
-                    for ($i=0; $i<=$level; $i++)
-                    {
-                      $params['options'][$i] = get_vocab("level_$i");
-                      // Work out which option should be selected by default:
-                      //   if we're editing an existing entry, then it should be the current value;
-                      //   if we're adding the very first entry, then it should be an admin;
-                      //   if we're adding a subsequent entry, then it should be an ordinary user;
-                      if ( (($Action == "Edit")  && ($i == $data[$key])) ||
-                           (($Action == "Add") && $initial_user_creation && ($i == $max_level)) ||
-                           (($Action == "Add") && !$initial_user_creation && ($i == 1)) )
-                      {
-                        $params['value'] = $i;
-                      }
-                    }
-                    $params['force_assoc'] = TRUE;
-                    generate_select($params);
-                    break;
-                  case 'name':
-                    // you cannot change a username (even your own) unless you have user editing rights
-                    $params['disabled'] = ($level < $min_user_editing_level);
-                    $params['mandatory'] = TRUE;
-                    generate_input($params);
-                    break;
-                  case 'email':
-                    $params['type'] = 'email';
-                    $params['attributes'] = 'multiple';
-                    generate_input($params);
-                    break;
-                  default:    
-                    // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
-                    // assume are intended to be booleans)
-                    if (($field['nature'] == 'boolean') || 
-                        (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-                    {
-                      generate_checkbox($params);
-                    }
-                    // Output a textarea if it's a character string longer than the limit for a
-                    // text input
-                    elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
-                    {
-                      $params['attributes'] = array('rows="8"', 'cols="40"');
-                      generate_textarea($params);   
-                    }
-                    // Otherwise output a text input
-                    else
-                    {
-                      $params['field'] = "users.$key";
-                      generate_input($params);
-                    }
-                    break;
-                } // end switch
-                echo "</div>\n";
-            } // end switch
-            
-            
-            // Then output any error messages associated with the field
-            // except for the password field which is a special case
-            switch($key)
-            {
-              case 'email':
-                if (!empty($invalid_email))
-                {
-                  echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
-                }
-                break;
-              case 'name':
-                if (!empty($name_not_unique))
-                {
-                  echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
-                }
-                if (!empty($name_empty))
-                {
-                  echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
-                }
-                break;
-            }
-                     
-          } // end foreach
-      
-          print "<div><p>" . get_vocab("password_twice") . "...</p></div>\n";
+  // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
+  // or admin rights are removed!
+  if ($Action == "Edit")
+  {
+    $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
+    $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
+  }
+  else
+  {
+    $editing_last_admin = FALSE;
+  }
+  
+  // Error messages
+  if (!empty($invalid_email))
+  {
+    echo "<p class=\"error\">" . get_vocab('invalid_email') . "</p>\n";
+  }
+  if (!empty($name_not_unique))
+  {
+    echo "<p class=\"error\">'" . htmlspecialchars($taken_name) . "' " . get_vocab('name_not_unique') . "<p>\n";
+  }
+  if (!empty($name_empty))
+  {
+    echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
+  }
 
-          for ($i=0; $i<2; $i++)
-          {
-            print "<div>\n";
-            print "<label for=\"password$i\">" . get_vocab("users.password") . "</label>\n";
-            print "<input type=\"password\" id=\"password$i\" name=\"password$i\" value=\"\">\n";
-            print "</div>\n";
-          }
-          
-          // Now do any password error messages
-          if (!empty($pwd_not_match))
-          {
-            echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
-          }
-          if (!empty($pwd_invalid))
-          {
-            echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
-            if (isset($pwd_policy))
-            {
-              echo "<ul class=\"error\">\n";
-              foreach ($pwd_policy as $rule => $value)
-              {
-                echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
-              }
-              echo "</ul>\n";
-            }
-          }
-          
-          if ($editing_last_admin)
-          {
-            echo "<p><em>(" . get_vocab("warning_last_admin") . ")</em></p>\n";
-          }
-          ?>
-          <input type="hidden" name="Action" value="Update">    
-          <input class="submit default_action" type="submit" value="<?php echo(get_vocab("save")); ?>">
-          
-        </div>
-        </fieldset>
-      </form>
-      <?php
-      /* Administrators get the right to delete users, but only those at the same level as them or lower */
-      if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
+  // Now do any password error messages
+  if (!empty($pwd_not_match))
+  {
+    echo "<p class=\"error\">" . get_vocab("passwords_not_eq") . "</p>\n";
+  }
+  if (!empty($pwd_invalid))
+  {
+    echo "<p class=\"error\">" . get_vocab("password_invalid") . "</p>\n";
+    if (isset($pwd_policy))
+    {
+      echo "<ul class=\"error\">\n";
+      foreach ($pwd_policy as $rule => $value)
       {
-        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-        echo Form::getTokenHTML() . "\n";
-        echo "<div>\n";
-        echo "<input type=\"hidden\" name=\"Action\" value=\"Delete\">\n";
-        echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
-        echo "<input class=\"submit\" type=\"submit\" " . 
-              (($editing_last_admin) ? "disabled=\"disabled\"" : "") .
-              "value=\"" . get_vocab("delete_user") . "\">\n";
-        echo "</div>\n";
-        echo "</form>\n";
+        echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
       }
-      // otherwise (ie when adding, or else editing when not an admin) give them a cancel button
-      // which takes them back to the user list and does nothing
-      else
-      {
-        echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-        echo Form::getTokenHTML() . "\n";
-        echo "<div>\n";
-        echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
-        echo "</div>\n";
-        echo "</form>\n";
-      }
-?>
-      </div>
-<?php
-
+      echo "</ul>\n";
+    }
+  }
+  
+  $form = new Form();
+  
+  $form->setAttributes(array('id'     => 'form_edit_users',
+                             'class'  => 'standard',
+                             'method' => 'post',
+                             'action' => this_page()));
+                             
+  $form->addHiddenInput('Id', $Id);
+                             
+  $fieldset = new ElementFieldset();
+  
+  foreach ($fields as $field)
+  {
+    $key = $field['name'];
+    
+    $params = array('label' => get_loc_field_name($tbl_users, $key),
+                    'name'  => VAR_PREFIX . $key,
+                    'value' => $data[$key]);
+                    
+    $disabled = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
+    
+    switch ($key)
+    {
+      case 'id':            // We've already got this in a hidden input
+      case 'password_hash': // We don't want to do anything with this
+      case 'timestamp':     // Nor this
+        break;
+        
+      case 'level':
+        if ($Action == 'Add')
+        {
+          // If we're creating a new user and it's the very first user, then they
+          // should have maximum rights.  Otherwise make them an ordinary user.
+          $params['value'] = ($initial_user_creation) ? $max_level : 1;
+        }
+        // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
+        // We don't want the user to be able to change the level if (a) it's the first user being created or
+        // (b) it's the last admin left or (c) they don't have admin rights
+        $fieldset->addElement(get_field_level($params, ($initial_user_creation || 
+                                                        $editing_last_admin ||
+                                                        $disabled)));
+        break;
+        
+      case 'name':
+        // you cannot change a username (even your own) unless you have user editing rights
+        $fieldset->addElement(get_field_name($params, ($level < $min_user_editing_level)));
+        break;
+        
+      case 'email':
+        $fieldset->addElement(get_field_email($params, $disabled));
+        break;
+        
+      default:
+        $params['field'] = "users.$key";
+        $fieldset->addElement(get_field_custom($field, $params, $disabled));
+        break;
+        
+    }
+  }
+  
+  $form->addElement($fieldset)
+       ->addElement(get_fieldset_password());
+       
+  // Administrators get the right to delete users, but only those at the
+  // the same level as them or lower.  Otherwise present a Back button.
+  $delete = ($Id >= 0) &&
+            ($level >= $min_user_editing_level) &&
+            ($level >= $data['level']);
+  
+  // Don't let the last admin be deleted, otherwise you'll be locked out.
+  $button_disabled = $delete && $editing_last_admin;
+  
+  $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled));
+  
+  $form->render();
+  
   // Print footer and exit
   output_trailer();
   exit;
@@ -856,14 +1037,20 @@ if (!$ajax)
 
   if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
   {
-    echo "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-    echo Form::getTokenHTML() . "\n";
-    echo "  <div>\n";
-    echo "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
-    echo "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
-    echo "    <input type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
-    echo "  </div>\n";
-    echo "</form>\n";
+    $form = new Form();
+    
+    $form->setAttributes(array('id'     => 'add_new_user',
+                               'method' => 'post',
+                               'action' => this_page()));
+                               
+    $form->addHiddenInputs(array('Action' => 'Add',
+                                 'Id'     => '-1'));
+                                 
+    $submit = new ElementInputSubmit();
+    $submit->setAttribute('value', get_vocab('add_new_user'));
+    $form->addElement($submit);
+    
+    $form->render();
   }
 }
 

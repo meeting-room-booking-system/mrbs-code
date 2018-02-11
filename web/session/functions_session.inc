@@ -22,7 +22,7 @@ function print_login_failed()
 function print_login_form($action, $target_url, $returl)
 {
   $form = new Form();
-  $form->setAttributes(array('class'  => 'form_general',
+  $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'logon',
                              'method' => 'post',
                              'action' => $action));
@@ -54,8 +54,8 @@ function print_login_form($action, $target_url, $returl)
         ->setControlAttributes(array('id'          => 'username',
                                      'name'        => 'username',
                                      'placeholder' => $placeholder,
-                                     'required'    => null,
-                                     'autofocus'   => null));               
+                                     'required'    => true,
+                                     'autofocus'   => true));               
   $fieldset->addElement($field);
   
   // The password field
@@ -96,7 +96,8 @@ function print_report_link($user)
                                'creatormatch' => $user));
                                
   $submit = new ElementInputSubmit();
-  $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
+  $submit->setAttributes(array('class' => 'link',
+                               'title' => get_vocab('show_my_entries'),
                                'value' => $user));
   $form->addElement($submit);
                                

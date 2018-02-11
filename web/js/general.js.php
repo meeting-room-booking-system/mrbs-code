@@ -307,11 +307,43 @@ init = function(args) {
       });
   }
   
-
+  <?php 
+  // Make sure that the left hand column in the standard form is of
+  // constant width.  If there are multiple fieldsets then each fieldset
+  // will have its own width, as the display:table only applies to that
+  // fieldset.
+  ?>
+  var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
+   
+  function getMaxWidth (selection) {
+    return Math.max.apply(null, selection.map(function() {
+      return $(this).width();
+    }).get());
+  }
   
-  $('#Form1 input[type="submit"]').css('visibility', 'visible');
-
+  <?php
+  // Add on one pixel to avoid what look to be like rounding
+  // problems in some browsers
+  ?>
+  labels.width(getMaxWidth(labels) + 1);
   
+  <?php // Add a fallback for browsers that don't support the time input ?>
+  $('[type="time"]').each(function() {
+    if ($(this).prop('type') != 'time')
+    {
+      $(this).attr('placeholder', 'hh:mm')
+             .attr('pattern', '<?php echo trim(REGEX_HHMM, '/') ?>')
+             .on('input', function(e) {
+                 e.target.setCustomValidity('');
+                 if (!e.target.validity.valid)
+                 {
+                   e.target.setCustomValidity('<?php echo escape_js(get_vocab('invalid_time_format'))?>');
+                 }
+               });
+    }
+  });
+
+
   var floatingTables = $('table#day_main, table#week_main');
 
   createFloatingHeaders(floatingTables);
@@ -321,6 +353,8 @@ init = function(args) {
     .resize(throttle(function() {
         createFloatingHeaders(floatingTables);
         updateTableHeaders(floatingTables);
+        labels.width('auto');
+        labels.width(getMaxWidth(labels));
       }, 100))
     .scroll(function() {
         updateTableHeaders(floatingTables);

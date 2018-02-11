@@ -181,7 +181,7 @@ else
  * Debugging
  ***********/
  
- define('DEBUG', FALSE);
+ define('DEBUG', true);
  
  
 /***************************************
@@ -231,7 +231,7 @@ define('FORMAT_PERIODS', "%d");
 
 
  /*************************************************
- * USED IN EDIT_ENTRY - internal use, do not change
+ * USED IN FORMS - internal use, do not change
  *************************************************/
  
 // Regular expressions used to define mandatory text fields, eg the 'name' field.   The first
@@ -239,6 +239,7 @@ define('FORMAT_PERIODS', "%d");
 // used by JavaScript for client side validation if the browser does not support pattern validation.
 define('REGEX_TEXT_POS', '\s*\S+.*');        // At least one non-whitespace character (we will trim in the handler)
 define('REGEX_TEXT_NEG', '/(^$)|(^\s+$)/');  // Cannot be blank or all whitespaces
+define('REGEX_HHMM', '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/');  // A time string in the form 'hh:mm'
 
 // Minimum useful value for rep_num_weeks
 define('REP_NUM_WEEKS_MIN',  1);
@@ -486,7 +487,7 @@ global $maxlength;
 
 // Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
 // for debugging.
-$use_strict = FALSE;
+$use_strict = true;
        
 
 /********************************************************
@@ -529,3 +530,6 @@ if (defined("E_STRICT"))
 error_reporting ($error_level);
 set_error_handler(__NAMESPACE__ . "\\error_handler");
 set_exception_handler(__NAMESPACE__ . "\\exception_handler");
+
+error_reporting(-1);
+ini_set('display_errors', '1');

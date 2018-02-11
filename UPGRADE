@@ -34,6 +34,13 @@ database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
 
+Upgrading from prior to MRBS 1.7.1
+==================================
+
+The $year_range configuration setting has been abandoned.   If you have
+it in your config file it won't do anything.
+
+
 Upgrading from prior to MRBS 1.7.0
 ==================================
 

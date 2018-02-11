@@ -358,14 +358,12 @@ $vocab["administration"]     = "Room Details";
 $vocab["invalid_area_name"]  = "This area name has already been used!";
 $vocab["empty_name"]         = "You have not entered a name!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Edit Area";
 $vocab["change"]                  = "Change";
 $vocab["backadmin"]               = "Back to Rooms";
-$vocab["editroomarea"]            = "Edit Area or Room Description";
 $vocab["editroom"]                = "Edit Room";
 $vocab["viewroom"]                = "View Room";
-$vocab["error_room"]              = "Error: room ";
 $vocab["not_found"]               = " not found";
 $vocab["room_admin_email"]        = "Room admin email";
 $vocab["area_admin_email"]        = "Area admin email";
@@ -374,8 +372,10 @@ $vocab["area_last_slot_start"]    = "Start of last slot";
 $vocab["area_res_mins"]           = "Resolution (minutes)";
 $vocab["area_def_duration_mins"]  = "Default duration (minutes)";
 $vocab["invalid_area"]            = "Invalid area!";
+$vocab["invalid_room"]            = "Invalid room!";
 $vocab["invalid_room_name"]       = "This room name has already been used in the area!";
 $vocab["invalid_email"]           = "Invalid email address!";
+$vocab["invalid_time_format"]     = "Times must be in the format 'hh:mm'";
 $vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
 $vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
 $vocab["general_settings"]        = "General";
@@ -422,7 +422,7 @@ $vocab["max_per_year"]            = "Maximum number per year";
 $vocab["max_per_future"]          = "Maximum number in the future";
 $vocab["custom_html"]             = "Custom HTML";
 $vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
-$vocab["email_list_note"]         = "Enter a list of email addresses separated by commas or newlines";
+$vocab["email_list_note"]         = "Enter a list of email addresses separated by commas";
 $vocab["mode"]                    = "Mode";
 $vocab["mode_periods"]            = "Periods";
 $vocab["mode_times"]              = "Times";

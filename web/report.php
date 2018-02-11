@@ -2,17 +2,231 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputDatalist;
+use MRBS\Form\FieldInputDate;
+use MRBS\Form\FieldInputRadioGroup;
+use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
+
 
 require "defaultincludes.inc";
 
 
+function get_field_from_date($data)
+{
+  $value = format_iso_date($data['from_year'], $data['from_month'], $data['from_day']);
+  $field = new FieldInputDate();
+  $field->setAttribute('id', 'div_report_start')
+        ->setLabel(get_vocab('report_start'))
+        ->setControlAttributes(array('name'     => 'from_date',
+                                     'value'    => $value,
+                                     'required' => true));
+  return $field;
+}
+
+
+function get_field_to_date($data)
+{
+  $value = format_iso_date($data['to_year'], $data['to_month'], $data['to_day']);
+  $field = new FieldInputDate();
+  $field->setAttribute('id', 'div_report_end')
+        ->setLabel(get_vocab('report_end'))
+        ->setControlAttributes(array('name'     => 'to_date',
+                                     'value'    => $value,
+                                     'required' => true));
+  return $field;
+}
+
+
+function get_field_areamatch($data)
+{        
+  $field = new FieldInputDatalist();
+  $options = get_area_names($all=true);
+  $field->setAttribute('id', 'div_areamatch')
+        ->setLabel(get_vocab('match_area'))
+        ->setControlAttributes(array('name'  => 'areamatch',
+                                     'value' => $data['areamatch']))
+        ->addDatalistOptions($options, false);
+        
+  return $field;
+}
+
+
+function get_field_roommatch($data)
+{
+  global $tbl_room;
+  
+  $field = new FieldInputDatalist();
+  
+  // (We need DISTINCT because it's possible to have two rooms of the same name
+  // in different areas)
+  $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
+  
+  $field->setAttribute('id', 'div_roommatch')
+        ->setLabel(get_vocab('match_room'))
+        ->setControlAttributes(array('name'  => 'roommatch',
+                                     'value' => $data['roommatch']))
+        ->addDatalistOptions($options, false);
+        
+  return $field;
+}
+
+
+function get_field_typematch($data)
+{
+  global $booking_types;
+  
+  if (count($booking_types) <=1)
+  {
+    return null;
+  }
+  
+  $options = array();
+  foreach ($booking_types as $type)
+  {
+    $options[$type] = get_type_vocab($type);
+  }
+  
+  $field = new FieldSelect();
+  $field->setAttributes(array('id'    => 'div_typematch',
+                              'class' => 'multiline'))
+        ->setLabel(get_vocab('match_type'))
+        ->setLabelAttribute('title', get_vocab('ctrl_click_type'))
+        ->setControlAttributes(array('id'       => 'typematch',
+                                     'name'     => 'typematch[]',
+                                     'multiple' => true,
+                                     'size'     => '5'))
+        ->addSelectOptions($options, $data['typematch'], true);
+  
+  return $field;
+}
+
+
+function get_field_match_private($data)
+{
+  global $user_level, $private_somewhere;
+  
+  // Only show this part of the form if there are areas that allow private bookings
+  if (!$private_somewhere)
+  {
+    return null;
+  }
+  
+  // If they're not logged in then there's no point in showing this part of the form because
+  // they'll only be able to see public bookings anyway (and we don't want to alert them to
+  // the existence of private bookings)
+  if (empty($user_level))
+  {
+    $field = new ElementInputHidden();
+    $field->setAttributes(array('name'  => 'match_private',
+                                'value' => BOOLEAN_MATCH_FALSE));
+  }
+  else
+  {
+    $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                     BOOLEAN_MATCH_FALSE => get_vocab('default_public'),
+                     BOOLEAN_MATCH_TRUE  => get_vocab('default_private'));
+    $field = new FieldInputRadioGroup();
+    $field->setAttribute('id', 'div_privacystatus')
+          ->setLabel(get_vocab('privacy_status'))
+          ->addRadioOptions($options, 'match_private', $data['match_private'], true);
+  }
+  
+  return $field;
+}
+
+
+function get_field_match_confirmed($data)
+{
+  global $confirmation_somewhere;
+  
+  // Only show this part of the form if there are areas that allow tentative bookings
+  if (!$confirmation_somewhere)
+  {
+    return null;
+  }
+  
+  $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                   BOOLEAN_MATCH_TRUE  => get_vocab('confirmed'),
+                   BOOLEAN_MATCH_FALSE => get_vocab('tentative'));
+  $field = new FieldInputRadioGroup();
+  $field->setAttribute('id', 'div_confirmationstatus')
+        ->setLabel(get_vocab('confirmation_status'))
+        ->addRadioOptions($options, 'match_confirmed', $data['match_confirmed'], true);
+  
+  return $field;
+}
+
+
+function get_field_match_approved($data)
+{
+  global $approval_somewhere;
+  
+  // Only show this part of the form if there are areas that require approval
+  if (!$approval_somewhere)
+  {
+    return null;
+  }
+  
+  $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                   BOOLEAN_MATCH_TRUE  => get_vocab('approved'),
+                   BOOLEAN_MATCH_FALSE => get_vocab('awaiting_approval'));
+  $field = new FieldInputRadioGroup();
+  $field->setAttribute('id', 'div_approvalstatus')
+        ->setLabel(get_vocab('approval_status'))
+        ->addRadioOptions($options, 'match_approved', $data['match_approved'], true);
+  
+  return $field;
+}
+
+
+function get_field_custom($data, $key)
+{
+  $var = "match_$key";
+  global $$var;
+  
+  global $tbl_entry,
+         $field_natures, $field_lengths;
+         
+  $name = $var;
+  $label = get_loc_field_name($tbl_entry, $key);
+         
+  // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
+  // assume are intended to be booleans)
+  if (($field_natures[$key] == 'boolean') || 
+      (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
+  {
+    $options = array(BOOLEAN_MATCH_BOTH  => get_vocab('both'),
+                     BOOLEAN_MATCH_TRUE  => get_vocab('with'),
+                     BOOLEAN_MATCH_FALSE => get_vocab('without'));
+    $value = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
+    $field = new FieldInputRadioGroup();
+    $field->setAttribute('id', "div_$name")
+          ->setLabel($label)
+          ->addRadioOptions($options, $name, $value, true);
+  }
+  else
+  {
+    $params = array('label' => $label,
+                    'name'  => $name,
+                    'value' => (isset($$var)) ? $$var : null,
+                    'field' => "entry.$key");
+    $field = get_field_report_input($params);
+  }
+  
+  return $field;
+}
+
+
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
-function generate_report_input($params)
+//   $params  an array indexed by 'label', 'name', 'value' and 'field'
+function get_field_report_input($params)
 {
   global $select_options, $datalist_options;
-  
-  unset ($params['options']);  // just in case
   
   // If $select_options is defined we want to force a <datalist> and not a
   // <select>.  That's because if we have options such as
@@ -22,338 +236,217 @@ function generate_report_input($params)
   {
     if (!empty($select_options[$params['field']]))
     {
-      $params['options'] = $select_options[$params['field']];
+      $options = $select_options[$params['field']];
     }
     elseif (!empty($datalist_options[$params['field']]))
     {
-      $params['options'] = $datalist_options[$params['field']];
+      $options = $datalist_options[$params['field']];
     }
   }
   
-  if (isset($params['options']))
+  if (isset($options))
   {
     // Remove any element with an empty key.  This will just be associated with a
     // required select element and the value will be meaningless for a search.
-    unset($params['options']['']);
+    unset($options['']);
     // Remove any elements with an empty value.   These will be meaningless for a search.
-    $params['options'] = array_diff($params['options'], array(''));
+    $options = array_diff($options, array(''));
+    $field = new FieldInputDatalist();
     // We force the values to be used and not the keys.   We will convert
     // back to values when we construct the SQL query.
-    $params['force_indexed'] = TRUE;
-    generate_datalist($params);
+    $field->addDatalistOptions($options, false);
   }
   else
   {
-    generate_simple_input($params);
+    $field = new FieldInputText();
   }
+  
+  $field->setAttribute('id', 'div_' . $params['name'])
+        ->setLabel($params['label'])
+        ->setControlAttributes(array('name'  => $params['name'],
+                                     'value' => $params['value']));
+  
+  return $field;
 }
 
 
-function generate_search_criteria(&$vars)
+function get_fieldset_search_criteria($data)
 {
-  global $booking_types;
-  global $private_somewhere, $approval_somewhere, $confirmation_somewhere;
-  global $user_level, $tbl_entry, $tbl_area, $tbl_room;
-  global $field_natures, $field_lengths;
   global $report_search_field_order;
   
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("search_criteria") . "</legend>\n";
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('search_criteria'));
   
   foreach ($report_search_field_order as $key)
   {
     switch ($key)
     {
       case 'report_start':
-        echo "<div id=\"div_report_start\">\n";
-        echo "<label>" . get_vocab("report_start") . "</label>\n";
-        genDateSelector("from_", $vars['from_day'], $vars['from_month'], $vars['from_year']);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_from_date($data));
         break;
-      
         
-      case 'report_end':  
-        echo "<div id=\"div_report_end\">\n";
-        echo "<label>" . get_vocab("report_end") . "</label>\n";
-        genDateSelector("to_", $vars['to_day'], $vars['to_month'], $vars['to_year']);
-        echo "</div>\n";
+      case 'report_end':
+        $fieldset->addElement(get_field_to_date($data));
         break;
-      
         
       case 'areamatch':
-        $options = get_area_names($all=TRUE);
-        echo "<div id=\"div_areamatch\">\n";
-        $params = array('label'         => get_vocab("match_area"),
-                        'name'          => 'areamatch',
-                        'options'       => $options,
-                        'force_indexed' => TRUE,
-                        'value'         => $vars['areamatch']);
-        generate_datalist($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_areamatch($data));
         break;
-        
         
       case 'roommatch':
-        // (We need DISTINCT because it's possible to have two rooms of the same name
-        // in different areas)
-        $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
-        echo "<div id=\"div_roommatch\">\n";
-        $params = array('label'         => get_vocab("match_room"),
-                        'name'          => 'roommatch',
-                        'options'       => $options,
-                        'force_indexed' => TRUE,
-                        'value'         => $vars['roommatch']);
-        generate_datalist($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_roommatch($data));
         break;
-      
         
       case 'typematch':
-        if (count($booking_types) > 1)
-        {
-          echo "<div id=\"div_typematch\">\n";
-          $options = array();
-          foreach ($booking_types as $type)
-          {
-            $options[$type] = get_type_vocab($type);
-          }
-          $params = array('label'        => get_vocab("match_type"),
-                          'name'         => 'typematch[]',
-                          'id'           => 'typematch',
-                          'options'      => $options,
-                          'force_assoc'  => TRUE,  // in case the type keys happen to be digits
-                          'value'        => $vars['typematch'],
-                          'multiple'     => TRUE,
-                          'attributes'   => 'size="5"');
-          generate_select($params);
-          echo "<span>" . get_vocab("ctrl_click_type") . "</span>\n";
-          echo "</div>\n";
-        }
+        $fieldset->addElement(get_field_typematch($data));
         break;
-      
         
-      case 'namematch':  
-        echo "<div id=\"div_namematch\">\n";
-        $params = array('label' => get_vocab("match_entry"),
+      case 'namematch':
+        $params = array('label' => get_vocab('match_entry'),
                         'name'  => 'namematch',
-                        'value' => $vars['namematch'],
+                        'value' => $data['namematch'],
                         'field' => 'entry.name');
-        generate_report_input($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_report_input($params));
         break;
-      
         
       case 'descrmatch':
-        echo "<div id=\"div_descrmatch\">\n";
-        $params = array('label' => get_vocab("match_descr"),
+        $params = array('label' => get_vocab('match_descr'),
                         'name'  => 'descrmatch',
-                        'value' => $vars['descrmatch'],
+                        'value' => $data['descrmatch'],
                         'field' => 'entry.description');
-        generate_report_input($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_report_input($params));
         break;
-  
-      
+        
       case 'creatormatch':
-        echo "<div id=\"div_creatormatch\">\n";
-        $params = array('label' => get_vocab("createdby"),
+        $params = array('label' => get_vocab('createdby'),
                         'name'  => 'creatormatch',
-                        'value' => $vars['creatormatch'],
+                        'value' => $data['creatormatch'],
                         'field' => 'entry.create_by');
-        generate_report_input($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_report_input($params));
         break;
         
-
       case 'match_private':
-        // Privacy status
-        // Only show this part of the form if there are areas that allow private bookings
-        if ($private_somewhere)
-        {
-          // If they're not logged in then there's no point in showing this part of the form because
-          // they'll only be able to see public bookings anyway (and we don't want to alert them to
-          // the existence of private bookings)
-          if (empty($user_level))
-          {
-            echo "<input type=\"hidden\" name=\"match_private\" value=\"" . BOOLEAN_MATCH_FALSE . "\">\n";
-          }
-          // Otherwise give them the radio buttons
-          else
-          {
-            echo "<div id=\"div_privacystatus\">\n";
-            $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_FALSE => get_vocab("default_public"), BOOLEAN_MATCH_TRUE => get_vocab("default_private"));
-            $params = array('label'       => get_vocab("privacy_status"),
-                            'name'        => 'match_private',
-                            'options'     => $options,
-                            'force_assoc' => TRUE,
-                            'value'       => $vars['match_private']);
-            generate_radio_group($params);
-            echo "</div>\n";
-          }
-        }
+        $fieldset->addElement(get_field_match_private($data));
         break;
         
-      
       case 'match_confirmed':
-        // Confirmation status
-        // Only show this part of the form if there are areas that require approval
-        if ($confirmation_somewhere)
-        {
-          echo "<div id=\"div_confirmationstatus\">\n";
-          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("confirmed"), BOOLEAN_MATCH_FALSE => get_vocab("tentative"));
-          $params = array('label'       => get_vocab("confirmation_status"),
-                          'name'        => 'match_confirmed',
-                          'options'     => $options,
-                          'force_assoc' => TRUE,
-                          'value'       => $vars['match_confirmed']);
-          generate_radio_group($params);
-          echo "</div>\n";
-        }
+        $fieldset->addElement(get_field_match_confirmed($data));
         break;
-        
         
       case 'match_approved':
-        // Approval status
-        // Only show this part of the form if there are areas that require approval
-        if ($approval_somewhere)
-        {
-          echo "<div id=\"div_approvalstatus\">\n";
-          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("approved"), BOOLEAN_MATCH_FALSE => get_vocab("awaiting_approval"));
-          $params = array('label'       => get_vocab("approval_status"),
-                          'name'        => 'match_approved',
-                          'options'     => $options,
-                          'force_assoc' => TRUE,
-                          'value'       => $vars['match_approved']);
-          generate_radio_group($params);
-          echo "</div>\n";
-        }
+        $fieldset->addElement(get_field_match_approved($data));
         break;
         
-
       default:
         // Must be a custom field
-        $var = "match_$key";
-        global $$var;
-        $params = array('label' => get_loc_field_name($tbl_entry, $key),
-                        'name'  => $var);
-        echo "<div id=\"div_$var\">\n";
-        // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
-        // assume are intended to be booleans)
-        if (($field_natures[$key] == 'boolean') || 
-            (($field_natures[$key] == 'integer') && isset($field_lengths[$key]) && ($field_lengths[$key] <= 2)) )
-        {
-          $options = array(BOOLEAN_MATCH_BOTH => get_vocab("both"), BOOLEAN_MATCH_TRUE => get_vocab("with"), BOOLEAN_MATCH_FALSE => get_vocab("without"));
-          $params['value'] = (isset($$var)) ? $$var : BOOLEAN_MATCH_BOTH;
-          $params['options'] = $options;
-          $params['force_assoc'] = true;
-          generate_radio_group($params);
-        }
-        // Otherwise output a text input of some kind
-        else
-        {
-          $params['value'] = (isset($$var)) ? $$var : null;
-          $params['field'] = "entry.$key";
-          generate_report_input($params);
-        }
-        echo "</div>\n";
+        $fieldset->addElement(get_field_custom($data, $key));
         break;
-        
     } // switch
-    
-  }
-
-  echo "</fieldset>\n";
+  } // foreach
+  
+  return $fieldset; 
 }
 
 
-function generate_presentation_options(&$vars)
+function get_field_output($data)
 {
-  global $times_somewhere, $report_presentation_field_order;
-  
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("presentation_options") . "</legend>\n";
+  $options = array(REPORT  => get_vocab('report'),
+                   SUMMARY => get_vocab('summary'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('output'))
+        ->addRadioOptions($options, 'output', $data['output'], true);
+  return $field;
+}
 
+
+function get_field_output_format($data)
+{
+  global $times_somewhere;
+  
+  $options = array(OUTPUT_HTML => get_vocab('html'),
+                   OUTPUT_CSV  => get_vocab('csv'));
+  // The iCal output button
+  if ($times_somewhere) // We can't do iCalendars for periods yet
+  {
+    $options[OUTPUT_ICAL] = get_vocab('ical');
+  }
+  
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('format'))
+        ->addRadioOptions($options, 'output_format', $data['output_format'], true);
+  return $field;
+}
+
+
+function get_field_sortby($data)
+{
+  $options = array('r' => get_vocab('sort_room'),
+                   's' => get_vocab('sort_rep_time'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('sort_rep'))
+        ->addRadioOptions($options, 'sortby', $data['sortby'], true);
+  return $field;
+}
+
+
+function get_field_sumby($data)
+{
+  $options = array('d' => get_vocab('sum_by_descrip'),
+                   'c' => get_vocab('sum_by_creator'),
+                   't' => get_vocab('sum_by_type'));
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('summarize_by'))
+        ->addRadioOptions($options, 'sumby', $data['sumby'], true);
+  return $field;
+}
+
+
+function get_fieldset_presentation_options($data)
+{
+  global $report_presentation_field_order;
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('presentation_options'));
+  
   foreach ($report_presentation_field_order as $key)
   {
     switch ($key)
     {
       case 'output':
-        echo "<div id=\"div_output\">\n";
-        $buttons = array(REPORT  => get_vocab('report'),
-                         SUMMARY => get_vocab('summary'));
-        $params = array('label'       => get_vocab('output'),
-                        'name'        => 'output',
-                        'value'       => $vars['output'],
-                        'options'     => $buttons,
-                        'force_assoc' => TRUE);
-        generate_radio_group($params);                  
-        echo "</div>\n";
+        $fieldset->addElement(get_field_output($data));
         break;
-        
         
       case 'output_format':
-        echo "<div id=\"div_format\">\n";
-        $buttons = array(OUTPUT_HTML => get_vocab('html'),
-                         OUTPUT_CSV  => get_vocab('csv'));
-        // The iCal output button
-        if ($times_somewhere) // We can't do iCalendars for periods yet
-        {
-          $buttons[OUTPUT_ICAL] = get_vocab('ical');
-        }
-        $params = array('label'       => get_vocab('format'),
-                        'name'        => 'output_format',
-                        'value'       => $vars['output_format'],
-                        'options'     => $buttons,
-                        'force_assoc' => TRUE);
-        generate_radio_group($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_output_format($data));
         break;
-        
-
+      
       case 'sortby':
-        echo "<div id=\"div_sortby\">\n";
-        $options = array('r' => get_vocab("sort_room"),
-                         's' => get_vocab("sort_rep_time"));
-        $params = array('label'   => get_vocab("sort_rep"),
-                        'name'    => 'sortby',
-                        'options' => $options,
-                        'value'   => $vars['sortby']);
-        generate_radio_group($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_sortby($data));
         break;
-
         
       case 'sumby':
-        echo "<div id=\"div_sumby\">\n";
-        $options = array('d' => get_vocab("sum_by_descrip"),
-                         'c' => get_vocab("sum_by_creator"),
-                         't' => get_vocab("sum_by_type"));
-        $params = array('label'   => get_vocab("summarize_by"),
-                        'name'    => 'sumby',
-                        'options' => $options,
-                        'value'   => $vars['sumby']);
-        generate_radio_group($params);
-        echo "</div>\n";
+        $fieldset->addElement(get_field_sumby($data));
         break;
         
-      
       default:
         break;  
-      
-    }  // switch
-   
-  }  // foreach   
+    } // switch
+  } // foreach
   
-  echo "</fieldset>\n";
+  return $fieldset;
 }
 
 
-function generate_submit_buttons()
+function get_fieldset_submit_buttons()
 {
-  echo "<div id=\"report_submit\">\n";
-  echo "<input type=\"hidden\" name=\"phase\" value=\"2\">\n";
-  echo "<input class=\"submit\" type=\"submit\" value=\"" . get_vocab("submitquery") . "\">\n";
-  echo "</div>\n";
+  $fieldset = new ElementFieldset();
+
+  $field = new FieldInputSubmit();
+  $field->setControlAttribute('value', get_vocab('submitquery'));
+  
+  $fieldset->addElement($field);
+  
+  return $fieldset;
 }
 
 
@@ -1228,15 +1321,14 @@ if ($cli_mode)
   ini_set("include_path", dirname($PHP_SELF));
 }
 
-$to_date = getdate(mktime(0, 0, 0, $month, $day + $default_report_days, $year));
+$default_from_time = mktime(0, 0, 0, $month, $day, $year);
+$default_to_time = mktime(0, 0, 0, $month, $day + $default_report_days, $year);
+$default_from_date = date('Y-m-d', $default_from_time);
+$default_to_date = date('Y-m-d', $default_to_time);
 
 // Get non-standard form variables
-$from_day = get_form_var('from_day', 'int', $day);
-$from_month = get_form_var('from_month', 'int', $month);
-$from_year = get_form_var('from_year', 'int', $year);
-$to_day = get_form_var('to_day', 'int', $to_date['mday']);
-$to_month = get_form_var('to_month', 'int', $to_date['mon']);
-$to_year = get_form_var('to_year', 'int', $to_date['year']);
+$from_date = get_form_var('from_date', 'string', $default_from_date);
+$to_date = get_form_var('to_date', 'string', $default_to_date);
 $creatormatch = get_form_var('creatormatch', 'string');
 $areamatch = get_form_var('areamatch', 'string');
 $roommatch = get_form_var('roommatch', 'string');
@@ -1253,6 +1345,9 @@ $match_private = get_form_var('match_private', 'int', BOOLEAN_MATCH_BOTH);
 $phase = get_form_var('phase', 'int', 1);
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
+
+list($from_year, $from_month, $from_day) = split_iso_date($from_date);
+list($to_year, $to_month, $to_day) = split_iso_date($to_date);
 
 // Check the user is authorised for this page
 if ($cli_mode)
@@ -1282,9 +1377,9 @@ if ($cli_mode)
 }
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
-// requests, which will only be if (a) the browser is using DataTables and (b)
-// we can do JSON encoding.    We also need to initialise the JSON data array.
-$ajax_capable = $datatable && function_exists('json_encode');
+// requests, which will only be if the browser is using DataTables.  We also need
+// to initialise the JSON data array.
+$ajax_capable = $datatable;
 
 if ($ajax)
 {
@@ -1565,15 +1660,11 @@ else
 // Upper part: The form.
 if ($output_form)
 {
-
   echo "<div class=\"screenonly\">\n";
  
-  echo "<form class=\"form_general\" id=\"report_form\" method=\"post\" action=\"report.php\">\n";
-  echo Form::getTokenHTML() . "\n";
-  echo "<fieldset>\n";
-  echo "<legend>" . get_vocab("report_on") . "</legend>\n";
+  $form = new Form();
   
-  // Do the search criteria fieldset
+  // Search variables
   $search_var_keys = array('from_day', 'from_month', 'from_year',
                            'to_day', 'to_month', 'to_year',
                            'areamatch', 'roommatch',
@@ -1585,9 +1676,8 @@ if ($output_form)
   {
     $search_vars[$var] = $$var;
   }
-  generate_search_criteria($search_vars);
   
-  // Then the presentation options fieldset
+  // Presentation variables
   $presentation_var_keys = array('output', 'output_format',
                                  'sortby', 'sumby');
   $presentation_vars = array();
@@ -1595,13 +1685,25 @@ if ($output_form)
   {
     $presentation_vars[$var] = $$var;
   }
-  generate_presentation_options($presentation_vars);
-        
-  // Then the submit buttons
-  generate_submit_buttons();
-
-  echo "</fieldset>\n";
-  echo "</form>\n";
+  
+  $attributes = array('id'     => 'report_form',
+                      'class'  => 'standard',
+                      'action' => 'report.php',
+                      'method' => 'post');
+                    
+  $form->setAttributes($attributes)
+       ->addHiddenInput('phase', '2');
+  
+  $outer_fieldset = new ElementFieldset();
+  $outer_fieldset->addLegend(get_vocab('report_on'))
+                 ->addElement(get_fieldset_search_criteria($search_vars))
+                 ->addElement(get_fieldset_presentation_options($presentation_vars))
+                 ->addElement(get_fieldset_submit_buttons());
+  
+  $form->addElement($outer_fieldset);
+  
+  $form->render();
+  
   echo "</div>\n";
 }
 

@@ -6,6 +6,7 @@ require_once "mrbs_sql.inc";
 require_once "functions_ical.inc";
 
 use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
 
 function invalid_booking($message)
 {
@@ -63,13 +64,9 @@ $formvars = array('create_by'          => 'string',
                   'name'               => 'string',
                   'description'        => 'string',
                   'start_seconds'      => 'int',
-                  'start_day'          => 'int',
-                  'start_month'        => 'int',
-                  'start_year'         => 'int',
+                  'start_date'         => 'string',
                   'end_seconds'        => 'int',
-                  'end_day'            => 'int',
-                  'end_month'          => 'int',
-                  'end_year'           => 'int',
+                  'end_date'           => 'string',
                   'all_day'            => 'string',  // bool, actually
                   'type'               => 'string',
                   'rooms'              => 'array',
@@ -82,9 +79,7 @@ $formvars = array('create_by'          => 'string',
                   'rep_id'             => 'int',
                   'edit_type'          => 'string',
                   'rep_type'           => 'int',
-                  'rep_end_day'        => 'int',
-                  'rep_end_month'      => 'int',
-                  'rep_end_year'       => 'int',
+                  'rep_end_date'       => 'string',
                   'rep_id'             => 'int',
                   'rep_day'            => 'array',   // array of bools
                   'rep_num_weeks'      => 'int',
@@ -109,6 +104,13 @@ foreach($formvars as $var => $var_type)
   {
     $$var = trim($$var);
   }
+}
+
+list($start_year, $start_month, $start_day) = split_iso_date($start_date);
+list($end_year, $end_month, $end_day) = split_iso_date($end_date);
+if (isset($rep_end_date))
+{
+  list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
 }
 
 // BACK:  we didn't really want to be here - send them to the returl
@@ -462,44 +464,44 @@ if ($enable_periods)
 }
 
 // Now work out the start and times
-$starttime = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
-$endtime   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
+$start_time = mktime(0, 0, $start_seconds, $start_month, $start_day, $start_year);
+$end_time   = mktime(0, 0, $end_seconds, $end_month, $end_day, $end_year);
 
 // If we're using periods then the endtime we've been returned by the form is actually
 // the beginning of the last period in the booking (it's more intuitive for users this way)
 // so we need to add on 60 seconds (1 period)
 if ($enable_periods)
 {
-  $endtime = $endtime + 60;
+  $end_time = $end_time + 60;
 }
 
 // Round down the starttime and round up the endtime to the nearest slot boundaries
 // (This step is probably unnecesary now that MRBS always returns times aligned
 // on slot boundaries, but is left in for good measure).
 $am7 = get_start_first_slot($start_month, $start_day, $start_year);                 
-$starttime = round_t_down($starttime, $resolution, $am7);
-$endtime = round_t_up($endtime, $resolution, $am7);
+$start_time = round_t_down($start_time, $resolution, $am7);
+$end_time = round_t_up($end_time, $resolution, $am7);
 
 // If they asked for 0 minutes, and even after the rounding the slot length is still
 // 0 minutes, push that up to 1 resolution unit.
-if ($endtime == $starttime)
+if ($end_time == $start_time)
 {
-  $endtime += $resolution;
+  $end_time += $resolution;
 }
 
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
     isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
 {
   // Get the repeat entry settings
-  $end_date = mktime(intval($start_seconds/SECONDS_PER_HOUR),
-                     intval(($start_seconds%SECONDS_PER_HOUR)/60),
-                     0,
-                     $rep_end_month, $rep_end_day, $rep_end_year);
+  $rep_end_time = mktime(intval($start_seconds/SECONDS_PER_HOUR),
+                         intval(($start_seconds%SECONDS_PER_HOUR)/60),
+                         0,
+                         $rep_end_month, $rep_end_day, $rep_end_year);
 }
 else
 {
   $rep_type = REP_NONE;
-  $end_date = 0;  // to avoid an undefined variable notice
+  $rep_end_time = 0;  // to avoid an undefined variable notice
 }
 
 if (!isset($rep_day))
@@ -519,7 +521,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
     // as the day of the week of the start of the period
     if (count($rep_day) == 0)
     {
-      $rep_day[] = date('w', $starttime);
+      $rep_day[] = date('w', $start_time);
     }
     // Build string of weekdays to repeat on:
     for ($i = 0; $i < 7; $i++)
@@ -552,17 +554,17 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   }
 
   // Get the first entry in the series and make that the start time
-  $reps = mrbsGetRepeatEntryList($starttime, $end_date, $rep_details, 1);
+  $reps = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, 1);
 
   if (count($reps) > 0)
   {
-    $duration = $endtime - $starttime;
-    $duration -= cross_dst($starttime, $endtime);
-    $starttime = $reps[0];
-    $endtime = $starttime + $duration;
-    $start_day = date('j', $starttime);
-    $start_month = date('n', $starttime);
-    $start_year = date('Y', $starttime);
+    $duration = $end_time - $start_time;
+    $duration -= cross_dst($start_time, $end_time);
+    $start_time = $reps[0];
+    $end_time = $start_time + $duration;
+    $start_day = date('j', $start_time);
+    $start_month = date('n', $start_time);
+    $start_year = date('Y', $start_time);
   }
 }
 
@@ -663,12 +665,12 @@ foreach ($rooms as $room_id)
   $booking['type'] = $type;
   $booking['description'] = $description;
   $booking['room_id'] = $room_id;
-  $booking['start_time'] = $starttime;
-  $booking['end_time'] = $endtime;
+  $booking['start_time'] = $start_time;
+  $booking['end_time'] = $end_time;
   $booking['rep_type'] = $rep_type;
   $booking['rep_opt'] = $rep_opt;
   $booking['rep_num_weeks'] = $rep_num_weeks;
-  $booking['end_date'] = $end_date;
+  $booking['end_date'] = $rep_end_time;
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;
   $booking['ical_recur_id'] = $ical_recur_id;
@@ -717,7 +719,7 @@ foreach ($rooms as $room_id)
   $bookings[] = $booking;
 }
 
-$just_check = $ajax && function_exists('json_encode') && !$commit;
+$just_check = $ajax && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
 $send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
 
@@ -758,7 +760,7 @@ db()->mutex_unlock($tbl_entry);
 
 
 // If this is an Ajax request, output the result and finish
-if ($ajax && function_exists('json_encode'))
+if ($ajax)
 {
   // If this was a successful commit generate the new HTML
   if ($result['valid_booking'] && $commit)
@@ -820,12 +822,16 @@ else
 echo "<div id=\"submit_buttons\">\n";
 
 // Back button
-echo "<form method=\"post\" action=\"" . htmlspecialchars($returl) . "\">\n";
-echo Form::getTokenHTML() . "\n";
-echo "<fieldset><legend></legend>\n";
-echo "<input type=\"submit\" value=\"" . get_vocab("back") . "\">\n";
-echo "</fieldset>\n";
-echo "</form>\n";
+$form = new Form();
+
+$form->setAttributes(array('method' => 'post',
+                           'action' => $returl));
+                           
+$submit = new ElementInputSubmit(); 
+$submit->setAttribute('value', get_vocab('back'));
+$form->addElement($submit);
+                 
+$form->render();
 
 
 // Skip and Book button (to book the entries that don't conflict)
@@ -833,9 +839,11 @@ echo "</form>\n";
 if (empty($result['violations']['errors'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
-  echo "<form method=\"post\" action=\"" . htmlspecialchars(this_page()) . "\">\n";
-  echo Form::getTokenHTML() . "\n";
-  echo "<fieldset><legend></legend>\n";
+  $form = new Form();
+  
+  $form->setAttributes(array('method' => 'post',
+                             'action' => this_page()));
+                             
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round
   // First the ordinary fields
@@ -848,13 +856,13 @@ if (empty($result['violations']['errors'])  &&
       {
         if (isset($value))
         {
-          echo "<input type=\"hidden\" name=\"${var}[]\" value=\"" . htmlspecialchars($value) . "\">\n";
+          $form->addHiddenInput("${var}[]", $value);
         }
       }
     }
     elseif (isset($$var))
     {
-      echo "<input type=\"hidden\" name=\"$var\" value=\"" . htmlspecialchars($$var) . "\">\n";
+      $form->addHiddenInput($var, $$var);
     }
   }
   // Then the custom fields
@@ -862,17 +870,17 @@ if (empty($result['violations']['errors'])  &&
   {
     if (array_key_exists($field['name'], $custom_fields) && isset($custom_fields[$field['name']]))
     {
-      echo "<input type=\"hidden\"" .
-                  " name=\"" . VAR_PREFIX . $field['name'] . "\"" .
-                  " value=\"" . htmlspecialchars($custom_fields[$field['name']]) . "\">\n";
+      $form->addHiddenInput(VAR_PREFIX . $field['name'], $custom_fields[$field['name']]);
     }
   }
   // Submit button
-  echo "<input type=\"submit\"" .
-              " value=\"" . get_vocab("skip_and_book") . "\"" .
-              " title=\"" . get_vocab("skip_and_book_note") . "\">\n";
-  echo "</fieldset>\n";
-  echo "</form>\n";
+  $submit = new ElementInputSubmit();
+  $submit->setAttributes(array('value' => get_vocab('skip_and_book'),
+                               'title' => get_vocab('skip_and_book_note')));
+  
+  $form->addElement($submit);
+  
+  $form->render();
 }
 
 echo "</div>\n";

@@ -350,14 +350,12 @@ $vocab["administration"]     = "Detail ruangan";
 $vocab["invalid_area_name"]  = "Nama tersebut sudah pernah digunakan!";
 $vocab["empty_name"]         = "Anda belum memasukkan anam!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Ubah Area";
 $vocab["change"]                  = "Ubah";
 $vocab["backadmin"]               = "Kembali ke ruangan";
-$vocab["editroomarea"]            = "Ubah Deskripsi Area atau Ruangan";
 $vocab["editroom"]                = "Ubah Ruangan";
 $vocab["viewroom"]                = "Lihat Ruangan";
-$vocab["error_room"]              = "Error: ruangan ";
 $vocab["not_found"]               = " tidak ditemukan";
 $vocab["room_admin_email"]        = "Surel admin ruangan";
 $vocab["area_admin_email"]        = "Surel admin area";

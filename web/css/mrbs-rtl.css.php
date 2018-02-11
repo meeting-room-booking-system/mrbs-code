@@ -25,7 +25,7 @@ legend {
 
 /* ------------ ADMIN.PHP ---------------------------*/
 
-form.form_admin, .form_admin div, div#custom_html,
+form.form_admin, .form_admin div, div#div_custom_html,
 #area_form form, #area_form label[for="area_select"],
 #areaChangeForm select, #areaChangeForm input, #areaChangeForm input.button,
 div.header_columns, div.body_columns {
@@ -92,77 +92,10 @@ foreach ($color_types as $type => $col)
 }
 ?>
 
-/* ------------ EDIT_AREA_ROOM.PHP ------------------*/
+/* ------------ EDIT_AREA.PHP ------------------*/
 
 #book_ahead_periods_note span {
   float: right;
-}
-
-/* ------------ FORM_GENERAL ------------------------*/
-
-form#edit_room, .form_general input, .form_general textarea,
-.form_general select, .form_general input.submit,
-div#edit_area_room_submit_back, div#edit_area_room_submit_save,
-.form_general .div_time span, .form_general div#ad,
-.form_general #div_rooms select, .form_general #div_typematch select {
-  float: right;
-}
-
-.form_general div.group {
-  float: none;
-}
-
-.form_general div.group_container, .edit_area_room div.group,
-#edit_room fieldset, .form_general label {
-  float: right;
-}
-
-.form_general .group_container div.group {
-  clear: inherit;
-}
-
-.edit_entry .form_general label, .report .form_general label,
-.edit_area_room .form_general label, #logon label {
-  direction: rtl;
-}
-
-.edit_entry .form_general label {
-  width: 250px;
-}
-
-.form_general .group label {
-  text-align: right;
-  margin-left:30px;
-  width: 90%;
-}
-
-#edit_entry_submit input, #report_submit input, #search_submit input,
-#db_logon_submit input {
-  left: 300%;
-}
-
-.form_general input#all_day {
-  margin-left: 1em;
-  margin-right: 3em;
-}
-
-/* ------------ EDIT_USERS.PHP ------------------*/
-
-<?php
-$edit_users_label_width      = '20.0';   // em
-?>
-
-div#form_container, #form_edit_users label {
-  float: right;
-}
-
-#form_edit_users div, #form_edit_users input {
-  float: inherit;
-}
-
-#form_edit_users label {
-  width: 20em;
-  direction: rtl;
 }
 
 /* ------------ FUNCTIONS.INC -------------------*/
@@ -215,8 +148,8 @@ table#pending_list {
 
 /* ------------ REPORT.PHP ----------------------*/
 
-.div_report h3, .div_report table, div.report_entry_name,
-.report .form_general fieldset fieldset {
+.div_report h3, .div_report table,
+div.report_entry_name {
   direction: rtl;
 }
 

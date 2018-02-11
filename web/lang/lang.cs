@@ -349,14 +349,12 @@ $vocab["administration"]     = "Detaily místnosti/zdroje";
 $vocab["invalid_area_name"]  = "Toto jméno oblasti je již použito!";
 $vocab["empty_name"]         = "Nevložili jste jméno!";
 
-// Used in edit_area_room.php
+// Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Upravit oblast";
 $vocab["change"]                  = "Změnit";
 $vocab["backadmin"]               = "Zpět do místností/zdrojů";
-$vocab["editroomarea"]            = "Upravit popis oblasti nebo místnosti/zdrojů";
 $vocab["editroom"]                = "Upravit místnost/zdroj";
 $vocab["viewroom"]                = "Zobrazit místnost/zdroj";
-$vocab["error_room"]              = "Chyba: místnost/zdroj ";
 $vocab["not_found"]               = " nenalezeno";
 $vocab["room_admin_email"]        = "E-mail administrátora místnosti/zdroje";
 $vocab["area_admin_email"]        = "E-mail administrátora oblasti";

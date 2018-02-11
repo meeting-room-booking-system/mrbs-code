@@ -196,12 +196,10 @@ if (in_array($page, array('day', 'week')))
 
 $(window).on('load', function() {
 
-  var args = {day: '<?php echo $day?>',
-              month: '<?php echo $month?>',
-              year: '<?php echo $year?>',
-              area: '<?php echo $area?>',
+  var args = {area: '<?php echo $area?>',
               room: '<?php echo $room?>',
-              page: '<?php echo $page?>'};
+              page: '<?php echo $page?>',
+              page_date: '<?php echo format_iso_date($year, $month, $day) ?>'};
   <?php
   // We need $timetohighlight for the day and week pages
   $timetohighlight = get_form_var('timetohighlight', 'int');
