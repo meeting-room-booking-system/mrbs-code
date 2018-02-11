@@ -7,6 +7,67 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.1 (Sun Feb 11th 2018):
+
+[*] Updated PHPMailer to use latest code (5.2.5+) from the 5.2-stable
+ branch. Note that MRBS cannot yet use PHPMailer Version 6.0+ because
+ that requires PHP 5.5 or later.
+
+[*] Improved error reporting when PHP sessions aren't working. See SF
+ Support Requests #1364.
+
+[*] Improved fix for SF Patches #62.
+
+[-] Fixed bug resulting in a function not found error. See SF Support
+ Requests #1390.
+
+[-] Fixed problem with updating users table. See SF Support Requests
+ #1390.
+
+[-] Fixed bug resulting in a "session expired" message when the "You are
+ xxx" link is clicked. See SF Support Requests #1393.
+
+[*] Removed "You are " text from "You are xxx" link. See SF Support
+ Requests #1393.
+
+[-] Fixed bug in formatting date for policy violations.
+
+[-] Fixed another date formatting problem.
+
+[*] Improved internationalisation of some language tokens
+
+[-] Fixed bug where access was being denied if the Joomla username
+ looked like an integer, eg "1234". See SF Bugs #401.
+
+[-] Fixed bug resulting in unwanted colons appearing after labels in
+ dataTables (eg the Report output)
+
+[-] Fixed problem with textarea values not being displayed.
+
+[*] Put the new period name input in focus when Add Period is clicked.
+
+[+] Added the ability to restrict IMAP authentication to usernames from
+ a certain domain, using the new config setting
+ $auth['imap_php']['user_domain']. See SF Support Requests #1407.
+
+[*] Reorganised mail settings. See SF Support Requests #1412.
+
+[*] Improved mail debugging information, giving 'From', 'To', 'Cc' and
+ 'Bcc' addresses.
+
+[*] Made the field order on the view_entry page the same as that on the
+ edit_entry page. See SF Support Requests #1426.
+
+[*] Added and id to custom field divs to make selection in CSS easier.
+ See SF Support Requests #1429.
+
+[*] Fixed CSS syntax error.
+
+[+] Added authLdapGetName() function in auth_ldap.inc. This isn't used
+ by MRBS currently, but people customising MRBS will be able to use
+ it.
+
+-------------------------------------------------------------------------------
 Version 1.7.0 (Thu Nov 16th 2017):
 
 [-] Set the default value of $smtp_settings['secure'] to '', so that TLS

@@ -1,8 +1,186 @@
+2018-02-11  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Incremented version number for release
+	[fbaee899064a] [tip]
+
+	* web/auth/auth_ldap.inc, web/systemdefaults.inc.php:
+	Added authLdapGetName() function in auth_ldap.inc. This isn't used
+	by MRBS currently, but people customising MRBS will be able to use
+	it
+	[6730bd5f6c3f]
+
+2018-02-09  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/css/mrbs-mail.css:
+	Fixed CSS syntax error.
+	[73a20d14fecd]
+
+2018-01-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/report.php:
+	Added and id to custom field divs to make selection in CSS easier.
+	See SF Support Requests #1429.
+	[ff5095ce9b5e]
+
+2018-01-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_view.inc, web/systemdefaults.inc.php:
+	Made the field order on the view_entry page the same as that on the
+	edit_entry page. See SF Support Requests #1426.
+	[746d3c95e061]
+
+2018-01-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Improved mail debugging information, giving 'From', 'To', 'Cc' and
+	'Bcc' addresses.
+	[ec9eeaacfd94]
+
+	* web/systemdefaults.inc.php:
+	Reorganised mail settings. See SF Support Requests #1412
+	[dc4d32e49524]
+
+2018-01-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_imap_php.inc, web/systemdefaults.inc.php:
+	Added the ability to restrict IMAP authentication to usernames from
+	a certain domain, using the new config setting
+	$auth['imap_php']['user_domain']. See SF Support Requests #1407.
+	[1d72b1c1bcf1]
+
+2018-01-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/edit_area_room.js.php:
+	Put the new period name input in focus when Add Period is clicked
+	[1e89c26f7d09]
+
+2018-01-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Fixed problem with textarea values not being displayed.
+	[f0a8bf59939a]
+
+	* web/css/mrbs.css.php:
+	Fixed bug resulting in unwanted colons appearing after labels in
+	dataTables (eg the Report output)
+	[5f51a2ac4fce]
+
+2018-01-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/JFactory.php:
+	Fixed bug where access was being denied if the Joomla username
+	looked like an integer, eg "1234". See SF Bugs #401.
+	[add3b82efa00]
+
+2017-12-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.cs, web/lang/lang.de, web/lang/lang.en,
+	web/lang/lang.es, web/lang/lang.fi, web/lang/lang.id,
+	web/lang/lang.it, web/lang/lang.ja, web/lang/lang.pl,
+	web/lang/lang.ro, web/lang/lang.sk, web/lang/lang.sr-rs-latin,
+	web/lang/lang.sv, web/lang/lang.zh-cn, web/mrbs_sql.inc:
+	Improved internationalisation of some language tokens
+	[211ba99df647]
+
+	* web/mrbs_sql.inc:
+	Fixed another date formatting problem
+	[e3e695d04ac0]
+
+	* web/mrbs_sql.inc:
+	Fixed bug in formatting date for policy violations
+	[4e41621e4066]
+
+2017-12-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.ca, web/lang/lang.cs, web/lang/lang.da,
+	web/lang/lang.de, web/lang/lang.el, web/lang/lang.en,
+	web/lang/lang.es, web/lang/lang.eu, web/lang/lang.fi,
+	web/lang/lang.fr, web/lang/lang.he, web/lang/lang.hu,
+	web/lang/lang.id, web/lang/lang.it, web/lang/lang.ja,
+	web/lang/lang.ko, web/lang/lang.nb, web/lang/lang.nl,
+	web/lang/lang.nn, web/lang/lang.no, web/lang/lang.pl,
+	web/lang/lang.pt, web/lang/lang.pt-br, web/lang/lang.ro,
+	web/lang/lang.ru, web/lang/lang.sk, web/lang/lang.sl, web/lang/lang
+	.sr-rs-latin, web/lang/lang.sv, web/lang/lang.th, web/lang/lang.tr,
+	web/lang/lang.zh-cn, web/lang/lang.zh-tw,
+	web/session/functions_session.inc:
+	Removed "You are " text from "You are xxx" link. See SF Support
+	Requests #1393
+	[a8b22ce4903d]
+
+	* web/css/mrbs.css.php, web/session/functions_session.inc:
+	Fixed bug resulting in a "session expired" message when the "You are
+	xxx" link is clicked. See SF Support Requests #1393.
+	[9c9546380027]
+
+2017-12-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* convert_db_to_utf8.php:
+	Fixed problem with updating users table. See SF Support Requests
+	#1390.
+	[805cd01dcb5f]
+
+	* convert_db_to_utf8.php:
+	Fixed bug resulting in a function not found error. See SF Support
+	Requests #1390.
+	[1b4540552b1a]
+
+2017-12-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Improved fix for SF Patches #62
+	[2dc6c2eb300b]
+
+2017-11-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Improved error reporting when PHP sessions aren't working. See SF
+	Support Requests #1364.
+	[c7697b62319f]
+
+2017-11-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/PHPMailer/LICENSE, web/lib/PHPMailer/VERSION,
+	web/lib/PHPMailer/class.phpmailer.php,
+	web/lib/PHPMailer/class.pop3.php, web/lib/PHPMailer/class.smtp.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ba.php,
+	web/lib/PHPMailer/language/phpmailer.lang-cs.php,
+	web/lib/PHPMailer/language/phpmailer.lang-nb.php,
+	web/lib/PHPMailer/language/phpmailer.lang-pt_br.php,
+	web/lib/PHPMailer/language/phpmailer.lang-rs.php,
+	web/lib/PHPMailer/language/phpmailer.lang-tr.php,
+	web/lib/PHPMailer/language/phpmailer.lang-zh_cn.php:
+	Updated PHPMailer to use latest code (5.2.5+) from the 5.2-stable
+	branch. Note that MRBS cannot yet use PHPMailer Version 6.0+ because
+	that requires PHP 5.5 or later.
+	[6d2dc783a874]
+
 2017-11-16  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/edit_entry_handler.php:
+	Merge
+	[6a29bc5d27a5]
+
+	* web/internalconfig.inc.php:
+	Merge
+	[c83727fc6754]
+
+	* .hgtags:
+	Added tag mrbs-1_7_0 for changeset 7e3d9a105985
+	[7971783f7888]
+
+	* NEWS:
+	Fixed release date in NEWS
+	[7e3d9a105985] [mrbs-1_7_0]
+
+	* ChangeLog, NEWS:
+	Updated NEWS and VersionNum for release
+	[20000e689d79]
 
 	* web/version_num.inc:
 	Updated version number for release
-	[8417b7c732b3] [tip]
+	[8417b7c732b3]
 
 2017-11-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
@@ -692,6 +870,31 @@
 	* Merge
 	[89253f8a8594]
 
+2017-10-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Trivial change to test set-up.
+	[e712cadf6f00]
+
+2017-11-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/day.php:
+	Removed unwanted semicolon from query string
+	[d65f79f724a8]
+
+2017-11-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Fixed bug when using all day checkbox and the day stretches past
+	midnight. See SF Patches #62.
+	[5c623553b45b]
+
+2017-10-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/internalconfig.inc.php, web/js/edit_area_room.js.php:
+	Fixed some bugs that occur when $periods is not set
+	[0af8a318fedf]
+
 2017-10-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/js/resizable.js.php:
@@ -736,10 +939,6 @@
 	* web/lib/MRBS/DB_mysql.php:
 	Added error checking to mutex_unlock()
 	[00fd0297229e]
-
-	* web/systemdefaults.inc.php:
-	Trivial change to test set-up.
-	[e712cadf6f00]
 
 2017-10-14  John Beranek  <jberanek@users.sourceforge.net>
 
@@ -1841,15 +2040,17 @@
 	Added MRBS 1.6.0 upgrade step to UPGRADE.
 	[8de8b062a9d3]
 
-	* web/version_num.inc:
-	Updated version number in preparation for release
-	[7346e8dfc1d6]
-
 2017-02-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/functions.inc:
 	Fixed bug introduced in recent commit
 	[ce506efb8fac]
+
+2017-02-11  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Updated version number in preparation for release
+	[7346e8dfc1d6]
 
 2017-01-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
@@ -2318,12 +2519,6 @@
 	* Merge
 	[ea4eaf635cf5]
 
-	* checklang.php, web/session/session_cookie.inc,
-	web/session/session_php.inc:
-	Removed unnecessary uses of $HTTP_SESSION_VARS and
-	$HTTP_COOKIE_VARS.
-	[dec2897a7762]
-
 2016-10-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/edit_users.php:
@@ -2340,6 +2535,14 @@
 	Fixed bug in DB_pgsql::table_exists() which meant that it always
 	returned true and thus broke the upgrade process, for example.
 	[fe0d186d752f]
+
+2016-10-12  John Beranek  <jberanek@users.sourceforge.net>
+
+	* checklang.php, web/session/session_cookie.inc,
+	web/session/session_php.inc:
+	Removed unnecessary uses of $HTTP_SESSION_VARS and
+	$HTTP_COOKIE_VARS.
+	[dec2897a7762]
 
 2016-10-08  John Beranek  <jberanek@users.sourceforge.net>
 
@@ -4143,11 +4346,6 @@
 	* Merged with default
 	[0fc7b1032d41]
 
-	* web/systemdefaults.inc.php:
-	Improved systemdefautls.inc.php comments about new LDAP filter
-	options.
-	[95deadcd3d44]
-
 2015-10-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* sample-data.sql, testdata.php:
@@ -4161,6 +4359,13 @@
 	(2) Flushed output when debug output is being sent to the browser
 	(see SF Support Requests #799)
 	[8fd4e3906c36]
+
+2015-10-16  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/systemdefaults.inc.php:
+	Improved systemdefautls.inc.php comments about new LDAP filter
+	options.
+	[95deadcd3d44]
 
 2015-10-14  John Beranek  <jberanek@users.sourceforge.net>
 
