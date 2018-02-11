@@ -38,6 +38,7 @@ function authLdapAction($callback, $user, &$object)
   global $ldap_group_member_attrib;
   global $ldap_admin_group_dn;
   global $ldap_email_attrib;
+  global $ldap_name_attrib;
   global $ldap_disable_referrals;
   global $ldap_deref;
   global $ldap_filter_base_dn;
@@ -68,6 +69,7 @@ function authLdapAction($callback, $user, &$object)
                         'ldap_v3',
                         'ldap_tls',
                         'ldap_email_attrib',
+                        'ldap_name_attrib',
                         'ldap_disable_referrals',
                         'ldap_deref',
                         'ldap_filter_base_dn',
@@ -571,6 +573,77 @@ function authGetUserLevel($user)
   $user_levels[$user] = $level;
   
   return $user_levels[$user];
+}
+
+/* authLdapGetName($user)
+ *
+ * Gets the name of the user from LDAP
+ *
+ * $user  - The user name
+ *
+ * Returns:
+ *   The user's name or ''
+ */
+function authLdapGetName($user)
+{
+  $name = '';
+  $object = array();
+
+  $res = authLdapAction("authLdapGetNameCallback", $user, $object);
+
+  if ($res)
+  {
+    $name = $object['name'];
+  }
+  return $name;
+}
+
+
+/* authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
+                           $user, &$object)
+ *
+ * Get the name of a found user
+ *
+ * &$ldap       - Reference to the LDAP object
+ * $base_dn     - The base DN
+ * $dn          - The user's DN
+ * $user_search - The LDAP filter to find the user
+ * $user        - The user name
+ * &$object     - Reference to the generic object
+ *
+ * Returns:
+ *   false    - Didn't find a user
+ *   true     - Found a user
+ */
+function authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
+                                 $user, &$object)
+{
+  $name_attrib = $object['config']['ldap_name_attrib'];
+
+  authLdapDebug("authLdapGetNameCallback: base_dn '$base_dn' dn '$dn' ".
+                "user_search '$user_search' user '$user'");
+
+  if ($ldap && $base_dn && $dn && $user_search)
+  {
+    $res = @ldap_read(
+                      $ldap,
+                      $dn,
+                      "(objectclass=*)",
+                      array(utf8_strtolower($name_attrib))
+                     );
+    if (@ldap_count_entries($ldap, $res) > 0)
+    {
+      authLdapDebug("authLdapGetNameCallback: search successful");
+      $entries = ldap_get_entries($ldap, $res);
+      $object['name'] = $entries[0][utf8_strtolower($name_attrib)][0];
+
+      authLdapDebug("authLdapGetNameCallback: name is '".
+                    $object['name']."'");
+
+      return true;
+    }
+  }
+  return false;
 }
 
 

@@ -810,6 +810,10 @@ $ldap_get_user_email = false;
 // The LDAP attribute which holds a user's email address
 // This can be an array.
 $ldap_email_attrib = 'mail';
+// The LDAP attribute which holds a user's name. Another common attribute
+// to use (with Active Directory) is 'displayname'.
+// This can be an array.
+$ldap_name_attrib = 'cn';
 
 // The DN of the LDAP group that MRBS admins must be in. If this is defined
 // then the $auth["admin"] is not used.
