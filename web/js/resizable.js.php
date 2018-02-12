@@ -746,8 +746,8 @@ init = function(args) {
           var tolerance = 2; <?php // px ?>
           var box = downHandler.box;
           var params = getBookingParams(table, tableData, box);
-          $(document).unbind('mousemove',moveHandler);
-          $(document).unbind('mouseup', upHandler);
+          $(document).off('mousemove',moveHandler);
+          $(document).off('mouseup', upHandler);
           <?php // Remove the resizing wrapper so that highlighting comes back on ?>
           $('table.dwm_main').unwrap();
           <?php
