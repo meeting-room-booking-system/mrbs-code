@@ -655,9 +655,11 @@ init = function(args) {
             }
             <?php
           }
-          ?>  
-          downHandler.box.offset(downHandler.origin);
+          ?>
+          
+          <?php // Attach the element to the document before setting the offset ?>
           $(document.body).append(downHandler.box);
+          downHandler.box.offset(downHandler.origin);
         };
       
       var moveHandler = function(e) {
