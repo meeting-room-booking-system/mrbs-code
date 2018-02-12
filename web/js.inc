@@ -16,17 +16,22 @@ $standard_query_string = "area=$area";
   
 // We are using the jQuery UI library, which has been custom built to include the following components:
 //   - Core
-//   - Widget
-//   - Mouse
-//   - Position
-//   - Draggable
-//   - Resizable
-//   - Autocomplete
-//   - Button
-//   - Datepicker
-//   - Dialog
-//   - Menu
-//   - Tabs
+//        - as defined by dependencies in order to support the required interactions and widgets
+//        - no need for jQuery 1.7 support
+//
+//   - Interactions
+//      - Draggable
+//      - Resizable
+//
+//   - Widgets
+//      - Autocomplete
+//      - Button
+//      - Datepicker
+//      - Dialog
+//      - Menu
+//      - Mouse
+//      - Tabs
+//
 //   - Sunny theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
