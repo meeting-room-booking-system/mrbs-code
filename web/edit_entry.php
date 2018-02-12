@@ -524,7 +524,8 @@ function get_field_rooms($value, $disabled=false)
     $field->setLabelAttribute('title', get_vocab('ctrl_click'));
   }
   
-  $field->setAttribute('class', 'multiline')
+  $field->setAttributes(array('class' => 'multiline',
+                              'id'    => 'div_rooms'))
         ->setControlAttributes(array('id'       => 'rooms',
                                      'name'     => 'rooms[]',
                                      'multiple' => $multiroom_allowed, // If multiple is not set then required is unnecessary
