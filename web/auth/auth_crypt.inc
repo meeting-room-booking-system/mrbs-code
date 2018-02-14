@@ -18,8 +18,6 @@ namespace MRBS;
  *
  */
 
-/* ~~JFL 2003/11/12 By default, use the http session mechanism */
-if (!isset($auth['session'])) $auth['session']='http';
 
 
 /* authValidateUser($user, $pass)

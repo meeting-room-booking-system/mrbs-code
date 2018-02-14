@@ -4,10 +4,22 @@ namespace MRBS;
 // include the authentication wrappers
 require_once "auth/auth_$auth[type].inc";
 
-if (isset($auth['session']))
+if (!isset($auth['session']))
 {
-  require_once "session/session_$auth[session].inc";
+  switch ($auth['type'])
+  {
+    case 'joomla':
+    case 'saml':
+    case 'wordpress':
+      $auth['session'] = $auth['type'];
+      break;
+    default:
+      $auth['session'] = 'php';
+      break;
+  }
 }
+
+require_once "session/session_$auth[session].inc";
 
 // MINIMUM PAGE ACCESS LEVELS
 
