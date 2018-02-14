@@ -841,7 +841,7 @@ div#div_custom_html {
 .standard input[type="password"],
 .standard input[type="search"],
 .standard textarea {
-  width: 20em;
+  width: 17rem;  <?php // Use rem not em because fonts may be different ?>
 }
 
 .standard input[type="text"].short {
