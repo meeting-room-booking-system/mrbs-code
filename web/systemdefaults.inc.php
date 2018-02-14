@@ -587,13 +587,17 @@ $report_presentation_field_order = array();
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
 
-$auth["session"] = "php"; // How to get and keep the user ID. One of
-                          // "http", "php", "cookie", "ip", "host", "nt", "omni",
-                          // "remote_user", "joomla" or "wordpress".
+// NOTE: if you are using the 'joomla', 'saml' or 'wordpress' authentication type,
+// then you must use the corresponding session scheme.
 
-$auth["type"] = "db"; // How to validate the user/password. One of "none",
-                      // "config", "db", "db_ext", "pop3", "imap", "ldap", "nis",
-                      // "nw", "ext", "joomla" or "wordpress".
+$auth["type"] = "db"; // How to validate the user/password. One of 
+                      // "auth_basic", "config", "crypt", "db", "db_ext", "imap",
+                      // "imap_php",  "joomla", "ldap", "nis", "none", "nw", "pop3",  
+                      // "saml", "smtp" or "wordpress".
+                      
+$auth["session"] = "php"; // How to get and keep the user ID. One of
+                          // "cookie", "host", "http", "ip", "joomla", "nt", "omni",
+                          // "php", "remote_user", "saml" or "wordpress".
 
 // Configuration parameters for 'cookie' session scheme
 
