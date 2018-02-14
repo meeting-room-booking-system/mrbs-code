@@ -1,9 +1,6 @@
 <?php
 namespace MRBS;
 
-// include the authentication wrappers
-require_once "auth/auth_$auth[type].inc";
-
 if (!isset($auth['session']))
 {
   switch ($auth['type'])
@@ -20,6 +17,8 @@ if (!isset($auth['session']))
 }
 
 require_once "session/session_$auth[session].inc";
+require_once "auth/auth_$auth[type].inc";
+
 
 // MINIMUM PAGE ACCESS LEVELS
 
