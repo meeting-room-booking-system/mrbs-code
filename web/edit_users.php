@@ -106,7 +106,7 @@ function validate_password($password)
         case 'length':
           if (utf8_strlen($password) < $pwd_policy[$rule])
           {
-            return FALSE;
+            return false;
           }
           break;
         default:
@@ -114,9 +114,9 @@ function validate_password($password)
           $pattern[$rule] .= 'u';
 
           $n = preg_match_all($pattern[$rule], $password, $matches);
-          if (($n === FALSE) || ($n < $pwd_policy[$rule]))
+          if (($n === false) || ($n < $pwd_policy[$rule]))
           {
-            return FALSE;
+            return false;
           }
           break;
       }
@@ -124,7 +124,7 @@ function validate_password($password)
   }
   
   // Everything is OK
-  return TRUE;
+  return true;
 }
 
 
@@ -451,15 +451,20 @@ function get_fieldset_password()
 }
 
 
-// Adds the submit buttons.  The second button is a Delete button
-// if $delete is true.
-function get_fieldset_submit_buttons($delete=false, $disabled=false)
+// Adds the submit buttons.
+//    $delete               If true, make the second button a Delete button instead of a Back button
+//    $disabled             If true, disable the Delete button
+//    $last_admin_warning   If true, add a warning about editing the last admin 
+function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin_warning=false)
 {
   $fieldset = new ElementFieldset();
   
-  $p = new ElementP();
-  $p->setText(get_vocab('warning_last_admin'));
-  $fieldset->addElement($p);
+  if ($last_admin_warning)
+  {
+    $p = new ElementP();
+    $p->setText(get_vocab('warning_last_admin'));
+    $fieldset->addElement($p);
+  }
   
   $field = new FieldInputSubmit();
   
@@ -612,7 +617,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
   else
   {
-    $editing_last_admin = FALSE;
+    $editing_last_admin = false;
   }
   
   // Error messages
@@ -720,7 +725,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   // Don't let the last admin be deleted, otherwise you'll be locked out.
   $button_disabled = $delete && $editing_last_admin;
   
-  $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled));
+  $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled, $editing_last_admin));
   
   $form->render();
   
@@ -832,7 +837,7 @@ if (isset($Action) && ($Action == "Update"))
     }
 
     // Now do some form validation
-    $valid_data = TRUE;
+    $valid_data = true;
     foreach ($values as $fieldname => $value)
     {
       switch ($fieldname)
@@ -841,7 +846,7 @@ if (isset($Action) && ($Action == "Update"))
           // check that the name is not empty
           if ($value === '')
           {
-            $valid_data = FALSE;
+            $valid_data = false;
             $q_string .= "&name_empty=1";
           }
 
@@ -862,7 +867,7 @@ if (isset($Action) && ($Action == "Update"))
           $result = db()->query($query, $sql_params);
           if ($result->count() > 0)
           {
-            $valid_data = FALSE;
+            $valid_data = false;
             $q_string .= "&name_not_unique=1";
             $q_string .= "&taken_name=$value";
           }
@@ -871,7 +876,7 @@ if (isset($Action) && ($Action == "Update"))
           // check that the two passwords match
           if ($password0 != $password1)
           {
-            $valid_data = FALSE;
+            $valid_data = false;
             $q_string .= "&pwd_not_match=1";
           }
           // check that the password conforms to the password policy
@@ -881,7 +886,7 @@ if (isset($Action) && ($Action == "Update"))
           {
             if (!validate_password($password0))
             {
-              $valid_data = FALSE;
+              $valid_data = false;
               $q_string .= "&pwd_invalid=1";
             }
           }
@@ -890,7 +895,7 @@ if (isset($Action) && ($Action == "Update"))
           // check that the email address is valid
           if (isset($value) && ($value !== '') && !validate_email_list($value))
           {
-            $valid_data = FALSE;
+            $valid_data = false;
             $q_string .= "&invalid_email=1";
           }
           break;
