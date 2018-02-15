@@ -771,6 +771,8 @@ if (isset($Action) && ($Action == "Update"))
       // first, get all the other form variables and put them into an array, $values, which 
       // we will use for entering into the database assuming we pass validation
       $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+      // Trim the field to remove accidental whitespace
+      $values[$fieldname] = trim($values[$fieldname]);
       // Truncate the field to the maximum length as a precaution.
       if (isset($maxlength["users.$fieldname"]))
       {
