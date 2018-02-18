@@ -235,6 +235,18 @@ select.room_area_select {margin-right: 0.5em}
 .js .js_none {display: none}
 .js .js_hidden {visibility: hidden}
 
+nav#location a {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  background-color: buttonface;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.2em 1em;
+  font-weight: normal;
+  text-transform: capitalize;
+}
+
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
