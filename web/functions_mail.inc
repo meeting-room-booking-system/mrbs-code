@@ -642,9 +642,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       {
         // Repeat number of weeks
         $new = $data['rep_num_weeks'] . ' ' .
-               (($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+               (($data['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
         $old = $mail_previous['rep_num_weeks'] . ' ' .
-               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
         $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
                                         $new,
                                         $old,

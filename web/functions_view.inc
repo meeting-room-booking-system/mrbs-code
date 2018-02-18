@@ -279,7 +279,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case REP_WEEKLY:
         // Repeat number of weeks
         $value = $data['rep_num_weeks'] . ' ';
-        $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks");
+        $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks");
         $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
         // Repeat days
         $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);

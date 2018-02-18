@@ -664,7 +664,7 @@ vocab.minutes = {singular: '<?php echo escape_js(get_vocab("minute_lc")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("minutes")) ?>'};
 vocab.hours   = {singular: '<?php echo escape_js(get_vocab("hour_lc")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("hours")) ?>'};
-vocab.days    = {singular: '<?php echo escape_js(get_vocab("day_lc")) ?>',
+vocab.days    = {singular: '<?php echo escape_js(get_vocab("day")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("days")) ?>'};
 
 

@@ -22,6 +22,33 @@ function get_location_nav($view, $year, $month, $day, $area, $room)
 }
 
 
+function get_view_nav($current_view, $year, $month, $day, $area, $room)
+{
+  $html = '';
+  
+  $html .= "<nav id=\"location\">\n";
+  
+  $views = array('day', 'week', 'month');
+  
+  foreach ($views as $view)
+  {
+    $vars = array('view'  => $view,
+                  'year'  => $year,
+                  'month' => $month,
+                  'day'   => $day,
+                  'area'  => $area,
+                  'room'  => $room);
+                  
+    $query = http_build_query($vars, '', '&amp;');
+    $html .= "<a href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
+  }
+  
+  $html .= "</nav>\n";
+  
+  return $html;
+}
+
+
 function get_calendar_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
@@ -29,7 +56,7 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room)
   $html .= "<nav id=\"calendar\">\n";
   
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
-  
+  $html .= get_view_nav($view, $year, $month, $day, $area, $room);
   
   $html .= "</nav>\n";
   
