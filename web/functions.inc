@@ -1404,7 +1404,7 @@ function period_name($s)
 
 // generates some html that can be used to select which area should be
 // displayed.
-function make_area_select_html($link, $current, $year, $month, $day)
+function make_area_select_html($view, $current, $year, $month, $day)
 {
   global $area_list_format;
   
@@ -1418,15 +1418,17 @@ function make_area_select_html($link, $current, $year, $month, $day)
   {
     $out_html .= "<div id=\"dwm_areas\">\n";
     $out_html .= "<h3>" . get_vocab("areas") . "</h3>\n";
+    $page_date = format_iso_date($year, $month, $day);
+    
     if ($area_list_format == "select")
     {
       $form = new Form();
       
       $form->setAttributes(array('id'     => 'areaChangeForm',
                                  'method' => 'get',
-                                 'action' => $link));
+                                 'action' => "calendar.php?view=$view"));
                                  
-      $form->addHiddenInput('page_date', format_iso_date($year, $month, $day));
+      $form->addHiddenInput('page_date', $page_date);
       
       $select = new ElementSelect();
       $select->setAttributes(array('class'    => 'room_area_select',
@@ -1449,7 +1451,11 @@ function make_area_select_html($link, $current, $year, $month, $day)
       $out_html .= "<ul>\n";
       foreach ($areas as $area_id => $area_name)
       {
-        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=${area_id}\">";
+        $vars = array('view'      => $view,
+                      'page_date' => $page_date,
+                      'area'      => $area_id);
+        $query = http_build_query($vars, '', '&amp;');                      
+        $out_html .= "<li><a href=\"calendar.php?$query\">";
         $out_html .= "<span" . (($area_id == $current) ? ' class="current"' : '') . ">";
         $out_html .= htmlspecialchars($area_name) . "</span></a></li>\n";
       }
