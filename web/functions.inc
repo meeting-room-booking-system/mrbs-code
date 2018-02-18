@@ -1404,7 +1404,7 @@ function period_name($s)
 
 // generates some html that can be used to select which area should be
 // displayed.
-function make_area_select_html($view, $current, $year, $month, $day)
+function make_area_select_html($view, $year, $month, $day, $current)
 {
   global $area_list_format;
   
@@ -1467,7 +1467,7 @@ function make_area_select_html($view, $current, $year, $month, $day)
 } // end make_area_select_html
 
 
-function make_room_select_html ($link, $area, $current, $year, $month, $day)
+function make_room_select_html ($view, $year, $month, $day, $area, $current)
 {
   global $area_list_format;
   
@@ -1480,15 +1480,17 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
   {
     $out_html .= "<div id=\"dwm_rooms\">\n";
     $out_html .= "<h3>" . get_vocab("rooms") . "</h3>";
+    $page_date = format_iso_date($year, $month, $day);
+    
     if ($area_list_format == "select")
     {
       $form = new Form();
       
       $form->setAttributes(array('id'     => 'roomChangeForm',
                                  'method' => 'get',
-                                 'action' => $link));
+                                 'action' => "calendar.php?view=$view"));
                                  
-      $form->addHiddenInputs(array('page_date' => format_iso_date($year, $month, $day),
+      $form->addHiddenInputs(array('page_date' => $page_date,
                                    'area'      => $area));
       
       $select = new ElementSelect();
@@ -1512,7 +1514,12 @@ function make_room_select_html ($link, $area, $current, $year, $month, $day)
       $out_html .= "<ul>\n";
       foreach ($rooms as $room_id => $room_name)
       {
-        $out_html .= "<li><a href=\"$link?year=$year&amp;month=$month&amp;day=$day&amp;area=$area&amp;room=" . $room_id . "\">";
+        $vars = array('view'      => $view,
+                      'page_date' => $page_date,
+                      'area'      => $area,
+                      'room'      => $room_id);
+        $query = http_build_query($vars, '', '&amp;');                      
+        $out_html .= "<li><a href=\"calendar.php?$query\">";
         $out_html .= "<span" . (($room_id == $current) ? ' class="current"' : '') . ">";
         $out_html .= htmlspecialchars($room_name) . "</span></a></li>\n";
       }
