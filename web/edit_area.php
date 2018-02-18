@@ -753,4 +753,4 @@ $form->addElement($outer_fieldset);
 $form->render();
 
 
-output_trailer();
+print_footer();

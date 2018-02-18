@@ -152,7 +152,7 @@ if ($type == "room")
     generate_no_form($room, $area);
 
     echo "</div>\n";
-    output_trailer();
+    print_footer();
     exit;
   }
 }
@@ -179,7 +179,7 @@ if ($type == "area")
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
     echo "</p>\n";
-    output_trailer();
+    print_footer();
     exit;
   }
 }

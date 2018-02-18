@@ -894,5 +894,4 @@ $form->addElement($fieldset);
 $form->render();
 
   
-output_trailer();
-
+print_footer();

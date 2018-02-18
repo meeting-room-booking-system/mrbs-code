@@ -59,5 +59,4 @@ echo "</p>\n";
  
 require_once "site_faq/site_faq" . $faqfilelang . ".html";
 
-output_trailer();
-
+print_footer();

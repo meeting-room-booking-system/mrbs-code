@@ -73,7 +73,7 @@ button.image {
   padding: 0;
 }
 
-div.contents, div.trailer {
+div.contents {
   float: left;
   width: 100%;
   box-sizing: border-box;
@@ -110,7 +110,6 @@ fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no le
 
 
 label::after,
-.trailer_label a::after,
 .list td:first-child::after {
   content: ':';
 }
@@ -120,7 +119,6 @@ label:empty::after, .group label::after {
 }
 
 [lang="fr"] label::after,
-[lang="fr"] .trailer_label a::after,
 [lang="fr"] .list td:first-child::after  {
   content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }
@@ -1253,65 +1251,6 @@ div#site_faq_body {margin-top: 2.0em}
 #site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0} 
 #site_faq_body div {padding-bottom: 0.5em}
 #site_faq_body :target {background-color: <?php echo $help_highlight_color ?>}
-
-
-/* ------------ TRAILER.INC ---------------------*/
-div#trailer {
-  border-top: 1px solid <?php echo $trailer_border_color ?>; 
-  border-bottom: 1px solid <?php echo $trailer_border_color ?>; 
-  float: left;
-  clear: left;
-  margin-top: 1.0em; margin-bottom: 1.5em;
-  padding-top: 0.3em; padding-bottom: 0.3em;
-}
-
-#trailer div {
-  float: left;
-  width: 100%;
-}
-
-#trailer div.trailer_label {
-  float: left;
-  clear: left;
-  width: 20%;
-  max-width: 9.0em;
-  font-weight: bold;
-}
-
-#trailer div.trailer_links {
-  float: left;
-  width: 79%;  /* 79 to avoid rounding problems */
-  padding-left: 1em;
-}
-
-.trailer_label span {
-  margin-right: 1.0em;
-}
-
-#trailer span.current {
-  font-weight: bold;
-}
-
-#trailer span.hidden {
-  font-weight: normal; 
-  background-color: <?php echo $body_background_color ?>;  /* hack: only necessary for IE6 to prevent blurring with opacity */
-  opacity: 0.5;  /* if you change this value, change it in the IE sheets as well */
-}
-
-#trailer .current a {
-  color: <?php echo $highlight_font_color ?>;
-}
-
-div#simple_trailer {
-  clear: both;
-  text-align: center;
-  padding-top: 1.0em;
-  padding-bottom: 2.0em;
-}
-
-#simple_trailer a {
-  padding: 0 1.0em 0 1.0em;
-}
 
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/

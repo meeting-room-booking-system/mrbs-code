@@ -24,7 +24,6 @@ require_once "config.inc.php";
 require_once "internalconfig.inc.php";
 require_once "functions.inc";
 require_once "language.inc";
-require_once "trailer.inc";
 require_once "theme.inc";
 require_once "init.inc";
 require_once "dbsys.inc";

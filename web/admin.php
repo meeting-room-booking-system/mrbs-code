@@ -532,5 +532,4 @@ if ($is_admin || !empty($enabled_areas))
   echo "</div>\n";
 }
 
-output_trailer();
-
+print_footer();

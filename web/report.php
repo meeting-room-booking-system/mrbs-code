@@ -1791,6 +1791,5 @@ if ($cli_mode)
 
 if ($output_form)
 {
-  output_trailer();
+  print_footer();
 }
-

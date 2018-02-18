@@ -121,6 +121,6 @@ function fatal_error($message)
 {
   print_simple_header();
   echo "<p>\n". htmlspecialchars($message) . "</p>\n";
-  output_trailer();
+  print_footer();
   exit;
 }

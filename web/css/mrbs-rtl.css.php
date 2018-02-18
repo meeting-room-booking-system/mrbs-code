@@ -157,16 +157,6 @@ div.report_entry_title, div.report_entry_name, p.report_entries {
   float: right;
 }
 
-/* ------------ TRAILER.INC ---------------------*/
-
-div#trailer, #trailer div, #trailer div.trailer_label,
-#trailer div.trailer_links {
-  float: right;
-}
-
-div#trailer {
-  direction: rtl;
-}
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 

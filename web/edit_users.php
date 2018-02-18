@@ -730,7 +730,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   $form->render();
   
   // Print footer and exit
-  output_trailer();
+  print_footer();
   exit;
 }
 
@@ -1145,6 +1145,5 @@ if ($ajax)
 }
 else
 {
-  output_trailer();
+  print_footer();
 }
-

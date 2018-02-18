@@ -454,7 +454,7 @@ echo "</div>\n";
 if ($room_invalid)
 {
   echo "<h1>".get_vocab("no_rooms_for_area")."</h1>";
-  output_trailer();
+  print_footer();
   exit;
 }
 
@@ -530,5 +530,5 @@ if ($display_calendar_bottom)
   minicals($year, $month, $day, $area, $room, 'month');
 }
 
-output_trailer();
+print_footer();
 

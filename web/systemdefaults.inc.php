@@ -298,8 +298,7 @@ $strftime_format['datetime24']   = "%H:%M - %A %d %B %Y";    // 24 hour clock
 // If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
 // MRBS 1.4.5 and earlier) then use
 // $strftime_format['daymonth']     = "%d %b";
-$strftime_format['daymonth']     = "%b %d";        // Used in trailer
-$strftime_format['monyear']      = "%b %Y";        // Used in trailer
+$strftime_format['daymonth']     = "%b %d";
 $strftime_format['monthyear']    = "%B %Y";        // Used in Month view
 
 // Whether or not to display the timezone
@@ -317,11 +316,6 @@ $refresh_rate = 0;
 // Set to 0 to disable
 $ajax_refresh_rate = 10;
 
-// Trailer type.   false gives a trailer complete with links to days, weeks and months before
-// and after the current date.    true gives a simpler trailer that just has links to the
-// current day, week and month.
-$simple_trailer = false;
-
 // should areas be shown as a list or a drop-down select box?
 $area_list_format = "list";
 //$area_list_format = "select";
@@ -332,9 +326,7 @@ $area_list_format = "list";
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To view weeks in the bottom trailer as week numbers (42) instead of
-// 'first day of the week' (13 Oct), set this to true.  Will also give week
-// numbers in the month view
+// To show ISO week numbers, set this to true
 $view_week_number = false;
 
 // To display week numbers in the mini-calendars, set this to true. The week

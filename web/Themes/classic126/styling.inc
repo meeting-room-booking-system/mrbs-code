@@ -47,8 +47,6 @@ $search_table_border_color      = $standard_font_color;
 
 $site_faq_entry_border_color    = "#C3CCD3";          // used to separate individual FAQ's in help.php
 
-$trailer_border_color           = $main_table_border_color;
-
 $anchor_link_color              = "#5B69A6";          // link color
 $anchor_visited_color           = "#5B69A6";          // link color (visited)
 $anchor_hover_color             = "red";              // link color (hover)

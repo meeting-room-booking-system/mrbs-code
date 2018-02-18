@@ -303,4 +303,4 @@ if ($auth['allow_custom_html'])
 }
 
 
-output_trailer();
+print_footer();

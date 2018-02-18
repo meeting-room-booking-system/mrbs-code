@@ -104,5 +104,4 @@ if ($display_calendar_bottom)
   minicals($year, $month, $day, $area, $room, 'week');
 }
 
-output_trailer(); 
-
+print_footer(); 

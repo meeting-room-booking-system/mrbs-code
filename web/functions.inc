@@ -265,7 +265,7 @@ function print_header($day=null, $month=null, $year=null, $area=null, $room=null
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer($and_exit)
+function print_footer($and_exit=false)
 {
   global $theme;
   

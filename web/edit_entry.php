@@ -1726,5 +1726,4 @@ $form->addElement(get_fieldset_submit_buttons());
 $form->render();
 
 
-output_trailer();
-
+print_footer();
