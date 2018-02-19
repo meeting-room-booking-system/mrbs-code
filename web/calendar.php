@@ -2,6 +2,7 @@
 namespace MRBS;
 
 require "defaultincludes.inc";
+require_once "functions_table.inc";
 
 
 function get_location_nav($view, $year, $month, $day, $area, $room)
@@ -68,6 +69,7 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room)
 
 // Get non-standard form variables
 $ajax = get_form_var('ajax', 'int');
+$timetohighlight = get_form_var('timetohighlight', 'int');
 $view = get_form_var('view', 'string', isset($default_view) ? $default_view : 'day');
 
 // Check the user is authorised for this page
@@ -76,9 +78,38 @@ if (!checkAuthorised($just_check = $ajax))
   exit;
 }
 
+switch ($view)
+{
+  case 'day':
+    $inner_html = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+    break;
+  case 'week':
+    $inner_html = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+    break;
+  case 'month':
+    $inner_html = month_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+    break;
+  default:
+    throw new \Exception("Unknown view '$view'");
+    break;
+}
+
+
+if ($ajax)
+{
+  echo $inner_html;
+  exit;
+}
+
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
+
+echo "<table class=\"dwm_main\" id=\"day_main\" data-resolution=\"$resolution\">\n";
+echo $inner_html;
+echo "</table>\n";
+
+show_colour_key();
 
 print_footer();

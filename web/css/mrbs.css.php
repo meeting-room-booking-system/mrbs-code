@@ -1166,12 +1166,12 @@ div#cal_last {float: left}
 div#cal_this {float: left; margin-left: 1.0em}
 div#cal_next {float: left; margin-left: 1.0em}
 
-table.calendar {
+table.minicalendar {
   border-spacing: 0;
   border-collapse: collapse;
 }
 
-.calendar th {
+.minicalendar th {
   min-width: 2.0em;
   text-align: center;
   font-weight: normal;
@@ -1179,7 +1179,7 @@ table.calendar {
   color: <?php echo $standard_font_color ?>;
 }
 
-.calendar td {
+.minicalendar td {
   text-align: center;
   font-size: x-small;
 }
@@ -1187,9 +1187,9 @@ table.calendar {
 <?php
 // set the styling for the "hidden" days in the mini-cals
 ?>
-.calendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>} 
-.calendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
-.calendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
+.minicalendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>} 
+.minicalendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
+.minicalendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
 
