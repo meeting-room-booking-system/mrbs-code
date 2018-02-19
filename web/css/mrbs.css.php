@@ -247,6 +247,13 @@ nav#location a {
   text-transform: capitalize;
 }
 
+nav#location a.selected, nav#location a:hover, nav#location a:focus {
+  background-color: #555555;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+
 /* ------------ ADMIN.PHP ---------------------------*/
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
