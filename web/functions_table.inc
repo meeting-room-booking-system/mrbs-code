@@ -730,10 +730,6 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
   }
   
-  // form the room parameter for use in query strings.    We want to preserve room information
-  // if possible when switching between views
-  $room_param = (empty($room_id)) ? "" : "&amp;room=$room_id";
-  
   // ensure that $morningstarts_minutes defaults to zero if not set
   if (!isset($morningstarts_minutes))
   {
@@ -828,11 +824,19 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     
     foreach($rooms as $room)
     {
-      // Put the room_id in a data attribute so that JavaScript can pick it up
-      $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">
-                        <a href=\"week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=" . $room['id'] . "\"
-                        title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . "\">" .
-                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? " (" . $room['capacity'] . ")" : "") . "</a></th>\n";
+      $vars = array('view'  => 'week',
+                    'year'  => $year,
+                    'month' => $month,
+                    'day'   => $day,
+                    'area'  => $area_id,
+                    'room'  => $room['id']);
+                    
+      $query = http_build_query($vars, '', '&amp;'); 
+      // Put the room_id in a data attribute so that JavaScript can pick it up        
+      $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">" .
+                       "<a href=\"calendar.php?$query\"" .
+                       'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
+                       htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
     }
   
     // next line to display times on right side
@@ -859,12 +863,6 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   // the day after to generate timesteps through the day as this
   // will ensure a constant time step
   
-  // URL for highlighting a time. Don't use REQUEST_URI or you will get
-  // the timetohighlight parameter duplicated each time you click.
-  $base_url="day.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id$room_param";
-  
-  
-   
   $row_class = 'even_row';
   
   // We can display the table in two ways
@@ -874,7 +872,16 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     foreach ($rooms as $room)
     {
       $tbody .= "<tr class=\"$row_class\">\n";
-      $room_cell_link = "week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=" . $room['id'];
+      
+      $vars = array('view'  => 'week',
+                    'year'  => $year,
+                    'month' => $month,
+                    'day'   => $day,
+                    'area'  => $area_id,
+                    'room'  => $room['id']);
+                    
+      $room_cell_link = "calendar.php?" . http_build_query($vars, '', '&amp;'); 
+      
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
       for ($s = $morning_slot_seconds;
@@ -916,15 +923,29 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     {
       // Show the time linked to the URL for highlighting that time
       $class = $row_class;
+      
+      $vars = array('view'  => 'day',
+                    'year'  => $year,
+                    'month' => $month,
+                    'day'   => $day,
+                    'area'  => $area_id);
+                    
+      if (isset($room_id))
+      {
+        $vars['room'] = $room_id;
+      }
+       
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
         $class .= " row_highlight";
-        $url = $base_url;
       }
       else
       {
-        $url = $base_url . "&amp;timetohighlight=$s";
+        $vars['timetohighlight'] = $s;
       }
+      
+      $url = "calendar.php?" . http_build_query($vars, '', '&amp;');
+      
       $tbody .= "<tr class=\"$class\">\n";
       $tbody .= time_cell_html($s, $url);
       $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
