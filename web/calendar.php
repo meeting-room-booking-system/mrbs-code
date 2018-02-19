@@ -40,7 +40,9 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
                   'room'  => $room);
                   
     $query = http_build_query($vars, '', '&amp;');
-    $html .= "<a href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
+    $html .= "<a";
+    $html .= ($view == $current_view) ? ' class="selected"' : '';
+    $html .= " href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
   }
   
   $html .= "</nav>\n";
