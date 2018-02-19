@@ -260,7 +260,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
 
 
 
-function cell_html($cell, $query_strings, $is_invalid = FALSE)
+function cell_html($cell, $query_vars, $is_invalid = FALSE)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -289,11 +289,11 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
   // the cell can be maximised.   (Multiple bookings can arise in a cell if the resolution
   // of an existing database in increased or the booking day is shifted).
   
-  // $query_strings is an array containg the query strings (or partial query strings) to be
-  // appended to the link used for the cell.    It is indexed as follows:
-  //    ['new_periods']   the string to be used for an empty cell if using periods
-  //    ['new_times']     the string to be used for an empty cell if using times
-  //    ['booking']       the string to be used for a full cell
+  // $query_vars is an array containg the query vars to be used in the link for the cell.
+  // It is indexed as follows:
+  //    ['new_periods']   the vars to be used for an empty cell if using periods
+  //    ['new_times']     the vars to be used for an empty cell if using times
+  //    ['booking']       the vars to be used for a full cell
   //
   // $is_invalid specifies whether the slot actually exists or is one of the non-existent
   // slots in the transition to DST
@@ -427,7 +427,12 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
                (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
                ">\n";
       $html .= "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
-      $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
+      
+      $vars = $query_vars['booking'];
+      $vars['id'] = $id;
+      $query = http_build_query($vars, '', '&amp;');
+      
+      $html .= "<a href=\"view_entry.php?$query\" title=\"$long_descr\">";
       $html .= ($is_repeat) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
       $html .= "$descr</a>\n";
       $html .= "</div>\n";
@@ -521,10 +526,11 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
         // Don't provide a link if the slot doesn't really exist
         if (!$is_invalid)
         {
+          $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
+          $query = http_build_query($vars, '', '&amp;');
+          
           $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-          $html .= "<a href=\"edit_entry.php?" . 
-                   (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
-                   "\">\n";
+          $html .= "<a href=\"edit_entry.php?$query\">\n";
           if ($show_plus_link)
           {
             $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -538,7 +544,12 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
         $html .= "<div data-id=\"$id\" data-type=\"$color\" class=\"celldiv slots" .
                  (($times_along_top) ? "1" : $slots) .
                  "\">\n";
-        $html .= "<a href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\" title=\"$long_descr\">";
+                 
+        $vars = $query_vars['booking'];
+        $vars['id'] = $id;
+        $query = http_build_query($vars, '', '&amp;');
+      
+        $html .= "<a href=\"view_entry.php?$query\" title=\"$long_descr\">";
         $html .= ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
         $html .= "$descr</a>\n";
         $html .= "</div>\n";
@@ -665,11 +676,11 @@ function get_n_time_slots()
 
 
 // $s is nominal seconds
-function get_query_strings($area, $room, $month, $day, $year, $s)
+function get_query_vars($area, $room, $month, $day, $year, $s)
 {
   global $morningstarts, $morningstarts_minutes;
   
-  $query_strings = array();
+  $result = array();
   
   // check to see if the time is really on the next day
   $date = getdate(mktime(0, 0, $s, $month, $day, $year));
@@ -681,11 +692,17 @@ function get_query_strings($area, $room, $month, $day, $year, $s)
   $hour = $date['hours'];
   $minute = $date['minutes'];
   $period = period_index($s);
-  $query_strings['new_periods'] = "area=$area&amp;room=$room&amp;period=$period&amp;year=$year&amp;month=$month&amp;day=$day";
-  $query_strings['new_times']   = "area=$area&amp;room=$room&amp;hour=$hour&amp;minute=$minute&amp;year=$year&amp;month=$month&amp;day=$day";
-  $query_strings['booking']     = "area=$area&amp;day=$day&amp;month=$month&amp;year=$year";
+  
+  $vars = array('year'  => $year,
+                'month' => $month,
+                'day'   => $day,
+                'area'  => $area);
+                
+  $result['booking']     = $vars;
+  $result['new_periods'] = array_merge($vars, array('room' => $room, 'period' => $period));
+  $result['new_times']   = array_merge($vars, array('room' => $room, 'hour' => $hour, 'minute' => $minute));
  
-  return $query_strings;
+  return $result;
 }
 
 // Gets the width in % of the main data columns in the day and week views
@@ -894,15 +911,15 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         {
           $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
         }
-        // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area_id, $room['id'], $month, $day, $year, $s);
+        // set up the query vars to be used for the link in the cell
+        $query_vars = get_query_vars($area_id, $room['id'], $month, $day, $year, $s);
 
         // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
         {
           $today[$room['id']][$day][$s] = array();
         }
-        $tbody .= cell_html($today[$room['id']][$day][$s], $query_strings, $is_invalid[$s]);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ( FALSE != $row_labels_both_sides )
       {
@@ -952,15 +969,15 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       // Loop through the list of rooms we have for this area
       foreach ($rooms as $room)
       {
-        // set up the query strings to be used for the link in the cell
-        $query_strings = get_query_strings($area_id, $room['id'], $month, $day, $year, $s);
+        // set up the query vars to be used for the link in the cell
+        $query_vars = get_query_vars($area_id, $room['id'], $month, $day, $year, $s);
         
         // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
         {
           $today[$room['id']][$day][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($today[$room['id']][$day][$s], $query_strings, $is_invalid);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid);
       }
       
       // next lines to display times on right side
