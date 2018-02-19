@@ -1426,9 +1426,10 @@ function make_area_select_html($view, $year, $month, $day, $current)
       
       $form->setAttributes(array('id'     => 'areaChangeForm',
                                  'method' => 'get',
-                                 'action' => "calendar.php?view=$view"));
+                                 'action' => 'calendar.php'));
                                  
-      $form->addHiddenInput('page_date', $page_date);
+      $form->addHiddenInputs(array('view'      => $view,
+                                   'page_date' => $page_date));
       
       $select = new ElementSelect();
       $select->setAttributes(array('class'    => 'room_area_select',
@@ -1488,9 +1489,10 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
       
       $form->setAttributes(array('id'     => 'roomChangeForm',
                                  'method' => 'get',
-                                 'action' => "calendar.php?view=$view"));
+                                 'action' => 'calendar.php'));
                                  
-      $form->addHiddenInputs(array('page_date' => $page_date,
+      $form->addHiddenInputs(array('view'      => $view,
+                                   'page_date' => $page_date,
                                    'area'      => $area));
       
       $select = new ElementSelect();

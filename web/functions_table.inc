@@ -1149,11 +1149,17 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
       }
       else  
       {
+        $vars = array('view'  => 'day',
+                      'year'  => strftime("%Y", $t),
+                      'month' => strftime("%m", $t),
+                      'day'   => strftime('%d', $t),
+                      'area'  => $area_id,
+                      'room'  => $room_id);
+                      
+        $query = http_build_query($vars, '', '&amp;');
         // Put the date into a data attribute so that it can be picked up by JavaScript
         $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%">' .
-                         '<a href="day.php?year=' . strftime("%Y", $t) . 
-                         '&amp;month=' . strftime("%m", $t) . '&amp;day=' . strftime('%d', $t) . 
-                         '&amp;area=' . $area_id . '" title="' . get_vocab('viewday') . '">' .
+                         "<a href=\"calendar.php?$query\" title=\"" . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
@@ -1176,9 +1182,6 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
 
-  // URL for highlighting a time. Don't use REQUEST_URI or you will get
-  // the timetohighlight parameter duplicated each time you click.
-  $base_url="week.php?year=$year&amp;month=$month&amp;day=$day&amp;area=$area_id&amp;room=$room_id";
   $row_class = "even_row";
 
   // We can display the table in two ways
@@ -1207,26 +1210,32 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
         $wdate = date('Y-n-d', $wt);
       
         $day_cell_text = utf8_strftime($dformat, $wt);
-        $day_cell_link = "day.php?year=" . strftime("%Y", $wt) . 
-                         "&amp;month=" . strftime("%m", $wt) . 
-                         "&amp;day=" . strftime("%d", $wt) . 
-                         "&amp;area=$area_id";
+        
+        $vars = array('view'  => 'day',
+                      'year'  => strftime("%Y", $wt),
+                      'month' => strftime("%m", $wt),
+                      'day'   => strftime("%d", $wt),
+                      'area'  => $area_id,
+                      'room'  => $room_id);
+                      
+        $day_cell_link = 'calendar.php?' . http_build_query($vars, '', '&amp;');
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
+        
         for ($s = $morning_slot_seconds;
              $s <= $evening_slot_seconds;
              $s += $resolution)
         {
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          // set up the query strings to be used for the link in the cell
-          $query_strings = get_query_strings($area_id, $room_id, $wmonth, $wday, $wyear, $s);
+          // set up the query vars to be used for the link in the cell
+          $query_vars = get_query_vars($area_id, $room_id, $wmonth, $wday, $wyear, $s);
 
           // and then draw the cell
           if (!isset($week_map[$room_id][$thisday][$s]))
           {
             $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_strings, $is_invalid);
+          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }  // end looping through the time slots
         if ( FALSE != $row_labels_both_sides )
         {
@@ -1249,15 +1258,25 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
     {
       // Show the time linked to the URL for highlighting that time:
       $class = $row_class;
+      
+      $vars = array('view'  => 'week',
+                    'year'  => $year,
+                    'month' => $month,
+                    'day'   => $day,
+                    'area'  => $area_id,
+                    'room'  => $room_id);
+                    
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
         $class .= " row_highlight";
-        $url = $base_url;
       }
       else
       {
-        $url = $base_url . "&amp;timetohighlight=$s";
+        $vars['timetohighlight'] = $s;
       }
+      
+      $url = 'calendar.php?' . http_build_query($vars, '', '&amp;');
+  
       $tbody.= "<tr class=\"$class\">";
       $tbody .= time_cell_html($s, $url);
   
@@ -1272,20 +1291,20 @@ function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohi
         }
         else
         {
-          // set up the query strings to be used for the link in the cell
+          // set up the query vars to be used for the link in the cell
           $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
           $wday = date("d", $wt);
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          $query_strings = get_query_strings($area_id, $room_id, $wmonth, $wday, $wyear, $s);
+          $query_vars = get_query_vars($area_id, $room_id, $wmonth, $wday, $wyear, $s);
      
           // and then draw the cell
           if (!isset($week_map[$room_id][$thisday][$s]))
           {
             $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_strings, $is_invalid);
+          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }
   
       }    // for loop
