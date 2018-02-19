@@ -26,7 +26,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav id=\"location\">\n";
+  $html .= "<nav id=\"view\">\n";
   
   $views = array('day', 'week', 'month');
   

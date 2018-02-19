@@ -235,19 +235,24 @@ select.room_area_select {margin-right: 0.5em}
 .js .js_none {display: none}
 .js .js_hidden {visibility: hidden}
 
-nav#location a {
+nav#view {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+nav#view a {
   -webkit-appearance: button;
   -moz-appearance: button;
   appearance: button;
   background-color: buttonface;
   cursor: pointer;
-  display: inline-block;
   padding: 0.2em 1em;
   font-weight: normal;
+  text-align: center;
   text-transform: capitalize;
 }
 
-nav#location a.selected, nav#location a:hover, nav#location a:focus {
+nav#view a.selected, nav#view a:hover, nav#view a:focus {
   background-color: #555555;
   color: #ffffff;
   text-decoration: none;
