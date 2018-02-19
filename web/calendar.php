@@ -84,7 +84,7 @@ switch ($view)
     $inner_html = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'week':
-    $inner_html = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+    $inner_html = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'month':
     $inner_html = month_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);

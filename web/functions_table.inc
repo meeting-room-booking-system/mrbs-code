@@ -996,7 +996,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
 }
 
 
-function week_table_innerhtml($day, $month, $year, $room_id, $area_id, $timetohighlight=NULL)
+function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=NULL)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
