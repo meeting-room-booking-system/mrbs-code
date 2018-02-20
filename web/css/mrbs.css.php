@@ -463,7 +463,7 @@ img.repeat_symbol {float: right; padding: 3px}
 div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking */ 
 <?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 100px} /* NOTE:  if you change the value of (min-)height, make sure you */
                                                                          /* also change the value of height in mrbs-ielte6.css */
-.month a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
+#month_main a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
        
 div.cell_header {position: relative; width: 100%; z-index: 20;         /* needs to be above the new booking anchor */
      min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}

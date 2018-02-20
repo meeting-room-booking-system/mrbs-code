@@ -87,7 +87,7 @@ switch ($view)
     $inner_html = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'month':
-    $inner_html = month_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+    $inner_html = month_table_innerhtml($year, $month, $day, $area, $room);
     break;
   default:
     throw new \Exception("Unknown view '$view'");
@@ -106,7 +106,7 @@ print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
-echo "<table class=\"dwm_main\" id=\"day_main\" data-resolution=\"$resolution\">\n";
+echo "<table class=\"dwm_main\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
 
