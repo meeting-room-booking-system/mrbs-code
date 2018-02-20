@@ -246,6 +246,7 @@ nav.view a, nav.arrow a {
   appearance: button;
   background-color: buttonface;
   cursor: pointer;
+  line-height: 1.8em;
   padding: 0.2em 1em;
   font-weight: normal;
   text-align: center;
@@ -256,6 +257,14 @@ nav.view a.selected, nav.view a:hover, nav.view a:focus {
   background-color: #555555;
   color: #ffffff;
   text-decoration: none;
+}
+
+nav.arrow a.prev::before {
+  content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
+}
+
+nav.arrow a.next::after {
+  content: '\00276f';  /* HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
 

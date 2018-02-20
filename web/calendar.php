@@ -46,7 +46,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
     $html .= " href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
   }
   
-  $html .= "</nav>\n";
+  $html .= "</nav>";
   
   return $html;
 }
@@ -54,16 +54,13 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 
 function get_arrow_nav($view, $year, $month, $day, $area, $room)
 {
-  $left_arrow  = '&#x276e';  // HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT
-  $right_arrow = '&#x276f';  // HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT
-  
   $html = '';
   
   $html .= "<nav class=\"arrow\">\n";
-  $html .= "<a href=\"#\">$left_arrow</a>";
+  $html .= "<a class=\"prev\" href=\"#\"></a>";  // Content will be filled in by CSS
   $html .= "<a href=\"#\">" . get_vocab('today') . "</a>";
-  $html .= "<a href=\"#\">$right_arrow</a>";
-  $html .= "</nav>\n";
+  $html .= "<a class=\"next\" href=\"#\"></a>";  // Content will be filled in by CSS
+  $html .= "</nav>";
   
   return $html;
   
