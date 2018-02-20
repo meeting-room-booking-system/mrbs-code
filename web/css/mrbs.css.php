@@ -235,6 +235,27 @@ select.room_area_select {margin-right: 0.5em}
 .js .js_none {display: none}
 .js .js_hidden {visibility: hidden}
 
+nav.main_calendar {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+nav.main_calendar > nav {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+nav.main_calendar > nav:first-child {
+  justify-content: flex-start;
+}
+
+nav.main_calendar > nav:last-child {
+  justify-content: flex-end;
+}
+
 nav.view {
   display: inline-grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -399,12 +420,13 @@ div#dwm {margin-bottom: 0.5em}
 table.dwm_main {
   float: left;
   clear: both; 
-  width: 100%; 
+  width: 100%;
+  margin: 1em 0;
   border-spacing: 0;
   border-collapse: separate;
   border-color: <?php echo $main_table_border_color ?>;
   border-width: <?php echo $main_table_border_width ?>px;
-  border-style: solid
+  border-style: solid;
 }
 
 .dwm_main td {padding: 0;

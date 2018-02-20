@@ -151,7 +151,7 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav id=\"calendar\">\n";
+  $html .= "<nav class=\"main_calendar\">\n";
   
   $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
