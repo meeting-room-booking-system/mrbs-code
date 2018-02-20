@@ -56,10 +56,29 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
+  switch ($view)
+  {
+    case 'day':
+      $title_prev = get_vocab('daybefore');
+      $title_next = get_vocab('dayafter');
+      break;
+    case 'week':
+      $title_prev = get_vocab('weekbefore');
+      $title_next = get_vocab('weekafter');
+      break;
+    case 'month':
+      $title_prev = get_vocab('monthbefore');
+      $title_next = get_vocab('monthafter');
+      break;
+    default:
+      throw new \Exception("Unknown view '$view'");
+      break;
+  }
+  
   $html .= "<nav class=\"arrow\">\n";
-  $html .= "<a class=\"prev\" href=\"#\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"prev\" title=\"$title_prev\" href=\"#\"></a>";  // Content will be filled in by CSS
   $html .= "<a href=\"#\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next\" href=\"#\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"next\" title=\"$title_next\"  href=\"#\"></a>";  // Content will be filled in by CSS
   $html .= "</nav>";
   
   return $html;
