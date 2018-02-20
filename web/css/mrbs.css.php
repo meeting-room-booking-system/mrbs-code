@@ -226,7 +226,9 @@ table.display span.normal {
   display: inline;
 }
 
-select.room_area_select {margin-right: 0.5em}
+select.room_area_select {
+  margin: 0 0.5em;
+}
 
 <?php
 // Don't display anything with a class of js_none (used for example for hiding Submit
