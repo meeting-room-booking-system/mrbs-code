@@ -289,11 +289,16 @@ nav.view a, nav.arrow a {
   text-transform: capitalize;
 }
 
-nav.view a.selected, nav.view a:hover, nav.view a:focus {
-  background-color: #555555;
+nav a.selected,
+nav.view a:hover,
+nav.view a:focus,
+nav.arrow a:hover,
+nav.arrow a:focus {
+  background-color: <?php echo $banner_back_color ?>;
   color: #ffffff;
   text-decoration: none;
 }
+
 
 nav.arrow a.prev::before {
   content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
