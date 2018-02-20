@@ -1,8 +1,138 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementSelect;
+
 require "defaultincludes.inc";
 require_once "functions_table.inc";
+
+
+// generates some html that can be used to select which area should be
+// displayed.
+function make_area_select_html($view, $year, $month, $day, $current)
+{
+  global $area_list_format;
+  
+  $out_html = '';
+  
+  $areas = get_area_names();
+
+  // Only show the areas if there are more than one of them, otherwise
+  // there's no point
+  if (count($areas) > 1)
+  {
+    $page_date = format_iso_date($year, $month, $day);
+    
+    if ($area_list_format == "select")
+    {
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'areaChangeForm',
+                                 'method' => 'get',
+                                 'action' => 'calendar.php'));
+                                 
+      $form->addHiddenInputs(array('view'      => $view,
+                                   'page_date' => $page_date));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'area_select',
+                                   'name'     => 'area',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($areas, $current, true);
+      $form->addElement($select);
+      
+      // Note:  the submit button will not be displayed if JavaScript is enabled
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
+    }
+    else // list format
+    {
+      $out_html .= "<ul>\n";
+      foreach ($areas as $area_id => $area_name)
+      {
+        $vars = array('view'      => $view,
+                      'page_date' => $page_date,
+                      'area'      => $area_id);
+        $query = http_build_query($vars, '', '&amp;');                      
+        $out_html .= "<li><a href=\"calendar.php?$query\">";
+        $out_html .= "<span" . (($area_id == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($area_name) . "</span></a></li>\n";
+      }
+      $out_html .= "</ul>\n";
+    }
+  }
+  return $out_html;
+} // end make_area_select_html
+
+
+function make_room_select_html ($view, $year, $month, $day, $area, $current)
+{
+  global $area_list_format;
+  
+  $out_html = '';
+  $rooms = get_room_names($area);
+  
+  // Only show the rooms if there's more than one of them, otherwise
+  // there's no point
+  if (count($rooms) > 1)
+  {
+    $page_date = format_iso_date($year, $month, $day);
+    
+    if ($area_list_format == "select")
+    {
+      $form = new Form();
+      
+      $form->setAttributes(array('id'     => 'roomChangeForm',
+                                 'method' => 'get',
+                                 'action' => 'calendar.php'));
+                                 
+      $form->addHiddenInputs(array('view'      => $view,
+                                   'page_date' => $page_date,
+                                   'area'      => $area));
+      
+      $select = new ElementSelect();
+      $select->setAttributes(array('class'    => 'room_area_select',
+                                   'id'       => 'room_select',
+                                   'name'     => 'room',
+                                   'onchange' => 'this.form.submit()'))
+             ->addSelectOptions($rooms, $current, true);
+      $form->addElement($select);
+      
+      // Note:  the submit button will not be displayed if JavaScript is enabled
+      $submit = new ElementInputSubmit();
+      $submit->setAttributes(array('class' => 'js_none',
+                                   'value' => get_vocab('change')));
+      $form->addElement($submit);
+      
+      $out_html .= $form->toHTML();
+    }
+    else  // list format
+    {
+      $out_html .= "<ul>\n";
+      foreach ($rooms as $room_id => $room_name)
+      {
+        $vars = array('view'      => $view,
+                      'page_date' => $page_date,
+                      'area'      => $area,
+                      'room'      => $room_id);
+        $query = http_build_query($vars, '', '&amp;');                      
+        $out_html .= "<li><a href=\"calendar.php?$query\">";
+        $out_html .= "<span" . (($room_id == $current) ? ' class="current"' : '') . ">";
+        $out_html .= htmlspecialchars($room_name) . "</span></a></li>\n";
+      }
+      $out_html .= "</ul>\n";
+    }
+  }
+  return $out_html;
+} // end make_room_select_html
+
 
 
 // Gets the link to the next/previous day/week/month

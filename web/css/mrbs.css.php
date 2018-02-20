@@ -237,9 +237,10 @@ select.room_area_select {margin-right: 0.5em}
 
 nav.main_calendar {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
   width: 100%;
+  margin-top: 1em;
 }
 
 nav.main_calendar > nav {
@@ -335,7 +336,10 @@ div#div_custom_html {
   float: left;
 }
   
-#roomChangeForm select, #areaChangeForm select {display: block; float: left; margin: -0.1em 1.5em 0 0}
+#roomChangeForm select, #areaChangeForm select {
+  font-size: larger;
+}
+
 #roomChangeForm input, #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
 
 #roomChangeForm input.button, #areaChangeForm button.image {
@@ -370,7 +374,6 @@ $column_month = number_format($column_month, 1, '.', '');  // (%) tidy the numbe
 
 ?>
 div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
-div#dwm_areas, div#dwm_rooms  {float: left; margin-right: 2.0em}
 #dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
     margin-top: 0; margin-bottom: 0.5em; padding-bottom: 0}
 #dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
