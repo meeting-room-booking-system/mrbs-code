@@ -1589,30 +1589,44 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       $html .= "<div class=\"cell_container\">\n";
       
       $html .= "<div class=\"cell_header\">\n";
+      
+      $vars = array('year'  => $year,
+                    'month' => $month,
+                    'day'   => $cday,
+                    'area'  => $area,
+                    'room'  => $room);
+                      
       // If it's a Monday (the start of the ISO week), show the week number
       if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
       {
-        $html .= "<a class=\"week_number\" href=\"week.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area&amp;room=$room\">";
+        $vars['view'] = 'week';          
+        $query = http_build_query($vars, '', '&amp;');
+        $html .= "<a class=\"week_number\" href=\"calendar.php?$query\">";
         $html .= date("W", gmmktime(12, 0, 0, $month, $cday, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
-      $html .= "<a class=\"monthday\" href=\"day.php?year=$year&amp;month=$month&amp;day=$cday&amp;area=$area\">$cday</a>\n";
+      $vars['view'] = 'day';          
+      $query = http_build_query($vars, '', '&amp;');
+      $html .= "<a class=\"monthday\" href=\"calendar.php?$query\">$cday</a>\n";
 
       $html .= "</div>\n";
       
       // then the link to make a new booking
-      $query_string = "room=$room&amp;area=$area&amp;year=$year&amp;month=$month&amp;day=$cday";
+      unset($vars['view']);
+      
       if ($enable_periods)
       {
-        $query_string .= "&amp;period=0";
+        $vars['period'] = 0;
       }
       else
       {
-        $query_string .= "&amp;hour=$morningstarts&amp;minute=$morningstarts_minutes";
+        $vars['hour'] = $morningstarts;
+        $vars['minute'] = $morningstarts_minutes;
       }
       
-      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
+      $query = http_build_query($vars, '', '&amp;');
+      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query\">\n";
       if ($show_plus_link)
       {
         $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -1644,7 +1658,14 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
           }
           $class .= " $monthly_view_entries_details";
           $html .= "<div class=\"" . $class . "\">\n";
-          $booking_link = "view_entry.php?id=" . $d[$cday]["id"][$i] . "&amp;day=$cday&amp;month=$month&amp;year=$year";
+          
+          $vars = array('id'    => $d[$cday]["id"][$i],
+                        'year'  => $year,
+                        'month' => $month,
+                        'day'   => $cday);
+                        
+          $query = http_build_query($vars, '', '&amp;');
+          $booking_link = "view_entry.php?$query";
           $slot_text = $d[$cday]["data"][$i];
           $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
           $full_text = $slot_text . " " . $description_text;
