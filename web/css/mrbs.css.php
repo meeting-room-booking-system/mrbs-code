@@ -237,6 +237,18 @@ select.room_area_select {
 .js .js_none {display: none}
 .js .js_hidden {visibility: hidden}
 
+h2.date, span.timezone {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0.1em;
+}
+
+span.timezone {
+  opacity: 0.8;
+  font-size: smaller;
+}
+
 nav.main_calendar {
   display: flex;
   align-items: center;
@@ -375,16 +387,6 @@ if ($n_hidden_days < 7)                                  // (avoid the div by ze
 $column_month = number_format($column_month, 1, '.', '');  // (%) tidy the number up and make sure it's valid for CSS (no commas)
 
 ?>
-div#dwm_header {width: 100%; float: left; margin-top: 1.0em; margin-bottom: 0.5em}
-#dwm_header h3 {font-size: small; font-weight: normal; text-decoration: underline; 
-    margin-top: 0; margin-bottom: 0.5em; padding-bottom: 0}
-#dwm_header ul {list-style-type: none; padding-left: 0; margin-left: 0; margin-top: 0}
-#dwm_header li {padding-left: 0; margin-left: 0}
-
-div#dwm {margin-bottom: 0.5em}
-#dwm {text-align: center}
-#dwm h2 {margin-bottom: 0}
-#dwm div.timezone {opacity: 0.8}
 
 .date_nav {
   float: left;

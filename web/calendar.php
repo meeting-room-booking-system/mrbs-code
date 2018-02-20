@@ -293,6 +293,44 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room)
 }
 
 
+function get_date_heading($view, $year, $month, $day)
+{
+  global $strftime_format, $display_timezone;
+  
+  $html = '';
+  $time = mktime(12, 0, 0, $month, $day, $year);
+  
+  $html .= '<h2 class="date">';
+  
+  switch ($view)
+  {
+    case 'day':
+      $html .= utf8_strftime($strftime_format['date'], $time);
+      break;
+    case 'week':
+      $html .= 'Still to do!!!';
+      break;
+    case 'month':
+      $html .= utf8_strftime($strftime_format['monthyear'], $time);
+      break;
+    default:
+      throw new \Exception("Unknown view '$view'");
+      break;
+  }
+  
+  $html .= '</h2>';
+  
+  if ($display_timezone)
+  {
+    $html .= '<span class="timezone">';
+    $html .= get_vocab("timezone") . ": " . date('T', $time) . " (UTC" . date('O', $time) . ")";
+    $html .= '</span>';
+  }
+  
+  return $html;
+}
+
+
 // Get non-standard form variables
 $ajax = get_form_var('ajax', 'int');
 $timetohighlight = get_form_var('timetohighlight', 'int');
@@ -330,6 +368,7 @@ if ($ajax)
 // print the page header
 print_header($day, $month, $year, $area, isset($room) ? $room : null);
 
+echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
 echo "<table class=\"dwm_main\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
