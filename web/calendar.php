@@ -9,7 +9,7 @@ function get_location_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav id=\"location\">\n";
+  $html .= "<nav class=\"location\">\n";
   $html .= make_area_select_html($view, $year, $month, $day, $area);
   
   if ($view !== 'day')
@@ -27,7 +27,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav id=\"view\">\n";
+  $html .= "<nav class=\"view\">\n";
   
   $views = array('day', 'week', 'month');
   
@@ -52,12 +52,31 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 }
 
 
+function get_arrow_nav($view, $year, $month, $day, $area, $room)
+{
+  $left_arrow  = '&#x276e';  // HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT
+  $right_arrow = '&#x276f';  // HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT
+  
+  $html = '';
+  
+  $html .= "<nav class=\"arrow\">\n";
+  $html .= "<a href=\"#\">$left_arrow</a>";
+  $html .= "<a href=\"#\">" . get_vocab('today') . "</a>";
+  $html .= "<a href=\"#\">$right_arrow</a>";
+  $html .= "</nav>\n";
+  
+  return $html;
+  
+}
+
+
 function get_calendar_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
   $html .= "<nav id=\"calendar\">\n";
   
+  $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
   $html .= get_view_nav($view, $year, $month, $day, $area, $room);
   

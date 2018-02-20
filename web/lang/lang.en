@@ -23,6 +23,7 @@ $vocab["outstanding"]        = "pending bookings";
 $vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Areas";
+$vocab["today"]              = "today";
 $vocab["daybefore"]          = "Go To Day Before";
 $vocab["dayafter"]           = "Go To Day After";
 $vocab["gototoday"]          = "Go To Today";
