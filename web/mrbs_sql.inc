@@ -64,8 +64,6 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     $starts = getdate($row['start_time']);
-    $param_ym = "area=$area&amp;year=$starts[year]&amp;month=".$starts['mon'];
-    $param_ymd = $param_ym . "&amp;day=" . $starts['mday'];
 
     if ($enable_periods)
     {
@@ -85,12 +83,22 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
        $row['name'] = get_vocab("unavailable");
     }
 
-    // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $err[] = "<a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
-      . " (" . $startstr . ', ' . $row['room_name'] .") "
-      . "<span>(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
-      . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
-      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</span>";
+    // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
+    $vars = array('year'  => $starts['year'],
+                  'month' => $starts['mon'],
+                  'day'   => $starts['mday'],
+                  'area'  => $area,
+                  'room'  => $room_id);
+                  
+    $query = http_build_query($vars, '', '&amp;');
+    
+    $err[] = "<a href=\"view_entry.php?id=" .$row['id'] . '">' . $row['name'] . '</a>' .
+             ' (' . $startstr . ', ' . $row['room_name'] . ') ' .
+             '<span>(' .
+             "<a href=\"calendar.php?view=day&amp;$query\">" . get_vocab('viewday') . '</a> | ' .
+             "<a href=\"calendar.php?view=week&amp;$query\">" . get_vocab('viewweek') . '</a> | ' .
+             "<a href=\"calendar.php?view=month&amp;$query\">" . get_vocab('viewmonth') . '</a>' .
+             ')</span>';
   }
 
   return $err;
