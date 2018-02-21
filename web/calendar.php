@@ -216,6 +216,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
   $html = '';
   
   $html .= "<nav class=\"view\">\n";
+  $html .= "<div class=\"container\">";  // helps the CSS
   
   $views = array('day', 'week', 'month');
   
@@ -234,6 +235,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
     $html .= " href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
   }
   
+  $html .= "</div>";
   $html .= "</nav>";
   
   return $html;
