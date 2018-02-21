@@ -327,7 +327,7 @@ if ($ajax)
 }
 
 // print the page header
-print_header($day, $month, $year, $area, isset($room) ? $room : null);
+print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);

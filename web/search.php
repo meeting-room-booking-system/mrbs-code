@@ -160,7 +160,7 @@ if (!isset($search_str))
   
 if (!$ajax)
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : null, $search_str);
+  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null, $search_str);
 
   if (!empty($advanced))
   {

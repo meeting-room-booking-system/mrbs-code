@@ -199,14 +199,14 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($day=null, $month=null, $year=null, $area=null, $room=null, $search_str=null, $simple=true);
+  print_header($view=null, $year=null, $month=null, $day=null, $area=null, $room=null, $search_str=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($day=null, $month=null, $year=null, $area=null, $room=null, $search_str=null, $simple=false)
+function print_header($view=null, $year=null, $month=null, $day=null, $area=null, $room=null, $search_str=null, $simple=false)
 {
-  global $theme;
+  global $theme, $default_view;
   
   static $done_header = false;
   
@@ -226,21 +226,26 @@ function print_header($day=null, $month=null, $year=null, $area=null, $room=null
     // This will set the correct timezone for the area
     get_area_settings($area);  
   }
+  
+  if (!isset($view))
+  {
+    $view = (isset($default_view)) ? $default_view : 'day';
+  }
 
   // If we dont know the right date then make it up 
-  if (!isset($day))
+  if (!isset($year))
   {
-    $day   = date("d");
+    $year = date('Y');
   }
   if (!isset($month))
   {
-    $month = date("m");
+    $month = date('m');
   }
-  if (!isset($year))
+  if (!isset($day))
   {
-    $year  = date("Y");
+    $day = date('d');
   }
-  
+
   // Load the print_theme_header function appropriate to the theme.    If there
   // isn't one then fall back to the default header.
   if (is_readable("Themes/$theme/header.inc"))
@@ -253,7 +258,7 @@ function print_header($day=null, $month=null, $year=null, $area=null, $room=null
   }
   
   // Now go and do it
-  print_theme_header($day, $month, $year, $area, $room, $simple, $search_str);
+  print_theme_header($view, $year, $month, $day, $area, $room, $simple, $search_str);
   
   $done_header = true;
 }

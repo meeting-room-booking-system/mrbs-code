@@ -194,7 +194,7 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
 }
 
 
-function print_nav($day, $month, $year, $area, $room, $search_str=null, $simple=false)
+function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $simple=false)
 {
   $query_string = "day=$day&amp;month=$month&amp;year=$year";
   if (!empty($area))
@@ -256,7 +256,7 @@ function print_unsupported_message()
 {
   echo "<div class=\"unsupported_message\">\n";
   echo "<header class=\"banner simple\">\n";
-  print_nav(null, null, null, null, null, null, $simple=true);
+  print_nav(null, null, null, null, null, null, null, $simple=true);
   echo "</header>\n";
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
@@ -268,7 +268,7 @@ function print_unsupported_message()
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($day, $month, $year, $area, $room, $simple=false, $search_str=null)
+function print_theme_header($view, $year, $month, $day, $area, $room, $simple=false, $search_str=null)
 {
   $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
@@ -313,7 +313,7 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
   print_unsupported_message();
   
   echo "<header class=\"$class\">\n";
-  print_nav($day, $month, $year, $area, $room, $search_str, $simple);
+  print_nav($view, $year, $month, $day, $area, $room, $search_str, $simple);
   echo "</header>\n";
 
   // This <div> should really be moved out of here so that we can always see

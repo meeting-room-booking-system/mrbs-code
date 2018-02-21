@@ -117,5 +117,5 @@ if ($info = get_booking_info($id, FALSE, TRUE))
 }
 
 // If you got this far then we got an access denied.
-showAccessDenied($day, $month, $year, $area);
+showAccessDenied($view, $year, $month, $day, $area);
 

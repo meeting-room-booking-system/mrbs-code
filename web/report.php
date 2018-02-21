@@ -1627,7 +1627,7 @@ if ($ajax)
 }
 elseif ($output_form)
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : null);
+  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 }
 else
 {

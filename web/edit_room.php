@@ -257,7 +257,7 @@ $user = getUserName();
 $required_level = (isset($max_level) ? $max_level : 2);
 $is_admin = (authGetUserLevel($user) >= $required_level);
 
-print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
+print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
 // Get the details for this room
 if (empty($room) || is_null($data = get_room_details($room)))
