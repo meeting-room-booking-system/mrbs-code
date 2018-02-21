@@ -71,7 +71,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
 
 function output_row($row)
 {
-  global $ajax, $json_data;
+  global $ajax, $json_data, $view;
   
   $values = array();
   // booking name
@@ -81,7 +81,18 @@ function output_row($row)
   $values[] = htmlspecialchars($row['create_by']);
   // start time and link to day view
   $date = getdate($row['start_time']);
-  $link = "<a href=\"day.php?day=$date[mday]&amp;month=$date[mon]&amp;year=$date[year]&amp;area=".$row['area_id']."\">";
+  
+  $vars = array('view'  => $view,
+                'year'  => $date['year'],
+                'month' => $date['mon'],
+                'day'   => $date['mday'],
+                'area'  => $row['area_id'],
+                'room'  => $row['room_id']);
+                
+  $query = http_build_query($vars, '', '&amp;');
+                
+  $link = "<a href=\"calendar.php?$query\">";
+  
   if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
@@ -336,7 +347,7 @@ if (!$ajax_capable || $ajax)
 {
   // Now we set up the "real" query
   $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
-                 R.area_id, A.enable_periods
+                 E.room_id, R.area_id, A.enable_periods
             FROM $tbl_entry E, $tbl_room R, $tbl_area A
            WHERE $sql_pred
         ORDER BY E.start_time asc";
