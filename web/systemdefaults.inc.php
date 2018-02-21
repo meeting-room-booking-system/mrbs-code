@@ -316,10 +316,6 @@ $refresh_rate = 0;
 // Set to 0 to disable
 $ajax_refresh_rate = 10;
 
-// should areas be shown as a list or a drop-down select box?
-$area_list_format = "list";
-//$area_list_format = "select";
-
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
 // "both" for both. Default is "both", but 6 entries per day are shown instead
