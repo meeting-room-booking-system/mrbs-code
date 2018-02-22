@@ -1306,8 +1306,16 @@ div#record_numbers {
 }
 
 div#record_nav {
-  font-weight: bold;
-  margin-bottom: 1.0em;
+  float: left;
+  margin: 0.5em 0;
+}
+
+div#record_nav form {
+  float: left;
+}
+
+div#record_nav form:first-child {
+  margin-right: 1em;
 }
 
 /* ------------ SITE_FAQ ------------------------*/
