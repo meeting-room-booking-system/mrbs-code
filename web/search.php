@@ -154,7 +154,9 @@ if (!isset($search_str))
 {
   $search_str = '';
 }
-  
+
+$search_start_time = mktime(0, 0, 0, $month, $day, $year);
+
 if (!$ajax)
 {
   print_header($day, $month, $year, $area, isset($room) ? $room : null, $search_str);
@@ -205,16 +207,14 @@ if (!$ajax)
     output_trailer();
     exit;
   }
-
-  // now is used so that we only display entries newer than the current time
+  
   echo "<h3>";
-  echo get_vocab("search_results") . ": ";
-  echo "\"<span id=\"search_str\">" . htmlspecialchars($search_str) . "</span>\"";
+  echo get_vocab("search_results",
+                 htmlspecialchars($search_str),
+                 htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));
   echo "</h3>\n";
 }  // if (!$ajax)
 
-
-$now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
 // NOTE: syntax_caseless_contains() modifies our SQL params for us
@@ -255,7 +255,7 @@ foreach ($fields as $field)
 }
 
 $sql_pred .= ") AND (E.end_time > ?)";
-$sql_params[] = $now;
+$sql_params[] = $search_start_time;
 $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
 
