@@ -85,7 +85,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($day, $month, $year, $area, $room)
+function print_goto_date($view, $year, $month, $day, $area, $room)
 {
   $user = getUserName();
   
@@ -130,9 +130,22 @@ function print_goto_date($day, $month, $year, $area, $room)
     echo "<div id=\"n_outstanding\"" .
          (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
          ">\n";
-    echo "<a href=\"pending.php?day=$day&amp;month=$month&amp;year=$year&amp;area=$area" . 
-         ((!empty($room)) ? "&amp;room=$room" : "") . 
-         "\">$n_outstanding " . get_vocab("outstanding") . "</a>\n";
+    
+    $vars = array('view'  => $view,
+                  'year'  => $year,
+                  'month' => $month,
+                  'day'   => $day,
+                  'area'  => $area);
+                  
+    if (isset($room))
+    {
+      $vars['room'] = $room;
+    }
+    
+    $query = http_build_query($vars, '', '&');
+    
+    echo '<a href="pending.php?' . htmlspecialchars($query) .
+         "\">$n_outstanding " . get_vocab('outstanding') . "</a>\n";
     echo "</div>\n";
   }
 }
@@ -216,7 +229,7 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
   if (!$simple)
   {
     echo "<li>\n";
-    print_goto_date($day, $month, $year, $area, $room);
+    print_goto_date($view, $year, $month, $day, $area, $room);
     echo "</li>\n";
     
     echo "<li>\n";
