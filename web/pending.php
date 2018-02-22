@@ -208,7 +208,7 @@ function display_entry_row(array $row)
   echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
     
-  // start date, with a link to the day.php
+  // start date, with a link to the calendar view
   $link = getdate($row['start_time']);
   echo "<td>";
   // <span> for sorting
