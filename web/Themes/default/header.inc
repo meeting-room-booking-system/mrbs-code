@@ -95,7 +95,9 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   
   $form->setAttributes(array('id'     => $form_id,
                              'method' => 'get',
-                             'action' => 'day.php'));
+                             'action' => 'calendar.php'))
+       ->addHiddenInput('view', $view);
+                    
   if (isset($area))
   {
     $form->addHiddenInput('area', $area);
