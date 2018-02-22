@@ -28,10 +28,7 @@ require_once "session/session_$auth[session].inc";
 // read features.   However if $auth['deny_public_access'] is TRUE then
 // access to the public is denied
 $page_level['calendar.php']              = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['day.php']                   = ($auth['deny_public_access']) ? 1 : 0;
 $page_level['help.php']                  = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['month.php']                 = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['week.php']                  = ($auth['deny_public_access']) ? 1 : 0;
 
 // These pages reveal usernames, which could be of assistance to someone trying to
 // break into the system, so users are required to be logged in before viewing them.
