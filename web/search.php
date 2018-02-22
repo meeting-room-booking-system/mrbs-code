@@ -50,9 +50,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
     // display "Previous" and "Next" buttons
     $hidden_inputs = array('search_str' => $search_str,
                            'total'      => $total,
-                           'from_year'  => $year,
-                           'from_month' => $month,
-                           'from_day'   => $day);
+                           'from_date'  => format_iso_date($year, $month, $day));
                            
     $hidden_inputs['search_pos'] = max(0, $search_pos - $search['count']);         
     $html .= get_search_nav_button($hidden_inputs , get_vocab('previous'), !$has_prev);
@@ -167,7 +165,9 @@ if (!isset($search_str))
 {
   $search_str = '';
 }
-  
+
+$search_start_time = mktime(0, 0, 0, $month, $day, $year);
+
 if (!$ajax)
 {
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null, $search_str);
@@ -218,16 +218,14 @@ if (!$ajax)
     print_footer();
     exit;
   }
-
-  // now is used so that we only display entries newer than the current time
+  
   echo "<h3>";
-  echo get_vocab("search_results") . ": ";
-  echo "\"<span id=\"search_str\">" . htmlspecialchars($search_str) . "</span>\"";
+  echo get_vocab("search_results",
+                 htmlspecialchars($search_str),
+                 htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));
   echo "</h3>\n";
 }  // if (!$ajax)
 
-
-$now = mktime(0, 0, 0, $month, $day, $year);
 
 // This is the main part of the query predicate, used in both queries:
 // NOTE: syntax_caseless_contains() modifies our SQL params for us
@@ -268,7 +266,7 @@ foreach ($fields as $field)
 }
 
 $sql_pred .= ") AND (E.end_time > ?)";
-$sql_params[] = $now;
+$sql_params[] = $search_start_time;
 $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
 
@@ -374,9 +372,7 @@ if (!$ajax)
   
   // Put the search parameters as data attributes so that the JavaScript can use them
   echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
-  echo ' data-from_day="' . htmlspecialchars($day) . '"';
-  echo ' data-from_month="' . htmlspecialchars($month) . '"';
-  echo ' data-from_year="' . htmlspecialchars($year) . '"';
+  echo ' data-from_date="' . htmlspecialchars(format_iso_date($year, $month, $day)) . '"';
   
   echo ">\n";
   echo "<thead>\n";

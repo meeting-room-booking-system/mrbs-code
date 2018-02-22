@@ -269,7 +269,7 @@ $vocab["warning_last_admin"] = "Warning!  This is the last admin and so you cann
 
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
-$vocab["search_results"]     = "Search Results for";
+$vocab["search_results"]     = 'Search results for \'%1$s\' from %2$s';
 $vocab["nothing_found"]      = "No matching entries found.";
 $vocab["records"]            = "Records ";
 $vocab["through"]            = " through ";

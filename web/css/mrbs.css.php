@@ -1293,9 +1293,6 @@ button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
-span#search_str {
-  color: <?php echo $highlight_font_color ?>;
-}
 
 p#nothing_found {
   font-weight: bold;
