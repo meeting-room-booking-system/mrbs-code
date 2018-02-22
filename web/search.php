@@ -50,9 +50,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
     // display "Previous" and "Next" buttons
     $hidden_inputs = array('search_str' => $search_str,
                            'total'      => $total,
-                           'from_year'  => $year,
-                           'from_month' => $month,
-                           'from_day'   => $day);
+                           'from_date'  => format_iso_date($year, $month, $day));
                            
     $hidden_inputs['search_pos'] = max(0, $search_pos - $search['count']);         
     $html .= get_search_nav_button($hidden_inputs , get_vocab('previous'), !$has_prev);
@@ -363,9 +361,7 @@ if (!$ajax)
   
   // Put the search parameters as data attributes so that the JavaScript can use them
   echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
-  echo ' data-from_day="' . htmlspecialchars($day) . '"';
-  echo ' data-from_month="' . htmlspecialchars($month) . '"';
-  echo ' data-from_year="' . htmlspecialchars($year) . '"';
+  echo ' data-from_date="' . htmlspecialchars(format_iso_date($year, $month, $day)) . '"';
   
   echo ">\n";
   echo "<thead>\n";
