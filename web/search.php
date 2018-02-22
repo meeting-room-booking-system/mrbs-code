@@ -87,9 +87,9 @@ function output_row($row)
                 'area'  => $row['area_id'],
                 'room'  => $row['room_id']);
                 
-  $query = http_build_query($vars, '', '&amp;');
+  $query = http_build_query($vars, '', '&');
                 
-  $link = "<a href=\"calendar.php?$query\">";
+  $link = '<a href="calendar.php?' . htmlspecialchars($query) . '">';
   
   if(empty($row['enable_periods']))
   {

@@ -90,14 +90,14 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
                   'area'  => $area,
                   'room'  => $room_id);
                   
-    $query = http_build_query($vars, '', '&amp;');
+    $query = http_build_query($vars, '', '&');
     
     $err[] = "<a href=\"view_entry.php?id=" .$row['id'] . '">' . $row['name'] . '</a>' .
              ' (' . $startstr . ', ' . $row['room_name'] . ') ' .
              '<span>(' .
-             "<a href=\"calendar.php?view=day&amp;$query\">" . get_vocab('viewday') . '</a> | ' .
-             "<a href=\"calendar.php?view=week&amp;$query\">" . get_vocab('viewweek') . '</a> | ' .
-             "<a href=\"calendar.php?view=month&amp;$query\">" . get_vocab('viewmonth') . '</a>' .
+             '<a href="calendar.php?view=day&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewday') . '</a> | ' .
+             '<a href="calendar.php?view=week&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewweek') . '</a> | ' .
+             '<a href="calendar.php?view=month&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewmonth') . '</a>' .
              ')</span>';
   }
 

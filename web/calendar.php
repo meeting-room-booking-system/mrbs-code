@@ -133,7 +133,7 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
                 'area'  => $area,
                 'room'  => $room);
   
-  return 'calendar.php?' . http_build_query($vars, '', '&amp;');
+  return 'calendar.php?' . http_build_query($vars, '', '&');
 }
 
 
@@ -149,7 +149,7 @@ function get_today_link($view, $area, $room)
                 'area'  => $area,
                 'room'  => $room);
   
-  return 'calendar.php?' . http_build_query($vars, '', '&amp;');
+  return 'calendar.php?' . http_build_query($vars, '', '&');
 }
 
 
@@ -175,8 +175,8 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav class=\"view\">\n";
-  $html .= "<div class=\"container\">";  // helps the CSS
+  $html .= '<nav class="view">';
+  $html .= '<div class="container">';  // helps the CSS
   
   $views = array('day', 'week', 'month');
   
@@ -189,14 +189,14 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
                   'area'  => $area,
                   'room'  => $room);
                   
-    $query = http_build_query($vars, '', '&amp;');
-    $html .= "<a";
+    $query = http_build_query($vars, '', '&');
+    $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= " href=\"calendar.php?$query\">" . htmlspecialchars(get_vocab($view)) . "</a>";
+    $html .= ' href="calendar.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($view)) . '</a>';
   }
   
-  $html .= "</div>";
-  $html .= "</nav>";
+  $html .= '</div>';
+  $html .= '</nav>';
   
   return $html;
 }
@@ -230,9 +230,9 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
   $link_next = get_adjacent_link($view, $year, $month, $day, $area, $room, true);
   
   $html .= "<nav class=\"arrow\">\n";
-  $html .= "<a class=\"prev\" title=\"$title_prev\" href=\"" . $link_prev . "\"></a>";  // Content will be filled in by CSS
-  $html .= "<a href=\"" . $link_today . "\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next\" title=\"$title_next\" href=\"" . $link_next . "\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"prev\" title=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
+  $html .= "<a href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
+  $html .= "<a class=\"next\" title=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
   $html .= "</nav>";
   
   return $html;

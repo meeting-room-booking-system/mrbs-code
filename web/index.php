@@ -13,6 +13,6 @@ $vars = array('view'  => $default_view,
               'area'  => $area,
               'room'  => $room);
               
-$query = http_build_query($vars);
+$query = http_build_query($vars, '', '&');
 
 header("Location: calendar.php?$query");

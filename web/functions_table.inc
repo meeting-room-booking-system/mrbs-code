@@ -430,9 +430,9 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       
       $vars = $query_vars['booking'];
       $vars['id'] = $id;
-      $query = http_build_query($vars, '', '&amp;');
+      $query = http_build_query($vars, '', '&');
       
-      $html .= "<a href=\"view_entry.php?$query\" title=\"$long_descr\">";
+      $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . "\" title=\"$long_descr\">";
       $html .= ($is_repeat) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
       $html .= "$descr</a>\n";
       $html .= "</div>\n";
@@ -527,10 +527,10 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         if (!$is_invalid)
         {
           $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
-          $query = http_build_query($vars, '', '&amp;');
+          $query = http_build_query($vars, '', '&');
           
           $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
-          $html .= "<a href=\"edit_entry.php?$query\">\n";
+          $html .= "<a href=\"edit_entry.php?" . htmlspecialchars($query) . "\">\n";
           if ($show_plus_link)
           {
             $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -547,9 +547,9 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
                  
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
-        $query = http_build_query($vars, '', '&amp;');
+        $query = http_build_query($vars, '', '&');
       
-        $html .= "<a href=\"view_entry.php?$query\" title=\"$long_descr\">";
+        $html .= "<a href=\"view_entry.php?" . htmlspecialchars($query) . "\" title=\"$long_descr\">";
         $html .= ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
         $html .= "$descr</a>\n";
         $html .= "</div>\n";
@@ -848,10 +848,10 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
                     'area'  => $area_id,
                     'room'  => $room['id']);
                     
-      $query = http_build_query($vars, '', '&amp;'); 
+      $query = http_build_query($vars, '', '&'); 
       // Put the room_id in a data attribute so that JavaScript can pick it up        
       $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">" .
-                       "<a href=\"calendar.php?$query\"" .
+                       '<a href="calendar.php?' . htmlspecialchars($query) . '"' .
                        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
     }
@@ -897,7 +897,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
                     'area'  => $area_id,
                     'room'  => $room['id']);
                     
-      $room_cell_link = "calendar.php?" . http_build_query($vars, '', '&amp;'); 
+      $room_cell_link = "calendar.php?" . htmlspecialchars(http_build_query($vars, '', '&')); 
       
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
@@ -961,7 +961,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         $vars['timetohighlight'] = $s;
       }
       
-      $url = "calendar.php?" . http_build_query($vars, '', '&amp;');
+      $url = "calendar.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
       
       $tbody .= "<tr class=\"$class\">\n";
       $tbody .= time_cell_html($s, $url);
@@ -1156,10 +1156,10 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
                       'area'  => $area_id,
                       'room'  => $room_id);
                       
-        $query = http_build_query($vars, '', '&amp;');
+        $query = http_build_query($vars, '', '&');
         // Put the date into a data attribute so that it can be picked up by JavaScript
         $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%">' .
-                         "<a href=\"calendar.php?$query\" title=\"" . get_vocab('viewday') . '">' .
+                         '<a href="calendar.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
@@ -1218,7 +1218,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
                       'area'  => $area_id,
                       'room'  => $room_id);
                       
-        $day_cell_link = 'calendar.php?' . http_build_query($vars, '', '&amp;');
+        $day_cell_link = 'calendar.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         
@@ -1275,7 +1275,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
         $vars['timetohighlight'] = $s;
       }
       
-      $url = 'calendar.php?' . http_build_query($vars, '', '&amp;');
+      $url = 'calendar.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
   
       $tbody.= "<tr class=\"$class\">";
       $tbody .= time_cell_html($s, $url);
@@ -1600,15 +1600,15 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
       {
         $vars['view'] = 'week';          
-        $query = http_build_query($vars, '', '&amp;');
-        $html .= "<a class=\"week_number\" href=\"calendar.php?$query\">";
+        $query = http_build_query($vars, '', '&');
+        $html .= '<a class="week_number" href="calendar.php?' . htmlspecialchars($query) . '">';
         $html .= date("W", gmmktime(12, 0, 0, $month, $cday, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
       $vars['view'] = 'day';          
-      $query = http_build_query($vars, '', '&amp;');
-      $html .= "<a class=\"monthday\" href=\"calendar.php?$query\">$cday</a>\n";
+      $query = http_build_query($vars, '', '&');
+      $html .= '<a class="monthday" href="calendar.php?' . htmlspecialchars($query) . "\">$cday</a>\n";
 
       $html .= "</div>\n";
       
@@ -1625,8 +1625,8 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
         $vars['minute'] = $morningstarts_minutes;
       }
       
-      $query = http_build_query($vars, '', '&amp;');
-      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query\">\n";
+      $query = http_build_query($vars, '', '&');
+      $html .= '<a class="new_booking" href="edit_entry.php?' . htmlspecialchars($query) . "\">\n";
       if ($show_plus_link)
       {
         $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -1664,8 +1664,8 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
                         'month' => $month,
                         'day'   => $cday);
                         
-          $query = http_build_query($vars, '', '&amp;');
-          $booking_link = "view_entry.php?$query";
+          $query = http_build_query($vars, '', '&');
+          $booking_link = 'view_entry.php?' . htmlspecialchars($query);
           $slot_text = $d[$cday]["data"][$i];
           $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
           $full_text = $slot_text . " " . $description_text;
