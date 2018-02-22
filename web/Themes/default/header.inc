@@ -151,25 +151,25 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 }
 
 
-function print_help($query_string)
+function print_help($query)
 {
-  echo "<a href=\"help.php?$query_string\">" . get_vocab("help") . "</a>\n";
+  echo '<a href="help.php?' . htmlspecialchars($query) . '">' . get_vocab('help') . "</a>\n";
 }
 
 
-function print_rooms($query_string)
+function print_rooms($query)
 {
-  echo "<a href=\"admin.php?$query_string\">" . get_vocab("rooms") . "</a>\n";
+  echo '<a href="admin.php?' . htmlspecialchars($query) . '">' . get_vocab('rooms') . "</a>\n";
 }
 
 
-function print_report($query_string)
+function print_report($query)
 {
-  echo "<a href=\"report.php?$query_string\">" . get_vocab("report") . "</a>\n";
+  echo '<a href="report.php?' . htmlspecialchars($query) . '">' . get_vocab('report') . "</a>\n";
 }
 
 
-function print_search($day, $month, $year, $area, $room, $search_str=null)
+function print_search($view, $year, $month, $day, $area, $room, $search_str=null)
 {
   if (!isset($search_str))
   {
@@ -183,9 +183,10 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
   $form->setAttributes(array('id'     => 'header_search',
                              'method' => 'post',
                              'action' => 'search.php'))
-       ->addHiddenInputs(array('day'   => $day,
+       ->addHiddenInputs(array('view'  => $view,
+                               'year'  => $year,
                                'month' => $month,
-                               'year'  => $year));
+                               'day'   => $day));
   if (!empty($area))
   {
     $form->addHiddenInput('area', $area);
@@ -209,15 +210,21 @@ function print_search($day, $month, $year, $area, $room, $search_str=null)
 
 function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $simple=false)
 {
-  $query_string = "day=$day&amp;month=$month&amp;year=$year";
+  $vars = array('view'  => $view,
+                'year'  => $year,
+                'month' => $month,
+                'day'   => $day);
+                
   if (!empty($area))
   {
-    $query_string .= "&amp;area=$area";
+    $vars['area'] = $area;
   }
   if (!empty($room))
   {
-    $query_string .= "&amp;room=$room";
+    $vars['room'] = $room;
   }
+  
+  $query = http_build_query($vars, '', '&');
   
   echo "<nav>\n";
   echo "<ul>\n";
@@ -233,19 +240,19 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
     echo "</li>\n";
     
     echo "<li>\n";
-    print_help($query_string);
+    print_help($query);
     echo "</li>\n";
     
     echo "<li>\n";
-    print_rooms($query_string);
+    print_rooms($query);
     echo "</li>\n";
     
     echo "<li>\n";
-    print_report($query_string);
+    print_report($query);
     echo "</li>\n";
     
     echo "<li>\n";
-    print_search($day, $month, $year, $area, $room, $search_str);
+    print_search($view, $year, $month, $day, $area, $room, $search_str);
     echo "</li>\n";
     
     // For session protocols that define their own logon box...
