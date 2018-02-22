@@ -192,8 +192,10 @@ function display_series_title_row($row)
 }
 
 // display an entry in a row
-function display_entry_row($row)
+function display_entry_row(array $row)
 {
+  global $view;
+  
   echo "<tr>\n";
   echo "<td>&nbsp;</td>\n";
     
@@ -211,7 +213,18 @@ function display_entry_row($row)
   echo "<td>";
   // <span> for sorting
   echo "<span title=\"" . $row['start_time'] . "\"></span>";
-  echo "<a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
+  
+  $vars = array('view'  => $view,
+                'year'  => $link['year'],
+                'month' => $link['mon'],
+                'day'   => $link['mday'],
+                'area'  => $row['area_id'],
+                'room'  => $row['room_id']);
+                
+  $query = http_build_query($vars, '', '&');
+  
+  echo '<a href="calendar.php?' .htmlspecialchars($query) . '">';
+  
   if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
@@ -220,6 +233,7 @@ function display_entry_row($row)
   {
     list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
   }
+  
   echo htmlspecialchars($link_str) . "</a></td>";
     
   // action buttons
