@@ -3,6 +3,7 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputSearch;
 use MRBS\Form\FieldInputSubmit;
@@ -10,6 +11,24 @@ use MRBS\Form\FieldInputSubmit;
 require "defaultincludes.inc";
 
 
+function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
+{
+  $html = '';
+  
+  $form = new Form();
+  $form->setAttributes(array('action' => 'search.php',
+                             'method' => 'post'));
+  $form->addHiddenInputs($hidden_inputs);
+  $submit = new ElementInputSubmit();
+  $submit->setAttributes(array('value'    => $value,
+                               'disabled' => $disabled));
+  $form->addElement($submit);
+  $html .= $form->toHTML();
+  
+  return $html;
+}
+
+  
 function generate_search_nav_html($search_pos, $total, $num_records, $search_str)
 {
   global $day, $month, $year;
@@ -27,41 +46,20 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
     $html .= "</div>\n";
   
     $html .= "<div id=\"record_nav\">\n";
-    $base_query_string = "search_str=" . urlencode($search_str) . "&amp;" .
-                         "total=$total&amp;" .
-                         "from_year=$year&amp;" .
-                         "from_month=$month&amp;" .
-                         "from_day=$day";
-    // display a "Previous" button if necessary
-    if($has_prev)
-    {
-      $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos-$search["count"]);
-      $html .= "<a href=\"search.php?$query_string\">";
-    }
 
-    $html .= get_vocab("previous");
-
-    if ($has_prev)
-    {
-      $html .= "</a>";
-    }
-
-    // add a separator for Next and Previous
-    $html .= (" | ");
-
-    // display a "Previous" button if necessary
-    if ($has_next)
-    {
-      $query_string = $base_query_string . "&amp;search_pos=" . max(0, $search_pos+$search["count"]);
-      $html .= "<a href=\"search.php?$query_string\">";
-    }
-
-    $html .= get_vocab("next");
+    // display "Previous" and "Next" buttons
+    $hidden_inputs = array('search_str' => $search_str,
+                           'total'      => $total,
+                           'from_year'  => $year,
+                           'from_month' => $month,
+                           'from_day'   => $day);
+                           
+    $hidden_inputs['search_pos'] = max(0, $search_pos - $search['count']);         
+    $html .= get_search_nav_button($hidden_inputs , get_vocab('previous'), !$has_prev);
+    
+    $hidden_inputs['search_pos'] = max(0, $search_pos + $search['count']);
+    $html .= get_search_nav_button($hidden_inputs , get_vocab('next'), !$has_next);
   
-    if ($has_next)
-    {
-      $html .= "</a>";
-    }
     $html .= "</div>\n";
   }
   
@@ -117,6 +115,7 @@ $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
 $from_date = get_form_var('from_date', 'string');
+
 if (isset($from_date))
 {
   list($year, $month, $day) = split_iso_date($from_date);
