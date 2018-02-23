@@ -19,7 +19,7 @@ $vocab["help"]               = "Help";
 $vocab["search"]             = "Zoek";
 $vocab["outstanding"]        = "Openstaande boekingen";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Boekingen voor";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Gebouwen";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "ga naar";
 $vocab["highlight_line"]     = "Markeer deze regel";
 $vocab["click_to_reserve"]   = "Klik op dit vak om een reservering te maken.";
 $vocab["timezone"]           = "Tijdzone";
+$vocab["weekbefore"]         = "Ga naar vorige week";
+$vocab["weekafter"]          = "Ga naar volgende week";
+$vocab["gotothisweek"]       = "Ga naar deze week";
+$vocab["monthbefore"]        = "Ga naar vorige maand";
+$vocab["monthafter"]         = "Ga naar volgende maand";
+$vocab["gotothismonth"]      = "Ga naar deze maand";
+$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Bekijk Dag";
@@ -258,19 +265,6 @@ $vocab["both"]                  = "Alles";
 $vocab["privacy_status"]        = "Privacy status";
 $vocab["search_criteria"]       = "Zoek criteria";
 $vocab["presentation_options"]  = "Presentatie mogelijkheden";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Ga naar vorige week";
-$vocab["weekafter"]          = "Ga naar volgende week";
-$vocab["gotothisweek"]       = "Ga naar deze week";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Ga naar vorige maand";
-$vocab["monthafter"]         = "Ga naar volgende maand";
-$vocab["gotothismonth"]      = "Ga naar deze maand";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 // Used in admin.php
 $vocab["edit"]               = "Wijzig";

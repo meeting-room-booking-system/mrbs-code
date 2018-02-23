@@ -19,7 +19,7 @@ $vocab["help"]               = "Bantuan";
 $vocab["search"]             = "Pencarian";
 $vocab["outstanding"]        = "pesanan Tertunda";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "pesanan Untuk";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Area";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Pergi Ke";
 $vocab["highlight_line"]     = "Stabilo baris ini";
 $vocab["click_to_reserve"]   = "Klik pada cell untuk reservasi.";
 $vocab["timezone"]           = "Zona Waktu";
+$vocab["weekbefore"]         = "Pindah ke satu minggu sebelum";
+$vocab["weekafter"]          = "Pindah ke satu minggu kedepan";
+$vocab["gotothisweek"]       = "Pindah ke minggu ini";
+$vocab["monthbefore"]        = "Pindah ke satu bulan sebelum";
+$vocab["monthafter"]         = "Pindah ke satu bulan kedepan";
+$vocab["gotothismonth"]      = "Pindah ke bulan ini";
+$vocab["no_rooms_for_area"]  = "Ruangan pada area ini belum dibuat";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Tampilan Hari";
@@ -317,19 +324,6 @@ $vocab["delete_entries_warning"] = "PERHATIAN!  Aksi berikut akan menghapus entr
                                    "anda yakin melanjutkan?\n\n" .
                                    "Jumlah entri yang akan dihapus: ";
 $vocab["delete_entries_failed"] = "Entri tidak dapat dihapus.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Pindah ke satu minggu sebelum";
-$vocab["weekafter"]          = "Pindah ke satu minggu kedepan";
-$vocab["gotothisweek"]       = "Pindah ke minggu ini";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Pindah ke satu bulan sebelum";
-$vocab["monthafter"]         = "Pindah ke satu bulan kedepan";
-$vocab["gotothismonth"]      = "Pindah ke bulan ini";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Ruangan pada area ini belum dibuat";
 
 // Used in admin.php
 $vocab["edit"]               = "Ubah";

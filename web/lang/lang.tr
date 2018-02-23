@@ -20,7 +20,7 @@ $vocab["help"]               = "Yardım";
 $vocab["search"]             = "Arama";
 $vocab["outstanding"]        = "askıdaki yer ayırtma";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Yer ayırtmak için";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Alanlar";
@@ -31,6 +31,13 @@ $vocab["goto"]               = "Git";
 $vocab["highlight_line"]     = "Satırı belirgin hale getir";
 $vocab["click_to_reserve"]   = "Yer ayırtmak için bu hücreye tıklayın.";
 $vocab["timezone"]           = "Saat dilimi";
+$vocab["weekbefore"]         = "Önceki Haftaya Git";
+$vocab["weekafter"]          = "Sonraki Haftaya Git";
+$vocab["gotothisweek"]       = "Bu Haftaya Git";
+$vocab["monthbefore"]        = "Bir önceki ayı görüntüle";
+$vocab["monthafter"]         = "Bir sonraki ayı görüntüle";
+$vocab["gotothismonth"]      = "Bu ayı görüntüle";
+$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantı Salonu tanımlı değil.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Günlük gösterim";
@@ -289,20 +296,6 @@ $vocab["both"]                  = "Tüm";
 $vocab["privacy_status"]        = "Mahremiyet durumu";
 $vocab["search_criteria"]       = "Arama kırıteri";
 $vocab["presentation_options"]  = "Çıktı seçenekleri";
-
-
-// Used in week.php
-$vocab["weekbefore"]         = "Önceki Haftaya Git";
-$vocab["weekafter"]          = "Sonraki Haftaya Git";
-$vocab["gotothisweek"]       = "Bu Haftaya Git";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Bir önceki ayı görüntüle";
-$vocab["monthafter"]         = "Bir sonraki ayı görüntüle";
-$vocab["gotothismonth"]      = "Bu ayı görüntüle";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantı Salonu tanımlı değil.";
 
 // Used in admin.php
 $vocab["edit"]               = "Düzenle";

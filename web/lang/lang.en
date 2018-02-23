@@ -19,7 +19,7 @@ $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
 $vocab["outstanding"]        = "pending bookings";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Areas";
@@ -31,6 +31,13 @@ $vocab["goto"]               = "Go to";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 $vocab["timezone"]           = "Timezone";
+$vocab["weekbefore"]         = "Go To Week Before";
+$vocab["weekafter"]          = "Go To Week After";
+$vocab["gotothisweek"]       = "Go To This Week";
+$vocab["monthbefore"]        = "Go To Month Before";
+$vocab["monthafter"]         = "Go To Month After";
+$vocab["gotothismonth"]      = "Go To This Month";
+$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
@@ -327,19 +334,6 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
                                    "you sure you want to continue?\n\n" .
                                    "Total number of entries that will be deleted: ";
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Go To Week Before";
-$vocab["weekafter"]          = "Go To Week After";
-$vocab["gotothisweek"]       = "Go To This Week";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Go To Month Before";
-$vocab["monthafter"]         = "Go To Month After";
-$vocab["gotothismonth"]      = "Go To This Month";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
 
 // Used in admin.php
 $vocab["edit"]               = "Edit";

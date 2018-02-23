@@ -20,7 +20,7 @@ $vocab["help"]               = "Nápoveda";
 $vocab["search"]             = "Hľadať";
 $vocab["outstanding"]        = "čakajúci na schválenie";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Objednané pre";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Oblasti";
@@ -31,6 +31,13 @@ $vocab["goto"]               = "Prejsť na";
 $vocab["highlight_line"]     = "Označte tento riadok";
 $vocab["click_to_reserve"]   = "Klepnite na bunku, aby ste vykonali rezerváciu.";
 $vocab["timezone"]           = "Časová zóna";
+$vocab["weekbefore"]         = "Týždeň dozadu";
+$vocab["weekafter"]          = "Týždeň dopredu";
+$vocab["gotothisweek"]       = "Tento týždeň";
+$vocab["monthbefore"]        = "Mesiac dozadu";
+$vocab["monthafter"]         = "Mesiac dopredu";
+$vocab["gotothismonth"]      = "Tento mesiac";
+$vocab["no_rooms_for_area"]  = "Pre tento zdroj nie je definovaná žiadna oblasť!";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Dni";
@@ -317,19 +324,6 @@ $vocab["delete_entries_warning"] = "UPOZORNENIE! Vymaže všetky položky odpove
                                    "chcete pokračovať?\n\n" .
                                    "Celkový počet položiek, ktoré budú zmazané: ";
 $vocab["delete_entries_failed"] = "Položky nemôžu byť odstránené.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Týždeň dozadu";
-$vocab["weekafter"]          = "Týždeň dopredu";
-$vocab["gotothisweek"]       = "Tento týždeň";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Mesiac dozadu";
-$vocab["monthafter"]         = "Mesiac dopredu";
-$vocab["gotothismonth"]      = "Tento mesiac";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Pre tento zdroj nie je definovaná žiadna oblasť!";
 
 // Used in admin.php
 $vocab["edit"]               = "Upraviť";

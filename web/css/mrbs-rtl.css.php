@@ -57,7 +57,7 @@ div#area_form, div.header_columns, div.body_columns {
   direction: rtl;
 }
 
-/* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+/* ------------ CALENDAR.PHP ------------------*/
 
 div#dwm_header, div.cell_container {
   float: right;

@@ -19,7 +19,7 @@ $vocab["admin"]              = "Amministratore";
 $vocab["help"]               = "Aiuto";
 $vocab["search"]             = "Ricerca";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["outstanding"]        = "prenotazioni pendenti";
 $vocab["bookingsfor"]        = "Prenotazioni per";
 $vocab["bookingsforpost"]    = "";
@@ -30,6 +30,13 @@ $vocab["gototoday"]          = "Vai a oggi";
 $vocab["goto"]               = "Vai a";
 $vocab["highlight_line"]     = "Evidenzia questa linea";
 $vocab["click_to_reserve"]   = "Clicca sulla cella per effettuare una prenotazione.";
+$vocab["weekbefore"]         = "Vai alla Settimana Precedente";
+$vocab["weekafter"]          = "Vai alla Settimana Successiva";
+$vocab["gotothisweek"]       = "Vai alla Settimana Corrente";
+$vocab["monthbefore"]        = "Vai al Mese Precedente";
+$vocab["monthafter"]         = "Vai al Mese Successivo";
+$vocab["gotothismonth"]      = "Vai al Mese Corrente";
+$vocab["no_rooms_for_area"]  = "Non ci sono sale per questa Area";
 
 // Used in trailer.inc
 $vocab["timezone"]           = "Fuso orario";
@@ -316,19 +323,6 @@ $vocab["presentation_options"]  = "Opzioni di presentazione";
 $vocab["delete_entries"]        = "Cancella valori";
 $vocab["delete_entries_warning"] = "ATENZIONE!  Questa operazione cancellerà tutti i valori che soddisfano " .
 $vocab["delete_entries_failed"] = "Non è stato possibile cancellare i valori.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Vai alla Settimana Precedente";
-$vocab["weekafter"]          = "Vai alla Settimana Successiva";
-$vocab["gotothisweek"]       = "Vai alla Settimana Corrente";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Vai al Mese Precedente";
-$vocab["monthafter"]         = "Vai al Mese Successivo";
-$vocab["gotothismonth"]      = "Vai al Mese Corrente";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Non ci sono sale per questa Area";
 
 // Used in admin.php
 $vocab["edit"]               = "Modifica";

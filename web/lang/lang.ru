@@ -19,7 +19,7 @@ $vocab["help"]               = "Помощь";
 $vocab["search"]             = "Поиск";
 $vocab["outstanding"]        = "не завершенное бронирование";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Бронирование для";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Местоположения";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "перейти";
 $vocab["highlight_line"]     = "Активизируйте эту строку";
 $vocab["click_to_reserve"]   = "Щелкните на ячейке, чтобы начать бронирование.";
 $vocab["timezone"]           = "Часовой пояс";
+$vocab["weekbefore"]         = "Перейти на неделю назад";
+$vocab["weekafter"]          = "Перейти на неделю вперед";
+$vocab["gotothisweek"]       = "Перейти на текущую неделю";
+$vocab["monthbefore"]        = "Перейти на месяц назад";
+$vocab["monthafter"]         = "Перейти на месяц вперед";
+$vocab["gotothismonth"]      = "Перейти на текущий месяц";
+$vocab["no_rooms_for_area"]  = "Для этого корпуса не определены помещения";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Просмотр дня";
@@ -271,19 +278,6 @@ $vocab["both"]                  = "Все";
 $vocab["privacy_status"]        = "Статус доступа";
 $vocab["search_criteria"]       = "Критерии поиска";
 $vocab["presentation_options"]  = "Параметры вывода";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Перейти на неделю назад";
-$vocab["weekafter"]          = "Перейти на неделю вперед";
-$vocab["gotothisweek"]       = "Перейти на текущую неделю";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Перейти на месяц назад";
-$vocab["monthafter"]         = "Перейти на месяц вперед";
-$vocab["gotothismonth"]      = "Перейти на текущий месяц";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Для этого корпуса не определены помещения";
 
 // Used in admin.php
 $vocab["edit"]               = "Изменить";

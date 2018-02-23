@@ -19,7 +19,7 @@ $vocab["help"]               = "Pomoć";
 $vocab["search"]             = "Pretraga";
 $vocab["outstanding"]        = "rezervacije na čekanju";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Rezervacije za";
 $vocab["bookingsforpost"]    = ""; // Ide posle datuma
 $vocab["areas"]              = "Oblasti";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "idi na datum";
 $vocab["highlight_line"]     = "Označi ovu liniju";
 $vocab["click_to_reserve"]   = "Kliknite na polje da biste napravili rezervaciju.";
 $vocab["timezone"]           = "Vremenska zona";
+$vocab["weekbefore"]         = "Idi na prethodnu nedelju";
+$vocab["weekafter"]          = "Idi na sledeću nedelju";
+$vocab["gotothisweek"]       = "Ova nedelja";
+$vocab["monthbefore"]        = "Idi na mesec pre";
+$vocab["monthafter"]         = "Idi na mesec posle";
+$vocab["gotothismonth"]      = "Idi na ovaj mesec";
+$vocab["no_rooms_for_area"]  = "Nema definisanih prostorija za ovu oblast";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Prikaži dan";
@@ -304,19 +311,6 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
                                    "you sure you want to continue?\n\n" .
                                    "Total number of entries that will be deleted: ";
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Idi na prethodnu nedelju";
-$vocab["weekafter"]          = "Idi na sledeću nedelju";
-$vocab["gotothisweek"]       = "Ova nedelja";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Idi na mesec pre";
-$vocab["monthafter"]         = "Idi na mesec posle";
-$vocab["gotothismonth"]      = "Idi na ovaj mesec";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nema definisanih prostorija za ovu oblast";
 
 // Used in admin.php
 $vocab["edit"]               = "Izmeni";

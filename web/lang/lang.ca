@@ -18,7 +18,7 @@ $vocab["admin"]              = "Administració";
 $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Cerca";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Reserves per a";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Famílies";
@@ -28,6 +28,13 @@ $vocab["gototoday"]          = "Dia actual";
 $vocab["goto"]               = "Anar a";
 $vocab["highlight_line"]     = "Destacar aquesta línia";
 $vocab["click_to_reserve"]   = "Clicar per fer una reserva.";
+$vocab["weekbefore"]         = "Anar a la setmana anterior";
+$vocab["weekafter"]          = "Anar a la setmana posterior";
+$vocab["gotothisweek"]       = "Anar a la setmana actual";
+$vocab["monthbefore"]        = "Anar al mes anterior";
+$vocab["monthafter"]         = "Anar al mes posterior";
+$vocab["gotothismonth"]      = "Anar al mes actual";
+$vocab["no_rooms_for_area"]  = "No hi ha recursos definits per aquest edifici";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Veure dia";
@@ -160,19 +167,6 @@ $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Executar informe";
 $vocab["sort_rep"]           = "Ordenar informe per";
 $vocab["sort_rep_time"]      = "Inici data/hora";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Anar a la setmana anterior";
-$vocab["weekafter"]          = "Anar a la setmana posterior";
-$vocab["gotothisweek"]       = "Anar a la setmana actual";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Anar al mes anterior";
-$vocab["monthafter"]         = "Anar al mes posterior";
-$vocab["gotothismonth"]      = "Anar al mes actual";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "No hi ha recursos definits per aquest edifici";
 
 // Used in admin.php
 $vocab["edit"]               = "Editar";

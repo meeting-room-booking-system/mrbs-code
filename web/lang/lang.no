@@ -22,7 +22,7 @@ $vocab["help"]               = "Hjelp";
 $vocab["search"]             = "Søk";
 $vocab["outstanding"]        = "ikke-behandlede reservasjoner";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Reservasjon for";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";
@@ -33,6 +33,13 @@ $vocab["goto"]               = "Gå til";
 $vocab["highlight_line"]     = "Merk denne linjen";
 $vocab["click_to_reserve"]   = "Trykk i cellen for å reservere.";
 $vocab["timezone"]           = "Tidssone";
+$vocab["weekbefore"]         = "Gå til uken før";
+$vocab["weekafter"]          = "Gå til uken etter";
+$vocab["gotothisweek"]       = "Gå til inneværende uke";
+$vocab["monthbefore"]        = "Gå til forrige måned";
+$vocab["monthafter"]         = "Gå til neste måned";
+$vocab["gotothismonth"]      = "Gå til inneværende måned";
+$vocab["no_rooms_for_area"]  = "Det er ikke opprettet noen rom under dette området";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Vis dag  ";
@@ -288,19 +295,6 @@ $vocab["delete_entries_warning"] = "ADVARSEL! Dette vil slette alle reservasjone
                                    "Er du sikker på at du vil fortsette?\n\n" .
                                    "Antall reservasjoner som slettes: ";
 $vocab["delete_entries_failed"] = "Reservasjonene kunne ikke slettes.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Gå til uken før";
-$vocab["weekafter"]          = "Gå til uken etter";
-$vocab["gotothisweek"]       = "Gå til inneværende uke";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Gå til forrige måned";
-$vocab["monthafter"]         = "Gå til neste måned";
-$vocab["gotothismonth"]      = "Gå til inneværende måned";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Det er ikke opprettet noen rom under dette området";
 
 // Used in admin.php
 $vocab["edit"]               = "Endre";

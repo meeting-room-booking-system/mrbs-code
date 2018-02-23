@@ -19,7 +19,7 @@ $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche";
 $vocab["outstanding"]        = "en attendant les réservations";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Réservations pour";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Lieux";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Afficher";
 $vocab["highlight_line"]     = "Surligner cette ligne";
 $vocab["click_to_reserve"]   = "Cliquer sur la cellule pour réserver.";
 $vocab["timezone"]           = "Fuseau horaire";
+$vocab["weekbefore"]         = "Semaine précédente";
+$vocab["weekafter"]          = "Semaine suivante";
+$vocab["gotothisweek"]       = "Semaine actuelle";
+$vocab["monthbefore"]        = "Mois précédent";
+$vocab["monthafter"]         = "Mois suivant";
+$vocab["gotothismonth"]      = "Mois actuel";
+$vocab["no_rooms_for_area"]  = "Aucune salle n'est définie pour ce lieu";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Afficher par jour";
@@ -274,19 +281,6 @@ $vocab["delete_entries_warning"] = "ATTENTION!  Cette action va supprimer les r�
                                    "Etes vous certain de vouloir supprimer les réservations ?\n\n" .
                                    "Nombre de réservations à supprimer définitivement : ";
 $vocab["delete_entries_failed"] = "Les réservations ne peuvent pas être supprimées.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Semaine précédente";
-$vocab["weekafter"]          = "Semaine suivante";
-$vocab["gotothisweek"]       = "Semaine actuelle";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Mois précédent";
-$vocab["monthafter"]         = "Mois suivant";
-$vocab["gotothismonth"]      = "Mois actuel";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Aucune salle n'est définie pour ce lieu";
 
 // Used in admin.php
 $vocab["edit"]               = "Modifier";

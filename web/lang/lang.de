@@ -19,7 +19,7 @@ $vocab["help"]               = "Hilfe";
 $vocab["search"]             = "Suche";
 $vocab["outstanding"]        = "ausstehende Einträge";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Einträge für";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Bereiche";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Start";
 $vocab["highlight_line"]     = "Markieren Sie diese Zeile";
 $vocab["click_to_reserve"]   = "In die Zelle klicken um eine Reservierung vorzunehmen";
 $vocab["timezone"]           = "Zeitzone";
+$vocab["weekbefore"]         = "gehe zur vorigen Woche";
+$vocab["weekafter"]          = "gehe zur nächsten Woche";
+$vocab["gotothisweek"]       = "gehe zu dieser Woche";
+$vocab["monthbefore"]        = "gehe zum vorigen Monat";
+$vocab["monthafter"]         = "gehe zum nächsten Monat";
+$vocab["gotothismonth"]      = "gehe zu diesem Monat";
+$vocab["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Zeige Tag";
@@ -323,19 +330,6 @@ $vocab["delete_entries_warning"] = "WARNUNG!  Alle Einträge, die den Suchkriter
                                    "Wollen Sie wirklich fortfahren?\n\n" .
                                    "Anzahl der zu löschenden Einträge: ";
 $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "gehe zur vorigen Woche";
-$vocab["weekafter"]          = "gehe zur nächsten Woche";
-$vocab["gotothisweek"]       = "gehe zu dieser Woche";
-
-// Used in month.php
-$vocab["monthbefore"]        = "gehe zum vorigen Monat";
-$vocab["monthafter"]         = "gehe zum nächsten Monat";
-$vocab["gotothismonth"]      = "gehe zu diesem Monat";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Der Bereich enthält keinen Raum";
 
 // Used in admin.php
 $vocab["edit"]               = "Bearbeiten";

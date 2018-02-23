@@ -24,7 +24,7 @@ $vocab["help"]               = "עזרה";
 $vocab["search"]             = "חיפוש";
 $vocab["outstanding"]        = "הזמנות לאישור";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "הזמנה ל";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "אזורים";
@@ -35,6 +35,13 @@ $vocab["goto"]               = "עבור ליום";
 $vocab["highlight_line"]     = "סמן שורה זו";
 $vocab["click_to_reserve"]   = "לחץ על התא כדי להזמין חדר";
 $vocab["timezone"]           = "אזור זמן";
+$vocab["weekbefore"]         = "עבור לשבוע הקודם";
+$vocab["weekafter"]          = "עבור לשבוע הבא";
+$vocab["gotothisweek"]       = "עבור לשבוע הנוכחי";
+$vocab["monthbefore"]        = "עבור לחודש הקודם";
+$vocab["monthafter"]         = "עבור לחודש הבא";
+$vocab["gotothismonth"]      = "עבור לחודש הנוכחי";
+$vocab["no_rooms_for_area"]  = "לא הוגדרו חדרים לאזור זה";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "הצג לפי יום";
@@ -279,19 +286,6 @@ $vocab["both"]                  = "הכל";
 $vocab["privacy_status"]        = "סטטוס פרטיות";
 $vocab["search_criteria"]       = "קריטריון לחיפוש";
 $vocab["presentation_options"]  = "אפשרויות פלט";
-
-// Used in week.php
-$vocab["weekbefore"]         = "עבור לשבוע הקודם";
-$vocab["weekafter"]          = "עבור לשבוע הבא";
-$vocab["gotothisweek"]       = "עבור לשבוע הנוכחי";
-
-// Used in month.php
-$vocab["monthbefore"]        = "עבור לחודש הקודם";
-$vocab["monthafter"]         = "עבור לחודש הבא";
-$vocab["gotothismonth"]      = "עבור לחודש הנוכחי";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "לא הוגדרו חדרים לאזור זה";
 
 // Used in admin.php
 $vocab["edit"]               = "עדכן";

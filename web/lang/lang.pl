@@ -19,7 +19,7 @@ $vocab["help"]               = "Pomoc";
 $vocab["search"]             = "Szukaj";
 $vocab["outstanding"]        = "oczekujących rezerwacji";
 
-// Uzyte w day.php
+// Uzyte w calendar.php
 $vocab["bookingsfor"]        = "Rezerwacja dla";
 $vocab["bookingsforpost"]    = ""; // To idzie po dacie
 $vocab["areas"]              = "Strefy";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Idź do";
 $vocab["highlight_line"]     = "Podświetl tą linie";
 $vocab["click_to_reserve"]   = "Kliknij na komórkę aby zarezerwować.";
 $vocab["timezone"]           = "Strefa czasowa";
+$vocab["weekbefore"]         = "Przejdź do Poprzedniego Tygodnia";
+$vocab["weekafter"]          = "Przejdź do Następnego Tygodnia";
+$vocab["gotothisweek"]       = "Przejdź Do Bieżącego Tygodnia";
+$vocab["monthbefore"]        = "Przejdź do Poprzedniego Miesiąca";
+$vocab["monthafter"]         = "Przejdż do Następnego Miesiąca";
+$vocab["gotothismonth"]      = "Przejdź do Bieżącegoo Miesiąca";
+$vocab["no_rooms_for_area"]  = "Brak zdefiniowanych pokoi dla tej strefy";
 
 // Uzyte w trailer.inc
 $vocab["viewday"]            = "Zobacz Dzień";
@@ -299,19 +306,6 @@ $vocab["delete_entries_warning"] = "UWAGA!  Spowoduje to usunięcie wszystkich d
                                    "pewien że chcesz kontynuować?\n\n" .
                                    "Całkowita usuniętych wejść: ";
 $vocab["delete_entries_failed"] = "Wejścia nie mogą być usunięte.";
-
-// Uzyte w week.php
-$vocab["weekbefore"]         = "Przejdź do Poprzedniego Tygodnia";
-$vocab["weekafter"]          = "Przejdź do Następnego Tygodnia";
-$vocab["gotothisweek"]       = "Przejdź Do Bieżącego Tygodnia";
-
-// Uzyte w month.php
-$vocab["monthbefore"]        = "Przejdź do Poprzedniego Miesiąca";
-$vocab["monthafter"]         = "Przejdż do Następnego Miesiąca";
-$vocab["gotothismonth"]      = "Przejdź do Bieżącegoo Miesiąca";
-
-// Uzyte w {day week month}.php
-$vocab["no_rooms_for_area"]  = "Brak zdefiniowanych pokoi dla tej strefy";
 
 // Uzyte w admin.php
 $vocab["edit"]               = "Edycja";

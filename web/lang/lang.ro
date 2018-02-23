@@ -19,7 +19,7 @@ $vocab["help"]               = "Ajutor";
 $vocab["search"]             = "Cautare";
 $vocab["outstanding"]        = "Rezervari in asteptare";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Rezervari pentru";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Zone";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Afiseaza";
 $vocab["highlight_line"]     = "Evidentiaza aceasta linie";
 $vocab["click_to_reserve"]   = "Apasa pe casuta pentru rezervare";
 $vocab["timezone"]           = "Fus orar";
+$vocab["weekbefore"]         = "Mergi La Saptamana Trecuta";
+$vocab["weekafter"]          = "Mergi La Saptamana Viitoare";
+$vocab["gotothisweek"]       = "Mergi La Saptamana Curenta";
+$vocab["monthbefore"]        = "Mergi La Luna Trecuta";
+$vocab["monthafter"]         = "Mergi La Luna Viitoare";
+$vocab["gotothismonth"]      = "Mergi La Luna Curenta";
+$vocab["no_rooms_for_area"]  = "Nicio sala definita pentru aceasta zona";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Vezi ziua";
@@ -325,19 +332,6 @@ $vocab["delete_entries_warning"] = "ATENTIE!  Se vor sterge toate rezervarile co
                                    "sigur ca vrei sa continui?\n\n" .
                                    "Numar total de rezervari ce vor fi sterse: ";
 $vocab["delete_entries_failed"] = "Rezervarile nu au putut fi sterse.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Mergi La Saptamana Trecuta";
-$vocab["weekafter"]          = "Mergi La Saptamana Viitoare";
-$vocab["gotothisweek"]       = "Mergi La Saptamana Curenta";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Mergi La Luna Trecuta";
-$vocab["monthafter"]         = "Mergi La Luna Viitoare";
-$vocab["gotothismonth"]      = "Mergi La Luna Curenta";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nicio sala definita pentru aceasta zona";
 
 // Used in admin.php
 $vocab["edit"]               = "Modificare";

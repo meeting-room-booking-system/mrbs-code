@@ -18,7 +18,7 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Pomoč";
 $vocab["search"]             = "Išči";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Rezervacija za";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Področja";
@@ -28,6 +28,13 @@ $vocab["gototoday"]          = "Danes";
 $vocab["goto"]               = "pojdi";
 $vocab["highlight_line"]     = "Poudari to vrsto";
 $vocab["click_to_reserve"]   = "Za dodajanje rezervacije klikni na celico.";
+$vocab["weekbefore"]         = "Prejšni teden";
+$vocab["weekafter"]          = "Naslednji teden";
+$vocab["gotothisweek"]       = "Ta teden";
+$vocab["monthbefore"]        = "Prejšni mesec";
+$vocab["monthafter"]         = "Naslednji mesec";
+$vocab["gotothismonth"]      = "Ta mesec";
+$vocab["no_rooms_for_area"]  = "Ni definiranih prostorov v tem področju";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Pogled dan";
@@ -171,19 +178,6 @@ $vocab["total"]              = "Skupaj";
 $vocab["submitquery"]        = "Naredi poročilo";
 $vocab["sort_rep"]           = "Uredi poročilo po";
 $vocab["sort_rep_time"]      = "Začetni datum/ura";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Prejšni teden";
-$vocab["weekafter"]          = "Naslednji teden";
-$vocab["gotothisweek"]       = "Ta teden";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Prejšni mesec";
-$vocab["monthafter"]         = "Naslednji mesec";
-$vocab["gotothismonth"]      = "Ta mesec";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Ni definiranih prostorov v tem področju";
 
 // Used in admin.php
 $vocab["edit"]               = "Uredi";

@@ -19,7 +19,7 @@ $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök";
 $vocab["outstanding"]        = "väntande bokningar";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Bokningar för";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Områden";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "Gå till";
 $vocab["highlight_line"]     = "Markera denna rad";
 $vocab["click_to_reserve"]   = "Klicka på cellen för att göra en bokning.";
 $vocab["timezone"]           = "Tidszon";
+$vocab["weekbefore"]         = "Gå till veckan innan";
+$vocab["weekafter"]          = "Nästa vecka";
+$vocab["gotothisweek"]       = "Denna vecka";
+$vocab["monthbefore"]        = "Föregående månad";
+$vocab["monthafter"]         = "Nästa månad";
+$vocab["gotothismonth"]      = "Denna månad";
+$vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Visa dag";
@@ -322,19 +329,6 @@ $vocab["delete_entries_warning"] = "VARNING! Detta tar bort alla poster som matc
                                    "Vill du verkligen fortsätta?\n\n" .
                                    "Totalt antal poster som ska tas bort: ";
 $vocab["delete_entries_failed"] = "Posterna kunde inte tas bort";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Gå till veckan innan";
-$vocab["weekafter"]          = "Nästa vecka";
-$vocab["gotothisweek"]       = "Denna vecka";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Föregående månad";
-$vocab["monthafter"]         = "Nästa månad";
-$vocab["gotothismonth"]      = "Denna månad";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
 
 // Used in admin.php
 $vocab["edit"]               = "Ändra";

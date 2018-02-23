@@ -19,7 +19,7 @@ $vocab["help"]               = "ช่วยเหลือ";
 $vocab["search"]             = "ค้นหา";
 $vocab["outstanding"]        = "การจองที่รอดำเนินการ";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "จองสำหรับ";
 $vocab["bookingsforpost"]    = "ไปหลังจากวันที่";
 $vocab["areas"]              = "พื้นที่";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "ไปยัง";
 $vocab["highlight_line"]     = "ไฮไลน์บรรทัดนี้";
 $vocab["click_to_reserve"]   = "คลิกที่เซลล์เพื่อทำการสำรองห้อง";
 $vocab["timezone"]           = "เขต";
+$vocab["weekbefore"]         = "ไปยังสัปดาห์ก่อนหน้า";
+$vocab["weekafter"]          = "ไปยังสัปดาห์ถัดไป";
+$vocab["gotothisweek"]       = "ไปยังสัปดาห์นี้";
+$vocab["monthbefore"]        = "ไปยังเดือนก่อนหน้า";
+$vocab["monthafter"]         = "ไปยังเดือนถัดไป";
+$vocab["gotothismonth"]      = "ไปยังเดือนนี้";
+$vocab["no_rooms_for_area"]  = "ไม่มีห้องที่กำหนดให้พื้นที่นี้";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "มุมมองรายวัน";
@@ -277,22 +284,9 @@ $vocab["both"]                  = "ทั้งหมด";
 $vocab["privacy_status"]        = "สถานะความเป็นส่วนตัว";
 $vocab["search_criteria"]       = "กฎเกณฑ์การค้นหา";
 $vocab["presentation_options"]  = "ตัวเลือกเอาท์พุท";
-
-// Used in week.php
 $vocab["delete_entries"]        = "ลบทั้งหมด";
 $vocab["delete_entries_warning"] = "คำเตือน! รายการทั้งหมดนี้จะถูกลบ  คุณแน่ใจหรือว่าต้องการดำเนินการต่อ  จำนวนรวมของรายการที่จะถูกลบออก:" .
 $vocab["delete_entries_failed"] = "รายการนี้ลบไม่ได้ !";
-$vocab["weekbefore"]         = "ไปยังสัปดาห์ก่อนหน้า";
-$vocab["weekafter"]          = "ไปยังสัปดาห์ถัดไป";
-$vocab["gotothisweek"]       = "ไปยังสัปดาห์นี้";
-
-// Used in month.php
-$vocab["monthbefore"]        = "ไปยังเดือนก่อนหน้า";
-$vocab["monthafter"]         = "ไปยังเดือนถัดไป";
-$vocab["gotothismonth"]      = "ไปยังเดือนนี้";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "ไม่มีห้องที่กำหนดให้พื้นที่นี้";
 
 // Used in admin.php
 $vocab["edit"]               = "แก้ไข";

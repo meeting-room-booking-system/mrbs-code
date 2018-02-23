@@ -19,7 +19,7 @@ $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Pesquisa";
 $vocab["outstanding"]        = "reservas pendentes";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Reservas para";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Áreas";
@@ -30,6 +30,13 @@ $vocab["goto"]               = "ir para";
 $vocab["highlight_line"]     = "Destaque esta linha";
 $vocab["click_to_reserve"]   = "Clique nesta célula para reservar.";
 $vocab["timezone"]           = "Fuso horário";
+$vocab["weekbefore"]         = "Ir para a semana Anterior";
+$vocab["weekafter"]          = "Ir para a semana seguinte";
+$vocab["gotothisweek"]       = "Ir para esta semana";
+$vocab["monthbefore"]        = "Ir para o mês Anterior";
+$vocab["monthafter"]         = "Ir para o mês seguinte";
+$vocab["gotothismonth"]      = "Ir para este mês";
+$vocab["no_rooms_for_area"]  = "Não há salas definidas para esta Área";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
@@ -256,19 +263,6 @@ $vocab["both"]                  = "Todos";
 $vocab["privacy_status"]        = "Estado da privacidade";
 $vocab["search_criteria"]       = "Critério de pesquisa";
 $vocab["presentation_options"]  = "opções de apresentação";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Ir para a semana Anterior";
-$vocab["weekafter"]          = "Ir para a semana seguinte";
-$vocab["gotothisweek"]       = "Ir para esta semana";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Ir para o mês Anterior";
-$vocab["monthafter"]         = "Ir para o mês seguinte";
-$vocab["gotothismonth"]      = "Ir para este mês";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Não há salas definidas para esta Área";
 
 // Used in admin.php
 $vocab["edit"]               = "Editar";

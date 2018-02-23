@@ -18,7 +18,7 @@ $vocab["help"]               = "帮助";
 $vocab["search"]             = "搜索";
 $vocab["outstanding"]        = "待定的预订";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "预订:";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "区域";
@@ -29,6 +29,13 @@ $vocab["goto"]               = "前往";
 $vocab["highlight_line"]     = "高亮显示这一行";
 $vocab["click_to_reserve"]   = "点击单元格进行预订";
 $vocab["timezone"]           = "时区";
+$vocab["weekbefore"]         = "前一周";
+$vocab["weekafter"]          = "后一周";
+$vocab["gotothisweek"]       = "本周";
+$vocab["monthbefore"]        = "上个月";
+$vocab["monthafter"]         = "下个月";
+$vocab["gotothismonth"]      = "本月";
+$vocab["no_rooms_for_area"]  = "这个区域没有定义房间";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "日视图";
@@ -317,19 +324,6 @@ $vocab["delete_entries_warning"] = "警告!  这将会删除所有符合搜索�
                                    "将要删除的条目数: ";
 
 $vocab["delete_entries_failed"] = "不能删除这些条目.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "前一周";
-$vocab["weekafter"]          = "后一周";
-$vocab["gotothisweek"]       = "本周";
-
-// Used in month.php
-$vocab["monthbefore"]        = "上个月";
-$vocab["monthafter"]         = "下个月";
-$vocab["gotothismonth"]      = "本月";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "这个区域没有定义房间";
 
 // Used in admin.php
 $vocab["edit"]               = "编辑";

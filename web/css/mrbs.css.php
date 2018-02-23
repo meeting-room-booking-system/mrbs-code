@@ -374,7 +374,7 @@ div.body_columns {max-width: 80%}
 .body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
 
 
-/* ------------ DAY/WEEK/MONTH.PHP ------------------*/
+/* ------------ CALENDAR.PHP ------------------*/
 
 <?php
 $column_hidden_width  = 0;       // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);

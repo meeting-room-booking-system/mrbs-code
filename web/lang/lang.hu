@@ -23,7 +23,7 @@ $vocab["help"]               = "Segítség";
 $vocab["search"]             = "Keresés";
 $vocab["outstanding"]        = "függőben lévő foglalások";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Foglalások a következőhöz:";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Helyek";
@@ -34,6 +34,13 @@ $vocab["goto"]               = "Ugrás";
 $vocab["highlight_line"]     = "Sor kiemelése";
 $vocab["click_to_reserve"]   = "Kattints a cellára a foglaláshoz!";
 $vocab["timezone"]           = "Időzóna";
+$vocab["weekbefore"]         = "Előző hét";
+$vocab["weekafter"]          = "Következő hét";
+$vocab["gotothisweek"]       = "Aktuális hét";
+$vocab["monthbefore"]        = "Előző hónap";
+$vocab["monthafter"]         = "Következő hónap";
+$vocab["gotothismonth"]      = "Aktuális hónap";
+$vocab["no_rooms_for_area"]  = "Nincsenek tárgyalók definiálva ehhez a területhez.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Napi nézet";
@@ -290,19 +297,6 @@ $vocab["delete_entries_warning"] = "FIGYELEM! Ez a művelet törölni fogja az �
                                    "Biztos vagy benne, hogy törlöd a bejegyzéseket?\n\n" .
                                    "Törlendő rekordok száma: ";
 $vocab["delete_entries_failed"] = "A bejegyzéseket nem sikerült törölni.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Előző hét";
-$vocab["weekafter"]          = "Következő hét";
-$vocab["gotothisweek"]       = "Aktuális hét";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Előző hónap";
-$vocab["monthafter"]         = "Következő hónap";
-$vocab["gotothismonth"]      = "Aktuális hónap";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nincsenek tárgyalók definiálva ehhez a területhez.";
 
 // Used in admin.php
 $vocab["edit"]               = "Szerkesztés";

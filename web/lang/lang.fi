@@ -18,7 +18,7 @@ $vocab["admin"]              = "Ylläpito";
 $vocab["help"]               = "Ohjeet";
 $vocab["search"]             = "Etsi";
 
-// Used in day.php
+// Used in calendar.php
 $vocab["bookingsfor"]        = "Varaukset";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Tilat";
@@ -29,6 +29,13 @@ $vocab["goto"]               = "mene";
 $vocab["highlight_line"]     = "Korosta tämä rivi";
 $vocab["click_to_reserve"]   = "Napsauta solua tehdäksesi varauksen.";
 $vocab["timezone"]           = "Aikavyöhyke";
+$vocab["weekbefore"]         = "Edelliseen viikkoon";
+$vocab["weekafter"]          = "Seuraavaan viikkoon";
+$vocab["gotothisweek"]       = "Tähän viikkoon";
+$vocab["monthbefore"]        = "Edelliseen kuukauteen";
+$vocab["monthafter"]         = "Seuraavaan kuukauteen";
+$vocab["gotothismonth"]      = "Tähän kuukauteen";
+$vocab["no_rooms_for_area"]  = "Tällä alueella ei ole yhtään huonetta.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Näytä päivä";
@@ -302,19 +309,6 @@ $vocab["delete_entries_warning"] = "VAROITUS! Olet poistamassa kaikkia hakusanan
                                    "Haluatko varmasti jatkaa?\n\n" .
                                    "Poistettavien merkintöjen määrä: ";
 $vocab["delete_entries_failed"] = "Varauksia ei voitu poistaa.";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Edelliseen viikkoon";
-$vocab["weekafter"]          = "Seuraavaan viikkoon";
-$vocab["gotothisweek"]       = "Tähän viikkoon";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Edelliseen kuukauteen";
-$vocab["monthafter"]         = "Seuraavaan kuukauteen";
-$vocab["gotothismonth"]      = "Tähän kuukauteen";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Tällä alueella ei ole yhtään huonetta.";
 
 // Used in admin.php
 $vocab["edit"]               = "Muokkaa";
