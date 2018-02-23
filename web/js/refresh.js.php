@@ -23,9 +23,10 @@ var refreshPage = function refreshPage() {
         !isMeteredConnection())
     {
       var data = {ajax: 1,
+                  view: refreshPage.args.view,
                   page_date: refreshPage.args.page_date,
-                  room: refreshPage.args.room,
-                  area: refreshPage.args.area};
+                  area: refreshPage.args.area,
+                  room: refreshPage.args.room};
       if (refreshPage.args.timetohighlight !== undefined)
       {
         data.timetohighlight = refreshPage.args.timetohighlight;

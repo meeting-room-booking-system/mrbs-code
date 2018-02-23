@@ -1,7 +1,7 @@
 <?php 
 namespace MRBS;
 
-global $day, $month, $year, $room, $area;
+global $view, $year, $month, $day, $area, $room;
 
 $page = this_page('.php');
 
@@ -155,7 +155,7 @@ if (is_readable("js/$page.js.php"))
 }
 
 // The day, week and month views do refresh by Ajax.
-if (in_array($page, array('day', 'week', 'month')))
+if ($page == 'calendar')
 {
   ?>
   <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
@@ -201,7 +201,8 @@ if (in_array($page, array('day', 'week')))
 
 $(window).on('load', function() {
 
-  var args = {area: '<?php echo $area?>',
+  var args = {view: '<?php echo $view?>',
+              area: '<?php echo $area?>',
               room: '<?php echo $room?>',
               page: '<?php echo $page?>',
               page_date: '<?php echo format_iso_date($year, $month, $day) ?>'};
