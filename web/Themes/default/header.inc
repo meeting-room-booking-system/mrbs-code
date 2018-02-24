@@ -93,11 +93,31 @@ function print_head($simple=false)
 
 function print_mini_calendar($view, $year, $month, $day, $area, $room)
 {
+  global $weekstarts, $strftime_format;
+  
   $calendar = get_calendar($year, $month, $day);
   
   $html = '';
   
   $html .= "<table>\n";
+  
+  // Produce the table head
+  $html .= "<thead>\n";
+  $html .= "<tr>";
+  
+  for ($i=$weekstarts; $i<$weekstarts+7; $i++)
+  {
+    // Sunday is Day 0
+    $day_name = utf8_strftime($strftime_format['dayname_cal'],
+                              strtotime("next sunday + $i days"));
+    $html .= '<th>' . htmlspecialchars($day_name) . '</th>';
+  }
+  
+  $html .= "</tr>\n";       
+  $html .= "</thead>\n";
+  
+  // Now the table body
+  $html .= "<tbody>\n";
   for ($i=0; $i<count($calendar); $i++)
   {
     if ($i == 0)
@@ -111,6 +131,8 @@ function print_mini_calendar($view, $year, $month, $day, $area, $room)
     $html .= "<td>" . $calendar[$i] . "</td>";
   }
   $html .= "</tr>\n";
+  
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
   
   echo $html;
