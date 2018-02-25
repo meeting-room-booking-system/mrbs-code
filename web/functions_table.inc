@@ -1144,7 +1144,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
         // day of the week in the header row
         $style = ($column_hidden_width == 0) ? 'display: none' : 'width: ' . $column_hidden_width . '%';
         $header_inner .= '<th class="hidden_day" style="' . $style . '">' .
-                         utf8_strftime($strftime_format['dayname_cal'], $t) . 
+                         utf8_strftime($dformat, $t) . 
                          "</th>\n";
       }
       else  

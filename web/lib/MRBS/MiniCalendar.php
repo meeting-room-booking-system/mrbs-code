@@ -73,7 +73,7 @@ class MiniCalendar
     for ($i=$weekstarts; $i<$weekstarts+7; $i++)
     {
       // Sunday is Day 0
-      $day_name = utf8_strftime($strftime_format['dayname_cal'],
+      $day_name = utf8_strftime($strftime_format['minical_dayname'],
                                 strtotime("next sunday + $i days"));
       $html .= '<th>' . htmlspecialchars($day_name) . '</th>';
     }
