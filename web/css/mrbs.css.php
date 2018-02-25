@@ -1118,10 +1118,6 @@ form#add_new_user {margin-left: 1em}
   color: <?php echo $anchor_hover_color_banner ?>;
 }
 
-#form_nav input[type="submit"] {
-  margin-left: 0.5em;
-}
-
 input.link[type="submit"] {
   display: inline;
   border: none;
@@ -1205,6 +1201,18 @@ div.problem_report {
 
 /* ------------ MINCALS.PHP ---------------------*/
 
+table.minicalendar {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.minicalendar th {
+  min-width: 2.0em;
+  text-align: center;
+  font-weight: normal;
+  background-color: transparent;
+}
+
 .minicalendar thead tr:first-child th {
   text-align: center;
   vertical-align: middle;
@@ -1218,24 +1226,26 @@ div.problem_report {
 .minicalendar thead tr:first-child th:last-child {
   text-align: right;
 }
- 
-
-table.minicalendar {
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-.minicalendar th {
-  min-width: 2.0em;
-  text-align: center;
-  font-weight: normal;
-  background-color: transparent;
-}
 
 .minicalendar td {
   text-align: center;
   font-size: x-small;
 }
+
+.minicalendar td a {
+  display: table-cell;
+  width: 2em;
+  height: 2em;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+
+.minicalendar td a:hover {
+  background-color: #788d9c;
+}
+
+
+
 
 <?php
 // set the styling for the "hidden" days in the mini-cals

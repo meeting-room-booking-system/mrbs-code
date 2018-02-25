@@ -109,40 +109,6 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 {
   $user = getUserName();
   
-  $form = new Form();
-  
-  $form_id = 'form_nav';
-  
-  $form->setAttributes(array('id'     => $form_id,
-                             'method' => 'get',
-                             'action' => 'calendar.php'))
-       ->addHiddenInput('view', $view);
-                    
-  if (isset($area))
-  {
-    $form->addHiddenInput('area', $area);
-  }
-  
-  if (isset($room))
-  {
-    $form->addHiddenInput('room', $room);
-  }
-  
-  $input = new ElementInputDate();
-  $input->setAttributes(array('name'        => 'page_date',
-                              'value'       => format_iso_date($year, $month, $day),
-                              'required'    => true,
-                              'data-submit' => $form_id));
-  
-  $form->addElement($input);
-  
-  $submit = new ElementInputSubmit();
-  $submit->setAttribute('value', get_vocab('goto'));
-  $form->addElement($submit);
-  
-  $form->render();
-  
-  
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
   $approval_somewhere = some_area('approval_enabled', TRUE);
