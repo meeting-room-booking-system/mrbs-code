@@ -30,31 +30,12 @@ class MiniCalendar
   {
     $html = '';
     
-    $html .= "<table>\n";
+    $html .= "<table class=\"minicalendar\">\n";
     
-    $html .= $this->toHTMLCaption();
     $html .= $this->toHTMLHead();
     $html .= $this->toHTMLBody();
     
     $html .= "</table>\n";
-    
-    return $html;
-  }
-  
-  
-  // Produce the table head
-  private function toHTMLCaption()
-  {
-    global $strftime_format;
-    
-    $html = '';
-    
-    $html .= "<caption>\n";
-    
-    $month_string = utf8_strftime($strftime_format['minical_caption'], $this->date->getTimestamp());
-    $html .= htmlspecialchars($month_string);
-    
-    $html .= "</caption>\n";
     
     return $html;
   }
@@ -68,6 +49,15 @@ class MiniCalendar
     $html = '';
     
     $html .= "<thead>\n";
+    
+    // The first row: month and year
+    $html .= "<tr>";
+    $html .= '<th><a class="prev" href="#"></a></th>';  // content will be completed by CSS
+    $month_string = utf8_strftime($strftime_format['minical_monthname'], $this->date->getTimestamp());
+    $html .= '<th colspan="5"><span>' . htmlspecialchars($month_string) . '</span></th>';
+    $html .= '<th><a class="next" href="#"></a></th>';  // content will be completed by CSS
+    $html .= "</tr>";
+    
     $html .= "<tr>";
     
     for ($i=$weekstarts; $i<$weekstarts+7; $i++)

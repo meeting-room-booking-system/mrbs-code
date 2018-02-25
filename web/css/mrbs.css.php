@@ -300,11 +300,11 @@ nav.arrow a:focus {
 }
 
 
-nav.arrow a.prev::before {
+a.prev::before {
   content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
-nav.arrow a.next::after {
+a.next::after {
   content: '\00276f';  /* HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
@@ -1204,10 +1204,19 @@ div.problem_report {
 }
 
 /* ------------ MINCALS.PHP ---------------------*/
-#cals {float: right}
-div#cal_last {float: left}
-div#cal_this {float: left; margin-left: 1.0em}
-div#cal_next {float: left; margin-left: 1.0em}
+
+.minicalendar thead tr:first-child th {
+  text-align: center;
+}
+
+.minicalendar thead tr:first-child th:first-child {
+  text-align: left;
+}
+
+.minicalendar thead tr:first-child th:last-child {
+  text-align: right;
+}
+ 
 
 table.minicalendar {
   border-spacing: 0;
@@ -1219,7 +1228,6 @@ table.minicalendar {
   text-align: center;
   font-weight: normal;
   background-color: transparent;
-  color: <?php echo $standard_font_color ?>;
 }
 
 .minicalendar td {
