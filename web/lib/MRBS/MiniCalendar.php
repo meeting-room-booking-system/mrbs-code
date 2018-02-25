@@ -8,21 +8,37 @@ use \DateInterval;
 
 class MiniCalendar
 {
-  private $calendar;
-  private $view;
   private $date;
+  private $calendar;
+  
+  private $view;
+  private $year;
+  private $month;
+  private $day;
   private $area;
   private $room;
   
   
-  public function __construct($view, $year, $month, $day, $area, $room)
+  public function __construct($view, $year, $month, $day, $area, $room, $mincal=null)
   {
-    $this->date = new DateTime();
-    $this->date->setDate($year, $month, $day);
+    if (isset($mincal))
+    {
+      $this->date = DateTime::createFromFormat('Y-m', $mincal);
+    }
+    else
+    {
+      $this->date = new DateTime();
+      $this->date->setDate($year, $month, $day);
+    }
+    
     $this->calendar = $this->getCalendar();
-    $this->view = $view;
-    $this->area = $area;
-    $this->room = $room;
+    
+    $this->view  = $view;
+    $this->year  = $year;
+    $this->month = $month;
+    $this->day   = $day;
+    $this->area  = $area;
+    $this->room  = $room;
   }
   
   
@@ -58,10 +74,12 @@ class MiniCalendar
     $date = clone $this->date;
     $month_next = $date->add($interval)->format('Y-m');
     
-    $vars = array('view' => $this->view,
-                  'page_date' => $this->date->format('Y-m-d'),
-                  'area'      => $this->area,
-                  'room'      => $this->room);
+    $vars = array('view'  => $this->view,
+                  'year'  => $this->year,
+                  'month' => $this->month,
+                  'day'   => $this->day,
+                  'area'  => $this->area,
+                  'room'  => $this->room);
     
     $vars['mincal'] = $month_prev;
     $query_prev = http_build_query($vars, '', '&');

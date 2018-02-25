@@ -42,7 +42,19 @@ function print_head($simple=false)
 
 function print_mini_calendar($view, $year, $month, $day, $area, $room)
 {
-  $mini_calendar = new MiniCalendar($view, $year, $month, $day, $area, $room);
+  $mincal = get_form_var('mincal', 'string');
+  
+  // Validate the mincal input
+  if (isset($mincal))
+  {
+    $date = DateTime::createFromFormat('Y-m', $mincal);
+    if (($date === false) || array_sum($date->getLastErrors()))
+    {
+      $mincal = null;
+    }
+  }
+  
+  $mini_calendar = new MiniCalendar($view, $year, $month, $day, $area, $room, $mincal);
   echo $mini_calendar->toHTML();
 }
 
