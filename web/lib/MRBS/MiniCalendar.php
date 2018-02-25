@@ -51,13 +51,34 @@ class MiniCalendar
     $html .= "<thead>\n";
     
     // The first row: month and year
+    $interval = new DateInterval('P1M');  // one month
+    
+    $date = clone $this->date;
+    $month_prev = $date->sub($interval)->format('Y-m');
+    $date = clone $this->date;
+    $month_next = $date->add($interval)->format('Y-m');
+    
+    $vars = array('view' => $this->view,
+                  'page_date' => $this->date->format('Y-m-d'),
+                  'area'      => $this->area,
+                  'room'      => $this->room);
+    
+    $vars['mincal'] = $month_prev;
+    $query_prev = http_build_query($vars, '', '&');
+    
+    $vars['mincal'] = $month_next;
+    $query_next = http_build_query($vars, '', '&');
+    
     $html .= "<tr>";
-    $html .= '<th><a class="prev" href="#"></a></th>';  // content will be completed by CSS
+    
+    // content for the prev and next links will be completed by CSS
+    $html .= '<th><a class="prev" href="' . this_page() . '?' . htmlspecialchars($query_prev) . '"></a></th>';
     $month_string = utf8_strftime($strftime_format['minical_monthname'], $this->date->getTimestamp());
     $html .= '<th colspan="5"><span>' . htmlspecialchars($month_string) . '</span></th>';
-    $html .= '<th><a class="next" href="#"></a></th>';  // content will be completed by CSS
+    $html .= '<th><a class="next" href="' . this_page() . '?' . htmlspecialchars($query_next) . '"></a></th>';
     $html .= "</tr>";
     
+    // Next row: day name
     $html .= "<tr>";
     
     for ($i=$weekstarts; $i<$weekstarts+7; $i++)
