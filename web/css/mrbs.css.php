@@ -1207,6 +1207,8 @@ div.problem_report {
 
 .minicalendar thead tr:first-child th {
   text-align: center;
+  vertical-align: middle;
+  line-height: 1.5em;
 }
 
 .minicalendar thead tr:first-child th:first-child {
