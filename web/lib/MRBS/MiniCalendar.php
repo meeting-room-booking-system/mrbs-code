@@ -91,17 +91,33 @@ class MiniCalendar
     $html = '';
     
     $html .= "<tbody>\n";
+    
+    $date = clone $this->date;
+    $date->setDate($date->format('Y'), $date->format('m') - 1, $this->calendar[0]);
+    $interval = new DateInterval('P1D');  // one day
+    
     for ($i=0; $i<count($this->calendar); $i++)
     {
       if ($i == 0)
       {
-        $html .= "<tr>";
+        $html .= "<tr>\n";
       }
       elseif ($i%7 == 0)
       {
-        $html .= "</tr><tr>\n";
+        $html .= "</tr>\n<tr>\n";
       }
-      $html .= "<td>" . $this->calendar[$i] . "</td>";
+      
+      $vars = array('view'      => $this->view,
+                    'page_date' => $date->format('Y-m-d'),
+                    'area'      => $this->area,
+                    'room'      => $this->room);
+                    
+      $query = http_build_query($vars, '', '&');
+      
+      $html .= '<td>';
+      $html .= '<a href="calendar.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
+      $html .= "</td>\n";
+      $date->add($interval);
     }
     $html .= "</tr>\n";
     
@@ -123,7 +139,7 @@ class MiniCalendar
     $date = clone $this->date;
     $d = $date->format('t');  // the last day of the month
     // Go to the last day of the month
-    $date->setDate($year, $month, $d);
+    $date->setDate($date->format('Y'), $date->format('n'), $d);
     $day_of_week = $date->format('w');
     
     $interval = new DateInterval('P1D');  // one day
