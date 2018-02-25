@@ -25,13 +25,26 @@ class MiniCalendar
   
   public function toHTML()
   {
-    global $weekstarts, $strftime_format;
-    
     $html = '';
     
     $html .= "<table>\n";
     
-    // Produce the table head
+    $html .= $this->toHTMLHead();
+    $html .= $this->toHTMLBody();
+    
+    $html .= "</table>\n";
+    
+    return $html;
+  }
+  
+  
+  // Produce the table head
+  private function toHTMLHead()
+  {
+    global $weekstarts, $strftime_format;
+    
+    $html = '';
+    
     $html .= "<thead>\n";
     $html .= "<tr>";
     
@@ -46,7 +59,15 @@ class MiniCalendar
     $html .= "</tr>\n";       
     $html .= "</thead>\n";
     
-    // Now the table body
+    return $html;
+  }
+  
+  
+  // Produce the table body
+  private function toHTMLBody()
+  {
+    $html = '';
+    
     $html .= "<tbody>\n";
     for ($i=0; $i<count($this->calendar); $i++)
     {
@@ -63,7 +84,6 @@ class MiniCalendar
     $html .= "</tr>\n";
     
     $html .= "</tbody>\n";
-    $html .= "</table>\n";
     
     return $html;
   }
