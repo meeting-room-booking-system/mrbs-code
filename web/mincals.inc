@@ -85,7 +85,7 @@ class Calendar
     $date = mktime(12, 0, 0, $this->month, 1, $this->year);
       
     $first = (strftime("%w",$date) + 7 - $weekstarts) % 7;  // day number of the first day of the month
-    $monthName = utf8_strftime($strftime_format['month_cal'], $date);
+    $monthName = utf8_strftime($strftime_format['minical_caption'], $date);
       
     $html .= "<table class=\"calendar\">\n";
     $html .= "<thead>\n";

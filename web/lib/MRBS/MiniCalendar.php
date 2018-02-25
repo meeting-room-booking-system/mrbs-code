@@ -10,16 +10,19 @@ class MiniCalendar
 {
   private $calendar;
   private $view;
-  private $year;
-  private $month;
-  private $day;
+  private $date;
   private $area;
   private $room;
   
   
   public function __construct($view, $year, $month, $day, $area, $room)
   {
-    $this->calendar = self::getCalendar($year, $month, $day);
+    $this->date = new DateTime();
+    $this->date->setDate($year, $month, $day);
+    $this->calendar = $this->getCalendar();
+    $this->view = $view;
+    $this->area = $area;
+    $this->room = $room;
   }
   
   
@@ -29,10 +32,29 @@ class MiniCalendar
     
     $html .= "<table>\n";
     
+    $html .= $this->toHTMLCaption();
     $html .= $this->toHTMLHead();
     $html .= $this->toHTMLBody();
     
     $html .= "</table>\n";
+    
+    return $html;
+  }
+  
+  
+  // Produce the table head
+  private function toHTMLCaption()
+  {
+    global $strftime_format;
+    
+    $html = '';
+    
+    $html .= "<caption>\n";
+    
+    $month_string = utf8_strftime($strftime_format['minical_caption'], $this->date->getTimestamp());
+    $html .= htmlspecialchars($month_string);
+    
+    $html .= "</caption>\n";
     
     return $html;
   }
@@ -89,19 +111,16 @@ class MiniCalendar
   }
   
   
-  // Gets a month calendar for the given $year, $month, $day.   (We need to specify
-  // $day as the year-month-day may not be a valid day, eg 2020-12-32 which will be
-  // interpreted as 2021-01-01).  Returns a six week calendar which is just an array
-  // of dates, starting on $weekstarts.  It's always six weeks so that tables produced
-  // from it are always the same height.
-  private static function getCalendar($year, $month, $day)
+  // Gets a month calendar for the given $year, $month, $day.  Returns a six week calendar
+  // which is just an array of dates, starting on $weekstarts.  It's always six weeks so
+  // that tables produced from it are always the same height.
+  private function getCalendar()
   {
     global $weekstarts;
     
     $calendar = array();
     
-    $date = new DateTime();
-    $date->setDate($year, $month, $day);
+    $date = clone $this->date;
     $d = $date->format('t');  // the last day of the month
     // Go to the last day of the month
     $date->setDate($year, $month, $d);
