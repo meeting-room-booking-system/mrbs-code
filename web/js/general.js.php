@@ -13,14 +13,13 @@ if ($use_strict)
 
 global $autocomplete_length_breaks;
 
+// This will be a function, defined later ?>
+var arrowClick;  
 
-
-// Function for handling the topping up of the mini-calendars via Ajax?>
+<?php // Function for handling the topping up of the mini-calendars via Ajax?>
 function Mincals() {
   this.data = [];
 }
-
-var arrowClick;  <?php // This will be a function, defined later ?>
 
 <?php
 // Build a sorted array of mini-calendars available in the DOM, so that we can top it
@@ -38,7 +37,11 @@ Mincals.prototype.getAll = function() {
 Mincals.prototype.add = function(month) {
   this.data.push(month);
   this.data.sort();
-}
+};
+
+Mincals.prototype.has = function(month) {
+  return (this.data.indexOf(month) >= 0)
+};
 
 <?php
 // Check to se whether we're nearly running out of mini-calendars and if so top-up
@@ -80,12 +83,18 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
            function(data) {
              <?php
              // Add the new mini-calendar to the DOM and also to our
-             // list of mini-calendars
+             // list of mini-calendars.  But first of all check that we
+             // haven't already got it from another Ajax request that might
+             // have been fired while we were waiting for this one.
              ?>
-             var newMincal = $(data);
-             newMincal.find('a.arrow').click(arrowClick);
-             element.after(newMincal);
-             mincals.add(newMincal.data('month'))
+             var newMincal = $(data),
+                 month = newMincal.data('month');
+             if (!mincals.has(month))
+             {
+               newMincal.find('a.arrow').click(arrowClick);
+               element.after(newMincal);
+               mincals.add(month);
+             }
            },
            'html');
   }
