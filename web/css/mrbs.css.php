@@ -1232,6 +1232,13 @@ table.minicalendar {
   font-size: x-small;
 }
 
+.minicalendar a.arrow {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
 .minicalendar td a {
   display: table-cell;
   width: 2em;
