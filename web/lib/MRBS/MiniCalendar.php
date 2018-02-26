@@ -60,8 +60,14 @@ class MiniCalendar
   }
   
   
-  public function toHTML($hidden=false)
+  // $page is the page to link to
+  public function toHTML($hidden=false, $page=null)
   {
+    if (!isset($page))
+    {
+      $page = this_page();
+    }
+    
     $html = '';
     
     $html .= '<table class="minicalendar"' ;
@@ -69,7 +75,7 @@ class MiniCalendar
     $html .= ($hidden) ? ' style="display: none"' : '';
     $html .= ">\n";
     
-    $html .= $this->toHTMLHead();
+    $html .= $this->toHTMLHead($page);
     $html .= $this->toHTMLBody();
     
     $html .= "</table>\n";
@@ -79,7 +85,7 @@ class MiniCalendar
   
   
   // Produce the table head
-  private function toHTMLHead()
+  private function toHTMLHead($page)
   {
     global $weekstarts, $strftime_format;
     
@@ -111,10 +117,10 @@ class MiniCalendar
     $html .= "<tr>";
     
     // content for the prev and next links will be completed by CSS
-    $html .= '<th><a class="arrow prev" href="' . this_page() . '?' . htmlspecialchars($query_prev) . '"></a></th>';
+    $html .= '<th><a class="arrow prev" href="' . htmlspecialchars("$page?$query_prev") . '"></a></th>';
     $month_string = utf8_strftime($strftime_format['minical_monthname'], $this->date->getTimestamp());
     $html .= '<th colspan="5"><span>' . htmlspecialchars($month_string) . '</span></th>';
-    $html .= '<th><a class="arrow next" href="' . this_page() . '?' . htmlspecialchars($query_next) . '"></a></th>';
+    $html .= '<th><a class="arrow next" href="' . htmlspecialchars("$page?$query_next") . '"></a></th>';
     $html .= "</tr>";
     
     // Next row: day name

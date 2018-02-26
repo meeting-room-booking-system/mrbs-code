@@ -14,6 +14,82 @@ if ($use_strict)
 global $autocomplete_length_breaks;
 
 
+
+// Function for handling the topping up of the mini-calendars via Ajax?>
+function Mincals() {
+  this.data = [];
+}
+
+<?php
+// Build a sorted array of mini-calendars available in the DOM, so that we can top it
+// up by Ajax when we're getting close to the end
+?>
+Mincals.prototype.getAll = function() {
+  var mincals = this;
+  $('.minicalendar').each(function() {
+    mincals.data.push($(this).data('month'));
+  });
+  mincals.data.sort();
+};
+
+<?php // Add a month to our list of available mini-calendars ?>
+Mincals.prototype.add = function(month) {
+  this.data.push(month);
+  this.data.sort();
+}
+
+<?php
+// Check to se whether we're nearly running out of mini-calendars and if so top-up
+// the stock by getting another from the server by Ajax and adding it after 'element'.
+?>
+Mincals.prototype.checkAndTopup = function(args, mincal, element) {
+  <?php // Check to see if we need to top up the of stock mini-calendars ?>
+  var mincals = this,
+      index = this.data.indexOf(mincal),
+      n = this.data.length,
+      reference = null,
+      relative;
+  if (index < 3)
+  {
+    <?php // Get the one before the first ?>
+    reference = this.data[0];
+    relative = -1;
+  }
+  else if ((n-index) <= 3)
+  {
+    <?php // Get the one after the last ?>
+    reference = this.data[n - 1];
+    relative = 1;
+  }
+  if (reference)
+  {
+    <?php // We need another mini-calendar ?>
+    var data = {csrf_token: getCSRFToken(),
+                reference: reference,
+                relative: relative,
+                page: args.page + '.php',
+                view: args.view,
+                page_date: args.page_date,
+                area: args.area,
+                room: args.room};
+                
+    $.post('ajax/minicalendar.php',
+           data,
+           function(data) {
+             <?php
+             // Add the new mini-calendar to the DOM and also to our
+             // list of mini-calendars
+             ?>
+             var newMincal = $(data);
+             element.after(newMincal);
+             mincals.add(newMincal.data('month'))
+           },
+           'html');
+  }
+};
+
+
+<?php
 // Function to determine whether the browser supports the HTML5
 // <datalist> element.
 ?>
@@ -361,6 +437,8 @@ init = function(args) {
       })
     .trigger('scroll');
   
+  var mincals = new Mincals();
+  mincals.getAll();
   
   <?php
   // When the Prev and Next arrows on the mini-calendars are clicked, show the prev/next
@@ -371,12 +449,15 @@ init = function(args) {
   $('.minicalendar a.arrow').click(function(event) {
     var href = $(this).attr('href'),
         mincal = getParameterByName('mincal', href),
-        nextcal = $('.minicalendar[data-month="' + mincal + '"]');
+        nextcal = $('.minicalendar[data-month="' + mincal + '"]'),
+        refMincal = null,
+        neededPrev = false;
     if (nextcal.length)
     {
       event.preventDefault();
       $(this).closest('.minicalendar').hide();
       nextcal.show();
+      mincals.checkAndTopup(args, mincal, nextcal);
     }
   });
 };
