@@ -20,6 +20,8 @@ function Mincals() {
   this.data = [];
 }
 
+var arrowClick;  <?php // This will be a function, defined later ?>
+
 <?php
 // Build a sorted array of mini-calendars available in the DOM, so that we can top it
 // up by Ajax when we're getting close to the end
@@ -81,6 +83,7 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
              // list of mini-calendars
              ?>
              var newMincal = $(data);
+             newMincal.find('a.arrow').click(arrowClick);
              element.after(newMincal);
              mincals.add(newMincal.data('month'))
            },
@@ -437,6 +440,7 @@ init = function(args) {
       })
     .trigger('scroll');
   
+  <?php // Set up Ajax loading of new mini-calendars ?>
   var mincals = new Mincals();
   mincals.getAll();
   
@@ -446,7 +450,7 @@ init = function(args) {
   // we just have to follow the link to the server, which will be slower.  (TO DO - get
   // more calendars via Ajax as necessary).
   ?>
-  $('.minicalendar a.arrow').click(function(event) {
+  arrowClick = function(event) {
     var href = $(this).attr('href'),
         mincal = getParameterByName('mincal', href),
         nextcal = $('.minicalendar[data-month="' + mincal + '"]'),
@@ -459,5 +463,7 @@ init = function(args) {
       nextcal.show();
       mincals.checkAndTopup(args, mincal, nextcal);
     }
-  });
+  };
+
+  $('.minicalendar a.arrow').click(arrowClick);
 };
