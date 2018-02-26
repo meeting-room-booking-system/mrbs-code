@@ -360,5 +360,23 @@ init = function(args) {
         updateTableHeaders(floatingTables);
       })
     .trigger('scroll');
-    
+  
+  
+  <?php
+  // When the Prev and Next arrows on the mini-calendars are clicked, show the prev/next
+  // calendar if it's there in the DOM and hide the current one.  If it's not there then
+  // we just have to follow the link to the server, which will be slower.  (TO DO - get
+  // more calendars via Ajax as necessary).
+  ?>
+  $('.minicalendar a.arrow').click(function(event) {
+    var href = $(this).attr('href'),
+        mincal = getParameterByName('mincal', href),
+        nextcal = $('.minicalendar[data-month="' + mincal + '"]');
+    if (nextcal.length)
+    {
+      event.preventDefault();
+      $(this).closest('.minicalendar').hide();
+      nextcal.show();
+    }
+  });
 };

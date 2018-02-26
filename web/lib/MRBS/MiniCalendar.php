@@ -42,11 +42,32 @@ class MiniCalendar
   }
   
   
-  public function toHTML()
+  public function add($interval_spec)
+  {
+    $interval = new DateInterval($interval_spec);
+    $this->date->add($interval);
+    $this->calendar = $this->getCalendar();
+    return $this;
+  }
+  
+  
+  public function sub($interval_spec)
+  {
+    $interval = new DateInterval($interval_spec);
+    $this->date->sub($interval);
+    $this->calendar = $this->getCalendar();
+    return $this;
+  }
+  
+  
+  public function toHTML($hidden=false)
   {
     $html = '';
     
-    $html .= "<table class=\"minicalendar\">\n";
+    $html .= '<table class="minicalendar"' ;
+    $html .= ' data-month="' . $this->date->format('Y-m') . '"';
+    $html .= ($hidden) ? ' style="display: none"' : '';
+    $html .= ">\n";
     
     $html .= $this->toHTMLHead();
     $html .= $this->toHTMLBody();
@@ -90,10 +111,10 @@ class MiniCalendar
     $html .= "<tr>";
     
     // content for the prev and next links will be completed by CSS
-    $html .= '<th><a class="prev" href="' . this_page() . '?' . htmlspecialchars($query_prev) . '"></a></th>';
+    $html .= '<th><a class="arrow prev" href="' . this_page() . '?' . htmlspecialchars($query_prev) . '"></a></th>';
     $month_string = utf8_strftime($strftime_format['minical_monthname'], $this->date->getTimestamp());
     $html .= '<th colspan="5"><span>' . htmlspecialchars($month_string) . '</span></th>';
-    $html .= '<th><a class="next" href="' . this_page() . '?' . htmlspecialchars($query_next) . '"></a></th>';
+    $html .= '<th><a class="arrow next" href="' . this_page() . '?' . htmlspecialchars($query_next) . '"></a></th>';
     $html .= "</tr>";
     
     // Next row: day name

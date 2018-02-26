@@ -42,6 +42,9 @@ function print_head($simple=false)
 
 function print_mini_calendar($view, $year, $month, $day, $area, $room)
 {
+  $buffer_size_prev = 5;  // months of hidden mini-calendars before the visible one
+  $buffer_size_next = 5;  // months of hidden mini-calendars after the visible one
+  
   $mincal = get_form_var('mincal', 'string');
   
   // Validate the mincal input
@@ -55,7 +58,16 @@ function print_mini_calendar($view, $year, $month, $day, $area, $room)
   }
   
   $mini_calendar = new MiniCalendar($view, $year, $month, $day, $area, $room, $mincal);
-  echo $mini_calendar->toHTML();
+  // Go back to the first mini-calendar in the buffer
+  $mini_calendar->sub('P' . $buffer_size_prev . 'M');
+  
+  // Output all the mini-calendars
+  for ($i = -$buffer_size_prev; $i <= $buffer_size_next; $i++)
+  {
+    $hidden = ($i !=0);
+    echo $mini_calendar->toHTML($hidden);
+    $mini_calendar->add('P1M');
+  }
 }
 
 
@@ -217,9 +229,12 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
   echo "<nav>\n";
   echo "<ul>\n";
   
-  echo "<li>\n";
-  print_mini_calendar($view, $year, $month, $day, $area, $room);
-  echo "</li>\n";
+  if (!$simple)
+  {
+    echo "<li>\n";
+    print_mini_calendar($view, $year, $month, $day, $area, $room);
+    echo "</li>\n";
+  }
   
   echo "<li>\n";
   print_header_site_info();
