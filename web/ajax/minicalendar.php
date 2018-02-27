@@ -12,6 +12,9 @@ require '../defaultincludes.inc';
 // Check the CSRF token.
 Form::checkToken();
 
+// Check the user is authorised for this page
+checkAuthorised();
+
 $mincal = get_form_var('reference', 'string');
 $page = filter_var(get_form_var('page', 'string'), FILTER_SANITIZE_URL);
 $relative = get_form_var('relative', 'int', 0);

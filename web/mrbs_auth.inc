@@ -52,6 +52,7 @@ $page_level['pending.php']               = 1;  // Ordinary users can view their 
 // Ajax pages
 $page_level['check_slot.php']            = $page_level['edit_entry.php'];  // only used by edit_entry.php
 $page_level['del_entry.php']             = 2;
+$page_level['minicalendar.php']          = ($auth['deny_public_access']) ? 1 : 0;
 
 // These pages have a minimum access level of 2 as they only contain admin features
 $page_level['add.php']                   = 2;
