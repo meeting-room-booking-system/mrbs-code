@@ -18,7 +18,7 @@ use MRBS\Form\Form;
 //
 //  Returns an array of slots which are invalid
 
-require "defaultincludes.inc";
+require '../defaultincludes.inc';
 
 // Check the CSRF token
 Form::checkToken();
@@ -26,7 +26,7 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised();
 
-// Get the non-standard form vatiables ($day, $month and $year are standard)
+// Get the non-standard form variables ($day, $month and $year are standard)
 $id = get_form_var('id', 'string');
 $slots = get_form_var('slots', 'array');
 $tz = get_form_var('tz', 'string');
