@@ -44,8 +44,8 @@ Mincals.prototype.has = function(month) {
 };
 
 <?php
-// Check to se whether we're nearly running out of mini-calendars and if so top-up
-// the stock by getting another from the server by Ajax and adding it after 'element'.
+// Check to see whether we're nearly running out of mini-calendars and if so top-up
+// the stock by getting some more from the server by Ajax and adding them after 'element'.
 ?>
 Mincals.prototype.checkAndTopup = function(args, mincal, element) {
   <?php // Check to see if we need to top up the of stock mini-calendars ?>
@@ -68,7 +68,7 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
   }
   if (reference)
   {
-    <?php // We need another mini-calendar ?>
+    <?php // We need more mini-calendars ?>
     var data = {csrf_token: getCSRFToken(),
                 reference: reference,
                 relative: relative,
@@ -83,9 +83,9 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
            data,
            function(data) {
              <?php
-             // Add the new mini-calendar to the DOM and also to our
+             // Add the new mini-calendars to the DOM and also to our
              // list of mini-calendars.  But first of all check that we
-             // haven't already got it from another Ajax request that might
+             // haven't already got them from another Ajax request that might
              // have been fired while we were waiting for this one.
              ?>
              $(data).filter('.minicalendar').each(function() {
