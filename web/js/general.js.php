@@ -271,7 +271,7 @@ init = function(args) {
             ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
         {
           recordActivity.lastRecorded = t;
-          $.post('record_activity_ajax.php', {ajax: 1, activity: 1}, function() {
+          $.post('ajax/record_activity_ajax.php', {ajax: 1, activity: 1}, function() {
             });
         }
       };
