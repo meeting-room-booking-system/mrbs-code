@@ -1,7 +1,7 @@
 <?php
 
-// Get a minicalendar which is 'relative' months away (typically 1 or -1) from the 'reference',
-// which is in YYYY-MM format.
+// Get a set of minicalendars starting at the month which is 'relative' months away (typically 1 or -1)
+// from the 'reference', which is in YYYY-MM format, and continuing for 'length' months
 
 namespace MRBS;
 
@@ -15,6 +15,7 @@ Form::checkToken();
 $mincal = get_form_var('reference', 'string');
 $page = filter_var(get_form_var('page', 'string'), FILTER_SANITIZE_URL);
 $relative = get_form_var('relative', 'int', 0);
+$length = get_form_var('length', 'int', 1);
 
 // Validate the mincal input
 if (isset($mincal))
@@ -30,13 +31,15 @@ $mini_calendar = new MiniCalendar($view, $year, $month, $day, $area, $room, $min
 
 $interval = 'P' . abs($relative) . 'M';
 
-if ($relative < 1)
+for ($i=0; $i<$length; $i++)
 {
-  $mini_calendar->sub($interval);
+  if ($relative < 1)
+  {
+    $mini_calendar->sub($interval);
+  }
+  else
+  {
+    $mini_calendar->add($interval);
+  }
+  echo $mini_calendar->toHTML(true, $page);
 }
-else
-{
-  $mini_calendar->add($interval);
-}
-
-echo $mini_calendar->toHTML(true, $page);

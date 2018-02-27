@@ -72,6 +72,7 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
     var data = {csrf_token: getCSRFToken(),
                 reference: reference,
                 relative: relative,
+                length: 5,
                 page: args.page + '.php',
                 view: args.view,
                 page_date: args.page_date,
@@ -87,14 +88,17 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
              // haven't already got it from another Ajax request that might
              // have been fired while we were waiting for this one.
              ?>
-             var newMincal = $(data),
-                 month = newMincal.data('month');
-             if (!mincals.has(month))
-             {
-               newMincal.find('a.arrow').click(arrowClick);
-               element.after(newMincal);
-               mincals.add(month);
-             }
+             $(data).filter('.minicalendar').each(function() {
+               var thisCalendar = $(this),
+                   month = thisCalendar.data('month');
+               if (!mincals.has(month))
+               {
+                 thisCalendar.find('a.arrow').click(arrowClick);
+                 element.after(thisCalendar);
+                 mincals.add(month);
+               }
+             });
+
            },
            'html');
   }
