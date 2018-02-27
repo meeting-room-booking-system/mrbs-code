@@ -136,7 +136,7 @@ function checkTimeSlots(jqDate)
                   year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
                   tz: areaConfig('timezone'),
                   slots: slots};
-    $.post('ajax/check_slot_ajax.php', params, function(result) {
+    $.post('ajax/check_slot.php', params, function(result) {
         $.each(result.slots, function(key, value) {
             $('#' + result.id).find('option[value="' + value + '"]').remove();
           });

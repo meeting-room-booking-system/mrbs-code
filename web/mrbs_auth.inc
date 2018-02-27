@@ -45,10 +45,12 @@ $page_level['approve_entry_handler.php'] = 1;  // Ordinary users are allowed to 
 $page_level['del_entry.php']             = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_room.php']             = 1;  // Ordinary users can view room details
 $page_level['edit_entry.php']            = ($auth['only_admin_can_book']) ? 2 : 1;
-$page_level['check_slot_ajax.php']       = $page_level['edit_entry.php'];  // only used by edit_entry.php
 $page_level['edit_entry_handler.php']    = ($auth['only_admin_can_book']) ? 2 : 1;
 $page_level['edit_users.php']            = 1;  // Ordinary users can edit their own details
 $page_level['pending.php']               = 1;  // Ordinary users can view their own entries
+
+// Ajax pages
+$page_level['check_slot.php']            = $page_level['edit_entry.php'];  // only used by edit_entry.php
 
 // These pages have a minimum access level of 2 as they only contain admin features
 $page_level['add.php']                   = 2;
