@@ -1132,16 +1132,6 @@ form#show_my_entries input.link[type="submit"] {
   padding: 0.3em 0;
   font-weight: normal;
 }
-  
-
-<?php
-// The rules below are concerned with keeping the date selector in the header a constant width, so
-// that the header doesn't jump around when the page is loaded
-?>
-
-.js .banner #Form1 select {
-  display: none;
-}
 
 table#colour_key {
   clear: both;
