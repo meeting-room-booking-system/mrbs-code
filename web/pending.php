@@ -223,7 +223,7 @@ function display_entry_row(array $row)
                 
   $query = http_build_query($vars, '', '&');
   
-  echo '<a href="calendar.php?' .htmlspecialchars($query) . '">';
+  echo '<a href="index.php?' .htmlspecialchars($query) . '">';
   
   if(empty($row['enable_periods']))
   {

@@ -604,7 +604,7 @@ if (empty($returl) ||
                             'edit_entry_handler.php',
                             'search.php')))
 {
-  $returl = 'calendar.php';
+  $returl = 'index.php';
 }
 
 // If we haven't been given a sensible date then get out of here and don't try and make a booking

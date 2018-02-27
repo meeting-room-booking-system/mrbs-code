@@ -18,7 +18,7 @@ $vocab["admin"]              = "Διαχείριση";
 $vocab["help"]               = "Βοήθεια";
 $vocab["search"]             = "Αναζήτηση";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Κρατήσεις για";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Περιοχές";

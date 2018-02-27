@@ -36,7 +36,7 @@ if (empty($returl))
                 'area'  => $area,
                 'room'  => $room);
 
-  $returl .= 'calendar.php?' . http_build_query($vars, '', '&');
+  $returl .= 'index.php?' . http_build_query($vars, '', '&');
 }
 
 if ($info = get_booking_info($id, FALSE, TRUE))

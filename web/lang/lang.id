@@ -19,7 +19,7 @@ $vocab["help"]               = "Bantuan";
 $vocab["search"]             = "Pencarian";
 $vocab["outstanding"]        = "pesanan Tertunda";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "pesanan Untuk";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Area";

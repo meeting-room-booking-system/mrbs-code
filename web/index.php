@@ -27,7 +27,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
     
     $form->setAttributes(array('id'     => 'areaChangeForm',
                                'method' => 'get',
-                               'action' => 'calendar.php'));
+                               'action' => 'index.php'));
                                
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date));
@@ -67,7 +67,7 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
     
     $form->setAttributes(array('id'     => 'roomChangeForm',
                                'method' => 'get',
-                               'action' => 'calendar.php'));
+                               'action' => 'index.php'));
                                
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date,
@@ -133,7 +133,7 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
                 'area'  => $area,
                 'room'  => $room);
   
-  return 'calendar.php?' . http_build_query($vars, '', '&');
+  return 'index.php?' . http_build_query($vars, '', '&');
 }
 
 
@@ -149,7 +149,7 @@ function get_today_link($view, $area, $room)
                 'area'  => $area,
                 'room'  => $room);
   
-  return 'calendar.php?' . http_build_query($vars, '', '&');
+  return 'index.php?' . http_build_query($vars, '', '&');
 }
 
 
@@ -192,7 +192,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
     $query = http_build_query($vars, '', '&');
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= ' href="calendar.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($view)) . '</a>';
+    $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($view)) . '</a>';
   }
   
   $html .= '</div>';

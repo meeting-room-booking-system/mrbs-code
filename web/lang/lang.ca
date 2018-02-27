@@ -18,7 +18,7 @@ $vocab["admin"]              = "Administració";
 $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Cerca";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reserves per a";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Famílies";

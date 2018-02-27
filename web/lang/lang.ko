@@ -19,7 +19,7 @@ $vocab["admin"]              = "관리자";
 $vocab["help"]               = "도움말";
 $vocab["search"]             = "검색";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = "의 예약입니다.";
 $vocab["areas"]              = "지역";

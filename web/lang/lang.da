@@ -19,7 +19,7 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjælp";
 $vocab["search"]             = "Søg";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reservation for";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";

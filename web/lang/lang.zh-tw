@@ -18,7 +18,7 @@ $vocab["admin"]              = "系統管理";
 $vocab["help"]               = "說明";
 $vocab["search"]             = "搜尋";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "預約";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "區域";

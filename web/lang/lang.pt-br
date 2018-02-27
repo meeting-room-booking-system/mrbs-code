@@ -19,7 +19,7 @@ $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Pesquisa";
 $vocab["outstanding"]        = "reservas pendentes";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reservas para";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Áreas";

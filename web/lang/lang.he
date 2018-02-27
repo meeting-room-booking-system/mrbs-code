@@ -24,7 +24,7 @@ $vocab["help"]               = "עזרה";
 $vocab["search"]             = "חיפוש";
 $vocab["outstanding"]        = "הזמנות לאישור";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "הזמנה ל";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "אזורים";

@@ -20,7 +20,7 @@ $vocab["help"]               = "ヘルプ";
 $vocab["search"]             = "検索";
 $vocab["outstanding"]        = "未決の予約";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "";
 $vocab["bookingsforpost"]    = "の予約です";
 $vocab["areas"]              = "部署";

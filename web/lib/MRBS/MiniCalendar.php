@@ -171,7 +171,7 @@ class MiniCalendar
       $query = http_build_query($vars, '', '&');
       
       $html .= '<td>';
-      $html .= '<a href="calendar.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
+      $html .= '<a href="index.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
       $html .= "</td>\n";
       $date->add($interval);
     }

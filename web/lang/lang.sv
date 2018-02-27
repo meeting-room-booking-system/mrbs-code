@@ -19,7 +19,7 @@ $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök";
 $vocab["outstanding"]        = "väntande bokningar";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Bokningar för";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Områden";

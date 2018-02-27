@@ -23,7 +23,7 @@ $vocab["help"]               = "Segítség";
 $vocab["search"]             = "Keresés";
 $vocab["outstanding"]        = "függőben lévő foglalások";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Foglalások a következőhöz:";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Helyek";

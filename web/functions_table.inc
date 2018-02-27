@@ -851,7 +851,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       $query = http_build_query($vars, '', '&'); 
       // Put the room_id in a data attribute so that JavaScript can pick it up        
       $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">" .
-                       '<a href="calendar.php?' . htmlspecialchars($query) . '"' .
+                       '<a href="index.php?' . htmlspecialchars($query) . '"' .
                        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
     }
@@ -897,7 +897,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
                     'area'  => $area_id,
                     'room'  => $room['id']);
                     
-      $room_cell_link = "calendar.php?" . htmlspecialchars(http_build_query($vars, '', '&')); 
+      $room_cell_link = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&')); 
       
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
@@ -961,7 +961,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         $vars['timetohighlight'] = $s;
       }
       
-      $url = "calendar.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
       
       $tbody .= "<tr class=\"$class\">\n";
       $tbody .= time_cell_html($s, $url);
@@ -1159,7 +1159,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
         $query = http_build_query($vars, '', '&');
         // Put the date into a data attribute so that it can be picked up by JavaScript
         $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%">' .
-                         '<a href="calendar.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
+                         '<a href="index.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }
     }  // for ($j = 0 ...
@@ -1218,7 +1218,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
                       'area'  => $area_id,
                       'room'  => $room_id);
                       
-        $day_cell_link = 'calendar.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+        $day_cell_link = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
                        
         $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         
@@ -1275,7 +1275,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
         $vars['timetohighlight'] = $s;
       }
       
-      $url = 'calendar.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
   
       $tbody.= "<tr class=\"$class\">";
       $tbody .= time_cell_html($s, $url);
@@ -1601,14 +1601,14 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       {
         $vars['view'] = 'week';          
         $query = http_build_query($vars, '', '&');
-        $html .= '<a class="week_number" href="calendar.php?' . htmlspecialchars($query) . '">';
+        $html .= '<a class="week_number" href="index.php?' . htmlspecialchars($query) . '">';
         $html .= date("W", gmmktime(12, 0, 0, $month, $cday, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
       $vars['view'] = 'day';          
       $query = http_build_query($vars, '', '&');
-      $html .= '<a class="monthday" href="calendar.php?' . htmlspecialchars($query) . "\">$cday</a>\n";
+      $html .= '<a class="monthday" href="index.php?' . htmlspecialchars($query) . "\">$cday</a>\n";
 
       $html .= "</div>\n";
       

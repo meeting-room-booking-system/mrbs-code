@@ -18,7 +18,7 @@ $vocab["admin"]              = "Kudeaketa";
 $vocab["help"]               = "Laguntza";
 $vocab["search"]             = "Bilatu";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Noiz erreserbatu: ";
 $vocab["bookingsforpost"]    = ""; // Dataren ondoren doa
 $vocab["areas"]              = "Baliabide mota";

@@ -19,7 +19,7 @@ $vocab["help"]               = "ช่วยเหลือ";
 $vocab["search"]             = "ค้นหา";
 $vocab["outstanding"]        = "การจองที่รอดำเนินการ";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "จองสำหรับ";
 $vocab["bookingsforpost"]    = "ไปหลังจากวันที่";
 $vocab["areas"]              = "พื้นที่";

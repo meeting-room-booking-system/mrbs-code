@@ -20,7 +20,7 @@ $vocab["help"]               = "Yardım";
 $vocab["search"]             = "Arama";
 $vocab["outstanding"]        = "askıdaki yer ayırtma";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Yer ayırtmak için";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Alanlar";

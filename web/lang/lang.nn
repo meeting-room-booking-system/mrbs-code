@@ -22,7 +22,7 @@ $vocab["help"]               = "Hjelp";
 $vocab["search"]             = "Søk";
 $vocab["outstanding"]        = "ikke-behandlede reservasjoner";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reservasjon for";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";

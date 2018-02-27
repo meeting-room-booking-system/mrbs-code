@@ -87,7 +87,7 @@ function output_row($row)
                 
   $query = http_build_query($vars, '', '&');
                 
-  $link = '<a href="calendar.php?' . htmlspecialchars($query) . '">';
+  $link = '<a href="index.php?' . htmlspecialchars($query) . '">';
   
   if(empty($row['enable_periods']))
   {

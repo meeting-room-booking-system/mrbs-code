@@ -19,7 +19,7 @@ $vocab["help"]               = "Aide";
 $vocab["search"]             = "Recherche";
 $vocab["outstanding"]        = "en attendant les réservations";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Réservations pour";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Lieux";

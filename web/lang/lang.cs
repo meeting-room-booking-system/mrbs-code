@@ -19,7 +19,7 @@ $vocab["help"]               = "Nápověda";
 $vocab["search"]             = "Hledat";
 $vocab["outstanding"]        = "čekající na schválení";
 
-// Used in calendar.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Objednáno pro";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Oblasti";

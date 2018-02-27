@@ -355,7 +355,7 @@ if (!isset($returl))
                   'area'  => $area,
                   'room'  => $room);
                   
-    $returl .= 'calendar.php?' . http_build_query($vars, '', '&');;
+    $returl .= 'index.php?' . http_build_query($vars, '', '&');;
   }
 }
 
