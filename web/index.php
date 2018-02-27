@@ -330,11 +330,14 @@ if ($ajax)
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo get_date_heading($view, $year, $month, $day);
-echo get_calendar_nav($view, $year, $month, $day, $area, $room);
+$calendar_nav = get_calendar_nav($view, $year, $month, $day, $area, $room);
+echo $calendar_nav;
 
 echo "<table class=\"dwm_main\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
+
+echo $calendar_nav;
 
 show_colour_key();
 

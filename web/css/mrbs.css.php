@@ -1143,7 +1143,15 @@ form#show_my_entries input.link[type="submit"] {
   display: none;
 }
 
-table#colour_key {clear: both; float: left; border-spacing: 0; border-collapse: collapse; margin-bottom: 0.5em}
+table#colour_key {
+  clear: both;
+  float: left;
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin-top: 1em;
+  margin-bottom: 3em;
+}
+
 #colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
     color: <?php echo $colour_key_font_color ?>;
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
