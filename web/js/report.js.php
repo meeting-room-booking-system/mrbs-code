@@ -158,7 +158,7 @@ init = function(args) {
                         $('#report_table_processing').css('visibility', 'visible');
                         for (j=0; j<nBatches; j++)
                         {
-                          $.post('del_entry_ajax.php',
+                          $.post('ajax/del_entry_ajax.php',
                                  {csrf_token: getCSRFToken(),
                                   ids: batches[j]},
                                  function(result) {

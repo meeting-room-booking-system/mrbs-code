@@ -24,8 +24,8 @@ use MRBS\Form\Form;
 //     seconds could overwhelm many mail servers, or break the usage policies
 //     on hosted systems.
 
-require "defaultincludes.inc";
-require_once "mrbs_sql.inc";
+require '../defaultincludes.inc';
+require_once '../mrbs_sql.inc';
 
 // Check the CSRF token
 Form::checkToken();
