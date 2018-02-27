@@ -16,8 +16,19 @@ global $autocomplete_length_breaks;
 // This will be a function, defined later ?>
 var arrowClick;  
 
-<?php // Function for handling the topping up of the mini-calendars via Ajax?>
+<?php
+// Function for handling the topping up of the mini-calendars via Ajax.  When the current
+// calendar is nearing the end of the list in the DOM, an Ajax request for a new batch of
+// calendars is sent to the server.  The settings below need to be chosen so that enough
+// new calendars are fetched to keep up with the fastest clicking rate of the user.  Of course,
+// this will depend on the network speed and latency, and in theory one could be more
+// sophisticated and measure the Ajax round-trip time and adjust the settings dynamically,
+// but it's probably not worth it.
+?>
 function Mincals() {
+  this.maxSize = 100;   <?php // Maximum number of mini-calendars to hold in the DOM ?>
+  this.batchSize = 10;  <?php // Number of new mini-calendars to get in each Ajax call ?>
+  this.trigger = 10;    <?php // Get more mini-calendars if we are this close to the end ?>
   this.data = [];
 }
 
@@ -39,6 +50,30 @@ Mincals.prototype.add = function(month) {
   this.data.sort();
 };
 
+<?php
+// Add a month to our list of available mini-calendars and, if
+// the list is now bigger than its maximum size, recommend a month
+// for removal, which will be the one at the other end from the
+// inserted month.
+?>
+Mincals.prototype.addAndPrune = function(month) {
+  var remove = null;
+  this.add(month);
+  if (this.data.length > this.maxSize)
+  {
+    if (this.data.indexOf(month) < this.data.length/2)
+    {
+      remove = this.data.pop();
+    }
+    else
+    {
+      remove = this.data.shift();
+    }
+  }
+  return remove;
+};
+
+<?php // Test whether 'month' is in the list ?>
 Mincals.prototype.has = function(month) {
   return (this.data.indexOf(month) >= 0)
 };
@@ -54,13 +89,13 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
       n = this.data.length,
       reference = null,
       relative;
-  if (index < 3)
+  if (index < this.trigger)
   {
     <?php // Get the one before the first ?>
     reference = this.data[0];
     relative = -1;
   }
-  else if ((n-index) <= 3)
+  else if ((n-index) <= this.trigger)
   {
     <?php // Get the one after the last ?>
     reference = this.data[n - 1];
@@ -87,15 +122,22 @@ Mincals.prototype.checkAndTopup = function(args, mincal, element) {
              // list of mini-calendars.  But first of all check that we
              // haven't already got them from another Ajax request that might
              // have been fired while we were waiting for this one.
+             // When we add a new one we also check whether we need to remove
+             // one from the other end to stop the DOM growing too large.
              ?>
              $(data).filter('.minicalendar').each(function() {
                var thisCalendar = $(this),
-                   month = thisCalendar.data('month');
+                   month = thisCalendar.data('month'),
+                   remove;
                if (!mincals.has(month))
                {
                  thisCalendar.find('a.arrow').click(arrowClick);
                  element.after(thisCalendar);
-                 mincals.add(month);
+                 remove = mincals.addAndPrune(month);
+                 if (remove)
+                 {
+                   thisCalendar.parent().find('[data-month="' + remove + '"]').remove();
+                 }
                }
              });
 

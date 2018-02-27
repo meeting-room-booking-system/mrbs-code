@@ -42,8 +42,8 @@ function print_head($simple=false)
 
 function print_mini_calendar($view, $year, $month, $day, $area, $room)
 {
-  $buffer_size_prev = 5;  // months of hidden mini-calendars before the visible one
-  $buffer_size_next = 5;  // months of hidden mini-calendars after the visible one
+  $buffer_size_prev = 15;  // months of hidden mini-calendars before the visible one
+  $buffer_size_next = 15;  // months of hidden mini-calendars after the visible one
   
   $mincal = get_form_var('mincal', 'string');
   
