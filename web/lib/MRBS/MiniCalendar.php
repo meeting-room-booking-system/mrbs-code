@@ -151,6 +151,8 @@ class MiniCalendar
     $date = clone $this->date;
     $date->setDate($date->format('Y'), $date->format('m') - 1, $this->calendar[0]);
     $interval = new DateInterval('P1D');  // one day
+    $date_today = new DateTime();
+    $today = $date_today->format('Y-m-d');
     
     for ($i=0; $i<count($this->calendar); $i++)
     {
@@ -170,7 +172,14 @@ class MiniCalendar
                     
       $query = http_build_query($vars, '', '&');
       
-      $html .= '<td>';
+      $classes = $this->getClasses($date);
+      
+      $html .= '<td';
+      if (!empty($classes))
+      {
+        $html .= ' class="' . implode(' ', $classes) . '"';
+      }
+      $html .= '>';
       $html .= '<a href="index.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
       $html .= "</td>\n";
       $date->add($interval);
@@ -228,6 +237,21 @@ class MiniCalendar
     }
     
     return $calendar;
+  }
+  
+  
+  private function getClasses(DateTime $date)
+  {
+    $classes = array();
+    
+    // Check whether it's today
+    $today = new DateTime();
+    if ($date->format('Y-m-d') == $today->format('Y-m-d'))
+    {
+      $classes[] = 'today';
+    }
+    
+    return $classes;
   }
   
 }

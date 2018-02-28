@@ -1250,6 +1250,7 @@ table.minicalendar {
   border-radius: 50%;
 }
 
+.minicalendar td.today a,
 .minicalendar td a:hover {
   background-color: #788d9c;
 }
