@@ -1242,10 +1242,11 @@ table.minicalendar {
 }
 
 .minicalendar td a {
-  display: table-cell;
+  display: block;
   width: 2em;
   height: 2em;
-  vertical-align: middle;
+  line-height: 2em;
+  margin: auto;
   border-radius: 50%;
 }
 
