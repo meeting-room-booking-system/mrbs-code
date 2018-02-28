@@ -1252,7 +1252,12 @@ table.minicalendar {
 
 .minicalendar td.today a,
 .minicalendar td a:hover {
-  background-color: #788d9c;
+  background-color: <?php echo $minical_today_color ?>;
+  color: <?php echo $standard_font_color ?>
+}
+
+.minicalendar td.view {
+  background-color: <?php echo $minical_view_color ?>;
 }
 
 

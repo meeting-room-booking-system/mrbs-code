@@ -8,19 +8,24 @@ use \DateInterval;
 
 class MiniCalendar
 {
-  private $date;
-  private $calendar;
+  private $date;      // The DateTime object representing this calendar
+  private $calendar;  // An array of days
   
+  // These properties are all concerned with the current context
   private $view;
   private $year;
   private $month;
   private $day;
   private $area;
   private $room;
+  private $date_view;            // The DateTime object for the current context date
+  private $date_view_weekstart;  // The DateTime object for the start of the week for the curent context date
   
   
   public function __construct($view, $year, $month, $day, $area, $room, $mincal=null)
   {
+    global $weekstarts;
+    
     if (isset($mincal))
     {
       $this->date = DateTime::createFromFormat('Y-m', $mincal);
@@ -39,6 +44,13 @@ class MiniCalendar
     $this->day   = $day;
     $this->area  = $area;
     $this->room  = $room;
+    
+    $this->date_view = new DateTime();
+    $this->date_view->setDate($year, $month, $day);
+    // Get the start of the week
+    $this->date_view_weekstart = new DateTime();
+    $n = ($this->date_view->format('w') + 7 - $weekstarts) % 7;
+    $this->date_view_weekstart->setDate($year, $month, $day - $n);
   }
   
   
@@ -249,6 +261,33 @@ class MiniCalendar
     if ($date->format('Y-m-d') == $today->format('Y-m-d'))
     {
       $classes[] = 'today';
+    }
+    
+    // Check whether it's part of the view
+    switch ($this->view)
+    {
+      case 'day':
+        if ($date->format('Y-m-d') == $this->date_view->format('Y-m-d'))
+        {
+          $classes[] = 'view';
+        }
+        break;
+      case 'week':
+        $interval = $this->date_view_weekstart->diff($date)->format('%r%a');
+        if (($interval >=0) && ($interval < 7))
+        {
+          $classes[] = 'view';
+        }
+        break;
+      case 'month':
+        if ($date->format('Y-m') == $this->date_view->format('Y-m'))
+        {
+          $classes[] = 'view';
+        }
+        break;
+      default:
+        throw new \Exception("Unknown view '$view'");
+        break;
     }
     
     return $classes;
