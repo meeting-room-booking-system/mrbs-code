@@ -78,6 +78,7 @@ div.contents {
   width: 100%;
   box-sizing: border-box;
   padding: 0 2em;
+  margin-bottom: 3em;
 }
 
 h1 {font-size: x-large; clear: both}
@@ -1138,7 +1139,6 @@ div#color_key{
   grid-template-columns: repeat(auto-fill, minmax(20ch, 1fr));
   width: 100%;
   margin-top: 1em;
-  margin-bottom: 3em;
 }
 
 div#color_key > div {
