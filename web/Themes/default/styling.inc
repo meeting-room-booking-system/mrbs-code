@@ -12,12 +12,12 @@ $header_font_color              = "#ffffff";    // font color for text in header
 $highlight_font_color           = "#ff0066";    // used for highlighting text (eg links, errors)
 $color_key_font_color           = $standard_font_color;    // used in the colour key table
 
-$banner_back_color              = "#004458";    // background colour for banner
+$banner_back_color              = "#3f5765";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
 $banner_font_color              = $header_font_color;       // font colour for banner
 
-$minical_view_color             = "#1f8a70";    // used for highlighting the dates in the current view
-$minical_today_color            = "#bedb39";    // used for highlighting today
+$minical_view_color             = "#2b3a42";    // used for highlighting the dates in the current view
+$minical_today_color            = "#bdd4de";    // used for highlighting today
 
 $header_back_color              = $banner_back_color;  // background colour for headers
 
