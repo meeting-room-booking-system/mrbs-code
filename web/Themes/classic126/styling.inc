@@ -10,7 +10,7 @@ $body_background_color          = "#ffffed";    // background colour for the mai
 $standard_font_color            = "black";      // default font color
 $header_font_color              = "#ffffff";    // font color for text in headers
 $highlight_font_color           = "red";        // used for highlighting text (eg links, errors)
-$colour_key_font_color          = "#5B69A6";    // used in the colour key table
+$color_key_font_color           = "#5B69A6";    // used in the colour key table
 
 $banner_back_color              = "#c0e0ff";    // background colour for banner
 $banner_border_color            = "#5B69A6";    // border colour for banner

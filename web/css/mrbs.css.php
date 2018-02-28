@@ -1133,19 +1133,23 @@ form#show_my_entries input.link[type="submit"] {
   font-weight: normal;
 }
 
-table#colour_key {
-  clear: both;
-  float: left;
-  border-spacing: 0;
-  border-collapse: collapse;
+div#color_key{
+  display: inline-grid;
+  grid-template-columns: repeat(auto-fill, minmax(20ch, 1fr));
+  width: 100%;
   margin-top: 1em;
   margin-bottom: 3em;
 }
 
-#colour_key td {width: 7.0em; padding: 2px; font-weight: bold;
-    color: <?php echo $colour_key_font_color ?>;
-    border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>}
-#colour_key td#row_padding {border-right: 0; border-bottom: 0}
+div#color_key > div {
+  color: <?php echo $color_key_font_color ?>;
+  word-wrap: break-word;
+  padding: 0.3em;
+  margin: -1px 0 0 -1px; <?php // to collapse the borders ?>
+  font-weight: bold;
+  border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>
+}
+  
 
 form#header_search {
   display: inline-block;

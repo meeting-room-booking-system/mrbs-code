@@ -1295,56 +1295,6 @@ function validate_email_list($list)
 }
 
 
-// Display the entry-type color key. This has up to 2 rows, up to 5 columns.
-function show_colour_key()
-{
-  global $booking_types;
-  
-  // No point in showing the colour key if we aren't using entry types.  (Note:  count()
-  // returns 0 if its parameter is not set).
-  if (count($booking_types) < 2)
-  {
-    return;
-  }
-  
-  // set the table width.   Default is 5, but try and avoid rows of unequal length
-  switch (count($booking_types))
-  {
-    case '6':
-      $table_width = 3;
-      break;
-    case '8':
-    case '12':
-      $table_width = 4;
-      break;
-    default:
-      $table_width = 5;
-  }
-  echo "<table id=\"colour_key\"><tr>\n";
-  $n = 0;
-  foreach ($booking_types as $key)
-  {
-    $value = get_type_vocab($key);
-    if (++$n > $table_width)
-    {
-      $n = 1;
-      echo "</tr><tr>";
-    }
-    echo tdcell($key, 1);
-    echo "<div class=\"celldiv slots1\" " .  // put the description inside a div which will give clipping in case of long names
-    "title=\"$value\">\n";        // but put the name in the title so you can still read it all if you hover over it
-    echo "$value</div></td>\n";
-  }
-  // If there is more than one row and the bottom row isn't complete then 
-  // pad it out with a single merged cell
-  if ((count($booking_types) > $table_width) && ($n < $table_width))
-  {
-    echo "<td colspan=\"" . ($table_width - $n) . "\"" .
-        " id=\"row_padding\">&nbsp;</td>\n";
-  }
-  echo "</tr></table>\n";
-}
-
 // Round time down to the nearest resolution
 function round_t_down($t, $resolution, $am7)
 {

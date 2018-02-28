@@ -9,6 +9,33 @@ require "defaultincludes.inc";
 require_once "functions_table.inc";
 
 
+// Display the entry-type color key.
+function get_color_key()
+{
+  global $booking_types;
+  
+  // No point in showing the color key if we aren't using entry types.  (Note:  count()
+  // returns 0 if its parameter is not set).
+  if (count($booking_types) < 2)
+  {
+    return;
+  }
+  
+  $html = '';
+  
+  $html = "<div id=\"color_key\">\n";
+
+  foreach ($booking_types as $key)
+  {
+    $html .= "<div class=\"$key\">" . get_type_vocab($key) . "</div>\n";
+  }
+
+  $html .= "</div>\n";
+  
+  return $html;
+}
+
+
 // generates some html that can be used to select which area should be
 // displayed.
 function make_area_select_html($view, $year, $month, $day, $current)
@@ -339,6 +366,6 @@ echo "</table>\n";
 
 echo $calendar_nav;
 
-show_colour_key();
+echo get_color_key();
 
 print_footer();
