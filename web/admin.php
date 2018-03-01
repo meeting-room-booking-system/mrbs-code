@@ -52,7 +52,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   
   $form = new Form();
   
-  $attributes = array('id'     => 'areaChangeForm',
+  $attributes = array('class'  => 'areaChangeForm',
                       'action' => this_page(),
                       'method' => 'post');
                       

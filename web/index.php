@@ -52,7 +52,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
     
     $form = new Form();
     
-    $form->setAttributes(array('id'     => 'areaChangeForm',
+    $form->setAttributes(array('class'  => 'areaChangeForm',
                                'method' => 'get',
                                'action' => 'index.php'));
                                
