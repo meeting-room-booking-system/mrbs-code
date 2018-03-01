@@ -1451,7 +1451,6 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
   global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
   global $user;
-  global $debug_flag;
   
   // Check that we've got a valid, enabled room
   if (is_null(get_room_name($room)))
@@ -1495,16 +1494,6 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
 
     foreach($entries as $entry)
     {
-      if ($debug_flag)
-      {
-        $html .= "<br>DEBUG: id ".$entry['id'].", starts ".$entry['start_time'].", ends ".$entry['end_time']."\n";
-      }
-
-      if ($debug_flag)
-      {
-        $html .= "<br>DEBUG: Entry ".$entry['id']." day $day_num\n";
-      }
-      
       // Handle private events
       if (is_private_event($entry['status'] & STATUS_PRIVATE)  &&
           !getWritable($entry['create_by'], $user, $room))
@@ -1534,26 +1523,6 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
                                                            $start_first_slot,
                                                            $end_last_slot);
     }
-  }
-
-  
-  if ($debug_flag)
-  {
-    $html .= "<p>DEBUG: Array of month day data:</p><pre>\n";
-    for ($i = 1; $i <= $days_in_month; $i++)
-    {
-      if (isset($d[$i]["id"]))
-      {
-        $n = count($d[$i]["id"]);
-        $html .= "Day $i has $n entries:\n";
-        for ($j = 0; $j < $n; $j++)
-        {
-          $html .= "  ID: " . $d[$i]["id"][$j] .
-            " Data: " . $d[$i]["data"][$j] . "\n";
-        }
-      }
-    }
-    $html .= "</pre>\n";
   }
   
   $html .= get_table_head();
