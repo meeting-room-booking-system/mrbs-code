@@ -92,7 +92,7 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
     
     $form = new Form();
     
-    $form->setAttributes(array('id'     => 'roomChangeForm',
+    $form->setAttributes(array('class'  => 'roomChangeForm',
                                'method' => 'get',
                                'action' => 'index.php'));
                                

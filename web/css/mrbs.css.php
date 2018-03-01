@@ -356,13 +356,13 @@ div#div_custom_html {
   float: left;
 }
   
-#roomChangeForm select, .areaChangeForm select {
+.roomChangeForm select, .areaChangeForm select {
   font-size: larger;
 }
 
-#roomChangeForm input, .areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
+.roomChangeForm input, .areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
 
-#roomChangeForm input.button, .areaChangeForm button.image {
+.roomChangeForm input.button, .areaChangeForm button.image {
   display: block;
   float: left;
   margin: 0 0.7em
