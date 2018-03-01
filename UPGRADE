@@ -37,12 +37,10 @@ performing the upgrade on your production database.
 Upgrading from prior to MRBS 1.8.0
 ==================================
 
-The $area_list_format configuration setting has been abandoned.   If you have
-it in your config file it won't do anything.  All area and room lists are
-now select elements.
-
-The $simple_trailer configuration setting has been abandoned.  There is no
-longer a trailer!
+The following configuration settings have changed:
+    $area_list_format         Redundant. All area and room lists are now select elements.
+    $display_calendar_bottom  Redundant.  The mini-calendars have moved.
+    $simple_trailer           Redundant.  There is no longer a trailer!
 
 The following $strftime_format settings have changed:
     'day_month'   redundant
