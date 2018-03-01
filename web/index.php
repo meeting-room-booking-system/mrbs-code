@@ -294,7 +294,7 @@ function get_date_heading($view, $year, $month, $day)
   switch ($view)
   {
     case 'day':
-      $html .= utf8_strftime($strftime_format['date'], $time);
+      $html .= utf8_strftime($strftime_format['view_day'], $time);
       break;
       
     case 'week':
@@ -323,7 +323,7 @@ function get_date_heading($view, $year, $month, $day)
       break;
       
     case 'month':
-      $html .= utf8_strftime($strftime_format['monthyear'], $time);
+      $html .= utf8_strftime($strftime_format['view_month'], $time);
       break;
       
     default:

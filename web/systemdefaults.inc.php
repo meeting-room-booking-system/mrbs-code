@@ -300,11 +300,20 @@ $strftime_format['datetime24']        = "%H:%M - %A %d %B %Y";    // 24 hour clo
 // MRBS 1.4.5 and earlier) then use
 // $strftime_format['daymonth']       = "%d %b";
 $strftime_format['daymonth']          = "%b %d";
-$strftime_format['monthyear']         = "%B %Y";        // Used in Month view
+
+// Used in the day/week/month views.  Note that for the week view we have to
+// cater for three possible cases, for example:
+//    Years differ:                   26 Dec 2016 - 1 Jan 2017
+//    Years same, but months differ:  30 Jan - 5 Feb 2017
+//    Years and months the same:      6 - 12 Feb 2017
+// Note that the separator between the start and end of the week is just '-',
+// so any spaces required need to put in the formats below.
+$strftime_format['view_day']          = "%A %e %B %Y";
+$strftime_format['view_month']        = "%B %Y";
 $strftime_format['view_week_end']     = " %e %B %Y";
-$strftime_format['view_week_start']   = "%e ";
-$strftime_format['view_week_start_m'] = "%e %B ";
-$strftime_format['view_week_start_y'] = "%e %B %Y ";
+$strftime_format['view_week_start']   = "%e ";        // year and month the same
+$strftime_format['view_week_start_m'] = "%e %B ";     // just the year the same
+$strftime_format['view_week_start_y'] = "%e %B %Y ";  // years (and months) different
 
 // Whether or not to display the timezone
 $display_timezone = false;
