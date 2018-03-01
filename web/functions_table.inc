@@ -1453,6 +1453,14 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
   global $user;
   global $debug_flag;
   
+  // Check that we've got a valid, enabled room
+  if (is_null(get_room_name($room)))
+  {
+    // No rooms have been created yet, or else they are all disabled
+    // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
+    return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
+  }
+  
   $html = '';
   
   // Month view start time. This ignores morningstarts/eveningends because it
