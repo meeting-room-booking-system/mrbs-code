@@ -282,7 +282,8 @@ $hidden_days = array();
 $twentyfourhour_format = 1;
 
 // Formats used for dates and times.   For formatting options
-// see http://php.net/manual/function.strftime.php
+// see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically
+// convert the following formats which are not supported on Windows: %e, %l, %P and %R.
 $strftime_format['date']              = "%A %d %B %Y";  // Used in Day view
 $strftime_format['date_short']        = "%x";           // Used in Search results
 $strftime_format['dayname']           = "%A";           // Used in Month view

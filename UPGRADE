@@ -45,7 +45,8 @@ The following configuration settings have changed:
 The following $strftime_format settings have changed:
     'day_month'   redundant
     'dayname_cal' replaced by 'minical_dayname'
-    'month_cal'   replaced by 'minical_monthname' 
+    'month_cal'   replaced by 'minical_monthname'
+    'monthyear'   replaced by 'view_month'
 
 
 Upgrading from prior to MRBS 1.7.1
