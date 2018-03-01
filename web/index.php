@@ -61,7 +61,6 @@ function make_area_select_html($view, $year, $month, $day, $current)
     
     $select = new ElementSelect();
     $select->setAttributes(array('class'    => 'room_area_select',
-                                 'id'       => 'area_select',
                                  'name'     => 'area',
                                  'onchange' => 'this.form.submit()'))
            ->addSelectOptions($areas, $current, true);
