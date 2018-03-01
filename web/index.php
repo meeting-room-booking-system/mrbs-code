@@ -284,7 +284,7 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room)
 
 function get_date_heading($view, $year, $month, $day)
 {
-  global $strftime_format, $display_timezone;
+  global $strftime_format, $display_timezone, $weekstarts;
   
   $html = '';
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -296,12 +296,36 @@ function get_date_heading($view, $year, $month, $day)
     case 'day':
       $html .= utf8_strftime($strftime_format['date'], $time);
       break;
+      
     case 'week':
-      $html .= 'Still to do!!!';
+      $day_of_week = date('w', $time);
+      $our_day_of_week = ($day_of_week + 7 - $weekstarts) % 7;
+      $start_of_week = mktime(12, 0, 0, $month, $day - $our_day_of_week, $year);
+      $end_of_week = mktime(12, 0, 0, $month, $day + 6 - $our_day_of_week, $year);
+      // We have to cater for three possible cases.  For example
+      //    Years differ:                   26 Dec 2016 - 1 Jan 2017
+      //    Years same, but months differ:  30 Jan - 5 Feb 2017
+      //    Years and months the same:      6 - 12 Feb 2017
+      if (date('Y', $start_of_week) != date('Y', $end_of_week))
+      {
+        $start_format = $strftime_format['view_week_start_y'];
+      }
+      elseif (date('m', $start_of_week) != date('m', $end_of_week))
+      {
+        $start_format = $strftime_format['view_week_start_m'];
+      }
+      else
+      {
+        $start_format = $strftime_format['view_week_start'];
+      }
+      $html .= utf8_strftime($start_format, $start_of_week) . '-' .
+               utf8_strftime($strftime_format['view_week_end'], $end_of_week);
       break;
+      
     case 'month':
       $html .= utf8_strftime($strftime_format['monthyear'], $time);
       break;
+      
     default:
       throw new \Exception("Unknown view '$view'");
       break;

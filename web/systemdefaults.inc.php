@@ -301,6 +301,10 @@ $strftime_format['datetime24']        = "%H:%M - %A %d %B %Y";    // 24 hour clo
 // $strftime_format['daymonth']       = "%d %b";
 $strftime_format['daymonth']          = "%b %d";
 $strftime_format['monthyear']         = "%B %Y";        // Used in Month view
+$strftime_format['view_week_end']     = " %e %B %Y";
+$strftime_format['view_week_start']   = "%e ";
+$strftime_format['view_week_start_m'] = "%e %B ";
+$strftime_format['view_week_start_y'] = "%e %B %Y ";
 
 // Whether or not to display the timezone
 $display_timezone = false;
