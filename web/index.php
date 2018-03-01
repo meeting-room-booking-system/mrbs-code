@@ -101,7 +101,6 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
     
     $select = new ElementSelect();
     $select->setAttributes(array('class'    => 'room_area_select',
-                                 'id'       => 'room_select',
                                  'name'     => 'room',
                                  'onchange' => 'this.form.submit()'))
            ->addSelectOptions($rooms, $current, true);
