@@ -99,7 +99,7 @@ class MiniCalendar
   // Produce the table head
   private function toHTMLHead($page)
   {
-    global $weekstarts, $strftime_format;
+    global $weekstarts, $hidden_days, $strftime_format;
     
     $html = '';
     
@@ -143,7 +143,9 @@ class MiniCalendar
       // Sunday is Day 0
       $day_name = utf8_strftime($strftime_format['minical_dayname'],
                                 strtotime("next sunday + $i days"));
-      $html .= '<th>' . htmlspecialchars($day_name) . '</th>';
+      $html .= '<th' . ((in_array($i % 7, $hidden_days)) ? ' class="hidden"' : '') . '>';
+      $html .= htmlspecialchars($day_name);
+      $html .= '</th>';
     }
     
     $html .= "</tr>\n";       
@@ -192,7 +194,17 @@ class MiniCalendar
         $html .= ' class="' . implode(' ', $classes) . '"';
       }
       $html .= '>';
-      $html .= '<a href="index.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
+      
+      // If it's a hidden day then don't provide a link
+      if (in_array('hidden', $classes))
+      {
+        $html .= '<span>' . $this->calendar[$i] . '</span>';
+      }
+      else
+      {
+        $html .= '<a href="index.php?' . htmlspecialchars($query) . '">' . $this->calendar[$i] . '</a>';
+      }
+      
       $html .= "</td>\n";
       $date->add($interval);
     }
@@ -254,6 +266,8 @@ class MiniCalendar
   
   private function getClasses(DateTime $date)
   {
+    global $hidden_days;
+    
     $classes = array();
     
     // Check whether it's today
@@ -288,6 +302,12 @@ class MiniCalendar
       default:
         throw new \Exception("Unknown view '$view'");
         break;
+    }
+    
+    // Check whether it's a hidden day
+    if (in_array($date->format('w'), $hidden_days))
+    {
+      $classes[] = 'hidden';
     }
     
     return $classes;

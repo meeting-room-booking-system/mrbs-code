@@ -1241,7 +1241,7 @@ table.minicalendar {
   text-align: center;
 }
 
-.minicalendar td a {
+.minicalendar td > * {
   display: block;
   width: 2em;
   height: 2em;
@@ -1256,18 +1256,14 @@ table.minicalendar {
   color: <?php echo $standard_font_color ?>
 }
 
-.minicalendar td.view {
+.minicalendar .view {
   background-color: <?php echo $minical_view_color ?>;
 }
 
+.minicalendar .hidden {
+  opacity: 0.7
+}
 
-
-
-<?php
-// set the styling for the "hidden" days in the mini-cals
-?>
-.minicalendar th.hidden {background-color: <?php echo $calendar_hidden_color ?>} 
-.minicalendar td.hidden {background-color: <?php echo $calendar_hidden_color ?>; font-weight: bold} 
 .minicalendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
 td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
 td.mincals_week_number { opacity: 0.5; font-size: 60%; }
