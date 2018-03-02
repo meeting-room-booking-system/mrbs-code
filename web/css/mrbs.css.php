@@ -1101,6 +1101,7 @@ form#add_new_user {margin-left: 1em}
 }
 
 nav.logon {
+  display: flex;
   margin-left: 1rem;
   padding-left: 1rem;
 }

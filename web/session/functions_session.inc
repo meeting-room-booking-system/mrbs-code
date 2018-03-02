@@ -96,8 +96,7 @@ function print_report_link($user)
                                'creatormatch' => $user));
                                
   $submit = new ElementInputSubmit();
-  $submit->setAttributes(array('class' => 'link',
-                               'title' => get_vocab('show_my_entries'),
+  $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
                                'value' => $user));
   $form->addElement($submit);
                                
