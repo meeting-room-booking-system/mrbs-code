@@ -1103,7 +1103,14 @@ form#add_new_user {margin-left: 1em}
 .banner nav.menu a {
   display: inline-block;
   text-align: center;
-  padding: 0.2rem 1rem;
+  padding: 0.3rem 1rem;
+  line-height: 1.5em;
+  border-radius: 0.8em;
+}
+
+.banner nav.menu a:hover {
+  background-color: #bdd4de;
+  color: <?php echo $standard_font_color ?>;
 }
 
 #form_nav {
