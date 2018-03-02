@@ -122,7 +122,6 @@ function print_header_site_info()
 
 function print_goto_date($view, $year, $month, $day, $area, $room)
 {
-  $user = getUserName();
   $form = new Form();
   
   $form_id = 'form_nav';
@@ -155,33 +154,31 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   $form->addElement($submit);
   
   $form->render();
-    
+}
+
+
+function print_outstanding($query)
+{
+  $user = getUserName();
+  
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
   $approval_somewhere = some_area('approval_enabled', TRUE);
   if ($approval_somewhere && (authGetUserLevel($user) >= 1))
   {
     $n_outstanding = get_entries_n_outstanding($user);
-    echo "<div id=\"n_outstanding\"" .
-         (($n_outstanding > 0) ? " class=\"outstanding\"" : '') .
-         ">\n";
     
-    $vars = array('view'  => $view,
-                  'year'  => $year,
-                  'month' => $month,
-                  'day'   => $day,
-                  'area'  => $area);
-                  
-    if (isset($room))
+    $class = 'notification';
+    
+    if ($n_outstanding > 0)
     {
-      $vars['room'] = $room;
+      $class .= ' attention';
     }
     
-    $query = http_build_query($vars, '', '&');
-    
-    echo '<a href="pending.php?' . htmlspecialchars($query) .
-         "\">$n_outstanding " . get_vocab('outstanding') . "</a>\n";
-    echo "</div>\n";
+    echo '<a href="pending.php?' . htmlspecialchars($query) . '"' .
+         " class=\"$class\"" .
+         ' title="' . get_vocab('outstanding', $n_outstanding) .
+         "\">$n_outstanding</a>\n";
   }
 }
 
@@ -305,6 +302,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
       echo "<nav class=\"logon\">\n";
+      print_outstanding($query);
       print_logon_box();
       echo "</nav>\n";
     }

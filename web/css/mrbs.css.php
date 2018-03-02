@@ -1102,6 +1102,7 @@ form#add_new_user {margin-left: 1em}
 
 nav.logon {
   display: flex;
+  align-items: center;
   margin-left: 1rem;
   padding-left: 1rem;
 }
@@ -1111,15 +1112,21 @@ nav.logon input {
   border: none;
 }
 
-.banner nav.menu a, nav.logon input {
+.banner nav.menu a,
+.banner a.notification,
+nav.logon input {
   display: inline-block;
-  text-align: center;
   padding: 0.3rem 1rem;
   line-height: 1.5em;
   border-radius: 0.8em;
 }
 
+.banner a.attention {
+  background-color: #ff530d;
+}
+
 .banner nav.menu a:hover,
+.banner a.notification:hover,
 nav.logon input:hover {
   background-color: #bdd4de;
   color: <?php echo $standard_font_color ?>;
@@ -1170,7 +1177,6 @@ form#header_search {
   width: 6em;
 }
 
-div#n_outstanding {margin-top: 0.5em}
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
 
 /* ------------ HELP.PHP ------------------------*/
