@@ -80,39 +80,42 @@ function print_header_site_info()
          $mrbs_company_logo,
          $mrbs_company_more_info;
   
-  echo "<div class=\"company\">\n";
-  
-  echo "<div class=\"logo\">\n";
-  if (!empty($mrbs_company_url))
+  // Company logo, with a link to the company
+  if (!empty($mrbs_company_logo))
   {
-    echo "<a href=\"$mrbs_company_url\">\n";
-  }
-  if (empty($mrbs_company_logo))
-  {
-    echo "<span>$mrbs_company</span>\n";
-  }
-  else
-  {
+    echo "<div class=\"logo\">\n";
+    if (!empty($mrbs_company_url))
+    {
+      echo '<a href="' . htmlspecialchars($mrbs_company_url) . '">';
+    }
     // Suppress error messages in case the logo is a URL and allow_url_fopen
     // is not enabled in php.ini
     $logo_size = @getimagesize($mrbs_company_logo);
-    echo "<img src=\"$mrbs_company_logo\" " . $logo_size[3] . " alt=\"$mrbs_company\">\n";
+    echo '<img src="' . $mrbs_company_logo . '" ' . $logo_size[3] . 
+         ' alt="' . htmlspecialchars($mrbs_company) . '">';
+    if (!empty($mrbs_company_url))
+    {
+      echo "</a>\n";
+    }
+    echo "</div>\n";
   }
+  
+  // Company name, any extra company info and MRBS
+  echo "<div class=\"company\">\n";
+  if (!empty($mrbs_company_url))
+  {
+    echo '<a href="' . htmlspecialchars($mrbs_company_url) . '">';
+  }
+  echo '<span>' . htmlspecialchars($mrbs_company) . '</span>';
   if (!empty($mrbs_company_url))
   {
     echo "</a>\n";
   }
-  echo "</div>\n";
-    
   if (!empty($mrbs_company_more_info))
   {
-    echo "<div id=\"more_info\">$mrbs_company_more_info</div>\n";
+    echo '<span id="more_info">' . htmlspecialchars($mrbs_company_more_info) . "</span>\n";
   }
-
-  echo "<div class=\"mrbs\">\n";
-  echo "<a href=\"index.php\">" . get_vocab("mrbs") . "</a>\n";
-  echo "</div>\n";
-  
+  echo '<a href="index.php">' . get_vocab('mrbs') . "</a>\n";
   echo "</div>\n";
 }
 
@@ -126,7 +129,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   
   $form->setAttributes(array('id'     => $form_id,
                              'method' => 'get',
-                             'action' => 'calendar.php'))
+                             'action' => 'index.php'))
        ->addHiddenInput('view', $view);
                     
   if (isset($area))
@@ -220,6 +223,8 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
     $search_str = '';
   }
   
+  echo "<div\n";
+  
   echo "<label><a href=\"search.php?advanced=1\">" . get_vocab('search') . "</a></label>\n";
   
   $form = new Form();
@@ -249,6 +254,8 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   $form->addElement($input);
   
   $form->render();
+  
+  echo "</div\n";
 }
 
 
@@ -272,18 +279,27 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
   
   $query = http_build_query($vars, '', '&');
   
-  echo "<nav>\n";
-  
   if (!$simple)
   {
-    print_mini_calendar($view, $year, $month, $day, $area, $room);
+    // print_mini_calendar($view, $year, $month, $day, $area, $room);
   }
   
   print_header_site_info();
   
+  
+  
   if (!$simple)
   {
+    echo "<nav class=\"container\">\n";
+    
+    echo "<nav>\n";
     print_goto_date($view, $year, $month, $day, $area, $room);
+    print_search($view, $year, $month, $day, $area, $room, $search_str);
+    echo "</nav>\n";
+
+    echo "</nav>\n";
+    
+    echo "<nav>\n";
     
     echo "<nav class=\"menu\">\n";
     print_help($query);
@@ -291,18 +307,17 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     print_report($query);
     print_users($query);
     echo "</nav>\n";
-    print_search($view, $year, $month, $day, $area, $room, $search_str);
     
     // For session protocols that define their own logon box...
     if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
-      echo "<li id=\"logon_box\">\n";
+      echo "<nav class=\"logon\">\n";
       print_logon_box();
-      echo "</li>\n";
+      echo "</nav>\n";
     }
+    echo "</nav>\n";
   }
   
-  echo "</nav>\n";
   echo "</header>\n";
 }
 

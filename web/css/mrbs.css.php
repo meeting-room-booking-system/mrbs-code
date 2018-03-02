@@ -1041,7 +1041,9 @@ form#add_new_user {margin-left: 1em}
 /* ------------ FUNCTIONS.INC -------------------*/
 
 .banner {
-  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   width: 100%;
   background-color: <?php echo $banner_back_color ?>;
   color: <?php echo $banner_font_color ?>;
@@ -1050,56 +1052,12 @@ form#add_new_user {margin-left: 1em}
   border-style: solid;
 }
 
-.banner.simple, .banner.simple nav {
-  height: auto;
-}
-
 .banner .company {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: large;
   padding: 0.3em 1em;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.banner .company div {
-  width: 100%;
-}
-
-.banner nav {
-  display: table;
-  height: 100%;
-  width: 100%;
-}
-
-.banner ul {
-  list-style: none;
-  display: table;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding-left: 0;
-}
-
-.banner li {
-  display: table-cell;
-  height: 100%;
-  text-align: center;
-  vertical-align: middle;
-  border-color: <?php echo $banner_border_color ?>;
-  border-style: solid;
-  border-width: 0 0 0 <?php echo $banner_border_cell_width ?>px;
-  padding: 0.3em 0.5em;
-}
-
-.banner li:first-child {
-  border-left-width: 0;
-}
-
-#logon_box a {
-  display: block;
-  width: 100%;
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
 }
 
 .banner a:link, .banner a:visited, .banner a:hover {
@@ -1117,6 +1075,20 @@ form#add_new_user {margin-left: 1em}
 
 .banner a:hover {
   color: <?php echo $anchor_hover_color_banner ?>;
+}
+
+.banner nav.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-wrap: wrap-reverse;
+}
+
+.banner nav.container > nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 input.link[type="submit"] {
