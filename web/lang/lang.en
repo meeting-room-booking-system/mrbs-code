@@ -248,7 +248,7 @@ $vocab["level_2"]            = "admin";
 $vocab["level_3"]            = "user admin";
 
 // Authentication database
-$vocab["user_list"]          = "User list";
+$vocab["user_list"]          = "Users";
 $vocab["edit_user"]          = "Edit user";
 $vocab["delete_user"]        = "Delete this user";
 //$vocab["users.name"]         = Use the same as above, for consistency.

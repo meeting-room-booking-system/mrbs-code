@@ -114,7 +114,7 @@ $vocab["logoff"]             = "Έξοδος (Log Off)";
 $vocab["username_or_email"]  = "Ψευδώνυμο ή ηλεκ. διεύθυνση";
 
 // Authentication database
-$vocab["user_list"]          = "User list";
+$vocab["user_list"]          = "Users";
 $vocab["edit_user"]          = "Edit user";
 $vocab["delete_user"]        = "Delete this user";
 //$vocab["users.name"]         = Use the same as above, for consistency.
