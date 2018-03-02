@@ -1080,9 +1080,9 @@ form#add_new_user {margin-left: 1em}
 .banner nav.container {
   flex-grow: 1;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  flex-wrap: wrap-reverse;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .banner nav.container > nav {

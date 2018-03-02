@@ -293,13 +293,6 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     echo "<nav class=\"container\">\n";
     
     echo "<nav>\n";
-    print_goto_date($view, $year, $month, $day, $area, $room);
-    print_search($view, $year, $month, $day, $area, $room, $search_str);
-    echo "</nav>\n";
-
-    echo "</nav>\n";
-    
-    echo "<nav>\n";
     
     echo "<nav class=\"menu\">\n";
     print_help($query);
@@ -315,6 +308,13 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
       print_logon_box();
       echo "</nav>\n";
     }
+    echo "</nav>\n";
+    
+    echo "<nav>\n";
+    print_goto_date($view, $year, $month, $day, $area, $room);
+    print_search($view, $year, $month, $day, $area, $room, $search_str);
+    echo "</nav>\n";
+
     echo "</nav>\n";
   }
   
