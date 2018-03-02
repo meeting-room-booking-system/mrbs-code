@@ -1061,6 +1061,7 @@ form#add_new_user {margin-left: 1em}
   font-size: large;
   padding: 0.5rem 2rem 0.5rem 0;
   margin-right: 2rem;
+  white-space: nowrap;
 }
 
 .banner a:link, .banner a:visited, .banner a:hover {
@@ -1105,7 +1106,12 @@ form#add_new_user {margin-left: 1em}
   align-items: center;
 }
 
-.banner nav.menu {
+nav.menu, nav.logon {
+  margin-left: 1rem;
+  padding-left: 1rem;
+}
+
+nav.menu {
   display: inline-grid;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -1113,8 +1119,6 @@ form#add_new_user {margin-left: 1em}
 nav.logon {
   display: flex;
   align-items: center;
-  margin-left: 1rem;
-  padding-left: 1rem;
 }
 
 nav.logon input {
@@ -1175,14 +1179,10 @@ div#color_key > div {
   font-weight: bold;
   border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>
 }
-  
-
-form#header_search {
-  display: inline-block;
-}
 
 #header_search input {
-  width: 6em;
+  width: 8em;
+  margin-left: 0.5em;
 }
 
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
