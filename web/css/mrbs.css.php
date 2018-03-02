@@ -1092,6 +1092,7 @@ form#add_new_user {margin-left: 1em}
 .banner nav.container > nav {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: flex-end;
 }
 
@@ -1112,8 +1113,7 @@ nav.logon input {
   border: none;
 }
 
-.banner nav.menu a,
-.banner a.notification,
+.banner nav a,
 nav.logon input {
   display: inline-block;
   padding: 0.3rem 1rem;
@@ -1125,8 +1125,7 @@ nav.logon input {
   background-color: #ff530d;
 }
 
-.banner nav.menu a:hover,
-.banner a.notification:hover,
+.banner nav a:hover,
 nav.logon input:hover {
   background-color: #bdd4de;
   color: <?php echo $standard_font_color ?>;
