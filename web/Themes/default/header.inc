@@ -201,6 +201,18 @@ function print_report($query)
 }
 
 
+function print_users($query)
+{
+  global $auth;
+  
+  if ($auth['type'] == 'db')
+  {
+    echo '<a id="user_list_link" href="edit_users.php?' . htmlspecialchars($query) . '">' . 
+         get_vocab('user_list') . "</a>\n";
+  }
+}
+
+
 function print_search($view, $year, $month, $day, $area, $room, $search_str=null)
 {
   if (!isset($search_str))
@@ -240,8 +252,10 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
 }
 
 
-function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $simple=false)
+function print_banner($view, $year, $month, $day, $area, $room, $search_str=null, $simple=false)
 {
+  echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
+  
   $vars = array('view'  => $view,
                 'year'  => $year,
                 'month' => $month,
@@ -259,40 +273,25 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
   $query = http_build_query($vars, '', '&');
   
   echo "<nav>\n";
-  echo "<ul>\n";
   
   if (!$simple)
   {
-    echo "<li>\n";
     print_mini_calendar($view, $year, $month, $day, $area, $room);
-    echo "</li>\n";
   }
   
-  echo "<li>\n";
   print_header_site_info();
-  echo "</li>\n";
   
   if (!$simple)
   {
-    echo "<li>\n";
     print_goto_date($view, $year, $month, $day, $area, $room);
-    echo "</li>\n";
     
-    echo "<li>\n";
+    echo "<nav class=\"menu\">\n";
     print_help($query);
-    echo "</li>\n";
-    
-    echo "<li>\n";
     print_rooms($query);
-    echo "</li>\n";
-    
-    echo "<li>\n";
     print_report($query);
-    echo "</li>\n";
-    
-    echo "<li>\n";
+    print_users($query);
+    echo "</nav>\n";
     print_search($view, $year, $month, $day, $area, $room, $search_str);
-    echo "</li>\n";
     
     // For session protocols that define their own logon box...
     if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
@@ -303,8 +302,8 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
     }
   }
   
-  echo "</ul>\n";
   echo "</nav>\n";
+  echo "</header>\n";
 }
 
 
@@ -314,9 +313,7 @@ function print_nav($view, $year, $month, $day, $area, $room, $search_str=null, $
 function print_unsupported_message()
 {
   echo "<div class=\"unsupported_message\">\n";
-  echo "<header class=\"banner simple\">\n";
-  print_nav(null, null, null, null, null, null, null, $simple=true);
-  echo "</header>\n";
+  print_banner(null, null, null, null, null, null, null, $simple=true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
@@ -363,18 +360,10 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
     <?php
   }
   
-  $class = 'banner';
-  if ($simple)
-  {
-    $class .= ' simple';
-  }
-  
   print_unsupported_message();
   
-  echo "<header class=\"$class\">\n";
-  print_nav($view, $year, $month, $day, $area, $room, $search_str, $simple);
-  echo "</header>\n";
-
+  print_banner($view, $year, $month, $day, $area, $room, $search_str, $simple);
+  
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>
   echo "<div class=\"contents\">\n";

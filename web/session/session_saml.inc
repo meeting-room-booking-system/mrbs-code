@@ -96,8 +96,6 @@ function print_logon_box()
 		print_unknown_user();
 		print_saml_logon_button('/'.$target_url);
 	}
-
-	print_userlist_link();
 }
 
 // Print a login button that will initiate a SAML session

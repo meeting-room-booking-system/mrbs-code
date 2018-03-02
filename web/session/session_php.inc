@@ -79,8 +79,6 @@ function print_logon_box()
     print_unknown_user();
     print_logon_button($target_url);
   } 
-  
-  print_userlist_link();
 }
 
 

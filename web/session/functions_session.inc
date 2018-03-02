@@ -152,14 +152,3 @@ function print_logoff_button($target_url)
   
   $form->render();
 }
-
-
-function print_userlist_link()
-{
-  global $auth;
-  
-  if ($auth['type'] == 'db')
-  {
-    echo "<a id=\"user_list_link\" href=\"edit_users.php\">" . get_vocab('user_list') . "</a>\n";
-  }
-}

@@ -82,7 +82,5 @@ function print_logon_box()
       exit;
     }
   }
-  
-  print_userlist_link();
 }
 
