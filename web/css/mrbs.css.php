@@ -1061,7 +1061,8 @@ form#add_new_user {margin-left: 1em}
   flex-direction: column;
   align-items: center;
   font-size: large;
-  margin-right: 4rem;
+  padding-right: 2rem;
+  margin-right: 2rem;
 }
 
 .banner a:link, .banner a:visited, .banner a:hover {
@@ -1093,6 +1094,16 @@ form#add_new_user {margin-left: 1em}
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+.banner nav.menu {
+  display: inline-grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#form_nav {
+  padding-right: 1rem;
+  margin-right: 1rem;
 }
 
 input.link[type="submit"] {
