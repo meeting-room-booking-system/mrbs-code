@@ -73,11 +73,14 @@ button.image {
   padding: 0;
 }
 
-div.contents {
+.contents, .banner {
+  padding: 0 1.5rem;
+}
+
+contents {
   float: left;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 2em;
   margin-bottom: 3em;
 }
 
@@ -1044,12 +1047,13 @@ form#add_new_user {margin-left: 1em}
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  width: 100%;
   background-color: <?php echo $banner_back_color ?>;
   color: <?php echo $banner_font_color ?>;
   border-color: <?php echo $banner_border_color ?>;
   border-width: <?php echo $banner_border_width ?>px;
   border-style: solid;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .banner .company {
@@ -1057,7 +1061,7 @@ form#add_new_user {margin-left: 1em}
   flex-direction: column;
   align-items: center;
   font-size: large;
-  padding: 0.3em 1em;
+  margin-right: 4rem;
 }
 
 .banner a:link, .banner a:visited, .banner a:hover {
