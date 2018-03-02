@@ -1101,6 +1101,12 @@ form#add_new_user {margin-left: 1em}
   grid-template-columns: repeat(4, 1fr);
 }
 
+.banner nav.menu a {
+  display: inline-block;
+  text-align: center;
+  padding: 0.2rem 1rem;
+}
+
 #form_nav {
   padding-right: 1rem;
   margin-right: 1rem;
