@@ -1068,7 +1068,7 @@ form#add_new_user {margin-left: 1em}
   font-weight: normal;
 }
 
-.banner a:link {
+.banner a:link, nav.logon input {
   color: <?php echo $anchor_link_color_banner ?>;
 }
 
@@ -1100,7 +1100,17 @@ form#add_new_user {margin-left: 1em}
   grid-template-columns: repeat(4, 1fr);
 }
 
-.banner nav.menu a {
+nav.logon {
+  margin-left: 1rem;
+  padding-left: 1rem;
+}
+
+nav.logon input {
+  background: none;
+  border: none;
+}
+
+.banner nav.menu a, nav.logon input {
   display: inline-block;
   text-align: center;
   padding: 0.3rem 1rem;
@@ -1108,7 +1118,8 @@ form#add_new_user {margin-left: 1em}
   border-radius: 0.8em;
 }
 
-.banner nav.menu a:hover {
+.banner nav.menu a:hover,
+nav.logon input:hover {
   background-color: #bdd4de;
   color: <?php echo $standard_font_color ?>;
 }

@@ -296,8 +296,8 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     
     echo "<nav class=\"menu\">\n";
     print_help($query);
-    print_rooms($query);
     print_report($query);
+    print_rooms($query);
     print_users($query);
     echo "</nav>\n";
     
