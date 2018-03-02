@@ -93,7 +93,6 @@ function print_logon_box()
 	}
 	else
 	{
-		print_unknown_user();
 		print_saml_logon_button('/'.$target_url);
 	}
 }

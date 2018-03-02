@@ -105,13 +105,6 @@ function print_report_link($user)
 }
 
 
-function print_unknown_user()
-{
-  $html = "<a href=\"\">" . get_vocab('unknown_user') . "</a>\n";
-  echo $html;
-}
-
-
 function print_logon_button($target_url)
 {
   $form = new Form();
