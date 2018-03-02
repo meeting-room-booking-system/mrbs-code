@@ -1101,6 +1101,10 @@ form#add_new_user {margin-left: 1em}
   align-items: center;
 }
 
+.banner nav.container > nav:first-child {
+  flex-wrap: wrap-reverse;
+}
+
 .banner nav.container > nav:last-child > * {
   display: flex;
   align-items: center;
