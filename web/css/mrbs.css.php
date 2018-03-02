@@ -1085,15 +1085,24 @@ form#add_new_user {margin-left: 1em}
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
 .banner nav.container > nav {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
+}
+
+.banner nav.container > nav > nav {
+  align-items: center;
+}
+
+.banner nav.container > nav:last-child > * {
+  display: flex;
+  align-items: center;
 }
 
 .banner nav.menu {
