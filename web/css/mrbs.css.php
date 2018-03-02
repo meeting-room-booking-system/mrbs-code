@@ -1052,8 +1052,6 @@ form#add_new_user {margin-left: 1em}
   border-color: <?php echo $banner_border_color ?>;
   border-width: <?php echo $banner_border_width ?>px;
   border-style: solid;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }
 
 .banner .company {
@@ -1061,7 +1059,7 @@ form#add_new_user {margin-left: 1em}
   flex-direction: column;
   align-items: center;
   font-size: large;
-  padding-right: 2rem;
+  padding: 0.5rem 2rem 0.5rem 0;
   margin-right: 2rem;
 }
 
@@ -1087,6 +1085,7 @@ form#add_new_user {margin-left: 1em}
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
 }
 
