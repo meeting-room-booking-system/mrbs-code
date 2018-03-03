@@ -1135,6 +1135,7 @@ nav.logon input {
 .banner nav a,
 nav.logon input {
   display: inline-block;
+  text-align: center;
   padding: 0.3rem 1rem;
   line-height: 1.5em;
   border-radius: 0.8em;
