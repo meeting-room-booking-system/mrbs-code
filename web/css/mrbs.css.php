@@ -113,7 +113,8 @@ fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; bor
 fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
 
 
-label::after,
+label:not(.link)::after,
+label.link a::after,
 .list td:first-child::after {
   content: ':';
 }
@@ -122,7 +123,8 @@ label:empty::after, .group label::after {
   visibility: hidden;
 }
 
-[lang="fr"] label::after,
+[lang="fr"] label:not(.link)::after,
+[lang="fr"] label.link a::after,
 [lang="fr"] .list td:first-child::after  {
   content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }

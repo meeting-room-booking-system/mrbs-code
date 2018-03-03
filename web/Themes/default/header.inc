@@ -227,7 +227,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   
   echo "<div>\n";
   
-  echo "<label><a href=\"search.php?advanced=1\">" . get_vocab('search') . "</a></label>\n";
+  echo '<label class="link"><a href="search.php?advanced=1">' . get_vocab('search') . "</a></label>\n";
   
   $form = new Form();
   
