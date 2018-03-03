@@ -161,6 +161,11 @@ function print_outstanding($query)
 {
   $user = getUserName();
   
+  if (!isset($user))
+  {
+    return;
+  }
+  
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
   $approval_somewhere = some_area('approval_enabled', TRUE);
@@ -298,14 +303,26 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     print_users($query);
     echo "</nav>\n";
     
+    echo "<nav class=\"logon\">\n";
+    print_outstanding($query);
     // For session protocols that define their own logon box...
+    // (Note: This really needs to be sorted out so that the HTML
+    // is taken out of the session code)
     if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
     {
-      echo "<nav class=\"logon\">\n";
-      print_outstanding($query);
       print_logon_box();
-      echo "</nav>\n";
     }
+    else
+    {
+      $user = getUserName();
+      if (isset($user))
+      {
+        require_once MRBS_ROOT . '/session/functions_session.inc';
+        print_report_link($user);
+      }
+    }
+    echo "</nav>\n";
+    
     echo "</nav>\n";
     
     echo "<nav>\n";
