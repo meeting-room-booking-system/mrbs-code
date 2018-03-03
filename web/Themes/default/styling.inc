@@ -6,7 +6,7 @@ namespace MRBS;
 // ***** COLOURS ************************
 // Colours used in MRBS.    All the colours are defined here as PHP variables
 
-$body_background_color          = "#e7ebee";    // background colour for the main body
+$body_background_color          = "#f9fbfc";    // background colour for the main body
 $standard_font_color            = "#0B263B";    // default font color
 $header_font_color              = "#ffffff";    // font color for text in headers
 $highlight_font_color           = "#ff0066";    // used for highlighting text (eg links, errors)
@@ -69,7 +69,7 @@ $anchor_hover_color_header      = $anchor_link_color_header;   // link color (ho
 $column_hidden_color            = $main_table_month_invalid_color;    // hidden days in the week and month views
 $calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
-$row_odd_color                  = "#f2f4f6";        // even rows in the day and week views
+$row_odd_color                  = "#efefef";        // even rows in the day and week views
 $row_highlight_color            = "#bdd4de";        // used for highlighting a row
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
