@@ -1058,6 +1058,7 @@ form#add_new_user {margin-left: 1em}
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   font-size: large;
   padding: 0.5rem 2rem 0.5rem 0;
   margin-right: 2rem;
@@ -1088,6 +1089,7 @@ form#add_new_user {margin-left: 1em}
   justify-content: space-between;
   align-items: stretch;
   flex-wrap: wrap;
+  padding: 0.75em 0;
 }
 
 .banner nav.container > nav {
