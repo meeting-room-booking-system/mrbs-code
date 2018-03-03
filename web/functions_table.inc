@@ -851,7 +851,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       $query = http_build_query($vars, '', '&'); 
       // Put the room_id in a data attribute so that JavaScript can pick it up        
       $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">" .
-                       '<a href="index.php?' . htmlspecialchars($query) . '"' .
+                       '<a href="index.php?' . htmlspecialchars($query) . '" ' .
                        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
     }

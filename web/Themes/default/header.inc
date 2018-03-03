@@ -225,7 +225,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
     $search_str = '';
   }
   
-  echo "<div\n";
+  echo "<div>\n";
   
   echo "<label><a href=\"search.php?advanced=1\">" . get_vocab('search') . "</a></label>\n";
   
@@ -257,7 +257,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   
   $form->render();
   
-  echo "</div\n";
+  echo "</div>\n";
 }
 
 
