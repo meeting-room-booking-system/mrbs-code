@@ -55,7 +55,9 @@ input, textarea {
 // In order to prevent the display shifting about during the conversion process we set
 // the widths of both to be the same.
 ?>
-input.date, .js input[type="date"] {
+input.date,
+.js input[type="date"],
+input.flatpickr-input {
   width: 6.5em;
 }
 

@@ -20,7 +20,7 @@ if ($use_strict)
 var oldInitDatepicker = init;
 init = function() {
   oldInitDatepicker.apply(this);
-
+  
   $.datepicker.setDefaults({
       showOtherMonths: true,
       selectOtherMonths: true,
@@ -40,6 +40,13 @@ init = function() {
   // better than the jQueryUI datepicker.
   ?>
   $('input[type="date"]').each(function() {
+      $(this).flatpickr({
+        locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
+        weekNumbers: <?php echo ($view_week_number) ? 'true' : 'false' ?>
+      });
+      return;
+      
+      
       var input = $(this),
           thisDate = input.val(),
           thisName = input.attr('name'),
