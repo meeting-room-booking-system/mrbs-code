@@ -1120,8 +1120,7 @@ nav.menu, nav.logon {
 }
 
 nav.menu {
-  display: inline-grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
 }
 
 nav.logon {
