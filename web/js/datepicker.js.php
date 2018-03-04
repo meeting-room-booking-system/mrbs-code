@@ -41,8 +41,14 @@ init = function() {
   ?>
   $('input[type="date"]').each(function() {
       $(this).flatpickr({
-        locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
-        weekNumbers: <?php echo ($view_week_number) ? 'true' : 'false' ?>
+        locale: {firstDayOfWeek: <?php echo $weekstarts ?>}
+        <?php
+        // Note that the following settings cause flatpickr not to use the native
+        // datepicker on mobile devices.  As it's probably better to use the native
+        // datepickers, we don't use these settings.   (We could get more 
+        // sophisticated and only use these settings on non-mobile devices).
+        //    weekNumbers
+        ?>
       });
       return;
       
