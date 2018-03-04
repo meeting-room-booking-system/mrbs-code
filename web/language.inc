@@ -1007,18 +1007,20 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
     // Can't see anything about it in the manual - must be a bug that was fixed in
     // later versions.
     $locale = \Locale::lookup($available_langtags, $lang, $canonicalize = FALSE);
+    
     if (!empty($locale))
     {
       if (in_array($locale, $default_langtags))
       {
-        return NULL;
+        return null;
       }
-      $filename_body = isset($lang_map) ? array_search($locale, $lang_map) : $locale;
+      $filename_body = (isset($lang_map)) ? array_search($locale, $lang_map) : false;
+      $filename_body = ($filename_body === false) ? $locale : $filename_body;
       return $prefix . $filename_body . $suffix;
     }
   }
-
-  return NULL;  // We failed to find anything acceptable
+  
+  return null;  // We failed to find anything acceptable
 }
 
 
@@ -1053,10 +1055,10 @@ function get_flatpickr_lang_file($dir)
   
   // Map non-standard language codes used by flatpickr onto BCP47 codes
   $lang_map = array('cat' => 'ca',
-                    'gr' => 'el',
-                    'vn' => 'vi');
+                    'gr'  => 'el',
+                    'vn'  => 'vi');
                     
-  return get_best_lang_file($langs, $dir, '', '.js', null , $lang_map);
+  return get_best_lang_file($langs, $dir, '', '.js', null, $lang_map);
 }
   
 
