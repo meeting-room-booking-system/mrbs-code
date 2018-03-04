@@ -1051,7 +1051,12 @@ function get_flatpickr_lang_file($dir)
 {
   global $langs;
   
-  return get_best_lang_file($langs, $dir, '', '.js');
+  // Map non-standard language codes used by flatpickr onto BCP47 codes
+  $lang_map = array('cat' => 'ca',
+                    'gr' => 'el',
+                    'vn' => 'vi');
+                    
+  return get_best_lang_file($langs, $dir, '', '.js', null , $lang_map);
 }
   
 

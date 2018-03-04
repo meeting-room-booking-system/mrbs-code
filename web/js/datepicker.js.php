@@ -41,6 +41,7 @@ init = function() {
   ?>
   
   <?php
+  // Localise the flatpickr
   if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file('flatpickr/l10n')))
   {
     // Strip the '.js' off the end of the filename
