@@ -909,7 +909,7 @@ div#div_custom_html {
   margin-bottom: 0.5em;
 }
 
-.standard input[type="text"]:not(.date),
+.standard input[type="text"]:not(.date):not(.flatpickr-input),
 .standard input[type="email"],
 .standard input[type="password"],
 .standard input[type="search"],
