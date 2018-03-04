@@ -51,9 +51,15 @@ init = function() {
   flatpickr('input[type="date"]', {
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
-        console.log(selectedDates);
-        console.log(instance);
-        console.change(instance);
+        var submit = $(this.element).data('submit');
+        if (submit)
+        {
+          $('#' + submit).submit();
+        }
+        else
+        {
+          $(this.element).change();
+        }
       }
     });
   

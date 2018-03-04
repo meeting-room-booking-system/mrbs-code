@@ -768,16 +768,15 @@ function getDateDifference()
 {
   var diff,
       secondsPerDay = <?php echo SECONDS_PER_DAY ?>,
-      start = $('#start_date_alt').val().split('-'),
+      start = $('#start_date').val().split('-'),
       startDate = new Date(parseInt(start[0], 10), 
                            parseInt(start[1], 10) - 1,
                            parseInt(start[2], 10),
                            12),
-      endDateAlt = $('#end_date_alt'),
-      end,
-      endDate;
+      endDate = $('#end_date'),
+      end;
       
-  if (endDateAlt.length === 0)
+  if (endDate.length === 0)
   {
     <?php
     // No end date selector, so assume the end date is
@@ -787,7 +786,7 @@ function getDateDifference()
   }
   else
   {
-    end = $('#end_date_alt').val().split('-'); 
+    end = endDate.val().split('-'); 
     endDate = new Date(parseInt(end[0], 10), 
                        parseInt(end[1], 10) - 1,
                        parseInt(end[2], 10),
@@ -1399,7 +1398,7 @@ init = function(args) {
     {
       if ($('#end_date').css('visibility') === 'hidden')
       {
-        $('#end_date_alt').val($('#start_date_alt').val());
+        $('#end_date').val($('#start_date').val());
       }
     }
     
