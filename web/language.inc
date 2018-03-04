@@ -1042,6 +1042,17 @@ function get_datepicker_lang_file($dir)
     return NULL;
   }
 }
+
+
+// Returns the pathname of the language file to use for the flatpickr
+// datepicker.    If no suitable language file exists then returns NULL
+// $dir is the directory containing the language files
+function get_flatpickr_lang_file($dir)
+{
+  global $langs;
+  
+  return get_best_lang_file($langs, $dir, '', '.js');
+}
   
 
 

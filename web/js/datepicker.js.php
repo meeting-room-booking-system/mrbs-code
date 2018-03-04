@@ -39,7 +39,14 @@ init = function() {
   // the native date controls on some modern browsers, eg Chrome mobile, are
   // better than the jQueryUI datepicker.
   ?>
-  flatpickr.localize(flatpickr.l10ns.fr);
+  
+  <?php
+  if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file('flatpickr/l10n')))
+  {
+    // Strip the '.js' off the end of the filename
+    echo 'flatpickr.localize(flatpickr.l10ns.' . substr($flatpickr_lang_file, 0, -3) . ');';
+  }
+  ?>
   flatpickr('input[type="date"]', {
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>}
     });

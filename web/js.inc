@@ -104,10 +104,14 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
 <script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/flatpickr/flatpickr.min.js"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
 
-    
 <?php
+$dir = 'js/flatpickr/l10n';
+if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
+{
+  echo "<script type=\"text/javascript\" src=\"$dir/${flatpickr_lang_file}\"></script>\n";
+}
+
 // dataTables initialisation
 if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
 {
