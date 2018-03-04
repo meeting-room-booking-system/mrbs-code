@@ -26,7 +26,7 @@ else
   <?php
 }
 ?>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="js/flatpickr/css/flatpickr.min.css" type="text/css">
     <link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
     <?php
     if ($using_rtl)

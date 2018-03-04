@@ -39,9 +39,14 @@ init = function() {
   // the native date controls on some modern browsers, eg Chrome mobile, are
   // better than the jQueryUI datepicker.
   ?>
+  flatpickr.localize(flatpickr.l10ns.fr);
+  flatpickr('input[type="date"]', {
+      locale: {firstDayOfWeek: <?php echo $weekstarts ?>}
+    });
+  
   $('input[type="date"]').each(function() {
+      return;
       $(this).flatpickr({
-        locale: {firstDayOfWeek: <?php echo $weekstarts ?>}
         <?php
         // Note that the following settings cause flatpickr not to use the native
         // datepicker on mobile devices.  As it's probably better to use the native

@@ -103,7 +103,8 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
 <script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript" src="js/flatpickr/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
 
     
 <?php
