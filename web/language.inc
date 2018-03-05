@@ -1013,7 +1013,8 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       {
         return NULL;
       }
-      $filename_body = isset($lang_map) ? array_search($locale, $lang_map) : $locale;
+      $filename_body = (isset($lang_map)) ? array_search($locale, $lang_map) : false;
+      $filename_body = ($filename_body === false) ? $locale : $filename_body;
       return $prefix . $filename_body . $suffix;
     }
   }
