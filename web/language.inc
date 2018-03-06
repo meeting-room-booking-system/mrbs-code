@@ -695,47 +695,6 @@ if ($doneit == 0)
 
 $server_os = get_server_os();  // used globally
 
-// 2003/11/09 JF Larvoire: Help new admins understand what to do in case the iconv error occurs...
-if (!function_exists('iconv') && 
-    (($server_os == 'windows') || ($server_os == 'aix') || (get_charset() != get_csv_charset())) )
-{
-  exit('
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>MRBS - iconv module not installed</title>
-</head>
-<body>
-<p>
-  <strong>Error:</strong> The iconv module, which provides PHP support for Unicode, is not
-installed on your system.
-</p>
-<p>
-  Unicode gives MRBS the ability to easily support languages other than
-  English. Without Unicode, support for non-English-speaking users will
-  be crippled.
-</p>
-<p>
-  To fix this error, you need to install and enable the iconv module.
-  <ul>
-    <li>
-      On a Windows server, enable php_iconv.dll in %windir%\php.ini,
-      and make sure both %phpdir%\dlls\iconv.dll and
-      %phpdir%\extensions\php_iconv.dll are in the path. One way to
-      do this is to copy these two files to %windir%.
-    </li>
-    <li>
-      On a Unix server, recompile your PHP module with the appropriate
-      option for enabling the iconv extension. Consult your PHP server
-      documentation for more information about enabling iconv support.
-    </li>
-  </ul>
-</p>
-</body>
-</html>
-');
-}
 
 $windows_locale = "eng";
 set_mrbs_locale();

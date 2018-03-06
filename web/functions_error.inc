@@ -124,3 +124,29 @@ function fatal_error($message)
   output_trailer();
   exit;
 }
+
+
+function shutdown_function()
+{
+  $error = error_get_last();
+  
+  if ((strpos($error['message'], 'undefined function iconv()') !== false))
+  {
+    // Help new admins understand what to do in case the iconv error occurs...
+    $heading = "MRBS - iconv module not installed. ";
+    $body = "The iconv module, which provides PHP support for Unicode, is not " .
+            "installed on your system." .
+            "Unicode gives MRBS the ability to easily support languages other " .
+            "than English. Without Unicode, support for non-English-speaking " .
+            "users will be crippled." .
+            "To fix this error, you need to install and enable the iconv module." .
+            "On a Windows server, enable php_iconv.dll in %windir%\\php.ini, and " .
+            "make sure both %phpdir%\\dlls\\iconv.dll and %phpdir%\\extensions\\php_iconv.dll " .
+            "are in the path. One way to do this is to copy these two files to %windir%." .
+            "On a Unix server, recompile your PHP module with the appropriate option for " .
+            "enabling the iconv extension. Consult your PHP server documentation for " .
+            "more information about enabling iconv support.\n";
+            
+    output_error($heading, $body, false);
+  }
+}
