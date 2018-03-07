@@ -78,11 +78,6 @@ else
   <script type="text/javascript" src="jquery/ui/jquery-ui.min.js"></script>
   <?php
 }
-
-if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')))
-{
-  echo "<script type=\"text/javascript\" src=\"${datepicker_lang_file}\"></script>";
-}
 ?>
     
 <script type="text/javascript">

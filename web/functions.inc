@@ -1792,20 +1792,20 @@ function is_cli()
   
   if (!$allow_cli)
   {
-    return FALSE;
-    
+    return false;
   }
+  
   if (defined('STDIN'))
   {
-    return TRUE;
+    return true;
   }
   elseif (is_cgi() && getenv('TERM'))
   {
-    return TRUE;
+    return true;
   }
   else
   {
-    return FALSE;
+    return false;
   }
 }
 

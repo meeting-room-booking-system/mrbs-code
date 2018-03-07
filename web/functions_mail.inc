@@ -31,7 +31,7 @@ function get_mail_locale()
   {
     if (isset($mail_settings['admin_lang']))
     {
-      $mail_locale = get_os_locale($mail_settings['admin_lang']);
+      $mail_locale = System::getOSlocale($mail_settings['admin_lang']);
     }
     else
     {

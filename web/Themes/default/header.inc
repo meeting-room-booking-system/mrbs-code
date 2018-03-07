@@ -364,10 +364,10 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   // We produce two <html> tags: one for versions of IE that we don't support and one for all
   // other browsers.  This enables us to use CSS to hide and show the appropriate text.
   echo "<!--[if lte IE 9]>\n";
-  echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\" class=\"unsupported_browser\">\n";
+  echo "<html lang=\"" . htmlspecialchars(get_mrbs_lang()) . "\" class=\"unsupported_browser\">\n";
   echo "<![endif]-->\n";
   echo "<!--[if (!IE)|(gt IE 9)]><!-->\n";
-  echo "<html lang=\"" . htmlspecialchars(get_lang()) . "\">\n";
+  echo "<html lang=\"" . htmlspecialchars(get_mrbs_lang()) . "\">\n";
   echo "<!--<![endif]-->\n";
   
   print_head($simple);

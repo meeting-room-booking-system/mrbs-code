@@ -99,7 +99,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   
   <?php
   // Set the language file to be used
-  if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
+  $datatable_dir = '../jquery/datatables/language';
+  if ($lang_file = get_datatable_lang_file($datatable_dir))
   {
     // If using the language.url way of loading a DataTables language file,
     // then the file must be valid JSON.   The .lang files that can be 
@@ -109,7 +110,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // method then the '../' would need to be stripped off the pathname, as in
     //    $lang_file = substr($lang_file, 3); // strip off the '../'
     ?>
-    defaultOptions.language = <?php include $lang_file ?>;
+    defaultOptions.language = <?php include $datatable_dir . '/' . $lang_file ?>;
     <?php
   }
   ?>
