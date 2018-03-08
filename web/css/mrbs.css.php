@@ -1222,11 +1222,11 @@ table.details.has_caption {
 
 .details td {
   padding: 0 1.0em 0 0;
-  vertical-align: bottom;
 }
 
 .details td:first-child {
   text-align: right;
+  white-space: nowrap;
 }
 
 

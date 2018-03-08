@@ -38,8 +38,16 @@ else
   echo "<tr><td>" . get_vocab("servertime") . "</td><td>" .
        utf8_strftime($strftime_format['datetime'], time()) .
        "</td></tr>\n";
-  echo "<tr><td>" . get_vocab("server_software") . "</td><td>" . htmlspecialchars(get_server_software()) . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("server_software") . "</td><td>" . 
+       htmlspecialchars(get_server_software()) . "</td></tr>\n";
   echo "<tr><td>PHP</td><td>" . phpversion() . "</td></tr>\n";
+  
+  // The PHP extensions loaded ,particularly intl and mbstring, are useful for debugging.
+  $extensions = get_loaded_extensions();
+  asort($extensions);
+  echo "<tr><td>" . get_vocab("extensions") . "</td><td>" . 
+        htmlspecialchars(implode(', ', $extensions)) . "</td></tr>\n";
+        
   echo "</table>\n";
 }
 
