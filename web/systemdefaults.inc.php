@@ -1166,8 +1166,8 @@ $default_language_tokens = "en";
 // Set this to a valid locale that is supported on the OS you run the
 // MRBS server on if you want to override the automatic locale determination
 // MRBS performs.  The locale should be in the form of a BCP 47 language
-// tag, eg 'en-GB'.   Note that MRBS will convert this into a format
-// suitable for your OS, eg by adding '.utf-8' or changing it to 'eng'.
+// tag, eg 'en-GB', or 'sr-Latn-RS'.   Note that MRBS will convert this into
+// a format suitable for your OS, eg by adding '.utf-8' or changing it to 'eng'.
 $override_locale = "";
 
 // faq file language selection. IF not set, use the default english file.
