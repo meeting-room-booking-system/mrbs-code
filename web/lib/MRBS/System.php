@@ -617,6 +617,39 @@ class System
     }
     return $locale;
   }
+  
+  
+  // The inverse of getOSlocale.  Turns an OS-specific locale into a BCP 47 style
+  // language tag.    This is provided for backwards compatibility with old versions
+  // of MRBS where the $override_locale config setting was required to be operating
+  // system specific (eg 'en_GB.utf-8' on Unix systems or 'eng' on Windows).  Now
+  // $override_locale should be in BCP 47 format, but we accept old-style settings.
+  public static function getBCPlocale($locale)
+  {
+    $result = $locale;
+    
+    // Strip anything like '.utf-8' off the end
+    if (strpos($result, '.') !== false)
+    {
+      $result = strstr($locale, '.', true);
+    }
+    
+    // Convert an old style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
+    if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
+    {
+      $result = array_search($result, self::$lang_map_windows);
+    }
+    
+    // Parse it and then recompose it.  This will get the capitalisation correct, eg
+    // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
+    // the capitalisation is just a convention.
+    $result = \Locale::composeLocale(\Locale::parseLocale($result));
+    
+    // Convert underscores to hyphens.  Locale::composeLocale() returns underscores.
+    $result = str_replace('_', '-', $result);
+    
+    return $result;
+  }
 
   
   public static function utf8ConvertFromLocale($string, $locale=null)

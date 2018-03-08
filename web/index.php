@@ -8,7 +8,6 @@ use MRBS\Form\ElementSelect;
 require "defaultincludes.inc";
 require_once "functions_table.inc";
 
-
 // Display the entry-type color key.
 function get_color_key()
 {
