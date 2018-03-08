@@ -22,7 +22,7 @@ class Locale
       $accept_languages = self::toSortedArray($header);
       foreach($accept_languages as $accept_language => $value)
       {
-        if (self::isAvailableLocale($accept_language))
+        if (System::availableLocale($accept_language))
         {
           return $accept_language;
         }
@@ -250,44 +250,6 @@ class Locale
     }
     
     return $langtag[$index];  // Return the match in its original format
-  }
-  
-  
-  // Checks whether $locale, which is in BCP 47 format, is available on this system
-  private static function isAvailableLocale($locale)
-  {
-    // [The easy way to do this is to use IntlCalendar::getAvailableLocales(),
-    // but as this is an MRBS implementation of the Locale class for cases where
-    // the Locale class doesn't exist, it's unlikely that the IntlCalendar class
-    // will exist either.   Instead we try and set the locale to see if it's
-    // available and restore the original locale afterwards]
-    
-    // Save the original locales.   Note that there could be different locales
-    // for different categories
-    $original_locales = explode(';', setlocale(LC_ALL, 0));
-
-    // Try the test locale
-    $result = setlocale(LC_ALL, MRBS\System::getOSLocale($locale));
-
-    // Restore the original settings
-    foreach ($original_locales as $locale_setting)
-    {
-      if (strpos($locale_setting, '=') !== false)
-      {
-        list($category, $locale) = explode('=', $locale_setting);
-        // Need to turn the string back into a constant
-        $category = constant($category);
-      }
-      else
-      {
-        $category = LC_ALL;
-        $locale   = $locale_setting;
-      }
-
-      setlocale($category, $locale);
-    }
-    
-    return ($result !== false);
   }
   
   

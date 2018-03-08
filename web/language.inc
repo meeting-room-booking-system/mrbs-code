@@ -170,7 +170,7 @@ function set_mrbs_locale($locale)
 {
   $os_locale = System::getOSlocale($locale);
   
-  if (false === setlocale(LC_ALL, $os_locale))
+  if ((false === $os_locale) || (false === setlocale(LC_ALL, $os_locale)))
   {
     $message = "Server failed to set locale to '$locale'";
     trigger_error($message, E_USER_NOTICE);
