@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-global $using_rtl, $refresh_rate, $custom_css_url, $PHP_SELF;
+global $refresh_rate, $custom_css_url, $PHP_SELF;
 
 if (DEBUG)
 {
@@ -29,7 +29,7 @@ else
     <link rel="stylesheet" href="js/flatpickr/css/flatpickr.min.css" type="text/css">
     <link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
     <?php
-    if ($using_rtl)
+    if (using_rtl_lang())
     {
       ?>
       <link rel="stylesheet" href="css/mrbs-rtl.css.php" type="text/css">
@@ -41,7 +41,7 @@ else
     <link rel="stylesheet" href="css/mrbs-ie.css" type="text/css">
     <![endif]-->
     <?php
-    if ($using_rtl)
+    if (using_rtl_lang())
     {
       ?>
       <!--[if IE]>

@@ -131,22 +131,13 @@ if ($need_to_send_mail)
 
 
 
-
-
-
-
-$langs = array();
-foreach ($langs as $lang => $qual)
+// Determines whether we are using a RTL language
+function using_rtl_lang()
 {
-
-  if (set_vocab($lang))
-  {
-    // Work out if we're using a RTL language.   This variable is used
-    // globally so that we can include the correct stylesheet
-    $using_rtl = in_array(utf8_strtolower($lang), $rtl_languages);
-    $doneit = 1;
-    break;
-  }
+  global $rtl_languages;
+  
+  $lang = get_mrbs_lang();
+  return in_array(utf8_strtolower($lang), $rtl_languages);
 }
 
 
@@ -277,7 +268,10 @@ function get_lang_preferences()
 }
 
 
-function get_mrbs_lang($locale)
+// Note: the first time this function is called, it should be called with a $locale.
+// Subsequent calls will just return the static $locale variable which was calculated on
+// the first call
+function get_mrbs_lang($locale=null)
 {
   global $disable_automatic_language_changing,
          $default_language_tokens,
@@ -298,7 +292,7 @@ function get_mrbs_lang($locale)
       $lang = $default_language_tokens;
     }
     // Otherwise, use the best available language following browser preferences
-    else
+    elseif (isset($locale))
     {
       $available_languages = get_langtags(MRBS_ROOT . '/lang', 'lang.');
       $lang = \Locale::lookup($available_languages, $locale, false, $default_language_tokens);
