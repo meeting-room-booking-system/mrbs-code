@@ -4,17 +4,11 @@ namespace MRBS;
 require_once "functions.inc";
 
 
-// A map of browser locale aliases, maps to "our" preferred representation.
-// We downcase the key before using this map, so the keys need to be all
-// lower-case.
+// A map of browser locale aliases
 $lang_aliases = array
 (
-  'sh' => 'sr-rs-latin',
-  'sr' => 'sr-rs-latin',
-  'sr-latn' => 'sr-rs-latin',
-  'sr-latn-rs' => 'sr-rs-latin',
+  'sh' => 'sr-latn-rs',
 );
-
 
 
 // The DataTables language files are for the moment given descriptive names.   I have
@@ -101,8 +95,11 @@ if (function_exists('mb_internal_encoding'))
   mb_internal_encoding('UTF-8');
 }
 
+// Translate languages in the header string to their aliases
+$aliased_header = alias_header($HTTP_ACCEPT_LANGUAGE, $lang_aliases);
+
 // Get the locale that we should be using
-$locale = get_mrbs_locale();
+$locale = get_mrbs_locale($aliased_header);
 
 // Then set the locale
 set_mrbs_locale($locale);
@@ -184,11 +181,13 @@ function set_mrbs_locale($locale)
 
 
 // Work out which locale we want to use
-function get_mrbs_locale()
+// Note: the first time this function is called, it should be called with a $header string.
+// Subsequent calls will just return the static $locale variable which was calculated on
+// the first call
+function get_mrbs_locale($header=null)
 {
   global $override_locale, $disable_automatic_language_changing, $default_language_tokens;
   global $cli_language;
-  global $HTTP_ACCEPT_LANGUAGE;
   
   static $locale = null;
   
@@ -210,9 +209,9 @@ function get_mrbs_locale()
       $locale = $default_language_tokens;
     }
     // Otherwise, use the best available language following browser preferences
-    elseif (!empty($HTTP_ACCEPT_LANGUAGE))
+    elseif (!empty($header))
     {
-      $locale = \Locale::acceptFromHttp($HTTP_ACCEPT_LANGUAGE);
+      $locale = \Locale::acceptFromHttp($header);
     }
     // If there aren't any browser preferences, use English
     else
@@ -237,15 +236,16 @@ function get_lang_preferences()
 {
   global $cli_language, $disable_automatic_language_changing, $default_language_tokens;
   global $override_locale;
+  global $aliased_header;
   
   static $lang_preferences = null;
   
   if (!isset($lang_preferences))
   {
-    // Use the browser preferences, if any, as a base.    Although we may add
-    // higher priority languages later, these are a useful fallback on the grounds
-    // that it's better to have some language eather than none.
-    $lang_preferences = get_browser_langs();
+    // Use the aliased browser preferences, if any, as a base.    Although we may add
+    // higher priority languages later, these are a useful fall-back on the grounds
+    // that it's better to have some language rather than none.
+    $lang_preferences = get_browser_langs($aliased_header);
     
     // If we've been told not to use the browser languages then the default
     // language is more important
@@ -309,59 +309,52 @@ function get_mrbs_lang($locale)
 }
 
 
-// Returns an array of language qualifiers with the language key replaced
-// by its alias, if one exists
-function alias_qualifiers($qualifiers)
+// Returns a version of the Accept-Language request HTTP header with language
+// strings substituted for their aliases
+function alias_header($header, array $aliases)
 {
-  global $lang_aliases;
-  
-  $result = array();
-  foreach ($qualifiers as $lang => $qualifier)
+  if (!empty($aliases))
   {
-    if (isset($lang_aliases[utf8_strtolower($lang)]))
+    $patterns = array();
+    $replacements = array();
+    
+    foreach ($aliases as $key => $value)
     {
-      $result[$lang_aliases[utf8_strtolower($lang)]] = $qualifier;
+      $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/";
+      $replacements[] = $value;
     }
-    else
-    {
-      $result[$lang] = $qualifier;
-    }
+    
+    $header = preg_replace($patterns, $replacements, $header);
   }
-  return $result;
+  
+  return $header;
 }
 
 
 // Returns a sorted associative array of acceptable language qualifiers, indexed
-// by language.
-function get_browser_langs()
+// by language, given an Accept-Language header string.
+function get_browser_langs($header)
 {
-  global $HTTP_ACCEPT_LANGUAGE;
+  $qualifiers = array();
   
-  static $browser_langs = null;
-  
-  if (!isset($browser_langs))
+  if (isset($header))
   {
-    $qualifiers = array();
-    
-    if (isset($HTTP_ACCEPT_LANGUAGE))
+    $lang_specifiers = explode(',', $header);
+    foreach ($lang_specifiers as $specifier)
     {
-      $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
-      foreach ($lang_specifiers as $specifier)
+      if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
       {
-        if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
-        {
-          $qualifiers[$matches[1]] = (float) $matches[2];
-        }
-        else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
-        {
-          $qualifiers[$matches[1]] = 1.0;
-        }
+        $qualifiers[$matches[1]] = (float) $matches[2];
+      }
+      else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
+      {
+        $qualifiers[$matches[1]] = 1.0;
       }
     }
-    
-    arsort($qualifiers, SORT_NUMERIC);
-    $browser_langs = array_keys($qualifiers);
   }
+  
+  arsort($qualifiers, SORT_NUMERIC);
+  $browser_langs = array_keys($qualifiers);
   
   return $browser_langs;
 }
