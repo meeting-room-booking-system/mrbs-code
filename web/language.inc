@@ -128,15 +128,6 @@ $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
                       $mail_settings['booker'] or
                       $mail_settings['book_admin_on_approval']);
                       
-if ($need_to_send_mail)
-{
-  $web_vocab = $vocab;   // Save $vocab before it gets overwritten
-  set_vocab($mail_settings['admin_lang']);
-  $mail_vocab = $vocab;
-  $vocab = $web_vocab;  // Restore $vocab
-}
-
-
 
 
 // Determines whether we are using a RTL language
@@ -599,8 +590,18 @@ function get_vocab($tag)
 // Same as get_vocab(), but uses the mailing language
 function get_mail_vocab($tag)
 {
-  global $mail_vocab;
-
+  global $vocab, $mail_settings;
+  
+  static $mail_vocab = null;
+  
+  if (!isset($mail_vocab))
+  {
+    $web_vocab = $vocab;   // Save $vocab before it gets overwritten
+    set_vocab($mail_settings['admin_lang']);
+    $mail_vocab = $vocab;
+    $vocab = $web_vocab;  // Restore $vocab
+  }
+  
   // Return the tag itself if we can't find a vocab string
   if (!isset($mail_vocab[$tag]))
   {
