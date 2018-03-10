@@ -35,11 +35,37 @@ init = function() {
   ?>
   
   var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
+      navigator.userAgent
+    );
+  
+  
+  var formatDate = function(dateObj, formatStr) {
+      var result;
+      <?php
+      $locales = get_lang_preferences();
+      if (!empty($locales))
+      {
+        ?>
+        var locales = ['<?php echo implode("','", get_lang_preferences())?>'];
+        <?php
+      }
+      ?>
+      if (typeof locales === 'undefined')
+      {
+        result = new Intl.DateTimeFormat().format(dateObj);
+      }
+      else
+      {
+        result = new Intl.DateTimeFormat(locales).format(dateObj);
+      }
+      console.log(result);
+      return result;
+    };
       
   var config = {
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
+      altInput: true,
+      formatDate: formatDate,
       onChange: function(selectedDates, dateStr, instance) {
         var submit = $(this.element).data('submit');
         if (submit)
