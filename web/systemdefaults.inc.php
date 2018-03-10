@@ -1150,11 +1150,11 @@ $mail_settings['disabled'] = false;
  * Language
  **********/
 
-// Set this to 1 to disable the automatic language changing MRBS performs
+// Set this to true to disable the automatic language changing MRBS performs
 // based on the user's browser language settings. It will ensure that
 // the language displayed is always the value of $default_language_tokens,
 // as specified below
-$disable_automatic_language_changing = 0;
+$disable_automatic_language_changing = false;
 
 // Set this to a different language specifier to default to different
 // language tokens. This must equate to a lang.* file in MRBS.
