@@ -52,6 +52,17 @@ init = function() {
         <?php
       }
       ?>
+      
+      <?php
+      // If window.Intl is supported then we can format dates in the user's preferred
+      // locale.  Otherwise, in practice just IE10, they have to make do with ISO
+      // (YYYY-MM-DD) dates.
+      ?>
+      if (!window.Intl || (formatStr == 'Y-m-d'))
+      {
+        return dateObj.toISOString().slice(0,10);
+      }
+      
       return (typeof locales === 'undefined') ?
              new Intl.DateTimeFormat().format(dateObj) :
              new Intl.DateTimeFormat(locales).format(dateObj);
@@ -59,6 +70,10 @@ init = function() {
       
       
   var config = {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'custom',
+      formatDate: formatDate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
         var submit = $(this.element).data('submit');
@@ -73,16 +88,6 @@ init = function() {
       }
     };
   
-  <?php
-  // If window.Intl is supported then we can format dates in the user's preferred
-  // locale.  Otherwise, in practice just IE10, they have to make do with ISO
-  // (YYYY-MM-DD) dates.
-  ?>
-  if (window.Intl)
-  {
-    config.altInput = true;
-    config.formatDate = formatDate;
-  }
   
   if (!isMobile)
   {
@@ -93,7 +98,9 @@ init = function() {
     ?>
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }
-    
+  
+  $('input[type="date"]').attr('data-id', 'altinput').addClass('flatpickr');
+  
   flatpickr('input[type="date"]', config);
   
 };
