@@ -92,7 +92,11 @@ $datatables_lang_map = array(
 
 
 // A list of languages that use Right to Left text
-$rtl_languages = array('he');
+$rtl_languages = array(
+  'he'
+);
+
+
 
 // Set the default character encoding
 ini_set('default_charset', 'UTF-8');
@@ -102,6 +106,19 @@ if (function_exists('mb_internal_encoding'))
 {
   mb_internal_encoding('UTF-8');
 }
+
+
+// Determine locale and language to use.  MRBS's strategy is first to find the locale
+// that best fits the config settings and the user's browser preferences.  Then it
+// finds a language that best fits the locale, subject to any overriding config settings.
+//
+// Locales will also be needed for third party JavaScript libraries such as datepickers.
+// MRBS tries to find the best match for these depending on the localisations available
+// for the library.   This may sometimes mean that the locale for the library, eg the
+// datepicker, is different from the main locale.   But this is probably better than
+// trying to find a locale that is available on the server and has a translation available
+// in MRBS and has localisations available in all the third party libraries.
+
 
 // Translate languages in the header string to their aliases
 $aliased_header = alias_header($HTTP_ACCEPT_LANGUAGE, $lang_aliases);
