@@ -70,8 +70,9 @@ use MRBS\Form\FieldSelect;
 // then it will use the fieldname, eg 'coffee_machine'. 
 
 
-require "defaultincludes.inc";
-require_once "mrbs_sql.inc";
+require 'defaultincludes.inc';
+require_once 'mrbs_sql.inc';
+require_once 'functions_mail.inc';
   
 $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
@@ -1715,7 +1716,7 @@ if (($edit_type == "series") && $repeats_allowed)
 }
 
 // Checkbox for no email
-if ($need_to_send_mail &&
+if (need_to_send_mail() &&
     ($mail_settings['allow_no_mail'] || ($is_admin && $mail_settings['allow_admins_no_mail'])))
 {
   $form->addElement(get_fieldset_booking_controls());

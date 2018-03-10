@@ -13,6 +13,7 @@ use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+require_once "functions_mail.inc";
 
 // Get non-standard form variables
 $id = get_form_var('id', 'int', null, INPUT_POST);
@@ -60,11 +61,10 @@ if ($info = get_booking_info($id, FALSE, TRUE))
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
     
-    $notify_by_email = $mail_settings['on_delete'] && $need_to_send_mail;
+    $notify_by_email = $mail_settings['on_delete'] && need_to_send_mail();
 
     if ($notify_by_email)
     {
-      require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
       $mail_previous = get_booking_info($id, FALSE);
       // If this is an individual entry of a series then force the entry_type

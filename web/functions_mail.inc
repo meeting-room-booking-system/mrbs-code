@@ -22,6 +22,19 @@ if ($mail_settings['icalendar'])
 }
 
 
+// Determines whether an email might need to be sent
+function need_to_send_mail()
+{
+  global $mail_settings;
+  
+  return ($mail_settings['admin_on_bookings'] or
+          $mail_settings['area_admin_on_bookings'] or
+          $mail_settings['room_admin_on_bookings'] or
+          $mail_settings['booker'] or
+          $mail_settings['book_admin_on_approval']);
+}
+
+
 function get_mail_locale()
 {
   static $mail_locale;

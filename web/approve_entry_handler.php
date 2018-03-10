@@ -40,7 +40,7 @@ if (strpos($returl, '?') === FALSE)
                   
 if (isset($action))
 {                     
-  if ($need_to_send_mail)
+  if (need_to_send_mail())
   { 
     $is_new_entry = TRUE;  // Treat it as a new entry unless told otherwise    
   }
@@ -58,7 +58,7 @@ if (isset($action))
   {
     // ACTION = "APPROVE"
     case 'approve':
-      if ($need_to_send_mail)
+      if (need_to_send_mail())
       {
         $is_new_entry = FALSE;
         // Get the current booking data, before we change anything, for use in emails
@@ -102,7 +102,7 @@ if (isset($action))
   
   
   // Now send an email if required and the operation was successful
-  if ($result && $need_to_send_mail)
+  if ($result && need_to_send_mail())
   {
     // Get the area settings for this area (we will need to know if periods are enabled
     // so that we will kniow whether to include iCalendar information in the email)

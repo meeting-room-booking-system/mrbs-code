@@ -1,9 +1,10 @@
 <?php
 namespace MRBS;
 
-require "defaultincludes.inc";
-require_once "mrbs_sql.inc";
-require_once "functions_ical.inc";
+require 'defaultincludes.inc';
+require_once 'mrbs_sql.inc';
+require_once 'functions_ical.inc';
+require_once 'functions_mail.inc';
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
@@ -717,7 +718,7 @@ foreach ($rooms as $room_id)
 
 $just_check = $ajax && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
-$send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
+$send_mail = ($no_mail) ? FALSE : need_to_send_mail();
 
 // Wrap the editing process in a transaction, because if deleting the old booking should fail for
 // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
