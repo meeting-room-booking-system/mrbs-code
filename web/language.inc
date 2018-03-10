@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use \Locale;
+
 require_once "functions.inc";
 
 
@@ -147,7 +149,7 @@ function convert_to_BCP47($locale)
   // Parse it and then recompose it.  This will get the capitalisation correct, eg
   // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
   // the capitalisation is just a convention.
-  $locale = \Locale::composeLocale(\Locale::parseLocale($locale));
+  $locale = Locale::composeLocale(Locale::parseLocale($locale));
   // Replace the underscores with hyphens.  The PHP Locale class will return underscores,
   // but the BCP 47 standard uses hyphens.
   return str_replace('_', '-', $locale);
@@ -202,7 +204,7 @@ function get_mrbs_locale($header=null)
     // Otherwise, use the best available language following browser preferences
     elseif (!empty($header))
     {
-      $locale = \Locale::acceptFromHttp($header);
+      $locale = Locale::acceptFromHttp($header);
     }
     // If there aren't any browser preferences, use English
     else
@@ -295,7 +297,7 @@ function get_mrbs_lang($locale=null)
     elseif (isset($locale))
     {
       $available_languages = get_langtags(MRBS_ROOT . '/lang', 'lang.');
-      $lang = \Locale::lookup($available_languages, $locale, false, $default_language_tokens);
+      $lang = Locale::lookup($available_languages, $locale, false, $default_language_tokens);
     }
   }
   
@@ -445,7 +447,7 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
     // For some reason the third parameter to Locale::lookup() is mandatory in 5.3.0.
     // Can't see anything about it in the manual - must be a bug that was fixed in
     // later versions.
-    $locale = \Locale::lookup($available_langtags, $lang, $canonicalize = false);
+    $locale = Locale::lookup($available_langtags, $lang, $canonicalize = false);
     
     if (!empty($locale))
     {
