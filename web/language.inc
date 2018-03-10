@@ -12,12 +12,18 @@ $lang_aliases = array
   'sh' => 'sr-latn-rs',
 );
 
+// Map non-standard language codes used by flatpickr onto BCP 47 language tags
+$flatpickr_lang_map = array(
+  'cat' => 'ca',
+  'gr'  => 'el',
+  'vn'  => 'vi'
+);
 
 // The DataTables language files are for the moment given descriptive names.   I have
-// asked the DataTables team to use standard tags instead, but until that happens we have
+// asked the DataTables team to use BCP 47 tags instead, but until that happens we have
 // to map the descriptions onto tags.  (The other method would be to rename all the files,
 // but then it would be less easy to take new releases of DataTables).
-$datatable_lang_map = array(
+$datatables_lang_map = array(
   'Afrikaans'           => 'af',
   'Albanian'            => 'sq',
   'Arabic'              => 'ar',
@@ -470,12 +476,9 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
 // $dir is the directory containing the language files
 function get_flatpickr_lang_file($dir)
 {
-  // Map non-standard language codes used by flatpickr onto BCP47 codes
-  $lang_map = array('cat' => 'ca',
-                    'gr'  => 'el',
-                    'vn'  => 'vi');
-                    
-  return get_best_lang_file($dir, '', '.js', null, $lang_map);
+  global $flatpickr_lang_map;
+                  
+  return get_best_lang_file($dir, '', '.js', null, $flatpickr_lang_map);
 }
   
 
@@ -484,9 +487,9 @@ function get_flatpickr_lang_file($dir)
 // $dir is the directory containing the language files
 function get_datatable_lang_file($dir)
 {
-  global $datatable_lang_map;
+  global $datatables_lang_map;
   
-  return get_best_lang_file($dir, '', '.lang', null, $datatable_lang_map);
+  return get_best_lang_file($dir, '', '.lang', null, $datatables_lang_map);
 }
 
 
