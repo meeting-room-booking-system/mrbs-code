@@ -1,5 +1,8 @@
 <?php
 
+use MRBS\System;
+
+
 // Emulates the PHP Locale class, for those sites that do not have the Intl extension installed.
 // The class will only be found by the autoloader if the global Locale class doesn't exist.
 class Locale
