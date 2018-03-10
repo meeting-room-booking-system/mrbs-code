@@ -39,8 +39,10 @@ init = function() {
     );
   
   
+  <?php
+  // Formats a date in the user's preferred locale.   Relies on window.Intl.
+  ?>
   var formatDate = function(dateObj, formatStr) {
-      var result;
       <?php
       $locales = get_lang_preferences();
       if (!empty($locales))
@@ -50,22 +52,14 @@ init = function() {
         <?php
       }
       ?>
-      if (typeof locales === 'undefined')
-      {
-        result = new Intl.DateTimeFormat().format(dateObj);
-      }
-      else
-      {
-        result = new Intl.DateTimeFormat(locales).format(dateObj);
-      }
-      console.log(result);
-      return result;
+      return (typeof locales === 'undefined') ?
+             new Intl.DateTimeFormat().format(dateObj) :
+             new Intl.DateTimeFormat(locales).format(dateObj);
     };
+      
       
   var config = {
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
-      altInput: true,
-      formatDate: formatDate,
       onChange: function(selectedDates, dateStr, instance) {
         var submit = $(this.element).data('submit');
         if (submit)
@@ -78,7 +72,18 @@ init = function() {
         }
       }
     };
-    
+  
+  <?php
+  // If window.Intl is supported then we can format dates in the user's preferred
+  // locale.  Otherwise, in practice just IE10, they have to make do with ISO
+  // (YYYY-MM-DD) dates.
+  ?>
+  if (window.Intl)
+  {
+    config.altInput = true;
+    config.formatDate = formatDate;
+  }
+  
   if (!isMobile)
   {
     <?php
