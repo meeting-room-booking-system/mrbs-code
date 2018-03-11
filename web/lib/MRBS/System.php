@@ -323,22 +323,21 @@ class System
   // language specifier to a locale specifier without a map
   private static $lang_map_unix = array
     (
-      'ca' => 'ca_ES',
-      'cs' => 'cs_CZ',
-      'da' => 'da_DK',
-      'el' => 'el_GR',
-      'en' => 'en_GB',
-      'et' => 'et_EE',
-      'eu' => 'eu_ES',
-      'ja' => 'ja_JP',
-      'ko' => 'ko_KR',
-      'nb' => 'nb_NO',
-      'nn' => 'nn_NO',
-      'sh' => 'sr_RS',
-      'sl' => 'sl_SI',
-      'sr-rs-latin' => 'sr_RS',
-      'sv' => 'sv_SE',
-      'zh' => 'zh_CN',
+      'ca' => 'ca-ES',
+      'cs' => 'cs-CZ',
+      'da' => 'da-DK',
+      'el' => 'el-GR',
+      'en' => 'en-GB',
+      'et' => 'et-EE',
+      'eu' => 'eu-ES',
+      'ja' => 'ja-JP',
+      'ko' => 'ko-KR',
+      'nb' => 'nb-NO',
+      'nn' => 'nn-NO',
+      'sh' => 'sr-RS',
+      'sl' => 'sl-SI',
+      'sv' => 'sv-SE',
+      'zh' => 'zh-CN',
     );
     
   // IBM AIX locale to code set table
@@ -542,46 +541,58 @@ class System
   }
   
   
+  // Checks whether $langtag is advertised as being available on this system
+  private static function isAdvertisedLocale($langtag)
+  {
+    if (!class_exists('\\ResourceBundle'))
+    {
+      // Could try using locale -a but that requires exec() which is not
+      // available on most systems.
+      return false;
+    }
+    
+    // Get the available locales
+    $locales = \ResourceBundle::getLocales('');
+    // Put our locale into PHP's format
+    $locale = \Locale::composeLocale(\Locale::parseLocale($langtag));
+    // See whether our locale exists.   Note that if it does we return the original
+    // $langtag, which will be in BCP 47 format, rather than the locale in PHP's
+    // format.  Although PHP will give you locales with underscores, when you try
+    // and set them you need hyphens!
+    return in_array($locale, $locales);
+  }
+  
+  
   // Checks whether $langtag, which is in BCP 47 format, is available on this system
-  // Returns FALSE if it is not available or the locale to use if it is, which might
-  // be in a different format such as a Windows three-letter format, eg 'eng'.
   public static function availableLocale($langtag)
   {
-    // First of all, if we can, get the list of locales on this system and see if the
-    // language tag matches one of them.
-    if (class_exists('\\ResourceBundle'))
+    // If the OS tells us it's available, then that's enough
+    if (isAdvertisedLocale($langtag))
     {
-      // Get the available locales
-      $locales = \ResourceBundle::getLocales('');
-      // Put our locale into PHP's format
-      $locale = \Locale::composeLocale(\Locale::parseLocale($langtag));
-      // See whether our locale exists.   Note that if it does we return the original
-      // $langtag, which will be in BCP 47 format, rather than the locale in PHP's
-      // format.  Although PHP will give you locales with underscores, when you try
-      // and set them you need hyphens!
-      return (in_array($locale, $locales)) ? $langtag : false;
+      return true;
     }
     
     // Otherwise try setting the locale
     if (self::testLocale($langtag))
     {
-      return $langtag;
+      return true;
     }
     
     // If that didn't work then we might just be running on a very old OS that does
     // things differently
-    $server_os = System::getServerOS();
+    $server_os = self::getServerOS();
     
     // Windows systems
     if ($server_os == "windows")
     {
-      return (isset(self::$lang_map_windows[utf8_strtolower($langtag)])) ? 
-             $lang_map_windows[utf8_strtolower($langtag)] : 
-             false;
+      if (!isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+      {
+        return false;
+      }
+      $locale = $lang_map_windows[utf8_strtolower($langtag)];
     }
-    
     // All of these Unix OSes work in mostly the same way...
-    if (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
+    elseif (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
     {
       // Construct the locale name
       if (strlen($langtag) == 2)
@@ -593,61 +604,78 @@ class System
         else
         {
           // Convert locale=xx to xx_XX
-          $locale = utf8_strtolower($langtag) . "_" . utf8_strtoupper($langtag);
+          $locale = utf8_strtolower($langtag) . "-" . utf8_strtoupper($langtag);
         }
       }
       else
       {
-        // First, if we have a map, use it
-        if (isset(self::$lang_map_unix[utf8_strtolower($langtag)]))
-        {
-          $locale = self::$lang_map_unix[utf8_strtolower($langtag)];
-        }
-        else
-        {
-          $locale = str_replace('-', '_', $langtag);
-        }
+        $locale = $langtag;
       }
-      // Then test it
-      return (self::testLocale($locale)) ? $locale : false;
     }
-    
-    return false;
-  }
-  
-  
-  // Returns a locale in the correct format for the server OS given a BCP 47
-  // language tag.
-  // Returns FALSE if no locale can be determined
-  public static function getOSlocale($langtag)
-  {
-    $locale = self::availableLocale($langtag);
-    
-    if ($locale === false)
+    // Unsupported OS
+    else
     {
       return false;
     }
     
-    // Add on a codeset [is this still necessary??]
-    $server_os = System::getServerOS();
+    // Then test it
+    return self::testLocale($locale);
+  }
+  
+  
+  // Add a codeset suffix to $locale
+  private static function addCodeset($locale)
+  {
+    $server_os = self::getServerOS();
     
     switch ($server_os)
     {
-      case "sunos":
-      case "linux":
-      case "bsd":
-        $locale .= ".UTF-8";
+      case 'sunos':
+      case 'linux':
+      case 'bsd':
+        $codeset = '.UTF-8';
         break;
 
-      case "macosx":
-        $locale .= ".utf-8";
+      case 'macosx':
+        $codeset = '.utf-8';
         break;
         
       default:
+        $codeset = '';
         break;
     }
     
-    return $locale;
+    return $locale . $codeset;
+  }
+  
+  
+  // Returns an array of locales in the correct format for the server OS given
+  // a BCP 47 language tag.  There is an array of locales to try because some
+  // operating systems and versions accept locales with underscores, some with
+  // hyphens and some as special codes.
+  public static function getOSlocale($langtag)
+  {
+    $locales = array();
+    
+    // Put the $langtag into standard PHP format
+    $locale = \Locale::composeLocale(\Locale::parseLocale($langtag));
+    
+    // First locale to try is a PHP style locale, ie with underscores
+    $locales[] = $locale;
+    // Next add in one with hyphens instead of underscores.  (These work on newer
+    // Windows systems, whereas underscores do not.)
+    $locales[] = str_replace('_', '-', $locale);
+    // On Windows systems add in the three-letter code if any as a last resort
+    if ((self::getServerOS() == 'windows') &&
+        isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+    {
+      $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+    }
+    
+    // Add on a codeset [is this still necessary??]
+    $locales = array_map('self::addCodeset', $locales);
+    
+    return $locales;
   }
   
   
@@ -686,7 +714,7 @@ class System
   
   public static function utf8ConvertFromLocale($string, $locale=null)
   {
-    $server_os = System::getServerOS();
+    $server_os = self::getServerOS();
     
     if ($server_os == 'windows')
     {
@@ -778,7 +806,7 @@ class System
   }
   
   
-  // Tests whether $locale can be set on this system. Preserves the current locale.
+  // Tests whether $langtag can be set on this system. Preserves the current locale.
   private static function testLocale($locale)
   {
     // [The easy way to do this is to use IntlCalendar::getAvailableLocales(),
@@ -790,9 +818,11 @@ class System
     // Save the original locales.   Note that there could be different locales
     // for different categories
     $original_locales = explode(';', setlocale(LC_ALL, 0));
-
+    
+    $os_locale = self::getOSLocale($langtag);
+    
     // Try the test locale
-    $result = setlocale(LC_ALL, $locale);
+    $result = setlocale(LC_ALL, $os_locale);
 
     // Restore the original settings
     foreach ($original_locales as $locale_setting)
