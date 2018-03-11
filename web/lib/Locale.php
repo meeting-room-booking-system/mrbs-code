@@ -25,7 +25,7 @@ class Locale
       $accept_languages = self::toSortedArray($header);
       foreach($accept_languages as $accept_language => $value)
       {
-        if (System::availableLocale($accept_language))
+        if (System::isAvailableLocale($accept_language))
         {
           return $accept_language;
         }

@@ -548,6 +548,8 @@ class System
     {
       // Could try using locale -a but that requires exec() which is not
       // available on most systems.
+      // Could also use IntlCalendar::getAvailableLocales(), but that needs
+      // the intl extension, just like ResourceBundle::getLocales().
       return false;
     }
     
@@ -564,7 +566,7 @@ class System
   
   
   // Checks whether $langtag, which is in BCP 47 format, is available on this system
-  public static function availableLocale($langtag)
+  public static function isAvailableLocale($langtag)
   {
     // If the OS tells us it's available, then that's enough
     if (isAdvertisedLocale($langtag))
@@ -809,14 +811,8 @@ class System
   // Tests whether $langtag can be set on this system. Preserves the current locale.
   private static function testLocale($locale)
   {
-    // [The easy way to do this is to use IntlCalendar::getAvailableLocales(),
-    // but as this is an MRBS implementation of the Locale class for cases where
-    // the Locale class doesn't exist, it's unlikely that the IntlCalendar class
-    // will exist either.   Instead we try and set the locale to see if it's
-    // available and restore the original locale afterwards]
-    
-    // Save the original locales.   Note that there could be different locales
-    // for different categories
+    // Save the original locales so that we can restore them later.   Note that
+    // there could be different locales for different categories
     $original_locales = explode(';', setlocale(LC_ALL, 0));
     
     $os_locale = self::getOSLocale($langtag);
