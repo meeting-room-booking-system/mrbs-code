@@ -722,7 +722,7 @@ class System
     {
       if (!isset($locale))
       {
-        $locale = System::getOSlocale(get_mrbs_locale());
+        $locale = get_mrbs_locale();
       }
       
       $locale = utf8_strtolower($locale);

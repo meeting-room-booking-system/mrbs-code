@@ -1005,6 +1005,7 @@ function utf8_strtolower($str)
   {
     return mb_strtolower($str);
   }
+  
   return strtolower($str);
 }
 
