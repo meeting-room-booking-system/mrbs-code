@@ -61,6 +61,10 @@ input.flatpickr-input {
   width: 6.5em;
 }
 
+input.flatpickr-input {
+  text-align: center;
+}
+
 .js input:not(.flatpickr-input)[type="date"] {
   visibility: hidden;
 }
