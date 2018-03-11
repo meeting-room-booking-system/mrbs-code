@@ -40,7 +40,16 @@ init = function() {
   
   
   <?php
-  // Formats a date in the user's preferred locale.   Relies on window.Intl.
+  // Custom date formatter.  At the moment, only two format strings are supported:
+  //
+  //    'custom'      The date is formatted in numeric form in the user's preferred locale,
+  //                  as expressed by their browser preferences and subject to any
+  //                  overriding config settings.  Note that 'custom' is not supported on
+  //                  IE10, as it requires Intl.DateTimeFormat(), and so IE10 users
+  //                  are given a date in 'Y-m-d' format.
+  //
+  //    everything    All other format strings are treated as 'Y-m-d'.
+  //    else      
   ?>
   var formatDate = function(dateObj, formatStr) {
       <?php
@@ -51,21 +60,19 @@ init = function() {
         var locales = ['<?php echo implode("','", get_lang_preferences())?>'];
         <?php
       }
-      ?>
       
-      <?php
       // If window.Intl is supported then we can format dates in the user's preferred
       // locale.  Otherwise, in practice just IE10, they have to make do with ISO
       // (YYYY-MM-DD) dates.
       ?>
-      if (!window.Intl || (formatStr == 'Y-m-d'))
+      if (window.Intl && (formatStr == 'custom'))
       {
-        return dateObj.toISOString().slice(0,10);
+        return (typeof locales === 'undefined') ?
+                new Intl.DateTimeFormat().format(dateObj) :
+                new Intl.DateTimeFormat(locales).format(dateObj);
       }
       
-      return (typeof locales === 'undefined') ?
-             new Intl.DateTimeFormat().format(dateObj) :
-             new Intl.DateTimeFormat(locales).format(dateObj);
+      return dateObj.toISOString().slice(0,10);
     };
       
       
@@ -98,8 +105,6 @@ init = function() {
     ?>
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }
-  
-  $('input[type="date"]').attr('data-id', 'altinput').addClass('flatpickr');
   
   flatpickr('input[type="date"]', config);
   
