@@ -1180,7 +1180,19 @@ form#show_my_entries input.link[type="submit"] {
 
 <?php
 // THE COLOR KEY
-// Displays as a grid for those browsers that support it, falling back to a flexbox.
+//
+// Displays as a grid for those browsers that support it, falling back to a flexbox, falling
+// back to floated divs.  The differences between the three levels of support are:
+//
+//  Grid:             If there is some spare space, the divs expand so that the grid rows 
+//                    nicely fill 100% of the container width.
+//  Flexbox (IE11):   As Grid, but the divs are of fixed width and won't expand, but will
+//                    wrap onto the next row.
+//  Floats (IE10):    As Flexbox, but if one of the divs in a row is higher than the others,
+//                    due to long piece of text, then the other divs won't grow in height to
+//                    match it, so it looks a bit odd.   But if this is a problem, then the
+//                    solution is to reduce the length of the description and/or increase the
+//                    width of the divs.
 ?>
 
 .color_key {
@@ -1196,6 +1208,7 @@ form#show_my_entries input.link[type="submit"] {
 }
 
 .color_key > div {
+  float: left;
   width: 12em;
   color: <?php echo $color_key_font_color ?>;
   word-wrap: break-word;
@@ -1210,6 +1223,8 @@ form#show_my_entries input.link[type="submit"] {
     width: auto;
   }
 }
+
+
 
 #header_search input {
   width: 8em;
