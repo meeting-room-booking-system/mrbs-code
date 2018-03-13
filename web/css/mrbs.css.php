@@ -87,7 +87,7 @@ button.image {
   float: left;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 3em;
+  padding-bottom: 3rem;
 }
 
 h1 {font-size: x-large; clear: both}
