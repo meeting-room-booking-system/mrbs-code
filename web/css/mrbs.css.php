@@ -1178,14 +1178,14 @@ form#show_my_entries input.link[type="submit"] {
   font-weight: normal;
 }
 
-div#color_key{
+.color_key{
   display: inline-grid;
   grid-template-columns: repeat(auto-fill, minmax(20ch, 1fr));
   width: 100%;
   margin-top: 1em;
 }
 
-div#color_key > div {
+.color_key > div {
   color: <?php echo $color_key_font_color ?>;
   word-wrap: break-word;
   padding: 0.3em;

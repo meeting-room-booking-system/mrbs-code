@@ -22,7 +22,7 @@ function get_color_key()
   
   $html = '';
   
-  $html = "<div id=\"color_key\">\n";
+  $html = "<div class=\"color_key\">\n";
 
   foreach ($booking_types as $key)
   {
