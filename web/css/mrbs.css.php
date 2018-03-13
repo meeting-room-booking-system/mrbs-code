@@ -83,7 +83,7 @@ button.image {
   padding: 0 1.5rem;
 }
 
-contents {
+.contents {
   float: left;
   width: 100%;
   box-sizing: border-box;
