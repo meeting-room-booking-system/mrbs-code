@@ -1178,7 +1178,17 @@ form#show_my_entries input.link[type="submit"] {
   font-weight: normal;
 }
 
-.color_key{
+<?php
+// THE COLOR KEY
+// Displays as a grid for those browsers that support it, falling back to a flexbox.
+?>
+
+.color_key {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.color_key {
   display: inline-grid;
   grid-template-columns: repeat(auto-fill, minmax(20ch, 1fr));
   width: 100%;
@@ -1186,12 +1196,19 @@ form#show_my_entries input.link[type="submit"] {
 }
 
 .color_key > div {
+  width: 12em;
   color: <?php echo $color_key_font_color ?>;
   word-wrap: break-word;
   padding: 0.3em;
   margin: -1px 0 0 -1px; <?php // to collapse the borders ?>
   font-weight: bold;
   border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>
+}
+
+@supports (display: grid) {
+  .color_key > div {
+    width: auto;
+  }
 }
 
 #header_search input {
