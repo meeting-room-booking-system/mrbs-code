@@ -569,7 +569,7 @@ class System
   public static function isAvailableLocale($langtag)
   {
     // If the OS tells us it's available, then that's enough
-    if (isAdvertisedLocale($langtag))
+    if (self::isAdvertisedLocale($langtag))
     {
       return true;
     }
@@ -809,7 +809,7 @@ class System
   
   
   // Tests whether $langtag can be set on this system. Preserves the current locale.
-  private static function testLocale($locale)
+  private static function testLocale($langtag)
   {
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
