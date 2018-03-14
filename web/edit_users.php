@@ -691,9 +691,13 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
         // We don't want the user to be able to change the level if (a) it's the first user being created or
         // (b) it's the last admin left or (c) they don't have admin rights
-        $fieldset->addElement(get_field_level($params, ($initial_user_creation || 
-                                                        $editing_last_admin ||
-                                                        $disabled)));
+        $level_disabled = $initial_user_creation || $editing_last_admin || $disabled;
+        $fieldset->addElement(get_field_level($params, $level_disabled));
+        // Add a hidden input if the field is disabled
+        if ($level_disabled)
+        {
+          $form->addHiddenInput($params['name'], $params['value']);
+        }
         break;
         
       case 'name':
