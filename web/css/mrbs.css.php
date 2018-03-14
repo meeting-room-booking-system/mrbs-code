@@ -312,11 +312,11 @@ nav.arrow a:focus {
 }
 
 
-a.prev::before {
+nav a.prev::before {
   content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
-a.next::after {
+nav a.next::after {
   content: '\00276f';  /* HEAVY RIGHT-POINTING ANGLE QUOTATION MARK ORNAMENT */
 }
 
