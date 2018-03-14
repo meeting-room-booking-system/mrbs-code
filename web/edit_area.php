@@ -711,7 +711,7 @@ function get_fieldset_submit_buttons()
 
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 

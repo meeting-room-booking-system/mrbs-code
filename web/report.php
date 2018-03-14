@@ -1362,7 +1362,7 @@ else
     Form::checkToken();
   }
   
-  checkAuthorised();
+  checkAuthorised(this_page());
   // Also need to know whether they have admin rights
   $user = getUserName();
   $user_level = authGetUserLevel($user);

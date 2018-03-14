@@ -527,7 +527,7 @@ if ($nusers > 0)
   $user = getUserName();
   $level = authGetUserLevel($user);
   // Check the user is authorised for this page
-  checkAuthorised();
+  checkAuthorised(this_page());
 }
 else 
 // We've just created the table.   Assume the person doing this IS an administrator

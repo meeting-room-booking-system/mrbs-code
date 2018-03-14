@@ -31,7 +31,7 @@ require_once '../mrbs_sql.inc';
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Check that the user has the highest level of admin rights
 $user = getUserName();

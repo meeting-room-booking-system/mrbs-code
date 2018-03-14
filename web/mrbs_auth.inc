@@ -21,46 +21,72 @@ require_once "auth/auth_$auth[type].inc";
 require_once "session/session_$auth[session].inc";
 
 
-
-// MINIMUM PAGE ACCESS LEVELS
-
-// These pages are open to the public by default as they only contain
-// read features.   However if $auth['deny_public_access'] is TRUE then
-// access to the public is denied
-$page_level['index.php']                 = ($auth['deny_public_access']) ? 1 : 0;
-$page_level['help.php']                  = ($auth['deny_public_access']) ? 1 : 0;
-
-// These pages reveal usernames, which could be of assistance to someone trying to
-// break into the system, so users are required to be logged in before viewing them.
-$page_level['report.php']                = 1;
-$page_level['search.php']                = 1;
-$page_level['view_entry.php']            = 1;
-
-// These pages are set to have a minimum access level of 1 as ordinary users
-// should be able to access them because they will have read access and in some
-// cases write access for their own entries.   Where necessary further checks are
-// made within the page to prevent ordinary users gaining access to admin features.
-$page_level['admin.php']                 = 1;  // Ordinary users can view room details 
-$page_level['approve_entry_handler.php'] = 1;  // Ordinary users are allowed to remind admins
-$page_level['del_entry.php']             = ($auth['only_admin_can_book']) ? 2 : 1;
-$page_level['edit_room.php']             = 1;  // Ordinary users can view room details
-$page_level['edit_entry.php']            = ($auth['only_admin_can_book']) ? 2 : 1;
-$page_level['edit_entry_handler.php']    = ($auth['only_admin_can_book']) ? 2 : 1;
-$page_level['edit_users.php']            = 1;  // Ordinary users can edit their own details
-$page_level['pending.php']               = 1;  // Ordinary users can view their own entries
-
-// Ajax pages
-$page_level['check_slot.php']            = $page_level['edit_entry.php'];  // only used by edit_entry.php
-$page_level['del_entry.php']             = 2;
-$page_level['minicalendar.php']          = ($auth['deny_public_access']) ? 1 : 0;
-
-// These pages have a minimum access level of 2 as they only contain admin features
-$page_level['add.php']                   = 2;
-$page_level['del.php']                   = 2;
-$page_level['edit_area.php']             = 2;
-$page_level['edit_area_handler.php']     = 2;
-$page_level['edit_room_handler.php']     = 2;
-$page_level['import.php']                = 2;
+// Gets the minimum user level required to access a page
+function get_page_level($page)
+{
+  global $auth, $max_level;
+  
+  switch ($page)
+  {
+    // These pages are open to the public by default as they only contain
+    // read features.
+    case 'help.php':
+    case 'index.php':
+    case 'minicalendar.php':            // Ajax page
+      $result = 0;
+      break;
+      
+    // These pages reveal usernames, which could be of assistance to someone trying to
+    // break into the system, so users are required to be logged in before viewing them.
+    case 'report.php':
+    case 'search.php':
+    case 'view_entry.php':
+      $result = 1;
+      break;
+      
+    // These pages are set to have a minimum access level of 1 as ordinary users
+    // should be able to access them because they will have read access and in some
+    // cases write access for their own entries.   Where necessary further checks are
+    // made within the page to prevent ordinary users gaining access to admin features.
+    case 'admin.php':
+    case 'approve_entry_handler.php':   // Ordinary users are allowed to remind admins
+    case 'edit_room.php':               // Ordinary users can view room details
+    case 'edit_users.php':              // Ordinary users can edit their own details
+    case 'pending.php':                 // Ordinary users can view their own entries
+      $result = 1;
+      break;
+      
+    // These pages allow users to create and delete entries
+    case 'check_slot.php':              // Ajax page used by edit_entry.php
+    case 'del_entry.php':
+    case 'edit_entry.php':
+    case 'edit_entry_handler.php':
+      $result = ($auth['only_admin_can_book']) ? 2 : 1;
+      break;
+    
+    // These pages only contain admin features
+    case 'add.php':                     // Adds a room
+    case 'del.php':                     // Deletes a room
+    case 'del_entry.php':               // Ajax page for bulk deletion of entries
+    case 'edit_area.php':
+    case 'edit_area_handler.php':
+    case 'edit_room_handler.php':
+    case 'import.php':
+      $result = 2;
+      break;
+      
+    default:
+      $result = (isset($max_level)) ? $max_level : 2;
+      break;
+  }
+  
+  if ($auth['deny_public_access'])
+  {
+    $result = max($result, 1);
+  }
+  
+  return $result;
+}
 
 
 /* getAuthorised($level)
@@ -96,65 +122,51 @@ function getAuthorised($level)
 
 /* checkAuthorised()
  *
- * Checks to see that a user is authorised to access the current page.
+ * Checks to see that a user is authorised to access a page.
  * If they are not, then shows an Access Denied message and exits.
  *
- * Required page level authorisations are defined above.
- * If they are not defined then the function plays safe and requires the
- * highest level of authorisation.
  */
-function checkAuthorised($just_check=FALSE)
+function checkAuthorised($page, $just_check=false)
 {
-  global $page_level, $max_level;
   global $view, $year, $month, $day, $area, $room;
-  global $PHP_SELF;
-
-  $page = this_page();
   
   // Get the minimum authorisation level for this page
-  if (isset($page_level[$page]))
-  {
-    $required_level = $page_level[$page];
-  }
-  elseif (isset($max_level))
-  {
-    $required_level = $max_level;
-  }
-  else
-  {
-    $required_level = 2;
-  }
+  $required_level = get_page_level($page);
   
   if ($just_check)
   {
     if ($required_level == 0)
     {
-      return TRUE;
+      return true;
     }
+    
     $user = getUserName();
-    return (isset($user)) ? (authGetUserLevel($user) >= $required_level): FALSE;
+    return (isset($user)) ? (authGetUserLevel($user) >= $required_level) : false;
   }
   
   // Check that the user has this level
-  if (!getAuthorised($required_level))
+  if (getAuthorised($required_level))
   {
-    // If we dont know the right date then use today's
-    if (!isset($day) or !isset($month) or !isset($year))
-    {
-      $day   = date("d");
-      $month = date("m");
-      $year  = date("Y");
-    }
-    if (empty($area))
-    {
-      $area = get_default_area();
-    }
-    showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
-    exit();
+    return true;
   }
   
-  return TRUE;
+  // If we don't know the right date then use today's
+  if (!isset($day) or !isset($month) or !isset($year))
+  {
+    $day   = date('d');
+    $month = date('m');
+    $year  = date('Y');
+  }
+  
+  if (empty($area))
+  {
+    $area = get_default_area();
+  }
+  
+  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  exit();
 }
+
 
 /* getWritable($creator, $user, $room)
  * 

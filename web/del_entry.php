@@ -26,7 +26,7 @@ $note = get_form_var('note', 'string', '', INPUT_POST);
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 if (empty($returl))
 {

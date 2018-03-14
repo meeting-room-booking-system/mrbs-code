@@ -24,7 +24,7 @@ require '../defaultincludes.inc';
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Get the non-standard form variables ($day, $month and $year are standard)
 $id = get_form_var('id', 'string');

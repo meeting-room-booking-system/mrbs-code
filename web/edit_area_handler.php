@@ -9,7 +9,7 @@ use MRBS\Form\Form;
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 
 // Get non-standard form variables

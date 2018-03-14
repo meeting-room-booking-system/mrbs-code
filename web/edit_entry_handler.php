@@ -21,7 +21,7 @@ function invalid_booking($message)
 }
 
 $ajax = get_form_var('ajax', 'int');
-if ($ajax && !checkAuthorised(TRUE))
+if ($ajax && !checkAuthorised(this_page(), true))
 {
   exit;
 }
@@ -33,7 +33,7 @@ Form::checkToken();
 
 // (1) Check the user is authorised for this page
 //  ---------------------------------------------
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Also need to know whether they have admin rights
 $user = getUserName();

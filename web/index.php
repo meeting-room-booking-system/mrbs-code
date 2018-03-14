@@ -346,7 +346,7 @@ $ajax = get_form_var('ajax', 'int');
 $timetohighlight = get_form_var('timetohighlight', 'int');
 
 // Check the user is authorised for this page
-if (!checkAuthorised($just_check = $ajax))
+if (!checkAuthorised(this_page(), $just_check = $ajax))
 {
   exit;
 }

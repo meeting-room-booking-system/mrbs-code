@@ -59,7 +59,7 @@ function generate_yes_form($room, $area)
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Get non-standard form variables
 $type = get_form_var('type', 'string');

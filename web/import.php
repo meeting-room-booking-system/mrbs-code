@@ -757,7 +757,7 @@ if (!empty($import))
 }
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 print_header($view, $year, $month, $day, $area, $room);
 

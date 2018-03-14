@@ -1092,7 +1092,7 @@ $end_date = get_form_var('end_date', 'string');
 Form::checkToken($post_only=true);
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Also need to know whether they have admin rights
 $user = getUserName();

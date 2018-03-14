@@ -5,7 +5,7 @@ require "defaultincludes.inc";
 require_once "version.inc";
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= $max_level);

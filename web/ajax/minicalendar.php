@@ -13,7 +13,7 @@ require '../defaultincludes.inc';
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 $mincal = get_form_var('reference', 'string');
 $page = filter_var(get_form_var('page', 'string'), FILTER_SANITIZE_URL);

@@ -20,7 +20,7 @@ $note = get_form_var('note', 'string');
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 $user = getUserName();
 
 // Retrieve the booking details
