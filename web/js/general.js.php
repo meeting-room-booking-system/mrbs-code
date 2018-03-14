@@ -295,7 +295,7 @@ init = function(args) {
       value: '1'
     }).appendTo('#header_search');
     
-  $('#user_list_link').each(function() {
+  $('header a[href^="edit_users.php"]').each(function() {
       var href = $(this).attr('href');
       href += (href.indexOf('?') < 0) ? '?' : '&';
       href += 'datatable=1';

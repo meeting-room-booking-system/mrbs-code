@@ -188,34 +188,29 @@ function print_outstanding($query)
 }
 
 
-function print_help($query)
-{
-  echo '<a href="help.php?' . htmlspecialchars($query) . '">' . get_vocab('help') . "</a>\n";
-}
-
-
-function print_rooms($query)
-{
-  echo '<a href="admin.php?' . htmlspecialchars($query) . '">' . get_vocab('rooms') . "</a>\n";
-}
-
-
-function print_report($query)
-{
-  echo '<a href="report.php?' . htmlspecialchars($query) . '">' . get_vocab('report') . "</a>\n";
-}
-
-
-function print_users($query)
+function print_menu_items($query)
 {
   global $auth;
   
+  $menu_items = array('help'   => 'help.php',
+                      'report' => 'report.php',
+                      'rooms'  => 'admin.php');
+                      
   if ($auth['type'] == 'db')
+  {               
+    $menu_items['user_list'] = 'edit_users.php';
+  }
+  
+  foreach ($menu_items as $token => $page)
   {
-    echo '<a id="user_list_link" href="edit_users.php?' . htmlspecialchars($query) . '">' . 
-         get_vocab('user_list') . "</a>\n";
+    // Only print menu items for which the user is allowed to access the page
+    if (checkAuthorised($page, true))
+    {
+      echo "<a href=\"$page?" . htmlspecialchars($query) . '">' . get_vocab($token) . "</a>\n";
+    }
   }
 }
+
 
 
 function print_search($view, $year, $month, $day, $area, $room, $search_str=null)
@@ -297,10 +292,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     echo "<nav>\n";
     
     echo "<nav class=\"menu\">\n";
-    print_help($query);
-    print_report($query);
-    print_rooms($query);
-    print_users($query);
+    print_menu_items($query);
     echo "</nav>\n";
     
     echo "<nav class=\"logon\">\n";
