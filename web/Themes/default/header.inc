@@ -333,7 +333,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
 function print_unsupported_message()
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner(null, null, null, null, null, null, null, $simple=true);
+  print_banner(null, null, null, null, null, null, $simple=true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
