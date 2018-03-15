@@ -213,13 +213,8 @@ function print_menu_items($query)
 
 
 
-function print_search($view, $year, $month, $day, $area, $room, $search_str=null)
+function print_search($view, $year, $month, $day, $area, $room)
 {
-  if (!isset($search_str))
-  {
-    $search_str = '';
-  }
-  
   echo "<div>\n";
     
   $form = new Form();
@@ -242,10 +237,9 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   
   $input = new ElementInputSearch();
   
-  $input->setAttributes(array('name'     => 'search_str',
-                              'value'    => $search_str,
+  $input->setAttributes(array('name'        => 'search_str',
                               'placeholder' => get_vocab('search'),
-                              'required' => true));
+                              'required'    => true));
                               
   $form->addElement($input);
   
@@ -260,7 +254,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
 }
 
 
-function print_banner($view, $year, $month, $day, $area, $room, $search_str=null, $simple=false)
+function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
   
@@ -323,7 +317,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $search_str=null
     
     echo "<nav>\n";
     print_goto_date($view, $year, $month, $day, $area, $room);
-    print_search($view, $year, $month, $day, $area, $room, $search_str);
+    print_search($view, $year, $month, $day, $area, $room);
     echo "</nav>\n";
 
     echo "</nav>\n";
@@ -350,7 +344,7 @@ function print_unsupported_message()
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($view, $year, $month, $day, $area, $room, $simple=false, $search_str=null)
+function print_theme_header($view, $year, $month, $day, $area, $room, $simple=false)
 {
   $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
@@ -388,7 +382,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   
   print_unsupported_message();
   
-  print_banner($view, $year, $month, $day, $area, $room, $search_str, $simple);
+  print_banner($view, $year, $month, $day, $area, $room, $simple);
   
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>
