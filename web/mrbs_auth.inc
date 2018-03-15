@@ -38,7 +38,6 @@ function get_page_level($page)
       
     // These pages reveal usernames, which could be of assistance to someone trying to
     // break into the system, so users are required to be logged in before viewing them.
-    case 'report.php':
     case 'search.php':
     case 'view_entry.php':
       $result = 1;
@@ -72,6 +71,7 @@ function get_page_level($page)
     case 'edit_area_handler.php':
     case 'edit_room_handler.php':
     case 'import.php':
+    case 'report.php':
       $result = 2;
       break;
       
