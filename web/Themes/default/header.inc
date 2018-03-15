@@ -215,6 +215,12 @@ function print_menu_items($query)
 
 function print_search($view, $year, $month, $day, $area, $room)
 {
+  if (!checkAuthorised('search.php', true))
+  {
+    // Don't show the search box if the user isn't allowed to search
+    return;
+  }
+  
   echo "<div>\n";
     
   $form = new Form();
