@@ -1402,6 +1402,10 @@ h3.search_results {
   padding-top: 2em;
 }
 
+.search p.error {
+  clear: left;
+}
+
 p#nothing_found {
   font-weight: bold;
 }

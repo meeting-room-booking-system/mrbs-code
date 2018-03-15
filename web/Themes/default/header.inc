@@ -221,9 +221,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   }
   
   echo "<div>\n";
-  
-  echo '<label class="link"><a href="search.php">' . get_vocab('search') . "</a></label>\n";
-  
+    
   $form = new Form();
   
   $form->setAttributes(array('id'     => 'header_search',
@@ -246,6 +244,7 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
   
   $input->setAttributes(array('name'     => 'search_str',
                               'value'    => $search_str,
+                              'placeholder' => get_vocab('search'),
                               'required' => true));
                               
   $form->addElement($input);
