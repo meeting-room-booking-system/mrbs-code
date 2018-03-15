@@ -326,7 +326,7 @@ function alias_header($header, array $aliases)
     
     foreach ($aliases as $key => $value)
     {
-      $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/";
+      $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/i";
       $replacements[] = $value;
     }
     
