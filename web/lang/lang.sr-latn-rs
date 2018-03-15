@@ -264,7 +264,6 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "Previous";
 $vocab["next"]               = "Next";
 $vocab["entry"]              = "Entry";
-$vocab["advanced_search"]    = "Advanced search";
 $vocab["search_button"]      = "Search";
 $vocab["search_for"]         = "Search For";
 $vocab["from"]               = "From";

@@ -1397,6 +1397,12 @@ button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
 
 /* ------------ SEARCH.PHP ----------------------*/
 
+h3.search_results {
+  clear: left;
+  margin-bottom: 0;
+  padding-top: 2em;
+}
+
 p#nothing_found {
   font-weight: bold;
 }

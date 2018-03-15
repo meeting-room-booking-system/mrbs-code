@@ -254,7 +254,6 @@ $vocab["of"]                 = " / ";
 $vocab["previous"]           = "Előző";
 $vocab["next"]               = "Következő";
 $vocab["entry"]              = "Bejegyzés";
-$vocab["advanced_search"]    = "Fejlett keresés";
 $vocab["search_button"]      = "Keresés";
 $vocab["search_for"]         = "Kulcsszó:";
 // gkiss - tesztelendő!

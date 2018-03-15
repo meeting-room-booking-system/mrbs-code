@@ -240,7 +240,6 @@ $vocab["of"]                 = " sur ";
 $vocab["previous"]           = "Précédent";
 $vocab["next"]               = "Suivant";
 $vocab["entry"]              = "Réservation";
-$vocab["advanced_search"]    = "Recherche avancée";
 $vocab["search_button"]      = "Recherche";
 $vocab["search_for"]         = "Rechercher";
 $vocab["from"]               = "À partir de";

@@ -254,7 +254,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Forrige";
 $vocab["next"]               = "Neste";
 $vocab["entry"]              = "Post";
-$vocab["advanced_search"]    = "Avansert søk";
 $vocab["search_button"]      = "Søk";
 $vocab["search_for"]         = "Søk etter";
 $vocab["from"]               = "Fra";

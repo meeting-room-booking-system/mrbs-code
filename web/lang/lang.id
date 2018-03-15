@@ -276,7 +276,6 @@ $vocab["of"]                 = " dari ";
 $vocab["previous"]           = "Sebelumnya";
 $vocab["next"]               = "Berikutnya";
 $vocab["entry"]              = "Entri";
-$vocab["advanced_search"]    = "Pencarian tingkat lanjut";
 $vocab["search_button"]      = "Cari";
 $vocab["search_for"]         = "Cari untuk";
 $vocab["from"]               = "Dari";

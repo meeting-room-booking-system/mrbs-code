@@ -249,7 +249,6 @@ $vocab["previous"]           = "קודם";
 $vocab["next"]               = "הבא";
 $vocab["entry"]              = "הזמן חדר";
 $vocab["view"]               = "הצג";
-$vocab["advanced_search"]    = "חיפוש";
 $vocab["search_button"]      = "חיפוש";
 $vocab["search_for"]         = "חפש את";
 $vocab["from"]               = "מתאריך";

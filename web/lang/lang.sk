@@ -276,7 +276,6 @@ $vocab["of"]                 = " o ";
 $vocab["previous"]           = "Predchádzajúci";
 $vocab["next"]               = "Ďalší";
 $vocab["entry"]              = "Záznam";
-$vocab["advanced_search"]    = "Rozšírené hľadanie";
 $vocab["search_button"]      = "Hľadať";
 $vocab["search_for"]         = "Hľadať čo";
 $vocab["from"]               = "Od";

@@ -119,7 +119,6 @@ function output_row($row)
 $search_str = get_form_var('search_str', 'string');
 $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
-$advanced = get_form_var('advanced', 'int');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
@@ -172,45 +171,42 @@ if (!$ajax)
 {
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null, $search_str);
 
-  if (!empty($advanced))
-  {
-    $form = new Form();
-    $form->setAttributes(array('class'  => 'standard',
-                               'id'     => 'search_form',
-                               'method' => 'post',
-                               'action' => 'search.php'));
-                               
-    $fieldset = new ElementFieldset();
-    $fieldset->addLegend(get_vocab('advanced_search'));
-    
-    // Search string
-    $field = new FieldInputSearch();
-    $field->setLabel(get_vocab('search_for'))
-          ->setControlAttributes(array('name'      => 'search_str',
-                                       'required'  => true,
-                                       'autofocus' => true));
-    $fieldset->addElement($field);
-    
-    // From date
-    $field = new FieldInputDate();
-    $field->setLabel(get_vocab('from'))
-          ->setControlAttributes(array('name'      => 'from_date',
-                                       'value'     => format_iso_date($year, $month, $day),
-                                       'required'  => true));
-    $fieldset->addElement($field);
-    
-    // Submit button
-    $field = new FieldInputSubmit();
-    $field->setControlAttribute('value', get_vocab('search_button'));
-    $fieldset->addElement($field);
-    
-    $form->addElement($fieldset);
-    
-    $form->render();
-    
-    print_footer();
-    exit;
-  }
+  $form = new Form();
+  $form->setAttributes(array('class'  => 'standard',
+                             'id'     => 'search_form',
+                             'method' => 'post',
+                             'action' => 'search.php'));
+                             
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('search'));
+  
+  // Search string
+  $field = new FieldInputSearch();
+  $field->setLabel(get_vocab('search_for'))
+        ->setControlAttributes(array('name'      => 'search_str',
+                                     'value'     => (isset($search_str)) ? $search_str : '',
+                                     'required'  => true,
+                                     'autofocus' => true));
+  $fieldset->addElement($field);
+  
+  // From date
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('from'))
+        ->setControlAttributes(array('name'      => 'from_date',
+                                     'value'     => (isset($from_date)) ? 
+                                                    $from_date :
+                                                    format_iso_date($year, $month, $day),
+                                     'required'  => true));
+  $fieldset->addElement($field);
+  
+  // Submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttribute('value', get_vocab('search_button'));
+  $fieldset->addElement($field);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
 
   if (!isset($search_str) || ($search_str === ''))
   {
@@ -219,7 +215,7 @@ if (!$ajax)
     exit;
   }
   
-  echo "<h3>";
+  echo '<h3 class="search_results">';
   echo get_vocab("search_results",
                  htmlspecialchars($search_str),
                  htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));

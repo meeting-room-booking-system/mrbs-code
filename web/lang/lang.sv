@@ -279,7 +279,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Föregående";
 $vocab["next"]               = "Nästa";
 $vocab["entry"]              = "Bokning";
-$vocab["advanced_search"]    = "Avancerad sökning";
 $vocab["search_button"]      = "Sök";
 $vocab["search_for"]         = "Sök för";
 $vocab["from"]               = "Från";

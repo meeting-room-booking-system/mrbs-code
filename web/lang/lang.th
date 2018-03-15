@@ -249,7 +249,6 @@ $vocab["of"]                 = "ของ ";
 $vocab["previous"]           = "ก่อนหน้า";
 $vocab["next"]               = "ถัดไป";
 $vocab["entry"]              = "เข้า";
-$vocab["advanced_search"]    = "การค้นหาขั้นสูง";
 $vocab["search_button"]      = "ค้นหา";
 $vocab["search_for"]         = "ค้นหาเพื่อ";
 $vocab["from"]               = "จาก";

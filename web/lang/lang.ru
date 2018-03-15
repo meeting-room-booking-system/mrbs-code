@@ -240,7 +240,6 @@ $vocab["previous"]           = "Предыдущая";
 $vocab["next"]               = "Следующая";
 $vocab["entry"]              = "запись";
 $vocab["view"]               = "Просмотр";
-$vocab["advanced_search"]    = "Расширенный поиск";
 $vocab["search_button"]      = "Поиск";
 $vocab["search_for"]         = "Поиск для";
 $vocab["from"]               = "Из";

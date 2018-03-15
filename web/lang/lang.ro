@@ -282,7 +282,6 @@ $vocab["of"]                 = "a ";
 $vocab["previous"]           = "Precedenta";
 $vocab["next"]               = "Urmatoare";
 $vocab["entry"]              = "Rezervare";
-$vocab["advanced_search"]    = "Cautare avansata";
 $vocab["search_button"]      = "Cautare";
 $vocab["search_for"]         = "Cautare pentru";
 $vocab["from"]               = "De la";
