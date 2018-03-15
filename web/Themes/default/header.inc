@@ -250,6 +250,11 @@ function print_search($view, $year, $month, $day, $area, $room, $search_str=null
                               
   $form->addElement($input);
   
+  $submit = new ElementInputSubmit();
+  $submit->setAttributes(array('value' => get_vocab('search_button'),
+                               'class' => 'js_none'));
+  $form->addElement($submit);
+  
   $form->render();
   
   echo "</div>\n";

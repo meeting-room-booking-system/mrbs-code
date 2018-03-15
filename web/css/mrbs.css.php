@@ -1226,9 +1226,8 @@ form#show_my_entries input.link[type="submit"] {
 
 
 
-#header_search input {
-  width: 8em;
-  margin-left: 0.5em;
+header input[type="search"] {
+  width: 10em;
 }
 
 .banner .outstanding a {color: <?php echo $outstanding_color ?>}
