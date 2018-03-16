@@ -766,11 +766,11 @@ if ($ajax)
     require_once "functions_table.inc";
     if ($page == 'day')
     {
-      $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+      $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     }
     else
     {
-      $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+      $result['table_innerhtml'] = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     }
   }
   http_headers(array("Content-Type: application/json"));

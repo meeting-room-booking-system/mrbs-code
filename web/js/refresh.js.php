@@ -32,7 +32,7 @@ var refreshPage = function refreshPage() {
         data.timetohighlight = refreshPage.args.timetohighlight;
       }
       
-      $.post(refreshPage.args.page + '.php',
+      $.post('index.php',
              data,
              function(result){
                  var table;
