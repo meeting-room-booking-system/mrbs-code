@@ -18,8 +18,8 @@ if ($use_strict)
 ?>
 
 var oldInitDatepicker = init;
-init = function() {
-  oldInitDatepicker.apply(this);
+init = function(args) {
+  oldInitDatepicker.apply(this, [args]);
     
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr
@@ -91,12 +91,10 @@ init = function() {
       if (!empty($hidden_days))
       {
         ?>
-        var hiddenDays = [<?php echo implode(',', $hidden_days)?>],
-            newClass;
+        var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
         if (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0)
         {
-          newClass = (fp.input.classList.contains('admin')) ? 'nextMonthDay' : 'disabled';
-          dayElem.classList.add(newClass);
+          dayElem.classList.add((args.isAdmin) ? 'nextMonthDay' : 'disabled');
         }
         <?php
       }
@@ -132,15 +130,6 @@ init = function() {
   if (!isMobile)
   {
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
-  }
-  
-  <?php 
-  // Add an admin class to the input if appropriate so we can do special things in
-  // onDayCreate() for admins.
-  ?>
-  if ($('body').hasClass('admin'))
-  {
-    $('input[type="date"]').addClass('admin');
   }
   
   flatpickr('input[type="date"]', config);

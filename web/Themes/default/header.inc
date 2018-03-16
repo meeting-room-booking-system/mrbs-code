@@ -370,15 +370,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
 
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  $classes = array('non_js', this_page('.php'));
-  
-  $user = getUserName();
-  if (authGetUserLevel($user) >= 2)
-  {
-    $classes[] = 'admin';
-  }
-  
-  echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . "\">\n";
+  echo '<body class="non_js ' . htmlspecialchars(this_page('.php')) . "\">\n";
    
   if (!$simple)
   {
