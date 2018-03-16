@@ -112,6 +112,8 @@ init = function() {
   
   
   <?php
+  // If we are using $hidden days and the input has a class of 'hidden' then we need
+  // to tell flatpickr to disable those dates.
   if (empty($hidden_days))
   {
     ?>
