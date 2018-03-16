@@ -156,23 +156,15 @@ if (is_readable("js/$page.js.php"))
 }
 
 // The day, week and month views do refresh by Ajax.
-if ($page == 'calendar')
+// We need the resizable booking and multiple bookings for the day and week views
+if ($page == 'index')
 {
   ?>
   <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
-  <?php
-}
-
-
-// We need the resizable booking and multiple bookings for the day and week pages
-if (in_array($page, array('day', 'week')))
-{
-  ?>
   <script type="text/javascript" src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
   <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
-
 ?>
 
 <!--[if lte IE 8]>

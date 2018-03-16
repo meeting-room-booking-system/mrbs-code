@@ -10,11 +10,11 @@ if ($use_strict)
 {
   echo "'use strict';\n";
 }
+?>
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= $max_level);
+var isAdmin;
 
-
+<?php
 // Set (if set is true) or clear (if set is false) a timer
 // to check for conflicts periodically in case someone else
 // books the slot you are looking at.  If setting the timer
@@ -1046,9 +1046,9 @@ function adjustSlotSelectors()
       <?php
       // Limit the end slots to the maximum duration if that is enabled, if the
       // user is not an admin
-      if (!$is_admin)
+      ?>
+      if (!isAdmin)
       {
-        ?>
         if (maxDurationEnabled)
         {
           <?php
@@ -1088,9 +1088,8 @@ function adjustSlotSelectors()
             }
           }
         }
-        <?php
       }
-      ?>
+
       if ((thisValue > startValue) ||
           ((thisValue === startValue) && enablePeriods) ||
           (dateDifference !== 0))
@@ -1138,6 +1137,8 @@ var editEntryVisChanged = function editEntryVisChanged() {
 var oldInitEditEntry = init;
 init = function(args) {
   oldInitEditEntry.apply(this, [args]);
+  
+  isAdmin = args.isAdmin;
   
   <?php
   // If there's only one enabled area in the database there won't be an area

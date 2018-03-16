@@ -11,8 +11,6 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= $max_level);
 
 // =================================================================================
 
@@ -29,14 +27,11 @@ init = function(args) {
   <?php
   // Turn the list of rooms into a dataTable
   // If we're an admin, then fix the right hand column
-  
-  if ($is_admin)
-  {
-    ?>
-    fixedColumnsOptions.rightColumns = 1;
-    <?php
-  }
   ?>
+  if (args.isAdmin)
+  {
+    fixedColumnsOptions.rightColumns = 1;
+  }
   
   makeDataTable('#rooms_table', {}, fixedColumnsOptions);
 };

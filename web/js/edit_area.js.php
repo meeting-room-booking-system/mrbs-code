@@ -214,8 +214,9 @@ function checkForLastPeriodName()
 ?>
 
 var oldInitEditAreaRoom = init;
-init = function() {
-  oldInitEditAreaRoom.apply(this);
+init = function(args) {
+  
+  oldInitEditAreaRoom.apply(this, [args]);
   
   <?php
   // We need to hide the sections of the form relating to times

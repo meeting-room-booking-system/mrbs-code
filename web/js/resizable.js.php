@@ -11,10 +11,6 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= $max_level);
-
-
 // function to reverse a collection of jQuery objects
 ?>
 $.fn.reverse = [].reverse;
@@ -622,15 +618,16 @@ init = function(args) {
           ?>
           downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
           downHandler.box = $('<div class="div_select">');
-          <?php
-          if (!$is_admin)
+
+          if (!args.isAdmin)
           {
+            <?php
             // If we're not an admin and we're not allowed to book repeats (in
             // the week view) or select multiple rooms (in the day view) then 
             // constrain the box to fit in the current slot width/height
             ?>
-            if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                ((args.page == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+            if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
             {
               <?php
               if ($times_along_top)
@@ -653,9 +650,7 @@ init = function(args) {
               }
               ?>
             }
-            <?php
           }
-          ?>
           
           <?php // Attach the element to the document before setting the offset ?>
           $(document.body).append(downHandler.box);
@@ -789,7 +784,7 @@ init = function(args) {
           queryString += '&area=' + args.area;
           queryString += '&start_seconds=' + params.seconds[0];
           queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
-          if (args.page === 'day')
+          if (args.view === 'day')
           {
             for (var i=0; i<params.room.length; i++)
             {
@@ -1018,7 +1013,7 @@ init = function(args) {
                     ?>
                   }
                 }
-                if (args.page === 'day')
+                if (args.view === 'day')
                 {
                   data.page = 'day';
                   data.start_date = args.page_date;
@@ -1028,18 +1023,15 @@ init = function(args) {
                 {
                   data.page = 'week';
                   data.start_date = newParams.date[0];
-                  <?php
-                  if ($is_admin || !$auth['only_admin_can_book_repeat'])
+                  var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
+                  if (args.isAdmin || !onlyAdminCanBookRepeat)
                   {
-                    ?>
                     if (newParams.date.length > 1)
                     {
                       data.rep_type = <?php echo REP_DAILY ?>;
                       data.rep_end_date = newParams.date[newParams.date.length - 1];
                     }
-                    <?php
                   }
-                  ?>
                 }
                 data.end_date = data.start_date;
                 data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
@@ -1133,12 +1125,10 @@ init = function(args) {
               ?>
               directions.other = {plus: false, minus: false};
             }
-            <?php
-            if (!$is_admin)
+            if (!args.isAdmin)
             {
-              ?>
-              if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                  ((args.page == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+              if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                  ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
               {
                 <?php
                 // If we're in the week view then if non-admins aren't allowed to
@@ -1161,7 +1151,9 @@ init = function(args) {
                 }
                 <?php
               }
+              ?>
             }
+            <?php
             // Don't allow multiday bookings to be moved at the end
             // which is joined to another day nor along the other axis
             ?>
