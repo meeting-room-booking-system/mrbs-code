@@ -143,6 +143,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   
   $input = new ElementInputDate();
   $input->setAttributes(array('name'        => 'page_date',
+                              'class'       => 'hidden',
                               'value'       => format_iso_date($year, $month, $day),
                               'required'    => true,
                               'data-submit' => $form_id));

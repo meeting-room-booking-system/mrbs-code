@@ -110,7 +110,26 @@ init = function() {
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }
   
-  flatpickr('input[type="date"]', config);
+  
+  <?php
+  if (empty($hidden_days))
+  {
+    ?>
+    flatpickr('input[type="date"]', config);
+    <?php
+  }
+  else
+  {
+    ?>
+    flatpickr('input[type="date"]:not(.hidden)', config);
+    config.disable = [function(date) {
+        var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+        return (hiddenDays.indexOf(date.getDay()) >= 0);
+      }];
+    flatpickr('input[type="date"].hidden', config);
+    <?php
+  }
+  ?>
   
 };
 
