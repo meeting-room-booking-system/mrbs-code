@@ -143,7 +143,6 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   
   $input = new ElementInputDate();
   $input->setAttributes(array('name'        => 'page_date',
-                              'class'       => 'hidden', // tells the datepicker to disable hidden days
                               'value'       => format_iso_date($year, $month, $day),
                               'required'    => true,
                               'data-submit' => $form_id));
@@ -371,7 +370,15 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
 
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"non_js ".htmlspecialchars(this_page('.php'))."\">\n";
+  $classes = array('non_js', this_page('.php'));
+  
+  $user = getUserName();
+  if (authGetUserLevel($user) >= 2)
+  {
+    $classes[] = 'admin';
+  }
+  
+  echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . "\">\n";
    
   if (!$simple)
   {

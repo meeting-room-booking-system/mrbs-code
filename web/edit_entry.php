@@ -356,7 +356,6 @@ function get_field_start_date($value, $disabled=false)
   // Generate the live slot selector and all day checkbox
   $element_date = new ElementInputDate();
   $element_date->setAttributes(array('id'       => 'start_date',
-                                     'class'    => 'hidden', // tells the datepicker to disable hidden days
                                      'name'     => 'start_date',
                                      'value'    => $start_date,
                                      'disabled' => $disabled,
@@ -420,7 +419,6 @@ function get_field_end_date($value, $disabled=false)
   // of the last period booked
   $element_date = new ElementInputDate();
   $element_date->setAttributes(array('id'       => 'end_date',
-                                     'class'    => 'hidden', // tells the datepicker to disable hidden days
                                      'name'     => 'end_date',
                                      'value'    => $end_date,
                                      'disabled' => $disabled));

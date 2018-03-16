@@ -80,11 +80,35 @@ init = function() {
     };
       
       
+  var onDayCreate = function(dObj, dStr, fp, dayElem) {
+      <?php
+      // If this is a hidden day, add a class to the element. If we're not an admin
+      // then add 'disabled', which will grey out the dates and prevent them being picked.
+      // If we are an admin then add 'nextMonthDay' will will grey out the dates, but
+      // still allow them to be picked.  [Note: it would be better to define our own
+      // class instead of using 'nextMonthDay' as that will probably have some 
+      // unintended consequences if we want to do special things with the next month.]
+      if (!empty($hidden_days))
+      {
+        ?>
+        var hiddenDays = [<?php echo implode(',', $hidden_days)?>],
+            newClass;
+        if (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0)
+        {
+          newClass = (fp.input.classList.contains('admin')) ? 'nextMonthDay' : 'disabled';
+          dayElem.classList.add(newClass);
+        }
+        <?php
+      }
+      ?>
+    };
+      
   var config = {
       dateFormat: 'Y-m-d',
       altInput: true,
       altFormat: 'custom',
       formatDate: formatDate,
+      onDayCreate: onDayCreate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
         var submit = $(this.element).data('submit');
@@ -100,38 +124,26 @@ init = function() {
     };
   
   
+  <?php
+  // Setting weekNumbers causes flatpickr not to use the native datepickers on mobile
+  // devices.  As these are generally better than flatpickr's, it's probably better
+  // to have the native datepicker and do without the week numbers.
+  ?>
   if (!isMobile)
   {
-    <?php
-    // Setting weekNumbers causes flatpickr not to use the native datepickers on mobile
-    // devices.  As these are generally better than flatpickr's, it's probably better
-    // to have the native datepicker and do without the week numbers.
-    ?>
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }
   
-  
-  <?php
-  // If we are using $hidden days and the input has a class of 'hidden' then we need
-  // to tell flatpickr to disable those dates.
-  if (empty($hidden_days))
-  {
-    ?>
-    flatpickr('input[type="date"]', config);
-    <?php
-  }
-  else
-  {
-    ?>
-    flatpickr('input[type="date"]:not(.hidden)', config);
-    config.disable = [function(date) {
-        var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
-        return (hiddenDays.indexOf(date.getDay()) >= 0);
-      }];
-    flatpickr('input[type="date"].hidden', config);
-    <?php
-  }
+  <?php 
+  // Add an admin class to the input if appropriate so we can do special things in
+  // onDayCreate() for admins.
   ?>
+  if ($('body').hasClass('admin'))
+  {
+    $('input[type="date"]').addClass('admin');
+  }
+  
+  flatpickr('input[type="date"]', config);
   
 };
 
