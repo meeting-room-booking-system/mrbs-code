@@ -94,7 +94,6 @@ $formvars = array('create_by'          => 'string',
                   'confirmed'          => 'string',
                   'back_button'        => 'string',
                   'timetohighlight'    => 'int',
-                  'page'               => 'string',
                   'commit'             => 'string');
       
 foreach($formvars as $var => $var_type)
@@ -569,10 +568,10 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   }
 }
 
-
-if (!$ajax || !$commit)
+// If we're committing this booking, get the start day/month/year and
+// make them the current day/month/year
+if ($commit)
 {
-  // Get the start day/month/year and make them the current day/month/year
   $day = $start_day;
   $month = $start_month;
   $year = $start_year;
@@ -764,7 +763,7 @@ if ($ajax)
   {
     // Generate the new HTML
     require_once "functions_table.inc";
-    if ($page == 'day')
+    if ($view == 'day')
     {
       $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
     }

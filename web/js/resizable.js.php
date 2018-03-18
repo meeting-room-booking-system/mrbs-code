@@ -1013,15 +1013,14 @@ init = function(args) {
                     ?>
                   }
                 }
+                data.view = args.view;
                 if (args.view === 'day')
                 {
-                  data.page = 'day';
                   data.start_date = args.page_date;
   
                 }
                 else  <?php // it's 'week' ?>
                 {
-                  data.page = 'week';
                   data.start_date = newParams.date[0];
                   var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
                   if (args.isAdmin || !onlyAdminCanBookRepeat)
