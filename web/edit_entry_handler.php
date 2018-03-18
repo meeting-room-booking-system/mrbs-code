@@ -569,9 +569,10 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
 }
 
 
-if (!$ajax || !$commit)
+// If we're committing this booking, get the start day/month/year and
+// make them the current day/month/year
+if ($commit)
 {
-  // Get the start day/month/year and make them the current day/month/year
   $day = $start_day;
   $month = $start_month;
   $year = $start_year;
