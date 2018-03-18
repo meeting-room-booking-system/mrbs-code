@@ -140,7 +140,7 @@ if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, 
 // If we're going to be doing something then check the CSRF token
 if (isset($search_str) && ($search_str !== ''))
 {
-  Form::checkToken();
+  Form::checkToken(true);
 }
 
 // Check the user is authorised for this page

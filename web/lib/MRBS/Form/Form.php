@@ -55,7 +55,7 @@ class Form extends Element
   //    (1) The CSRF token is always looked for in the POST data, never anywhere else.
   //        GET requests should only be used for operations that do not modify data or
   //        grant access.
-  //    (2) Forms should never use a GET method.  Instead redirect to a URL with query string.
+  //    (2) Forms should normally use a POST method.
   //    (3) Actions should normally be taken by handler pages which are not designed to be
   //        accessed directly by the user and are only expecting POST requests.  These pages
   //        will look for the CSRF token however they are requested.  If they are requested via

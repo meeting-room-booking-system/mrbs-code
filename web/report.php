@@ -1359,7 +1359,7 @@ else
   // Check the CSRF token if this is Phase 2
   if ($phase == 2)
   {
-    Form::checkToken();
+    Form::checkToken(true);
   }
   
   checkAuthorised(this_page());
