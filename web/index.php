@@ -263,11 +263,13 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
 }
 
 
-function get_calendar_nav($view, $year, $month, $day, $area, $room)
+function get_calendar_nav($view, $year, $month, $day, $area, $room, $hidden=false)
 {
   $html = '';
   
-  $html .= "<nav class=\"main_calendar\">\n";
+  $html .= "<nav class=\"main_calendar\"" .
+           (($hidden) ? ' style="display:none"' : '') .
+           "\">\n";
   
   $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
@@ -393,14 +395,14 @@ if ($auth['type'] == 'db')
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo get_date_heading($view, $year, $month, $day);
-$calendar_nav = get_calendar_nav($view, $year, $month, $day, $area, $room);
-echo $calendar_nav;
+echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
 echo "<table class=\"dwm_main\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
 
-echo $calendar_nav;
+// The bottom navigation bar is controlled by JavaScript
+echo get_calendar_nav($view, $year, $month, $day, $area, $room, true);
 
 echo get_color_key();
 

@@ -36,6 +36,7 @@ init = function(args) {
   
   oldInitIndex.apply(this, [args]);
   
+  checkNav();
   $(window).scroll(checkNav);
   $(window).resize(checkNav);
 };
