@@ -1294,7 +1294,7 @@ init = function(args) {
         // The table dimensions have changed, so we need to redraw the clones
         // and re map the table
         ?>
-        table = $('table.dwm_main');
+        table = $('table.dwm_main').not('#month_main');
         redrawClones(table);
         getTableData(table, tableData);
       }
