@@ -52,7 +52,7 @@ See AUTHENTICATION for information about user authentication/passwords.
 Requirements:
 -------------
 - PHP 5.3.3+ with MySQL and/or PostgreSQL support
-- MySQL (5.3.3 and above) or PostgreSQL
+- MySQL (5.5.3 and above) or PostgreSQL
 - Any web server that is supported by PHP
 
 Recommended:
