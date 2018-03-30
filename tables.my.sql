@@ -167,14 +167,14 @@ CREATE TABLE mrbs_variables
 CREATE TABLE mrbs_zoneinfo
 (
   id                 int NOT NULL auto_increment,
-  timezone           varchar(255) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT '' NOT NULL,
+  timezone           varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT '' NOT NULL,
   outlook_compatible tinyint unsigned NOT NULL DEFAULT 0,
-  vtimezone          text CHARACTER SET ascii COLLATE ascii_general_ci,
+  vtimezone          text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   last_updated       int NOT NULL DEFAULT 0,
       
   PRIMARY KEY (id),
   UNIQUE KEY uq_timezone (timezone, outlook_compatible)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE mrbs_users
 (
