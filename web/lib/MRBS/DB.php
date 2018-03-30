@@ -11,6 +11,7 @@ class DB
 {
   const DB_DEFAULT_PORT = null;
   const DB_DBO_DRIVER = null;
+  const DB_CHARSET = 'UTF8';
   protected $dbh = null;
   protected $mutex_lock_name;
 
@@ -50,7 +51,7 @@ class DB
                            $db_password,
                            array(PDO::ATTR_PERSISTENT => ($persist ? true : false),
                                  PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
-      $this->command("SET NAMES 'UTF8'");
+      $this->command("SET NAMES '".static::DB_CHARSET."'");
     }
     catch (PDOException $e)
     {

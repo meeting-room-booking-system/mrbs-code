@@ -10,6 +10,7 @@ class DB_mysql extends DB
 {
   const DB_DEFAULT_PORT = 3306;
   const DB_DBO_DRIVER = "mysql";
+  const DB_CHARSET = "utf8mb4";
 
   
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
