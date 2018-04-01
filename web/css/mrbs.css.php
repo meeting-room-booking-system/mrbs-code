@@ -1148,6 +1148,7 @@ form#add_new_user {margin-left: 1em}
   -ms-flex-align: stretch;
   align-items: stretch;
   justify-content: flex-end;
+  padding: 0.3em 0;
 }
 
 .banner nav.container > nav > nav {
