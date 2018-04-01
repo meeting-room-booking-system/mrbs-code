@@ -289,7 +289,7 @@ nav.view div.container {
 }
 
 <?php 
-// Make sure that older browsers (eg IE9 and IE10) recognise the links as distinct
+// Make sure that older browsers (eg IE10 and IE11) recognise the links as distinct
 // words (so that the 'text-transform: capitalize' rule works) by inserting some
 // whitespace before and after.
 ?>
