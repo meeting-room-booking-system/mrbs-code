@@ -266,6 +266,7 @@ nav.main_calendar {
   display: flex;
   -ms-flex-align: center;
   align-items: center;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   width: 100%;
   margin-top: 1em;
@@ -1075,8 +1076,11 @@ form#add_new_user {margin-left: 1em}
 /* ------------ FUNCTIONS.INC -------------------*/
 
 .banner {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-direction: row;
   flex-direction: row;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   background-color: <?php echo $banner_back_color ?>;
   color: <?php echo $banner_font_color ?>;
@@ -1086,14 +1090,22 @@ form#add_new_user {margin-left: 1em}
 }
 
 .banner .company {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -ms-flex-align: center;
   align-items: center;
+  -ms-flex-pack: center;
   justify-content: center;
   font-size: large;
   padding: 0.5rem 2rem 0.5rem 0;
   margin-right: 2rem;
   white-space: nowrap;
+}
+
+.banner .company > * {
+  display: -ms-flexbox;
 }
 
 .banner a:link, .banner a:visited, .banner a:hover {
@@ -1115,31 +1127,40 @@ form#add_new_user {margin-left: 1em}
 
 .banner nav.container {
   flex-grow: 1;
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: stretch;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   padding: 0.75em 0;
 }
 
 .banner nav.container > nav {
+  display: -ms-flexbox;
   display: flex;
   flex-direction: row;
+  -ms-flex-align: stretch;
   align-items: stretch;
   justify-content: flex-end;
 }
 
 .banner nav.container > nav > nav {
+  -ms-flex-align: center;
   align-items: center;
 }
 
 .banner nav.container > nav:first-child {
+  -ms-flex-wrap: wrap-reverse;
   flex-wrap: wrap-reverse;
 }
 
 .banner nav.container > nav:last-child > * {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -1149,11 +1170,14 @@ nav.menu, nav.logon {
 }
 
 nav.menu {
+  display: -ms-flexbox;
   display: flex;
 }
 
 nav.logon {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-align: center;
   align-items: center;
 }
 
