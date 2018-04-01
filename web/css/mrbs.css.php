@@ -1126,6 +1126,7 @@ form#add_new_user {margin-left: 1em}
 }
 
 .banner nav.container {
+  width: 50%;
   -ms-flex-positive: 1;
   flex-grow: 1;
   display: -ms-flexbox;
