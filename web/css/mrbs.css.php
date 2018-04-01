@@ -262,7 +262,9 @@ span.timezone {
 }
 
 nav.main_calendar {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-align: center;
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
@@ -270,16 +272,21 @@ nav.main_calendar {
 }
 
 nav.main_calendar > nav {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex: 1;
   flex: 1;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 nav.main_calendar > nav:first-child {
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 nav.main_calendar > nav:last-child {
+  -ms-flex-pack: end;
   justify-content: flex-end;
 }
 
