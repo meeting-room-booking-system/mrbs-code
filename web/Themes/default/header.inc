@@ -194,6 +194,7 @@ function print_menu_items($query)
   
   $menu_items = array('help'   => 'help.php',
                       'report' => 'report.php',
+                      'import' => 'import.php',
                       'rooms'  => 'admin.php');
                       
   if ($auth['type'] == 'db')
