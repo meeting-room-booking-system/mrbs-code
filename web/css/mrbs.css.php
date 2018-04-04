@@ -1089,6 +1089,19 @@ form#add_new_user {margin-left: 1em}
   border-style: solid;
 }
 
+.banner .logo {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.banner .logo img {
+  margin: 1em 2em 1em 0;
+}
+
 .banner .company {
   display: -ms-flexbox;
   display: flex;
