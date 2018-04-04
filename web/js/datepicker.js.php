@@ -134,5 +134,19 @@ init = function(args) {
   
   flatpickr('input[type="date"]', config);
   
+  config.inline = true;
+  
+  var fp = flatpickr('span.minicalendar', config);
+  
+  $.each(fp, function(key, value) {
+    value.setDate('2040-03-12');
+    value.changeMonth(key);
+    if (key !== 0)
+    {
+      value.clear();
+    }
+  });
+
+  
 };
 

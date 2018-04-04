@@ -40,37 +40,6 @@ function print_head($simple=false)
 }
 
 
-function print_mini_calendar($view, $year, $month, $day, $area, $room)
-{
-  $buffer_size_prev = 15;  // months of hidden mini-calendars before the visible one
-  $buffer_size_next = 15;  // months of hidden mini-calendars after the visible one
-  
-  $mincal = get_form_var('mincal', 'string');
-  
-  // Validate the mincal input
-  if (isset($mincal))
-  {
-    $date = DateTime::createFromFormat('Y-m', $mincal);
-    if (($date === false) || array_sum($date->getLastErrors()))
-    {
-      $mincal = null;
-    }
-  }
-  
-  $mini_calendar = new MiniCalendar($view, $year, $month, $day, $area, $room, $mincal);
-  // Go back to the first mini-calendar in the buffer
-  $mini_calendar->sub('P' . $buffer_size_prev . 'M');
-  
-  // Output all the mini-calendars
-  for ($i = -$buffer_size_prev; $i <= $buffer_size_next; $i++)
-  {
-    $hidden = ($i !=0);
-    echo $mini_calendar->toHTML($hidden);
-    $mini_calendar->add('P1M');
-  }
-}
-
-
 // Print the basic site information.   This function is used for all headers, including
 // the simple header, and so mustn't require any database access.
 function print_header_site_info()
@@ -280,11 +249,6 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
   }
   
   $query = http_build_query($vars, '', '&');
-  
-  if (!$simple)
-  {
-    // print_mini_calendar($view, $year, $month, $day, $area, $room);
-  }
   
   print_header_site_info();
   

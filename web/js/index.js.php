@@ -39,4 +39,5 @@ init = function(args) {
   checkNav();
   $(window).scroll(checkNav);
   $(window).resize(checkNav);
+  
 };

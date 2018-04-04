@@ -8,6 +8,7 @@ use MRBS\Form\ElementSelect;
 require "defaultincludes.inc";
 require_once "functions_table.inc";
 
+
 // Display the entry-type color key.
 function get_color_key()
 {
@@ -269,7 +270,7 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room, $hidden=fals
   
   $html .= "<nav class=\"main_calendar\"" .
            (($hidden) ? ' style="display:none"' : '') .
-           "\">\n";
+           ">\n";
   
   $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
@@ -394,6 +395,15 @@ if ($auth['type'] == 'db')
 // print the page header
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
+echo "<div class=\"minicalendars\">\n";
+if (!empty($display_minicalendars))
+{
+  echo "<span class=\"minicalendar\"></span>\n";
+  echo "<span class=\"minicalendar\"></span>\n";
+}
+echo "</div>\n";
+
+echo "<div class=\"view_container\">\n";
 echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
@@ -405,5 +415,6 @@ echo "</table>\n";
 echo get_calendar_nav($view, $year, $month, $day, $area, $room, true);
 
 echo get_color_key();
+echo "</div>\n";
 
 print_footer();

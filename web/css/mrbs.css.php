@@ -90,8 +90,40 @@ button.image {
   padding-bottom: 3rem;
 }
 
-h1 {font-size: x-large; clear: both}
-h2 {font-size: large; clear: both}
+h1 {
+  font-size: x-large;
+  clear: both;
+}
+
+h2 {
+  font-size: large;
+  clear: both;
+}
+
+<?php
+// Make the inline minicalendars smaller than the pop-up calendars.
+// The default width is 39px
+?>
+.flatpickr-calendar.inline {
+  width: calc(7 * 25px);
+  font-size: 85%;
+}
+
+.flatpickr-calendar.inline .dayContainer {
+  width: calc(7 * 25px);
+  min-width: calc(7 * 25px);
+  max-width: calc(7 * 25px);
+}
+
+.flatpickr-calendar.inline .flatpickr-days {
+  width: calc(7 * 25px);
+}
+
+.flatpickr-calendar.inline .flatpickr-day {
+  max-width: 25px;
+  height: 25px;
+  line-height: 25px;
+}
 
 img {border: 0}
 
