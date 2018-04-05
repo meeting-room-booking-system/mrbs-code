@@ -32,14 +32,8 @@ init = function(args) {
     // Strip the '.js' off the end of the filename
     echo 'flatpickr.localize(flatpickr.l10ns.' . substr($flatpickr_lang_file, 0, -3) . ');';
   }
-  ?>
+
   
-  var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-  
-  
-  <?php
   // Custom date formatter.  At the moment, only two format strings are supported:
   //
   //    'custom'      The date is formatted in numeric form in the user's preferred locale,
@@ -127,7 +121,7 @@ init = function(args) {
   // devices.  As these are generally better than flatpickr's, it's probably better
   // to have the native datepicker and do without the week numbers.
   ?>
-  if (!isMobile)
+  if (!isMobile())
   {
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }

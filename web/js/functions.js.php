@@ -13,6 +13,11 @@ if ($use_strict)
 
 ?>
 
+function isMobile()
+{
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 $.fn.reverse = [].reverse;
 
 function getErrorList(errors)

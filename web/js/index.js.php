@@ -43,15 +43,20 @@ init = function(args) {
   <?php
   // Turn the room and area selects into fancy select boxes and then
   // show the location menu (it's hidden to avoid screen jiggling).
+  // If we are using a mobile device then keep the native select elements
+  // as they tend to be better.
   ?>
-  $('.room_area_select').select2();
-  <?php
-  // Select2 doesn't always get the width right, so increase it by a
-  // few pixels to make sure we don't get a '...'
-  ?>
-  $('.select2-container').each(function() {
-    var container = $(this);
-    container.width(container.width() + 5);
-  });
+  if (!isMobile())
+  {
+    $('.room_area_select').select2();
+    <?php
+    // Select2 doesn't always get the width right, so increase it by a
+    // few pixels to make sure we don't get a '...'
+    ?>
+    $('.select2-container').each(function() {
+      var container = $(this);
+      container.width(container.width() + 5);
+    });
+  }
   $('nav.location').removeClass('js_hidden');
 };
