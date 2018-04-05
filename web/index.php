@@ -182,7 +182,7 @@ function get_location_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
   
-  $html .= "<nav class=\"location\">\n";
+  $html .= "<nav class=\"location js_hidden\">\n";  // JavaScript will show it
   $html .= make_area_select_html($view, $year, $month, $day, $area);
   
   if ($view !== 'day')

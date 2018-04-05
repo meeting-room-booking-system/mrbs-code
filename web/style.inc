@@ -27,6 +27,7 @@ else
 }
 ?>
     <link rel="stylesheet" href="js/flatpickr/css/flatpickr.min.css" type="text/css">
+    <link rel="stylesheet" href="jquery/select2/dist/css/select2.min.css" type="text/css">
     <link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
     <?php
     if (using_rtl_lang())

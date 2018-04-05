@@ -281,7 +281,7 @@ table.display span.normal {
 }
 
 select.room_area_select,
-nav.main_calendar .select2-container {
+nav.location .select2-container {
   margin: 0 0.5em;
 }
 

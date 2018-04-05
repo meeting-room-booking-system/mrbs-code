@@ -99,6 +99,7 @@ else
 <script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
 <script type="text/javascript" src="js/flatpickr/flatpickr.min.js"></script>
+<script type="text/javascript" src="jquery/select2/dist/js/select2.full.min.js"></script>
 
 <?php
 $dir = 'js/flatpickr/l10n';

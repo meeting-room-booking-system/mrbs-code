@@ -40,4 +40,10 @@ init = function(args) {
   $(window).scroll(checkNav);
   $(window).resize(checkNav);
   
+  <?php
+  // Turn the room and area selects into fancy select boxes and then
+  // show the location menu (it's hidden to avoid screen jiggling).
+  ?>
+  $('.room_area_select').select2();
+  $('nav.location').removeClass('js_hidden');
 };
