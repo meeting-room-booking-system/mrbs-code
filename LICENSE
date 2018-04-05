@@ -56,3 +56,9 @@ PHPMAILER
 
 This is supplied under the GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1,
 February 1999.  See web/PHPMailer/LICENSE.
+
+
+SELECT2
+=======
+
+Released under the MIT license.  See web/jquery/select2/LICENSE.md
