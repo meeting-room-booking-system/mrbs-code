@@ -45,5 +45,13 @@ init = function(args) {
   // show the location menu (it's hidden to avoid screen jiggling).
   ?>
   $('.room_area_select').select2();
+  <?php
+  // Select2 doesn't always get the width right, so increase it by a
+  // few pixels to make sure we don't get a '...'
+  ?>
+  $('.select2-container').each(function() {
+    var container = $(this);
+    container.width(container.width() + 5);
+  });
   $('nav.location').removeClass('js_hidden');
 };
