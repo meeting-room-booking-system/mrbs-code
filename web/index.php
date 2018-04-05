@@ -23,7 +23,7 @@ function get_color_key()
   
   $html = '';
   
-  $html = "<div class=\"color_key\">\n";
+  $html = "<div class=\"color_key js_hidden\">\n";
 
   foreach ($booking_types as $key)
   {
@@ -268,9 +268,9 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room, $hidden=fals
 {
   $html = '';
   
-  $html .= "<nav class=\"main_calendar\"" .
-           (($hidden) ? ' style="display:none"' : '') .
-           ">\n";
+  $html .= "<nav class=\"main_calendar" .
+           (($hidden) ? ' js_hidden' : '') .
+           "\">\n";
   
   $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
@@ -396,11 +396,6 @@ if ($auth['type'] == 'db')
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo "<div class=\"minicalendars\">\n";
-if (!empty($display_minicalendars))
-{
-  echo "<span class=\"minicalendar\"></span>\n";
-  echo "<span class=\"minicalendar\"></span>\n";
-}
 echo "</div>\n";
 
 echo "<div class=\"view_container\">\n";

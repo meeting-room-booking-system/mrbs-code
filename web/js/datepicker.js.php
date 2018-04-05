@@ -11,11 +11,35 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-
 // =================================================================================
 
-// Extend the init() function 
+// Extend the init() function
+
+// Turn a JavaScript year, month, day (ie with Jan = 0) into an
+// ISO format YYYY-MM-DD date string.    Can cope with months
+// outside the range 0..11, but days must be valid.
 ?>
+function getISODate(year, month, day)
+{
+  while (month > 11)
+  {
+    month = month-12;
+    year++;
+  }
+  
+  while (month < 0)
+  {
+    month = month+12;
+    year--;
+  }
+  
+  return [
+      year,
+      ('0' + (month + 1)).slice(-2),
+      ('0' + day).slice(-2)
+    ].join('-');
+}
+
 
 var oldInitDatepicker = init;
 init = function(args) {
@@ -66,11 +90,7 @@ init = function(args) {
                 new Intl.DateTimeFormat(locales).format(dateObj);
       }
       
-      return [
-          dateObj.getFullYear(),
-          ('0' + (dateObj.getMonth() + 1)).slice(-2),
-          ('0' + dateObj.getDate()).slice(-2)
-        ].join('-');
+      return getISODate(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
     };
       
       
@@ -93,6 +113,23 @@ init = function(args) {
         <?php
       }
       ?>
+    };
+    
+  var onMonthChange = function(selectedDates, dateStr, instance) {
+      var thisId = instance.element.attributes.id.nodeValue,
+          thisIndex = parseInt(thisId.substring(3), 10),
+          currentMonth = parseInt(instance.currentMonth, 10),
+          currentYear = parseInt(instance.currentYear, 10);
+      
+      $.each(minicalendars, function(key, value) {
+          if (value.element.attributes.id.nodeValue !== thisId)
+          {
+            var index = parseInt(value.element.attributes.id.nodeValue.substring(3), 10);
+            console.log(currentMonth + index - thisIndex);
+            console.log(getISODate(currentYear, currentMonth + index - thisIndex, 1));
+            value.jumpToDate(getISODate(currentYear, currentMonth + index - thisIndex, 1));
+          }
+        });
     };
       
   var config = {
@@ -128,18 +165,27 @@ init = function(args) {
   
   flatpickr('input[type="date"]', config);
   
-  config.inline = true;
-  
-  var fp = flatpickr('span.minicalendar', config);
-  
-  $.each(fp, function(key, value) {
-    value.setDate('2040-03-12');
-    value.changeMonth(key);
-    if (key !== 0)
+  <?php
+  if (!empty($display_minicalendars))
+  {
+    ?>
+    var div = $('.minicalendars');
+    for (var i=0; i<3; i++)
     {
-      value.clear();
+      div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
     }
-  });
+    config.inline = true;
+    config.onMonthChange = onMonthChange;
+    
+    var minicalendars = flatpickr('span.minicalendar', config);
+    
+    $.each(minicalendars, function(key, value) {
+        value.setDate(args.page_date);
+        value.changeMonth(key);
+      });
+    <?php
+  }
+  ?>
 
   
 };

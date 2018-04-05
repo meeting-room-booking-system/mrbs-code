@@ -36,10 +36,6 @@ init = function(args) {
   
   oldInitIndex.apply(this, [args]);
   
-  checkNav();
-  $(window).scroll(checkNav);
-  $(window).resize(checkNav);
-  
   <?php
   // Turn the room and area selects into fancy select boxes and then
   // show the location menu (it's hidden to avoid screen jiggling).
@@ -59,4 +55,20 @@ init = function(args) {
     });
   }
   $('nav.location').removeClass('js_hidden');
+  
+  <?php
+  // The bottom navigation was hidden while the Select2 boxes were formed
+  // so that the correct widths could be established.  It is then shown if
+  // the top navigation is not visible.
+  ?>
+  $('nav.main_calendar').removeClass('js_hidden');
+  checkNav();
+  $(window).scroll(checkNav);
+  $(window).resize(checkNav);
+  
+  <?php
+  // Only reveal the color key once the bottom navigation has been determined,
+  // in order to avoid jiggling.
+  ?>
+  $('.color_key').removeClass('js_hidden');
 };
