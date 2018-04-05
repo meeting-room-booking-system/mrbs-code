@@ -100,6 +100,10 @@ h2 {
   clear: both;
 }
 
+.minicalendars {
+  margin-right: 2em;
+}
+
 <?php
 // Make the inline minicalendars smaller than the pop-up calendars.
 // The default width is 39px
@@ -107,6 +111,7 @@ h2 {
 .flatpickr-calendar.inline {
   width: calc(7 * 25px);
   font-size: 85%;
+  margin-top: 1rem;
 }
 
 .flatpickr-calendar.inline .dayContainer {
@@ -123,6 +128,11 @@ h2 {
   max-width: 25px;
   height: 25px;
   line-height: 25px;
+}
+
+.index .contents {
+  display: -ms-flexbox;
+  display: flex;
 }
 
 img {border: 0}
@@ -270,9 +280,11 @@ table.display span.normal {
   display: inline;
 }
 
-select.room_area_select {
+select.room_area_select,
+nav.main_calendar .select2-container {
   margin: 0 0.5em;
 }
+
 
 <?php
 // Don't display anything with a class of js_none (used for example for hiding Submit
