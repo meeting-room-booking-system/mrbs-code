@@ -104,6 +104,7 @@ h2 {
   margin-right: 2em;
 }
 
+
 <?php
 // Make the inline minicalendars smaller than the pop-up calendars.
 // The default width is 39px

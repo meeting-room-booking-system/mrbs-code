@@ -194,7 +194,7 @@ init = function(args) {
     if (!isMobile())
     {
       var div = $('.minicalendars');
-      for (var i=0; i<3; i++)
+      for (var i=0; i<2; i++)
       {
         div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
       }
