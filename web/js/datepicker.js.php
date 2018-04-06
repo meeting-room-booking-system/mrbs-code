@@ -144,6 +144,15 @@ init = function(args) {
   var onYearChange = function(selectedDates, dateStr, instance) {
       syncCals(instance);
     };
+    
+  var onMinicalChange = function(selectedDates, dateStr, instance) {
+      var href = 'index.php';
+      href += '?view=' + args.view;
+      href += '&area=' + args.area;
+      href += '&room=' + args.room;
+      href += '&page_date=' + dateStr;
+      window.location.href = href;
+    }; 
       
   var config = {
       dateFormat: 'Y-m-d',
@@ -192,6 +201,7 @@ init = function(args) {
       config.inline = true;
       config.onMonthChange = onMonthChange;
       config.onYearChange = onYearChange;
+      config.onChange = onMinicalChange;
       
       var minicalendars = flatpickr('span.minicalendar', config);
       
