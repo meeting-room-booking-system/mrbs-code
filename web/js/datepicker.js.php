@@ -114,22 +114,35 @@ init = function(args) {
       }
       ?>
     };
+  
+  
+  <?php
+  // Sync all the minicalendars with this instance of one.   In other words
+  // make the mini-calendars show sequential months, aligning with this one.
+  ?>
+  function syncCals(instance)
+  {
+    var thisId = instance.element.attributes.id.nodeValue,
+        thisIndex = parseInt(thisId.substring(3), 10),
+        currentMonth = parseInt(instance.currentMonth, 10),
+        currentYear = parseInt(instance.currentYear, 10);
     
+    $.each(minicalendars, function(key, value) {
+        if (value.element.attributes.id.nodeValue !== thisId)
+        {
+          var index = parseInt(value.element.attributes.id.nodeValue.substring(3), 10);
+          value.jumpToDate(getISODate(currentYear, currentMonth + index - thisIndex, 1));
+        }
+      });
+  }
+  
+  
   var onMonthChange = function(selectedDates, dateStr, instance) {
-      var thisId = instance.element.attributes.id.nodeValue,
-          thisIndex = parseInt(thisId.substring(3), 10),
-          currentMonth = parseInt(instance.currentMonth, 10),
-          currentYear = parseInt(instance.currentYear, 10);
-      
-      $.each(minicalendars, function(key, value) {
-          if (value.element.attributes.id.nodeValue !== thisId)
-          {
-            var index = parseInt(value.element.attributes.id.nodeValue.substring(3), 10);
-            console.log(currentMonth + index - thisIndex);
-            console.log(getISODate(currentYear, currentMonth + index - thisIndex, 1));
-            value.jumpToDate(getISODate(currentYear, currentMonth + index - thisIndex, 1));
-          }
-        });
+      syncCals(instance);
+    };
+    
+  var onYearChange = function(selectedDates, dateStr, instance) {
+      syncCals(instance);
     };
       
   var config = {
@@ -166,23 +179,27 @@ init = function(args) {
   flatpickr('input[type="date"]', config);
   
   <?php
-  if (!empty($display_minicalendars))
+  if (!empty($display_mincals))
   {
     ?>
-    var div = $('.minicalendars');
-    for (var i=0; i<3; i++)
+    if (!isMobile())
     {
-      div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
+      var div = $('.minicalendars');
+      for (var i=0; i<3; i++)
+      {
+        div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
+      }
+      config.inline = true;
+      config.onMonthChange = onMonthChange;
+      config.onYearChange = onYearChange;
+      
+      var minicalendars = flatpickr('span.minicalendar', config);
+      
+      $.each(minicalendars, function(key, value) {
+          value.setDate(args.page_date);
+          value.changeMonth(key);
+        });
     }
-    config.inline = true;
-    config.onMonthChange = onMonthChange;
-    
-    var minicalendars = flatpickr('span.minicalendar', config);
-    
-    $.each(minicalendars, function(key, value) {
-        value.setDate(args.page_date);
-        value.changeMonth(key);
-      });
     <?php
   }
   ?>

@@ -340,6 +340,9 @@ $monthly_view_entries_details = "both";
 // To show ISO week numbers, set this to true
 $view_week_number = false;
 
+// Whether or not the mini-calendars are displayed
+$display_mincals = false;
+
 // To display week numbers in the mini-calendars, set this to true. The week
 // numbers are only accurate if you set $weekstarts to 1, i.e. set the
 // start of the week to Monday
