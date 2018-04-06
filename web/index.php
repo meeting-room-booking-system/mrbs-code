@@ -398,7 +398,7 @@ print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 echo "<div class=\"minicalendars\">\n";
 echo "</div>\n";
 
-echo "<div class=\"view_container\">\n";
+echo "<div class=\"view_container js_hidden\">\n";
 echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 

@@ -212,8 +212,10 @@ init = function(args) {
     }
     <?php
   }
-  ?>
-
   
+  // Only show the main table and navigation once the mini-calendars are in place
+  // in order to avoid the scrreen jiggling about.
+  ?>
+  $('.view_container').removeClass('js_hidden');
 };
 
