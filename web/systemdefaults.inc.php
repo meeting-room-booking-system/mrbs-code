@@ -340,7 +340,8 @@ $monthly_view_entries_details = "both";
 // To show ISO week numbers, set this to true
 $view_week_number = false;
 
-// Whether or not the mini-calendars are displayed
+// Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
+// displayed anyway if the screen is wide enough.)
 $display_mincals = false;
 
 // To display week numbers in the mini-calendars, set this to true. The week
