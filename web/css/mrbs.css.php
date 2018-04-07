@@ -104,6 +104,15 @@ h2 {
   margin-right: 2em;
 }
 
+.minicalendars.formed {
+  display: none;
+}
+
+@media screen and (min-width: 80rem) {
+  .minicalendars.formed {
+    display: block;
+  }
+}
 
 <?php
 // Make the inline minicalendars smaller than the pop-up calendars.

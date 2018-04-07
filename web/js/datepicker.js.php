@@ -209,6 +209,16 @@ init = function(args) {
           value.setDate(args.page_date);
           value.changeMonth(key);
         });
+      
+      <?php
+      // Once the calendars are formed thern we add the class 'formed' which will
+      // bring into play CSS media queries.    We need to do this because if we 
+      // form them when the media queries are operational then they won't get
+      // formed if the result of the query is 'display: none', which means that if
+      // the window is later widened, for example, they still won't appear when they
+      // should do.
+      ?>
+      div.addClass('formed');
     }
     <?php
   }
