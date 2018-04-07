@@ -51,6 +51,18 @@ JQUERY UI
 Released under the MIT license.  See web/jquery/ui/LICENSE.txt.
 
 
+JQUERY-VISIBLE
+==============
+
+A small plugin that checks whether elements are within the user visible
+viewport of a web browser.  Only accounts for vertical position, not
+horizontal.
+
+Copyright 2012, Digital Fusion
+Licensed under the MIT license.
+http://teamdf.com/jquery-plugins/license/
+
+
 PHPMAILER
 =========
 
