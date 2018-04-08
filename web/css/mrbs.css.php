@@ -1816,8 +1816,48 @@ a.dt-button {
   padding-right: 20px;
 }
 
-
 #check_tabs {border:0}
 div#check_tabs {background-image: none}
 .edit_entry #ui-tab-dialog-close {position:absolute; right:0; top:23px}
 .edit_entry #ui-tab-dialog-close a {float:none; padding:0}
+
+
+
+<?php
+// Modify the flatpickr blue to match the MRBS blue
+?>
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: dodgerblue;
+  border-color: dodgerblue;
+}
+
+.flatpickr-day.selected.startRange + .endRange,
+.flatpickr-day.startRange.startRange + .endRange,
+.flatpickr-day.endRange.startRange + .endRange {
+  -webkit-box-shadow: -10px 0 0 dodgerblue;
+  box-shadow: -10px 0 0 dodgerblue;
+}
+
+.flatpickr-day.week.selected {
+  border-radius:0;
+  -webkit-box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
+  box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
+}
+
