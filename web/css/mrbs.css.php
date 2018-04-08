@@ -1384,13 +1384,13 @@ nav.logon input {
 }
 
 .banner a.attention {
-  background-color: #ff530d;
+  background-color: darkorange;
 }
 
 .banner nav a:hover,
 nav.logon input:hover {
-  background-color: #bdd4de;
-  color: <?php echo $standard_font_color ?>;
+  background-color: darkblue;
+  color: #ffffff;
 }
 
 #form_nav {
