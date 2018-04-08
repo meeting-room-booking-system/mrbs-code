@@ -535,26 +535,75 @@ table.dwm_main {
   border-color: <?php echo $main_table_border_color ?>;
   border-width: <?php echo $main_table_border_width ?>px;
   border-style: solid;
+  border-radius: 5px;
 }
 
-.dwm_main td {padding: 0;
-    border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
-    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
-    border-bottom: 0;
-    border-right: 0}
-.dwm_main td:first-child {border-left: 0}
+.dwm_main td {
+  padding: 0;
+  border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
+  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+  border-bottom: 0;
+  border-right: 0;
+}
+
 <?php
 // Note that it is important to have zero padding-left and padding-top on the th cells and the celldiv divs.
 // These elements are used to calculate the offset top and left of the position of bookings in
 // the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
 // need padding put it on the contained element.
 ?>
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0;
-    color: <?php echo $header_font_color ?>; 
-    background-color: <?php echo $header_back_color ?>;
-    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
-.dwm_main th.first_last, .dwm_main th span {padding: 0 2px}
-.dwm_main th:first-child {border-left: 0}
+.dwm_main th {
+  font-size: small;
+  font-weight: normal;
+  vertical-align: top;
+  padding: 0.2em;
+  color: <?php echo standard_font_color ?>; 
+  background-color: #ffffff;
+  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
+}
+
+.dwm_main tr:first-child th {
+  border-top: 0 solid <?php echo $main_table_border_color ?>;
+  border-bottom: 0 solid <?php echo $main_table_border_color ?>;
+}
+
+.dwm_main > *:last-child tr:last-child th,
+.dwm_main > *:last-child tr:last-child td {
+  border-bottom: 0 solid <?php echo $main_table_border_color ?>;
+}
+
+.dwm_main > *:last-child tr:last-child th {
+  border-top: 0 solid <?php echo $main_table_border_color ?>;
+}
+
+.dwm_main th:first-child,
+.dwm_main td:first-child {
+  border-left: 0 solid <?php echo $main_table_border_color ?>;
+}
+
+.dwm_main th:last-child,
+.dwm_main td:last-child {
+  border-right: 0 solid <?php echo $main_table_border_color ?>;
+}
+
+.dwm_main tr:first-child th:first-child {
+  border-top-left-radius: 5px;
+}
+
+.dwm_main tr:first-child th:last-child {
+  border-top-right-radius: 5px;
+}
+
+.dwm_main > *:last-child tr:last-child th:first-child,
+.dwm_main > *:last-child tr:last-child td:first-child {
+  border-bottom-left-radius: 5px;
+}
+
+.dwm_main > *:last-child tr:last-child th:last-child,
+.dwm_main > *:last-child tr:last-child td:last-child {
+  border-bottom-right-radius: 5px;
+}
+
 
 .dwm_main a {
   display: block;
@@ -564,12 +613,27 @@ table.dwm_main {
   hyphens: auto;
 }
 
+.dwm_main tbody a {
+  padding: 0 0.2em
+}
 
+.dwm_main th a {
+  text-decoration: none;
+  font-weight: normal;
+}
 
-.dwm_main tbody a {padding: 0 2px}
-.dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
-.dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
-.dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+.dwm_main th a:link {
+  color: <?php echo $anchor_link_color_header ?>;
+}
+
+.dwm_main th a:visited {
+  color: <?php echo $anchor_visited_color_header ?>;
+}
+
+.dwm_main th a:hover {
+  color: <?php echo $anchor_hover_color_header ?>;
+  text-decoration:underline;
+}
 
 .dwm_main#week_main th.first_last {vertical-align: bottom}
 .dwm_main td.invalid {background-color: <?php echo $main_table_slot_invalid_color ?>}
@@ -679,18 +743,51 @@ foreach ($color_types as $type => $col)
       echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
     ?>
     }
-td.hidden_day     {background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
-    font-size: medium; font-weight: bold;
-    border-top: <?php echo $main_table_cell_border_width ?>px solid <?php echo $column_hidden_color ?>;
-    <?php 
-      echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
-    ?>
-    }
-tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /* used for highlighting a row */
-.dwm_main td.row_labels     {background-color: <?php echo $main_table_labels_back_color ?>; white-space: nowrap}    /* used for the row labels column */
-.row_labels a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
-.row_labels a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
-.row_labels a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration: underline; font-weight: normal}
+    
+td.hidden_day {
+  background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
+  font-size: medium;
+  font-weight: bold;
+  border-top: <?php echo $main_table_cell_border_width ?>px solid <?php echo $column_hidden_color ?>;
+  <?php 
+    echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
+  ?>
+}
+
+tr.row_highlight td.new {
+  background-color: <?php echo $row_highlight_color ?>;
+}
+
+td.row_labels {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+tr:nth-child(odd) td.row_labels {
+  background-color: <?php echo $row_odd_color ?>;
+}
+
+tr:nth-child(even) td.row_labels {
+  background-color: <?php echo $row_even_color ?>;
+}
+
+.row_labels a {
+  text-decoration: none;
+  font-weight: normal
+}
+
+.row_labels a:link {
+  color: <?php echo $anchor_link_color_header ?>;
+}
+
+.row_labels a:visited {
+  color: <?php echo $anchor_visited_color_header ?>;
+}
+
+.row_labels a:hover {
+  color: <?php echo $anchor_hover_color_header ?>;
+  text-decoration: underline;
+}
 
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
