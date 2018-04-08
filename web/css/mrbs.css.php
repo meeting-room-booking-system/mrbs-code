@@ -102,6 +102,7 @@ h2 {
 
 .minicalendars {
   margin-right: 2em;
+  padding-top: 0.8rem; <?php // same as margin-top on nav.main_calendar ?>
 }
 
 .minicalendars.formed {
@@ -121,7 +122,7 @@ h2 {
 .flatpickr-calendar.inline {
   width: calc(7 * 25px);
   font-size: 85%;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .flatpickr-calendar.inline .dayContainer {
@@ -329,7 +330,7 @@ nav.main_calendar {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   width: 100%;
-  margin-top: 1em;
+  margin-top: 0.8rem;  <?php // same as padding-top on minicalendars ?>
 }
 
 nav.main_calendar > nav {

@@ -211,6 +211,11 @@ init = function(args) {
         });
       
       <?php
+      // Align the top of the mini-calendars with the top of the navigation bar
+      ?>
+      div.css('margin-top', $('.view_container h2').outerHeight(true) + 'px');
+      
+      <?php
       // Once the calendars are formed thern we add the class 'formed' which will
       // bring into play CSS media queries.    We need to do this because if we 
       // form them when the media queries are operational then they won't get
