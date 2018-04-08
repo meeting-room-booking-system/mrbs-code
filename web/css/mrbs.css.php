@@ -151,8 +151,14 @@ a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; fo
 a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
 a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
 
-tr.even_row td.new {background-color: <?php echo $row_even_color ?>}
-tr.odd_row td.new {background-color: <?php echo $row_odd_color ?>}
+tr:nth-child(odd) td.new {
+  background-color: <?php echo $row_odd_color ?>;
+}
+
+tr:nth-child(even) td.new {
+  background-color: <?php echo $row_even_color ?>;
+}
+
 
 td, th {vertical-align: top}
 
@@ -701,8 +707,15 @@ tr.row_highlight td.new {background-color: <?php echo $row_highlight_color ?>} /
 .dwm_main tbody tr:hover a:link,    td.row_labels_hover a:link    {color: <?php echo $anchor_link_color ?>}
 .dwm_main tbody tr:hover a:visited, td.row_labels_hover a:visited {color: <?php echo $anchor_link_color ?>}
 <?php // Disable the highlighting when we're in resize mode ?>
-.resizing .dwm_main tr.even_row td:hover.new {background-color: <?php echo $row_even_color ?>}
-.resizing .dwm_main tr.odd_row td:hover.new {background-color: <?php echo $row_odd_color ?>}
+.resizing .dwm_main tr:nth-child(odd) td:hover.new {
+  background-color: <?php echo $row_odd_color ?>;
+}
+
+.resizing .dwm_main tr:nth-child(even) td:hover.new {
+  background-color: <?php echo $row_even_color ?>;
+}
+
+
 .resizing .dwm_main tr:hover td.row_labels {background-color: <?php echo $main_table_labels_back_color ?>; color: <?php echo $anchor_link_color_header ?>}
 .resizing .row_labels a:hover {text-decoration: none}
 .resizing .dwm_main tbody tr:hover td.row_labels a:link {color: <?php echo $anchor_link_color_header ?>}

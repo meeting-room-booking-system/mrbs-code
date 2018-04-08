@@ -880,15 +880,13 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   // the day after to generate timesteps through the day as this
   // will ensure a constant time step
   
-  $row_class = 'even_row';
-  
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
     foreach ($rooms as $room)
     {
-      $tbody .= "<tr class=\"$row_class\">\n";
+      $tbody .= "<tr>\n";
       
       $vars = array('view'  => 'week',
                     'year'  => $year,
@@ -926,7 +924,6 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         $tbody .= room_cell_html($room, $room_cell_link);
       }
       $tbody .= "</tr>\n";
-      $row_class = ($row_class == 'even_row') ? 'odd_row' : 'even_row';
     }  // end for (looping through the rooms)
   }  // end "times_along_top" view (for the body)
   
@@ -935,11 +932,10 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     // the standard view, with rooms along the top and times down the side
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
-         $s += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
+         $s += $resolution)
     {
       // Show the time linked to the URL for highlighting that time
-      $class = $row_class;
+      $classes = array();
       
       $vars = array('view'  => 'day',
                     'year'  => $year,
@@ -954,7 +950,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
        
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
-        $class .= " row_highlight";
+        $classes[] = 'row_highlight';
       }
       else
       {
@@ -963,7 +959,13 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       
       $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
       
-      $tbody .= "<tr class=\"$class\">\n";
+      $tbody.= '<tr';
+      if (!empty($classes))
+      {
+        $tbody .= ' class="' . implode(' ', $classes) . '"';
+      }
+      $tbody .= ">\n";
+      
       $tbody .= time_cell_html($s, $url);
       $is_invalid = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
       // Loop through the list of rooms we have for this area
@@ -1182,26 +1184,22 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
 
-  $row_class = "even_row";
-
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++, $row_class = ($row_class == "even_row")?"odd_row":"even_row")
+    for ($thisday = 0; $thisday<=($num_of_days-1); $thisday++)
     {
       if (is_hidden_day(($thisday + $weekstarts) % 7))
       {
         // These days are to be hidden in the display: don't display a row
-        // Toggle the row class back to keep it in sequence
-        $row_class = ($row_class == "even_row")?"odd_row":"even_row";
         continue;
       }
     
       else
       {
-        $tbody .= "<tr class=\"$row_class\">\n";
+        $tbody .= "<tr>\n";
       
         $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
         $wday = date("d", $wt);
@@ -1253,11 +1251,10 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
     // the standard view, with days of the week along the top and times down the side
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
-         $s += $resolution,
-           $row_class = ($row_class == "even_row") ? "odd_row" : "even_row")
+         $s += $resolution)
     {
       // Show the time linked to the URL for highlighting that time:
-      $class = $row_class;
+      $classes = array();
       
       $vars = array('view'  => 'week',
                     'year'  => $year,
@@ -1268,7 +1265,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
                     
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
-        $class .= " row_highlight";
+        $classes[] = 'row_highlight';
       }
       else
       {
@@ -1277,7 +1274,13 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
       
       $url = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
   
-      $tbody.= "<tr class=\"$class\">";
+      $tbody.= '<tr';
+      if (!empty($classes))
+      {
+        $tbody .= ' class="' . implode(' ', $classes) . '"';
+      }
+      $tbody .= ">\n";
+      
       $tbody .= time_cell_html($s, $url);
   
   
