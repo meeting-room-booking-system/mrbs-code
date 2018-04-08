@@ -342,7 +342,7 @@ $view_week_number = false;
 
 // Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
 // displayed anyway if the screen is wide enough.)
-$display_mincals = false;
+$display_mincals = true;
 
 // To display week numbers in the mini-calendars, set this to true. The week
 // numbers are only accurate if you set $weekstarts to 1, i.e. set the
