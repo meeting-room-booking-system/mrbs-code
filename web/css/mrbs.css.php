@@ -1856,7 +1856,6 @@ div#check_tabs {background-image: none}
 }
 
 .flatpickr-day.week.selected {
-  border-radius:0;
   -webkit-box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
   box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
 }
