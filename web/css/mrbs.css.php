@@ -792,17 +792,23 @@ tr:nth-child(even) td.row_labels {
 <?php
 // HIGHLIGHTING:  Set styles for the highlighted cells under the cursor (the time/period cell and the current cell)
 ?>
-.dwm_main td:hover.new, .dwm_main td.new_hover {background-color: <?php echo $row_highlight_color ?>}
-.dwm_main tr:hover td.row_labels, .dwm_main td.row_labels_hover {background-color: <?php echo $row_highlight_color ?>; color: <?php echo $standard_font_color ?>}
-.dwm_main#month_main td:hover.valid, .dwm_main#month_main td.valid_hover {background-color: <?php echo $row_highlight_color ?>}
-<?php
-// would be nicer to use color: inherit in the four rules below, but inherit is not supported by IE until IE8.   
-// inherit would mean that (1) you didn't have to specify the colour again and (2) you needn't use the tbody selector to
-// stop the header links changing colour.
-?>
+.dwm_main td:hover.new, .dwm_main td.new_hover {
+  background-color: <?php echo $row_highlight_color ?>;
+}
 
-.dwm_main tbody tr:hover a:link,    td.row_labels_hover a:link    {color: <?php echo $anchor_link_color ?>}
-.dwm_main tbody tr:hover a:visited, td.row_labels_hover a:visited {color: <?php echo $anchor_link_color ?>}
+.dwm_main tr:hover td.row_labels {
+  background-color: <?php echo $row_highlight_color ?>;
+}
+
+.dwm_main tr:hover td.row_labels a {
+  color: #ffffff;
+}
+
+.dwm_main#month_main td:hover.valid,
+.dwm_main#month_main td.valid_hover {
+  background-color: <?php echo $row_highlight_color ?>;
+}
+
 <?php // Disable the highlighting when we're in resize mode ?>
 .resizing .dwm_main tr:nth-child(odd) td:hover.new {
   background-color: <?php echo $row_odd_color ?>;
