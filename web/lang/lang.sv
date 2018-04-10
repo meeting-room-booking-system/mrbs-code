@@ -365,7 +365,6 @@ $vocab["invalid_area"]            = "Ogiltigt område!";
 $vocab["invalid_room_name"]       = "Det här rums namnet används redan i det här området!";
 $vocab["invalid_email"]           = "Ogiltig e-postadress!";
 $vocab["invalid_resolution"]      = "Ogiltig kombination av första tid, sista tid och tidsintervall!";
-$vocab["too_many_slots"]          = 'Du behöver öka värdet för $max_slots i config filen!'; // single quotes!
 $vocab["general_settings"]        = "Allmänna inställningar";
 $vocab["time_settings"]           = "Tidsintervaller";
 $vocab["confirmation_settings"]   = "Moderationsinställningar";

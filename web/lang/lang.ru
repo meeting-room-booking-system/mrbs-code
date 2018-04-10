@@ -314,7 +314,6 @@ $vocab["invalid_area"]            = "Не верный корпус!";
 $vocab["invalid_room_name"]       = "This помещение name has already been used in the корпус!";
 $vocab["invalid_email"]           = "Не верный электронный адрес!";
 $vocab["invalid_resolution"]      = "Не верный комбинация первого бронирования, последнего бронирования и интервалов!";
-$vocab["too_many_slots"]          = 'Вам необходимо увеличить значение $max_slots в файле конфигурации!';
 $vocab["general_settings"]        = "Общие";
 $vocab["time_settings"]           = "Время бронирования";
 $vocab["confirmation_settings"]   = "Настройки подтверждения";

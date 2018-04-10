@@ -172,14 +172,6 @@ else
       {
         $errors[] = 'invalid_resolution';
       }
-    
-      // Check that the number of slots we now have is no greater than $max_slots
-      // defined in the config file - otherwise we won't generate enough CSS classes
-      $n_slots = ($start_difference/$area_res_mins) + 1;
-      if ($n_slots > $max_slots)
-      {
-        $errors[] = 'too_many_slots';
-      }
     }
   }
 }

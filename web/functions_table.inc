@@ -572,7 +572,7 @@ function time_cell_html($s, $url)
   $html = '';
   
   $html .= tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $s));
-  $html .= "<div class=\"celldiv slots1\">\n";
+  
   if ( $enable_periods )
   {
     
@@ -586,7 +586,6 @@ function time_cell_html($s, $url)
              . get_vocab("highlight_line") . "\">"
              . hour_min($s) . "</a>\n";
   }
-  $html .= "</div></td>\n";
   
   return $html;
 }

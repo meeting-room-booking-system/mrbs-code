@@ -360,7 +360,6 @@ $vocab["invalid_area"]            = "Area tidak valid!";
 $vocab["invalid_room_name"]       = "Nama ruangan ini sudah pernah digunakan!";
 $vocab["invalid_email"]           = "Alamat surel invalid!";
 $vocab["invalid_resolution"]      = "Kombinasi lost pertama tidak valid, slot terakhir dan resolusi!";
-$vocab["too_many_slots"]          = 'Anda harus menaikkan jumlah $max_slots pada file konfigurasi!';
 $vocab["general_settings"]        = "Umum";
 $vocab["time_settings"]           = "Slot";
 $vocab["confirmation_settings"]   = "Aturan konfirmasi";

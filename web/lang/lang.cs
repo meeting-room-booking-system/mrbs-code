@@ -359,7 +359,6 @@ $vocab["invalid_area"]            = "Neplatná oblast!";
 $vocab["invalid_room_name"]       = "Toto jméno místnosti/zdroje již bylo použito v aktuální oblasti!";
 $vocab["invalid_email"]           = "Neplatná emailová adresa!";
 $vocab["invalid_resolution"]      = "Neplatná kombinace první pozice, poslední pozice a rozlišení!";
-$vocab["too_many_slots"]          = 'Je třeba zvýšit hodnotu $max_slots v konfiguračním souboru!';
 $vocab["general_settings"]        = "Obecné";
 $vocab["time_settings"]           = "Časy pozic";
 $vocab["confirmation_settings"]   = "Nastavení potvrzování";

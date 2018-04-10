@@ -146,6 +146,11 @@ h2 {
   display: flex;
 }
 
+.view_container {
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
 img {border: 0}
 
 a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
@@ -530,6 +535,7 @@ table.dwm_main {
   float: left;
   clear: both; 
   width: 100%;
+  height: 100%;
   margin: 1em 0;
   border-spacing: 0;
   border-collapse: separate;
@@ -606,7 +612,9 @@ table.dwm_main {
 
 
 .dwm_main a {
-  display: block;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
   min-height: inherit;
   word-break: break-all;
   word-break: break-word;  /* Better for those browsers, eg webkit, that support it */
@@ -757,6 +765,10 @@ tr.row_highlight td.new {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
+.dwm_main th:first-child, .dwm_main td:first-child {
+  height: 1.8em;
+}
+
 td.row_labels {
   white-space: nowrap;
   vertical-align: middle;
@@ -771,6 +783,7 @@ tr:nth-child(even) td.row_labels {
 }
 
 .row_labels a {
+  display: inline;
   text-decoration: none;
   font-weight: normal
 }
@@ -848,63 +861,14 @@ div.outline {
   z-index: 700;
 }
 
-<?php
-
-/* SLOTS CLASSES
-
-The next section generates the slot classes (i.e. slots1, slots2, etc.).   We need
-enough of them so that they cover a booking spanning all the slots.
-
-These classes are used to control the styling of the main div in a cell in the main display table.
-By editing $clipped the styling can be set to be either 
-(1) CLIPPED.
-The cells are all a standard height and any content that does not fit in the cell is clipped.
-The height is a multiple of the height for a single cell, defined by $main_cell_height.   For 
-example if you define the main cell height to be 1.1em high, then a booking that is only one slot long
-will be 1.1 em high and a booking two slots long will be 2.2em high, etc.
-(2) NOT CLIPPED
-The cells expand to fit the content.
-
-(Although the style information could be put in an inline style declaration, this would mean that every
-cell in the display would carry the extra size of the style declaration, whereas the classes here mean
-that we only need the style declaration for each row.) 
-
-In the classes below
-- slotsN is the class for displaying a booking N slots long
-- height is the height of N slots (ie N * $main_cell_height)
-- you need to specify max-height so that clipping works correctly in Firefox
-- you need to specify height so that clipping works correctly in IE and also
-  to force min-height to work correctly in IE
-- you need to specify min-height to force the box to be the min-height in
-  IE (Firefox works OK without min-height)
-
-*/
 
 
-// work out how many classes we'll need.   If we're transposing the table then we'll only need one, since all
-// cells are the same height (it's the width that varies, controlled by the colspan attribute).   For a normal
-// table we'll need at least as many as we've got slots, since a booking could span as many as all the slots
-// (in this case controlled by a rowspan).
-$classes_required = ($times_along_top) ? 1 : $max_slots;
-for ($i=1; $i<=$classes_required; $i++) 
-{
-  $div_height = $main_cell_height * $i;
-  $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
-  
-  $rule = "div.slots" . $i . " {min-height: " . $div_height . "px";
-  if ($clipped)
-  {
-    $rule .= "; max-height: " . $div_height . "px"; 
-    $rule .= "; height: "     . $div_height . "px";
-  }
-  $rule .= "}";
-  echo $rule . "\n";
-}
-
-?>
 div.celldiv {
+  display: inline-block;
   box-sizing: border-box;
+  width: 100%;
   max-width: 100%;
+  height: 100%;
   overflow: hidden;
   margin: 0;
   padding: 0;

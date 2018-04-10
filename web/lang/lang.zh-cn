@@ -360,7 +360,6 @@ $vocab["invalid_area"]            = "无效的区域!";
 $vocab["invalid_room_name"]       = "房间名在该区域内已被使用!";
 $vocab["invalid_email"]           = "无效的 Email 地址!";
 $vocab["invalid_resolution"]      = "第一时段、最后时段和分辨率的组合非法!";
-$vocab["too_many_slots"]          = '你需要在配置文件中加大 $max_slots 的的数值!';
 $vocab["general_settings"]        = "一般设置";
 $vocab["time_settings"]           = "时段设置";
 $vocab["confirmation_settings"]   = "确定设置";

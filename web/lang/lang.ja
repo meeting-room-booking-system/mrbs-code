@@ -344,7 +344,6 @@ $vocab["invalid_area"]            = "無効な部署名です!";
 $vocab["invalid_room_name"]       = "この部屋名は既に部署内で使用されています!";
 $vocab["invalid_email"]           = "無効なEメールアドレスです!";
 $vocab["invalid_resolution"]      = "最初の時間枠の開始時刻, 最後の時間枠の開始時刻, 分解能の組み合わせが無効です!";
-$vocab["too_many_slots"]          = '設定ファイルの\$max_slotsの値を増やす必要があります!';
 $vocab["general_settings"]        = "一般";
 $vocab["time_settings"]           = "時間枠";
 $vocab["confirmation_settings"]   = "確定状況";

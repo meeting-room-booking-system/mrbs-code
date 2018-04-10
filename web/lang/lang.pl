@@ -340,7 +340,6 @@ $vocab["invalid_area"]            = "Zły budynek!";
 $vocab["invalid_room_name"]       = "Ta nazwa pokoju była już użyta w tym budynku!";
 $vocab["invalid_email"]      = "Błędny email!";
 $vocab["invalid_resolution"]      = "Zła kombinacja pierwszego slotu, ostatniego i rezolucji!";
-$vocab["too_many_slots"]          = 'Trzeba zwiększyć wartość $max_slots w pliku konfiguracyjnym!';
 $vocab["general_settings"]        = "Ogólne";
 $vocab["time_settings"]           = "Czas slotu";
 $vocab["confirmation_settings"]   = "Ustawienia potwierdzania";

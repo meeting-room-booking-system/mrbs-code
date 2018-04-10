@@ -368,7 +368,6 @@ $vocab["invalid_area"]            = "Zona invalida!";
 $vocab["invalid_room_name"]       = "Acest nume de sala a fost deja folosit in zona!";
 $vocab["invalid_email"]           = "Adresa de email invalida!";
 $vocab["invalid_resolution"]      = "Combinatie de primul slot, ultimul slot si resolutie, invalida!";
-$vocab["too_many_slots"]          = 'Trebuie sa maresti valoarea pentru $max_slots in config file!';
 $vocab["general_settings"]        = "General";
 $vocab["time_settings"]           = "Perioade Slor";
 $vocab["period_settings"]         = "Nume Perioada";

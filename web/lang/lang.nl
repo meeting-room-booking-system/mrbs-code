@@ -299,7 +299,6 @@ $vocab["invalid_area"]            = "Verkeerde ruimte!";
 $vocab["invalid_room_name"]       = "Deze kamer naam is al gebruikt in deze ruimte!";
 $vocab["invalid_email"]           = "Ongeldig email adres !";
 $vocab["invalid_resolution"]      = "Verkeerde combinatie van eerste slot, laatste slot en stappen!";
-$vocab["too_many_slots"]          = 'U moet de waarde van $max_slots verhogen in het config bestand!';
 $vocab["general_settings"]        = "Algemeen";
 $vocab["time_settings"]           = "Slot tijden";
 $vocab["confirmation_settings"]   = "Bevestiging instellingen";

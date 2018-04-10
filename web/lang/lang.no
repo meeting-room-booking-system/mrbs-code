@@ -332,7 +332,6 @@ $vocab["invalid_area"]            = "Ugylig område!";
 $vocab["invalid_room_name"]       = "Dette rommet er allerede brukt i et annet område!";
 $vocab["invalid_email"]           = "Ugyldig e-postadresse!";
 $vocab["invalid_resolution"]      = "Ugyldig kombinasjon av første luke, siste luke og oppløsning!";
-$vocab["too_many_slots"]          = 'Du må øke verdien av $max_slots i konfigurasjonsfilen!';
 $vocab["general_settings"]        = "Generelt";
 $vocab["time_settings"]           = "Luke tider";
 $vocab["confirmation_settings"]   = "Bekreftelses-innstillinger";

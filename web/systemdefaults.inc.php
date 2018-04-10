@@ -178,18 +178,6 @@ $theme = "default";
 // following the "Rooms" link in MRBS.
 
 
-// GENERAL SETTINGS
-// ----------------
-
-// This is the maximum number of rows (timeslots or periods) that one can
-// expect to see in the day and week views.    It is used by mrbs.css.php for
-// creating classes.    It does not matter if it is too large, except for the
-// fact that more CSS than necessary will be generated.  (The variable is ignored
-// if $times_along_top is set to true).
-
-$max_slots = 60;
-
-
 // TIMES SETTINGS
 // --------------
 

@@ -366,7 +366,6 @@ $vocab["invalid_area"]       = "Ungültiger Bereich!";
 $vocab["invalid_room_name"]  = "Dieser Raumname wurde in diesem Bereich bereits vergeben!";
 $vocab["invalid_email"]      = "Ungültige E-Mail Adresse !";
 $vocab["invalid_resolution"] = "Ungültige Kombination aus erstem Abschnitt, letztem Abschnitt und Zeitraster!";
-$vocab["too_many_slots"]     = 'Sie müssen den Wert für $max_slots in der Konfigurationsdatei erhöhen!';
 $vocab["general_settings"]   = "Allgemein";
 $vocab["time_settings"]      = "Zeitabschnitte";
 $vocab["confirmation_settings"]   = "Bestätigungseinstellungen";

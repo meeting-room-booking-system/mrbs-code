@@ -333,7 +333,6 @@ $vocab["invalid_area"]            = "Érvénytelen helyszín!";
 $vocab["invalid_room_name"]       = "A megadott tárgyalónév már foglalt ezen a helyszínen!";
 $vocab["invalid_email"]           = "Érvénytelen email cím.";
 $vocab["invalid_resolution"]      = "Érvénytelen beállítás, ellenőrizd a slotoknál és a részletességnél megadott értékeket!";
-$vocab["too_many_slots"]          = 'Növeld meg a $max_slots értékét a konfigurációs fájlban!';
 $vocab["general_settings"]        = "Általános";
 $vocab["time_settings"]           = "Slot idők";
 $vocab["confirmation_settings"]   = "Megerősítés beállításai";

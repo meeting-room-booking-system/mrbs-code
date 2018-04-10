@@ -323,7 +323,6 @@ $vocab["invalid_area"]            = "אזור לא חוקי!";
 $vocab["invalid_room_name"]       = "קיים כבר שם כזה לחדר באזור זה";
 $vocab["invalid_email"]           = "כתובת דואר אלקטרוני לא נכונה";
 $vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
-$vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
 $vocab["general_settings"]        = "הגדרות כללי";
 $vocab["time_settings"]           = "זמני שימוש בחדר";
 $vocab["confirmation_settings"]   = "הגדרות הזמנות";

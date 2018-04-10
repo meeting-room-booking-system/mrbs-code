@@ -345,7 +345,6 @@ $vocab["invalid_area"]            = "Virheellinen alue!";
 $vocab["invalid_room_name"]       = "Tämä huone on jo käytössä alueella!";
 $vocab["invalid_email"]           = "Virheellinen sähköpostiosoite!";
 $vocab["invalid_resolution"]      = "Virheellinen alkamisajankohta, päättymisajankohta ja tarkkuus!";
-$vocab["too_many_slots"]          = 'Kasvata arvoa $max_slots asetustiedostossa!';
 $vocab["general_settings"]        = "Yleiset";
 $vocab["time_settings"]           = "Aikavälit";
 $vocab["confirmation_settings"]   = "Vahvistusasetukset";

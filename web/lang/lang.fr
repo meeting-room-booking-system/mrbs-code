@@ -317,7 +317,6 @@ $vocab["invalid_area"]            = "Lieu invalide!";
 $vocab["invalid_room_name"]       = "Ce nom de salle a déjà été utilisé dans le lieu !";
 $vocab["invalid_email"]      = "Adresse courriel invalide&nbsp;!";
 $vocab["invalid_resolution"]      = "Combinaison non valide de la première case, dernière case et la résolution !";
-$vocab["too_many_slots"]          = 'Vous devez augmenter la valeur de $max_slots dans le fichier de config !';
 $vocab["general_settings"]        = "Général";
 $vocab["time_settings"]           = "Heures des plages";
 $vocab["confirmation_settings"]   = "Paramètres de confirmation";

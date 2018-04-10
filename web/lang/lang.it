@@ -359,7 +359,6 @@ $vocab["invalid_area"]       = "Area non valida!";
 $vocab["invalid_room_name"]  = "Questo nome stanza è già stato usato nell'area!";
 $vocab["invalid_email"]      = "Email non valida!";
 $vocab["invalid_resolution"]      = "Combinazione non valida di primo slot, ultimo slot e risoluzione!";
-$vocab["too_many_slots"]          = 'Devi incrementare il valore di $max_slots nel file di configurazione!';
 $vocab["general_settings"]        = "Generale";
 $vocab["time_settings"]           = "Orari slot";
 $vocab["confirmation_settings"]   = "Impostazioni di conferma";

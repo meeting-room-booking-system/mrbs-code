@@ -368,7 +368,6 @@ $vocab["invalid_area"]            = "¡Agrupación inválida!";
 $vocab["invalid_room_name"]       = "¡Este nombre de Sala ya se ha usado en esta Agrupación!";
 $vocab["invalid_email"]           = "¡Correo Electrónico Incorrecto!";
 $vocab["invalid_resolution"]      = "¡Combinación incorrecta de duración y periodos primero y último!";
-$vocab["too_many_slots"]          = '¡Es necesario aumentar el valor de $max_slots en el archivo de configuración!';
 $vocab["general_settings"]        = "Generales";
 $vocab["time_settings"]           = "Periodos horarios";
 $vocab["confirmation_settings"]   = "Ajustes de confirmación";

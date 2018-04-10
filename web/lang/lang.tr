@@ -337,7 +337,6 @@ $vocab["invalid_area"]            = "Geçersiz alan!";
 $vocab["invalid_room_name"]       = "Bu toplantı odası adı zaten kullanılmakta!";
 $vocab["invalid_email"]      	  = "Geçersiz eposta!";
 $vocab["invalid_resolution"]      = "Geçersiz kombinasyon ilk slot, son slot ve çözünürlük!";
-$vocab["too_many_slots"]          = 'Konfigürasyon dosyasındaki $max_slots değerini arttırmalısınız!';
 $vocab["general_settings"]        = "Genel";
 $vocab["time_settings"]           = "Slot zamanı";
 $vocab["confirmation_settings"]   = "Onay ayarları";
