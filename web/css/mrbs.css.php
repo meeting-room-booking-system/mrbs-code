@@ -535,7 +535,6 @@ table.dwm_main {
   float: left;
   clear: both; 
   width: 100%;
-  height: 100%;
   margin: 1em 0;
   border-spacing: 0;
   border-collapse: separate;
@@ -546,6 +545,7 @@ table.dwm_main {
 }
 
 .dwm_main td {
+  position: relative;
   padding: 0;
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
   border-bottom: 0;
@@ -766,7 +766,7 @@ tr.row_highlight td.new {
 }
 
 .dwm_main th:first-child, .dwm_main td:first-child {
-  height: 1.8em;
+  height: 1.5em;
 }
 
 td.row_labels {
@@ -875,6 +875,9 @@ div.celldiv {
 }
 
 .booked div.celldiv {
+  position: absolute;
+  top: 0;
+  left: 0;
   border-top: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
