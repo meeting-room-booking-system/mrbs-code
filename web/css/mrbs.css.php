@@ -541,7 +541,6 @@ table.dwm_main {
 
 .dwm_main td {
   padding: 0;
-  border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
   border-bottom: 0;
   border-right: 0;
@@ -749,7 +748,6 @@ td.hidden_day {
   background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
   font-size: medium;
   font-weight: bold;
-  border-top: <?php echo $main_table_cell_border_width ?>px solid <?php echo $column_hidden_color ?>;
   <?php 
     echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
   ?>
@@ -891,7 +889,6 @@ $classes_required = ($times_along_top) ? 1 : $max_slots;
 for ($i=1; $i<=$classes_required; $i++) 
 {
   $div_height = $main_cell_height * $i;
-  $div_height = $div_height + (($i-1)*$main_table_cell_border_width);
   $div_height = (int) $div_height;    // Make absolutely sure it's an int to avoid generating invalid CSS
   
   $rule = "div.slots" . $i . " {min-height: " . $div_height . "px";
@@ -905,7 +902,18 @@ for ($i=1; $i<=$classes_required; $i++)
 }
 
 ?>
-div.celldiv {max-width: 100%; overflow: hidden; margin: 0; padding: 0}
+div.celldiv {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.booked div.celldiv {
+  border-top: 1px solid <?php echo $main_table_body_v_border_color ?>;
+}
+
 .row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
 

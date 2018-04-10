@@ -341,7 +341,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $color       = $cell[$n]["color"];
       $descr       = htmlspecialchars($cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
-      $class = $color;
+      $class = "booked $color";
       if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
@@ -401,7 +401,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $color       = $cell[$n]["color"];
       $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
-      $class = $color;
+      $class = "booked $color";
       if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
@@ -474,7 +474,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     // We tell if its booked by $id and $descr having something in them
     if (isset($id) && isset($descr))
     {
-      $c = $color;
+      $c = "booked $color";
       if ($status & STATUS_PRIVATE)
       {
         $c .= " private";
