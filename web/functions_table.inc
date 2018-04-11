@@ -401,29 +401,35 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $color       = $cell[$n]["color"];
       $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
-      $class = "booked $color";
+      
+      $classes = array('booked', $color);
       if ($status & STATUS_PRIVATE)
       {
-        $class .= " private";
+        $classes[] = 'private';
       }
       if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
-        $class .= " awaiting_approval";
+        $classes[] = 'awaiting_approval';
       }
       if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
-        $class .= " tentative";
+        $classes[] = 'tentative';
       }
       if ($is_multiday_start)
       {
-        $class .= " multiday_start";
+        $classes[] = 'multiday_start';
       }
       if ($is_multiday_end)
       {
-        $class .= " multiday_end";
+        $classes[] = 'multiday_end';
       }
+      if ($is_repeat)
+      {
+        $classes[] = 'series';
+      }
+      
       $html .= "<tr>\n";
-      $html .= "<td class=\"$class\"" .
+      $html .= '<td class="' . implode(' ', $classes) . '"' .
                (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
                ">\n";
       $html .= "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
@@ -433,7 +439,6 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $query = http_build_query($vars, '', '&');
       
       $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . "\" title=\"$long_descr\">";
-      $html .= ($is_repeat) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
       $html .= "$descr</a>\n";
       $html .= "</div>\n";
      
@@ -549,12 +554,6 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         $vars['id'] = $id;
         $query = http_build_query($vars, '', '&');
         $html .= "<a href=\"view_entry.php?" . htmlspecialchars($query) . "\" title=\"$long_descr\">";
-        if ($is_repeat)
-        {
-          $html .= '<img class="repeat_symbol ';
-          $html .= (is_array($classes)) ? implode(' ', $classes) : $classes;
-          $html .= '" src="images/repeat.png" alt="' . get_vocab('series') . '" title="' . get_vocab('series') . '" width="10" height="10">';
-        }
         $html .= "$descr</a>\n";
         $html .= "</div>\n";
       }
@@ -1635,21 +1634,26 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
         {
           // give the enclosing div the appropriate width: full width if both,
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-          $class = $d[$cday]["color"][$i]; 
+          $classes = array($d[$cday]['color'][$i],
+                           $monthly_view_entries_details); 
           if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
           {
-            $class .= " private";
+            $classes[] = 'private';
           }
-          if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+          if ($approval_enabled && ($d[$cday]['status'][$i] & STATUS_AWAITING_APPROVAL))
           {
-            $class .= " awaiting_approval";
+            $classes[] = 'awaiting_approval';
           }
-          if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
+          if ($confirmation_enabled && ($d[$cday]['status'][$i] & STATUS_TENTATIVE))
           {
-            $class .= " tentative";
+            $classes[] = 'tentative';
           }
-          $class .= " $monthly_view_entries_details";
-          $html .= "<div class=\"" . $class . "\">\n";
+          if ($d[$cday]['is_repeat'][$i])
+          {
+            $classes[] = 'series';
+          }
+          
+          $html .= '<div class="' . implode(' ', $classes) . "\">\n";
           
           $vars = array('id'    => $d[$cday]["id"][$i],
                         'year'  => $year,
@@ -1684,7 +1688,6 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
             }
           }
           $html .= "<a href=\"$booking_link\" title=\"$full_text\">";
-          $html .= ($d[$cday]['is_repeat'][$i]) ? "<img class=\"repeat_symbol\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
           $html .= "$display_text</a>\n";
           $html .= "</div>\n";
         }

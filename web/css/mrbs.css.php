@@ -552,6 +552,11 @@ table.dwm_main {
   border-right: 0;
 }
 
+.dwm_main .series a::before {
+  content: '\0021bb';  /* CLOCKWISE OPEN CIRCLE ARROW */
+  margin-right: 0.5em;
+}
+
 <?php
 // Note that it is important to have zero padding-left and padding-top on the th cells and the celldiv divs.
 // These elements are used to calculate the offset top and left of the position of bookings in
@@ -653,8 +658,6 @@ table.dwm_main {
 
 td.new a, a.new_booking {display: block; font-size: medium; text-align: center}
 td.new img, .new_booking img {margin: auto; padding: 4px 0 2px 0}
-img.repeat_symbol {float: right; padding: 3px}
-.dwm_main#month_main img.repeat_symbol {padding: 2px}
 
 
 <?php
