@@ -468,47 +468,47 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $slots = 1;
     }
 
-    // $c is the colour of the cell that the browser sees. Zebra stripes normally,
-    // row_highlight if we're highlighting that line and the appropriate colour if
-    // it is booked (determined by the type).
+    $classes = array();
+    
     // We tell if its booked by $id and $descr having something in them
     if (isset($id) && isset($descr))
     {
-      $c = "booked $color";
+      $classes[] = 'booked';
+      $classes[] = $color;
       if ($status & STATUS_PRIVATE)
       {
-        $c .= " private";
+        $classes[] = 'private';
       }
       if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
       {
-        $c .= " awaiting_approval";
+        $classes[] = 'awaiting_approval';
       }
       if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
       {
-        $c .= " tentative";
+        $classes[] = 'tentative';
       }
       if ($is_multiday_start)
       {
-        $c .= " multiday_start";
+        $classes[] = 'multiday_start';
       }
       if ($is_multiday_end)
       {
-        $c .= " multiday_end";
+        $classes[] = 'multiday_end';
       }
       // Add a class to bookings that this user is allowed to edit so that the
       // JavaScript can turn them into resizable bookings
       if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
       {
-        $c .= " writable";
+        $classes[] = 'writable';
         if ($is_repeat)
         {
-          $c .= " series";
+          $classes = 'series';
         }
       }
     }
     else
     {
-      $c = ($is_invalid) ? "invalid" : "new";
+      $classes[] = ($is_invalid) ? 'invalid' : 'new';
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
@@ -518,7 +518,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
 
     if (!isset($id) || isset($descr))
     {
-      $html .= tdcell($c, $slots);
+      $html .= tdcell($classes, $slots);
 
       // If the room isn't booked then allow it to be booked
       if (!isset($id))
@@ -548,9 +548,13 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
         $query = http_build_query($vars, '', '&');
-      
         $html .= "<a href=\"view_entry.php?" . htmlspecialchars($query) . "\" title=\"$long_descr\">";
-        $html .= ($is_repeat) ? "<img class=\"repeat_symbol $c\" src=\"images/repeat.png\" alt=\"" . get_vocab("series") . "\" title=\"" . get_vocab("series") . "\" width=\"10\" height=\"10\">" : '';
+        if ($is_repeat)
+        {
+          $html .= '<img class="repeat_symbol ';
+          $html .= (is_array($classes)) ? implode(' ', $classes) : $classes;
+          $html .= '" src="images/repeat.png" alt="' . get_vocab('series') . '" title="' . get_vocab('series') . '" width="10" height="10">';
+        }
         $html .= "$descr</a>\n";
         $html .= "</div>\n";
       }
@@ -571,7 +575,7 @@ function time_cell_html($s, $url)
   
   $html = '';
   
-  $html .= tdcell("row_labels", 1, array('name' => 'seconds', 'value' => $s));
+  $html .= tdcell('row_labels', 1, array('name' => 'seconds', 'value' => $s));
   
   if ( $enable_periods )
   {
@@ -596,7 +600,7 @@ function time_cell_html($s, $url)
 function room_cell_html($row, $link)
 {
   $html = '';
-  $html .= tdcell("row_labels", 1, array('name' => 'room', 'value' => $row['id']));
+  $html .= tdcell('row_labels', 1, array('name' => 'room', 'value' => $row['id']));
   $html .= "<div class=\"celldiv slots1\">\n";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
@@ -612,7 +616,7 @@ function room_cell_html($row, $link)
 function day_cell_html($text, $link, $date)
 {
   $html = '';
-  $html .= tdcell("row_labels", 1, array('name' => 'date', 'value' => $date));
+  $html .= tdcell('row_labels', 1, array('name' => 'date', 'value' => $date));
   $html .= "<div class=\"celldiv slots1\">\n";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   $html .= "</div></td>\n";
@@ -621,33 +625,42 @@ function day_cell_html($text, $link, $date)
 
 
 // Output a start table cell tag <td> with color class.
-// $colclass is an entry type (A-J), zebra stripes if
+// $classes can be either a string or an array of classes
 // empty or row_highlight if highlighted.
 // $slots is the number of time slots high that the cell should be
 //
 // $data is an optional third parameter which if set passes the data name and value
 // for use in the data- attribute.  It is an associative array with two elements,
 // data['name'] and data['value'].
-function tdcell($colclass, $slots)
+function tdcell($classes, $slots, $data=null)
 {
   global $times_along_top;
   
-  $html = '';
-  if (func_num_args() > 2)
+  if (isset($classes) && ($classes !== '') && !is_array($classes))
   {
-    $data = func_get_arg(2);
+    $classes = array($classes);
   }
   
-  $html .= "<td class=\"$colclass\"";
+  $html = '';
+  
+  $html .= '<td';
+  
+  if (isset($classes))
+  {
+    $html.= ' class="' . implode(' ', $classes) . '"';
+  }
+  
   if ($slots > 1)
   // No need to output more HTML than necessary
   {
-    $html .= " " . (($times_along_top) ? "colspan" : "rowspan") . "=\"$slots\"";
+    $html .= (($times_along_top) ? ' colspan' : ' rowspan') . "=\"$slots\"";
   }
+  
   if (isset($data))
   {
     $html .= " data-" . $data['name'] . "=\"" . $data['value'] . "\"";
   }
+  
   $html .= ">\n";
   
   return $html;
