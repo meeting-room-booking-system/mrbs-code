@@ -502,7 +502,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         $classes[] = 'writable';
         if ($is_repeat)
         {
-          $classes = 'series';
+          $classes[] = 'series';
         }
       }
     }
