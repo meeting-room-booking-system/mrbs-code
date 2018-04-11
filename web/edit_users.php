@@ -772,16 +772,21 @@ if (isset($Action) && ($Action == "Update"))
         continue; 
       }
 
-      // first, get all the other form variables and put them into an array, $values, which 
-      // we will use for entering into the database assuming we pass validation
-      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-      // Trim the field to remove accidental whitespace
-      $values[$fieldname] = trim($values[$fieldname]);
-      // Truncate the field to the maximum length as a precaution.
-      if (isset($maxlength["users.$fieldname"]))
+      // first, get all the other form variables, except for password_hash which is
+      // a special case,and put them into an array, $values, which  we will use
+      // for entering into the database assuming we pass validation
+      if ($fieldname !== 'password_hash')
       {
-        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+        $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+        // Trim the field to remove accidental whitespace
+        $values[$fieldname] = trim($values[$fieldname]);
+        // Truncate the field to the maximum length as a precaution.
+        if (isset($maxlength["users.$fieldname"]))
+        {
+          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+        }
       }
+      
       // we will also put the data into a query string which we will use for passing
       // back to this page if we fail validation.   This will enable us to reload the
       // form with the original data so that the user doesn't have to
@@ -927,13 +932,20 @@ if (isset($Action) && ($Action == "Update"))
     // For each db column get the value ready for the database
     foreach ($fields as $field)
     {
+      $fieldname = $field['name'];;
+      
       // Stop ordinary users trying to change fields they are not allowed to
-      if (($level < $min_user_editing_level) && in_array($field['name'], $auth['db']['protected_fields']))
+      if (($level < $min_user_editing_level) && in_array($fieldname, $auth['db']['protected_fields']))
       {
         continue;
       }
       
-      $fieldname = $field['name'];
+      // If the password field is blank then we are not changing it
+      if (($fieldname == 'password_hash') && (!isset($values[$fieldname])))
+      {
+        continue;
+      }
+      
       if ($fieldname != 'id')
       {
         // pre-process the field value for SQL
