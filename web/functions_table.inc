@@ -572,7 +572,7 @@ function time_cell_html($s, $url)
   
   $html = '';
   
-  $html .= tdcell('row_labels', 1, array('name' => 'seconds', 'value' => $s));
+  $html .= tdcell('row_labels', 1, array('seconds' => $s));
   
   if ( $enable_periods )
   {
@@ -597,7 +597,7 @@ function time_cell_html($s, $url)
 function room_cell_html($row, $link)
 {
   $html = '';
-  $html .= tdcell('row_labels', 1, array('name' => 'room', 'value' => $row['id']));
+  $html .= tdcell('row_labels', 1, array('room' => $row['id']));
   $html .= "<div class=\"celldiv slots1\">\n";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
@@ -613,7 +613,7 @@ function room_cell_html($row, $link)
 function day_cell_html($text, $link, $date)
 {
   $html = '';
-  $html .= tdcell('row_labels', 1, array('name' => 'date', 'value' => $date));
+  $html .= tdcell('row_labels', 1, array('date' => $date));
   $html .= "<div class=\"celldiv slots1\">\n";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
   $html .= "</div></td>\n";
@@ -626,10 +626,9 @@ function day_cell_html($text, $link, $date)
 // empty or row_highlight if highlighted.
 // $slots is the number of time slots high that the cell should be
 //
-// $data is an optional third parameter which if set passes the data name and value
-// for use in the data- attribute.  It is an associative array with two elements,
-// data['name'] and data['value'].
-function tdcell($classes, $slots, $data=null)
+// $data is an optional third parameter which if set passes an
+// associative array of name-value pairs to be used in data aatributes
+function tdcell($classes, $slots, array $data=null)
 {
   global $times_along_top;
   
@@ -655,7 +654,10 @@ function tdcell($classes, $slots, $data=null)
   
   if (isset($data))
   {
-    $html .= " data-" . $data['name'] . "=\"" . $data['value'] . "\"";
+    foreach ($data as $name => $value)
+    {
+      $html .= " data-$name=\"$value\"";
+    }
   }
   
   $html .= ">\n";
