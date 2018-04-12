@@ -288,12 +288,12 @@ function snapToGrid(tableData, div, side, force)
  
   var data = (isLR) ? tableData.x.data : tableData.y.data;
   
-  var topLeft, bottomRight, divTop, divLeft, divWidth, divOuterHeight, thisCoord,
+  var topLeft, bottomRight, divTop, divLeft, divOuterWidth, divOuterHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
       
   divTop = div.offsetRound().top;
   divLeft = div.offsetRound().left;
-  divWidth = div.outerWidth();
+  divOuterWidth = div.outerWidth();
   divOuterHeight = div.outerHeight();
   
   switch (side)
@@ -308,7 +308,7 @@ function snapToGrid(tableData, div, side, force)
       thisCoord = divLeft;
       break;
     case 'right':
-      thisCoord = divLeft + divWidth;
+      thisCoord = divLeft + divOuterWidth;
       break;
   }
 
@@ -333,7 +333,7 @@ function snapToGrid(tableData, div, side, force)
         {
           case 'left':
             div.offset({top: divTop, left: topLeft});
-            div.outerWidth(divWidth + gapTopLeft);
+            div.outerWidth(divOuterWidth + gapTopLeft);
             break;
           case 'right':
             <?php
@@ -342,13 +342,13 @@ function snapToGrid(tableData, div, side, force)
             // rule.   Unfortunately we can't rely on uniform column widths
             // so we can't use a min-width rule.
             ?>
-            if ((divWidth - gapTopLeft) < tolerance)
+            if ((divOuterWidth - gapTopLeft) < tolerance)
             {
-              div.outerWidth(divWidth + gapBottomRight);
+              div.outerWidth(divOuterWidth + gapBottomRight);
             }
             else
             {
-              div.outerWidth(divWidth - gapTopLeft);
+              div.outerWidth(divOuterWidth - gapTopLeft);
             }
             break;
           case 'top':
@@ -367,19 +367,19 @@ function snapToGrid(tableData, div, side, force)
         {
           case 'left':
             <?php // Don't let the width become zero.  ?>
-            if ((divWidth - gapBottomRight) < tolerance)
+            if ((divOuterWidth - gapBottomRight) < tolerance)
             {
               div.offset({top: div.Top, left: topLeft});
-              div.outerWidth(divWidth + gapTopLeft);
+              div.outerWidth(divOuterWidth + gapTopLeft);
             }
             else
             {
               div.offset({top: divTop, left: bottomRight});
-              div.outerWidth(divWidth - gapBottomRight);
+              div.outerWidth(divOuterWidth - gapBottomRight);
             }
             break;
           case 'right':
-            div.outerWidth(divWidth + gapBottomRight);
+            div.outerWidth(divOuterWidth + gapBottomRight);
             break;
           case 'top':
             div.offset({top: bottomRight, left: divLeft});
