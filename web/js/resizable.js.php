@@ -288,20 +288,21 @@ function snapToGrid(tableData, div, side, force)
  
   var data = (isLR) ? tableData.x.data : tableData.y.data;
   
-  var topLeft, bottomRight, divTop, divLeft, divWidth, divHeight, thisCoord,
+  var topLeft, bottomRight, divTop, divLeft, divWidth, divOuterHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
       
   divTop = div.offsetRound().top;
   divLeft = div.offsetRound().left;
   divWidth = div.outerWidth();
-  divHeight = div.outerHeight();
+  divOuterHeight = div.outerHeight();
+  
   switch (side)
   {
     case 'top':
       thisCoord = divTop;
       break;
     case 'bottom':
-      thisCoord = divTop + divHeight;
+      thisCoord = divTop + divOuterHeight;
       break;
     case 'left':
       thisCoord = divLeft;
@@ -352,10 +353,10 @@ function snapToGrid(tableData, div, side, force)
             break;
           case 'top':
             div.offset({top: topLeft, left: divLeft});
-            div.height(divHeight + gapTopLeft);
+            div.outerHeight(divOuterHeight + gapTopLeft);
             break;
           case 'bottom':
-            div.height(divHeight - gapTopLeft);
+            div.outerHeight(divOuterHeight - gapTopLeft);
             break;
         }
         return;
@@ -382,10 +383,10 @@ function snapToGrid(tableData, div, side, force)
             break;
           case 'top':
             div.offset({top: bottomRight, left: divLeft});
-            div.height(divHeight - gapBottomRight);
+            div.outerHeight(divOuterHeight - gapBottomRight);
             break;
           case 'bottom':
-            div.height(divHeight + gapBottomRight);
+            div.outerHeight(divOuterHeight + gapBottomRight);
             break;
         }
         return;
@@ -1202,7 +1203,7 @@ init = function(args) {
               }
             }
             var handles = aHandles.join(',');
-            var divBooking = $(this).children('div');
+            var divBooking = $(this).children('a');
             var divClone = divBooking.clone();
             divBooking.css('visibility', 'hidden');
             divClone.css('z-index', '500')
@@ -1228,8 +1229,7 @@ init = function(args) {
                                   stop: divResizeStop});
             }
             divClone.appendTo($(this));
-            $(this).css('background-color', 'transparent')
-                   .wrapInner('<div style="position: relative"><\/div>');
+            $(this).css('background-color', 'transparent');
           });
                               
       <?php

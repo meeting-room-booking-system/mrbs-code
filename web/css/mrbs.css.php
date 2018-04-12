@@ -562,7 +562,7 @@ table.dwm_main {
 }
 
 <?php
-// Note that it is important to have zero padding-left and padding-top on the th cells and the celldiv divs.
+// Note that it is important to have zero padding-left and padding-top on the th and td cells.
 // These elements are used to calculate the offset top and left of the position of bookings in
 // the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
 // need padding put it on the contained element.
@@ -630,8 +630,17 @@ table.dwm_main {
   hyphens: auto;
 }
 
+.dwm_main .booked a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
+}
+
 .dwm_main tbody a {
-  padding: 0 0.2em
+  padding: 0.2em;
 }
 
 .dwm_main th a {
@@ -872,29 +881,7 @@ div.outline {
 }
 
 
-
-div.celldiv {
-  display: inline-block;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-.booked div.celldiv {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-top: 1px solid <?php echo $main_table_body_v_border_color ?>;
-}
-
-.row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
-
-
 // Multiple bookings.  These rules control the styling of the cells and controls when there is more than
 // one booking in a time slot.
 ?>

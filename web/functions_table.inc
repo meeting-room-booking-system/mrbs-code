@@ -480,6 +480,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     {
       $classes[] = 'booked';
       $classes[] = $color;
+      
       if ($status & STATUS_PRIVATE)
       {
         $classes[] = 'private';
@@ -544,16 +545,15 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       }
       else                 // if it is booked then show the booking
       {
-        $html .= "<div data-id=\"$id\" data-type=\"$color\" class=\"celldiv slots" .
-                 (($times_along_top) ? "1" : $slots) .
-                 "\">\n";
-                 
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
         $query = http_build_query($vars, '', '&');
-        $html .= "<a href=\"view_entry.php?" . htmlspecialchars($query) . "\" title=\"$long_descr\">";
-        $html .= "$descr</a>\n";
-        $html .= "</div>\n";
+        $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
+                   ' title="' . $long_descr . '"' .
+                   ' class="' . $color . '"' .
+                   ' data-id="' .$id . '"' .
+                   ' data-type="' . $color . '">';
+        $html .= $descr . "</a>\n";
       }
       $html .= "</td>\n";
     }
