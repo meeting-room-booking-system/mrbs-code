@@ -333,7 +333,7 @@ function snapToGrid(tableData, div, side, force)
         {
           case 'left':
             div.offset({top: divTop, left: topLeft});
-            div.width(divWidth + gapTopLeft);
+            div.outerWidth(divWidth + gapTopLeft);
             break;
           case 'right':
             <?php
@@ -344,11 +344,11 @@ function snapToGrid(tableData, div, side, force)
             ?>
             if ((divWidth - gapTopLeft) < tolerance)
             {
-              div.width(divWidth + gapBottomRight);
+              div.outerWidth(divWidth + gapBottomRight);
             }
             else
             {
-              div.width(divWidth - gapTopLeft);
+              div.outerWidth(divWidth - gapTopLeft);
             }
             break;
           case 'top':
@@ -370,16 +370,16 @@ function snapToGrid(tableData, div, side, force)
             if ((divWidth - gapBottomRight) < tolerance)
             {
               div.offset({top: div.Top, left: topLeft});
-              div.width(divWidth + gapTopLeft);
+              div.outerWidth(divWidth + gapTopLeft);
             }
             else
             {
               div.offset({top: divTop, left: bottomRight});
-              div.width(divWidth - gapBottomRight);
+              div.outerWidth(divWidth - gapBottomRight);
             }
             break;
           case 'right':
-            div.width(divWidth + gapBottomRight);
+            div.outerWidth(divWidth + gapBottomRight);
             break;
           case 'top':
             div.offset({top: bottomRight, left: divLeft});
