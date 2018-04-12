@@ -268,8 +268,8 @@ function outsideTable(tableData, p)
 }
         
 <?php
-// Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') to 
-// the nearest grid line, if the side is within the snapping range.
+// Given the element 'el', snap the side specified (can be 'left', 'right', 'top'
+// or 'bottom') to the nearest grid line, if the side is within the snapping range.
 //
 // If force is true, then the side is snapped regardless of where it is.
 //
@@ -280,7 +280,7 @@ function outsideTable(tableData, p)
 // row heights and column widths - so we can't specify a grid in terms of a simple
 // array as required by the resize widget.
 ?>
-function snapToGrid(tableData, div, side, force)
+function snapToGrid(tableData, el, side, force)
 {
   var snapGap = (force) ? 100000: 30; <?php // px ?>
   var tolerance = 2; <?php //px ?>
@@ -288,27 +288,27 @@ function snapToGrid(tableData, div, side, force)
  
   var data = (isLR) ? tableData.x.data : tableData.y.data;
   
-  var topLeft, bottomRight, divTop, divLeft, divOuterWidth, divOuterHeight, thisCoord,
+  var topLeft, bottomRight, elTop, elLeft, elOuterWidth, elOuterHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
       
-  divTop = div.offsetRound().top;
-  divLeft = div.offsetRound().left;
-  divOuterWidth = div.outerWidth();
-  divOuterHeight = div.outerHeight();
+  elTop = el.offsetRound().top;
+  elLeft = el.offsetRound().left;
+  elOuterWidth = el.outerWidth();
+  elOuterHeight = el.outerHeight();
   
   switch (side)
   {
     case 'top':
-      thisCoord = divTop;
+      thisCoord = elTop;
       break;
     case 'bottom':
-      thisCoord = divTop + divOuterHeight;
+      thisCoord = elTop + elOuterHeight;
       break;
     case 'left':
-      thisCoord = divLeft;
+      thisCoord = elLeft;
       break;
     case 'right':
-      thisCoord = divLeft + divOuterWidth;
+      thisCoord = elLeft + elOuterWidth;
       break;
   }
 
@@ -332,8 +332,8 @@ function snapToGrid(tableData, div, side, force)
         switch (side)
         {
           case 'left':
-            div.offset({top: divTop, left: topLeft});
-            div.outerWidth(divOuterWidth + gapTopLeft);
+            el.offset({top: elTop, left: topLeft});
+            el.outerWidth(elOuterWidth + gapTopLeft);
             break;
           case 'right':
             <?php
@@ -342,21 +342,21 @@ function snapToGrid(tableData, div, side, force)
             // rule.   Unfortunately we can't rely on uniform column widths
             // so we can't use a min-width rule.
             ?>
-            if ((divOuterWidth - gapTopLeft) < tolerance)
+            if ((elOuterWidth - gapTopLeft) < tolerance)
             {
-              div.outerWidth(divOuterWidth + gapBottomRight);
+              el.outerWidth(elOuterWidth + gapBottomRight);
             }
             else
             {
-              div.outerWidth(divOuterWidth - gapTopLeft);
+              el.outerWidth(elOuterWidth - gapTopLeft);
             }
             break;
           case 'top':
-            div.offset({top: topLeft, left: divLeft});
-            div.outerHeight(divOuterHeight + gapTopLeft);
+            el.offset({top: topLeft, left: elLeft});
+            el.outerHeight(elOuterHeight + gapTopLeft);
             break;
           case 'bottom':
-            div.outerHeight(divOuterHeight - gapTopLeft);
+            el.outerHeight(elOuterHeight - gapTopLeft);
             break;
         }
         return;
@@ -367,26 +367,26 @@ function snapToGrid(tableData, div, side, force)
         {
           case 'left':
             <?php // Don't let the width become zero.  ?>
-            if ((divOuterWidth - gapBottomRight) < tolerance)
+            if ((elOuterWidth - gapBottomRight) < tolerance)
             {
-              div.offset({top: div.Top, left: topLeft});
-              div.outerWidth(divOuterWidth + gapTopLeft);
+              el.offset({top: elTop, left: topLeft});
+              el.outerWidth(elOuterWidth + gapTopLeft);
             }
             else
             {
-              div.offset({top: divTop, left: bottomRight});
-              div.outerWidth(divOuterWidth - gapBottomRight);
+              el.offset({top: elTop, left: bottomRight});
+              el.outerWidth(elOuterWidth - gapBottomRight);
             }
             break;
           case 'right':
-            div.outerWidth(divOuterWidth + gapBottomRight);
+            el.outerWidth(elOuterWidth + gapBottomRight);
             break;
           case 'top':
-            div.offset({top: bottomRight, left: divLeft});
-            div.outerHeight(divOuterHeight - gapBottomRight);
+            el.offset({top: bottomRight, left: elLeft});
+            el.outerHeight(elOuterHeight - gapBottomRight);
             break;
           case 'bottom':
-            div.outerHeight(divOuterHeight + gapBottomRight);
+            el.outerHeight(elOuterHeight + gapBottomRight);
             break;
         }
         return;
