@@ -1062,14 +1062,16 @@ init = function(args) {
                                  .trigger('load');
                             <?php // Now for the visual feedback ?>
                             $.each(result.new_details, function(i, value) {
-                                var cell = $('[data-id="' + value.id + '"]');
-                                var cellAnchor = cell.find('a').last();
-                                var oldHTML = cellAnchor.html();
+                                var el = $('[data-id="' + value.id + '"]').last();
+                                var oldText = el.text();
+                                var oldChildren = el.children();
                                 var duration = 1000; <?php // ms ?>
-                                cellAnchor.fadeOut(duration, function(){
-                                    cellAnchor.html('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
-                                        cellAnchor.fadeOut(duration, function() {
-                                            cellAnchor.html(oldHTML).fadeIn(duration);
+                                el.fadeOut(duration, function(){
+                                    el.text('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
+                                        el.fadeOut(duration, function() {
+                                            el.text(oldText).fadeIn(duration, function() {
+                                                el.append(oldChildren);
+                                              });  
                                           });
                                       });
                                   });
