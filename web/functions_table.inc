@@ -534,14 +534,12 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
           $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
           $query = http_build_query($vars, '', '&');
           
-          $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
           $html .= "<a href=\"edit_entry.php?" . htmlspecialchars($query) . "\">\n";
           if ($show_plus_link)
           {
             $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
           }
           $html .= "</a>\n";
-          $html .= "</div>\n";
         }
       }
       else                 // if it is booked then show the booking

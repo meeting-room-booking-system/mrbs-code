@@ -544,6 +544,10 @@ table.dwm_main {
   border-radius: 5px;
 }
 
+.dwm_main th, .dwm_main td {
+  height: 1.5em;
+}
+
 .dwm_main td {
   position: relative;
   padding: 0;
@@ -656,8 +660,15 @@ table.dwm_main {
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
-td.new a, a.new_booking {display: block; font-size: medium; text-align: center}
-td.new img, .new_booking img {margin: auto; padding: 4px 0 2px 0}
+td.new a, a.new_booking {
+  font-size: medium;
+  text-align: center;
+}
+
+td.new img, .new_booking img {
+  margin: auto;
+  padding: 4px 0 2px 0;
+}
 
 
 <?php
@@ -766,10 +777,6 @@ td.hidden_day {
 
 tr.row_highlight td.new {
   background-color: <?php echo $row_highlight_color ?>;
-}
-
-.dwm_main th:first-child, .dwm_main td:first-child {
-  height: 1.5em;
 }
 
 td.row_labels {
