@@ -189,7 +189,7 @@ $vocab["max_per_year_area"]       = "Maksymalna liczba rezerwacji na rok przez j
 $vocab["max_per_future_area"]     = "Maksymalna liczba zaległych rezerwacji przez jednego użytkownika w tym budynku to";
 $vocab["skip_and_book"]           = "Pomiń i rezerwuj";
 $vocab["skip_and_book_note"]      = "Uważaj rezerwując, pomijając konflikty";
-$vocab["changes_saved"]           = "Zmiany zapisane";
+
 // Used in pending.php
 $vocab["pending"]            = "Rezerwacja czekające na potwierdzenie";
 $vocab["none_outstanding"]   = "Nie ma rezerwacji oczekujących na zatwierdzenie.";

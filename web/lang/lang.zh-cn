@@ -206,7 +206,6 @@ $vocab["max_per_year_area"]       = "该区域内每人每年最大预定数是"
 $vocab["max_per_future_area"]     = "该区域内每人每天最大重要预定数是";
 $vocab["skip_and_book"]           = "忽略并预订";
 $vocab["skip_and_book_note"]      = "继续预订, 忽略以前的有冲突的条目";
-$vocab["changes_saved"]           = "已保存修改";
 
 // Used in pending.php
 $vocab["pending"]            = "待批准的预订";

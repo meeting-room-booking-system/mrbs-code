@@ -214,7 +214,6 @@ $vocab["skip_and_book"]           = "Überspringen und buchen";
 $vocab["skip_and_book_note"]      = "Buchung eintragen, dabei Buchungstermine mit Konflikten überspringen";
 
 // Used in pending.php
-$vocab["changes_saved"]           = "Änderungen gespeichert";
 $vocab["pending"]            = "Eintrag erwartet Genehmigung";
 $vocab["none_outstanding"]   = "Sie haben keine Einträge, die genehmigt werden müssen.";
 

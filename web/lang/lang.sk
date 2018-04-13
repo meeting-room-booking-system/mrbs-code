@@ -206,7 +206,6 @@ $vocab["max_per_year_area"]       = "Maximálny počet rezervácií za rok na je
 $vocab["max_per_future_area"]     = "Maximálny počet nevyřízených rezervácií na uživateľa v tejto oblasti je";
 $vocab["skip_and_book"]           = "Vynechať a zarezerovať";
 $vocab["skip_and_book_note"]      = "Pokračovať v rezervácii, vynechať kolidujúce položky";
-$vocab["changes_saved"]           = "Zmeny uložené";
 
 // Used in pending.php
 $vocab["pending"]            = "Rezervácie čakajúce na schválenie";

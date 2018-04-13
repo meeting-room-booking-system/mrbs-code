@@ -211,7 +211,6 @@ $vocab["max_per_year_area"]       = "Numarul maxim de rezervari pe an pe utiliza
 $vocab["max_per_future_area"]     = "Numarul maxim de rezervaru restante pe utilizator in aceasta zona este";
 $vocab["skip_and_book"]           = "Ignora si rezerva";
 $vocab["skip_and_book_note"]      = "Continua rezervarile, ignorand conflictele";
-$vocab["changes_saved"]           = "Modificari salvate";
 
 // Used in pending.php
 $vocab["pending"]            = "Rezervari asteptand raspuns";

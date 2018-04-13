@@ -206,7 +206,6 @@ $vocab["max_per_year_area"]          = "Jumlah pesanan maksimum per tahun per pe
 $vocab["max_per_future_area"]        = "Jumlah sisa pesanan per pengguna untuk area ini adalah";
 $vocab["skip_and_book"]              = "Abaikan dan pesan";
 $vocab["skip_and_book_note"]         = "Lanjutkan pesanan, Abaikan konflik yg ada.";
-$vocab["changes_saved"]              = "Perubahan telah disimpan.";
 
 // Used in pending.php
 $vocab["pending"]            = "Pesanan menunggu persetujuan";

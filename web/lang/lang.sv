@@ -209,7 +209,6 @@ $vocab["max_per_year_area"]       = "Maximala antalet bokningar per år per anv�
 $vocab["max_per_future_area"]     = "Maximala antalet utgivna bokningar per användare inom detta område är";
 $vocab["skip_and_book"]           = "Hoppa över och boka";
 $vocab["skip_and_book_note"]      = "Fortsätta med bokningen och hoppa över bokningskonflikter";
-$vocab["changes_saved"]           = "Ändringarna är sparade";
 
 // Used in pending.php
 $vocab["pending"]            = "Preliminär bokning väntar på godkännande";

@@ -1042,10 +1042,19 @@ init = function(args) {
                   data.timetohighlight = <?php echo $timetohighlight ?>;
                   <?php
                 }
+                
+                // Give some visual feedback that the change is being saved.   Note that the span
+                // is inserted after the elemement rather than appended, because if it's a child
+                // then any opacity rule that is applied to the parent will also apply to the child.
                 ?>
+                divClone.empty()
+                        .addClass('saving')
+                        .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
+
                 $.post('edit_entry_handler.php',
                        data,
                        function(result) {
+                          return;
                           if (result.valid_booking)
                           {
                             <?php
@@ -1053,29 +1062,11 @@ init = function(args) {
                             // table in order to get rid of events and data and
                             // prevent memory leaks (2) insert the updated table HTML
                             // and then (3) trigger a table load event so that the
-                            // resizable bookings are re-created and then (4) give the
-                            // user some positive visual feedback that the change has 
-                            // been saved
+                            // resizable bookings are re-created
                             ?>
                             table.empty()
                                  .html(result.table_innerhtml)
                                  .trigger('load');
-                            <?php // Now for the visual feedback ?>
-                            $.each(result.new_details, function(i, value) {
-                                var el = $('[data-id="' + value.id + '"]').last();
-                                var oldText = el.text();
-                                var oldChildren = el.children();
-                                var duration = 1000; <?php // ms ?>
-                                el.fadeOut(duration, function(){
-                                    el.text('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
-                                        el.fadeOut(duration, function() {
-                                            el.text(oldText).fadeIn(duration, function() {
-                                                el.append(oldChildren);
-                                              });  
-                                          });
-                                      });
-                                  });
-                              });
                           }
                           else
                           {

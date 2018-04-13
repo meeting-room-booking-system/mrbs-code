@@ -212,9 +212,12 @@ $vocab["max_per_year_area"]       = "Il numero massimo di prenotazioni all'anno 
 $vocab["max_per_future_area"]     = "Il numero massimo di prenotazioni in attesa per utente in questa area è";
 $vocab["skip_and_book"]           = "Salta e prenota";
 $vocab["skip_and_book_note"]      = "Prosegui con la prenotazione, saltando i conflitti";
-$vocab["changes_saved"]           = "Cambiamenti salvati";
+
+// Used in pending.php
 $vocab["pending"]            = "Prenotazioni in attesa di approvazione";
 $vocab["none_outstanding"]   = "Non ci sono prenotazioni in attesa di approvazione.";
+
+// Authentication stuff
 $vocab["accessdenied"]       = "Accesso Negato";
 $vocab["norights"]           = "Non hai i diritti per modificare questo oggetto.";
 $vocab["please_login"]       = "Effettua il log in";

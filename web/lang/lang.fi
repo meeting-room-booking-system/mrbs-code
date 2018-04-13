@@ -192,7 +192,6 @@ $vocab["max_per_year_area"]       = "Maksimimäärä käyttäjäkohtaisia varauk
 $vocab["max_per_future_area"]     = "Maksimimäärä keskeneräisiä käyttäjäkohtaisia varauksia tällä alueella on";
 $vocab["skip_and_book"]           = "Ohita ja varaa";
 $vocab["skip_and_book_note"]      = "Jatka varauksen tallentamiseen ohittaen ristiriidassa olevat varaukset";
-$vocab["changes_saved"]           = "Muutokset tallennettu";
 
 // Used in pending.php
 $vocab["pending"]            = "Varaukset odottamassa hyväksyntää";

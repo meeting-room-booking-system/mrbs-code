@@ -639,6 +639,42 @@ table.dwm_main {
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
+.dwm_main .booked a.saving {
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.dwm_main .booked span.saving {
+  font-weight: bold;
+}
+
+.dwm_main .booked span.saving::after {
+  content: '...';
+}
+
+.dwm_main .booked span.saving,
+.dwm_main .booked span.saving::after {
+  z-index: 600;
+  animation-name: pulsate;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulsate {
+  from {
+    opacity: 0;
+  }
+  
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 .dwm_main tbody a {
   padding: 0.2em;
 }

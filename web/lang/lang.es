@@ -210,8 +210,6 @@ $vocab["max_per_year_area"]       = "El número máximo de reservas por año y p
 $vocab["max_per_future_area"]     = "El número máximo de reservas extraordinarias por usuario en este agrupamiento es";
 $vocab["skip_and_book"]           = "Ignorar y reservar";
 $vocab["skip_and_book_note"]      = "Adelante con la reserva, ignorando las entradas en conflicto";
-$vocab["changes_saved"]           = "Cambios guardados";
-
 
 // Used in pending.php
 $vocab["pending"]            = "Reserva en espera de ser aprobada";
