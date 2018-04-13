@@ -298,7 +298,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
   // $is_invalid specifies whether the slot actually exists or is one of the non-existent
   // slots in the transition to DST
     
-  global $main_cell_height, $main_table_cell_border_width;
+  global $main_table_cell_border_width;
   global $area, $year, $month, $timetohighlight;
   global $enable_periods, $times_along_top, $show_plus_link;
   global $approval_enabled, $confirmation_enabled;
@@ -327,7 +327,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     $html .= "<table>\n";
     $html .= "<tbody>\n";
     
-    $row_height = $main_cell_height - (($n_bookings-1) * $main_table_cell_border_width);   // subtract the borders (first row has no top border)
+    $row_height = 500;  // STUPID VALUE TO SHOW THAT THIS NEEDS TO BE REWRITTEN!!!!
     $row_height = $row_height/$n_bookings;  // split what's left between the bookings
     $row_height = (int) ceil($row_height);  // round up, so that (a) there's no empty space at the bottom
                                             // and (b) each stripe is at least 1 unit high
@@ -382,7 +382,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     
     // Now draw the maxi table
     $html .= "<div class=\"maxi\">\n";
-    $total_height = $n_bookings * $main_cell_height;
+    $total_height = $n_bookings * 500;  // STUPID VALUE TO SHOW THAT THIS NEEDS TO BE REWRITTEN
     $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
     $html .= "<div class=\"multiple_control\" " .
              "style =\"height: " . $total_height . "px; " .

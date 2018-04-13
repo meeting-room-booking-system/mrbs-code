@@ -1201,7 +1201,7 @@ init = function(args) {
             divBooking.css('visibility', 'hidden');
             divClone.css('z-index', '500')
                     .css('max-height', 'none')
-                    .css('min-height', '<?php echo $main_cell_height ?>px')
+                    .css('min-height', '<?php echo $main_cell_height ?>')
                     .addClass('clone')
                     <?php
                     // We use the inner dimensions of the parent rather than the outer dimensions

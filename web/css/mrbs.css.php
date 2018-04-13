@@ -545,7 +545,7 @@ table.dwm_main {
 }
 
 .dwm_main th, .dwm_main td {
-  height: 1.5em;
+  height: <?php echo $main_cell_height ?>;
 }
 
 .dwm_main td {
@@ -930,15 +930,15 @@ div.mini, div.maxi {position: relative}     /* establish a relative position for
 div.multiple_control {
     display: none;       /* will be over-ridden by JavaScript if enabled */
     position: absolute; z-index: 20;
-    width: <?php echo $main_cell_height ?>px;
+    width: <?php echo $main_cell_height ?>;
     text-align: center;
     padding: 0;
     border-right: <?php echo $main_table_cell_border_width . "px solid " . $main_table_body_v_border_color ?>;
     background-color: <?php echo $multiple_control_color ?>}
 .mini div.multiple_control {                /* heights for maxi are set using in-line styles */
-    height: <?php echo $main_cell_height ?>px;
-    max-height: <?php echo $main_cell_height ?>px;
-    min-height: <?php echo $main_cell_height ?>px}
+    height: <?php echo $main_cell_height ?>;
+    max-height: <?php echo $main_cell_height ?>;
+    min-height: <?php echo $main_cell_height ?>}
 div:hover.multiple_control {cursor: pointer}
 .multiple_booking table {height: 100%; width: 100%; border-spacing: 0; border-collapse: collapse}
 .multiple_booking td {border-left: 0}
@@ -957,7 +957,7 @@ div:hover.multiple_control {cursor: pointer}
 .js div.multiple_control {
     display: block;   /* if JavaScript is enabled then we want to see the JavaScript controls */
   }
-.js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height + $main_table_cell_border_width + 2 ?>px}
+.js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height ?>}
 
 div.div_select {
   position: absolute;
