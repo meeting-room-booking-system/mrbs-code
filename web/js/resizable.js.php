@@ -1200,7 +1200,6 @@ init = function(args) {
             var divClone = divBooking.clone();
             divBooking.css('visibility', 'hidden');
             divClone.css('z-index', '500')
-                    .css('background-color', $(this).css('background-color'))
                     .css('max-height', 'none')
                     .css('min-height', '<?php echo $main_cell_height ?>px')
                     .addClass('clone')
