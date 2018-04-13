@@ -137,8 +137,8 @@ function redrawClones(table)
   table.find('div.clone').each(function() {
       var clone = $(this);
       var original = clone.prev();
-      clone.width(original.outerWidth())
-           .height(original.outerHeight());
+      clone.outerWidth(original.outerWidth())
+           .outerHeight(original.outerHeight());
     });
 }
         
@@ -1200,9 +1200,6 @@ init = function(args) {
             var divClone = divBooking.clone();
             divBooking.css('visibility', 'hidden');
             divClone.css('z-index', '500')
-                    .css('position', 'absolute')
-                    .css('top', '0')
-                    .css('left', '0')
                     .css('background-color', $(this).css('background-color'))
                     .css('max-height', 'none')
                     .css('min-height', '<?php echo $main_cell_height ?>px')

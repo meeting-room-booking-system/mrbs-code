@@ -620,7 +620,8 @@ table.dwm_main {
 }
 
 
-.dwm_main a {
+.dwm_main a, 
+.dwm_main .booked span.saving {
   display: inline-block;
   height: 100%;
   width: 100%;
@@ -630,17 +631,21 @@ table.dwm_main {
   hyphens: auto;
 }
 
-.dwm_main .booked a {
+.dwm_main .booked a,
+.dwm_main .booked span.saving {
   position: absolute;
   top: 0;
   left: 0;
   overflow: hidden;
+}
+
+.dwm_main .booked a {
   box-sizing: border-box;
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
 .dwm_main .booked a.saving {
-  opacity: 0.1;
+  opacity: 0.3;
   pointer-events: none;
 }
 
