@@ -1007,22 +1007,22 @@ init = function(args) {
               ?>
           
               <?php // left edge ?>
-              if (booking.position().left !== divResize.lastRectangle.w)
+              if (sides.w)
               {
                 snapToGrid(tableData, booking, 'left');
               }
               <?php // right edge ?>
-              if ((booking.position().left + booking.outerWidth()) !== divResize.lastRectangle.e)
+              if (sides.e)
               {
                 snapToGrid(tableData, booking, 'right');
               }
               <?php // top edge ?>
-              if (booking.position().top !== divResize.lastRectangle.n)
+              if (sides.n)
               {
                 snapToGrid(tableData, booking, 'top');
               }
               <?php // bottom edge ?>
-              if ((booking.position().top + booking.outerHeight()) !== divResize.lastRectangle.s)
+              if (sides.s)
               {
                 snapToGrid(tableData, booking, 'bottom');
               }
