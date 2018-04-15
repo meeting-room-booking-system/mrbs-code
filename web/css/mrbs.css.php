@@ -636,6 +636,7 @@ table.dwm_main {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 500;
   overflow: hidden;
 }
 
@@ -646,6 +647,7 @@ table.dwm_main {
 
 .dwm_main .booked a.saving {
   opacity: 0.3;
+  color: transparent;
   pointer-events: none;
 }
 

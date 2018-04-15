@@ -97,23 +97,56 @@ function rectanglesOverlap(r1, r2)
             
 <?php
 // Check whether the rectangle (with sides n,s,e,w) overlaps any
-// of the booked slots in the table.
+// of the booked slots in the table.   Returns an array of overlapped
+// bookings.  stopAtFirst is an optional third parameter.  If true then
+// only the first overlap found will be returned.  Default false.
 ?>
-function overlapsBooked(rectangle, bookedMap)
+function overlapsBooked(rectangle, bookedMap, stopAtFirst)
 {
-  <?php
-  // Check each of the booked cells in turn to see if it overlaps
-  // the rectangle.  If it does return true immediately.
-  ?>
+  var result = [];
+
   for (var i=0; i<bookedMap.length; i++)
   {
     if (rectanglesOverlap(rectangle, bookedMap[i]))
     {
-      return true;
+      result.push(bookedMap[i]);
+      if (stopAtFirst)
+      {
+        break;
+      }
     }
   }
-  return false;
+  
+  return result;
 }
+
+
+<?php
+// Gets the side-most side of the array of rectangles.
+// side can be 'n', 's', 'e' or 'w'
+?>
+function getClosestSide(rectangles, side)
+{
+  var result = null;
+  
+  rectangles.forEach(function(rectangle) {
+      if (result === null)
+      {
+        result = rectangle[side];
+      }
+      else if ((side === 'e') || (side === 's'))
+      {
+        result = Math.max(result, rectangle[side]);
+      }
+      else
+      {
+        result = Math.min(result, rectangle[side]);
+      }
+    });
+    
+  return result;
+}
+
       
 <?php
 // Get the name of the data attribute in this jQuery object.
@@ -603,6 +636,7 @@ init = function(args) {
           table.find('td:visible').not('td.new, td.row_labels').each(function() {
               bookedMap.push(getSides($(this)));
             });
+          
           <?php // Apply a wrapper to turn off highlighting ?>
           table.wrap('<div class="resizing"><\/div>');
           var jqTarget = $(e.target);
@@ -701,8 +735,10 @@ init = function(args) {
           snapToGrid(tableData, box, 'left');
           <?php
           // If the new box overlaps a booked cell, then undo the changes
+          // We set stopAtFirst=true because we just want to know if there is
+          // *any* overlap.
           ?>
-          if (overlapsBooked(getSides(box), bookedMap))
+          if (overlapsBooked(getSides(box), bookedMap, true).length)
           {
             box.offset(oldBoxOffset)
                .width(oldBoxWidth)
@@ -833,28 +869,128 @@ init = function(args) {
             ?>
             var divResize = function (event, ui)
             {
-              if (divResize.origin === undefined)
+              var width,
+                  height,
+                  closest,
+                  rectangle = {},
+                  sides = {n: false, s: false, e: false, w: false};
+              
+              if (divResize.lastRectangle === undefined)
               {
-                divResize.origin = elBooking.offsetRound();
-                divResize.lastPosition = $.extend({}, elClone.position());
-                divResize.lastSize = {width: elClone.outerWidth(),
-                                      height: elClone.outerHeight()};
+                divResize.lastRectangle = {
+                    n: original.offset().top,
+                    s: original.offset().top + original.outerHeight(),
+                    w: original.offset().left,
+                    e: original.offset().left + original.outerWidth()
+                  };
+              }
+ 
+              <?php
+              // Get the sides of the desired resired rectangle and also the direction(s)
+              // of resize.  Use Math.round to avoid problems with floats.
+              ?>
+              if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
+              {
+                rectangle.n = original.offset().top;
+              }
+              else
+              {
+                rectangle.n = event.pageY;
+                sides.n = true;
+              }
+              
+              if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
+              {
+                rectangle.w = original.offset().left;
+              }
+              else
+              {
+                rectangle.w = event.pageX;
+                sides.w = true;
+              }
+              
+              if (Math.round((ui.position.top + ui.size.height) - 
+                             (ui.originalPosition.top + ui.originalSize.height)) === 0)
+              {
+                rectangle.s = original.offset().top + ui.size.height;
+              }
+              else
+              {
+                rectangle.s = event.pageY;
+                sides.s = true;
+              }
+              
+              if (Math.round((ui.position.left + ui.size.width) -
+                             (ui.originalPosition.left + ui.originalSize.width)) === 0)
+              {
+                rectangle.e = original.offset().left + ui.size.width;
+              }
+              else
+              {
+                rectangle.e = event.pageX;
+                sides.e = true;
+              }
+              
+              var overlappedElements = overlapsBooked(rectangle, bookedMap);
+              
+              if (overlappedElements.length)
+              {
+                if (sides.n)
+                {
+                  closest = getClosestSide(overlappedElements, 's');
+                  if (event.pageY <= closest)
+                  {
+                    ui.position.top = closest - original.offset().top;
+                    booking.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
+                  }
+                  else
+                  {
+                    booking.resizable('option', 'maxHeight', null);
+                  }
+                }
+                
+                if (sides.w)
+                {
+                  closest = getClosestSide(overlappedElements, 'e');
+                  if (event.pageX <= closest)
+                  {
+                    ui.position.left = closest - original.offset().left + <?php echo $main_table_cell_border_width ?>;
+                    booking.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
+                  }
+                  else
+                  {
+                    booking.resizable('option', 'maxWidth', null);
+                  }
+                }
+                
+                if (sides.s)
+                {
+                  closest = getClosestSide(overlappedElements, 'n');
+                  if (event.pageY >= closest)
+                  {
+                    booking.resizable('option', 'maxHeight', closest - original.offset().top);
+                  }
+                  else
+                  {
+                    booking.resizable('option', 'maxHeight', null);
+                  }
+                }
+                
+                if (sides.e)
+                {
+                  closest = getClosestSide(overlappedElements, 'w');
+                  if (event.pageX >= closest)
+                  {
+                    booking.resizable('option', 'maxWidth', closest - original.offset().left);
+                  }
+                  else
+                  {
+                    booking.resizable('option', 'maxWidth', null);
+                  }
+                }
               }
 
-              var rectangle = {};
-              rectangle.n = Math.round(divResize.origin.top + elClone.position().top);
-              rectangle.w = Math.round(divResize.origin.left + elClone.position().left);
-              rectangle.s = rectangle.n + Math.round(elClone.outerHeight());
-              rectangle.e = rectangle.w + Math.round(elClone.outerWidth());
-
-              if (overlapsBooked(rectangle, bookedMap))
-              {
-                elClone.resizable("disable");
-              }
-              else if (elClone.resizable('option', 'disabled'))
-              {
-                elClone.resizable("enable");
-              }
+              
               <?php
               // Check to see if any of the four sides of the div have moved since the last time
               // and if so, see if they've got close enough to the next boundary that we can snap
@@ -862,31 +998,29 @@ init = function(args) {
               ?>
           
               <?php // left edge ?>
-              if (elClone.position().left !== divResize.lastPosition.left)
+              if (booking.position().left !== divResize.lastRectangle.w)
               {
-                snapToGrid(tableData, elClone, 'left');
+                snapToGrid(tableData, booking, 'left');
               }
               <?php // right edge ?>
-              if ((elClone.position().left + elClone.outerWidth()) !== (divResize.lastPosition.left + divResize.lastSize.width))
+              if ((booking.position().left + booking.outerWidth()) !== divResize.lastRectangle.e)
               {
-                snapToGrid(tableData, elClone, 'right');
+                snapToGrid(tableData, booking, 'right');
               }
               <?php // top edge ?>
-              if (elClone.position().top !== divResize.lastPosition.top)
+              if (booking.position().top !== divResize.lastRectangle.n)
               {
-                snapToGrid(tableData, elClone, 'top');
+                snapToGrid(tableData, booking, 'top');
               }
               <?php // bottom edge ?>
-              if ((elClone.position().top + elClone.outerHeight()) !== (divResize.lastPosition.top + divResize.lastSize.height))
+              if ((booking.position().top + booking.outerHeight()) !== divResize.lastRectangle.s)
               {
-                snapToGrid(tableData, elClone, 'bottom');
+                snapToGrid(tableData, booking, 'bottom');
               }
-            
-              highlightRowLabels(table, tableData, elClone);
-            
-              divResize.lastPosition = $.extend({}, elClone.position());
-              divResize.lastSize = {width: elClone.outerWidth(),
-                                    height: elClone.outerHeight()};
+                
+              divResize.lastRectangle = $.extend({}, rectangle);
+              highlightRowLabels(table, tableData, booking);
+              
             };  <?php // divResize ?>
         
         
@@ -902,30 +1036,35 @@ init = function(args) {
               ?>
               table.wrap('<div class="resizing"><\/div>');
               <?php
-              // Remove the constraint on the max width of the clone.  (We've had
-              // to keep it there up until now because otherwise the div is 
-              // sometimes 1px too wide.  Don't quite understand why - something to do
-              // with rounding)
+              // Keep a copy of the original booking so that we can compare the new
+              // booking to it.  Then remove the constraints on the booking so that
+              // it can be resized.
               ?>
-              elClone.css('max-width', 'none');
+              original = booking.clone()
+                                .css('visibility', 'hidden')
+                                .insertAfter(booking);
+                                
+              booking.css({'min-height': '<?php echo $main_cell_height ?>',
+                           'max-height': 'none'});
               <?php
               // Add an outline to the original booking so that we can see where it
               // was.   The width and height are 2 pixels short of the original to allow
               // for a 1 pixel border all round.
               ?>
               $('<div class="outline"><\/div>')
-                  .width(elClone.outerWidth() - 2)
-                  .height(elClone.outerHeight() - 2)
+                  .width(booking.outerWidth() - 2)
+                  .height(booking.outerHeight() - 2)
                   .appendTo($('div.resizing'))
-                  .offset(elClone.offsetRound());
+                  .offset(booking.offsetRound());
               <?php
               // Build the map of booked cells, excluding this cell (because we're
               // allowed to be in our own cell.   (We select just the visible cells
               // because there could be hidden days).
               ?>
-              table.find('td:visible').not('td.new, td.row_labels').not(elBooking.closest('td')).each(function() {
+              table.find('td:visible').not('td.new, td.row_labels').not(booking.closest('td')).each(function() {
                   bookedMap.push(getSides($(this)));
                 });
+              
 
             };  <?php // divResizeStart ?>
         
@@ -938,34 +1077,33 @@ init = function(args) {
               <?php // Clear the map of booked cells ?>
               bookedMap = [];
           
-              if (elClone.resizable('option', 'disabled'))
+              if (booking.resizable('option', 'disabled'))
               { 
                 <?php
                 // If the resize was disabled then just restore the original position
                 ?>
-                elClone.resizable('enable')
-                        .offset(elBooking.offsetRound())
-                        .width(elBooking.outerWidth())
-                        .height(elBooking.outerHeight());
+                booking.resizable('enable')
+                        .offset(booking.offsetRound())
+                        .width(booking.outerWidth())
+                        .height(booking.outerHeight());
               }
-              else
-              {
-                <?php
-                // Snap the edges to the grid, regardless of where they are.
-                ?>
-                snapToGrid(tableData, elClone, 'left', true);
-                snapToGrid(tableData, elClone, 'right', true);
-                snapToGrid(tableData, elClone, 'top', true);
-                snapToGrid(tableData, elClone, 'bottom', true);
-              }
+
+              <?php
+              // Snap the edges to the grid, regardless of where they are.
+              ?>
+              snapToGrid(tableData, booking, 'left', true);
+              snapToGrid(tableData, booking, 'right', true);
+              snapToGrid(tableData, booking, 'top', true);
+              snapToGrid(tableData, booking, 'bottom', true);
+
           
               <?php // Remove the outline ?>
               $('div.outline').remove();
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
           
-              var r1 = getSides(elBooking);
-              var r2 = getSides(elClone);
+              var r1 = getSides(original);
+              var r2 = getSides(booking);
               if (rectanglesIdentical(r1, r2))
               {
                 turnOnPageRefresh();
@@ -980,11 +1118,11 @@ init = function(args) {
                             ajax: 1, 
                             commit: 1};
                 <?php // get the booking id and type ?>
-                data.id = elClone.data('id');
-                data.type = elClone.data('type');
+                data.id = booking.data('id');
+                data.type = booking.data('type');
                 <?php // get the other parameters ?>
-                var oldParams = getBookingParams(table, tableData, elBooking);
-                var newParams = getBookingParams(table, tableData, elClone);
+                var oldParams = getBookingParams(table, tableData, original);
+                var newParams = getBookingParams(table, tableData, booking);
                 if (newParams.seconds !== undefined)
                 {
                   <?php
@@ -1047,9 +1185,8 @@ init = function(args) {
                 // is inserted after the elemement rather than appended, because if it's a child
                 // then any opacity rule that is applied to the parent will also apply to the child.
                 ?>
-                elClone.empty()
-                        .addClass('saving')
-                        .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
+                booking.addClass('saving')
+                       .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
 
                 $.post('edit_entry_handler.php',
                        data,
@@ -1070,9 +1207,9 @@ init = function(args) {
                           }
                           else
                           {
-                            elClone.offset(elBooking.offsetRound())
-                                    .width(elBooking.outerWidth())
-                                    .height(elBooking.outerHeight());
+                            booking.offset(original.offsetRound())
+                                     .width(original.outerWidth())
+                                     .height(original.outerHeight());
                             var alertMessage = '';
                             if (result.conflicts.length > 0)
                             {
@@ -1196,28 +1333,17 @@ init = function(args) {
               }
             }
             var handles = aHandles.join(',');
-            var elBooking = $(this).children('a');
-            var elClone = elBooking.clone();
-            elBooking.css('visibility', 'hidden');
-            elClone.css('z-index', '500')
-                    .css('max-height', 'none')
-                    .css('min-height', '<?php echo $main_cell_height ?>')
-                    .addClass('clone')
-                    <?php
-                    // We use the inner dimensions of the parent rather than the outer dimensions
-                    // of this element in case this element doesn't fill the whole cell - which
-                    // for some reason it doesn't always when clipping is turned off in MRBS.
-                    ?>
-                    .width(elBooking.parent().innerWidth())
-                    .height(elBooking.parent().innerHeight());
+            var booking = $(this).children('a');
+            var original;
+            
             if (handles)
             {
-              elClone.resizable({handles: handles,
-                                  resize: divResize,
-                                  start: divResizeStart,
-                                  stop: divResizeStop});
+              booking.resizable({handles: handles,
+                                 resize: divResize,
+                                 start: divResizeStart,
+                                 stop: divResizeStop});
             }
-            elClone.appendTo($(this));
+            
             $(this).css('background-color', 'transparent');
           });
                               
