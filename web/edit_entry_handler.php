@@ -570,7 +570,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
 
 // If we're committing this booking, get the start day/month/year and
 // make them the current day/month/year
-if ($commit)
+if (!$ajax || $commit)
 {
   $day = $start_day;
   $month = $start_month;
@@ -615,9 +615,7 @@ if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkd
 }
 
 // Now construct the new query string
-$returl .= '?year='  . $start_year .
-           '&month=' . $start_month .
-           '&day='   . $start_day;
+$returl .= "?year=$year&month=$month&day=$day";
 
 // If the old sticky room is one of the rooms requested for booking, then don't change the sticky room.
 // Otherwise change the sticky room to be one of the new rooms.
