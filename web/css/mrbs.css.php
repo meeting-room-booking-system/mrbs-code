@@ -646,7 +646,7 @@ table.dwm_main {
 }
 
 .dwm_main .booked a.saving {
-  opacity: 0.3;
+  opacity: 0.4;
   color: transparent;
   pointer-events: none;
 }
@@ -656,7 +656,7 @@ table.dwm_main {
 }
 
 .dwm_main .booked span.saving::after {
-  content: '...';
+  content: '\002026'; <?php // HORIZONTAL ELLIPSIS ?>
 }
 
 .dwm_main .booked span.saving,
