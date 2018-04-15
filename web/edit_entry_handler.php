@@ -625,7 +625,9 @@ if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkd
 }
 
 // Now construct the new query string
-$returl .= "?year=$year&month=$month&day=$day";
+$returl .= '?year='  . $start_year .
+           '&month=' . $start_month .
+           '&day='   . $start_day;
 
 // If the old sticky room is one of the rooms requested for booking, then don't change the sticky room.
 // Otherwise change the sticky room to be one of the new rooms.
