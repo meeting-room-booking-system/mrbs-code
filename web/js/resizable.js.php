@@ -1204,7 +1204,6 @@ init = function(args) {
                 $.post('edit_entry_handler.php',
                        data,
                        function(result) {
-                          return;
                           if (result.valid_booking)
                           {
                             <?php
