@@ -270,6 +270,7 @@ function getTableData(table, tableData)
       tableData.y.data.push({coord: $(this).offsetRound().top + $(this).outerHeight(),
                              value: value});
     });
+    
 }
         
         
@@ -347,16 +348,24 @@ function snapToGrid(tableData, el, side, force)
 
   for (var i=0; i<(data.length -1); i++)
   {
-    topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
+    topLeft = data[i].coord;
     bottomRight = data[i+1].coord;
+    <?php
+    // Allow for the vertical border.  Note that there are no horizontal borders.
+    ?>
+    if (side === 'left')
+    {
+      topLeft += <?php echo $main_table_cell_border_width ?>;
+      bottomRight += <?php echo $main_table_cell_border_width ?>;
+    }
     
     gapTopLeft = thisCoord - topLeft;
     gapBottomRight = bottomRight - thisCoord;
             
-    if (((gapTopLeft>0) && (gapBottomRight>0)) ||
+    if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
         <?php // containment tests ?>
-        ((i===0) && (gapTopLeft<0)) ||
-        ((i===(data.length-2)) && (gapBottomRight<0)) )
+        ((i === 0) && (gapTopLeft < 0)) ||
+        ((i === (data.length-2)) && (gapBottomRight < 0)) )
     {
       gap = bottomRight - topLeft;
               
