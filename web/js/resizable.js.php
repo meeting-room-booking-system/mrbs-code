@@ -878,9 +878,7 @@ init = function(args) {
             ?>
             var divResize = function (event, ui)
             {
-              var width,
-                  height,
-                  closest,
+              var closest,
                   rectangle = {},
                   sides = {n: false, s: false, e: false, w: false};
               
@@ -942,7 +940,13 @@ init = function(args) {
               
               var overlappedElements = overlapsBooked(rectangle, bookedMap);
               
-              if (overlappedElements.length)
+              if (!overlappedElements.length)
+              {
+                <?php // No overlaps: remove any constraints ?>
+                booking.resizable('option', {maxHeight: null,
+                                             maxWidth: null});
+              }
+              else
               {
                 if (sides.n)
                 {
@@ -1007,22 +1011,22 @@ init = function(args) {
               ?>
           
               <?php // left edge ?>
-              if (sides.w)
+              if (booking.position().left !== divResize.lastRectangle.w)
               {
                 snapToGrid(tableData, booking, 'left');
               }
               <?php // right edge ?>
-              if (sides.e)
+              if ((booking.position().left + booking.outerWidth()) !== divResize.lastRectangle.e)
               {
                 snapToGrid(tableData, booking, 'right');
               }
               <?php // top edge ?>
-              if (sides.n)
+              if (booking.position().top !== divResize.lastRectangle.n)
               {
                 snapToGrid(tableData, booking, 'top');
               }
               <?php // bottom edge ?>
-              if (sides.s)
+              if ((booking.position().top + booking.outerHeight()) !== divResize.lastRectangle.s)
               {
                 snapToGrid(tableData, booking, 'bottom');
               }
