@@ -894,7 +894,9 @@ init = function(args) {
  
               <?php
               // Get the sides of the desired resired rectangle and also the direction(s)
-              // of resize.  Use Math.round to avoid problems with floats.
+              // of resize.  Note that the desired rectangle may be being moved in two
+              // directions at once (eg nw) if a corner has been grabbed.  Use Math.round
+              // to avoid problems with floats.
               ?>
               if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
               {
@@ -938,6 +940,12 @@ init = function(args) {
                 sides.e = true;
               }
               
+              
+              <?php
+              // Get all the bookings that the desired rectangle would overlap.  Note
+              // that it could overlap more than one othe booking, so we need to find them 
+              // all and then find the closest one.
+              ?>
               var overlappedElements = overlapsBooked(rectangle, bookedMap);
               
               if (!overlappedElements.length)
@@ -948,6 +956,11 @@ init = function(args) {
               }
               else
               {
+                <?php
+                // There is at least overlap, so for each direction that the booking is being
+                // resized, get the closest booking in that direction.  If there's an overlap
+                // then constrain the desired rectangle not to overlap.
+                ?>
                 if (sides.n)
                 {
                   closest = getClosestSide(overlappedElements, 's');
@@ -1007,7 +1020,8 @@ init = function(args) {
               <?php
               // Check to see if any of the four sides of the div have moved since the last time
               // and if so, see if they've got close enough to the next boundary that we can snap
-              // them to the grid
+              // them to the grid.   (Note: using the condition sides.w etc. doesn't seem to work
+              // properly for some reason - it will pull the other edge off the grid slightly).
               ?>
           
               <?php // left edge ?>
