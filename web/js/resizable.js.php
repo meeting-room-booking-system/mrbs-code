@@ -49,8 +49,8 @@ function getSides(jqObject)
   var sides = {};
   sides.n = jqObject.offsetRound().top;
   sides.w = jqObject.offsetRound().left;
-  sides.s = sides.n + jqObject.outerHeight();
-  sides.e = sides.w + jqObject.outerWidth();
+  sides.s = sides.n + parseFloat(jqObject.css('height'));
+  sides.e = sides.w + parseFloat(jqObject.css('width'));
   return sides;
 }
         
@@ -165,16 +165,6 @@ function getDataName(jqObject)
 }
         
         
-function redrawClones(table)
-{
-  table.find('.clone').each(function() {
-      var clone = $(this);
-      var original = clone.prev();
-      clone.outerWidth(original.outerWidth())
-           .outerHeight(original.outerHeight());
-    });
-}
-        
 function getTableData(table, tableData)
 {
   <?php 
@@ -244,7 +234,7 @@ function getTableData(table, tableData)
       {
         value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
       }
-      var edge = $(this).offsetRound().left + $(this).outerWidth();
+      var edge = $(this).offsetRound().left + parseFloat($(this).css('width'));
       tableData.x.data.push({coord: edge, value: value});
     });
 
@@ -267,7 +257,7 @@ function getTableData(table, tableData)
       {
         value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
       }
-      tableData.y.data.push({coord: $(this).offsetRound().top + $(this).outerHeight(),
+      tableData.y.data.push({coord: $(this).offsetRound().top + parseFloat($(this).css('height')),
                              value: value});
     });
     
@@ -327,8 +317,8 @@ function snapToGrid(tableData, el, side, force)
       
   elTop = el.offsetRound().top;
   elLeft = el.offsetRound().left;
-  elOuterWidth = el.outerWidth();
-  elOuterHeight = el.outerHeight();
+  elOuterWidth = parseFloat(el.css('width'));
+  elOuterHeight = parseFloat(el.css('height'));
   
   switch (side)
   {
@@ -456,8 +446,8 @@ function getBookingParams(table, tableData, el)
       
   cell.x.start = el.offsetRound().left;
   cell.y.start = el.offsetRound().top;
-  cell.x.end = cell.x.start + el.outerWidth();
-  cell.y.end = cell.y.start + el.outerHeight();
+  cell.x.end = cell.x.start + parseFloat(el.css('width'));
+  cell.y.end = cell.y.start + parseFloat(el.css('height'));
   for (axis in cell)
   {
     if (cell.hasOwnProperty(axis))
@@ -886,9 +876,9 @@ init = function(args) {
               {
                 divResize.lastRectangle = {
                     n: original.offset().top,
-                    s: original.offset().top + original.outerHeight(),
+                    s: original.offset().top + parseFloat(original.css('height')),
                     w: original.offset().left,
-                    e: original.offset().left + original.outerWidth()
+                    e: original.offset().left + parseFloat(original.css('width'))
                   };
               }
  
@@ -1030,7 +1020,7 @@ init = function(args) {
                 snapToGrid(tableData, booking, 'left');
               }
               <?php // right edge ?>
-              if ((booking.position().left + booking.outerWidth()) !== divResize.lastRectangle.e)
+              if ((booking.position().left + parseFloat(booking.css('width'))) !== divResize.lastRectangle.e)
               {
                 snapToGrid(tableData, booking, 'right');
               }
@@ -1040,7 +1030,7 @@ init = function(args) {
                 snapToGrid(tableData, booking, 'top');
               }
               <?php // bottom edge ?>
-              if ((booking.position().top + booking.outerHeight()) !== divResize.lastRectangle.s)
+              if ((booking.position().top + parseFloat(booking.css('height'))) !== divResize.lastRectangle.s)
               {
                 snapToGrid(tableData, booking, 'bottom');
               }
@@ -1075,14 +1065,13 @@ init = function(args) {
                            'max-height': 'none'});
               <?php
               // Add an outline to the original booking so that we can see where it
-              // was.   The width and height are 2 pixels short of the original to allow
-              // for a 1 pixel border all round.
+              // was.   
               ?>
               $('<div class="outline"><\/div>')
-                  .width(booking.outerWidth() - 2)
-                  .height(booking.outerHeight() - 2)
+                  .width(parseFloat(booking.css('width')))
+                  .height(parseFloat(booking.css('height')))
                   .appendTo($('div.resizing'))
-                  .offset(booking.offsetRound());
+                  .offset(booking.offset());
               <?php
               // Build the map of booked cells, excluding this cell (because we're
               // allowed to be in our own cell.   (We select just the visible cells
@@ -1111,10 +1100,10 @@ init = function(args) {
                 ?>
                 booking.resizable('enable')
                         .offset(booking.offsetRound())
-                        .width(booking.outerWidth())
-                        .height(booking.outerHeight());
+                        .width(parseFloat(booking.css('width')))
+                        .height(parseFloat(booking.css('height')));
               }
-
+              
               <?php
               // Snap the edges to the grid, regardless of where they are.
               ?>
@@ -1131,6 +1120,7 @@ init = function(args) {
           
               var r1 = getSides(original);
               var r2 = getSides(booking);
+              
               if (rectanglesIdentical(r1, r2))
               {
                 turnOnPageRefresh();
@@ -1234,8 +1224,8 @@ init = function(args) {
                           else
                           {
                             booking.offset(original.offsetRound())
-                                     .width(original.outerWidth())
-                                     .height(original.outerHeight());
+                                     .width(parseFloat(original.css('width')))
+                                     .height(parseFloat(original.css('height')));
                             var alertMessage = '';
                             if (result.conflicts.length > 0)
                             {
@@ -1436,7 +1426,6 @@ init = function(args) {
         // and re map the table
         ?>
         table = $('table.dwm_main').not('#month_main');
-        redrawClones(table);
         getTableData(table, tableData);
       }
     }, 50));

@@ -925,6 +925,9 @@ tr:nth-child(even) td.row_labels {
 ?>
 div.outline {
   position: absolute !important;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
   border: 1px dotted <?php echo $header_back_color ?>;
   z-index: 700;
 }
