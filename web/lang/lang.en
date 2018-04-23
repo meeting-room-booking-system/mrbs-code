@@ -39,6 +39,7 @@ $vocab["monthafter"]         = "Go To Month After";
 $vocab["gotothismonth"]      = "Go To This Month";
 $vocab["no_rooms_for_area"]  = "No rooms defined for this area";
 $vocab["saving"]             = "Saving";
+$vocab["week_number"]        = "Week %s | ";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";

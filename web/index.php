@@ -284,7 +284,8 @@ function get_calendar_nav($view, $year, $month, $day, $area, $room, $hidden=fals
 
 function get_date_heading($view, $year, $month, $day)
 {
-  global $strftime_format, $display_timezone, $weekstarts;
+  global $strftime_format, $display_timezone,
+         $weekstarts, $mincals_week_numbers;
   
   $html = '';
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -298,6 +299,15 @@ function get_date_heading($view, $year, $month, $day)
       break;
       
     case 'week':
+      // Display the week number if required, provided the week starts on Monday,
+      // otherwise it's spanning two ISO weeks and doesn't make sense.
+      if ($mincals_week_numbers && ($weekstarts == 1))
+      {
+        $html .= '<span class="week_number">' .
+                 get_vocab('week_number', date('W', $time)) .
+                 '</span>';
+      }
+      // Then display the actual dates
       $day_of_week = date('w', $time);
       $our_day_of_week = ($day_of_week + 7 - $weekstarts) % 7;
       $start_of_week = mktime(12, 0, 0, $month, $day - $our_day_of_week, $year);
