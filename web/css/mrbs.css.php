@@ -722,6 +722,15 @@ td.new img, .new_booking img {
   padding: 4px 0 2px 0;
 }
 
+.resizable-helper {
+  box-sizing: border-box;
+  border: 3px solid red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 7000 !important;
+}
+
 
 <?php
 // The following section deals with the contents of the table cells in the month view.    It is designed
@@ -918,19 +927,6 @@ tr:nth-child(even) td.row_labels {
 .dwm_main .ui-resizable-sw {bottom: -2px; left: -1px}
 .dwm_main .ui-resizable-ne {top: -2px; right: -1px}
 .dwm_main .ui-resizable-nw {top: -2px; left: -1px}
-
-<?php
-// We make the position property !important because otherwise IE seems to give it an inline style
-// of position: relative for some unknown reason
-?>
-div.outline {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  box-sizing: border-box;
-  border: 1px dotted <?php echo $header_back_color ?>;
-  z-index: 700;
-}
 
 
 <?php

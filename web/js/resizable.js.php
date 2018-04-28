@@ -17,38 +17,13 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// function to return offset coordinates rounded to the nearest integer.
-// Standard jQuery .offset() can return coordinates with decimal parts because
-// it is not returning the rendered position but the calculated position.  If an
-// element or its parents have styling that will lead to non-integer dimensions,
-// for example by having a width of n%, then the offset returned will be non-integer.
-// However in this application we often want the actual rendered position to the
-// nearest pixel, which hopefully will be the rounded position.
-?>
-$.fn.offsetRound = function(coordinates) {
-    if (typeof coordinates === 'undefined')
-    {
-      var result = this.offset();
-      result.top = Math.round(result.top);
-      result.left = Math.round(result.left);
-      return result;
-    }
-    else
-    {
-      this.offset(coordinates);
-    }
-  };
-
-
-
-<?php
 // Get the sides of the rectangle represented by the jQuery object jqObject
 ?>
 function getSides(jqObject)
 {
   var sides = {};
-  sides.n = jqObject.offsetRound().top;
-  sides.w = jqObject.offsetRound().left;
+  sides.n = jqObject.offset().top;
+  sides.w = jqObject.offset().left;
   sides.s = sides.n + parseFloat(jqObject.css('height'));
   sides.e = sides.w + parseFloat(jqObject.css('width'));
   return sides;
@@ -207,7 +182,7 @@ function getTableData(table, tableData)
       {
         tableData.x.key = getDataName($(this));
       }
-      tableData.x.data.push({coord: $(this).offsetRound().left,
+      tableData.x.data.push({coord: $(this).offset().left,
                              value: $(this).data(tableData.x.key)});
     });
   <?php 
@@ -223,7 +198,7 @@ function getTableData(table, tableData)
         {
           value = tableData.x.data[0].value + resolution;
         }
-        var edge = $(this).offsetRound().left;
+        var edge = $(this).offset().left;
         tableData.x.data.unshift({coord: edge, value: value});
       });
   }
@@ -234,7 +209,7 @@ function getTableData(table, tableData)
       {
         value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
       }
-      var edge = $(this).offsetRound().left + parseFloat($(this).css('width'));
+      var edge = $(this).offset().left + parseFloat($(this).css('width'));
       tableData.x.data.push({coord: edge, value: value});
     });
 
@@ -247,7 +222,7 @@ function getTableData(table, tableData)
       {
         tableData.y.key = getDataName($(this));
       }
-      tableData.y.data.push({coord: $(this).offsetRound().top,
+      tableData.y.data.push({coord: $(this).offset().top,
                              value: $(this).data(tableData.y.key)});
     });
   <?php // and also get the bottom edge ?>
@@ -257,7 +232,7 @@ function getTableData(table, tableData)
       {
         value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
       }
-      tableData.y.data.push({coord: $(this).offsetRound().top + parseFloat($(this).css('height')),
+      tableData.y.data.push({coord: $(this).offset().top + parseFloat($(this).css('height')),
                              value: value});
     });
     
@@ -304,38 +279,23 @@ function outsideTable(tableData, p)
 // row heights and column widths - so we can't specify a grid in terms of a simple
 // array as required by the resize widget.
 ?>
-function snapToGrid(tableData, el, side, force)
+function snapToGrid(tableData, obj, side, force)
 {
+  var el = obj[0];
   var snapGap = (force) ? 100000: 30; <?php // px ?>
   var tolerance = 2; <?php //px ?>
-  var isLR = (side==='left') || (side==='right');
+  var isLR = (side === 'left') || (side === 'right');
  
   var data = (isLR) ? tableData.x.data : tableData.y.data;
   
-  var topLeft, bottomRight, elTop, elLeft, elOuterWidth, elOuterHeight, thisCoord,
+  var topLeft, bottomRight,
       gap, gapTopLeft, gapBottomRight;
-      
-  elTop = el.offsetRound().top;
-  elLeft = el.offsetRound().left;
-  elOuterWidth = parseFloat(el.css('width'));
-  elOuterHeight = parseFloat(el.css('height'));
   
-  switch (side)
-  {
-    case 'top':
-      thisCoord = elTop;
-      break;
-    case 'bottom':
-      thisCoord = elTop + elOuterHeight;
-      break;
-    case 'left':
-      thisCoord = elLeft;
-      break;
-    case 'right':
-      thisCoord = elLeft + elOuterWidth;
-      break;
-  }
-
+  var boundingRectangle = el.getBoundingClientRect(),
+      elOuterWidth = boundingRectangle.right - boundingRectangle.left,
+      elOuterHeight = boundingRectangle.bottom - boundingRectangle.top,
+      thisCoord = boundingRectangle[side];  
+  console.log(side);
   for (var i=0; i<(data.length -1); i++)
   {
     topLeft = data[i].coord;
@@ -351,7 +311,7 @@ function snapToGrid(tableData, el, side, force)
     
     gapTopLeft = thisCoord - topLeft;
     gapBottomRight = bottomRight - thisCoord;
-            
+    
     if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
         <?php // containment tests ?>
         ((i === 0) && (gapTopLeft < 0)) ||
@@ -364,9 +324,10 @@ function snapToGrid(tableData, el, side, force)
         switch (side)
         {
           case 'left':
-            el.offset({top: elTop, left: topLeft});
-            el.outerWidth(elOuterWidth + gapTopLeft);
+            obj.offset({top: boundingRectangle.top, left: topLeft});
+            el.style.width = (elOuterWidth + gapTopLeft) + 'px';
             break;
+            
           case 'right':
             <?php
             // Don't let the width become zero.   (We don't need to do
@@ -376,19 +337,21 @@ function snapToGrid(tableData, el, side, force)
             ?>
             if ((elOuterWidth - gapTopLeft) < tolerance)
             {
-              el.outerWidth(elOuterWidth + gapBottomRight);
+              el.style.width = (elOuterWidth + gapBottomRight) + 'px';
             }
             else
             {
-              el.outerWidth(elOuterWidth - gapTopLeft);
+              el.style.width = (elOuterWidth - gapTopLeft) + 'px';
             }
             break;
+            
           case 'top':
-            el.offset({top: topLeft, left: elLeft});
-            el.outerHeight(elOuterHeight + gapTopLeft);
+            obj.offset({top: topLeft, left: boundingRectangle.left});
+            el.style.height = (elOuterHeight + gapTopLeft) + 'px';
             break;
+            
           case 'bottom':
-            el.outerHeight(elOuterHeight - gapTopLeft);
+            el.style.height = (elOuterHeight - gapTopLeft) + 'px';
             break;
         }
         return;
@@ -401,24 +364,27 @@ function snapToGrid(tableData, el, side, force)
             <?php // Don't let the width become zero.  ?>
             if ((elOuterWidth - gapBottomRight) < tolerance)
             {
-              el.offset({top: elTop, left: topLeft});
-              el.outerWidth(elOuterWidth + gapTopLeft);
+              obj.offset({top: boundingRectangle.top, left: topLeft});
+              el.style.width = (elOuterWidth + gapTopLeft) + 'px';
             }
             else
             {
-              el.offset({top: elTop, left: bottomRight});
-              el.outerWidth(elOuterWidth - gapBottomRight);
+              obj.offset({top: boundingRectangle.top, left: bottomRight});
+              el.style.width = (elOuterWidth - gapBottomRight) + 'px';
             }
             break;
+            
           case 'right':
-            el.outerWidth(elOuterWidth + gapBottomRight);
+            el.style.width = (elOuterWidth + gapBottomRight) + 'px';
             break;
+            
           case 'top':
-            el.offset({top: bottomRight, left: elLeft});
-            el.outerHeight(elOuterHeight - gapBottomRight);
+            obj.offset({top: bottomRight, left: boundingRectangle.left});
+            el.style.height = (elOuterHeight - gapBottomRight) + 'px';
             break;
+            
           case 'bottom':
-            el.outerHeight(elOuterHeight + gapBottomRight);
+            el.style.height = (elOuterHeight + gapBottomRight) + 'px';
             break;
         }
         return;
@@ -444,8 +410,8 @@ function getBookingParams(table, tableData, el)
       i,
       axis;
       
-  cell.x.start = el.offsetRound().left;
-  cell.y.start = el.offsetRound().top;
+  cell.x.start = el.offset().left;
+  cell.y.start = el.offset().top;
   cell.x.end = cell.x.start + parseFloat(el.css('width'));
   cell.y.end = cell.y.start + parseFloat(el.css('height'));
   for (axis in cell)
@@ -540,8 +506,8 @@ var highlightRowLabels = function (table, tableData, el)
         highlightRowLabels.rows.push($(this).find('td.row_labels'));
       });
   }
-  var elStartRow = getRowNumber(tableData, el.offsetRound().top);
-  var elEndRow = getRowNumber(tableData, el.offsetRound().top + el.outerHeight());
+  var elStartRow = getRowNumber(tableData, el.offset().top);
+  var elEndRow = getRowNumber(tableData, el.offset().top + el.outerHeight());
   for (var i=0; i<highlightRowLabels.rows.length ; i++)
   {
     if (((elStartRow === null) || (elStartRow <= i)) && 
@@ -644,7 +610,7 @@ init = function(args) {
           {
             jqTarget = jqTarget.parent();
           }
-          downHandler.origin = jqTarget.offsetRound();
+          downHandler.origin = jqTarget.offset();
           downHandler.firstPosition = {x: e.pageX, y: e.pageY};
           <?php
           // Get the original link in case we need it later.    We can't be sure whether
@@ -693,7 +659,7 @@ init = function(args) {
       
       var moveHandler = function(e) {
           var box = downHandler.box;
-          var oldBoxOffset = box.offsetRound();
+          var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
         
@@ -866,7 +832,7 @@ init = function(args) {
             <?php
             // resize event callback function
             ?>
-            var divResize = function (event, ui)
+            var divResize = function(event, ui)
             {
               var closest,
                   rectangle = {},
@@ -875,10 +841,10 @@ init = function(args) {
               if (divResize.lastRectangle === undefined)
               {
                 divResize.lastRectangle = {
-                    n: original.offset().top,
-                    s: original.offset().top + parseFloat(original.css('height')),
-                    w: original.offset().left,
-                    e: original.offset().left + parseFloat(original.css('width'))
+                    n: ui.originalElement.offset().top,
+                    s: ui.originalElement.offset().top + parseFloat(ui.originalElement.css('height')),
+                    w: ui.originalElement.offset().left,
+                    e: ui.originalElement.offset().left + parseFloat(ui.originalElement.css('width'))
                   };
               }
  
@@ -890,7 +856,7 @@ init = function(args) {
               ?>
               if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
               {
-                rectangle.n = original.offset().top;
+                rectangle.n = ui.originalElement.offset().top;
               }
               else
               {
@@ -900,7 +866,7 @@ init = function(args) {
               
               if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
               {
-                rectangle.w = original.offset().left;
+                rectangle.w = ui.originalElement.offset().left;
               }
               else
               {
@@ -911,7 +877,7 @@ init = function(args) {
               if (Math.round((ui.position.top + ui.size.height) - 
                              (ui.originalPosition.top + ui.originalSize.height)) === 0)
               {
-                rectangle.s = original.offset().top + ui.size.height;
+                rectangle.s = ui.originalElement.offset().top + ui.size.height;
               }
               else
               {
@@ -922,7 +888,7 @@ init = function(args) {
               if (Math.round((ui.position.left + ui.size.width) -
                              (ui.originalPosition.left + ui.originalSize.width)) === 0)
               {
-                rectangle.e = original.offset().left + ui.size.width;
+                rectangle.e = ui.originalElement.offset().left + ui.size.width;
               }
               else
               {
@@ -956,7 +922,7 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 's');
                   if (event.pageY <= closest)
                   {
-                    ui.position.top = closest - original.offset().top;
+                    ui.position.top = closest - ui.originalElement.offset().top;
                     booking.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
                   }
                   else
@@ -970,7 +936,7 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 'e');
                   if (event.pageX <= closest)
                   {
-                    ui.position.left = closest - original.offset().left + <?php echo $main_table_cell_border_width ?>;
+                    ui.position.left = closest - ui.originalElement.offset().left + <?php echo $main_table_cell_border_width ?>;
                     booking.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
                   }
                   else
@@ -984,7 +950,7 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 'n');
                   if (event.pageY >= closest)
                   {
-                    booking.resizable('option', 'maxHeight', closest - original.offset().top);
+                    booking.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
                   }
                   else
                   {
@@ -997,7 +963,7 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 'w');
                   if (event.pageX >= closest)
                   {
-                    booking.resizable('option', 'maxWidth', closest - original.offset().left);
+                    booking.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
                   }
                   else
                   {
@@ -1015,27 +981,39 @@ init = function(args) {
               ?>
           
               <?php // left edge ?>
-              if (booking.position().left !== divResize.lastRectangle.w)
+              if (sides.w)
               {
-                snapToGrid(tableData, booking, 'left');
+                snapToGrid(tableData, ui.helper, 'left');
               }
               <?php // right edge ?>
-              if ((booking.position().left + parseFloat(booking.css('width'))) !== divResize.lastRectangle.e)
+              if (sides.e)
               {
-                snapToGrid(tableData, booking, 'right');
+                //snapToGrid(tableData, ui.helper, 'right');
               }
               <?php // top edge ?>
-              if (booking.position().top !== divResize.lastRectangle.n)
+              if (sides.n)
               {
-                snapToGrid(tableData, booking, 'top');
+                snapToGrid(tableData, ui.helper, 'top');
               }
               <?php // bottom edge ?>
-              if ((booking.position().top + parseFloat(booking.css('height'))) !== divResize.lastRectangle.s)
+              if (sides.s)
               {
-                snapToGrid(tableData, booking, 'bottom');
+                snapToGrid(tableData, ui.helper, 'bottom');
               }
+              
+
+              //snapToGrid(tableData, ui.helper, 'left');
+ 
+              //snapToGrid(tableData, ui.helper, 'right');
+
+              //  snapToGrid(tableData, ui.helper, 'top');
+
+               // snapToGrid(tableData, ui.helper, 'bottom');
+
                 
               divResize.lastRectangle = $.extend({}, rectangle);
+              return;
+              
               highlightRowLabels(table, tableData, booking);
               
             };  <?php // divResize ?>
@@ -1044,7 +1022,7 @@ init = function(args) {
             <?php
             // callback function called when the resize starts
             ?>
-            var divResizeStart = function (event, ui)
+            var divResizeStart = function(event, ui)
             {
               turnOffPageRefresh();
               <?php
@@ -1054,24 +1032,18 @@ init = function(args) {
               table.wrap('<div class="resizing"><\/div>');
               <?php
               // Keep a copy of the original booking so that we can compare the new
-              // booking to it.  Then remove the constraints on the booking so that
-              // it can be resized.
+              // booking to it.   Note that ui.originalSize cannot be used because of
+              // the jQuery UI Resizeable border-box bug.  Then remove the constraints
+              // on the booking so that it can be resized.
               ?>
-              original = booking.clone()
-                                .css('visibility', 'hidden')
-                                .insertAfter(booking);
+              console.log(ui.helper.css('box-sizing'));
+              divResizeStart.original = booking.clone()
+                                               .css('visibility', 'hidden')
+                                               .insertAfter(booking);
                                 
-              booking.css({'min-height': '<?php echo $main_cell_height ?>',
-                           'max-height': 'none'});
-              <?php
-              // Add an outline to the original booking so that we can see where it
-              // was.   
-              ?>
-              $('<div class="outline"><\/div>')
-                  .width(parseFloat(booking.css('width')))
-                  .height(parseFloat(booking.css('height')))
-                  .appendTo($('div.resizing'))
-                  .offset(booking.offset());
+              //booking.css({'min-height': '<?php echo $main_cell_height ?>',
+              //             'max-height': 'none'});
+
               <?php
               // Build the map of booked cells, excluding this cell (because we're
               // allowed to be in our own cell.   (We select just the visible cells
@@ -1088,8 +1060,10 @@ init = function(args) {
             <?php
             // callback function called when the resize stops
             ?>
-            var divResizeStop = function (event, ui)
+            var divResizeStop = function(event, ui)
             {          
+            
+              
               <?php // Clear the map of booked cells ?>
               bookedMap = [];
           
@@ -1099,7 +1073,7 @@ init = function(args) {
                 // If the resize was disabled then just restore the original position
                 ?>
                 booking.resizable('enable')
-                        .offset(booking.offsetRound())
+                        .offset(booking.offset())
                         .width(parseFloat(booking.css('width')))
                         .height(parseFloat(booking.css('height')));
               }
@@ -1107,26 +1081,29 @@ init = function(args) {
               <?php
               // Snap the edges to the grid, regardless of where they are.
               ?>
-              snapToGrid(tableData, booking, 'left', true);
-              snapToGrid(tableData, booking, 'right', true);
-              snapToGrid(tableData, booking, 'top', true);
-              snapToGrid(tableData, booking, 'bottom', true);
+              snapToGrid(tableData, ui.helper, 'left', true);
+              snapToGrid(tableData, ui.helper, 'right', true);
+              snapToGrid(tableData, ui.helper, 'top', true);
+              snapToGrid(tableData, ui.helper, 'bottom', true);
 
-          
-              <?php // Remove the outline ?>
-              $('div.outline').remove();
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
           
-              var r1 = getSides(original);
-              var r2 = getSides(booking);
+              var r1 = getSides(divResizeStart.original);
+              var r2 = getSides(ui.helper);
               
+              console.log(r1);
+              console.log(r2);
               if (rectanglesIdentical(r1, r2))
               {
                 turnOnPageRefresh();
+                console.log("Identical");
+                return;
               }
               else
               {
+                console.log("Not Identical");
+                return;
                 <?php 
                 // We've got a change to the booking, so we need to send an Ajax
                 // request to the server to make the new booking
@@ -1223,7 +1200,7 @@ init = function(args) {
                           }
                           else
                           {
-                            booking.offset(original.offsetRound())
+                            booking.offset(original.offset())
                                      .width(parseFloat(original.css('width')))
                                      .height(parseFloat(original.css('height')));
                             var alertMessage = '';
@@ -1355,9 +1332,11 @@ init = function(args) {
             if (handles)
             {
               booking.resizable({handles: handles,
-                                 resize: divResize,
+                                 helper: 'resizable-helper',
                                  start: divResizeStart,
+                                 resize: divResize,
                                  stop: divResizeStop});
+             
             }
             
             $(this).css('background-color', 'transparent');
