@@ -281,6 +281,12 @@ function outsideTable(tableData, p)
 ?>
 function snapToGrid(tableData, obj, side, force)
 {
+  <?php
+  // We use raw JavaScript rather than jQuery's .outerWidth(), because, at least in
+  // jQuery 3.3.1, using .outerWidth() as a setter when box-sizing is border-box and
+  // the browser zoom level is not 100%.   It's not great either as a getter, hence
+  // the use of getBoundingClientRect().
+  ?>
   var el = obj[0];
   var snapGap = (force) ? 100000: 30; <?php // px ?>
   var tolerance = 2; <?php //px ?>
