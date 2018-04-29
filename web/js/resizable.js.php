@@ -1069,10 +1069,9 @@ init = function(args) {
         <?php
         // Snap the edges to the grid, regardless of where they are.
         ?>
-        snapToGrid(tableData, ui.helper, 'left', true);
-        snapToGrid(tableData, ui.helper, 'right', true);
-        snapToGrid(tableData, ui.helper, 'top', true);
-        snapToGrid(tableData, ui.helper, 'bottom', true);
+        ['left', 'right', 'top', 'bottom'].forEach(function(side) {
+            snapToGrid(tableData, ui.helper, side, true);
+          });
 
         <?php // Remove the resizing wrapper so that highlighting comes back on ?>
         $('table.dwm_main').unwrap();
