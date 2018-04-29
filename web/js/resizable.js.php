@@ -1104,15 +1104,18 @@ init = function(args) {
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
               
+              <?php
+              // Tidy up after jQuery UI Resizable and remove hidden elements.   Not quite
+              // sure why they are left hanging around, but idf you don't do thisd then you
+              // are left with an extra <a> after each resize.
+              ?>
+              wrapper.find('a').filter(function() {
+                  return ($(this).css('visibility') == 'hidden');
+                }).remove();
+              
               var r1 = getSides(divResizeStart.original);
               var r2 = getSides(ui.helper);
                             console.log(r1);
-              console.log(r2);
-              
-              ui.size.width = 500;
-              ['top', 'bottom', 'left', 'right'].forEach(function(side) {
-                  //ui.originalElement[0].style[side] = r2[side] + 'px';
-                });
               
               if (rectanglesIdentical(r1, r2))
               {
@@ -1346,7 +1349,7 @@ init = function(args) {
               }
             }
             var handles = aHandles.join(',');
-            var booking = $(this).children('a');
+            var booking = $(this).find('a');
             var original;
             
             if (handles)
