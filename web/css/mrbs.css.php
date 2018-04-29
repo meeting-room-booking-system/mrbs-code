@@ -722,9 +722,13 @@ td.new img, .new_booking img {
   padding: 4px 0 2px 0;
 }
 
+<?php
+// We use outline instead of border because jQuery UI Resizable has problems with border-box.
+?>
 .resizable-helper {
   box-sizing: border-box;
-  border: 3px solid red;
+  outline: 4px solid red;
+  outline-offset: -4px;
   position: absolute;
   top: 0;
   left: 0;

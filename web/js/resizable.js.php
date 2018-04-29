@@ -17,16 +17,25 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// Get the sides of the rectangle represented by the jQuery object jqObject
+// Get the sides of the rectangle represented by the jQuery object jqObject.
+// The result object is indexed by 'n', 'w', 's' and 'e' as well as 'top',
+// 'left', 'bottom' and 'right'.
 ?>
 function getSides(jqObject)
 {
-  var sides = {};
-  sides.n = jqObject.offset().top;
-  sides.w = jqObject.offset().left;
-  sides.s = sides.n + parseFloat(jqObject.css('height'));
-  sides.e = sides.w + parseFloat(jqObject.css('width'));
-  return sides;
+  var boundingRectangle = jqObject[0].getBoundingClientRect(),
+      result = {};
+  
+  ['top', 'left', 'bottom', 'right'].forEach(function(side) {
+      result[side] = boundingRectangle[side];
+    });
+  
+  result.n = result.top;
+  result.w = result.left;
+  result.s = result.bottom;
+  result.e = result.right;
+  
+  return result;
 }
         
         
@@ -330,7 +339,11 @@ function snapToGrid(tableData, obj, side, force)
         switch (side)
         {
           case 'left':
-            obj.offset({top: boundingRectangle.top, left: topLeft});
+            if (force)
+            {
+              console.log('topleft: ' + el.style.top);
+            }
+            el.style.left = topLeft + 'px';
             el.style.width = (elOuterWidth + gapTopLeft) + 'px';
             break;
             
@@ -352,7 +365,7 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'top':
-            obj.offset({top: topLeft, left: boundingRectangle.left});
+            el.style.top = topLeft + 'px';
             el.style.height = (elOuterHeight + gapTopLeft) + 'px';
             break;
             
@@ -367,15 +380,27 @@ function snapToGrid(tableData, obj, side, force)
         switch (side)
         {
           case 'left':
+            if (force)
+            {
+              console.log('bottomright: ' + el.style.top);
+            }
             <?php // Don't let the width become zero.  ?>
             if ((elOuterWidth - gapBottomRight) < tolerance)
             {
-              obj.offset({top: boundingRectangle.top, left: topLeft});
+              if (force)
+              {
+                console.log('tl: ' + topLeft);
+              }
+              el.style.left = topLeft + 'px';
               el.style.width = (elOuterWidth + gapTopLeft) + 'px';
             }
             else
             {
-              obj.offset({top: boundingRectangle.top, left: bottomRight});
+              if (force)
+              {
+                console.log('br: ' + bottomRight);
+              }
+              el.style.left = bottomRight + 'px';
               el.style.width = (elOuterWidth - gapBottomRight) + 'px';
             }
             break;
@@ -385,7 +410,7 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'top':
-            obj.offset({top: bottomRight, left: boundingRectangle.left});
+            el.style.top = bottomRight + 'px';
             el.style.height = (elOuterHeight - gapBottomRight) + 'px';
             break;
             
@@ -901,7 +926,8 @@ init = function(args) {
                 rectangle.e = event.pageX;
                 sides.e = true;
               }
-              
+
+              console.log(sides);
               
               <?php
               // Get all the bookings that the desired rectangle would overlap.  Note
@@ -912,12 +938,14 @@ init = function(args) {
               
               if (!overlappedElements.length)
               {
+                console.log("No overlap");
                 <?php // No overlaps: remove any constraints ?>
                 booking.resizable('option', {maxHeight: null,
                                              maxWidth: null});
               }
               else
               {
+                console.log("Overlap");
                 <?php
                 // There is at least overlap, so for each direction that the booking is being
                 // resized, get the closest booking in that direction.  If there's an overlap
@@ -994,7 +1022,7 @@ init = function(args) {
               <?php // right edge ?>
               if (sides.e)
               {
-                //snapToGrid(tableData, ui.helper, 'right');
+                snapToGrid(tableData, ui.helper, 'right');
               }
               <?php // top edge ?>
               if (sides.n)
@@ -1007,17 +1035,8 @@ init = function(args) {
                 snapToGrid(tableData, ui.helper, 'bottom');
               }
               
-
-              //snapToGrid(tableData, ui.helper, 'left');
- 
-              //snapToGrid(tableData, ui.helper, 'right');
-
-              //  snapToGrid(tableData, ui.helper, 'top');
-
-               // snapToGrid(tableData, ui.helper, 'bottom');
-
-                
               divResize.lastRectangle = $.extend({}, rectangle);
+              console.log(getSides(ui.helper));
               return;
               
               highlightRowLabels(table, tableData, booking);
@@ -1031,6 +1050,7 @@ init = function(args) {
             var divResizeStart = function(event, ui)
             {
               turnOffPageRefresh();
+              
               <?php
               // Add a wrapper so that we can disable the highlighting when we are
               // resizing (the flickering is a bit annoying)
@@ -1073,7 +1093,8 @@ init = function(args) {
               <?php // Clear the map of booked cells ?>
               bookedMap = [];
           
-              if (booking.resizable('option', 'disabled'))
+              //if (booking.resizable('option', 'disabled'))
+                if (false)
               { 
                 <?php
                 // If the resize was disabled then just restore the original position
@@ -1094,12 +1115,17 @@ init = function(args) {
 
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
-          
+              
               var r1 = getSides(divResizeStart.original);
               var r2 = getSides(ui.helper);
-              
-              console.log(r1);
+                            console.log(r1);
               console.log(r2);
+              
+              ui.size.width = 500;
+              ['top', 'bottom', 'left', 'right'].forEach(function(side) {
+                  //ui.originalElement[0].style[side] = r2[side] + 'px';
+                });
+              
               if (rectanglesIdentical(r1, r2))
               {
                 turnOnPageRefresh();
