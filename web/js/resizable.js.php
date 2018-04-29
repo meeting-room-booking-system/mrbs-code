@@ -1331,15 +1331,14 @@ init = function(args) {
             // Test each corner.  If we've got both the side handles then
             // add in the corner handle
             ?>
-            var corners = ['nw', 'ne', 'se', 'sw'];
-            for (var i=0; i<corners.length; i++)
-            {
-              if ((aHandles.indexOf(corners[i][0]) >= 0) &&
-                  (aHandles.indexOf(corners[i][1]) >= 0))
-              {
-                aHandles.push(corners[i]);
-              }
-            }
+            ['nw', 'ne', 'se', 'sw'].forEach(function(corner) {
+                if ((aHandles.indexOf(corner[0]) >= 0) &&
+                    (aHandles.indexOf(corner[1]) >= 0))
+                {
+                  aHandles.push(corner);
+                }
+              });
+            
             var handles = aHandles.join(',');
             var booking = $(this).find('a');
             var original;
