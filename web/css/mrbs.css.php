@@ -632,12 +632,18 @@ table.dwm_main {
 }
 
 .dwm_main .booked a,
+.dwm_main .booking-wrapper,
 .dwm_main .booked span.saving {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 50;
   overflow: hidden;
+}
+
+.dwm_main .booking-wrapper {
+  width: 100%;
+  height: 100%;
 }
 
 .dwm_main .booked a {
@@ -661,7 +667,7 @@ table.dwm_main {
 
 .dwm_main .booked span.saving,
 .dwm_main .booked span.saving::after {
-  z-index: 600;
+  z-index: 60;
   animation-name: pulsate;
   animation-duration: 2s;
   animation-timing-function: ease-in-out;
@@ -732,7 +738,7 @@ td.new img, .new_booking img {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 7000 !important;
+  z-index: 100 !important;
 }
 
 
@@ -922,7 +928,6 @@ tr:nth-child(even) td.row_labels {
 }
 
 
-.dwm_main .ui-resizable-handle {z-index: 1000}
 .dwm_main .ui-resizable-n {top: -1px}
 .dwm_main .ui-resizable-e {right: -1px}
 .dwm_main .ui-resizable-s {bottom: -1px}

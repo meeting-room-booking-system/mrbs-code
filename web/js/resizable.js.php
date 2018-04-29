@@ -940,7 +940,7 @@ init = function(args) {
               {
                 console.log("No overlap");
                 <?php // No overlaps: remove any constraints ?>
-                booking.resizable('option', {maxHeight: null,
+                wrapper.resizable('option', {maxHeight: null,
                                              maxWidth: null});
               }
               else
@@ -957,11 +957,11 @@ init = function(args) {
                   if (event.pageY <= closest)
                   {
                     ui.position.top = closest - ui.originalElement.offset().top;
-                    booking.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
+                    wrapper.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
                   }
                   else
                   {
-                    booking.resizable('option', 'maxHeight', null);
+                    wrapper.resizable('option', 'maxHeight', null);
                   }
                 }
                 
@@ -971,11 +971,11 @@ init = function(args) {
                   if (event.pageX <= closest)
                   {
                     ui.position.left = closest - ui.originalElement.offset().left + <?php echo $main_table_cell_border_width ?>;
-                    booking.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
+                    wrapper.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
                   }
                   else
                   {
-                    booking.resizable('option', 'maxWidth', null);
+                    wrapper.resizable('option', 'maxWidth', null);
                   }
                 }
                 
@@ -984,11 +984,11 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 'n');
                   if (event.pageY >= closest)
                   {
-                    booking.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
+                    wrapper.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
                   }
                   else
                   {
-                    booking.resizable('option', 'maxHeight', null);
+                    wrapper.resizable('option', 'maxHeight', null);
                   }
                 }
                 
@@ -997,11 +997,11 @@ init = function(args) {
                   closest = getClosestSide(overlappedElements, 'w');
                   if (event.pageX >= closest)
                   {
-                    booking.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
+                    wrapper.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
                   }
                   else
                   {
-                    booking.resizable('option', 'maxWidth', null);
+                    wrapper.resizable('option', 'maxWidth', null);
                   }
                 }
               }
@@ -1363,12 +1363,20 @@ init = function(args) {
             
             if (handles)
             {
-              booking.resizable({handles: handles,
+              <?php
+              // We have to wrap the bookings in a container because jQuery UI resizable
+              // has problems with border-box (see https://stackoverflow.com/questions/18344272).
+              // And we need border-box for the bookings because we are using padding on the
+              // bookings and we want 'width: 100%' and 'height: 100%' to fill the table-cell with
+              // the entire booking including content.
+              ?>
+              booking.wrap('<div class="booking-wrapper"></div>');
+              var wrapper = booking.parent();
+              wrapper.resizable({handles: handles,
                                  helper: 'resizable-helper',
                                  start: divResizeStart,
                                  resize: divResize,
                                  stop: divResizeStop});
-             
             }
             
             $(this).css('background-color', 'transparent');
