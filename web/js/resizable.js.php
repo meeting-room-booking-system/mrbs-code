@@ -835,6 +835,227 @@ init = function(args) {
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
+        
+        
+      <?php
+      // resize event callback function
+      ?>
+      var divResize = function(event, ui)
+      {
+        var closest,
+            rectangle = {},
+            sides = {n: false, s: false, e: false, w: false};
+        
+        if (divResize.lastRectangle === undefined)
+        {
+          divResize.lastRectangle = {
+              n: ui.originalElement.offset().top,
+              s: ui.originalElement.offset().top + parseFloat(ui.originalElement.css('height')),
+              w: ui.originalElement.offset().left,
+              e: ui.originalElement.offset().left + parseFloat(ui.originalElement.css('width'))
+            };
+        }
+
+        <?php
+        // Get the sides of the desired resired rectangle and also the direction(s)
+        // of resize.  Note that the desired rectangle may be being moved in two
+        // directions at once (eg nw) if a corner has been grabbed.  Use Math.round
+        // to avoid problems with floats.
+        ?>
+        if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
+        {
+          rectangle.n = ui.originalElement.offset().top;
+        }
+        else
+        {
+          rectangle.n = event.pageY;
+          sides.n = true;
+        }
+        
+        if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
+        {
+          rectangle.w = ui.originalElement.offset().left;
+        }
+        else
+        {
+          rectangle.w = event.pageX;
+          sides.w = true;
+        }
+        
+        if (Math.round((ui.position.top + ui.size.height) - 
+                       (ui.originalPosition.top + ui.originalSize.height)) === 0)
+        {
+          rectangle.s = ui.originalElement.offset().top + ui.size.height;
+        }
+        else
+        {
+          rectangle.s = event.pageY;
+          sides.s = true;
+        }
+        
+        if (Math.round((ui.position.left + ui.size.width) -
+                       (ui.originalPosition.left + ui.originalSize.width)) === 0)
+        {
+          rectangle.e = ui.originalElement.offset().left + ui.size.width;
+        }
+        else
+        {
+          rectangle.e = event.pageX;
+          sides.e = true;
+        }
+
+        console.log(sides);
+        
+        <?php
+        // Get all the bookings that the desired rectangle would overlap.  Note
+        // that it could overlap more than one othe booking, so we need to find them 
+        // all and then find the closest one.
+        ?>
+        var overlappedElements = overlapsBooked(rectangle, bookedMap);
+        
+        if (!overlappedElements.length)
+        {
+          console.log("No overlap");
+          <?php // No overlaps: remove any constraints ?>
+          ui.element.resizable('option', {maxHeight: null,
+                                          maxWidth: null});
+        }
+        else
+        {
+          console.log("Overlap");
+          <?php
+          // There is at least overlap, so for each direction that the booking is being
+          // resized, get the closest booking in that direction.  If there's an overlap
+          // then constrain the desired rectangle not to overlap.
+          ?>
+          if (sides.n)
+          {
+            closest = getClosestSide(overlappedElements, 's');
+            if (event.pageY <= closest)
+            {
+              ui.position.top = closest - ui.originalElement.offset().top;
+              ui.element.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxHeight', null);
+            }
+          }
+          
+          if (sides.w)
+          {
+            closest = getClosestSide(overlappedElements, 'e');
+            if (event.pageX <= closest)
+            {
+              ui.position.left = closest - ui.originalElement.offset().left + <?php echo $main_table_cell_border_width ?>;
+              ui.element.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxWidth', null);
+            }
+          }
+          
+          if (sides.s)
+          {
+            closest = getClosestSide(overlappedElements, 'n');
+            if (event.pageY >= closest)
+            {
+              ui.element.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxHeight', null);
+            }
+          }
+          
+          if (sides.e)
+          {
+            closest = getClosestSide(overlappedElements, 'w');
+            if (event.pageX >= closest)
+            {
+              ui.element.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxWidth', null);
+            }
+          }
+        }
+
+        
+        <?php
+        // Check to see if any of the four sides of the div have moved since the last time
+        // and if so, see if they've got close enough to the next boundary that we can snap
+        // them to the grid.   (Note: using the condition sides.w etc. doesn't seem to work
+        // properly for some reason - it will pull the other edge off the grid slightly).
+        ?>
+    
+        <?php // left edge ?>
+        if (sides.w)
+        {
+          snapToGrid(tableData, ui.helper, 'left');
+        }
+        <?php // right edge ?>
+        if (sides.e)
+        {
+          snapToGrid(tableData, ui.helper, 'right');
+        }
+        <?php // top edge ?>
+        if (sides.n)
+        {
+          snapToGrid(tableData, ui.helper, 'top');
+        }
+        <?php // bottom edge ?>
+        if (sides.s)
+        {
+          snapToGrid(tableData, ui.helper, 'bottom');
+        }
+        
+        divResize.lastRectangle = $.extend({}, rectangle);
+        console.log(getSides(ui.helper));
+        return;
+        
+        highlightRowLabels(table, tableData, booking);
+        
+      };  <?php // divResize ?>
+        
+        
+      <?php
+      // callback function called when the resize starts
+      ?>
+      var divResizeStart = function(event, ui)
+      {
+        turnOffPageRefresh();
+        
+        <?php
+        // Add a wrapper so that we can disable the highlighting when we are
+        // resizing (the flickering is a bit annoying)
+        ?>
+        table.wrap('<div class="resizing"><\/div>');
+        <?php
+        // Keep a copy of the original booking so that we can compare the new
+        // booking to it.   Note that ui.originalSize cannot be used because of
+        // the jQuery UI Resizeable border-box bug.  Then remove the constraints
+        // on the booking so that it can be resized.
+        ?>
+                          
+        //booking.css({'min-height': '<?php echo $main_cell_height ?>',
+        //             'max-height': 'none'});
+
+        <?php
+        // Build the map of booked cells, excluding this cell (because we're
+        // allowed to be in our own cell.   (We select just the visible cells
+        // because there could be hidden days).
+        ?>
+        table.find('td:visible')
+             .not('td.new, td.row_labels')
+             .not(ui.element.closest('td'))
+             .each(function() {
+            bookedMap.push(getSides($(this)));
+          });
+        
+      };  <?php // divResizeStart ?>
 
       
       <?php
@@ -860,227 +1081,10 @@ init = function(args) {
       ?>
       table.find('td.writable')
         .each(function() {
-            <?php
-            // resize event callback function
-            ?>
-            var divResize = function(event, ui)
-            {
-              var closest,
-                  rectangle = {},
-                  sides = {n: false, s: false, e: false, w: false};
-              
-              if (divResize.lastRectangle === undefined)
-              {
-                divResize.lastRectangle = {
-                    n: ui.originalElement.offset().top,
-                    s: ui.originalElement.offset().top + parseFloat(ui.originalElement.css('height')),
-                    w: ui.originalElement.offset().left,
-                    e: ui.originalElement.offset().left + parseFloat(ui.originalElement.css('width'))
-                  };
-              }
- 
-              <?php
-              // Get the sides of the desired resired rectangle and also the direction(s)
-              // of resize.  Note that the desired rectangle may be being moved in two
-              // directions at once (eg nw) if a corner has been grabbed.  Use Math.round
-              // to avoid problems with floats.
-              ?>
-              if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
-              {
-                rectangle.n = ui.originalElement.offset().top;
-              }
-              else
-              {
-                rectangle.n = event.pageY;
-                sides.n = true;
-              }
-              
-              if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
-              {
-                rectangle.w = ui.originalElement.offset().left;
-              }
-              else
-              {
-                rectangle.w = event.pageX;
-                sides.w = true;
-              }
-              
-              if (Math.round((ui.position.top + ui.size.height) - 
-                             (ui.originalPosition.top + ui.originalSize.height)) === 0)
-              {
-                rectangle.s = ui.originalElement.offset().top + ui.size.height;
-              }
-              else
-              {
-                rectangle.s = event.pageY;
-                sides.s = true;
-              }
-              
-              if (Math.round((ui.position.left + ui.size.width) -
-                             (ui.originalPosition.left + ui.originalSize.width)) === 0)
-              {
-                rectangle.e = ui.originalElement.offset().left + ui.size.width;
-              }
-              else
-              {
-                rectangle.e = event.pageX;
-                sides.e = true;
-              }
 
-              console.log(sides);
-              
-              <?php
-              // Get all the bookings that the desired rectangle would overlap.  Note
-              // that it could overlap more than one othe booking, so we need to find them 
-              // all and then find the closest one.
-              ?>
-              var overlappedElements = overlapsBooked(rectangle, bookedMap);
-              
-              if (!overlappedElements.length)
-              {
-                console.log("No overlap");
-                <?php // No overlaps: remove any constraints ?>
-                wrapper.resizable('option', {maxHeight: null,
-                                             maxWidth: null});
-              }
-              else
-              {
-                console.log("Overlap");
-                <?php
-                // There is at least overlap, so for each direction that the booking is being
-                // resized, get the closest booking in that direction.  If there's an overlap
-                // then constrain the desired rectangle not to overlap.
-                ?>
-                if (sides.n)
-                {
-                  closest = getClosestSide(overlappedElements, 's');
-                  if (event.pageY <= closest)
-                  {
-                    ui.position.top = closest - ui.originalElement.offset().top;
-                    wrapper.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
-                  }
-                  else
-                  {
-                    wrapper.resizable('option', 'maxHeight', null);
-                  }
-                }
-                
-                if (sides.w)
-                {
-                  closest = getClosestSide(overlappedElements, 'e');
-                  if (event.pageX <= closest)
-                  {
-                    ui.position.left = closest - ui.originalElement.offset().left + <?php echo $main_table_cell_border_width ?>;
-                    wrapper.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
-                  }
-                  else
-                  {
-                    wrapper.resizable('option', 'maxWidth', null);
-                  }
-                }
-                
-                if (sides.s)
-                {
-                  closest = getClosestSide(overlappedElements, 'n');
-                  if (event.pageY >= closest)
-                  {
-                    wrapper.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
-                  }
-                  else
-                  {
-                    wrapper.resizable('option', 'maxHeight', null);
-                  }
-                }
-                
-                if (sides.e)
-                {
-                  closest = getClosestSide(overlappedElements, 'w');
-                  if (event.pageX >= closest)
-                  {
-                    wrapper.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
-                  }
-                  else
-                  {
-                    wrapper.resizable('option', 'maxWidth', null);
-                  }
-                }
-              }
-
-              
-              <?php
-              // Check to see if any of the four sides of the div have moved since the last time
-              // and if so, see if they've got close enough to the next boundary that we can snap
-              // them to the grid.   (Note: using the condition sides.w etc. doesn't seem to work
-              // properly for some reason - it will pull the other edge off the grid slightly).
-              ?>
-          
-              <?php // left edge ?>
-              if (sides.w)
-              {
-                snapToGrid(tableData, ui.helper, 'left');
-              }
-              <?php // right edge ?>
-              if (sides.e)
-              {
-                snapToGrid(tableData, ui.helper, 'right');
-              }
-              <?php // top edge ?>
-              if (sides.n)
-              {
-                snapToGrid(tableData, ui.helper, 'top');
-              }
-              <?php // bottom edge ?>
-              if (sides.s)
-              {
-                snapToGrid(tableData, ui.helper, 'bottom');
-              }
-              
-              divResize.lastRectangle = $.extend({}, rectangle);
-              console.log(getSides(ui.helper));
-              return;
-              
-              highlightRowLabels(table, tableData, booking);
-              
-            };  <?php // divResize ?>
         
         
-            <?php
-            // callback function called when the resize starts
-            ?>
-            var divResizeStart = function(event, ui)
-            {
-              turnOffPageRefresh();
-              
-              <?php
-              // Add a wrapper so that we can disable the highlighting when we are
-              // resizing (the flickering is a bit annoying)
-              ?>
-              table.wrap('<div class="resizing"><\/div>');
-              <?php
-              // Keep a copy of the original booking so that we can compare the new
-              // booking to it.   Note that ui.originalSize cannot be used because of
-              // the jQuery UI Resizeable border-box bug.  Then remove the constraints
-              // on the booking so that it can be resized.
-              ?>
-              console.log(ui.helper.css('box-sizing'));
-              divResizeStart.original = booking.clone()
-                                               .css('visibility', 'hidden')
-                                               .insertAfter(booking);
-                                
-              //booking.css({'min-height': '<?php echo $main_cell_height ?>',
-              //             'max-height': 'none'});
 
-              <?php
-              // Build the map of booked cells, excluding this cell (because we're
-              // allowed to be in our own cell.   (We select just the visible cells
-              // because there could be hidden days).
-              ?>
-              table.find('td:visible').not('td.new, td.row_labels').not(booking.closest('td')).each(function() {
-                  bookedMap.push(getSides($(this)));
-                });
-              
-
-            };  <?php // divResizeStart ?>
         
         
             <?php
@@ -1104,18 +1108,12 @@ init = function(args) {
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
               
-              <?php
-              // Tidy up after jQuery UI Resizable and remove hidden elements.   Not quite
-              // sure why they are left hanging around, but idf you don't do thisd then you
-              // are left with an extra <a> after each resize.
-              ?>
-              wrapper.find('a').filter(function() {
-                  return ($(this).css('visibility') == 'hidden');
-                }).remove();
-              
-              var r1 = getSides(divResizeStart.original);
+              var r1 = {n: ui.originalPosition.top,
+                        w: ui.originalPosition.left,
+                        s: ui.originalPosition.top + ui.originalSize.height,
+                        e: ui.originalPosition.left + ui.originalSize.width};
+             
               var r2 = getSides(ui.helper);
-                            console.log(r1);
               
               if (rectanglesIdentical(r1, r2))
               {
