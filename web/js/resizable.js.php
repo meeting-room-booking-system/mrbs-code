@@ -1092,18 +1092,6 @@ init = function(args) {
               
               <?php // Clear the map of booked cells ?>
               bookedMap = [];
-          
-              //if (booking.resizable('option', 'disabled'))
-                if (false)
-              { 
-                <?php
-                // If the resize was disabled then just restore the original position
-                ?>
-                booking.resizable('enable')
-                        .offset(booking.offset())
-                        .width(parseFloat(booking.css('width')))
-                        .height(parseFloat(booking.css('height')));
-              }
               
               <?php
               // Snap the edges to the grid, regardless of where they are.
