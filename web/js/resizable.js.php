@@ -813,15 +813,15 @@ init = function(args) {
       <?php
       // resize event callback function
       ?>
-      var divResize = function(event, ui)
+      var resize = function(event, ui)
       {
         var closest,
             rectangle = {},
             sides = {n: false, s: false, e: false, w: false};
         
-        if (divResize.lastRectangle === undefined)
+        if (resize.lastRectangle === undefined)
         {
-          divResize.lastRectangle = {
+          resize.lastRectangle = {
               n: ui.originalElement.offset().top,
               s: ui.originalElement.offset().top + parseFloat(ui.originalElement.css('height')),
               w: ui.originalElement.offset().left,
@@ -981,21 +981,21 @@ init = function(args) {
           snapToGrid(tableData, ui.helper, 'bottom');
         }
         
-        divResize.lastRectangle = $.extend({}, rectangle);
+        resize.lastRectangle = $.extend({}, rectangle);
         
         // highlightRowLabels(table, tableData, booking);
         
-      };  <?php // divResize ?>
+      };  <?php // resize ?>
         
         
       <?php
       // callback function called when the resize starts
       ?>
-      var divResizeStart = function(event, ui)
+      var resizeStart = function(event, ui)
       {
         turnOffPageRefresh();
         
-        divResizeStart.oldParams = getBookingParams(table, tableData, ui.originalElement.find('a'));
+        resizeStart.oldParams = getBookingParams(table, tableData, ui.originalElement.find('a'));
         
         <?php
         // Add a wrapper so that we can disable the highlighting when we are
@@ -1024,13 +1024,13 @@ init = function(args) {
             bookedMap.push(getSides($(this)));
           });
         
-      };  <?php // divResizeStart ?>
+      };  <?php // resizeStart ?>
 
       
       <?php
       // callback function called when the resize stops
       ?>
-      var divResizeStop = function(event, ui)
+      var resizeStop = function(event, ui)
       {              
         <?php // Clear the map of booked cells ?>
         bookedMap = [];
@@ -1070,7 +1070,7 @@ init = function(args) {
           data.id = booking.data('id');
           data.type = booking.data('type');
           <?php // get the other parameters ?>
-          var oldParams = divResizeStart.oldParams;
+          var oldParams = resizeStart.oldParams;
           var newParams = getBookingParams(table, tableData, booking);
           if (newParams.seconds !== undefined)
           {
@@ -1182,7 +1182,7 @@ init = function(args) {
                  'json');
         }   <?php // if (rectanglesIdentical(r1, r2)) ?>
     
-      };  <?php // divResizeStop ?>
+      };  <?php // resizeStop ?>
             
       
       <?php
@@ -1320,9 +1320,9 @@ init = function(args) {
               booking.wrap('<div class="booking-wrapper"></div>');
               booking.parent().resizable({handles: handles,
                                           helper: 'resizable-helper',
-                                          start: divResizeStart,
-                                          resize: divResize,
-                                          stop: divResizeStop});
+                                          start: resizeStart,
+                                          resize: resize,
+                                          stop: resizeStop});
             }
             
             $(this).css('background-color', 'transparent');
