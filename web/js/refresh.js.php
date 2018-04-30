@@ -48,8 +48,6 @@ var refreshPage = function refreshPage() {
                    table = $('table.dwm_main');
                    table.empty();
                    table.html(result);
-                   createFloatingHeaders(table);
-                   updateTableHeaders(table);
                    window.clearInterval(intervalId);
                    intervalId = undefined;
                    table.trigger('load');

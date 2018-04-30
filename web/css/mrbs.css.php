@@ -821,13 +821,14 @@ foreach ($color_types as $type => $col)
   background-color: <?php echo $main_table_slot_private_type_color;?>;
 }
 
-/* For floating header in the day and week views */
-
-.floatingHeader {
-  position: fixed;
+.dwm_main thead th {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  z-index: 200;
   top: 0;
-  z-index: 2000;
-  display: none;
 }
 
 .dwm_main#month_main th.hidden_day     

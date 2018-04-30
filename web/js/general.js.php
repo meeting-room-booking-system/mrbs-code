@@ -163,85 +163,6 @@ var supportsDatalist = function supportsDatalist() {
            (window.HTMLDataListElement !== undefined);
   };
   
-<?php
-// Set up a cloned <thead> for use with floating headers
-?>
-var createFloatingHeaders = function createFloatingHeaders(tables) {
-    tables.each(function() {
-      var originalHeader = $('thead', this),
-          existingClone = $('.floatingHeader', this).first(),
-          clonedHeader;
-      <?php
-      // We need to know if there's already a clone, because we only need to create one
-      // if there isn't one already (otherwise we'll end up with millions of them).  If
-      // there already is a clone, all we need to do is adjust its width.
-      ?>
-      if (existingClone.length)
-      {
-        clonedHeader = existingClone;
-      }
-      else
-      {
-        clonedHeader = originalHeader.clone();
-        clonedHeader.addClass('floatingHeader');
-      }
-      <?php
-      // Now we need to set the width of the cloned header to equal the width of the original 
-      // header.   But we also need to set the widths of the header cells, because when they are
-      // not connected to the table body the constraints on the width are different and the columns
-      // may not line up.
-      //
-      // When calculating the width of the original cells we use getBoundingClientRect().width to
-      // avoid problems with IE which would otherwise round the widths.   But since
-      // getBoundingClientRect().width gives us the width including padding and borders (but not
-      // margins) we need to set the box-sizing model accordingly when setting the width.
-      //
-      // Note that these calculations assume border-collapse: separate.   If we were using 
-      // collapsed borders then we'd have to watch out for the fact that the borders are shared
-      // and then subtract half the border width (possibly on the inner cells only?).
-      ?>
-      clonedHeader
-          .css('width', originalHeader.width())
-          .find('th')
-              .css('box-sizing', 'border-box')
-              .css('width', function (i) {
-                  return originalHeader.find('th').get(i).getBoundingClientRect().width;
-                });
-      if (!existingClone.length)
-      {
-        clonedHeader.insertAfter(originalHeader);
-      }
-    });
-  };
-  
-
-<?php
-// Make the floating header visible or hidden depending on the vertical scroll
-// position.  We also need to take account of horizontal scroll
-?>
-var updateTableHeaders = function updateTableHeaders(tables) {
-    tables.each(function() {
-
-        var el             = $(this),
-            offset         = el.offset(),
-            scrollTop      = $(window).scrollTop(),
-            floatingHeader = $(".floatingHeader", this);
-            
-        if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height()))
-        {
-          floatingHeader.show();
-        } 
-        else
-        {
-          floatingHeader.hide();
-        }
-        <?php 
-        // Also need to adjust the horizontal position as the element
-        // has a fixed position
-        ?>
-        floatingHeader.css('left', offset.left - $(window).scrollLeft());
-    });
-  };
   
 <?php
 // =================================================================================
@@ -476,24 +397,13 @@ init = function(args) {
                });
     }
   });
-
-
-  var floatingTables = $('table#day_main, table#week_main');
-
-  createFloatingHeaders(floatingTables);
   
   $(window)
     <?php // Make resizing smoother by not redoing headers on every resize event ?>
     .resize(throttle(function() {
-        createFloatingHeaders(floatingTables);
-        updateTableHeaders(floatingTables);
         labels.width('auto');
         labels.width(getMaxWidth(labels));
-      }, 100))
-    .scroll(function() {
-        updateTableHeaders(floatingTables);
-      })
-    .trigger('scroll');
+      }, 100));
   
   <?php // Set up Ajax loading of new mini-calendars ?>
   var mincals = new Mincals();

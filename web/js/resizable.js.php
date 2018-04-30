@@ -173,9 +173,8 @@ function getTableData(table, tableData)
   tableData.x.data = [];
   <?php 
   // We need :visible because there might be hidden days 
-  // We need thead:first-child in case there are floating headers
   ?>
-  var columns = table.find('thead:first-child tr:first-child th:visible').not('.first_last');
+  var columns = table.find('thead tr:first-child th:visible').not('.first_last');
 
   <?php
   // If the table has direction rtl, as it may do if you're using a RTL language
@@ -577,7 +576,7 @@ init = function(args) {
   <?php
   // Resizable bookings work by creating an element which is a clone of the real booking
   // element and making it resizable.   We can't make the real element resizable
-  // because it is bound by the table cell walls (THIS ISN@T TRUE ANYMORE!).   So we give
+  // because it is bound by the table cell walls (THIS ISN'T TRUE ANYMORE!).   So we give
   // the clone an absolute position and a positive z-index.    We work out what
   // new booking the user is requesting by comparing the coordinates of the clone
   // with the table grid.   We also put the booking parameters (eg room id) as HTML5
@@ -593,9 +592,6 @@ init = function(args) {
   ?>
   $('table.dwm_main').not('#month_main').on('load', function() {
       var table = $(this);
-      
-      createFloatingHeaders(table);
-      updateTableHeaders(table);
       
       <?php // Don't do anything if this is an empty table ?>
       if (table.find('tbody').data('empty'))

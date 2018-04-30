@@ -101,7 +101,7 @@ $banner_border_width          = '0';  // (px)  border width for the outside of t
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
 $main_table_border_width      = '0';  // (px)  border width for the outside of the main day/week/month tables    
 $main_table_cell_border_width = '1';  // (px)  vertical border width for the cells of the main day/week/month tables
-$main_cell_height             = '1.5em'; // height of the cells in the main day/week tables
+$main_cell_height             = '1.5em';  // height of the cells in the main day/week tables
          
     
 // ***** FONTS ************************    
