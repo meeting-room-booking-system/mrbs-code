@@ -244,7 +244,7 @@ function getTableData(table, tableData)
       tableData.y.data.push({coord: $(this).offset().top + parseFloat($(this).css('height')),
                              value: value});
     });
-    
+  console.log(tableData);
 }
         
         
@@ -276,12 +276,10 @@ function outsideTable(tableData, p)
 }
         
 <?php
-// Given the element 'el', snap the side specified (can be 'left', 'right', 'top'
+// Given the jQuery object 'obj', snap the side specified (can be 'left', 'right', 'top'
 // or 'bottom') to the nearest grid line, if the side is within the snapping range.
 //
 // If force is true, then the side is snapped regardless of where it is.
-//
-// We also contain the resize within the set of bookable cells
 //
 // We have to provide our own snapToGrid function instead of using the grid
 // option in the jQuery UI resize widget because our table may not have uniform
@@ -290,27 +288,23 @@ function outsideTable(tableData, p)
 ?>
 function snapToGrid(tableData, obj, side, force)
 {
+  var el = obj[0],
+      snapGap = (force) ? 100000: 30, <?php // px ?>
+      tolerance = 2, <?php //px ?>
+      isLR = (side === 'left') || (side === 'right'),
+      data = (isLR) ? tableData.x.data : tableData.y.data,
+      topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
+  
   <?php
-  // We use raw JavaScript rather than jQuery's .outerWidth(), because, at least in
-  // jQuery 3.3.1, using .outerWidth() as a setter when box-sizing is border-box and
-  // the browser zoom level is not 100%.   It's not great either as a getter, hence
-  // the use of getBoundingClientRect().
+  // We use JavaScript's getBoundingClientRect() rather than jQuery for getting the
+  // size of the rectangle because there can be problems when box-sizing is border-box and
+  // the browser zoom level is not 100%.
   ?>
-  var el = obj[0];
-  var snapGap = (force) ? 100000: 30; <?php // px ?>
-  var tolerance = 2; <?php //px ?>
-  var isLR = (side === 'left') || (side === 'right');
- 
-  var data = (isLR) ? tableData.x.data : tableData.y.data;
-  
-  var topLeft, bottomRight,
-      gap, gapTopLeft, gapBottomRight;
-  
   var boundingRectangle = el.getBoundingClientRect(),
       elOuterWidth = boundingRectangle.right - boundingRectangle.left,
       elOuterHeight = boundingRectangle.bottom - boundingRectangle.top,
-      thisCoord = boundingRectangle[side];  
-  console.log(side);
+      thisCoord = boundingRectangle[side];
+  
   for (var i=0; i<(data.length -1); i++)
   {
     topLeft = data[i].coord;
@@ -320,13 +314,13 @@ function snapToGrid(tableData, obj, side, force)
     ?>
     if (side === 'left')
     {
-      topLeft += <?php echo $main_table_cell_border_width ?>;
-      bottomRight += <?php echo $main_table_cell_border_width ?>;
+      topLeft += <?php echo (int) $main_table_cell_border_width ?>;
+      bottomRight += <?php echo (int) $main_table_cell_border_width ?>;
     }
     
     gapTopLeft = thisCoord - topLeft;
     gapBottomRight = bottomRight - thisCoord;
-    
+
     if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
         <?php // containment tests ?>
         ((i === 0) && (gapTopLeft < 0)) ||
@@ -343,8 +337,8 @@ function snapToGrid(tableData, obj, side, force)
             {
               console.log('topleft: ' + el.style.top);
             }
-            el.style.left = topLeft + 'px';
-            el.style.width = (elOuterWidth + gapTopLeft) + 'px';
+            obj.offset({top: boundingRectangle.top, left: topLeft});
+            obj.outerWidth(elOuterWidth + gapTopLeft);
             break;
             
           case 'right':
@@ -356,21 +350,21 @@ function snapToGrid(tableData, obj, side, force)
             ?>
             if ((elOuterWidth - gapTopLeft) < tolerance)
             {
-              el.style.width = (elOuterWidth + gapBottomRight) + 'px';
+              obj.outerWidth(elOuterWidth + gapBottomRight);
             }
             else
             {
-              el.style.width = (elOuterWidth - gapTopLeft) + 'px';
+              obj.outerWidth(elOuterWidth - gapTopLeft);
             }
             break;
             
           case 'top':
-            el.style.top = topLeft + 'px';
-            el.style.height = (elOuterHeight + gapTopLeft) + 'px';
+            obj.offset({top: topLeft, left: boundingRectangle.left});
+            obj.outerHeight(elOuterHeight + gapTopLeft);
             break;
             
           case 'bottom':
-            el.style.height = (elOuterHeight - gapTopLeft) + 'px';
+            obj.outerHeight(elOuterHeight - gapTopLeft);
             break;
         }
         return;
@@ -382,7 +376,7 @@ function snapToGrid(tableData, obj, side, force)
           case 'left':
             if (force)
             {
-              console.log('bottomright: ' + el.style.top);
+              console.log('bottomright: ' + el.style.left);
             }
             <?php // Don't let the width become zero.  ?>
             if ((elOuterWidth - gapBottomRight) < tolerance)
@@ -391,8 +385,8 @@ function snapToGrid(tableData, obj, side, force)
               {
                 console.log('tl: ' + topLeft);
               }
-              el.style.left = topLeft + 'px';
-              el.style.width = (elOuterWidth + gapTopLeft) + 'px';
+              obj.offset({top: boundingRectangle.top, left: topLeft});
+              obj.outerWidth(elOuterWidth + gapTopLeft);
             }
             else
             {
@@ -400,22 +394,22 @@ function snapToGrid(tableData, obj, side, force)
               {
                 console.log('br: ' + bottomRight);
               }
-              el.style.left = bottomRight + 'px';
-              el.style.width = (elOuterWidth - gapBottomRight) + 'px';
+              obj.offset({top: boundingRectangle.top, left: bottomRight});
+              obj.outerWidth(elOuterWidth - gapBottomRight);
             }
             break;
             
           case 'right':
-            el.style.width = (elOuterWidth + gapBottomRight) + 'px';
+            obj.outerWidth(elOuterWidth + gapBottomRight);
             break;
             
           case 'top':
-            el.style.top = bottomRight + 'px';
-            el.style.height = (elOuterHeight - gapBottomRight) + 'px';
+            obj.offset({top: bottomRight, left: boundingRectangle.left});
+            obj.outerHeight(elOuterHeight - gapBottomRight);
             break;
             
           case 'bottom':
-            el.style.height = (elOuterHeight + gapBottomRight) + 'px';
+            obj.outerHeight(elOuterHeight + gapBottomRight);
             break;
         }
         return;
@@ -947,7 +941,7 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 'e');
             if (event.pageX <= closest)
             {
-              ui.position.left = closest - ui.originalElement.offset().left + <?php echo $main_table_cell_border_width ?>;
+              ui.position.left = closest - ui.originalElement.offset().left + <?php echo (int) $main_table_cell_border_width ?>;
               ui.element.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
             }
             else
@@ -1062,17 +1056,17 @@ init = function(args) {
       // callback function called when the resize stops
       ?>
       var divResizeStop = function(event, ui)
-      {          
+      {              
         <?php // Clear the map of booked cells ?>
         bookedMap = [];
         
         <?php
-        // Snap the edges to the grid, regardless of where they are.
+        // Snap the edges of the element being resized to the grid, regardless of where they are.
         ?>
         ['left', 'right', 'top', 'bottom'].forEach(function(side) {
-            snapToGrid(tableData, ui.helper, side, true);
+            snapToGrid(tableData, ui.element, side, true);
           });
-
+        
         <?php // Remove the resizing wrapper so that highlighting comes back on ?>
         $('table.dwm_main').unwrap();
         
