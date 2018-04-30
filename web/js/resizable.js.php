@@ -995,6 +995,8 @@ init = function(args) {
       {
         turnOffPageRefresh();
         
+        divResizeStart.oldParams = getBookingParams(table, tableData, ui.originalElement.find('a'));
+        
         <?php
         // Add a wrapper so that we can disable the highlighting when we are
         // resizing (the flickering is a bit annoying)
@@ -1053,23 +1055,22 @@ init = function(args) {
         if (rectanglesIdentical(r1, r2))
         {
           turnOnPageRefresh();
-          return;
         }
         else
         {
-          return;
           <?php 
           // We've got a change to the booking, so we need to send an Ajax
           // request to the server to make the new booking
           ?>
           var data = {csrf_token: getCSRFToken(),
                       ajax: 1, 
-                      commit: 1};
+                      commit: 1},
+              booking = ui.element.find('a');
           <?php // get the booking id and type ?>
           data.id = booking.data('id');
           data.type = booking.data('type');
           <?php // get the other parameters ?>
-          var oldParams = getBookingParams(table, tableData, original);
+          var oldParams = divResizeStart.oldParams;
           var newParams = getBookingParams(table, tableData, booking);
           if (newParams.seconds !== undefined)
           {
@@ -1305,8 +1306,6 @@ init = function(args) {
               });
             
             var handles = aHandles.join(',');
-            var booking = $(this).find('a');
-            var original;
             
             if (handles)
             {
@@ -1317,6 +1316,7 @@ init = function(args) {
               // bookings and we want 'width: 100%' and 'height: 100%' to fill the table-cell with
               // the entire booking including content.
               ?>
+              var booking = $(this).find('a');
               booking.wrap('<div class="booking-wrapper"></div>');
               booking.parent().resizable({handles: handles,
                                           helper: 'resizable-helper',
