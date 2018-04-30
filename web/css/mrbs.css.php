@@ -733,8 +733,8 @@ td.new img, .new_booking img {
 ?>
 .resizable-helper {
   box-sizing: border-box;
-  outline: 4px solid red;
-  outline-offset: -4px;
+  outline: 1px solid <?php echo $standard_font_color ?>;
+  outline-offset: -1px;
   position: absolute;
   top: 0;
   left: 0;
