@@ -243,7 +243,6 @@ function getTableData(table, tableData)
       tableData.y.data.push({coord: $(this).offset().top + parseFloat($(this).css('height')),
                              value: value});
     });
-  console.log(tableData);
 }
         
         
@@ -332,10 +331,6 @@ function snapToGrid(tableData, obj, side, force)
         switch (side)
         {
           case 'left':
-            if (force)
-            {
-              console.log('topleft: ' + el.style.top);
-            }
             obj.offset({top: boundingRectangle.top, left: topLeft});
             obj.outerWidth(elOuterWidth + gapTopLeft);
             break;
@@ -373,26 +368,14 @@ function snapToGrid(tableData, obj, side, force)
         switch (side)
         {
           case 'left':
-            if (force)
-            {
-              console.log('bottomright: ' + el.style.left);
-            }
             <?php // Don't let the width become zero.  ?>
             if ((elOuterWidth - gapBottomRight) < tolerance)
             {
-              if (force)
-              {
-                console.log('tl: ' + topLeft);
-              }
               obj.offset({top: boundingRectangle.top, left: topLeft});
               obj.outerWidth(elOuterWidth + gapTopLeft);
             }
             else
             {
-              if (force)
-              {
-                console.log('br: ' + bottomRight);
-              }
               obj.offset({top: boundingRectangle.top, left: bottomRight});
               obj.outerWidth(elOuterWidth - gapBottomRight);
             }
@@ -893,8 +876,6 @@ init = function(args) {
           rectangle.e = event.pageX;
           sides.e = true;
         }
-
-        console.log(sides);
         
         <?php
         // Get all the bookings that the desired rectangle would overlap.  Note
@@ -905,14 +886,12 @@ init = function(args) {
         
         if (!overlappedElements.length)
         {
-          console.log("No overlap");
           <?php // No overlaps: remove any constraints ?>
           ui.element.resizable('option', {maxHeight: null,
                                           maxWidth: null});
         }
         else
         {
-          console.log("Overlap");
           <?php
           // There is at least overlap, so for each direction that the booking is being
           // resized, get the closest booking in that direction.  If there's an overlap
@@ -1003,10 +982,8 @@ init = function(args) {
         }
         
         divResize.lastRectangle = $.extend({}, rectangle);
-        console.log(getSides(ui.helper));
-        return;
         
-        highlightRowLabels(table, tableData, booking);
+        // highlightRowLabels(table, tableData, booking);
         
       };  <?php // divResize ?>
         
@@ -1076,12 +1053,10 @@ init = function(args) {
         if (rectanglesIdentical(r1, r2))
         {
           turnOnPageRefresh();
-          console.log("Identical");
           return;
         }
         else
         {
-          console.log("Not Identical");
           return;
           <?php 
           // We've got a change to the booking, so we need to send an Ajax
