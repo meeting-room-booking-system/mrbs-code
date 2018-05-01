@@ -761,18 +761,23 @@ db()->mutex_unlock($tbl_entry);
 // If this is an Ajax request, output the result and finish
 if ($ajax)
 {
-  // If this was a successful commit generate the new HTML
-  if ($result['valid_booking'] && $commit)
+  // Generate the new HTML
+  if ($commit)
   {
     // Generate the new HTML
     require_once "functions_table.inc";
-    if ($view == 'day')
+    
+    switch ($view)
     {
-      $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
-    }
-    else
-    {
-      $result['table_innerhtml'] = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+      case 'day':
+        $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        break;
+      case 'week':
+        $result['table_innerhtml'] = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        break;
+      default:
+        throw new \Exception("Unsupported view '$view'");
+        break;
     }
   }
   http_headers(array("Content-Type: application/json"));

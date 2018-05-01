@@ -358,7 +358,6 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'bottom':
-            console.log('if: ' + (elOuterHeight - gapTopLeft));
             obj.outerHeight(elOuterHeight - gapTopLeft);
             break;
         }
@@ -392,7 +391,6 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'bottom':
-            console.log('else: ' + (elOuterHeight - gapBottomRight));
             obj.outerHeight(elOuterHeight + gapBottomRight);
             break;
         }
@@ -1055,8 +1053,7 @@ init = function(args) {
                   e: ui.originalPosition.left + ui.originalSize.width};
        
         var r2 = getSides(ui.helper);
-        console.log(r1);
-        console.log(r2);
+        
         if (rectanglesIdentical(r1, r2))
         {
           turnOnPageRefresh();
@@ -1145,24 +1142,21 @@ init = function(args) {
           $.post('edit_entry_handler.php',
                  data,
                  function(result) {
-                    if (result.valid_booking)
+                    <?php
+                    // Load the new HTML.   (1) Empty the existing
+                    // table in order to get rid of events and data and
+                    // prevent memory leaks (2) insert the updated table HTML
+                    // and then (3) trigger a table load event so that the
+                    // resizable bookings are re-created
+                    ?>
+                    table.empty()
+                         .html(result.table_innerhtml)
+                         .trigger('load');
+                    <?php
+                    // If the booking failed then show an alert explaining why.
+                    ?>
+                    if (!result.valid_booking)
                     {
-                      <?php
-                      // The new booking succeeded.   (1) Empty the existing
-                      // table in order to get rid of events and data and
-                      // prevent memory leaks (2) insert the updated table HTML
-                      // and then (3) trigger a table load event so that the
-                      // resizable bookings are re-created
-                      ?>
-                      table.empty()
-                           .html(result.table_innerhtml)
-                           .trigger('load');
-                    }
-                    else
-                    {
-                      booking.offset(original.offset())
-                               .width(parseFloat(original.css('width')))
-                               .height(parseFloat(original.css('height')));
                       var alertMessage = '';
                       if (result.conflicts.length > 0)
                       {
