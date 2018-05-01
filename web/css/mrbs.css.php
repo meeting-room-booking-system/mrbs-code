@@ -730,11 +730,12 @@ td.new img, .new_booking img {
 
 <?php
 // We use outline instead of border because jQuery UI Resizable has problems with border-box.
+// Note that on Chrome (at least up until Chrome 68.0.3416.0) outline position and width can
+// be 1px off when the browser zoom level is not 100%.
 ?>
 .resizable-helper {
-  box-sizing: border-box;
-  outline: 1px solid <?php echo $standard_font_color ?>;
-  outline-offset: -1px;
+  outline: 2px solid #666666;
+  outline-offset: -2px;
   position: absolute;
   top: 0;
   left: 0;

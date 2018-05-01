@@ -358,6 +358,7 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'bottom':
+            console.log('if: ' + (elOuterHeight - gapTopLeft));
             obj.outerHeight(elOuterHeight - gapTopLeft);
             break;
         }
@@ -391,6 +392,7 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'bottom':
+            console.log('else: ' + (elOuterHeight - gapBottomRight));
             obj.outerHeight(elOuterHeight + gapBottomRight);
             break;
         }
@@ -1036,9 +1038,11 @@ init = function(args) {
         bookedMap = [];
         
         <?php
-        // Snap the edges of the element being resized to the grid, regardless of where they are.
+        // Snap the edges of both the helper and the element being resized to the grid,
+        // regardless of where they are.
         ?>
         ['left', 'right', 'top', 'bottom'].forEach(function(side) {
+            snapToGrid(tableData, ui.helper, side, true);
             snapToGrid(tableData, ui.element, side, true);
           });
         
@@ -1051,7 +1055,8 @@ init = function(args) {
                   e: ui.originalPosition.left + ui.originalSize.width};
        
         var r2 = getSides(ui.helper);
-        
+        console.log(r1);
+        console.log(r2);
         if (rectanglesIdentical(r1, r2))
         {
           turnOnPageRefresh();
