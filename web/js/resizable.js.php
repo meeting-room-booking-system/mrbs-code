@@ -1309,14 +1309,9 @@ init = function(args) {
             if (handles)
             {
               <?php
-              // We have to wrap the bookings in a container because jQuery UI resizable
-              // has problems with border-box (see https://stackoverflow.com/questions/18344272).
-              // And we need border-box for the bookings because we are using padding on the
-              // bookings and we want 'width: 100%' and 'height: 100%' to fill the table-cell with
-              // the entire booking including content.
+              // 
               ?>
               var booking = $(this).find('a');
-              booking.wrap('<div class="booking-wrapper"></div>');
               booking.parent().resizable({handles: handles,
                                           helper: 'resizable-helper',
                                           start: resizeStart,

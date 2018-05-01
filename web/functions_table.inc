@@ -548,12 +548,21 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
         $query = http_build_query($vars, '', '&');
+        // We have to wrap the booking in a <div> because we want the booking itself to be given
+        // an absolute position and we can't use position relative on a <td> in IE11 and below.
+        // We also need the bookings in a container because jQuery UI resizable has problems
+        // with border-box (see https://stackoverflow.com/questions/18344272). And we need
+        // border-box for the bookings because we are using padding on the bookings and we want
+        // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
+        // including content.
+        $html .= '<div class="booking-wrapper">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
                    ' title="' . $long_descr . '"' .
                    ' class="' . $color . '"' .
                    ' data-id="' .$id . '"' .
                    ' data-type="' . $color . '">';
-        $html .= $descr . "</a>\n";
+        $html .= $descr . '</a>';
+        $html .= "</div>\n";
       }
       $html .= "</td>\n";
     }
