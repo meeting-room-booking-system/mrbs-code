@@ -641,6 +641,19 @@ table.dwm_main {
   overflow: hidden;
 }
 
+<?php 
+// Catch IE10 and IE11 only
+// IE10 and IE11 don't support position: relative on the <td> so we have to do it on
+// the wrapper.  The downside is that when resizing to make the booking larger the
+// table has to expand to accommodate the relative div.
+?>
+@media all and (-ms-high-contrast: none), all and (-ms-high-contrast: active)
+{
+  .dwm_main .booking-wrapper {
+    position: relative;
+  }
+}
+
 .dwm_main .booking-wrapper {
   width: 100%;
   height: 100%;
