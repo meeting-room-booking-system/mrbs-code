@@ -17,23 +17,29 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// Get the sides of the rectangle represented by the jQuery object jqObject.
+// Get the sides of the rectangle represented by the jQuery object obj.
 // The result object is indexed by 'n', 'w', 's' and 'e' as well as 'top',
 // 'left', 'bottom' and 'right'.
+//
+// [Note: this depends on the object having box-sizing of content-box, as 
+// jQuery has problems getting the correct dimensions when using border-box
+// and the browser zoom level is not 100%.  If you need to use border-box,
+// then JavaScript's getBoundingClientRect() works, but remember that it
+// returns positions relative to the viewport and not the document.]
 ?>
-function getSides(jqObject)
+function getSides(obj)
 {
-  var boundingRectangle = jqObject[0].getBoundingClientRect(),
-      result = {};
+  var result = {};
+ 
+  result.n = obj.offset().top;
+  result.w = obj.offset().left;
+  result.s = result.n + obj.outerHeight();
+  result.e = result.w + obj.outerWidth();
   
-  ['top', 'left', 'bottom', 'right'].forEach(function(side) {
-      result[side] = boundingRectangle[side];
-    });
-  
-  result.n = result.top;
-  result.w = result.left;
-  result.s = result.bottom;
-  result.e = result.right;
+  result.top = result.n;
+  result.left = result.w;
+  result.bottom = result.s;
+  result.right = result.e;
   
   return result;
 }
@@ -286,22 +292,19 @@ function outsideTable(tableData, p)
 ?>
 function snapToGrid(tableData, obj, side, force)
 {
-  var el = obj[0],
-      snapGap = (force) ? 100000: 30, <?php // px ?>
+  var snapGap = (force) ? 100000: 30, <?php // px ?>
       tolerance = 2, <?php //px ?>
       isLR = (side === 'left') || (side === 'right'),
       data = (isLR) ? tableData.x.data : tableData.y.data,
       topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
   
-  <?php
-  // We use JavaScript's getBoundingClientRect() rather than jQuery for getting the
-  // size of the rectangle because there can be problems when box-sizing is border-box and
-  // the browser zoom level is not 100%.
-  ?>
-  var boundingRectangle = el.getBoundingClientRect(),
-      elOuterWidth = boundingRectangle.right - boundingRectangle.left,
-      elOuterHeight = boundingRectangle.bottom - boundingRectangle.top,
-      thisCoord = boundingRectangle[side];
+  var rectangle = obj.offset();
+      rectangle.bottom = rectangle.top + obj.outerHeight();
+      rectangle.right = rectangle.left + obj.outerWidth();
+      
+  var outerWidth = rectangle.right - rectangle.left,
+      outerHeight = rectangle.bottom - rectangle.top,
+      thisCoord = rectangle[side];
   
   for (var i=0; i<(data.length -1); i++)
   {
@@ -331,8 +334,8 @@ function snapToGrid(tableData, obj, side, force)
         switch (side)
         {
           case 'left':
-            obj.offset({top: boundingRectangle.top, left: topLeft});
-            obj.outerWidth(elOuterWidth + gapTopLeft);
+            obj.offset({top: rectangle.top, left: topLeft});
+            obj.outerWidth(outerWidth + gapTopLeft);
             break;
             
           case 'right':
@@ -342,23 +345,23 @@ function snapToGrid(tableData, obj, side, force)
             // rule.   Unfortunately we can't rely on uniform column widths
             // so we can't use a min-width rule.
             ?>
-            if ((elOuterWidth - gapTopLeft) < tolerance)
+            if ((outerWidth - gapTopLeft) < tolerance)
             {
-              obj.outerWidth(elOuterWidth + gapBottomRight);
+              obj.outerWidth(outerWidth + gapBottomRight);
             }
             else
             {
-              obj.outerWidth(elOuterWidth - gapTopLeft);
+              obj.outerWidth(outerWidth - gapTopLeft);
             }
             break;
             
           case 'top':
-            obj.offset({top: topLeft, left: boundingRectangle.left});
-            obj.outerHeight(elOuterHeight + gapTopLeft);
+            obj.offset({top: topLeft, left: rectangle.left});
+            obj.outerHeight(outerHeight + gapTopLeft);
             break;
             
           case 'bottom':
-            obj.outerHeight(elOuterHeight - gapTopLeft);
+            obj.outerHeight(outerHeight - gapTopLeft);
             break;
         }
         return;
@@ -369,29 +372,29 @@ function snapToGrid(tableData, obj, side, force)
         {
           case 'left':
             <?php // Don't let the width become zero.  ?>
-            if ((elOuterWidth - gapBottomRight) < tolerance)
+            if ((outerWidth - gapBottomRight) < tolerance)
             {
-              obj.offset({top: boundingRectangle.top, left: topLeft});
-              obj.outerWidth(elOuterWidth + gapTopLeft);
+              obj.offset({top: rectangle.top, left: topLeft});
+              obj.outerWidth(outerWidth + gapTopLeft);
             }
             else
             {
-              obj.offset({top: boundingRectangle.top, left: bottomRight});
-              obj.outerWidth(elOuterWidth - gapBottomRight);
+              obj.offset({top: rectangle.top, left: bottomRight});
+              obj.outerWidth(outerWidth - gapBottomRight);
             }
             break;
             
           case 'right':
-            obj.outerWidth(elOuterWidth + gapBottomRight);
+            obj.outerWidth(outerWidth + gapBottomRight);
             break;
             
           case 'top':
-            obj.offset({top: bottomRight, left: boundingRectangle.left});
-            obj.outerHeight(elOuterHeight - gapBottomRight);
+            obj.offset({top: bottomRight, left: rectangle.left});
+            obj.outerHeight(outerHeight - gapBottomRight);
             break;
             
           case 'bottom':
-            obj.outerHeight(elOuterHeight + gapBottomRight);
+            obj.outerHeight(outerHeight + gapBottomRight);
             break;
         }
         return;
