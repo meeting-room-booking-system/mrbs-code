@@ -850,7 +850,7 @@ init = function(args) {
         
         if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
         {
-          rectangle.w = ui.originalElement.offset().left;
+          rectangle.w = ui.position.left;
         }
         else
         {
@@ -919,8 +919,8 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 'e');
             if (event.pageX <= closest)
             {
-              ui.position.left = closest - ui.originalElement.offset().left + <?php echo (int) $main_table_cell_border_width ?>;
-              ui.element.resizable('option', 'maxWidth', ui.originalSize.width - ui.position.left);
+              ui.position.left = closest + <?php echo (int) $main_table_cell_border_width ?>;
+              ui.element.resizable('option', 'maxWidth', ui.originalSize.width + ui.originalPosition.left - ui.position.left);
             }
             else
             {
