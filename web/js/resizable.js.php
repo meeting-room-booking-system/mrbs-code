@@ -617,7 +617,7 @@ init = function(args) {
           // Build the map of booked cells. (We select just the visible cells
           // because there could be hidden days).
           ?>
-          table.find('td:visible').not('td.new, td.row_labels').each(function() {
+          table.find('td.booked:visible').each(function() {
               bookedMap.push(getSides($(this)));
             });
           
