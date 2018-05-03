@@ -292,8 +292,8 @@ function outsideTable(tableData, p)
 ?>
 function snapToGrid(tableData, obj, side, force)
 {
-  var snapGap = (force) ? 100000: 30, <?php // px ?>
-      tolerance = 2, <?php //px ?>
+  var snapGap = 35, <?php // px ?>
+      tolerance = 2, <?php // px ?>
       isLR = (side === 'left') || (side === 'right'),
       data = (isLR) ? tableData.x.data : tableData.y.data,
       topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
@@ -329,7 +329,7 @@ function snapToGrid(tableData, obj, side, force)
     {
       gap = bottomRight - topLeft;
               
-      if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
+      if ((gapTopLeft <= gap/2) && (force || (gapTopLeft < snapGap)))
       {
         switch (side)
         {
@@ -366,7 +366,7 @@ function snapToGrid(tableData, obj, side, force)
         }
         return;
       }
-      else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
+      else if ((gapBottomRight <= gap/2) && (force || (gapBottomRight < snapGap)))
       {
         switch (side)
         {
