@@ -1023,8 +1023,7 @@ init = function(args) {
         // allowed to be in our own cell.   (We select just the visible cells
         // because there could be hidden days).
         ?>
-        table.find('td:visible')
-             .not('td.new, td.row_labels')
+        table.find('td.booked:visible')
              .not(ui.element.closest('td'))
              .each(function() {
             bookedMap.push(getSides($(this)));
