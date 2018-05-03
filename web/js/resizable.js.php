@@ -872,7 +872,7 @@ init = function(args) {
         if (Math.round((ui.position.left + ui.size.width) -
                        (ui.originalPosition.left + ui.originalSize.width)) === 0)
         {
-          rectangle.e = ui.originalElement.offset().left + ui.size.width;
+          rectangle.e = ui.position.left + ui.size.width;
         }
         else
         {
@@ -946,7 +946,7 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 'w');
             if (event.pageX >= closest)
             {
-              ui.element.resizable('option', 'maxWidth', closest - ui.originalElement.offset().left);
+              ui.element.resizable('option', 'maxWidth', closest - ui.originalPosition.left);
             }
             else
             {
