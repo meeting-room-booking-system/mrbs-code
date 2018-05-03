@@ -434,8 +434,8 @@ function getBookingParams(table, tableData, el)
       
   cell.x.start = el.offset().left;
   cell.y.start = el.offset().top;
-  cell.x.end = cell.x.start + parseFloat(el.css('width'));
-  cell.y.end = cell.y.start + parseFloat(el.css('height'));
+  cell.x.end = cell.x.start + el.outerWidth();
+  cell.y.end = cell.y.start + el.outerHeight();
   for (axis in cell)
   {
     if (cell.hasOwnProperty(axis))
