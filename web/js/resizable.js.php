@@ -825,10 +825,10 @@ init = function(args) {
         if (resize.lastRectangle === undefined)
         {
           resize.lastRectangle = {
-              n: ui.originalElement.offset().top,
-              s: ui.originalElement.offset().top + parseFloat(ui.originalElement.css('height')),
-              w: ui.originalElement.offset().left,
-              e: ui.originalElement.offset().left + parseFloat(ui.originalElement.css('width'))
+              n: ui.originalPosition.top,
+              s: ui.originalPosition.top + ui.originalSize.height,
+              w: ui.originalPosition.left,
+              e: ui.originalPosition.left + ui.originalSize.width
             };
         }
 
