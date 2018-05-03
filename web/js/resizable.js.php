@@ -223,7 +223,7 @@ function getTableData(table, tableData)
       {
         value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
       }
-      var edge = $(this).offset().left + parseFloat($(this).css('width'));
+      var edge = $(this).offset().left + $(this).outerWidth();
       tableData.x.data.push({coord: edge, value: value});
     });
 
@@ -246,7 +246,7 @@ function getTableData(table, tableData)
       {
         value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
       }
-      tableData.y.data.push({coord: $(this).offset().top + parseFloat($(this).css('height')),
+      tableData.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
                              value: value});
     });
 }
