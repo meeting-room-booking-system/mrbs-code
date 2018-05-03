@@ -840,7 +840,7 @@ init = function(args) {
         ?>
         if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
         {
-          rectangle.n = ui.originalElement.offset().top;
+          rectangle.n = ui.position.top;
         }
         else
         {
@@ -861,7 +861,7 @@ init = function(args) {
         if (Math.round((ui.position.top + ui.size.height) - 
                        (ui.originalPosition.top + ui.originalSize.height)) === 0)
         {
-          rectangle.s = ui.originalElement.offset().top + ui.size.height;
+          rectangle.s = ui.position.top + ui.size.height;
         }
         else
         {
@@ -905,8 +905,8 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 's');
             if (event.pageY <= closest)
             {
-              ui.position.top = closest - ui.originalElement.offset().top;
-              ui.element.resizable('option', 'maxHeight', ui.originalSize.height - ui.position.top);
+              ui.position.top = closest;
+              ui.element.resizable('option', 'maxHeight', ui.originalSize.height + ui.originalPosition.top - ui.position.top);
             }
             else
             {
@@ -933,7 +933,7 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 'n');
             if (event.pageY >= closest)
             {
-              ui.element.resizable('option', 'maxHeight', closest - ui.originalElement.offset().top);
+              ui.element.resizable('option', 'maxHeight', closest - ui.originalPosition.top);
             }
             else
             {
