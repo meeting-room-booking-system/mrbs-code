@@ -339,12 +339,7 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'right':
-            <?php
-            // Don't let the width become zero.   (We don't need to do
-            // this for height because that's protected by a min-height
-            // rule.   Unfortunately we can't rely on uniform column widths
-            // so we can't use a min-width rule.
-            ?>
+            <?php // Don't let the width become zero. ?>
             if ((outerWidth - gapTopLeft) < tolerance)
             {
               obj.outerWidth(outerWidth + gapBottomRight);
@@ -361,7 +356,15 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'bottom':
-            obj.outerHeight(outerHeight - gapTopLeft);
+            <?php // Don't let the height become zero. ?>
+            if ((outerHeight - gapTopLeft) < tolerance)
+            {
+              obj.outerHeight(outerHeight + gapBottomRight);
+            }
+            else
+            {
+              obj.outerHeight(outerHeight - gapTopLeft);
+            }
             break;
         }
         return;
@@ -389,8 +392,17 @@ function snapToGrid(tableData, obj, side, force)
             break;
             
           case 'top':
-            obj.offset({top: bottomRight, left: rectangle.left});
-            obj.outerHeight(outerHeight - gapBottomRight);
+            <?php // Don't let the height become zero.  ?>
+            if ((outerHeight - gapBottomRight) < tolerance)
+            {
+              obj.offset({top: topLeft, left: rectangle.left});
+              obj.outerHeight(outerHeight + gapTopLeft);
+            }
+            else
+            {
+              obj.offset({top: bottomRight, left: rectangle.left});
+              obj.outerHeight(outerHeight - gapBottomRight);
+            }
             break;
             
           case 'bottom':
@@ -1005,15 +1017,6 @@ init = function(args) {
         // resizing (the flickering is a bit annoying)
         ?>
         table.wrap('<div class="resizing"><\/div>');
-        <?php
-        // Keep a copy of the original booking so that we can compare the new
-        // booking to it.   Note that ui.originalSize cannot be used because of
-        // the jQuery UI Resizeable border-box bug.  Then remove the constraints
-        // on the booking so that it can be resized.
-        ?>
-                          
-        //booking.css({'min-height': '<?php echo $main_cell_height ?>',
-        //             'max-height': 'none'});
 
         <?php
         // Build the map of booked cells, excluding this cell (because we're
