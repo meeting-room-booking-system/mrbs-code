@@ -1376,7 +1376,6 @@ init = function(args) {
       <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
       table.find('div.multiple_control')
           .click(function() {
-              redrawClones(table);
               getTableData(table, tableData);
             });
     }).trigger('load');
@@ -1386,8 +1385,7 @@ init = function(args) {
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
       {
         <?php
-        // The table dimensions have changed, so we need to redraw the clones
-        // and re map the table
+        // The table dimensions have changed, so we need to re-map the table
         ?>
         table = $('table.dwm_main').not('#month_main');
         getTableData(table, tableData);
