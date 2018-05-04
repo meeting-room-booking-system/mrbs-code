@@ -88,21 +88,27 @@ function rectanglesOverlap(r1, r2)
 <?php
 // Check whether the rectangle (with sides n,s,e,w) overlaps any
 // of the booked slots in the table.   Returns an array of overlapped
-// bookings.  stopAtFirst is an optional third parameter.  If true then
-// only the first overlap found will be returned.  Default false.
+// bookings.
+//    stopAtFirst       (optional) If true then only the first overlap found will
+//                      be returned.  Default false.
+//    ignoreRectangle   (optional).  A rectangle that is to be ignored when checking
+//                      for overlaps.
 ?>
-function overlapsBooked(rectangle, bookedMap, stopAtFirst)
+function overlapsBooked(rectangle, bookedMap, stopAtFirst, ignoreRectangle)
 {
   var result = [];
 
   for (var i=0; i<bookedMap.length; i++)
   {
-    if (rectanglesOverlap(rectangle, bookedMap[i]))
+    if (!(ignoreRectangle && rectanglesIdentical(ignoreRectangle, bookedMap[i])))
     {
-      result.push(bookedMap[i]);
-      if (stopAtFirst)
+      if (rectanglesOverlap(rectangle, bookedMap[i]))
       {
-        break;
+        result.push(bookedMap[i]);
+        if (stopAtFirst)
+        {
+          break;
+        }
       }
     }
   }
@@ -598,28 +604,12 @@ init = function(args) {
       }
      
       getTableData(table, tableData);
-  
-      <?php
-      // bookedMap is an array of booked slots.   Each member of the array is an
-      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
-      // of the side.   We will use this array to test whether a proposed
-      // booking overlaps an existing booking.   We save populating this array until
-      // the resize starts, because we want to exclude the booked slot that is being
-      // resized.
-      ?>
-      var bookedMap = [];
+      
       var mouseDown = false; 
   
       var downHandler = function(e) {
           mouseDown = true;
           turnOffPageRefresh();
-          <?php
-          // Build the map of booked cells. (We select just the visible cells
-          // because there could be hidden days).
-          ?>
-          table.find('td.booked:visible').each(function() {
-              bookedMap.push(getSides($(this)));
-            });
           
           <?php // Apply a wrapper to turn off highlighting ?>
           table.wrap('<div class="resizing"><\/div>');
@@ -836,12 +826,7 @@ init = function(args) {
         
         if (resize.lastRectangle === undefined)
         {
-          resize.lastRectangle = {
-              n: ui.originalPosition.top,
-              s: ui.originalPosition.top + ui.originalSize.height,
-              w: ui.originalPosition.left,
-              e: ui.originalPosition.left + ui.originalSize.width
-            };
+          resize.lastRectangle = $.extend({}, resizeStart.originalRectangle);
         }
 
         <?php
@@ -894,10 +879,10 @@ init = function(args) {
         
         <?php
         // Get all the bookings that the desired rectangle would overlap.  Note
-        // that it could overlap more than one othe booking, so we need to find them 
+        // that it could overlap more than one other booking, so we need to find them 
         // all and then find the closest one.
         ?>
-        var overlappedElements = overlapsBooked(rectangle, bookedMap);
+        var overlappedElements = overlapsBooked(rectangle, bookedMap, false, resizeStart.originalRectangle);
         
         if (!overlappedElements.length)
         {
@@ -907,6 +892,7 @@ init = function(args) {
         }
         else
         {
+          console.log("Overlap");
           <?php
           // There is at least overlap, so for each direction that the booking is being
           // resized, get the closest booking in that direction.  If there's an overlap
@@ -1012,23 +998,18 @@ init = function(args) {
         
         resizeStart.oldParams = getBookingParams(table, tableData, ui.originalElement.find('a'));
         
+        resizeStart.originalRectangle = {
+            n: ui.originalPosition.top,
+            s: ui.originalPosition.top + ui.originalSize.height,
+            w: ui.originalPosition.left,
+            e: ui.originalPosition.left + ui.originalSize.width
+          };
+        
         <?php
         // Add a wrapper so that we can disable the highlighting when we are
         // resizing (the flickering is a bit annoying)
         ?>
         table.wrap('<div class="resizing"><\/div>');
-
-        <?php
-        // Build the map of booked cells, excluding this cell (because we're
-        // allowed to be in our own cell.   (We select just the visible cells
-        // because there could be hidden days).
-        ?>
-        table.find('td.booked:visible')
-             .not(ui.element.closest('td'))
-             .each(function() {
-            bookedMap.push(getSides($(this)));
-          });
-        
       };  <?php // resizeStart ?>
 
       
@@ -1037,9 +1018,6 @@ init = function(args) {
       ?>
       var resizeStop = function(event, ui)
       {              
-        <?php // Clear the map of booked cells ?>
-        bookedMap = [];
-        
         <?php
         // Snap the edges of both the helper and the element being resized to the grid,
         // regardless of where they are.
@@ -1187,8 +1165,21 @@ init = function(args) {
         }   <?php // if (rectanglesIdentical(r1, r2)) ?>
     
       };  <?php // resizeStop ?>
-            
-      
+           
+
+      <?php
+      // bookedMap is an array of booked slots.   Each member of the array is an
+      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+      // of the side.   We will use this array to test whether a proposed
+      // booking overlaps an existing booking. Select just the visible cells because there
+      // could be hidden days.
+      ?>
+      var bookedMap = [];  
+      table.find('td.booked:visible')
+           .each(function() {
+          bookedMap.push(getSides($(this)));
+        });
+          
       <?php
       // Turn all the empty cells where a new multi-cell selection
       // can be created by dragging the mouse
