@@ -609,7 +609,6 @@ init = function(args) {
   
       var downHandler = function(e) {
           mouseDown = true;
-          turnOffPageRefresh();
           
           <?php
           // Apply a class so that we know that resizing is in progres, eg to turn off
@@ -761,8 +760,6 @@ init = function(args) {
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
           
-          <?php // Remove the resizing class so that highlighting comes back on ?>
-          $('table.dwm_main').removeClass('resizing');
           
           <?php
           // If the user has released the button while outside the table it means
@@ -771,7 +768,7 @@ init = function(args) {
           if (outsideTable(tableData, {x: e.pageX, y: e.pageY}))
           {
             box.remove();
-            turnOnPageRefresh();
+            $('table.dwm_main').removeClass('resizing');
             return;
           }
           <?php
@@ -790,8 +787,8 @@ init = function(args) {
             else
             {
               box.remove();
+              $('table.dwm_main').removeClass('resizing');
             }
-            turnOnPageRefresh();
             return;
           }
           <?php
@@ -815,7 +812,6 @@ init = function(args) {
             queryString += '&start_date=' + params.date[0];
             queryString += '&end_date=' + params.date[params.date.length - 1];
           }
-          turnOnPageRefresh();
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
@@ -898,7 +894,6 @@ init = function(args) {
         }
         else
         {
-          console.log("Overlap");
           <?php
           // There is at least overlap, so for each direction that the booking is being
           // resized, get the closest booking in that direction.  If there's an overlap
@@ -1000,8 +995,6 @@ init = function(args) {
       ?>
       var resizeStart = function(event, ui)
       {
-        turnOffPageRefresh();
-        
         resizeStart.oldParams = getBookingParams(table, tableData, ui.originalElement.find('a'));
         
         resizeStart.originalRectangle = {
@@ -1033,8 +1026,6 @@ init = function(args) {
             snapToGrid(tableData, ui.element, side, true);
           });
         
-        <?php // Remove the resizing class so that highlighting comes back on ?>
-        $('table.dwm_main').removeClass('resizing');
         
         var r1 = {n: ui.originalPosition.top,
                   w: ui.originalPosition.left,
@@ -1045,7 +1036,7 @@ init = function(args) {
         
         if (rectanglesIdentical(r1, r2))
         {
-          turnOnPageRefresh();
+          $('table.dwm_main').removeClass('resizing');
         }
         else
         {
@@ -1165,7 +1156,6 @@ init = function(args) {
                       }
                       window.alert(alertMessage);
                     }
-                    turnOnPageRefresh();
                   },
                  'json');
         }   <?php // if (rectanglesIdentical(r1, r2)) ?>
@@ -1334,38 +1324,38 @@ init = function(args) {
       // of new bookings, so that we don't turn on page refresh while in the
       // middle of a drag selection when we pass over a resizable handle
       ?>   
-      $('.clone .ui-resizable-handle')
+      $('.ui-resizable-handle')
         .mouseenter(function(e) {
             if (!mouseDown)
             {
               if ($(this).is(':hover'))
               {
-                turnOffPageRefresh();
+                table.addClass('resizing');
               }
               else
               {
-                turnOnPageRefresh();
+                table.removeClass('resizing');
               }
             }
           })
         .mouseleave(function() {
             if (!mouseDown)
             {
-              turnOnPageRefresh();
+              table.removeClass('resizing');
             }
           })
         .mousedown(function() {
             mouseDown = true;
             if ($(this).is(':hover'))
             {
-              turnOffPageRefresh();
+              table.addClass('resizing');
             }
           })
         .mouseup(function() {
             mouseDown = false;
             if (!$(this).is(':hover'))
             {
-              turnOnPageRefresh();
+              table.removeClass('resizing');
             }
           })
         .first().trigger('mouseenter');

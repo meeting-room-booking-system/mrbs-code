@@ -19,7 +19,7 @@ var intervalId;
 
 var refreshPage = function refreshPage() {
     if (!isHidden() && 
-        !refreshPage.disabled &&
+        !$('table.dwm_main').hasClass('resizing') &&
         !isMeteredConnection())
     {
       var data = {ajax: 1,
@@ -35,7 +35,6 @@ var refreshPage = function refreshPage() {
       $.post('index.php',
              data,
              function(result){
-                 var table;
                  <?php
                  // (1) Empty the existing table in order to get rid of events
                  // and data and prevent memory leaks, (2) insert the updated 
@@ -45,30 +44,19 @@ var refreshPage = function refreshPage() {
                  ?>
                  if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
                  {
-                   table = $('table.dwm_main');
-                   table.empty();
-                   table.html(result);
-                   window.clearInterval(intervalId);
-                   intervalId = undefined;
-                   table.trigger('load');
+                   var table = $('table.dwm_main');
+                   if (!table.hasClass('resizing'))
+                   {
+                     table.empty();
+                     table.html(result);
+                     window.clearInterval(intervalId);
+                     intervalId = undefined;
+                     table.trigger('load');
+                   }
                  }
                },
              'html');
-    }  <?php // if (!isHidden() && !refreshPage.disabled) ?>
-  };
-
-<?php
-// Functions to turn off and on page refresh.  We don't want the page to be
-// refreshed while we are in the middle of resizing a booking or selecting a
-// set of empty cells.
-?>
-var turnOffPageRefresh = function turnOffPageRefresh() {
-    refreshPage.disabled = true;
-  };
-  
-  
-var turnOnPageRefresh = function turnOnPageRefresh() {
-    refreshPage.disabled = false;
+    }  <?php // if (!isHidden() etc.?>
   };
     
   
