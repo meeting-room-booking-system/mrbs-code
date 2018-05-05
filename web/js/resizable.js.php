@@ -65,9 +65,16 @@ function rectanglesOverlap(r1, r2)
   // below, we are checking on the first line to see if either of the vertical
   // sides of r1 intersects either of the horizontal sides of r2.  The second line
   // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
+  // Use Math.round because some browsers produce slightly odd results for offset and
+  // height/width.
   ?>
-  if ( (( ((r1.w > r2.w) && (r1.w < r2.e)) || ((r1.e > r2.w) && (r1.e < r2.e)) ) && (r1.n < r2.s) && (r1.s > r2.n)) ||
-       (( ((r1.n > r2.n) && (r1.n < r2.s)) || ((r1.s > r2.n) && (r1.s < r2.s)) ) && (r1.w < r2.e) && (r1.e > r2.w)) )
+  if ( (( ((Math.round(r1.w - r2.w) > 0) && (Math.round(r1.w - r2.e) < 0)) ||
+          ((Math.round(r1.e - r2.w) > 0) && (Math.round(r1.e - r2.e) < 0)) ) &&
+           (Math.round(r1.n - r2.s) < 0) && (Math.round(r1.s - r2.n) > 0)) ||
+           
+       (( ((Math.round(r1.n - r2.n) > 0) && (Math.round(r1.n - r2.s) < 0)) ||
+          ((Math.round(r1.s - r2.n) > 0) && (Math.round(r1.s - r2.s) < 0)) ) && 
+           (Math.round(r1.w - r2.e) < 0) && (Math.round(r1.e - r2.w) > 0)) )
   {
     return true;
   }
