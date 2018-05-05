@@ -919,27 +919,38 @@ tr:nth-child(even) td.row_labels {
 }
 
 <?php // Disable the highlighting when we're in resize mode ?>
-.resizing .dwm_main tr:nth-child(odd) td:hover.new {
+.dwm_main.resizing tr:nth-child(odd) td:hover.new {
   background-color: <?php echo $row_odd_color ?>;
 }
 
-.resizing .dwm_main tr:nth-child(even) td:hover.new {
+.dwm_main.resizing tr:nth-child(even) td:hover.new {
   background-color: <?php echo $row_even_color ?>;
 }
 
+.dwm_main.resizing tr:hover td.row_labels {
+  background-color: <?php echo $main_table_labels_back_color ?>;
+  color: <?php echo $anchor_link_color_header ?>;
+}
 
-.resizing .dwm_main tr:hover td.row_labels {background-color: <?php echo $main_table_labels_back_color ?>; color: <?php echo $anchor_link_color_header ?>}
-.resizing .row_labels a:hover {text-decoration: none}
-.resizing .dwm_main tbody tr:hover td.row_labels a:link {color: <?php echo $anchor_link_color_header ?>}
-.resizing .dwm_main tbody tr:hover td.row_labels a:visited {color: <?php echo $anchor_link_color_header ?>}
+.resizing .row_labels a:hover {
+  text-decoration: none;
+}
 
-.resizing .dwm_main tr td.row_labels.selected {
+.dwm_main.resizing tbody tr:hover td.row_labels a:link {
+  color: <?php echo $anchor_link_color_header ?>;
+}
+
+.dwm_main.resizing tbody tr:hover td.row_labels a:visited {
+  color: <?php echo $anchor_link_color_header ?>;
+}
+
+.dwm_main.resizing tr td.row_labels.selected {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.resizing .dwm_main tr:hover td.row_labels.selected,
-.resizing .dwm_main tr td.row_labels.selected a:link,
-.resizing .dwm_main tr td.row_labels.selected a:visited {
+.dwm_main.resizing tr:hover td.row_labels.selected,
+.dwm_main.resizing tr td.row_labels.selected a:link,
+.dwm_main.resizing tr td.row_labels.selected a:visited {
   color: #ffffff;
 }
 

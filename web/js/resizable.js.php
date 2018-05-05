@@ -611,8 +611,12 @@ init = function(args) {
           mouseDown = true;
           turnOffPageRefresh();
           
-          <?php // Apply a wrapper to turn off highlighting ?>
-          table.wrap('<div class="resizing"><\/div>');
+          <?php
+          // Apply a class so that we know that resizing is in progres, eg to turn off
+          // highlighting
+          ?>
+          table.addClass('resizing');
+          
           var jqTarget = $(e.target);
           <?php // If we've landed on the + symbol we want the parent ?>
           if (e.target.nodeName.toLowerCase() === "img")
@@ -756,8 +760,10 @@ init = function(args) {
           var params = getBookingParams(table, tableData, box);
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
-          <?php // Remove the resizing wrapper so that highlighting comes back on ?>
-          $('table.dwm_main').unwrap();
+          
+          <?php // Remove the resizing class so that highlighting comes back on ?>
+          $('table.dwm_main').removeClass('resizing');
+          
           <?php
           // If the user has released the button while outside the table it means
           // they want to cancel, so just return. 
@@ -1006,10 +1012,10 @@ init = function(args) {
           };
         
         <?php
-        // Add a wrapper so that we can disable the highlighting when we are
+        // Add a class so that we can disable the highlighting when we are
         // resizing (the flickering is a bit annoying)
         ?>
-        table.wrap('<div class="resizing"><\/div>');
+        table.addClass('resizing');
       };  <?php // resizeStart ?>
 
       
@@ -1027,8 +1033,8 @@ init = function(args) {
             snapToGrid(tableData, ui.element, side, true);
           });
         
-        <?php // Remove the resizing wrapper so that highlighting comes back on ?>
-        $('table.dwm_main').unwrap();
+        <?php // Remove the resizing class so that highlighting comes back on ?>
+        $('table.dwm_main').removeClass('resizing');
         
         var r1 = {n: ui.originalPosition.top,
                   w: ui.originalPosition.left,
