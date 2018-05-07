@@ -17,7 +17,7 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// Get the sides of the rectangle represented by the jQuery object obj.
+// Get the sides, excluding the border, of the rectangle represented by the jQuery object obj.
 // The result object is indexed by 'n', 'w', 's' and 'e' as well as 'top',
 // 'left', 'bottom' and 'right'.
 //
@@ -30,11 +30,11 @@ $.fn.reverse = [].reverse;
 function getSides(obj)
 {
   var result = {};
- 
-  result.n = obj.offset().top;
-  result.w = obj.offset().left;
-  result.s = result.n + obj.outerHeight();
-  result.e = result.w + obj.outerWidth();
+  
+  result.n = obj.offset().top + parseInt(obj.css('border-top-width'), 10);
+  result.w = obj.offset().left + parseInt(obj.css('border-left-width'), 10);
+  result.s = result.n + obj.innerHeight();
+  result.e = result.w + obj.innerWidth();
   
   result.top = result.n;
   result.left = result.w;
