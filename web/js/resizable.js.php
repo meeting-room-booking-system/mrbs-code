@@ -60,35 +60,21 @@ function rectanglesIdentical(r1, r2)
 function rectanglesOverlap(r1, r2)
 {
   <?php
-  // We check whether two rectangles overlap by checking whether any of the
-  // sides of one rectangle intersect the sides of the other.   In the condition
-  // below, we are checking on the first line to see if either of the vertical
-  // sides of r1 intersects either of the horizontal sides of r2.  The second line
-  // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
-  // Use Math.round because some browsers produce slightly odd results for offset and
-  // height/width.
+  // If any of the sides of r1 is clear of the opposite side of r2, then the two
+  // rectangles don't overlap.   Otherwise they must do.   We allow the sides to
+  // be on top of each other (ie we use >= and <=).
   ?>
-  if ( (( ((Math.round(r1.w - r2.w) > 0) && (Math.round(r1.w - r2.e) < 0)) ||
-          ((Math.round(r1.e - r2.w) > 0) && (Math.round(r1.e - r2.e) < 0)) ) &&
-           (Math.round(r1.n - r2.s) < 0) && (Math.round(r1.s - r2.n) > 0)) ||
-           
-       (( ((Math.round(r1.n - r2.n) > 0) && (Math.round(r1.n - r2.s) < 0)) ||
-          ((Math.round(r1.s - r2.n) > 0) && (Math.round(r1.s - r2.s) < 0)) ) && 
-           (Math.round(r1.w - r2.e) < 0) && (Math.round(r1.e - r2.w) > 0)) )
+  if ((r1.n >= r2.s) ||
+      (r1.s <= r2.n) ||
+      (r1.w >= r2.e) ||
+      (r1.e <= r2.w))
+  {
+    return false;
+  }
+  else
   {
     return true;
   }
-  <?php // they also overlap if r1 is inside r2 ?>
-  if ((r1.w >= r2.w) && (r1.n >= r2.n) && (r1.e <= r2.e) && (r1.s <= r2.s))
-  {
-    return true;
-  }
-  <?php // or r2 is inside r1 ?>
-  if ((r2.w >= r1.w) && (r2.n >= r1.n) && (r2.e <= r1.e) && (r2.s <= r1.s))
-  {
-    return true;
-  }
-  return false;
 }
             
             
