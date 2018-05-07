@@ -17,9 +17,9 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// Get the sides, excluding the border, of the rectangle represented by the jQuery object obj.
-// The result object is indexed by 'n', 'w', 's' and 'e' as well as 'top',
-// 'left', 'bottom' and 'right'.
+// Get the sides, optionally including the border, of the rectangle represented by
+// the jQuery object obj.The result object is indexed by 'n', 'w', 's' and 'e' as
+// well as 'top', 'left', 'bottom' and 'right'.
 //
 // [Note: this depends on the object having box-sizing of content-box, as 
 // jQuery has problems getting the correct dimensions when using border-box
@@ -27,15 +27,25 @@ $.fn.reverse = [].reverse;
 // then JavaScript's getBoundingClientRect() works, but remember that it
 // returns positions relative to the viewport and not the document.]
 ?>
-function getSides(obj)
+function getSides(obj, includeBorder)
 {
   var result = {};
   
-  result.n = obj.offset().top + parseInt(obj.css('border-top-width'), 10);
-  result.w = obj.offset().left + parseInt(obj.css('border-left-width'), 10);
-  result.s = result.n + obj.innerHeight();
-  result.e = result.w + obj.innerWidth();
-  
+  if (includeBorder)
+  {
+    result.n = obj.offset().top;
+    result.w = obj.offset().left;
+    result.s = result.n + obj.outerHeight();
+    result.e = result.w + obj.outerWidth();
+  }
+  else
+  {
+    result.n = obj.offset().top + parseInt(obj.css('border-top-width'), 10);
+    result.w = obj.offset().left + parseInt(obj.css('border-left-width'), 10);
+    result.s = result.n + obj.innerHeight();
+    result.e = result.w + obj.innerWidth();
+  }
+    
   result.top = result.n;
   result.left = result.w;
   result.bottom = result.s;
