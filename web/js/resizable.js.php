@@ -58,11 +58,10 @@ function getSides(obj, includeBorder)
 <?php // Checks to see whether two rectangles occupy the same space ?>
 function rectanglesIdentical(r1, r2)
 {
-  var tolerance = 2;  <?php //px ?>
-  return ((Math.abs(r1.n - r2.n) < tolerance) &&
-          (Math.abs(r1.s - r2.s) < tolerance) &&
-          (Math.abs(r1.e - r2.e) < tolerance) &&
-          (Math.abs(r1.w - r2.w) < tolerance));
+  return ((Math.round(r1.n - r2.n) === 0) &&
+          (Math.round(r1.s - r2.s) === 0) &&
+          (Math.round(r1.e - r2.e) === 0) &&
+          (Math.round(r1.w - r2.w) === 0));
 }
             
                               
