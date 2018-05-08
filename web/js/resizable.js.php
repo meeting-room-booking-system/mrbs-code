@@ -1038,6 +1038,12 @@ init = function(args) {
         
         if (rectanglesIdentical(r1, r2))
         {
+          <?php
+          // Restore the proper height and width so that if the browser zoom
+          // level is changed then the booking fills the slot properly.  (The
+          // resizing will have set actual pixel values instead of percentages).
+          ?>
+          ui.element.css({width: '100%', height: '100%'});
           $('table.dwm_main').removeClass('resizing');
         }
         else
