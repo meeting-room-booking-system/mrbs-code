@@ -311,24 +311,41 @@ function snapToGrid(tableData, obj, side, force)
       topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
   
   var rectangle = obj.offset();
-      rectangle.bottom = rectangle.top + obj.outerHeight();
-      rectangle.right = rectangle.left + obj.outerWidth();
+      rectangle.bottom = rectangle.top + obj.innerHeight();
+      rectangle.right = rectangle.left + obj.innerWidth();
       
   var outerWidth = rectangle.right - rectangle.left,
       outerHeight = rectangle.bottom - rectangle.top,
       thisCoord = rectangle[side];
+  
+  if (typeof snapToGrid.borderLeftWidth == 'undefined')
+  { 
+    <?php 
+    // Get the width of the top and left borders of the first proper slot cell
+    // in the main table (ie ignore the row labels cell).  This won't be the
+    // same as the value in the CSS if the browsers zoom level is not 100%.
+    ?>
+    var td = $('.dwm_main tbody tr:first-child td:nth-child(2)');
+    snapToGrid.borderLeftWidth = parseFloat(td.css('border-left-width'));
+    snapToGrid.borderTopWidth = parseFloat(td.css('border-top-width'));
+  }
   
   for (var i=0; i<(data.length -1); i++)
   {
     topLeft = data[i].coord;
     bottomRight = data[i+1].coord;
     <?php
-    // Allow for the vertical border.  Note that there are no horizontal borders.
+    // Allow for the borders: .offset() includes borders.
     ?>
     if (side === 'left')
     {
-      topLeft += <?php echo (int) $main_table_cell_border_width ?>;
-      bottomRight += <?php echo (int) $main_table_cell_border_width ?>;
+      topLeft += snapToGrid.borderLeftWidth;
+      bottomRight += snapToGrid.borderLeftWidth;
+    }
+    else if (side === 'top')
+    {
+      topLeft += snapToGrid.borderTopWidth;
+      bottomRight += snapToGrid.borderTopWidth;
     }
     
     gapTopLeft = thisCoord - topLeft;
