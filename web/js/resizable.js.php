@@ -40,8 +40,12 @@ function getSides(obj, includeBorder)
   }
   else
   {
-    result.n = obj.offset().top + parseInt(obj.css('border-top-width'), 10);
-    result.w = obj.offset().left + parseInt(obj.css('border-left-width'), 10);
+    <?php 
+    // We need to use parseFloat instead of parseInt because the CSS width may be
+    // a float, especially if the browser zoom level is not 100%.
+    ?>
+    result.n = obj.offset().top + parseFloat(obj.css('border-top-width'));
+    result.w = obj.offset().left + parseFloat(obj.css('border-left-width'));
     result.s = result.n + obj.innerHeight();
     result.e = result.w + obj.innerWidth();
   }
@@ -832,7 +836,7 @@ init = function(args) {
         {
           resize.lastRectangle = $.extend({}, resizeStart.originalRectangle);
         }
-
+        
         <?php
         // Get the sides of the desired resired rectangle and also the direction(s)
         // of resize.  Note that the desired rectangle may be being moved in two
@@ -1183,7 +1187,7 @@ init = function(args) {
            .each(function() {
           bookedMap.push(getSides($(this)));
         });
-          
+       
       <?php
       // Turn all the empty cells where a new multi-cell selection
       // can be created by dragging the mouse
