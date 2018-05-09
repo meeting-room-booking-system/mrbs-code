@@ -1032,15 +1032,7 @@ init = function(args) {
             snapToGrid(tableData, ui.element, side, true);
           });
         
-        
-        var r1 = {n: ui.originalPosition.top,
-                  w: ui.originalPosition.left,
-                  s: ui.originalPosition.top + ui.originalSize.height,
-                  e: ui.originalPosition.left + ui.originalSize.width};
-       
-        var r2 = getSides(ui.helper);
-        
-        if (rectanglesIdentical(r1, r2))
+        if (rectanglesIdentical(resizeStart.originalRectangle, getSides(ui.helper)))
         {
           <?php
           // Restore the proper height and width so that if the browser zoom
@@ -1049,128 +1041,127 @@ init = function(args) {
           ?>
           ui.element.css({width: '100%', height: '100%'});
           $('table.dwm_main').removeClass('resizing');
+          return;
         }
-        else
+
+        <?php 
+        // We've got a change to the booking, so we need to send an Ajax
+        // request to the server to make the new booking
+        ?>
+        var data = {csrf_token: getCSRFToken(),
+                    ajax: 1, 
+                    commit: 1},
+            booking = ui.element.find('a');
+        <?php // get the booking id and type ?>
+        data.id = booking.data('id');
+        data.type = booking.data('type');
+        <?php // get the other parameters ?>
+        var oldParams = resizeStart.oldParams;
+        var newParams = getBookingParams(table, tableData, booking);
+        if (newParams.seconds !== undefined)
         {
-          <?php 
-          // We've got a change to the booking, so we need to send an Ajax
-          // request to the server to make the new booking
-          ?>
-          var data = {csrf_token: getCSRFToken(),
-                      ajax: 1, 
-                      commit: 1},
-              booking = ui.element.find('a');
-          <?php // get the booking id and type ?>
-          data.id = booking.data('id');
-          data.type = booking.data('type');
-          <?php // get the other parameters ?>
-          var oldParams = resizeStart.oldParams;
-          var newParams = getBookingParams(table, tableData, booking);
-          if (newParams.seconds !== undefined)
-          {
-            <?php
-            // We only send through the time parameters that have changed.
-            // This is so that edit_entry_handler.php knows whether to use
-            // the original booking parameters.    We need to do this so that
-            // we can properly handle multi-day bookings in the week view.
-            ?>
-            if (newParams.seconds[0] !== oldParams.seconds[0])
-            {
-              data.start_seconds = newParams.seconds[0];
-            }
-            if (newParams.seconds[newParams.seconds.length - 1] !==
-                oldParams.seconds[oldParams.seconds.length - 1])
-            {
-              data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
-              <?php
-              if ($enable_periods)
-              {
-                // When we're dealing with periods the end time is defined as
-                // the start of the last period (as opposed to the start of the
-                // next slot in times mode)
-                ?>
-                data.end_seconds -= 60;
-                <?php
-              }
-              ?>
-            }
-          }
-          data.view = args.view;
-          if (args.view === 'day')
-          {
-            data.start_date = args.page_date;
-
-          }
-          else  <?php // it's 'week' ?>
-          {
-            data.start_date = newParams.date[0];
-            var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
-            if (args.isAdmin || !onlyAdminCanBookRepeat)
-            {
-              if (newParams.date.length > 1)
-              {
-                data.rep_type = <?php echo REP_DAILY ?>;
-                data.rep_end_date = newParams.date[newParams.date.length - 1];
-              }
-            }
-          }
-          data.end_date = data.start_date;
-          data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
           <?php
-          if (isset($timetohighlight))
-          {
-            ?>
-            data.timetohighlight = <?php echo $timetohighlight ?>;
-            <?php
-          }
-          
-          // Give some visual feedback that the change is being saved.   Note that the span
-          // is inserted after the elemement rather than appended, because if it's a child
-          // then any opacity rule that is applied to the parent will also apply to the child.
+          // We only send through the time parameters that have changed.
+          // This is so that edit_entry_handler.php knows whether to use
+          // the original booking parameters.    We need to do this so that
+          // we can properly handle multi-day bookings in the week view.
           ?>
-          booking.addClass('saving')
-                 .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
+          if (newParams.seconds[0] !== oldParams.seconds[0])
+          {
+            data.start_seconds = newParams.seconds[0];
+          }
+          if (newParams.seconds[newParams.seconds.length - 1] !==
+              oldParams.seconds[oldParams.seconds.length - 1])
+          {
+            data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
+            <?php
+            if ($enable_periods)
+            {
+              // When we're dealing with periods the end time is defined as
+              // the start of the last period (as opposed to the start of the
+              // next slot in times mode)
+              ?>
+              data.end_seconds -= 60;
+              <?php
+            }
+            ?>
+          }
+        }
+        data.view = args.view;
+        if (args.view === 'day')
+        {
+          data.start_date = args.page_date;
 
-          $.post('edit_entry_handler.php',
-                 data,
-                 function(result) {
-                    <?php
-                    // Load the new HTML.   (1) Empty the existing
-                    // table in order to get rid of events and data and
-                    // prevent memory leaks (2) insert the updated table HTML
-                    // and then (3) trigger a table load event so that the
-                    // resizable bookings are re-created
-                    ?>
-                    table.empty()
-                         .html(result.table_innerhtml)
-                         .trigger('load');
-                    <?php
-                    // If the booking failed then show an alert explaining why.
-                    ?>
-                    if (!result.valid_booking)
+        }
+        else  <?php // it's 'week' ?>
+        {
+          data.start_date = newParams.date[0];
+          var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
+          if (args.isAdmin || !onlyAdminCanBookRepeat)
+          {
+            if (newParams.date.length > 1)
+            {
+              data.rep_type = <?php echo REP_DAILY ?>;
+              data.rep_end_date = newParams.date[newParams.date.length - 1];
+            }
+          }
+        }
+        data.end_date = data.start_date;
+        data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
+        <?php
+        if (isset($timetohighlight))
+        {
+          ?>
+          data.timetohighlight = <?php echo $timetohighlight ?>;
+          <?php
+        }
+        
+        // Give some visual feedback that the change is being saved.   Note that the span
+        // is inserted after the elemement rather than appended, because if it's a child
+        // then any opacity rule that is applied to the parent will also apply to the child.
+        ?>
+        booking.addClass('saving')
+               .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
+
+        $.post('edit_entry_handler.php',
+               data,
+               function(result) {
+                  <?php
+                  // Load the new HTML.   (1) Empty the existing
+                  // table in order to get rid of events and data and
+                  // prevent memory leaks (2) insert the updated table HTML
+                  // and then (3) trigger a table load event so that the
+                  // resizable bookings are re-created
+                  ?>
+                  table.empty()
+                       .html(result.table_innerhtml)
+                       .trigger('load');
+                  <?php
+                  // If the booking failed then show an alert explaining why.
+                  ?>
+                  if (!result.valid_booking)
+                  {
+                    var alertMessage = '';
+                    if (result.conflicts.length > 0)
                     {
-                      var alertMessage = '';
+                      alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
+                      var conflictsList = getErrorList(result.conflicts);
+                      alertMessage += conflictsList.text;
+                    }
+                    if (result.violations.errors.length > 0)
+                    {
                       if (result.conflicts.length > 0)
                       {
-                        alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
-                        var conflictsList = getErrorList(result.conflicts);
-                        alertMessage += conflictsList.text;
+                        alertMessage += "\n\n";
                       }
-                      if (result.violations.errors.length > 0)
-                      {
-                        if (result.conflicts.length > 0)
-                        {
-                          alertMessage += "\n\n";
-                        }
-                        alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
-                        var rulesList = getErrorList(result.violations.errors);
-                        alertMessage += rulesList.text;
-                      }
-                      window.alert(alertMessage);
+                      alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
+                      var rulesList = getErrorList(result.violations.errors);
+                      alertMessage += rulesList.text;
                     }
-                  },
-                 'json');
-        }   <?php // if (rectanglesIdentical(r1, r2)) ?>
+                    window.alert(alertMessage);
+                  }
+                },
+               'json');
     
       };  <?php // resizeStop ?>
            
