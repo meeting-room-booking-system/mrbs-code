@@ -925,7 +925,7 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 's');
             if (event.pageY <= closest)
             {
-              ui.position.top = closest;
+              ui.position.top = closest + Table.borderTopWidth;
               ui.element.resizable('option', 'maxHeight', ui.originalSize.height + ui.originalPosition.top - ui.position.top);
             }
             else
@@ -939,7 +939,7 @@ init = function(args) {
             closest = getClosestSide(overlappedElements, 'e');
             if (event.pageX <= closest)
             {
-              ui.position.left = closest + <?php echo (int) $main_table_cell_border_width ?>;
+              ui.position.left = closest + Table.borderLeftWidth;
               ui.element.resizable('option', 'maxWidth', ui.originalSize.width + ui.originalPosition.left - ui.position.left);
             }
             else
