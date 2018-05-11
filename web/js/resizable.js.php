@@ -255,7 +255,62 @@ var Table = {
       } <?php // for (axis in cell) ?>
       return params;
     },  <?php // getBookingParams() ?>
+
+    
+  getRowNumber: function(y) {
+      for (var i=0; i<Table.grid.y.data.length - 1; i++)
+      {
+        if ((y >= Table.grid.y.data[i].coord) && 
+            (y < Table.grid.y.data[i+1].coord))
+        {
+          return i;
+        }
+      }
+      return null;
+    },  <?php // getRowNumber ?>
+
+
+  <?php // Remove any highlighting that has been applied to the row labels ?>
+  clearRowLabels: function() {
+      if (Table.highlightRowLabels.rows !== undefined)
+      {
+        for (var i=0; i < Table.highlightRowLabels.rows.length; i++)
+        {
+          Table.highlightRowLabels.rows[i].removeClass('selected');
+        }
+      }
+    },  <?php // clearRowLabels ?>
   
+
+  <?php
+  // function to highlight the row labels in the table that are level
+  // with the element el
+  ?>
+  highlightRowLabels: function (el) {
+      if (Table.highlightRowLabels.rows === undefined)
+      {
+        <?php // Cache the row label cells in an array ?>
+        Table.highlightRowLabels.rows = [];
+        $(Table.selector).find('tbody tr').each(function() {
+            Table.highlightRowLabels.rows.push($(this).find('td.row_labels'));
+          });
+      }
+      var elStartRow = Table.getRowNumber(el.offset().top);
+      var elEndRow = Table.getRowNumber(el.offset().top + el.outerHeight());
+      for (var i=0; i<Table.highlightRowLabels.rows.length ; i++)
+      {
+        if (((elStartRow === null) || (elStartRow <= i)) && 
+            ((elEndRow === null) || (i < elEndRow)))
+        {
+          Table.highlightRowLabels.rows[i].addClass('selected');
+        }
+        else
+        {
+          Table.highlightRowLabels.rows[i].removeClass('selected');
+        }
+      }
+    },  <?php // highlightRowLabels ?>
+
   <?php
   // Tests whether the point p with coordinates x and y is outside the table
   ?>
@@ -530,62 +585,6 @@ var Table = {
 };
 
 
-function getRowNumber(tableData, y)
-{
-  for (var i=0; i<tableData.y.data.length - 1; i++)
-  {
-    if (y >= tableData.y.data[i].coord && y < tableData.y.data[i+1].coord)
-    {
-      return i;
-    }
-  }
-  return null;
-}
-
-
-<?php
-// function to highlight the row labels in the table that are level
-// with the element el
-?>
-var highlightRowLabels = function (table, tableData, el)
-{
-  if (highlightRowLabels.rows === undefined)
-  {
-    <?php // Cache the row label cells in an array ?>
-    highlightRowLabels.rows = [];
-    table.find('tbody tr').each(function() {
-        highlightRowLabels.rows.push($(this).find('td.row_labels'));
-      });
-  }
-  var elStartRow = getRowNumber(tableData, el.offset().top);
-  var elEndRow = getRowNumber(tableData, el.offset().top + el.outerHeight());
-  for (var i=0; i<highlightRowLabels.rows.length ; i++)
-  {
-    if (((elStartRow === null) || (elStartRow <= i)) && 
-        ((elEndRow === null) || (i < elEndRow)))
-    {
-      highlightRowLabels.rows[i].addClass('selected');
-    }
-    else
-    {
-      highlightRowLabels.rows[i].removeClass('selected');
-    }
-  }
-};
-      
-      
-<?php // Remove any highlighting that has been applied to the row labels ?>
-function clearRowLabels()
-{
-  if (highlightRowLabels.rows !== undefined)
-  {
-    for (var i=0; i<highlightRowLabels.rows.length; i++)
-    {
-      highlightRowLabels.rows[i].removeClass('selected');
-    }
-  }
-}
-
 <?php
 
 // =================================================================================
@@ -753,7 +752,7 @@ init = function(args) {
             {
               box.addClass('outside');
               moveHandler.outside = true;
-              clearRowLabels();
+              Table.clearRowLabels();
             }
           }
           else if (moveHandler.outside)
@@ -767,7 +766,7 @@ init = function(args) {
           ?>
           if (!moveHandler.outside)
           {
-            //highlightRowLabels(table, tableData, box);
+            Table.highlightRowLabels(box);
           }
         };
 
@@ -1006,7 +1005,7 @@ init = function(args) {
         
         resize.lastRectangle = $.extend({}, rectangle);
         
-        // highlightRowLabels(table, tableData, booking);
+        Table.highlightRowLabels(ui.helper);
         
       };  <?php // resize ?>
         
