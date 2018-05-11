@@ -614,7 +614,7 @@ init = function(args) {
   // the window causes other things to be re-initialised, which we don't want.   For example
   // if we have the datepicker open we don't want that to be reset.
   ?>
-  $('table.dwm_main').not('#month_main').on('load', function() {
+  $(Table.selector).on('load', function() {
       var table = $(this);
       
       <?php // Don't do anything if this is an empty table ?>
@@ -788,7 +788,7 @@ init = function(args) {
           if (Table.outside({x: e.pageX, y: e.pageY}))
           {
             box.remove();
-            $('table.dwm_main').removeClass('resizing');
+            $(Table.selector).removeClass('resizing');
             return;
           }
           <?php
@@ -807,7 +807,7 @@ init = function(args) {
             else
             {
               box.remove();
-              $('table.dwm_main').removeClass('resizing');
+              $(Table.selector).removeClass('resizing');
             }
             return;
           }
@@ -1054,7 +1054,7 @@ init = function(args) {
           // resizing will have set actual pixel values instead of percentages).
           ?>
           ui.element.css({width: '100%', height: '100%'});
-          $('table.dwm_main').removeClass('resizing');
+          $(Table.selector).removeClass('resizing');
           return;
         }
 
