@@ -77,10 +77,10 @@ function rectanglesOverlap(r1, r2)
   // rectangles don't overlap.   Otherwise they must do.   We allow the sides to
   // be on top of each other (ie we use >= and <=).
   ?>
-  if ((r1.n >= r2.s) ||
-      (r1.s <= r2.n) ||
-      (r1.w >= r2.e) ||
-      (r1.e <= r2.w))
+  if ((Math.round(r1.n - r2.s) >= 0) ||
+      (Math.round(r1.s - r2.n) <= 0) ||
+      (Math.round(r1.w - r2.e) >= 0) ||
+      (Math.round(r1.e - r2.w) <= 0))
   {
     return false;
   }
