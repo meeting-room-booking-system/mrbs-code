@@ -6,6 +6,7 @@ $first_last_width = 1;  // (%)
 $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
                             //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 
+                            
 function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
 {
   // Enters the contents of the booking found in $entry into $column, which is
@@ -83,14 +84,15 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
          !getWritable($entry['create_by'], $user, $entry['room_id']))
   {
     $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
-    if ($is_private_field['entry.name'])
+    
+    foreach (array('name', 'description') as $key)
     {
-      $entry['name'] = "[".get_vocab('unavailable')."]";
+      if ($is_private_field["entry.$key"])
+      {
+        $entry[$key] = '[' . get_vocab('unavailable') . ']';
+      }
     }
-    if ($is_private_field['entry.description'])
-    {
-      $entry['description'] = "[".get_vocab('unavailable')."]";
-    }
+    
     if (!empty($is_private_field['entry.type']))
     {
       $entry['type'] = 'private_type';
