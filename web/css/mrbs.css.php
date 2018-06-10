@@ -632,7 +632,7 @@ table.dwm_main {
 }
 
 .dwm_main .booked a,
-.dwm_main .booking-wrapper,
+.dwm_main .booking,
 .dwm_main .booked span.saving {
   position: absolute;
   top: 0;
@@ -649,12 +649,12 @@ table.dwm_main {
 ?>
 @media all and (-ms-high-contrast: none), all and (-ms-high-contrast: active)
 {
-  .dwm_main .booking-wrapper {
+  .dwm_main .booking {
     position: relative;
   }
 }
 
-.dwm_main .booking-wrapper {
+.dwm_main .booking {
   width: 100%;
   height: 100%;
   min-height: <?php echo $main_cell_height ?>;

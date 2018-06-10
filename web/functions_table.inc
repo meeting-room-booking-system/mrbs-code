@@ -559,7 +559,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
         // border-box for the bookings because we are using padding on the bookings and we want
         // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
         // including content.
-        $html .= '<div class="booking-wrapper">';
+        $html .= '<div class="booking">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
                    ' title="' . htmlspecialchars($description) . '"' .
                    ' class="' . $type . '"' .
