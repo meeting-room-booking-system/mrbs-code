@@ -79,6 +79,8 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   global $resolution;
   global $is_private_field;
   
+  $data_keys = array('name', 'description', 'create_by', 'room_id');
+  
   $user = getUserName();
   if (is_private_event($entry['status'] & STATUS_PRIVATE) &&
          !getWritable($entry['create_by'], $user, $entry['room_id']))
@@ -132,22 +134,20 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     $column[$s][$n]["type"] = $entry['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
     $column[$s][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
-    // if it's a multiple booking also fill in the name and description
-    if ($n > 0)
+    
+    foreach ($data_keys as $key)
     {
-      $column[$s][$n]["name"] = $entry['name'];
-      $column[$s][$n]["description"] = $entry['description'];
-      $column[$s][$n]["create_by"] = $entry['create_by'];
-      $column[$s][$n]["room_id"] = $entry['room_id'];
-    }
-    // otherwise just leave them blank (we'll fill in the first whole slot later)
-    // use null rather than '' just in case the value really is ''
-    else
-    {
-      $column[$s][$n]["name"] = null;
-      $column[$s][$n]["description"] = null;
-      $column[$s][$n]["create_by"] = null;
-      $column[$s][$n]["room_id"] = null;
+      // if it's a multiple booking also fill in the data key
+      if ($n > 0)
+      {
+        $column[$s][$n][$key] = $entry[$key];
+      }
+      // otherwise just leave it blank (we'll fill in the first whole slot later)
+      // use null rather than '' just in case the value really is ''
+      else
+      {
+        $column[$s][$n][$key] = null;
+      }
     }
   } // end for
   
@@ -179,28 +179,28 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     {
       if ($column[$end_s][0]["slots"] > 1)
       {
-        // Move the name and description into the new first slot and decrement the number of slots
-        $column[$end_s + $resolution][0]["name"]        = $column[$end_s][0]["name"];
-        $column[$end_s + $resolution][0]["description"] = $column[$end_s][0]["description"];
-        $column[$end_s + $resolution][0]["create_by"]   = $column[$end_s][0]["create_by"];
-        $column[$end_s + $resolution][0]["room_id"]     = $column[$end_s][0]["room_id"];
-        $column[$end_s + $resolution][0]["slots"]       = $column[$end_s][0]["slots"] - 1;
+        // Move the dats into the new first slot and decrement the number of slots
+        foreach ($data_keys as $key)
+        {
+          $column[$end_s + $resolution][0][$key] = $column[$end_s][0][$key];
+        }
+        $column[$end_s + $resolution][0]['slots'] = $column[$end_s][0]['slots'] - 1;
       }
     }
   }
   
   // and if the first time slot is already occupied, decrement
   // again, adjust the first slot for this booking
-  if (isset($column[$start_s][1]["id"]))
+  if (isset($column[$start_s][1]['id']))
   {
     $n_slots--;
     $first_slot += $resolution;
     // If we're only the second booking to land on this time slot
     // then we'll have to adjust the information held for the first booking
-    if (!isset($column[$start_s][2]["id"]))
+    if (!isset($column[$start_s][2]['id']))
     {
       // Find the first slot ($s) of the first booking
-      $first_booking_id = $column[$start_s][0]["id"];
+      $first_booking_id = $column[$start_s][0]['id'];
       $r = $start_s;
       // If you've got to the first slot of the day then that must be the
       // first slot of the first booking
@@ -213,7 +213,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
         {
           foreach ($column[$r] as $booking)
           {
-            if ($booking["id"] == $first_booking_id)
+            if ($booking['id'] == $first_booking_id)
             {
               continue 2;  // next iteration of the while loop
             }
@@ -239,11 +239,11 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
       // no need to worry about count going < 1: the multiple booking display
       // does not use the slot count.
       $column[$r][$i]["slots"]--;
-      // and put the name and description in the multiply booked slot
-      $column[$start_s][0]["name"]        = $column[$r][$i]["name"];
-      $column[$start_s][0]["description"] = $column[$r][$i]["description"];
-      $column[$start_s][0]["create_by"]   = $column[$r][$i]["create_by"];
-      $column[$start_s][0]["room_id"]     = $column[$r][$i]["room_id"];
+      // and put the data in the multiply booked slot
+      foreach ($data_keys as $key)
+      {
+        $column[$start_s][0][$key] = $column[$r][$i][$key];
+      }
     }
   }
  
@@ -251,11 +251,11 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   // slot for the booking (provided it's not a multiple booking slot)
   if (!isset($column[$first_slot][1]["id"]))
   {
-    $column[$first_slot][0]["name"]        = $entry['name'];
-    $column[$first_slot][0]["description"] = $entry['description'];
-    $column[$first_slot][0]["create_by"]   = $entry['create_by']; 
-    $column[$first_slot][0]["room_id"]     = $entry['room_id']; 
-    $column[$first_slot][0]["slots"]       = $n_slots;
+    foreach ($data_keys as $key)
+    {
+      $column[$first_slot][0][$key] = $entry[$key];
+    }    
+    $column[$first_slot][0]['slots'] = $n_slots;
   }
 
 } // end function map_add_booking()
