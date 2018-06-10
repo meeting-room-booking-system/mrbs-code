@@ -339,8 +339,8 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status      = $cell[$n]["status"];
       $type        = $cell[$n]["type"];
-      $descr       = htmlspecialchars($cell[$n]["data"]);
-      $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
+      $descr       = $cell[$n]["data"];
+      $long_descr  = $cell[$n]["long_descr"];
       $class = "booked $type";
       if ($status & STATUS_PRIVATE)
       {
@@ -399,8 +399,8 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status      = $cell[$n]["status"];
       $type        = $cell[$n]["type"];
-      $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
-      $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
+      $descr       = $cell[$n]["start_time"] . " " . $cell[$n]["data"];
+      $long_descr  = $cell[$n]["long_descr"];
       
       $classes = array('booked', $type);
       if ($status & STATUS_PRIVATE)
@@ -438,8 +438,9 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $vars['id'] = $id;
       $query = http_build_query($vars, '', '&');
       
-      $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . "\" title=\"$long_descr\">";
-      $html .= "$descr</a>\n";
+      $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
+                  'title="' . htmlspecialchars($long_descr). '">';
+      $html .= htmlspecialchars($descr) . "</a>\n";
       $html .= "</div>\n";
      
       $html .= "</td>\n";
@@ -463,8 +464,8 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_end   = $cell[0]["is_multiday_end"];
       $status     = $cell[0]["status"];
       $type       = $cell[0]["type"];
-      $descr      = isset($cell[0]["data"]) ? htmlspecialchars($cell[0]["data"]) : NULL;
-      $long_descr = htmlspecialchars($cell[0]["long_descr"]);
+      $descr      = isset($cell[0]["data"]) ? $cell[0]["data"] : null;
+      $long_descr = $cell[0]["long_descr"];
       $slots      = $cell[0]["slots"];
     }
     else  // id not set
@@ -557,11 +558,11 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         // including content.
         $html .= '<div class="booking-wrapper">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
-                   ' title="' . $long_descr . '"' .
+                   ' title="' . htmlspecialchars($long_descr) . '"' .
                    ' class="' . $type . '"' .
                    ' data-id="' .$id . '"' .
                    ' data-type="' . $type . '">';
-        $html .= $descr . '</a>';
+        $html .= htmlspecialchars($descr) . '</a>';
         $html .= "</div>\n";
       }
       $html .= "</td>\n";
