@@ -308,6 +308,15 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   $html = '';
   $user = getUserName();
   
+  $vars = array('id',
+                'is_repeat',
+                'is_multiday_start',
+                'is_multiday_end',
+                'status',
+                'type',
+                'name',
+                'description');
+  
   // if the time slot has got multiple bookings, then draw a mini-table
   if(isset($cell[1]["id"]))
   {
@@ -335,15 +344,13 @@ function cell_html($cell, $query_vars, $is_invalid = false)
                                             // and (b) each stripe is at least 1 unit high
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id           = $cell[$n]["id"];
-      $is_repeat    = $cell[$n]["is_repeat"];
-      $is_multiday_start = $cell[$n]["is_multiday_start"];
-      $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status       = $cell[$n]["status"];
-      $type         = $cell[$n]["type"];
-      $name         = $cell[$n]["name"];
-      $description  = $cell[$n]["description"];
+      foreach ($vars as $var)
+      {
+        $$var = $cell[$n][$var];
+      }
+      
       $class = "booked $type";
+      
       if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
@@ -395,14 +402,12 @@ function cell_html($cell, $query_vars, $is_invalid = false)
     $html .= "<tbody>\n";
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id           = $cell[$n]["id"];
-      $is_repeat    = $cell[$n]["is_repeat"];
-      $is_multiday_start = $cell[$n]["is_multiday_start"];
-      $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status       = $cell[$n]["status"];
-      $type         = $cell[$n]["type"];
-      $name         = $cell[$n]["start_time"] . " " . $cell[$n]["name"];
-      $description  = $cell[$n]["description"];
+      foreach ($vars as $var)
+      {
+        $$var = $cell[$n][$var];
+      }
+      
+      $name = $cell[$n]["start_time"] . ' ' . $name;
       
       $classes = array('booked', $type);
       if ($status & STATUS_PRIVATE)
@@ -458,17 +463,13 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   // otherwise draw a cell, showing either the booking or a blank cell
   else
   {  
-    if(isset($cell[0]["id"]))
-    {       
-      $id          = $cell[0]["id"];
-      $is_repeat   = $cell[0]["is_repeat"];
-      $is_multiday_start = $cell[0]["is_multiday_start"];
-      $is_multiday_end   = $cell[0]["is_multiday_end"];
-      $status      = $cell[0]["status"];
-      $type        = $cell[0]["type"];
-      $name        = isset($cell[0]["name"]) ? $cell[0]["name"] : null;
-      $description = $cell[0]["description"];
-      $slots       = $cell[0]["slots"];
+    if(isset($cell[0]['id']))
+    {      
+      foreach ($vars as $var)
+      {
+        $$var = isset($cell[0][$var]) ? $cell[0][$var] : null;
+      }
+      $slots       = $cell[0]['slots'];
     }
     else  // id not set
     {
