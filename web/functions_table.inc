@@ -476,18 +476,6 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       unset($id);
       $slots = 1;
     }
-
-    $classes = array();
-    
-    // We tell if its booked by $id and $name having something in them
-    if (isset($id) && isset($name))
-    {
-      $classes[] = 'booked';
-    }
-    else
-    {
-      $classes[] = ($is_invalid) ? 'invalid' : 'new';
-    }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
     // This would mean that it's the second or subsequent slot of a booking and so the
@@ -496,7 +484,21 @@ function cell_html($cell, $query_vars, $is_invalid = false)
 
     if (!isset($id) || isset($name))
     {
-      $html .= tdcell($classes, $slots);
+      // We tell if its booked by $id and $name having something in them
+      if (isset($id) && isset($name))
+      {
+        $class = 'booked';
+      }
+      elseif ($is_invalid)
+      {
+        $class = 'invalid';
+      }
+      else
+      {
+        $class = 'new';
+      }
+      
+      $html .= tdcell($class, $slots);
 
       // If the room isn't booked then allow it to be booked
       if (!isset($id))
