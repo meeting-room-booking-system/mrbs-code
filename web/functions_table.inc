@@ -469,12 +469,10 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       {
         $$var = isset($cell[0][$var]) ? $cell[0][$var] : null;
       }
-      $slots       = $cell[0]['slots'];
     }
     else  // id not set
     {
       unset($id);
-      $slots = 1;
     }
     
     // Don't put in a <td> cell if the slot is booked and there's no description.
@@ -497,6 +495,9 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       {
         $class = 'new';
       }
+      
+      // If there's no booking or if there are multiple boookings then make the slot one unit long
+      $slots = (count($cell) == 1) ? $cell[0]['slots'] : 1;
       
       $html .= tdcell($class, $slots);
 
