@@ -38,7 +38,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //                                          beyond the day end
   //                  [type]
   //                  [data]
-  //                  [long_descr]
+  //                  [description]
   //                  [create_by]
   //                  [room_id]
   //                  [start_time]
@@ -129,23 +129,23 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     $column[$s][$n]["status"] = $entry['status'];
     $column[$s][$n]["type"] = $entry['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
-    $column[$s][$n]["slots"] = NULL;  // to avoid undefined index NOTICE errors
+    $column[$s][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
       $column[$s][$n]["data"] = $entry['name'];
-      $column[$s][$n]["long_descr"] = $entry['description'];
+      $column[$s][$n]["description"] = $entry['description'];
       $column[$s][$n]["create_by"] = $entry['create_by'];
       $column[$s][$n]["room_id"] = $entry['room_id'];
     }
     // otherwise just leave them blank (we'll fill in the first whole slot later)
-    // use NULL rather than '' just in case the value really is ''
+    // use null rather than '' just in case the value really is ''
     else
     {
-      $column[$s][$n]["data"] = NULL;
-      $column[$s][$n]["long_descr"] = NULL;
-      $column[$s][$n]["create_by"] = NULL;
-      $column[$s][$n]["room_id"] = NULL;
+      $column[$s][$n]["data"] = null;
+      $column[$s][$n]["description"] = null;
+      $column[$s][$n]["create_by"] = null;
+      $column[$s][$n]["room_id"] = null;
     }
   } // end for
   
@@ -178,11 +178,11 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
       if ($column[$end_s][0]["slots"] > 1)
       {
         // Move the name and description into the new first slot and decrement the number of slots
-        $column[$end_s + $resolution][0]["data"]       = $column[$end_s][0]["data"];
-        $column[$end_s + $resolution][0]["long_descr"] = $column[$end_s][0]["long_descr"];
-        $column[$end_s + $resolution][0]["create_by"]  = $column[$end_s][0]["create_by"];
-        $column[$end_s + $resolution][0]["room_id"]    = $column[$end_s][0]["room_id"];
-        $column[$end_s + $resolution][0]["slots"]      = $column[$end_s][0]["slots"] - 1;
+        $column[$end_s + $resolution][0]["data"]        = $column[$end_s][0]["data"];
+        $column[$end_s + $resolution][0]["description"] = $column[$end_s][0]["description"];
+        $column[$end_s + $resolution][0]["create_by"]   = $column[$end_s][0]["create_by"];
+        $column[$end_s + $resolution][0]["room_id"]     = $column[$end_s][0]["room_id"];
+        $column[$end_s + $resolution][0]["slots"]       = $column[$end_s][0]["slots"] - 1;
       }
     }
   }
@@ -238,10 +238,10 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
       // does not use the slot count.
       $column[$r][$i]["slots"]--;
       // and put the name and description in the multiply booked slot
-      $column[$start_s][0]["data"]       = $column[$r][$i]["data"];
-      $column[$start_s][0]["long_descr"] = $column[$r][$i]["long_descr"];
-      $column[$start_s][0]["create_by"]  = $column[$r][$i]["create_by"];
-      $column[$start_s][0]["room_id"]    = $column[$r][$i]["room_id"];
+      $column[$start_s][0]["data"]        = $column[$r][$i]["data"];
+      $column[$start_s][0]["description"] = $column[$r][$i]["description"];
+      $column[$start_s][0]["create_by"]   = $column[$r][$i]["create_by"];
+      $column[$start_s][0]["room_id"]     = $column[$r][$i]["room_id"];
     }
   }
  
@@ -249,18 +249,18 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   // slot for the booking (provided it's not a multiple booking slot)
   if (!isset($column[$first_slot][1]["id"]))
   {
-    $column[$first_slot][0]["data"]       = $entry['name'];
-    $column[$first_slot][0]["long_descr"] = $entry['description'];
-    $column[$first_slot][0]["create_by"]  = $entry['create_by']; 
-    $column[$first_slot][0]["room_id"]    = $entry['room_id']; 
-    $column[$first_slot][0]["slots"]      = $n_slots;
+    $column[$first_slot][0]["data"]        = $entry['name'];
+    $column[$first_slot][0]["description"] = $entry['description'];
+    $column[$first_slot][0]["create_by"]   = $entry['create_by']; 
+    $column[$first_slot][0]["room_id"]     = $entry['room_id']; 
+    $column[$first_slot][0]["slots"]       = $n_slots;
   }
 
 } // end function map_add_booking()
 
 
 
-function cell_html($cell, $query_vars, $is_invalid = FALSE)
+function cell_html($cell, $query_vars, $is_invalid = false)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -273,7 +273,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
   //         [is_multiday_end]
   //         [type]
   //         [data]
-  //         [long_descr]
+  //         [description]
   //         [create_by]
   //         [room_id]
   //         [start_time]
@@ -333,14 +333,14 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
                                             // and (b) each stripe is at least 1 unit high
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id          = $cell[$n]["id"];
-      $is_repeat   = $cell[$n]["is_repeat"];
+      $id           = $cell[$n]["id"];
+      $is_repeat    = $cell[$n]["is_repeat"];
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status      = $cell[$n]["status"];
-      $type        = $cell[$n]["type"];
-      $descr       = $cell[$n]["data"];
-      $long_descr  = $cell[$n]["long_descr"];
+      $status       = $cell[$n]["status"];
+      $type         = $cell[$n]["type"];
+      $descr        = $cell[$n]["data"];
+      $description  = $cell[$n]["description"];
       $class = "booked $type";
       if ($status & STATUS_PRIVATE)
       {
@@ -393,14 +393,14 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     $html .= "<tbody>\n";
     for ($n=0; $n<$n_bookings; $n++)
     {
-      $id          = $cell[$n]["id"];
-      $is_repeat   = $cell[$n]["is_repeat"];
+      $id           = $cell[$n]["id"];
+      $is_repeat    = $cell[$n]["is_repeat"];
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status      = $cell[$n]["status"];
-      $type        = $cell[$n]["type"];
-      $descr       = $cell[$n]["start_time"] . " " . $cell[$n]["data"];
-      $long_descr  = $cell[$n]["long_descr"];
+      $status       = $cell[$n]["status"];
+      $type         = $cell[$n]["type"];
+      $descr        = $cell[$n]["start_time"] . " " . $cell[$n]["data"];
+      $description  = $cell[$n]["description"];
       
       $classes = array('booked', $type);
       if ($status & STATUS_PRIVATE)
@@ -439,7 +439,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $query = http_build_query($vars, '', '&');
       
       $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
-                  'title="' . htmlspecialchars($long_descr). '">';
+                  'title="' . htmlspecialchars($description). '">';
       $html .= htmlspecialchars($descr) . "</a>\n";
       $html .= "</div>\n";
      
@@ -458,15 +458,15 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
   {  
     if(isset($cell[0]["id"]))
     {       
-      $id         = $cell[0]["id"];
-      $is_repeat  = $cell[0]["is_repeat"];
+      $id          = $cell[0]["id"];
+      $is_repeat   = $cell[0]["is_repeat"];
       $is_multiday_start = $cell[0]["is_multiday_start"];
       $is_multiday_end   = $cell[0]["is_multiday_end"];
-      $status     = $cell[0]["status"];
-      $type       = $cell[0]["type"];
-      $descr      = isset($cell[0]["data"]) ? $cell[0]["data"] : null;
-      $long_descr = $cell[0]["long_descr"];
-      $slots      = $cell[0]["slots"];
+      $status      = $cell[0]["status"];
+      $type        = $cell[0]["type"];
+      $descr       = isset($cell[0]["data"]) ? $cell[0]["data"] : null;
+      $description = $cell[0]["description"];
+      $slots       = $cell[0]["slots"];
     }
     else  // id not set
     {
@@ -558,7 +558,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         // including content.
         $html .= '<div class="booking-wrapper">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
-                   ' title="' . htmlspecialchars($long_descr) . '"' .
+                   ' title="' . htmlspecialchars($description) . '"' .
                    ' class="' . $type . '"' .
                    ' data-id="' .$id . '"' .
                    ' data-type="' . $type . '">';
@@ -752,7 +752,7 @@ function get_main_column_width($n_columns, $n_hidden=0)
 }
 
 
-function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=NULL)
+function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -940,7 +940,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         }
         $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
-      if ( FALSE != $row_labels_both_sides )
+      if ( false != $row_labels_both_sides )
       {
         $tbody .= room_cell_html($room, $room_cell_link);
       }
@@ -1004,7 +1004,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       }
       
       // next lines to display times on right side
-      if ( FALSE != $row_labels_both_sides )
+      if ( false != $row_labels_both_sides )
       {
         $tbody .= time_cell_html($s, $url);
       }
@@ -1019,7 +1019,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
 }
 
 
-function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=NULL)
+function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -1256,7 +1256,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
           }
           $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }  // end looping through the time slots
-        if ( FALSE != $row_labels_both_sides )
+        if ( false != $row_labels_both_sides )
         {
           $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
         }
@@ -1334,7 +1334,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
       }    // for loop
   
       // next lines to display times on right side
-      if ( FALSE != $row_labels_both_sides )
+      if ( false != $row_labels_both_sides )
         {
           $tbody .= time_cell_html($s, $url);
         }
