@@ -36,7 +36,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //                                       beyond the day start
   //                  [is_multiday_end]    a boolean indicating if the booking stretches
   //                                          beyond the day end
-  //                  [color]
+  //                  [type]
   //                  [data]
   //                  [long_descr]
   //                  [create_by]
@@ -127,7 +127,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
     $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
     $column[$s][$n]["status"] = $entry['status'];
-    $column[$s][$n]["color"] = $entry['type'];
+    $column[$s][$n]["type"] = $entry['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
     $column[$s][$n]["slots"] = NULL;  // to avoid undefined index NOTICE errors
     // if it's a multiple booking also fill in the name and description
@@ -271,7 +271,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
   //         [is_repeat]
   //         [is_multiday_start]
   //         [is_multiday_end]
-  //         [color]
+  //         [type]
   //         [data]
   //         [long_descr]
   //         [create_by]
@@ -338,10 +338,10 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status      = $cell[$n]["status"];
-      $color       = $cell[$n]["color"];
+      $type        = $cell[$n]["type"];
       $descr       = htmlspecialchars($cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
-      $class = "booked $color";
+      $class = "booked $type";
       if ($status & STATUS_PRIVATE)
       {
         $class .= " private";
@@ -398,11 +398,11 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status      = $cell[$n]["status"];
-      $color       = $cell[$n]["color"];
+      $type        = $cell[$n]["type"];
       $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
       
-      $classes = array('booked', $color);
+      $classes = array('booked', $type);
       if ($status & STATUS_PRIVATE)
       {
         $classes[] = 'private';
@@ -462,7 +462,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
       $is_multiday_start = $cell[0]["is_multiday_start"];
       $is_multiday_end   = $cell[0]["is_multiday_end"];
       $status     = $cell[0]["status"];
-      $color      = $cell[0]["color"];
+      $type       = $cell[0]["type"];
       $descr      = isset($cell[0]["data"]) ? htmlspecialchars($cell[0]["data"]) : NULL;
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
       $slots      = $cell[0]["slots"];
@@ -479,7 +479,7 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
     if (isset($id) && isset($descr))
     {
       $classes[] = 'booked';
-      $classes[] = $color;
+      $classes[] = $type;
       
       if ($status & STATUS_PRIVATE)
       {
@@ -558,9 +558,9 @@ function cell_html($cell, $query_vars, $is_invalid = FALSE)
         $html .= '<div class="booking-wrapper">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
                    ' title="' . $long_descr . '"' .
-                   ' class="' . $color . '"' .
+                   ' class="' . $type . '"' .
                    ' data-id="' .$id . '"' .
-                   ' data-type="' . $color . '">';
+                   ' data-type="' . $type . '">';
         $html .= $descr . '</a>';
         $html .= "</div>\n";
       }
@@ -630,7 +630,7 @@ function day_cell_html($text, $link, $date)
 }
 
 
-// Output a start table cell tag <td> with color class.
+// Output a start table cell tag <td> with class of $classes.
 // $classes can be either a string or an array of classes
 // empty or row_highlight if highlighted.
 // $slots is the number of time slots high that the cell should be
@@ -1538,7 +1538,7 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       
       $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
       $d[$day_num]["id"][]           = $entry['id'];
-      $d[$day_num]["color"][]        = $entry['type'];
+      $d[$day_num]["type"][]        = $entry['type'];
       $d[$day_num]["status"][]       = $entry['status'];
       $d[$day_num]["is_repeat"][]    = isset($entry['repeat_id']);
       $d[$day_num]["data"][]         = get_booking_summary($entry['start_time'],
@@ -1643,7 +1643,7 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
         {
           // give the enclosing div the appropriate width: full width if both,
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-          $classes = array($d[$cday]['color'][$i],
+          $classes = array($d[$cday]['type'][$i],
                            $monthly_view_entries_details); 
           if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
           {
