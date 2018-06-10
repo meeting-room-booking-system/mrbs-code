@@ -483,38 +483,6 @@ function cell_html($cell, $query_vars, $is_invalid = false)
     if (isset($id) && isset($name))
     {
       $classes[] = 'booked';
-      $classes[] = $type;
-      
-      if ($status & STATUS_PRIVATE)
-      {
-        $classes[] = 'private';
-      }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
-      {
-        $classes[] = 'awaiting_approval';
-      }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
-      {
-        $classes[] = 'tentative';
-      }
-      if ($is_multiday_start)
-      {
-        $classes[] = 'multiday_start';
-      }
-      if ($is_multiday_end)
-      {
-        $classes[] = 'multiday_end';
-      }
-      // Add a class to bookings that this user is allowed to edit so that the
-      // JavaScript can turn them into resizable bookings
-      if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
-      {
-        $classes[] = 'writable';
-        if ($is_repeat)
-        {
-          $classes[] = 'series';
-        }
-      }
     }
     else
     {
@@ -552,6 +520,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
         $query = http_build_query($vars, '', '&');
+        
         // We have to wrap the booking in a <div> because we want the booking itself to be given
         // an absolute position and we can't use position relative on a <td> in IE11 and below.
         // We also need the bookings in a container because jQuery UI resizable has problems
@@ -559,7 +528,46 @@ function cell_html($cell, $query_vars, $is_invalid = false)
         // border-box for the bookings because we are using padding on the bookings and we want
         // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
         // including content.
-        $html .= '<div class="booking">';
+        
+        $classes = array('booking', $type);
+        
+        if ($status & STATUS_PRIVATE)
+        {
+          $classes[] = 'private';
+        }
+        
+        if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+        {
+          $classes[] = 'awaiting_approval';
+        }
+        
+        if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+        {
+          $classes[] = 'tentative';
+        }
+        
+        if ($is_repeat)
+        {
+          $classes[] = 'series';
+        }
+        
+        if ($is_multiday_start)
+        {
+          $classes[] = 'multiday_start';
+        }
+        
+        if ($is_multiday_end)
+        {
+          $classes[] = 'multiday_end';
+        }
+      
+        // Tell JavaScript to make bookings resizable
+        if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
+        {
+          $classes[] = 'writable';
+        }
+        
+        $html .= '<div class="' . implode(' ', $classes) . '">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
                    ' title="' . htmlspecialchars($description) . '"' .
                    ' class="' . $type . '"' .

@@ -1212,9 +1212,9 @@ init = function(args) {
       
       
       <?php
-      // Turn all the writable cells into resizable bookings
+      // Make all the writable bookings resizable
       ?>
-      table.find('td.writable')
+      table.find('.writable')
         .each(function() {
           
             <?php
@@ -1317,15 +1317,11 @@ init = function(args) {
             
             if (handles)
             {
-              <?php
-              // 
-              ?>
-              var booking = $(this).find('a');
-              booking.parent().resizable({handles: handles,
-                                          helper: 'resizable-helper',
-                                          start: resizeStart,
-                                          resize: resize,
-                                          stop: resizeStop});
+              $(this).resizable({handles: handles,
+                                 helper: 'resizable-helper',
+                                 start: resizeStart,
+                                 resize: resize,
+                                 stop: resizeStop});
             }
             
             $(this).css('background-color', 'transparent');

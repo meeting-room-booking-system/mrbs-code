@@ -556,10 +556,37 @@ table.dwm_main {
   border-right: 0;
 }
 
-.dwm_main .series a::before {
+.series a::before {
   content: '\0021bb';  /* CLOCKWISE OPEN CIRCLE ARROW */
   margin-right: 0.5em;
 }
+
+.awaiting_approval a::before {
+  content: '?';
+  margin-right: 0.5em;
+}
+
+.awaiting_approval.series a:before {
+  content: '?\002009\0021bb';  /* THIN SPACE, CLOCKWISE OPEN CIRCLE ARROW */
+}
+
+.awaiting_approval {
+  opacity: 0.6
+}
+
+.private {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.tentative {
+  opacity: 0.6;
+}
+
+.tentative a {
+  font-weight: normal;
+}
+
 
 <?php
 // Note that it is important to have zero padding-left and padding-top on the th and td cells.
@@ -1012,21 +1039,6 @@ div.div_select {
 div.div_select.outside {
   background-color: transparent;
 }   
-
-/* booking privacy status */
-.private {
-  opacity: 0.6;
-  font-style: italic;
-}
-
-/* booking approval status */
-.awaiting_approval {opacity: 0.6}
-.awaiting_approval a::before {content: "? "}
-
-/* booking confirmation status */
-.tentative {opacity: 0.6}
-.tentative a {font-weight: normal}
-
 
 
 /* ------------ DEL.PHP -----------------------------*/
