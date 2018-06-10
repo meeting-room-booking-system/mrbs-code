@@ -545,7 +545,7 @@ table.dwm_main {
 }
 
 .dwm_main th, .dwm_main td {
-  height: <?php echo $main_cell_height ?>;
+  min-height: <?php echo $main_cell_height ?>;
 }
 
 .dwm_main td {
@@ -649,7 +649,7 @@ table.dwm_main {
 
 .dwm_main a, 
 .dwm_main .booked span.saving {
-  display: inline-block;
+  display: block;
   height: 100%;
   width: 100%;
   min-height: inherit;
@@ -666,6 +666,11 @@ table.dwm_main {
   left: 0;
   z-index: 50;
   overflow: hidden;
+}
+
+.dwm_main .booked.multiply a,
+.dwm_main .booked.multiply .booking {
+  position: relative;
 }
 
 <?php 
@@ -991,43 +996,6 @@ tr:nth-child(even) td.row_labels {
 .dwm_main .ui-resizable-ne {top: -2px; right: -1px}
 .dwm_main .ui-resizable-nw {top: -2px; left: -1px}
 
-
-<?php
-// Multiple bookings.  These rules control the styling of the cells and controls when there is more than
-// one booking in a time slot.
-?>
-div.mini, div.maxi {position: relative}     /* establish a relative position for the absolute position to follow */
-div.multiple_control {
-    display: none;       /* will be over-ridden by JavaScript if enabled */
-    position: absolute; z-index: 20;
-    width: <?php echo $main_cell_height ?>;
-    text-align: center;
-    padding: 0;
-    border-right: <?php echo $main_table_cell_border_width . "px solid " . $main_table_body_v_border_color ?>;
-    background-color: <?php echo $multiple_control_color ?>}
-.mini div.multiple_control {                /* heights for maxi are set using in-line styles */
-    height: <?php echo $main_cell_height ?>;
-    max-height: <?php echo $main_cell_height ?>;
-    min-height: <?php echo $main_cell_height ?>}
-div:hover.multiple_control {cursor: pointer}
-.multiple_booking table {height: 100%; width: 100%; border-spacing: 0; border-collapse: collapse}
-.multiple_booking td {border-left: 0}
-
-/* used for toggling multiple bookings from mini to maxi size */
-.maximized div.mini {display: none}
-.maximized div.maxi {display: block}
-.minimized div.mini {display: block}
-.minimized div.maxi {display: none}
-
-<?php
-// Over-rides for multiple bookings.  If JavaScript is enabled then we want to see the JavaScript controls.
-// And we will need to extend the padding so that the controls don't overwrite the booking text
-?>
-
-.js div.multiple_control {
-    display: block;   /* if JavaScript is enabled then we want to see the JavaScript controls */
-  }
-.js .multiple_booking .maxi a {padding-left: <?php echo $main_cell_height ?>}
 
 div.div_select {
   position: absolute;

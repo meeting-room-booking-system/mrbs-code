@@ -308,217 +308,71 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   $html = '';
   $user = getUserName();
   
-  $vars = array('id',
-                'is_repeat',
-                'is_multiday_start',
-                'is_multiday_end',
-                'status',
-                'type',
-                'name',
-                'description');
-  
-  // if the time slot has got multiple bookings, then draw a mini-table
-  if(isset($cell[1]["id"]))
-  {
-    // Find out how many bookings there are (needed to calculate heights)
-    $n_bookings = 0;
-    while (isset($cell[$n_bookings]["id"]))
-    {
-      $n_bookings++;
-    }
-    
-    // Make the class maximized by default so that if you don't have JavaScript then
-    // you can still see all the bookings.    If you have JavaScript it will overwrite
-    // the class and make it minimized.
-    $html .= "<td class=\"multiple_booking maximized\">\n";
-    
-    // First draw the mini table
-    $html .= "<div class=\"celldiv slots1 mini\">\n";
-    $html .= "<div class=\"multiple_control\">+</div>\n";
-    $html .= "<table>\n";
-    $html .= "<tbody>\n";
-    
-    $row_height = 500;  // STUPID VALUE TO SHOW THAT THIS NEEDS TO BE REWRITTEN!!!!
-    $row_height = $row_height/$n_bookings;  // split what's left between the bookings
-    $row_height = (int) ceil($row_height);  // round up, so that (a) there's no empty space at the bottom
-                                            // and (b) each stripe is at least 1 unit high
-    for ($n=0; $n<$n_bookings; $n++)
-    {
-      foreach ($vars as $var)
-      {
-        $$var = $cell[$n][$var];
-      }
-      
-      $class = "booked $type";
-      
-      if ($status & STATUS_PRIVATE)
-      {
-        $class .= " private";
-      }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
-      {
-        $class .= " awaiting_approval";
-      }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
-      {
-        $class .= " tentative";
-      }
-      if ($is_multiday_start)
-      {
-        $class .= " multiday_start";
-      }
-      if ($is_multiday_end)
-      {
-        $class .= " multiday_end";
-      }
-
-      $html .= "<tr>\n";
-      $html .= "<td class=\"$class\"" .
-               (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
-               ">\n";
-      $html .= "<div style=\"overflow: hidden; " .
-               "height: " . $row_height . "px; " .
-               "max-height: " . $row_height . "px; " .
-               "min-height: " . $row_height . "px\">\n";
-      $html .= "&nbsp;\n";
-      $html .= "</div>\n";
-      $html .= "</td>\n";
-      $html .= "</tr>\n";
-    }
-    $html .= "</tbody>\n";
-    $html .= "</table>\n";
-    $html .= "</div>\n";
-    
-    // Now draw the maxi table
-    $html .= "<div class=\"maxi\">\n";
-    $total_height = $n_bookings * 500;  // STUPID VALUE TO SHOW THAT THIS NEEDS TO BE REWRITTEN
-    $total_height += ($n_bookings - 1) * $main_table_cell_border_width;  // (first row has no top border)
-    $html .= "<div class=\"multiple_control\" " .
-             "style =\"height: " . $total_height . "px; " .
-                      "min-height: " . $total_height . "px; " .
-                      "max-height: " . $total_height . "px; " .
-             "\">-</div>\n";  
-    $html .= "<table>\n";
-    $html .= "<tbody>\n";
-    for ($n=0; $n<$n_bookings; $n++)
-    {
-      foreach ($vars as $var)
-      {
-        $$var = $cell[$n][$var];
-      }
-      
-      $name = $cell[$n]["start_time"] . ' ' . $name;
-      
-      $classes = array('booked', $type);
-      if ($status & STATUS_PRIVATE)
-      {
-        $classes[] = 'private';
-      }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
-      {
-        $classes[] = 'awaiting_approval';
-      }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
-      {
-        $classes[] = 'tentative';
-      }
-      if ($is_multiday_start)
-      {
-        $classes[] = 'multiday_start';
-      }
-      if ($is_multiday_end)
-      {
-        $classes[] = 'multiday_end';
-      }
-      if ($is_repeat)
-      {
-        $classes[] = 'series';
-      }
-      
-      $html .= "<tr>\n";
-      $html .= '<td class="' . implode(' ', $classes) . '"' .
-               (($n==0) ? " style=\"border-top-width: 0\"" : "") .   // no border for first row
-               ">\n";
-      $html .= "<div class=\"celldiv slots1\">\n";     // we want clipping of overflow
-      
-      $vars = $query_vars['booking'];
-      $vars['id'] = $id;
-      $query = http_build_query($vars, '', '&');
-      
-      $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
-                  'title="' . htmlspecialchars($description). '">';
-      $html .= htmlspecialchars($name) . "</a>\n";
-      $html .= "</div>\n";
-     
-      $html .= "</td>\n";
-      $html .= "</tr>\n";
-    }
-    $html .= "</tbody>\n";
-    $html .= "</table>\n";
-    $html .= "</div>\n";
-    
-    $html .= "</td>\n";
-  }  // end of if isset ( ...[1]..)
+  $vars = array('id', 'name');
   
   // otherwise draw a cell, showing either the booking or a blank cell
-  else
-  {  
-    if(isset($cell[0]['id']))
-    {      
-      foreach ($vars as $var)
+  if(isset($cell[0]['id']))
+  {      
+    foreach ($vars as $var)
+    {
+      $$var = isset($cell[0][$var]) ? $cell[0][$var] : null;
+    }
+  }
+  else  // id not set
+  {
+    unset($id);
+  }
+  
+  // Don't put in a <td> cell if the slot is booked and there's no description.
+  // This would mean that it's the second or subsequent slot of a booking and so the
+  // <td> for the first slot would have had a rowspan that extended the cell down for
+  // the number of slots of the booking.
+
+  if (empty($cell) || isset($name))
+  {
+    // We tell if its booked by $id and $name having something in them
+    if (isset($id) && isset($name))
+    {
+      $class = 'booked';
+      if (count($cell) > 1)
       {
-        $$var = isset($cell[0][$var]) ? $cell[0][$var] : null;
+        $class .= ' multiply';
       }
     }
-    else  // id not set
+    elseif ($is_invalid)
     {
-      unset($id);
+      $class = 'invalid';
+    }
+    else
+    {
+      $class = 'new';
     }
     
-    // Don't put in a <td> cell if the slot is booked and there's no description.
-    // This would mean that it's the second or subsequent slot of a booking and so the
-    // <td> for the first slot would have had a rowspan that extended the cell down for
-    // the number of slots of the booking.
-
-    if (!isset($id) || isset($name))
+    // If there's no booking or if there are multiple boookings then make the slot one unit long
+    $slots = (count($cell) == 1) ? $cell[0]['slots'] : 1;
+    
+    $html .= tdcell($class, $slots);
+    
+    // If the room isn't booked then allow it to be booked
+    if (!isset($id))
     {
-      // We tell if its booked by $id and $name having something in them
-      if (isset($id) && isset($name))
+      // Don't provide a link if the slot doesn't really exist
+      if (!$is_invalid)
       {
-        $class = 'booked';
-      }
-      elseif ($is_invalid)
-      {
-        $class = 'invalid';
-      }
-      else
-      {
-        $class = 'new';
-      }
-      
-      // If there's no booking or if there are multiple boookings then make the slot one unit long
-      $slots = (count($cell) == 1) ? $cell[0]['slots'] : 1;
-      
-      $html .= tdcell($class, $slots);
-
-      // If the room isn't booked then allow it to be booked
-      if (!isset($id))
-      {
-        // Don't provide a link if the slot doesn't really exist
-        if (!$is_invalid)
+        $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
+        $query = http_build_query($vars, '', '&');
+        
+        $html .= "<a href=\"edit_entry.php?" . htmlspecialchars($query) . "\">\n";
+        if ($show_plus_link)
         {
-          $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
-          $query = http_build_query($vars, '', '&');
-          
-          $html .= "<a href=\"edit_entry.php?" . htmlspecialchars($query) . "\">\n";
-          if ($show_plus_link)
-          {
-            $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
-          }
-          $html .= "</a>\n";
+          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
         }
+        $html .= "</a>\n";
       }
-      else                 // if it is booked then show the booking
+    }
+    else                 // if it is booked then show the booking
+    {
+      foreach ($cell as $booking)
       {
         $vars = $query_vars['booking'];
         $vars['id'] = $id;
@@ -531,56 +385,58 @@ function cell_html($cell, $query_vars, $is_invalid = false)
         // border-box for the bookings because we are using padding on the bookings and we want
         // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
         // including content.
+              
+        $classes = array('booking', $booking['type']);
         
-        $classes = array('booking', $type);
-        
-        if ($status & STATUS_PRIVATE)
+        if ($booking['status'] & STATUS_PRIVATE)
         {
           $classes[] = 'private';
         }
         
-        if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+        if ($approval_enabled && ($booking['status'] & STATUS_AWAITING_APPROVAL))
         {
           $classes[] = 'awaiting_approval';
         }
         
-        if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+        if ($confirmation_enabled && ($booking['status'] & STATUS_TENTATIVE))
         {
           $classes[] = 'tentative';
         }
         
-        if ($is_repeat)
+        if ($booking['is_repeat'])
         {
           $classes[] = 'series';
         }
         
-        if ($is_multiday_start)
+        if ($booking['is_multiday_start'])
         {
           $classes[] = 'multiday_start';
         }
         
-        if ($is_multiday_end)
+        if ($booking['is_multiday_end'])
         {
           $classes[] = 'multiday_end';
         }
       
         // Tell JavaScript to make bookings resizable
-        if (getWritable($cell[0]['create_by'], $user, $cell[0]['room_id']))
+        if ((count($cell) == 1) &&
+            getWritable($booking['create_by'], $user, $booking['room_id']))
         {
           $classes[] = 'writable';
         }
         
         $html .= '<div class="' . implode(' ', $classes) . '">';
         $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
-                   ' title="' . htmlspecialchars($description) . '"' .
-                   ' class="' . $type . '"' .
-                   ' data-id="' .$id . '"' .
-                   ' data-type="' . $type . '">';
-        $html .= htmlspecialchars($name) . '</a>';
+                   ' title="' . htmlspecialchars($booking['description']) . '"' .
+                   ' class="' . $booking['type'] . '"' .
+                   ' data-id="' . $booking['id'] . '"' .
+                   ' data-type="' . $booking['type'] . '">';
+        $html .= htmlspecialchars($booking['name']) . '</a>';
         $html .= "</div>\n";
       }
-      $html .= "</td>\n";
     }
+    
+    $html .= "</td>\n";
   }
   
   return $html;
