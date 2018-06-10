@@ -37,7 +37,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //                  [is_multiday_end]    a boolean indicating if the booking stretches
   //                                          beyond the day end
   //                  [type]
-  //                  [data]
+  //                  [name]
   //                  [description]
   //                  [create_by]
   //                  [room_id]
@@ -133,7 +133,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     // if it's a multiple booking also fill in the name and description
     if ($n > 0)
     {
-      $column[$s][$n]["data"] = $entry['name'];
+      $column[$s][$n]["name"] = $entry['name'];
       $column[$s][$n]["description"] = $entry['description'];
       $column[$s][$n]["create_by"] = $entry['create_by'];
       $column[$s][$n]["room_id"] = $entry['room_id'];
@@ -142,7 +142,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     // use null rather than '' just in case the value really is ''
     else
     {
-      $column[$s][$n]["data"] = null;
+      $column[$s][$n]["name"] = null;
       $column[$s][$n]["description"] = null;
       $column[$s][$n]["create_by"] = null;
       $column[$s][$n]["room_id"] = null;
@@ -178,7 +178,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
       if ($column[$end_s][0]["slots"] > 1)
       {
         // Move the name and description into the new first slot and decrement the number of slots
-        $column[$end_s + $resolution][0]["data"]        = $column[$end_s][0]["data"];
+        $column[$end_s + $resolution][0]["name"]        = $column[$end_s][0]["name"];
         $column[$end_s + $resolution][0]["description"] = $column[$end_s][0]["description"];
         $column[$end_s + $resolution][0]["create_by"]   = $column[$end_s][0]["create_by"];
         $column[$end_s + $resolution][0]["room_id"]     = $column[$end_s][0]["room_id"];
@@ -238,7 +238,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
       // does not use the slot count.
       $column[$r][$i]["slots"]--;
       // and put the name and description in the multiply booked slot
-      $column[$start_s][0]["data"]        = $column[$r][$i]["data"];
+      $column[$start_s][0]["name"]        = $column[$r][$i]["name"];
       $column[$start_s][0]["description"] = $column[$r][$i]["description"];
       $column[$start_s][0]["create_by"]   = $column[$r][$i]["create_by"];
       $column[$start_s][0]["room_id"]     = $column[$r][$i]["room_id"];
@@ -249,7 +249,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   // slot for the booking (provided it's not a multiple booking slot)
   if (!isset($column[$first_slot][1]["id"]))
   {
-    $column[$first_slot][0]["data"]        = $entry['name'];
+    $column[$first_slot][0]["name"]        = $entry['name'];
     $column[$first_slot][0]["description"] = $entry['description'];
     $column[$first_slot][0]["create_by"]   = $entry['create_by']; 
     $column[$first_slot][0]["room_id"]     = $entry['room_id']; 
@@ -272,7 +272,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   //         [is_multiday_start]
   //         [is_multiday_end]
   //         [type]
-  //         [data]
+  //         [name]
   //         [description]
   //         [create_by]
   //         [room_id]
@@ -339,7 +339,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status       = $cell[$n]["status"];
       $type         = $cell[$n]["type"];
-      $descr        = $cell[$n]["data"];
+      $name         = $cell[$n]["name"];
       $description  = $cell[$n]["description"];
       $class = "booked $type";
       if ($status & STATUS_PRIVATE)
@@ -399,7 +399,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
       $status       = $cell[$n]["status"];
       $type         = $cell[$n]["type"];
-      $descr        = $cell[$n]["start_time"] . " " . $cell[$n]["data"];
+      $name         = $cell[$n]["start_time"] . " " . $cell[$n]["name"];
       $description  = $cell[$n]["description"];
       
       $classes = array('booked', $type);
@@ -440,7 +440,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       
       $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
                   'title="' . htmlspecialchars($description). '">';
-      $html .= htmlspecialchars($descr) . "</a>\n";
+      $html .= htmlspecialchars($name) . "</a>\n";
       $html .= "</div>\n";
      
       $html .= "</td>\n";
@@ -464,7 +464,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       $is_multiday_end   = $cell[0]["is_multiday_end"];
       $status      = $cell[0]["status"];
       $type        = $cell[0]["type"];
-      $descr       = isset($cell[0]["data"]) ? $cell[0]["data"] : null;
+      $name        = isset($cell[0]["name"]) ? $cell[0]["name"] : null;
       $description = $cell[0]["description"];
       $slots       = $cell[0]["slots"];
     }
@@ -476,8 +476,8 @@ function cell_html($cell, $query_vars, $is_invalid = false)
 
     $classes = array();
     
-    // We tell if its booked by $id and $descr having something in them
-    if (isset($id) && isset($descr))
+    // We tell if its booked by $id and $name having something in them
+    if (isset($id) && isset($name))
     {
       $classes[] = 'booked';
       $classes[] = $type;
@@ -523,7 +523,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
     // <td> for the first slot would have had a rowspan that extended the cell down for
     // the number of slots of the booking.
 
-    if (!isset($id) || isset($descr))
+    if (!isset($id) || isset($name))
     {
       $html .= tdcell($classes, $slots);
 
@@ -562,7 +562,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
                    ' class="' . $type . '"' .
                    ' data-id="' .$id . '"' .
                    ' data-type="' . $type . '">';
-        $html .= htmlspecialchars($descr) . '</a>';
+        $html .= htmlspecialchars($name) . '</a>';
         $html .= "</div>\n";
       }
       $html .= "</td>\n";
