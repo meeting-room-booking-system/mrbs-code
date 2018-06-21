@@ -137,7 +137,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     
     foreach ($data_keys as $key)
     {
-      // if it's a multiple booking also fill in the data key
+      // if it's a multiple booking also fill in the data
       if ($n > 0)
       {
         $column[$s][$n][$key] = $entry[$key];
@@ -179,7 +179,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     {
       if ($column[$end_s][0]["slots"] > 1)
       {
-        // Move the dats into the new first slot and decrement the number of slots
+        // Move the data into the new first slot and decrement the number of slots
         foreach ($data_keys as $key)
         {
           $column[$end_s + $resolution][0][$key] = $column[$end_s][0][$key];
@@ -308,30 +308,15 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   $html = '';
   $user = getUserName();
   
-  $vars = array('id', 'name');
-  
-  // otherwise draw a cell, showing either the booking or a blank cell
-  if(isset($cell[0]['id']))
-  {      
-    foreach ($vars as $var)
-    {
-      $$var = isset($cell[0][$var]) ? $cell[0][$var] : null;
-    }
-  }
-  else  // id not set
-  {
-    unset($id);
-  }
-  
   // Don't put in a <td> cell if the slot is booked and there's no description.
   // This would mean that it's the second or subsequent slot of a booking and so the
   // <td> for the first slot would have had a rowspan that extended the cell down for
   // the number of slots of the booking.
 
-  if (empty($cell) || isset($name))
+  if (empty($cell) || isset($cell[0]['name']))
   {
     // We tell if its booked by $id and $name having something in them
-    if (isset($id) && isset($name))
+    if (!empty($cell))
     {
       $class = 'booked';
       if (count($cell) > 1)
@@ -354,7 +339,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
     $html .= tdcell($class, $slots);
     
     // If the room isn't booked then allow it to be booked
-    if (!isset($id))
+    if (empty($cell))
     {
       // Don't provide a link if the slot doesn't really exist
       if (!$is_invalid)
@@ -375,7 +360,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
       foreach ($cell as $booking)
       {
         $vars = $query_vars['booking'];
-        $vars['id'] = $id;
+        $vars['id'] = $booking['id'];
         $query = http_build_query($vars, '', '&');
         
         // We have to wrap the booking in a <div> because we want the booking itself to be given
@@ -673,6 +658,8 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   {
     map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
   }
+  
+  var_dump($today);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
