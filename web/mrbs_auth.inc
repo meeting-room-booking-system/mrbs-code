@@ -223,7 +223,7 @@ function auth_can_edit_user($user, $target)
   global $min_user_editing_level;
   
   // Always allowed to modify your own stuff
-  if(strcasecmp($user, $target) == 0)
+  if(strcasecmp($user, $target) === 0)
   {
     return 1;
   }
