@@ -1,25 +1,9 @@
 <?php
 
-/* $Id: auth_none.inc 1029 2009-02-24 19:26:53Z cimorrison $
- *
- * Dummy authentication scheme, that accepts any user.
- * Useful for using mrbs without authentication,
- * or in combination with a session scheme that already enforces
- * its own authentication. For example that in IIS.
- *
- * To use this authentication scheme set the following
- * things in config.inc.php:
- *
- *      $auth["type"]    = "none";
- *      $auth["session"] = your choice
- *
- * Then, you may configure admin users:
- *
- * $auth["admin"][] = "nt_username1";
- * $auth["admin"][] = "nt_username2";
- *
- * See AUTHENTICATION  for more informations.
- */
+// Initialise CAS
+phpCAS::client(CAS_VERSION_2_0,'secure.its.yale.edu',443,'/cas');
+phpCAS::setNoCasServerValidation();
+
 
 /** 
  * Checks if the specified username/password pair are valid.
@@ -30,6 +14,7 @@
  * @param   string  $pass   The password
  * @return  int             non-zero - Always valid
  */
+ 
 function authValidateUser($user, $pass)
 {
 if (phpCAS::isAuthenticated()){
