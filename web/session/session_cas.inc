@@ -3,22 +3,20 @@ namespace MRBS;
 
 use \phpCAS;
 
+require_once MRBS_ROOT . '/session/functions_session.inc';
+
 
 function authGet()
 {
-//Useless Method
+  // Useless Method
 }
+
 
 function getUserName()
 {
- if (phpCAS::isAuthenticated()){
-    return phpCAS::getUser();
-   } 
-  else
-  {
-    return NULL;
-  }
+  return (phpCAS::isAuthenticated()) ? phpCAS::getUser() : null;
 }
+
 
 // Print the logon entry on the top banner.
 function PrintLogonBox()
