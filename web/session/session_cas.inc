@@ -1,4 +1,7 @@
 <?php 
+namespace MRBS;
+
+use \phpCAS;
 
 
 function authGet()

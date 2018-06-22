@@ -1,4 +1,7 @@
 <?php
+namespace MRBS;
+
+use \phpCAS;
 
 // Initialise CAS
 phpCAS::client(CAS_VERSION_2_0,'secure.its.yale.edu',443,'/cas');
