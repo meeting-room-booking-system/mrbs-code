@@ -113,7 +113,7 @@ function generateOwnerButtons($id, $series)
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($user, $create_by) == 0) && 
+      (strcasecmp($user, $create_by) === 0) && 
       ($status & STATUS_AWAITING_APPROVAL) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
@@ -458,7 +458,7 @@ if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL)
       }    
     }
     // Buttons for the owner of this booking
-    elseif (strcasecmp($user, $create_by) == 0)
+    elseif (strcasecmp($user, $create_by) === 0)
     {
       generateOwnerButtons($id, $series);
     }
