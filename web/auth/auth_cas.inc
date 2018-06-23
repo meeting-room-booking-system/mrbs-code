@@ -4,8 +4,18 @@ namespace MRBS;
 use \phpCAS;
 
 // Initialise CAS
-phpCAS::client(CAS_VERSION_2_0,'secure.its.yale.edu',443,'/cas');
-phpCAS::setNoCasServerValidation();
+if ($auth['cas']['debug'])
+{
+  phpCAS::setDebug();
+  phpCAS::setVerbose(true);
+}
+
+phpCAS::client(CAS_VERSION_2_0, $auth['cas']['host'], $auth['cas']['port'], $auth['cas']['context']);
+
+if ($auth['cas']['no_server_validation'])
+{
+  phpCAS::setNoCasServerValidation();
+}
 
 
 /* authValidateUser($user, $pass)
