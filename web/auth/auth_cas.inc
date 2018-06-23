@@ -21,6 +21,16 @@ if ($auth['cas']['no_server_validation'])
   phpCAS::setNoCasServerValidation();
 }
 
+// Handle incoming logout requests
+if (empty($auth['cas']['real_hosts']))
+{
+  phpCAS::handleLogoutRequests();
+}
+else
+{
+  phpCAS::handleLogoutRequests(true, $auth['cas']['real_hosts']);
+}
+
 // Set the language
 // (The language constants will only be defined after the first call to a phpCAS method)
 $cas_lang_map = array(

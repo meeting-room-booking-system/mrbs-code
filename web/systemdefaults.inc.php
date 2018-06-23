@@ -699,6 +699,12 @@ $min_user_editing_level = 2;
 $auth['cas']['host']    = 'cas.example.com';  // Full hostname of your CAS Server
 $auth['cas']['port']    = 443;  // CAS server port (integer). Normally for a https server it's 443
 $auth['cas']['context'] = '/cas';  // Context of the CAS Server
+// The "real" hosts of clustered cas server that send SAML logout messages
+// Assumes the cas server is load balanced across multiple hosts.
+// Failure to restrict SAML logout requests to authorized hosts could
+// allow denial of service attacks where at the least the server is
+// tied up parsing bogus XML messages.
+//$auth['cas']['real_hosts'] = array('cas-real-1.example.com', 'cas-real-2.example.com');
 
 // For quick testing you can disable SSL validation of the CAS server.
 // THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.

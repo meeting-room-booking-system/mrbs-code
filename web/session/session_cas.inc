@@ -21,39 +21,106 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $auth;
+  global $QUERY_STRING;
+  
+  $target_url = this_page();
+
+  if (isset($QUERY_STRING))
+  {
+    $target_url = $target_url . "?" . $QUERY_STRING;
+  }
   
   $user = getUserName();
 
   if (isset($user))
   {
     print_report_link($user);
-
-    // Retrieve logout link from configuration, if specified
-    if (isset($auth['cas']['logout_link']) &&
-        is_string($auth['cas']['logout_link']) &&
-        (!empty($auth['cas']['logout_link'])))
-    {
-      print '<a href="' . $auth['cas']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
-    }
-
+    print_logoff_button($target_url);
   }
   else
   {
-    if (isset($auth['cas']['login_link']) &&
-        is_string($auth['cas']['login_link']) &&
-        (!empty($auth['cas']['login_link'])))
+    print_unknown_user();
+    print_logon_button($target_url);
+  } 
+  
+  print_userlist_link();
+}
+
+
+function logoff_user()
+{
+  phpCAS::logout();
+}
+
+
+global $HTTP_REFERER;
+
+// Get non-standard form variables
+$action = get_form_var('action', 'string', null, INPUT_POST);
+$username = get_form_var('username', 'string', null, INPUT_POST);
+$password = get_form_var('password', 'string', null, INPUT_POST);
+$target_url = get_form_var('target_url', 'string', null, INPUT_POST);
+$returl = get_form_var('returl', 'string', null, INPUT_POST);
+
+// We need to preserve the original calling page, so that it's there when we eventually get to the
+// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
+// holds the original caller.    If this is the second time through we will have stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
+}
+
+if (isset($action))
+{
+  // Target of the form with sets the URL argument "action=QueryName".
+  if ($action == "QueryName")
+  {
+    phpCAS::forceAuthentication();
+  }
+  
+  
+  // Target of the form with sets the URL argument "action=SetName".
+  // Will eventually return to URL argument "target_url=whatever".
+  if ($action == "SetName")
+  {
+    // If we're going to do something then check the CSRF token first
+    Form::checkToken();
+    
+    // First make sure the password is valid
+    if ($username == "")
     {
-      print '<a href="' . $auth['cas']['login_link'] .'">' . get_vocab('login') . "</a>\n";
+      logoff_user();
     }
     else
     {
-      echo "<p class=\"error\">Error: cas_set was not included when it should have been.</p>";
-      exit;
+      // Shouldn't get here
     }
+    
+    // preserve the original $HTTP_REFERER by sending it as a GET parameter
+    if (!empty($returl))
+    {
+      // check to see whether there's a query string already
+      if (strpos($target_url, '?') === false)
+      {
+        $target_url .= "?returl=" . urlencode($returl);
+      }
+      else
+      {
+        $target_url .= "&returl=" . urlencode($returl);
+      }
+    }
+    
+    header ("Location: $target_url"); /* Redirect browser to initial page */
+    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
+      which allows to work around problems with DNS inconsistencies in the server name.
+      Anyway, if the browser cannot redirect automatically, the manual link below will work. */
+    print_header();
+    echo "<br>\n";
+    echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+
+    // Print footer and exit
+    print_footer(TRUE);
   }
-  
-  print_userlist_link();
 }
 
 ?>
