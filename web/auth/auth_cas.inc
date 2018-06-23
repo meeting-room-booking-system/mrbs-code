@@ -4,17 +4,40 @@ namespace MRBS;
 use \phpCAS;
 
 // Initialise CAS
+
 if ($auth['cas']['debug'])
 {
   phpCAS::setDebug();
   phpCAS::setVerbose(true);
 }
 
-phpCAS::client(CAS_VERSION_2_0, $auth['cas']['host'], $auth['cas']['port'], $auth['cas']['context']);
+phpCAS::client(CAS_VERSION_2_0,
+               $auth['cas']['host'],
+               $auth['cas']['port'],
+               $auth['cas']['context']);
 
 if ($auth['cas']['no_server_validation'])
 {
   phpCAS::setNoCasServerValidation();
+}
+
+// Set the language
+// (The language constants will only be defined after the first call to a phpCAS method)
+$cas_lang_map = array(
+    'ca' => PHPCAS_LANG_CATALAN,
+    'de' => PHPCAS_LANG_GERMAN,
+    'el' => PHPCAS_LANG_GREEK,
+    'en' => PHPCAS_LANG_ENGLISH,
+    'es' => PHPCAS_LANG_SPANISH,
+    'fr' => PHPCAS_LANG_FRENCH,
+    'ja' => PHPCAS_LANG_JAPANESE,
+    'zh' => PHPCAS_LANG_CHINESE_SIMPLIFIED
+  );
+  
+$locale = \Locale::parseLocale(get_lang());
+if (isset($cas_lang_map[$locale['language']]))
+{
+  phpCAS::setLang($cas_lang_map[$locale['language']]);
 }
 
 
