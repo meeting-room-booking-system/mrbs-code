@@ -659,7 +659,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
   }
   
-  var_dump($today);
+  //var_dump($today);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
