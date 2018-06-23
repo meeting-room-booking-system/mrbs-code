@@ -1094,7 +1094,7 @@ function get_csv_charset()
 }
 
 
-// Returns the language that MRBS is sing, in BCP-47 format
+// Returns the language that MRBS is using, in BCP-47 format
 function get_lang()
 {
   global $lang;

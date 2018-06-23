@@ -592,13 +592,13 @@ $report_presentation_field_order = array();
 // then you must use the corresponding session scheme.
 
 $auth["type"] = "db"; // How to validate the user/password. One of 
-                      // "auth_basic", "config", "crypt", "db", "db_ext", "imap",
+                      // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "imap",
                       // "imap_php",  "joomla", "ldap", "nis", "none", "nw", "pop3",  
                       // "saml", "smtp" or "wordpress".
                       
 $auth["session"] = "php"; // How to get and keep the user ID. One of
-                          // "cookie", "host", "http", "ip", "joomla", "nt", "omni",
-                          // "php", "remote_user", "saml" or "wordpress".
+                          // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
+                          // "omni", "php", "remote_user", "saml" or "wordpress".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -694,6 +694,23 @@ $min_user_editing_level = 2;
 // $pwd_policy['upper']   = 1;  // Minimum number of upper case characters
 // $pwd_policy['numeric'] = 1;  // Minimum number of numeric characters
 // $pwd_policy['special'] = 1;  // Minimum number of special characters (not alpha-numeric)
+
+// 'cas' configuration settings
+$auth['cas']['host']    = 'cas.example.com';  // Full hostname of your CAS Server
+$auth['cas']['port']    = 443;  // CAS server port (integer). Normally for a https server it's 443
+$auth['cas']['context'] = '/cas';  // Context of the CAS Server
+// The "real" hosts of clustered cas server that send SAML logout messages
+// Assumes the cas server is load balanced across multiple hosts.
+// Failure to restrict SAML logout requests to authorized hosts could
+// allow denial of service attacks where at the least the server is
+// tied up parsing bogus XML messages.
+//$auth['cas']['real_hosts'] = array('cas-real-1.example.com', 'cas-real-2.example.com');
+
+// For quick testing you can disable SSL validation of the CAS server.
+// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
+// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
+$auth['cas']['no_server_validation'] = false;
+$auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable for production.
 
 
 // 'auth_db' configuration settings
