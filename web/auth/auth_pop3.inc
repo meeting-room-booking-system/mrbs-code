@@ -151,29 +151,30 @@ function authValidateUser($user, $pass)
   return false;
 }
 
+
 /* authGetUserLevel($user)
  * 
- * Determines the users access level
+ * Determines the user's access level
  * 
  * $user - The user name
  *
  * Returns:
- *   The users access level
+ *   The user's access level
  */
 function authGetUserLevel($user)
 {
   global $auth;
-  $admins = $auth['admin'];
+
   // User not logged in, user level '0'
-  if (!isset($user))
+  if(!isset($user))
   {
     return 0;
   }
 
-  // Check if the user is can modify
-  for ($i = 0; $admins[$i]; $i++)
+  // Check whether the user is an admin
+  foreach ($auth['admin'] as $admin)
   {
-    if(strcasecmp($user, $admins[$i]) == 0)
+    if(strcasecmp($user, $admin) === 0)
     {
       return 2;
     }
