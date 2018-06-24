@@ -276,6 +276,7 @@ $strftime_format['date']              = "%A %d %B %Y";  // Used in Day view
 $strftime_format['date_short']        = "%x";           // Used in Search results
 $strftime_format['dayname']           = "%A";           // Used in Month view
 $strftime_format['dayname_edit']      = "%a";           // Used in edit_entry form
+$strftime_format['weekview_headers']  = "%a<br>%b %d";  // Used in the table header in Week view
 $strftime_format['minical_monthname'] = "%B %Y";        // Used in mini calendar heading
 $strftime_format['minical_dayname']   = "%a";           // Used in mini calendar heading
 $strftime_format['mon']               = "%b";           // Used in date selectors

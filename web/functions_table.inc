@@ -839,7 +839,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   $thead = "<thead>\n";
   $header_inner = "<tr>\n";
 
-  $dformat = "%a<br>" . $strftime_format['daymonth'];
+  $dformat = $strftime_format['weekview_headers'];
   // If we've got a table with times along the top then put everything on the same line
   // (ie replace the <br> with a space).   It looks slightly better
   if ($times_along_top)
@@ -961,12 +961,12 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
       {
         $tbody .= "<tr>\n";
       
-        $wt = mktime( 12, 0, 0, $month, $day_start_week+$thisday, $year );
+        $wt = mktime( 12, 0, 0, $month, $day_start_week + $thisday, $year );
         $wday = date("d", $wt);
         $wmonth = date("m", $wt);
         $wyear = date("Y", $wt);
         $wdate = date('Y-n-d', $wt);
-      
+        
         $day_cell_text = utf8_strftime($dformat, $wt);
         
         $vars = array('view'  => 'day',
