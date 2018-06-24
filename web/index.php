@@ -203,9 +203,11 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
   $html .= '<nav class="view">';
   $html .= '<div class="container">';  // helps the CSS
   
-  $views = array('day', 'week', 'month');
+  $views = array('day' => 'nav_day',
+                 'week' => 'nav_week',
+                 'month' => 'nav_month');
   
-  foreach ($views as $view)
+  foreach ($views as $view => $token)
   {
     $vars = array('view'  => $view,
                   'year'  => $year,
@@ -217,7 +219,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
     $query = http_build_query($vars, '', '&');
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($view)) . '</a>';
+    $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
   }
   
   $html .= '</div>';

@@ -362,15 +362,6 @@ nav.view div.container {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-<?php 
-// Make sure that older browsers (eg IE10 and IE11) recognise the links as distinct
-// words (so that the 'text-transform: capitalize' rule works) by inserting some
-// whitespace before and after.
-?>
-nav.view a::before, nav.view a::after {
-  content: '\0000a0';
-}
-
 nav.view a, nav.arrow a {
   -webkit-appearance: button;
   -moz-appearance: button;
@@ -380,7 +371,6 @@ nav.view a, nav.arrow a {
   line-height: 1.8em;
   font-weight: normal;
   text-align: center;
-  text-transform: capitalize;
 }
 
 nav.view a {
