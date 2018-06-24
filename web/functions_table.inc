@@ -29,59 +29,41 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //       create_by
   //       status
   
-  // $column is a column of the map of the screen that will be displayed
-  // It looks like:
-  //     $column[s][n][id]
-  //                  [is_repeat]
-  //                  [is_multiday_start]  a boolean indicating if the booking stretches
-  //                                       beyond the day start
-  //                  [is_multiday_end]    a boolean indicating if the booking stretches
-  //                                          beyond the day end
-  //                  [type]
-  //                  [name]
-  //                  [description]
-  //                  [create_by]
-  //                  [room_id]
-  //                  [start_time]
-  //                  [slots]
-  //                  [status]
+  // $column is a column of the map of the screen that will be displayed, and is an array
+  // indexed by the number of nominal seconds (ie ignoring DST changes] since the
+  // start of the calendar day which has the start of the booking day.  Each element of
+  // the array consists of an array of entries that fall in that slot.
+  //
+  // Normally of course there will only be one entry per slot, but it is possible to have
+  // multiple entries per slot if the resolution is increased or the day shifted since the
+  // original bookings were made.  For example if you previously had a resolution of 1800 
+  // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
+  // If you then increase the resolution to 3600 seconds, these two bookings 
+  // will both occupy the 1100-1200 time slot.
+  //
+  // Each entry also has the following keys added:
+  //       is_multiday_start  a boolean indicating if the booking stretches beyond the day start
+  //       is_multiday_end    a boolean indicating if the booking stretches beyond the day end                            
+  //       first_slot         the value of the first slot in nominal seconds
+  //       n_slots            the number of slots the booking lasts
   
   // s is the number of nominal seconds (ie ignoring DST changes] since the
   // start of the calendar day which has the start of the booking day
   
-  // slots records the duration of the booking in number of time slots.
-  // Used to calculate how high to make the block used for clipping
-  // overflow descriptions.
 
   // Fill in the map for this meeting. Start at the meeting start time,
   // or the day start time, whichever is later. End one slot before the
   // meeting end time (since the next slot is for meetings which start then),
   // or at the last slot in the day, whichever is earlier.
   // Time is of the format HHMM without leading zeros.
-  //
-  // [n] exists because it's possible that there may be multiple bookings
-  // in the same time slot.   Normally this won't be the case.   However it
-  // can arise legitimately if you increase the resolution, or shift the 
-  // displayed day.   For example if you previously had a resolution of 1800 
-  // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
-  // If you then increase the resolution to 3600 seconds, these two bookings 
-  // will both occupy the 1100-1200 time slot.   [n] starts at 0.   For
-  // the example above the map for the room would look like this
-  //
-  //       0  1
-  // 1000  A
-  // 1100  A  B
-  // 1200  B
-  //
-  // Adjust the starting and ending times so that bookings which don't
-  // start or end at a recognized time still appear.
+
   
   global $resolution;
   global $is_private_field;
   
-  $data_keys = array('name', 'description', 'create_by', 'room_id');
-  
   $user = getUserName();
+  
+  // Check whether the event is private
   if (is_private_event($entry['status'] & STATUS_PRIVATE) &&
          !getWritable($entry['create_by'], $user, $entry['room_id']))
   {
@@ -105,191 +87,94 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
   }
 
-  $is_multiday_start = ($entry['start_time'] < $start_first_slot);
-  $is_multiday_end = ($entry['end_time'] > ($start_last_slot + $resolution));
-              
+  // Adjust the starting and ending times so that bookings which don't
+  // start or end at a recognized time still appear.
   $start_t = max(round_t_down($entry['start_time'], $resolution, $start_first_slot), $start_first_slot);
   $end_t = min(round_t_up($entry['end_time'], $resolution, $start_first_slot) - $resolution, $start_last_slot);
   
-  // calculate the times used for indexing - we index by nominal seconds since the start
+  // Calculate the times used for indexing - we index by nominal seconds since the start
   // of the calendar day which has the start of the booking day
   $start_s = nominal_seconds($start_t);
   $end_s = nominal_seconds($end_t);
   
+  // Get some additional information about the entry related to the way it displays on the page
+  $entry['is_multiday_start'] = ($entry['start_time'] < $start_first_slot);
+  $entry['is_multiday_end'] = ($entry['end_time'] > ($start_last_slot + $resolution));
+  
+  // Find the number of time slots that the booking occupies, and the index of the first slot
+  // that this booking has entirely to itself. We need to adjust the start and end times
+  // for DST transitions as the display ignores DST.
+  $entry['n_slots'] = intval((($end_t - $start_t) - cross_dst($start_t, $end_t))/$resolution) + 1;
+  $entry['first_slot'] = $start_s;
+              
   for ($s = $start_s; $s <= $end_s; $s += $resolution)
   { 
-    // find the first free index (in case there are multiple bookings in a timeslot)
-    $n = 0;
-    while (!empty($column[$s][$n]["id"]))
+    if (!isset($column[$s]))
     {
-      $n++;
+      $column[$s] = array();
     }
+    array_push($column[$s], $entry);
     
-    // fill in the id, type and start time
-    $column[$s][$n]["id"] = $entry['id'];
-    $column[$s][$n]["is_repeat"] = isset($entry['repeat_id']);
-    $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
-    $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
-    $column[$s][$n]["status"] = $entry['status'];
-    $column[$s][$n]["type"] = $entry['type'];
-    $column[$s][$n]["start_time"] = hour_min($start_s);
-    $column[$s][$n]["slots"] = null;  // to avoid undefined index NOTICE errors
-    
-    foreach ($data_keys as $key)
-    {
-      // if it's a multiple booking also fill in the data
-      if ($n > 0)
-      {
-        $column[$s][$n][$key] = $entry[$key];
-      }
-      // otherwise just leave it blank (we'll fill in the first whole slot later)
-      // use null rather than '' just in case the value really is ''
-      else
-      {
-        $column[$s][$n][$key] = null;
-      }
-    }
-  } // end for
-  
-  
-  // Show the name of the booker, the description and the number of complete
-  // slots in the first complete slot that the booking happens in, or at the 
-  // start of the day if it started before today.
+    // If there is more than one booking to land in this slot then we have a multiple booking
+    // and will need to (a) make all bookings one slot long, (b) truncate the previous
+    // bookings if it hasn't already been done and (c) start this booking afresh in the next slot.
+    // Fortunately the task is made simpler because we know that MRBS will not have allowed
+    // overlapping bookings to have been made (although they may overlap when shown in the table
+    // due to the display resolution).
 
-  // Find the number of time slots that the booking occupies, and the index
-  // of the first slot that this booking has entirely to itself
-  // We need to adjust the start and end times for DST transitions as the display
-  // ignores DST
-  $n_slots = intval((($end_t - $start_t) - cross_dst($start_t, $end_t))/$resolution) + 1;
-  $first_slot = $start_s;
-  
-  // If the last time slot is already occupied, we have a multiple
-  // booking in the last slot, so decrement the number of slots that
-  // we will display for this booking
-  if (isset($column[$end_s][1]["id"]))
-  {
-    $n_slots--;
-    // If we're only the second booking to land on this time slot
-    // then we'll have to adjust the information held for the first booking
-    // (unless it's just one slot long in the first place, when it 
-    // doesn't matter as it will now be part of a multiple booking).
-    // If we are the third booking or more, then it will have already
-    // been adjusted.
-    if (!isset($column[$end_s][2]["id"]))
+    if (count($column[$s]) > 1)
     {
-      if ($column[$end_s][0]["slots"] > 1)
+      // Make all the bookings in this slot one slot long
+      foreach ($column[$s] as $slot_entry)
       {
-        // Move the data into the new first slot and decrement the number of slots
-        foreach ($data_keys as $key)
-        {
-          $column[$end_s + $resolution][0][$key] = $column[$end_s][0][$key];
-        }
-        $column[$end_s + $resolution][0]['slots'] = $column[$end_s][0]['slots'] - 1;
+        $slot_entry['first_slot'] = $s;
+        $slot_entry['n_slots'] = 1;
       }
-    }
-  }
-  
-  // and if the first time slot is already occupied, decrement
-  // again, adjust the first slot for this booking
-  if (isset($column[$start_s][1]['id']))
-  {
-    $n_slots--;
-    $first_slot += $resolution;
-    // If we're only the second booking to land on this time slot
-    // then we'll have to adjust the information held for the first booking
-    if (!isset($column[$start_s][2]['id']))
-    {
-      // Find the first slot ($s) of the first booking
-      $first_booking_id = $column[$start_s][0]['id'];
-      $r = $start_s;
-      // If you've got to the first slot of the day then that must be the
-      // first slot of the first booking
-      while ($r > $start_first_slot)
+      
+      // Truncate the previous bookings that go into this slot (if there are some)
+      // We only need to do it if there is only one entry in the previous slot, because if
+      // there are more than one then they will already be just one slot long
+      if ($s > $start_s)
       {
-        // Otherwise, step back one slot.
-        $r -= $resolution;
-        // If that slot contains the first booking, then step back again
-        if (isset($column[$r]))
+        if (count($column[$s - $resolution]) == 1)
         {
-          foreach ($column[$r] as $booking)
+          $entry_id = $column[$s - $resolution][0]['id'];
+          for ($i= $start_s; $i < $s; $i += $resolution)
           {
-            if ($booking['id'] == $first_booking_id)
+            foreach ($column[$i] as &$earlier_slot_entry)
             {
-              continue 2;  // next iteration of the while loop
+              if ($earlier_slot_entry['id'] == $entry_id)
+              {
+                $earlier_slot_entry['n_slots']--;
+              }
             }
+            unset($earlier_slot_entry); // Break the reference
           }
         }
-        // If not, then we've stepped back one slot past the start of
-        // the first booking, so step forward again and finish
-        $r += $resolution;
-        break;
-      } // end while
-      
-      // Now we've found the time ($r) of the first slot of the first booking
-      // we need to find its index ($i)
-      foreach ($column[$r] as $i => $booking)
-      {
-        if ($booking["id"] == $first_booking_id)
-        {
-          break;
-        }
-      }
 
-      // Finally decrement the slot count for the first booking
-      // no need to worry about count going < 1: the multiple booking display
-      // does not use the slot count.
-      $column[$r][$i]["slots"]--;
-      // and put the data in the multiply booked slot
-      foreach ($data_keys as $key)
+      }
+      
+      // Make the current booking start at the next slot (if there is one)
+      if ($s < $end_s)
       {
-        $column[$start_s][0][$key] = $column[$r][$i][$key];
+        $entry['n_slots'] = $entry['n_slots'] - (1 + $s - $entry['first_slot'])/$resolution;
+        $entry['first_slot'] = $s + $resolution;
       }
     }
-  }
- 
-  // now we've got all the information we can enter it in the first complete
-  // slot for the booking (provided it's not a multiple booking slot)
-  if (!isset($column[$first_slot][1]["id"]))
-  {
-    foreach ($data_keys as $key)
-    {
-      $column[$first_slot][0][$key] = $entry[$key];
-    }    
-    $column[$first_slot][0]['slots'] = $n_slots;
-  }
-
+  }  // end for
+  
 } // end function map_add_booking()
 
 
 
-function cell_html($cell, $query_vars, $is_invalid = false)
+function cell_html($s, $cell, $query_vars, $is_invalid = false)
 {
   // draws a single cell in the main table of the day and week views
   //
-  // $cell is a two dimensional array that is part of the map of the whole
-  // display and looks like this:
-  // 
-  // $cell[n][id]
-  //         [is_repeat]
-  //         [is_multiday_start]
-  //         [is_multiday_end]
-  //         [type]
-  //         [name]
-  //         [description]
-  //         [create_by]
-  //         [room_id]
-  //         [start_time]
-  //         [slots]
-  //         [status]
-  //
-  // where n is the number of the booking in the cell.    There can be none, one or many 
-  // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
+  // $cell is an array of entries that occupy that cell.  There can be none, one or many 
+  // bookings in a cell.  If there are no bookings then a blank cell is drawn with a link
   // to the edit entry form.     If there is one booking, then the booking is shown in that
-  // cell.    If there is more than one booking then all the bookings are shown, but they can 
-  // be shown in two different ways: minimised and maximised.   By default they are shown
-  // minimised, so that the standard row height is preserved.   By clicking a control
-  // the cell can be maximised.   (Multiple bookings can arise in a cell if the resolution
-  // of an existing database in increased or the booking day is shifted).
+  // cell.    If there is more than one booking then all the bookings are shown.
   
   // $query_vars is an array containg the query vars to be used in the link for the cell.
   // It is indexed as follows:
@@ -313,9 +198,8 @@ function cell_html($cell, $query_vars, $is_invalid = false)
   // <td> for the first slot would have had a rowspan that extended the cell down for
   // the number of slots of the booking.
 
-  if (empty($cell) || isset($cell[0]['name']))
+  if (empty($cell) || ($cell[0]['first_slot'] == $s))
   {
-    // We tell if its booked by $id and $name having something in them
     if (!empty($cell))
     {
       $class = 'booked';
@@ -334,7 +218,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
     }
     
     // If there's no booking or if there are multiple boookings then make the slot one unit long
-    $slots = (count($cell) == 1) ? $cell[0]['slots'] : 1;
+    $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
     
     $html .= tdcell($class, $slots);
     
@@ -388,7 +272,7 @@ function cell_html($cell, $query_vars, $is_invalid = false)
           $classes[] = 'tentative';
         }
         
-        if ($booking['is_repeat'])
+        if (isset($booking['repeat_id']))
         {
           $classes[] = 'series';
         }
@@ -658,8 +542,6 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   {
     map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
   }
-  
-  //var_dump($today);
 
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
@@ -795,7 +677,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         {
           $today[$room['id']][$day][$s] = array();
         }
-        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
+        $tbody .= cell_html($s, $today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ( false != $row_labels_both_sides )
       {
@@ -852,12 +734,12 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($area_id, $room['id'], $month, $day, $year, $s);
         
-        // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
         {
-          $today[$room['id']][$day][$s] = array();  // to avoid an undefined index NOTICE error
+          $today[$room['id']][$day][$s] = array();
         }
-        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid);
+        
+        $tbody .= cell_html($s, $today[$room['id']][$day][$s], $query_vars, $is_invalid);
       }
       
       // next lines to display times on right side
@@ -1111,7 +993,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
           {
             $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+          $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }  // end looping through the time slots
         if ( false != $row_labels_both_sides )
         {
@@ -1185,7 +1067,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
           {
             $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+          $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }
   
       }    // for loop
