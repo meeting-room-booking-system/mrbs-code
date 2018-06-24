@@ -57,8 +57,6 @@ global $HTTP_REFERER;
 
 // Get non-standard form variables
 $action = get_form_var('action', 'string', null, INPUT_POST);
-$username = get_form_var('username', 'string', null, INPUT_POST);
-$password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
@@ -86,15 +84,9 @@ if (isset($action))
     // If we're going to do something then check the CSRF token first
     Form::checkToken();
     
-    // First make sure the password is valid
-    if ($username == "")
-    {
-      logoff_user();
-    }
-    else
-    {
-      // Shouldn't get here
-    }
+    // You should only get here using CAS authentication after clicking the logoff
+    // link, no matter what the value of the form parameters.
+    logoff_user();
     
     // preserve the original $HTTP_REFERER by sending it as a GET parameter
     if (!empty($returl))

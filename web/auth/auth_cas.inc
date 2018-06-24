@@ -13,7 +13,7 @@ if ($auth['cas']['debug'])
 
 phpCAS::client(CAS_VERSION_2_0,
                $auth['cas']['host'],
-               $auth['cas']['port'],
+               (int) $auth['cas']['port'],
                $auth['cas']['context']);
 
 if ($auth['cas']['no_server_validation'])
