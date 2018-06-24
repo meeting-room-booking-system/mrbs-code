@@ -114,5 +114,3 @@ if (isset($action))
     print_footer(TRUE);
   }
 }
-
-?>

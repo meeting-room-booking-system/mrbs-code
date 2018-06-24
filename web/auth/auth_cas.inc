@@ -117,6 +117,3 @@ function authGetUserEmail($user)
   
   return get_default_email($user);
 }
-
-
-?>
