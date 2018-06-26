@@ -536,6 +536,7 @@ table.dwm_main {
 
 .dwm_main th, .dwm_main td {
   min-height: <?php echo $main_cell_height ?>;
+  line-height: <?php echo $main_cell_height ?>;
 }
 
 .dwm_main td {
@@ -656,6 +657,11 @@ table.dwm_main {
   left: 0;
   z-index: 50;
   overflow: hidden;
+}
+
+.dwm_main.times-along-top .booked.multiply a {
+  max-height: <?php echo $main_cell_height ?>;
+  box-sizing: content-box;
 }
 
 .dwm_main .booked.multiply a,

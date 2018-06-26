@@ -414,7 +414,13 @@ echo "<div class=\"view_container js_hidden\">\n";
 echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
-echo "<table class=\"dwm_main\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
+$class = 'dwm_main';
+if ($times_along_top)
+{
+  $class .= ' times-along-top';
+}
+
+echo "<table class=\"$class\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
 
