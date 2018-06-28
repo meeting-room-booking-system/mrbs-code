@@ -92,7 +92,7 @@ class SessionHandler implements \SessionHandlerInterface
     global $tbl_sessions;
     
     $sql = "DELETE FROM $tbl_sessions WHERE id=:id";
-    $rows = $rows = db()->command($sql, $sql_params);
+    $rows = $rows = db()->command($sql, array(':id' => $session_id));
     return ($rows === 1);
   }
 
