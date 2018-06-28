@@ -28,7 +28,7 @@ foreach ($tables as $table)
 }
 
 
-$db_schema_version = 55;
+$db_schema_version = 56;
 $local_db_schema_version = 1;
 
 // Convenience wrapper function to provide access to a DB object for
