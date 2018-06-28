@@ -20,6 +20,10 @@ if ($auth['cas']['no_server_validation'])
 {
   phpCAS::setNoCasServerValidation();
 }
+elseif (!empty($auth['cas']['ca_cert_path']))
+{
+  phpCAS::setCasServerCACert($auth['cas']['ca_cert_path']);
+}
 
 // Handle incoming logout requests
 if (empty($auth['cas']['real_hosts']))

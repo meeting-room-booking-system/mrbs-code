@@ -706,10 +706,15 @@ $auth['cas']['context'] = '/cas';  // Context of the CAS Server
 // tied up parsing bogus XML messages.
 //$auth['cas']['real_hosts'] = array('cas-real-1.example.com', 'cas-real-2.example.com');
 
+// For production use set the CA certificate that is the issuer of the certificate
+// on the CAS server
+$auth['cas']['ca_cert_path'] = '/path/to/cachain.pem';
+
 // For quick testing you can disable SSL validation of the CAS server.
 // THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION.
 // VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL!
 $auth['cas']['no_server_validation'] = false;
+
 $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable for production.
 
 
