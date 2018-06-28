@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use \phpCAS;
+use MRBS\Form\Form;
 
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
@@ -31,7 +32,7 @@ function print_logon_box()
   }
   
   $user = getUserName();
-
+  
   if (isset($user))
   {
     print_report_link($user);
