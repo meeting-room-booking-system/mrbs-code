@@ -169,6 +169,13 @@ CREATE TABLE mrbs_zoneinfo
   CONSTRAINT mrbs_uq_timezone UNIQUE (timezone, outlook_compatible)
 );
 
+CREATE TABLE mrbs_sessions
+(
+  id      varchar(32) NOT NULL primary key,
+  access  int DEFAULT NULL,
+  data    text DEFAULT NULL
+);
+
 CREATE TABLE mrbs_users
 (
   /* The first four fields are required. Don't remove. */
@@ -195,6 +202,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '55');
+  VALUES ('db_version', '56');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
