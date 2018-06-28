@@ -106,9 +106,20 @@ function print_report_link($user)
 
 function print_logon_button($target_url)
 {
+  global $auth;
+  
+  if ($auth['session'] == 'cas')
+  {
+    $action = $target_url;
+  }
+  else
+  {
+    $action = 'admin.php';
+  }
+  
   $form = new Form();
   $form->setAttributes(array('method' => 'post',
-                             'action' => 'admin.php'));
+                             'action' => $action));
   
   // Add the hidden fields
   $hidden_inputs = array('target_url' => $target_url,
