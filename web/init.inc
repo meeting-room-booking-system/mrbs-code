@@ -39,7 +39,8 @@ function session_init()
 }
 
 // Start up sessions 
-session_init();
+new SessionHandler();
+//session_init();
 
 // If sessions didn't work, then set a cookie containing the CSRF token.
 if (session_id() === '')

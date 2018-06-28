@@ -9,7 +9,7 @@ use MRBS\Form\FieldInputSubmit;
 
 global $dbsys, $db_tbl_prefix, $db_schema, $maxlength;
 
-$tables = array('area', 'entry', 'repeat', 'room', 'users', 'variables', 'zoneinfo');
+$tables = array('area', 'entry', 'repeat', 'room', 'sessions', 'users', 'variables', 'zoneinfo');
 $table_vars = array();
 
 foreach ($tables as $table)
