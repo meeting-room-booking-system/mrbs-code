@@ -13,6 +13,8 @@ class SessionHandler implements \SessionHandlerInterface
   
   public function __construct()
   {
+    global $auth;
+    
     session_set_save_handler(
         array($this, 'open'),
         array($this, 'close'),
@@ -21,9 +23,36 @@ class SessionHandler implements \SessionHandlerInterface
         array($this, 'destroy'),
         array($this, 'gc')
       );
-      
+    
+    $cookie_path = get_cookie_path();
+
+    if (!isset($auth['session_php']['session_expire_time']))
+    {
+      // Default to the behaviour of previous versions of MRBS, use only
+      // session cookies - no persistent cookie.
+      $auth['session_php']['session_expire_time'] = 0;
+    }
+
+    session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
+    session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
     register_shutdown_function('session_write_close');
-    session_start();
+    
+    if (false === session_start())
+    {
+      // Check that the session started OK.   If we're using the 'php' session scheme then
+      // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
+      // they are not working we will fall back to using cookies.
+      $message = "MRBS: could not start sessions";
+      
+      if ($auth['session'] == 'php')
+      {
+        throw new \Exception($message);
+      }
+      else
+      {
+        trigger_error($message, E_USER_WARNING);
+      }
+    }
   }
     
     
