@@ -42,38 +42,31 @@ class SessionHandler implements \SessionHandlerInterface
   {
     global $tbl_sessions;
     
-    $sql = "UPDATE $tbl_sessions
-               SET data=:data, access=:access
-             WHERE id=:id";
+    $sql = "SELECT COUNT(*) FROM $tbl_sessions WHERE id=:id LIMIT 1";
+    $rows = db()->query1($sql, array(':id' => $session_id));
     
-    $sql_params = array(':id' => $session_id,
-                        ':data' => $session_data,
-                        ':access' => time());
-                            
-    $rows = db()->command($sql, $sql_params);
-
-    if ($rows === 1)
+    if ($rows > 0)
     {
-      return true;
+      $sql = "UPDATE $tbl_sessions
+                 SET data=:data, access=:access
+               WHERE id=:id";
     }
-    
-    if ($rows === 0)
+    else
     {
       // The id didn't exist so we have to INSERT it (we couldn't use
       // REPLACE INTO because we have to cater for both MySQL and PostgreSQL)
       $sql = "INSERT INTO $tbl_sessions
                           (id, data, access)
                    VALUES (:id, :data, :access)";
-      
-      $rows = db()->command($sql, $sql_params);
-      
-      if ($rows === 1)
-      {
-        return true;
-      }
     }
+                 
+    $sql_params = array(':id' => $session_id,
+                        ':data' => $session_data,
+                        ':access' => time());
     
-    return false;
+    db()->command($sql, $sql_params);
+    
+    return true;
   }
 
   
