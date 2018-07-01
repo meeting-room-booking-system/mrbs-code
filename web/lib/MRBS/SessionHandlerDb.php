@@ -2,13 +2,13 @@
 
 namespace MRBS;
 
-// Use our own PHP session handling.   This has three advantages:
+// Use our own PHP session handling by storing sessions in the database.   This has three advantages:
 //    (a) it's more secure, especially on shared servers
 //    (b) it avoids problems with ordinary sessions not working because the PHP session save
 //        directory is not writable
 //    (c) it's more resilient in clustered environments
 
-class SessionHandler implements \SessionHandlerInterface
+class SessionHandlerDb implements \SessionHandlerInterface
 {
   
   public function open($save_path , $session_name)

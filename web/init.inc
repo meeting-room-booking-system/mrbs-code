@@ -19,7 +19,7 @@ function session_init()
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
 
-  $handler = new SessionHandler();
+  $handler = new SessionHandlerDb();
   session_set_save_handler($handler, true);
   
   if (false === session_start())
