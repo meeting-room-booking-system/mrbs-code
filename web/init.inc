@@ -7,6 +7,11 @@ function session_init()
 {
   global $auth;
   
+  // Set some session settings, as a defence against session fixation.
+  ini_set('session.use_only_cookies', '1');
+  ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
+  ini_set('session.use_trans_sid', '0');
+  
   $cookie_path = get_cookie_path();
 
   if (!isset($auth['session_php']['session_expire_time']))
