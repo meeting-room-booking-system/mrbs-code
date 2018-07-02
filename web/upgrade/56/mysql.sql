@@ -5,5 +5,6 @@ CREATE TABLE %DB_TBL_PREFIX%sessions
   access  int unsigned DEFAULT NULL,
   data    text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  KEY idxAccess (access)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -175,6 +175,7 @@ CREATE TABLE mrbs_sessions
   access  int DEFAULT NULL,
   data    text DEFAULT NULL
 );
+create index mrbs_idxAccess on mrbs_sessions(access);
 
 CREATE TABLE mrbs_users
 (
