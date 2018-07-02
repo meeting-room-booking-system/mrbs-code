@@ -1,27 +1,145 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Form;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputPassword;
+use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldInputSubmit;
+
+
+$db_schema_version = 56;
+$local_db_schema_version = 1;
+
+
+// Sanity check:  check that we can access the MRBS tables.  If we can't, it's
+// either because they don't exist or we don't have permission.
+if (!db()->table_exists($tbl_entry))
+{
+  fatal_error(get_vocab('fatal_no_tables'));
+}
+
+// Default version is 0, before we had schema versions
+$current_db_schema_version = 0;
+$current_local_db_schema_version = 0;
+
+if (db()->table_exists($tbl_variables))
+{
+  $current_db_schema_version = db()->query1("SELECT variable_content ".
+                                          "FROM $tbl_variables ".
+                                          "WHERE variable_name = 'db_version'");
+  $current_local_db_schema_version = db()->query1("SELECT variable_content ".
+                                                "FROM $tbl_variables ".
+                                                "WHERE variable_name = 'local_db_version'");                                            
+  if ($current_local_db_schema_version < 0)
+  {
+    $current_local_db_schema_version = 0;
+  }
+}
+
+// If either of the database schema version numbers are out of date, then 
+// upgrade the database - provided of course that the entry table exists.
+if (($current_db_schema_version < $db_schema_version) || 
+    ($current_local_db_schema_version < $local_db_schema_version))
+{
+  // Upgrade needed
+
+  // Just use a simple header as the normal header may (a) use features
+  // which are not available until after the database upgrade or (b) use
+  // functions which are not available until after dbsys has run.
+  print_simple_header();
+ 
+  echo '<h1>' . get_vocab('mrbs') . "</h1>\n";
+  echo '<p class="error">' . get_vocab('upgrade_required') . "</p>\n"; 
+
+  $admin_handle = null;
+
+  // We need to open a connection to the database with a database
+  // username that has admin rights.
+  while (empty($admin_handle))
+  {
+    $db_admin_username = get_form_var('form_username', 'string');
+    $db_admin_password = get_form_var('form_password', 'string');
+    if (!isset($db_admin_username) || !isset($db_admin_password))
+    {
+      // Get a username and password if we haven't got them
+      echo '<p>' . get_vocab('supply_userpass') . "</p>\n";
+      echo '<p>' . get_vocab('contact_admin') . "</p>\n"; 
+      db_get_userpass();
+    }
+    else
+    {
+      $admin_handle = DBFactory::create($dbsys, $db_host, $db_admin_username, $db_admin_password, $db_database, 0, $db_port);
+    }
+  }
+
+  // Check the CSRF token before we make any changes
+  Form::checkToken();
+    
+  $ok = true;
+
+  // Do any MRBS upgrades first
+  if ($current_db_schema_version < $db_schema_version)
+  {
+    $ok = upgrade_database(false, $current_db_schema_version, $db_schema_version, $admin_handle);
+  }
+  // Then any local upgrades
+  if ($ok && $current_local_db_schema_version < $local_db_schema_version)
+  {
+    $ok = upgrade_database(true, $current_local_db_schema_version, $local_db_schema_version, $admin_handle);
+  }
+  
+  // close the database connection that has admin rights
+  unset($admin_handle);
+
+  if ($ok)
+  {
+    echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
+  }
+  echo "<a href=\"./\">" . get_vocab('returncal') . '</a>.';
+
+  print_footer(true);
+}
+
+
+// Populate the $maxlength global.   (We need to do this after any upgrade in case the
+// upgrade as altered the table structures).
+foreach ($table_vars as $table => $var)
+{
+  // Find the maximum length of the CHAR and VARCHAR fields (we won't
+  // worry about TEXT fields) 
+  $field_info = db()->field_info($$var);
+  foreach ($field_info as $field)
+  {
+    if (($field['nature'] == 'character') && 
+        isset($field['length']) &&
+        ($field['length'] < 256))
+    {
+      $maxlength[$table . '.' . $field['name']] = (int) $field['length'];
+    }
+  }
+}
+
 
 // Upgrade between database schema versions.
-//
 // Returns FALSE on error, TRUE is successful
-
 function upgrade_echo($message)
 {
   echo $message;
   // Flush the message, so that there's some progress information
   // output to the browser even when the upgrade is taking a while
-  if (ob_get_length() !== FALSE)
+  if (ob_get_length() !== false)
   {
     ob_flush();
   }
   flush();
 }
 
+
 function upgrade_database($local, $from, $to, $upgrade_handle)
 {
-  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local == FALSE)
-  // or local upgrades ($local == TRUE);
+  // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
+  // or local upgrades ($local === true);
   // $upgrade_handle is the database handle to use for the upgrade.   It will typically
   // have admin rights (eg CREATE and ALTER)
   global $dbsys;
@@ -36,8 +154,8 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
     
   for ($ver = ($from+1); $ver <= $to; $ver++)
   {
-    upgrade_echo("<p>" .
-                 (($local) ? get_vocab("upgrade_to_local_version") : get_vocab("upgrade_to_version")) .
+    upgrade_echo('<p>' .
+                 (($local) ? get_vocab('upgrade_to_local_version') : get_vocab('upgrade_to_version')) .
                  ": $ver");
 
     if ($local)
@@ -50,15 +168,15 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       $filename = "upgrade/$ver/$sql_type.sql";
       $php_filename = "upgrade/$ver/post.inc";
     }
-    $handle = fopen($filename, "r");
+    $handle = fopen($filename, 'r');
     if (!$handle)
     {
       // No need to localise, should never happen!
       upgrade_echo("Fatal error: Failed to open '$filename' for reading.\n");
-      return FALSE;
+      return false;
     }
     $file_size = filesize($filename);
-    $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : "";
+    $sql = (!empty($file_size)) ? fread($handle, filesize($filename)) : '';
     fclose($handle);
 
     // PostgreSQL databases can have multiple schemas and so need a qualified
@@ -80,7 +198,7 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       }
     }
 
-    upgrade_echo("<br>" . get_vocab("ok"));
+    upgrade_echo('<br>' . get_vocab('ok'));
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
@@ -95,5 +213,48 @@ function upgrade_database($local, $from, $to, $upgrade_handle)
       include($php_filename);
     }
   }
-  return TRUE;
+  return true;
+}
+
+
+// Get a database username and password
+function db_get_userpass()
+{
+  print_header();
+  
+  $form = new Form();
+  $form->setAttributes(array('class'  => 'standard',
+                             'id'     => 'db_logon',
+                             'method' => 'post',
+                             'action' => this_page()));
+  
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('database_login'));
+  
+  // The username field
+  $field = new FieldInputText();
+  $field->setLabel('Database username')
+        ->setControlAttributes(array('id'       => 'form_username',
+                                     'name'     => 'form_username',
+                                     'required' => true));               
+  $fieldset->addElement($field);
+  
+  // The password field
+  $field = new FieldInputPassword();
+  $field->setLabel('Database password')
+        ->setControlAttributes(array('id'   => 'form_password',
+                                     'name' => 'form_password'));               
+  $fieldset->addElement($field);
+  
+  // The submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('value' => get_vocab('login')));
+  $fieldset->addElement($field);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
+  
+  // Print footer and exit
+  print_footer(TRUE);
 }

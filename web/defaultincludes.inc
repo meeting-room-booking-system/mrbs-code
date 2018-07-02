@@ -30,4 +30,5 @@ require_once 'dbsys.inc';
 require_once 'init.inc';
 require_once 'password_compat/password.php';
 require_once 'mrbs_auth.inc';
+require_once 'upgrade.inc';
 require 'standard_vars.inc.php';
