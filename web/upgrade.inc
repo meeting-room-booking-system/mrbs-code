@@ -7,6 +7,8 @@ use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
 
+// This file checks to see whether the database schema versions (both global and local)
+// are up to date, and if not perfgorms the necessary upgrades.
 
 $db_schema_version = 56;
 $local_db_schema_version = 1;
