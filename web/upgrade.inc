@@ -89,34 +89,22 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   
   // close the database connection that has admin rights
   unset($admin_handle);
-
+  
   if ($ok)
   {
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
   echo "<a href=\"./\">" . get_vocab('returncal') . '</a>.';
+  
+  // Populate the $maxlength global.   (We need to do this after any upgrade in case the
+  // upgrade has altered the table structures).
+  populate_maxlength();
 
   print_footer(true);
 }
 
 
-// Populate the $maxlength global.   (We need to do this after any upgrade in case the
-// upgrade as altered the table structures).
-foreach ($table_vars as $table => $var)
-{
-  // Find the maximum length of the CHAR and VARCHAR fields (we won't
-  // worry about TEXT fields) 
-  $field_info = db()->field_info($$var);
-  foreach ($field_info as $field)
-  {
-    if (($field['nature'] == 'character') && 
-        isset($field['length']) &&
-        ($field['length'] < 256))
-    {
-      $maxlength[$table . '.' . $field['name']] = (int) $field['length'];
-    }
-  }
-}
+
 
 
 // Upgrade between database schema versions.

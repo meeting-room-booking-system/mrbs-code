@@ -14,11 +14,44 @@ foreach ($tables as $table)
   // other than MySQL, which is one of the few that doesn't support schemas.
   // (Although in practice this means PostgreSQL at the moment, it's possible that
   // in the future support for more databases may be added)
-  if ((strpos($dbsys, 'mysql') === FALSE) && isset($db_schema))
+  if ((strpos($dbsys, 'mysql') === false) && isset($db_schema))
   {
     $$var = $db_schema . '.' . $$var;
   }
   $table_vars[$table] = $var;
+}
+
+populate_maxlength();
+
+
+// Populate the $maxlength global.
+function populate_maxlength()
+{
+  global $maxlength, $table_vars;
+  
+  foreach ($table_vars as $table => $var)
+  {
+    global $$var;
+    
+    // Check to see if the table exists, as it won't yet if it's about
+    // to be created as part of an upgrade
+    if (db()->table_exists($$var))
+    {
+      // Find the maximum length of the CHAR and VARCHAR fields (we won't
+      // worry about TEXT fields)
+      $field_info = db()->field_info($$var);
+      
+      foreach ($field_info as $field)
+      {
+        if (($field['nature'] == 'character') && 
+            isset($field['length']) &&
+            ($field['length'] < 256))
+        {
+          $maxlength[$table . '.' . $field['name']] = (int) $field['length'];
+        }
+      }
+    }
+  }
 }
 
 
