@@ -10,10 +10,6 @@ use MRBS\Form\FieldInputSubmit;
 // This file checks to see whether the database schema versions (both global and local)
 // are up to date, and if not perfgorms the necessary upgrades.
 
-$db_schema_version = 56;
-$local_db_schema_version = 1;
-
-
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
 if (!db()->table_exists($tbl_entry))
@@ -23,26 +19,26 @@ if (!db()->table_exists($tbl_entry))
 
 // Default version is 0, before we had schema versions
 $current_db_schema_version = 0;
-$current_local_db_schema_version = 0;
+$current_db_schema_version_local = 0;
 
 if (db()->table_exists($tbl_variables))
 {
   $current_db_schema_version = db()->query1("SELECT variable_content ".
-                                          "FROM $tbl_variables ".
-                                          "WHERE variable_name = 'db_version'");
-  $current_local_db_schema_version = db()->query1("SELECT variable_content ".
-                                                "FROM $tbl_variables ".
-                                                "WHERE variable_name = 'local_db_version'");                                            
-  if ($current_local_db_schema_version < 0)
+                                              "FROM $tbl_variables ".
+                                             "WHERE variable_name = 'db_version'");
+  $current_db_schema_version_local = db()->query1("SELECT variable_content ".
+                                                    "FROM $tbl_variables ".
+                                                   "WHERE variable_name = 'local_db_version'");                                            
+  if ($current_db_schema_version_local < 0)
   {
-    $current_local_db_schema_version = 0;
+    $current_db_schema_version_local = 0;
   }
 }
 
 // If either of the database schema version numbers are out of date, then 
 // upgrade the database - provided of course that the entry table exists.
-if (($current_db_schema_version < $db_schema_version) || 
-    ($current_local_db_schema_version < $local_db_schema_version))
+if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) || 
+    ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
 {
   // Upgrade needed
 
@@ -81,14 +77,14 @@ if (($current_db_schema_version < $db_schema_version) ||
   $ok = true;
 
   // Do any MRBS upgrades first
-  if ($current_db_schema_version < $db_schema_version)
+  if ($current_db_schema_version < DB::DB_SCHEMA_VERSION)
   {
-    $ok = upgrade_database(false, $current_db_schema_version, $db_schema_version, $admin_handle);
+    $ok = upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $admin_handle);
   }
   // Then any local upgrades
-  if ($ok && $current_local_db_schema_version < $local_db_schema_version)
+  if ($ok && $current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL)
   {
-    $ok = upgrade_database(true, $current_local_db_schema_version, $local_db_schema_version, $admin_handle);
+    $ok = upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $admin_handle);
   }
   
   // close the database connection that has admin rights
