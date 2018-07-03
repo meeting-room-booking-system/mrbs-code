@@ -13,7 +13,9 @@ class SessionHandlerDb implements \SessionHandlerInterface
   
   public function open($save_path , $session_name)
   {
-    return true;
+    global $tbl_sessions;
+    
+    return db()->table_exists($tbl_sessions);
   }
 
   

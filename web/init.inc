@@ -23,24 +23,32 @@ function session_init()
 
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
-
+  
   $handler = new SessionHandlerDb();
   session_set_save_handler($handler, true);
   
   if (false === session_start())
   {
-    // Check that the session started OK.   If we're using the 'php' session scheme then
-    // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
-    // they are not working we will fall back to using cookies.
-    $message = "MRBS: could not start sessions";
+    trigger_error("MRBS: could not get DB sessions to start.  Trying ordinary PHP sessions.", E_USER_WARNING);
     
-    if ($auth['session'] == 'php')
+    $handler = new \SessionHandler();
+    session_set_save_handler($handler, true);
+    
+    if (false === session_start())
     {
-      throw new \Exception($message);
-    }
-    else
-    {
-      trigger_error($message, E_USER_WARNING);
+      // Check that the session started OK.   If we're using the 'php' session scheme then
+      // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
+      // they are not working we will fall back to using cookies.
+      $message = "MRBS: could not start sessions";
+      
+      if ($auth['session'] == 'php')
+      {
+        throw new \Exception($message);
+      }
+      else
+      {
+        trigger_error($message, E_USER_WARNING);
+      }
     }
   }
 }
