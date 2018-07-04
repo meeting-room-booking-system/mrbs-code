@@ -3,43 +3,66 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 
+
 function session_init()
 {
   global $auth;
   
+  // Set some session settings, as a defence against session fixation.
+  ini_set('session.use_only_cookies', '1');
+  ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
+  ini_set('session.use_trans_sid', '0');
+  
   $cookie_path = get_cookie_path();
 
-  if (!isset($auth["session_php"]["session_expire_time"]))
+  if (!isset($auth['session_php']['session_expire_time']))
   {
     // Default to the behaviour of previous versions of MRBS, use only
     // session cookies - no persistent cookie.
-    $auth["session_php"]["session_expire_time"] = 0;
+    $auth['session_php']['session_expire_time'] = 0;
   }
 
-  session_name("MRBS_SESSID");  // call before session_set_cookie_params() - see PHP manual
-  session_set_cookie_params($auth["session_php"]["session_expire_time"],
-                            $cookie_path);
-                            
-  // Sessions are only essential if we're using the 'php' session scheme.   For other schemes
-  // they are desirable as if they are working we will use them for storing CSRF tokens, but
-  // if they are not working we will fall back to other techniques, eg cookies.
-  if ((false === session_start()) && ($auth['session'] == 'php'))
+  session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
+  session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
+  
+  $handler = new SessionHandlerDb();
+  session_set_save_handler($handler, true);
+  
+  if (false === session_start())
   {
-    // Checking the result of session_start() is not very reliable.   Before PHP 5.3.0
-    // it always returned TRUE.   Even after 5.3.0 it seems to return TRUE even if the
-    // session_save_path is not writable.  A warning is generated, but session_start()
-    // still returns TRUE.
-    $message = "MRBS: could not start session.  The most likely causes are that session.save_path " .
-               "has not been set properly in your php.ini file, or else that the session.save_path " .
-               "directory is not writable.  Check your php.ini file and the file permissions on the ".
-               "session save path.";
+    $message = "Could not start DB sessions, trying ordinary PHP sessions.  Note that this " .
+               "error will normally only occur if the sessions table doesn't exist, which " .
+               "will be the case when upgrading to database schema version 56.  If it " .
+               "happens at any other time then something has gone wrong and it should be " .
+               "investigated.";
+               
     trigger_error($message, E_USER_WARNING);
-    fatal_error("MRBS: server configuration error. Check your error log for more details.");
+    
+    $handler = new \SessionHandler();
+    session_set_save_handler($handler, true);
+    
+    if (false === session_start())
+    {
+      // Check that the session started OK.   If we're using the 'php' session scheme then
+      // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
+      // they are not working we will fall back to using cookies.
+      $message = "MRBS: could not start sessions";
+      
+      if ($auth['session'] == 'php')
+      {
+        throw new \Exception($message);
+      }
+      else
+      {
+        trigger_error($message, E_USER_WARNING);
+      }
+    }
   }
 }
 
 // Start up sessions 
 session_init();
+
 
 // If sessions didn't work, then set a cookie containing the CSRF token.
 if (session_id() === '')

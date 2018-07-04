@@ -6,17 +6,19 @@ use PDO;
 use PDOException;
 
 
-//
 class DB
 {
+  const DB_SCHEMA_VERSION = 56;
+  const DB_SCHEMA_VERSION_LOCAL = 1;
+  
   const DB_DEFAULT_PORT = null;
   const DB_DBO_DRIVER = null;
   const DB_CHARSET = 'UTF8';
+  
   protected $dbh = null;
   protected $mutex_lock_name;
 
 
-  //
   public function __construct($db_host, $db_username, $db_password,
                               $db_name, $persist = 0, $db_port = null)
   {
