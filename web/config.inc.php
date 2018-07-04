@@ -32,7 +32,7 @@ namespace MRBS;
 //
 // A list of valid timezones can be found at http://php.net/manual/timezones.php
 // The following line must be uncommented by removing the '//' at the beginning
-//$timezone = "Europe/London";
+$timezone = "Europe/London";
 
 
 /*******************
@@ -40,6 +40,8 @@ namespace MRBS;
  ******************/
 // Which database system: "pgsql"=PostgreSQL, "mysql"=MySQL
 $dbsys = "mysql";
+#$dbsys = "pgsql";
+
 // Hostname of database server. For pgsql, can use "" instead of localhost
 // to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
@@ -74,4 +76,125 @@ $db_persist = FALSE;
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
 
+/* db_ext testing */
+//$auth['db_ext']['password_format'] = 'password_hash';
+$auth['db_ext']['password_format'] = 'crypt';
+$auth['db_ext']['column_name_level'] = 'mrbs_level';
+//$auth['type'] = 'db_ext';
 
+$auth['type'] = 'db';
+//$auth['type'] = 'db';
+
+$auth["session"] = "php";
+//$auth["session"] = "cookie";
+
+//$auth['deny_public_access'] = true;
+
+// Really short inactivity expiry time, for testing - 1 minute!
+//$auth["session_php"]["inactivity_expire_time"] = 60;
+  
+#$auth['type'] = 'ldap';
+$ldap_host = "localhost";
+$ldap_user_attrib = "cn";
+$ldap_debug = true;
+$ldap_base_dn = 'dc=theberaneks,dc=org,dc=uk';
+$ldap_dn_search_attrib = "uid";
+$ldap_dn_search_dn = 'uid=queryuser,ou=people,dc=theberaneks,dc=org,dc=uk';
+$ldap_dn_search_password = 'uFelobu0';
+$ldap_debug = true;
+
+/* Email settings */
+$mrbs_admin_email = 'john@redux.org.uk';
+$mail_settings['admin_on_bookings']      = true;
+
+$url_base = "https://home.redux.org.uk/mrbs/";
+
+$mail_settings['details']   = TRUE; // Set to TRUE if you want full booking details;
+                                     // otherwise you just get a link to the entry
+$mail_settings['html']      = TRUE; // Set to true if you want HTML mail
+$mail_settings['icalendar'] = TRUE; // Set to TRUE to include iCalendar details
+
+// Set the name of the backend used to transport your mails. Either 'mail',
+// 'smtp' or 'sendmail'. Default is 'mail'.
+$mail_settings['admin_backend'] = 'mail';
+#$mail_settings['admin_backend'] = 'sendmail';
+#$mail_settings['admin_backend'] = 'smtp';
+
+$mail_settings['debug'] = TRUE;
+
+// Set the path of the Sendmail program (only used with "sendmail" backend).
+// Default is '/usr/bin/sendmail'
+$sendmail_settings['path'] = '/usr/sbin/sendmail';
+// Set additional Sendmail parameters (only used with "sendmail" backend).
+// (example "-t -i"). Default is ''
+$sendmail_settings['args'] = '-t -i';
+
+/*******************
+ * SMTP settings
+ */
+  
+// Local
+$smtp_settings['host'] = 'home.redux.org.uk';  // SMTP server
+$smtp_settings['port'] = 25;           // SMTP port number
+//$smtp_settings['port'] = 465;           // SMTP port number
+$smtp_settings['auth'] = false;        // Whether to use SMTP authentication
+$smtp_settings['username'] = 'jberanek';
+$smtp_settings['password'] = 'password';
+$smtp_settings['secure'] = '';      // Encryption method: '', 'tls' or 'ssl'
+//$smtp_settings['disable_opportunistic_tls'] = true;
+//$smtp_settings['ssl_verify_peer'] = false;
+//$smtp_settings['ssl_verify_peer_name'] = false;
+//$smtp_settings['ssl_allow_self_signed'] = false;
+
+// GMail
+//$smtp_settings['host'] = 'smtp.gmail.com';  // SMTP server
+//$smtp_settings['port'] = 587;           // SMTP port number
+//$smtp_settings['auth'] = true;        // Whether to use SMTP authentication
+//$smtp_settings['username'] = 'john.redux@gmail.com';
+//$smtp_settings['password'] = 'password';
+//$smtp_settings['secure'] = '';      // Encryption method: '', 'tls' or 'ssl'
+//$smtp_settings['disable_opportunistic_tls'] = false;
+
+// Set the email address of the From field. Default is 'admin_email@your.org'
+//$mail_settings['from'] = 'john@redux.org.uk';
+$mail_settings['from'] = 'webmaster@redux.org.uk';
+
+// The address to be used for the ORGANIZER in an iCalendar event.   Do not make
+// this email address the same as the admin email address or the recipients
+// email address because on some mail systems, eg IBM Domino, the iCalendar email
+// notification is silently discarded if the organizer's email address is the same
+// as the recipient's.  On other systems you may get a "Meeting not found" message.
+$mail_settings['organizer'] = 'webmaster@redux.org.uk';
+
+// Set the recipient email. Default is 'admin_email@your.org'. You can define
+// more than one recipient like this "john@doe.com,scott@tiger.com"
+//$mail_settings['recipients'] = 'johnb@press.net';
+$mail_settings['recipients'] = 'john@redux.org.uk';
+
+// Set email address of the Carbon Copy field. Default is ''. You can define
+// more than one recipient (see 'recipients')
+$mail_settings['cc'] = '';
+
+$select_options['entry.selectfield'] =
+  array('a' => "foo",
+        'b' => "blah",
+        'c' => "blah2");
+
+unset($periods);    // Include this line when copying to config.inc.php
+$periods[] = "Period < £€";
+$periods[] = "百度新闻 \"";
+
+//$custom_css_url = 'css/custom.css';
+
+$hidden_days = array(1,2);
+
+$auth['only_admin_can_see_other_users'] = true;
+
+$default_language_tokens = "en";
+//$disable_automatic_language_changing = 0;
+//$override_locale = "sl_SI.UTF-8";
+$vocab_override["en"]["type.I"] = 'whizz bang';
+
+$area_list_format = "select";
+
+$display_mincals = true;
