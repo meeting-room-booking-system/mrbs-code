@@ -4,18 +4,6 @@ namespace MRBS;
 use MRBS\Form\Form;
 
 
-// Our own version of session_start().  There seems to be a strange behaviour in the standard PHP
-// session_start() which causes the error_reporting level to be changed to 0, at least when session_start
-// fails.
-function mrbs_session_start()
-{
-  $tmp = error_reporting();
-  $result = session_start();
-  error_reporting($tmp);
-  return $result;
-}
-
-
 function session_init()
 {
   global $auth;
@@ -40,14 +28,14 @@ function session_init()
   $handler = new SessionHandlerDb();
   session_set_save_handler($handler, true);
   
-  if (false === mrbs_session_start())
+  if (false === session_start())
   {
     trigger_error("MRBS: could not get DB sessions to start.  Trying ordinary PHP sessions.", E_USER_WARNING);
     
     $handler = new \SessionHandler();
     session_set_save_handler($handler, true);
     
-    if (false === mrbs_session_start())
+    if (false === session_start())
     {
       // Check that the session started OK.   If we're using the 'php' session scheme then
       // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
