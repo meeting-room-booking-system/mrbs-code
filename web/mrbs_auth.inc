@@ -69,8 +69,8 @@ $page_level['import.php']                = 2;
  * $level - The access level required
  * 
  * Returns:
- *   0        - The user does not have the required access
- *   non-zero - The user has the required access
+ *   false - The user does not have the required access
+ *   true  - The user has the required access
  */
 function getAuthorised($level)
 {
@@ -78,15 +78,15 @@ function getAuthorised($level)
   // authorised, whoever they are
   if (empty($level))
   {
-    return TRUE;
+    return true;
   }
 
   // Otherwise we need to check who they are
   $user = getUserName();
-  if(isset($user) == FALSE)
+  if(isset($user) == false)
   {
     authGet();
-    return 0;
+    return false;
   }
 
   return authGetUserLevel($user) >= $level;
@@ -102,7 +102,7 @@ function getAuthorised($level)
  * If they are not defined then the function plays safe and requires the
  * highest level of authorisation.
  */
-function checkAuthorised($just_check=FALSE)
+function checkAuthorised($just_check=false)
 {
   global $page_level, $max_level;
   global $day, $month, $year, $area, $room;
@@ -128,10 +128,10 @@ function checkAuthorised($just_check=FALSE)
   {
     if ($required_level == 0)
     {
-      return TRUE;
+      return true;
     }
     $user = getUserName();
-    return (isset($user)) ? (authGetUserLevel($user) >= $required_level): FALSE;
+    return (isset($user)) ? (authGetUserLevel($user) >= $required_level): false;
   }
   
   // Check that the user has this level
@@ -152,7 +152,7 @@ function checkAuthorised($just_check=FALSE)
     exit();
   }
   
-  return TRUE;
+  return true;
 }
 
 /* getWritable($creator, $user, $room)
@@ -164,25 +164,25 @@ function checkAuthorised($just_check=FALSE)
  * $room    - The id of the room that the entry is in
  *
  * Returns:
- *   0        - The user does not have the required access
- *   non-zero - The user has the required access
+ *   false  - The user does not have the required access
+ *   true   - The user has the required access
  */
 function getWritable($creator, $user, $room)
 {
   // Always allowed to modify your own stuff
-  if(strcasecmp($creator, $user) == 0)
+  if(strcasecmp($creator, $user) === 0)
   {
-    return 1;
+    return true;
   }
   
   // Otherwise you have to be a (booking) admin for this room
   if (auth_book_admin($user, $room))
   {
-    return 1;
+    return true;
   }
   
   // Unathorised access
-  return 0;
+  return false;
 }
 
 /* showAccessDenied()
@@ -204,7 +204,7 @@ function showAccessDenied($day=null, $month=null, $year=null, $area=null, $room=
   echo "</p>\n";
 
   // Print footer and exit
-  print_footer(TRUE);
+  print_footer(true);
 }
 
 /* auth_can_edit_user($creator, $user)
@@ -215,8 +215,8 @@ function showAccessDenied($day=null, $month=null, $year=null, $area=null, $room=
  * $target  - The user that is being edited
  *
  * Returns:
- *   0        - The user does not have the required access
- *   non-zero - The user has the required access
+ *   false  - The user does not have the required access
+ *   true   - The user has the required access
  */
 function auth_can_edit_user($user, $target)
 {
@@ -225,16 +225,16 @@ function auth_can_edit_user($user, $target)
   // Always allowed to modify your own stuff
   if(strcasecmp($user, $target) === 0)
   {
-    return 1;
+    return true;
   }
 
   if(authGetUserLevel($user) >= $min_user_editing_level)
   {
-    return 1;
+    return true;
   }
 
   // Unathorised access
-  return 0;
+  return false;
 }
 
 // auth_book_admin($user, $room)
