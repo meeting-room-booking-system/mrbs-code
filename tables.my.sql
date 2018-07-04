@@ -176,6 +176,17 @@ CREATE TABLE mrbs_zoneinfo
   UNIQUE KEY uq_timezone (timezone, outlook_compatible)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE mrbs_sessions
+(
+  id      varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  access  int unsigned DEFAULT NULL,
+  data    text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  
+  PRIMARY KEY (id),
+  KEY idxAccess (access)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE mrbs_users
 (
   /* The first four fields are required. Don't remove. */
@@ -191,6 +202,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '55');
+  VALUES ( 'db_version', '56');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

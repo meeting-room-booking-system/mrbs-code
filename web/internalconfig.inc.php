@@ -494,11 +494,6 @@ $use_strict = false;
  * PHP System Configuration - internal use, do not change
  ********************************************************/
 
-// Set some session settings, as a defence against session fixation.
-ini_set('session.use_only_cookies', '1');
-ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
-ini_set('session.use_trans_sid', '0');
-
 // Disable magic quoting on database returns:
 if (get_magic_quotes_runtime())  // Will always return false as of PHP 5.4.0
 {
