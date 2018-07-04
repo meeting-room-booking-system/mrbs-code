@@ -30,7 +30,13 @@ function session_init()
   
   if (false === session_start())
   {
-    trigger_error("MRBS: could not get DB sessions to start.  Trying ordinary PHP sessions.", E_USER_WARNING);
+    $message = "Could not start DB sessions, trying ordinary PHP sessions.  Note that this " .
+               "error will normally only occur if the sessions table doesn't exist, which " .
+               "will be the case when upgrading to database schema version 56.  If it " .
+               "happens at any other time then something has gone wrong and it should be " .
+               "investigated.";
+               
+    trigger_error($message, E_USER_WARNING);
     
     $handler = new \SessionHandler();
     session_set_save_handler($handler, true);
