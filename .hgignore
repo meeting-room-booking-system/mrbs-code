@@ -3,6 +3,8 @@ syntax: glob
 
 *~
 *.bak
+web/config.inc.php.*
+web/css/custom.css
 
 # Regexp syntax rules
 syntax: regexp
