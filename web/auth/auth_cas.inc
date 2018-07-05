@@ -95,7 +95,31 @@ function authGetUserLevel($user)
   {
     return 0;
   }
-
+  
+  // If the attribute filters are set, check to see whether the user has
+  // the required attributes
+  if (isset($auth['cas']['filter_attr_name']) &&
+      isset($auth['cas']['filter_attr_values']))
+  {
+    // getAttribute can return either a scalar or an array
+    $actual_values = phpCAS::getAttribute($auth['cas']['filter_attr_name']);
+    if (!is_array($actual_values))
+    {
+      $actual_values = array($actual_values);
+    }
+    // $auth['cas']['filter_attr_values'] can be either a scalar or an array
+    $required_values = $auth['cas']['filter_attr_values'];
+    if (!is_array($required_values))
+    {
+      $required_values = array($required_values);
+    }
+    // If the user doesn't have at least one of the required attributes they are level 0
+    if (count(array_intersect($actual_values, $required_values)) === 0)
+    {
+      return 0;
+    }
+  }
+  
   // Check whether the user is an admin
   foreach ($auth['admin'] as $admin)
   {
