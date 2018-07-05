@@ -57,15 +57,18 @@ If you are using a Unix/Linux webserver to which you have access, then
 an example of the installation might be:
 
 Unpack the software into a new temporary directory, something like this:
-    $ tar -xvzf ~/download/mrbs-1.0.tgz       (or whatever version)
-    $ cd mrbs-1.0                             (or whatever version)
+    $ tar -xvzf ~/download/mrbs-1.7.1.tgz       (or whatever version)
+    $ cd mrbs-1.7.1                             (or whatever version)
 
-If you are upgrading from a previous version of MRBS, you should save your
-"config.inc.php" file so you can compare and update the new file with your
-site-specific changes. Then rename your existing MRBS web server directory.
-For example:
-    $ cp /var/lib/apache/htdocs/mrbs/config.inc.php config.site.inc
-    $ mv /var/lib/apache/htdocs/mrbs /var/lib/apache/htdocs/mrbs.old
+MRBS comes with a sample configuration file "web/config.inc.php-sample" -
+this should be copied to "web/config.inc.php" and configured for your
+site. The minimum you generally need to configure are the timezone
+(unless your PHP configuration already defines the timezone) and the
+database access details.
+
+If you are upgrading from a previous version of MRBS, you should consider
+copying your changes to the "config.inc.php" file into a new copy
+of config.inc.php copied from the new MRBS version's config.inc.php-sample.
 
 Now install MRBS by copying the contents of the "web" subdirectory of the
 distribution somewhere your web server can find it.  For example:
@@ -123,7 +126,7 @@ the instructions above for creating the tables in your database.
 When editing config.inc.php, you need to change the table name prefix
 from "mrbs_" to the value you chose using the variable $db_tbl_prefix.
 
-WARNING: All of the .sql files are setup to use the 'mrbs_' prefix
+WARNING: All of the .sql files are set up to use the 'mrbs_' prefix
          therefore you will have to edit them before you use them if you
          change the prefix for your tables.
 
