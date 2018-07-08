@@ -1117,7 +1117,16 @@ function trim_leading_zeros($string)
 // array of year, month, day with leading zeros removed.
 function split_iso_date($date)
 {
-  return array_map(__NAMESPACE__ . "\\trim_leading_zeros", explode('-', $date));
+  // Split the date into components, sanitize the result and trim any leading zeros
+  $result = explode('-', $date);
+  foreach ($result as &$value)
+  {
+    $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+    $value = trim_leading_zeros($value);
+  }
+  unset($value);  // Break the reference (not necessary here, but good practice)
+  
+  return $result;
 }
 
 
