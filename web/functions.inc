@@ -1107,12 +1107,6 @@ function format_iso_date($year, $month, $day)
 }
 
 
-function trim_leading_zeros($string)
-{
-  return ltrim($string, '0');
-}
-
-
 // Splits a date in ISO 8601 format ('yyyy-mm-dd') and returns an
 // array of year, month, day with leading zeros removed.
 function split_iso_date($date)
@@ -1122,7 +1116,7 @@ function split_iso_date($date)
   foreach ($result as &$value)
   {
     $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-    $value = trim_leading_zeros($value);
+    $value = ltrim($value, '0');
   }
   unset($value);  // Break the reference (not necessary here, but good practice)
   
