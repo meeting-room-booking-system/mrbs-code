@@ -68,8 +68,7 @@ function print_logon_box()
 
 function logoff_user()
 {
-  global $mainframe;
-  
+  $mainframe = JFactory::getApplication('site');
   $mainframe->logout();
 }
 
@@ -120,6 +119,7 @@ if (isset($action))
       $credentials = array();
       $credentials['username'] = $username;
       $credentials['password'] = $password;
+      $mainframe = JFactory::getApplication('site');
    
       if (!$mainframe->login($credentials))
       {

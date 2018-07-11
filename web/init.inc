@@ -3,20 +3,12 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 
-$mainframe = null;
 
 function joomla_init()
 {
-  global $mainframe;
-  
   // Start up Joomla
-  require_once MRBS_ROOT . '/auth/cms/joomla.inc';
-  if (!isset($mainframe))
-  {
-    $mainframe = JFactory::getApplication('site');
-    $mainframe->initialise();
-  }
-
+  $mainframe = JFactory::getApplication('site');
+  $mainframe->initialise();
 }
 
 
