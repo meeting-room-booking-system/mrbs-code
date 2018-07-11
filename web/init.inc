@@ -3,10 +3,33 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 
+$mainframe = null;
+
+function joomla_init()
+{
+  global $mainframe;
+  
+  // Start up Joomla
+  require_once MRBS_ROOT . '/auth/cms/joomla.inc';
+  if (!isset($mainframe))
+  {
+    $mainframe = JFactory::getApplication('site');
+    $mainframe->initialise();
+  }
+
+}
+
 
 function session_init()
 {
   global $auth;
+  
+  // Joomla has its own session management
+  if ($auth['session'] == 'joomla')
+  {
+    joomla_init();
+    return;
+  }
   
   // Set some session settings, as a defence against session fixation.
   ini_set('session.use_only_cookies', '1');
@@ -55,24 +78,23 @@ function session_init()
       else
       {
         trigger_error($message, E_USER_WARNING);
+        
+        // If sessions didn't work, then set a cookie containing the CSRF token.
+
+        // Note that the technique of creating a dummy form to store the token
+        // does not work when using sessions.  It only works for cookies.   That's
+        // because when using sessions, the new token is stored immediately.  So by
+        // the time we come to read $_SESSION to check the token we will be looking
+        // at the *new* token.   However, when using cookies, the browser will have
+        // already sent the cookie by the time we get to this point, so when reading
+        // $_COOKIE we are looking at the *old* token, which is what we want.
+        $dummy_form = new Form();
       }
     }
   }
 }
 
+
 // Start up sessions 
 session_init();
 
-
-// If sessions didn't work, then set a cookie containing the CSRF token.
-if (session_id() === '')
-{
-  // Note that the technique of creating a dummy form to store the token
-  // does not work when using sessions.  It only works for cookies.   That's
-  // because when using sessions, the new token is stored immediately.  So by
-  // the time we come to read $_SESSION to check the token we will be looking
-  // at the *new* token.   However, when using cookies, the browser will have
-  // already sent the cookie by the time we get to this point, so when reading
-  // $_COOKIE we are looking at the *old* token, which is what we want.
-  $dummy_form = new Form();
-}

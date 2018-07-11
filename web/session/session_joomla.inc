@@ -73,20 +73,6 @@ function logoff_user()
   $mainframe->logout();
 }
 
-// Destroy MRBS's sessions before we start Joomla, which has its own
-// session handling.  Delete the session cookie and destroy the session.
-if (ini_get('session.use_cookies'))
-{
-  $params = session_get_cookie_params();
-  setcookie(session_name(), '', time() - 42000,
-            $params['path'], $params['domain'],
-            $params['secure'], $params['httponly']);
-}
-session_destroy();
-
-// Start up Joomla
-$mainframe = JFactory::getApplication('site');
-$mainframe->initialise();
 
 global $auth;
 
@@ -124,7 +110,6 @@ if (isset($action))
   {
     // If we're going to do something then check the CSRF token first
     Form::checkToken();
-    
     /* First make sure the password is valid */
     if ($username == "")
     {
