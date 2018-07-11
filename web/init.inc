@@ -6,8 +6,12 @@ use MRBS\Form\Form;
 
 function init_joomla()
 {
-  // Start up Joomla
+  // Not quite sure what's going on here.   JFactory::getSession() needs to be called
+  // before JFactory::getApplication() in order to keep Joomla 2 happy and after it for
+  // Joomla 3.  Doing it both before and after seems to keep them both happy.
+  $session = JFactory::getSession();
   $mainframe = JFactory::getApplication('site');
+  $session = JFactory::getSession();
   $mainframe->initialise();
 }
 
