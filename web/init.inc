@@ -4,7 +4,7 @@ namespace MRBS;
 use MRBS\Form\Form;
 
 
-function joomla_init()
+function init_joomla()
 {
   // Start up Joomla
   $mainframe = JFactory::getApplication('site');
@@ -12,14 +12,14 @@ function joomla_init()
 }
 
 
-function session_init()
+function init_sessions()
 {
   global $auth;
   
   // Joomla has its own session management
   if ($auth['session'] == 'joomla')
   {
-    joomla_init();
+    init_joomla();
     return;
   }
   
@@ -88,5 +88,5 @@ function session_init()
 
 
 // Start up sessions 
-session_init();
+init_sessions();
 
