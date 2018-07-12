@@ -11,6 +11,8 @@ namespace MRBS;
 class SessionHandlerDb implements \SessionHandlerInterface
 {
   
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is 
+  // returned internally to PHP for processing.
   public function open($save_path , $session_name)
   {
     global $tbl_sessions;
@@ -19,27 +21,49 @@ class SessionHandlerDb implements \SessionHandlerInterface
   }
 
   
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is
+  // returned internally to PHP for processing.
   public function close()
   {
     return true;
   }
 
   
+  // Returns an encoded string of the read data. If nothing was read, it must
+  // return an empty string. Note this value is returned internally to PHP for
+  // processing.
   public function read($session_id)
   {
     global $tbl_sessions;
     
-    $sql = "SELECT data
-              FROM $tbl_sessions
-             WHERE id=:id
-             LIMIT 1";
-             
-    $result = db()->query1($sql, array(':id' => $session_id));
+    try
+    {
+      $sql = "SELECT data
+                FROM $tbl_sessions
+               WHERE id=:id
+               LIMIT 1";
+               
+      $result = db()->query1($sql, array(':id' => $session_id));
+    }
+    catch (DBException $e)
+    {
+      // If the exception is because the sessions table doesn't exist, then that's
+      // probably because we're in the middle of the upgrade that creates the
+      // sessions table, so just ignore it and return ''.   Otherwise re-throw
+      // the exception.
+      if (!db()->table_exists($tbl_sessions))
+      {
+        return '';
+      }
+      throw $e;
+    }
     
     return ($result === -1) ? '' : $result;
   }
 
   
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is
+  // returned internally to PHP for processing.
   public function write($session_id , $session_data)
   {
     global $tbl_sessions;
@@ -72,6 +96,8 @@ class SessionHandlerDb implements \SessionHandlerInterface
   }
 
   
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is
+  // returned internally to PHP for processing.
   public function destroy($session_id)
   {
     global $tbl_sessions;
@@ -82,6 +108,8 @@ class SessionHandlerDb implements \SessionHandlerInterface
   }
 
   
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is
+  // returned internally to PHP for processing.
   public function gc($maxlifetime)
   {
     global $tbl_sessions;
