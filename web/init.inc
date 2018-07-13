@@ -44,10 +44,18 @@ function init_sessions()
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
   
-  $handler = new SessionHandlerDb();
-  session_set_save_handler($handler, true);
+  try
+  {
+    $handler = new SessionHandlerDb();
+    session_set_save_handler($handler, true);
+    $session_started = session_start();
+  }
+  catch(\Exception $e)
+  {
+    $session_started = false;
+  }
   
-  if (false === session_start())
+  if ($session_started === false)
   {
     $message = "Could not start DB sessions, trying ordinary PHP sessions.  Note that this " .
                "error will normally only occur if the sessions table doesn't exist, which " .

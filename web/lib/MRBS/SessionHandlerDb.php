@@ -11,13 +11,27 @@ namespace MRBS;
 class SessionHandlerDb implements \SessionHandlerInterface
 {
   
+  public function __construct()
+  {
+    global $tbl_sessions;
+  
+    if (!db()->table_exists($tbl_sessions))
+    {
+      // We throw an exception if the table doesn't exist rather than returning FALSE, because in some
+      // versions of PHP, eg 7.0.25, session_start() will throw a fatal error if it can't open
+      // a session, rather than just returning FALSE as the documentation seems to suggest.   So
+      // wnen a new SessionHandlerDb object is created we do it in a try/catch block.  [Note that
+      // the exception can't be thrown on open() because a try/catch round session_start() won't
+      // catch the exception - maybe because open() is a callback function??]
+      throw new \Exception("MRBS: session table does not exist");
+    }
+  }
+  
   // The return value (usually TRUE on success, FALSE on failure). Note this value is 
   // returned internally to PHP for processing.
   public function open($save_path , $session_name)
   {
-    global $tbl_sessions;
-    
-    return db()->table_exists($tbl_sessions);
+    return true;
   }
 
   
