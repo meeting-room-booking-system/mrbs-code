@@ -892,6 +892,8 @@ $auth['smtp']['server'] = 'myserver.example.org';
 
 // 'auth_joomla' configuration settings
 $auth['joomla']['rel_path'] = '..';   // Path to the Joomla! installation relative to MRBS.
+// Be sure to set the cookie path in your Joomla administrator Global Configuration Site settings
+// to cover both the Joomla and MRBS installations, eg '/'.
 
 // [Note that although in Joomla! access levels are solely used for what users are allowed to *see*, we use
 // them in MRBS to determine what they can see and do, ie we map them onto MRBS user levels.  While this

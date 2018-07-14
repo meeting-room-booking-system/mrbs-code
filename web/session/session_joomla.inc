@@ -65,14 +65,10 @@ function print_logon_box()
 
 function logoff_user()
 {
-  global $mainframe;
-  
+  $mainframe = JFactory::getApplication('site');
   $mainframe->logout();
 }
 
-
-$mainframe = JFactory::getApplication('site');
-$mainframe->initialise();
 
 global $auth;
 
@@ -110,7 +106,6 @@ if (isset($action))
   {
     // If we're going to do something then check the CSRF token first
     Form::checkToken();
-    
     /* First make sure the password is valid */
     if ($username == "")
     {
@@ -121,6 +116,7 @@ if (isset($action))
       $credentials = array();
       $credentials['username'] = $username;
       $credentials['password'] = $password;
+      $mainframe = JFactory::getApplication('site');
    
       if (!$mainframe->login($credentials))
       {

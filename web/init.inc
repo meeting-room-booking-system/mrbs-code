@@ -4,9 +4,28 @@ namespace MRBS;
 use MRBS\Form\Form;
 
 
-function session_init()
+function init_joomla()
+{
+  // Not quite sure what's going on here.   JFactory::getSession() needs to be called
+  // before JFactory::getApplication() in order to keep Joomla 2 happy and after it for
+  // Joomla 3.  Doing it both before and after seems to keep them both happy.
+  $session = JFactory::getSession();
+  $mainframe = JFactory::getApplication('site');
+  $session = JFactory::getSession();
+  $mainframe->initialise();
+}
+
+
+function init_sessions()
 {
   global $auth;
+  
+  // Joomla has its own session management
+  if ($auth['session'] == 'joomla')
+  {
+    init_joomla();
+    return;
+  }
   
   // Set some session settings, as a defence against session fixation.
   ini_set('session.use_only_cookies', '1');
@@ -25,10 +44,18 @@ function session_init()
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
   
-  $handler = new SessionHandlerDb();
-  session_set_save_handler($handler, true);
+  try
+  {
+    $handler = new SessionHandlerDb();
+    session_set_save_handler($handler, true);
+    $session_started = session_start();
+  }
+  catch(\Exception $e)
+  {
+    $session_started = false;
+  }
   
-  if (false === session_start())
+  if ($session_started === false)
   {
     $message = "Could not start DB sessions, trying ordinary PHP sessions.  Note that this " .
                "error will normally only occur if the sessions table doesn't exist, which " .
@@ -55,24 +82,23 @@ function session_init()
       else
       {
         trigger_error($message, E_USER_WARNING);
+        
+        // If sessions didn't work, then set a cookie containing the CSRF token.
+
+        // Note that the technique of creating a dummy form to store the token
+        // does not work when using sessions.  It only works for cookies.   That's
+        // because when using sessions, the new token is stored immediately.  So by
+        // the time we come to read $_SESSION to check the token we will be looking
+        // at the *new* token.   However, when using cookies, the browser will have
+        // already sent the cookie by the time we get to this point, so when reading
+        // $_COOKIE we are looking at the *old* token, which is what we want.
+        $dummy_form = new Form();
       }
     }
   }
 }
 
+
 // Start up sessions 
-session_init();
+init_sessions();
 
-
-// If sessions didn't work, then set a cookie containing the CSRF token.
-if (session_id() === '')
-{
-  // Note that the technique of creating a dummy form to store the token
-  // does not work when using sessions.  It only works for cookies.   That's
-  // because when using sessions, the new token is stored immediately.  So by
-  // the time we come to read $_SESSION to check the token we will be looking
-  // at the *new* token.   However, when using cookies, the browser will have
-  // already sent the cookie by the time we get to this point, so when reading
-  // $_COOKIE we are looking at the *old* token, which is what we want.
-  $dummy_form = new Form();
-}

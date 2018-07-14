@@ -33,6 +33,8 @@ the upgraded database.   You may therefore choose to make a copy of the
 database for test purposes and check that the upgrade process works before
 performing the upgrade on your production database.
 
+See the advice in INSTALL about potentially creating a fresh "config.inc.php"
+when you upgrade MRBS, especially for a major version change.
 
 Upgrading from prior to MRBS 1.8.0
 ==================================
