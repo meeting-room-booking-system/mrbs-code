@@ -10,12 +10,15 @@ namespace MRBS;
 
 class SessionHandlerDb implements \SessionHandlerInterface
 {
+  private static $table;
   
   public function __construct()
   {
     global $tbl_sessions;
   
-    if (!db()->table_exists($tbl_sessions))
+    self::$table = $tbl_sessions;
+    
+    if (!db()->table_exists(self::$table))
     {
       // We throw an exception if the table doesn't exist rather than returning FALSE, because in some
       // versions of PHP, eg 7.0.25, session_start() will throw a fatal error if it can't open
@@ -48,12 +51,10 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // processing.
   public function read($session_id)
   {
-    global $tbl_sessions;
-    
     try
     {
       $sql = "SELECT data
-                FROM $tbl_sessions
+                FROM " . self::$table . "
                WHERE id=:id
                LIMIT 1";
                
@@ -65,7 +66,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
       // probably because we're in the middle of the upgrade that creates the
       // sessions table, so just ignore it and return ''.   Otherwise re-throw
       // the exception.
-      if (!db()->table_exists($tbl_sessions))
+      if (!db()->table_exists(self::$table))
       {
         return '';
       }
@@ -80,14 +81,12 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function write($session_id , $session_data)
   {
-    global $tbl_sessions;
-    
-    $sql = "SELECT COUNT(*) FROM $tbl_sessions WHERE id=:id LIMIT 1";
+    $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $session_id));
     
     if ($rows > 0)
     {
-      $sql = "UPDATE $tbl_sessions
+      $sql = "UPDATE " . self::$table . "
                  SET data=:data, access=:access
                WHERE id=:id";
     }
@@ -95,7 +94,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
     {
       // The id didn't exist so we have to INSERT it (we couldn't use
       // REPLACE INTO because we have to cater for both MySQL and PostgreSQL)
-      $sql = "INSERT INTO $tbl_sessions
+      $sql = "INSERT INTO " . self::$table . "
                           (id, data, access)
                    VALUES (:id, :data, :access)";
     }
@@ -114,9 +113,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function destroy($session_id)
   {
-    global $tbl_sessions;
-    
-    $sql = "DELETE FROM $tbl_sessions WHERE id=:id";
+    $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
     $rows = $rows = db()->command($sql, array(':id' => $session_id));
     return ($rows === 1);
   }
@@ -126,9 +123,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function gc($maxlifetime)
   {
-    global $tbl_sessions;
-    
-    $sql = "DELETE FROM $tbl_sessions WHERE access<:old"; 
+    $sql = "DELETE FROM " . self::$table . "WHERE access<:old"; 
     db()->command($sql, array(':old' => time() - $maxlifetime));  
     return true;  // An exception will be thrown on error
   }
