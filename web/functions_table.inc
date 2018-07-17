@@ -7,7 +7,7 @@ $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0
                             //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 
                             
-function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
+function map_add_booking (array $entry, &$column, $start_first_slot, $start_last_slot)
 {
   // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
@@ -167,7 +167,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
 
 
 
-function cell_html($s, $cell, $query_vars, $is_invalid = false)
+function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -343,7 +343,7 @@ function time_cell_html($s, $url)
 // Draw a room cell to be used in the first and last columns of the day view
 //    $row     contains the room details; comes from an SQL query
 //    $link    the href to be used for the link
-function room_cell_html($row, $link)
+function room_cell_html(array $row, $link)
 {
   $html = '';
   $html .= tdcell('row_labels', 1, array('room' => $row['id']));
@@ -376,7 +376,7 @@ function day_cell_html($text, $link, $date)
 // $slots is the number of time slots high that the cell should be
 //
 // $data is an optional third parameter which if set passes an
-// associative array of name-value pairs to be used in data aatributes
+// associative array of name-value pairs to be used in data attributes
 function tdcell($classes, $slots, array $data=null)
 {
   global $times_along_top;
