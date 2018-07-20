@@ -254,7 +254,7 @@ function process_event($vevent)
   
   // Set up the booking with some defaults
   $booking = array();
-  $booking['status'] = 0;
+  $booking['awaiting_approval'] = false;
   $booking['rep_type'] = REP_NONE;
   $booking['type'] = $import_default_type;
   $booking['room_id'] = $import_default_room;
@@ -307,12 +307,15 @@ function process_event($vevent)
         $booking['create_by'] = get_create_by($details['value']);
         $booking['modified_by'] = '';
         break;
+        
       case 'SUMMARY':
         $booking['name'] = $details['value'];
         break;
+        
       case 'DESCRIPTION':
         $booking['description'] = $details['value'];
         break;
+        
       case 'LOCATION':
         $error = '';
         $booking['room_id'] = get_room_id($details['value'], $error);
@@ -321,12 +324,15 @@ function process_event($vevent)
           $problems[] = $error;
         }
         break;
+        
       case 'DTEND':
         $booking['end_time'] = get_time($details['value'], $details['params']);
         break;
+        
       case 'DURATION':
         trigger_error("DURATION not yet supported by MRBS", E_USER_WARNING);
         break;
+        
       case 'RRULE':
         $rrule_errors = array();
         $repeat_details = get_repeat_details($details['value'], $booking['start_time'], $rrule_errors);
@@ -342,18 +348,15 @@ function process_event($vevent)
           }
         }
         break;
+        
       case 'CLASS':
-        if (in_array($details['value'], array('PRIVATE', 'CONFIDENTIAL')))
-        {
-          $booking['status'] |= STATUS_PRIVATE;
-        }
+        $booking['private'] = in_array($details['value'], array('PRIVATE', 'CONFIDENTIAL'));
         break;
+        
       case 'STATUS':
-        if ($details['value'] == 'TENTATIVE')
-        {
-          $booking['status'] |= STATUS_TENTATIVE;
-        }
+        $booking['tentative'] = ($details['value'] == 'TENTATIVE');
         break;
+        
       case 'X-MRBS-TYPE':
         foreach($booking_types as $type)
         {
@@ -364,16 +367,20 @@ function process_event($vevent)
           }
         }
         break;
+        
       case 'UID':
         $booking['ical_uid'] = $details['value'];
         break;
+        
       case 'SEQUENCE':
         $booking['ical_sequence'] = $details['value'];
         break;
+        
       case 'LAST-MODIFIED':
         // We probably ought to do something with LAST-MODIFIED and use it
         // for the timestamp field
         break;
+        
       default:
         break;
     }

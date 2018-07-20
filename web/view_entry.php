@@ -104,7 +104,7 @@ function generateApproveButtons($id, $series)
 
 function generateOwnerButtons($id, $series)
 {
-  global $user, $create_by, $status, $area;
+  global $user, $create_by, $awaiting_approval, $area;
   global $PHP_SELF, $reminders_enabled, $last_reminded, $reminder_interval;
   
   $this_page = this_page();
@@ -114,7 +114,7 @@ function generateOwnerButtons($id, $series)
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
       (strcasecmp($user, $create_by) === 0) && 
-      ($status & STATUS_AWAITING_APPROVAL) &&
+      ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
     echo "<tr>\n";
@@ -214,12 +214,12 @@ get_area_settings($row['area_id']);
 
 // Work out whether the room or area is disabled
 $room_disabled = $row['room_disabled'] || $row['area_disabled'];
-// Get the status
-$status = $row['status'];
+// Get the approval status
+$awaiting_approval = $row['awaiting_approval'];
+// Work out whether this event should be kept private
+$private = $row['private'];
 // Get the creator
 $create_by = $row['create_by'];
-// Work out whether this event should be kept private
-$private = $row['status'] & STATUS_PRIVATE;
 $writeable = getWritable($row['create_by'], $user, $row['room_id']);
 $keep_private = (is_private_event($private) && !$writeable);
 
@@ -397,7 +397,7 @@ echo create_details_body($row, TRUE, $keep_private, $room_disabled);
 
 // If bookings require approval, and the room is enabled, put the buttons
 // to do with managing the bookings in the footer
-if ($approval_enabled && !$room_disabled && ($status & STATUS_AWAITING_APPROVAL))
+if ($approval_enabled && !$room_disabled && $awaiting_approval)
 {
   echo "<tfoot id=\"approve_buttons\">\n";
   // PHASE 2 - REJECT

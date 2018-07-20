@@ -1179,7 +1179,7 @@ if (isset($id))
   $area = get_area($entry['room_id']);
   get_area_settings($area);
   
-  $private = $entry['status'] & STATUS_PRIVATE;
+  $private = $entry['private'];
   if ($private_mandatory) 
   {
     $private = $private_default;
@@ -1254,7 +1254,7 @@ if (isset($id))
       case 'status':
         // No need to do the privacy status as we've already done that.
         // Just do the confirmation status
-        $confirmed = !($entry['status'] & STATUS_TENTATIVE);
+        $confirmed = !$entry['tentative'];
         break;
       
       case 'repeat_id':

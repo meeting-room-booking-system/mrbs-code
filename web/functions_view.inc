@@ -106,6 +106,15 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     }
   }
   
+  // Add in the two special status fields
+  foreach (array('approval_status', 'confirmation_status') as $key)
+  {
+    if (!in_array($key, $field_order))
+    {
+      array_push($field_order, $key);
+    }
+  }
+  
   $tbody = '';
   $tbody .= ($as_html) ? "<tbody>\n" : "";
 
@@ -119,6 +128,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'entry_type':
       case 'reminded':
       case 'repeat_id':
+      case 'status':
       case 'info_time':
       case 'info_user':
       case 'info_text':
@@ -133,21 +143,24 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         $tbody .= create_details_row(get_vocab("description"), $data['description'], $as_html, $class);
         break;
         
-      case 'status':
+      case 'confirmation_status':
         // Confirmation status
         if ($confirmation_enabled)
         {
-          $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+          $value = ($data['tentative']) ? get_vocab("tentative") : get_vocab("confirmed");
           $tbody .= create_details_row(get_vocab("confirmation_status"), $value, $as_html);
-        }
-        // Approval status
-        if ($approval_enabled)
-        {
-          $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
-          $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
         }
         break;
         
+      case 'approval_status':
+        // Approval status
+        if ($approval_enabled)
+        {
+          $value = ($data['awaiting_approval']) ? get_vocab("awaiting_approval") : get_vocab("approved");
+          $tbody .= create_details_row(get_vocab("approval_status"), $value, $as_html);
+        }
+        break;
+          
       case 'room_id':
         // Room
         $value = $data['area_name'] . " - " . $data['room_name'];

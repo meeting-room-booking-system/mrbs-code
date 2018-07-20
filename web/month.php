@@ -174,10 +174,10 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
       }
       
       // Handle private events
-      if (is_private_event($entry['status'] & STATUS_PRIVATE)  &&
+      if (is_private_event($entry['private'])  &&
           !getWritable($entry['create_by'], $user, $room))
       {
-        $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
+        $entry['private'] = true;   // Set the private bit
         if ($is_private_field['entry.name'])
         {
           $entry['name'] = "[".get_vocab('unavailable')."]";
@@ -189,13 +189,15 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
       }
       else
       {
-        $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
+        $entry['private'] = false;  // Clear the private bit
       }
       
       $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
       $d[$day_num]["id"][]           = $entry['id'];
       $d[$day_num]["color"][]        = $entry['type'];
-      $d[$day_num]["status"][]       = $entry['status'];
+      $d[$day_num]["awaiting_approval"][] = $entry['awaiting_approval'];
+      $d[$day_num]["private"][]           = $entry['private'];
+      $d[$day_num]["tentative"][]         = $entry['tentative'];
       $d[$day_num]["is_repeat"][]    = isset($entry['repeat_id']);
       $d[$day_num]["data"][]         = get_booking_summary($entry['start_time'],
                                                            $entry['end_time'],
@@ -306,17 +308,17 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
           // give the enclosing div the appropriate width: full width if both,
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
           $class = $d[$cday]["color"][$i]; 
-          if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
+          if ($d[$cday]['private'][$i])
           {
-            $class .= " private";
+            $class .= ' private';
           }
-          if ($approval_enabled && ($d[$cday]["status"][$i] & STATUS_AWAITING_APPROVAL))
+          if ($approval_enabled && $d[$cday]['awaiting_approval'][$i])
           {
-            $class .= " awaiting_approval";
+            $class .= ' awaiting_approval';
           }
-          if ($confirmation_enabled && ($d[$cday]["status"][$i] & STATUS_TENTATIVE))
+          if ($confirmation_enabled && $d[$cday]['tentative'][$i])
           {
-            $class .= " tentative";
+            $class .= ' tentative';
           }
           $class .= " $monthly_view_entries_details";
           $html .= "<div class=\"" . $class . "\">\n";

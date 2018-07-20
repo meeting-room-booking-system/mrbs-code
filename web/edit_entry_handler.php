@@ -222,7 +222,7 @@ if ($private_mandatory)
 }
 else
 {
-  $isprivate = ($private) ? TRUE : FALSE;
+  $isprivate = ($private) ? true : false;
 }
 
 // The id must be either an integer or NULL, so that subsequent code that tests whether
@@ -291,10 +291,10 @@ if ($ajax && $commit)
           $$var = $old_booking['room_id'];
           break;
         case 'private':
-          $$var = $old_booking['status'] & STATUS_PRIVATE;
+          $$var = $old_booking['private'];
           break;
         case 'confirmed':
-          $$var = !($old_booking['status'] & STATUS_TENTATIVE);
+          $$var = !$old_booking['tentative'];
           break;
         // In the calculation of $start_seconds and $end_seconds below we need to take
         // care of the case when 0000 on the day in question is across a DST boundary
@@ -693,29 +693,21 @@ foreach ($rooms as $room_id)
     $booking[$key] = $value;
   }
 
-  // Set the various bits in the status field as appropriate
-  // (Note: the status field is the only one that can differ by room)
-  $status = 0;
+  // Set the various statuses as appropriate
+  // (Note: the statuses fields are the only ones that can differ by room)
+  
   // Privacy status
-  if ($isprivate)
-  {
-    $status |= STATUS_PRIVATE;  // Set the private bit
-  }
+  $booking['private'] = (bool) $isprivate;
+  
   // If we are using booking approvals then we need to work out whether the
   // status of this booking is approved.   If the user is allowed to approve
   // bookings for this room, then the status will be approved, since they are
   // in effect immediately approving their own booking.  Otherwise the booking
   // will need to approved.
-  if ($approval_enabled && !auth_book_admin($user, $room_id))
-  {
-    $status |= STATUS_AWAITING_APPROVAL;
-  }
+  $booking['awaiting_approval'] = ($approval_enabled && !auth_book_admin($user, $room_id));
+  
   // Confirmation status
-  if ($confirmation_enabled && !$confirmed)
-  {
-    $status |= STATUS_TENTATIVE;
-  }
-  $booking['status'] = $status;
+  $booking['tentative'] = ($confirmation_enabled && !$confirmed);
   
   $bookings[] = $booking;
 }

@@ -26,7 +26,9 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //       type
   //       description
   //       create_by
-  //       status
+  //       awaiting_approval
+  //       private
+  //       tentative
   
   // $column is a column of the map of the screen that will be displayed
   // It looks like:
@@ -43,7 +45,9 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   //                  [room_id]
   //                  [start_time]
   //                  [slots]
-  //                  [status]
+  //                  [awaiting_approval]
+  //                  [private]
+  //                  [tentative]
   
   // s is the number of nominal seconds (ie ignoring DST changes] since the
   // start of the calendar day which has the start of the booking day
@@ -79,10 +83,11 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   global $is_private_field;
   
   $user = getUserName();
-  if (is_private_event($entry['status'] & STATUS_PRIVATE) &&
-         !getWritable($entry['create_by'], $user, $entry['room_id']))
+  
+  if (is_private_event($entry['private']) &&
+      !getWritable($entry['create_by'], $user, $entry['room_id']))
   {
-    $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
+    $entry['private'] = true;
     if ($is_private_field['entry.name'])
     {
       $entry['name'] = "[".get_vocab('unavailable')."]";
@@ -98,7 +103,7 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
   }
   else
   {
-    $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
+    $entry['private'] = false;
   }
 
   $is_multiday_start = ($entry['start_time'] < $start_first_slot);
@@ -126,7 +131,9 @@ function map_add_booking ($entry, &$column, $start_first_slot, $start_last_slot)
     $column[$s][$n]["is_repeat"] = isset($entry['repeat_id']);
     $column[$s][$n]["is_multiday_start"] = $is_multiday_start;
     $column[$s][$n]["is_multiday_end"] = $is_multiday_end;
-    $column[$s][$n]["status"] = $entry['status'];
+    $column[$s][$n]["awaiting_approval"] = $entry['awaiting_approval'];
+    $column[$s][$n]["private"]           = $entry['private'];
+    $column[$s][$n]["tentative"]         = $entry['tentative'];
     $column[$s][$n]["color"] = $entry['type'];
     $column[$s][$n]["start_time"] = hour_min($start_s);
     $column[$s][$n]["slots"] = NULL;  // to avoid undefined index NOTICE errors
@@ -278,7 +285,9 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
   //         [room_id]
   //         [start_time]
   //         [slots]
-  //         [status]
+  //         [awaiting_approval]
+  //         [private]
+  //         [tentative]
   //
   // where n is the number of the booking in the cell.    There can be none, one or many 
   // bookings in a cell.    If there are no bookings then a blank cell is drawn with a link
@@ -337,20 +346,22 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
       $is_repeat   = $cell[$n]["is_repeat"];
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status      = $cell[$n]["status"];
+      $awaiting_approval = $cell[$n]["awaiting_approval"];
+      $private           = $cell[$n]["private"];
+      $tentative         = $cell[$n]["tentative"];
       $color       = $cell[$n]["color"];
       $descr       = htmlspecialchars($cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($status & STATUS_PRIVATE)
+      if ($private)
       {
         $class .= " private";
       }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && $awaiting_approval)
       {
         $class .= " awaiting_approval";
       }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      if ($confirmation_enabled && $tentative)
       {
         $class .= " tentative";
       }
@@ -397,20 +408,22 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
       $is_repeat   = $cell[$n]["is_repeat"];
       $is_multiday_start = $cell[$n]["is_multiday_start"];
       $is_multiday_end   = $cell[$n]["is_multiday_end"];
-      $status      = $cell[$n]["status"];
+      $awaiting_approval = $cell[$n]["awaiting_approval"];
+      $private           = $cell[$n]["private"];
+      $tentative         = $cell[$n]["tentative"];
       $color       = $cell[$n]["color"];
       $descr       = htmlspecialchars($cell[$n]["start_time"] . " " . $cell[$n]["data"]);
       $long_descr  = htmlspecialchars($cell[$n]["long_descr"]);
       $class = $color;
-      if ($status & STATUS_PRIVATE)
+      if ($private)
       {
         $class .= " private";
       }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && $awaiting_approval)
       {
         $class .= " awaiting_approval";
       }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      if ($confirmation_enabled && $tentative)
       {
         $class .= " tentative";
       }
@@ -451,7 +464,9 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
       $is_repeat  = $cell[0]["is_repeat"];
       $is_multiday_start = $cell[0]["is_multiday_start"];
       $is_multiday_end   = $cell[0]["is_multiday_end"];
-      $status     = $cell[0]["status"];
+      $awaiting_approval = $cell[0]["awaiting_approval"];
+      $private           = $cell[0]["private"];
+      $tentative         = $cell[0]["tentative"];
       $color      = $cell[0]["color"];
       $descr      = isset($cell[0]["data"]) ? htmlspecialchars($cell[0]["data"]) : NULL;
       $long_descr = htmlspecialchars($cell[0]["long_descr"]);
@@ -470,15 +485,15 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
     if (isset($id) && isset($descr))
     {
       $c = $color;
-      if ($status & STATUS_PRIVATE)
+      if ($private)
       {
         $c .= " private";
       }
-      if ($approval_enabled && ($status & STATUS_AWAITING_APPROVAL))
+      if ($approval_enabled && $awaiting_approval)
       {
         $c .= " awaiting_approval";
       }
-      if ($confirmation_enabled && ($status & STATUS_TENTATIVE))
+      if ($confirmation_enabled && $tentative)
       {
         $c .= " tentative";
       }
