@@ -214,6 +214,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
         
       default:
+        
         // The custom fields
         foreach ($fields as $field)
         {
@@ -222,6 +223,12 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
           {
             break;
           }
+        }
+        
+        // The field doesn't exist.
+        if ($field['name'] != $key)
+        {
+          break;
         }
         
         $label = get_loc_field_name($tbl_entry, $key);

@@ -654,6 +654,13 @@ function get_field_custom($key, $disabled=false)
   global $custom_fields, $custom_fields_map, $tbl_entry;
   global $is_mandatory_field, $text_input_max, $maxlength;
   
+  // First check that the custom field exists.  It normally will, but won't if 
+  // $edit_entry_field_order contains a value for which a field doesn't exist.
+  if (!isset($custom_fields_map[$key]))
+  {
+    return;
+  }
+  
   $custom_field = $custom_fields_map[$key];
   
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
