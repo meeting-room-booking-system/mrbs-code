@@ -77,8 +77,8 @@ $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
-$entry_fields = array('name', 'description', 'start_time', 'end_time', 'areas',
-                      'rooms', 'type', 'confirmation_status', 'privacy_status');
+$entry_fields = array('name', 'description', 'start_time', 'end_time', 'room_id',
+                      'type', 'confirmation_status', 'privacy_status');
                       
 foreach ($entry_fields as $field)
 {
@@ -1678,11 +1678,8 @@ foreach ($edit_entry_field_order as $key)
       $fieldset->addElement(get_field_end_time($end_time));
       break;
 
-    case 'areas':
+    case 'room_id':
       $fieldset->addElement(get_field_areas($area_id));
-      break;
-
-    case 'rooms':
       // $selected_rooms will be populated if we've come from a drag selection
       if (empty($selected_rooms))
       {

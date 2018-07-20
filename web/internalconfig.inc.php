@@ -146,6 +146,29 @@ if (false !== ($key = array_search('end_date', $edit_entry_field_order)))
   trigger_error($message, E_USER_NOTICE);
 }
 
+if (false !== ($key = array_search('areas', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'room_id';
+  $message = 'Please check your config file.  The value \'areas\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'room_id\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
+if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
+{
+  if (in_array('room_id', $edit_entry_field_order))
+  {
+    array_splice($edit_entry_field_order, $key, 1);
+  }
+  else
+  {
+    $edit_entry_field_order[$key] = 'room_id';
+  }
+  $message = 'Please check your config file.  The value \'rooms\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'room_id\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
 /********************************************************
  * Checking
  ********************************************************/
