@@ -557,11 +557,10 @@ $skip_default = false;
 // 
 // $edit_entry_field_order = array('name', 'in_charge');
 // 
-// Valid entries in this array are: 'name', 'description', 'start_date', 
-// 'end_date', 'areas', 'rooms', 'type', 'confirmation_status', 
-// 'privacy_status', plus any custom fields you may have defined. Fields that 
-// are not mentioned in the array are appended at the end, in their usual 
-// order.
+// Valid entries in this array are: 'name', 'description', 'start_time',
+// 'end_time', 'room_id', 'type', 'confirmation_status', 'privacy_status',
+// plus any custom fields you may have defined. Fields that are not
+// mentioned in the array are appended at the end, in their usual order.
 $edit_entry_field_order = array();
 
 // You can so the same for the fields in the Search Criteria section of the report

@@ -269,7 +269,7 @@ if (isset($area))
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
 {
-  echo "<p class=\"error\">" . get_vocab($error) . "</p>\n";
+  echo "<p class=\"error\">" . htmlspecialchars(get_vocab($error)) . "</p>\n";
 }
 
 // TOP SECTION:  THE FORM FOR SELECTING AN AREA

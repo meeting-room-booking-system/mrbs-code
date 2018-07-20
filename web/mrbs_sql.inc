@@ -3,6 +3,40 @@ namespace MRBS;
 
 define('INTERVAL_DAY', 0);
 
+
+// Pack the various status fields into a single bitmap
+function pack_status(&$data)
+{
+  $statuses = array('awaiting_approval' => STATUS_AWAITING_APPROVAL,
+                    'private'           => STATUS_PRIVATE,
+                    'tentative'         => STATUS_TENTATIVE);
+                    
+  $data['status'] = 0;
+  
+  foreach ($statuses as $key => $value)
+  {
+    if ($data[$key])
+    {
+      $data['status'] |= $value;
+    }
+    unset($data[$key]);
+  }
+}
+
+
+// Translates the status flags into a set of booleans
+function unpack_status(&$data)
+{
+  if (isset($data))
+  {
+    $data['awaiting_approval'] = (bool) ($data['status'] & STATUS_AWAITING_APPROVAL);
+    $data['private']           = (bool) ($data['status'] & STATUS_PRIVATE);
+    $data['tentative']         = (bool) ($data['status'] & STATUS_TENTATIVE);
+    unset($data['status']);
+  }
+}
+
+  
 /** mrbsCheckFree()
  * 
  * Check to see if the time period specified is free
@@ -77,8 +111,9 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
                                 $row['start_time']);
     }
 
-    if (is_private_event($row['status'] & STATUS_PRIVATE) && $is_private_field['entry.name'] &&
-         !getWritable($row['create_by'], $user, $room_id))
+    if (is_private_event($row['private']) && 
+        $is_private_field['entry.name'] &&
+        !getWritable($row['create_by'], $user, $room_id))
     {
        $row['name'] = get_vocab("unavailable");
     }
@@ -420,7 +455,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     // globally
     if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, FALSE);
+      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, false);
       if (isset($tmp))
       {
         $violations[] = $tmp;
@@ -429,7 +464,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
     // for the area
     if (!empty($max_per_interval_area_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, TRUE);
+      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, true);
       if (isset($tmp))
       {
         $violations[] = $tmp;
@@ -449,7 +484,7 @@ function get_entry_by_id($id)
   
   if (!isset($id))
   {
-    return NULL;
+    return null;
   }
   
   $sql = "SELECT *
@@ -459,7 +494,11 @@ function get_entry_by_id($id)
    
   $res = db()->query($sql, array($id));
   
-  $result = ($res->count() == 0) ? NULL : $res->row_keyed(0);
+  $result = ($res->count() == 0) ? null : $res->row_keyed(0);
+  
+  // Unpack the status bits
+  unpack_status($result);
+  
   return $result;
 }
 
@@ -483,6 +522,13 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
   $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
   
   $result = $res->all_rows_keyed();
+  
+  foreach ($result as &$row)
+  {
+    unpack_status($row);
+  }
+  unset($row);
+  
   return $result;
 }
 
@@ -504,6 +550,13 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
   $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
   
   $result = $res->all_rows_keyed();
+  
+  foreach ($result as &$row)
+  {
+    unpack_status($row);
+  }
+  unset($row);
+  
   return $result;
 }
 
@@ -645,6 +698,9 @@ function mrbsCreateEntry($table, $data)
 
   $sql_params = array();
 
+  // Pack the status fields into the bit map
+  pack_status($data);
+  
   foreach ($fields as $field)
   {
     $key = $field['name'];
@@ -1325,7 +1381,7 @@ function get_booking_info($id, $series, $silent=FALSE)
           array_push($terms, $field['name'] . " AS entry_".$field['name']);
         }
         break;
-
+        
       default:
         // These are (a) all the standard fields which are common to the entry
         // and repeat tables and (b) all the custom fields, which should be
@@ -1389,7 +1445,10 @@ function get_booking_info($id, $series, $silent=FALSE)
   $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], $row['area_id'], false);
   $row['duration'] = $d['duration'];
   $row['dur_units'] = $d['dur_units'];
-    
+  
+  // Translate the status field into a set of booleans
+  unpack_status($row);
+  
   // Get some extra information
   if ($series)
   {

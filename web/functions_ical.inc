@@ -885,7 +885,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
   }
   else
   {
-    $results[] = "STATUS:" . (($data['status'] & STATUS_TENTATIVE) ? "TENTATIVE" : "CONFIRMED");
+    $results[] = "STATUS:" . (($data['tentative']) ? "TENTATIVE" : "CONFIRMED");
   }
   
   /*  
@@ -893,7 +893,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
   hand in hand with an ORGANIZER, otherwise people won't be able to see their own
   bookings
   // CLASS
-  $results[] = "CLASS:" . (($data['status'] & STATUS_PRIVATE) ? "PRIVATE" : "PUBLIC");
+  $results[] = "CLASS:" . (($data['private']) ? "PRIVATE" : "PUBLIC");
   */
   
   // ORGANIZER

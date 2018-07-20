@@ -864,7 +864,7 @@ function report_row(&$rows, &$data)
         // Translate the status field bit into meaningful text
         if ($data['confirmation_enabled'])
         {
-          $value = ($data['status'] & STATUS_TENTATIVE) ? get_vocab("tentative") : get_vocab("confirmed");
+          $value = ($data['tentative']) ? get_vocab('tentative') : get_vocab('confirmed');
         }
         else
         {
@@ -875,7 +875,7 @@ function report_row(&$rows, &$data)
         // Translate the status field bit into meaningful text
         if ($data['approval_enabled'])
         {
-          $value = ($data['status'] & STATUS_AWAITING_APPROVAL) ? get_vocab("awaiting_approval") : get_vocab("approved");
+          $value = ($data['awaiting_approval']) ? get_vocab('awaiting_approval') : get_vocab('approved');
         }
         else
         {
@@ -1753,6 +1753,7 @@ if ($phase == 2)
       $body_rows = array();
       for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
+        unpack_status($row);
         report_row($body_rows, $row);
       }
       output_body_rows($body_rows, $output_format);
@@ -1766,6 +1767,7 @@ if ($phase == 2)
       {
         for ($i = 0; ($row = $res->row_keyed($i)); $i++)
         {
+          unpack_status($row);
           accumulate($row, $count, $hours,
                      $report_start, $report_end,
                      $room_hash, $name_hash);

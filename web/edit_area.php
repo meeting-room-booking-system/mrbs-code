@@ -84,7 +84,7 @@ function get_timezone_options()
 }
 
 
-function get_fieldset_errors($errors)
+function get_fieldset_errors(array $errors)
 {
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('')
@@ -101,7 +101,7 @@ function get_fieldset_errors($errors)
 }
 
 
-function get_fieldset_general($data)
+function get_fieldset_general(array $data)
 {
   global $timezone, $auth;
   

@@ -129,6 +129,14 @@ if (isset($db_nopersist))
   trigger_error($message, E_USER_NOTICE);
 }
 
+// Variables no longer used in versions of MRBS > 1.7.1
+if (false !== ($key = array_search('start_date', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'start_time';
+  $message = 'Please check your config file.  The value \'start_date\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'start_time\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
 // Variables in a changed format in versions of MRBS > 1.7.1
 if (!empty($override_locale))
 {
@@ -142,6 +150,36 @@ if (!empty($override_locale))
   }
 }
 
+if (false !== ($key = array_search('end_date', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'end_time';
+  $message = 'Please check your config file.  The value \'end_date\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'end_time\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
+if (false !== ($key = array_search('areas', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'room_id';
+  $message = 'Please check your config file.  The value \'areas\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'room_id\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
+if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
+{
+  if (in_array('room_id', $edit_entry_field_order))
+  {
+    array_splice($edit_entry_field_order, $key, 1);
+  }
+  else
+  {
+    $edit_entry_field_order[$key] = 'room_id';
+  }
+  $message = 'Please check your config file.  The value \'rooms\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'room_id\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
 
 /********************************************************
  * Checking

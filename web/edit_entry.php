@@ -78,8 +78,8 @@ $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
-$entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
-                      'rooms', 'type', 'confirmation_status', 'privacy_status');
+$entry_fields = array('name', 'description', 'start_time', 'end_time', 'room_id',
+                      'type', 'confirmation_status', 'privacy_status');
                       
 foreach ($entry_fields as $field)
 {
@@ -343,7 +343,7 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
 }
 
 
-function get_field_start_date($value, $disabled=false)
+function get_field_start_time($value, $disabled=false)
 {
   global $areas, $area_id;
   
@@ -397,7 +397,7 @@ function get_field_start_date($value, $disabled=false)
 }
 
 
-function get_field_end_date($value, $disabled=false)
+function get_field_end_time($value, $disabled=false)
 {
   global $areas, $area_id;
   global $multiday_allowed;
@@ -654,6 +654,13 @@ function get_field_custom($key, $disabled=false)
 {
   global $custom_fields, $custom_fields_map, $tbl_entry;
   global $is_mandatory_field, $text_input_max, $maxlength;
+  
+  // First check that the custom field exists.  It normally will, but won't if 
+  // $edit_entry_field_order contains a value for which a field doesn't exist.
+  if (!isset($custom_fields_map[$key]))
+  {
+    return;
+  }
   
   $custom_field = $custom_fields_map[$key];
   
@@ -1173,7 +1180,7 @@ if (isset($id))
   $area = get_area($entry['room_id']);
   get_area_settings($area);
   
-  $private = $entry['status'] & STATUS_PRIVATE;
+  $private = $entry['private'];
   if ($private_mandatory) 
   {
     $private = $private_default;
@@ -1248,7 +1255,7 @@ if (isset($id))
       case 'status':
         // No need to do the privacy status as we've already done that.
         // Just do the confirmation status
-        $confirmed = !($entry['status'] & STATUS_TENTATIVE);
+        $confirmed = !$entry['tentative'];
         break;
       
       case 'repeat_id':
@@ -1664,19 +1671,16 @@ foreach ($edit_entry_field_order as $key)
       $fieldset->addElement(get_field_description($description));
       break;
       
-    case 'start_date':
-      $fieldset->addElement(get_field_start_date($start_time));
+    case 'start_time':
+      $fieldset->addElement(get_field_start_time($start_time));
       break;
 
-    case 'end_date':
-      $fieldset->addElement(get_field_end_date($end_time));
+    case 'end_time':
+      $fieldset->addElement(get_field_end_time($end_time));
       break;
 
-    case 'areas':
+    case 'room_id':
       $fieldset->addElement(get_field_areas($area_id));
-      break;
-
-    case 'rooms':
       // $selected_rooms will be populated if we've come from a drag selection
       if (empty($selected_rooms))
       {
