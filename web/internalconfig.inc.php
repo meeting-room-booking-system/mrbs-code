@@ -129,6 +129,22 @@ if (isset($db_nopersist))
   trigger_error($message, E_USER_NOTICE);
 }
 
+// Variables no longer used in versions of MRBS > 1.7.1
+if (false !== ($key = array_search('start_date', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'start_time';
+  $message = 'Please check your config file.  The value \'start_date\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'start_time\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
+if (false !== ($key = array_search('end_date', $edit_entry_field_order)))
+{
+  $edit_entry_field_order[$key] = 'end_time';
+  $message = 'Please check your config file.  The value \'end_date\' in the variable ' .
+             '$edit_entry_field_order has been replaced by \'end_time\'.';
+  trigger_error($message, E_USER_NOTICE);
+}
 
 /********************************************************
  * Checking

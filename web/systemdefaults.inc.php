@@ -566,8 +566,8 @@ $skip_default = false;
 // 
 // $edit_entry_field_order = array('name', 'in_charge');
 // 
-// Valid entries in this array are: 'name', 'description', 'start_date', 
-// 'end_date', 'areas', 'rooms', 'type', 'confirmation_status', 
+// Valid entries in this array are: 'name', 'description', 'start_time', 
+// 'end_time', 'areas', 'rooms', 'type', 'confirmation_status', 
 // 'privacy_status', plus any custom fields you may have defined. Fields that 
 // are not mentioned in the array are appended at the end, in their usual 
 // order.

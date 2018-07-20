@@ -77,7 +77,7 @@ $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
-$entry_fields = array('name', 'description', 'start_date', 'end_date', 'areas',
+$entry_fields = array('name', 'description', 'start_time', 'end_time', 'areas',
                       'rooms', 'type', 'confirmation_status', 'privacy_status');
                       
 foreach ($entry_fields as $field)
@@ -342,7 +342,7 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
 }
 
 
-function get_field_start_date($value, $disabled=false)
+function get_field_start_time($value, $disabled=false)
 {
   global $areas, $area_id;
   
@@ -396,7 +396,7 @@ function get_field_start_date($value, $disabled=false)
 }
 
 
-function get_field_end_date($value, $disabled=false)
+function get_field_end_time($value, $disabled=false)
 {
   global $areas, $area_id;
   global $multiday_allowed;
@@ -1663,12 +1663,12 @@ foreach ($edit_entry_field_order as $key)
       $fieldset->addElement(get_field_description($description));
       break;
       
-    case 'start_date':
-      $fieldset->addElement(get_field_start_date($start_time));
+    case 'start_time':
+      $fieldset->addElement(get_field_start_time($start_time));
       break;
 
-    case 'end_date':
-      $fieldset->addElement(get_field_end_date($end_time));
+    case 'end_time':
+      $fieldset->addElement(get_field_end_time($end_time));
       break;
 
     case 'areas':
