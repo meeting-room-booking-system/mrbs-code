@@ -27,7 +27,9 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   //       type
   //       description
   //       create_by
-  //       status
+  //       awaiting_approval
+  //       private
+  //       tentative
   
   // $column is a column of the map of the screen that will be displayed, and is an array
   // indexed by the number of nominal seconds (ie ignoring DST changes] since the
@@ -64,10 +66,10 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   $user = getUserName();
   
   // Check whether the event is private
-  if (is_private_event($entry['status'] & STATUS_PRIVATE) &&
-         !getWritable($entry['create_by'], $user, $entry['room_id']))
+  if (is_private_event($entry['private']) &&
+      !getWritable($entry['create_by'], $user, $entry['room_id']))
   {
-    $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
+    $entry['private'] = true;
     
     foreach (array('name', 'description') as $key)
     {
@@ -84,7 +86,7 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   }
   else
   {
-    $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
+    $entry['private'] = false;
   }
 
   // Adjust the starting and ending times so that bookings which don't
@@ -257,17 +259,17 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
               
         $classes = array('booking', $booking['type']);
         
-        if ($booking['status'] & STATUS_PRIVATE)
+        if ($booking['private'])
         {
           $classes[] = 'private';
         }
         
-        if ($approval_enabled && ($booking['status'] & STATUS_AWAITING_APPROVAL))
+        if ($approval_enabled && ($booking['awaiting_approval']))
         {
           $classes[] = 'awaiting_approval';
         }
         
-        if ($confirmation_enabled && ($booking['status'] & STATUS_TENTATIVE))
+        if ($confirmation_enabled && ($booking['tentative']))
         {
           $classes[] = 'tentative';
         }
@@ -1258,10 +1260,10 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
     foreach($entries as $entry)
     {
       // Handle private events
-      if (is_private_event($entry['status'] & STATUS_PRIVATE)  &&
+      if (is_private_event($entry['private']) &&
           !getWritable($entry['create_by'], $user, $room))
       {
-        $entry['status'] |= STATUS_PRIVATE;   // Set the private bit
+        $entry['private'] = true;
         if ($is_private_field['entry.name'])
         {
           $entry['name'] = "[".get_vocab('unavailable')."]";
@@ -1273,18 +1275,20 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       }
       else
       {
-        $entry['status'] &= ~STATUS_PRIVATE;  // Clear the private bit
+        $entry['private'] = false;
       }
       
-      $d[$day_num]["shortdescrip"][] = htmlspecialchars($entry['name']);
-      $d[$day_num]["id"][]           = $entry['id'];
-      $d[$day_num]["type"][]        = $entry['type'];
-      $d[$day_num]["status"][]       = $entry['status'];
-      $d[$day_num]["is_repeat"][]    = isset($entry['repeat_id']);
-      $d[$day_num]["data"][]         = get_booking_summary($entry['start_time'],
-                                                           $entry['end_time'],
-                                                           $start_first_slot,
-                                                           $end_last_slot);
+      $d[$day_num]['shortdescrip'][]      = htmlspecialchars($entry['name']);
+      $d[$day_num]['id'][]                = $entry['id'];
+      $d[$day_num]['type'][]              = $entry['type'];
+      $d[$day_num]['awaiting_approval'][] = $entry['awaiting_approval'];
+      $d[$day_num]['private'][]           = $entry['private'];
+      $d[$day_num]['tentative'][]         = $entry['tentative'];
+      $d[$day_num]['is_repeat'][]         = isset($entry['repeat_id']);
+      $d[$day_num]['data'][]              = get_booking_summary($entry['start_time'],
+                                                                $entry['end_time'],
+                                                                $start_first_slot,
+                                                                $end_last_slot);
     }
   }
   
@@ -1385,15 +1389,15 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
           $classes = array($d[$cday]['type'][$i],
                            $monthly_view_entries_details); 
-          if ($d[$cday]["status"][$i] & STATUS_PRIVATE)
+          if ($d[$cday]['private'][$i])
           {
             $classes[] = 'private';
           }
-          if ($approval_enabled && ($d[$cday]['status'][$i] & STATUS_AWAITING_APPROVAL))
+          if ($approval_enabled && ($d[$cday]['awaiting_approval'][$i]))
           {
             $classes[] = 'awaiting_approval';
           }
-          if ($confirmation_enabled && ($d[$cday]['status'][$i] & STATUS_TENTATIVE))
+          if ($confirmation_enabled && ($d[$cday]['tentative'][$i]))
           {
             $classes[] = 'tentative';
           }
