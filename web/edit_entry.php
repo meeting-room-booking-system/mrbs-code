@@ -616,7 +616,7 @@ function get_field_confirmation_status($value, $disabled=false)
   $options = array(0 => get_vocab('tentative'),
                    1 => get_vocab('confirmed'));
                    
-  $value = ($value) ? 1 : 0;
+  $value = ($value) ? 0 : 1;
                    
   $field = new FieldInputRadioGroup();
   
@@ -1215,6 +1215,7 @@ if (isset($id))
       case 'info_time':
       case 'info_user':
       case 'info_text':
+      case 'private':    // We have already done private above
         break;
       
       // These columns cannot be made private  
@@ -1241,6 +1242,7 @@ if (isset($id))
       case 'ical_sequence':
       case 'ical_recur_id':
       case 'entry_type':
+      case 'tentative':
         $$column = $entry[$column];
         break;
       
@@ -1250,12 +1252,6 @@ if (isset($id))
       case 'description':
       case 'type':
         $$column = ($keep_private && isset($is_private_field["entry.$column"]) && $is_private_field["entry.$column"]) ? '' : $entry[$column];
-        break;
-        
-      case 'status':
-        // No need to do the privacy status as we've already done that.
-        // Just do the confirmation status
-        $confirmed = !$entry['tentative'];
         break;
       
       case 'repeat_id':
@@ -1371,7 +1367,7 @@ else
   $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
   $room_id       = $room;
   $private       = $private_default;
-  $confirmed     = $confirmed_default;
+  $tentative     = !$confirmed_default;
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults
@@ -1694,7 +1690,7 @@ foreach ($edit_entry_field_order as $key)
       break;
       
     case 'confirmation_status':
-      $fieldset->addElement(get_field_confirmation_status($confirmed));
+      $fieldset->addElement(get_field_confirmation_status($tentative));
       break;
       
     case 'privacy_status':
