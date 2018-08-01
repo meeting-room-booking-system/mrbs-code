@@ -75,7 +75,7 @@ $GLOBALS['_PEAR_error_handler_stack']    = array();
  * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.10.0dev3
+ * @version    Release: 1.10.5
  * @link       http://pear.php.net/package/PEAR
  * @see        PEAR_Error
  * @since      Class available since PHP 4.0.2
@@ -170,7 +170,7 @@ class PEAR
             $destructor = "_$classname";
             if (method_exists($this, $destructor)) {
                 global $_PEAR_destructor_object_list;
-                $_PEAR_destructor_object_list[] = &$this;
+                $_PEAR_destructor_object_list[] = $this;
                 if (!isset($GLOBALS['_PEAR_SHUTDOWN_REGISTERED'])) {
                     register_shutdown_function("_PEAR_call_destructors");
                     $GLOBALS['_PEAR_SHUTDOWN_REGISTERED'] = true;
@@ -191,7 +191,7 @@ class PEAR
      */
     public function PEAR($error_class = null)
     {
-        $this->__construct($error_class);
+        self::__construct($error_class);
     }
 
     /**
@@ -450,7 +450,7 @@ class PEAR
     }
 
     /**
-     * This method deletes all occurences of the specified element from
+     * This method deletes all occurrences of the specified element from
      * the expected error codes stack.
      *
      * @param  mixed $error_code error code that should be deleted
@@ -598,11 +598,11 @@ class PEAR
     protected static function _throwError($object, $message = null, $code = null, $userinfo = null)
     {
         if ($object !== null) {
-            $a = &$object->raiseError($message, $code, null, null, $userinfo);
+            $a = $object->raiseError($message, $code, null, null, $userinfo);
             return $a;
         }
 
-        $a = &PEAR::raiseError($message, $code, null, null, $userinfo);
+        $a = PEAR::raiseError($message, $code, null, null, $userinfo);
         return $a;
     }
 
@@ -823,7 +823,7 @@ function _PEAR_call_destructors()
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
- * @version    Release: 1.10.0dev3
+ * @version    Release: 1.10.5
  * @link       http://pear.php.net/manual/en/core.pear.pear-error.php
  * @see        PEAR::raiseError(), PEAR::throwError()
  * @since      Class available since PHP 4.0.2
@@ -914,7 +914,8 @@ class PEAR_Error
             } else {
                 $format = $options;
             }
-            die(sprintf($format, $msg));
+            printf($format, $msg);
+            exit($code);
         }
 
         if ($this->mode & PEAR_ERROR_CALLBACK && is_callable($this->callback)) {
@@ -925,6 +926,24 @@ class PEAR_Error
             trigger_error("PEAR_ERROR_EXCEPTION is obsolete, use class PEAR_Exception for exceptions", E_USER_WARNING);
             eval('$e = new Exception($this->message, $this->code);throw($e);');
         }
+    }
+
+    /**
+     * Only here for backwards compatibility.
+     *
+     * Class "Cache_Error" still uses it, among others.
+     *
+     * @param string $message  Message
+     * @param int    $code     Error code
+     * @param int    $mode     Error mode
+     * @param mixed  $options  See __construct()
+     * @param string $userinfo Additional user/debug info
+     */
+    public function PEAR_Error(
+        $message = 'unknown error', $code = null, $mode = null,
+        $options = null, $userinfo = null
+    ) {
+        self::__construct($message, $code, $mode, $options, $userinfo);
     }
 
     /**

@@ -87,7 +87,7 @@ function authValidateUser($user, $pass)
   }
   else
   {
-    while ( each($all_imap_hosts ) )
+    foreach($all_imap_hosts as $value)
     {
       $all_imap_ports[] = $imap_port;
     }
