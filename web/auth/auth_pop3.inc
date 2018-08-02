@@ -74,7 +74,7 @@ function authValidateUser($user, $pass)
   }
   else
   {
-    while (each($all_pop3_hosts ) )
+    foreach ($all_pop3_hosts as $value)
     {
       $all_pop3_ports[] = $pop3_port;
     }
