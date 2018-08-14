@@ -27,8 +27,7 @@ legend {
 
 form.form_admin, .form_admin div, div#div_custom_html,
 #area_form form, #area_form label[for="area_select"],
-.areaChangeForm select, .areaChangeForm input, .areaChangeForm input.button,
-div.header_columns, div.body_columns {
+.areaChangeForm select, .areaChangeForm input, .areaChangeForm input.button {
   float: right;
 }
 

@@ -500,19 +500,16 @@ div#div_custom_html {
   font-size: larger;
 }
 
-.roomChangeForm input, .areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
+.roomChangeForm input, .areaChangeForm input {
+  float: left;
+  margin: -0.2em 0.5em 0 0;
+}
 
 .roomChangeForm input.button, .areaChangeForm button.image {
   display: block;
   float: left;
   margin: 0 0.7em
 }
-
-div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
-div.header_columns {max-width: 20%}
-div.body_columns {max-width: 80%}
-
-.body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
 
 
 /* ------------ INDEX.PHP ------------------*/
