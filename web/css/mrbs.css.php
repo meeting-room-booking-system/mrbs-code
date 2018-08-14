@@ -508,16 +508,16 @@ div#div_custom_html {
 .roomChangeForm input.button, .areaChangeForm button.image {
   display: block;
   float: left;
-  margin: 0 0.7em
+  margin: 0 0.7em;
 }
 
 
 /* ------------ INDEX.PHP ------------------*/
 
 <?php
-$column_hidden_width  = 0;       // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
-                                 //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
-$column_row_labels_width   = 1;  // (%) width of the row label columns (will expand if necessary)
+$column_hidden_width = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
+                           //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
+
 $n_hidden_days = count($hidden_days);
 
 // month view:  work out what percentage of the width is available to
@@ -691,7 +691,7 @@ table.dwm_main {
   width: 100%;
   min-height: inherit;
   word-break: break-all;
-  word-break: break-word;  /* Better for those browsers, eg webkit, that support it */
+  word-break: break-word; <?php // Better for those browsers, eg webkit, that support it ?>
   hyphens: auto;
 }
 
@@ -798,13 +798,35 @@ table.dwm_main {
   text-decoration:underline;
 }
 
-.dwm_main#week_main th.first_last {vertical-align: bottom}
-.dwm_main td.invalid {background-color: <?php echo $main_table_slot_invalid_color ?>}
-.dwm_main#month_main th {width: <?php echo $column_month ?>%}
-.dwm_main#month_main td {border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>}
-.dwm_main#month_main td.valid   {background-color: <?php echo $main_table_month_color ?>}
-.dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
-.dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
+.dwm_main#week_main th.first_last {
+  vertical-align: bottom;
+}
+
+.dwm_main td.invalid {
+  background-color: <?php echo $main_table_slot_invalid_color ?>;
+}
+
+.dwm_main#month_main th {
+  width: <?php echo $column_month ?>%;
+}
+
+.dwm_main#month_main td {
+  border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+}
+
+.dwm_main#month_main td.valid {
+  background-color: <?php echo $main_table_month_color ?>;
+}
+
+.dwm_main#month_main td.invalid {
+  background-color: <?php echo $main_table_month_invalid_color ?>;
+}
+
+.dwm_main#month_main a {
+  height: 100%;
+  width: 100%;
+  padding: 0 2px 0 2px;
+}
 
 td.new a, a.new_booking {
   font-size: medium;
@@ -845,21 +867,52 @@ td.new img, .new_booking img {
 // with the small gap at the end of odd rows is probably a small price worth paying to ensure that the date and the 
 // new booking link remain visible when you scroll.]
 ?>
-div.cell_container {position: relative; float: left; width: 100%;        /* the containing div for a.new_booking */ 
-<?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 100px} /* NOTE:  if you change the value of (min-)height, make sure you */
-                                                                         /* also change the value of height in mrbs-ielte6.css */
-#month_main a.new_booking {position: absolute; top: 0; left: 0; z-index: 10}  /* needs to be above the base, but below the date (monthday) */
+
+<?php // The containing div for a.new_booking. ?>
+div.cell_container {
+  position: relative;
+  float: left;
+  width: 100%;        
+  <?php echo ($month_cell_scrolling ? 'height:' : 'min-height:') ?> 100px;
+}
+                                                                         
+#month_main a.new_booking {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;  <?php // needs to be above the base, but below the date (monthday) ?>
+}
        
-div.cell_header {position: relative; width: 100%; z-index: 20;         /* needs to be above the new booking anchor */
-     min-height: 20%; height: 20%; max-height: 20%; overflow: hidden}
+div.cell_header {
+  position: relative;
+  width: 100%;
+  z-index: 20;  <?php // needs to be above the new booking anchor ?>
+  min-height: 20%;
+  height: 20%;
+  max-height: 20%;
+  overflow: hidden;
+}
 
-#month_main div.cell_header a {display: block; width: auto; float: left}                                                                               
-#month_main div.cell_header a.monthday {font-size: medium}  /* the date in the top left corner */
-#month_main div.cell_header a.week_number {opacity: 0.5; padding: 2px 4px 0 4px}
+#month_main div.cell_header a {
+  display: block;
+  width: auto;
+  float: left;
+}
 
+<?php // the date in the top left corner ?>                                                                           
+#month_main div.cell_header a.monthday {
+  font-size: medium;
+}
+
+#month_main div.cell_header a.week_number {
+  opacity: 0.5;
+  padding: 2px 4px 0 4px;
+}
+
+<?php // contains the list of bookings ?>
 div.booking_list {
-  position: relative;      /* contains the list of bookings */
-  z-index: 20;             /* needs to be above new_booking */
+  position: relative;
+  z-index: 20;  <?php // needs to be above new_booking ?>
   max-height: 80%;
   font-size: x-small;                                
   overflow: <?php echo ($month_cell_scrolling ? 'auto' : 'visible') ?>;
@@ -920,19 +973,22 @@ foreach ($color_types as $type => $col)
   top: 0;
 }
 
-.dwm_main#month_main th.hidden_day     
-    {width: <?php echo $column_hidden_width ?>%; 
-    <?php 
-      echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
-    ?>
-    }
-    
+.dwm_main#month_main th.hidden_day {
+  width: <?php echo $column_hidden_width ?>%; 
+  <?php
+  // if the width is set to zero, then don't display anything at all
+  echo (empty($column_hidden_width) ? ' display: none' : '');
+  ?>
+}
+
+<?php // hidden columns (eg weekends) in the week and month views ?> 
 td.hidden_day {
-  background-color: <?php echo $column_hidden_color ?>; /* hidden columns (eg weekends) in the week and month views */
+  background-color: <?php echo $column_hidden_color ?>;
   font-size: medium;
   font-weight: bold;
-  <?php 
-    echo (empty($column_hidden_width) ? " display: none" : ""); // if the width is set to zero, then don't display anything at all
+  <?php
+  // if the width is set to zero, then don't display anything at all
+  echo (empty($column_hidden_width) ? ' display: none' : '');
   ?>
 }
 
@@ -1029,14 +1085,41 @@ tr:nth-child(even) td.row_labels {
 }
 
 
-.dwm_main .ui-resizable-n {top: -1px}
-.dwm_main .ui-resizable-e {right: -1px}
-.dwm_main .ui-resizable-s {bottom: -1px}
-.dwm_main .ui-resizable-w {left: -1px}
-.dwm_main .ui-resizable-se {bottom: 0; right: 0}
-.dwm_main .ui-resizable-sw {bottom: -2px; left: -1px}
-.dwm_main .ui-resizable-ne {top: -2px; right: -1px}
-.dwm_main .ui-resizable-nw {top: -2px; left: -1px}
+.dwm_main .ui-resizable-n {
+  top: -1px;
+}
+
+.dwm_main .ui-resizable-e {
+  right: -1px;
+}
+
+.dwm_main .ui-resizable-s {
+  bottom: -1px;
+}
+
+.dwm_main .ui-resizable-w {
+  left: -1px;
+}
+
+.dwm_main .ui-resizable-se {
+  bottom: 0;
+  right: 0;
+}
+
+.dwm_main .ui-resizable-sw {
+  bottom: -2px;
+  left: -1px;
+}
+
+.dwm_main .ui-resizable-ne {
+  top: -2px;
+  right: -1px;
+}
+
+.dwm_main .ui-resizable-nw {
+  top: -2px;
+  left: -1px;
+}
 
 
 div.div_select {
@@ -1309,17 +1392,34 @@ div#checks span {
 
 
 /* ------------ EDIT_ENTRY_HANDLER.PHP ------------------*/
-.edit_entry_handler div#submit_buttons {float: left}
-.edit_entry_handler #submit_buttons form {float: left; margin: 1em 2em 1em 0}
+
+.edit_entry_handler div#submit_buttons {
+  float: left;
+}
+
+.edit_entry_handler #submit_buttons form {
+  float: left;
+  margin: 1em 2em 1em 0;
+}
 
 
 /* ------------ EDIT_USERS.PHP ------------------*/
 
-div#user_list {padding: 2em 0}
-form#add_new_user {margin-left: 1em}
-#users_table td {text-align: right}
-#users_table td div.string {text-align: left}
+div#user_list {
+  padding: 2em 0;
+}
 
+form#add_new_user {
+  margin-left: 1em;
+}
+
+#users_table td {
+  text-align: right;
+}
+
+#users_table td div.string {
+  text-align: left;
+}
 
 
 /* ------------ FUNCTIONS.INC -------------------*/
@@ -1539,7 +1639,10 @@ header input[type="search"] {
   width: 10em;
 }
 
-.banner .outstanding a {color: <?php echo $outstanding_color ?>}
+.banner .outstanding a {
+  color: <?php echo $outstanding_color ?>;
+}
+
 
 /* ------------ HELP.PHP ------------------------*/
 
@@ -1575,10 +1678,12 @@ table.details.has_caption {
 
 
 /* ------------ IMPORT.PHP ------------------------*/
+
 div.problem_report {
   border-bottom: 1px solid <?php echo $site_faq_entry_border_color ?>;
   margin-top: 1em;
 }
+
 
 /* ------------ MINCALS.PHP ---------------------*/
 
@@ -1643,11 +1748,14 @@ table.minicalendar {
   opacity: 0.7
 }
 
-.minicalendar a.current {font-weight: bold; color: <?php echo $highlight_font_color ?>}
-td#sticky_day {border: 1px dotted <?php echo $highlight_font_color ?>}
-td.mincals_week_number { opacity: 0.5; font-size: 60%; }
+.minicalendar a.current {
+  font-weight: bold;
+  color: <?php echo $highlight_font_color ?>;
+}
+
 
 /* ------------ PENDING.PHP ------------------*/
+
 #pending_list form {
   display: inline-block;
 }
@@ -1669,30 +1777,90 @@ td.mincals_week_number { opacity: 0.5; font-size: 60%; }
   background-color: <?php echo $pending_control_color ?>;
 }
 
-#pending_list td:first-child {width: 1.2em}
-#pending_list #pending_table td.sub_table {width: auto}
-table.admin_table.sub {border-right-width: 0}
-table.sub th {background-color: #788D9C}
-.js .admin_table table.sub th:first-child {background-color: <?php echo $pending_control_color ?>;
-    border-left-color: <?php echo $admin_table_border_color ?>}
-#pending_list form {margin: 2px 4px}
+#pending_list td:first-child {
+  width: 1.2em;
+}
+
+#pending_list #pending_table td.sub_table {
+  width: auto;
+}
+
+table.admin_table.sub {
+  border-right-width: 0;
+}
+
+table.sub th {
+  background-color: #788D9C;
+}
+
+.js .admin_table table.sub th:first-child {
+  background-color: <?php echo $pending_control_color ?>;
+  border-left-color: <?php echo $admin_table_border_color ?>;
+}
+
+#pending_list form {
+  margin: 2px 4px;
+}
 
 
 /* ------------ REPORT.PHP ----------------------*/
-div#div_summary {padding-top: 3em}
-#div_summary table {border-spacing: 1px; border-collapse: collapse;
-    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
-    border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
-#div_summary td, #div_summary th {padding: 0.1em 0.2em 0.1em 0.2em;
-    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-#div_summary th {background-color: transparent; font-weight: bold; text-align: center}
-#div_summary thead tr:nth-child(2) th {font-weight: normal; font-style: italic}
-#div_summary th:first-child {text-align: right}
-#div_summary tfoot th {text-align: right}
-#div_summary td {text-align: right}
-#div_summary tbody td:nth-child(even), #div_summary tfoot th:nth-child(even) {border-right-width: 0}
-#div_summary td:first-child {font-weight: bold}
+
+div#div_summary {
+  padding-top: 3em;
+}
+
+#div_summary table {
+  border-spacing: 1px;
+  border-collapse: collapse;
+  border-color: <?php echo $report_table_border_color ?>;
+  border-style: solid;
+  border-top-width: 1px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 1px;
+}
+
+#div_summary td, #div_summary th {
+  padding: 0.1em 0.2em 0.1em 0.2em;
+  border-color: <?php echo $report_table_border_color ?>;
+  border-style: solid;
+  border-top-width: 0;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 0;
+}
+
+#div_summary th {
+  background-color: transparent;
+  font-weight: bold;
+  text-align: center;
+}
+
+#div_summary thead tr:nth-child(2) th {
+  font-weight: normal;
+  font-style: italic;
+}
+
+#div_summary th:first-child {
+  text-align: right;
+}
+
+#div_summary tfoot th {
+  text-align: right;
+}
+
+#div_summary td {
+  text-align: right;
+}
+
+#div_summary tbody td:nth-child(even),
+#div_summary tfoot th:nth-child(even) {
+  border-right-width: 0;
+}
+
+#div_summary td:first-child {
+  font-weight: bold;
+}
 
 p.report_entries {
   float: left;
@@ -1700,7 +1868,11 @@ p.report_entries {
   font-weight: bold
 }
 
-button#delete_button {float: left; clear: left; margin: 1em 0 3em 0}
+button#delete_button {
+  float: left;
+  clear: left;
+  margin: 1em 0 3em 0;
+}
 
 
 /* ------------ SEARCH.PHP ----------------------*/
@@ -1736,18 +1908,48 @@ div#record_nav form:first-child {
   margin-right: 1em;
 }
 
+
 /* ------------ SITE_FAQ ------------------------*/
-.help q {font-style: italic}
-.help dfn {font-style: normal; font-weight: bold}
-#site_faq_contents li a {text-decoration: underline}
-div#site_faq_body {margin-top: 2.0em}
-#site_faq_body h4 {border-top: 1px solid <?php echo $site_faq_entry_border_color ?>; padding-top: 0.5em; margin-top: 0} 
-#site_faq_body div {padding-bottom: 0.5em}
-#site_faq_body :target {background-color: <?php echo $help_highlight_color ?>}
+
+.help q {
+  font-style: italic;
+}
+
+.help dfn {
+  font-style: normal;
+  font-weight: bold;
+}
+
+#site_faq_contents li a {
+  text-decoration: underline;
+}
+
+div#site_faq_body {
+  margin-top: 2.0em;
+}
+
+#site_faq_body h4 {
+  border-top: 1px solid <?php echo $site_faq_entry_border_color ?>;
+  padding-top: 0.5em;
+  margin-top: 0;
+}
+
+#site_faq_body div {
+  padding-bottom: 0.5em;
+}
+
+#site_faq_body :target {
+  background-color: <?php echo $help_highlight_color ?>;
+}
 
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
-.view_entry #entry td:first-child {text-align: right; font-weight: bold; padding-right: 1.0em}
+
+.view_entry #entry td:first-child {
+  text-align: right;
+  font-weight: bold;
+  padding-right: 1.0em;
+}
 
 .view_entry div#view_entry_nav {
   display: table;
@@ -1781,10 +1983,22 @@ div#returl {
   margin-bottom: 1em;
 }
 
-#approve_buttons td {vertical-align: middle; padding-top: 1em}
-#approve_buttons td#caption {text-align: left}
-#approve_buttons td#note {padding-top: 0}
-#approve_buttons td#note form {width: 100%}
+#approve_buttons td {
+  vertical-align: middle;
+  padding-top: 1em;
+}
+
+#approve_buttons td#caption {
+  text-align: left;
+}
+
+#approve_buttons td#note {
+  padding-top: 0;
+}
+
+#approve_buttons td#note form {
+  width: 100%;
+}
 
 #approve_buttons td#note textarea {
   width: 100%;

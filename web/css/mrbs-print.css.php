@@ -16,8 +16,14 @@ http_headers(array("Content-type: text/css"),
 
 td.new a, a.new_booking img { display: none; }
 
-.dwm_main th {color: <?php echo $header_font_color_print ?>}
-.dwm_main th a:link, .row_labels a:link {color: <?php echo $anchor_link_color_header_print ?>}
+.dwm_main th {
+  color: <?php echo $header_font_color_print ?>;
+}
+
+.dwm_main th a:link,
+.row_labels a:link {
+  color: <?php echo $anchor_link_color_header_print ?>;
+}
 
 <?php
 // redefine table and cell border colours so that they are visible in the print view
@@ -80,6 +86,10 @@ foreach ($color_types as $type => $col)
 // hide DataTable buttons in print
 ?>
 
-.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {display: none; }
+.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {
+  display: none;
+}
 
-.ui-resizable-handle {display: none}
+.ui-resizable-handle {
+  display: none;
+}
