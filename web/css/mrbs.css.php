@@ -24,8 +24,8 @@ body {
   font-size: small;
   margin: 0;
   padding: 0;
-  color:            <?php echo $standard_font_color ?>;
-  font-family:      <?php echo $standard_font_family ?>;
+  color: <?php echo $standard_font_color ?>;
+  font-family: <?php echo $standard_font_family ?>;
   background-color: <?php echo $body_background_color ?>;
 }
 
@@ -41,10 +41,22 @@ body {
   display: block;
 }
 
-.current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
-.error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
-.warning {color: <?php echo $highlight_font_color ?>}                        /* for warning messages */
-.note    {font-style: italic}
+.current {
+  color: <?php echo $highlight_font_color ?>;  <?php // used to highlight the current item ?>
+}
+
+.error {
+  color: <?php echo $highlight_font_color ?>;  <?php // for error messages ?>
+  font-weight: bold;
+}
+
+.warning {
+  color: <?php echo $highlight_font_color ?>;  <?php // for warning messages ?>
+}
+              
+.note {
+  font-style: italic;
+}
 
 input, textarea {
   box-sizing: border-box;
@@ -151,11 +163,27 @@ h2 {
   flex-grow: 1;
 }
 
-img {border: 0}
+img {
+  border: 0;
+}
 
-a:link    {color: <?php echo $anchor_link_color ?>;    text-decoration: none; font-weight: bold}
-a:visited {color: <?php echo $anchor_visited_color ?>; text-decoration: none; font-weight: bold}
-a:hover   {color: <?php echo $anchor_hover_color ?>;   text-decoration: underline; font-weight: bold} 
+a:link {
+  color: <?php echo $anchor_link_color ?>;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:visited {
+  color: <?php echo $anchor_visited_color ?>;
+  text-decoration: none;
+  font-weight: bold
+}
+
+a:hover {
+  color: <?php echo $anchor_hover_color ?>;
+  text-decoration: underline;
+  font-weight: bold;
+} 
 
 tr:nth-child(odd) td.new {
   background-color: <?php echo $row_odd_color ?>;
@@ -166,22 +194,47 @@ tr:nth-child(even) td.new {
 }
 
 
-td, th {vertical-align: top}
+td, th {
+  vertical-align: top;
+}
 
-td form {margin: 0}     /* Prevent IE from displaying margins around forms in tables. */
+td form {
+  margin: 0;  <?php // Prevent IE from displaying margins around forms in tables. ?>
+}
 
-legend {font-weight: bold; font-size: large;
-    font-family: <?php echo $standard_font_family ?>;
-    color: <?php echo $standard_font_color ?>}
-fieldset {margin: 0; padding: 0; border: 0; 
-    border-radius: 8px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px}
-fieldset.admin {width: 100%; padding: 0 1.0em 1.0em 1.0em;
-    border: 1px solid <?php echo $admin_table_border_color ?>}
-fieldset fieldset {position: relative; clear: left; width: 100%; padding: 0; border: 0; margin: 0}  /* inner fieldsets are invisible */
-fieldset fieldset legend {font-size: 0}        /* for IE: even if there is no legend text, IE allocates space  */
+legend {
+  font-weight: bold;
+  font-size: large;
+  font-family: <?php echo $standard_font_family ?>;
+  color: <?php echo $standard_font_color ?>;
+}
 
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
+}
+
+fieldset.admin {
+  width: 100%; padding: 0 1.0em 1.0em 1.0em;
+  border: 1px solid <?php echo $admin_table_border_color ?>;
+}
+
+fieldset fieldset {
+  position: relative;
+  clear: left;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+fieldset fieldset legend {
+  font-size: 0;  <?php // for IE: even if there is no legend text, IE allocates space ?>
+}      
 
 label:not(.link)::after,
 label.link a::after,
@@ -210,7 +263,6 @@ label.no_suffix::after,
 // don't work well either with a border round the table.   So we put the left and right borders
 // on the table cells.
 ?>
-
 
 table.admin_table {
   border-collapse: separate;
@@ -241,15 +293,15 @@ table.dataTable thead th, table.dataTable thead td {
 
 .admin_table th:first-child,
 table.dataTable thead th:first-child, table.dataTable thead td:first-child {
-  border-left-color: <?php echo $admin_table_header_back_color ?>
+  border-left-color: <?php echo $admin_table_header_back_color ?>;
 }
 
 .admin_table th:last-child {
-  border-right-color: <?php echo $admin_table_header_back_color ?>
+  border-right-color: <?php echo $admin_table_header_back_color ?>;
 }
 
 .admin_table.DTFC_Cloned th:last-child {
-  border-right-color: <?php echo $admin_table_border_color ?>
+  border-right-color: <?php echo $admin_table_border_color ?>;
 }
 
 .admin_table th,
@@ -257,19 +309,19 @@ table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc {
   color: <?php echo $admin_table_header_font_color ?>; 
-  background-color: <?php echo $admin_table_header_back_color ?>
+  background-color: <?php echo $admin_table_header_back_color ?>;
 }
 
 .admin_table td.action {
-  text-align: center
+  text-align: center;
 }
 
 .admin_table td.action div {
-  display: inline-block
+  display: inline-block;
 }
 
 .admin_table td.action div div {
-  display: table-cell
+  display: table-cell;
 }
 
 table.display {
@@ -312,8 +364,13 @@ nav.location .select2-container {
 // Don't display anything with a class of js_none (used for example for hiding Submit
 // buttons when we're submitting onchange).  The .js class is added to the <body> by JavaScript
 ?>
-.js .js_none {display: none}
-.js .js_hidden {visibility: hidden}
+.js .js_none {
+  display: none;
+}
+
+.js .js_hidden {
+  visibility: hidden;
+}
 
 h2.date, span.timezone {
   display: inline-block;
@@ -402,14 +459,6 @@ nav a.next::after {
 
 
 /* ------------ ADMIN.PHP ---------------------------*/
-<?php
-// Adjust the label width to suit the longest label - it will depend on the translation being used
-// The input width can normally be left alone
-$admin_form_label_width       = '10.0';   // em
-$admin_form_gap               = '1.0';   // em
-$admin_form_input_width       = '10.5';   // em
-
-?>
 
 .form_admin fieldset {
   border: 1px solid <?php echo $admin_table_border_color ?>;
@@ -440,7 +489,7 @@ div#div_custom_html {
   display: block;
   float: left;
   font-weight: bold;
-  margin-right: <?php echo $admin_form_gap ?>em;
+  margin-right: 1em;
 }
 
 .areaChangeForm div {
