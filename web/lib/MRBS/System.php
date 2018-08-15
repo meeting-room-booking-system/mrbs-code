@@ -4,6 +4,29 @@ namespace MRBS;
 
 class System
 {
+  // A set of special cases for mapping a language to a default region
+  // (normally the region is the same as the language, eg 'fr' => 'FR')
+  private static $default_regions = array
+    (
+      'ca' => 'ES',
+      'cs' => 'CZ',
+      'da' => 'DK',
+      'el' => 'GR',
+      'en' => 'GB',
+      'et' => 'EE',
+      'eu' => 'ES',
+      'ja' => 'JP',
+      'ko' => 'KR',
+      'nb' => 'NO',
+      'nn' => 'NO',
+      'sh' => 'RS',
+      'sl' => 'SI',
+      'sr' => 'RS',
+      'sv' => 'SE',
+      'zh' => 'CN',
+    );
+    
+    
   // A map is needed to convert from the HTTP language specifier to a
   // locale specifier for Windows
   //
@@ -657,22 +680,7 @@ class System
   // hyphens and some as special codes.
   public static function getOSlocale($langtag)
   {
-    $locales = array();
-    
-    // Put the $langtag into standard PHP format
-    $locale = \Locale::composeLocale(\Locale::parseLocale($langtag));
-    
-    // First locale to try is a PHP style locale, ie with underscores
-    $locales[] = $locale;
-    // Next add in one with hyphens instead of underscores.  (These work on newer
-    // Windows systems, whereas underscores do not.)
-    $locales[] = str_replace('_', '-', $locale);
-    // On Windows systems add in the three-letter code if any as a last resort
-    if ((self::getServerOS() == 'windows') &&
-        isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
-    {
-      $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
-    }
+    $locales = self::getLocaleAlternatives($langtag);
     
     // Add on a codeset [is this still necessary??]
     $locales = array_map('self::addCodeset', $locales);
@@ -739,6 +747,56 @@ class System
       $string = self::utf8ConvertAix($string, $locale);
     }
     return $string;
+  }
+  
+  
+  private static function getLocaleAlternatives($langtag)
+  {
+    $locales = array();
+    
+    // Put the $langtag into standard PHP format
+    $subtags = \Locale::parseLocale($langtag);
+    $locale = \Locale::composeLocale($subtags);
+    
+    // First locale to try is a PHP style locale, ie with underscores
+    $locales[] = $locale;
+    
+    // Next add in one with hyphens instead of underscores.  (These work on newer
+    // Windows systems, whereas underscores do not.)
+    $locales[] = str_replace('_', '-', $locale);
+    
+    // On Windows systems add in the three-letter code if any as a last resort
+    if ((self::getServerOS() == 'windows') &&
+        isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+    {
+      $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+    }
+    
+    // If there isn't a region specified then add one, because on some systems
+    // setlocale(LC_ALL, 'en'), for example, doesn't work, even though 'en' seems
+    // to be an available locale.
+    if (!isset($subtags['region']))
+    {
+      $subtags['region'] = self::getDefaultRegion($subtags['language']);
+      if (isset($subtags['region']))  // avoid an infinite recursion
+      {
+        $locales = array_merge($locales, self::getLocaleAlternatives(\Locale::composeLocale($subtags)));
+      }
+    }
+    
+    return $locales;
+  }
+  
+  
+  // Returns the default region for a language
+  private static function getDefaultRegion($language)
+  {
+    if (isset(self::$default_regions[$language]))
+    {
+      return self::$default_regions[$language];
+    }
+    
+    return utf8_strtoupper($language);
   }
   
   
