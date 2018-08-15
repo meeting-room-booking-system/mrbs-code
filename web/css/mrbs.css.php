@@ -153,7 +153,7 @@ h2 {
   line-height: 25px;
 }
 
-.index .contents {
+.index :not(.simple) + .contents {
   display: -ms-flexbox;
   display: flex;
 }
