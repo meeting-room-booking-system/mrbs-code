@@ -166,8 +166,9 @@ function convert_to_BCP47($locale)
 
 function set_mrbs_locale($locale)
 {
+  var_dump($locale);
   $os_locale = System::getOSlocale($locale);
-  
+  var_dump($os_locale);
   if (false === setlocale(LC_ALL, $os_locale))
   {
     // $os_locale will be an array
