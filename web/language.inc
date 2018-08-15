@@ -1034,22 +1034,21 @@ function set_vocab($lang)
   
   $lang = utf8_strtolower($lang);
 
-  if (is_readable('lang'))
+  $lang_file = "lang/lang.$lang";
+  
+  if ($cli_mode)
   {
-    $lang_file = "lang/lang.$lang";
+    // When in CLI mode, we need to add the full path name as
+    // is_readable() ignores the include path
+    $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
   }
-  else
+  elseif (!is_readable('lang'))
   {
     // The JavaScript files in the js directory end up including language.inc.
     // In this case we need to adjust the path
     $lang_file = "../lang/lang.$lang";
   }
-  // When in CLI mode, we need to add the full path name as
-  // is_readable() ignores the include path
-  if ($cli_mode)
-  {
-    $lang_file = dirname($PHP_SELF) . "/" . $lang_file;
-  }
+  
   if (is_readable($lang_file))
   {
     // Get the standard language tokens
