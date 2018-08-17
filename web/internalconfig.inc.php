@@ -532,5 +532,5 @@ global $maxlength;
  * JavaScript - internal use, do not change
  ********************************************************/
 
-// Puts Javascript into stict mode
+// Puts Javascript into strict mode
 $use_strict = true;
