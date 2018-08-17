@@ -535,10 +535,3 @@ global $maxlength;
 // Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
 // for debugging.
 $use_strict = false;
-       
-
-/********************************************************
- * PHP System Configuration - internal use, do not change
- ********************************************************/
-
-
