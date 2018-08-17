@@ -532,6 +532,5 @@ global $maxlength;
  * JavaScript - internal use, do not change
  ********************************************************/
 
-// Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
-// for debugging.
-$use_strict = false;
+// Puts Javascript into stict mode
+$use_strict = true;
