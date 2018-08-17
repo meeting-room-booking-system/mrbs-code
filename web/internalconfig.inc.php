@@ -541,4 +541,4 @@ $use_strict = false;
  * PHP System Configuration - internal use, do not change
  ********************************************************/
 
-register_shutdown_function(__NAMESPACE__ . "\\shutdown_function");
+
