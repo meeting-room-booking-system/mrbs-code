@@ -2,8 +2,9 @@
 namespace MRBS;
 
 global $refresh_rate, $custom_css_url, $PHP_SELF;
+global $debug;
 
-if (DEBUG)
+if ($debug)
 {
   ?>
   <link href="jquery/ui/css/jquery-ui.structure.css" rel="stylesheet" type="text/css">

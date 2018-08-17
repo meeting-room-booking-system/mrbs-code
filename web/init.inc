@@ -6,6 +6,8 @@ use MRBS\Form\Form;
 
 function init_errors()
 {
+  global $debug;
+  
   // Make sure notice errors are not reported, they can break mrbs code:
   $error_level = E_ALL & !E_NOTICE & !E_USER_NOTICE;
 
@@ -20,7 +22,14 @@ function init_errors()
   {
     $error_level = $error_level & !E_STRICT;
   }
-
+  
+  if ($debug)
+  {
+    $error_level = -1;
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', true);
+  }
+  
   error_reporting ($error_level);
   set_error_handler(__NAMESPACE__ . "\\error_handler");
   set_exception_handler(__NAMESPACE__ . "\\exception_handler");

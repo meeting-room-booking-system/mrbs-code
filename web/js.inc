@@ -2,6 +2,7 @@
 namespace MRBS;
 
 global $view, $year, $month, $day, $area, $room;
+global $debug;
 
 $page = this_page('.php');
 
@@ -36,7 +37,7 @@ $standard_query_string = "area=$area";
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
 
-if (DEBUG)
+if ($debug)
 {
   ?>
   <script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
@@ -53,7 +54,7 @@ else
 // until we are confident that our JavaScript is not using any features that have
 // been removed.   The uncompressed version will output warnings about removed and
 // deprecated features to the console
-if (DEBUG)
+if ($debug)
 {
   ?>
   <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.js"></script>
@@ -66,7 +67,7 @@ else
   <?php
 }
 
-if (DEBUG)
+if ($debug)
 {
   ?>
   <script type="text/javascript" src="jquery/ui/jquery-ui.js"></script>
@@ -112,7 +113,7 @@ if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
 if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
 {
   // Include the JavaScript for those pages that use dataTables
-  if (DEBUG)
+  if ($debug)
   {
     ?>
     <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.js"></script>
@@ -173,7 +174,7 @@ if ($page == 'index')
   // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
   // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the 
   // page which says we don't support them!).
-  if (DEBUG)
+  if (debug)
   {
     ?>
     <script src="js/html5shiv.js"></script>

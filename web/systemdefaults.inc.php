@@ -11,6 +11,17 @@ namespace MRBS;
  *
  **************************************************************************/
 
+/********
+ * System
+ ********/
+
+// Set $debug = true to force MRBS to output debugging information to the browser.
+// WARNING!  Do not use this for production systems, as not only will it generate
+// unnecessary output in the broswer, but it could also expose sensitive security
+// information (eg database usernames and passwords).
+$debug = false;
+
+ 
 /**********
  * Timezone
  **********/
