@@ -57,16 +57,25 @@ Array parameters must all appear in the same argument.
 <table>
 <tbody>
 <tr>
-  <td><code>summarize</code></td>
+  <td><code>output</code></td>
   <td>
-    The type of report to produce.  Permitted values are:
+    The type of output to produce.  Permitted values are:
     <table>
-      <tr><td><code>5</code></td><td>HTML report</td></tr>
-      <tr><td><code>6</code></td><td>HTML summary</td></tr>
-      <tr><td><code>7</code></td><td>HTML report and summary</td></tr>
-      <tr><td><code>9</code></td><td>CSV report<em> (default)</em></td></tr>
-      <tr><td><code>10</code></td><td>CSV summary</td></tr>
-      <tr><td><code>17</code></td><td>iCalendar (.ics file) report - excluding periods</td></tr>
+      <tr><td><code>0</code></td><td>A report<em> (default)</em></td></tr>
+      <tr><td><code>1</code></td><td>A summary</td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>output_format</code></td>
+  <td>
+    The format that the output should be produced in.  Permitted values are:
+    <table>
+      <tr><td><code>0</code></td><td>HTML<em> (default except when running from the CLI)</em></td></tr>
+      <tr><td><code>1</code></td><td>CSV<em> (default when running from the CLI)</em></td></tr>
+      <tr><td><code>2</code></td><td>iCalendar (.ics file) report - excluding periods<em> (cannot be used for summaries)</em></td></tr>
     </table>
   </td>
 </tr>
@@ -105,57 +114,22 @@ Array parameters must all appear in the same argument.
 </tbody>
 <tbody>
 <tr>
-  <td><code>from_day</code></td>
+  <td><code>from_date</code></td>
   <td>
-    The start day (1..31) of the reporting period.  If from_day,
-    from_month and from_year are not specified then the base date will
-    be used.
+    The start date of the reporting period in YYYY-MM-DD format.  If
+    from_date is not specified then the base date will be used.
   </td>
 </tr>
 <tr>
-  <td><code>from_month</code></td>
+  <td><code>to_date</code></td>
   <td>
-    The start month (1..12) of the reporting period.  If from_day,
-    from_month and from_year are not specified then the base date will
-    be used.
-  </td>
-</tr>
-<tr>
-  <td><code>from_year</code></td>
-  <td>
-    The start year (4 digits) of the reporting period.  If from_day,
-    from_month and from_year are not specified then the base date will
-    be used.
-  </td>
-</tr>
-<tr>
-  <td><code>to_day</code></td>
-  <td>
-    The end day (1..31) of the reporting period.  If to_day,
-    to_month and to_year are not specified then the base date + 
+    The end date of the reporting period in YYYY-MM-DD format.  If
+    to_date is not specified then the base date + 
     $default_report_days (specified in systemdefaults.inc.php and
     optionally over-ridden in config.in.php) will be used.  Note that
     the reporting period ends at 0000 on the to_day, so if for example
-    you want a report for all bookings in 2011 the to_date should be
-    1 Jan 2012.
-  </td>
-</tr>
-<tr>
-  <td><code>to_month</code></td>
-  <td>
-    The end month (1..12) of the reporting period.  If to_day,
-    to_month and to_year are not specified then the base date + 
-    $default_report_days (specified in systemdefaults.inc.php and
-    optionally over-ridden in config.in.php) will be used.
-  </td>
-</tr>
-<tr>
-  <td><code>to_year</code></td>
-  <td>
-    The end year (4 digits) of the reporting period.  If to_day,
-    to_month and to_year are not specified then the base date + 
-    $default_report_days (specified in systemdefaults.inc.php and
-    optionally over-ridden in config.in.php) will be used.
+    you want a report for all bookings in 2019 the to_date should be
+    2020-01-01.
   </td>
 </tr>
 </tbody>
@@ -199,32 +173,63 @@ Array parameters must all appear in the same argument.
 </tbody>
 <tbody>
 <tr>
+  <td><code>match_approved</code></td>
+  <td>
+    Limit the report to entries that are/are not approved.  Permitted values are:
+    <table>
+      <tr><td><code>0</code></td><td>Awaiting approval</td></tr>
+      <tr><td><code>1</code></td><td>Approved</td></tr>
+      <tr><td><code>2</code></td><td>All entries<em> (default)</em></td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>match_confirmed</code></td>
+  <td>
+    Limit the report to entries that are tentative or confirmed.  Permitted values are:
+    <table>
+      <tr><td><code>0</code></td><td>Tentative</td></tr>
+      <tr><td><code>1</code></td><td>Confirmed</td></tr>
+      <tr><td><code>2</code></td><td>All entries<em> (default)</em></td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+  <td><code>match_private</code></td>
+  <td>
+    Limit the report to entries that are private or public.  Permitted values are:
+    <table>
+      <tr><td><code>0</code></td><td>Private</td></tr>
+      <tr><td><code>1</code></td><td>Public</td></tr>
+      <tr><td><code>2</code></td><td>All entries<em> (default)</em></td></tr>
+    </table>
+  </td>
+</tr>
+</tbody>
+<tbody>
+<tr>
   <td><code>sortby</code></td>
   <td>
     Permitted values are:
     <table>
-      <tr><td><code>r</code></td><td><em>(default)</em> sort by room name</td></tr>
+      <tr><td><code>r</code></td><td>sort by room name<em> (default)</em></td></tr>
       <tr><td><code>s</code></td><td>sort by start time</td></tr>
     </table>
   </td>
 </tr>
-<tr>
-  <td><code>display</code></td>
-  <td>
-    Permitted values are:
-    <table>
-      <tr><td><code>d</code></td><td><em>(default)</em> show start time and duration</td></tr>
-      <tr><td><code>e</code></td><td>show start time and end time</td></tr>
-    </table>
-  </td>
-</tr>
+</tbody>
+<tbody>
 <tr>
   <td><code>sumby</code></td>
   <td>
     The field to use for the first column of the summary table.
     Permitted values are:
     <table>
-      <tr><td><code>d</code></td><td><em>(default)</em> brief description</td></tr>
+      <tr><td><code>d</code></td><td>brief description<em> (default)</em></td></tr>
       <tr><td><code>c</code></td><td>creator's user name</td></tr>
       <tr><td><code>t</code></td><td>type</td></tr>
     </table>
@@ -258,12 +263,12 @@ Returns 0 on success.
 </p>
 <h1>EXAMPLES</h1>
 <p>
-  To produce a summary in CSV format of all bookings for 2011, arranged by the creator's 
+  To produce a summary in CSV format of all bookings for 2019, arranged by the creator's 
   name, and send the summary to the file summary.csv:
 </p>
 <p>
 <code>
-  /usr/local/bin/php /home/mrbs/report.php summarize=10 from_day=1&amp;from_month=1&amp;from_year=2011 to_day=1&amp;to_month=1&amp;to_year=2012 sumby=c > summary.csv
+  /usr/local/bin/php /home/mrbs/report.php output=1 from_date=2019-01-01 to_date=2020-01-01 sumby=c > summary.csv
 </code>
 </p>
 <p>
@@ -271,11 +276,12 @@ Returns 0 on success.
   that the parameter <code>phase=2</code> must be added to tell MRBS that it is on the second
   phase of report production (the first phase is gathering the user input from the form; if report.php
   is called from the command line the phase is automatically set to 2).  For example,
-  to simulate the CLI command above enter into the browser:
+  to simulate the CLI command above enter into the browser (note the addition of the <code>
+  output_format</code> parameter as CSV is not the default format when running from the browser):
 </p>
 <p>
 <code>
-  report.php?phase=2&amp;summarize=10&amp;from_day=1&amp;from_month=1&amp;from_year=2011&amp;to_day=1&amp;to_month=1&amp;to_year=2012&amp;sumby=c
+  report.php?phase=2&amp;output=1&amp;output_format=2&amp;from_date=2019-01-01&amp;to_date=2020-01-01&amp;sumby=c
 </code>
 </p>
 <p>
@@ -283,7 +289,7 @@ Returns 0 on success.
 </p>
 <p>
 <code>
-  wget -O myreport.csv http://localhost/mrbs/report.php?phase=2\&amp;summarize=10\&amp;sumby=c
+  wget -O myreport.csv http://localhost/mrbs/report.php?phase=2\&amp;output=1\&amp;output_format=2\&amp;sumby=c
 </code>
 </p>
 </body>
