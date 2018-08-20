@@ -32,7 +32,6 @@ function get_page_level($page)
     // read features.
     case 'help.php':
     case 'index.php':
-    case 'minicalendar.php':            // Ajax page
       $result = 0;
       break;
       
