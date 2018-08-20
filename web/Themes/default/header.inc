@@ -12,6 +12,7 @@ function print_head($simple=false)
   echo "<head>\n";
   
   echo "<meta charset=\"" . get_charset() . "\">\n";
+  
   // Set IE=edge so that IE10 will display MRBS properly, even if compatibility mode is used
   // on the browser.  If we don't do this then MRBS will treat IE10 as an unsupported browser
   // when compatibility mode is turned on, potentially confusing users who may have forgotten
@@ -20,6 +21,9 @@ function print_head($simple=false)
   // conditional comments.  So we have to do it in a <meta> tag, after the conditional comments
   // around the <html> tags.
   echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
+  
+  // Improve scaling on mobile devices
+  echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n";
   
   if (!$simple)
   {
