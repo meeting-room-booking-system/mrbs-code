@@ -73,6 +73,16 @@ input.flatpickr-input {
   width: 6.5em;
 }
 
+<?php
+// Flatpickr lets mobile devices use their own date inputs, because these are usually
+// superior.  In these cases set the width of the date input to 'auto' to allow the native
+// date input display properly.   For example on iPad Safari, the native date input is
+// displayed as dd-mmm-yyyy, eg 1 Jan 2019, which is wider than most date inputs.
+?>
+input.flatpickr-input.flatpickr-mobile {
+  width: auto;
+}
+
 input.flatpickr-input {
   text-align: center;
 }
