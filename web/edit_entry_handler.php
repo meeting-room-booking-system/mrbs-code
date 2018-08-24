@@ -9,6 +9,7 @@ require_once 'functions_mail.inc';
 use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
+
 function invalid_booking($message)
 {
   global $day, $month, $year, $area, $room;
@@ -19,6 +20,31 @@ function invalid_booking($message)
   // Print footer and exit
   print_footer(TRUE);
 }
+
+
+// Truncate any fields that have a maximum length as a precaution.
+// Although the MAXLENGTH attribute is used in the <input> tag, this can
+// sometimes be ignored by the browser, for example by Firefox when 
+// autocompletion is used.  The user could also edit the HTML and remove
+// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
+// does not accept a maxlength attribute.  Passing an oversize string to some
+// databases (eg some versions of PostgreSQL) results in an SQL error,
+// rather than silent truncation of the string.
+//
+// We truncate to a maximum number of UTF8 characters rather than bytes.
+// This is OK in current versions of MySQL and PostgreSQL, though in earler
+// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
+// as a VARCHAR(n) was n bytes long rather than n characters.
+function truncate($value, $column)
+{
+  if (null !== ($maxlength = maxlength($column)))
+  {
+    return utf8_substr($value, 0, $maxlength);
+  }
+  
+  return $value;
+}
+
 
 $ajax = get_form_var('ajax', 'int');
 if ($ajax && !checkAuthorised(this_page(), true))
@@ -99,11 +125,14 @@ $formvars = array('create_by'          => 'string',
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
-  // Trim the strings
+  
+  // Trim the strings and truncate them to the maximum field length
   if (is_string($$var))
   {
     $$var = trim($$var);
+    $$var = truncate($$var, "entry.$var");
   }
+  
 }
 
 list($start_year, $start_month, $start_day) = split_iso_date($start_date);
@@ -153,11 +182,14 @@ foreach($fields as $field)
     {
       $custom_fields[$field['name']] = NULL;
     }
-    // Trim any strings
+    
+    // Trim any strings and truncate them to the maximum field length
     if (is_string($custom_fields[$field['name']]))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
+      $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
     }
+    
   }
 }
 
@@ -345,38 +377,6 @@ if ($ajax && $commit)
   }
 }
 
-
-// Truncate any fields that have a maximum length as a precaution.
-// Although the MAXLENGTH attribute is used in the <input> tag, this can
-// sometimes be ignored by the browser, for example by Firefox when 
-// autocompletion is used.  The user could also edit the HTML and remove
-// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
-// does not accept a maxlength attribute.  Passing an oversize string to some
-// databases (eg some versions of PostgreSQL) results in an SQL error,
-// rather than silent truncation of the string.
-//
-// We truncate to a maximum number of UTF8 characters rather than bytes.
-// This is OK in current versions of MySQL and PostgreSQL, though in earler
-// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
-// as a VARCHAR(n) was n bytes long rather than n characters.
-foreach ($maxlength as $key => $length)
-{
-  list($table, $field) = explode('.', $key, 2);
-  if ($table == 'entry')
-  {
-    // Custom fields are held in their own array, so we need to handle them
-    // slightly differently. (Should probably change the way they are handled
-    // sometime to be just like any other variables).
-    if (array_key_exists($field, $custom_fields))
-    {
-      $custom_fields[$field] = utf8_substr($custom_fields[$field], 0, $length);
-    }
-    elseif (isset($$field))
-    {
-      $$field = utf8_substr($$field, 0, $length);
-    }
-  }
-}
 
 // When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
 // get passed through by the form.   We therefore need to set them.

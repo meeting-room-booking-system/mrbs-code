@@ -294,8 +294,6 @@ function get_field_level($params, $disabled=false)
 
 function get_field_name($params, $disabled=false)
 {
-  global $maxlength;
-  
   $field = new FieldInputText();
   
   $field->setLabel($params['label'])
@@ -305,9 +303,9 @@ function get_field_name($params, $disabled=false)
                                      'required' => true,
                                      'pattern'  => REGEX_TEXT_POS));
   
-  if (isset($maxlength['users.name']))
+  if (null !== ($maxlength = maxlength('users.name')))
   {
-    $field->setControlAttribute('maxlength', $maxlength['users.name']);
+    $field->setControlAttribute('maxlength', $maxlength);
   }    
   
   return $field;
@@ -316,8 +314,6 @@ function get_field_name($params, $disabled=false)
 
 function get_field_email($params, $disabled=false)
 {
-  global $maxlength;
-  
   $field = new FieldInputEmail();
   
   $field->setLabel($params['label'])
@@ -326,9 +322,9 @@ function get_field_email($params, $disabled=false)
                                      'disabled' => $disabled,
                                      'multiple' => true));
   
-  if (isset($maxlength['users.email']))
+  if (null !== ($maxlength = maxlength('users.email')))
   {
-    $field->setControlAttribute('maxlength', $maxlength['users.email']);
+    $field->setControlAttribute('maxlength', $maxlength);
   }    
   
   return $field;
@@ -338,7 +334,7 @@ function get_field_email($params, $disabled=false)
 function get_field_custom($custom_field, $params, $disabled=false)
 {
   global $select_options, $datalist_options, $is_mandatory_field;
-  global $maxlength, $text_input_max;
+  global $text_input_max;
   
   $key = $custom_field['name'];
   
@@ -415,9 +411,9 @@ function get_field_custom($custom_field, $params, $disabled=false)
       {
         $field->setControlAttribute('value', $params['value']);
       }
-      if (isset($maxlength[$params['field']]))
+      if (null !== ($maxlength = maxlength($params['field'])))
       {
-        $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
+        $field->setControlAttribute('maxlength', $maxlength);
       }
       break;
       
@@ -781,9 +777,9 @@ if (isset($Action) && ($Action == "Update"))
         // Trim the field to remove accidental whitespace
         $values[$fieldname] = trim($values[$fieldname]);
         // Truncate the field to the maximum length as a precaution.
-        if (isset($maxlength["users.$fieldname"]))
+        if (null !== ($maxlength = maxlength("users.$fieldname")))
         {
-          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength["users.$fieldname"]);
+          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
         }
       }
       

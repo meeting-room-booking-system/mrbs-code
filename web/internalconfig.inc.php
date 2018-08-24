@@ -113,7 +113,7 @@ if (isset($max_book_ahead_secs))
   $max_delete_ahead_secs = $max_book_ahead_secs;
 }
 
-if (isset($max_length))
+if (isset($maxlength))
 {
   $message = 'Please check your config file.   The variable $maxlength ' .
              'is no longer used and maximum field lengths are now calculated automatically.';
@@ -518,15 +518,6 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
 
-/********************************************************
- * Globals
- ********************************************************/
-
-// These global declarations are not necessary, but are just used as a reminder
-// of the rather ugly use of these variables as globals, so that they are not
-// forgotten when MRBS is rewritten.
-
-global $maxlength;
  
 /********************************************************
  * JavaScript - internal use, do not change

@@ -107,7 +107,6 @@ foreach ($fields as $field)
 function get_field_entry_input($params)
 {
   global $select_options, $datalist_options;
-  global $maxlength;
   
   if (isset($params['field']))
   {
@@ -172,9 +171,9 @@ function get_field_entry_input($params)
       {
         $field->setControlAttribute('value', $params['value']);
       }
-      if (isset($maxlength[$params['field']]))
+      if (null !== ($maxlength = maxlength($params['field'])))
       {
-        $field->setControlAttribute('maxlength', $maxlength[$params['field']]);
+        $field->setControlAttribute('maxlength', $maxlength);
       }
       break;
       
@@ -653,7 +652,7 @@ function get_field_privacy_status($value, $disabled=false)
 function get_field_custom($key, $disabled=false)
 {
   global $custom_fields, $custom_fields_map, $tbl_entry;
-  global $is_mandatory_field, $text_input_max, $maxlength;
+  global $is_mandatory_field, $text_input_max;
   
   // First check that the custom field exists.  It normally will, but won't if 
   // $edit_entry_field_order contains a value for which a field doesn't exist.

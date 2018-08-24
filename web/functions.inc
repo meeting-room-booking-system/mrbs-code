@@ -25,6 +25,48 @@ function get_cookie_path()
 }
 
 
+// Returns the maximum length, in characters, of a column, or NULL if the maximum
+// length is not known.   Should only be called after any database upgrades have been
+// performed as the results are stored in a static variable and so the maximum lengths
+// may change after an upgrade.
+function maxlength($column)
+{
+  global $table_vars;
+  
+  static $maxlengths = null;
+  
+  if (!isset($maxlength))
+  {
+    $maxlengths = array();
+    
+    foreach ($table_vars as $table => $var)
+    {
+      global $$var;
+    
+      // Check to see if the table exists, as it won't yet if it's about
+      // to be created as part of an upgrade
+      if (db()->table_exists($$var))
+      {
+        // Find the maximum length of the CHAR and VARCHAR fields (we won't
+        // worry about TEXT fields)
+        $field_info = db()->field_info($$var);
+        
+        foreach ($field_info as $field)
+        {
+          if (($field['nature'] == 'character') && 
+              isset($field['length']) &&
+              ($field['length'] < 256))
+          {
+            $maxlengths[$table . '.' . $field['name']] = (int) $field['length'];
+          }
+        }
+      }
+    }
+  }
+  
+  return (isset($maxlengths[$column])) ? $maxlengths[$column] : null;
+}
+
 // Formats a number taking into account the current locale.  (Could use
 // the NumberFormatter class, but the intl extension isn't always installed.)
 function number_format_locale($number, $decimals=0)

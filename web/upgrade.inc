@@ -96,10 +96,6 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   }
   echo "<a href=\"./\">" . get_vocab('returncal') . '</a>.';
   
-  // Populate the $maxlength global.   (We need to do this after any upgrade in case the
-  // upgrade has altered the table structures).
-  populate_maxlength();
-
   print_footer(true);
 }
 

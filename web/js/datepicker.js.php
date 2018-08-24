@@ -180,7 +180,11 @@ init = function(args) {
   // devices.  As these are generally better than flatpickr's, it's probably better
   // to have the native datepicker and do without the week numbers.
   ?>
-  if (!isMobile())
+  if (isMobile())
+  {
+    $('input.flatpickr-input').width('auto');
+  }
+  else
   {
     config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
   }
