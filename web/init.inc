@@ -20,6 +20,12 @@ function init_sessions()
 {
   global $auth;
   
+  // The cookie session scheme doesn't use PHP csessions
+  if ($auth['session'] == 'cookie')
+  {
+    return;
+  }
+  
   // Joomla has its own session management
   if ($auth['session'] == 'joomla')
   {
