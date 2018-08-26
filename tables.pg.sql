@@ -171,7 +171,7 @@ CREATE TABLE mrbs_zoneinfo
 
 CREATE TABLE mrbs_sessions
 (
-  id      varchar(32) NOT NULL primary key,
+  id      varchar(255) NOT NULL primary key,
   access  int DEFAULT NULL,
   data    text DEFAULT NULL
 );
@@ -203,6 +203,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '56');
+  VALUES ('db_version', '57');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
