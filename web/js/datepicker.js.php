@@ -81,7 +81,7 @@ init = function() {
       ?>
       var dateFormat = input.datepicker('option', 'dateFormat');
       input.datepicker('option', 'dateFormat', 'yy-mm-dd');
-      input.datepicker('setDate', new Date(thisDate));
+      input.datepicker('setDate', thisDate);
       input.datepicker('option', 'dateFormat', dateFormat);
     });
 };
