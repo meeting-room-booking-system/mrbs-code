@@ -276,9 +276,9 @@ $weekdays = array(1, 2, 3, 4, 5);
 // jumping straight into the day view from the date selector.]
 $hidden_days = array();
 
-// Time format in pages. 0 to show dates in 12 hour format, 1 to show them
+// Time format in pages. FALSE to show dates in 12 hour format, TRUE to show them
 // in 24 hour format
-$twentyfourhour_format = 1;
+$twentyfourhour_format = true;
 
 // Formats used for dates and times.   For formatting options
 // see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically

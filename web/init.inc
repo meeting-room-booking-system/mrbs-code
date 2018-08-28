@@ -54,7 +54,7 @@ function init_sessions()
 {
   global $auth;
   
-  // The cookie session scheme doesn't use PHP csessions
+  // The cookie session scheme doesn't use PHP sessions
   if ($auth['session'] == 'cookie')
   {
     return;
