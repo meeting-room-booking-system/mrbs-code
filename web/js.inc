@@ -2,9 +2,13 @@
 namespace MRBS;
 
 global $view, $year, $month, $day, $area, $room;
+global $max_level;
 global $debug;
 
 $page = this_page('.php');
+
+$user = getUserName();
+$is_admin = (authGetUserLevel($user) >= $max_level);
 
 
 // We need to construct a standard query string that can be passed to the *.js.php
@@ -200,7 +204,8 @@ $(window).on('load', function() {
               area: '<?php echo $area?>',
               room: '<?php echo $room?>',
               page: '<?php echo $page?>',
-              page_date: '<?php echo format_iso_date($year, $month, $day) ?>'};
+              page_date: '<?php echo format_iso_date($year, $month, $day) ?>',
+              isAdmin: <?php echo ($is_admin) ? 'true' : 'false'?>};
   <?php
   // We need $timetohighlight for the day and week pages
   $timetohighlight = get_form_var('timetohighlight', 'int');
