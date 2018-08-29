@@ -216,11 +216,6 @@ $(window).on('load', function() {
     <?php
   }
   
-  // We also need to know if the user is an admin
-  $user = getUserName();
-  ?>
-  args.isAdmin = <?php echo (authGetUserLevel($user) >= 2) ? 'true' : 'false';?>;
-
   init(args);
 
 });
