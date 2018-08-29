@@ -11,9 +11,6 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= $max_level);
-
 // =================================================================================
 
 // Extend the init() function 
