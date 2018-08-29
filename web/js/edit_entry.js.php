@@ -1395,7 +1395,7 @@ init = function(args) {
     //     then set the end date to be the same as the start date.  (This will be
     //     the case if multiday bookings are not allowed)
     ?>
-    if ($(this).attr('id') === 'start_datepicker')
+    if ($(this).attr('id') === 'start_date')
     {
       if ($('#end_date').css('visibility') === 'hidden')
       {

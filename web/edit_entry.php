@@ -401,11 +401,6 @@ function get_field_end_time($value, $disabled=false)
   global $areas, $area_id;
   global $multiday_allowed;
   
-  if (!$multiday_allowed)
-  {
-    return null;
-  }
-  
   $date = getbookingdate($value);
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -421,6 +416,13 @@ function get_field_end_time($value, $disabled=false)
                                      'name'     => 'end_date',
                                      'value'    => $end_date,
                                      'disabled' => $disabled));
+                                     
+  // Don't show the end date if multiday bookings are not allowed
+  if (!$multiday_allowed)
+  {
+    $element_date->setAttributes(array('style'    => 'visibility: hidden',
+                                       'disabled' => true));
+  }
                                      
   $a = $areas[$area_id];
   $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
