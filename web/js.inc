@@ -215,6 +215,7 @@ $(window).on('load', function() {
     args.timetohighlight = '<?php echo $timetohighlight?>';
     <?php
   }
+  ?>
   
   init(args);
 
