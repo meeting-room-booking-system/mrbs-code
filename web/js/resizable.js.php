@@ -421,7 +421,7 @@ var Table = {
         
       Table.grid.y = {};
       Table.grid.y.data = [];
-      var rows = table.find('tbody td:first-child').not('.multiple_booking td');
+      var rows = table.find('tbody td:first-child');
       rows.each(function() {
           if (Table.grid.y.key === undefined)
           {
@@ -1373,11 +1373,6 @@ init = function(args) {
           })
         .first().trigger('mouseenter');
     
-      <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
-      table.find('div.multiple_control')
-          .click(function() {
-              Table.size();
-            });
     }).trigger('load');
     
   $(window).resize(throttle(function(event) {

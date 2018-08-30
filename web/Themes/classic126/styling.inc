@@ -67,8 +67,6 @@ $row_highlight_color            = "#ffc0da";        // used for highlighting a r
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 
-$multiple_control_color         = "#ffff44";        // background colour for the multiple booking controls
-
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
