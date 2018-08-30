@@ -135,8 +135,16 @@ foreach($formvars as $var => $var_type)
   
 }
 
+// If they're not an admin and multi-day bookings are not allowed, then
+// set the end date to the start date
+if (!$is_admin && $auth['only_admin_can_book_multiday'])
+{
+  $end_date = $start_date;
+}
+
 list($start_year, $start_month, $start_day) = split_iso_date($start_date);
 list($end_year, $end_month, $end_day) = split_iso_date($end_date);
+
 if (isset($rep_end_date))
 {
   list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
@@ -280,15 +288,6 @@ else
 if (get_area($room) != $area)
 {
   $room = get_default_room($area);
-}
-
-// If they're not an admin and multi-day bookings are not allowed, then
-// set the end date to the start date
-if (!$is_admin && $auth['only_admin_can_book_multiday'])
-{
-  $end_day = $start_day;
-  $end_month = $start_month;
-  $end_year = $start_year;
 }
 
 // Check that they really are allowed to set $no_mail;
