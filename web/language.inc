@@ -662,12 +662,14 @@ function get_loc_field_name($table, $name)
 }
 
 
-//  optionally switch to a new locale, switching back at the end
+// optionally switch to a new locale, switching back at the end.
+// $temp_locale can either be a string or an array of locales.
 function utf8_strftime($format, $time, $temp_locale=null)
 {
   $server_os = System::getServerOS();
 
-  // Set the temporary locale
+  // Set the temporary locale.  Note that $temp_locale could be an array of locales,
+  // so we need to find out which locale actually worked.
   if (!empty($temp_locale))
   {
     $old_locale = setlocale(LC_TIME, '0');
