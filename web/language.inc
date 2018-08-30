@@ -671,7 +671,7 @@ function utf8_strftime($format, $time, $temp_locale=null)
   if (!empty($temp_locale))
   {
     $old_locale = setlocale(LC_TIME, '0');
-    setlocale(LC_TIME, $temp_locale);
+    $new_locale = setlocale(LC_TIME, $temp_locale);
   }
   elseif ($server_os == "windows")
   {
@@ -685,7 +685,8 @@ function utf8_strftime($format, $time, $temp_locale=null)
     // the script itself never called setlocale(). This happens due to other scripts
     // running in different threads of the same process at the same time, changing the
     // process-wide locale using setlocale()."
-    set_mrbs_locale(get_mrbs_locale());
+    $new_locale = get_mrbs_locale();
+    set_mrbs_locale($new_locale);
   }
   
   if ($server_os == "windows")
@@ -710,7 +711,7 @@ function utf8_strftime($format, $time, $temp_locale=null)
   }
 
   $result = strftime($format, $time);
-  $result = System::utf8ConvertFromLocale($result, $temp_locale);
+  $result = System::utf8ConvertFromLocale($result, $new_locale);
   
   // Restore the original locale
   if (!empty($temp_locale))
