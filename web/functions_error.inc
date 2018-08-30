@@ -29,6 +29,42 @@ function to_html($string)
 }
 
 
+// Output a backtrace.  This function allows us to format the output slightly better
+// than debug_print_backtrace(), for example by replacing newlines with <br> tags.
+function output_backtrace()
+{
+  $backtrace = '';
+  
+  $calls = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  
+  for ($i=0; $i<count($calls); $i++)
+  {
+    $call = $calls[$i];
+    $backtrace .= "#$i ";
+    
+    if (isset($call['class']) && isset($call['type']))
+    {
+      $backtrace .= $call['class'] . $call['type'];
+    }
+    
+    if (isset($call['function']))
+    {
+      $backtrace .= $call['function'];
+      $backtrace .= '()';
+    }
+    
+    if (isset($call['file']) && isset($call['line']))
+    {
+      $backtrace .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
+    }
+    
+    $backtrace .= "\n";
+  }
+  
+  echo to_html($backtrace);
+}
+
+
 function output_error($heading, $body, $show_data=false)
 {
   static $default_timezone_set = false;
@@ -71,6 +107,8 @@ function output_error($heading, $body, $show_data=false)
 
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
+  global $debug;
+  
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
@@ -85,6 +123,11 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
   
   output_error($heading, $errstr . "\n", $show_data);
+  
+  if ($debug)
+  {
+    output_backtrace();
+  }
 }
 
 
