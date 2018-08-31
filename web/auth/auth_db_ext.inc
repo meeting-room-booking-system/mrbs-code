@@ -112,7 +112,7 @@ function authValidateUser($user, $pass)
         // Otherwise assume plaintext
 
         // Backwards-compatibility config option
-        if ($auth['db_ext']['use_md5_passwords'] == 1)
+        if (isset($auth['db_ext']['use_md5_passwords']) && ($auth['db_ext']['use_md5_passwords'] == 1))
         {
           $pass = md5($pass);
         }
@@ -140,7 +140,7 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user)
 {
-  global $auth;
+  global $auth, $db_ext_conn;
 
   // User not logged in, user level '0'
   if(!isset($user))
