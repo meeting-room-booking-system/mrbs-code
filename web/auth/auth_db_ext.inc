@@ -140,7 +140,7 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user)
 {
-  global $auth;
+  global $auth, $db_ext_conn;
 
   // User not logged in, user level '0'
   if(!isset($user))
