@@ -112,7 +112,7 @@ function authValidateUser($user, $pass)
         // Otherwise assume plaintext
 
         // Backwards-compatibility config option
-        if (isset($auth['db_ext']['use_md5_passwords']) && ($auth['db_ext']['use_md5_passwords'] == 1))
+        if (!empty($auth['db_ext']['use_md5_passwords']))
         {
           $pass = md5($pass);
         }
