@@ -61,7 +61,14 @@ function output_backtrace()
     $backtrace .= "\n";
   }
   
-  echo to_html($backtrace);
+  if (ini_get('display_errors'))
+  {
+    echo to_html(htmlspecialchars($backtrace));
+  }
+  if (ini_get('log_errors'))
+  {
+    error_log($backtrace);
+  }
 }
 
 
