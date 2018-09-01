@@ -37,9 +37,8 @@ function output_backtrace()
   
   $calls = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   
-  for ($i=0; $i<count($calls); $i++)
+  foreach ($calls as $i => $call)
   {
-    $call = $calls[$i];
     $backtrace .= "#$i ";
     
     if (isset($call['class']) && isset($call['type']))
