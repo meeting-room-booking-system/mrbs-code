@@ -29,13 +29,42 @@ function to_html($string)
 }
 
 
+function get_arg_string($args)
+{
+  $result = array();
+  
+  foreach ($args as $arg)
+  {
+    $type = gettype($arg);
+    
+    switch ($type)
+    {
+      case 'boolean';
+        $result[] = ($arg) ? 'true' : 'false';
+        break;
+        
+      case 'integer':
+      case 'double':
+      case 'string':
+        $result[] = $arg;
+        break;
+        
+      default:
+        $result[] = $type;
+        break;
+    }
+  }
+  
+  return implode(', ', $result);
+}
+
+
 // Output a backtrace.  This function allows us to format the output slightly better
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
 function output_backtrace()
 {
   $backtrace = '';
-  
-  $calls = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  $calls = debug_backtrace();
   
   foreach ($calls as $i => $call)
   {
@@ -49,7 +78,12 @@ function output_backtrace()
     if (isset($call['function']))
     {
       $backtrace .= $call['function'];
-      $backtrace .= '()';
+      $backtrace .= '(';
+      if (isset($call['args']))
+      {
+        $backtrace .= get_arg_string($call['args']);
+      }
+      $backtrace .= ')';
     }
     
     if (isset($call['file']) && isset($call['line']))
