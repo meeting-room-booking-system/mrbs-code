@@ -104,6 +104,8 @@ function authValidateUser($user, $pass)
       case 'password_hash':
         if (password_verify($pass, $row[0]))
         {
+          // Should we call password_needs_rehash() ?
+          // Probably not as we may not have UPDATE rights on the external database.
           $retval = $user;
         }
         break;
@@ -112,7 +114,7 @@ function authValidateUser($user, $pass)
         // Otherwise assume plaintext
 
         // Backwards-compatibility config option
-        if (isset($auth['db_ext']['use_md5_passwords']) && ($auth['db_ext']['use_md5_passwords'] == 1))
+        if (!empty($auth['db_ext']['use_md5_passwords']))
         {
           $pass = md5($pass);
         }

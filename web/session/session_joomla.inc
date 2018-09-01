@@ -79,15 +79,6 @@ $password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
-// We need to preserve the original calling page, so that it's there when we eventually get to the
-// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
-// holds the original caller.    If this is the second time through we will have stored it in $returl.
-if (!isset($returl))
-{
-  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
-}
-
-
 if (isset($action))
 {
   // Target of the form with sets the URL argument "action=QueryName".
@@ -125,18 +116,19 @@ if (isset($action))
         print_login_form(this_page(), $target_url, $returl);
         exit();
       }
-    }
-    // preserve the original $HTTP_REFERER by sending it as a GET parameter
-    if (!empty($returl))
-    {
-      // check to see whether there's a query string already
-      if (strpos($target_url, '?') === false)
+      
+      // Preserve the original $HTTP_REFERER by sending it as a GET parameter
+      if (!empty($returl))
       {
-        $target_url .= "?returl=" . urlencode($returl);
-      }
-      else
-      {
-        $target_url .= "&returl=" . urlencode($returl);
+        // check to see whether there's a query string already
+        if (strpos($target_url, '?') === false)
+        {
+          $target_url .= "?returl=" . urlencode($returl);
+        }
+        else
+        {
+          $target_url .= "&returl=" . urlencode($returl);
+        }
       }
     }
 
@@ -146,7 +138,7 @@ if (isset($action))
       Anyway, if the browser cannot redirect automatically, the manual link below will work. */
     print_header();
     echo "<br>\n";
-    echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+    echo "<p>Please click <a href=\"" . htmlspecialchars($target_url) . "\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
 
     // Print footer and exit
     print_footer(TRUE);

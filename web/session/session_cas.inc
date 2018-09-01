@@ -61,14 +61,6 @@ $action = get_form_var('action', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
-// We need to preserve the original calling page, so that it's there when we eventually get to the
-// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
-// holds the original caller.    If this is the second time through we will have stored it in $returl.
-if (!isset($returl))
-{
-  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
-}
-
 if (isset($action))
 {
   // Target of the form with sets the URL argument "action=QueryName".
@@ -88,20 +80,6 @@ if (isset($action))
     // You should only get here using CAS authentication after clicking the logoff
     // link, no matter what the value of the form parameters.
     logoff_user();
-    
-    // preserve the original $HTTP_REFERER by sending it as a GET parameter
-    if (!empty($returl))
-    {
-      // check to see whether there's a query string already
-      if (strpos($target_url, '?') === false)
-      {
-        $target_url .= "?returl=" . urlencode($returl);
-      }
-      else
-      {
-        $target_url .= "&returl=" . urlencode($returl);
-      }
-    }
     
     header ("Location: $target_url"); /* Redirect browser to initial page */
     /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,

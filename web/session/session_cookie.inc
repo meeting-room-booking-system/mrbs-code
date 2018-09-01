@@ -166,16 +166,7 @@ $password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
-// We need to preserve the original calling page, so that it's there when we eventually get to the
-// target_url (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER
-// holds the original caller.    If this is the second time through we will have stored it in $returl.
-if (!isset($returl))
-{
-  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : '';
-}
-
 $cookie_path = get_cookie_path();
-
 
 // Delete old-style cookies
 if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
@@ -261,8 +252,8 @@ if (isset($action))
                 "${hash}_".base64_encode($json_data),
                 $expiry_time,
                 $cookie_path);
-      }
-      // preserve the original $HTTP_REFERER by sending it as a GET parameter
+                
+      // Preserve the original $HTTP_REFERER by sending it as a GET parameter
       if (!empty($returl))
       {
         // check to see whether there's a query string already
@@ -275,14 +266,16 @@ if (isset($action))
           $target_url .= "&returl=" . urlencode($returl);
         }
       }
-      header ("Location: $target_url"); /* Redirect browser to initial page */
-      /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
-          which allows to work around problems with DNS inconsistencies in the server name.
-          Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-      print_header();
-      echo "<p>Please click <a href=\"".htmlspecialchars($target_url)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
+    }
+    
+    header ("Location: $target_url"); /* Redirect browser to initial page */
+    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
+        which allows to work around problems with DNS inconsistencies in the server name.
+        Anyway, if the browser cannot redirect automatically, the manual link below will work. */
+    print_header();
+    echo "<p>Please click <a href=\"" . htmlspecialchars($target_url) . "\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
 
-      // Print footer and exit
-      print_footer(TRUE);
+    // Print footer and exit
+    print_footer(TRUE);
   }
 }

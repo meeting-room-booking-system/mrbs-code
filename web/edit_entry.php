@@ -1099,12 +1099,23 @@ $end_date = get_form_var('end_date', 'string');
 // this page should not take any action, but only display data.
 Form::checkToken($post_only=true);
 
+// Get the return URL.  Need to do this before checkAuthorised().
+// We might be going through edit_entry more than once, for example if we have to log on on the way.  We
+// still need to preserve the original calling page so that once we've completed edit_entry_handler we can
+// go back to the page we started at (rather than going to the default view).  If this is the first time 
+// through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
+// stored it in $returl.
+if (!isset($returl))
+{
+  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+}
+
 // Check the user is authorised for this page
 checkAuthorised(this_page());
-
 // Also need to know whether they have admin rights
 $user = getUserName();
 $is_admin = (authGetUserLevel($user) >= 2);
+
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
 $repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
@@ -1138,19 +1149,6 @@ if (isset($start_date))
     list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
   }
 }
-
-
-
-// We might be going through edit_entry more than once, for example if we have to log on on the way.  We
-// still need to preserve the original calling page so that once we've completed edit_entry_handler we can
-// go back to the page we started at (rather than going to the default view).  If this is the first time 
-// through, then $HTTP_REFERER holds the original caller.    If this is the second time through we will have 
-// stored it in $returl.
-if (!isset($returl))
-{
-  $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
-}
-    
 
 
 // This page will either add or modify a booking
