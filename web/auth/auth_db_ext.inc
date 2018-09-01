@@ -104,6 +104,8 @@ function authValidateUser($user, $pass)
       case 'password_hash':
         if (password_verify($pass, $row[0]))
         {
+          // Should we call password_needs_rehash() ?
+          // Probably not as we may not have UPDATE rights on the external database.
           $retval = $user;
         }
         break;
