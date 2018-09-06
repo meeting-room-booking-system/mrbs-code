@@ -266,12 +266,18 @@ class Element
   }
   
   
+  // $checked is either a scalar or an array of keys that are checked
   public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     // Trivial case
     if (empty($options))
     {
       return $this;
+    }
+    
+    if (isset($checked) && !is_array($checked))
+    {
+      $checked = array($checked);
     }
     
     if (!isset($associative))
@@ -288,7 +294,7 @@ class Element
       $checkbox = new ElementInputCheckbox();
       $checkbox->setAttributes(array('name'  => $name,
                                      'value' => $key));
-      if (isset($checked) && ($key == $checked))
+      if (isset($checked) && (in_array($key, $checked)))
       {
         $checkbox->setChecked(true);
       }
