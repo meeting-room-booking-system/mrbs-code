@@ -275,7 +275,7 @@ class Element
       return $this;
     }
     
-    if (isset($checked) && !is_array($checked))
+    if (is_scalar($checked))
     {
       $checked = array($checked);
     }
