@@ -236,8 +236,9 @@ function get_fieldset_times()
                                      'value'    => (int) $default_duration/60,
                                      'required' => true));
   $options = array('1' => get_vocab('all_day'));
+  $checked = ($default_duration_all_day) ? '1' : null;
   $checkbox_group = new FieldInputCheckboxGroup();
-  $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $default_duration_all_day, true);
+  $checkbox_group->addCheckboxOptions($options, 'area_def_duration_all_day', $checked, true);
   $field->addElement($checkbox_group);
   $fieldset->addElement($field);
         
