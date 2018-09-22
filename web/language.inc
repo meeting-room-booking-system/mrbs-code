@@ -690,6 +690,10 @@ function utf8_strftime($format, $time, $temp_locale=null)
     $new_locale = get_mrbs_locale();
     set_mrbs_locale($new_locale);
   }
+  else
+  {
+    $new_locale = null;
+  }
   
   if ($server_os == "windows")
   {
