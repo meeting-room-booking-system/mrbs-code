@@ -170,4 +170,16 @@ abstract class Field extends Element
     $this->setElements($elements);
     return $this;
   }
+  
+  
+  // Adds a hidden input to the form
+  public function addHiddenInput($name, $value)
+  {
+    $element = new ElementInputHidden();
+    $element->setAttributes(array('name'  => $name,
+                                  'value' => $value));
+    $this->addElement($element);
+    return $this;
+  }
+  
 }
