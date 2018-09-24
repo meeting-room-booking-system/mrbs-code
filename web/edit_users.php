@@ -302,11 +302,18 @@ function get_field_name($params, $disabled=false)
                                      'disabled' => $disabled,
                                      'required' => true,
                                      'pattern'  => REGEX_TEXT_POS));
-  
+                                     
   if (null !== ($maxlength = maxlength('users.name')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
-  }    
+  }
+  
+  // If the name field is disabled we need to add a hidden input, because
+  // otherwise it won't be posted.
+  if ($disabled)
+  {
+    $field->addHiddenInput($params['name'], $params['value']);
+  }
   
   return $field;
 }
@@ -373,9 +380,10 @@ function get_field_custom($custom_field, $params, $disabled=false)
   {
     $field->setControlAttribute('required', true);
   }
-  if (!empty($params['disabled']))
+  if ($disabled)
   {
     $field->setControlAttribute('disabled', true);
+    $field->addHiddenInput($params['name'], $params['value']);
   }
   
   switch ($class)
