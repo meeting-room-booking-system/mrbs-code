@@ -131,8 +131,15 @@ function get_default_email($user)
     }
   }
   
-  // Add on the domain
-  $email .= $mail_settings['domain'];
+  // Add on the domain, if there is one
+  if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
+  {
+    // Trim any leading '@' character. Older versions of MRBS required the '@' character
+    // to be included in $mail_settings['domain'], and we still allow this for backwards
+    // compatibility.
+    $domain = ltrim($mail_settings['domain'], '@');
+    $email .= '@' . $domain;
+  }
   
   return $email;
 }
