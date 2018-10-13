@@ -939,6 +939,7 @@ div.both {
 .booking_list div {
   float: left;
   min-height: 1.3em;
+  line-height: 1.3em;
   overflow: hidden;
 }
 
