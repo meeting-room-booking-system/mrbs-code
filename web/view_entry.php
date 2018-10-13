@@ -193,10 +193,21 @@ if (!isset($returl))
   // We need HTTP_REFERER to contain an actual page, and not be a directory, ie end in '/'
   if (isset($HTTP_REFERER) && (substr($HTTP_REFERER, -1) != '/'))
   {
-    $returl = basename(parse_url($HTTP_REFERER, PHP_URL_PATH));
+    $parsed_url = parse_url($HTTP_REFERER);
+    $returl = basename($parsed_url['path']);
   }
   // If we haven't got a referer (eg we've come here from an email) then construct
   // a sensible place to go to afterwards
+  else
+  {
+    $returl = 'index.php';
+  }
+  
+  // Add on the query string
+  if (isset($parsed_url) && isset($parsed_url['query']))
+  {
+    $returl .= '?' . $parsed_url['query'];
+  }
   else
   {
     $vars = array('view'  => $default_view,
@@ -206,7 +217,7 @@ if (!isset($returl))
                   'area'  => $area,
                   'room'  => $room);
                   
-    $returl .= 'index.php?' . http_build_query($vars, '', '&');;
+    $returl .= '?' . http_build_query($vars, '', '&');;
   }
 }
 
