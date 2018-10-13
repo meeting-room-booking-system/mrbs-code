@@ -187,6 +187,32 @@ $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
 
+// Need to tell all the links where to go back to after an edit or delete
+if (!isset($returl))
+{
+  if (isset($HTTP_REFERER))
+  {
+    $returl = basename($HTTP_REFERER);
+  }
+  // If we haven't got a referer (eg we've come here from an email) then construct
+  // a sensible place to go to afterwards
+  else
+  {
+    switch ($default_view)
+    {
+      case "month":
+        $returl = "month.php";
+        break;
+      case "week":
+        $returl = "week.php";
+        break;
+      default:
+        $returl = "day.php";
+    }
+    $returl .= "?year=$year&month=$month&day=$day&area=$area";
+  }
+}
+
 // Check the CSRF token if we're going to do something
 if (isset($action))
 {
@@ -335,33 +361,6 @@ if (isset($action) && ($action == "export"))
 // ------------------------
 
 print_header($day, $month, $year, $area, isset($room) ? $room : null);
-
-
-// Need to tell all the links where to go back to after an edit or delete
-if (!isset($returl))
-{
-  if (isset($HTTP_REFERER))
-  {
-    $returl = basename($HTTP_REFERER);
-  }
-  // If we haven't got a referer (eg we've come here from an email) then construct
-  // a sensible place to go to afterwards
-  else
-  {
-    switch ($default_view)
-    {
-      case "month":
-        $returl = "month.php";
-        break;
-      case "week":
-        $returl = "week.php";
-        break;
-      default:
-        $returl = "day.php";
-    }
-    $returl .= "?year=$year&month=$month&day=$day&area=$area";
-  }
-}
 
 
 if (empty($series))
