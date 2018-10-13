@@ -145,6 +145,7 @@ function mrbs_default_timezone_get()
   }
 }
 
+
 // Gets the default email address for $user.   Returns an empty
 // string if one can't be found
 function get_default_email($user)
@@ -156,8 +157,27 @@ function get_default_email($user)
     return '';
   }
   
-  $email = str_replace($mail_settings['username_suffix'], '', $user);
-  $email .= $mail_settings['domain'];
+  $email = $user;
+  
+  // Remove the suffix, if there is one
+  if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
+  {
+    $suffix = $mail_settings['username_suffix'];
+    if (substr($email, -strlen($suffix)) === $suffix)
+    {
+      $email = substr($email, 0, -strlen($suffix));
+    }
+  }
+  
+  // Add on the domain, if there is one
+  if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
+  {
+    // Trim any leading '@' character. Older versions of MRBS required the '@' character
+    // to be included in $mail_settings['domain'], and we still allow this for backwards
+    // compatibility.
+    $domain = ltrim($mail_settings['domain'], '@');
+    $email .= '@' . $domain;
+  }
   
   return $email;
 }

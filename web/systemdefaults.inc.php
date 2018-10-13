@@ -1105,10 +1105,10 @@ $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 // authentication method then MRBS will be able to get them from the users table.  But
 // if you are using any other authentication scheme then the following settings allow
 // you to specify a domain name that will be appended to the username to produce a
-// valid email address (eg "@domain.com").
+// valid email address (eg "@domain.com").  MRBS will add the '@' character for you.
 $mail_settings['domain'] = '';
-// If you use $mail_settings['domain'] above and username returned by mrbs contains extra
-// strings appended like domain name ('username.domain'), you need to provide
+// If you use $mail_settings['domain'] above and the username returned by mrbs contains extra
+// strings appended like the domain name ('username.domain'), you need to provide
 // this extra string here so that it will be removed from the username.
 $mail_settings['username_suffix'] = '';
 
