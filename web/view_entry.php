@@ -198,18 +198,14 @@ if (!isset($returl))
   // a sensible place to go to afterwards
   else
   {
-    switch ($default_view)
-    {
-      case "month":
-        $returl = "month.php";
-        break;
-      case "week":
-        $returl = "week.php";
-        break;
-      default:
-        $returl = "day.php";
-    }
-    $returl .= "?year=$year&month=$month&day=$day&area=$area";
+    $vars = array('view'  => $default_view,
+                  'year'  => $year,
+                  'month' => $month,
+                  'day'   => $day,
+                  'area'  => $area,
+                  'room'  => $room);
+                  
+    $returl .= 'index.php?' . http_build_query($vars, '', '&');;
   }
 }
 
@@ -362,30 +358,6 @@ if (isset($action) && ($action == "export"))
 
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
-
-// Need to tell all the links where to go back to after an edit or delete
-if (!isset($returl))
-{
-  if (isset($HTTP_REFERER))
-  {
-    $returl = basename($HTTP_REFERER);
-  }
-  // If we haven't got a referer (eg we've come here from an email) then construct
-  // a sensible place to go to afterwards
-  else
-  {
-    $vars = array('view'  => $default_view,
-                  'year'  => $year,
-                  'month' => $month,
-                  'day'   => $day,
-                  'area'  => $area,
-                  'room'  => $room);
-                  
-    $returl .= 'index.php?' . http_build_query($vars, '', '&');;
-  }
-}
-
-
 if (empty($series))
 {
   $series = 0;
@@ -394,7 +366,6 @@ else
 {
   $series = 1;
 }
-
 
 // Now that we know all the data we start drawing it
 
