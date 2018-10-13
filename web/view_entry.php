@@ -190,9 +190,10 @@ $error = get_form_var('error', 'string');
 // Need to tell all the links where to go back to after an edit or delete
 if (!isset($returl))
 {
-  if (isset($HTTP_REFERER))
+  // We need HTTP_REFERER to contain an actual page, and not be a directory, ie end in '/'
+  if (isset($HTTP_REFERER) && (substr($HTTP_REFERER, -1) != '/'))
   {
-    $returl = basename($HTTP_REFERER);
+    $returl = basename(parse_url($HTTP_REFERER, PHP_URL_PATH));
   }
   // If we haven't got a referer (eg we've come here from an email) then construct
   // a sensible place to go to afterwards
