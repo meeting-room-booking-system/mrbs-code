@@ -97,6 +97,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   $err = array();
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
+    unpack_status($row);
     $starts = getdate($row['start_time']);
     $param_ym = "area=$area&amp;year=$starts[year]&amp;month=".$starts['mon'];
     $param_ymd = $param_ym . "&amp;day=" . $starts['mday'];
