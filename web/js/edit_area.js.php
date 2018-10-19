@@ -277,7 +277,12 @@ init = function() {
       }
     })
     .change();
-    
+  
+  <?php // Disable the default duration if "All day" is checked. ?>
+  $('input[name="area_def_duration_all_day"]').change(function() {
+      $('#area_def_duration_mins').prop('disabled', $(this).prop('checked'));
+    }).change();
+  
   $('input[name="area_start_first_slot"], input[name="area_res_mins"]')
       .change(function() {
           generateLastSlotSelect();
