@@ -70,12 +70,14 @@ function generateApproveButtons($id, $series)
     }
   }
   
+  $query_string = "id=$id&series=" . (($series) ? 1 : 0);
+  
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . "</td>\n";
   echo "<td>\n";
   
   // Approve
-  $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
+  $params = array('action' => "approve_entry_handler.php?$query_string",
                   'value'  => get_vocab('approve'),
                   'inputs' => array('action' => 'approve',
                                     'returl' => $returl)
@@ -83,7 +85,7 @@ function generateApproveButtons($id, $series)
   generate_button($params);
   
   // Reject
-  $params = array('action' => "$this_page?id=$id&series=$series",
+  $params = array('action' => "$this_page?$query_string",
                   'value'  => get_vocab('reject'),
                   'inputs' => array('action' => 'reject',
                                     'returl' => $returl)
@@ -91,7 +93,7 @@ function generateApproveButtons($id, $series)
   generate_button($params);
   
   // More info
-  $params = array('action' => "$this_page?id=$id&series=$series",
+  $params = array('action' => "$this_page?$query_string",
                   'value'  => get_vocab('more_info'),
                   'inputs' => array('action' => 'more_info',
                                     'returl' => $returl)
@@ -105,9 +107,7 @@ function generateApproveButtons($id, $series)
 function generateOwnerButtons($id, $series)
 {
   global $user, $create_by, $awaiting_approval, $area;
-  global $PHP_SELF, $reminders_enabled, $last_reminded, $reminder_interval;
-  
-  $this_page = this_page();
+  global $reminders_enabled, $last_reminded, $reminder_interval;
   
   // Remind button if you're the owner AND there's a booking awaiting
   // approval AND sufficient time has passed since the last reminder
@@ -121,7 +121,10 @@ function generateOwnerButtons($id, $series)
     echo "<td class=\"no_suffix\"></td>\n";
     echo "<td>\n";
     
-    $params = array('action' => "approve_entry_handler.php?id=$id&series=$series",
+    $this_page = this_page();
+    $query_string = "id=$id&series=" . (($series) ? 1 : 0);
+    
+    $params = array('action' => "approve_entry_handler.php?$query_string",
                     'value'  => get_vocab('remind_admin'),
                     'inputs' => array('action' => 'remind',
                                       'returl' => "$this_page?id=$id&area=$area")
@@ -398,7 +401,7 @@ if (!empty($error))
   echo "<tr><td>&nbsp;</td><td class=\"error\">" . get_vocab($error) . "</td></tr>\n";
 }
 
-echo create_details_body($row, TRUE, $keep_private, $room_disabled);
+echo create_details_body($row, true, $keep_private, $room_disabled);
 
 // If bookings require approval, and the room is enabled, put the buttons
 // to do with managing the bookings in the footer
@@ -455,11 +458,11 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     {
       if (!$series)
       {
-        generateApproveButtons($id, FALSE);
+        generateApproveButtons($id, false);
       }
       if (!empty($repeat_id) || $series)
       {
-        generateApproveButtons($repeat_id, TRUE);
+        generateApproveButtons($repeat_id, true);
       }    
     }
     // Buttons for the owner of this booking
