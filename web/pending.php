@@ -33,7 +33,7 @@ function display_buttons($row, $is_series)
     
     $hidden_inputs = array('action' => 'approve',
                            'id'     => $target_id,
-                           'series' => $is_series,
+                           'series' => ($is_series) ? 1 : 0,
                            'returl' => $returl);
     $form->addHiddenInputs($hidden_inputs);
     
@@ -186,7 +186,7 @@ function display_series_title_row($row)
   echo "</td>\n";
   
   echo "<td>\n";
-  display_buttons($row, TRUE);
+  display_buttons($row, true);
   echo "</td>\n";
   echo "</tr>\n";
 }
@@ -224,7 +224,7 @@ function display_entry_row($row)
     
   // action buttons
   echo "<td>\n";
-  display_buttons($row, FALSE);
+  display_buttons($row, false);
   echo "</td>\n";
   echo "</tr>\n";  
 }
@@ -286,8 +286,8 @@ else  // display them in a table
   display_table_head();
   
   echo "<tbody>\n";
-  $last_repeat_id = NULL;
-  $is_series = FALSE;
+  $last_repeat_id = null;
+  $is_series = false;
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   { 
     if ($row['repeat_id'] != $last_repeat_id)
@@ -297,14 +297,14 @@ else  // display them in a table
       if ($is_series)
       {
         // end the last series table if there was one
-        $is_series = FALSE;
+        $is_series = false;
         echo "</tbody></table></div></td></tr>\n";
       }
     
       if (!empty($row['repeat_id']))
       {
         // we're starting a new series
-        $is_series = TRUE;
+        $is_series = true;
         // Put in the title row
         display_series_title_row($row);
         echo "<tr class=\"sub_table\">\n";
