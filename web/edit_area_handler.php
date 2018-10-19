@@ -216,8 +216,13 @@ if (!$area_enable_periods)
 {
   $assign_array[] = "resolution=?";
   $sql_params[] = $area_res_mins * 60;
-  $assign_array[] = "default_duration=?";
-  $sql_params[] = $area_def_duration_mins * 60;
+  if (!$area_def_duration_all_day)
+  {
+    // If the default duration is all day, then this value will have
+    // been disabled on the form, so don't change it.
+    $assign_array[] = "default_duration=?";
+    $sql_params[] = $area_def_duration_mins * 60;
+  }
   $assign_array[] = "default_duration_all_day=?";
   $sql_params[] = $area_def_duration_all_day;
   $assign_array[] = "morningstarts=?";
