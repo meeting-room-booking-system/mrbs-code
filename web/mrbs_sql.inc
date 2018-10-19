@@ -97,6 +97,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   $err = array();
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
+    unpack_status($row);
     $starts = getdate($row['start_time']);
 
     if ($enable_periods)
