@@ -31,7 +31,7 @@ function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
   
 function generate_search_nav_html($search_pos, $total, $num_records, $search_str)
 {
-  global $day, $month, $year;
+  global $from_date;
   global $search;
   
   $html = '';
@@ -50,7 +50,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
     // display "Previous" and "Next" buttons
     $hidden_inputs = array('search_str' => $search_str,
                            'total'      => $total,
-                           'from_date'  => format_iso_date($year, $month, $day));
+                           'from_date'  => $from_date);
                            
     $hidden_inputs['search_pos'] = max(0, $search_pos - $search['count']);         
     $html .= get_search_nav_button($hidden_inputs , get_vocab('previous'), !$has_prev);
@@ -65,14 +65,19 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
 }
 
 
-function output_row($row)
+function output_row($row, $returl)
 {
   global $ajax, $json_data, $view;
+  
+  $vars = array('id'     => $row['entry_id'],
+                'returl' => $returl);
+                
+  $query = http_build_query($vars, '', '&');
   
   $values = array();
   // booking name
   $html_name = htmlspecialchars($row['name']);
-  $values[] = "<a title=\"$html_name\" href=\"view_entry.php?id=" . $row['entry_id'] . "\">$html_name</a>";
+  $values[] = "<a title=\"$html_name\" href=\"view_entry.php?" . htmlspecialchars($query) . "\">$html_name</a>";
   // created by
   $values[] = htmlspecialchars($row['create_by']);
   // start time and link to day view
@@ -129,12 +134,13 @@ if (isset($from_date))
   list($year, $month, $day) = split_iso_date($from_date);
 }
 
-// If we haven't been given a sensible date then use today's
+// If we haven't been given a sensible date then use today's and construct a from_date
 if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
 {
   $day   = date("d");
   $month = date("m");
   $year  = date("Y");
+  $from_date = format_iso_date($year, $month, $day);
 }
 
 // If we're going to be doing something then check the CSRF token
@@ -247,7 +253,7 @@ foreach ($fields as $field)
       {
         // We have to use strpos() rather than stripos() because we cannot
         // assume PHP5
-        if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== FALSE))
+        if (($key !== '') && (strpos(utf8_strtolower($value), utf8_strtolower($search_str)) !== false))
         {
           $sql_pred .= " OR (E." . db()->quote($field['name']) . "=?)";
           $sql_params[] = $key;
@@ -368,7 +374,7 @@ if (!$ajax)
   
   // Put the search parameters as data attributes so that the JavaScript can use them
   echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
-  echo ' data-from_date="' . htmlspecialchars(format_iso_date($year, $month, $day)) . '"';
+  echo ' data-from_date="' . htmlspecialchars($from_date) . '"';
   
   echo ">\n";
   echo "<thead>\n";
@@ -388,9 +394,11 @@ if (!$ajax)
 // an Ajax request
 if (!$ajax_capable || $ajax)
 {
+  $returl = this_page() . "?search_str=$search_str&from_date=$from_date";
+
   for ($i = 0; ($row = $result->row_keyed($i)); $i++)
   {
-    output_row($row);
+    output_row($row, $returl);
   }
 }
 

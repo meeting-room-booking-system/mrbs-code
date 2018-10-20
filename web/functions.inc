@@ -1175,12 +1175,18 @@ function format_iso_date($year, $month, $day)
 function split_iso_date($date)
 {
   // Split the date into components, sanitize the result and trim any leading zeros
-  $result = explode('-', $date);
+  // If the date is malformed, pad it out with nulls so that three elements are returned.
+  $result = array_pad(explode('-', $date, 3), 3, null);
+  
   foreach ($result as &$value)
   {
-    $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-    $value = ltrim($value, '0');
+    if (isset($value))
+    {
+      $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+      $value = ($value === '') ? null : (int) ltrim($value, '0');
+    }
   }
+  
   unset($value);  // Break the reference (not necessary here, but good practice)
   
   return $result;
