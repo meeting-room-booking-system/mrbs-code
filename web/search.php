@@ -199,9 +199,7 @@ if (!$ajax)
   $field = new FieldInputDate();
   $field->setLabel(get_vocab('from'))
         ->setControlAttributes(array('name'      => 'from_date',
-                                     'value'     => (isset($from_date)) ? 
-                                                    $from_date :
-                                                    format_iso_date($year, $month, $day),
+                                     'value'     => $from_date,
                                      'required'  => true));
   $fieldset->addElement($field);
   
