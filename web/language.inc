@@ -653,19 +653,10 @@ $doneit = 0;
 
 // First try for an exact match, so if the user specified en-gb, look
 // for lang.en-gb
-
 foreach ($langs as $lang => $qual)
 {
-  // Set the locale even if MRBS hasn't got a translation, at least
-  // we'll get time formats right
-  if (!isset($locale))
-  {
-    $locale = $lang;
-  }
-
   if (set_vocab($lang))
   {
-    $locale = $lang;
     // Work out if we're using a RTL language.   This variable is used
     // globally so that we can include the correct stylesheet
     $using_rtl = in_array(utf8_strtolower($lang), $rtl_languages);
@@ -684,9 +675,18 @@ if ($doneit == 0)
     if (set_vocab(substr($lang,0,2)))
     {
       // If we have found a translation, update the locale to match
-      $locale = $lang;
       break;
     }
+  }
+}
+
+// Now try and get the locale that best matches the language, making sure
+// that it at least shares a base language with the chosen lang
+foreach ($langs as $locale => $qual)
+{
+  if (strpos($locale, $lang) === 0)
+  {
+    break;
   }
 }
 
