@@ -681,7 +681,9 @@ if ($doneit == 0)
 }
 
 // Now try and get the locale that best matches the language, making sure
-// that it at least shares a base language with the chosen lang
+// that it at least shares a base language with the chosen lang.  For example,
+// if the user's browser preferences were for "en-GB, en", we want to give them
+// the en-GB locale even though we've only got the en language tokens.
 foreach ($langs as $locale => $qual)
 {
   if (strpos($locale, $lang) === 0)
