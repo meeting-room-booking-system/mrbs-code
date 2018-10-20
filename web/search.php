@@ -124,14 +124,16 @@ if (isset($from_date))
   list($year, $month, $day) = split_iso_date($from_date);
 }
 
-// If we haven't been given a sensible date then use today's and construct a from_date
+// If we haven't been given a sensible date then use today's
 if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
 {
   $day   = date("d");
   $month = date("m");
   $year  = date("Y");
-  $from_date = format_iso_date($year, $month, $day);
 }
+
+// Reconstruct the from_date using the, possibly new, values of year/month/day
+$from_date = format_iso_date($year, $month, $day);
 
 // If we're going to be doing something then check the CSRF token
 if (isset($search_str) && ($search_str !== ''))
