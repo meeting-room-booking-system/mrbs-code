@@ -758,18 +758,22 @@ class System
     $subtags = \Locale::parseLocale($langtag);
     $locale = \Locale::composeLocale($subtags);
     
+    // First locale to try is one with hyphens instead of underscores.  These work on newer
+    // Windows systems, whereas underscores do not.  Also, on Windows systems, although
+    // setlocale will succeed with, for example, both 'en_GB' and 'en-GB', only 'en-GB' (and
+    // indeed 'eng') will give the date in the correct format when using strftime('%x').
+    $locales[] = str_replace('_', '-', $locale);
+    
     // First locale to try is a PHP style locale, ie with underscores
     $locales[] = $locale;
     
-    // Next add in one with hyphens instead of underscores.  (These work on newer
-    // Windows systems, whereas underscores do not.)
-    $locales[] = str_replace('_', '-', $locale);
-    
-    // On Windows systems add in the three-letter code if any as a last resort
-    if ((self::getServerOS() == 'windows') &&
-        isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+    if (self::getServerOS() == 'windows')
     {
-      $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+      // Add in the three-letter code if any as a last resort
+      if (isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+      {
+        $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+      }
     }
     
     // If there isn't a region specified then add one, because on some systems
