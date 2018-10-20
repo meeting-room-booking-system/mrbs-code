@@ -35,7 +35,7 @@ function maxlength($column)
   
   static $maxlengths = null;
   
-  if (!isset($maxlength))
+  if (!isset($maxlengths))
   {
     $maxlengths = array();
     
