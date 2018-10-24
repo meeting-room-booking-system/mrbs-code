@@ -177,7 +177,7 @@ if ($page == 'index')
   // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
   // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the 
   // page which says we don't support them!).
-  if (debug)
+  if ($debug)
   {
     ?>
     <script src="js/html5shiv.js"></script>
