@@ -438,8 +438,15 @@ nav.view a, nav.arrow a {
   text-align: center;
 }
 
+nav.view a:first-child, nav.arrow a:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
 nav.view a:last-child, nav.arrow a:last-child {
   margin-right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 nav.view a {
