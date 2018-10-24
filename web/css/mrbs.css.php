@@ -430,14 +430,16 @@ nav.view div.container {
 }
 
 nav.view a, nav.arrow a {
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-  background-color: buttonface;
+  background: linear-gradient(#eee, #ccc);
+  margin-right: 1px;
   cursor: pointer;
   line-height: 1.8em;
   font-weight: normal;
   text-align: center;
+}
+
+nav.view a:last-child, nav.arrow a:last-child {
+  margin-right: 0;
 }
 
 nav.view a {
@@ -445,7 +447,7 @@ nav.view a {
 }
 
 nav.arrow a {
-  padding: 0.2em 1em;
+  padding: 0.2em 1.1em;
 }
 
 nav a.selected,
@@ -453,11 +455,11 @@ nav.view a:hover,
 nav.view a:focus,
 nav.arrow a:hover,
 nav.arrow a:focus {
-  background-color: <?php echo $banner_back_color ?>;
+  background: <?php echo $banner_back_color ?>;
+  box-shadow: inset 1px 1px darkblue;
   color: #ffffff;
   text-decoration: none;
 }
-
 
 nav a.prev::before {
   content: '\00276e';  /* HEAVY LEFT-POINTING ANGLE QUOTATION MARK ORNAMENT */
