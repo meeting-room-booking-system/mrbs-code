@@ -12,7 +12,7 @@ $header_font_color              = "#ffffff";    // font color for text in header
 $highlight_font_color           = "#ff0066";    // used for highlighting text (eg links, errors)
 $color_key_font_color           = $standard_font_color;    // used in the colour key table
 
-$banner_back_color              = "dodgerblue";    // background colour for banner
+$banner_back_color              = "#1976D2";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
 $banner_font_color              = $header_font_color;       // font colour for banner
 
@@ -74,7 +74,7 @@ $column_hidden_color            = $main_table_month_invalid_color;    // hidden 
 $calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
 $row_odd_color                  = "#efefef";        // even rows in the day and week views
-$row_highlight_color            = "dodgerblue";        // used for highlighting a row
+$row_highlight_color            = "#1976D2";        // used for highlighting a row
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 
