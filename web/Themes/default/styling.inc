@@ -15,6 +15,7 @@ $color_key_font_color           = $standard_font_color;    // used in the colour
 $banner_back_color              = "#1976D2";    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
 $banner_font_color              = $header_font_color;       // font colour for banner
+$banner_nav_hover_color         = 'darkblue';   // background colour when header links are hovered over
 
 $minical_view_color             = "#2b3a42";    // used for highlighting the dates in the current view
 $minical_today_color            = "#bdd4de";    // used for highlighting today

@@ -1587,7 +1587,7 @@ nav.logon input {
 
 .banner nav a:hover,
 nav.logon input:hover {
-  background-color: darkblue;
+  background-color: <?php echo $banner_nav_hover_color ?>;
   color: #ffffff;
 }
 
