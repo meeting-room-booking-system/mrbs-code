@@ -2136,7 +2136,7 @@ div#check_tabs {background-image: none}
 
 
 <?php
-// Modify the flatpickr blue to match the MRBS blue
+// Modify the flatpickr blue
 ?>
 .flatpickr-day.selected,
 .flatpickr-day.startRange,
