@@ -36,6 +36,9 @@ $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid
 $main_table_slot_private_type_color = "#d1d9de";          // background colour when the type has to kept private
 $main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
 
+$zebra_even_color = 'white';    // Colour for even rows in the main table
+$zebra_odd_color  = '#E2E4FF';  // Colour for even rows in the main table
+
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php
 $main_table_border_color_print        = "#879AA8";    // border colour for the main table (print view)
 $main_table_header_border_color_print = "#879AA8";    // border colour for day/week/month tables - header (print view)
@@ -74,6 +77,9 @@ $row_highlight_color            = "dodgerblue";        // used for highlighting 
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 
+// Button colours
+$button_color_stops = array('#eeeeee', '#cccccc');  // linear gradient colour stops
+$button_inset_color = 'darkblue';
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views

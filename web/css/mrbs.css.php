@@ -339,11 +339,11 @@ table.display {
 }
 
 table.display tbody tr:nth-child(2n) {
-  background-color: white;
+  background-color: <?php echo $zebra_even_color ?>;
 }
 
 table.display tbody tr:nth-child(2n+1) {
-  background-color: #E2E4FF;
+  background-color: <?php echo $zebra_odd_color ?>;
 }
 
 table.display th, table.display td {
@@ -430,7 +430,7 @@ nav.view div.container {
 }
 
 nav.view a, nav.arrow a {
-  background: linear-gradient(#eee, #ccc);
+  background: linear-gradient(<?php echo implode(', ', $button_color_stops)?>);
   margin-right: 1px;
   cursor: pointer;
   line-height: 1.8em;
@@ -463,7 +463,7 @@ nav.view a:focus,
 nav.arrow a:hover,
 nav.arrow a:focus {
   background: <?php echo $banner_back_color ?>;
-  box-shadow: inset 1px 1px darkblue;
+  box-shadow: inset 1px 1px <?php echo $button_inset_color ?>;
   color: #ffffff;
   text-decoration: none;
 }
