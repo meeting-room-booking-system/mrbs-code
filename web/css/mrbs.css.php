@@ -2156,19 +2156,19 @@ div#check_tabs {background-image: none}
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: dodgerblue;
-  border-color: dodgerblue;
+  background: <?php echo $flatpickr_highlight_color ?>;
+  border-color: <?php echo $flatpickr_highlight_color ?>;
 }
 
 .flatpickr-day.selected.startRange + .endRange,
 .flatpickr-day.startRange.startRange + .endRange,
 .flatpickr-day.endRange.startRange + .endRange {
-  -webkit-box-shadow: -10px 0 0 dodgerblue;
-  box-shadow: -10px 0 0 dodgerblue;
+  -webkit-box-shadow: -10px 0 0 <?php echo $flatpickr_highlight_color ?>;
+  box-shadow: -10px 0 0 <?php echo $flatpickr_highlight_color ?>;
 }
 
 .flatpickr-day.week.selected {
-  -webkit-box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
-  box-shadow:-5px 0 0 dodgerblue, 5px 0 0 dodgerblue;
+  -webkit-box-shadow:-5px 0 0 <?php echo $flatpickr_highlight_color ?>, 5px 0 0 <?php echo $flatpickr_highlight_color ?>;
+  box-shadow:-5px 0 0 <?php echo $flatpickr_highlight_color ?>, 5px 0 0 <?php echo $flatpickr_highlight_color ?>;
 }
 

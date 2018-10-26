@@ -20,6 +20,7 @@ $minical_view_color             = "#2b3a42";    // used for highlighting the dat
 $minical_today_color            = "#bdd4de";    // used for highlighting today
 
 $header_back_color              = $banner_back_color;  // background colour for headers
+$flatpickr_highlight_color      = $banner_back_color;  // used for highlighting the date
 
 $admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
