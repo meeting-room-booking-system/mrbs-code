@@ -1030,7 +1030,7 @@ tr:nth-child(even) td.row_labels {
 }
 
 .row_labels a {
-  display: inline;
+  display: inline-block;
   text-decoration: none;
   font-weight: normal
 }
