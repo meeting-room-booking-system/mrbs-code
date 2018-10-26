@@ -1447,6 +1447,8 @@ form#add_new_user {
 .banner {
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   -ms-flex-direction: row;
   flex-direction: row;
   -ms-flex-pack: start;
