@@ -338,14 +338,11 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   print_head($simple);
 
   // Put the filename in as a class to aid styling.   
-  // (Use a class rather than id to avoid specificity problems)
-  echo '<body class="non_js ' . htmlspecialchars(this_page('.php')) . "\">\n";
+  echo '<body class="' . htmlspecialchars(this_page('.php')) . "\">\n";
    
   if (!$simple)
   {
-    // Add a class of "js" so that we know if we're using JavaScript or not
-    // and remove the non_js class (it's sometimes useful to know that we're
-    // not running JavaScript)
+    // Add a class of "js" so that we know if we're using JavaScript or not.
     echo "<script type=\"text/javascript\" src=\"js/set_class.js.php\"></script>\n";
   }
   
