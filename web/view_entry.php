@@ -233,12 +233,11 @@ if (isset($action))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
+
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
-$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+$repeats_allowed = is_admin() || empty($auth['only_admin_can_book_repeat']);
 
 $row = get_booking_info($id, $series);
 

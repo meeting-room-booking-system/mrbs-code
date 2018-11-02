@@ -61,10 +61,7 @@ Form::checkToken();
 //  ---------------------------------------------
 checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-
 
 
 // (2) Get the form variables
@@ -137,7 +134,7 @@ foreach($formvars as $var => $var_type)
 
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
-if (!$is_admin && $auth['only_admin_can_book_multiday'])
+if (!is_admin() && $auth['only_admin_can_book_multiday'])
 {
   $end_date = $start_date;
 }
@@ -294,7 +291,7 @@ if (get_area($room) != $area)
 if ($no_mail)
 {
   if (!$mail_settings['allow_no_mail'] &&
-      (!$is_admin || !$mail_settings['allow_admins_no_mail']))
+      (!is_admin() || !$mail_settings['allow_admins_no_mail']))
   {
     $no_mail = FALSE;
   }
@@ -638,7 +635,7 @@ $returl .= '?' . http_build_query($vars, '', '&');
 // prevent you ever getting here, but this check is here as a safeguard in 
 // case someone has spoofed the HTML)
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
-    !$is_admin &&
+    !is_admin() &&
     !empty($auth['only_admin_can_book_repeat']))
 {
   showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);

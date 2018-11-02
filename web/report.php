@@ -3,6 +3,7 @@ namespace MRBS;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
@@ -1349,10 +1350,12 @@ $datatable = get_form_var('datatable', 'int');  // Will only be set if we're usi
 list($from_year, $from_month, $from_day) = split_iso_date($from_date);
 list($to_year, $to_month, $to_day) = split_iso_date($to_date);
 
-// Check the user is authorised for this page
+
 if ($cli_mode)
 {
-  $is_admin = TRUE;
+  // If we're running in CLI mode we're passing the parameters in from the command line
+  // not the form and we want to go straight to Phase 2 (producing the report)
+  $phase = 2;
 }
 else
 {
@@ -1362,18 +1365,10 @@ else
     Form::checkToken(true);
   }
   
+  // Check the user is authorised for this page
   checkAuthorised(this_page());
-  // Also need to know whether they have admin rights
   $user = getUserName();
   $user_level = authGetUserLevel($user);
-  $is_admin =  ($user_level >= 2);
-}
-
-// If we're running in CLI mode we're passing the parameters in from the command line
-// not the form and we want to go straight to Phase 2 (producing the report)
-if ($cli_mode)
-{
-  $phase = 2;
 }
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
@@ -1567,7 +1562,7 @@ if ($phase == 2)
   // to make sure we respect the privacy settings.  (We rely on the privacy fields
   // in the area table being not NULL.   If they are by some chance NULL, then no
   // entries will be found, which is at least safe from the privacy viewpoint)
-  if (!$is_admin)
+  if (!$cli_mode && !is_admin())
   {
     if (isset($user))
     {

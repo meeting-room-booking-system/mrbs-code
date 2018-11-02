@@ -565,10 +565,8 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 // Get the number of outstanding (ie waiting to be approved) for a user
 function get_entries_n_outstanding($user)
 {
-  global $tbl_entry, $tbl_room, $tbl_area,
-         $max_level;
+  global $tbl_entry, $tbl_room, $tbl_area;
   
-  $is_admin = (authGetUserLevel($user) >= $max_level);
   $sql_approval_enabled = some_area_predicate('approval_enabled');
   $sql_params = array();
 
@@ -582,7 +580,7 @@ function get_entries_n_outstanding($user)
              AND R.disabled = 0
              AND A.disabled = 0
              AND $sql_approval_enabled";
-  if (!$is_admin)
+  if (!is_admin())
   {
     // Ordinary users can only see their own
     $sql .= " AND create_by=?";

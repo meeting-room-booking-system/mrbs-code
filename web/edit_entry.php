@@ -1112,17 +1112,16 @@ if (!isset($returl))
 
 // Check the user is authorised for this page
 checkAuthorised(this_page());
-// Also need to know whether they have admin rights
+
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
-$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+$repeats_allowed = is_admin() || empty($auth['only_admin_can_book_repeat']);
 // Similarly for multi-day
-$multiday_allowed = $is_admin || empty($auth['only_admin_can_book_multiday']);
+$multiday_allowed = is_admin() || empty($auth['only_admin_can_book_multiday']);
 // Similarly for multiple room selection
-$multiroom_allowed = $is_admin || empty($auth['only_admin_can_select_multiroom']);
+$multiroom_allowed = is_admin() || empty($auth['only_admin_can_select_multiroom']);
 
 
 
@@ -1425,7 +1424,7 @@ else
     }
     
     // Make sure the duration doesn't exceed the maximum
-    if (!$is_admin && $max_duration_enabled)
+    if (!is_admin() && $max_duration_enabled)
     {
       $duration = min($duration, (($enable_periods) ? $max_duration_periods : $max_duration_secs));
     }
@@ -1444,7 +1443,7 @@ else
     // Make sure the end_time falls within a booking day.   So if there are no 
     // restrictions, bring it back to the nearest booking day.   If the user is not
     // allowed multi-day bookings then make sure it is on the first booking day.
-    if ($is_admin || !$auth['only_admin_can_book_multiday'])
+    if (is_admin() || !$auth['only_admin_can_book_multiday'])
     {
       $end_time = fit_to_booking_day($end_time, $back=true);
     }
@@ -1576,7 +1575,7 @@ for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   // We don't show the all day checkbox if it's going to result in bookings that
   // contravene the policy - ie if max_duration is enabled and an all day booking
   // would be longer than the maximum duration allowed.
-  $row['show_all_day'] = $is_admin || 
+  $row['show_all_day'] = is_admin() || 
                          !$row['max_duration_enabled'] ||
                          ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($row['periods']))) ||
                            (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
@@ -1716,7 +1715,7 @@ if (($edit_type == "series") && $repeats_allowed)
 
 // Checkbox for no email
 if (need_to_send_mail() &&
-    ($mail_settings['allow_no_mail'] || ($is_admin && $mail_settings['allow_admins_no_mail'])))
+    ($mail_settings['allow_no_mail'] || (is_admin() && $mail_settings['allow_admins_no_mail'])))
 {
   $form->addElement(get_fieldset_booking_controls());
 }

@@ -247,9 +247,7 @@ function display_entry_row(array $row)
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
 
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
@@ -278,7 +276,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
 $sql_params = array();
 
 // Ordinary users can only see their own bookings       
-if (!$is_admin)
+if (!is_admin())
 {
   $sql .= " AND E.create_by=?";
   $sql_params[] = $user;

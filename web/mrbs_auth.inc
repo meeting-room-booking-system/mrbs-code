@@ -249,6 +249,19 @@ function auth_can_edit_user($user, $target)
   return false;
 }
 
+
+// Determines whether the current user has admin rights
+function is_admin()
+{
+  global $max_level;
+  
+  $user = getUserName();
+  $required_level = (isset($max_level) ? $max_level : 2);
+  
+  return (authGetUserLevel($user) >= $required_level);
+}
+
+
 // auth_book_admin($user, $room)
 //
 // Checks whether $user is allowed has booking administration rights

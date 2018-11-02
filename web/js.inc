@@ -7,13 +7,9 @@ global $debug;
 
 $page = this_page('.php');
 
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= $max_level);
-
-
 // We need to construct a standard query string that can be passed to the *.js.php
 // pages.  That's because some of the settings they use are area dependent.
-// We also want the area to be in the queey string so that the JavaScript page is
+// We also want the area to be in the query string so that the JavaScript page is
 // cached if the area is the same and not otherwise.
 $standard_query_string = "area=$area";
   
@@ -204,7 +200,7 @@ $(window).on('load', function() {
               room: '<?php echo $room?>',
               page: '<?php echo $page?>',
               page_date: '<?php echo format_iso_date($year, $month, $day) ?>',
-              isAdmin: <?php echo ($is_admin) ? 'true' : 'false'?>};
+              isAdmin: <?php echo (is_admin()) ? 'true' : 'false'?>};
   <?php
   // We need $timetohighlight for the day and week pages
   $timetohighlight = get_form_var('timetohighlight', 'int');

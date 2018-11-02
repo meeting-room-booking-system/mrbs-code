@@ -154,9 +154,7 @@ if (isset($search_str) && ($search_str !== ''))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.  We also need
@@ -276,7 +274,7 @@ $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 // to make sure we respect the privacy settings.  (We rely on the privacy fields
 // in the area table being not NULL.   If they are by some chance NULL, then no
 // entries will be found, which is at least safe from the privacy viewpoint)
-if (!$is_admin)
+if (is_admin())
 {
   if (isset($user))
   {
