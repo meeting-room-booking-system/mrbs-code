@@ -276,7 +276,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
 $sql_params = array();
 
 // Ordinary users can only see their own bookings       
-if (!is_admin())
+if (!is_book_admin())
 {
   $sql .= " AND E.create_by=?";
   $sql_params[] = $user;

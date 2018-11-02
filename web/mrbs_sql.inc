@@ -579,7 +579,7 @@ function get_entries_n_outstanding($user)
              AND R.disabled = 0
              AND A.disabled = 0
              AND $sql_approval_enabled";
-  if (!is_admin())
+  if (!is_book_admin())
   {
     // Ordinary users can only see their own
     $sql .= " AND create_by=?";
