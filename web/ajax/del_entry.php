@@ -33,10 +33,8 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// Check that the user has the highest level of admin rights
-$user = getUserName();
-$level = authGetUserLevel($user);
-if ($level < $max_level)
+// Check that the user is a booking admin
+if (!is_booking_admin())
 {
   exit;
 }
