@@ -56,7 +56,6 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   global $strftime_format, $is_private_field;
 
   $room_id = $booking['room_id'];
-  $user = getUserName();
   
   get_area_settings(get_area($room_id));
 
@@ -114,7 +113,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
     if (is_private_event($row['private']) && 
         $is_private_field['entry.name'] &&
-        !getWritable($row['create_by'], $user, $room_id))
+        !getWritable($row['create_by'], $room_id))
     {
        $row['name'] = get_vocab("unavailable");
     }
@@ -639,7 +638,7 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
-    if(!getWritable($row['create_by'], $user, $room_id))
+    if(!getWritable($row['create_by'], $room_id))
     {
       continue;
     }

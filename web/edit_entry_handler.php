@@ -447,7 +447,7 @@ else
   }
   $target_room = $rooms[0];
 }
-if (!getWritable($create_by, $user, $target_room))
+if (!getWritable($create_by, $target_room))
 {
   showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;

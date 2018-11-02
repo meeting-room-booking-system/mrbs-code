@@ -167,20 +167,21 @@ function checkAuthorised($page, $just_check=false)
 }
 
 
-/* getWritable($creator, $user, $room)
+/* getWritable($creator, $room)
  * 
- * Determines if a user is able to modify an entry
+ * Determines if the current user is able to modify an entry
  *
  * $creator - The creator of the entry
- * $user    - Who wants to modify it
  * $room    - The id of the room that the entry is in
  *
  * Returns:
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $user, $room)
+function getWritable($creator, $room)
 {
+  $user = getUserName();
+  
   // Always allowed to modify your own stuff
   if(strcasecmp($creator, $user) === 0)
   {

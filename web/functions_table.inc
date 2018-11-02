@@ -63,11 +63,9 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   global $resolution;
   global $is_private_field;
   
-  $user = getUserName();
-  
   // Check whether the event is private
   if (is_private_event($entry['private']) &&
-      !getWritable($entry['create_by'], $user, $entry['room_id']))
+      !getWritable($entry['create_by'], $entry['room_id']))
   {
     $entry['private'] = true;
     
@@ -193,7 +191,6 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
   global $approval_enabled, $confirmation_enabled;
   
   $html = '';
-  $user = getUserName();
   
   // Don't put in a <td> cell if the slot is booked and there's no description.
   // This would mean that it's the second or subsequent slot of a booking and so the
@@ -291,7 +288,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
       
         // Tell JavaScript to make bookings resizable
         if ((count($cell) == 1) &&
-            getWritable($booking['create_by'], $user, $booking['room_id']))
+            getWritable($booking['create_by'], $booking['room_id']))
         {
           $classes[] = 'writable';
         }
@@ -1215,7 +1212,6 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
   global $periods, $enable_periods, $morningstarts, $morningstarts_minutes;
   global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
-  global $user;
   
   // Check that we've got a valid, enabled room
   if (is_null(get_room_name($room)))
@@ -1261,7 +1257,7 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
     {
       // Handle private events
       if (is_private_event($entry['private']) &&
-          !getWritable($entry['create_by'], $user, $room))
+          !getWritable($entry['create_by'], $room))
       {
         $entry['private'] = true;
         if ($is_private_field['entry.name'])

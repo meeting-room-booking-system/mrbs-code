@@ -256,7 +256,7 @@ $awaiting_approval = $row['awaiting_approval'];
 $private = $row['private'];
 // Get the creator
 $create_by = $row['create_by'];
-$writeable = getWritable($row['create_by'], $user, $row['room_id']);
+$writeable = getWritable($row['create_by'], $row['room_id']);
 $keep_private = (is_private_event($private) && !$writeable);
 
 // Work out when the last reminder was sent

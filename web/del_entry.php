@@ -42,7 +42,6 @@ if (empty($returl))
 
 if ($info = get_booking_info($id, FALSE, TRUE))
 {
-  $user = getUserName();
   // check that the user is allowed to delete this entry
   if (isset($action) && ($action == "reject"))
   {
@@ -50,7 +49,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
   }
   else
   {
-    $authorised = getWritable($info['create_by'], $user, $info['room_id']);
+    $authorised = getWritable($info['create_by'], $info['room_id']);
   }
   if ($authorised)
   {
