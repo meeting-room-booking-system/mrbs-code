@@ -8,7 +8,7 @@ require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)
 {
-  global $user, $reminders_enabled, $reminder_interval;
+  global $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = this_page();
@@ -22,7 +22,7 @@ function display_buttons($row, $is_series)
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&series=1" : "";
   
-  if (auth_book_admin($user, $row['room_id']))
+  if (is_book_admin($row['room_id']))
   {
     // approve
     $form = new Form();

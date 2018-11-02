@@ -188,7 +188,7 @@ function getWritable($creator, $user, $room)
   }
   
   // Otherwise you have to be a (booking) admin for this room
-  if (auth_book_admin($user, $room))
+  if (is_book_admin($room, $user))
   {
     return true;
   }
@@ -262,19 +262,22 @@ function is_admin()
 }
 
 
-// auth_book_admin($user, $room)
-//
 // Checks whether $user is allowed has booking administration rights
 // for $room - ie is allowed to modify and delete other people's bookings
-// and to approve bookings.
+// and to approve bookings.   The default value for $user is the current user.
 //
 // At the moment $room is ignored, but is passed here so that later
 // it can be enhanced to provide fine-grained permissions
 // 
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room; otherwise FALSE
-function auth_book_admin($user, $room)
+function is_book_admin($room, $user=null)
 {
+  if (!isset($user))
+  {
+    $user = getUserName();
+  }
+  
   return (authGetUserLevel($user) >= 2);
 }
 

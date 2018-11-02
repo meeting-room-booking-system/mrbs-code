@@ -306,8 +306,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   
   // If the user is a booking admin for this room then we still check for policy
   // violations, but they are for information only and are classed as 'notices'
-  $user = getUserName();
-  $violation_status = (auth_book_admin($user, $booking['room_id'])) ? 'notices' : 'errors';
+  $violation_status = (is_book_admin($booking['room_id'])) ? 'notices' : 'errors';
 
    
   // Because MRBS has no notion of where we are in the day if we're using periods,

@@ -453,7 +453,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   else
   {
     // Buttons for those who are allowed to approve this booking
-    if (auth_book_admin($user, $row['room_id']))
+    if (is_book_admin($row['room_id']))
     {
       if (!$series)
       {

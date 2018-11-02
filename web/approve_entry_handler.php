@@ -48,7 +48,7 @@ if (isset($action))
   // If we have to approve or reject a booking, check that we have rights to do so
   // for this room
   if ((($action == "approve") || ($action == "reject")) 
-       && !auth_book_admin($user, $room_id))
+       && !is_book_admin($room_id))
   {
     showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
     exit;

@@ -695,7 +695,7 @@ foreach ($rooms as $room_id)
   // bookings for this room, then the status will be approved, since they are
   // in effect immediately approving their own booking.  Otherwise the booking
   // will need to approved.
-  $booking['awaiting_approval'] = ($approval_enabled && !auth_book_admin($user, $room_id));
+  $booking['awaiting_approval'] = ($approval_enabled && !is_book_admin($room_id));
   
   // Confirmation status
   $booking['tentative'] = ($confirmation_enabled && !$confirmed);
