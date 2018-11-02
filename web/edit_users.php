@@ -158,14 +158,14 @@ function get_form_var_type($field)
 function output_row(&$row)
 {
   global $ajax, $json_data;
-  global $level, $min_user_editing_level, $user;
+  global $user;
   global $fields, $ignore_columns, $select_options;
   
   $values = array();
   
   // First column, which is the name
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-  if (($level >= $min_user_editing_level) || (strcasecmp($row['name'], $user) == 0))
+  if (is_user_admin() || (strcasecmp($row['name'], $user) == 0))
   {
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
@@ -676,7 +676,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                     'name'  => VAR_PREFIX . $key,
                     'value' => $data[$key]);
                     
-    $disabled = ($level < $min_user_editing_level) && in_array($key, $auth['db']['protected_fields']);
+    $disabled = !is_user_admin() && in_array($key, $auth['db']['protected_fields']);
     
     switch ($key)
     {
@@ -706,7 +706,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         
       case 'name':
         // you cannot change a username (even your own) unless you have user editing rights
-        $fieldset->addElement(get_field_name($params, ($level < $min_user_editing_level)));
+        $fieldset->addElement(get_field_name($params, !is_user_admin()));
         break;
         
       case 'email':
@@ -727,7 +727,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
   $delete = ($Id >= 0) &&
-            ($level >= $min_user_editing_level) &&
+            is_user_admin() &&
             ($level >= $data['level']);
   
   // Don't let the last admin be deleted, otherwise you'll be locked out.
@@ -751,7 +751,7 @@ if (isset($Action) && ($Action == "Update"))
   // If you haven't got the rights to do this, then exit
   $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
                         array(utf8_strtolower($user)));
-  if (($level < $min_user_editing_level) && ($Id != $my_id ))
+  if (!is_user_admin() && ($Id != $my_id ))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
@@ -939,7 +939,7 @@ if (isset($Action) && ($Action == "Update"))
       $fieldname = $field['name'];;
       
       // Stop ordinary users trying to change fields they are not allowed to
-      if (($level < $min_user_editing_level) && in_array($fieldname, $auth['db']['protected_fields']))
+      if (!is_user_admin() && in_array($fieldname, $auth['db']['protected_fields']))
       {
         continue;
       }
@@ -1039,7 +1039,7 @@ if (isset($Action) && ($Action == "Delete"))
   }
   // you can't delete a user if you're not some kind of admin, and then you can't
   // delete someone higher than you
-  if (($level < $min_user_editing_level) || ($level < $target_level))
+  if (!is_user_admin() || ($level < $target_level))
   {
     showAccessDenied();
     exit();
@@ -1062,7 +1062,7 @@ if (!$ajax)
 
   echo "<h2>" . get_vocab("user_list") . "</h2>\n";
 
-  if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
+  if (is_user_admin()) /* Administrators get the right to add new users */
   {
     $form = new Form();
     
@@ -1140,7 +1140,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       // You can only see this row if (a) we allow everybody to see all rows or
       // (b) you are an admin or (c) you are this user
       if (!$auth['only_admin_can_see_other_users'] ||
-          ($level >= $min_user_viewing_level) ||
+          is_user_admin() ||
           (strcasecmp($row['name'], $user) == 0))
       {
         output_row($row);

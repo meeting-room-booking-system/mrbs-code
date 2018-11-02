@@ -250,7 +250,7 @@ function auth_can_edit_user($user, $target)
 }
 
 
-// Determines whether the current user has admin rights
+// Checks whether the current user has admin rights
 function is_admin()
 {
   global $max_level;
@@ -282,3 +282,13 @@ function is_book_admin($room=null, $user=null)
   return (authGetUserLevel($user) >= 2);
 }
 
+
+// Checks whether the current user has user editing rights
+function is_user_admin()
+{
+  global $min_user_editing_level;
+  
+  $user = getUserName();
+
+  return (authGetUserLevel($user) >= $min_user_editing_level);
+}
