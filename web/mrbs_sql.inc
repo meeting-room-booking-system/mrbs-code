@@ -594,7 +594,6 @@ function get_entries_n_outstanding($user)
  * Delete an entry, or optionally all entries.   Will also delete any newly
  * orphaned rows in the repeat table.
  * 
- * $user   - Who's making the request
  * $id     - The entry to delete
  * $series - If set, delete the series, except user modified entries
  * $all    - If set, include user modified entries in the series delete
@@ -603,7 +602,7 @@ function get_entries_n_outstanding($user)
  * have been deleted.
  *
  */
-function mrbsDelEntry($user, $id, $series, $all)
+function mrbsDelEntry($id, $series, $all)
 {
   global $tbl_entry, $tbl_repeat;
   
