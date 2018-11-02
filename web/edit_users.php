@@ -165,7 +165,7 @@ function output_row(&$row)
   
   // First column, which is the name
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-  if (is_user_admin() || (strcasecmp($row['name'], $user) == 0))
+  if (is_user_admin() || (strcasecmp($row['name'], $user) === 0))
   {
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
@@ -587,8 +587,10 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     }
   }
 
-  /* First make sure the user is authorized */
-  if (!$initial_user_creation && !auth_can_edit_user($user, $data['name']))
+  // First make sure the user is authorized
+  if (!$initial_user_creation &&
+      !is_user_admin() &&
+      (strcasecmp($user, $data['name']) !== 0))
   {
     showAccessDenied();
     exit();
@@ -1141,7 +1143,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
       // (b) you are an admin or (c) you are this user
       if (!$auth['only_admin_can_see_other_users'] ||
           is_user_admin() ||
-          (strcasecmp($row['name'], $user) == 0))
+          (strcasecmp($row['name'], $user) === 0))
       {
         output_row($row);
       }

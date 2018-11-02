@@ -219,36 +219,6 @@ function showAccessDenied($view=null, $year=null, $month=null, $day=null, $area=
   print_footer(true);
 }
 
-/* auth_can_edit_user($creator, $user)
- * 
- * Determines if a user is able to edit another user's details
- *
- * $user    - Who wants to modify it
- * $target  - The user that is being edited
- *
- * Returns:
- *   false  - The user does not have the required access
- *   true   - The user has the required access
- */
-function auth_can_edit_user($user, $target)
-{
-  global $min_user_editing_level;
-  
-  // Always allowed to modify your own stuff
-  if(strcasecmp($user, $target) === 0)
-  {
-    return true;
-  }
-
-  if(authGetUserLevel($user) >= $min_user_editing_level)
-  {
-    return true;
-  }
-
-  // Unathorised access
-  return false;
-}
-
 
 // Checks whether the current user has admin rights
 function is_admin()
