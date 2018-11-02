@@ -2,7 +2,6 @@
 namespace MRBS;
 
 global $view, $year, $month, $day, $area, $room;
-global $max_level;
 global $debug;
 
 $page = this_page('.php');
