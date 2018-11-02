@@ -346,13 +346,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
     // Add a class of "js" so that we know if we're using JavaScript or not
     // and remove the non_js class (it's sometimes useful to know that we're
     // not running JavaScript)
-    ?>
-    <script type="text/javascript">
-      //<![CDATA[
-      $('body').addClass('js').removeClass('non_js');
-      //]]>
-    </script> 
-    <?php
+    echo "<script type=\"text/javascript\" src=\"js/set_class.js.php\"></script>\n";
   }
   
   print_unsupported_message();
