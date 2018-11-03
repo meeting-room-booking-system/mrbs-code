@@ -69,7 +69,7 @@ init = function(args) {
     <?php
   }
 
-  // Add in a hidden input to the header search form so that we can tell if we are using DataTables
+  // Add in a hidden input to the header search forms so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled).   We need to know this because when we're using an
   // an Ajax data source we don't want to send the HTML version of the table data.
   // 
@@ -80,7 +80,7 @@ init = function(args) {
       type: 'hidden',
       name: 'datatable',
       value: '1'
-    }).appendTo('#header_search');
+    }).appendTo('form[action="search.php"]');
     
   $('header a[href^="edit_users.php"]').each(function() {
       var href = $(this).attr('href');

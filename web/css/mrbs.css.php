@@ -1575,7 +1575,8 @@ nav.logon input {
 }
 
 .banner nav a,
-nav.logon input {
+nav.logon input,
+nav.logon span {
   display: inline-block;
   text-align: center;
   padding: 0.3rem 1rem;
