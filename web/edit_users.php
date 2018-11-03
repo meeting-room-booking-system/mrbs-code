@@ -79,6 +79,14 @@ elseif (isset($update_button))
 }
 
 
+// Checks whether the current user can edit the target user
+function can_edit_user($target)
+{
+  $user = getUserName();
+    
+  return (is_user_admin() || (strcasecmp($user, $target) === 0))
+}
+
 
 // Validates that the password conforms to the password policy
 // (Ideally this function should also be matched by client-side
@@ -158,14 +166,13 @@ function get_form_var_type($field)
 function output_row(&$row)
 {
   global $ajax, $json_data;
-  global $user;
   global $fields, $ignore_columns, $select_options;
   
   $values = array();
   
   // First column, which is the name
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-  if (is_user_admin() || (strcasecmp($row['name'], $user) === 0))
+  if (can_edit_user($row['name']))
   {
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
@@ -588,9 +595,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
 
   // First make sure the user is authorized
-  if (!$initial_user_creation &&
-      !is_user_admin() &&
-      (strcasecmp($user, $data['name']) !== 0))
+  if (!$initial_user_creation && !can_edit_user($data['name']))
   {
     showAccessDenied();
     exit();
@@ -1141,9 +1146,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     {
       // You can only see this row if (a) we allow everybody to see all rows or
       // (b) you are an admin or (c) you are this user
-      if (!$auth['only_admin_can_see_other_users'] ||
-          is_user_admin() ||
-          (strcasecmp($row['name'], $user) === 0))
+      if (!$auth['only_admin_can_see_other_users'] || can_edit_user($row['name']))
       {
         output_row($row);
       }
