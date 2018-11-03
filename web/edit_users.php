@@ -84,7 +84,7 @@ function can_edit_user($target)
 {
   $user = getUserName();
     
-  return (is_user_admin() || (strcasecmp($user, $target) === 0))
+  return (is_user_admin() || (strcasecmp($user, $target) === 0));
 }
 
 
