@@ -600,8 +600,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     showAccessDenied();
     exit();
   }
-
-  print_header();
+  
+  print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
   
   echo "<h2>";
   if ($initial_user_creation)
@@ -1065,7 +1065,7 @@ if (isset($Action) && ($Action == "Delete"))
 
 if (!$ajax)
 {
-  print_header();
+  print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
   echo "<h2>" . get_vocab("user_list") . "</h2>\n";
 
