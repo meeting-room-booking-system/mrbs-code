@@ -15,6 +15,8 @@ if ($use_strict)
 }
 ?>
 
+var refreshListenerAdded = false;
+
 var intervalId;
 
 var refreshPage = function refreshPage() {
@@ -24,7 +26,7 @@ var refreshPage = function refreshPage() {
     {
       var data = {ajax: 1,
                   view: refreshPage.args.view,
-                  page_date: refreshPage.args.page_date,
+                  page_date: refreshPage.args.pageDate,
                   area: refreshPage.args.area,
                   room: refreshPage.args.room};
       if (refreshPage.args.timetohighlight !== undefined)
@@ -91,14 +93,8 @@ if (!empty($refresh_rate))
     };
   
 
-  <?php
-  // =================================================================================
 
-  // Extend the init() function 
-  ?>
-  var oldInitRefresh = init;
-  init = function(args) {
-    oldInitRefresh.apply(this, [args]);
+  $(function() {
     
     refreshPage.args = args;
     
@@ -125,12 +121,13 @@ if (!empty($refresh_rate))
         var prefix = visibilityPrefix();
         if (document.addEventListener &&
             (prefix !== null) && 
-            !init.refreshListenerAdded)
+            !refreshListenerAdded)
         {
           document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
-          init.refreshListenerAdded = true;
+          refreshListenerAdded = true;
         }
       }).trigger('load');
-  };
+      
+  });
   <?php
 }

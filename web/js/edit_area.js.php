@@ -205,18 +205,10 @@ function checkForLastPeriodName()
   }
 }
 
-<?php
 
 
-// =================================================================================
 
-// Extend the init() function 
-?>
-
-var oldInitEditAreaRoom = init;
-init = function(args) {
-  
-  oldInitEditAreaRoom.apply(this, [args]);
+$(function() {
   
   <?php
   // We need to hide the sections of the form relating to times
@@ -289,4 +281,5 @@ init = function(args) {
           generateLastSlotSelect();
         });
   generateLastSlotSelect();
-};
+  
+});

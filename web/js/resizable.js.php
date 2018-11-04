@@ -585,17 +585,7 @@ var Table = {
 };
 
 
-<?php
-
-// =================================================================================
-
-// Extend the init() function 
-?>
-
-var oldInitResizable = init;
-init = function(args) {
-  
-  oldInitResizable.apply(this, [args]);
+$(function() {
 
   <?php
   // Resizable bookings work by creating an element which is a clone of the real booking
@@ -824,7 +814,7 @@ init = function(args) {
             {
               queryString += '&rooms[]=' + params.room[i];
             }
-            queryString += '&start_date=' + args.page_date;
+            queryString += '&start_date=' + args.pageDate;
           }
           else <?php // it's a week ?>
           {
@@ -1104,7 +1094,7 @@ init = function(args) {
         data.view = args.view;
         if (args.view === 'day')
         {
-          data.start_date = args.page_date;
+          data.start_date = args.pageDate;
 
         }
         else  <?php // it's 'week' ?>
@@ -1385,5 +1375,5 @@ init = function(args) {
       }
     }, 50));
   
-};
+});
 

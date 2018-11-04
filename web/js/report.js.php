@@ -11,17 +11,9 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-
-
-// =================================================================================
-
-
-// Extend the init() function 
 ?>
 
-var oldInitReport = init;
-init = function(args) {
-  oldInitReport.apply(this, [args]);
+$(function() {
   
   <?php
   // Tidy up the presentation of the first header row by merging the cells.
@@ -228,4 +220,4 @@ init = function(args) {
 
   reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
   
-};
+});

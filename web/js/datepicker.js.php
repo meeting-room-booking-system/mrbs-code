@@ -11,9 +11,7 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// =================================================================================
 
-// Extend the init() function
 
 // Turn a JavaScript year, month, day (ie with Jan = 0) into an
 // ISO format YYYY-MM-DD date string.    Can cope with months
@@ -41,10 +39,9 @@ function getISODate(year, month, day)
 }
 
 
-var oldInitDatepicker = init;
-init = function(args) {
-  oldInitDatepicker.apply(this, [args]);
-    
+
+$(function() {
+  
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr
   // datepickers.  Note that by default flatpickr will use the native datepickers
@@ -210,7 +207,7 @@ init = function(args) {
       var minicalendars = flatpickr('span.minicalendar', config);
       
       $.each(minicalendars, function(key, value) {
-          value.setDate(args.page_date);
+          value.setDate(args.pageDate);
           value.changeMonth(key);
         });
       
@@ -236,5 +233,6 @@ init = function(args) {
   // in order to avoid the scrreen jiggling about.
   ?>
   $('.view_container').removeClass('js_hidden');
-};
+  
+});
 

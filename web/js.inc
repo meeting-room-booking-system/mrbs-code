@@ -78,21 +78,7 @@ else
   <script type="text/javascript" src="jquery/ui/jquery-ui.min.js"></script>
   <?php
 }
-?>
-    
-<script type="text/javascript">
-  //<![CDATA[
-  <?php
-  // Create an empty init() function.   This will get "extended" if necessary
-  // by the page specific JavaScript files in the js directory
-  ?>
-  function init(params)
-  {
-  }
-  //]]>
-</script>
 
-<?php
 // All pages
 ?>
 <script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
@@ -186,35 +172,3 @@ if ($page == 'index')
   }
   ?>
 <![endif]-->
-    
-<script type="text/javascript">
-
-//<![CDATA[
-
-
-$(window).on('load', function() {
-
-  var args = {view: '<?php echo $view?>',
-              area: '<?php echo $area?>',
-              room: '<?php echo $room?>',
-              page: '<?php echo $page?>',
-              page_date: '<?php echo format_iso_date($year, $month, $day) ?>',
-              isAdmin: <?php echo (is_admin()) ? 'true' : 'false'?>};
-  <?php
-  // We need $timetohighlight for the day and week pages
-  $timetohighlight = get_form_var('timetohighlight', 'int');
-  if (isset($timetohighlight))
-  {
-    ?>
-    args.timetohighlight = '<?php echo $timetohighlight?>';
-    <?php
-  }
-  ?>
-  
-  init(args);
-
-});
-
-
-//]]>
-</script>

@@ -1128,16 +1128,10 @@ var editEntryVisChanged = function editEntryVisChanged() {
     conflictTimer(true);
   };
 
-<?php
-// =================================================================================
 
-// Extend the init() function 
-?>
-
-var oldInitEditEntry = init;
-init = function(args) {
-  oldInitEditEntry.apply(this, [args]);
   
+$(function() {
+ 
   isAdmin = args.isAdmin;
   
   <?php
@@ -1441,4 +1435,5 @@ init = function(args) {
   {
     document.addEventListener(prefix + "visibilitychange", editEntryVisChanged);
   }
-};
+  
+});

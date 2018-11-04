@@ -30,15 +30,10 @@ var supportsDatalist = function supportsDatalist() {
   };
   
   
-<?php
-// =================================================================================
 
-// Extend the init() function 
-?>
 
-var oldInitGeneral = init;
-init = function(args) {
-  oldInitGeneral.apply(this, [args]);
+
+$(function() {
 
   <?php
   // If we're required to log the user out after a period of inactivity then the user filling in
@@ -271,4 +266,4 @@ init = function(args) {
         labels.width(getMaxWidth(labels));
       }, 100));
   
-};
+});

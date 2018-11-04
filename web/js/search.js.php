@@ -11,15 +11,10 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// =================================================================================
-
-
-// Extend the init() function 
 ?>
 
-var oldInitSearch = init;
-init = function(args) {
-  oldInitSearch.apply(this, [args]);
+
+$(function() {
   
   var searchForm = $('#search_form'),
       table = $('#search_results'),
@@ -64,5 +59,5 @@ init = function(args) {
     makeDataTable('#search_results', tableOptions, {"leftColumns": 1});
   }
     
-};
+});
 

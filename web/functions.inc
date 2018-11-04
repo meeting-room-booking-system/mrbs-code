@@ -200,13 +200,13 @@ function this_page($suffix=null)
 global $private_override;
 if ($private_override == "private" )
 {
-  $private_mandatory=TRUE;
-  $private_default=TRUE;
+  $private_mandatory = true;
+  $private_default = true;
 }
 elseif ($private_override == "public" )
 {
-  $private_mandatory=TRUE;
-  $private_default=FALSE;
+  $private_mandatory = true;
+  $private_default = false;
 }
 
 
@@ -294,7 +294,7 @@ function print_header($view=null, $year=null, $month=null, $day=null, $area=null
     $view = (isset($default_view)) ? $default_view : 'day';
   }
 
-  // If we dont know the right date then make it up 
+  // If we dont know the right date then use today's
   if (!isset($year))
   {
     $year = date('Y');
@@ -306,6 +306,16 @@ function print_header($view=null, $year=null, $month=null, $day=null, $area=null
   if (!isset($day))
   {
     $day = date('d');
+  }
+  
+  if (empty($area))
+  {
+    $area = get_default_area();
+  }
+
+  if (empty($room))
+  {
+    $room = get_default_room($area);
   }
 
   // Load the print_theme_header function appropriate to the theme.    If there
@@ -354,7 +364,7 @@ function print_footer($and_exit=false)
 
 // Converts a duration of $dur seconds into a duration of
 // $dur $units
-function toTimeString(&$dur, &$units, $translate=TRUE)
+function toTimeString(&$dur, &$units, $translate=true)
 {
   if (abs($dur) >= 60)
   {
@@ -494,7 +504,7 @@ function get_period_interval($start_time, $end_time)
 }
 
 
-function toPeriodString($start_period, &$dur, &$units, $translate=TRUE)
+function toPeriodString($start_period, &$dur, &$units, $translate=true)
 {
   global $periods;
 
@@ -640,7 +650,7 @@ function byday_to_day($year, $month, $byday)
   }
   else
   {
-    return FALSE;
+    return false;
   }
 }
 
@@ -1151,7 +1161,7 @@ function some_area_predicate($field)
 // is TRUE then the search is limited to enabled areas
 //
 // Returns: boolean
-function some_area($field, $enabled=FALSE)
+function some_area($field, $enabled=false)
 {
   global $tbl_area;
   
@@ -1194,7 +1204,7 @@ function split_iso_date($date)
 
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name($daynumber, $format=NULL)
+function day_name($daynumber, $format=null)
 {
   global $strftime_format;
   
@@ -1357,12 +1367,12 @@ function validate_email_list($list)
     {
       if (!validate_email(trim($email)))
       {
-        return FALSE;
+        return false;
       }
     }
   }
   
-  return TRUE;
+  return true;
 }
 
 
@@ -1515,7 +1525,7 @@ function is_possibly_invalid($start, $end)
 // example from 0100 to 0159 in Europe/London.
 // Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
 // a simple equality test will default to a valid time if MRBS can't determine an answer)
-function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=NULL)
+function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=null)
 {
   global $timezone;
 
@@ -1523,7 +1533,7 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=N
   // whether there's a transition into DST from the day before to the day after
   if (!function_exists('date_default_timezone_set'))
   {
-    return NULL;
+    return null;
   }
   
   if (empty($tz))
@@ -1539,7 +1549,7 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=N
   $dayBefore = mktime($hour, $minute, $second, $month, $day-1, $year);
   if (date('I', $dayBefore))
   {
-    $result = FALSE;
+    $result = false;
   }
   else
   {
@@ -1548,7 +1558,7 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=N
     $dayAfter = mktime($hour, $minute, $second, $month, $day+1, $year);
     if (!date('I', $dayAfter))
     {
-      $result = FALSE;
+      $result = false;
     }
     else
     {
@@ -1556,7 +1566,7 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=N
       // However we can only do this efficiently in PHP 5.3.0 or greater
       if (version_compare(PHP_VERSION, '5.3.0') < 0)
       {
-        $result = NULL;
+        $result = null;
       }
       else
       {
@@ -1573,7 +1583,7 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=N
         // If we failed for some reason to get any transition data, return NULL
         if (!isset($transition))
         {
-          $result = NULL;
+          $result = null;
         }
         else
         {
@@ -1795,11 +1805,11 @@ function is_private_event($privacy_status)
   global $private_override;
   if ($private_override == "private" )
   {
-    $privacy_status = TRUE;
+    $privacy_status = true;
   }
   elseif ($private_override == "public" )
   {
-    $privacy_status = FALSE;
+    $privacy_status = false;
   }
 
   return $privacy_status;

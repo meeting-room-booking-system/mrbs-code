@@ -25,16 +25,9 @@ var checkNav = function() {
     }
   };
 
-<?php
-// =================================================================================
 
-// Extend the init() function 
-?>
 
-var oldInitIndex = init;
-init = function(args) {
-  
-  oldInitIndex.apply(this, [args]);
+$(function() {
   
   <?php
   // Turn the room and area selects into fancy select boxes and then
@@ -71,4 +64,5 @@ init = function(args) {
   // in order to avoid jiggling.
   ?>
   $('.color_key').removeClass('js_hidden');
-};
+  
+});

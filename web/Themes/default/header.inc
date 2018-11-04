@@ -337,13 +337,43 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   
   print_head($simple);
 
+  $page = this_page('.php');
+
+  // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
+  // cannot use these PHP variables directly in the JavaScript files as those files are cached.
+  $data = array(
+      'view'      => $view,
+      'area'      => $area,
+      'room'      => $room,
+      'page'      => $page,
+      'page-date' => format_iso_date($year, $month, $day),
+      'is-admin'  => (is_admin()) ? 'true' : 'false'
+    );
+    
+  // We need $timetohighlight for the day and week views
+  $timetohighlight = get_form_var('timetohighlight', 'int');
+  if (isset($timetohighlight))
+  {
+    $data['timetohighlight'] = $timetohighlight;
+  }
+
   // Put the filename in as a class to aid styling.   
-  echo '<body class="' . htmlspecialchars(this_page('.php')) . "\">\n";
+  echo '<body class="' . htmlspecialchars($page) . '"';
+  foreach ($data as $key => $value)
+  {
+    if (isset($value))
+    {
+      echo " data-$key=\"" . htmlspecialchars($value) . '"';
+    }
+  }
+  echo ">\n";
    
   if (!$simple)
   {
-    // Add a class of "js" so that we know if we're using JavaScript or not.
-    echo "<script type=\"text/javascript\" src=\"js/set_class.js.php\"></script>\n";
+    // Load the init file now so that it gets executed as soon as possible.  We
+    // need to do things such as add the 'js' class to the body and retrieve the
+    // data attributes we have just written.
+    echo "<script type=\"text/javascript\" src=\"js/init.js.php\"></script>\n";
   }
   
   print_unsupported_message();
