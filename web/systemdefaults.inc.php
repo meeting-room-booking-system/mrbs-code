@@ -16,6 +16,7 @@ namespace MRBS;
  ********/
 
 // Set $debug = true to force MRBS to output debugging information to the browser.
+// Caching of files is also disabled when $debug is set.
 // WARNING!  Do not use this for production systems, as not only will it generate
 // unnecessary output in the broswer, but it could also expose sensitive security
 // information (eg database usernames and passwords).

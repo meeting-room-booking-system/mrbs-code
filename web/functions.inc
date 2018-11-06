@@ -224,7 +224,9 @@ function rfc1123_date($timestamp)
 // If $seconds is <= 0, then caching is disabled.
 function expires_header($seconds)
 {
-  if ($seconds > 0)
+  global $debug;
+  
+  if (!$debug && ($seconds > 0))
   {
     // We also send a couple of extra headers as the "Expires" header alone
     // does not always result in caching.
