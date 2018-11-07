@@ -93,18 +93,13 @@ function mrbs_default_timezone_set($tz=null)
 }
 
 
-// Get the default timezone.  Caters for PHP servers that don't
-// have date_default_timezone_get()
+// Get the default timezone.
+// The MRBS wrapper eound date_default_timezone_get() is redundant now.  It used to
+// cater for PHP servers that don't have date_default_timezone_get(), but now that
+// the minimum PHP version is >= 5.1.0, there are none.
 function mrbs_default_timezone_get()
 {
-  if (function_exists("date_default_timezone_get"))
-  {
-    return date_default_timezone_get();
-  }
-  else
-  {
-    return getenv('TZ');
-  }
+  return date_default_timezone_get();
 }
 
 
