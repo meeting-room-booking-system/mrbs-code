@@ -63,13 +63,13 @@ function function_disabled($name)
 // timezone from the config file is used.
 function mrbs_default_timezone_set($tz=null)
 {
-  global $area_defaults, $timezone;
+  global $area_defaults;
   
   if (!isset($tz))
   {
-    if (isset($timezone))
+    if (isset($area_defaults['timezone']))
     {
-      $tz = $timezone;
+      $tz = $area_defaults['timezone'];
     }
     else
     {
@@ -84,9 +84,9 @@ function mrbs_default_timezone_set($tz=null)
     }
   }
   
-  if (!date_default_timezone_set($timezone))
+  if (!date_default_timezone_set($tz))
   {
-    $message = "MRBS configuration error: invalid timezone '$timezone'";
+    $message = "MRBS configuration error: invalid timezone '$tz'";
     die($message);  // See comment above about use of die()
   }
 
