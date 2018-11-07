@@ -101,13 +101,13 @@ function function_disabled($name)
 // timezone from the config file is used.
 function mrbs_default_timezone_set($tz=null)
 {
-  global $area_defaults, $timezone;
+  global $area_defaults;
   
   if (!isset($tz))
   {
-    if (isset($timezone))
+    if (isset($area_defaults['timezone']))
     {
-      $tz = $timezone;
+      $tz = $area_defaults['timezone'];
     }
     else
     {
@@ -122,27 +122,22 @@ function mrbs_default_timezone_set($tz=null)
     }
   }
   
-  if (!date_default_timezone_set($timezone))
+  if (!date_default_timezone_set($tz))
   {
-    $message = "MRBS configuration error: invalid timezone '$timezone'";
+    $message = "MRBS configuration error: invalid timezone '$tz'";
     die($message);  // See comment above about use of die()
   }
 
 }
 
 
-// Get the default timezone.  Caters for PHP servers that don't
-// have date_default_timezone_get()
+// Get the default timezone.
+// The MRBS wrapper round date_default_timezone_get() is redundant now.  It used to
+// cater for PHP servers that don't have date_default_timezone_get(), but now that
+// the minimum PHP version is >= 5.1.0, there are none.
 function mrbs_default_timezone_get()
 {
-  if (function_exists("date_default_timezone_get"))
-  {
-    return date_default_timezone_get();
-  }
-  else
-  {
-    return getenv('TZ');
-  }
+  return date_default_timezone_get();
 }
 
 
