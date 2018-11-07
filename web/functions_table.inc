@@ -2,7 +2,6 @@
 namespace MRBS;
 
 // width of the row label columns in the day and week views
-$first_last_width = 1;  // (%)
 $column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
                             //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
 
@@ -464,38 +463,12 @@ function get_query_vars($area, $room, $month, $day, $year, $s)
   return $result;
 }
 
-// Gets the width in % of the main data columns in the day and week views
-// given the number of columns, taking into account the row label columns
-// and hidden columns
-function get_main_column_width($n_columns, $n_hidden=0)
-{
-  global $row_labels_both_sides, $first_last_width, $column_hidden_width;
-  
-  // Calculate the percentage width of each of the main columns.   We use number_format
-  // because in some locales you would get a comma for the decimal point which
-  // would break the CSS
-  $column_width = 100 - $first_last_width;
-  if (!empty($row_labels_both_sides))
-  {
-    $column_width = $column_width - $first_last_width;
-  }
-  // Subtract the hidden columns (unless they are all hidden)
-  if ($n_hidden < $n_columns)
-  {
-    $column_width = $column_width - ($n_hidden * $column_hidden_width);
-    $column_width = number_format($column_width/($n_columns - $n_hidden), 6);
-  }
-  
-  return $column_width;
-}
-
 
 function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  global $first_last_width;
   
   $rooms = get_rooms($area_id);
   $n_rooms = count($rooms);
@@ -554,11 +527,8 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   if ($times_along_top)
   {
     // with times along the top and rooms down the side
-    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       get_vocab('room') . "</th>\n";
+    $first_last_html = '<th class="first_last">' . get_vocab('room') . "</th>\n";
     $header_inner .= $first_last_html;
-    
-    $column_width = get_main_column_width($n_time_slots);
     
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
@@ -566,7 +536,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
     {
       // Put the number of seconds since the start of the day (nominal, ignoring DST)
       // in a data attribute so that JavaScript can pick it up
-      $header_inner .= "<th data-seconds=\"$s\" style=\"width: $column_width%\">";
+      $header_inner .= "<th data-seconds=\"$s\">";
       // We need the span so that we can apply some padding.   We can't apply it
       // to the <th> because that is used by jQuery.offset() in resizable bookings
       $header_inner .= "<span>";
@@ -592,11 +562,10 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
   else
   {
     // the standard view, with rooms along the top and times down the side
-    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
-                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . "</th>\n";
+    $first_last_html = '<th class="first_last">' . 
+                       ($enable_periods ? get_vocab('period') : get_vocab('time')) .
+                       "</th>\n";
     $header_inner .= $first_last_html;
-  
-    $column_width = get_main_column_width(count($rooms));
     
     foreach($rooms as $room)
     {
@@ -609,7 +578,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
                     
       $query = http_build_query($vars, '', '&'); 
       // Put the room_id in a data attribute so that JavaScript can pick it up        
-      $header_inner .= "<th data-room=\"" . $room['id'] . "\" style=\"width: $column_width%\">" .
+      $header_inner .= '<th data-room="' . $room['id'] . '">' .
                        '<a href="index.php?' . htmlspecialchars($query) . '" ' .
                        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
                        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
@@ -763,7 +732,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
-  global $first_last_width, $column_hidden_width, $hidden_days;
+  global $column_hidden_width, $hidden_days;
 
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
@@ -851,11 +820,9 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+    $first_last_html = '<th class="first_last">' . 
                        get_vocab('date') . "</th>\n";
     $header_inner .= $first_last_html;
-    
-    $column_width = get_main_column_width($n_time_slots);
     
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
@@ -863,7 +830,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
     {
       // Put the seconds since the start of the day (nominal, not adjusted for DST)
       // into a data attribute so that it can be picked up by JavaScript
-      $header_inner .= "<th data-seconds=\"$s\" style=\"width: $column_width%\">";
+      $header_inner .= "<th data-seconds=\"$s\">";
       // We need the span so that we can apply some padding.   We can't apply it
       // to the <th> because that is used by jQuery.offset() in resizable bookings
       $header_inner .= "<span>";
@@ -888,11 +855,9 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   else
   {
     // the standard view, with days along the top and times down the side
-    $first_last_html = '<th class="first_last" style="width: ' . $first_last_width . '%">' . 
+    $first_last_html = '<th class="first_last">' . 
                        ($enable_periods ? get_vocab('period') : get_vocab('time')) . '</th>';
     $header_inner .= $first_last_html;
-    
-    $column_width = get_main_column_width($num_of_days, count($hidden_days));
     
     for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
@@ -903,8 +868,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
       {
         // These days are to be hidden in the display (as they are hidden, just give the
         // day of the week in the header row
-        $style = ($column_hidden_width == 0) ? 'display: none' : 'width: ' . $column_hidden_width . '%';
-        $header_inner .= '<th class="hidden_day" style="' . $style . '">' .
+        $header_inner .= '<th class="hidden_day">' .
                          utf8_strftime($dformat, $t) . 
                          "</th>\n";
       }
@@ -919,7 +883,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
                       
         $query = http_build_query($vars, '', '&');
         // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= '<th data-date="' . $date . '" style="width: ' . $column_width . '%">' .
+        $header_inner .= '<th data-date="' . $date . '">' .
                          '<a href="index.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
                          utf8_strftime($dformat, $t) . "</a></th>\n";
       }

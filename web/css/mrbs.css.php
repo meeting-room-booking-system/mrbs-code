@@ -533,23 +533,6 @@ div#div_custom_html {
 
 /* ------------ INDEX.PHP ------------------*/
 
-<?php
-$column_hidden_width = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
-                           //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
-
-$n_hidden_days = count($hidden_days);
-
-// month view:  work out what percentage of the width is available to
-// normal columns (ie columns that are not hidden)
-$column_month = 100 - ($column_hidden_width *  $n_hidden_days);
-if ($n_hidden_days < 7)                                  // (avoid the div by zero)
-{
-  $column_month = $column_month/(7 - $n_hidden_days);      // divide what's left between the number of days to display
-}
-$column_month = number_format($column_month, 1, '.', '');  // (%) tidy the number up and make sure it's valid for CSS (no commas)
-
-?>
-
 .date_nav {
   float: left;
   width: 100%;
@@ -817,16 +800,16 @@ table.dwm_main {
   text-decoration:underline;
 }
 
+.dwm_main th.first_last {
+  width: 1px;
+}
+
 .dwm_main#week_main th.first_last {
   vertical-align: bottom;
 }
 
 .dwm_main td.invalid {
   background-color: <?php echo $main_table_slot_invalid_color ?>;
-}
-
-.dwm_main#month_main th {
-  width: <?php echo $column_month ?>%;
 }
 
 .dwm_main#month_main td {
@@ -993,23 +976,15 @@ foreach ($color_types as $type => $col)
   top: 0;
 }
 
-.dwm_main#month_main th.hidden_day {
-  width: <?php echo $column_hidden_width ?>%; 
-  <?php
-  // if the width is set to zero, then don't display anything at all
-  echo (empty($column_hidden_width) ? ' display: none' : '');
-  ?>
+<?php // hidden columns (eg weekends) in the week and month views ?> 
+.hidden_day {
+  display: none;
 }
 
-<?php // hidden columns (eg weekends) in the week and month views ?> 
 td.hidden_day {
   background-color: <?php echo $column_hidden_color ?>;
   font-size: medium;
   font-weight: bold;
-  <?php
-  // if the width is set to zero, then don't display anything at all
-  echo (empty($column_hidden_width) ? ' display: none' : '');
-  ?>
 }
 
 tr.row_highlight td.new {

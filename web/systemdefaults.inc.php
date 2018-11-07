@@ -270,7 +270,7 @@ $weekdays = array(1, 2, 3, 4, 5);
 //
 // By default the hidden days will be removed completely from the main table in the week and month
 // views.   You can alternatively arrange for them to be shown as narrow, greyed-out columns
-// by editing the CSS file.   Look for $column_hidden_width in mrbs.css.php.
+// by defining some custom CSS for the .hidden_day class.
 //
 // [Note that although they are hidden from display in the week and month views, they 
 // can still be booked from the edit_entry form and you can display the bookings by
