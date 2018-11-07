@@ -280,11 +280,11 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     // If $disabled is set, give the element a class so that the JavaScript
     // knows to keep it disabled
-    $field->setAttribute('class', 'keep_disabled');
+    $field->addClass('keep_disabled');
   }
   if ($display_none)
   {
-    $field->setAttribute('style', 'display: none');
+    $field->addClass('none');
   }
   
   if ($disabled && !$display_none)
@@ -308,7 +308,7 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
   
   if ($display_none || !$area['show_all_day'])
   {
-    $element->setAttribute('style', 'display: none');
+    $element->addClass('none');
   }
   
   // (1) If $display_none or $disabled are set then we'll also disable the select so
@@ -483,8 +483,8 @@ function get_field_areas($value, $disabled=false)
   // We will set the display to none and then turn it on in the JavaScript.  That's
   // because if there's no JavaScript we don't want to display it because we won't
   // have any means of changing the rooms if the area is changed.
-  $field->setAttributes(array('id'    => 'div_areas',
-                              'style' => 'display: none'))
+  $field->setAttributes(array('id'    => 'div_areas'))
+        ->addClass('none')
         ->setLabel(get_vocab('area'))
         ->setControlAttributes(array('name'     => 'area',
                                      'disabled' => $disabled))
