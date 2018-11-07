@@ -369,6 +369,9 @@ nav.location .select2-container {
   margin: 0 0.5em;
 }
 
+.none {
+  display: none;
+}
 
 <?php
 // Don't display anything with a class of js_none (used for example for hiding Submit
