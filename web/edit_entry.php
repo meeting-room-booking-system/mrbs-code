@@ -543,12 +543,12 @@ function get_field_rooms($value, $disabled=false)
     
     $select = new ElementSelect();
     $select->setAttributes(array('id'       => 'rooms' . $a,
-                                 'style'    => 'display: none',
                                  'name'     => 'rooms[]',
                                  'multiple' => $multiroom_allowed, // If multiple is not set then required is unnecessary
                                  'required' => $multiroom_allowed, // and also causes an HTML5 validation error
                                  'disabled' => true,
                                  'size'     => '5'))
+           ->addClass('none')
            ->addSelectOptions($rooms, $room_ids[0], true);
     // Put in some data about the area for use by the JavaScript
     $select->setAttributes(array(

@@ -1213,7 +1213,7 @@ div#div_custom_html {
   display: table-row;
 }
 
-.standard fieldset > div > * {
+.standard fieldset > div > *:not(.none) {
   display: table-cell;
   vertical-align: middle;
 }
