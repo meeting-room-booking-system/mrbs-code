@@ -334,7 +334,11 @@ table.dataTable thead .sorting_desc {
   display: table-cell;
 }
 
-table.display {
+<?php
+// The width for JavaScript enabled browsers is set in js/datatables.js.php.  See the comment in that
+// file for an explanation.
+?>
+body:not(.js) table.display {
   width: 100%;
 }
 
@@ -2013,6 +2017,10 @@ div#returl {
 div.datatable_container {
   float: left;
   width: 100%;
+}
+
+.js .datatable_container {
+  visibility: hidden;
 }
 
 div.ColVis_collection {
