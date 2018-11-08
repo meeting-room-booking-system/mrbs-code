@@ -497,22 +497,7 @@ function get_field_areas($value, $disabled=false)
 function get_field_rooms($value, $disabled=false)
 {
   global $tbl_room, $tbl_area;
-  global $multiroom_allowed, $area_id, $areas;
-  
-  // Get the details of all the enabled rooms
-  $all_rooms = array();
-  $sql = "SELECT R.id, R.room_name, R.area_id
-            FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id = A.id
-             AND R.disabled=0
-             AND A.disabled=0
-        ORDER BY R.area_id, R.sort_key";
-  $res = db()->query($sql);
-  
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
-  {
-    $all_rooms[$row['area_id']][$row['id']] = $row['room_name'];
-  }
+  global $multiroom_allowed, $area_id, $areas, $rooms;
   
   // First of all generate the rooms for this area
   $field = new FieldSelect();
@@ -534,12 +519,12 @@ function get_field_rooms($value, $disabled=false)
                                      'required' => $multiroom_allowed, // and also causes an HTML5 validation error
                                      'disabled' => $disabled,
                                      'size'     => '5'))
-        ->addSelectOptions($all_rooms[$area_id], $value, true);
+        ->addSelectOptions($rooms[$area_id], $value, true);
   
   // Then generate templates for all the rooms
-  foreach ($all_rooms as $a => $rooms)
+  foreach ($rooms as $a => $area_rooms)
   {
-    $room_ids = array_keys($rooms);
+    $room_ids = array_keys($area_rooms);
     
     $select = new ElementSelect();
     $select->setAttributes(array('id'       => 'rooms' . $a,
@@ -549,7 +534,7 @@ function get_field_rooms($value, $disabled=false)
                                  'required' => $multiroom_allowed, // and also causes an HTML5 validation error
                                  'disabled' => true,
                                  'size'     => '5'))
-           ->addSelectOptions($rooms, $room_ids[0], true);
+           ->addSelectOptions($area_rooms, $room_ids[0], true);
     // Put in some data about the area for use by the JavaScript
     $select->setAttributes(array(
         'data-enable_periods'           => ($areas[$a]['enable_periods']) ? 1 : 0,
@@ -1526,7 +1511,7 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
-  $rooms[$row['id']] = $row;
+  $rooms[$row['area_id']][$row['id']] = $row['room_name'];
 }
     
 // Get the details of all the enabled areas
@@ -1542,6 +1527,13 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
+  // We don't want areas that have no enabled rooms because it doesn't make sense
+  // to try and select them for a booking.
+  if (empty($rooms[$row['id']]))
+  {
+    continue;
+  }
+  
   // Periods are JSON encoded in the database
   $row['periods'] = json_decode($row['periods']);
   
