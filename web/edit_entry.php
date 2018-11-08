@@ -1526,6 +1526,13 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
+  // We don't want areas that have no enabled rooms because it doesn't make sense
+  // to try and select them for a booking.
+  if (empty($rooms[$row['id']]))
+  {
+    continue;
+  }
+  
   // Periods are JSON encoded in the database
   $row['periods'] = json_decode($row['periods']);
   
