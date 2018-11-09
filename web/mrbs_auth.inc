@@ -129,6 +129,11 @@ function checkAuthorised($page, $just_check=false)
 {
   global $view, $year, $month, $day, $area, $room;
   
+  if (!isset($page) || ($page === ''))
+  {
+    trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
+  }
+  
   // Get the minimum authorisation level for this page
   $required_level = get_page_level($page);
   
