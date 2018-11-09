@@ -106,7 +106,6 @@ function checkAuthorised($just_check=false)
 {
   global $page_level, $max_level;
   global $day, $month, $year, $area, $room;
-  global $PHP_SELF;
 
   $page = this_page();
   
