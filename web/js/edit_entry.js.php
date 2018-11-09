@@ -180,11 +180,11 @@ function onAllDayClick()
     firstSlot = parseInt(startSelect.find('option').first().val(), 10);
     lastSlot = parseInt(endSelect.find('option').last().val(), 10);
     onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
-    onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
+    onAllDayClick.oldStartDatepicker = startDatepicker.val();
     startSelect.val(firstSlot);
     startSelect.prop('disabled', true);
     onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
-    onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
+    onAllDayClick.oldEndDatepicker = endDatepicker.val();
     endSelect.val(lastSlot);
     if ((lastSlot < firstSlot) && 
         (onAllDayClick.oldStartDatepicker === onAllDayClick.oldEndDatepicker))
@@ -197,13 +197,13 @@ function onAllDayClick()
       {
         date = new Date(onAllDayClick.oldStartDatepicker);
         date.setDate(date.getDate() - 1);
-        startDatepicker.datepicker('setDate', date);
+        startDatepicker.val(date.toISOString().split('T')[0]);
       }
       else
       {
         date = new Date(onAllDayClick.oldEndDatepicker);
         date.setDate(date.getDate() + 1);
-        endDatepicker.datepicker('setDate', date);
+        endDatepicker.val(date.toISOString().split('T')[0]);
       }
     }
     endSelect.prop('disabled', true);
@@ -211,10 +211,10 @@ function onAllDayClick()
   else  <?php // restore the old values and re-enable the inputs ?>
   {
     startSelect.val(onAllDayClick.oldStart);
-    startDatepicker.datepicker('setDate', onAllDayClick.oldStartDatepicker);
+    startDatepicker.val(onAllDayClick.oldStartDatepicker);
     startSelect.prop('disabled', false);
     endSelect.val(onAllDayClick.oldEnd);
-    endDatepicker.datepicker('setDate', onAllDayClick.oldEndDatepicker);
+    endDatepicker.val(onAllDayClick.oldEndDatepicker);
     endSelect.prop('disabled', false);
   }
 
@@ -1229,8 +1229,8 @@ $(function() {
     endSelect.prop('disabled', true);
     onAllDayClick.oldStart = startSelect.val();
     onAllDayClick.oldEnd = endSelect.val();
-    onAllDayClick.oldStartDatepicker = form.find('#start_date').datepicker('getDate');
-    onAllDayClick.oldEndDatepicker = form.find('#end_date').datepicker('getDate');
+    onAllDayClick.oldStartDatepicker = form.find('#start_date').val();
+    onAllDayClick.oldEndDatepicker = form.find('#end_date').val();
   }
 
 

@@ -12,29 +12,6 @@ $page = this_page('.php');
 // cached if the area is the same and not otherwise.
 $standard_query_string = "area=$area";
   
-  
-  
-// We are using the jQuery UI library, which has been custom built to include the following components:
-//   - Core
-//        - as defined by dependencies in order to support the required interactions and widgets
-//        - no need for jQuery 1.7 support
-//
-//   - Interactions
-//      - Draggable
-//      - Resizable
-//
-//   - Widgets
-//      - Autocomplete
-//      - Button
-//      - Datepicker
-//      - Dialog
-//      - Menu
-//      - Mouse
-//      - Tabs
-//
-//   - Sunny theme
-// If you need any other components you will need to rebuild the custom UI library
-// See http://jqueryui.com/
 
 if ($debug)
 {
@@ -65,6 +42,29 @@ else
   <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.min.js"></script>
   <?php
 }
+
+  
+// We are using the jQuery UI library, which has been custom built to include the following components:
+//   - Core
+//      - as defined by dependencies in order to support the required interactions and widgets
+//      - no need for jQuery 1.7 support
+//
+//   - Interactions
+//      - Draggable
+//      - Resizable
+//
+//   - Widgets
+//      - Autocomplete
+//      - Button
+//      - Dialog
+//      - Menu
+//      - Mouse
+//      - Tabs
+//
+//   - Sunny theme
+// If you need any other components you will need to rebuild the custom UI library
+// See http://jqueryui.com/
+
 
 if ($debug)
 {
