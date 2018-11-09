@@ -9,6 +9,7 @@ require_once "functions.inc";
 // A map of browser locale aliases
 $lang_aliases = array
 (
+  'no' => 'nb',         // Not all operating systems will accept a locale of 'no'
   'sh' => 'sr-latn-rs',
 );
 
@@ -356,11 +357,18 @@ function get_browser_langs($header)
     {
       if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
       {
-        $qualifiers[$matches[1]] = (float) $matches[2];
+        $weight = (float) $matches[2];
       }
       else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
       {
-        $qualifiers[$matches[1]] = 1.0;
+        $weight = 1.0;
+      }
+      // Due to $lang_aliases above, it is possible that a language may appear
+      // twice in the header.   In this case we want to use the highest weight.
+      if (!isset($qualifiers[$matches[1]]) ||
+          ($weight > $qualifiers[$matches[1]]))
+      {
+        $qualifiers[$matches[1]] = $weight;
       }
     }
   }
