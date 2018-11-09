@@ -148,6 +148,11 @@ function this_page($suffix=null)
 {
   global $PHP_SELF;
   
+  if ((!isset($PHP_SELF) || ($PHP_SELF === '') && !is_cli()))
+  {
+    trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
+  }
+  
   return basename($PHP_SELF, $suffix);
 }
 

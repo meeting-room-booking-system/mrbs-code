@@ -110,11 +110,6 @@ function checkAuthorised($just_check=false)
 
   $page = this_page();
   
-  if (!isset($page) || ($page === ''))
-  {
-    trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
-  }
-  
   // Get the minimum authorisation level for this page
   if (isset($page_level[$page]))
   {
