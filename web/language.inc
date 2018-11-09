@@ -15,8 +15,10 @@ $lang_aliases = array
 
 // Map non-standard language codes used by flatpickr onto BCP 47 language tags
 $flatpickr_lang_map = array(
+  'at'  => 'de-at',
   'cat' => 'ca',
   'gr'  => 'el',
+  'kz'  => 'kk',
   'vn'  => 'vi'
 );
 
