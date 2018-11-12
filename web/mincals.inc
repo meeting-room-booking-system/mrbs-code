@@ -42,7 +42,6 @@ class Calendar
   public function getHTML()
   {
     global $weekstarts;
-    global $PHP_SELF;
     global $day, $month, $year;
     global $mincals_week_numbers;
     global $strftime_format;
