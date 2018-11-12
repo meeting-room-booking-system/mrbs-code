@@ -159,7 +159,6 @@ function logoff_user()
 }
 
 
-global $PHP_SELF, $HTTP_REFERER;
 global $auth;
 
 // Get non-standard form variables
@@ -256,18 +255,11 @@ if (isset($action))
                 $expiry_time,
                 $cookie_path);
                 
-      // Preserve the original $HTTP_REFERER by sending it as a GET parameter
       if (!empty($returl))
       {
         // check to see whether there's a query string already
-        if (strpos($target_url, '?') === false)
-        {
-          $target_url .= "?returl=" . urlencode($returl);
-        }
-        else
-        {
-          $target_url .= "&returl=" . urlencode($returl);
-        }
+        $target_url .= (strpos($target_url, '?') === false) ? '?' : '&';
+        $target_url .= urlencode($returl);
       }
     }
     
