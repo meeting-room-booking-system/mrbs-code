@@ -8,7 +8,7 @@ require_once "mrbs_sql.inc";
 
 function get_cookie_path()
 {
-  global $cookie_path_override, $PHP_SELF;
+  global $cookie_path_override, $REQUEST_URI;
   
   if (isset($cookie_path_override))
   {
@@ -16,8 +16,8 @@ function get_cookie_path()
   }
   else
   {
-    $cookie_path = $PHP_SELF;
-    // Strip off everything after the last '/' in $PHP_SELF
+    $cookie_path = $REQUEST_URI;
+    // Strip off everything after the last '/' in $REQUEST_URI
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
   }
   
