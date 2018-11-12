@@ -125,13 +125,20 @@ $vars = array('HTTP_ACCEPT_LANGUAGE',
               'QUERY_STRING',
               'REMOTE_ADDR',
               'REMOTE_USER',
-              'REQUEST_METHOD'
+              'REQUEST_METHOD',
+              'REQUEST_URI'
               );
               
 foreach ($vars as $var)
 {
   // Set the variable to null if it doesn't exist to avoid undefined variable errors
   $$var = (!empty($_SERVER) && isset($_SERVER[$var])) ? $_SERVER[$var] : null;
+}
+
+if (!isset($REQUEST_URI))
+{
+  // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
+  $REQUEST_URI = $PHP_SELF;
 }
 
 

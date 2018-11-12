@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-global $refresh_rate, $custom_css_url, $PHP_SELF;
+global $refresh_rate, $custom_css_url;
 global $debug;
 
 if ($debug)
@@ -61,7 +61,7 @@ else
     ?>
     <meta name="robots" content="noindex, nofollow">
 <?php
-if (($refresh_rate != 0) && preg_match("/(day|week|month)\.php/", $PHP_SELF))
+if (($refresh_rate != 0) && in_array(this_page('.php'), array('day', 'week', 'month')))
 {
   // If we're using JavaScript we'll do the refresh by getting a new
   // table using Ajax requests, which means we only have to download
