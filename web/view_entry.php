@@ -50,7 +50,7 @@ function generate_button(array $params, array $button_attributes=array())
 // Generates the Approve, Reject and More Info buttons
 function generateApproveButtons($id, $series)
 {
-  global $returl, $PHP_SELF;
+  global $returl;
   global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
   
   $info_time = ($series) ? $repeat_info_time : $entry_info_time;
