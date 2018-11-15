@@ -180,7 +180,7 @@ CREATE TABLE mrbs_sessions
 (
   id      varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   access  int unsigned DEFAULT NULL,
-  data    text CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  data    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   
   PRIMARY KEY (id),
   KEY idxAccess (access)
@@ -202,6 +202,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '57');
+  VALUES ( 'db_version', '58');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
