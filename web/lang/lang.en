@@ -231,6 +231,7 @@ $vocab["users.name"]         = "Name";
 $vocab["users.password"]     = "Password";
 $vocab["users.level"]        = "Rights";
 $vocab["users.timestamp"]    = "Last updated";
+$vocab["users.last_login"]   = "Last login";
 $vocab["unknown_user"]       = "Unknown user";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log off";

@@ -117,6 +117,8 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  */
 function authValidateUser($user, $pass)
 {
+  global $tbl_users;
+
   // The string $user that the user logged on with could be either a username or
   // an email address, or even possibly just the local part of an email address.
   // So it's just possible that there is more than one user with this password and
@@ -131,6 +133,11 @@ function authValidateUser($user, $pass)
 
   $valid_usernames = array_merge($valid_usernames, authValidateEmail($user, $pass));
   $valid_usernames = array_unique($valid_usernames);
+
+  $now = time();
+  $sql = "UPDATE $tbl_users SET last_login=?, timestamp=timestamp WHERE name=?";
+  $sql_params = array($now, $user);
+  db()->command($sql, $sql_params);
 
   return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
 }
