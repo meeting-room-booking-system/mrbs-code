@@ -217,6 +217,16 @@ function output_row(&$row)
           }
           $values[] = "<span title=\"$unix_timestamp\"></span>" . time_date_string($unix_timestamp);
           break;
+        case 'last_login':
+          if ($col_value)
+          {
+            $values[] = "<span title=\"$col_value\"></span>" . time_date_string($col_value);
+          }
+          else
+          {
+            $values[] = "";
+          }
+          break;
         default:
           // Where there's an associative array of options, display
           // the value rather than the key
@@ -687,6 +697,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
       case 'id':            // We've already got this in a hidden input
       case 'password_hash': // We don't want to do anything with this
       case 'timestamp':     // Nor this
+      case 'last_login':
         break;
         
       case 'level':
@@ -845,6 +856,7 @@ if (isset($Action) && ($Action == "Update"))
           }
           break;
         case 'timestamp':
+        case 'last_login':
           // Don't update this field ourselves at all
           unset($fields[$index]);
           unset($values[$fieldname]);
@@ -1118,6 +1130,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
         {
           case 'level':
           case 'timestamp':
+          case 'last_login':
             $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
             break;
           default:

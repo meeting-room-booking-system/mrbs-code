@@ -196,12 +196,13 @@ CREATE TABLE mrbs_users
   password_hash  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   email     varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_login  int DEFAULT '0' NOT NULL,
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '58');
+  VALUES ( 'db_version', '59');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

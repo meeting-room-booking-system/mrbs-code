@@ -186,7 +186,8 @@ CREATE TABLE mrbs_users
   password_hash  varchar(255),
   email     varchar(75),
   timestamp timestamptz DEFAULT current_timestamp,
-  
+  last_login  int DEFAULT 0 NOT NULL,
+
   CONSTRAINT mrbs_uq_name UNIQUE (name)
 );
 
@@ -203,6 +204,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '58');
+  VALUES ('db_version', '59');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
