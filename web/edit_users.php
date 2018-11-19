@@ -218,14 +218,8 @@ function output_row(&$row)
           $values[] = "<span title=\"$unix_timestamp\"></span>" . time_date_string($unix_timestamp);
           break;
         case 'last_login':
-          if ($col_value)
-          {
-            $values[] = "<span title=\"$col_value\"></span>" . time_date_string($col_value);
-          }
-          else
-          {
-            $values[] = "";
-          }
+          $values[] = "<span title=\"$col_value\"></span>" .
+                      (($col_value) ? time_date_string($col_value) : '');
           break;
         default:
           // Where there's an associative array of options, display
