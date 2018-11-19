@@ -1,10 +1,6 @@
 <?php
 namespace MRBS;
 
-// width of the row label columns in the day and week views
-$column_hidden_width  = 0;  // (%) width of the column for hidden days (set to 0 for no column at all; 1 for a narrow column);
-                            //     when $times_along_top is TRUE, hidden days (rows) are not shown at all
-
                             
 function map_add_booking (array $entry, &$column, $start_first_slot, $start_last_slot)
 {
@@ -732,7 +728,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
-  global $column_hidden_width, $hidden_days;
+  global $hidden_days;
 
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
