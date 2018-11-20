@@ -274,7 +274,7 @@ $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 // to make sure we respect the privacy settings.  (We rely on the privacy fields
 // in the area table being not NULL.   If they are by some chance NULL, then no
 // entries will be found, which is at least safe from the privacy viewpoint)
-if (is_book_admin())
+if (!is_book_admin())
 {
   if (isset($user))
   {
