@@ -222,7 +222,8 @@ function output_row(&$row)
             // To cater for timestamps before the start of the Unix Epoch
             $unix_timestamp = 0;
           }
-          $values[] = "<span title=\"$unix_timestamp\"></span>" . time_date_string($unix_timestamp);
+          $values[] = "<span title=\"$unix_timestamp\"></span>" . 
+                      (($unix_timestamp) ? time_date_string($unix_timestamp) : '');
           break;
         case 'last_login':
           $values[] = "<span title=\"$col_value\"></span>" .
