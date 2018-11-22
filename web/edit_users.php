@@ -190,6 +190,16 @@ function output_row(&$row)
     if (!in_array($key, $ignore_columns))
     {
       $col_value = $row[$key];
+      
+      // If you are not a user admin then you are only allowed to see the last_updated
+      // and last_login times for yourself.
+      if (in_array($key, array('timestamp', 'last_login')) &&
+          ($level < $min_user_editing_level) &&
+          (strcasecmp($row['name'], $user) !== 0))
+      {
+        $col_value = null;
+      }
+            
       switch($key)
       {
         // special treatment for some fields
@@ -1098,7 +1108,9 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   $res = db()->query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
   
   // Display the data in a table
-  $ignore_columns = array('id', 'password_hash', 'name'); // We don't display these columns or they get special treatment
+  
+  // We don't display these columns or they get special treatment
+  $ignore_columns = array('id', 'password_hash', 'name'); 
   
   if (!$ajax)
   {
