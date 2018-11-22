@@ -201,8 +201,7 @@ function output_row(&$row)
       // If you are not a user admin then you are only allowed to see the last_updated
       // and last_login times for yourself.
       if (in_array($key, array('timestamp', 'last_login')) &&
-          ($level < $min_user_editing_level) &&
-          (strcasecmp($row['name'], $user) !== 0))
+          !can_edit_user($row['name']))
       {
         $col_value = null;
       }
