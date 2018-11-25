@@ -183,12 +183,14 @@ function output_row(&$row)
                                  'name'  => 'edit_button',
                                  'value' => $row['name']));
     $form->addElement($submit);
-    $values[] = $form->toHTML();
+    $name_value = $form->toHTML();
   }
   else
   {
-    $values[] = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
+    $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
   }
+  
+  $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
     
   // Other columns
   foreach ($fields as $field)
@@ -1124,7 +1126,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<tr>";
   
     // First column which is the name
-    echo "<th>" . get_vocab("users.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
   
     // Other column headers
     foreach ($fields as $field)
