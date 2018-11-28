@@ -58,6 +58,7 @@ function init_sessions()
   }
   catch(\Exception $e)
   {
+	trigger_error($e->getMessage(), E_USER_WARNING);
     $session_started = false;
   }
   
