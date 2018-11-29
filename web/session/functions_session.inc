@@ -4,22 +4,18 @@ namespace MRBS;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 
 
-function print_login_failed()
-{
-  echo "<p>" . get_vocab('unknown_user') . "</p>\n";
-}
-
-
 /*
   Display the login form. 
   Will eventually return to $target_url with query string returl=$returl
+  If $error is set then an $error is printed.
 */
-function print_login_form($action, $target_url, $returl)
+function print_login_form($action, $target_url, $returl, $error=null)
 {
   $form = new Form();
   $form->setAttributes(array('class'  => 'standard',
@@ -34,6 +30,13 @@ function print_login_form($action, $target_url, $returl)
   $form->addHiddenInputs($hidden_inputs);
   
   // Now for the visible fields
+  if (isset($error))
+  {
+    $p = new ElementP();
+    $p->setText($error);
+    $form->addElement($p);
+  }
+  
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('please_login'));
   

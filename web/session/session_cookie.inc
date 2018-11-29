@@ -208,8 +208,7 @@ if (isset($action))
       if (($valid_username = authValidateUser($username, $password)) === false)
       {
         print_header();
-        print_login_failed();
-        print_login_form(this_page(), $target_url, $returl);
+        print_login_form(this_page(), $target_url, $returl, get_vocab('unknown_user'));
         exit();
       }
       else

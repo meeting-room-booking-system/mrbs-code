@@ -119,8 +119,8 @@ if (isset($action))
       {
         $errors = $wp_user;  // $errors is a WordPress global
         print_header();
-        echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
-        print_login_form(this_page(), $target_url, $returl);
+        $error_message = apply_filters ('login_errors', $wp_user->get_error_message());
+        print_login_form(this_page(), $target_url, $returl, $error_message);
         exit();
       }
       
