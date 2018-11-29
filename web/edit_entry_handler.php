@@ -588,7 +588,10 @@ if (isset($returl) && ($returl !== ''))
   $returl = parse_url($returl);
   if ($returl !== false)
   {
-    parse_str($returl['query'], $query_vars);
+    if (isset($returl['query']))
+    {
+      parse_str($returl['query'], $query_vars);
+    }
     $view = (isset($query_vars['view'])) ? $query_vars['view'] : $default_view;
     $returl = explode('/', $returl['path']);
     $returl = end($returl);
