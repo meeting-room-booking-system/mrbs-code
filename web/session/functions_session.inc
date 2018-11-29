@@ -77,11 +77,6 @@ function print_login_form($action, $target_url, $returl, $error=null)
   
   $form->render();
   
-  // The code below doesn't really belong here and ideally ought to be moved
-  // to somewhere where you can see the opening <div> etc.
-
-  echo "</div>\n";  // Close of the contents div
-  
   // Print footer and exit
   print_footer(TRUE);
 }
