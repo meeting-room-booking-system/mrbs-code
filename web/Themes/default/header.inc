@@ -373,7 +373,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
     // Load the init file now so that it gets executed as soon as possible.  We
     // need to do things such as add the 'js' class to the body and retrieve the
     // data attributes we have just written.
-    echo "<script type=\"text/javascript\" src=\"js/init.js.php\"></script>\n";
+    echo "<script src=\"js/init.js.php\"></script>\n";
   }
   
   print_unsupported_message();

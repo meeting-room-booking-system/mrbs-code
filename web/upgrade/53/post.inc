@@ -19,7 +19,7 @@ if (empty($auth['allow_custom_html']))
     {
       ?>
 
-      <script type="text/javascript">
+      <script>
       //<![CDATA[
         alert('You are using custom HTML. For security reasons this has now been disabled ' +
               'by default. If you want to continue using custom HTML and trust the HTML that ' +

@@ -16,13 +16,13 @@ $standard_query_string = "area=$area";
 if ($debug)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
+  <script src="jquery/jquery-3.3.1.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-3.3.1.min.js"></script>
+  <script src="jquery/jquery-3.3.1.min.js"></script>
   <?php
 }
 
@@ -33,13 +33,13 @@ else
 if ($debug)
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.js"></script>
+  <script src="jquery/jquery-migrate-3.0.0.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/jquery-migrate-3.0.0.min.js"></script>
+  <script src="jquery/jquery-migrate-3.0.0.min.js"></script>
   <?php
 }
 
@@ -69,29 +69,29 @@ else
 if ($debug)
 {
   ?>
-  <script type="text/javascript" src="jquery/ui/jquery-ui.js"></script>
+  <script src="jquery/ui/jquery-ui.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script type="text/javascript" src="jquery/ui/jquery-ui.min.js"></script>
+  <script src="jquery/ui/jquery-ui.min.js"></script>
   <?php
 }
 
 // All pages
 ?>
-<script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/flatpickr/flatpickr.min.js"></script>
-<script type="text/javascript" src="jquery/select2/dist/js/select2.full.min.js"></script>
+<script src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
+<script src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
+<script src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
+<script src="js/flatpickr/flatpickr.min.js"></script>
+<script src="jquery/select2/dist/js/select2.full.min.js"></script>
 
 <?php
 $dir = 'js/flatpickr/l10n';
 if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
 {
-  echo "<script type=\"text/javascript\" src=\"$dir/${flatpickr_lang_file}\"></script>\n";
+  echo "<script src=\"$dir/${flatpickr_lang_file}\"></script>\n";
 }
 
 // dataTables initialisation
@@ -101,28 +101,28 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
   if ($debug)
   {
     ?>
-    <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.buttons.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/buttons.colVis.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.js"></script>
+    <script src="jquery/datatables/js/jquery.dataTables.js"></script>
+    <script src="jquery/datatables/js/dataTables.buttons.js"></script>
+    <script src="jquery/datatables/js/buttons.colVis.js"></script>
+    <script src="jquery/datatables/js/dataTables.fixedColumns.js"></script>
+    <script src="jquery/datatables/js/dataTables.colReorder.js"></script>
     <?php
   }
   else
   {
     ?>
-    <script type="text/javascript" src="jquery/datatables/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/buttons.colVis.min.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.fixedColumns.min.js"></script>
-    <script type="text/javascript" src="jquery/datatables/js/dataTables.colReorder.min.js"></script>
+    <script src="jquery/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="jquery/datatables/js/dataTables.buttons.min.js"></script>
+    <script src="jquery/datatables/js/buttons.colVis.min.js"></script>
+    <script src="jquery/datatables/js/dataTables.fixedColumns.min.js"></script>
+    <script src="jquery/datatables/js/dataTables.colReorder.min.js"></script>
     <?php
   }
   ?>
   
-  <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
+  <script src="jquery/datatables/js/plugins.js"></script>
       
-  <script type="text/javascript" src="js/datatables.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/datatables.js.php?<?php echo $standard_query_string ?>"></script>
 
   <?php
 }
@@ -132,13 +132,13 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
 if (is_readable("js/$page.js"))
 {
   ?>
-  <script type="text/javascript" src="js/<?php echo $page?>.js"></script>
+  <script src="js/<?php echo $page?>.js"></script>
   <?php
 }
 if (is_readable("js/$page.js.php"))
 {
   ?>
-  <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
 
@@ -147,8 +147,8 @@ if (is_readable("js/$page.js.php"))
 if ($page == 'index')
 {
   ?>
-  <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
-  <script type="text/javascript" src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
   <?php
 }
 ?>
