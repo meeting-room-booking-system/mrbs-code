@@ -12,9 +12,10 @@ namespace MRBS;
  * own doesn't work.
  */
 
-if ($auth['session'] !== 'saml') {
-	header('Content-Type: text/plain', true, 500);
-	die("auth_saml doesn't work alone, set \$config['session'] = 'saml'; too.\r\n");
+if ($auth['session'] !== 'saml')
+{
+  header('Content-Type: text/plain', true, 500);
+  die("auth_saml doesn't work alone, set \$config['session'] = 'saml'; too.\r\n");
 }
 
 /* authValidateUser($user, $pass)
@@ -30,11 +31,14 @@ if ($auth['session'] !== 'saml') {
  */
 function authValidateUser($user, $pass)
 {
-	$username = getUserName();
-	if (isset($username) && $username === $user) {
-		return $user;
-	}
-	return false;
+  $username = getUserName();
+  
+  if (isset($username) && $username === $user)
+  {
+    return $user;
+  }
+  
+  return false;
 }
 
 /* authGetUserLevel($user)
@@ -56,32 +60,46 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user)
 {
-	global $ssp;
-	global $auth;
-	$userData = $ssp->getAttributes();
-	$username = getUserName();
-	if (isset($username) && $username === $user) {
-		foreach($auth['saml']['admin'] as $attr => $values) {
-			if (array_key_exists($attr, $userData)) foreach($values as $value) {
-				if (in_array($value, $userData[$attr])) return 2;
-			}
-		}
-		return 1;
-	}
-	return 0;
+  global $ssp;
+  global $auth;
+  
+  $userData = $ssp->getAttributes();
+  $username = getUserName();
+  
+  if (isset($username) && $username === $user)
+  {
+    foreach($auth['saml']['admin'] as $attr => $values)
+    {
+      if (array_key_exists($attr, $userData)) foreach($values as $value)
+      {
+        if (in_array($value, $userData[$attr]))
+        {
+          return 2;
+        }
+      }
+    }
+    
+    return 1;
+  }
+  
+  return 0;
 }
 
 // Gets the users e-mail from the SAML attributes.
 // Returns an empty string if no e-mail address was found
 function authGetUserEmail($user)
 {
-	global $ssp;
-	global $auth;
-	$mailAttr = $auth['saml']['attr']['mail'];
-	$userData = $ssp->getAttributes();
-	$username = getUserName();
-	if (isset($username) && $username === $user) {
-		return array_key_exists($mailAttr, $userData) ? $userData[$mailAttr][0] : '';
-	}
-	return '';
+  global $ssp;
+  global $auth;
+  
+  $mailAttr = $auth['saml']['attr']['mail'];
+  $userData = $ssp->getAttributes();
+  $username = getUserName();
+  
+  if (isset($username) && $username === $user)
+  {
+    return array_key_exists($mailAttr, $userData) ? $userData[$mailAttr][0] : '';
+  }
+  
+  return '';
 }
