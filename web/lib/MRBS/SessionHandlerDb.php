@@ -123,7 +123,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function gc($maxlifetime)
   {
-    $sql = "DELETE FROM " . self::$table . "WHERE access<:old"; 
+    $sql = "DELETE FROM " . self::$table . " WHERE access<:old"; 
     db()->command($sql, array(':old' => time() - $maxlifetime));  
     return true;  // An exception will be thrown on error
   }
