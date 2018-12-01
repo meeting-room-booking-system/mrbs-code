@@ -178,20 +178,26 @@ function get_default_email($user)
 }
 
 
-// Returns the current page.   If the page ends in suffix this will be cut off.
-// Separated out into a function to make it easier
-// to change for different situations.   We use basename() because the full name
-// causes problems when reverse proxies are being used.
-function this_page($suffix=null)
+// Returns the current page.   If the page ends in $suffix this will be cut off.
+// The query string is optionally added.
+function this_page($suffix=null, $with_query_string=false)
 {
-  global $PHP_SELF;
+  global $PHP_SELF, $QUERY_STRING;
   
   if ((!isset($PHP_SELF) || ($PHP_SELF === '') && !is_cli()))
   {
     trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
   }
   
-  return basename($PHP_SELF, $suffix);
+  // We use basename() because the full name causes problems when reverse proxies are being used.
+  $result = basename($PHP_SELF, $suffix);
+  
+  if (isset($QUERY_STRING) && ($QUERY_STRING !== ''))
+  {
+    $result = $result . "?" . $QUERY_STRING;
+  }
+  
+  return $result;
 }
 
 

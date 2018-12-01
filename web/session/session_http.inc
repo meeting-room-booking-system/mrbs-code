@@ -75,15 +75,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $QUERY_STRING;
-  
-  $target_url = this_page();
-
-  if (isset($QUERY_STRING))
-  {
-    $target_url = $target_url . "?" . $QUERY_STRING;
-  }
-  
+  $target_url = this_page(null, true);
   $user = getUserName();
   
   if (isset($user))
