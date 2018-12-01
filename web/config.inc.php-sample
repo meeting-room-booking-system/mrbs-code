@@ -12,6 +12,10 @@ namespace MRBS;
  *   or areadefaults.inc.php, then copy the relevant lines into this file
  *   and edit them here.   This file will override the default settings and
  *   when you upgrade to a new version of MRBS the config file is preserved.
+ *
+ *   NOTE: if you include or require other files from this file, for example
+ *   to store your database details in a separate location, then you should
+ *   use an absolute and not a relative pathname.
  **************************************************************************/
 
 /**********
