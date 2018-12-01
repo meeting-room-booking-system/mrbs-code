@@ -180,7 +180,7 @@ function get_default_email($user)
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The query string is optionally added.
-function this_page($suffix=null, $with_query_string=false)
+function this_page($with_query_string=false, $suffix=null)
 {
   global $PHP_SELF, $QUERY_STRING;
   

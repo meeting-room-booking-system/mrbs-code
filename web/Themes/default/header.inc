@@ -337,7 +337,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   
   print_head($simple);
 
-  $page = this_page('.php');
+  $page = this_page(false, '.php');
 
   // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
   // cannot use these PHP variables directly in the JavaScript files as those files are cached.

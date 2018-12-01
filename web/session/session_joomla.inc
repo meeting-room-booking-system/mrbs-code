@@ -18,7 +18,7 @@ function authGet()
   global $returl;
 
   print_header();
-  $target_url = this_page(null, true);
+  $target_url = this_page(true);
   print_login_form(this_page(), $target_url, $returl);
 
   exit();
@@ -32,7 +32,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  $target_url = this_page(null, true);
+  $target_url = this_page(true);
   $user=getUserName();
   
   if (isset($user))

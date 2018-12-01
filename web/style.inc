@@ -61,7 +61,7 @@ else
     ?>
     <meta name="robots" content="noindex, nofollow">
 <?php
-if (($refresh_rate != 0) && (this_page('.php') == 'index'))
+if (($refresh_rate != 0) && (this_page(false, '.php') == 'index'))
 {
   // If we're using JavaScript we'll do the refresh by getting a new
   // table using Ajax requests, which means we only have to download

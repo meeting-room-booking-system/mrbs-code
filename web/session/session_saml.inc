@@ -91,7 +91,7 @@ function print_logon_box()
 {
   global $ssp;
 
-  $target_url = this_page(null, true);
+  $target_url = this_page(true);
   $user=getUserName();
 
   if ($ssp->isAuthenticated())

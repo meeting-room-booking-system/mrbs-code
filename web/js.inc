@@ -4,7 +4,7 @@ namespace MRBS;
 global $view, $year, $month, $day, $area, $room;
 global $debug;
 
-$page = this_page('.php');
+$page = this_page(false, '.php');
 
 // We need to construct a standard query string that can be passed to the *.js.php
 // pages.  That's because some of the settings they use are area dependent.
