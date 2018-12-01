@@ -28,7 +28,7 @@ function init_errors()
     $error_level = -1;
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', true);
-    assert_options(ASSERT_ACTIVE, true);
+    assert_options(ASSERT_ACTIVE, true);  // the default, but we'll make it explicit
   }
   else
   {

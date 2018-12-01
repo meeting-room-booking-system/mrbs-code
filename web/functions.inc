@@ -184,6 +184,9 @@ function this_page($with_query_string=false, $suffix=null)
 {
   global $PHP_SELF, $QUERY_STRING;
   
+  assert(is_bool($with_query_string), '$with_query_string should be a boolean');
+  assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
+  
   if ((!isset($PHP_SELF) || ($PHP_SELF === '') && !is_cli()))
   {
     trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
