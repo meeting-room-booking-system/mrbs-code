@@ -28,6 +28,11 @@ function init_errors()
     $error_level = -1;
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', true);
+    assert_options(ASSERT_ACTIVE, true);
+  }
+  else
+  {
+    assert_options(ASSERT_ACTIVE, false);
   }
   
   error_reporting ($error_level);
