@@ -116,14 +116,6 @@ if (isset($action))
     }
 
     header ("Location: $target_url"); /* Redirect browser to initial page */
-    /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
-      which allows to work around problems with DNS inconsistencies in the server name.
-      Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-    print_header();
-    echo "<br>\n";
-    echo "<p>Please click <a href=\"" . htmlspecialchars($target_url) . "\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
-
-    // Print footer and exit
-    print_footer(true);
+    exit;
   }
 }
