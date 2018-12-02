@@ -195,7 +195,7 @@ function this_page($with_query_string=false, $suffix=null)
   // We use basename() because the full name causes problems when reverse proxies are being used.
   $result = basename($PHP_SELF, $suffix);
   
-  if (isset($QUERY_STRING) && ($QUERY_STRING !== ''))
+  if ($with_query_string && isset($QUERY_STRING) && ($QUERY_STRING !== ''))
   {
     $result = $result . "?" . $QUERY_STRING;
   }
