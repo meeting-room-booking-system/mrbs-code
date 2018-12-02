@@ -28,7 +28,7 @@ if (isset($mail_settings['admin_all']))
   // which gives the same behaviour as before, and if it's been set to FALSE
   // it means the site admin has deliberately changed it.
   $message = 'Please check your config file.   The variable $mail_settings["admin_all"] ' .
-             'is no longer used and has been replaced by $mail_settings["on_change"], ' .
+             'is no longer used and has been replaced by $mail_settings["on_new"], ' .
              '$mail_settings["on_change"] and $mail_settings["on_delete"].';
   trigger_error($message, E_USER_NOTICE);
   $mail_settings['on_change'] = ($mail_settings['admin_all']) ? TRUE : FALSE;
