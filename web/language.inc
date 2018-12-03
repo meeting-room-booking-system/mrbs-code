@@ -352,7 +352,7 @@ function get_browser_langs($header)
 {
   $qualifiers = array();
   
-  if (isset($header))
+  if (!empty($header))
   {
     $lang_specifiers = explode(',', $header);
     foreach ($lang_specifiers as $specifier)
@@ -365,13 +365,22 @@ function get_browser_langs($header)
       {
         $weight = 1.0;
       }
-      // Due to $lang_aliases above, it is possible that a language may appear
-      // twice in the header.   In this case we want to use the highest weight.
-      if (!isset($qualifiers[$matches[1]]) ||
-          ($weight > $qualifiers[$matches[1]]))
+      else
       {
-        $qualifiers[$matches[1]] = $weight;
+        trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
       }
+      
+      if (isset($weight))
+      {
+        // Due to $lang_aliases above, it is possible that a language may appear
+        // twice in the header.   In this case we want to use the highest weight.
+        if (!isset($qualifiers[$matches[1]]) ||
+            ($weight > $qualifiers[$matches[1]]))
+        {
+          $qualifiers[$matches[1]] = $weight;
+        }
+      }
+      
     }
   }
   
