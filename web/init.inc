@@ -85,7 +85,13 @@ function init_sessions()
     // session cookies - no persistent cookie.
     $auth['session_php']['session_expire_time'] = 0;
   }
-
+  
+  // We don't want the session garbage collector to delete the session before it has expired
+  if ($auth['session_php']['session_expire_time'] !== 0)
+  {
+    ini_set('session.gc_maxlifetime', $auth['session_php']['session_expire_time']);
+  }
+  
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
   
