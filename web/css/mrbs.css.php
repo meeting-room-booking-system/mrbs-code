@@ -645,7 +645,7 @@ table.dwm_main {
   font-weight: normal;
   vertical-align: top;
   padding: 0.2em;
-  color: <?php echo standard_font_color ?>; 
+  color: <?php echo $standard_font_color ?>; 
   background-color: #ffffff;
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
