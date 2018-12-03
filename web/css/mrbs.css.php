@@ -252,17 +252,18 @@ label.link a::after,
   content: ':';
 }
 
-label:empty::after, .group label::after {
-  visibility: hidden;
-}
-
 [lang="fr"] label:not(.link)::after,
 [lang="fr"] label.link a::after,
 [lang="fr"] .list td:first-child::after  {
   content: '\0000a0:';  <?php // &nbsp; before the colon ?>
 }
 
+label:empty::after, .group label::after {
+  visibility: hidden;
+}
+
 label.no_suffix::after,
+[lang="fr"] label.no_suffix::after,
 .dataTables_wrapper label::after,
 .list td.no_suffix:first-child::after {
   content: '';
