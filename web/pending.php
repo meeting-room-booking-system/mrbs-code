@@ -15,10 +15,10 @@ function display_buttons($row, $is_series)
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 
-  // When we're going to view_entry.php we need to pass the id and series
-  // in a query string rather than as hidden inputs.   That's because some
-  // pages called by view_entry use HTTP_REFERER to form a return URL, and
-  // view_entry needs to have a valid id.
+  // When we're going to view_entry.php we need to pass the id and series in a
+  // query string rather than as hidden inputs.   That's because some pages called
+  // by view_entry use $_SERVER['HTTP_REFERER'] to form a return URL, and view_entry
+  // needs to have a valid id.
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&series=1" : "";
   

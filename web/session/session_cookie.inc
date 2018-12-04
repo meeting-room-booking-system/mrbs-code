@@ -40,7 +40,7 @@ function authGet()
 
 function getUserName()
 {
-  global $REMOTE_ADDR, $auth;
+  global $auth;
   
   static $cached_username = null;
   static $have_checked_cookie = false;
@@ -92,7 +92,7 @@ function getUserName()
           // Expiry is OK
           
           if (!isset($session_data['ip']) ||
-              ($session_data['ip'] == $REMOTE_ADDR))
+              ($session_data['ip'] == $_SERVER['REMOTE_ADDR']))
           {
             // IP is OK
             $cached_username = $session_data['user'];
@@ -215,7 +215,7 @@ if (isset($action))
       $session_data['expiry'] = $expiry_time;
       if ($auth['session_cookie']['include_ip'])
       {
-        $session_data['ip'] = $REMOTE_ADDR;
+        $session_data['ip'] = $_SERVER['REMOTE_ADDR'];
       }
       $json_data = json_encode($session_data);
       if (!function_exists('hash_hmac'))

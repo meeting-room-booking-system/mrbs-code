@@ -29,11 +29,9 @@ function authGet()
 
 function getAuthPassword()
 {
-  global $PHP_AUTH_PW;
-
-  if (isset($PHP_AUTH_PW))
+  if (isset($_SERVER['PHP_AUTH_PW']))
   {
-    return unslashes($PHP_AUTH_PW);
+    return unslashes($_SERVER['PHP_AUTH_PW']);
   }
   else
   {
@@ -43,16 +41,14 @@ function getAuthPassword()
 
 function getUserName()
 {
-  global $PHP_AUTH_USER;
-  
   // We save the results of the user validation so that we avoid any performance
   // penalties in authValidateUser, which can be severe if for example we are using
   // LDAP authentication
-  static $authorised_user = NULL;
+  static $authorised_user = null;
 
-  if (isset($PHP_AUTH_USER))
+  if (isset($_SERVER['PHP_AUTH_USER']))
   {
-    $user = unslashes($PHP_AUTH_USER);
+    $user = unslashes($_SERVER['PHP_AUTH_USER']);
 
     if ((isset($authorised_user) && ($authorised_user == $user)) ||
         (authValidateUser($user, getAuthPassword()) !== false))
@@ -61,12 +57,12 @@ function getUserName()
     }
     else
     {
-      $authorised_user = NULL;
+      $authorised_user = null;
     }
   }
   else
   {
-    $authorised_user = NULL;
+    $authorised_user = null;
   }
   
   return $authorised_user;

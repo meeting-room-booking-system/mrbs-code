@@ -113,36 +113,6 @@ if (defined('ABSPATH'))  // standard test for WordPress
 $get = $_GET;
 $post = $_POST;
 
-
-// Get useful $_SERVER variables
-$vars = array('HTTP_ACCEPT_LANGUAGE',
-              'HTTP_HOST',
-              'HTTP_REFERER',
-              'HTTP_USER_AGENT',
-              'PHP_AUTH_PW',
-              'PHP_AUTH_USER',
-              'PHP_SELF',
-              'QUERY_STRING',
-              'REMOTE_ADDR',
-              'REMOTE_USER',
-              'REQUEST_METHOD',
-              'REQUEST_URI'
-              );
-              
-foreach ($vars as $var)
-{
-  // Set the variable to null if it doesn't exist to avoid undefined variable errors
-  $$var = (!empty($_SERVER) && isset($_SERVER[$var])) ? $_SERVER[$var] : null;
-}
-
-if (!isset($REQUEST_URI))
-{
-  // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
-  $REQUEST_URI = $PHP_SELF;
-}
-
-
-
 // If we're operating from the command line then build
 // an associative array of the command line parameters
 // (assumes they're in the form 'parameter=value')

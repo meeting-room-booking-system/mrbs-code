@@ -108,7 +108,7 @@ if (isset($action))
         exit();
       }
       
-      // Preserve the original $HTTP_REFERER by sending it as a GET parameter
+      // Preserve the original $_SERVER['HTTP_REFERER'] by sending it as a GET parameter
       if (!empty($returl))
       {
         // check to see whether there's a query string already

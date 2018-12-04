@@ -130,7 +130,7 @@ if (function_exists('mb_internal_encoding'))
 
 
 // Translate languages in the header string to their aliases
-$aliased_header = alias_header($HTTP_ACCEPT_LANGUAGE, $lang_aliases);
+$aliased_header = alias_header($_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_aliases);
 
 // Get the locale that we should be using
 $locale = get_mrbs_locale($aliased_header);

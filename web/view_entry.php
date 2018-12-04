@@ -193,10 +193,10 @@ $error = get_form_var('error', 'string');
 // Need to tell all the links where to go back to after an edit or delete
 if (!isset($returl))
 {
-  // We need HTTP_REFERER to contain an actual page, and not be a directory, ie end in '/'
-  if (isset($HTTP_REFERER) && (substr($HTTP_REFERER, -1) != '/'))
+  // We need $_SERVER['HTTP_REFERER'] to contain an actual page, and not be a directory, ie end in '/'
+  if (isset($_SERVER['HTTP_REFERER']) && (substr($_SERVER['HTTP_REFERER'], -1) != '/'))
   {
-    $parsed_url = parse_url($HTTP_REFERER);
+    $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
     $returl = basename($parsed_url['path']);
   }
   // If we haven't got a referer (eg we've come here from an email) then construct
@@ -616,10 +616,10 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   }
 echo "</div>\n";
 
-if (isset($HTTP_REFERER)) //remove the link if displayed from an email
+if (isset($_SERVER['HTTP_REFERER'])) //remove the link if displayed from an email
 {
   echo "<div id=\"returl\">\n";
-  echo '<a href="' . htmlspecialchars($HTTP_REFERER) . '">' . get_vocab('returnprev') . "</a>\n";
+  echo '<a href="' . htmlspecialchars($_SERVER['HTTP_REFERER']) . '">' . get_vocab('returnprev') . "</a>\n";
   echo "</div>\n";
 }
 

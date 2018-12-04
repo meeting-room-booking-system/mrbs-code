@@ -206,14 +206,12 @@ function getWritable($creator, $room)
  */
 function showAccessDenied($view=null, $year=null, $month=null, $day=null, $area=null, $room=null)
 {
-  global $HTTP_REFERER;
-
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
   echo "<p>" . get_vocab("norights") . "</p>\n";
   echo "<p>\n";
-  echo "<a href=\"" . htmlspecialchars($HTTP_REFERER) . "\">\n" . get_vocab("returnprev") . "</a>\n";
+  echo "<a href=\"" . htmlspecialchars($_SERVER['HTTP_REFERER']) . "\">\n" . get_vocab("returnprev") . "</a>\n";
   echo "</p>\n";
 
   // Print footer and exit

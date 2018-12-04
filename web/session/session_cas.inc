@@ -46,8 +46,6 @@ function logoff_user()
 }
 
 
-global $HTTP_REFERER;
-
 // Get non-standard form variables
 $action = get_form_var('action', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);

@@ -8,7 +8,7 @@ require_once "mrbs_sql.inc";
 
 function get_cookie_path()
 {
-  global $cookie_path_override, $REQUEST_URI;
+  global $cookie_path_override;
   
   if (isset($cookie_path_override))
   {
@@ -16,8 +16,9 @@ function get_cookie_path()
   }
   else
   {
-    $cookie_path = $REQUEST_URI;
-    // Strip off everything after the last '/' in $REQUEST_URI
+    // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
+    $cookie_path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+    // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
   }
   
@@ -182,22 +183,22 @@ function get_default_email($user)
 // The query string is optionally added.
 function this_page($with_query_string=false, $suffix=null)
 {
-  global $PHP_SELF, $QUERY_STRING;
-  
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
   assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
   
-  if ((!isset($PHP_SELF) || ($PHP_SELF === '') && !is_cli()))
+  if ((!isset($_SERVER['PHP_SELF']) || ($_SERVER['PHP_SELF'] === '') && !is_cli()))
   {
     trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
   }
   
   // We use basename() because the full name causes problems when reverse proxies are being used.
-  $result = basename($PHP_SELF, $suffix);
+  $result = basename($_SERVER['PHP_SELF'], $suffix);
   
-  if ($with_query_string && isset($QUERY_STRING) && ($QUERY_STRING !== ''))
+  if ($with_query_string &&
+      isset($_SERVER['QUERY_STRING']) && 
+     ($_SERVER['QUERY_STRING'] !== ''))
   {
-    $result = $result . "?" . $QUERY_STRING;
+    $result = $result . "?" . $_SERVER['QUERY_STRING'];
   }
   
   return $result;

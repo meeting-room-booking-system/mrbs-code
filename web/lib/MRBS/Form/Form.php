@@ -65,10 +65,8 @@ class Form extends Element
   //        good practice should check the token anyway if they have been requested by a POST.
   //        To cater for these pages the $post_only parameter should be set to TRUE.
   public static function checkToken($post_only=false)
-  {
-    global $REMOTE_ADDR, $REQUEST_METHOD;
-    
-    if ($post_only && ($REQUEST_METHOD != 'POST'))
+  { 
+    if ($post_only && ($_SERVER['REQUEST_METHOD'] != 'POST'))
     {
       return;
     }
@@ -83,7 +81,7 @@ class Form extends Element
         // Only report a possible CSRF attack if the stored token exists.   If it doesn't
         // it's normally because the user session has expired in between the form being
         // displayed and submitted.
-        trigger_error("Possible CSRF attack from IP address $REMOTE_ADDR", E_USER_WARNING);
+        trigger_error('Possible CSRF attack from IP address ' . $_SERVER['REMOTE_ADDR'], E_USER_WARNING);
       }
       
       if (function_exists("\\MRBS\\logoff_user"))
