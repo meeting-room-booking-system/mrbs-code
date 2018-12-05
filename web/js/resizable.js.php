@@ -604,7 +604,7 @@ $(function() {
   // the window causes other things to be re-initialised, which we don't want.   For example
   // if we have the datepicker open we don't want that to be reset.
   ?>
-  $(Table.selector).on('load', function() {
+  $(Table.selector).on('tableload', function() {
       var table = $(this);
       
       <?php // Don't do anything if this is an empty table ?>
@@ -1363,7 +1363,7 @@ $(function() {
           })
         .first().trigger('mouseenter');
     
-    }).trigger('load');
+    }).trigger('tableload');
     
   $(window).resize(throttle(function(event) {
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
