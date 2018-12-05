@@ -16,7 +16,8 @@ function get_mrbs_version()
 
   if (function_exists('exec') && !function_disabled('exec'))
   {
-    $hg_id_out = exec("$hg_command id --id --branch", $output, $retval);
+    // Suppress any errors because we are only interested in success
+    $hg_id_out = @exec("$hg_command id --id --branch", $output, $retval);
 
     if (($retval == 0) && (strlen($hg_id_out)))
     {
