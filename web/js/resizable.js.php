@@ -1139,7 +1139,7 @@ $(function() {
                   ?>
                   table.empty()
                        .html(result.table_innerhtml)
-                       .trigger('load');
+                       .trigger('tableload');
                   <?php
                   // If the booking failed then show an alert explaining why.
                   ?>
