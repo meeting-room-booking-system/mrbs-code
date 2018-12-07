@@ -565,7 +565,7 @@ else
   if (!isset($action))   // second time through it will be set to "update"
   {
     $action = "add";
-    $id = -1;
+    $id = null;
   }
   $level = $max_level;
   $user = "";           // to avoid an undefined variable notice
@@ -579,7 +579,7 @@ else
 if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 {
   
-  if ($id >= 0) /* -1 for new users, or >=0 for existing ones */
+  if (isset($id))
   {
     // If it's an existing user then get the data from the database
     $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($id));
@@ -595,7 +595,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       exit;
     }
   }
-  if (($id == -1) || (!$data))
+  if (!isset($id) || (!$data))
   {
     // Otherwise try and get the data from the query string, and if it's
     // not there set the default to be blank.  (The data will be in the 
@@ -750,7 +750,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
        
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
-  $delete = ($id >= 0) &&
+  $delete = isset($id) &&
             is_user_admin() &&
             ($level >= $data['level']);
   
@@ -787,7 +787,7 @@ if (isset($action) && ($action == "update"))
   else
   {
     $values = array();
-    $q_string = ($id >= 0) ? "action=edit" : "action=add";
+    $q_string = (isset($id)) ? "action=edit" : "action=add";
     foreach ($fields as $index => $field)
     {
       $fieldname = $field['name'];
@@ -898,7 +898,7 @@ if (isset($action) && ($action == "update"))
           // for that user.
           $query = "SELECT id FROM $tbl_users WHERE name=?";
           $sql_params[] = $value;
-          if ($id >= 0)
+          if (isset($id))
           {
             $query .= " AND id != ?";
             $sql_params[] = $id;
@@ -920,9 +920,9 @@ if (isset($action) && ($action == "update"))
             $q_string .= "&pwd_not_match=1";
           }
           // check that the password conforms to the password policy
-          // if it's a new user (id < 0), or else it's an existing user
+          // if it's a new user, or else if it's an existing user
           // trying to change their password
-          if (($id <0) || ($password0 !== ''))
+          if (!isset($id) || ($password0 !== ''))
           {
             if (!validate_password($password0))
             {
@@ -1002,7 +1002,7 @@ if (isset($action) && ($action == "update"))
     } /* end for each column of user database */
   
     /* Now generate the SQL operation based on the given array of fields */
-    if ($id >= 0)
+    if (isset($id))
     {
       /* if the id exists - then we are editing an existing user, rather than
        * creating a new one */
@@ -1095,8 +1095,7 @@ if (!$ajax)
                                'method' => 'post',
                                'action' => this_page()));
                                
-    $form->addHiddenInputs(array('action' => 'add',
-                                 'id'     => '-1'));
+    $form->addHiddenInput('action', 'add');
                                  
     $submit = new ElementInputSubmit();
     $submit->setAttribute('value', get_vocab('add_new_user'));
