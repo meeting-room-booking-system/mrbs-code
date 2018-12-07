@@ -457,13 +457,18 @@ function get_field_custom($custom_field, $params, $disabled=false)
 }
 
 
-function get_fieldset_password()
+function get_fieldset_password($id=null)
 {
   $fieldset = new ElementFieldset();
   
-  $p = new ElementP();
-  $p->setText(get_vocab('password_twice'));
-  $fieldset->addElement($p);
+  // If this is an existing user then give them the message about optionally
+  // changing their password.
+  if (isset($id))
+  {
+    $p = new ElementP();
+    $p->setText(get_vocab('password_twice'));
+    $fieldset->addElement($p);
+  }
   
   for ($i=0; $i<2; $i++)
   {
@@ -698,8 +703,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
     $params = array('label' => get_loc_field_name($tbl_users, $key),
                     'name'  => VAR_PREFIX . $key,
                     'value' => $data[$key]);
-                    
-    $disabled = !is_user_admin() && in_array($key, $auth['db']['protected_fields']);
+    
+    $disabled = !$initial_user_creation &&
+                !is_user_admin() &&
+                in_array($key, $auth['db']['protected_fields']);
     
     switch ($key)
     {
@@ -729,8 +736,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
         break;
         
       case 'name':
-        // you cannot change a username (even your own) unless you have user editing rights
-        $fieldset->addElement(get_field_name($params, !is_user_admin()));
+        $fieldset->addElement(get_field_name($params, $disabled));
         break;
         
       case 'email':
@@ -746,7 +752,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   }
   
   $form->addElement($fieldset)
-       ->addElement(get_fieldset_password());
+       ->addElement(get_fieldset_password($id));
        
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
