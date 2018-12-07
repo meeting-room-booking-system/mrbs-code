@@ -983,7 +983,9 @@ if (isset($action) && ($action == "update"))
     $fieldname = $field['name'];;
     
     // Stop ordinary users trying to change fields they are not allowed to
-    if (!is_user_admin() && in_array($fieldname, $auth['db']['protected_fields']))
+    if (!$initial_user_creation &&
+        !is_user_admin() &&
+        in_array($fieldname, $auth['db']['protected_fields']))
     {
       continue;
     }
