@@ -44,8 +44,8 @@ use MRBS\Form\FieldSelect;
 require "defaultincludes.inc";
 
 // Get non-standard form variables
-$Action = get_form_var('Action', 'string');
-$Id = get_form_var('Id', 'int');
+$action = get_form_var('action', 'string');
+$id = get_form_var('id', 'int');
 $password0 = get_form_var('password0', 'string', null, INPUT_POST);
 $password1 = get_form_var('password1', 'string', null, INPUT_POST);
 $invalid_email = get_form_var('invalid_email', 'int');
@@ -63,19 +63,19 @@ $update_button = get_form_var('update_button', 'string');
 
 if (isset($back_button))
 {
-  unset($Action);
+  unset($action);
 }
 elseif (isset($delete_button))
 {
-  $Action = 'Delete';
+  $action = 'delete';
 }
 elseif (isset($edit_button))
 {
-  $Action = 'Edit';
+  $action = 'edit';
 }
 elseif (isset($update_button))
 {
-  $Action = 'Update';
+  $action = 'update';
 }
 
 
@@ -177,7 +177,7 @@ function output_row(&$row)
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
                                'action' => this_page()));
-    $form->addHiddenInput('Id', $row['id']);
+    $form->addHiddenInput('id', $row['id']);
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
                                  'name'  => 'edit_button',
@@ -542,7 +542,7 @@ $nusers = db()->query1("SELECT COUNT(*) FROM $tbl_users");
 \*---------------------------------------------------------------------------*/
 
 // Check the CSRF token if we're going to be altering the database
-if (isset($Action) && in_array($Action, array('Delete', 'Update')))
+if (isset($action) && in_array($action, array('delete', 'update')))
 {
   Form::checkToken();
 }
@@ -562,10 +562,10 @@ else
 // to be an admin)
 {
   $initial_user_creation = true;
-  if (!isset($Action))   // second time through it will be set to "Update"
+  if (!isset($action))   // second time through it will be set to "update"
   {
-    $Action = "Add";
-    $Id = -1;
+    $action = "add";
+    $id = -1;
   }
   $level = $max_level;
   $user = "";           // to avoid an undefined variable notice
@@ -576,13 +576,13 @@ else
 |             Edit a given entry - 1st phase: Get the user input.             |
 \*---------------------------------------------------------------------------*/
 
-if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
+if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 {
   
-  if ($Id >= 0) /* -1 for new users, or >=0 for existing ones */
+  if ($id >= 0) /* -1 for new users, or >=0 for existing ones */
   {
     // If it's an existing user then get the data from the database
-    $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($Id));
+    $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($id));
     $data = $result->row_keyed(0);
     unset($result);
     // Check that we've got a valid result.   We should do normally, but if somebody alters
@@ -590,12 +590,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
     // safe.
     if (!$data)
     {
-      trigger_error("Invalid user id $Id", E_USER_NOTICE);
+      trigger_error("Invalid user id $id", E_USER_NOTICE);
       header("Location: " . this_page());
       exit;
     }
   }
-  if (($Id == -1) || (!$data))
+  if (($id == -1) || (!$data))
   {
     // Otherwise try and get the data from the query string, and if it's
     // not there set the default to be blank.  (The data will be in the 
@@ -626,7 +626,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   }
   else
   {
-    echo ($Action == 'Edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
+    echo ($action == 'edit') ? get_vocab('edit_user') : get_vocab('add_new_user');
   }
   echo "</h2>\n";
   
@@ -637,7 +637,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
   
   // Find out how many admins are left in the table - it's disastrous if the last one is deleted,
   // or admin rights are removed!
-  if ($Action == "Edit")
+  if ($action == "edit")
   {
     $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
     $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
@@ -687,7 +687,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
                              'method' => 'post',
                              'action' => this_page()));
                              
-  $form->addHiddenInput('Id', $Id);
+  $form->addHiddenInput('Id', $id);
                              
   $fieldset = new ElementFieldset();
   
@@ -710,7 +710,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
         break;
         
       case 'level':
-        if ($Action == 'Add')
+        if ($action == 'add')
         {
           // If we're creating a new user and it's the very first user, then they
           // should have maximum rights.  Otherwise make them an ordinary user.
@@ -750,7 +750,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
        
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
-  $delete = ($Id >= 0) &&
+  $delete = ($id >= 0) &&
             is_user_admin() &&
             ($level >= $data['level']);
   
@@ -770,12 +770,12 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 |             Edit a given entry - 2nd phase: Update the database.            |
 \*---------------------------------------------------------------------------*/
 
-if (isset($Action) && ($Action == "Update"))
+if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
   $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
                         array(utf8_strtolower($user)));
-  if (!is_user_admin() && ($Id != $my_id ))
+  if (!is_user_admin() && ($id != $my_id ))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
@@ -787,7 +787,7 @@ if (isset($Action) && ($Action == "Update"))
   else
   {
     $values = array();
-    $q_string = ($Id >= 0) ? "Action=Edit" : "Action=Add";
+    $q_string = ($id >= 0) ? "action=edit" : "action=add";
     foreach ($fields as $index => $field)
     {
       $fieldname = $field['name'];
@@ -796,7 +796,7 @@ if (isset($Action) && ($Action == "Update"))
       {
         // id: don't need to do anything except add the id to the query string;
         // the field itself is auto-incremented
-        $q_string .= "&Id=$Id";
+        $q_string .= "&id=$id";
         continue; 
       }
 
@@ -898,10 +898,10 @@ if (isset($Action) && ($Action == "Update"))
           // for that user.
           $query = "SELECT id FROM $tbl_users WHERE name=?";
           $sql_params[] = $value;
-          if ($Id >= 0)
+          if ($id >= 0)
           {
             $query .= " AND id != ?";
-            $sql_params[] = $Id;
+            $sql_params[] = $id;
           }
           $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
           $result = db()->query($query, $sql_params);
@@ -920,9 +920,9 @@ if (isset($Action) && ($Action == "Update"))
             $q_string .= "&pwd_not_match=1";
           }
           // check that the password conforms to the password policy
-          // if it's a new user (Id < 0), or else it's an existing user
+          // if it's a new user (id < 0), or else it's an existing user
           // trying to change their password
-          if (($Id <0) || ($password0 !== ''))
+          if (($id <0) || ($password0 !== ''))
           {
             if (!validate_password($password0))
             {
@@ -1002,9 +1002,9 @@ if (isset($Action) && ($Action == "Update"))
     } /* end for each column of user database */
   
     /* Now generate the SQL operation based on the given array of fields */
-    if ($Id >= 0)
+    if ($id >= 0)
     {
-      /* if the Id exists - then we are editing an existing user, rather th
+      /* if the id exists - then we are editing an existing user, rather than
        * creating a new one */
   
       $assign_array = array();
@@ -1016,7 +1016,7 @@ if (isset($Action) && ($Action == "Update"))
         $sql_params[] = $value;
       }
       $operation .= implode(",", $assign_array) . " WHERE id=?";
-      $sql_params[] = $Id;
+      $sql_params[] = $id;
     }
     else
     {
@@ -1055,9 +1055,9 @@ if (isset($Action) && ($Action == "Update"))
 |                                Delete a user                                |
 \*---------------------------------------------------------------------------*/
 
-if (isset($Action) && ($Action == "Delete"))
+if (isset($action) && ($action == "delete"))
 {
-  $target_level = db()->query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($Id));
+  $target_level = db()->query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($id));
   if ($target_level < 0)
   {
     fatal_error("Fatal error while deleting a user");
@@ -1070,7 +1070,7 @@ if (isset($Action) && ($Action == "Delete"))
     exit();
   }
 
-  db()->command("DELETE FROM $tbl_users WHERE id=?", array($Id));
+  db()->command("DELETE FROM $tbl_users WHERE id=?", array($id));
 
   /* Success. Do not display a message. Simply fall through into the list display. */
 }
@@ -1095,8 +1095,8 @@ if (!$ajax)
                                'method' => 'post',
                                'action' => this_page()));
                                
-    $form->addHiddenInputs(array('Action' => 'Add',
-                                 'Id'     => '-1'));
+    $form->addHiddenInputs(array('action' => 'add',
+                                 'id'     => '-1'));
                                  
     $submit = new ElementInputSubmit();
     $submit->setAttribute('value', get_vocab('add_new_user'));
