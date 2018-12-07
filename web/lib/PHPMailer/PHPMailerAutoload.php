@@ -42,8 +42,20 @@ if (version_compare(PHP_VERSION, '5.1.2', '>=')) {
      * Fall back to traditional autoload for old PHP versions
      * @param string $classname The name of the class to load
      */
+     
+    // MRBS
+    $message = "The minimum PHP version fore MRBS means that it should not be possible " .
+               "to get here.";
+    throw new \Exception($message);
+    
+    /*
+    MRBS: this has been commented out because although we can never reach this point, the
+    mere existence of the function causes deprecated errors in PHP 7.2.0 and above.  (We
+    should really upgrade to PHPMailer V6, but that requires PHP 5.5 or later).
+    
     function __autoload($classname)
     {
         PHPMailerAutoload($classname);
     }
+    */
 }
