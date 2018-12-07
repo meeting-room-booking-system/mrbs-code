@@ -691,8 +691,11 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
                              'class'  => 'standard',
                              'method' => 'post',
                              'action' => this_page()));
-                             
-  $form->addHiddenInput('Id', $id);
+  
+  if (isset($id))
+  {    
+    $form->addHiddenInput('id', $id);
+  }
                              
   $fieldset = new ElementFieldset();
   
@@ -779,9 +782,21 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                        array(utf8_strtolower($user)));
-  if (!is_user_admin() && ($id != $my_id ))
+  if (isset($user))
+  {
+    $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
+                          array(utf8_strtolower($user)));
+  }
+  else
+  {
+    $my_id = null;
+  }
+  
+  // You are only alowed to do this if (a) you're creating the first user or
+  // (b) you are a user admin or (c) you are editing your own details
+  if (!$initial_user_creation &&
+      !is_user_admin() && 
+      (!isset($myid) || ($id != $my_id )))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
@@ -790,271 +805,268 @@ if (isset($action) && ($action == "update"))
   }
   
   // otherwise go ahead and update the database
-  else
+  $values = array();
+  $q_string = (isset($id)) ? "action=edit" : "action=add";
+  foreach ($fields as $index => $field)
   {
-    $values = array();
-    $q_string = (isset($id)) ? "action=edit" : "action=add";
-    foreach ($fields as $index => $field)
+    $fieldname = $field['name'];
+    $type = get_form_var_type($field);
+    if ($fieldname == 'id')
     {
-      $fieldname = $field['name'];
-      $type = get_form_var_type($field);
-      if ($fieldname == 'id')
-      {
-        // id: don't need to do anything except add the id to the query string;
-        // the field itself is auto-incremented
-        $q_string .= "&id=$id";
-        continue; 
-      }
+      // id: don't need to do anything except add the id to the query string;
+      // the field itself is auto-incremented
+      $q_string .= "&id=$id";
+      continue; 
+    }
 
-      // first, get all the other form variables, except for password_hash which is
-      // a special case,and put them into an array, $values, which  we will use
-      // for entering into the database assuming we pass validation
-      if ($fieldname !== 'password_hash')
+    // first, get all the other form variables, except for password_hash which is
+    // a special case,and put them into an array, $values, which  we will use
+    // for entering into the database assuming we pass validation
+    if ($fieldname !== 'password_hash')
+    {
+      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+      // Trim the field to remove accidental whitespace
+      $values[$fieldname] = trim($values[$fieldname]);
+      // Truncate the field to the maximum length as a precaution.
+      if (null !== ($maxlength = maxlength("users.$fieldname")))
       {
-        $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-        // Trim the field to remove accidental whitespace
-        $values[$fieldname] = trim($values[$fieldname]);
-        // Truncate the field to the maximum length as a precaution.
-        if (null !== ($maxlength = maxlength("users.$fieldname")))
-        {
-          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
-        }
+        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
       }
-      
-      // we will also put the data into a query string which we will use for passing
-      // back to this page if we fail validation.   This will enable us to reload the
-      // form with the original data so that the user doesn't have to
-      // re-enter it.  (Instead of passing the data in a query string we
-      // could pass them as session variables, but at the moment MRBS does
-      // not rely on PHP sessions).
-      switch ($fieldname)
+    }
+    
+    // we will also put the data into a query string which we will use for passing
+    // back to this page if we fail validation.   This will enable us to reload the
+    // form with the original data so that the user doesn't have to
+    // re-enter it.  (Instead of passing the data in a query string we
+    // could pass them as session variables, but at the moment MRBS does
+    // not rely on PHP sessions).
+    switch ($fieldname)
+    {
+      // some of the fields get special treatment
+      case 'name':
+        // name: convert it to lower case
+        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        $values[$fieldname] = utf8_strtolower($values[$fieldname]);
+        break;
+      case 'password_hash':
+        // password: if the password field is blank it means
+        // that the user doesn't want to change the password
+        // so don't do anything; otherwise calculate the hash.
+        // Note: we don't put the password in the query string
+        // for security reasons.
+        if ($password0 !== '')
+        {
+          if (\PasswordCompat\binary\check())
+          {
+            $hash = password_hash($password0, PASSWORD_DEFAULT);
+          }
+          else
+          {
+            $hash = md5($password0);
+          }
+          $values[$fieldname] = $hash;
+        }
+        break;
+      case 'level':
+        // level:  set a safe default (lowest level of access)
+        // if there is no value set
+        $q_string .= "&$fieldname=" . $values[$fieldname];
+        if (!isset($values[$fieldname]))
+        {
+          $values[$fieldname] = 0;
+        }
+        // Check that we are not trying to upgrade our level.    This shouldn't be possible
+        // but someone might have spoofed the input in the edit form
+        if ($values[$fieldname] > $level)
+        {
+          header("Location: edit_users.php");
+          exit;
+        }
+        break;
+      case 'timestamp':
+      case 'last_login':
+        // Don't update this field ourselves at all
+        unset($fields[$index]);
+        unset($values[$fieldname]);
+        break;
+      default:
+        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        break;
+    }
+  }
+
+  // Now do some form validation
+  $valid_data = true;
+  foreach ($values as $fieldname => $value)
+  {
+    switch ($fieldname)
+    {
+      case 'name':
+        // check that the name is not empty
+        if ($value === '')
+        {
+          $valid_data = false;
+          $q_string .= "&name_empty=1";
+        }
+
+        $sql_params = array();
+
+        // Check that the name is unique.
+        // If it's a new user, then to check to see if there are any rows with that name.
+        // If it's an update, then check to see if there are any rows with that name, except
+        // for that user.
+        $query = "SELECT id FROM $tbl_users WHERE name=?";
+        $sql_params[] = $value;
+        if (isset($id))
+        {
+          $query .= " AND id != ?";
+          $sql_params[] = $id;
+        }
+        $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
+        $result = db()->query($query, $sql_params);
+        if ($result->count() > 0)
+        {
+          $valid_data = false;
+          $q_string .= "&name_not_unique=1";
+          $q_string .= "&taken_name=$value";
+        }
+        break;
+      case 'password_hash':
+        // check that the two passwords match
+        if ($password0 != $password1)
+        {
+          $valid_data = false;
+          $q_string .= "&pwd_not_match=1";
+        }
+        // check that the password conforms to the password policy
+        // if it's a new user, or else if it's an existing user
+        // trying to change their password
+        if (!isset($id) || ($password0 !== ''))
+        {
+          if (!validate_password($password0))
+          {
+            $valid_data = false;
+            $q_string .= "&pwd_invalid=1";
+          }
+        }
+        break;
+      case 'email':
+        // check that the email address is valid
+        if (isset($value) && ($value !== '') && !validate_email_list($value))
+        {
+          $valid_data = false;
+          $q_string .= "&invalid_email=1";
+        }
+        break;
+    }
+  }
+
+  // if validation failed, go back to this page with the query 
+  // string, which by now has both the error codes and the original
+  // form values 
+  if (!$valid_data)
+  { 
+    header("Location: edit_users.php?$q_string");
+    exit;
+  }
+
+  
+  // If we got here, then we've passed validation and we need to
+  // enter the data into the database
+
+  $sql_params = array();
+  $sql_fields = array();
+
+  // For each db column get the value ready for the database
+  foreach ($fields as $field)
+  {
+    $fieldname = $field['name'];;
+    
+    // Stop ordinary users trying to change fields they are not allowed to
+    if (!is_user_admin() && in_array($fieldname, $auth['db']['protected_fields']))
+    {
+      continue;
+    }
+    
+    // If the password field is blank then we are not changing it
+    if (($fieldname == 'password_hash') && (!isset($values[$fieldname])))
+    {
+      continue;
+    }
+    
+    if ($fieldname != 'id')
+    {
+      // pre-process the field value for SQL
+      $value = $values[$fieldname];
+      switch ($field['nature'])
       {
-        // some of the fields get special treatment
-        case 'name':
-          // name: convert it to lower case
-          $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
-          $values[$fieldname] = utf8_strtolower($values[$fieldname]);
-          break;
-        case 'password_hash':
-          // password: if the password field is blank it means
-          // that the user doesn't want to change the password
-          // so don't do anything; otherwise calculate the hash.
-          // Note: we don't put the password in the query string
-          // for security reasons.
-          if ($password0 !== '')
+        case 'integer':
+          if (!isset($value) || ($value === ''))
           {
-            if (\PasswordCompat\binary\check())
-            {
-              $hash = password_hash($password0, PASSWORD_DEFAULT);
-            }
-            else
-            {
-              $hash = md5($password0);
-            }
-            $values[$fieldname] = $hash;
+            // Try and set it to NULL when we can because there will be cases when we
+            // want to distinguish between NULL and 0 - especially when the field
+            // is a genuine integer.
+            $value = ($field['is_nullable']) ? null : 0;
           }
-          break;
-        case 'level':
-          // level:  set a safe default (lowest level of access)
-          // if there is no value set
-          $q_string .= "&$fieldname=" . $values[$fieldname];
-          if (!isset($values[$fieldname]))
-          {
-            $values[$fieldname] = 0;
-          }
-          // Check that we are not trying to upgrade our level.    This shouldn't be possible
-          // but someone might have spoofed the input in the edit form
-          if ($values[$fieldname] > $level)
-          {
-            header("Location: edit_users.php");
-            exit;
-          }
-          break;
-        case 'timestamp':
-        case 'last_login':
-          // Don't update this field ourselves at all
-          unset($fields[$index]);
-          unset($values[$fieldname]);
           break;
         default:
-          $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+          // No special handling
           break;
       }
-    }
+     
+      /* If we got here, we have a valid, sql-ified value for this field,
+       * so save it for later */
+      $sql_fields[$fieldname] = $value;
+    }                   
+  } /* end for each column of user database */
 
-    // Now do some form validation
-    $valid_data = true;
-    foreach ($values as $fieldname => $value)
+  /* Now generate the SQL operation based on the given array of fields */
+  if (isset($id))
+  {
+    /* if the id exists - then we are editing an existing user, rather than
+     * creating a new one */
+
+    $assign_array = array();
+    $operation = "UPDATE $tbl_users SET ";
+
+    foreach ($sql_fields as $fieldname => $value)
     {
-      switch ($fieldname)
-      {
-        case 'name':
-          // check that the name is not empty
-          if ($value === '')
-          {
-            $valid_data = false;
-            $q_string .= "&name_empty=1";
-          }
-
-          $sql_params = array();
-
-          // Check that the name is unique.
-          // If it's a new user, then to check to see if there are any rows with that name.
-          // If it's an update, then check to see if there are any rows with that name, except
-          // for that user.
-          $query = "SELECT id FROM $tbl_users WHERE name=?";
-          $sql_params[] = $value;
-          if (isset($id))
-          {
-            $query .= " AND id != ?";
-            $sql_params[] = $id;
-          }
-          $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-          $result = db()->query($query, $sql_params);
-          if ($result->count() > 0)
-          {
-            $valid_data = false;
-            $q_string .= "&name_not_unique=1";
-            $q_string .= "&taken_name=$value";
-          }
-          break;
-        case 'password_hash':
-          // check that the two passwords match
-          if ($password0 != $password1)
-          {
-            $valid_data = false;
-            $q_string .= "&pwd_not_match=1";
-          }
-          // check that the password conforms to the password policy
-          // if it's a new user, or else if it's an existing user
-          // trying to change their password
-          if (!isset($id) || ($password0 !== ''))
-          {
-            if (!validate_password($password0))
-            {
-              $valid_data = false;
-              $q_string .= "&pwd_invalid=1";
-            }
-          }
-          break;
-        case 'email':
-          // check that the email address is valid
-          if (isset($value) && ($value !== '') && !validate_email_list($value))
-          {
-            $valid_data = false;
-            $q_string .= "&invalid_email=1";
-          }
-          break;
-      }
+      array_push($assign_array, db()->quote($fieldname) . "=?");
+      $sql_params[] = $value;
     }
-
-    // if validation failed, go back to this page with the query 
-    // string, which by now has both the error codes and the original
-    // form values 
-    if (!$valid_data)
-    { 
-      header("Location: edit_users.php?$q_string");
-      exit;
-    }
-
-    
-    // If we got here, then we've passed validation and we need to
-    // enter the data into the database
-
-    $sql_params = array();
-    $sql_fields = array();
-  
-    // For each db column get the value ready for the database
-    foreach ($fields as $field)
-    {
-      $fieldname = $field['name'];;
-      
-      // Stop ordinary users trying to change fields they are not allowed to
-      if (!is_user_admin() && in_array($fieldname, $auth['db']['protected_fields']))
-      {
-        continue;
-      }
-      
-      // If the password field is blank then we are not changing it
-      if (($fieldname == 'password_hash') && (!isset($values[$fieldname])))
-      {
-        continue;
-      }
-      
-      if ($fieldname != 'id')
-      {
-        // pre-process the field value for SQL
-        $value = $values[$fieldname];
-        switch ($field['nature'])
-        {
-          case 'integer':
-            if (!isset($value) || ($value === ''))
-            {
-              // Try and set it to NULL when we can because there will be cases when we
-              // want to distinguish between NULL and 0 - especially when the field
-              // is a genuine integer.
-              $value = ($field['is_nullable']) ? null : 0;
-            }
-            break;
-          default:
-            // No special handling
-            break;
-        }
-       
-        /* If we got here, we have a valid, sql-ified value for this field,
-         * so save it for later */
-        $sql_fields[$fieldname] = $value;
-      }                   
-    } /* end for each column of user database */
-  
-    /* Now generate the SQL operation based on the given array of fields */
-    if (isset($id))
-    {
-      /* if the id exists - then we are editing an existing user, rather than
-       * creating a new one */
-  
-      $assign_array = array();
-      $operation = "UPDATE $tbl_users SET ";
-  
-      foreach ($sql_fields as $fieldname => $value)
-      {
-        array_push($assign_array, db()->quote($fieldname) . "=?");
-        $sql_params[] = $value;
-      }
-      $operation .= implode(",", $assign_array) . " WHERE id=?";
-      $sql_params[] = $id;
-    }
-    else
-    {
-      /* The id field doesn't exist, so we're adding a new user */
-  
-      $fields_list = array();
-      $values_list = array();
-  
-      foreach ($sql_fields as $fieldname => $value)
-      {
-        array_push($fields_list,$fieldname);
-        array_push($values_list,'?');
-        $sql_params[] = $value;
-      }
-
-      foreach ($fields_list as &$field)
-      {
-        $field = db()->quote($field);
-      }
-      $operation = "INSERT INTO $tbl_users " .
-        "(". implode(",", $fields_list) . ")" .
-        " VALUES " . "(" . implode(",", $values_list) . ")";
-    }
-  
-    /* DEBUG lines - check the actual sql statement going into the db */
-    //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
-    //exit;
-    db()->command($operation, $sql_params);
-  
-    /* Success. Redirect to the user list, to remove the form args */
-    header("Location: edit_users.php");
+    $operation .= implode(",", $assign_array) . " WHERE id=?";
+    $sql_params[] = $id;
   }
+  else
+  {
+    /* The id field doesn't exist, so we're adding a new user */
+
+    $fields_list = array();
+    $values_list = array();
+
+    foreach ($sql_fields as $fieldname => $value)
+    {
+      array_push($fields_list,$fieldname);
+      array_push($values_list,'?');
+      $sql_params[] = $value;
+    }
+
+    foreach ($fields_list as &$field)
+    {
+      $field = db()->quote($field);
+    }
+    $operation = "INSERT INTO $tbl_users " .
+      "(". implode(",", $fields_list) . ")" .
+      " VALUES " . "(" . implode(",", $values_list) . ")";
+  }
+
+  /* DEBUG lines - check the actual sql statement going into the db */
+  //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
+  //exit;
+  db()->command($operation, $sql_params);
+
+  /* Success. Redirect to the user list, to remove the form args */
+  header("Location: edit_users.php");
 }
 
 /*---------------------------------------------------------------------------*\
