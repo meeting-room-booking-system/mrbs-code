@@ -44,7 +44,7 @@ if (version_compare(PHP_VERSION, '5.1.2', '>=')) {
      */
      
     // MRBS
-    $message = "The minimum PHP version fore MRBS means that it should not be possible " .
+    $message = "The minimum PHP version for MRBS means that it should not be possible " .
                "to get here.";
     throw new \Exception($message);
     
