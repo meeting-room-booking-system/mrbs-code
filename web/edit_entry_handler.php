@@ -61,7 +61,7 @@ Form::checkToken();
 //  ---------------------------------------------
 checkAuthorised(this_page());
 
-$current_user = getUserName();
+$current_username = getUserName();
 
 
 // (2) Get the form variables
@@ -136,11 +136,11 @@ foreach($formvars as $var => $var_type)
 // user is an admin and we allow admins to make bookings on behalf of others.
 if (!is_book_admin() || $auth['admin_can_only_book_for_self'])
 {
-  if ($create_by !== $current_user)
+  if ($create_by !== $current_username)
   {
-    $message = "Attempt made by user '$current_user' to make a booking in the name of '$create_by'";
+    $message = "Attempt made by user '$current_username' to make a booking in the name of '$create_by'";
     trigger_error($message, E_USER_NOTICE);
-    $create_by = $current_user;
+    $create_by = $current_username;
   }
 }
 
@@ -667,7 +667,7 @@ foreach ($rooms as $room_id)
 {
   $booking = array();
   $booking['create_by'] = $create_by;
-  $booking['modified_by'] = (isset($id)) ? $current_user : '';
+  $booking['modified_by'] = (isset($id)) ? $current_username : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;
