@@ -307,7 +307,7 @@ function authGetUserEmail($user)
 
 
 // Return an array of all users
-function get_users()
+function authGetUsers()
 {
   global $tbl_users;
   
@@ -318,7 +318,7 @@ function get_users()
 
 
 // Return an array of users, indexed by 'username' and 'display_name'
-function get_usernames()
+function authGetUsernames()
 {
   global $tbl_users;
   

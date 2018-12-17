@@ -101,7 +101,7 @@ function authGetUserEmail($user)
 
 
 // Return an array of users, indexed by 'username' and 'display_name'
-function get_usernames()
+function authGetUsernames()
 {
   global $auth;
   

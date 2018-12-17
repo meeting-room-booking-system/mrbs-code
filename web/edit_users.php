@@ -540,7 +540,7 @@ if ($ajax)
 // Get the information about the fields in the users table
 $fields = db()->field_info($tbl_users);
 
-$users = get_users();
+$users = authGetUsers();
 
 
 /*---------------------------------------------------------------------------*\
