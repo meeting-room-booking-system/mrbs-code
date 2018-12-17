@@ -61,7 +61,7 @@ Form::checkToken();
 //  ---------------------------------------------
 checkAuthorised(this_page());
 
-$user = getUserName();
+$current_user = getUserName();
 
 
 // (2) Get the form variables
@@ -130,6 +130,18 @@ foreach($formvars as $var => $var_type)
     $$var = truncate($$var, "entry.$var");
   }
   
+}
+
+// Validate the create_by variable, checking that it's the current user, unless the
+// user is an admin and we allow admins to make bookings on behalf of others.
+if (!is_book_admin() || $auth['admin_can_only_book_for_self'])
+{
+  if ($create_by !== $current_user)
+  {
+    $message = "Attempt made by user '$current_user' to make a booking in the name of '$create_by'";
+    trigger_error($message, E_USER_NOTICE);
+    $create_by = $current_user;
+  }
 }
 
 // If they're not an admin and multi-day bookings are not allowed, then
@@ -655,7 +667,7 @@ foreach ($rooms as $room_id)
 {
   $booking = array();
   $booking['create_by'] = $create_by;
-  $booking['modified_by'] = (isset($id)) ? $user : '';
+  $booking['modified_by'] = (isset($id)) ? $current_user : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;

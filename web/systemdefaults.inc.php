@@ -569,7 +569,7 @@ $skip_default = false;
 // 
 // $edit_entry_field_order = array('name', 'in_charge');
 // 
-// Valid entries in this array are: 'name', 'description', 'start_time',
+// Valid entries in this array are: 'create_by', 'name', 'description', 'start_time',
 // 'end_time', 'room_id', 'type', 'confirmation_status', 'privacy_status',
 // plus any custom fields you may have defined. Fields that are not
 // mentioned in the array are appended at the end, in their usual order.
@@ -981,6 +981,10 @@ $auth['only_admin_can_select_multiroom'] = false;
 // If you don't want ordinary users to be able to see the other users'
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
+
+// Set this to true if you don't want admins to be able to make bookings
+// on behalf of other users
+$auth['admin_can_only_book_for_self'] = false;
 
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to true

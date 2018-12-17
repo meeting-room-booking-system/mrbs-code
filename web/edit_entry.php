@@ -78,7 +78,7 @@ $fields = db()->field_info($tbl_entry);
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
-$entry_fields = array('name', 'description', 'start_time', 'end_time', 'room_id',
+$entry_fields = array('create_by', 'name', 'description', 'start_time', 'end_time', 'room_id',
                       'type', 'confirmation_status', 'privacy_status');
                       
 foreach ($entry_fields as $field)
@@ -127,6 +127,10 @@ function get_field_entry_input($params)
       $class = 'FieldInputText';
     }
   }
+  else
+  {
+    $class = 'FieldInputText';
+  }
   
   $full_class = __NAMESPACE__ . "\\Form\\$class";
   $field = new $full_class();
@@ -171,7 +175,8 @@ function get_field_entry_input($params)
       {
         $field->setControlAttribute('value', $params['value']);
       }
-      if (null !== ($maxlength = maxlength($params['field'])))
+      if (isset($params['field']) && 
+          (null !== ($maxlength = maxlength($params['field']))))
       {
         $field->setControlAttribute('maxlength', $maxlength);
       }
@@ -182,6 +187,44 @@ function get_field_entry_input($params)
       break;
   }
 
+  return $field;
+}
+
+
+function get_field_create_by($create_by, $disabled=false)
+{
+  if (function_exists(__NAMESPACE__ . "\\get_usernames"))
+  {
+    // We can get a list of all users, so present a <select> element
+    $users = get_usernames();
+
+    $options = array();
+    
+    foreach ($users as $user)
+    {
+      $options[$user['username']] = $user['display_name'];
+    }
+    
+    $field = new FieldSelect();
+    $field->setLabel(get_vocab('createdby'))
+          ->setControlAttributes(array('name'     => 'create_by',
+                                       'disabled' => $disabled))
+          ->addSelectOptions($options, $create_by, true);
+  }
+  else
+  {
+    // We don't know all the available users, so we'll just present
+    // a text input field and rely on the user to enter a valid username.
+    $params = array('label'    => get_vocab('createdby'),
+                    'name'     => 'create_by',
+                    'field'    => 'entry.create_by',
+                    'value'    => $create_by,
+                    'required' => true,
+                    'disabled' => $disabled);
+                    
+    $field = get_field_entry_input($params);
+  }
+  
   return $field;
 }
 
@@ -1098,7 +1141,7 @@ if (!isset($returl))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = getUserName();
+$current_user = getUserName();
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
@@ -1170,7 +1213,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($user != $entry['create_by'])) 
+  if (isset($copy) && ($current_user != $entry['create_by'])) 
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
@@ -1244,7 +1287,7 @@ if (isset($id))
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
         // different if it's an admin doing the copying)
-        $create_by   = (isset($copy)) ? $user : $entry['create_by'];
+        $create_by   = (isset($copy)) ? $current_user : $entry['create_by'];
         break;
         
       case 'start_time':
@@ -1345,7 +1388,7 @@ else
   // It is a new booking. The data comes from whichever button the user clicked
   $edit_type     = "series";
   $name          = "";
-  $create_by     = $user;
+  $create_by     = $current_user;
   $description   = $default_description;
   $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
   $room_id       = $room;
@@ -1618,10 +1661,11 @@ $form->setAttributes(array('class'  => 'standard',
                            'action' => 'edit_entry_handler.php',
                            'method' => 'post'));
 
-$form->addHiddenInputs(array('returl'    => $returl,
-                             'create_by' => $create_by,
-                             'rep_id'    => $rep_id,
-                             'edit_type' => $edit_type));
+$hidden_inputs = array('returl'    => $returl,
+                       'rep_id'    => $rep_id,
+                       'edit_type' => $edit_type);
+
+$form->addHiddenInputs($hidden_inputs);
 
 // The original_room_id will only be set if this was an existing booking.
 // If it is an existing booking then edit_entry_handler needs to know the
@@ -1649,6 +1693,20 @@ foreach ($edit_entry_field_order as $key)
 {
   switch ($key)
   {
+    case 'create_by':
+      // Add in the create_by hidden input, unless the user is a booking admin
+      // and we're allowing admins to make bookings on behalf of other users, in
+      // which case we'll have an explicit form field to specify the user.                      
+      if (!is_book_admin() || $auth['admin_can_only_book_for_self'])
+      {
+        $form->addHiddenInput('create_by', $create_by);
+      }
+      else
+      {
+        $fieldset->addElement(get_field_create_by($create_by));
+      }
+      break;
+      
     case 'name':
       $fieldset->addElement(get_field_name($name));
       break;
