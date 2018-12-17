@@ -14,8 +14,9 @@ use MRBS\Form\FieldInputText;
   Display the login form. 
   Will eventually return to $target_url with query string returl=$returl
   If $error is set then an $error is printed.
+  If $raw is true then the message is not HTML escaped
 */
-function print_login_form($action, $target_url, $returl, $error=null)
+function print_login_form($action, $target_url, $returl, $error=null, $raw=false)
 {
   $form = new Form();
   $form->setAttributes(array('class'  => 'standard',
@@ -33,7 +34,7 @@ function print_login_form($action, $target_url, $returl, $error=null)
   if (isset($error))
   {
     $p = new ElementP();
-    $p->setText($error);
+    $p->setText($error, false, $raw);
     $form->addElement($p);
   }
   
