@@ -112,6 +112,24 @@ function authGetUserEmail($user)
 }
 
 
+// Return an array of users, indexed by 'username' and 'display_name'
+function authGetUsernames()
+{
+  $result = array();
+  
+  $args = array('fields' => array('user_login', 'display_name'));
+  $users = get_users($args);
+  
+  foreach ($users as $user)
+  {
+    $result[] = array('username'     => $user->user_login,
+                      'display_name' => $user->display_name);
+  }
+  
+  return $result;
+}
+
+
 // Convert a WordPress role name to lowercase and replace spaces by underscores.
 // Example "MRBS Admin" -> "mrbs_admin"
 function standardise_role_name($role)
