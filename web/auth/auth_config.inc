@@ -99,3 +99,20 @@ function authGetUserEmail($user)
   return get_default_email($user);
 }
 
+
+// Return an array of users, indexed by 'username' and 'display_name'
+function get_usernames()
+{
+  global $auth;
+  
+  $result = array();
+  
+  foreach ($auth['user'] as $user => $password)
+  {
+    $result[] = array('username'     => $user,
+                      'display_name' => $user);
+  }
+  
+  return $result;
+}
+
