@@ -82,9 +82,9 @@ elseif (isset($update_button))
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
-  $user = getUserName();
+  $current_user = getUserName();
     
-  return (is_user_admin() || (strcasecmp($user, $target) === 0));
+  return (is_user_admin() || (strcasecmp($current_user, $target) === 0));
 }
 
 
@@ -540,7 +540,8 @@ if ($ajax)
 // Get the information about the fields in the users table
 $fields = db()->field_info($tbl_users);
 
-$nusers = db()->query1("SELECT COUNT(*) FROM $tbl_users");
+$users = get_users();
+
 
 /*---------------------------------------------------------------------------*\
 |                         Authenticate the current user                         |
@@ -554,10 +555,10 @@ if (isset($action) && in_array($action, array('delete', 'update')))
 
 $initial_user_creation = false;
 
-if ($nusers > 0)
+if (count($users) > 0)
 {
-  $user = getUserName();
-  $level = authGetUserLevel($user);
+  $current_user = getUserName();
+  $level = authGetUserLevel($current_user);
   // Check the user is authorised for this page
   checkAuthorised(this_page());
 }
@@ -573,7 +574,7 @@ else
     $id = null;
   }
   $level = $max_level;
-  $user = "";           // to avoid an undefined variable notice
+  $current_user = '';           // to avoid an undefined variable notice
 }
 
 
@@ -782,10 +783,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  if (isset($user))
+  if (isset($current_user))
   {
     $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                          array(utf8_strtolower($user)));
+                          array(utf8_strtolower($current_user)));
   }
   else
   {
@@ -1127,10 +1128,7 @@ if (!$ajax)
 
 if ($initial_user_creation != 1)   // don't print the user table if there are no users
 {
-  // Get the user information
-  $res = db()->query("SELECT * FROM $tbl_users ORDER BY level DESC, name");
-  
-  // Display the data in a table
+  // Display the user data in a table
   
   // We don't display these columns or they get special treatment
   $ignore_columns = array('id', 'password_hash', 'name'); 
@@ -1182,13 +1180,13 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // an Ajax request
   if (!$ajax_capable || $ajax)
   {
-    for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+    foreach ($users as $user)
     {
       // You can only see this row if (a) we allow everybody to see all rows or
       // (b) you are an admin or (c) you are this user
-      if (!$auth['only_admin_can_see_other_users'] || can_edit_user($row['name']))
+      if (!$auth['only_admin_can_see_other_users'] || can_edit_user($user['name']))
       {
-        output_row($row);
+        output_row($user);
       }
     }
   }
