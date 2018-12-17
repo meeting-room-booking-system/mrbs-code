@@ -36,6 +36,8 @@ class Element
   }
   
   
+  // If $raw is true then the text will not be put through htmlspecialchars().  Only to
+  // be used for trusted text.
   public function setText($text, $text_at_start=false, $raw=false)
   {
     if ($this->self_closing)
