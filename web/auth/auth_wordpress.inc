@@ -123,10 +123,27 @@ function authGetUsernames()
   $mrbs_roles = array_merge($auth['wordpress']['admin_roles'],
                             $auth['wordpress']['user_roles']);
   
-  $args = array('fields'   => array('user_login', 'display_name'),
-                'role__in' => $mrbs_roles);
-                
-  $users = get_users($args);
+  $args = array('fields' => array('user_login', 'display_name'));
+  
+  if (version_compare(get_bloginfo('version'), '4.4', '>=') )
+  {
+    $args['role__in'] = $mrbs_roles;
+    $users = get_users($args);
+  }
+  else
+  {
+    // The 'role__in' argument is only supported since WordPress 4.4.   Before that
+    // we have to do it one role at a time.
+    $users = array();
+    $mrbs_roles = array_unique($mrbs_roles);
+    foreach ($mrbs_roles as $mrbs_role)
+    {
+      $args['role'] = $mrbs_role;
+      $users = array_merge($users, get_users($args));
+    }
+    // Remove duplicate users
+    $users = array_map('unserialize', array_unique(array_map('serialize', $users)));
+  }
   
   foreach ($users as $user)
   {
