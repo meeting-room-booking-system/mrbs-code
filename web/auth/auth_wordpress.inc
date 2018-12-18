@@ -112,12 +112,20 @@ function authGetUserEmail($user)
 }
 
 
-// Return an array of users, indexed by 'username' and 'display_name'
+// Return an array of MRBS users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {
+  global $auth;
+  
   $result = array();
   
-  $args = array('fields' => array('user_login', 'display_name'));
+  // We are only interested in MRBS users and admins
+  $mrbs_roles = array_merge($auth['wordpress']['admin_roles'],
+                            $auth['wordpress']['user_roles']);
+  
+  $args = array('fields'   => array('user_login', 'display_name'),
+                'role__in' => $mrbs_roles);
+                
   $users = get_users($args);
   
   foreach ($users as $user)
