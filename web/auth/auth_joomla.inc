@@ -2,6 +2,7 @@
 namespace MRBS;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
+require_once MRBS_ROOT . '/auth/functions_auth.inc';
 
 // Check we've got the right session scheme
 if ($auth['session'] !== 'joomla')
@@ -102,6 +103,9 @@ function authGetUsernames()
     $result[] = array('username'     => $user->username,
                       'display_name' => $user->name);
   }
+  
+  // Need to sort the users
+  sort_users($result);
   
   return $result;
 }
