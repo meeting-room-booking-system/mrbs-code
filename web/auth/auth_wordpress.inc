@@ -123,7 +123,9 @@ function authGetUsernames()
   $mrbs_roles = array_merge($auth['wordpress']['admin_roles'],
                             $auth['wordpress']['user_roles']);
   
-  $args = array('fields' => array('user_login', 'display_name'));
+  $args = array('fields'  => array('user_login', 'display_name'),
+                'orderby' => 'display_name',
+                'order'   => 'ASC');
   
   if (version_compare(get_bloginfo('version'), '4.4', '>=') )
   {
