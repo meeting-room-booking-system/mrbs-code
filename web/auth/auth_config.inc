@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 /*****************************************************************************
 *
 *   File name       auth_config.inc
@@ -112,6 +114,9 @@ function authGetUsernames()
     $result[] = array('username'     => $user,
                       'display_name' => $user);
   }
+  
+  // Need to sort the users
+  sort_users($result);
   
   return $result;
 }
