@@ -202,7 +202,14 @@ function get_field_create_by($create_by, $disabled=false)
     
     foreach ($users as $user)
     {
-      $options[$user['username']] = $user['display_name'];
+      if (isset($user['display_name']) && ($user['display_name'] !== ''))
+      {
+        $options[$user['username']] = $user['display_name'];
+      }
+      else
+      {
+        $options[$user['username']] = $user['username'];
+      }
     }
     
     $field = new FieldSelect();
