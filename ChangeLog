@@ -1,8 +1,42 @@
 2018-12-19  John Beranek  <jberanek@users.sourceforge.net>
 
+	* Merge with default
+	[dec3a546c58c] [tip]
+
+2018-12-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/PHPMailer/PHPMailerAutoload.php:
+	Corrected typo in message
+	[c29599584c21]
+
+2018-12-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/PHPMailer/PHPMailerAutoload.php:
+	Got rid of deprecated error in PHP 7.2 and above. This is only a
+	temporary fix though as we should really upgrade to PHPMailer V6,
+	but that requires PHP 5.5 or later.
+	[dbe30938ab6c]
+
+	* web/lib/PHPMailer/VERSION, web/lib/PHPMailer/class.phpmailer.php,
+	web/lib/PHPMailer/class.pop3.php, web/lib/PHPMailer/class.smtp.php:
+	Upgraded PHPMailer to Version 5.2.27. (Note that the 5.2 branch is
+	now deprecated and we should really upgrade to PHPMailer Version 6,
+	but that requires PHP 5.5 or greater.)
+	[030681ee9968]
+
+2018-12-19  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_7_2 for changeset b02368b8844d
+	[5e4478e77b22]
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for 1.7.2 release
+	[b02368b8844d] [mrbs-1_7_2]
+
 	* web/version_num.inc:
 	Update version number to 1.7.2
-	[7a4417bb0ed1] [tip]
+	[7a4417bb0ed1]
 
 2018-12-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
 

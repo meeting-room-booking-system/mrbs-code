@@ -139,6 +139,8 @@ Version 1.7.2 (Web Dec 19th 2018):
  logged out by the garbage collector before the session cookie is due
  to expire.
 
+[*] Upgraded PHPMailer to Version 5.2.27.
+
 
 -------------------------------------------------------------------------------
 Version 1.7.1 (Sun Feb 11th 2018):
