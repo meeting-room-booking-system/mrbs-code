@@ -1,8 +1,1709 @@
+2018-12-19  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Update version number to 1.7.2
+	[7a4417bb0ed1] [tip]
+
+2018-12-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/version.inc:
+	Added error suppression to the exec because we are not interested if
+	the exec fails, eg with an "unable to fork" message.
+	[7b29f40cccbc]
+
+2018-12-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Set the session.gc_maxlifetime to the same time as
+	$auth['session_php']['session_expire_time'] so that users aren't
+	logged out by the garbage collector before the session cookie is due
+	to expire.
+	[8d35130aada1]
+
+2018-12-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/internalconfig.inc.php:
+	Fixed typo. See SF Support Requests #1650.
+	[90a6965a196a]
+
+2018-12-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/config.inc.php-sample:
+	Added a note about how to include files from the config file. See SF
+	Support Requests #1649.
+	[aea1be25006a]
+
+	* web/session/session_cas.inc, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc:
+	Removed the now redundant alternative redirection by a manual link
+	instead of a redirection to a relative URL. The alternative link was
+	generating errors after logoff because the session had been
+	destroyed and the new CSRF token couldn't be stored (with the PHP
+	session scheme anyway, but removed from all schemes for
+	consistency).
+	[ca9871530b5e]
+
+2018-11-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Fixed SQL syntax error in session garbage collection code, which
+	looks like it was probably the cause of the "Could not start DB
+	sessions" error.
+	[99d5eced72ae]
+
+	* web/internalconfig.inc.php:
+	Fixed bug which resulted in error reporting being disabled
+	[ac56320c2354]
+
+	* web/auth/auth_joomla.inc, web/auth/auth_saml.inc,
+	web/auth/auth_wordpress.inc, web/init.inc,
+	web/session/session_saml.inc:
+	Replaced tabs with spaces in some recent changes that had been made
+	after my editor mysteriously reset itself to the default settings.
+	At the same time replaced tabs with spaces eleswhere in the MRBS
+	code (except for third party libraries). Also brought the formatting
+	of the two SAML files in line with MRBS conventions.
+	[bd2ead67019b]
+
+2018-11-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Added some diagnostic information. I'm occasionally getting the
+	message "Could not start DB sessions, trying ordinary PHP sessions",
+	but am not sure why.
+	[92f364320446]
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Fixed typo in comment
+	[8abe0de4e0c0]
+
+2018-11-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php, web/jquery/datatables/js/plugins.js:
+	Fixed bug which prevented the name column of the users table being
+	sorted by DataTables. (Temporary fix as we really need to move to
+	using data-sort).
+	[a16a774c7c8a]
+
+2018-11-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Changed behaviour so that if you are not a user admin then you are
+	only allowed to see the last_updated and last_login times for
+	yourself.
+	[09212d8584d8]
+
+2018-11-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Changed code so that no last updated timestamp is shown if it is 0.
+	[0f4c7586e123]
+
+2018-11-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed bug preventing DataTables from sorting the last login column
+	[b9783ca55ed0]
+
+2018-11-17  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/upgrade/59/mysql.sql:
+	Correct bad merge of DB schema 59 upgrade
+	[d5e076e30a01]
+
+	* web/upgrade/59/mysql.sql, web/upgrade/59/pgsql.sql:
+	Added missing DB upgrade files
+	[5d8128eac356]
+
+	* tables.my.sql, tables.pg.sql, web/auth/auth_db.inc,
+	web/edit_users.php, web/lang/lang.en, web/lib/MRBS/DB.php:
+	Added 'last login' functionality to 'db' auth scheme
+	[4a1bdd38eee6]
+
+2018-11-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/lib/MRBS/DB.php,
+	web/upgrade/58/mysql.sql, web/upgrade/58/pgsql.sql:
+	Fixed bug that prevented users with emojis in their usernames from
+	logging in when using MySQL.
+	[22fbdb9c7427]
+
+2018-11-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Switched to using the REQUEST_URI instead of PHP_SELF in order to
+	get the cookie path. See SF Support Requests #1634.
+	[0283e38128d2]
+
+	* web/mincals.inc:
+	Removed redundant global declaration
+	[4dbe7ca39a42]
+
+	* web/session/session_cookie.inc, web/session/session_php.inc:
+	Removed redundant global declarations and simplified code
+	[e7b6fb6e6557]
+
+	* web/grab_globals.inc.php:
+	Added REQUEST_URI to the list of server variables 'grabbed'.
+	[63de505573f6]
+
+	* web/style.inc:
+	Got rid of an instance of using $PHP_SELF
+	[dabe1b990f9e]
+
+	* web/view_entry.php:
+	Removed redundant global declaration
+	[cbe145a62771]
+
+2018-11-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_auth.inc:
+	Removed redundant global declaration
+	[ebde3a9da707]
+
+	* web/functions.inc, web/mrbs_auth.inc:
+	Revised last change
+	[9e4225134589]
+
+	* web/mrbs_auth.inc:
+	Added an error trigger if PHP_SELF is empty. See SF Support Requests
+	#1633.
+	[8d102d0c67ff]
+
+2018-11-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Fixed bug that allowed areas with no enabled rooms to appear in the
+	area select. [Fix back-ported from the nav_improvements branch -
+	should have fixed it here first].
+	[5e120005db86]
+
+2018-11-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed typo in comment
+	[4edb470e4cdc]
+
+	* web/functions.inc:
+	Removed redundant code.
+	[7037cc9865c4]
+
+	* web/functions.inc:
+	Fixed bug in date_default_timezone_set() that was causing it to set
+	the current area timnezone rather than the config timezone if no
+	timezone was specified.
+	[f625b947d9b4]
+
+2018-10-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Added comment.
+	[a77261240ba0]
+
+	* web/language.inc:
+	Fixed problem with date in search results heading being shown in the
+	wrong format when using en_GB on Windows. Not a great fix - the
+	language and locale handling is much better in the nav_improvements
+	branch and this will eventually be merged back into the default
+	branch.
+	[4804fe8a6f62]
+
+	* web/search.php:
+	Fixed problem introduced in last few changes
+	[aee149b9f408]
+
+	* web/functions.inc, web/search.php:
+	Fixed bug causing "Empty or invalid search string". See SF Bugs
+	#421.
+	[d34ce063a263]
+
+2018-10-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Fixed bug introduced in d21c016bf2ce causing automatic detection of
+	scheduling conflicts to fail.
+	[3051ac2d89f3]
+
+	* UPGRADE:
+	Clarified upgrade instructions. See SF Support Requests #1622.
+	[4e705e487f93]
+
+	* web/edit_area_handler.php, web/js/edit_area.js.php:
+	Disabled the default duration field on the area form if "All day" is
+	checked.
+	[112be64422fb]
+
+	* web/view_entry.php:
+	Tidied up code
+	[242258e754b2]
+
+	* web/pending.php:
+	Fixed bug causing series not to be approved. Might be related to SF
+	Support Requests #1623
+	[1f678d571183]
+
+2018-10-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/systemdefaults.inc.php:
+	Changed the code so that it is no longer necessary to include an '@'
+	character at the beginning of $mail_settings['domain'] - though
+	older config files that do have one will still work.
+	[06e705b973d8]
+
+	* web/functions.inc, web/systemdefaults.inc.php:
+	Fixed a bug that was causing the username_suffix to be stripped out
+	of a username wherever it occurred, rather than just at the end.
+	[d24470d34285]
+
+	* web/view_entry.php:
+	Fixed a bug (SF Bugs #420) causing an "invalid id" message if you
+	try an edit an entry without first having logged in.
+	[78bdbdd868ad]
+
+2018-09-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php, web/lib/MRBS/Form/Field.php:
+	Fixed problem with disabled required fields on the edit_users form.
+	See SF Bugs #419.
+	[cb2378459f9b]
+
+2018-09-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/CAS.php, web/lib/CAS/AuthenticationException.php,
+	web/lib/CAS/Autoload.php, web/lib/CAS/Client.php,
+	web/lib/CAS/CookieJar.php, web/lib/CAS/Exception.php,
+	web/lib/CAS/GracefullTerminationException.php,
+	web/lib/CAS/InvalidArgumentException.php, web/lib/CAS/LICENSE,
+	web/lib/CAS/Languages/Catalan.php,
+	web/lib/CAS/Languages/ChineseSimplified.php,
+	web/lib/CAS/Languages/English.php, web/lib/CAS/Languages/French.php,
+	web/lib/CAS/Languages/German.php, web/lib/CAS/Languages/Greek.php,
+	web/lib/CAS/Languages/Japanese.php,
+	web/lib/CAS/Languages/LanguageInterface.php,
+	web/lib/CAS/Languages/Spanish.php, web/lib/CAS/NOTICE,
+	web/lib/CAS/OutOfSequenceBeforeAuthenticationCallException.php,
+	web/lib/CAS/OutOfSequenceBeforeClientException.php,
+	web/lib/CAS/OutOfSequenceBeforeProxyException.php,
+	web/lib/CAS/OutOfSequenceException.php,
+	web/lib/CAS/PGTStorage/AbstractStorage.php,
+	web/lib/CAS/PGTStorage/Db.php, web/lib/CAS/PGTStorage/File.php,
+	web/lib/CAS/ProxiedService.php,
+	web/lib/CAS/ProxiedService/Abstract.php,
+	web/lib/CAS/ProxiedService/Exception.php,
+	web/lib/CAS/ProxiedService/Http.php,
+	web/lib/CAS/ProxiedService/Http/Abstract.php,
+	web/lib/CAS/ProxiedService/Http/Get.php,
+	web/lib/CAS/ProxiedService/Http/Post.php,
+	web/lib/CAS/ProxiedService/Imap.php,
+	web/lib/CAS/ProxiedService/Testable.php, web/lib/CAS/ProxyChain.php,
+	web/lib/CAS/ProxyChain/AllowedList.php,
+	web/lib/CAS/ProxyChain/Any.php,
+	web/lib/CAS/ProxyChain/Interface.php,
+	web/lib/CAS/ProxyChain/Trusted.php,
+	web/lib/CAS/ProxyTicketException.php,
+	web/lib/CAS/Request/AbstractRequest.php,
+	web/lib/CAS/Request/CurlMultiRequest.php,
+	web/lib/CAS/Request/CurlRequest.php,
+	web/lib/CAS/Request/Exception.php,
+	web/lib/CAS/Request/MultiRequestInterface.php,
+	web/lib/CAS/Request/RequestInterface.php,
+	web/lib/CAS/TypeMismatchException.php, web/lib/phpCAS.php:
+	Updated to latest version of PHP CAS source
+	[cacec73c3e52]
+
+2018-09-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Element.php:
+	Simplified code
+	[6263e4198b99]
+
+	* web/edit_area.php, web/lib/MRBS/Form/Element.php:
+	Fixed problem with checkboxes on forms not being filled properly.
+	See SF Bugs #418.
+	[d246de90a776]
+
+2018-09-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_db_ext.inc, web/edit_entry.php,
+	web/session/session_cas.inc, web/session/session_cookie.inc,
+	web/session/session_joomla.inc, web/session/session_php.inc,
+	web/session/session_wordpress.inc:
+	Fixed problems with (a) the URL growing longer and longer when
+	logging in and logging out and logging in again etc. and (b) the
+	Back button on the edit_entry page not working after a login.
+	[8adab239fe9d]
+
+2018-08-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_db_ext.inc:
+	Improved earlier fix.
+	[36252600f45c]
+
+	* web/auth/auth_db_ext.inc:
+	Fixed bug when using db_ext and
+	$auth['db_ext']['column_name_level']. See SF Bugs #417
+	[f8a6b6847207]
+
+	* web/auth/auth_db_ext.inc:
+	Fixed bug when db_ext password_format is not defined.
+	[ce745312dd0c]
+
+2018-08-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js.inc, web/js/admin.js.php, web/js/edit_entry.js.php,
+	web/js/multiple.js.php, web/js/report.js.php,
+	web/js/resizable.js.php:
+	Fixed problems to do with caching of the user level in JavaScript
+	code. See SF Bugs #415.
+	[5d325f2cabac]
+
+	* web/edit_entry.php, web/js/edit_entry.js.php:
+	Fixed bug when multiday bookings are not allowed. See SF Bugs #416.
+	[d64d31459af8]
+
+2018-08-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* INSTALL:
+	Updated minimum PHP version number. See SF Bugs #414.
+	[a882f5f8e6ab]
+
+	* web/js/datepicker.js.php:
+	fixed bug causing the datepicker date to be off by one day. See SF
+	Support Requests #1591.
+	[fa4dd034fd2d]
+
+2018-08-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Converted $twentyfourhour_format to a boolean
+	[6b20ab7701da]
+
+	* web/init.inc:
+	Corrected typo in comment
+	[c37243256589]
+
+2018-08-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Excluded the cookie session scheme from init_sessions().
+	[bd17508c9c49]
+
+2018-08-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/lib/MRBS/DB.php,
+	web/upgrade/57/mysql.sql, web/upgrade/57/pgsql.sql:
+	Increased the length of the id column in the sessions table from 32
+	to 255. See SF Feature Requests #158.
+	[da7cfbe1c72f]
+
+2018-08-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* help_report.html:
+	Updated the report help page to reflect changes to the report
+	parameters.
+	[9148158f2579]
+
+2018-08-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Fixed bug causing language file not to be used when in CLI mode. See
+	SF Support Requests 1583.
+	[d38a9a861873]
+
+2018-08-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_pop3.inc:
+	Rewrote code to avoid the use of the deprecated each() function
+	[14513d53856d]
+
+2018-08-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/Mail/mime.php, web/Mail/mimePart.php, web/Net/SMTP.php,
+	web/Net/Socket.php, web/PEAR.php:
+	Converted files to UniX LF line endings
+	[ae8f5fa7cdc6]
+
+2018-08-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Net/Socket.php:
+	Updated to version 1.2.2
+	[f9c818b70ca4]
+
+	* web/Net/SMTP.php:
+	Updated to version 1.8.0
+	[65f29cc718d0]
+
+	* web/PEAR.php:
+	Updated to version 1.10.5, though the deprecated each() function is
+	still used.
+	[6559b737b3bd]
+
+	* web/Mail/mime.php, web/Mail/mimePart.php:
+	Updated Mail_Mime package to version 1.10.2 to avoid the use of the
+	deprecated each() function.
+	[4eb7a3ae335d]
+
+	* web/auth/auth_imap.inc:
+	Rewrote code to avoid the use of the deprecated each() function
+	[19dd80ae04b6]
+
+2018-07-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Fixed bug with confirmation status, introduced during recent
+	changes. See SF Support Requests #1562.
+	[cf10a82810cd]
+
+2018-07-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/edit_entry_handler.php,
+	web/functions_ical.inc, web/functions_mail.inc,
+	web/functions_table.inc, web/functions_view.inc, web/import.php,
+	web/month.php, web/mrbs_sql.inc, web/report.php, web/view_entry.php:
+	Made 'confirmation_status' and 'approval_status' work in
+	$edit_entry_field_order for view_entry (see SF Support Requests
+	#1562). In the process moved the packing and unpacking of the status
+	bits into mrbs_sql.inc.
+	[d21c016bf2ce]
+
+	* web/edit_entry.php, web/internalconfig.inc.php,
+	web/systemdefaults.inc.php:
+	Replaced the values 'areas' and 'rooms' in the config setting
+	$edit_entry_field_order with a single value 'room_id' (on the
+	assumption that one would always want to have the room field next to
+	the area field). This fixes a bug (see SF Support Requests #1562)
+	and makes the use of the values consistent with the column names in
+	the entry table.
+	[c768832f6257]
+
+	* web/edit_entry.php, web/functions_view.inc:
+	Added some resilience for the case where an $edit_entry_field_order
+	element does not exist.
+	[72930c9b9633]
+
+	* web/edit_entry.php, web/internalconfig.inc.php,
+	web/systemdefaults.inc.php:
+	Replaced the values 'start_date' and 'end_date' in the config
+	setting $edit_entry_field_order with 'start_time' and 'end_time'.
+	This fixes a bug (see SF Support Requests #1562) and makes the use
+	of the values consistent with the column names in the entry table.
+	[86abc3cb95ad]
+
+2018-07-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area.php:
+	Added some type hinting
+	[fa675be35a55]
+
+	* web/admin.php:
+	Added HTML escaping of what could be user input
+	[55eb3c32ff6a]
+
+2018-07-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Got rid of a few global declarations
+	[4015c215529a]
+
+2018-07-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc, web/lib/MRBS/SessionHandlerDb.php:
+	Fixed another problem with upgrading to database sessions. It seems
+	that in some versions of PHP (eg 7.0.25) session_start() generates a
+	fatal error if the session handler open() returns false. Throwing an
+	exception in open() doesn't work either because a try block round
+	session_start() won't catch the exception (possibly because the
+	open() method is actually a callback??). So instead we test for the
+	existence of the session table in the constructor, which allows us
+	to catch the exception when the object is created.
+	[06c6d4efa46e]
+
+2018-07-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Fixed another Catch 22 problem with upgrading to the new sessions
+	table.
+	[01f8917322d6]
+
+2018-07-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Fixed sessions for both Joomla 2 and Joomla 3
+	[7a7783b29ce0]
+
+	* web/init.inc:
+	Renamed functions
+	[0fe12c27215d]
+
+	* web/init.inc, web/lib/MRBS/Form/Form.php, web/lib/MRBS/JFactory.php,
+	web/session/session_joomla.inc:
+	Restructured code, removing a global
+	[fbff2b19cfe6]
+
+	* web/init.inc, web/session/functions_session.inc,
+	web/session/session_joomla.inc, web/systemdefaults.inc.php:
+	Fixed operation of new session code with Joomla
+	[67384e169be4]
+
+2018-07-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/session/session_joomla.inc:
+	Fixed a bug when using Joomla authentication
+	[0967437642ea]
+
+2018-07-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/config.inc.php:
+	Merge
+	[19ff7493a9de]
+
+	* web/functions.inc:
+	Simplified code
+	[09eda13d03a4]
+
+	* web/functions.inc:
+	Added some sanitization to split_iso_date()
+	[6761fce53396]
+
+2018-07-05  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgignore:
+	Added config.inc.php to the .hgignore
+	[2b0952006d9c]
+
+	* INSTALL, UPGRADE, web/config.inc.php, web/config.inc.php-sample:
+	Moved config.inc.php to config.inc.php-sample
+	[e0652b64fc9b]
+
+2018-07-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_cas.inc, web/systemdefaults.inc.php:
+	Implemented filtering by CAS attribute. See SF Support Requests
+	1533.
+	[54650a43a40a]
+
+2018-07-04  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgignore:
+	Added web/css/custom.css to .hgignore
+	[bbcf7d189640]
+
+	* .hgignore, web/config.inc.php:
+	Backed out changeset f3ea15fe5a4a
+	[a6739877fde2]
+
+	* .hgignore, web/config.inc.php:
+	Added web/css/custom.css to .hgignore
+	[f3ea15fe5a4a]
+
+	* .hgignore:
+	Added useful pattern to .hgignore
+	[27cc8f2a9051]
+
+2018-07-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_auth.inc:
+	Converted some functions to return a boolean instead of 0/1.
+	[0a3dc02720ca]
+
+	* Merge with db_sessions
+	[63d811a36004]
+
+2018-06-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_cas.inc, web/systemdefaults.inc.php:
+	Added in CAS Server CA Certificate validation
+	[8e266aa0ecc9]
+
+	* web/session/functions_session.inc:
+	Fixed (I hope) problem with MRBS always returning to the admin page
+	after successful CAS login
+	[65183945fe86]
+
+	* web/session/session_cas.inc:
+	Fixed a problem when logging off using CAS authentication
+	[c94285a2c10d]
+
+2018-06-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_cas.inc, web/session/session_cas.inc:
+	Changed lines endings to Unix(LF)
+	[2b222ec01044]
+
+	* web/auth/auth_cas.inc, web/session/session_cas.inc:
+	Removed closing PHP tags
+	[d48e69291d0d]
+
+	* web/session/session_cas.inc:
+	Tidied up the code
+	[70d6d0a969e8]
+
+	* web/auth/auth_cas.inc:
+	Made CAS authentication resilient to the server port number being
+	configured as a string.
+	[b5098f976420]
+
+2018-06-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge with CAS_authentication
+	[716b527ca96e]
+
+2018-06-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_auth_basic.inc, web/auth/auth_config.inc,
+	web/auth/auth_crypt.inc, web/auth/auth_db_ext.inc,
+	web/auth/auth_ext.inc, web/auth/auth_imap.inc,
+	web/auth/auth_imap_php.inc, web/auth/auth_ldap.inc,
+	web/auth/auth_nis.inc, web/auth/auth_none.inc, web/auth/auth_nw.inc,
+	web/auth/auth_pop3.inc, web/auth/auth_smtp.inc, web/mrbs_auth.inc,
+	web/view_entry.php:
+	Simplified code
+	[0338c1dd9f38]
+
+2018-04-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry_handler.php:
+	Improved last fix
+	[478aa6c5a113]
+
+	* web/edit_entry_handler.php:
+	Fixed bug causing edit_entry_handler to go to today when finished
+	rather than the day of the srtart of the booking.
+	[e2fe8629924d]
+
+2018-04-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed bug whereby the password_hash would be wiped if the password
+	field was left blank. The bug was introduced during the
+	forms_rewrite.
+	[7299f79570ef]
+
+2018-03-31  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/upgrade/55/mysql.sql:
+	Fixed typo in upgrade script comment.
+	[30d1fed1cd2c]
+
+	* web/upgrade/55/mysql.sql, web/upgrade/55/pgsql.sql:
+	Added missing upgrade files.
+	[1f1195ee463d]
+
+2018-03-30  John Beranek  <jberanek@users.sourceforge.net>
+
+	* tables.my.sql:
+	Set the zoneinfo table back to utf8.
+	[eab5204c3096]
+
+	* README:
+	Fixed typo in MySQL version requirement
+	[50cd6e51ed97]
+
+	* INSTALL, README, tables.my.sql, tables.pg.sql, web/dbsys.inc,
+	web/lib/MRBS/DB.php, web/lib/MRBS/DB_mysql.php:
+	Changed MySQL schema/connection to use "utf8mb4" character set, in
+	order to support full Unicode. This adds a requirement on MySQL
+	5.3.3 or later.
+	[35ba41a2d32f]
+
+2018-03-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* LICENSE, web/jquery/ui/LICENSE.txt:
+	Added licensing information
+	[37917179f114]
+
+2018-03-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Form.php, web/report.php, web/search.php:
+	Relaxed CSRF token checking, so that the token isn't checked for GET
+	requests to read-only pages such as Search and Report.
+	[6c481f780b54]
+
+	* web/edit_entry_handler.php:
+	Fixed bug when resizing a booking on a day that's not today
+	[cd48eeab8e15]
+
+2018-03-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed bug introduced during the forms_rewrite branch preventing the
+	creation of a first admin user.
+	[18004f9bc608]
+
+2018-03-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_error.inc, web/internalconfig.inc.php,
+	web/language.inc:
+	Moved the advice on what to do about a missing iconv() function out
+	of language.inc and into general error handling.
+	[3b0c4dd25bc7]
+
+	* web/internalconfig.inc.php:
+	Reverted debugging settings which had accidentally been committed
+	during the forms_rewrite branch
+	[2c6648c400bb]
+
+2018-03-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Fixed bug in finding best language file
+	[e6a6e1ac51f4]
+
+2018-02-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/defaultincludes.inc:
+	Changed 'require to 'require_once' for grab_globals.inc.php, as it
+	should only be included once since it contains a function
+	declaration.
+	[4702e7fd216e]
+
+2018-02-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/lang/lang.en, web/search.php,
+	web/systemdefaults.inc.php:
+	Added a date to the search results so that it's clear when the
+	search started.
+	[24ddbbc4ad8d]
+
+	* web/search.php:
+	Fixed problem with Search ignoring Search From date
+	[5a07192a97dd]
+
+	* web/css/mrbs.css.php, web/search.php:
+	Fixed bug with Prev and Next links in Search results, resulting in a
+	session expiry because no CSRF token was being passed. Only happens
+	when JavaScript is disabled.
+	[bea39ec378b7]
+
+2018-02-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Added trimming of input fields on the Edit User form to remove
+	accidental whitespace
+	[607e279cf800]
+
+	* web/edit_users.php:
+	Fixed a bug causing the warning about editing the last admin always
+	to be shown. (This bug was introduced in the forms_rewrite branch
+	and was not present in MRBS 1.7.1).
+	[cc21e05e5cb6]
+
+2018-02-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_auth.inc:
+	Fixed bug introduced in a recent restructuring of mrbs_auth.inc
+	[e55b1fbdb569]
+
+	* web/css/mrbs.css.php:
+	Fixed problem with text inputs and textarea widths not being the
+	same in some browsers, eg Firefox
+	[6a1c009fa69f]
+
+	* web/systemdefaults.inc.php:
+	Updated the list of authentication types and session schemes.
+	[1af76bfaf8ac]
+
+	* web/auth/auth_joomla.inc, web/auth/auth_wordpress.inc,
+	web/mrbs_auth.inc:
+	Added checks to make sure that the session scheme is set correctly
+	when using joomla or wordpress authentication.
+	[b69a9bb73c5b]
+
+	* web/auth/auth_auth_basic.inc, web/auth/auth_config.inc,
+	web/auth/auth_crypt.inc, web/auth/auth_ext.inc,
+	web/auth/auth_imap.inc, web/auth/auth_ldap.inc,
+	web/auth/auth_nis.inc, web/auth/auth_nw.inc, web/auth/auth_pop3.inc,
+	web/auth/auth_smtp.inc, web/mrbs_auth.inc:
+	Moved setting of the default session scheme to mrbs_auth.inc and
+	changed the default from 'http' to 'php', except for the 'joomla',
+	'saml' and 'wordpress' auth types.
+	[574c446d3dde]
+
+2018-02-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Accra.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Addis_Ababa.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Algiers.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Asmara.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bamako.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bangui.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Banjul.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bissau.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Blantyre.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Brazzaville.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bujumbura.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Cairo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Casablanca.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ceuta.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Conakry.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Dakar.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Dar_es_Salaam.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Djibouti.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Douala.ics, web/tzurl/zoneinfo-
+	outlook/Africa/El_Aaiun.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Freetown.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Gaborone.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Harare.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Johannesburg.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Juba.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kampala.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Khartoum.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kigali.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kinshasa.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lagos.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Libreville.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lome.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Luanda.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lubumbashi.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lusaka.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Malabo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Maputo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Maseru.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Mbabane.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Mogadishu.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Monrovia.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Nairobi.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ndjamena.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Niamey.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Nouakchott.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ouagadougou.ics, web/tzurl/zoneinfo-outlook/Africa
+	/Porto-Novo.ics, web/tzurl/zoneinfo-outlook/Africa/Sao_Tome.ics,
+	web/tzurl/zoneinfo-outlook/Africa/Tripoli.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Tunis.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Windhoek.ics, web/tzurl/zoneinfo-
+	outlook/America/Adak.ics, web/tzurl/zoneinfo-
+	outlook/America/Anchorage.ics, web/tzurl/zoneinfo-
+	outlook/America/Anguilla.ics, web/tzurl/zoneinfo-
+	outlook/America/Antigua.ics, web/tzurl/zoneinfo-
+	outlook/America/Araguaina.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Buenos_Aires.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Catamarca.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Cordoba.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Jujuy.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/La_Rioja.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Mendoza.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Rio_Gallegos.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Salta.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/San_Juan.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/San_Luis.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Tucuman.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Ushuaia.ics, web/tzurl/zoneinfo-
+	outlook/America/Aruba.ics, web/tzurl/zoneinfo-
+	outlook/America/Asuncion.ics, web/tzurl/zoneinfo-
+	outlook/America/Atikokan.ics, web/tzurl/zoneinfo-
+	outlook/America/Bahia.ics, web/tzurl/zoneinfo-
+	outlook/America/Bahia_Banderas.ics, web/tzurl/zoneinfo-
+	outlook/America/Barbados.ics, web/tzurl/zoneinfo-
+	outlook/America/Belem.ics, web/tzurl/zoneinfo-
+	outlook/America/Belize.ics, web/tzurl/zoneinfo-outlook/America
+	/Blanc-Sablon.ics, web/tzurl/zoneinfo-outlook/America/Boa_Vista.ics,
+	web/tzurl/zoneinfo-outlook/America/Bogota.ics, web/tzurl/zoneinfo-
+	outlook/America/Boise.ics, web/tzurl/zoneinfo-
+	outlook/America/Cambridge_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Campo_Grande.ics, web/tzurl/zoneinfo-
+	outlook/America/Cancun.ics, web/tzurl/zoneinfo-
+	outlook/America/Caracas.ics, web/tzurl/zoneinfo-
+	outlook/America/Cayenne.ics, web/tzurl/zoneinfo-
+	outlook/America/Cayman.ics, web/tzurl/zoneinfo-
+	outlook/America/Chicago.ics, web/tzurl/zoneinfo-
+	outlook/America/Chihuahua.ics, web/tzurl/zoneinfo-
+	outlook/America/Costa_Rica.ics, web/tzurl/zoneinfo-
+	outlook/America/Creston.ics, web/tzurl/zoneinfo-
+	outlook/America/Cuiaba.ics, web/tzurl/zoneinfo-
+	outlook/America/Curacao.ics, web/tzurl/zoneinfo-
+	outlook/America/Danmarkshavn.ics, web/tzurl/zoneinfo-
+	outlook/America/Dawson.ics, web/tzurl/zoneinfo-
+	outlook/America/Dawson_Creek.ics, web/tzurl/zoneinfo-
+	outlook/America/Denver.ics, web/tzurl/zoneinfo-
+	outlook/America/Detroit.ics, web/tzurl/zoneinfo-
+	outlook/America/Dominica.ics, web/tzurl/zoneinfo-
+	outlook/America/Edmonton.ics, web/tzurl/zoneinfo-
+	outlook/America/Eirunepe.ics, web/tzurl/zoneinfo-
+	outlook/America/El_Salvador.ics, web/tzurl/zoneinfo-
+	outlook/America/Fort_Nelson.ics, web/tzurl/zoneinfo-
+	outlook/America/Fortaleza.ics, web/tzurl/zoneinfo-
+	outlook/America/Glace_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Godthab.ics, web/tzurl/zoneinfo-
+	outlook/America/Goose_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Grand_Turk.ics, web/tzurl/zoneinfo-
+	outlook/America/Grenada.ics, web/tzurl/zoneinfo-
+	outlook/America/Guadeloupe.ics, web/tzurl/zoneinfo-
+	outlook/America/Guatemala.ics, web/tzurl/zoneinfo-
+	outlook/America/Guayaquil.ics, web/tzurl/zoneinfo-
+	outlook/America/Guyana.ics, web/tzurl/zoneinfo-
+	outlook/America/Halifax.ics, web/tzurl/zoneinfo-
+	outlook/America/Havana.ics, web/tzurl/zoneinfo-
+	outlook/America/Hermosillo.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Indianapolis.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Knox.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Marengo.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Petersburg.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Tell_City.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Vevay.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Vincennes.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Winamac.ics, web/tzurl/zoneinfo-
+	outlook/America/Inuvik.ics, web/tzurl/zoneinfo-
+	outlook/America/Iqaluit.ics, web/tzurl/zoneinfo-
+	outlook/America/Juneau.ics, web/tzurl/zoneinfo-
+	outlook/America/Kentucky/Louisville.ics, web/tzurl/zoneinfo-
+	outlook/America/Kentucky/Monticello.ics, web/tzurl/zoneinfo-
+	outlook/America/Kralendijk.ics, web/tzurl/zoneinfo-
+	outlook/America/La_Paz.ics, web/tzurl/zoneinfo-
+	outlook/America/Lima.ics, web/tzurl/zoneinfo-
+	outlook/America/Los_Angeles.ics, web/tzurl/zoneinfo-
+	outlook/America/Lower_Princes.ics, web/tzurl/zoneinfo-
+	outlook/America/Maceio.ics, web/tzurl/zoneinfo-
+	outlook/America/Managua.ics, web/tzurl/zoneinfo-
+	outlook/America/Manaus.ics, web/tzurl/zoneinfo-
+	outlook/America/Marigot.ics, web/tzurl/zoneinfo-
+	outlook/America/Martinique.ics, web/tzurl/zoneinfo-
+	outlook/America/Matamoros.ics, web/tzurl/zoneinfo-
+	outlook/America/Mazatlan.ics, web/tzurl/zoneinfo-
+	outlook/America/Menominee.ics, web/tzurl/zoneinfo-
+	outlook/America/Merida.ics, web/tzurl/zoneinfo-
+	outlook/America/Metlakatla.ics, web/tzurl/zoneinfo-
+	outlook/America/Mexico_City.ics, web/tzurl/zoneinfo-
+	outlook/America/Miquelon.ics, web/tzurl/zoneinfo-
+	outlook/America/Moncton.ics, web/tzurl/zoneinfo-
+	outlook/America/Monterrey.ics, web/tzurl/zoneinfo-
+	outlook/America/Montevideo.ics, web/tzurl/zoneinfo-
+	outlook/America/Montserrat.ics, web/tzurl/zoneinfo-
+	outlook/America/Nassau.ics, web/tzurl/zoneinfo-
+	outlook/America/New_York.ics, web/tzurl/zoneinfo-
+	outlook/America/Nipigon.ics, web/tzurl/zoneinfo-
+	outlook/America/Nome.ics, web/tzurl/zoneinfo-
+	outlook/America/Noronha.ics, web/tzurl/zoneinfo-
+	outlook/America/Ojinaga.ics, web/tzurl/zoneinfo-
+	outlook/America/Panama.ics, web/tzurl/zoneinfo-
+	outlook/America/Pangnirtung.ics, web/tzurl/zoneinfo-
+	outlook/America/Paramaribo.ics, web/tzurl/zoneinfo-
+	outlook/America/Phoenix.ics, web/tzurl/zoneinfo-outlook/America
+	/Port-au-Prince.ics, web/tzurl/zoneinfo-
+	outlook/America/Port_of_Spain.ics, web/tzurl/zoneinfo-
+	outlook/America/Porto_Velho.ics, web/tzurl/zoneinfo-
+	outlook/America/Puerto_Rico.ics, web/tzurl/zoneinfo-
+	outlook/America/Punta_Arenas.ics, web/tzurl/zoneinfo-
+	outlook/America/Rainy_River.ics, web/tzurl/zoneinfo-
+	outlook/America/Rankin_Inlet.ics, web/tzurl/zoneinfo-
+	outlook/America/Recife.ics, web/tzurl/zoneinfo-
+	outlook/America/Regina.ics, web/tzurl/zoneinfo-
+	outlook/America/Resolute.ics, web/tzurl/zoneinfo-
+	outlook/America/Rio_Branco.ics, web/tzurl/zoneinfo-
+	outlook/America/Santa_Isabel.ics, web/tzurl/zoneinfo-
+	outlook/America/Santarem.ics, web/tzurl/zoneinfo-
+	outlook/America/Santiago.ics, web/tzurl/zoneinfo-
+	outlook/America/Santo_Domingo.ics, web/tzurl/zoneinfo-
+	outlook/America/Sao_Paulo.ics, web/tzurl/zoneinfo-
+	outlook/America/Scoresbysund.ics, web/tzurl/zoneinfo-
+	outlook/America/Sitka.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Barthelemy.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Johns.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Kitts.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Lucia.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Thomas.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Vincent.ics, web/tzurl/zoneinfo-
+	outlook/America/Swift_Current.ics, web/tzurl/zoneinfo-
+	outlook/America/Tegucigalpa.ics, web/tzurl/zoneinfo-
+	outlook/America/Thule.ics, web/tzurl/zoneinfo-
+	outlook/America/Thunder_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Tijuana.ics, web/tzurl/zoneinfo-
+	outlook/America/Toronto.ics, web/tzurl/zoneinfo-
+	outlook/America/Tortola.ics, web/tzurl/zoneinfo-
+	outlook/America/Vancouver.ics, web/tzurl/zoneinfo-
+	outlook/America/Whitehorse.ics, web/tzurl/zoneinfo-
+	outlook/America/Winnipeg.ics, web/tzurl/zoneinfo-
+	outlook/America/Yakutat.ics, web/tzurl/zoneinfo-
+	outlook/America/Yellowknife.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Casey.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Davis.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/DumontDUrville.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Macquarie.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Mawson.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/McMurdo.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Palmer.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Rothera.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Syowa.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Troll.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Vostok.ics, web/tzurl/zoneinfo-
+	outlook/Arctic/Longyearbyen.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Aden.ics, web/tzurl/zoneinfo-outlook/Asia/Almaty.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Amman.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Anadyr.ics, web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Ashgabat.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Atyrau.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Baghdad.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Bahrain.ics, web/tzurl/zoneinfo-outlook/Asia/Baku.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Barnaul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Beirut.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Bishkek.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Brunei.ics, web/tzurl/zoneinfo-outlook/Asia/Chita.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Colombo.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Damascus.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Dhaka.ics, web/tzurl/zoneinfo-outlook/Asia/Dili.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Dubai.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Dushanbe.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Famagusta.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Gaza.ics, web/tzurl/zoneinfo-outlook/Asia/Hebron.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Hong_Kong.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Hovd.ics, web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jakarta.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jayapura.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jerusalem.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kabul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kamchatka.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Karachi.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kashgar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kathmandu.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Khandyga.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kolkata.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Krasnoyarsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuala_Lumpur.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuching.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuwait.ics, web/tzurl/zoneinfo-outlook/Asia/Macau.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Magadan.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Makassar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Manila.ics, web/tzurl/zoneinfo-outlook/Asia/Muscat.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Novokuznetsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Novosibirsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Omsk.ics, web/tzurl/zoneinfo-outlook/Asia/Oral.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Pontianak.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Pyongyang.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Qatar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Qyzylorda.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Rangoon.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Riyadh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Sakhalin.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Samarkand.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Seoul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Shanghai.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Singapore.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Srednekolymsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Taipei.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tashkent.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tbilisi.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tehran.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Thimphu.ics, web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Tomsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Ulaanbaatar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Urumqi.ics, web/tzurl/zoneinfo-outlook/Asia/Ust-
+	Nera.ics, web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics, web/tzurl
+	/zoneinfo-outlook/Asia/Vladivostok.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yakutsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yangon.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yekaterinburg.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yerevan.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Azores.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Bermuda.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Canary.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Cape_Verde.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Faroe.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Madeira.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Reykjavik.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/South_Georgia.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/St_Helena.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Stanley.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Adelaide.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Currie.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Darwin.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Eucla.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Hobart.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Lindeman.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Lord_Howe.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Melbourne.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Perth.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Sydney.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Amsterdam.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Andorra.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Astrakhan.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Athens.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Belgrade.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Berlin.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Bratislava.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Brussels.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Bucharest.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Budapest.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Busingen.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Chisinau.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Copenhagen.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Dublin.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Gibraltar.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Guernsey.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Helsinki.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Isle_of_Man.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Istanbul.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Jersey.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kaliningrad.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kiev.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kirov.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Lisbon.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Ljubljana.ics, web/tzurl/zoneinfo-
+	outlook/Europe/London.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Luxembourg.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Madrid.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Malta.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Mariehamn.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Minsk.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Monaco.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Moscow.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Nicosia.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Oslo.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Paris.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Podgorica.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Prague.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Riga.ics, web/tzurl/zoneinfo-outlook/Europe/Rome.ics,
+	web/tzurl/zoneinfo-outlook/Europe/Samara.ics, web/tzurl/zoneinfo-
+	outlook/Europe/San_Marino.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Sarajevo.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Saratov.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Simferopol.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Skopje.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Sofia.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Stockholm.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Tallinn.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Ulyanovsk.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Uzhgorod.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vaduz.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vatican.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vienna.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vilnius.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Volgograd.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Warsaw.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zagreb.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zaporozhye.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zurich.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Antananarivo.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Chagos.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Christmas.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Cocos.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Comoro.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Kerguelen.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mahe.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Maldives.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mauritius.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mayotte.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Reunion.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Apia.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Auckland.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Bougainville.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Chatham.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Chuuk.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Easter.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Efate.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Enderbury.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Fakaofo.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Fiji.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Funafuti.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Galapagos.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Gambier.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Guadalcanal.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Guam.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Honolulu.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Johnston.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kiritimati.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kosrae.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kwajalein.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Majuro.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Marquesas.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Midway.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Nauru.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Niue.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Norfolk.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Noumea.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pago_Pago.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Palau.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pitcairn.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pohnpei.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Port_Moresby.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Rarotonga.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Saipan.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tahiti.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tarawa.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tongatapu.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Wake.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Wallis.ics, web/tzurl/zoneinfo/Africa/Abidjan.ics,
+	web/tzurl/zoneinfo/Africa/Accra.ics,
+	web/tzurl/zoneinfo/Africa/Addis_Ababa.ics,
+	web/tzurl/zoneinfo/Africa/Algiers.ics,
+	web/tzurl/zoneinfo/Africa/Asmara.ics,
+	web/tzurl/zoneinfo/Africa/Bamako.ics,
+	web/tzurl/zoneinfo/Africa/Bangui.ics,
+	web/tzurl/zoneinfo/Africa/Banjul.ics,
+	web/tzurl/zoneinfo/Africa/Bissau.ics,
+	web/tzurl/zoneinfo/Africa/Blantyre.ics,
+	web/tzurl/zoneinfo/Africa/Brazzaville.ics,
+	web/tzurl/zoneinfo/Africa/Bujumbura.ics,
+	web/tzurl/zoneinfo/Africa/Cairo.ics,
+	web/tzurl/zoneinfo/Africa/Casablanca.ics,
+	web/tzurl/zoneinfo/Africa/Ceuta.ics,
+	web/tzurl/zoneinfo/Africa/Conakry.ics,
+	web/tzurl/zoneinfo/Africa/Dakar.ics,
+	web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	web/tzurl/zoneinfo/Africa/Djibouti.ics,
+	web/tzurl/zoneinfo/Africa/Douala.ics,
+	web/tzurl/zoneinfo/Africa/El_Aaiun.ics,
+	web/tzurl/zoneinfo/Africa/Freetown.ics,
+	web/tzurl/zoneinfo/Africa/Gaborone.ics,
+	web/tzurl/zoneinfo/Africa/Harare.ics,
+	web/tzurl/zoneinfo/Africa/Johannesburg.ics,
+	web/tzurl/zoneinfo/Africa/Juba.ics,
+	web/tzurl/zoneinfo/Africa/Kampala.ics,
+	web/tzurl/zoneinfo/Africa/Khartoum.ics,
+	web/tzurl/zoneinfo/Africa/Kigali.ics,
+	web/tzurl/zoneinfo/Africa/Kinshasa.ics,
+	web/tzurl/zoneinfo/Africa/Lagos.ics,
+	web/tzurl/zoneinfo/Africa/Libreville.ics,
+	web/tzurl/zoneinfo/Africa/Lome.ics,
+	web/tzurl/zoneinfo/Africa/Luanda.ics,
+	web/tzurl/zoneinfo/Africa/Lubumbashi.ics,
+	web/tzurl/zoneinfo/Africa/Lusaka.ics,
+	web/tzurl/zoneinfo/Africa/Malabo.ics,
+	web/tzurl/zoneinfo/Africa/Maputo.ics,
+	web/tzurl/zoneinfo/Africa/Maseru.ics,
+	web/tzurl/zoneinfo/Africa/Mbabane.ics,
+	web/tzurl/zoneinfo/Africa/Mogadishu.ics,
+	web/tzurl/zoneinfo/Africa/Monrovia.ics,
+	web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	web/tzurl/zoneinfo/Africa/Ndjamena.ics,
+	web/tzurl/zoneinfo/Africa/Niamey.ics,
+	web/tzurl/zoneinfo/Africa/Nouakchott.ics,
+	web/tzurl/zoneinfo/Africa/Ouagadougou.ics, web/tzurl/zoneinfo/Africa
+	/Porto-Novo.ics, web/tzurl/zoneinfo/Africa/Sao_Tome.ics,
+	web/tzurl/zoneinfo/Africa/Tripoli.ics,
+	web/tzurl/zoneinfo/Africa/Tunis.ics,
+	web/tzurl/zoneinfo/Africa/Windhoek.ics,
+	web/tzurl/zoneinfo/America/Adak.ics,
+	web/tzurl/zoneinfo/America/Anchorage.ics,
+	web/tzurl/zoneinfo/America/Anguilla.ics,
+	web/tzurl/zoneinfo/America/Antigua.ics,
+	web/tzurl/zoneinfo/America/Araguaina.ics,
+	web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics,
+	web/tzurl/zoneinfo/America/Argentina/Catamarca.ics,
+	web/tzurl/zoneinfo/America/Argentina/Cordoba.ics,
+	web/tzurl/zoneinfo/America/Argentina/Jujuy.ics,
+	web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics,
+	web/tzurl/zoneinfo/America/Argentina/Mendoza.ics,
+	web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics,
+	web/tzurl/zoneinfo/America/Argentina/Salta.ics,
+	web/tzurl/zoneinfo/America/Argentina/San_Juan.ics,
+	web/tzurl/zoneinfo/America/Argentina/San_Luis.ics,
+	web/tzurl/zoneinfo/America/Argentina/Tucuman.ics,
+	web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics,
+	web/tzurl/zoneinfo/America/Aruba.ics,
+	web/tzurl/zoneinfo/America/Asuncion.ics,
+	web/tzurl/zoneinfo/America/Atikokan.ics,
+	web/tzurl/zoneinfo/America/Bahia.ics,
+	web/tzurl/zoneinfo/America/Bahia_Banderas.ics,
+	web/tzurl/zoneinfo/America/Barbados.ics,
+	web/tzurl/zoneinfo/America/Belem.ics,
+	web/tzurl/zoneinfo/America/Belize.ics, web/tzurl/zoneinfo/America
+	/Blanc-Sablon.ics, web/tzurl/zoneinfo/America/Boa_Vista.ics,
+	web/tzurl/zoneinfo/America/Bogota.ics,
+	web/tzurl/zoneinfo/America/Boise.ics,
+	web/tzurl/zoneinfo/America/Cambridge_Bay.ics,
+	web/tzurl/zoneinfo/America/Campo_Grande.ics,
+	web/tzurl/zoneinfo/America/Cancun.ics,
+	web/tzurl/zoneinfo/America/Caracas.ics,
+	web/tzurl/zoneinfo/America/Cayenne.ics,
+	web/tzurl/zoneinfo/America/Cayman.ics,
+	web/tzurl/zoneinfo/America/Chicago.ics,
+	web/tzurl/zoneinfo/America/Chihuahua.ics,
+	web/tzurl/zoneinfo/America/Costa_Rica.ics,
+	web/tzurl/zoneinfo/America/Creston.ics,
+	web/tzurl/zoneinfo/America/Cuiaba.ics,
+	web/tzurl/zoneinfo/America/Curacao.ics,
+	web/tzurl/zoneinfo/America/Danmarkshavn.ics,
+	web/tzurl/zoneinfo/America/Dawson.ics,
+	web/tzurl/zoneinfo/America/Dawson_Creek.ics,
+	web/tzurl/zoneinfo/America/Denver.ics,
+	web/tzurl/zoneinfo/America/Detroit.ics,
+	web/tzurl/zoneinfo/America/Dominica.ics,
+	web/tzurl/zoneinfo/America/Edmonton.ics,
+	web/tzurl/zoneinfo/America/Eirunepe.ics,
+	web/tzurl/zoneinfo/America/El_Salvador.ics,
+	web/tzurl/zoneinfo/America/Fort_Nelson.ics,
+	web/tzurl/zoneinfo/America/Fortaleza.ics,
+	web/tzurl/zoneinfo/America/Glace_Bay.ics,
+	web/tzurl/zoneinfo/America/Godthab.ics,
+	web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	web/tzurl/zoneinfo/America/Grand_Turk.ics,
+	web/tzurl/zoneinfo/America/Grenada.ics,
+	web/tzurl/zoneinfo/America/Guadeloupe.ics,
+	web/tzurl/zoneinfo/America/Guatemala.ics,
+	web/tzurl/zoneinfo/America/Guayaquil.ics,
+	web/tzurl/zoneinfo/America/Guyana.ics,
+	web/tzurl/zoneinfo/America/Halifax.ics,
+	web/tzurl/zoneinfo/America/Havana.ics,
+	web/tzurl/zoneinfo/America/Hermosillo.ics,
+	web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics,
+	web/tzurl/zoneinfo/America/Indiana/Knox.ics,
+	web/tzurl/zoneinfo/America/Indiana/Marengo.ics,
+	web/tzurl/zoneinfo/America/Indiana/Petersburg.ics,
+	web/tzurl/zoneinfo/America/Indiana/Tell_City.ics,
+	web/tzurl/zoneinfo/America/Indiana/Vevay.ics,
+	web/tzurl/zoneinfo/America/Indiana/Vincennes.ics,
+	web/tzurl/zoneinfo/America/Indiana/Winamac.ics,
+	web/tzurl/zoneinfo/America/Inuvik.ics,
+	web/tzurl/zoneinfo/America/Iqaluit.ics,
+	web/tzurl/zoneinfo/America/Juneau.ics,
+	web/tzurl/zoneinfo/America/Kentucky/Louisville.ics,
+	web/tzurl/zoneinfo/America/Kentucky/Monticello.ics,
+	web/tzurl/zoneinfo/America/Kralendijk.ics,
+	web/tzurl/zoneinfo/America/La_Paz.ics,
+	web/tzurl/zoneinfo/America/Lima.ics,
+	web/tzurl/zoneinfo/America/Los_Angeles.ics,
+	web/tzurl/zoneinfo/America/Lower_Princes.ics,
+	web/tzurl/zoneinfo/America/Maceio.ics,
+	web/tzurl/zoneinfo/America/Managua.ics,
+	web/tzurl/zoneinfo/America/Manaus.ics,
+	web/tzurl/zoneinfo/America/Marigot.ics,
+	web/tzurl/zoneinfo/America/Martinique.ics,
+	web/tzurl/zoneinfo/America/Matamoros.ics,
+	web/tzurl/zoneinfo/America/Mazatlan.ics,
+	web/tzurl/zoneinfo/America/Menominee.ics,
+	web/tzurl/zoneinfo/America/Merida.ics,
+	web/tzurl/zoneinfo/America/Metlakatla.ics,
+	web/tzurl/zoneinfo/America/Mexico_City.ics,
+	web/tzurl/zoneinfo/America/Miquelon.ics,
+	web/tzurl/zoneinfo/America/Moncton.ics,
+	web/tzurl/zoneinfo/America/Monterrey.ics,
+	web/tzurl/zoneinfo/America/Montevideo.ics,
+	web/tzurl/zoneinfo/America/Montserrat.ics,
+	web/tzurl/zoneinfo/America/Nassau.ics,
+	web/tzurl/zoneinfo/America/New_York.ics,
+	web/tzurl/zoneinfo/America/Nipigon.ics,
+	web/tzurl/zoneinfo/America/Nome.ics,
+	web/tzurl/zoneinfo/America/Noronha.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/Center.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics,
+	web/tzurl/zoneinfo/America/Ojinaga.ics,
+	web/tzurl/zoneinfo/America/Panama.ics,
+	web/tzurl/zoneinfo/America/Pangnirtung.ics,
+	web/tzurl/zoneinfo/America/Paramaribo.ics,
+	web/tzurl/zoneinfo/America/Phoenix.ics, web/tzurl/zoneinfo/America
+	/Port-au-Prince.ics, web/tzurl/zoneinfo/America/Port_of_Spain.ics,
+	web/tzurl/zoneinfo/America/Porto_Velho.ics,
+	web/tzurl/zoneinfo/America/Puerto_Rico.ics,
+	web/tzurl/zoneinfo/America/Punta_Arenas.ics,
+	web/tzurl/zoneinfo/America/Rainy_River.ics,
+	web/tzurl/zoneinfo/America/Rankin_Inlet.ics,
+	web/tzurl/zoneinfo/America/Recife.ics,
+	web/tzurl/zoneinfo/America/Regina.ics,
+	web/tzurl/zoneinfo/America/Resolute.ics,
+	web/tzurl/zoneinfo/America/Rio_Branco.ics,
+	web/tzurl/zoneinfo/America/Santa_Isabel.ics,
+	web/tzurl/zoneinfo/America/Santarem.ics,
+	web/tzurl/zoneinfo/America/Santiago.ics,
+	web/tzurl/zoneinfo/America/Santo_Domingo.ics,
+	web/tzurl/zoneinfo/America/Sao_Paulo.ics,
+	web/tzurl/zoneinfo/America/Scoresbysund.ics,
+	web/tzurl/zoneinfo/America/Sitka.ics,
+	web/tzurl/zoneinfo/America/St_Barthelemy.ics,
+	web/tzurl/zoneinfo/America/St_Johns.ics,
+	web/tzurl/zoneinfo/America/St_Kitts.ics,
+	web/tzurl/zoneinfo/America/St_Lucia.ics,
+	web/tzurl/zoneinfo/America/St_Thomas.ics,
+	web/tzurl/zoneinfo/America/St_Vincent.ics,
+	web/tzurl/zoneinfo/America/Swift_Current.ics,
+	web/tzurl/zoneinfo/America/Tegucigalpa.ics,
+	web/tzurl/zoneinfo/America/Thule.ics,
+	web/tzurl/zoneinfo/America/Thunder_Bay.ics,
+	web/tzurl/zoneinfo/America/Tijuana.ics,
+	web/tzurl/zoneinfo/America/Toronto.ics,
+	web/tzurl/zoneinfo/America/Tortola.ics,
+	web/tzurl/zoneinfo/America/Vancouver.ics,
+	web/tzurl/zoneinfo/America/Whitehorse.ics,
+	web/tzurl/zoneinfo/America/Winnipeg.ics,
+	web/tzurl/zoneinfo/America/Yakutat.ics,
+	web/tzurl/zoneinfo/America/Yellowknife.ics,
+	web/tzurl/zoneinfo/Antarctica/Casey.ics,
+	web/tzurl/zoneinfo/Antarctica/Davis.ics,
+	web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics,
+	web/tzurl/zoneinfo/Antarctica/Macquarie.ics,
+	web/tzurl/zoneinfo/Antarctica/Mawson.ics,
+	web/tzurl/zoneinfo/Antarctica/McMurdo.ics,
+	web/tzurl/zoneinfo/Antarctica/Palmer.ics,
+	web/tzurl/zoneinfo/Antarctica/Rothera.ics,
+	web/tzurl/zoneinfo/Antarctica/Syowa.ics,
+	web/tzurl/zoneinfo/Antarctica/Troll.ics,
+	web/tzurl/zoneinfo/Antarctica/Vostok.ics,
+	web/tzurl/zoneinfo/Arctic/Longyearbyen.ics,
+	web/tzurl/zoneinfo/Asia/Aden.ics,
+	web/tzurl/zoneinfo/Asia/Almaty.ics,
+	web/tzurl/zoneinfo/Asia/Amman.ics,
+	web/tzurl/zoneinfo/Asia/Anadyr.ics,
+	web/tzurl/zoneinfo/Asia/Aqtau.ics,
+	web/tzurl/zoneinfo/Asia/Aqtobe.ics,
+	web/tzurl/zoneinfo/Asia/Ashgabat.ics,
+	web/tzurl/zoneinfo/Asia/Atyrau.ics,
+	web/tzurl/zoneinfo/Asia/Baghdad.ics,
+	web/tzurl/zoneinfo/Asia/Bahrain.ics,
+	web/tzurl/zoneinfo/Asia/Baku.ics,
+	web/tzurl/zoneinfo/Asia/Bangkok.ics,
+	web/tzurl/zoneinfo/Asia/Barnaul.ics,
+	web/tzurl/zoneinfo/Asia/Beirut.ics,
+	web/tzurl/zoneinfo/Asia/Bishkek.ics,
+	web/tzurl/zoneinfo/Asia/Brunei.ics,
+	web/tzurl/zoneinfo/Asia/Chita.ics,
+	web/tzurl/zoneinfo/Asia/Choibalsan.ics,
+	web/tzurl/zoneinfo/Asia/Colombo.ics,
+	web/tzurl/zoneinfo/Asia/Damascus.ics,
+	web/tzurl/zoneinfo/Asia/Dhaka.ics, web/tzurl/zoneinfo/Asia/Dili.ics,
+	web/tzurl/zoneinfo/Asia/Dubai.ics,
+	web/tzurl/zoneinfo/Asia/Dushanbe.ics,
+	web/tzurl/zoneinfo/Asia/Famagusta.ics,
+	web/tzurl/zoneinfo/Asia/Gaza.ics,
+	web/tzurl/zoneinfo/Asia/Hebron.ics,
+	web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics,
+	web/tzurl/zoneinfo/Asia/Hong_Kong.ics,
+	web/tzurl/zoneinfo/Asia/Hovd.ics,
+	web/tzurl/zoneinfo/Asia/Irkutsk.ics,
+	web/tzurl/zoneinfo/Asia/Istanbul.ics,
+	web/tzurl/zoneinfo/Asia/Jakarta.ics,
+	web/tzurl/zoneinfo/Asia/Jayapura.ics,
+	web/tzurl/zoneinfo/Asia/Jerusalem.ics,
+	web/tzurl/zoneinfo/Asia/Kabul.ics,
+	web/tzurl/zoneinfo/Asia/Kamchatka.ics,
+	web/tzurl/zoneinfo/Asia/Karachi.ics,
+	web/tzurl/zoneinfo/Asia/Kashgar.ics,
+	web/tzurl/zoneinfo/Asia/Kathmandu.ics,
+	web/tzurl/zoneinfo/Asia/Khandyga.ics,
+	web/tzurl/zoneinfo/Asia/Kolkata.ics,
+	web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics,
+	web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics,
+	web/tzurl/zoneinfo/Asia/Kuching.ics,
+	web/tzurl/zoneinfo/Asia/Kuwait.ics,
+	web/tzurl/zoneinfo/Asia/Macau.ics,
+	web/tzurl/zoneinfo/Asia/Magadan.ics,
+	web/tzurl/zoneinfo/Asia/Makassar.ics,
+	web/tzurl/zoneinfo/Asia/Manila.ics,
+	web/tzurl/zoneinfo/Asia/Muscat.ics,
+	web/tzurl/zoneinfo/Asia/Nicosia.ics,
+	web/tzurl/zoneinfo/Asia/Novokuznetsk.ics,
+	web/tzurl/zoneinfo/Asia/Novosibirsk.ics,
+	web/tzurl/zoneinfo/Asia/Omsk.ics, web/tzurl/zoneinfo/Asia/Oral.ics,
+	web/tzurl/zoneinfo/Asia/Phnom_Penh.ics,
+	web/tzurl/zoneinfo/Asia/Pontianak.ics,
+	web/tzurl/zoneinfo/Asia/Pyongyang.ics,
+	web/tzurl/zoneinfo/Asia/Qatar.ics,
+	web/tzurl/zoneinfo/Asia/Qyzylorda.ics,
+	web/tzurl/zoneinfo/Asia/Rangoon.ics,
+	web/tzurl/zoneinfo/Asia/Riyadh.ics,
+	web/tzurl/zoneinfo/Asia/Sakhalin.ics,
+	web/tzurl/zoneinfo/Asia/Samarkand.ics,
+	web/tzurl/zoneinfo/Asia/Seoul.ics,
+	web/tzurl/zoneinfo/Asia/Shanghai.ics,
+	web/tzurl/zoneinfo/Asia/Singapore.ics,
+	web/tzurl/zoneinfo/Asia/Srednekolymsk.ics,
+	web/tzurl/zoneinfo/Asia/Taipei.ics,
+	web/tzurl/zoneinfo/Asia/Tashkent.ics,
+	web/tzurl/zoneinfo/Asia/Tbilisi.ics,
+	web/tzurl/zoneinfo/Asia/Tehran.ics,
+	web/tzurl/zoneinfo/Asia/Thimphu.ics,
+	web/tzurl/zoneinfo/Asia/Tokyo.ics,
+	web/tzurl/zoneinfo/Asia/Tomsk.ics,
+	web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics,
+	web/tzurl/zoneinfo/Asia/Urumqi.ics, web/tzurl/zoneinfo/Asia/Ust-
+	Nera.ics, web/tzurl/zoneinfo/Asia/Vientiane.ics,
+	web/tzurl/zoneinfo/Asia/Vladivostok.ics,
+	web/tzurl/zoneinfo/Asia/Yakutsk.ics,
+	web/tzurl/zoneinfo/Asia/Yangon.ics,
+	web/tzurl/zoneinfo/Asia/Yekaterinburg.ics,
+	web/tzurl/zoneinfo/Asia/Yerevan.ics,
+	web/tzurl/zoneinfo/Atlantic/Azores.ics,
+	web/tzurl/zoneinfo/Atlantic/Bermuda.ics,
+	web/tzurl/zoneinfo/Atlantic/Canary.ics,
+	web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics,
+	web/tzurl/zoneinfo/Atlantic/Faroe.ics,
+	web/tzurl/zoneinfo/Atlantic/Madeira.ics,
+	web/tzurl/zoneinfo/Atlantic/Reykjavik.ics,
+	web/tzurl/zoneinfo/Atlantic/South_Georgia.ics,
+	web/tzurl/zoneinfo/Atlantic/St_Helena.ics,
+	web/tzurl/zoneinfo/Atlantic/Stanley.ics,
+	web/tzurl/zoneinfo/Australia/Adelaide.ics,
+	web/tzurl/zoneinfo/Australia/Brisbane.ics,
+	web/tzurl/zoneinfo/Australia/Currie.ics,
+	web/tzurl/zoneinfo/Australia/Darwin.ics,
+	web/tzurl/zoneinfo/Australia/Eucla.ics,
+	web/tzurl/zoneinfo/Australia/Hobart.ics,
+	web/tzurl/zoneinfo/Australia/Lindeman.ics,
+	web/tzurl/zoneinfo/Australia/Lord_Howe.ics,
+	web/tzurl/zoneinfo/Australia/Melbourne.ics,
+	web/tzurl/zoneinfo/Australia/Perth.ics,
+	web/tzurl/zoneinfo/Australia/Sydney.ics,
+	web/tzurl/zoneinfo/Europe/Amsterdam.ics,
+	web/tzurl/zoneinfo/Europe/Andorra.ics,
+	web/tzurl/zoneinfo/Europe/Astrakhan.ics,
+	web/tzurl/zoneinfo/Europe/Athens.ics,
+	web/tzurl/zoneinfo/Europe/Belgrade.ics,
+	web/tzurl/zoneinfo/Europe/Berlin.ics,
+	web/tzurl/zoneinfo/Europe/Bratislava.ics,
+	web/tzurl/zoneinfo/Europe/Brussels.ics,
+	web/tzurl/zoneinfo/Europe/Bucharest.ics,
+	web/tzurl/zoneinfo/Europe/Budapest.ics,
+	web/tzurl/zoneinfo/Europe/Busingen.ics,
+	web/tzurl/zoneinfo/Europe/Chisinau.ics,
+	web/tzurl/zoneinfo/Europe/Copenhagen.ics,
+	web/tzurl/zoneinfo/Europe/Dublin.ics,
+	web/tzurl/zoneinfo/Europe/Gibraltar.ics,
+	web/tzurl/zoneinfo/Europe/Guernsey.ics,
+	web/tzurl/zoneinfo/Europe/Helsinki.ics,
+	web/tzurl/zoneinfo/Europe/Isle_of_Man.ics,
+	web/tzurl/zoneinfo/Europe/Istanbul.ics,
+	web/tzurl/zoneinfo/Europe/Jersey.ics,
+	web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	web/tzurl/zoneinfo/Europe/Kiev.ics,
+	web/tzurl/zoneinfo/Europe/Kirov.ics,
+	web/tzurl/zoneinfo/Europe/Lisbon.ics,
+	web/tzurl/zoneinfo/Europe/Ljubljana.ics,
+	web/tzurl/zoneinfo/Europe/London.ics,
+	web/tzurl/zoneinfo/Europe/Luxembourg.ics,
+	web/tzurl/zoneinfo/Europe/Madrid.ics,
+	web/tzurl/zoneinfo/Europe/Malta.ics,
+	web/tzurl/zoneinfo/Europe/Mariehamn.ics,
+	web/tzurl/zoneinfo/Europe/Minsk.ics,
+	web/tzurl/zoneinfo/Europe/Monaco.ics,
+	web/tzurl/zoneinfo/Europe/Moscow.ics,
+	web/tzurl/zoneinfo/Europe/Nicosia.ics,
+	web/tzurl/zoneinfo/Europe/Oslo.ics,
+	web/tzurl/zoneinfo/Europe/Paris.ics,
+	web/tzurl/zoneinfo/Europe/Podgorica.ics,
+	web/tzurl/zoneinfo/Europe/Prague.ics,
+	web/tzurl/zoneinfo/Europe/Riga.ics,
+	web/tzurl/zoneinfo/Europe/Rome.ics,
+	web/tzurl/zoneinfo/Europe/Samara.ics,
+	web/tzurl/zoneinfo/Europe/San_Marino.ics,
+	web/tzurl/zoneinfo/Europe/Sarajevo.ics,
+	web/tzurl/zoneinfo/Europe/Saratov.ics,
+	web/tzurl/zoneinfo/Europe/Simferopol.ics,
+	web/tzurl/zoneinfo/Europe/Skopje.ics,
+	web/tzurl/zoneinfo/Europe/Sofia.ics,
+	web/tzurl/zoneinfo/Europe/Stockholm.ics,
+	web/tzurl/zoneinfo/Europe/Tallinn.ics,
+	web/tzurl/zoneinfo/Europe/Ulyanovsk.ics,
+	web/tzurl/zoneinfo/Europe/Uzhgorod.ics,
+	web/tzurl/zoneinfo/Europe/Vaduz.ics,
+	web/tzurl/zoneinfo/Europe/Vatican.ics,
+	web/tzurl/zoneinfo/Europe/Vienna.ics,
+	web/tzurl/zoneinfo/Europe/Vilnius.ics,
+	web/tzurl/zoneinfo/Europe/Volgograd.ics,
+	web/tzurl/zoneinfo/Europe/Warsaw.ics,
+	web/tzurl/zoneinfo/Europe/Zagreb.ics,
+	web/tzurl/zoneinfo/Europe/Zaporozhye.ics,
+	web/tzurl/zoneinfo/Europe/Zurich.ics,
+	web/tzurl/zoneinfo/Indian/Antananarivo.ics,
+	web/tzurl/zoneinfo/Indian/Chagos.ics,
+	web/tzurl/zoneinfo/Indian/Christmas.ics,
+	web/tzurl/zoneinfo/Indian/Cocos.ics,
+	web/tzurl/zoneinfo/Indian/Comoro.ics,
+	web/tzurl/zoneinfo/Indian/Kerguelen.ics,
+	web/tzurl/zoneinfo/Indian/Mahe.ics,
+	web/tzurl/zoneinfo/Indian/Maldives.ics,
+	web/tzurl/zoneinfo/Indian/Mauritius.ics,
+	web/tzurl/zoneinfo/Indian/Mayotte.ics,
+	web/tzurl/zoneinfo/Indian/Reunion.ics,
+	web/tzurl/zoneinfo/Pacific/Apia.ics,
+	web/tzurl/zoneinfo/Pacific/Auckland.ics,
+	web/tzurl/zoneinfo/Pacific/Bougainville.ics,
+	web/tzurl/zoneinfo/Pacific/Chatham.ics,
+	web/tzurl/zoneinfo/Pacific/Chuuk.ics,
+	web/tzurl/zoneinfo/Pacific/Easter.ics,
+	web/tzurl/zoneinfo/Pacific/Efate.ics,
+	web/tzurl/zoneinfo/Pacific/Enderbury.ics,
+	web/tzurl/zoneinfo/Pacific/Fakaofo.ics,
+	web/tzurl/zoneinfo/Pacific/Fiji.ics,
+	web/tzurl/zoneinfo/Pacific/Funafuti.ics,
+	web/tzurl/zoneinfo/Pacific/Galapagos.ics,
+	web/tzurl/zoneinfo/Pacific/Gambier.ics,
+	web/tzurl/zoneinfo/Pacific/Guadalcanal.ics,
+	web/tzurl/zoneinfo/Pacific/Guam.ics,
+	web/tzurl/zoneinfo/Pacific/Honolulu.ics,
+	web/tzurl/zoneinfo/Pacific/Johnston.ics,
+	web/tzurl/zoneinfo/Pacific/Kiritimati.ics,
+	web/tzurl/zoneinfo/Pacific/Kosrae.ics,
+	web/tzurl/zoneinfo/Pacific/Kwajalein.ics,
+	web/tzurl/zoneinfo/Pacific/Majuro.ics,
+	web/tzurl/zoneinfo/Pacific/Marquesas.ics,
+	web/tzurl/zoneinfo/Pacific/Midway.ics,
+	web/tzurl/zoneinfo/Pacific/Nauru.ics,
+	web/tzurl/zoneinfo/Pacific/Niue.ics,
+	web/tzurl/zoneinfo/Pacific/Norfolk.ics,
+	web/tzurl/zoneinfo/Pacific/Noumea.ics,
+	web/tzurl/zoneinfo/Pacific/Pago_Pago.ics,
+	web/tzurl/zoneinfo/Pacific/Palau.ics,
+	web/tzurl/zoneinfo/Pacific/Pitcairn.ics,
+	web/tzurl/zoneinfo/Pacific/Pohnpei.ics,
+	web/tzurl/zoneinfo/Pacific/Port_Moresby.ics,
+	web/tzurl/zoneinfo/Pacific/Rarotonga.ics,
+	web/tzurl/zoneinfo/Pacific/Saipan.ics,
+	web/tzurl/zoneinfo/Pacific/Tahiti.ics,
+	web/tzurl/zoneinfo/Pacific/Tarawa.ics,
+	web/tzurl/zoneinfo/Pacific/Tongatapu.ics,
+	web/tzurl/zoneinfo/Pacific/Wake.ics,
+	web/tzurl/zoneinfo/Pacific/Wallis.ics:
+	Updated timezone definitions
+	[8b7286cae097]
+
+	* web/jquery/ui/css/jquery-ui.structure.min.css,
+	web/jquery/ui/css/sunny/images/ui-bg_diagonals-
+	medium_20_d34d17_40x40.png, web/jquery/ui/css/sunny/images/ui-
+	bg_gloss-wave_45_817865_500x100.png, web/jquery/ui/css/sunny/images
+	/ui-bg_gloss-wave_60_fece2f_500x100.png,
+	web/jquery/ui/css/sunny/images/ui-bg_gloss-
+	wave_70_ffdd57_500x100.png, web/jquery/ui/css/sunny/images/ui-
+	bg_gloss-wave_90_fff9e5_500x100.png, web/jquery/ui/css/sunny/images
+	/ui-bg_highlight-soft_100_feeebd_1x100.png,
+	web/jquery/ui/css/sunny/images/ui-bg_inset-soft_30_ffffff_1x100.png,
+	web/jquery/ui/css/sunny/jquery-ui.theme.min.css, web/jquery/ui
+	/jquery-ui.js, web/jquery/ui/jquery-ui.min.js, web/js.inc:
+	Upgraded to latest version of jQuery UI (1.12.1). Actually, we
+	already had version 1.12.1, but this custom download removes support
+	for jQuery 1.7.x, which makes the file slightly smaller.
+	[5db37760acd9]
+
+	* web/js/resizable.js.php:
+	Fixed JQuery Migrate warning about applying an offset to an element
+	not conncted to the document.
+	[dde5f7cec30a]
+
+	* web/js/resizable.js.php:
+	Replaced use of deprecated jQuery method .unbind() with .off()
+	[3014073aefe1]
+
+	* web/edit_entry.php:
+	Fixed bug causing the end time not to be shown when there is only
+	one area. (This was a bug introduced in the forms_rewrite branch and
+	is not present in MRBS 1.7.1).
+	[6554c0c3ee45]
+
+2018-02-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area_room.php, web/js/edit_area_room.js.php:
+	Merge with forms_rewrite
+	[94d79405086e]
+
 2018-02-11  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_7_1 for changeset 86d4c68952c8
+	[b5f65f6cb170]
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for MRBS 1.7.1 release.
+	[86d4c68952c8] [mrbs-1_7_1]
 
 	* web/version_num.inc:
 	Incremented version number for release
-	[fbaee899064a] [tip]
+	[fbaee899064a]
 
 	* web/auth/auth_ldap.inc, web/systemdefaults.inc.php:
 	Added authLdapGetName() function in auth_ldap.inc. This isn't used
