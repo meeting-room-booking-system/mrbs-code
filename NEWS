@@ -7,6 +7,142 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.2 (Web Dec 19th 2018):
+
+[*] Updated included time zone files.
+
+[*] Fixed some Javascript warnings/deprecations. Updated jQuery UI.
+
+[*] Improved session/auth selection.
+
+[-] Fixed problem with text inputs and textarea widths not being the
+ same in some browsers, eg Firefox.
+
+[*] Added trimming of input fields on the Edit User form to remove
+ accidental whitespace.
+
+[-] Fixed bug with Prev and Next links in Search results, resulting in a
+ session expiry because no CSRF token was being passed. Only happens
+ when JavaScript is disabled.
+
+[-] Fixed problem with Search ignoring Search From date.
+
+[*] Added a date to the search results so that it's clear when the
+ search started.
+
+[-] Fixed bug in finding best language file.
+
+[-] Fixed bug when resizing a booking on a day that's not today.
+
+[*] Relaxed CSRF token checking, so that the token isn't checked for GET
+ requests to read-only pages such as Search and Report.
+
+[*] Changed MySQL schema/connection to use "utf8mb4" character set, in
+ order to support full Unicode. This adds a requirement on MySQL
+ 5.3.3 or later.
+
+[-] Fixed bug causing edit_entry_handler to go to today when finished
+ rather than the day of the start of the booking.
+
+[+] Added CAS session/authentication scheme.
+
+[+] Maded 'php' session scheme store sessions in the MRBS database,
+ rather than relying on the system having a working session storage
+ configuration.
+
+[*] Moved config.inc.php to config.inc.php-sample. This means that new
+ releases of MRBS won't conflict with/overwrite users' own config.inc.php
+ files.
+
+[-] Fixed a bug when using Joomla authentication.
+
+[-] Made settings for $edit_entry_field_order consistent.
+ This fixes a bug (see SF Support Requests #1562).
+
+[-] Fixed bug with confirmation status, introduced during recent
+ changes. See SF Support Requests #1562.
+
+[*] Updated Mail_Mime package to version 1.10.2 to avoid the use of the
+ deprecated each() function.
+
+[*] Updated PEAR to 1.10.5.
+
+[*] Updated Net_SMTP to 1.8.0.
+
+[*] Updated Net_Socket to 1.2.2.
+
+[-] Fixed bug causing language file not to be used when in CLI mode. See
+ SF Support Requests 1583.
+
+[*] Increased the length of the id column in the sessions table from 32
+ to 255. See SF Feature Requests #158.
+
+[*] Updated stated minimum PHP version number to 5.4.0.
+
+[-] Fixed bug when multiday bookings are not allowed. See SF Bugs #416.
+
+[-] Fixed problems to do with caching of the user level in JavaScript
+ code. See SF Bugs #415.
+
+[-] Fixed bug when db_ext password_format is not defined.
+
+[-] Fixed bug when using db_ext and
+ $auth['db_ext']['column_name_level']. See SF Bugs #417
+
+[-] Fixed problems with (a) the URL growing longer and longer when
+ logging in and logging out and logging in again etc. and (b) the
+ Back button on the edit_entry page not working after a login.
+
+[-] Fixed problem with checkboxes on forms not being filled properly.
+ See SF Bugs #418.
+
+[-] Fixed problem with disabled required fields on the edit_users form.
+ See SF Bugs #419.
+
+[-] Fixed a bug (SF Bugs #420) causing an "invalid id" message if you
+ try an edit an entry without first having logged in.
+
+[-] Fixed a bug that was causing the username_suffix to be stripped out
+ of a username wherever it occurred, rather than just at the end.
+
+[-] Fixed bug causing series not to be approved. Might be related to SF
+ Support Requests #1623
+
+[*] Disabled the default duration field on the area form if "All day" is
+ checked.
+
+[*] Clarified upgrade instructions. See SF Support Requests #1622.
+
+[-] Fixed bug causing "Empty or invalid search string". See SF Bugs
+ #421.
+
+[-] Fixed bug in date_default_timezone_set() that was causing it to set
+ the current area timnezone rather than the config timezone if no
+ timezone was specified.
+
+[-] Fixed bug that allowed areas with no enabled rooms to appear in the
+ area select.
+
+[*] Switched to using the REQUEST_URI instead of PHP_SELF in order to
+ get the cookie path. See SF Support Requests #1634.
+
+[-] Fixed bug that prevented users with emojis in their usernames from
+ logging in when using MySQL.
+
+[+] Added 'last login' functionality to 'db' auth scheme.
+
+[*] Added a note about how to include files from the config file. See SF
+ Support Requests #1649.
+
+[*] Set the session.gc_maxlifetime to the same time as
+ $auth['session_php']['session_expire_time'] so that users aren't
+ logged out by the garbage collector before the session cookie is due
+ to expire.
+
+[*] Upgraded PHPMailer to Version 5.2.27.
+
+
+-------------------------------------------------------------------------------
 Version 1.7.1 (Sun Feb 11th 2018):
 
 [*] Updated PHPMailer to use latest code (5.2.5+) from the 5.2-stable
