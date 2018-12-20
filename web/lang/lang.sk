@@ -20,7 +20,7 @@ $vocab["help"]               = "Nápoveda";
 $vocab["search"]             = "Hľadať";
 $vocab["outstanding"]        = "čakajúci na schválenie";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Objednané pre";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Oblasti";
@@ -28,9 +28,19 @@ $vocab["daybefore"]          = "Deň vzad";
 $vocab["dayafter"]           = "Deň vpred";
 $vocab["gototoday"]          = "Dnes";
 $vocab["goto"]               = "Prejsť na";
+$vocab["nav_day"]            = "Deň";
+$vocab["nav_week"]           = "Týždeň";
+$vocab["nav_month"]          = "Mesiac";
 $vocab["highlight_line"]     = "Označte tento riadok";
 $vocab["click_to_reserve"]   = "Klepnite na bunku, aby ste vykonali rezerváciu.";
 $vocab["timezone"]           = "Časová zóna";
+$vocab["weekbefore"]         = "Týždeň dozadu";
+$vocab["weekafter"]          = "Týždeň dopredu";
+$vocab["gotothisweek"]       = "Tento týždeň";
+$vocab["monthbefore"]        = "Mesiac dozadu";
+$vocab["monthafter"]         = "Mesiac dopredu";
+$vocab["gotothismonth"]      = "Tento mesiac";
+$vocab["no_rooms_for_area"]  = "Pre tento zdroj nie je definovaná žiadna oblasť!";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Dni";
@@ -60,9 +70,9 @@ $vocab["minute_lc"]          = "minúta";
 $vocab["minutes"]            = "minúty";
 $vocab["hour_lc"]            = "hodina";
 $vocab["hours"]              = "hodiny";
-$vocab["day_lc"]             = "deň";
+$vocab["day"]                = "deň";
 $vocab["days"]               = "dni";
-$vocab["week_lc"]            = "týždeň";
+$vocab["week"]               = "týždeň";
 $vocab["weeks"]              = "týždne";
 $vocab["year_lc"]            = "rok";
 $vocab["years"]              = "roky";
@@ -199,7 +209,6 @@ $vocab["max_per_year_area"]       = "Maximálny počet rezervácií za rok na je
 $vocab["max_per_future_area"]     = "Maximálny počet nevyřízených rezervácií na uživateľa v tejto oblasti je";
 $vocab["skip_and_book"]           = "Vynechať a zarezerovať";
 $vocab["skip_and_book_note"]      = "Pokračovať v rezervácii, vynechať kolidujúce položky";
-$vocab["changes_saved"]           = "Zmeny uložené";
 
 // Used in pending.php
 $vocab["pending"]            = "Rezervácie čakajúce na schválenie";
@@ -269,7 +278,6 @@ $vocab["of"]                 = " o ";
 $vocab["previous"]           = "Predchádzajúci";
 $vocab["next"]               = "Ďalší";
 $vocab["entry"]              = "Záznam";
-$vocab["advanced_search"]    = "Rozšírené hľadanie";
 $vocab["search_button"]      = "Hľadať";
 $vocab["search_for"]         = "Hľadať čo";
 $vocab["from"]               = "Od";
@@ -318,19 +326,6 @@ $vocab["delete_entries_warning"] = "UPOZORNENIE! Vymaže všetky položky odpove
                                    "Celkový počet položiek, ktoré budú zmazané: ";
 $vocab["delete_entries_failed"] = "Položky nemôžu byť odstránené.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Týždeň dozadu";
-$vocab["weekafter"]          = "Týždeň dopredu";
-$vocab["gotothisweek"]       = "Tento týždeň";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Mesiac dozadu";
-$vocab["monthafter"]         = "Mesiac dopredu";
-$vocab["gotothismonth"]      = "Tento mesiac";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Pre tento zdroj nie je definovaná žiadna oblasť!";
-
 // Used in admin.php
 $vocab["edit"]               = "Upraviť";
 $vocab["delete"]             = "Zmazať";
@@ -367,7 +362,6 @@ $vocab["invalid_area"]            = "Neplatná oblasť!";
 $vocab["invalid_room_name"]       = "Toto meno zdroja už bolo použité v aktuálnej oblasti!";
 $vocab["invalid_email"]           = "Neplatná emailová adresa!";
 $vocab["invalid_resolution"]      = "Neplatná kombinácia prvej pozície, poslednej pozície a rozlíšenia!";
-$vocab["too_many_slots"]          = 'Je treba zvýšiť hodnotu $max_slots v konfiguračnom súbore!';
 $vocab["general_settings"]        = "Všeobecné";
 $vocab["time_settings"]           = "Časy pozícií";
 $vocab["confirmation_settings"]   = "Nastavenie potvrdzovania";

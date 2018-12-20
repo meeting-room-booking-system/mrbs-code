@@ -18,7 +18,7 @@ $vocab["admin"]              = "Kudeaketa";
 $vocab["help"]               = "Laguntza";
 $vocab["search"]             = "Bilatu";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Noiz erreserbatu: ";
 $vocab["bookingsforpost"]    = ""; // Dataren ondoren doa
 $vocab["areas"]              = "Baliabide mota";
@@ -26,8 +26,18 @@ $vocab["daybefore"]          = "Aurreko eguna";
 $vocab["dayafter"]           = "Hurrengo eguna";
 $vocab["gototoday"]          = "Gaurko eguna";
 $vocab["goto"]               = "Hona joan";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "Lerro honi lehentasuna eman";
 $vocab["click_to_reserve"]   = "Erreserba egiteko karratutxoan klik egin.";
+$vocab["weekbefore"]         = "Aurreko astera joan";
+$vocab["weekafter"]          = "Hurrengo astera joan";
+$vocab["gotothisweek"]       = "Aste honetara joan";
+$vocab["monthbefore"]        = "Aurreko hilabetera joan";
+$vocab["monthafter"]         = "Hurrengo hilabetera joan";
+$vocab["gotothismonth"]      = "Hilabete honetara joan";
+$vocab["no_rooms_for_area"]  = "Baliabide honetarako elementurik ez da zehaztu";
 
 // Used in trailer.php
 $vocab["viewday"]            = "Eguna ikusi";
@@ -133,7 +143,6 @@ $vocab["of"]                 = " - Aurkitutako erregistrok guztira: ";
 $vocab["previous"]           = "Aurrekoa";
 $vocab["next"]               = "Hurrengoa";
 $vocab["entry"]              = "Sarrera";
-$vocab["advanced_search"]    = "Bilaketa aurreratua";
 $vocab["search_button"]      = "Bilatu";
 $vocab["search_for"]         = "Bilaketa aurreratua";
 $vocab["from"]               = "Noiztik";
@@ -159,19 +168,6 @@ $vocab["total"]              = "Guztira";
 $vocab["submitquery"]        = "Bidali";
 $vocab["sort_rep"]           = "Zeren arabera";
 $vocab["sort_rep_time"]      = "Hasiera data/ordua";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Aurreko astera joan";
-$vocab["weekafter"]          = "Hurrengo astera joan";
-$vocab["gotothisweek"]       = "Aste honetara joan";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Aurreko hilabetera joan";
-$vocab["monthafter"]         = "Hurrengo hilabetera joan";
-$vocab["gotothismonth"]      = "Hilabete honetara joan";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Baliabide honetarako elementurik ez da zehaztu";
 
 // Used in admin.php
 $vocab["edit"]               = "Editatu";

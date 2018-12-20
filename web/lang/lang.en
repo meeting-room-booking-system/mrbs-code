@@ -17,19 +17,32 @@ $vocab["report"]             = "Report";
 $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
-$vocab["outstanding"]        = "pending bookings";
+$vocab["outstanding"]        = "%d pending bookings";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Bookings for";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Areas";
+$vocab["today"]              = "Today";
 $vocab["daybefore"]          = "Go To Day Before";
 $vocab["dayafter"]           = "Go To Day After";
 $vocab["gototoday"]          = "Go To Today";
 $vocab["goto"]               = "Go to";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
 $vocab["timezone"]           = "Timezone";
+$vocab["weekbefore"]         = "Go To Week Before";
+$vocab["weekafter"]          = "Go To Week After";
+$vocab["gotothisweek"]       = "Go To This Week";
+$vocab["monthbefore"]        = "Go To Month Before";
+$vocab["monthafter"]         = "Go To Month After";
+$vocab["gotothismonth"]      = "Go To This Month";
+$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
+$vocab["saving"]             = "Saving";
+$vocab["week_number"]        = "Week %s | ";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
@@ -59,10 +72,11 @@ $vocab["minute_lc"]          = "minute";
 $vocab["minutes"]            = "minutes";
 $vocab["hour_lc"]            = "hour";
 $vocab["hours"]              = "hours";
-$vocab["day_lc"]             = "day";
+$vocab["day"]                = "day";
 $vocab["days"]               = "days";
-$vocab["week_lc"]            = "week";
+$vocab["week"]               = "week";
 $vocab["weeks"]              = "weeks";
+$vocab["month"]              = "month";
 $vocab["year_lc"]            = "year";
 $vocab["years"]              = "years";
 $vocab["period_lc"]          = "period";
@@ -204,7 +218,6 @@ $vocab["max_per_year_area"]       = "The maximum number of bookings per year per
 $vocab["max_per_future_area"]     = "The maximum number of outstanding bookings per user in this area is";
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
-$vocab["changes_saved"]           = "Changes saved";
 
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";
@@ -240,7 +253,7 @@ $vocab["level_2"]            = "admin";
 $vocab["level_3"]            = "user admin";
 
 // Authentication database
-$vocab["user_list"]          = "User list";
+$vocab["user_list"]          = "Users";
 $vocab["edit_user"]          = "Edit user";
 $vocab["delete_user"]        = "Delete this user";
 //$vocab["users.name"]         = Use the same as above, for consistency.
@@ -262,8 +275,10 @@ $vocab["administrator"]      = "Administrator";
 $vocab["unknown"]            = "Unknown";
 $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Click to display my upcoming entries";
-$vocab["no_users_initial"]   = "No users in database, allowing initial user creation";
-$vocab["no_users_create_first_admin"] = "Create a user configured as an administrator and then you can log in and create more users.";
+$vocab["no_users_initial"]   = "Welcome to MRBS!";
+$vocab["no_users_create_first_admin"] = "Before you can do anything else you need to create an admin " .
+                                        "user. Then login as that user and create more users and create " .
+                                        "areas and rooms.";
 $vocab["warning_last_admin"] = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
 
 // Used in search.php
@@ -276,9 +291,8 @@ $vocab["of"]                 = " of ";
 $vocab["previous"]           = "Previous";
 $vocab["next"]               = "Next";
 $vocab["entry"]              = "Entry";
-$vocab["advanced_search"]    = "Advanced search";
 $vocab["search_button"]      = "Search";
-$vocab["search_for"]         = "Search For";
+$vocab["search_for"]         = "Search for";
 $vocab["from"]               = "From";
 
 // Used in report.php
@@ -327,19 +341,6 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
                                    "Total number of entries that will be deleted: ";
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Go To Week Before";
-$vocab["weekafter"]          = "Go To Week After";
-$vocab["gotothisweek"]       = "Go To This Week";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Go To Month Before";
-$vocab["monthafter"]         = "Go To Month After";
-$vocab["gotothismonth"]      = "Go To This Month";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "No rooms defined for this area";
-
 // Used in admin.php
 $vocab["edit"]               = "Edit";
 $vocab["delete"]             = "Delete";
@@ -378,7 +379,6 @@ $vocab["invalid_room_name"]       = "This room name has already been used in the
 $vocab["invalid_email"]           = "Invalid email address!";
 $vocab["invalid_time_format"]     = "Times must be in the format 'hh:mm'";
 $vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
-$vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
 $vocab["general_settings"]        = "General";
 $vocab["time_settings"]           = "Slot times";
 $vocab["period_settings"]         = "Period names";
@@ -459,6 +459,7 @@ $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
 $vocab["servertime"]         = "Server time";
 $vocab["server_software"]    = "Server software";
+$vocab["extensions"]         = "Extensions";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 

@@ -22,6 +22,19 @@ if ($mail_settings['icalendar'])
 }
 
 
+// Determines whether an email might need to be sent
+function need_to_send_mail()
+{
+  global $mail_settings;
+  
+  return ($mail_settings['admin_on_bookings'] or
+          $mail_settings['area_admin_on_bookings'] or
+          $mail_settings['room_admin_on_bookings'] or
+          $mail_settings['booker'] or
+          $mail_settings['book_admin_on_approval']);
+}
+
+
 function get_mail_locale()
 {
   static $mail_locale;
@@ -31,7 +44,7 @@ function get_mail_locale()
   {
     if (isset($mail_settings['admin_lang']))
     {
-      $mail_locale = get_os_locale($mail_settings['admin_lang']);
+      $mail_locale = System::getOSlocale($mail_settings['admin_lang']);
     }
     else
     {
@@ -642,9 +655,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       {
         // Repeat number of weeks
         $new = $data['rep_num_weeks'] . ' ' .
-               (($data['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+               (($data['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
         $old = $mail_previous['rep_num_weeks'] . ' ' .
-               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week_lc") : get_vocab("weeks"));
+               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
         $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
                                         $new,
                                         $old,
@@ -777,7 +790,7 @@ function create_addresses($data, $action)
   // for this room, then get the email addresses of the approvers
   if (!in_array($action, array("delete", "reject")) &&
       $approval_enabled && 
-      !auth_book_admin($user, $data['room_id']))
+      !is_book_admin($data['room_id']))
   {
     $to[] = get_approvers_email($data['room_id']);
   }

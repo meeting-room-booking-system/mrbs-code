@@ -47,12 +47,11 @@ function generate_room_delete_form($room, $area)
 
 function generate_area_change_form($enabled_areas, $disabled_areas)
 {
-  global $is_admin;
   global $area, $day, $month, $year;
   
   $form = new Form();
   
-  $attributes = array('id'     => 'areaChangeForm',
+  $attributes = array('class'  => 'areaChangeForm',
                       'action' => this_page(),
                       'method' => 'post');
                       
@@ -69,7 +68,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   $fieldset->addLegend('');
   
   // The area select
-  if ($is_admin)
+  if (is_admin())
   {
     $options = array(get_vocab("enabled") => $enabled_areas,
                      get_vocab("disabled") => $disabled_areas);
@@ -96,7 +95,7 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
   $fieldset->addElement($field);
   
   // If they're an admin then give them edit and delete buttons for the area
-  if ($is_admin)
+  if (is_admin())
   {
     $img = new ElementImg();
     $img->setAttributes(array('src'   => 'images/edit.png',
@@ -127,8 +126,6 @@ function generate_area_change_form($enabled_areas, $disabled_areas)
 
 function generate_new_area_form()
 {
-  global $maxlength;
-  
   $form = new Form();
   
   $attributes = array('id'     => 'add_area',
@@ -151,7 +148,7 @@ function generate_new_area_form()
         ->setControlAttributes(array('id'        => 'area_name',
                                      'name'      => 'name',
                                      'required'  => true,
-                                     'maxlength' => $maxlength['area.area_name']));               
+                                     'maxlength' => maxlength('area.area_name')));               
   $fieldset->addElement($field);
   
   // The submit button
@@ -168,7 +165,6 @@ function generate_new_area_form()
 
 function generate_new_room_form()
 {
-  global $maxlength;
   global $area;
   
   $form = new Form();
@@ -195,7 +191,7 @@ function generate_new_room_form()
         ->setControlAttributes(array('id'        => 'room_name',
                                      'name'      => 'name',
                                      'required'  => true,
-                                     'maxlength' => $maxlength['room.room_name']));               
+                                     'maxlength' => maxlength('room.room_name')));               
   $fieldset->addElement($field);
   
   // The description field
@@ -203,7 +199,7 @@ function generate_new_room_form()
   $field->setLabel(get_vocab('description'))
         ->setControlAttributes(array('id'        => 'room_description',
                                      'name'      => 'description',
-                                     'maxlength' => $maxlength['room.description']));               
+                                     'maxlength' => maxlength('room.description')));               
   $fieldset->addElement($field);
    
   // Capacity
@@ -240,17 +236,14 @@ function generate_new_room_form()
 Form::checkToken($post_only=true);
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
-$user = getUserName();
-$required_level = (isset($max_level) ? $max_level : 2);
-$is_admin = (authGetUserLevel($user) >= $required_level);
+
 
 // Get non-standard form variables
 $error = get_form_var('error', 'string');
 
-print_header($day, $month, $year, isset($area) ? $area : null, isset($room) ? $room : null);
+print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
 // Get the details we need for this area
 if (isset($area))
@@ -302,7 +295,7 @@ if (!$areas_defined)
 }
 else
 {
-  if (!$is_admin && empty($enabled_areas))
+  if (!is_admin() && empty($enabled_areas))
   {
     echo "<p>" . get_vocab("noareas_enabled") . "</p>\n";
   }
@@ -313,7 +306,7 @@ else
   }
 }
 
-if ($is_admin)
+if (is_admin())
 {
   // New area form
   generate_new_area_form();
@@ -334,7 +327,7 @@ if ($auth['allow_custom_html'])
 // BOTTOM SECTION: ROOMS IN THE SELECTED AREA
 // Only display the bottom section if the user is an admin or
 // else if there are some areas that can be displayed
-if ($is_admin || !empty($enabled_areas))
+if (is_admin() || !empty($enabled_areas))
 {
   echo "<h2>\n";
   echo get_vocab("rooms");
@@ -366,7 +359,7 @@ if ($is_admin || !empty($enabled_areas))
       for ($i = 0; ($row = $res->row_keyed($i)); $i++)
       {
         $rooms[] = $row;
-        if ($is_admin || !$row['disabled'])
+        if (is_admin() || !$row['disabled'])
         {
           $n_displayable_rooms++;
         }
@@ -390,9 +383,9 @@ if ($is_admin || !empty($enabled_areas))
         echo "<tr>\n";
 
         echo "<th>" . get_vocab("name") . "</th>\n";
-        if ($is_admin)
+        if (is_admin())
         {
-        // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
+          // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
           echo "<th>" . get_vocab("enabled") . "</th>\n";
         }
         // ignore these columns, either because we don't want to display them,
@@ -421,7 +414,7 @@ if ($is_admin || !empty($enabled_areas))
           }
         }
         
-        if ($is_admin)
+        if (is_admin())
         {
           echo "<th>&nbsp;</th>\n";
         }
@@ -435,7 +428,7 @@ if ($is_admin || !empty($enabled_areas))
         foreach ($rooms as $r)
         {
           // Don't show ordinary users disabled rooms
-          if ($is_admin || !$r['disabled'])
+          if (is_admin() || !$r['disabled'])
           {
             $row_class = ($row_class == "even") ? "odd" : "even";
             echo "<tr class=\"$row_class\">\n";
@@ -447,7 +440,7 @@ if ($is_admin || !empty($enabled_areas))
                  "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
                  "<a title=\"$html_name\" href=\"edit_room.php?room=" . $r['id'] . "\">$html_name</a>" .
                  "</div></td>\n";
-            if ($is_admin)
+            if (is_admin())
             {
               // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
               echo "<td class=\"boolean\"><div>" . ((!$r['disabled']) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
@@ -498,7 +491,7 @@ if ($is_admin || !empty($enabled_areas))
             }  // foreach
             
             // Give admins a delete button
-            if ($is_admin)
+            if (is_admin())
             {
               echo "<td>\n<div>\n";
               generate_room_delete_form($r['id'], $area);
@@ -525,12 +518,11 @@ if ($is_admin || !empty($enabled_areas))
 
   // Give admins a form for adding rooms to the area - provided 
   // there's an area selected
-  if ($is_admin && $areas_defined && !empty($area))
+  if (is_admin() && $areas_defined && !empty($area))
   {
     generate_new_room_form();
   }
   echo "</div>\n";
 }
 
-output_trailer();
-
+print_footer();

@@ -36,6 +36,22 @@ performing the upgrade on your production database.
 See the advice in INSTALL about potentially creating a fresh "config.inc.php"
 when you upgrade MRBS, especially for a major version change.
 
+Upgrading from prior to MRBS 1.8.0
+==================================
+
+The following configuration settings have changed:
+    $area_list_format         Redundant. All area and room lists are now select elements.
+    $display_calendar_bottom  Redundant. The mini-calendars have moved.
+    $max_slots                Redundant. The code has been rewritten.
+    $simple_trailer           Redundant. There is no longer a trailer!
+
+The following $strftime_format settings have changed:
+    'day_month'   redundant
+    'dayname_cal' replaced by 'minical_dayname'
+    'month_cal'   replaced by 'minical_monthname'
+    'monthyear'   replaced by 'view_month'
+
+
 Upgrading from prior to MRBS 1.7.1
 ==================================
 

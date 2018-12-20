@@ -17,52 +17,55 @@ $.fn.reverse = [].reverse;
 
 
 <?php
-// function to return offset coordinates rounded to the nearest integer.
-// Standard jQuery .offset() can return coordinates with decimal parts because
-// it is not returning the rendered position but the calculated position.  If an
-// element or its parents have styling that will lead to non-integer dimensions,
-// for example by having a width of n%, then the offset returned will be non-integer.
-// However in this application we often want the actual rendered position to the
-// nearest pixel, which hopefully will be the rounded position.
+// Get the sides, optionally including the border, of the rectangle represented by
+// the jQuery object obj.The result object is indexed by 'n', 'w', 's' and 'e' as
+// well as 'top', 'left', 'bottom' and 'right'.
+//
+// [Note: this depends on the object having box-sizing of content-box, as 
+// jQuery has problems getting the correct dimensions when using border-box
+// and the browser zoom level is not 100%.  If you need to use border-box,
+// then JavaScript's getBoundingClientRect() works, but remember that it
+// returns positions relative to the viewport and not the document.]
 ?>
-$.fn.offsetRound = function(coordinates) {
-    if (typeof coordinates === 'undefined')
-    {
-      var result = this.offset();
-      result.top = Math.round(result.top);
-      result.left = Math.round(result.left);
-      return result;
-    }
-    else
-    {
-      this.offset(coordinates);
-    }
-  };
-
-
-
-<?php
-// Get the sides of the rectangle represented by the jQuery object jqObject
-?>
-function getSides(jqObject)
+function getSides(obj, includeBorder)
 {
-  var sides = {};
-  sides.n = jqObject.offsetRound().top;
-  sides.w = jqObject.offsetRound().left;
-  sides.s = sides.n + jqObject.outerHeight();
-  sides.e = sides.w + jqObject.outerWidth();
-  return sides;
+  var result = {};
+  
+  if (includeBorder)
+  {
+    result.n = obj.offset().top;
+    result.w = obj.offset().left;
+    result.s = result.n + obj.outerHeight();
+    result.e = result.w + obj.outerWidth();
+  }
+  else
+  {
+    <?php 
+    // We need to use parseFloat instead of parseInt because the CSS width may be
+    // a float, especially if the browser zoom level is not 100%.
+    ?>
+    result.n = obj.offset().top + parseFloat(obj.css('border-top-width'));
+    result.w = obj.offset().left + parseFloat(obj.css('border-left-width'));
+    result.s = result.n + obj.innerHeight();
+    result.e = result.w + obj.innerWidth();
+  }
+    
+  result.top = result.n;
+  result.left = result.w;
+  result.bottom = result.s;
+  result.right = result.e;
+  
+  return result;
 }
         
         
 <?php // Checks to see whether two rectangles occupy the same space ?>
 function rectanglesIdentical(r1, r2)
 {
-  var tolerance = 2;  <?php //px ?>
-  return ((Math.abs(r1.n - r2.n) < tolerance) &&
-          (Math.abs(r1.s - r2.s) < tolerance) &&
-          (Math.abs(r1.e - r2.e) < tolerance) &&
-          (Math.abs(r1.w - r2.w) < tolerance));
+  return ((Math.round(r1.n - r2.n) === 0) &&
+          (Math.round(r1.s - r2.s) === 0) &&
+          (Math.round(r1.e - r2.e) === 0) &&
+          (Math.round(r1.w - r2.w) === 0));
 }
             
                               
@@ -70,50 +73,82 @@ function rectanglesIdentical(r1, r2)
 function rectanglesOverlap(r1, r2)
 {
   <?php
-  // We check whether two rectangles overlap by checking whether any of the
-  // sides of one rectangle intersect the sides of the other.   In the condition
-  // below, we are checking on the first line to see if either of the vertical
-  // sides of r1 intersects either of the horizontal sides of r2.  The second line
-  // checks for intersection of the horizontal sides r1 with the vertical sides of r2.
+  // If any of the sides of r1 is clear of the opposite side of r2, then the two
+  // rectangles don't overlap.   Otherwise they must do.   We allow the sides to
+  // be on top of each other (ie we use >= and <=).
   ?>
-  if ( (( ((r1.w > r2.w) && (r1.w < r2.e)) || ((r1.e > r2.w) && (r1.e < r2.e)) ) && (r1.n < r2.s) && (r1.s > r2.n)) ||
-       (( ((r1.n > r2.n) && (r1.n < r2.s)) || ((r1.s > r2.n) && (r1.s < r2.s)) ) && (r1.w < r2.e) && (r1.e > r2.w)) )
+  if ((Math.round(r1.n - r2.s) >= 0) ||
+      (Math.round(r1.s - r2.n) <= 0) ||
+      (Math.round(r1.w - r2.e) >= 0) ||
+      (Math.round(r1.e - r2.w) <= 0))
+  {
+    return false;
+  }
+  else
   {
     return true;
   }
-  <?php // they also overlap if r1 is inside r2 ?>
-  if ((r1.w >= r2.w) && (r1.n >= r2.n) && (r1.e <= r2.e) && (r1.s <= r2.s))
-  {
-    return true;
-  }
-  <?php // or r2 is inside r1 ?>
-  if ((r2.w >= r1.w) && (r2.n >= r1.n) && (r2.e <= r1.e) && (r2.s <= r1.s))
-  {
-    return true;
-  }
-  return false;
 }
             
             
 <?php
 // Check whether the rectangle (with sides n,s,e,w) overlaps any
-// of the booked slots in the table.
+// of the booked slots in the table.   Returns an array of overlapped
+// bookings.
+//    stopAtFirst       (optional) If true then only the first overlap found will
+//                      be returned.  Default false.
+//    ignoreRectangle   (optional).  A rectangle that is to be ignored when checking
+//                      for overlaps.
 ?>
-function overlapsBooked(rectangle, bookedMap)
+function overlapsBooked(rectangle, bookedMap, stopAtFirst, ignoreRectangle)
 {
-  <?php
-  // Check each of the booked cells in turn to see if it overlaps
-  // the rectangle.  If it does return true immediately.
-  ?>
+  var result = [];
+
   for (var i=0; i<bookedMap.length; i++)
   {
-    if (rectanglesOverlap(rectangle, bookedMap[i]))
+    if (!(ignoreRectangle && rectanglesIdentical(ignoreRectangle, bookedMap[i])))
     {
-      return true;
+      if (rectanglesOverlap(rectangle, bookedMap[i]))
+      {
+        result.push(bookedMap[i]);
+        if (stopAtFirst)
+        {
+          break;
+        }
+      }
     }
   }
-  return false;
+  
+  return result;
 }
+
+
+<?php
+// Gets the side-most side of the array of rectangles.
+// side can be 'n', 's', 'e' or 'w'
+?>
+function getClosestSide(rectangles, side)
+{
+  var result = null;
+  
+  rectangles.forEach(function(rectangle) {
+      if (result === null)
+      {
+        result = rectangle[side];
+      }
+      else if ((side === 'e') || (side === 's'))
+      {
+        result = Math.max(result, rectangle[side]);
+      }
+      else
+      {
+        result = Math.min(result, rectangle[side]);
+      }
+    });
+    
+  return result;
+}
+
       
 <?php
 // Get the name of the data attribute in this jQuery object.
@@ -131,429 +166,431 @@ function getDataName(jqObject)
   return false;
 }
         
-        
-function redrawClones(table)
-{
-  table.find('div.clone').each(function() {
-      var clone = $(this);
-      var original = clone.prev();
-      clone.width(original.outerWidth())
-           .height(original.outerHeight());
-    });
-}
-        
-function getTableData(table, tableData)
-{
-  <?php 
-  // Build an object holding all the data we need about the table, which is
-  // the coordinates of the cell boundaries and the names and values of the
-  // data attributes.    The object has two properties, x and y, which in turn
-  // are objects containing the data for the x and y axes.  Each of these
-  // objects has a key property which holds the name of the data attribute and a
-  // data object, which is an array of objects holding the coordinate and data
-  // value at each cell boundary.
-  //
-  // Note that jQuery.offset() measures to the top left hand corner of the content
-  // and does not take into account padding.   So we need to make sure that the padding-top
-  // and padding-left is the same for all elements that we are going to measure so
-  // that we can compare them properly.   It is simplest to use zero and put any
-  // padding required on the contained element.
-  ?>
-  var rtl = ((table.css('direction') !== undefined) &&
-             table.css('direction').toLowerCase() === 'rtl');
-  var resolution = table.data('resolution');
-  tableData.x = {};
-  tableData.x.data = [];
-  <?php 
-  // We need :visible because there might be hidden days 
-  // We need thead:first-child in case there are floating headers
-  ?>
-  var columns = table.find('thead:first-child tr:first-child th:visible').not('.first_last');
 
+var Table = {
+  selector: ".dwm_main:not('#month_main')",
+  borderLeftWidth: undefined,
+  borderTopWidth: undefined,
+  grid: {},
+  
   <?php
-  // If the table has direction rtl, as it may do if you're using a RTL language
-  // such as Hebrew, then the columns will have been presented in the order right
-  // to left and we'll need to reverse the columns.
+  // Return the parameters for the booking represented by el
+  // The result is an object with property of the data name (eg
+  // 'seconds', 'time', 'room') and each property is an array of
+  // the values for that booking (for example an array of room ids)
   ?>
-  if (rtl)
-  {
-    columns.reverse();
-  }
-  columns.each(function() {
-      if (tableData.x.key === undefined)
+  getBookingParams: function(el) {
+      var rtl = ($(Table.selector).css('direction').toLowerCase() === 'rtl'),
+          params = {},
+          data,
+          tolerance = 2, <?php //px ?>
+          cell = {x: {}, y: {}},
+          i,
+          axis;
+          
+      cell.x.start = el.offset().left;
+      cell.y.start = el.offset().top;
+      cell.x.end = cell.x.start + el.outerWidth();
+      cell.y.end = cell.y.start + el.outerHeight();
+      for (axis in cell)
       {
-        tableData.x.key = getDataName($(this));
-      }
-      tableData.x.data.push({coord: $(this).offsetRound().left,
-                             value: $(this).data(tableData.x.key)});
-    });
-  <?php 
-  // and also get the right hand edge (and also the left hand edge if the
-  // direction is RTL, as in Hebrew).  If we're dealing with seconds
-  // we need to know what the end time of the slot would be
-  ?>
-  if (rtl)
-  {
-    columns.filter(':first').each(function() {
-        var value = null;
-        if (tableData.x.key === 'seconds')
+        if (cell.hasOwnProperty(axis))
         {
-          value = tableData.x.data[0].value + resolution;
+          data = Table.grid[axis].data;
+          if (params[Table.grid[axis].key] === undefined)
+          {
+            params[Table.grid[axis].key] = [];
+          }
+          if (rtl && (axis==='x'))
+          {
+            for (i = data.length - 1; i >= 0; i--)
+            {
+              if ((data[i].coord + tolerance) < cell[axis].start)
+              {
+                <?php
+                // 'seconds' behaves slightly differently to the other parameters:
+                // we need to know the end time for the new slot.    Also it's possible
+                // for us to have a zero element, eg when selecting a new booking, and if
+                // so we need to make sure there's something returned
+                ?>
+                if ((Table.grid[axis].key === 'seconds') ||
+                    (params[Table.grid[axis].key].length === 0))
+                {
+                  params[Table.grid[axis].key].push(data[i].value);
+                }
+                break;
+              }
+              if ((data[i].coord + tolerance) < cell[axis].end)
+              {
+                params[Table.grid[axis].key].push(data[i].value);
+              }
+            }
+          }
+          else
+          {
+            for (i=0; i<data.length; i++)
+            {
+              if ((data[i].coord + tolerance) > cell[axis].end)
+              {
+                <?php
+                // 'seconds' behaves slightly differently to the other parameters:
+                // we need to know the end time for the new slot.    Also it's possible
+                // for us to have a zero element, eg when selecting a new booking, and if
+                // so we need to make sure there's something returned
+                ?>
+                if ((Table.grid[axis].key === 'seconds') ||
+                    (params[Table.grid[axis].key].length === 0))
+                {
+                  params[Table.grid[axis].key].push(data[i].value);
+                }
+                break;
+              }
+              if ((data[i].coord + tolerance) > cell[axis].start)
+              {
+                params[Table.grid[axis].key].push(data[i].value);
+              }
+            } <?php // for ?>
+          }
         }
-        var edge = $(this).offsetRound().left;
-        tableData.x.data.unshift({coord: edge, value: value});
-      });
-  }
-
-  columns.filter(':last').each(function() {
-      var value = null;
-      if (tableData.x.key === 'seconds')
-      {
-        value = tableData.x.data[tableData.x.data.length - 1].value + resolution;
-      }
-      var edge = $(this).offsetRound().left + $(this).outerWidth();
-      tableData.x.data.push({coord: edge, value: value});
-    });
+      } <?php // for (axis in cell) ?>
+      return params;
+    },  <?php // getBookingParams() ?>
 
     
-  tableData.y = {};
-  tableData.y.data = [];
-  var rows = table.find('tbody td:first-child').not('.multiple_booking td');
-  rows.each(function() {
-      if (tableData.y.key === undefined)
+  getRowNumber: function(y) {
+      for (var i=0; i<Table.grid.y.data.length - 1; i++)
       {
-        tableData.y.key = getDataName($(this));
+        if ((y >= Table.grid.y.data[i].coord) && 
+            (y < Table.grid.y.data[i+1].coord))
+        {
+          return i;
+        }
       }
-      tableData.y.data.push({coord: $(this).offsetRound().top,
-                             value: $(this).data(tableData.y.key)});
-    });
-  <?php // and also get the bottom edge ?>
-  rows.filter(':last').each(function() {
-      var value = null;
-      if (tableData.y.key === 'seconds')
+      return null;
+    },  <?php // getRowNumber ?>
+
+
+  <?php // Remove any highlighting that has been applied to the row labels ?>
+  clearRowLabels: function() {
+      if (Table.highlightRowLabels.rows !== undefined)
       {
-        value = tableData.y.data[tableData.y.data.length - 1].value + resolution;
+        for (var i=0; i < Table.highlightRowLabels.rows.length; i++)
+        {
+          Table.highlightRowLabels.rows[i].removeClass('selected');
+        }
       }
-      tableData.y.data.push({coord: $(this).offsetRound().top + $(this).outerHeight(),
-                             value: value});
-    });
-}
-        
-        
-<?php
-// Tests whether the point p with coordinates x and y is outside the table
-?>
-function outsideTable(tableData, p)
-{
-  var headBottoms = $('table.dwm_main thead').map(function() {
+    },  <?php // clearRowLabels ?>
+  
+
+  <?php
+  // function to highlight the row labels in the table that are level
+  // with the element el
+  ?>
+  highlightRowLabels: function (el) {
+      if (Table.highlightRowLabels.rows === undefined)
+      {
+        <?php // Cache the row label cells in an array ?>
+        Table.highlightRowLabels.rows = [];
+        $(Table.selector).find('tbody tr').each(function() {
+            Table.highlightRowLabels.rows.push($(this).find('td.row_labels'));
+          });
+      }
+      var elStartRow = Table.getRowNumber(el.offset().top);
+      var elEndRow = Table.getRowNumber(el.offset().top + el.outerHeight());
+      for (var i=0; i<Table.highlightRowLabels.rows.length ; i++)
+      {
+        if (((elStartRow === null) || (elStartRow <= i)) && 
+            ((elEndRow === null) || (i < elEndRow)))
+        {
+          Table.highlightRowLabels.rows[i].addClass('selected');
+        }
+        else
+        {
+          Table.highlightRowLabels.rows[i].removeClass('selected');
+        }
+      }
+    },  <?php // highlightRowLabels ?>
+
+  <?php
+  // Tests whether the point p with coordinates x and y is outside the table
+  ?>
+  outside: function(p) {
+      var headBottoms = $(Table.selector).find('thead').map(function() {
           return $(this).offset().top + $(this).outerHeight();
         }).get();
-  
-  <?php
-  // We might have floating headers in operation, in which case
-  // it doesn't make sense to drag in the part of the table behind
-  // the floating header because you can't see what's happening.
-  // So test to see if the cursor is above the bottom of the lowest
-  // table header.
-  ?>  
-  if (p.y < (Math.max.apply(null, headBottoms)))
-  {
-    return true;
-  }
-
-  return ((p.x < tableData.x.data[0].coord) ||
-          (p.y < tableData.y.data[0].coord) ||
-          (p.x > tableData.x.data[tableData.x.data.length - 1].coord) ||
-          (p.y > tableData.y.data[tableData.y.data.length - 1].coord) );
-}
-        
-<?php
-// Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') to 
-// the nearest grid line, if the side is within the snapping range.
-//
-// If force is true, then the side is snapped regardless of where it is.
-//
-// We also contain the resize within the set of bookable cells
-//
-// We have to provide our own snapToGrid function instead of using the grid
-// option in the jQuery UI resize widget because our table may not have uniform
-// row heights and column widths - so we can't specify a grid in terms of a simple
-// array as required by the resize widget.
-?>
-function snapToGrid(tableData, div, side, force)
-{
-  var snapGap = (force) ? 100000: 30; <?php // px ?>
-  var tolerance = 2; <?php //px ?>
-  var isLR = (side==='left') || (side==='right');
- 
-  var data = (isLR) ? tableData.x.data : tableData.y.data;
-  
-  var topLeft, bottomRight, divTop, divLeft, divWidth, divHeight, thisCoord,
-      gap, gapTopLeft, gapBottomRight;
       
-  divTop = div.offsetRound().top;
-  divLeft = div.offsetRound().left;
-  divWidth = div.outerWidth();
-  divHeight = div.outerHeight();
-  switch (side)
-  {
-    case 'top':
-      thisCoord = divTop;
-      break;
-    case 'bottom':
-      thisCoord = divTop + divHeight;
-      break;
-    case 'left':
-      thisCoord = divLeft;
-      break;
-    case 'right':
-      thisCoord = divLeft + divWidth;
-      break;
-  }
+      <?php
+      // We might have floating headers in operation, in which case
+      // it doesn't make sense to drag in the part of the table behind
+      // the floating header because you can't see what's happening.
+      // So test to see if the cursor is above the bottom of the lowest
+      // table header.
+      ?>  
+      if (p.y < (Math.max.apply(null, headBottoms)))
+      {
+        return true;
+      }
 
-  for (var i=0; i<(data.length -1); i++)
-  {
-    topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
-    bottomRight = data[i+1].coord;
+      return ((p.x < Table.grid.x.data[0].coord) ||
+              (p.y < Table.grid.y.data[0].coord) ||
+              (p.x > Table.grid.x.data[Table.grid.x.data.length - 1].coord) ||
+              (p.y > Table.grid.y.data[Table.grid.y.data.length - 1].coord) );
+    },  <?php // outside() ?>
+
+  size: function() {
+      <?php 
+      // Get the width of the top and left borders of the first proper slot cell
+      // in the main table (ie ignore the row labels cell).  This won't be the
+      // same as the value in the CSS if the browsers zoom level is not 100%.
+      ?>
+      var table = $(Table.selector);
+      var td = table.find('tbody tr:first-child td:nth-child(2)');
+      Table.borderLeftWidth = parseFloat(td.css('border-left-width'));
+      Table.borderTopWidth = parseFloat(td.css('border-top-width'));
+      
+      <?php 
+      // Build an object holding all the data we need about the table, which is
+      // the coordinates of the cell boundaries and the names and values of the
+      // data attributes.    The object has two properties, x and y, which in turn
+      // are objects containing the data for the x and y axes.  Each of these
+      // objects has a key property which holds the name of the data attribute and a
+      // data object, which is an array of objects holding the coordinate and data
+      // value at each cell boundary.
+      //
+      // Note that jQuery.offset() measures to the top left hand corner of the content
+      // and does not take into account padding.   So we need to make sure that the padding-top
+      // and padding-left is the same for all elements that we are going to measure so
+      // that we can compare them properly.   It is simplest to use zero and put any
+      // padding required on the contained element.
+      ?>
+      var rtl = ((table.css('direction') !== undefined) &&
+                 (table.css('direction').toLowerCase() === 'rtl'));
+      var resolution = table.data('resolution');
+      Table.grid.x = {};
+      Table.grid.x.data = [];
+      <?php 
+      // We need :visible because there might be hidden days 
+      ?>
+      var columns = table.find('thead tr:first-child th:visible').not('.first_last');
+
+      <?php
+      // If the table has direction rtl, as it may do if you're using a RTL language
+      // such as Hebrew, then the columns will have been presented in the order right
+      // to left and we'll need to reverse the columns.
+      ?>
+      if (rtl)
+      {
+        columns.reverse();
+      }
+      columns.each(function() {
+          if (Table.grid.x.key === undefined)
+          {
+            Table.grid.x.key = getDataName($(this));
+          }
+          Table.grid.x.data.push({coord: $(this).offset().left,
+                                  value: $(this).data(Table.grid.x.key)});
+        });
+      <?php 
+      // and also get the right hand edge (and also the left hand edge if the
+      // direction is RTL, as in Hebrew).  If we're dealing with seconds
+      // we need to know what the end time of the slot would be
+      ?>
+      if (rtl)
+      {
+        columns.filter(':first').each(function() {
+            var value = null;
+            if (Table.grid.x.key === 'seconds')
+            {
+              value = Table.grid.x.data[0].value + resolution;
+            }
+            var edge = $(this).offset().left;
+            Table.grid.x.data.unshift({coord: edge, value: value});
+          });
+      }
+
+      columns.filter(':last').each(function() {
+          var value = null;
+          if (Table.grid.x.key === 'seconds')
+          {
+            value = Table.grid.x.data[Table.grid.x.data.length - 1].value + resolution;
+          }
+          var edge = $(this).offset().left + $(this).outerWidth();
+          Table.grid.x.data.push({coord: edge, value: value});
+        });
+
+        
+      Table.grid.y = {};
+      Table.grid.y.data = [];
+      var rows = table.find('tbody td:first-child');
+      rows.each(function() {
+          if (Table.grid.y.key === undefined)
+          {
+            Table.grid.y.key = getDataName($(this));
+          }
+          Table.grid.y.data.push({coord: $(this).offset().top,
+                                  value: $(this).data(Table.grid.y.key)});
+        });
+      <?php // and also get the bottom edge ?>
+      rows.filter(':last').each(function() {
+          var value = null;
+          if (Table.grid.y.key === 'seconds')
+          {
+            value = Table.grid.y.data[Table.grid.y.data.length - 1].value + resolution;
+          }
+          Table.grid.y.data.push({coord: $(this).offset().top + $(this).outerHeight(),
+                                  value: value});
+        });
+    }, <?php // size() ?>
     
-    gapTopLeft = thisCoord - topLeft;
-    gapBottomRight = bottomRight - thisCoord;
-            
-    if (((gapTopLeft>0) && (gapBottomRight>0)) ||
-        <?php // containment tests ?>
-        ((i===0) && (gapTopLeft<0)) ||
-        ((i===(data.length-2)) && (gapBottomRight<0)) )
-    {
-      gap = bottomRight - topLeft;
-              
-      if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
-      {
-        switch (side)
-        {
-          case 'left':
-            div.offset({top: divTop, left: topLeft});
-            div.width(divWidth + gapTopLeft);
-            break;
-          case 'right':
-            <?php
-            // Don't let the width become zero.   (We don't need to do
-            // this for height because that's protected by a min-height
-            // rule.   Unfortunately we can't rely on uniform column widths
-            // so we can't use a min-width rule.
-            ?>
-            if ((divWidth - gapTopLeft) < tolerance)
-            {
-              div.width(divWidth + gapBottomRight);
-            }
-            else
-            {
-              div.width(divWidth - gapTopLeft);
-            }
-            break;
-          case 'top':
-            div.offset({top: topLeft, left: divLeft});
-            div.height(divHeight + gapTopLeft);
-            break;
-          case 'bottom':
-            div.height(divHeight - gapTopLeft);
-            break;
-        }
-        return;
-      }
-      else if ((gapBottomRight <= gap/2) && (gapBottomRight < snapGap))
-      {
-        switch (side)
-        {
-          case 'left':
-            <?php // Don't let the width become zero.  ?>
-            if ((divWidth - gapBottomRight) < tolerance)
-            {
-              div.offset({top: div.Top, left: topLeft});
-              div.width(divWidth + gapTopLeft);
-            }
-            else
-            {
-              div.offset({top: divTop, left: bottomRight});
-              div.width(divWidth - gapBottomRight);
-            }
-            break;
-          case 'right':
-            div.width(divWidth + gapBottomRight);
-            break;
-          case 'top':
-            div.offset({top: bottomRight, left: divLeft});
-            div.height(divHeight - gapBottomRight);
-            break;
-          case 'bottom':
-            div.height(divHeight + gapBottomRight);
-            break;
-        }
-        return;
-      }
-    }
-  }  <?php // for ?>
-}  <?php // snapToGrid() ?>
-              
-
-<?php
-// Return the parameters for the booking represented by div
-// The result is an object with property of the data name (eg
-// 'seconds', 'time', 'room') and each property is an array of
-// the values for that booking (for example an array of room ids)
-?>
-function getBookingParams(table, tableData, div)
-{ 
-  var rtl = (table.css('direction').toLowerCase() === 'rtl'),
-      params = {},
-      data,
-      tolerance = 2, <?php //px ?>
-      cell = {x: {}, y: {}},
-      i,
-      axis;
+  <?php
+  // Given the jQuery object 'obj', snap the side specified (can be 'left', 'right', 'top'
+  // or 'bottom') to the nearest grid line, if the side is within the snapping range.
+  //
+  // If force is true, then the side is snapped regardless of where it is.
+  //
+  // We have to provide our own snapToGrid function instead of using the grid
+  // option in the jQuery UI resize widget because our table may not have uniform
+  // row heights and column widths - so we can't specify a grid in terms of a simple
+  // array as required by the resize widget.
+  ?>
+  snapToGrid: function (obj, side, force) {
+      var snapGap = 35, <?php // px ?>
+          tolerance = 2, <?php // px ?>
+          isLR = (side === 'left') || (side === 'right'),
+          data = (isLR) ? Table.grid.x.data : Table.grid.y.data,
+          topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
       
-  cell.x.start = div.offsetRound().left;
-  cell.y.start = div.offsetRound().top;
-  cell.x.end = cell.x.start + div.outerWidth();
-  cell.y.end = cell.y.start + div.outerHeight();
-  for (axis in cell)
-  {
-    if (cell.hasOwnProperty(axis))
-    {
-      data = tableData[axis].data;
-      if (params[tableData[axis].key] === undefined)
+      var rectangle = obj.offset();
+          rectangle.bottom = rectangle.top + obj.innerHeight();
+          rectangle.right = rectangle.left + obj.innerWidth();
+          
+      var outerWidth = rectangle.right - rectangle.left,
+          outerHeight = rectangle.bottom - rectangle.top,
+          thisCoord = rectangle[side];
+      
+      for (var i=0; i<(data.length -1); i++)
       {
-        params[tableData[axis].key] = [];
-      }
-      if (rtl && (axis==='x'))
-      {
-        for (i = data.length - 1; i >= 0; i--)
+        topLeft = data[i].coord;
+        bottomRight = data[i+1].coord;
+        <?php
+        // Allow for the borders: .offset() includes borders.
+        ?>
+        if (side === 'left')
         {
-          if ((data[i].coord + tolerance) < cell[axis].start)
+          topLeft += Table.borderLeftWidth;
+          bottomRight += Table.borderLeftWidth;
+        }
+        else if (side === 'top')
+        {
+          topLeft += Table.borderTopWidth;
+          bottomRight += Table.borderTopWidth;
+        }
+        
+        gapTopLeft = thisCoord - topLeft;
+        gapBottomRight = bottomRight - thisCoord;
+
+        if (((gapTopLeft > 0) && (gapBottomRight > 0)) ||
+            <?php // containment tests ?>
+            ((i === 0) && (gapTopLeft < 0)) ||
+            ((i === (data.length-2)) && (gapBottomRight < 0)) )
+        {
+          gap = bottomRight - topLeft;
+                  
+          if ((gapTopLeft <= gap/2) && (force || (gapTopLeft < snapGap)))
           {
-            <?php
-            // 'seconds' behaves slightly differently to the other parameters:
-            // we need to know the end time for the new slot.    Also it's possible
-            // for us to have a zero div, eg when selecting a new booking, and if
-            // so we need to make sure there's something returned
-            ?>
-            if ((tableData[axis].key === 'seconds') ||
-                (params[tableData[axis].key].length === 0))
+            switch (side)
             {
-              params[tableData[axis].key].push(data[i].value);
+              case 'left':
+                obj.offset({top: rectangle.top, left: topLeft});
+                obj.outerWidth(outerWidth + gapTopLeft);
+                break;
+                
+              case 'right':
+                <?php // Don't let the width become zero. ?>
+                if ((outerWidth - gapTopLeft) < tolerance)
+                {
+                  obj.outerWidth(outerWidth + gapBottomRight);
+                }
+                else
+                {
+                  obj.outerWidth(outerWidth - gapTopLeft);
+                }
+                break;
+                
+              case 'top':
+                obj.offset({top: topLeft, left: rectangle.left});
+                obj.outerHeight(outerHeight + gapTopLeft);
+                break;
+                
+              case 'bottom':
+                <?php // Don't let the height become zero. ?>
+                if ((outerHeight - gapTopLeft) < tolerance)
+                {
+                  obj.outerHeight(outerHeight + gapBottomRight);
+                }
+                else
+                {
+                  obj.outerHeight(outerHeight - gapTopLeft);
+                }
+                break;
             }
-            break;
+            return;
           }
-          if ((data[i].coord + tolerance) < cell[axis].end)
+          else if ((gapBottomRight <= gap/2) && (force || (gapBottomRight < snapGap)))
           {
-            params[tableData[axis].key].push(data[i].value);
+            switch (side)
+            {
+              case 'left':
+                <?php // Don't let the width become zero.  ?>
+                if ((outerWidth - gapBottomRight) < tolerance)
+                {
+                  obj.offset({top: rectangle.top, left: topLeft});
+                  obj.outerWidth(outerWidth + gapTopLeft);
+                }
+                else
+                {
+                  obj.offset({top: rectangle.top, left: bottomRight});
+                  obj.outerWidth(outerWidth - gapBottomRight);
+                }
+                break;
+                
+              case 'right':
+                obj.outerWidth(outerWidth + gapBottomRight);
+                break;
+                
+              case 'top':
+                <?php // Don't let the height become zero.  ?>
+                if ((outerHeight - gapBottomRight) < tolerance)
+                {
+                  obj.offset({top: topLeft, left: rectangle.left});
+                  obj.outerHeight(outerHeight + gapTopLeft);
+                }
+                else
+                {
+                  obj.offset({top: bottomRight, left: rectangle.left});
+                  obj.outerHeight(outerHeight - gapBottomRight);
+                }
+                break;
+                
+              case 'bottom':
+                obj.outerHeight(outerHeight + gapBottomRight);
+                break;
+            }
+            return;
           }
         }
-      }
-      else
-      {
-        for (i=0; i<data.length; i++)
-        {
-          if ((data[i].coord + tolerance) > cell[axis].end)
-          {
-            <?php
-            // 'seconds' behaves slightly differently to the other parameters:
-            // we need to know the end time for the new slot.    Also it's possible
-            // for us to have a zero div, eg when selecting a new booking, and if
-            // so we need to make sure there's something returned
-            ?>
-            if ((tableData[axis].key === 'seconds') ||
-                (params[tableData[axis].key].length === 0))
-            {
-              params[tableData[axis].key].push(data[i].value);
-            }
-            break;
-          }
-          if ((data[i].coord + tolerance) > cell[axis].start)
-          {
-            params[tableData[axis].key].push(data[i].value);
-          }
-        } <?php // for ?>
-      }
-    }
-  } <?php // for (axis in cell) ?>
-  return params;
-}
-        
-        
-function getRowNumber(tableData, y)
-{
-  for (var i=0; i<tableData.y.data.length - 1; i++)
-  {
-    if (y >= tableData.y.data[i].coord && y < tableData.y.data[i+1].coord)
-    {
-      return i;
-    }
-  }
-  return null;
-}
+      }  <?php // for ?>
+    }  <?php // snapToGrid() ?>
 
-
-<?php
-// function to highlight the row labels in the table that are level
-// with div
-?>
-var highlightRowLabels = function (table, tableData, div)
-{
-  if (highlightRowLabels.rows === undefined)
-  {
-    <?php // Cache the row label cells in an array ?>
-    highlightRowLabels.rows = [];
-    table.find('tbody tr').each(function() {
-        highlightRowLabels.rows.push($(this).find('td.row_labels'));
-      });
-  }
-  var divStartRow = getRowNumber(tableData, div.offsetRound().top);
-  var divEndRow = getRowNumber(tableData, div.offsetRound().top + div.outerHeight());
-  for (var i=0; i<highlightRowLabels.rows.length ; i++)
-  {
-    if (((divStartRow === null) || (divStartRow <= i)) && 
-        ((divEndRow === null) || (i < divEndRow)))
-    {
-      highlightRowLabels.rows[i].addClass('selected');
-    }
-    else
-    {
-      highlightRowLabels.rows[i].removeClass('selected');
-    }
-  }
 };
-      
-      
-<?php // Remove any highlighting that has been applied to the row labels ?>
-function clearRowLabels()
-{
-  if (highlightRowLabels.rows !== undefined)
-  {
-    for (var i=0; i<highlightRowLabels.rows.length; i++)
-    {
-      highlightRowLabels.rows[i].removeClass('selected');
-    }
-  }
-}
 
-<?php
 
-// =================================================================================
-
-// Extend the init() function 
-?>
-
-var oldInitResizable = init;
-init = function(args) {
-
-  var tableData = {};
-  
-  oldInitResizable.apply(this, [args]);
+$(function() {
 
   <?php
-  // Resizable bookings work by creating a div which 
-  // is a clone of the real booking div and making it resizable.   We can't make the
-  // real div resizable because it is bound by the table cell walls.   So we give
+  // Resizable bookings work by creating an element which is a clone of the real booking
+  // element and making it resizable.   We can't make the real element resizable
+  // because it is bound by the table cell walls (THIS ISN'T TRUE ANYMORE!).   So we give
   // the clone an absolute position and a positive z-index.    We work out what
   // new booking the user is requesting by comparing the coordinates of the clone
   // with the table grid.   We also put the booking parameters (eg room id) as HTML5
@@ -567,11 +604,8 @@ init = function(args) {
   // the window causes other things to be re-initialised, which we don't want.   For example
   // if we have the datepicker open we don't want that to be reset.
   ?>
-  $('table.dwm_main').on('load', function() {
+  $(Table.selector).on('tableload', function() {
       var table = $(this);
-      
-      createFloatingHeaders(table);
-      updateTableHeaders(table);
       
       <?php // Don't do anything if this is an empty table ?>
       if (table.find('tbody').data('empty'))
@@ -579,38 +613,26 @@ init = function(args) {
         return;
       }
      
-      getTableData(table, tableData);
-  
-      <?php
-      // bookedMap is an array of booked slots.   Each member of the array is an
-      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
-      // of the side.   We will use this array to test whether a proposed
-      // booking overlaps an existing booking.   We save populating this array until
-      // the resize starts, because we want to exclude the booked slot that is being
-      // resized.
-      ?>
-      var bookedMap = [];
+      Table.size();
+      
       var mouseDown = false; 
   
       var downHandler = function(e) {
           mouseDown = true;
-          turnOffPageRefresh();
+          
           <?php
-          // Build the map of booked cells. (We select just the visible cells
-          // because there could be hidden days).
+          // Apply a class so that we know that resizing is in progres, eg to turn off
+          // highlighting
           ?>
-          table.find('td:visible').not('td.new, td.row_labels').each(function() {
-              bookedMap.push(getSides($(this)));
-            });
-          <?php // Apply a wrapper to turn off highlighting ?>
-          table.wrap('<div class="resizing"><\/div>');
+          table.addClass('resizing');
+          
           var jqTarget = $(e.target);
           <?php // If we've landed on the + symbol we want the parent ?>
           if (e.target.nodeName.toLowerCase() === "img")
           {
             jqTarget = jqTarget.parent();
           }
-          downHandler.origin = jqTarget.offsetRound();
+          downHandler.origin = jqTarget.offset();
           downHandler.firstPosition = {x: e.pageX, y: e.pageY};
           <?php
           // Get the original link in case we need it later.    We can't be sure whether
@@ -618,16 +640,16 @@ init = function(args) {
           ?>
           downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
           downHandler.box = $('<div class="div_select">');
-          
-          if (args.isAdmin)
+
+          if (!args.isAdmin)
           {
             <?php
             // If we're not an admin and we're not allowed to book repeats (in
             // the week view) or select multiple rooms (in the day view) then 
             // constrain the box to fit in the current slot width/height
             ?>
-            if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                ((args.page == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+            if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
             {
               <?php
               if ($times_along_top)
@@ -659,7 +681,7 @@ init = function(args) {
       
       var moveHandler = function(e) {
           var box = downHandler.box;
-          var oldBoxOffset = box.offsetRound();
+          var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
         
@@ -694,14 +716,16 @@ init = function(args) {
           }
           box.width(Math.abs(e.pageX - downHandler.origin.left));
           box.height(Math.abs(e.pageY - downHandler.origin.top));
-          snapToGrid(tableData, box, 'top');
-          snapToGrid(tableData, box, 'bottom');
-          snapToGrid(tableData, box, 'right');
-          snapToGrid(tableData, box, 'left');
+          Table.snapToGrid(box, 'top');
+          Table.snapToGrid(box, 'bottom');
+          Table.snapToGrid(box, 'right');
+          Table.snapToGrid(box, 'left');
           <?php
           // If the new box overlaps a booked cell, then undo the changes
+          // We set stopAtFirst=true because we just want to know if there is
+          // *any* overlap.
           ?>
-          if (overlapsBooked(getSides(box), bookedMap))
+          if (overlapsBooked(getSides(box), bookedMap, true).length)
           {
             box.offset(oldBoxOffset)
                .width(oldBoxWidth)
@@ -712,13 +736,13 @@ init = function(args) {
           // then give some visual feedback.   If we've moved back into the box
           // remove the feedback.
           ?>
-          if (outsideTable(tableData, {x: e.pageX, y: e.pageY}))
+          if (Table.outside({x: e.pageX, y: e.pageY}))
           {
             if (!moveHandler.outside)
             {
               box.addClass('outside');
               moveHandler.outside = true;
-              clearRowLabels();
+              Table.clearRowLabels();
             }
           }
           else if (moveHandler.outside)
@@ -732,7 +756,7 @@ init = function(args) {
           ?>
           if (!moveHandler.outside)
           {
-            highlightRowLabels(table, tableData, box);
+            Table.highlightRowLabels(box);
           }
         };
 
@@ -742,19 +766,19 @@ init = function(args) {
           e.preventDefault();
           var tolerance = 2; <?php // px ?>
           var box = downHandler.box;
-          var params = getBookingParams(table, tableData, box);
+          var params = Table.getBookingParams(box);
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
-          <?php // Remove the resizing wrapper so that highlighting comes back on ?>
-          $('table.dwm_main').unwrap();
+          
+          
           <?php
           // If the user has released the button while outside the table it means
           // they want to cancel, so just return. 
           ?>
-          if (outsideTable(tableData, {x: e.pageX, y: e.pageY}))
+          if (Table.outside({x: e.pageX, y: e.pageY}))
           {
             box.remove();
-            turnOnPageRefresh();
+            $(Table.selector).removeClass('resizing');
             return;
           }
           <?php
@@ -773,8 +797,8 @@ init = function(args) {
             else
             {
               box.remove();
+              $(Table.selector).removeClass('resizing');
             }
-            turnOnPageRefresh();
             return;
           }
           <?php
@@ -784,13 +808,13 @@ init = function(args) {
           queryString += '&area=' + args.area;
           queryString += '&start_seconds=' + params.seconds[0];
           queryString += '&end_seconds=' + params.seconds[params.seconds.length - 1];
-          if (args.page === 'day')
+          if (args.view === 'day')
           {
             for (var i=0; i<params.room.length; i++)
             {
               queryString += '&rooms[]=' + params.room[i];
             }
-            queryString += '&start_date=' + args.page_date;
+            queryString += '&start_date=' + args.pageDate;
           }
           else <?php // it's a week ?>
           {
@@ -798,12 +822,367 @@ init = function(args) {
             queryString += '&start_date=' + params.date[0];
             queryString += '&end_date=' + params.date[params.date.length - 1];
           }
-          turnOnPageRefresh();
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
+        
+        
+      <?php
+      // resize event callback function
+      ?>
+      var resize = function(event, ui)
+      {
+        var closest,
+            rectangle = {},
+            sides = {n: false, s: false, e: false, w: false};
+        
+        if (resize.lastRectangle === undefined)
+        {
+          resize.lastRectangle = $.extend({}, resizeStart.originalRectangle);
+        }
+        
+        <?php
+        // Get the sides of the desired resired rectangle and also the direction(s)
+        // of resize.  Note that the desired rectangle may be being moved in two
+        // directions at once (eg nw) if a corner has been grabbed.  Use Math.round
+        // to avoid problems with floats.
+        ?>
+        if (Math.round(ui.position.top - ui.originalPosition.top) === 0)
+        {
+          rectangle.n = ui.position.top;
+        }
+        else
+        {
+          rectangle.n = event.pageY;
+          sides.n = true;
+        }
+        
+        if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
+        {
+          rectangle.w = ui.position.left;
+        }
+        else
+        {
+          rectangle.w = event.pageX;
+          sides.w = true;
+        }
+        
+        if (Math.round((ui.position.top + ui.size.height) - 
+                       (ui.originalPosition.top + ui.originalSize.height)) === 0)
+        {
+          rectangle.s = ui.position.top + ui.size.height;
+        }
+        else
+        {
+          rectangle.s = event.pageY;
+          sides.s = true;
+        }
+        
+        if (Math.round((ui.position.left + ui.size.width) -
+                       (ui.originalPosition.left + ui.originalSize.width)) === 0)
+        {
+          rectangle.e = ui.position.left + ui.size.width;
+        }
+        else
+        {
+          rectangle.e = event.pageX;
+          sides.e = true;
+        }
+        
+        <?php
+        // Get all the bookings that the desired rectangle would overlap.  Note
+        // that it could overlap more than one other booking, so we need to find them 
+        // all and then find the closest one.
+        ?>
+        var overlappedElements = overlapsBooked(rectangle, bookedMap, false, resizeStart.originalRectangle);
+        
+        if (!overlappedElements.length)
+        {
+          <?php // No overlaps: remove any constraints ?>
+          ui.element.resizable('option', {maxHeight: null,
+                                          maxWidth: null});
+        }
+        else
+        {
+          <?php
+          // There is at least overlap, so for each direction that the booking is being
+          // resized, get the closest booking in that direction.  If there's an overlap
+          // then constrain the desired rectangle not to overlap.
+          ?>
+          if (sides.n)
+          {
+            closest = getClosestSide(overlappedElements, 's');
+            if (event.pageY <= closest)
+            {
+              ui.position.top = closest + Table.borderTopWidth;
+              ui.element.resizable('option', 'maxHeight', ui.originalSize.height + ui.originalPosition.top - ui.position.top);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxHeight', null);
+            }
+          }
+          
+          if (sides.w)
+          {
+            closest = getClosestSide(overlappedElements, 'e');
+            if (event.pageX <= closest)
+            {
+              ui.position.left = closest + Table.borderLeftWidth;
+              ui.element.resizable('option', 'maxWidth', ui.originalSize.width + ui.originalPosition.left - ui.position.left);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxWidth', null);
+            }
+          }
+          
+          if (sides.s)
+          {
+            closest = getClosestSide(overlappedElements, 'n');
+            if (event.pageY >= closest)
+            {
+              ui.element.resizable('option', 'maxHeight', closest - ui.originalPosition.top);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxHeight', null);
+            }
+          }
+          
+          if (sides.e)
+          {
+            closest = getClosestSide(overlappedElements, 'w');
+            if (event.pageX >= closest)
+            {
+              ui.element.resizable('option', 'maxWidth', closest - ui.originalPosition.left);
+            }
+            else
+            {
+              ui.element.resizable('option', 'maxWidth', null);
+            }
+          }
+        }
+
+        
+        <?php
+        // Check to see if any of the four sides of the div have moved since the last time
+        // and if so, see if they've got close enough to the next boundary that we can snap
+        // them to the grid.   (Note: using the condition sides.w etc. doesn't seem to work
+        // properly for some reason - it will pull the other edge off the grid slightly).
+        ?>
+    
+        <?php // left edge ?>
+        if (sides.w)
+        {
+          Table.snapToGrid(ui.helper, 'left');
+        }
+        <?php // right edge ?>
+        if (sides.e)
+        {
+          Table.snapToGrid(ui.helper, 'right');
+        }
+        <?php // top edge ?>
+        if (sides.n)
+        {
+          Table.snapToGrid(ui.helper, 'top');
+        }
+        <?php // bottom edge ?>
+        if (sides.s)
+        {
+          Table.snapToGrid(ui.helper, 'bottom');
+        }
+        
+        resize.lastRectangle = $.extend({}, rectangle);
+        
+        Table.highlightRowLabels(ui.helper);
+        
+      };  <?php // resize ?>
+        
+        
+      <?php
+      // callback function called when the resize starts
+      ?>
+      var resizeStart = function(event, ui)
+      {
+        resizeStart.oldParams = Table.getBookingParams(ui.originalElement.find('a'));
+        
+        resizeStart.originalRectangle = {
+            n: ui.originalPosition.top,
+            s: ui.originalPosition.top + ui.originalSize.height,
+            w: ui.originalPosition.left,
+            e: ui.originalPosition.left + ui.originalSize.width
+          };
+        
+        <?php
+        // Add a class so that we can disable the highlighting when we are
+        // resizing (the flickering is a bit annoying)
+        ?>
+        table.addClass('resizing');
+      };  <?php // resizeStart ?>
 
       
+      <?php
+      // callback function called when the resize stops
+      ?>
+      var resizeStop = function(event, ui)
+      {              
+        <?php
+        // Snap the edges of both the helper and the element being resized to the grid,
+        // regardless of where they are.
+        ?>
+        ['left', 'right', 'top', 'bottom'].forEach(function(side) {
+            Table.snapToGrid(ui.helper, side, true);
+            Table.snapToGrid(ui.element, side, true);
+          });
+        
+        if (rectanglesIdentical(resizeStart.originalRectangle, getSides(ui.helper)))
+        {
+          <?php
+          // Restore the proper height and width so that if the browser zoom
+          // level is changed then the booking fills the slot properly.  (The
+          // resizing will have set actual pixel values instead of percentages).
+          ?>
+          ui.element.css({width: '100%', height: '100%'});
+          $(Table.selector).removeClass('resizing');
+          return;
+        }
+
+        <?php 
+        // We've got a change to the booking, so we need to send an Ajax
+        // request to the server to make the new booking
+        ?>
+        var data = {csrf_token: getCSRFToken(),
+                    ajax: 1, 
+                    commit: 1},
+            booking = ui.element.find('a');
+        <?php // get the booking id and type ?>
+        data.id = booking.data('id');
+        data.type = booking.data('type');
+        <?php // get the other parameters ?>
+        var oldParams = resizeStart.oldParams;
+        var newParams = Table.getBookingParams(booking);
+        if (newParams.seconds !== undefined)
+        {
+          <?php
+          // We only send through the time parameters that have changed.
+          // This is so that edit_entry_handler.php knows whether to use
+          // the original booking parameters.    We need to do this so that
+          // we can properly handle multi-day bookings in the week view.
+          ?>
+          if (newParams.seconds[0] !== oldParams.seconds[0])
+          {
+            data.start_seconds = newParams.seconds[0];
+          }
+          if (newParams.seconds[newParams.seconds.length - 1] !==
+              oldParams.seconds[oldParams.seconds.length - 1])
+          {
+            data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
+            <?php
+            if ($enable_periods)
+            {
+              // When we're dealing with periods the end time is defined as
+              // the start of the last period (as opposed to the start of the
+              // next slot in times mode)
+              ?>
+              data.end_seconds -= 60;
+              <?php
+            }
+            ?>
+          }
+        }
+        data.view = args.view;
+        if (args.view === 'day')
+        {
+          data.start_date = args.pageDate;
+
+        }
+        else  <?php // it's 'week' ?>
+        {
+          data.start_date = newParams.date[0];
+          var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
+          if (args.isAdmin || !onlyAdminCanBookRepeat)
+          {
+            if (newParams.date.length > 1)
+            {
+              data.rep_type = <?php echo REP_DAILY ?>;
+              data.rep_end_date = newParams.date[newParams.date.length - 1];
+            }
+          }
+        }
+        data.end_date = data.start_date;
+        data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
+        <?php
+        if (isset($timetohighlight))
+        {
+          ?>
+          data.timetohighlight = <?php echo $timetohighlight ?>;
+          <?php
+        }
+        
+        // Give some visual feedback that the change is being saved.   Note that the span
+        // is inserted after the elemement rather than appended, because if it's a child
+        // then any opacity rule that is applied to the parent will also apply to the child.
+        ?>
+        booking.addClass('saving')
+               .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
+
+        $.post('edit_entry_handler.php',
+               data,
+               function(result) {
+                  <?php
+                  // Load the new HTML.   (1) Empty the existing
+                  // table in order to get rid of events and data and
+                  // prevent memory leaks (2) insert the updated table HTML
+                  // and then (3) trigger a table load event so that the
+                  // resizable bookings are re-created
+                  ?>
+                  table.empty()
+                       .html(result.table_innerhtml)
+                       .trigger('tableload');
+                  <?php
+                  // If the booking failed then show an alert explaining why.
+                  ?>
+                  if (!result.valid_booking)
+                  {
+                    var alertMessage = '';
+                    if (result.conflicts.length > 0)
+                    {
+                      alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
+                      var conflictsList = getErrorList(result.conflicts);
+                      alertMessage += conflictsList.text;
+                    }
+                    if (result.violations.errors.length > 0)
+                    {
+                      if (result.conflicts.length > 0)
+                      {
+                        alertMessage += "\n\n";
+                      }
+                      alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
+                      var rulesList = getErrorList(result.violations.errors);
+                      alertMessage += rulesList.text;
+                    }
+                    window.alert(alertMessage);
+                  }
+                },
+               'json');
+    
+      };  <?php // resizeStop ?>
+           
+
+      <?php
+      // bookedMap is an array of booked slots.   Each member of the array is an
+      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+      // of the side.   We will use this array to test whether a proposed
+      // booking overlaps an existing booking. Select just the visible cells because there
+      // could be hidden days.
+      ?>
+      var bookedMap = [];  
+      table.find('td.booked:visible')
+           .each(function() {
+          bookedMap.push(getSides($(this)));
+        });
+       
       <?php
       // Turn all the empty cells where a new multi-cell selection
       // can be created by dragging the mouse
@@ -823,291 +1202,11 @@ init = function(args) {
       
       
       <?php
-      // Turn all the writable cells into resizable bookings
+      // Make all the writable bookings resizable
       ?>
-      table.find('td.writable')
+      table.find('.writable')
         .each(function() {
-            <?php
-            // resize event callback function
-            ?>
-            var divResize = function (event, ui)
-            {
-              if (divResize.origin === undefined)
-              {
-                divResize.origin = divBooking.offsetRound();
-                divResize.lastPosition = $.extend({}, divClone.position());
-                divResize.lastSize = {width: divClone.outerWidth(),
-                                      height: divClone.outerHeight()};
-              }
-
-              var rectangle = {};
-              rectangle.n = Math.round(divResize.origin.top + divClone.position().top);
-              rectangle.w = Math.round(divResize.origin.left + divClone.position().left);
-              rectangle.s = rectangle.n + Math.round(divClone.outerHeight());
-              rectangle.e = rectangle.w + Math.round(divClone.outerWidth());
-
-              if (overlapsBooked(rectangle, bookedMap))
-              {
-                divClone.resizable("disable");
-              }
-              else if (divClone.resizable('option', 'disabled'))
-              {
-                divClone.resizable("enable");
-              }
-              <?php
-              // Check to see if any of the four sides of the div have moved since the last time
-              // and if so, see if they've got close enough to the next boundary that we can snap
-              // them to the grid
-              ?>
           
-              <?php // left edge ?>
-              if (divClone.position().left !== divResize.lastPosition.left)
-              {
-                snapToGrid(tableData, divClone, 'left');
-              }
-              <?php // right edge ?>
-              if ((divClone.position().left + divClone.outerWidth()) !== (divResize.lastPosition.left + divResize.lastSize.width))
-              {
-                snapToGrid(tableData, divClone, 'right');
-              }
-              <?php // top edge ?>
-              if (divClone.position().top !== divResize.lastPosition.top)
-              {
-                snapToGrid(tableData, divClone, 'top');
-              }
-              <?php // bottom edge ?>
-              if ((divClone.position().top + divClone.outerHeight()) !== (divResize.lastPosition.top + divResize.lastSize.height))
-              {
-                snapToGrid(tableData, divClone, 'bottom');
-              }
-            
-              highlightRowLabels(table, tableData, divClone);
-            
-              divResize.lastPosition = $.extend({}, divClone.position());
-              divResize.lastSize = {width: divClone.outerWidth(),
-                                    height: divClone.outerHeight()};
-            };  <?php // divResize ?>
-        
-        
-            <?php
-            // callback function called when the resize starts
-            ?>
-            var divResizeStart = function (event, ui)
-            {
-              turnOffPageRefresh();
-              <?php
-              // Add a wrapper so that we can disable the highlighting when we are
-              // resizing (the flickering is a bit annoying)
-              ?>
-              table.wrap('<div class="resizing"><\/div>');
-              <?php
-              // Remove the constraint on the max width of the clone.  (We've had
-              // to keep it there up until now because otherwise the div is 
-              // sometimes 1px too wide.  Don't quite understand why - something to do
-              // with rounding)
-              ?>
-              divClone.css('max-width', 'none');
-              <?php
-              // Add an outline to the original booking so that we can see where it
-              // was.   The width and height are 2 pixels short of the original to allow
-              // for a 1 pixel border all round.
-              ?>
-              $('<div class="outline"><\/div>')
-                  .width(divClone.outerWidth() - 2)
-                  .height(divClone.outerHeight() - 2)
-                  .appendTo($('div.resizing'))
-                  .offset(divClone.offsetRound());
-              <?php
-              // Build the map of booked cells, excluding this cell (because we're
-              // allowed to be in our own cell.   (We select just the visible cells
-              // because there could be hidden days).
-              ?>
-              table.find('td:visible').not('td.new, td.row_labels').not(divBooking.closest('td')).each(function() {
-                  bookedMap.push(getSides($(this)));
-                });
-
-            };  <?php // divResizeStart ?>
-        
-        
-            <?php
-            // callback function called when the resize stops
-            ?>
-            var divResizeStop = function (event, ui)
-            {          
-              <?php // Clear the map of booked cells ?>
-              bookedMap = [];
-          
-              if (divClone.resizable('option', 'disabled'))
-              { 
-                <?php
-                // If the resize was disabled then just restore the original position
-                ?>
-                divClone.resizable('enable')
-                        .offset(divBooking.offsetRound())
-                        .width(divBooking.outerWidth())
-                        .height(divBooking.outerHeight());
-              }
-              else
-              {
-                <?php
-                // Snap the edges to the grid, regardless of where they are.
-                ?>
-                snapToGrid(tableData, divClone, 'left', true);
-                snapToGrid(tableData, divClone, 'right', true);
-                snapToGrid(tableData, divClone, 'top', true);
-                snapToGrid(tableData, divClone, 'bottom', true);
-              }
-          
-              <?php // Remove the outline ?>
-              $('div.outline').remove();
-              <?php // Remove the resizing wrapper so that highlighting comes back on ?>
-              $('table.dwm_main').unwrap();
-          
-              var r1 = getSides(divBooking);
-              var r2 = getSides(divClone);
-              if (rectanglesIdentical(r1, r2))
-              {
-                turnOnPageRefresh();
-              }
-              else
-              {
-                <?php 
-                // We've got a change to the booking, so we need to send an Ajax
-                // request to the server to make the new booking
-                ?>
-                var data = {csrf_token: getCSRFToken(),
-                            ajax: 1, 
-                            commit: 1};
-                <?php // get the booking id and type ?>
-                data.id = divClone.data('id');
-                data.type = divClone.data('type');
-                <?php // get the other parameters ?>
-                var oldParams = getBookingParams(table, tableData, divBooking);
-                var newParams = getBookingParams(table, tableData, divClone);
-                if (newParams.seconds !== undefined)
-                {
-                  <?php
-                  // We only send through the time parameters that have changed.
-                  // This is so that edit_entry_handler.php knows whether to use
-                  // the original booking parameters.    We need to do this so that
-                  // we can properly handle multi-day bookings in the week view.
-                  ?>
-                  if (newParams.seconds[0] !== oldParams.seconds[0])
-                  {
-                    data.start_seconds = newParams.seconds[0];
-                  }
-                  if (newParams.seconds[newParams.seconds.length - 1] !==
-                      oldParams.seconds[oldParams.seconds.length - 1])
-                  {
-                    data.end_seconds = newParams.seconds[newParams.seconds.length - 1];
-                    <?php
-                    if ($enable_periods)
-                    {
-                      // When we're dealing with periods the end time is defined as
-                      // the start of the last period (as opposed to the start of the
-                      // next slot in times mode)
-                      ?>
-                      data.end_seconds -= 60;
-                      <?php
-                    }
-                    ?>
-                  }
-                }
-                if (args.page === 'day')
-                {
-                  data.page = 'day';
-                  data.start_date = args.page_date;
-  
-                }
-                else  <?php // it's 'week' ?>
-                {
-                  data.page = 'week';
-                  data.start_date = newParams.date[0];
-                  var repeatsAllowed = args.isAdmin || <?php echo (!$auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>;
-
-                  if (repeatsAllowed)
-                  {
-                    if (newParams.date.length > 1)
-                    {
-                      data.rep_type = <?php echo REP_DAILY ?>;
-                      data.rep_end_date = newParams.date[newParams.date.length - 1];
-                    }
-                  }
-                  
-                }
-                data.end_date = data.start_date;
-                data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
-                <?php
-                if (isset($timetohighlight))
-                {
-                  ?>
-                  data.timetohighlight = <?php echo $timetohighlight ?>;
-                  <?php
-                }
-                ?>
-                $.post('edit_entry_handler.php',
-                       data,
-                       function(result) {
-                          if (result.valid_booking)
-                          {
-                            <?php
-                            // The new booking succeeded.   (1) Empty the existing
-                            // table in order to get rid of events and data and
-                            // prevent memory leaks (2) insert the updated table HTML
-                            // and then (3) trigger a table load event so that the
-                            // resizable bookings are re-created and then (4) give the
-                            // user some positive visual feedback that the change has 
-                            // been saved
-                            ?>
-                            table.empty()
-                                 .html(result.table_innerhtml)
-                                 .trigger('load');
-                            <?php // Now for the visual feedback ?>
-                            $.each(result.new_details, function(i, value) {
-                                var cell = $('[data-id="' + value.id + '"]');
-                                var cellAnchor = cell.find('a').last();
-                                var oldHTML = cellAnchor.html();
-                                var duration = 1000; <?php // ms ?>
-                                cellAnchor.fadeOut(duration, function(){
-                                    cellAnchor.html('<?php echo get_vocab("changes_saved")?>').fadeIn(duration, function() {
-                                        cellAnchor.fadeOut(duration, function() {
-                                            cellAnchor.html(oldHTML).fadeIn(duration);
-                                          });
-                                      });
-                                  });
-                              });
-                          }
-                          else
-                          {
-                            divClone.offset(divBooking.offsetRound())
-                                    .width(divBooking.outerWidth())
-                                    .height(divBooking.outerHeight());
-                            var alertMessage = '';
-                            if (result.conflicts.length > 0)
-                            {
-                              alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("conflict"))) ?>' + ":  \n\n";
-                              var conflictsList = getErrorList(result.conflicts);
-                              alertMessage += conflictsList.text;
-                            }
-                            if (result.violations.errors.length > 0)
-                            {
-                              if (result.conflicts.length > 0)
-                              {
-                                alertMessage += "\n\n";
-                              }
-                              alertMessage += '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + ":  \n\n";
-                              var rulesList = getErrorList(result.violations.errors);
-                              alertMessage += rulesList.text;
-                            }
-                            window.alert(alertMessage);
-                          }
-                          turnOnPageRefresh();
-                        },
-                       'json');
-              }   <?php // if (rectanglesIdentical(r1, r2)) ?>
-          
-            };  <?php // divResizeStop ?>
-        
             <?php
             // Get the set of directions in which we are allowed to drag the
             // box.   At this stage we will do it by reference to the two axes,
@@ -1117,6 +1216,7 @@ init = function(args) {
             ?>
             var directions = {times: {plus: true, minus: true},
                               other: {plus: true, minus: true}};
+                              
             if ($(this).hasClass('series'))
             {
               <?php
@@ -1127,11 +1227,10 @@ init = function(args) {
               ?>
               directions.other = {plus: false, minus: false};
             }
-            
-            if (args.isAdmin)
+            if (!args.isAdmin)
             {
-              if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                  ((args.page == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+              if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                  ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
               {
                 <?php
                 // If we're in the week view then if non-admins aren't allowed to
@@ -1196,44 +1295,26 @@ init = function(args) {
             // Test each corner.  If we've got both the side handles then
             // add in the corner handle
             ?>
-            var corners = ['nw', 'ne', 'se', 'sw'];
-            for (var i=0; i<corners.length; i++)
-            {
-              if ((aHandles.indexOf(corners[i][0]) >= 0) &&
-                  (aHandles.indexOf(corners[i][1]) >= 0))
-              {
-                aHandles.push(corners[i]);
-              }
-            }
+            ['nw', 'ne', 'se', 'sw'].forEach(function(corner) {
+                if ((aHandles.indexOf(corner[0]) >= 0) &&
+                    (aHandles.indexOf(corner[1]) >= 0))
+                {
+                  aHandles.push(corner);
+                }
+              });
+            
             var handles = aHandles.join(',');
-            var divBooking = $(this).children('div');
-            var divClone = divBooking.clone();
-            divBooking.css('visibility', 'hidden');
-            divClone.css('z-index', '500')
-                    .css('position', 'absolute')
-                    .css('top', '0')
-                    .css('left', '0')
-                    .css('background-color', $(this).css('background-color'))
-                    .css('max-height', 'none')
-                    .css('min-height', '<?php echo $main_cell_height ?>px')
-                    .addClass('clone')
-                    <?php
-                    // We use the inner dimensions of the parent rather than the outer dimensions
-                    // of this element in case this element doesn't fill the whole cell - which
-                    // for some reason it doesn't always when clipping is turned off in MRBS.
-                    ?>
-                    .width(divBooking.parent().innerWidth())
-                    .height(divBooking.parent().innerHeight());
+            
             if (handles)
             {
-              divClone.resizable({handles: handles,
-                                  resize: divResize,
-                                  start: divResizeStart,
-                                  stop: divResizeStop});
+              $(this).resizable({handles: handles,
+                                 helper: 'resizable-helper',
+                                 start: resizeStart,
+                                 resize: resize,
+                                 stop: resizeStop});
             }
-            divClone.appendTo($(this));
-            $(this).css('background-color', 'transparent')
-                   .wrapInner('<div style="position: relative"><\/div>');
+            
+            $(this).css('background-color', 'transparent');
           });
                               
       <?php
@@ -1246,63 +1327,53 @@ init = function(args) {
       // of new bookings, so that we don't turn on page refresh while in the
       // middle of a drag selection when we pass over a resizable handle
       ?>   
-      $('div.clone .ui-resizable-handle')
+      $('.ui-resizable-handle')
         .mouseenter(function(e) {
             if (!mouseDown)
             {
               if ($(this).is(':hover'))
               {
-                turnOffPageRefresh();
+                table.addClass('resizing');
               }
               else
               {
-                turnOnPageRefresh();
+                table.removeClass('resizing');
               }
             }
           })
         .mouseleave(function() {
             if (!mouseDown)
             {
-              turnOnPageRefresh();
+              table.removeClass('resizing');
             }
           })
         .mousedown(function() {
             mouseDown = true;
             if ($(this).is(':hover'))
             {
-              turnOffPageRefresh();
+              table.addClass('resizing');
             }
           })
         .mouseup(function() {
             mouseDown = false;
             if (!$(this).is(':hover'))
             {
-              turnOnPageRefresh();
+              table.removeClass('resizing');
             }
           })
         .first().trigger('mouseenter');
     
-      <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
-      table.find('div.multiple_control')
-          .click(function() {
-              redrawClones(table);
-              getTableData(table, tableData);
-            });
-    }).trigger('load');
+    }).trigger('tableload');
     
   $(window).resize(throttle(function(event) {
-      var table;
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
       {
         <?php
-        // The table dimensions have changed, so we need to redraw the clones
-        // and re map the table
+        // The table dimensions have changed, so we need to re-map the table
         ?>
-        table = $('table.dwm_main');
-        redrawClones(table);
-        getTableData(table, tableData);
+        Table.size();
       }
     }, 50));
   
-};
+});
 

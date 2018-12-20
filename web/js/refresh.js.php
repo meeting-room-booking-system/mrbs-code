@@ -15,26 +15,42 @@ if ($use_strict)
 }
 ?>
 
+var refreshListenerAdded = false;
+
 var intervalId;
+
+<?php
+// Make the columns in the calendar views of equal size.   We can't use an inline style,
+// because this would cause an error on those servers that have a Content Security Policy of
+// "default-src 'self'" or "script-src 'self'".  And we can't use a CSS file because we don't
+// know how many columns there are.  So we have to use JavaScript.
+?>
+var sizeColumns = function() {
+  
+    var mainCols = $('.dwm_main thead th').not('th.first_last, th.hidden_day');
+    mainCols.css('width', 100/mainCols.length + '%');
+
+  };
+
 
 var refreshPage = function refreshPage() {
     if (!isHidden() && 
-        !refreshPage.disabled &&
+        !$('table.dwm_main').hasClass('resizing') &&
         !isMeteredConnection())
     {
       var data = {ajax: 1,
-                  page_date: refreshPage.args.page_date,
-                  room: refreshPage.args.room,
-                  area: refreshPage.args.area};
-      if (refreshPage.args.timetohighlight !== undefined)
+                  view: args.view,
+                  page_date: args.pageDate,
+                  area: args.area,
+                  room: args.room};
+      if (args.timetohighlight !== undefined)
       {
-        data.timetohighlight = refreshPage.args.timetohighlight;
+        data.timetohighlight = args.timetohighlight;
       }
       
-      $.post(refreshPage.args.page + '.php',
+      $.post('index.php',
              data,
              function(result){
-                 var table;
                  <?php
                  // (1) Empty the existing table in order to get rid of events
                  // and data and prevent memory leaks, (2) insert the updated 
@@ -44,85 +60,66 @@ var refreshPage = function refreshPage() {
                  ?>
                  if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
                  {
-                   table = $('table.dwm_main');
-                   table.empty();
-                   table.html(result);
-                   createFloatingHeaders(table);
-                   updateTableHeaders(table);
-                   window.clearInterval(intervalId);
-                   intervalId = undefined;
-                   table.trigger('load');
+                   var table = $('table.dwm_main');
+                   if (!table.hasClass('resizing'))
+                   {
+                     table.empty();
+                     table.html(result);
+                     window.clearInterval(intervalId);
+                     intervalId = undefined;
+                     table.trigger('tableload');
+                   }
                  }
                },
              'html');
-    }  <?php // if (!isHidden() && !refreshPage.disabled) ?>
-  };
-
-<?php
-// Functions to turn off and on page refresh.  We don't want the page to be
-// refreshed while we are in the middle of resizing a booking or selecting a
-// set of empty cells.
-?>
-var turnOffPageRefresh = function turnOffPageRefresh() {
-    refreshPage.disabled = true;
-  };
-  
-  
-var turnOnPageRefresh = function turnOnPageRefresh() {
-    refreshPage.disabled = false;
+    }  <?php // if (!isHidden() etc.?>
   };
     
   
-<?php
-if (!empty($refresh_rate))
-{
-  ?>
-  
-  var refreshVisChanged = function refreshVisChanged() {
-      var pageHidden = isHidden();
 
-      if (pageHidden !== null)
+  
+var refreshVisChanged = function refreshVisChanged() {
+    var pageHidden = isHidden();
+
+    if (pageHidden !== null)
+    {
+       <?php
+      // Stop the interval timer.  If the page is now visible then refresh
+      // the page, which will also start a new timer.   We clear the interval
+      // and refresh the page rather than just disabling/enabling the page
+      // refresh because we want the latest data to be displayed immediately the
+      // page becomes visible again.  (It might have been hidden for a while
+      // with lots of changes in the meantime).
+      ?>
+      if (typeof intervalId !== 'undefined')
       {
-         <?php
-        // Stop the interval timer.  If the page is now visible then refresh
-        // the page, which will also start a new timer.   We clear the interval
-        // and refresh the page rather than just disabling/enabling the page
-        // refresh because we want the latest data to be displayed immediately the
-        // page becomes visible again.  (It might have been hidden for a while
-        // with lots of changes in the meantime).
-        ?>
-        if (typeof intervalId !== 'undefined')
-        {
-          window.clearInterval(intervalId);
-          intervalId = undefined;
-        }
-        if (!pageHidden)
-        {
-          refreshPage();
-        }
+        window.clearInterval(intervalId);
+        intervalId = undefined;
       }
-    };
+      if (!pageHidden)
+      {
+        refreshPage();
+      }
+    }
+  };
+
+
+
+$(function() {
   
-
   <?php
-  // =================================================================================
-
-  // Extend the init() function 
+  // Set up the timer on the table load rather than the window load event because
+  // we will only want to reinitialise the table when it is refreshed rather than the
+  // whole window.   For example if we've got the datepicker open we don't want that
+  // to be reset.
   ?>
-  var oldInitRefresh = init;
-  init = function(args) {
-    oldInitRefresh.apply(this, [args]);
+  $('table.dwm_main').on('tableload', function() {
     
-    refreshPage.args = args;
-    
-    <?php
-    // Set up the timer on the table load rather than the window load event because
-    // we will only want to reinitialise the table when it is refreshed rather than the
-    // whole window.   For example if we've got the datepicker open we don't want that
-    // to be reset.
-    ?>
-    $('table.dwm_main').on('load', function() {
-        <?php
+      sizeColumns();
+      
+      <?php
+      if (!empty($refresh_rate))
+      {
         // Set an interval timer to refresh the page, unless there's already one in place
         ?>
         if (typeof intervalId === 'undefined')
@@ -138,12 +135,16 @@ if (!empty($refresh_rate))
         var prefix = visibilityPrefix();
         if (document.addEventListener &&
             (prefix !== null) && 
-            !init.refreshListenerAdded)
+            !refreshListenerAdded)
         {
           document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
-          init.refreshListenerAdded = true;
+          refreshListenerAdded = true;
         }
-      }).trigger('load');
-  };
-  <?php
-}
+        <?php
+      }
+      ?>
+      
+    }).trigger('tableload');
+    
+});
+

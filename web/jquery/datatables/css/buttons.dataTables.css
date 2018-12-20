@@ -1,3 +1,32 @@
+@keyframes dtb-spinner {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes dtb-spinner {
+  100% {
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-ms-keyframes dtb-spinner {
+  100% {
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes dtb-spinner {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes dtb-spinner {
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
 div.dt-button-info {
   position: fixed;
   top: 50%;
@@ -23,6 +52,12 @@ div.dt-button-info > div {
   padding: 1em;
 }
 
+div.dt-button-collection-title {
+  text-align: center;
+  padding: 0.3em 0 0.5em;
+  font-size: 0.9em;
+}
+
 button.dt-button,
 div.dt-button,
 a.dt-button {
@@ -30,11 +65,13 @@ a.dt-button {
   display: inline-block;
   box-sizing: border-box;
   margin-right: 0.333em;
+  margin-bottom: 0.333em;
   padding: 0.5em 1em;
   border: 1px solid #999;
   border-radius: 2px;
   cursor: pointer;
   font-size: 0.88em;
+  line-height: 1.6em;
   color: black;
   white-space: nowrap;
   overflow: hidden;
@@ -48,7 +85,7 @@ a.dt-button {
   /* IE10 */
   background-image: -o-linear-gradient(top, white 0%, #e9e9e9 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, white 0%, #e9e9e9 100%);
+  background-image: linear-gradient(to bottom, white 0%, #e9e9e9 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='white', EndColorStr='#e9e9e9');
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -73,7 +110,7 @@ a.dt-button.disabled {
   /* IE10 */
   background-image: -o-linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
+  background-image: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#ffffff', EndColorStr='#f9f9f9');
 }
 button.dt-button:active:not(.disabled), button.dt-button.active:not(.disabled),
@@ -91,7 +128,7 @@ a.dt-button.active:not(.disabled) {
   /* IE10 */
   background-image: -o-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
+  background-image: linear-gradient(to bottom, #f3f3f3 0%, #e2e2e2 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f3f3f3', EndColorStr='#e2e2e2');
   box-shadow: inset 1px 1px 3px #999999;
 }
@@ -111,7 +148,7 @@ a.dt-button.active:not(.disabled):hover:not(.disabled) {
   /* IE10 */
   background-image: -o-linear-gradient(top, #eaeaea 0%, #cccccc 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #eaeaea 0%, #cccccc 100%);
+  background-image: linear-gradient(to bottom, #eaeaea 0%, #cccccc 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#eaeaea', EndColorStr='#cccccc');
 }
 button.dt-button:hover,
@@ -133,7 +170,7 @@ a.dt-button:hover:not(.disabled) {
   /* IE10 */
   background-image: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
+  background-image: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f9f9f9', EndColorStr='#e0e0e0');
 }
 button.dt-button:focus:not(.disabled),
@@ -152,7 +189,7 @@ a.dt-button:focus:not(.disabled) {
   /* IE10 */
   background-image: -o-linear-gradient(top, #bddef4 0%, #79ace9 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #bddef4 0%, #79ace9 100%);
+  background-image: linear-gradient(to bottom, #bddef4 0%, #79ace9 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#bddef4', EndColorStr='#79ace9');
 }
 
@@ -182,7 +219,6 @@ div.dt-button-collection {
   z-index: 2002;
   border-radius: 5px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-  z-index: 2002;
   -webkit-column-gap: 8px;
   -moz-column-gap: 8px;
   -ms-column-gap: 8px;
@@ -195,6 +231,7 @@ div.dt-button-collection a.dt-button {
   position: relative;
   left: 0;
   right: 0;
+  width: 100%;
   display: block;
   float: none;
   margin-bottom: 4px;
@@ -215,7 +252,7 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
   /* IE10 */
   background-image: -o-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #f0f0f0 0%, #dadada 100%);
+  background-image: linear-gradient(to bottom, #f0f0f0 0%, #dadada 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f0f0f0', EndColorStr='#dadada');
   box-shadow: inset 1px 1px 3px #666;
 }
@@ -224,6 +261,7 @@ div.dt-button-collection.fixed {
   top: 50%;
   left: 50%;
   margin-left: -75px;
+  border-radius: 0;
 }
 div.dt-button-collection.fixed.two-column {
   margin-left: -150px;
@@ -265,6 +303,9 @@ div.dt-button-collection.four-column {
   -o-column-count: 4;
   column-count: 4;
 }
+div.dt-button-collection .dt-button {
+  border-radius: 0;
+}
 
 div.dt-button-background {
   position: fixed;
@@ -294,4 +335,31 @@ div.dt-button-background {
     float: none !important;
     text-align: center;
   }
+}
+button.dt-button.processing,
+div.dt-button.processing,
+a.dt-button.processing {
+  color: rgba(0, 0, 0, 0.2);
+}
+button.dt-button.processing:after,
+div.dt-button.processing:after,
+a.dt-button.processing:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  box-sizing: border-box;
+  display: block;
+  content: ' ';
+  border: 2px solid #282828;
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  animation: dtb-spinner 1500ms infinite linear;
+  -o-animation: dtb-spinner 1500ms infinite linear;
+  -ms-animation: dtb-spinner 1500ms infinite linear;
+  -webkit-animation: dtb-spinner 1500ms infinite linear;
+  -moz-animation: dtb-spinner 1500ms infinite linear;
 }

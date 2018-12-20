@@ -67,7 +67,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
 
 function output_row($row, $returl)
 {
-  global $ajax, $json_data;
+  global $ajax, $json_data, $view;
   
   $vars = array('id'     => $row['entry_id'],
                 'returl' => $returl);
@@ -82,7 +82,18 @@ function output_row($row, $returl)
   $values[] = htmlspecialchars($row['create_by']);
   // start time and link to day view
   $date = getdate($row['start_time']);
-  $link = "<a href=\"day.php?day=$date[mday]&amp;month=$date[mon]&amp;year=$date[year]&amp;area=".$row['area_id']."\">";
+  
+  $vars = array('view'  => $view,
+                'year'  => $date['year'],
+                'month' => $date['mon'],
+                'day'   => $date['mday'],
+                'area'  => $row['area_id'],
+                'room'  => $row['room_id']);
+                
+  $query = http_build_query($vars, '', '&');
+                
+  $link = '<a href="index.php?' . htmlspecialchars($query) . '">';
+  
   if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
@@ -113,7 +124,6 @@ function output_row($row, $returl)
 $search_str = get_form_var('search_str', 'string');
 $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
-$advanced = get_form_var('advanced', 'int');
 $ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
@@ -142,11 +152,9 @@ if (isset($search_str) && ($search_str !== ''))
 }
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin =  (isset($user) && authGetUserLevel($user)>=2) ;
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.  We also need
@@ -167,56 +175,51 @@ $search_start_time = mktime(0, 0, 0, $month, $day, $year);
 
 if (!$ajax)
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : null, $search_str);
+  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
-  if (!empty($advanced))
-  {
-    $form = new Form();
-    $form->setAttributes(array('class'  => 'standard',
-                               'id'     => 'search_form',
-                               'method' => 'post',
-                               'action' => 'search.php'));
-                               
-    $fieldset = new ElementFieldset();
-    $fieldset->addLegend(get_vocab('advanced_search'));
-    
-    // Search string
-    $field = new FieldInputSearch();
-    $field->setLabel(get_vocab('search_for'))
-          ->setControlAttributes(array('name'      => 'search_str',
-                                       'required'  => true,
-                                       'autofocus' => true));
-    $fieldset->addElement($field);
-    
-    // From date
-    $field = new FieldInputDate();
-    $field->setLabel(get_vocab('from'))
-          ->setControlAttributes(array('name'      => 'from_date',
-                                       'value'     => $from_date,
-                                       'required'  => true));
-    $fieldset->addElement($field);
-    
-    // Submit button
-    $field = new FieldInputSubmit();
-    $field->setControlAttribute('value', get_vocab('search_button'));
-    $fieldset->addElement($field);
-    
-    $form->addElement($fieldset);
-    
-    $form->render();
-    
-    output_trailer();
-    exit;
-  }
+  $form = new Form();
+  $form->setAttributes(array('class'  => 'standard',
+                             'id'     => 'search_form',
+                             'method' => 'post',
+                             'action' => 'search.php'));
+                             
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('search'));
+  
+  // Search string
+  $field = new FieldInputSearch();
+  $field->setLabel(get_vocab('search_for'))
+        ->setControlAttributes(array('name'      => 'search_str',
+                                     'value'     => (isset($search_str)) ? $search_str : '',
+                                     'required'  => true,
+                                     'autofocus' => true));
+  $fieldset->addElement($field);
+  
+  // From date
+  $field = new FieldInputDate();
+  $field->setLabel(get_vocab('from'))
+        ->setControlAttributes(array('name'      => 'from_date',
+                                     'value'     => $from_date,
+                                     'required'  => true));
+  $fieldset->addElement($field);
+  
+  // Submit button
+  $field = new FieldInputSubmit();
+  $field->setControlAttribute('value', get_vocab('search_button'));
+  $fieldset->addElement($field);
+  
+  $form->addElement($fieldset);
+  
+  $form->render();
 
   if (!isset($search_str) || ($search_str === ''))
   {
     echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
-    output_trailer();
+    print_footer();
     exit;
   }
   
-  echo "<h3>";
+  echo '<h3 class="search_results">';
   echo get_vocab("search_results",
                  htmlspecialchars($search_str),
                  htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));
@@ -271,7 +274,7 @@ $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 // to make sure we respect the privacy settings.  (We rely on the privacy fields
 // in the area table being not NULL.   If they are by some chance NULL, then no
 // entries will be found, which is at least safe from the privacy viewpoint)
-if (!$is_admin)
+if (!is_book_admin())
 {
   if (isset($user))
   {
@@ -321,7 +324,7 @@ if (!isset($total))
 if (($total <= 0) && !$ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
-  output_trailer();
+  print_footer();
   exit;
 }
 
@@ -341,7 +344,7 @@ if (!$ajax_capable || $ajax)
 {
   // Now we set up the "real" query
   $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
-                 R.area_id, A.enable_periods
+                 E.room_id, R.area_id, A.enable_periods
             FROM $tbl_entry E, $tbl_room R, $tbl_area A
            WHERE $sql_pred
         ORDER BY E.start_time asc";
@@ -407,6 +410,6 @@ else
   echo "</tbody>\n";
   echo "</table>\n";
   echo "</div>\n";
-  output_trailer();
+  print_footer();
 }
 

@@ -42,7 +42,7 @@ class ElementInputDatalist extends ElementInput
     // support <datalist> will still have the options in their DOM and then
     // the JavaScript polyfill can find them and do something with them
     $select = new ElementSelect();
-    $select->setAttribute('style', 'display: none');
+    $select->addClass('none');
     $select->addSelectOptions($options, null, $associative);
     
     $this->next($this->next()->addElement($select));

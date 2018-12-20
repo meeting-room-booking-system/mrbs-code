@@ -19,7 +19,7 @@ $vocab["help"]               = "Hjälp";
 $vocab["search"]             = "Sök";
 $vocab["outstanding"]        = "väntande bokningar";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Bokningar för";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Områden";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Gå till föregående dag";
 $vocab["dayafter"]           = "Gå till nästa dag";
 $vocab["gototoday"]          = "Gå till idag";
 $vocab["goto"]               = "Gå till";
+$vocab["nav_day"]            = "Dag";
+$vocab["nav_week"]           = "Vecka";
+$vocab["nav_month"]          = "Månad";
 $vocab["highlight_line"]     = "Markera denna rad";
 $vocab["click_to_reserve"]   = "Klicka på cellen för att göra en bokning.";
 $vocab["timezone"]           = "Tidszon";
+$vocab["weekbefore"]         = "Gå till veckan innan";
+$vocab["weekafter"]          = "Nästa vecka";
+$vocab["gotothisweek"]       = "Denna vecka";
+$vocab["monthbefore"]        = "Föregående månad";
+$vocab["monthafter"]         = "Nästa månad";
+$vocab["gotothismonth"]      = "Denna månad";
+$vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Visa dag";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]          = "minut";
 $vocab["minutes"]            = "minuter";
 $vocab["hour_lc"]            = "timme";
 $vocab["hours"]              = "timmar";
-$vocab["day_lc"]             = "dag";
+$vocab["day"]                = "dag";
 $vocab["days"]               = "dagar";
-$vocab["week_lc"]            = "vecka";
+$vocab["week"]               = "vecka";
 $vocab["weeks"]              = "veckor";
 $vocab["year_lc"]            = "år";
 $vocab["years"]              = "år";
@@ -202,7 +212,6 @@ $vocab["max_per_year_area"]       = "Maximala antalet bokningar per år per anv�
 $vocab["max_per_future_area"]     = "Maximala antalet utgivna bokningar per användare inom detta område är";
 $vocab["skip_and_book"]           = "Hoppa över och boka";
 $vocab["skip_and_book_note"]      = "Fortsätta med bokningen och hoppa över bokningskonflikter";
-$vocab["changes_saved"]           = "Ändringarna är sparade";
 
 // Used in pending.php
 $vocab["pending"]            = "Preliminär bokning väntar på godkännande";
@@ -272,7 +281,6 @@ $vocab["of"]                 = " av ";
 $vocab["previous"]           = "Föregående";
 $vocab["next"]               = "Nästa";
 $vocab["entry"]              = "Bokning";
-$vocab["advanced_search"]    = "Avancerad sökning";
 $vocab["search_button"]      = "Sök";
 $vocab["search_for"]         = "Sök för";
 $vocab["from"]               = "Från";
@@ -323,19 +331,6 @@ $vocab["delete_entries_warning"] = "VARNING! Detta tar bort alla poster som matc
                                    "Totalt antal poster som ska tas bort: ";
 $vocab["delete_entries_failed"] = "Posterna kunde inte tas bort";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Gå till veckan innan";
-$vocab["weekafter"]          = "Nästa vecka";
-$vocab["gotothisweek"]       = "Denna vecka";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Föregående månad";
-$vocab["monthafter"]         = "Nästa månad";
-$vocab["gotothismonth"]      = "Denna månad";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Rum saknas för denna plats";
-
 // Used in admin.php
 $vocab["edit"]               = "Ändra";
 $vocab["delete"]             = "Radera";
@@ -372,7 +367,6 @@ $vocab["invalid_area"]            = "Ogiltigt område!";
 $vocab["invalid_room_name"]       = "Det här rums namnet används redan i det här området!";
 $vocab["invalid_email"]           = "Ogiltig e-postadress!";
 $vocab["invalid_resolution"]      = "Ogiltig kombination av första tid, sista tid och tidsintervall!";
-$vocab["too_many_slots"]          = 'Du behöver öka värdet för $max_slots i config filen!'; // single quotes!
 $vocab["general_settings"]        = "Allmänna inställningar";
 $vocab["time_settings"]           = "Tidsintervaller";
 $vocab["confirmation_settings"]   = "Moderationsinställningar";

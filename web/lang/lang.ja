@@ -20,7 +20,7 @@ $vocab["help"]               = "ヘルプ";
 $vocab["search"]             = "検索";
 $vocab["outstanding"]        = "未決の予約";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "";
 $vocab["bookingsforpost"]    = "の予約です";
 $vocab["areas"]              = "部署";
@@ -28,9 +28,19 @@ $vocab["daybefore"]          = "前の日に移動";
 $vocab["dayafter"]           = "次の日移動";
 $vocab["gototoday"]          = "本日に移動";
 $vocab["goto"]               = "移動";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "この行を強調";
 $vocab["click_to_reserve"]   = "予約を入れたいセルをクリックしてください。";
 $vocab["timezone"]           = "時間帯";
+$vocab["weekbefore"]         = "前の週に移動";
+$vocab["weekafter"]          = "次の週に移動";
+$vocab["gotothisweek"]       = "今週に移動";
+$vocab["monthbefore"]        = "前の月に移動";
+$vocab["monthafter"]         = "次の月に移動";
+$vocab["gotothismonth"]      = "今月に移動";
+$vocab["no_rooms_for_area"]  = "この部署には部屋が設定されていません";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "日で表示";
@@ -60,9 +70,9 @@ $vocab["minute_lc"]          = "分間";
 $vocab["minutes"]            = "分間";
 $vocab["hour_lc"]            = "時間";
 $vocab["hours"]              = "時間";
-$vocab["day_lc"]             = "日間";
+$vocab["day"]                = "日間";
 $vocab["days"]               = "日間";
-$vocab["week_lc"]            = "週間";
+$vocab["week"]               = "週間";
 $vocab["weeks"]              = "週間";
 $vocab["year_lc"]            = "年間";
 $vocab["years"]              = "年間";
@@ -254,7 +264,6 @@ $vocab["of"]                 = ", 該当件数";
 $vocab["previous"]           = "前";
 $vocab["next"]               = "次";
 $vocab["entry"]              = "エントリ";
-$vocab["advanced_search"]    = "高度な検索";
 $vocab["search_button"]      = "検索";
 $vocab["search_for"]         = "検索語";
 $vocab["from"]               = "始点";
@@ -302,19 +311,6 @@ $vocab["delete_entries_warning"] = "警告! この操作は、検索文字列に
                                    "削除されるエントリーの合計: ";
 $vocab["delete_entries_failed"] = "エントリーを削除することができませんでした。";
 
-// Used in week.php
-$vocab["weekbefore"]         = "前の週に移動";
-$vocab["weekafter"]          = "次の週に移動";
-$vocab["gotothisweek"]       = "今週に移動";
-
-// Used in month.php
-$vocab["monthbefore"]        = "前の月に移動";
-$vocab["monthafter"]         = "次の月に移動";
-$vocab["gotothismonth"]      = "今月に移動";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "この部署には部屋が設定されていません";
-
 // Used in admin.php
 $vocab["edit"]               = "編集";
 $vocab["delete"]             = "削除";
@@ -351,7 +347,6 @@ $vocab["invalid_area"]            = "無効な部署名です!";
 $vocab["invalid_room_name"]       = "この部屋名は既に部署内で使用されています!";
 $vocab["invalid_email"]           = "無効なEメールアドレスです!";
 $vocab["invalid_resolution"]      = "最初の時間枠の開始時刻, 最後の時間枠の開始時刻, 分解能の組み合わせが無効です!";
-$vocab["too_many_slots"]          = '設定ファイルの\$max_slotsの値を増やす必要があります!';
 $vocab["general_settings"]        = "一般";
 $vocab["time_settings"]           = "時間枠";
 $vocab["confirmation_settings"]   = "確定状況";

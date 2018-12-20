@@ -6,9 +6,10 @@ namespace MRBS;
 
 // Get the standard form variables
 $page_date = get_form_var('page_date', 'string');
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
+$view = get_form_var('view', 'string', isset($default_view) ? $default_view : 'day');
 $year = get_form_var('year', 'int');
+$month = get_form_var('month', 'int');
+$day = get_form_var('day', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
 

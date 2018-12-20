@@ -29,6 +29,82 @@ function to_html($string)
 }
 
 
+function get_arg_string($args)
+{
+  $result = array();
+  
+  foreach ($args as $arg)
+  {
+    $type = gettype($arg);
+    
+    switch ($type)
+    {
+      case 'boolean';
+        $result[] = ($arg) ? 'true' : 'false';
+        break;
+        
+      case 'integer':
+      case 'double':
+      case 'string':
+        $result[] = $arg;
+        break;
+        
+      default:
+        $result[] = $type;
+        break;
+    }
+  }
+  
+  return implode(', ', $result);
+}
+
+
+// Output a backtrace.  This function allows us to format the output slightly better
+// than debug_print_backtrace(), for example by replacing newlines with <br> tags.
+function output_backtrace()
+{
+  $backtrace = '';
+  $calls = debug_backtrace();
+  
+  foreach ($calls as $i => $call)
+  {
+    $backtrace .= "#$i ";
+    
+    if (isset($call['class']) && isset($call['type']))
+    {
+      $backtrace .= $call['class'] . $call['type'];
+    }
+    
+    if (isset($call['function']))
+    {
+      $backtrace .= $call['function'];
+      $backtrace .= '(';
+      if (isset($call['args']))
+      {
+        $backtrace .= get_arg_string($call['args']);
+      }
+      $backtrace .= ')';
+    }
+    
+    if (isset($call['file']) && isset($call['line']))
+    {
+      $backtrace .= ' called at [' . $call['file'] . ':' . $call['line'] . ']';
+    }
+    
+    $backtrace .= "\n";
+  }
+  
+  if (ini_get('display_errors'))
+  {
+    echo to_html(htmlspecialchars($backtrace));
+  }
+  if (ini_get('log_errors'))
+  {
+    error_log($backtrace);
+  }
+}
+
+
 function output_error($heading, $body, $show_data=false)
 {
   static $default_timezone_set = false;
@@ -71,6 +147,8 @@ function output_error($heading, $body, $show_data=false)
 
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
+  global $debug;
+  
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
@@ -85,6 +163,11 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
   
   output_error($heading, $errstr . "\n", $show_data);
+  
+  if ($debug)
+  {
+    output_backtrace();
+  }
 }
 
 
@@ -121,7 +204,7 @@ function fatal_error($message)
 {
   print_simple_header();
   echo "<p>\n". htmlspecialchars($message) . "</p>\n";
-  output_trailer();
+  print_footer();
   exit;
 }
 

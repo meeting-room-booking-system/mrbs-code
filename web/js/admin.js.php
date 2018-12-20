@@ -10,19 +10,12 @@ if ($use_strict)
 {
   echo "'use strict';\n";
 }
-
-// =================================================================================
-
-// Extend the init() function 
 ?>
 
-var oldInitAdmin = init;
-init = function(args) {
+$(function() {
   
   var fixedColumnsOptions = {leftColumns: 1};
-  
-  oldInitAdmin.apply(this, [args]);
-  
+
   <?php
   // Turn the list of rooms into a dataTable
   // If we're an admin, then fix the right hand column
@@ -33,5 +26,5 @@ init = function(args) {
   }
   
   makeDataTable('#rooms_table', {}, fixedColumnsOptions);
-};
+});
 

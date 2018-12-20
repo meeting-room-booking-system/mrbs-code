@@ -59,7 +59,7 @@ function generate_yes_form($room, $area)
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Get non-standard form variables
 $type = get_form_var('type', 'string');
@@ -97,7 +97,7 @@ if ($type == "room")
   }
   else
   {
-    print_header($day, $month, $year, $area, isset($room) ? $room : null);
+    print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
    
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
@@ -152,7 +152,7 @@ if ($type == "room")
     generate_no_form($room, $area);
 
     echo "</div>\n";
-    output_trailer();
+    print_footer();
     exit;
   }
 }
@@ -174,12 +174,12 @@ if ($type == "area")
   else
   {
     // There are rooms left in the area
-    print_header($day, $month, $year, $area, isset($room) ? $room : null);
+    print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
     echo "<p>\n";
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
     echo "</p>\n";
-    output_trailer();
+    print_footer();
     exit;
   }
 }

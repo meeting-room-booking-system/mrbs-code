@@ -19,7 +19,7 @@ $vocab["admin"]              = "Amministratore";
 $vocab["help"]               = "Aiuto";
 $vocab["search"]             = "Ricerca";
 
-// Used in day.php
+// Used in index.php
 $vocab["outstanding"]        = "prenotazioni pendenti";
 $vocab["bookingsfor"]        = "Prenotazioni per";
 $vocab["bookingsforpost"]    = "";
@@ -28,8 +28,18 @@ $vocab["daybefore"]          = "Vai al Giorno Prima";
 $vocab["dayafter"]           = "Vai al Giorno Dopo";
 $vocab["gototoday"]          = "Vai a oggi";
 $vocab["goto"]               = "Vai a";
+$vocab["nav_day"]            = "Giorno";
+$vocab["nav_week"]           = "Settimana";
+$vocab["nav_month"]          = "Mese";
 $vocab["highlight_line"]     = "Evidenzia questa linea";
 $vocab["click_to_reserve"]   = "Clicca sulla cella per effettuare una prenotazione.";
+$vocab["weekbefore"]         = "Vai alla Settimana Precedente";
+$vocab["weekafter"]          = "Vai alla Settimana Successiva";
+$vocab["gotothisweek"]       = "Vai alla Settimana Corrente";
+$vocab["monthbefore"]        = "Vai al Mese Precedente";
+$vocab["monthafter"]         = "Vai al Mese Successivo";
+$vocab["gotothismonth"]      = "Vai al Mese Corrente";
+$vocab["no_rooms_for_area"]  = "Non ci sono sale per questa Area";
 
 // Used in trailer.inc
 $vocab["timezone"]           = "Fuso orario";
@@ -60,9 +70,9 @@ $vocab["minute_lc"]          = "minuto";
 $vocab["minutes"]            = "minuti";
 $vocab["hour_lc"]            = "ora";
 $vocab["hours"]              = "ora";
-$vocab["day_lc"]             = "giorno";
+$vocab["day"]                = "giorno";
 $vocab["days"]               = "giorni";
-$vocab["week_lc"]            = "settimana";
+$vocab["week"]               = "settimana";
 $vocab["weeks"]              = "settimane";
 $vocab["year_lc"]            = "anno";
 $vocab["years"]              = "anni";
@@ -205,9 +215,12 @@ $vocab["max_per_year_area"]       = "Il numero massimo di prenotazioni all'anno 
 $vocab["max_per_future_area"]     = "Il numero massimo di prenotazioni in attesa per utente in questa area è";
 $vocab["skip_and_book"]           = "Salta e prenota";
 $vocab["skip_and_book_note"]      = "Prosegui con la prenotazione, saltando i conflitti";
-$vocab["changes_saved"]           = "Cambiamenti salvati";
+
+// Used in pending.php
 $vocab["pending"]            = "Prenotazioni in attesa di approvazione";
 $vocab["none_outstanding"]   = "Non ci sono prenotazioni in attesa di approvazione.";
+
+// Authentication stuff
 $vocab["accessdenied"]       = "Accesso Negato";
 $vocab["norights"]           = "Non hai i diritti per modificare questo oggetto.";
 $vocab["please_login"]       = "Effettua il log in";
@@ -271,7 +284,6 @@ $vocab["of"]                 = " di ";
 $vocab["previous"]           = "Precedente";
 $vocab["next"]               = "Successivo";
 $vocab["entry"]              = "Valore";
-$vocab["advanced_search"]    = "Ricerca avanzata";
 $vocab["search_button"]      = "Ricerca";
 $vocab["search_for"]         = "Cerca per";
 $vocab["from"]               = "Da";
@@ -317,19 +329,6 @@ $vocab["delete_entries"]        = "Cancella valori";
 $vocab["delete_entries_warning"] = "ATENZIONE!  Questa operazione cancellerà tutti i valori che soddisfano " .
 $vocab["delete_entries_failed"] = "Non è stato possibile cancellare i valori.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Vai alla Settimana Precedente";
-$vocab["weekafter"]          = "Vai alla Settimana Successiva";
-$vocab["gotothisweek"]       = "Vai alla Settimana Corrente";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Vai al Mese Precedente";
-$vocab["monthafter"]         = "Vai al Mese Successivo";
-$vocab["gotothismonth"]      = "Vai al Mese Corrente";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Non ci sono sale per questa Area";
-
 // Used in admin.php
 $vocab["edit"]               = "Modifica";
 $vocab["delete"]             = "Elimina";
@@ -366,7 +365,6 @@ $vocab["invalid_area"]       = "Area non valida!";
 $vocab["invalid_room_name"]  = "Questo nome stanza è già stato usato nell'area!";
 $vocab["invalid_email"]      = "Email non valida!";
 $vocab["invalid_resolution"]      = "Combinazione non valida di primo slot, ultimo slot e risoluzione!";
-$vocab["too_many_slots"]          = 'Devi incrementare il valore di $max_slots nel file di configurazione!';
 $vocab["general_settings"]        = "Generale";
 $vocab["time_settings"]           = "Orari slot";
 $vocab["confirmation_settings"]   = "Impostazioni di conferma";

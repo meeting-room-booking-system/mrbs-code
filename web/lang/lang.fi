@@ -18,7 +18,7 @@ $vocab["admin"]              = "Ylläpito";
 $vocab["help"]               = "Ohjeet";
 $vocab["search"]             = "Etsi";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Varaukset";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Tilat";
@@ -26,9 +26,19 @@ $vocab["daybefore"]          = "Edelliseen päivään";
 $vocab["dayafter"]           = "Seuraavaan päivään";
 $vocab["gototoday"]          = "Tähän päivään";
 $vocab["goto"]               = "mene";
+$vocab["nav_day"]            = "Päivä";
+$vocab["nav_week"]           = "Viikko";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "Korosta tämä rivi";
 $vocab["click_to_reserve"]   = "Napsauta solua tehdäksesi varauksen.";
 $vocab["timezone"]           = "Aikavyöhyke";
+$vocab["weekbefore"]         = "Edelliseen viikkoon";
+$vocab["weekafter"]          = "Seuraavaan viikkoon";
+$vocab["gotothisweek"]       = "Tähän viikkoon";
+$vocab["monthbefore"]        = "Edelliseen kuukauteen";
+$vocab["monthafter"]         = "Seuraavaan kuukauteen";
+$vocab["gotothismonth"]      = "Tähän kuukauteen";
+$vocab["no_rooms_for_area"]  = "Tällä alueella ei ole yhtään huonetta.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Näytä päivä";
@@ -58,9 +68,9 @@ $vocab["minute_lc"]          = "minuutti";
 $vocab["minutes"]            = "minuuttia";
 $vocab["hour_lc"]            = "tunti";
 $vocab["hours"]              = "tuntia";
-$vocab["day_lc"]             = "päivä";
+$vocab["day"]                = "päivä";
 $vocab["days"]               = "päivää";
-$vocab["week_lc"]            = "viikko";
+$vocab["week"]               = "viikko";
 $vocab["weeks"]              = "viikkoa";
 $vocab["year_lc"]            = "vuosi";
 $vocab["years"]              = "vuotta";
@@ -185,7 +195,6 @@ $vocab["max_per_year_area"]       = "Maksimimäärä käyttäjäkohtaisia varauk
 $vocab["max_per_future_area"]     = "Maksimimäärä keskeneräisiä käyttäjäkohtaisia varauksia tällä alueella on";
 $vocab["skip_and_book"]           = "Ohita ja varaa";
 $vocab["skip_and_book_note"]      = "Jatka varauksen tallentamiseen ohittaen ristiriidassa olevat varaukset";
-$vocab["changes_saved"]           = "Muutokset tallennettu";
 
 // Used in pending.php
 $vocab["pending"]            = "Varaukset odottamassa hyväksyntää";
@@ -255,7 +264,6 @@ $vocab["of"]                 = " tuloksia yhteensä: ";
 $vocab["previous"]           = "Edellinen";
 $vocab["next"]               = "Seuraava";
 $vocab["entry"]              = "Varaus";
-$vocab["advanced_search"]    = "Tarkennettu haku";
 $vocab["search_button"]      = "Hae";
 $vocab["search_for"]         = "Etsi";
 $vocab["from"]               = "Alkaen";
@@ -303,19 +311,6 @@ $vocab["delete_entries_warning"] = "VAROITUS! Olet poistamassa kaikkia hakusanan
                                    "Poistettavien merkintöjen määrä: ";
 $vocab["delete_entries_failed"] = "Varauksia ei voitu poistaa.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Edelliseen viikkoon";
-$vocab["weekafter"]          = "Seuraavaan viikkoon";
-$vocab["gotothisweek"]       = "Tähän viikkoon";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Edelliseen kuukauteen";
-$vocab["monthafter"]         = "Seuraavaan kuukauteen";
-$vocab["gotothismonth"]      = "Tähän kuukauteen";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Tällä alueella ei ole yhtään huonetta.";
-
 // Used in admin.php
 $vocab["edit"]               = "Muokkaa";
 $vocab["delete"]             = "Poista";
@@ -352,7 +347,6 @@ $vocab["invalid_area"]            = "Virheellinen alue!";
 $vocab["invalid_room_name"]       = "Tämä huone on jo käytössä alueella!";
 $vocab["invalid_email"]           = "Virheellinen sähköpostiosoite!";
 $vocab["invalid_resolution"]      = "Virheellinen alkamisajankohta, päättymisajankohta ja tarkkuus!";
-$vocab["too_many_slots"]          = 'Kasvata arvoa $max_slots asetustiedostossa!';
 $vocab["general_settings"]        = "Yleiset";
 $vocab["time_settings"]           = "Aikavälit";
 $vocab["confirmation_settings"]   = "Vahvistusasetukset";

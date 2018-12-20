@@ -113,7 +113,7 @@ if (isset($max_book_ahead_secs))
   $max_delete_ahead_secs = $max_book_ahead_secs;
 }
 
-if (isset($max_length))
+if (isset($maxlength))
 {
   $message = 'Please check your config file.   The variable $maxlength ' .
              'is no longer used and maximum field lengths are now calculated automatically.';
@@ -169,6 +169,20 @@ if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
   trigger_error($message, E_USER_NOTICE);
 }
 
+// Variables in a changed format in versions of MRBS > 1.7.1
+if (!empty($override_locale))
+{
+  $new_override_locale = System::getBCPlocale($override_locale);
+  if (strtolower($override_locale) != strtolower($new_override_locale))
+  {
+    $message = 'The config variable $override_locale should now be in BCP 47 format. ' .
+               "Please change '$override_locale' to '$new_override_locale'.";
+    trigger_error($message, E_USER_NOTICE);
+    $override_locale = $new_override_locale;
+  }
+}
+
+
 /********************************************************
  * Checking
  ********************************************************/
@@ -216,13 +230,7 @@ else
   }
 }
 
-/***********
- * Debugging
- ***********/
- 
- define('DEBUG', false);
- 
- 
+
 /***************************************
  * DOCTYPE - internal use, do not change
  ***************************************/
@@ -501,7 +509,7 @@ $area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['fut
 $area_defaults['max_per_future']           = $max_per_interval_area['future'];
 
 
-// We send Ajax requests to del_entry_ajax.php with data as an array of ids.
+// We send Ajax requests to ajax/del_entry.php with data as an array of ids.
 // In order to stop the POST request getting too large and triggering a 406
 // error, we split the requests into batches with a maximum number of ids
 // in the array defined below.
@@ -510,58 +518,10 @@ define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
 
-/********************************************************
- * Globals
- ********************************************************/
-
-// These global declarations are not necessary, but are just used as a reminder
-// of the rather ugly use of these variables as globals, so that they are not
-// forgotten when MRBS is rewritten.
-
-global $maxlength;
  
 /********************************************************
  * JavaScript - internal use, do not change
  ********************************************************/
 
-// Setting $use_strict = TRUE will put the MRBS JavaScript into strict mode.  Useful
-// for debugging.
-$use_strict = false;
-       
-
-/********************************************************
- * PHP System Configuration - internal use, do not change
- ********************************************************/
-
-// Disable magic quoting on database returns:
-if (get_magic_quotes_runtime())  // Will always return false as of PHP 5.4.0
-{
-  if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-  {
-    ini_set('magic_quotes_runtime', 0);
-  }
-  else
-  {
-    set_magic_quotes_runtime(false);
-  }
-}
-
-// Make sure notice errors are not reported, they can break mrbs code:
-$error_level = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
-
-if (defined("E_DEPRECATED"))
-{
-  $error_level = $error_level & ~E_DEPRECATED;
-}
-
-// The Mail and Net libraries generate E_STRICT errors, so disable E_STRICT (which became
-// part of E_ALL in PHP 5.4)
-if (defined("E_STRICT"))
-{
-  $error_level = $error_level & ~E_STRICT;
-}
-
-error_reporting ($error_level);
-set_error_handler(__NAMESPACE__ . "\\error_handler");
-set_exception_handler(__NAMESPACE__ . "\\exception_handler");
-register_shutdown_function(__NAMESPACE__ . "\\shutdown_function");
+// Puts Javascript into strict mode
+$use_strict = true;

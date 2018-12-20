@@ -10,7 +10,7 @@ $body_background_color          = "#ffffed";    // background colour for the mai
 $standard_font_color            = "black";      // default font color
 $header_font_color              = "#ffffff";    // font color for text in headers
 $highlight_font_color           = "red";        // used for highlighting text (eg links, errors)
-$colour_key_font_color          = "#5B69A6";    // used in the colour key table
+$color_key_font_color           = "#5B69A6";    // used in the colour key table
 
 $banner_back_color              = "#c0e0ff";    // background colour for banner
 $banner_border_color            = "#5B69A6";    // border colour for banner
@@ -33,6 +33,9 @@ $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid
 $main_table_slot_private_type_color = "#d1d9de";   // background colour when the type has to kept private
 $main_table_labels_back_color   = "#fff0f0";    // background colour for the row labels column
 
+$zebra_even_color = 'white';    // Colour for even rows in the main table
+$zebra_odd_color  = '#E2E4FF';  // Colour for even rows in the main table
+
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php
 $main_table_border_color_print        = "#777777";    // border colour for the main table (print view)
 $main_table_header_border_color_print = "#777777";    // border colour for day/week/month tables - header (print view)
@@ -46,8 +49,6 @@ $report_h3_border_color         = "#879AA8";              // border colour for <
 $search_table_border_color      = $standard_font_color;
 
 $site_faq_entry_border_color    = "#C3CCD3";          // used to separate individual FAQ's in help.php
-
-$trailer_border_color           = $main_table_border_color;
 
 $anchor_link_color              = "#5B69A6";          // link color
 $anchor_visited_color           = "#5B69A6";          // link color (visited)
@@ -69,8 +70,9 @@ $row_highlight_color            = "#ffc0da";        // used for highlighting a r
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 
-$multiple_control_color         = "#ffff44";        // background colour for the multiple booking controls
-
+// Button colours
+$button_color_stops = array('#eeeeee', '#cccccc');  // linear gradient colour stops
+$button_inset_color = 'darkblue';
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
@@ -97,7 +99,7 @@ $banner_border_width          = '1';  // (px)  border width for the outside of t
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
 $main_table_border_width      = '1';  // (px)  the border width for the outside of the main day/week/month tables
 $main_table_cell_border_width = '1';  // (px)  the border width for the cells of the main day/week/month tables
-$main_cell_height             = '17'; // (px)  height of the cells in the main day/week tables
+$main_cell_height             = '1.5em'; // height of the cells in the main day/week tables
     
     
 // ***** FONTS ************************    

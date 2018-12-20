@@ -23,7 +23,7 @@ $vocab["help"]               = "Segítség";
 $vocab["search"]             = "Keresés";
 $vocab["outstanding"]        = "függőben lévő foglalások";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Foglalások a következőhöz:";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Helyek";
@@ -31,9 +31,19 @@ $vocab["daybefore"]          = "Előző nap";
 $vocab["dayafter"]           = "Következő nap";
 $vocab["gototoday"]          = "Mai nap";
 $vocab["goto"]               = "Ugrás";
+$vocab["nav_day"]            = "Nap";
+$vocab["nav_week"]           = "Hét";
+$vocab["nav_month"]          = "Hónap";
 $vocab["highlight_line"]     = "Sor kiemelése";
 $vocab["click_to_reserve"]   = "Kattints a cellára a foglaláshoz!";
 $vocab["timezone"]           = "Időzóna";
+$vocab["weekbefore"]         = "Előző hét";
+$vocab["weekafter"]          = "Következő hét";
+$vocab["gotothisweek"]       = "Aktuális hét";
+$vocab["monthbefore"]        = "Előző hónap";
+$vocab["monthafter"]         = "Következő hónap";
+$vocab["gotothismonth"]      = "Aktuális hónap";
+$vocab["no_rooms_for_area"]  = "Nincsenek tárgyalók definiálva ehhez a területhez.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Napi nézet";
@@ -63,9 +73,9 @@ $vocab["minute_lc"]          = "perc";
 $vocab["minutes"]            = "perc";
 $vocab["hour_lc"]            = "óra";
 $vocab["hours"]              = "óra";
-$vocab["day_lc"]             = "nap";
+$vocab["day"]                = "nap";
 $vocab["days"]               = "nap";
-$vocab["week_lc"]            = "hét";
+$vocab["week"]               = "hét";
 $vocab["weeks"]              = "hét";
 $vocab["year_lc"]            = "év";
 $vocab["years"]              = "év";
@@ -247,7 +257,6 @@ $vocab["of"]                 = " / ";
 $vocab["previous"]           = "Előző";
 $vocab["next"]               = "Következő";
 $vocab["entry"]              = "Bejegyzés";
-$vocab["advanced_search"]    = "Fejlett keresés";
 $vocab["search_button"]      = "Keresés";
 $vocab["search_for"]         = "Kulcsszó:";
 // gkiss - tesztelendő!
@@ -291,19 +300,6 @@ $vocab["delete_entries_warning"] = "FIGYELEM! Ez a művelet törölni fogja az �
                                    "Törlendő rekordok száma: ";
 $vocab["delete_entries_failed"] = "A bejegyzéseket nem sikerült törölni.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Előző hét";
-$vocab["weekafter"]          = "Következő hét";
-$vocab["gotothisweek"]       = "Aktuális hét";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Előző hónap";
-$vocab["monthafter"]         = "Következő hónap";
-$vocab["gotothismonth"]      = "Aktuális hónap";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nincsenek tárgyalók definiálva ehhez a területhez.";
-
 // Used in admin.php
 $vocab["edit"]               = "Szerkesztés";
 $vocab["delete"]             = "Törlés";
@@ -340,7 +336,6 @@ $vocab["invalid_area"]            = "Érvénytelen helyszín!";
 $vocab["invalid_room_name"]       = "A megadott tárgyalónév már foglalt ezen a helyszínen!";
 $vocab["invalid_email"]           = "Érvénytelen email cím.";
 $vocab["invalid_resolution"]      = "Érvénytelen beállítás, ellenőrizd a slotoknál és a részletességnél megadott értékeket!";
-$vocab["too_many_slots"]          = 'Növeld meg a $max_slots értékét a konfigurációs fájlban!';
 $vocab["general_settings"]        = "Általános";
 $vocab["time_settings"]           = "Slot idők";
 $vocab["confirmation_settings"]   = "Megerősítés beállításai";

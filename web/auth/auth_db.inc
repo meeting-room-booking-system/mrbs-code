@@ -305,3 +305,25 @@ function authGetUserEmail($user)
   return ($email == -1) ? '' : $email;
 }
 
+
+// Return an array of all users
+function authGetUsers()
+{
+  global $tbl_users;
+  
+  $res = db()->query("SELECT * FROM $tbl_users ORDER BY name");
+  
+  return $res->all_rows_keyed();
+}
+
+
+// Return an array of users, indexed by 'username' and 'display_name'
+function authGetUsernames()
+{
+  global $tbl_users;
+  
+  $res = db()->query("SELECT name AS username, name AS display_name FROM $tbl_users ORDER BY name");
+  
+  return $res->all_rows_keyed();
+}
+

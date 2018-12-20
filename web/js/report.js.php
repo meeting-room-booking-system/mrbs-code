@@ -11,15 +11,9 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// =================================================================================
-
-
-// Extend the init() function 
 ?>
 
-var oldInitReport = init;
-init = function(args) {
-  oldInitReport.apply(this, [args]);
+$(function() {
   
   <?php
   // Tidy up the presentation of the first header row by merging the cells.
@@ -155,7 +149,7 @@ init = function(args) {
                           $('#report_table_processing').css('visibility', 'visible');
                           for (j=0; j<nBatches; j++)
                           {
-                            $.post('del_entry_ajax.php',
+                            $.post('ajax/del_entry.php',
                                    {csrf_token: getCSRFToken(),
                                     ids: batches[j]},
                                    function(result) {
@@ -218,12 +212,12 @@ init = function(args) {
                   .insertAfter('#report_table_paginate');
 
         };
-      }
-      <?php
     }
-    ?>
+    <?php
+  }
+  ?>
 
 
   reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
   
-};
+});

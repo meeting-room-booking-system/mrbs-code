@@ -20,7 +20,7 @@ $vocab["help"]               = "Yardım";
 $vocab["search"]             = "Arama";
 $vocab["outstanding"]        = "askıdaki yer ayırtma";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Yer ayırtmak için";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Alanlar";
@@ -28,9 +28,19 @@ $vocab["daybefore"]          = "Dün";
 $vocab["dayafter"]           = "Yarın";
 $vocab["gototoday"]          = "Bugün";
 $vocab["goto"]               = "Git";
+$vocab["nav_day"]            = "Gün";
+$vocab["nav_week"]           = "Hafta";
+$vocab["nav_month"]          = "Ay";
 $vocab["highlight_line"]     = "Satırı belirgin hale getir";
 $vocab["click_to_reserve"]   = "Yer ayırtmak için bu hücreye tıklayın.";
 $vocab["timezone"]           = "Saat dilimi";
+$vocab["weekbefore"]         = "Önceki Haftaya Git";
+$vocab["weekafter"]          = "Sonraki Haftaya Git";
+$vocab["gotothisweek"]       = "Bu Haftaya Git";
+$vocab["monthbefore"]        = "Bir önceki ayı görüntüle";
+$vocab["monthafter"]         = "Bir sonraki ayı görüntüle";
+$vocab["gotothismonth"]      = "Bu ayı görüntüle";
+$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantı Salonu tanımlı değil.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Günlük gösterim";
@@ -57,12 +67,12 @@ $vocab["period"]             = "Dönem";
 $vocab["duration"]           = "Devam Süresi";
 $vocab["seconds"]            = "saniye";
 $vocab["second_lc"]          = "saniye";
-$vocab["minute_lc"]         = "dakika";
+$vocab["minute_lc"]          = "dakika";
 $vocab["minutes"]            = "dakika";
 $vocab["hours"]              = "saat";
 $vocab["hour_lc"]            = "saat";
-$vocab["day_lc"]             = "gün";
-$vocab["week_lc"]            = "hafta";
+$vocab["day"]                = "gün";
+$vocab["week"]               = "hafta";
 $vocab["days"]               = "gün";
 $vocab["weeks"]              = "hafta";
 $vocab["years"]              = "yıl";
@@ -248,7 +258,6 @@ $vocab["previous"]           = "Önceki";
 $vocab["next"]               = "Sonraki";
 $vocab["entry"]              = "Kayıt";
 $vocab["view"]               = "Görünüm";
-$vocab["advanced_search"]    = "Detaylı arama";
 $vocab["search_button"]      = "Arama";
 $vocab["search_for"]         = "Anahtar kelime";
 $vocab["from"]               = "den";
@@ -289,20 +298,6 @@ $vocab["both"]                  = "Tüm";
 $vocab["privacy_status"]        = "Mahremiyet durumu";
 $vocab["search_criteria"]       = "Arama kırıteri";
 $vocab["presentation_options"]  = "Çıktı seçenekleri";
-
-
-// Used in week.php
-$vocab["weekbefore"]         = "Önceki Haftaya Git";
-$vocab["weekafter"]          = "Sonraki Haftaya Git";
-$vocab["gotothisweek"]       = "Bu Haftaya Git";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Bir önceki ayı görüntüle";
-$vocab["monthafter"]         = "Bir sonraki ayı görüntüle";
-$vocab["gotothismonth"]      = "Bu ayı görüntüle";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Bu bölge için Toplantı Salonu tanımlı değil.";
 
 // Used in admin.php
 $vocab["edit"]               = "Düzenle";
@@ -345,7 +340,6 @@ $vocab["invalid_area"]            = "Geçersiz alan!";
 $vocab["invalid_room_name"]       = "Bu toplantı odası adı zaten kullanılmakta!";
 $vocab["invalid_email"]      	  = "Geçersiz eposta!";
 $vocab["invalid_resolution"]      = "Geçersiz kombinasyon ilk slot, son slot ve çözünürlük!";
-$vocab["too_many_slots"]          = 'Konfigürasyon dosyasındaki $max_slots değerini arttırmalısınız!';
 $vocab["general_settings"]        = "Genel";
 $vocab["time_settings"]           = "Slot zamanı";
 $vocab["confirmation_settings"]   = "Onay ayarları";

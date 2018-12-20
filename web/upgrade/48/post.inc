@@ -7,7 +7,7 @@ $message = "If you have just upgraded to MRBS 1.5.1 or later please " .
            "use persistent connections.";
 ?>
 
-<script type="text/javascript">
+<script>
 //<![CDATA[
   alert("<?php echo $message?>");
 //]];

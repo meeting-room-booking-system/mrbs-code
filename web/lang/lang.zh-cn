@@ -18,7 +18,7 @@ $vocab["help"]               = "帮助";
 $vocab["search"]             = "搜索";
 $vocab["outstanding"]        = "待定的预订";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "预订:";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "区域";
@@ -26,9 +26,19 @@ $vocab["daybefore"]          = "前一天";
 $vocab["dayafter"]           = "后一天";
 $vocab["gototoday"]          = "今天";
 $vocab["goto"]               = "前往";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "高亮显示这一行";
 $vocab["click_to_reserve"]   = "点击单元格进行预订";
 $vocab["timezone"]           = "时区";
+$vocab["weekbefore"]         = "前一周";
+$vocab["weekafter"]          = "后一周";
+$vocab["gotothisweek"]       = "本周";
+$vocab["monthbefore"]        = "上个月";
+$vocab["monthafter"]         = "下个月";
+$vocab["gotothismonth"]      = "本月";
+$vocab["no_rooms_for_area"]  = "这个区域没有定义房间";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "日视图";
@@ -58,9 +68,9 @@ $vocab["minute_lc"]          = "分";
 $vocab["minutes"]            = "分";
 $vocab["hour_lc"]            = "小时";
 $vocab["hours"]              = "小时";
-$vocab["day_lc"]             = "天";
+$vocab["day"]                = "天";
 $vocab["days"]               = "天";
-$vocab["week_lc"]            = "星期";
+$vocab["week"]               = "星期";
 $vocab["weeks"]              = "星期";
 $vocab["year_lc"]            = "年";
 $vocab["years"]              = "年";
@@ -199,7 +209,6 @@ $vocab["max_per_year_area"]       = "该区域内每人每年最大预定数是"
 $vocab["max_per_future_area"]     = "该区域内每人每天最大重要预定数是";
 $vocab["skip_and_book"]           = "忽略并预订";
 $vocab["skip_and_book_note"]      = "继续预订, 忽略以前的有冲突的条目";
-$vocab["changes_saved"]           = "已保存修改";
 
 // Used in pending.php
 $vocab["pending"]            = "待批准的预订";
@@ -269,7 +278,6 @@ $vocab["of"]                 = " 共 ";
 $vocab["previous"]           = "前一页";
 $vocab["next"]               = "下一页";
 $vocab["entry"]              = "条目";
-$vocab["advanced_search"]    = "高级搜索";
 $vocab["search_button"]      = "搜索";
 $vocab["search_for"]         = "搜索";
 $vocab["from"]               = "从";
@@ -318,19 +326,6 @@ $vocab["delete_entries_warning"] = "警告!  这将会删除所有符合搜索�
 
 $vocab["delete_entries_failed"] = "不能删除这些条目.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "前一周";
-$vocab["weekafter"]          = "后一周";
-$vocab["gotothisweek"]       = "本周";
-
-// Used in month.php
-$vocab["monthbefore"]        = "上个月";
-$vocab["monthafter"]         = "下个月";
-$vocab["gotothismonth"]      = "本月";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "这个区域没有定义房间";
-
 // Used in admin.php
 $vocab["edit"]               = "编辑";
 $vocab["delete"]             = "删除";
@@ -367,7 +362,6 @@ $vocab["invalid_area"]            = "无效的区域!";
 $vocab["invalid_room_name"]       = "房间名在该区域内已被使用!";
 $vocab["invalid_email"]           = "无效的 Email 地址!";
 $vocab["invalid_resolution"]      = "第一时段、最后时段和分辨率的组合非法!";
-$vocab["too_many_slots"]          = '你需要在配置文件中加大 $max_slots 的的数值!';
 $vocab["general_settings"]        = "一般设置";
 $vocab["time_settings"]           = "时段设置";
 $vocab["confirmation_settings"]   = "确定设置";

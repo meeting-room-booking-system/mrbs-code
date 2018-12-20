@@ -11,14 +11,10 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
-// =================================================================================
-
-// Extend the init() function 
 ?>
 
-var oldInitEditUsers = init;
-init = function(args) {
-  oldInitEditUsers.apply(this, [args]);
+
+$(function() {
 
   <?php // Turn the list of users into a dataTable ?>
   
@@ -36,5 +32,6 @@ init = function(args) {
   <?php // Get the types and feed those into dataTables ?>
   tableOptions.columnDefs = getTypes($('#users_table'));
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
-};
+  
+});
 

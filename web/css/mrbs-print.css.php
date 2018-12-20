@@ -16,8 +16,14 @@ http_headers(array("Content-type: text/css"),
 
 td.new a, a.new_booking img { display: none; }
 
-.dwm_main th {color: <?php echo $header_font_color_print ?>}
-.dwm_main th a:link, .row_labels a:link {color: <?php echo $anchor_link_color_header_print ?>}
+.dwm_main th {
+  color: <?php echo $header_font_color_print ?>;
+}
+
+.dwm_main th a:link,
+.row_labels a:link {
+  color: <?php echo $anchor_link_color_header_print ?>;
+}
 
 <?php
 // redefine table and cell border colours so that they are visible in the print view
@@ -68,24 +74,22 @@ div.booking_list div {
   box-sizing: border-box;
 }
 
-    
-<?php
-// add a top margin to the colour key table to separate it from the main table
-// (in the screen view the separation is provided by the Goto Prev/This/Next links
-?>
-table#colour_key {margin-top: 1em}
 
 <?php
 // Generate the rules to give the colour coding by booking type in the day/week/month views
 // and the colour key
 foreach ($color_types as $type => $col)
 {
-  echo "td.$type, #month_main div.$type, #colour_key td.$type {border: 2px solid $col}\n";
+  echo "td.$type, div.$type {border: 2px solid $col}\n";
 }
 
 // hide DataTable buttons in print
 ?>
 
-.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {display: none; }
+.ColVis_Button, .dataTables_filter, .dataTables_length, .dataTables_paginate {
+  display: none;
+}
 
-.ui-resizable-handle {display: none}
+.ui-resizable-handle {
+  display: none;
+}

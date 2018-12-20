@@ -19,7 +19,7 @@ $vocab["help"]               = "Ajutor";
 $vocab["search"]             = "Cautare";
 $vocab["outstanding"]        = "Rezervari in asteptare";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Rezervari pentru";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Zone";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Ziua precedenta";
 $vocab["dayafter"]           = "Ziua urmatoare";
 $vocab["gototoday"]          = "Astazi";
 $vocab["goto"]               = "Afiseaza";
+$vocab["nav_day"]            = "Zi";
+$vocab["nav_week"]           = "Saptamana";
+$vocab["nav_month"]          = "Luna";
 $vocab["highlight_line"]     = "Evidentiaza aceasta linie";
 $vocab["click_to_reserve"]   = "Apasa pe casuta pentru rezervare";
 $vocab["timezone"]           = "Fus orar";
+$vocab["weekbefore"]         = "Mergi La Saptamana Trecuta";
+$vocab["weekafter"]          = "Mergi La Saptamana Viitoare";
+$vocab["gotothisweek"]       = "Mergi La Saptamana Curenta";
+$vocab["monthbefore"]        = "Mergi La Luna Trecuta";
+$vocab["monthafter"]         = "Mergi La Luna Viitoare";
+$vocab["gotothismonth"]      = "Mergi La Luna Curenta";
+$vocab["no_rooms_for_area"]  = "Nicio sala definita pentru aceasta zona";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Vezi ziua";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]          = "minut";
 $vocab["minutes"]            = "minute";
 $vocab["hour_lc"]            = "ora";
 $vocab["hours"]              = "ore";
-$vocab["day_lc"]             = "zi";
+$vocab["day"]                = "zi";
 $vocab["days"]               = "zile";
-$vocab["week_lc"]            = "saptamana";
+$vocab["week"]               = "saptamana";
 $vocab["weeks"]              = "saptamani";
 $vocab["year_lc"]            = "an";
 $vocab["years"]              = "ani";
@@ -204,7 +214,6 @@ $vocab["max_per_year_area"]       = "Numarul maxim de rezervari pe an pe utiliza
 $vocab["max_per_future_area"]     = "Numarul maxim de rezervaru restante pe utilizator in aceasta zona este";
 $vocab["skip_and_book"]           = "Ignora si rezerva";
 $vocab["skip_and_book_note"]      = "Continua rezervarile, ignorand conflictele";
-$vocab["changes_saved"]           = "Modificari salvate";
 
 // Used in pending.php
 $vocab["pending"]            = "Rezervari asteptand raspuns";
@@ -275,7 +284,6 @@ $vocab["of"]                 = "a ";
 $vocab["previous"]           = "Precedenta";
 $vocab["next"]               = "Urmatoare";
 $vocab["entry"]              = "Rezervare";
-$vocab["advanced_search"]    = "Cautare avansata";
 $vocab["search_button"]      = "Cautare";
 $vocab["search_for"]         = "Cautare pentru";
 $vocab["from"]               = "De la";
@@ -326,19 +334,6 @@ $vocab["delete_entries_warning"] = "ATENTIE!  Se vor sterge toate rezervarile co
                                    "Numar total de rezervari ce vor fi sterse: ";
 $vocab["delete_entries_failed"] = "Rezervarile nu au putut fi sterse.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Mergi La Saptamana Trecuta";
-$vocab["weekafter"]          = "Mergi La Saptamana Viitoare";
-$vocab["gotothisweek"]       = "Mergi La Saptamana Curenta";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Mergi La Luna Trecuta";
-$vocab["monthafter"]         = "Mergi La Luna Viitoare";
-$vocab["gotothismonth"]      = "Mergi La Luna Curenta";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nicio sala definita pentru aceasta zona";
-
 // Used in admin.php
 $vocab["edit"]               = "Modificare";
 $vocab["delete"]             = "Stergere";
@@ -375,7 +370,6 @@ $vocab["invalid_area"]            = "Zona invalida!";
 $vocab["invalid_room_name"]       = "Acest nume de sala a fost deja folosit in zona!";
 $vocab["invalid_email"]           = "Adresa de email invalida!";
 $vocab["invalid_resolution"]      = "Combinatie de primul slot, ultimul slot si resolutie, invalida!";
-$vocab["too_many_slots"]          = 'Trebuie sa maresti valoarea pentru $max_slots in config file!';
 $vocab["general_settings"]        = "General";
 $vocab["time_settings"]           = "Perioade Slor";
 $vocab["period_settings"]         = "Nume Perioada";

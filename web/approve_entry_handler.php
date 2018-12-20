@@ -20,7 +20,7 @@ $note = get_form_var('note', 'string');
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 $user = getUserName();
 
 // Retrieve the booking details
@@ -40,7 +40,7 @@ if (strpos($returl, '?') === FALSE)
                   
 if (isset($action))
 {                     
-  if ($need_to_send_mail)
+  if (need_to_send_mail())
   { 
     $is_new_entry = TRUE;  // Treat it as a new entry unless told otherwise    
   }
@@ -48,9 +48,9 @@ if (isset($action))
   // If we have to approve or reject a booking, check that we have rights to do so
   // for this room
   if ((($action == "approve") || ($action == "reject")) 
-       && !auth_book_admin($user, $room_id))
+       && !is_book_admin($room_id))
   {
-    showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
+    showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
     exit;
   }
   
@@ -58,7 +58,7 @@ if (isset($action))
   {
     // ACTION = "APPROVE"
     case 'approve':
-      if ($need_to_send_mail)
+      if (need_to_send_mail())
       {
         $is_new_entry = FALSE;
         // Get the current booking data, before we change anything, for use in emails
@@ -102,7 +102,7 @@ if (isset($action))
   
   
   // Now send an email if required and the operation was successful
-  if ($result && $need_to_send_mail)
+  if ($result && need_to_send_mail())
   {
     // Get the area settings for this area (we will need to know if periods are enabled
     // so that we will kniow whether to include iCalendar information in the email)

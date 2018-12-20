@@ -10,8 +10,8 @@ if ($use_strict)
 {
   echo "'use strict';\n";
 }
-
 ?>
+
 var isAdmin;
 
 <?php
@@ -136,7 +136,7 @@ function checkTimeSlots(jqDate)
                   year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
                   tz: areaConfig('timezone'),
                   slots: slots};
-    $.post('check_slot_ajax.php', params, function(result) {
+    $.post('ajax/check_slot.php', params, function(result) {
         $.each(result.slots, function(key, value) {
             $('#' + result.id).find('option[value="' + value + '"]').remove();
           });
@@ -180,11 +180,11 @@ function onAllDayClick()
     firstSlot = parseInt(startSelect.find('option').first().val(), 10);
     lastSlot = parseInt(endSelect.find('option').last().val(), 10);
     onAllDayClick.oldStart = parseInt(startSelect.val(), 10);
-    onAllDayClick.oldStartDatepicker = startDatepicker.datepicker('getDate');
+    onAllDayClick.oldStartDatepicker = startDatepicker.val();
     startSelect.val(firstSlot);
     startSelect.prop('disabled', true);
     onAllDayClick.oldEnd = parseInt(endSelect.val(), 10);
-    onAllDayClick.oldEndDatepicker = endDatepicker.datepicker('getDate');
+    onAllDayClick.oldEndDatepicker = endDatepicker.val();
     endSelect.val(lastSlot);
     if ((lastSlot < firstSlot) && 
         (onAllDayClick.oldStartDatepicker === onAllDayClick.oldEndDatepicker))
@@ -197,13 +197,13 @@ function onAllDayClick()
       {
         date = new Date(onAllDayClick.oldStartDatepicker);
         date.setDate(date.getDate() - 1);
-        startDatepicker.datepicker('setDate', date);
+        startDatepicker.val(date.toISOString().split('T')[0]);
       }
       else
       {
         date = new Date(onAllDayClick.oldEndDatepicker);
         date.setDate(date.getDate() + 1);
-        endDatepicker.datepicker('setDate', date);
+        endDatepicker.val(date.toISOString().split('T')[0]);
       }
     }
     endSelect.prop('disabled', true);
@@ -211,10 +211,10 @@ function onAllDayClick()
   else  <?php // restore the old values and re-enable the inputs ?>
   {
     startSelect.val(onAllDayClick.oldStart);
-    startDatepicker.datepicker('setDate', onAllDayClick.oldStartDatepicker);
+    startDatepicker.val(onAllDayClick.oldStartDatepicker);
     startSelect.prop('disabled', false);
     endSelect.val(onAllDayClick.oldEnd);
-    endDatepicker.datepicker('setDate', onAllDayClick.oldEndDatepicker);
+    endDatepicker.val(onAllDayClick.oldEndDatepicker);
     endSelect.prop('disabled', false);
   }
 
@@ -664,7 +664,7 @@ vocab.minutes = {singular: '<?php echo escape_js(get_vocab("minute_lc")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("minutes")) ?>'};
 vocab.hours   = {singular: '<?php echo escape_js(get_vocab("hour_lc")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("hours")) ?>'};
-vocab.days    = {singular: '<?php echo escape_js(get_vocab("day_lc")) ?>',
+vocab.days    = {singular: '<?php echo escape_js(get_vocab("day")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("days")) ?>'};
 
 
@@ -768,16 +768,15 @@ function getDateDifference()
 {
   var diff,
       secondsPerDay = <?php echo SECONDS_PER_DAY ?>,
-      start = $('#start_date_alt').val().split('-'),
+      start = $('#start_date').val().split('-'),
       startDate = new Date(parseInt(start[0], 10), 
                            parseInt(start[1], 10) - 1,
                            parseInt(start[2], 10),
                            12),
-      endDateAlt = $('#end_date_alt'),
-      end,
-      endDate;
+      endDate = $('#end_date'),
+      end;
       
-  if (endDateAlt.length === 0)
+  if (endDate.length === 0)
   {
     <?php
     // No end date selector, so assume the end date is
@@ -787,7 +786,7 @@ function getDateDifference()
   }
   else
   {
-    end = $('#end_date_alt').val().split('-'); 
+    end = endDate.val().split('-'); 
     endDate = new Date(parseInt(end[0], 10), 
                        parseInt(end[1], 10) - 1,
                        parseInt(end[2], 10),
@@ -1048,46 +1047,49 @@ function adjustSlotSelectors()
       // Limit the end slots to the maximum duration if that is enabled, if the
       // user is not an admin
       ?>
-      if (!isAdmin && maxDurationEnabled)
+      if (!isAdmin)
       {
-        <?php
-        // Calculate the duration in periods or seconds
-        ?>
-        duration =  thisValue - startValue;
-        if (enablePeriods)
+        if (maxDurationEnabled)
         {
-          duration = duration/60 + 1;  <?php // because of the way periods work ?>
-          duration += dateDifference * nPeriods;
-        }
-        else
-        {
-          duration += dateDifference * secondsPerDay;
-        }
-        maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
-        if (duration > maxDuration)
-        {
-          if (i === 0)
+          <?php
+          // Calculate the duration in periods or seconds
+          ?>
+          duration =  thisValue - startValue;
+          if (enablePeriods)
           {
-            endSelect.append($(this).val(thisValue).text(nbsp));
-            var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
-            if (enablePeriods)
-            {
-              errorMessage += maxDurationPeriods + nbsp;
-              errorMessage += (maxDurationPeriods > 1) ? vocab.periods.plural : vocab.periods.singular;
-            }
-            else
-            {
-              errorMessage += maxDurationQty + nbsp + maxDurationUnits;
-            }
-            $('#end_time_error').text(errorMessage);
+            duration = duration/60 + 1;  <?php // because of the way periods work ?>
+            duration += dateDifference * nPeriods;
           }
           else
           {
-            return false;
+            duration += dateDifference * secondsPerDay;
+          }
+          maxDuration = (enablePeriods) ? maxDurationPeriods : maxDurationSecs;
+          if (duration > maxDuration)
+          {
+            if (i === 0)
+            {
+              endSelect.append($(this).val(thisValue).text(nbsp));
+              var errorMessage = '<?php echo escape_js(get_vocab("max_booking_duration")) ?>' + nbsp;
+              if (enablePeriods)
+              {
+                errorMessage += maxDurationPeriods + nbsp;
+                errorMessage += (maxDurationPeriods > 1) ? vocab.periods.plural : vocab.periods.singular;
+              }
+              else
+              {
+                errorMessage += maxDurationQty + nbsp + maxDurationUnits;
+              }
+              $('#end_time_error').text(errorMessage);
+            }
+            else
+            {
+              return false;
+            }
           }
         }
       }
-      
+
       if ((thisValue > startValue) ||
           ((thisValue === startValue) && enablePeriods) ||
           (dateDifference !== 0))
@@ -1126,16 +1128,10 @@ var editEntryVisChanged = function editEntryVisChanged() {
     conflictTimer(true);
   };
 
-<?php
-// =================================================================================
 
-// Extend the init() function 
-?>
-
-var oldInitEditEntry = init;
-init = function(args) {
-  oldInitEditEntry.apply(this, [args]);
   
+$(function() {
+ 
   isAdmin = args.isAdmin;
   
   <?php
@@ -1233,8 +1229,8 @@ init = function(args) {
     endSelect.prop('disabled', true);
     onAllDayClick.oldStart = startSelect.val();
     onAllDayClick.oldEnd = endSelect.val();
-    onAllDayClick.oldStartDatepicker = form.find('#start_date').datepicker('getDate');
-    onAllDayClick.oldEndDatepicker = form.find('#end_date').datepicker('getDate');
+    onAllDayClick.oldStartDatepicker = form.find('#start_date').val();
+    onAllDayClick.oldEndDatepicker = form.find('#end_date').val();
   }
 
 
@@ -1397,7 +1393,7 @@ init = function(args) {
     {
       if ($('#end_date').css('visibility') === 'hidden')
       {
-        $('#end_date_alt').val($('#start_date_alt').val());
+        $('#end_date').val($('#start_date').val());
       }
     }
     
@@ -1439,4 +1435,5 @@ init = function(args) {
   {
     document.addEventListener(prefix + "visibilitychange", editEntryVisChanged);
   }
-};
+  
+});

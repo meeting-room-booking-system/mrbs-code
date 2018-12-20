@@ -56,7 +56,6 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   global $strftime_format, $is_private_field;
 
   $room_id = $booking['room_id'];
-  $user = getUserName();
   
   get_area_settings(get_area($room_id));
 
@@ -99,8 +98,6 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
   {
     unpack_status($row);
     $starts = getdate($row['start_time']);
-    $param_ym = "area=$area&amp;year=$starts[year]&amp;month=".$starts['mon'];
-    $param_ymd = $param_ym . "&amp;day=" . $starts['mday'];
 
     if ($enable_periods)
     {
@@ -116,17 +113,27 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
     if (is_private_event($row['private']) && 
         $is_private_field['entry.name'] &&
-        !getWritable($row['create_by'], $user, $room_id))
+        !getWritable($row['create_by'], $room_id))
     {
        $row['name'] = get_vocab("unavailable");
     }
 
-    // enclose  the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $err[] = "<a href=\"view_entry.php?id=".$row['id']."\">".$row['name']."</a>"
-      . " (" . $startstr . ', ' . $row['room_name'] .") "
-      . "<span>(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
-      . " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
-      . " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</span>";
+    // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
+    $vars = array('year'  => $starts['year'],
+                  'month' => $starts['mon'],
+                  'day'   => $starts['mday'],
+                  'area'  => $area,
+                  'room'  => $room_id);
+                  
+    $query = http_build_query($vars, '', '&');
+    
+    $err[] = "<a href=\"view_entry.php?id=" .$row['id'] . '">' . $row['name'] . '</a>' .
+             ' (' . $startstr . ', ' . $row['room_name'] . ') ' .
+             '<span>(' .
+             '<a href="index.php?view=day&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewday') . '</a> | ' .
+             '<a href="index.php?view=week&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewweek') . '</a> | ' .
+             '<a href="index.php?view=month&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewmonth') . '</a>' .
+             ')</span>';
   }
 
   return $err;
@@ -298,8 +305,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   
   // If the user is a booking admin for this room then we still check for policy
   // violations, but they are for information only and are classed as 'notices'
-  $user = getUserName();
-  $violation_status = (auth_book_admin($user, $booking['room_id'])) ? 'notices' : 'errors';
+  $violation_status = (is_book_admin($booking['room_id'])) ? 'notices' : 'errors';
 
    
   // Because MRBS has no notion of where we are in the day if we're using periods,
@@ -557,10 +563,8 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 // Get the number of outstanding (ie waiting to be approved) for a user
 function get_entries_n_outstanding($user)
 {
-  global $tbl_entry, $tbl_room, $tbl_area,
-         $max_level;
+  global $tbl_entry, $tbl_room, $tbl_area;
   
-  $is_admin = (authGetUserLevel($user) >= $max_level);
   $sql_approval_enabled = some_area_predicate('approval_enabled');
   $sql_params = array();
 
@@ -574,7 +578,7 @@ function get_entries_n_outstanding($user)
              AND R.disabled = 0
              AND A.disabled = 0
              AND $sql_approval_enabled";
-  if (!$is_admin)
+  if (!is_book_admin())
   {
     // Ordinary users can only see their own
     $sql .= " AND create_by=?";
@@ -590,7 +594,6 @@ function get_entries_n_outstanding($user)
  * Delete an entry, or optionally all entries.   Will also delete any newly
  * orphaned rows in the repeat table.
  * 
- * $user   - Who's making the request
  * $id     - The entry to delete
  * $series - If set, delete the series, except user modified entries
  * $all    - If set, include user modified entries in the series delete
@@ -599,7 +602,7 @@ function get_entries_n_outstanding($user)
  * have been deleted.
  *
  */
-function mrbsDelEntry($user, $id, $series, $all)
+function mrbsDelEntry($id, $series, $all)
 {
   global $tbl_entry, $tbl_repeat;
   
@@ -634,7 +637,7 @@ function mrbsDelEntry($user, $id, $series, $all)
 
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
-    if(!getWritable($row['create_by'], $user, $room_id))
+    if(!getWritable($row['create_by'], $room_id))
     {
       continue;
     }
@@ -1727,7 +1730,7 @@ function mrbsGetRoomArea($id)
 // error in $error
 function mrbsAddArea($name, &$error)
 {
-  global $maxlength, $tbl_area, $area_defaults, $boolean_fields;
+  global $tbl_area, $area_defaults, $boolean_fields;
   
   // First of all check that we've got a name
   if (!isset($name) || ($name === ''))
@@ -1737,7 +1740,7 @@ function mrbsAddArea($name, &$error)
   }
   
   // Truncate the name field to the maximum length as a precaution.
-  $name = utf8_substr($name, 0, $maxlength['area.area_name']);
+  $name = utf8_substr($name, 0, maxlength('area.area_name'));
   // Acquire a mutex to lock out others who might be editing the area
   if (!db()->mutex_lock($tbl_area))
   {
@@ -1807,7 +1810,7 @@ function mrbsAddArea($name, &$error)
 // error in $error
 function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room_admin_email='')
 {
-  global $maxlength, $tbl_room;
+  global $tbl_room;
   
   // First of all check that we've got a name
   if (!isset($name) || ($name === ''))
@@ -1817,8 +1820,8 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   }
   
   // Truncate the name and description fields to the maximum length as a precaution.
-  $name = utf8_substr($name, 0, $maxlength['room.room_name']);
-  $description = utf8_substr($description, 0, $maxlength['room.description']);
+  $name = utf8_substr($name, 0, maxlength('room.room_name'));
+  $description = utf8_substr($description, 0, maxlength('room.description'));
 
   if (empty($capacity))
   {

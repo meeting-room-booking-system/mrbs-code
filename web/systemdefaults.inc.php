@@ -11,6 +11,18 @@ namespace MRBS;
  *
  **************************************************************************/
 
+/********
+ * System
+ ********/
+
+// Set $debug = true to force MRBS to output debugging information to the browser.
+// Caching of files is also disabled when $debug is set.
+// WARNING!  Do not use this for production systems, as not only will it generate
+// unnecessary output in the broswer, but it could also expose sensitive security
+// information (eg database usernames and passwords).
+$debug = false;
+
+ 
 /**********
  * Timezone
  **********/
@@ -178,18 +190,6 @@ $theme = "default";
 // following the "Rooms" link in MRBS.
 
 
-// GENERAL SETTINGS
-// ----------------
-
-// This is the maximum number of rows (timeslots or periods) that one can
-// expect to see in the day and week views.    It is used by mrbs.css.php for
-// creating classes.    It does not matter if it is too large, except for the
-// fact that more CSS than necessary will be generated.  (The variable is ignored
-// if $times_along_top is set to true).
-
-$max_slots = 60;
-
-
 // TIMES SETTINGS
 // --------------
 
@@ -270,7 +270,7 @@ $weekdays = array(1, 2, 3, 4, 5);
 //
 // By default the hidden days will be removed completely from the main table in the week and month
 // views.   You can alternatively arrange for them to be shown as narrow, greyed-out columns
-// by editing the CSS file.   Look for $column_hidden_width in mrbs.css.php.
+// by defining some custom CSS for the .hidden_day class.
 //
 // [Note that although they are hidden from display in the week and month views, they 
 // can still be booked from the edit_entry form and you can display the bookings by
@@ -282,26 +282,40 @@ $hidden_days = array();
 $twentyfourhour_format = true;
 
 // Formats used for dates and times.   For formatting options
-// see http://php.net/manual/function.strftime.php
-$strftime_format['date']         = "%A %d %B %Y";  // Used in Day view
-$strftime_format['date_short']   = "%x";           // Used in Search results
-$strftime_format['dayname']      = "%A";           // Used in Month view
-$strftime_format['dayname_edit'] = "%a";           // Used in edit_entry form
-$strftime_format['dayname_cal']  = "%a";           // Used in mini calendars
-$strftime_format['month_cal']    = "%B";           // Used in mini calendars
-$strftime_format['mon']          = "%b";           // Used in date selectors
-$strftime_format['ampm']         = "%p";
-$strftime_format['time12']       = "%I:%M%p";      // 12 hour clock
-$strftime_format['time24']       = "%H:%M";        // 24 hour clock
-$strftime_format['datetime']     = "%c";           // Used in Help
-$strftime_format['datetime12']   = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
-$strftime_format['datetime24']   = "%H:%M - %A %d %B %Y";    // 24 hour clock
+// see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically
+// convert the following formats which are not supported on Windows: %e, %l, %P and %R.
+$strftime_format['date']              = "%A %d %B %Y";  // Used in Day view
+$strftime_format['date_short']        = "%x";           // Used in Search results
+$strftime_format['dayname']           = "%A";           // Used in Month view
+$strftime_format['dayname_edit']      = "%a";           // Used in edit_entry form
+$strftime_format['weekview_headers']  = "%a<br>%b %d";  // Used in the table header in Week view
+$strftime_format['minical_monthname'] = "%B %Y";        // Used in mini calendar heading
+$strftime_format['minical_dayname']   = "%a";           // Used in mini calendar heading
+$strftime_format['mon']               = "%b";           // Used in date selectors
+$strftime_format['ampm']              = "%p";
+$strftime_format['time12']            = "%I:%M%p";      // 12 hour clock
+$strftime_format['time24']            = "%H:%M";        // 24 hour clock
+$strftime_format['datetime']          = "%c";           // Used in Help
+$strftime_format['datetime12']        = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
+$strftime_format['datetime24']        = "%H:%M - %A %d %B %Y";    // 24 hour clock
 // If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
 // MRBS 1.4.5 and earlier) then use
-// $strftime_format['daymonth']     = "%d %b";
-$strftime_format['daymonth']     = "%b %d";        // Used in trailer
-$strftime_format['monyear']      = "%b %Y";        // Used in trailer
-$strftime_format['monthyear']    = "%B %Y";        // Used in Month view
+// $strftime_format['daymonth']       = "%d %b";
+$strftime_format['daymonth']          = "%b %d";
+
+// Used in the day/week/month views.  Note that for the week view we have to
+// cater for three possible cases, for example:
+//    Years differ:                   26 Dec 2016 - 1 Jan 2017
+//    Years same, but months differ:  30 Jan - 5 Feb 2017
+//    Years and months the same:      6 - 12 Feb 2017
+// Note that the separator between the start and end of the week is just '-',
+// so any spaces required need to put in the formats below.
+$strftime_format['view_day']          = "%A %e %B %Y";
+$strftime_format['view_month']        = "%B %Y";
+$strftime_format['view_week_end']     = " %e %B %Y";
+$strftime_format['view_week_start']   = "%e ";        // year and month the same
+$strftime_format['view_week_start_m'] = "%e %B ";     // just the year the same
+$strftime_format['view_week_start_y'] = "%e %B %Y ";  // years (and months) different
 
 // Whether or not to display the timezone
 $display_timezone = false;
@@ -318,25 +332,18 @@ $refresh_rate = 0;
 // Set to 0 to disable
 $ajax_refresh_rate = 10;
 
-// Trailer type.   false gives a trailer complete with links to days, weeks and months before
-// and after the current date.    true gives a simpler trailer that just has links to the
-// current day, week and month.
-$simple_trailer = false;
-
-// should areas be shown as a list or a drop-down select box?
-$area_list_format = "list";
-//$area_list_format = "select";
-
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
 // "both" for both. Default is "both", but 6 entries per day are shown instead
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To view weeks in the bottom trailer as week numbers (42) instead of
-// 'first day of the week' (13 Oct), set this to true.  Will also give week
-// numbers in the month view
+// To show ISO week numbers, set this to true
 $view_week_number = false;
+
+// Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
+// displayed anyway if the screen is wide enough.)
+$display_mincals = true;
 
 // To display week numbers in the mini-calendars, set this to true. The week
 // numbers are only accurate if you set $weekstarts to 1, i.e. set the
@@ -357,10 +364,6 @@ $row_labels_both_sides = false;
 // To display the column headers (times, rooms or days) on the bottom of the table as
 // well as the top in the day and week views, set to true;
 $column_labels_both_ends = false;
-
-// To display the mini caldandars at the bottom of the day week and month views
-// set this value to true
-$display_calendar_bottom = false; 
 
 // Define default starting view (month, week or day)
 // Default is day
@@ -566,7 +569,7 @@ $skip_default = false;
 // 
 // $edit_entry_field_order = array('name', 'in_charge');
 // 
-// Valid entries in this array are: 'name', 'description', 'start_time',
+// Valid entries in this array are: 'create_by', 'name', 'description', 'start_time',
 // 'end_time', 'room_id', 'type', 'confirmation_status', 'privacy_status',
 // plus any custom fields you may have defined. Fields that are not
 // mentioned in the array are appended at the end, in their usual order.
@@ -979,6 +982,10 @@ $auth['only_admin_can_select_multiroom'] = false;
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
 
+// Set this to true if you don't want admins to be able to make bookings
+// on behalf of other users
+$auth['admin_can_only_book_for_self'] = false;
+
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to true
 $auth['deny_public_access'] = false;
@@ -1183,11 +1190,11 @@ $mail_settings['disabled'] = false;
  * Language
  **********/
 
-// Set this to 1 to disable the automatic language changing MRBS performs
+// Set this to true to disable the automatic language changing MRBS performs
 // based on the user's browser language settings. It will ensure that
 // the language displayed is always the value of $default_language_tokens,
 // as specified below
-$disable_automatic_language_changing = 0;
+$disable_automatic_language_changing = false;
 
 // Set this to a different language specifier to default to different
 // language tokens. This must equate to a lang.* file in MRBS.
@@ -1196,10 +1203,11 @@ $disable_automatic_language_changing = 0;
 // have disabled automatic language changing above]
 $default_language_tokens = "en";
 
-// Set this to a valid locale (for the OS you run the MRBS server on)
-// if you want to override the automatic locale determination MRBS
-// performs.   Remember to include the codeset if appropriate.   For example,
-// on a UNIX system you would use "en_GB.utf-8" for English/GB.
+// Set this to a valid locale that is supported on the OS you run the
+// MRBS server on if you want to override the automatic locale determination
+// MRBS performs.  The locale should be in the form of a BCP 47 language
+// tag, eg 'en-GB', or 'sr-Latn-RS'.   Note that MRBS will convert this into
+// a format suitable for your OS, eg by adding '.utf-8' or changing it to 'eng'.
 $override_locale = "";
 
 // faq file language selection. IF not set, use the default english file.

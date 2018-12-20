@@ -193,26 +193,34 @@ $error = get_form_var('error', 'string');
 // Need to tell all the links where to go back to after an edit or delete
 if (!isset($returl))
 {
-  if (isset($HTTP_REFERER))
+  // We need $_SERVER['HTTP_REFERER'] to contain an actual page, and not be a directory, ie end in '/'
+  if (isset($_SERVER['HTTP_REFERER']) && (substr($_SERVER['HTTP_REFERER'], -1) != '/'))
   {
-    $returl = basename($HTTP_REFERER);
+    $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
+    $returl = basename($parsed_url['path']);
   }
   // If we haven't got a referer (eg we've come here from an email) then construct
   // a sensible place to go to afterwards
   else
   {
-    switch ($default_view)
-    {
-      case "month":
-        $returl = "month.php";
-        break;
-      case "week":
-        $returl = "week.php";
-        break;
-      default:
-        $returl = "day.php";
-    }
-    $returl .= "?year=$year&month=$month&day=$day&area=$area";
+    $returl = 'index.php';
+  }
+  
+  // Add on the query string
+  if (isset($parsed_url) && isset($parsed_url['query']))
+  {
+    $returl .= '?' . $parsed_url['query'];
+  }
+  else
+  {
+    $vars = array('view'  => $default_view,
+                  'year'  => $year,
+                  'month' => $month,
+                  'day'   => $day,
+                  'area'  => $area,
+                  'room'  => $room);
+                  
+    $returl .= '?' . http_build_query($vars, '', '&');;
   }
 }
 
@@ -223,14 +231,13 @@ if (isset($action))
 }
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
+
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
-$repeats_allowed = $is_admin || empty($auth['only_admin_can_book_repeat']);
+$repeats_allowed = is_book_admin() || empty($auth['only_admin_can_book_repeat']);
 
 $row = get_booking_info($id, $series);
 
@@ -249,7 +256,7 @@ $awaiting_approval = $row['awaiting_approval'];
 $private = $row['private'];
 // Get the creator
 $create_by = $row['create_by'];
-$writeable = getWritable($row['create_by'], $user, $row['room_id']);
+$writeable = getWritable($row['create_by'], $row['room_id']);
 $keep_private = (is_private_event($private) && !$writeable);
 
 // Work out when the last reminder was sent
@@ -363,8 +370,7 @@ if (isset($action) && ($action == "export"))
 // PHASE 1 - VIEW THE ENTRY
 // ------------------------
 
-print_header($day, $month, $year, $area, isset($room) ? $room : null);
-
+print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 if (empty($series))
 {
@@ -374,7 +380,6 @@ else
 {
   $series = 1;
 }
-
 
 // Now that we know all the data we start drawing it
 
@@ -448,7 +453,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   else
   {
     // Buttons for those who are allowed to approve this booking
-    if (auth_book_admin($user, $row['room_id']))
+    if (is_book_admin($row['room_id']))
     {
       if (!$series)
       {
@@ -611,13 +616,12 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   }
 echo "</div>\n";
 
-if (isset($HTTP_REFERER)) //remove the link if displayed from an email
+if (isset($_SERVER['HTTP_REFERER'])) //remove the link if displayed from an email
 {
   echo "<div id=\"returl\">\n";
-  echo '<a href="' . htmlspecialchars($HTTP_REFERER) . '">' . get_vocab('returnprev') . "</a>\n";
+  echo '<a href="' . htmlspecialchars($_SERVER['HTTP_REFERER']) . '">' . get_vocab('returnprev') . "</a>\n";
   echo "</div>\n";
 }
 
 
-output_trailer();
-
+print_footer();

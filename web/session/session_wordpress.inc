@@ -15,18 +15,10 @@ require_once MRBS_ROOT . '/session/functions_session.inc';
  */
 function authGet()
 {
-  global $QUERY_STRING;
   global $returl;
 
   print_header();
-
-  echo "<p>".get_vocab("norights")."</p>\n";
-
-  $target_url = this_page();
-  if (isset($QUERY_STRING))
-  {
-    $target_url = $target_url . "?" . $QUERY_STRING;
-  }
+  $target_url = this_page(true);
   print_login_form(this_page(), $target_url, $returl);
 
   exit();
@@ -37,7 +29,7 @@ function getUserName()
 {
   if (!is_user_logged_in())
   {
-    return NULL;
+    return null;
   }
   
   $current_user = wp_get_current_user();
@@ -48,15 +40,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  global $QUERY_STRING;
-
-  $target_url = this_page();
-
-  if (isset($QUERY_STRING))
-  {
-    $target_url = $target_url . "?" . $QUERY_STRING;
-  }
-  
+  $target_url = this_page(true);
   $user=getUserName();
   
   if (isset($user))
@@ -66,11 +50,8 @@ function print_logon_box()
   }
   else
   {
-    print_unknown_user();
     print_logon_button($target_url);
   } 
-  
-  print_userlist_link();
 }
 
 
@@ -122,12 +103,13 @@ if (isset($action))
       {
         $errors = $wp_user;  // $errors is a WordPress global
         print_header();
-        echo "<p>" . apply_filters ('login_errors', $wp_user->get_error_message()) . "</p>\n";
-        print_login_form(this_page(), $target_url, $returl);
+        $error_message = apply_filters('login_errors', $wp_user->get_error_message());
+        // The Wordpress error message contains HTML so don't escape it.
+        print_login_form(this_page(), $target_url, $returl, $error_message, $raw=true);
         exit();
       }
       
-      // Preserve the original $HTTP_REFERER by sending it as a GET parameter
+      // Preserve the original $_SERVER['HTTP_REFERER'] by sending it as a GET parameter
       if (!empty($returl))
       {
         // check to see whether there's a query string already

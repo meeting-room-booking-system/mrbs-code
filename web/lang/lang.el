@@ -18,7 +18,7 @@ $vocab["admin"]              = "Διαχείριση";
 $vocab["help"]               = "Βοήθεια";
 $vocab["search"]             = "Αναζήτηση";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Κρατήσεις για";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Περιοχές";
@@ -26,8 +26,18 @@ $vocab["daybefore"]          = "Μετάβαση στην προηγούμενη
 $vocab["dayafter"]           = "Μετάβαση στην επόμενη μέρα";
 $vocab["gototoday"]          = "Μετάβαση στη σημερινή μέρα";
 $vocab["goto"]               = "Μετάβαση";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
+$vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";
+$vocab["weekafter"]          = "Μετάβαση στην επόμενη εβδομάδα";
+$vocab["gotothisweek"]       = "Μετάβαση στην τρέχουσα εβδομάδα";
+$vocab["monthbefore"]        = "Μετάβαση στον προηγούμενο μήνα";
+$vocab["monthafter"]         = "Μετάβαση στον επόμενο μήνα";
+$vocab["gotothismonth"]      = "Μετάβαση στον τρέχοντα μήνα";
+$vocab["no_rooms_for_area"]  = "Δεν έχουν οριστεί αίθουσες για αυτή την περιοχή";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Προβολή ανά ημέρα";
@@ -107,7 +117,7 @@ $vocab["logoff"]             = "Έξοδος (Log Off)";
 $vocab["username_or_email"]  = "Ψευδώνυμο ή ηλεκ. διεύθυνση";
 
 // Authentication database
-$vocab["user_list"]          = "User list";
+$vocab["user_list"]          = "Users";
 $vocab["edit_user"]          = "Edit user";
 $vocab["delete_user"]        = "Delete this user";
 //$vocab["users.name"]         = Use the same as above, for consistency.
@@ -133,7 +143,6 @@ $vocab["of"]                 = " από ";
 $vocab["previous"]           = "Προηγούμενη";
 $vocab["next"]               = "Επόμενη";
 $vocab["entry"]              = "Αίτηση";
-$vocab["advanced_search"]    = "Προηγμένη αναζήτηση";
 $vocab["search_button"]      = "Αναζήτηση";
 $vocab["search_for"]         = "Αναζήτηση για";
 $vocab["from"]               = "Από";
@@ -159,19 +168,6 @@ $vocab["total"]              = "Σύνολο";
 $vocab["submitquery"]        = "Εκτέλεση αναφοράς";
 $vocab["sort_rep"]           = "Sort Report by";
 $vocab["sort_rep_time"]      = "Start Date/Time";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Μετάβαση στην προηγούμενη εβδομάδα";
-$vocab["weekafter"]          = "Μετάβαση στην επόμενη εβδομάδα";
-$vocab["gotothisweek"]       = "Μετάβαση στην τρέχουσα εβδομάδα";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Μετάβαση στον προηγούμενο μήνα";
-$vocab["monthafter"]         = "Μετάβαση στον επόμενο μήνα";
-$vocab["gotothismonth"]      = "Μετάβαση στον τρέχοντα μήνα";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Δεν έχουν οριστεί αίθουσες για αυτή την περιοχή";
 
 // Used in admin.php
 $vocab["edit"]               = "Τροποποίηση";

@@ -74,12 +74,23 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   {
     return false;
   }
+  
   <?php
   // Remove the <colgroup>.  This is only needed to assist in the formatting
   // of the non-datatable version of the table.   When we have a datatable,
   // the datatable sorts out its own formatting.
   ?>
   table.find('colgroup').remove();
+  
+  <?php
+  // In the latest releases of DataTables a CSS rule of 'width: 100%' does not work with FixedColumns.
+  // Instead you have to either set a style attribute of 'width: 100%' or set a width attribute of '100%'.
+  // The former would cause problems with sites that have a Content Security Policy of "style-src 'self'" -
+  // though this is a bit academic since DataTables contravenes it anyway, but maybe things will change
+  // in the future.  The latter isn't ideal either because 'width' is a deprecated attribute, but we set
+  // the width attribute here as the lesser of two evils.
+  ?>
+  table.attr('width', '100%');
   
   <?php // Set up the default options ?>
   defaultOptions = {
@@ -99,7 +110,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   
   <?php
   // Set the language file to be used
-  if ($lang_file = get_datatable_lang_file('../jquery/datatables/language'))
+  $datatable_dir = '../jquery/datatables/language';
+  if ($lang_file = get_datatable_lang_file($datatable_dir))
   {
     // If using the language.url way of loading a DataTables language file,
     // then the file must be valid JSON.   The .lang files that can be 
@@ -109,7 +121,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // method then the '../' would need to be stripped off the pathname, as in
     //    $lang_file = substr($lang_file, 3); // strip off the '../'
     ?>
-    defaultOptions.language = <?php include $lang_file ?>;
+    defaultOptions.language = <?php include $datatable_dir . '/' . $lang_file ?>;
     <?php
   }
   ?>
@@ -184,7 +196,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     ?>
   }
 
-  $('.js div.datatable_container').css('visibility', 'visible');
+  $('.datatable_container').css('visibility', 'visible');
   <?php // Need to adjust column sizing after the table is made visible ?>
   dataTable.columns.adjust();
   

@@ -19,7 +19,7 @@ $vocab["help"]               = "Help";
 $vocab["search"]             = "Zoek";
 $vocab["outstanding"]        = "Openstaande boekingen";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Boekingen voor";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Gebouwen";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Naar Vorige Dag";
 $vocab["dayafter"]           = "Naar Volgende Dag";
 $vocab["gototoday"]          = "Naar Vandaag";
 $vocab["goto"]               = "ga naar";
+$vocab["nav_day"]            = "Dag";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Maand";
 $vocab["highlight_line"]     = "Markeer deze regel";
 $vocab["click_to_reserve"]   = "Klik op dit vak om een reservering te maken.";
 $vocab["timezone"]           = "Tijdzone";
+$vocab["weekbefore"]         = "Ga naar vorige week";
+$vocab["weekafter"]          = "Ga naar volgende week";
+$vocab["gotothisweek"]       = "Ga naar deze week";
+$vocab["monthbefore"]        = "Ga naar vorige maand";
+$vocab["monthafter"]         = "Ga naar volgende maand";
+$vocab["gotothismonth"]      = "Ga naar deze maand";
+$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Bekijk Dag";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]          = "minuut";
 $vocab["minutes"]            = "minuten";
 $vocab["hour_lc"]            = "uur";
 $vocab["hours"]              = "uren";
-$vocab["day_lc"]             = "dag";
+$vocab["day"]                = "dag";
 $vocab["days"]               = "dagen";
-$vocab["week_lc"]            = "week";
+$vocab["week"]               = "week";
 $vocab["weeks"]              = "weken";
 $vocab["year_lc"]            = "yaar";
 $vocab["years"]              = "jaren";
@@ -226,7 +236,6 @@ $vocab["of"]                 = " van ";
 $vocab["previous"]           = "Vorige";
 $vocab["next"]               = "Volgende";
 $vocab["entry"]              = "Boeking";
-$vocab["advanced_search"]    = "Uitgebreid Zoeken";
 $vocab["search_button"]      = "Zoek";
 $vocab["search_for"]         = "Zoeken naar";
 $vocab["from"]               = "Van";
@@ -258,19 +267,6 @@ $vocab["both"]                  = "Alles";
 $vocab["privacy_status"]        = "Privacy status";
 $vocab["search_criteria"]       = "Zoek criteria";
 $vocab["presentation_options"]  = "Presentatie mogelijkheden";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Ga naar vorige week";
-$vocab["weekafter"]          = "Ga naar volgende week";
-$vocab["gotothisweek"]       = "Ga naar deze week";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Ga naar vorige maand";
-$vocab["monthafter"]         = "Ga naar volgende maand";
-$vocab["gotothismonth"]      = "Ga naar deze maand";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Nog geen kamers gedefiniëerd voor dit gebouw";
 
 // Used in admin.php
 $vocab["edit"]               = "Wijzig";
@@ -306,7 +302,6 @@ $vocab["invalid_area"]            = "Verkeerde ruimte!";
 $vocab["invalid_room_name"]       = "Deze kamer naam is al gebruikt in deze ruimte!";
 $vocab["invalid_email"]           = "Ongeldig email adres !";
 $vocab["invalid_resolution"]      = "Verkeerde combinatie van eerste slot, laatste slot en stappen!";
-$vocab["too_many_slots"]          = 'U moet de waarde van $max_slots verhogen in het config bestand!';
 $vocab["general_settings"]        = "Algemeen";
 $vocab["time_settings"]           = "Slot tijden";
 $vocab["confirmation_settings"]   = "Bevestiging instellingen";

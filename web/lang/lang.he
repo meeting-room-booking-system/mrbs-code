@@ -24,7 +24,7 @@ $vocab["help"]               = "עזרה";
 $vocab["search"]             = "חיפוש";
 $vocab["outstanding"]        = "הזמנות לאישור";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "הזמנה ל";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "אזורים";
@@ -32,9 +32,19 @@ $vocab["daybefore"]          = "היום הקודם";
 $vocab["dayafter"]           = "היום הבא";
 $vocab["gototoday"]          = "היום";
 $vocab["goto"]               = "עבור ליום";
+$vocab["nav_day"]            = "Day";
+$vocab["nav_week"]           = "Week";
+$vocab["nav_month"]          = "Month";
 $vocab["highlight_line"]     = "סמן שורה זו";
 $vocab["click_to_reserve"]   = "לחץ על התא כדי להזמין חדר";
 $vocab["timezone"]           = "אזור זמן";
+$vocab["weekbefore"]         = "עבור לשבוע הקודם";
+$vocab["weekafter"]          = "עבור לשבוע הבא";
+$vocab["gotothisweek"]       = "עבור לשבוע הנוכחי";
+$vocab["monthbefore"]        = "עבור לחודש הקודם";
+$vocab["monthafter"]         = "עבור לחודש הבא";
+$vocab["gotothismonth"]      = "עבור לחודש הנוכחי";
+$vocab["no_rooms_for_area"]  = "לא הוגדרו חדרים לאזור זה";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "הצג לפי יום";
@@ -64,9 +74,9 @@ $vocab["minute_lc"]          = "דקה";
 $vocab["minutes"]            = "דקות";
 $vocab["hour_lc"]            = "שעה";
 $vocab["hours"]              = "שעות";
-$vocab["day_lc"]             = "יום";
+$vocab["day"]                = "יום";
 $vocab["days"]               = "ימים";
-$vocab["week_lc"]            = "שבוע";
+$vocab["week"]               = "שבוע";
 $vocab["weeks"]              = "שבועות";
 $vocab["year_lc"]            = "שנה";
 $vocab["years"]              = "שנים";
@@ -242,7 +252,6 @@ $vocab["previous"]           = "קודם";
 $vocab["next"]               = "הבא";
 $vocab["entry"]              = "הזמן חדר";
 $vocab["view"]               = "הצג";
-$vocab["advanced_search"]    = "חיפוש";
 $vocab["search_button"]      = "חיפוש";
 $vocab["search_for"]         = "חפש את";
 $vocab["from"]               = "מתאריך";
@@ -279,19 +288,6 @@ $vocab["both"]                  = "הכל";
 $vocab["privacy_status"]        = "סטטוס פרטיות";
 $vocab["search_criteria"]       = "קריטריון לחיפוש";
 $vocab["presentation_options"]  = "אפשרויות פלט";
-
-// Used in week.php
-$vocab["weekbefore"]         = "עבור לשבוע הקודם";
-$vocab["weekafter"]          = "עבור לשבוע הבא";
-$vocab["gotothisweek"]       = "עבור לשבוע הנוכחי";
-
-// Used in month.php
-$vocab["monthbefore"]        = "עבור לחודש הקודם";
-$vocab["monthafter"]         = "עבור לחודש הבא";
-$vocab["gotothismonth"]      = "עבור לחודש הנוכחי";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "לא הוגדרו חדרים לאזור זה";
 
 // Used in admin.php
 $vocab["edit"]               = "עדכן";
@@ -330,7 +326,6 @@ $vocab["invalid_area"]            = "אזור לא חוקי!";
 $vocab["invalid_room_name"]       = "קיים כבר שם כזה לחדר באזור זה";
 $vocab["invalid_email"]           = "כתובת דואר אלקטרוני לא נכונה";
 $vocab["invalid_resolution"]      = "Invalid combination of first slot, last slot and resolution!";
-$vocab["too_many_slots"]          = 'You need to increase the value of $max_slots in the config file!';
 $vocab["general_settings"]        = "הגדרות כללי";
 $vocab["time_settings"]           = "זמני שימוש בחדר";
 $vocab["confirmation_settings"]   = "הגדרות הזמנות";

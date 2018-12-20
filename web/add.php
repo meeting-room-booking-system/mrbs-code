@@ -11,7 +11,7 @@ require_once "mrbs_sql.inc";
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 // Get non-standard form variables
 $name = get_form_var('name', 'string', null, INPUT_POST);

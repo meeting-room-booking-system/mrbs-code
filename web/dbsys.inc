@@ -21,39 +21,6 @@ foreach ($tables as $table)
   $table_vars[$table] = $var;
 }
 
-populate_maxlength();
-
-
-// Populate the $maxlength global.
-function populate_maxlength()
-{
-  global $maxlength, $table_vars;
-  
-  foreach ($table_vars as $table => $var)
-  {
-    global $$var;
-    
-    // Check to see if the table exists, as it won't yet if it's about
-    // to be created as part of an upgrade
-    if (db()->table_exists($$var))
-    {
-      // Find the maximum length of the CHAR and VARCHAR fields (we won't
-      // worry about TEXT fields)
-      $field_info = db()->field_info($$var);
-      
-      foreach ($field_info as $field)
-      {
-        if (($field['nature'] == 'character') && 
-            isset($field['length']) &&
-            ($field['length'] < 256))
-        {
-          $maxlength[$table . '.' . $field['name']] = (int) $field['length'];
-        }
-      }
-    }
-  }
-}
-
 
 // Convenience wrapper function to provide access to a DB object for
 // default MRBS database

@@ -19,7 +19,7 @@ $vocab["help"]               = "Ajuda";
 $vocab["search"]             = "Pesquisa";
 $vocab["outstanding"]        = "reservas pendentes";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reservas para";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Áreas";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Ir para Dia Anterior";
 $vocab["dayafter"]           = "Ir para Dia Seguinte";
 $vocab["gototoday"]          = "Ir para dia de hoje";
 $vocab["goto"]               = "ir para";
+$vocab["nav_day"]            = "Dia";
+$vocab["nav_week"]           = "Semana";
+$vocab["nav_month"]          = "Mês";
 $vocab["highlight_line"]     = "Destaque esta linha";
 $vocab["click_to_reserve"]   = "Prima neste campo para reservar.";
 $vocab["timezone"]           = "Fuso horário";
+$vocab["weekbefore"]         = "Ir para a semana anterior";
+$vocab["weekafter"]          = "Ir para a semana seguinte";
+$vocab["gotothisweek"]       = "Ir para esta semana";
+$vocab["monthbefore"]        = "Ir para o mês anterior";
+$vocab["monthafter"]         = "Ir para o mês seguinte";
+$vocab["gotothismonth"]      = "Ir para este mês";
+$vocab["no_rooms_for_area"]  = "Não há salas definidas para esta Área";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Ver Dia";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]          = "minuto";
 $vocab["minutes"]            = "minutos";
 $vocab["hour_lc"]            = "hora";
 $vocab["hours"]              = "horas";
-$vocab["day_lc"]             = "dia";
+$vocab["day"]                = "dia";
 $vocab["days"]               = "dias";
-$vocab["week_lc"]            = "semana";
+$vocab["week"]               = "semana";
 $vocab["weeks"]              = "semanas";
 $vocab["year_lc"]            = "ano";
 $vocab["years"]              = "anos";
@@ -224,7 +234,6 @@ $vocab["of"]                 = " de ";
 $vocab["previous"]           = "Anterior";
 $vocab["next"]               = "Próximo";
 $vocab["entry"]              = "Entrada";
-$vocab["advanced_search"]    = "Pesquisa Avançada";
 $vocab["search_button"]      = "Pesquisar";
 $vocab["search_for"]         = "Pesquisar por";
 $vocab["from"]               = "De";
@@ -256,19 +265,6 @@ $vocab["both"]                  = "Todos";
 $vocab["privacy_status"]        = "Estado da privacidade";
 $vocab["search_criteria"]       = "Critério de pesquisa";
 $vocab["presentation_options"]  = "opções de apresentação";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Ir para a semana anterior";
-$vocab["weekafter"]          = "Ir para a semana seguinte";
-$vocab["gotothisweek"]       = "Ir para esta semana";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Ir para o mês anterior";
-$vocab["monthafter"]         = "Ir para o mês seguinte";
-$vocab["gotothismonth"]      = "Ir para este mês";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Não há salas definidas para esta Área";
 
 // Used in admin.php
 $vocab["edit"]               = "Editar";
@@ -304,7 +300,6 @@ $vocab["invalid_area"]            = "Área inválida!";
 $vocab["invalid_room_name"]       = "Esta sala já existe nesta área!";
 $vocab["invalid_email"]           = "Email inválido!";
 $vocab["invalid_resolution"]      = "Combinação inválida do 1º slot, último slot e resolução!";
-$vocab["too_many_slots"]          = 'Precisa de aumentar o valor de $max_slots no ficheiro de configuração!';
 $vocab["general_settings"]        = "Geral";
 $vocab["time_settings"]           = "Tempo do Slot";
 $vocab["confirmation_settings"]   = "Confirmação";

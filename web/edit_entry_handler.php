@@ -1,26 +1,53 @@
 <?php
 namespace MRBS;
 
-require "defaultincludes.inc";
-require_once "mrbs_sql.inc";
-require_once "functions_ical.inc";
+require 'defaultincludes.inc';
+require_once 'mrbs_sql.inc';
+require_once 'functions_ical.inc';
+require_once 'functions_mail.inc';
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
+
 
 function invalid_booking($message)
 {
   global $day, $month, $year, $area, $room;
   
-  print_header($day, $month, $year, $area, isset($room) ? $room : null);
+  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
   // Print footer and exit
   print_footer(TRUE);
 }
 
+
+// Truncate any fields that have a maximum length as a precaution.
+// Although the MAXLENGTH attribute is used in the <input> tag, this can
+// sometimes be ignored by the browser, for example by Firefox when 
+// autocompletion is used.  The user could also edit the HTML and remove
+// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
+// does not accept a maxlength attribute.  Passing an oversize string to some
+// databases (eg some versions of PostgreSQL) results in an SQL error,
+// rather than silent truncation of the string.
+//
+// We truncate to a maximum number of UTF8 characters rather than bytes.
+// This is OK in current versions of MySQL and PostgreSQL, though in earler
+// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
+// as a VARCHAR(n) was n bytes long rather than n characters.
+function truncate($value, $column)
+{
+  if (null !== ($maxlength = maxlength($column)))
+  {
+    return utf8_substr($value, 0, $maxlength);
+  }
+  
+  return $value;
+}
+
+
 $ajax = get_form_var('ajax', 'int');
-if ($ajax && !checkAuthorised(TRUE))
+if ($ajax && !checkAuthorised(this_page(), true))
 {
   exit;
 }
@@ -32,12 +59,9 @@ Form::checkToken();
 
 // (1) Check the user is authorised for this page
 //  ---------------------------------------------
-checkAuthorised();
+checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
-$user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
-
+$current_username = getUserName();
 
 
 // (2) Get the form variables
@@ -93,21 +117,43 @@ $formvars = array('create_by'          => 'string',
                   'confirmed'          => 'string',
                   'back_button'        => 'string',
                   'timetohighlight'    => 'int',
-                  'page'               => 'string',
                   'commit'             => 'string');
       
 foreach($formvars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
-  // Trim the strings
+  
+  // Trim the strings and truncate them to the maximum field length
   if (is_string($$var))
   {
     $$var = trim($$var);
+    $$var = truncate($$var, "entry.$var");
   }
+  
+}
+
+// Validate the create_by variable, checking that it's the current user, unless the
+// user is an admin and we allow admins to make bookings on behalf of others.
+if (!is_book_admin() || $auth['admin_can_only_book_for_self'])
+{
+  if ($create_by !== $current_username)
+  {
+    $message = "Attempt made by user '$current_username' to make a booking in the name of '$create_by'";
+    trigger_error($message, E_USER_NOTICE);
+    $create_by = $current_username;
+  }
+}
+
+// If they're not an admin and multi-day bookings are not allowed, then
+// set the end date to the start date
+if (!is_book_admin() && $auth['only_admin_can_book_multiday'])
+{
+  $end_date = $start_date;
 }
 
 list($start_year, $start_month, $start_day) = split_iso_date($start_date);
 list($end_year, $end_month, $end_day) = split_iso_date($end_date);
+
 if (isset($rep_end_date))
 {
   list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
@@ -153,11 +199,14 @@ foreach($fields as $field)
     {
       $custom_fields[$field['name']] = NULL;
     }
-    // Trim any strings
+    
+    // Trim any strings and truncate them to the maximum field length
     if (is_string($custom_fields[$field['name']]))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
+      $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
     }
+    
   }
 }
 
@@ -250,20 +299,11 @@ if (get_area($room) != $area)
   $room = get_default_room($area);
 }
 
-// If they're not an admin and multi-day bookings are not allowed, then
-// set the end date to the start date
-if (!$is_admin && $auth['only_admin_can_book_multiday'])
-{
-  $end_day = $start_day;
-  $end_month = $start_month;
-  $end_year = $start_year;
-}
-
 // Check that they really are allowed to set $no_mail;
 if ($no_mail)
 {
   if (!$mail_settings['allow_no_mail'] &&
-      (!$is_admin || !$mail_settings['allow_admins_no_mail']))
+      (!is_book_admin() || !$mail_settings['allow_admins_no_mail']))
   {
     $no_mail = FALSE;
   }
@@ -346,38 +386,6 @@ if ($ajax && $commit)
 }
 
 
-// Truncate any fields that have a maximum length as a precaution.
-// Although the MAXLENGTH attribute is used in the <input> tag, this can
-// sometimes be ignored by the browser, for example by Firefox when 
-// autocompletion is used.  The user could also edit the HTML and remove
-// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
-// does not accept a maxlength attribute.  Passing an oversize string to some
-// databases (eg some versions of PostgreSQL) results in an SQL error,
-// rather than silent truncation of the string.
-//
-// We truncate to a maximum number of UTF8 characters rather than bytes.
-// This is OK in current versions of MySQL and PostgreSQL, though in earler
-// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
-// as a VARCHAR(n) was n bytes long rather than n characters.
-foreach ($maxlength as $key => $length)
-{
-  list($table, $field) = explode('.', $key, 2);
-  if ($table == 'entry')
-  {
-    // Custom fields are held in their own array, so we need to handle them
-    // slightly differently. (Should probably change the way they are handled
-    // sometime to be just like any other variables).
-    if (array_key_exists($field, $custom_fields))
-    {
-      $custom_fields[$field] = utf8_substr($custom_fields[$field], 0, $length);
-    }
-    elseif (isset($$field))
-    {
-      $$field = utf8_substr($$field, 0, $length);
-    }
-  }
-}
-
 // When All Day is checked, $start_seconds and $end_seconds are disabled and so won't
 // get passed through by the form.   We therefore need to set them.
 if (!empty($all_day))
@@ -451,9 +459,9 @@ else
   }
   $target_room = $rooms[0];
 }
-if (!getWritable($create_by, $user, $target_room))
+if (!getWritable($create_by, $target_room))
 {
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -568,7 +576,6 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   }
 }
 
-
 // If we're committing this booking, get the start day/month/year and
 // make them the current day/month/year
 if (!$ajax || $commit)
@@ -590,10 +597,15 @@ if (!$ajax || $commit)
 //       have to preserve the search parameter in the query string)
 if (isset($returl) && ($returl !== ''))
 {
-  $returl = parse_url($returl, PHP_URL_PATH);
+  $returl = parse_url($returl);
   if ($returl !== false)
   {
-    $returl = explode('/', $returl);
+    if (isset($returl['query']))
+    {
+      parse_str($returl['query'], $query_vars);
+    }
+    $view = (isset($query_vars['view'])) ? $query_vars['view'] : $default_view;
+    $returl = explode('/', $returl['path']);
     $returl = end($returl);
   }
 }
@@ -603,18 +615,7 @@ if (empty($returl) ||
                             'edit_entry_handler.php',
                             'search.php')))
 {
-  switch ($default_view)
-  {
-    case 'month':
-      $returl = 'month.php';
-      break;
-    case 'week':
-      $returl = 'week.php';
-      break;
-    default:
-      $returl = 'day.php';
-      break;
-  }
+  $returl = 'index.php';
 }
 
 // If we haven't been given a sensible date then get out of here and don't try and make a booking
@@ -624,9 +625,6 @@ if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkd
   exit;
 }
 
-// Now construct the new query string
-$returl .= "?year=$year&month=$month&day=$day";
-
 // If the old sticky room is one of the rooms requested for booking, then don't change the sticky room.
 // Otherwise change the sticky room to be one of the new rooms.
 if (!in_array($room, $rooms))
@@ -635,8 +633,16 @@ if (!in_array($room, $rooms))
 } 
 // Find the corresponding area
 $area = mrbsGetRoomArea($room);
-// Complete the query string
-$returl .= "&area=$area&room=$room";
+
+// Now construct the new query string
+$vars = array('view'  => (isset($view)) ? $view : $default_view,
+              'year'  => $year,
+              'month' => $month,
+              'day'   => $day,
+              'area'  => $area,
+              'room'  => $room);
+              
+$returl .= '?' . http_build_query($vars, '', '&');
 
 
 // Check to see whether this is a repeat booking and if so, whether the user
@@ -644,10 +650,10 @@ $returl .= "&area=$area&room=$room";
 // prevent you ever getting here, but this check is here as a safeguard in 
 // case someone has spoofed the HTML)
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
-    !$is_admin &&
+    !is_book_admin() &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($day, $month, $year, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -661,7 +667,7 @@ foreach ($rooms as $room_id)
 {
   $booking = array();
   $booking['create_by'] = $create_by;
-  $booking['modified_by'] = (isset($id)) ? $user : '';
+  $booking['modified_by'] = (isset($id)) ? $current_username : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;
@@ -704,7 +710,7 @@ foreach ($rooms as $room_id)
   // bookings for this room, then the status will be approved, since they are
   // in effect immediately approving their own booking.  Otherwise the booking
   // will need to approved.
-  $booking['awaiting_approval'] = ($approval_enabled && !auth_book_admin($user, $room_id));
+  $booking['awaiting_approval'] = ($approval_enabled && !is_book_admin($room_id));
   
   // Confirmation status
   $booking['tentative'] = ($confirmation_enabled && !$confirmed);
@@ -714,7 +720,7 @@ foreach ($rooms as $room_id)
 
 $just_check = $ajax && !$commit;
 $this_id = (isset($id)) ? $id : NULL;
-$send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
+$send_mail = ($no_mail) ? FALSE : need_to_send_mail();
 
 // Wrap the editing process in a transaction, because if deleting the old booking should fail for
 // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
@@ -736,7 +742,7 @@ $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_ro
 // we were editing an existing booking, then delete the old booking
 if (!$just_check && $result['valid_booking'] && isset($id))
 {
-  $transaction_ok = mrbsDelEntry($user, $id, ($edit_type == "series"), 1);
+  $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), 1);
 }
 
 if ($transaction_ok)
@@ -755,18 +761,23 @@ db()->mutex_unlock($tbl_entry);
 // If this is an Ajax request, output the result and finish
 if ($ajax)
 {
-  // If this was a successful commit generate the new HTML
-  if ($result['valid_booking'] && $commit)
+  // Generate the new HTML
+  if ($commit)
   {
     // Generate the new HTML
     require_once "functions_table.inc";
-    if ($page == 'day')
+    
+    switch ($view)
     {
-      $result['table_innerhtml'] = day_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
-    }
-    else
-    {
-      $result['table_innerhtml'] = week_table_innerhtml($day, $month, $year, $room, $area, $timetohighlight);
+      case 'day':
+        $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        break;
+      case 'week':
+        $result['table_innerhtml'] = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        break;
+      default:
+        throw new \Exception("Unsupported view '$view'");
+        break;
     }
   }
   http_headers(array("Content-Type: application/json"));
@@ -783,7 +794,7 @@ if ($result['valid_booking'])
 
 else
 {
-  print_header($day, $month, $year, $area, isset($room) ? $room : null);
+  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
     
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!empty($result['violations']['errors']))
@@ -878,5 +889,4 @@ if (empty($result['violations']['errors'])  &&
 
 echo "</div>\n";
 
-output_trailer();
-
+print_footer();

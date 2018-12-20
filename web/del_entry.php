@@ -13,6 +13,7 @@ use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
+require_once "functions_mail.inc";
 
 // Get non-standard form variables
 $id = get_form_var('id', 'int', null, INPUT_POST);
@@ -25,35 +26,30 @@ $note = get_form_var('note', 'string', '', INPUT_POST);
 Form::checkToken();
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
 if (empty($returl))
 {
-  switch ($default_view)
-  {
-    case "month":
-      $returl = "month.php";
-      break;
-    case "week":
-      $returl = "week.php";
-      break;
-    default:
-      $returl = "day.php";
-  }
-  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+  $vars = array('view'  => $default_view,
+                'year'  => $year,
+                'month' => $month,
+                'day'   => $day,
+                'area'  => $area,
+                'room'  => $room);
+
+  $returl .= 'index.php?' . http_build_query($vars, '', '&');
 }
 
 if ($info = get_booking_info($id, FALSE, TRUE))
 {
-  $user = getUserName();
   // check that the user is allowed to delete this entry
   if (isset($action) && ($action == "reject"))
   {
-    $authorised = auth_book_admin($user, $info['room_id']);
+    $authorised = is_book_admin($info['room_id']);
   }
   else
   {
-    $authorised = getWritable($info['create_by'], $user, $info['room_id']);
+    $authorised = getWritable($info['create_by'], $info['room_id']);
   }
   if ($authorised)
   {
@@ -64,11 +60,10 @@ if ($info = get_booking_info($id, FALSE, TRUE))
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
     
-    $notify_by_email = $mail_settings['on_delete'] && $need_to_send_mail;
+    $notify_by_email = $mail_settings['on_delete'] && need_to_send_mail();
 
     if ($notify_by_email)
     {
-      require_once "functions_mail.inc";
       // Gather all fields values for use in emails.
       $mail_previous = get_booking_info($id, FALSE);
       // If this is an individual entry of a series then force the entry_type
@@ -80,7 +75,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       }
     }
     
-    $start_times = mrbsDelEntry(getUserName(), $id, $series, 1);
+    $start_times = mrbsDelEntry($id, $series, 1);
     
     // [At the moment MRBS does not inform the user if it was not able to delete
     // an entry, or, for a series, some entries in a series.  This could happen for
@@ -117,5 +112,5 @@ if ($info = get_booking_info($id, FALSE, TRUE))
 }
 
 // If you got this far then we got an access denied.
-showAccessDenied($day, $month, $year, $area);
+showAccessDenied($view, $year, $month, $day, $area);
 

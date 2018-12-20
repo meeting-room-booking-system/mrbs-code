@@ -50,6 +50,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+FLATPICKR
+=========
+
+Released under the MIT license.   See web/js/flatpickr/LICENSE.md.
+
+
 JQUERY
 ======
 
@@ -64,8 +70,26 @@ JQUERY UI
 Released under the MIT license.  See web/jquery/ui/LICENSE.txt.
 
 
+JQUERY-VISIBLE
+==============
+
+A small plugin that checks whether elements are within the user visible
+viewport of a web browser.  Only accounts for vertical position, not
+horizontal.
+
+Copyright 2012, Digital Fusion
+Licensed under the MIT license.
+http://teamdf.com/jquery-plugins/license/
+
+
 PHPMAILER
 =========
 
 This is supplied under the GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1,
 February 1999.  See web/PHPMailer/LICENSE.
+
+
+SELECT2
+=======
+
+Released under the MIT license.  See web/jquery/select2/LICENSE.md

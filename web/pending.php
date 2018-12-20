@@ -8,21 +8,21 @@ require "defaultincludes.inc";
 
 function display_buttons($row, $is_series)
 {
-  global $user, $reminders_enabled, $reminder_interval;
+  global $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = this_page();
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 
-  // When we're going to view_entry.php we need to pass the id and series
-  // in a query string rather than as hidden inputs.   That's because some
-  // pages called by view_entry use HTTP_REFERER to form a return URL, and
-  // view_entry needs to have a valid id.
+  // When we're going to view_entry.php we need to pass the id and series in a
+  // query string rather than as hidden inputs.   That's because some pages called
+  // by view_entry use $_SERVER['HTTP_REFERER'] to form a return URL, and view_entry
+  // needs to have a valid id.
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&series=1" : "";
   
-  if (auth_book_admin($user, $row['room_id']))
+  if (is_book_admin($row['room_id']))
   {
     // approve
     $form = new Form();
@@ -192,8 +192,10 @@ function display_series_title_row($row)
 }
 
 // display an entry in a row
-function display_entry_row($row)
+function display_entry_row(array $row)
 {
+  global $view;
+  
   echo "<tr>\n";
   echo "<td>&nbsp;</td>\n";
     
@@ -206,12 +208,23 @@ function display_entry_row($row)
   echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
     
-  // start date, with a link to the day.php
+  // start date, with a link to the calendar view
   $link = getdate($row['start_time']);
   echo "<td>";
   // <span> for sorting
   echo "<span title=\"" . $row['start_time'] . "\"></span>";
-  echo "<a href=\"day.php?day=$link[mday]&amp;month=$link[mon]&amp;year=$link[year]&amp;area=".$row['area_id']."\">";
+  
+  $vars = array('view'  => $view,
+                'year'  => $link['year'],
+                'month' => $link['mon'],
+                'day'   => $link['mday'],
+                'area'  => $row['area_id'],
+                'room'  => $row['room_id']);
+                
+  $query = http_build_query($vars, '', '&');
+  
+  echo '<a href="index.php?' .htmlspecialchars($query) . '">';
+  
   if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
@@ -220,6 +233,7 @@ function display_entry_row($row)
   {
     list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
   }
+  
   echo htmlspecialchars($link_str) . "</a></td>";
     
   // action buttons
@@ -231,13 +245,11 @@ function display_entry_row($row)
 
 
 // Check the user is authorised for this page
-checkAuthorised();
+checkAuthorised(this_page());
 
-// Also need to know whether they have admin rights
 $user = getUserName();
-$is_admin = (authGetUserLevel($user) >= 2);
 
-print_header($day, $month, $year, $area, isset($room) ? $room : null);
+print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
@@ -264,7 +276,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
 $sql_params = array();
 
 // Ordinary users can only see their own bookings       
-if (!$is_admin)
+if (!is_book_admin())
 {
   $sql .= " AND E.create_by=?";
   $sql_params[] = $user;
@@ -328,5 +340,4 @@ else  // display them in a table
   echo "</div>\n";
 }
 
-output_trailer();
-
+print_footer();

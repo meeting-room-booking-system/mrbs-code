@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 /*****************************************************************************
 *
 *   File name       auth_config.inc
@@ -97,5 +99,25 @@ function authGetUserEmail($user)
   }
 
   return get_default_email($user);
+}
+
+
+// Return an array of users, indexed by 'username' and 'display_name'
+function authGetUsernames()
+{
+  global $auth;
+  
+  $result = array();
+  
+  foreach ($auth['user'] as $user => $password)
+  {
+    $result[] = array('username'     => $user,
+                      'display_name' => $user);
+  }
+  
+  // Need to sort the users
+  sort_users($result);
+  
+  return $result;
 }
 

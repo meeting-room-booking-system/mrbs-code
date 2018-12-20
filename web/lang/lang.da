@@ -19,7 +19,7 @@ $vocab["admin"]              = "Admin";
 $vocab["help"]               = "Hjælp";
 $vocab["search"]             = "Søg";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Reservation for";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "Område";
@@ -27,8 +27,18 @@ $vocab["daybefore"]          = "Gå til forrige dag";
 $vocab["dayafter"]           = "Gå til næste dag";
 $vocab["gototoday"]          = "Gå til idag";
 $vocab["goto"]               = "gå til";
+$vocab["nav_day"]            = "Dag";
+$vocab["nav_week"]           = "Uge";
+$vocab["nav_month"]          = "Måned";
 $vocab["highlight_line"]     = "fremhæv denne linie";
 $vocab["click_to_reserve"]   = "Klik på cellen for at lave en reservation.";
+$vocab["weekbefore"]         = "Gå til ugen før";
+$vocab["weekafter"]          = "Gå til ugen efter";
+$vocab["gotothisweek"]       = "Gå til denne uge";
+$vocab["monthbefore"]        = "Gå til forrige måned";
+$vocab["monthafter"]         = "Gå til næste måned";
+$vocab["gotothismonth"]      = "Gå til denne måned";
+$vocab["no_rooms_for_area"]  = "Ingen rum er defineret for dette område";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Vis dag";
@@ -134,7 +144,6 @@ $vocab["of"]                 = " af ";
 $vocab["previous"]           = "Forrige";
 $vocab["next"]               = "Næste";
 $vocab["entry"]              = "Post";
-$vocab["advanced_search"]    = "Avanceret søgning";
 $vocab["search_button"]      = "Søg";
 $vocab["search_for"]         = "Søg efter";
 $vocab["from"]               = "Fra";
@@ -160,19 +169,6 @@ $vocab["total"]              = "Total";
 $vocab["submitquery"]        = "Kør rapport";
 $vocab["sort_rep"]           = "Sorter rapport efter";
 $vocab["sort_rep_time"]      = "Start dato/tid";
-
-// Used in week.php
-$vocab["weekbefore"]         = "Gå til ugen før";
-$vocab["weekafter"]          = "Gå til ugen efter";
-$vocab["gotothisweek"]       = "Gå til denne uge";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Gå til forrige måned";
-$vocab["monthafter"]         = "Gå til næste måned";
-$vocab["gotothismonth"]      = "Gå til denne måned";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Ingen rum er defineret for dette område";
 
 // Used in admin.php
 $vocab["edit"]               = "Ændre";

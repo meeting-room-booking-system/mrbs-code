@@ -19,7 +19,7 @@ $vocab["help"]               = "Nápověda";
 $vocab["search"]             = "Hledat";
 $vocab["outstanding"]        = "čekající na schválení";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "Objednáno pro";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Oblasti";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Den vzad";
 $vocab["dayafter"]           = "Den vpřed";
 $vocab["gototoday"]          = "Dnes";
 $vocab["goto"]               = "Přejít na";
+$vocab["nav_day"]            = "Den";
+$vocab["nav_week"]           = "Týden";
+$vocab["nav_month"]          = "Měsíc";
 $vocab["highlight_line"]     = "Označte tuto řádku";
 $vocab["click_to_reserve"]   = "Klepněte na buňku, abyste provedli rezervaci.";
 $vocab["timezone"]           = "Časová zóna";
+$vocab["weekbefore"]         = "Týden dozadu";
+$vocab["weekafter"]          = "Týden dopředu";
+$vocab["gotothisweek"]       = "Tento týden";
+$vocab["monthbefore"]        = "Měsíc dozadu";
+$vocab["monthafter"]         = "Měsic dopředu";
+$vocab["gotothismonth"]      = "Tento měsíc";
+$vocab["no_rooms_for_area"]  = "Pro tuto místnost/zdroj není definována žádná oblast!";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Dny";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]          = "minuta";
 $vocab["minutes"]            = "minuty";
 $vocab["hour_lc"]            = "hodina";
 $vocab["hours"]              = "hodiny";
-$vocab["day_lc"]             = "den";
+$vocab["day"]                = "den";
 $vocab["days"]               = "dny";
-$vocab["week_lc"]            = "týden";
+$vocab["week"]               = "týden";
 $vocab["weeks"]              = "týdny";
 $vocab["year_lc"]            = "rok";
 $vocab["years"]              = "roky";
@@ -198,7 +208,6 @@ $vocab["max_per_year_area"]       = "Maximální počet rezervací za rok na jed
 $vocab["max_per_future_area"]     = "Maximální počet nevyřízených rezervací na uživatele v této oblasti je";
 $vocab["skip_and_book"]           = "Vynechat a zarezerovat";
 $vocab["skip_and_book_note"]      = "Pokračovat v rezervaci, vynechat kolidující položky";
-$vocab["changes_saved"]           = "Změny uloženy";
 
 // Used in pending.php
 $vocab["pending"]            = "Rezervace čekající na schválení";
@@ -268,7 +277,6 @@ $vocab["of"]                 = " o ";
 $vocab["previous"]           = "Předchozi";
 $vocab["next"]               = "Další";
 $vocab["entry"]              = "Záznam";
-$vocab["advanced_search"]    = "Rozšířené hledání";
 $vocab["search_button"]      = "Hledat";
 $vocab["search_for"]         = "Hledat co";
 $vocab["from"]               = "Od";
@@ -317,19 +325,6 @@ $vocab["delete_entries_warning"] = "UPOZORNĚNÍ! Vymaže všechny položky odpo
                                    "Celkový počet položek, které budou smazány: ";
 $vocab["delete_entries_failed"] = "Položky nemohou být odstraněny.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Týden dozadu";
-$vocab["weekafter"]          = "Týden dopředu";
-$vocab["gotothisweek"]       = "Tento týden";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Měsíc dozadu";
-$vocab["monthafter"]         = "Měsic dopředu";
-$vocab["gotothismonth"]      = "Tento měsíc";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Pro tuto místnost/zdroj není definována žádná oblast!";
-
 // Used in admin.php
 $vocab["edit"]               = "Upravit";
 $vocab["delete"]             = "Smazat";
@@ -366,7 +361,6 @@ $vocab["invalid_area"]            = "Neplatná oblast!";
 $vocab["invalid_room_name"]       = "Toto jméno místnosti/zdroje již bylo použito v aktuální oblasti!";
 $vocab["invalid_email"]           = "Neplatná emailová adresa!";
 $vocab["invalid_resolution"]      = "Neplatná kombinace první pozice, poslední pozice a rozlišení!";
-$vocab["too_many_slots"]          = 'Je třeba zvýšit hodnotu $max_slots v konfiguračním souboru!';
 $vocab["general_settings"]        = "Obecné";
 $vocab["time_settings"]           = "Časy pozic";
 $vocab["confirmation_settings"]   = "Nastavení potvrzování";

@@ -22,6 +22,7 @@ class Element
   private $self_closing = false;
   private $attributes = array();
   private $text = null;
+  private $raw = false;
   private $text_at_start = false;
   private $elements = array();
   private $next = null;
@@ -35,7 +36,9 @@ class Element
   }
   
   
-  public function setText($text, $text_at_start=false)
+  // If $raw is true then the text will not be put through htmlspecialchars().  Only to
+  // be used for trusted text.
+  public function setText($text, $text_at_start=false, $raw=false)
   {
     if ($this->self_closing)
     {
@@ -44,6 +47,8 @@ class Element
     
     $this->text = $text;
     $this->text_at_start = $text_at_start;
+    $this->raw = $raw;
+    
     return $this;
   }
   
@@ -404,7 +409,7 @@ class Element
     {
       if (isset($this->text) && $this->text_at_start)
       {
-        $html .= htmlspecialchars($this->text);
+        $html .= self::escapeText($this->text, $this->raw);
       }
       
       if (!empty($this->elements))
@@ -423,7 +428,7 @@ class Element
       
       if (isset($this->text) && !$this->text_at_start)
       {
-        $html .= htmlspecialchars($this->text);
+        $html .= self::escapeText($this->text, $this->raw);
       }
 
       $html .= "</" . $this->tag . ">$terminator";
@@ -436,6 +441,12 @@ class Element
     }
     
     return $html;
+  }
+  
+  
+  private static function escapeText($text, $raw=false)
+  {
+    return ($raw) ? $text : htmlspecialchars($text);
   }
   
 }

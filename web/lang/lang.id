@@ -19,7 +19,7 @@ $vocab["help"]               = "Bantuan";
 $vocab["search"]             = "Pencarian";
 $vocab["outstanding"]        = "pesanan Tertunda";
 
-// Used in day.php
+// Used in index.php
 $vocab["bookingsfor"]        = "pesanan Untuk";
 $vocab["bookingsforpost"]    = ""; // Goes after the date
 $vocab["areas"]              = "Area";
@@ -27,9 +27,19 @@ $vocab["daybefore"]          = "Kemarin";
 $vocab["dayafter"]           = "Besok";
 $vocab["gototoday"]          = "Hari Ini";
 $vocab["goto"]               = "Pergi Ke";
+$vocab["nav_day"]            = "Hari";
+$vocab["nav_week"]           = "Minggu";
+$vocab["nav_month"]          = "Bulan";
 $vocab["highlight_line"]     = "Stabilo baris ini";
 $vocab["click_to_reserve"]   = "Klik pada cell untuk reservasi.";
 $vocab["timezone"]           = "Zona Waktu";
+$vocab["weekbefore"]         = "Pindah ke satu minggu sebelum";
+$vocab["weekafter"]          = "Pindah ke satu minggu kedepan";
+$vocab["gotothisweek"]       = "Pindah ke minggu ini";
+$vocab["monthbefore"]        = "Pindah ke satu bulan sebelum";
+$vocab["monthafter"]         = "Pindah ke satu bulan kedepan";
+$vocab["gotothismonth"]      = "Pindah ke bulan ini";
+$vocab["no_rooms_for_area"]  = "Ruangan pada area ini belum dibuat";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "Tampilan Hari";
@@ -59,9 +69,9 @@ $vocab["minute_lc"]               = "Menit";
 $vocab["minutes"]                 = "Menit";
 $vocab["hour_lc"]                 = "Jam";
 $vocab["hours"]                   = "Jam";
-$vocab["day_lc"]                  = "Hari";
+$vocab["day"]                     = "Hari";
 $vocab["days"]                    = "Hari";
-$vocab["week_lc"]                 = "Minggu";
+$vocab["week"]                    = "Minggu";
 $vocab["weeks"]                   = "Minggu";
 $vocab["year_lc"]                 = "Tahun";
 $vocab["years"]                   = "Tahun";
@@ -199,7 +209,6 @@ $vocab["max_per_year_area"]          = "Jumlah pesanan maksimum per tahun per pe
 $vocab["max_per_future_area"]        = "Jumlah sisa pesanan per pengguna untuk area ini adalah";
 $vocab["skip_and_book"]              = "Abaikan dan pesan";
 $vocab["skip_and_book_note"]         = "Lanjutkan pesanan, Abaikan konflik yg ada.";
-$vocab["changes_saved"]              = "Perubahan telah disimpan.";
 
 // Used in pending.php
 $vocab["pending"]            = "Pesanan menunggu persetujuan";
@@ -269,7 +278,6 @@ $vocab["of"]                 = " dari ";
 $vocab["previous"]           = "Sebelumnya";
 $vocab["next"]               = "Berikutnya";
 $vocab["entry"]              = "Entri";
-$vocab["advanced_search"]    = "Pencarian tingkat lanjut";
 $vocab["search_button"]      = "Cari";
 $vocab["search_for"]         = "Cari untuk";
 $vocab["from"]               = "Dari";
@@ -318,19 +326,6 @@ $vocab["delete_entries_warning"] = "PERHATIAN!  Aksi berikut akan menghapus entr
                                    "Jumlah entri yang akan dihapus: ";
 $vocab["delete_entries_failed"] = "Entri tidak dapat dihapus.";
 
-// Used in week.php
-$vocab["weekbefore"]         = "Pindah ke satu minggu sebelum";
-$vocab["weekafter"]          = "Pindah ke satu minggu kedepan";
-$vocab["gotothisweek"]       = "Pindah ke minggu ini";
-
-// Used in month.php
-$vocab["monthbefore"]        = "Pindah ke satu bulan sebelum";
-$vocab["monthafter"]         = "Pindah ke satu bulan kedepan";
-$vocab["gotothismonth"]      = "Pindah ke bulan ini";
-
-// Used in {day week month}.php
-$vocab["no_rooms_for_area"]  = "Ruangan pada area ini belum dibuat";
-
 // Used in admin.php
 $vocab["edit"]               = "Ubah";
 $vocab["delete"]             = "Hapus";
@@ -367,7 +362,6 @@ $vocab["invalid_area"]            = "Area tidak valid!";
 $vocab["invalid_room_name"]       = "Nama ruangan ini sudah pernah digunakan!";
 $vocab["invalid_email"]           = "Alamat surel invalid!";
 $vocab["invalid_resolution"]      = "Kombinasi lost pertama tidak valid, slot terakhir dan resolusi!";
-$vocab["too_many_slots"]          = 'Anda harus menaikkan jumlah $max_slots pada file konfigurasi!';
 $vocab["general_settings"]        = "Umum";
 $vocab["time_settings"]           = "Slot";
 $vocab["confirmation_settings"]   = "Aturan konfirmasi";
