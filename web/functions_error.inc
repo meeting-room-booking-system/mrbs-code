@@ -59,15 +59,15 @@ function get_arg_string($args)
 }
 
 
-// Output a backtrace.  This function allows us to format the output slightly better
+// Generate a backtrace.  This function allows us to format the output slightly better
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
-function output_backtrace()
+function generate_backtrace()
 {
   $backtrace = '';
   $calls = debug_backtrace();
   
   foreach ($calls as $i => $call)
-  {
+  { 
     $backtrace .= "#$i ";
     
     if (isset($call['class']) && isset($call['type']))
@@ -79,7 +79,9 @@ function output_backtrace()
     {
       $backtrace .= $call['function'];
       $backtrace .= '(';
-      if (isset($call['args']))
+      // We're not interested in the args for the first two calls because they
+      // are just going to repeat the error message
+      if (isset($call['args']) && ($i > 1))
       {
         $backtrace .= get_arg_string($call['args']);
       }
@@ -94,19 +96,14 @@ function output_backtrace()
     $backtrace .= "\n";
   }
   
-  if (ini_get('display_errors'))
-  {
-    echo to_html(htmlspecialchars($backtrace));
-  }
-  if (ini_get('log_errors'))
-  {
-    error_log($backtrace);
-  }
+  return $backtrace;
 }
 
 
 function output_error($heading, $body, $show_data=false)
 {
+  global $debug;
+  
   static $default_timezone_set = false;
   
   // We can't start outputting any error messages unless the default timezone has been set,
@@ -133,6 +130,13 @@ function output_error($heading, $body, $show_data=false)
       }
   }
   
+  $body .= "\n";
+  
+  if ($debug)
+  {
+    $body .=  generate_backtrace();
+  }
+  
   if (ini_get('display_errors'))
   {
     echo "<b>" . to_html(htmlspecialchars($heading)) . "</b>\n";
@@ -147,8 +151,6 @@ function output_error($heading, $body, $show_data=false)
 
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-  global $debug;
-  
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
@@ -162,12 +164,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
   // Show the superglobal data unless the error is minor
   $show_data = !in_array($errno, array(E_NOTICE, E_USER_NOTICE, E_USER_DEPRECATED));
   
-  output_error($heading, $errstr . "\n", $show_data);
-  
-  if ($debug)
-  {
-    output_backtrace();
-  }
+  output_error($heading, $errstr, $show_data);
 }
 
 
