@@ -148,8 +148,7 @@ $(document).on('page_ready', function() {
       href += '&area=' + args.area;
       href += '&room=' + args.room;
       href += '&page_date=' + dateStr;
-      updateBody(href);
-      //window.location.href = href;
+      updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     }; 
       
   var config = {

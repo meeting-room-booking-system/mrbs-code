@@ -30,61 +30,6 @@ var supportsDatalist = function supportsDatalist() {
   };
   
 
-<?php
-// Update the <body> element via an Ajax call in order to avoid flickering
-// of the screen as we move between pages in the calendar view.
-// 
-// 'event' can either be an event object if the function is called from an 'on'
-// handler, or else it as an href string (eg when called from flatpickr).
-?>
-var updateBody = function(event) {
-    var href;
-    if (typeof event === 'object')
-    {
-      href = $(this).attr('href');
-      event.preventDefault();
-    }
-    else
-    {
-      href = event;
-    }
-    $.get({ 
-        url: href, 
-        dataType: 'html', 
-        success: function(response){
-            var matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
-            var body = $('body');
-            body.html(matches[2]);
-            $('<div' + matches[1].substring(5) + '</div>').each(function() {
-                $.each(this.attributes, function() {
-                    <?php
-                    // this.attributes is not a plain object, but an array
-                    // of attribute nodes, which contain both the name and value
-                    ?>
-                    if(this.specified) {
-                      if (this.name.substring(0, 5).toLowerCase() == 'data-')
-                      {
-                        body.data(this.name.substring(5), this.value);
-                      }
-                      else
-                      {
-                        body.attr(this.name, this.value);
-                      }
-                    }
-                  });
-              });
-            <?php
-            // Trigger a page_ready event, because the normal document ready event
-            // won't be triggered when we are just replacing the html.
-            ?>
-            $(document).trigger('page_ready');
-            <?php // change the URL in the address bar ?>
-            history.pushState(null, '', href);
-        }
-      }); 
-  };
-  
-  
 var args;
 
 

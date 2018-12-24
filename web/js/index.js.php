@@ -24,6 +24,72 @@ var checkNav = function() {
       $('nav.main_calendar').eq(1).show();
     }
   };
+
+
+<?php
+// Update the <body> element via an Ajax call in order to avoid flickering
+// of the screen as we move between pages in the calendar view.
+// 
+// 'event' can either be an event object if the function is called from an 'on'
+// handler, or else it as an href string (eg when called from flatpickr).
+?>
+var updateBody = function(event) {
+    var href;
+    if (typeof event === 'object')
+    {
+      href = $(this).attr('href');
+      event.preventDefault();
+    }
+    else
+    {
+      href = event;
+    }
+    $.get({ 
+        url: href, 
+        dataType: 'html', 
+        success: function(response){
+            <?php
+            // We get the entire page HTML returned, but we are only interested in the <body> element.
+            // That's because if we replace the whole HTML the browser will re-load the JavaScript and
+            // CSS files which is unnecessary and will also cause problems if the CSS is not loaded in
+            // time.
+            //
+            // Unfortunately, we can't use jQuery.replaceWith() on the body object as that doesn't work
+            // properly.  So we have to replace the body HTML and then update the attributes for the body
+            // tag afterwards.
+            ?>
+            var matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
+            var body = $('body');
+            body.html(matches[2]);
+            $('<div' + matches[1].substring(5) + '</div>').each(function() {
+                $.each(this.attributes, function() {
+                    <?php
+                    // this.attributes is not a plain object, but an array
+                    // of attribute nodes, which contain both the name and value
+                    ?>
+                    if(this.specified) {
+                      <?php // Data attributes have to be updated differently from other attributes ?>
+                      if (this.name.substring(0, 5).toLowerCase() == 'data-')
+                      {
+                        body.data(this.name.substring(5), this.value);
+                      }
+                      else
+                      {
+                        body.attr(this.name, this.value);
+                      }
+                    }
+                  });
+              });
+            <?php
+            // Trigger a page_ready event, because the normal document ready event
+            // won't be triggered when we are just replacing the html.
+            ?>
+            $(document).trigger('page_ready');
+            <?php // change the URL in the address bar ?>
+            history.pushState(null, '', href);
+        }
+      }); 
+  };
   
 
 $(document).on('page_ready', function() {
@@ -64,6 +130,10 @@ $(document).on('page_ready', function() {
   ?>
   $('.color_key').removeClass('js_hidden');
   
+  <?php
+  // Replace the navigation links with Ajax calls in order to eliminate flickering
+  // as we move between pages.
+  ?>
   $('nav.arrow a, nav.view a').click(updateBody);
   
 });
