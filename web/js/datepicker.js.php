@@ -148,7 +148,8 @@ $(document).on('page_ready', function() {
       href += '&area=' + args.area;
       href += '&room=' + args.room;
       href += '&page_date=' + dateStr;
-      window.location.href = href;
+      updateBody(href);
+      //window.location.href = href;
     }; 
       
   var config = {
