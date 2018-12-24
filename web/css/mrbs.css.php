@@ -759,7 +759,8 @@ table.dwm_main {
   font-weight: bold;
 }
 
-.dwm_main .booked span.saving::after {
+.dwm_main .booked span.saving::after,
+.loading::after {
   content: '\002026'; <?php // HORIZONTAL ELLIPSIS ?>
 }
 
@@ -2162,3 +2163,11 @@ div#check_tabs {background-image: none}
   box-shadow:-5px 0 0 <?php echo $flatpickr_highlight_color ?>, 5px 0 0 <?php echo $flatpickr_highlight_color ?>;
 }
 
+
+h2.date.loading,
+h2.date.loading::after {
+  animation-name: pulsate;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}

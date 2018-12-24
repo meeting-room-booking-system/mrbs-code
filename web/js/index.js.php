@@ -35,6 +35,7 @@ var checkNav = function() {
 ?>
 var updateBody = function(event) {
     var href;
+    
     if (typeof event === 'object')
     {
       href = $(this).attr('href');
@@ -44,6 +45,11 @@ var updateBody = function(event) {
     {
       href = event;
     }
+    
+    <?php // Add a "Loading ..." message ?>
+    $('h2.date').text('<?php echo get_vocab('loading')?>')
+                .addClass('loading');
+                
     $.get({ 
         url: href, 
         dataType: 'html', 
