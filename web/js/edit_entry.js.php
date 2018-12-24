@@ -1130,7 +1130,7 @@ var editEntryVisChanged = function editEntryVisChanged() {
 
 
   
-$(function() {
+$(document).on('page_ready', function() {
  
   isAdmin = args.isAdmin;
   

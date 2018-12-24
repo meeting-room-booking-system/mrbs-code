@@ -12,7 +12,7 @@ if ($use_strict)
 }
 ?>
 
-$(function() {
+$(document).on('page_ready', function() {
   
   var fixedColumnsOptions = {leftColumns: 1};
 

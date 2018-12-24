@@ -585,7 +585,7 @@ var Table = {
 };
 
 
-$(function() {
+$(document).on('page_ready', function() {
 
   <?php
   // Resizable bookings work by creating an element which is a clone of the real booking

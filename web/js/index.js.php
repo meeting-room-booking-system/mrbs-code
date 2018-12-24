@@ -27,7 +27,7 @@ var checkNav = function() {
 
 
 
-$(function() {
+$(document).on('page_ready', function() {
   
   <?php
   // Turn the room and area selects into fancy select boxes and then
@@ -64,5 +64,45 @@ $(function() {
   // in order to avoid jiggling.
   ?>
   $('.color_key').removeClass('js_hidden');
+  
+  <?php
+  $('nav.arrow a, nav.view a').click(function(e) {
+    var href = $(this).attr('href');
+    e.preventDefault();
+    $.get({ 
+        url: href, 
+        dataType: 'html', 
+        success: function(response){
+            var matches = response.match(/(<body[^>]*>)([^<]*(?:(?!<\/?body)<[^<]*)*)<\/body\s*>/i);
+            var body = $('body');
+            body.html(matches[2]);
+            $('<div' + matches[1].substring(5) + '</div>').each(function() {
+                $.each(this.attributes, function() {
+                    <?php
+                    // this.attributes is not a plain object, but an array
+                    // of attribute nodes, which contain both the name and value
+                    ?>
+                    if(this.specified) {
+                      if (this.name.substring(0, 5).toLowerCase() == 'data-')
+                      {
+                        body.data(this.name.substring(5), this.value);
+                      }
+                      else
+                      {
+                        body.attr(this.name, this.value);
+                      }
+                    }
+                  });
+              });
+            <?php
+            // Trigger a page_ready event, because the normal document ready event
+            // won't be triggered when we are just replacing the html.
+            ?>
+            $(document).trigger('page_ready');
+            <?php // change the URL in the address bar ?>
+            history.pushState(null, '', href);
+        }
+      }); 
+    });
   
 });

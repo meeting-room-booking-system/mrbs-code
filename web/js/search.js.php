@@ -14,7 +14,7 @@ if ($use_strict)
 ?>
 
 
-$(function() {
+$(document).on('page_ready', function() {
   
   var searchForm = $('#search_form'),
       table = $('#search_results'),

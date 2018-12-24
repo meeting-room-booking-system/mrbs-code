@@ -30,11 +30,14 @@ var supportsDatalist = function supportsDatalist() {
   };
   
   
+var args;
 
 
+$(document).on('page_ready', function() {
 
-$(function() {
-
+  <?php // Retrieve the data that the JavaScript files need. ?>
+  args = $('body').data();
+  
   <?php
   // If we're required to log the user out after a period of inactivity then the user filling in
   // an MRBS form counts as activity and we need to record it.   In fact we'll record any key or
@@ -266,4 +269,9 @@ $(function() {
         labels.width(getMaxWidth(labels));
       }, 100));
   
+});
+
+<?php // We define our own page ready event so that we can trigger it after an Ajax load ?>
+$(function() {
+  $(document).trigger('page_ready');
 });

@@ -14,7 +14,7 @@ if ($use_strict)
 ?>
 
 
-$(function() {
+$(document).on('page_ready', function() {
 
   <?php // Turn the list of users into a dataTable ?>
   

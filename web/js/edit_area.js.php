@@ -208,7 +208,7 @@ function checkForLastPeriodName()
 
 
 
-$(function() {
+$(document).on('page_ready', function() {
   
   <?php
   // We need to hide the sections of the form relating to times

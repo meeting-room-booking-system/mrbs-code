@@ -105,7 +105,7 @@ var refreshVisChanged = function refreshVisChanged() {
 
 
 
-$(function() {
+$(document).on('page_ready', function() {
   
   <?php
   // Set up the timer on the table load rather than the window load event because

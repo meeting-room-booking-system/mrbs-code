@@ -40,7 +40,7 @@ function getISODate(year, month, day)
 
 
 
-$(function() {
+$(document).on('page_ready', function() {
   
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr

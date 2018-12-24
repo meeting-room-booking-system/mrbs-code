@@ -13,7 +13,7 @@ if ($use_strict)
 ?>
 
 
-$(function() {
+$(document).on('page_ready', function() {
 
   <?php
   // Turn the table into a datatable, with subtables that appear/disappear when

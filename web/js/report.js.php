@@ -13,7 +13,7 @@ if ($use_strict)
 
 ?>
 
-$(function() {
+$(document).on('page_ready', function() {
   
   <?php
   // Tidy up the presentation of the first header row by merging the cells.
