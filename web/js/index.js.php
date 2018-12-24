@@ -80,11 +80,16 @@ var updateBody = function(event) {
                     }
                   });
               });
+              
+            <?php // Add a class of "js" so that we know if we're using JavaScript or not ?>
+            body.addClass('js');
+            
             <?php
             // Trigger a page_ready event, because the normal document ready event
             // won't be triggered when we are just replacing the html.
             ?>
             $(document).trigger('page_ready');
+            
             <?php // change the URL in the address bar ?>
             history.pushState(null, '', href);
         }
