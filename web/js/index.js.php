@@ -136,6 +136,7 @@ var prefetch = function() {
     return;
   }
   
+  var delay = <?php echo $prefetch_refresh_rate?> * 1000;
   var hrefs = [$('a.prev').attr('href'), 
                $('a.next').attr('href')];
   
@@ -143,12 +144,20 @@ var prefetch = function() {
   updateBody.prefetched = {};
   clearTimeout(prefetch.timeoutId);
   
+  <?php
+  // Don't pre-fetch if the page is hidden.  Just set another timeout
+  ?>
+  if (isHidden())
+  {
+    prefetch.timeoutId = setTimeout(prefetch, delay);
+    return;
+  }
+  
   hrefs.forEach(function(href) {
     $.get({ 
         url: href, 
         dataType: 'html', 
         success: function(response) {
-            var delay = <?php echo $prefetch_refresh_rate?> * 1000;
             updateBody.prefetched[href] = response;
             <?php // Once we've got all the responses back set off another timeout ?>
             if (Object.keys(updateBody.prefetched).length === hrefs.length)
@@ -160,6 +169,7 @@ var prefetch = function() {
   });
   
 };
+
 
 $(document).on('page_ready', function() {
   
