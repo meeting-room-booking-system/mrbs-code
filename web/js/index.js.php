@@ -120,6 +120,13 @@ var updateBody = function(event) {
 // the two most likely pages to be required.
 ?>
 var prefetch = function() {
+  
+  <?php // Don't pre-fetch and waste bandwidth if we're on a metered connection ?>
+  if (isMeteredConnection())
+  {
+    return;
+  }
+  
   var hrefs = [$('a.prev').attr('href'), 
                $('a.next').attr('href')];
   
