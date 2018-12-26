@@ -97,16 +97,16 @@ var updateBody = function(event) {
       href = event;
     }
     
+    <?php // Add a "Loading ..." message ?>
+    $('h2.date').text('<?php echo get_vocab('loading')?>')
+                .addClass('loading');
+                  
     if (updateBody.prefetched[href])
     {
       replaceBody(updateBody.prefetched[href], href);
     }
     else
     {
-      <?php // Add a "Loading ..." message ?>
-      $('h2.date').text('<?php echo get_vocab('loading')?>')
-                  .addClass('loading');
-                  
       $.get(href, 'html', function(response){
           replaceBody(response, href);
 
