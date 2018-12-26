@@ -323,14 +323,20 @@ $display_timezone = false;
 // Results per page for searching:
 $search["count"] = 20;
 
-// Page refresh time (in seconds). Set to 0 to disable
+// Page refresh time (in seconds). Set to 0 to disable.
 // (Note that if MRBS detects that a client is on a metered network
 // connection it will disable page refresh for that client.)
 $refresh_rate = 0;
 
 // Refresh rate (in seconds) for Ajax checking of valid bookings on the edit_entry page
-// Set to 0 to disable
+// Set to 0 to disable.
 $ajax_refresh_rate = 10;
+
+// Refresh rate for page pre-fetches in the calendar views.   MRBS tries to improve
+// performance of navigation between pages in the calendar view by pre-fetching some
+// pages.   This setting determines how often (in seconds) the pre-fetches should be
+// refreshed in order to keep them from gettin out of date.  Set to 0 to disable.
+$prefetch_refresh_rate = 30;
 
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and

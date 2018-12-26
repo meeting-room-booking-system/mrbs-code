@@ -121,7 +121,16 @@ var updateBody = function(event) {
 ?>
 var prefetch = function() {
   
-  <?php // Don't pre-fetch and waste bandwidth if we're on a metered connection ?>
+  <?php
+  // Don't pre-fetch if it's been disabled in the config
+  if (empty($prefetch_refresh_rate))
+  {
+    ?>
+    return;
+    <?php
+  }
+  
+  // Don't pre-fetch and waste bandwidth if we're on a metered connection ?>
   if (isMeteredConnection())
   {
     return;
@@ -130,14 +139,22 @@ var prefetch = function() {
   var hrefs = [$('a.prev').attr('href'), 
                $('a.next').attr('href')];
   
+  <?php // Clear any existing pre-fetched data and any timeout ?>
   updateBody.prefetched = {};
+  clearTimeout(prefetch.timeoutId);
   
   hrefs.forEach(function(href) {
     $.get({ 
         url: href, 
         dataType: 'html', 
         success: function(response) {
+            var delay = <?php echo $prefetch_refresh_rate?> * 1000;
             updateBody.prefetched[href] = response;
+            <?php // Once we've got all the responses back set off another timeout ?>
+            if (Object.keys(updateBody.prefetched).length === hrefs.length)
+            {
+              prefetch.timeoutId = setTimeout(prefetch, delay);
+            }
           }
       });
   });
