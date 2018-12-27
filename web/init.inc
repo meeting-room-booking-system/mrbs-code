@@ -95,6 +95,11 @@ function init_sessions()
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
   
+  $current_db_schema_version = db_schema_version();
+  // The session table was created in Upgrade 56.   Before that we will ignore any errors
+  // to do with DB sessions.
+  $session_table_should_exist = ($current_db_schema_version >= 56);
+
   try
   {
     $handler = new SessionHandlerDb();
@@ -103,19 +108,20 @@ function init_sessions()
   }
   catch(\Exception $e)
   {
-    trigger_error($e->getMessage(), E_USER_WARNING);
+    if ($session_table_should_exist)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+    }
     $session_started = false;
   }
   
   if ($session_started === false)
   {
-    $message = "Could not start DB sessions, trying ordinary PHP sessions.  Note that this " .
-               "error will normally only occur if the sessions table doesn't exist, which " .
-               "will be the case when upgrading to database schema version 56.  If it " .
-               "happens at any other time then something has gone wrong and it should be " .
-               "investigated.";
-               
-    trigger_error($message, E_USER_WARNING);
+    if ($session_table_should_exist)
+    {
+      $message = "Could not start DB sessions, trying ordinary PHP sessions.";       
+      trigger_error($message, E_USER_WARNING);
+    }
     
     $handler = new \SessionHandler();
     session_set_save_handler($handler, true);

@@ -39,3 +39,46 @@ function db()
   return $db_obj;
 }
 
+
+// Returns the db schema version as recorded in the database.   If there is no version
+// recorded then returns 0.
+function db_schema_version()
+{
+  global $tbl_variables;
+  
+  if (db()->table_exists($tbl_variables))
+  {
+    $result = db()->query1("SELECT variable_content " .
+                             "FROM $tbl_variables " .
+                            "WHERE variable_name = 'db_version'");
+  }
+  else
+  {
+    // Default version is 0, before we had schema versions
+    $result = 0;
+  }
+  
+  return max($result, 0);
+}
+
+
+// Returns the local db schema version as recorded in the database.   If there is no version
+// recorded then returns 0.
+function db_schema_version_local()
+{
+  global $tbl_variables;
+  
+  if (db()->table_exists($tbl_variables))
+  {
+    $result = db()->query1("SELECT variable_content " .
+                             "FROM $tbl_variables " .
+                            "WHERE variable_name = 'local_db_version'");
+  }
+  else
+  {
+    // Default version is 0, before we had schema versions
+    $result = 0;
+  }
+  
+  return max($result, 0);
+}

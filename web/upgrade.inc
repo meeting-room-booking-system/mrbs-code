@@ -17,23 +17,8 @@ if (!db()->table_exists($tbl_entry))
   fatal_error(get_vocab('fatal_no_tables'));
 }
 
-// Default version is 0, before we had schema versions
-$current_db_schema_version = 0;
-$current_db_schema_version_local = 0;
-
-if (db()->table_exists($tbl_variables))
-{
-  $current_db_schema_version = db()->query1("SELECT variable_content ".
-                                              "FROM $tbl_variables ".
-                                             "WHERE variable_name = 'db_version'");
-  $current_db_schema_version_local = db()->query1("SELECT variable_content ".
-                                                    "FROM $tbl_variables ".
-                                                   "WHERE variable_name = 'local_db_version'");                                            
-  if ($current_db_schema_version_local < 0)
-  {
-    $current_db_schema_version_local = 0;
-  }
-}
+$current_db_schema_version = db_schema_version();
+$current_db_schema_version_local = db_schema_version_local();
 
 // If either of the database schema version numbers are out of date, then 
 // upgrade the database - provided of course that the entry table exists.
