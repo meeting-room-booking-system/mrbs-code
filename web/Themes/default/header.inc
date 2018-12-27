@@ -239,9 +239,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
   
   $vars = array('view'  => $view,
-                'year'  => $year,
-                'month' => $month,
-                'day'   => $day);
+                'page_date' => format_iso_date($year, $month, $day));
                 
   if (!empty($area))
   {
