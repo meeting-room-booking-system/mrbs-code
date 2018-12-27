@@ -98,6 +98,7 @@ var refreshVisChanged = function refreshVisChanged() {
       }
       if (!pageHidden)
       {
+        prefetch();  <?php // Refresh the prefetched pages ?>
         refreshPage();
       }
     }
@@ -126,23 +127,25 @@ $(document).on('page_ready', function() {
         {
           intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
         }
-    
-        <?php
-        // Add an event listener to detect a change in the visibility
-        // state.  We can then suspend Ajax refreshing when the page is
-        // hidden to save on server, client and network load.
-        ?>
-        var prefix = visibilityPrefix();
-        if (document.addEventListener &&
-            (prefix !== null) && 
-            !refreshListenerAdded)
-        {
-          document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
-          refreshListenerAdded = true;
-        }
         <?php
       }
+
+      // Add an event listener to detect a change in the visibility
+      // state.  We can then suspend Ajax refreshing when the page is
+      // hidden to save on server, client and network load.
+      
+      // We also need to resume refreshing and refresh the pre-fetched 
+      // pages when the page becomes visible again.
       ?>
+      var prefix = visibilityPrefix();
+      if (document.addEventListener &&
+          (prefix !== null) && 
+          !refreshListenerAdded)
+      {
+        document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
+        refreshListenerAdded = true;
+      }
+
       
     }).trigger('tableload');
     
