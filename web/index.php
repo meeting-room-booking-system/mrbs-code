@@ -151,12 +151,10 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
   
   $date = getdate($time);
   
-  $vars = array('view'  => $view,
-                'year'  => $date['year'],
-                'month' => $date['mon'],
-                'day'   => $date['mday'],
-                'area'  => $area,
-                'room'  => $room);
+  $vars = array('view'      => $view,
+                'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
+                'area'      => $area,
+                'room'      => $room);
   
   return 'index.php?' . http_build_query($vars, '', '&');
 }
@@ -167,12 +165,10 @@ function get_today_link($view, $area, $room)
 {
   $date = getdate();
   
-  $vars = array('view'  => $view,
-                'year'  => $date['year'],
-                'month' => $date['mon'],
-                'day'   => $date['mday'],
-                'area'  => $area,
-                'room'  => $room);
+  $vars = array('view'      => $view,
+                'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
+                'area'      => $area,
+                'room'      => $room);
   
   return 'index.php?' . http_build_query($vars, '', '&');
 }
@@ -209,12 +205,10 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
   
   foreach ($views as $view => $token)
   {
-    $vars = array('view'  => $view,
-                  'year'  => $year,
-                  'month' => $month,
-                  'day'   => $day,
-                  'area'  => $area,
-                  'room'  => $room);
+    $vars = array('view'      => $view,
+                  'page_date' => format_iso_date($year, $month, $day),
+                  'area'      => $area,
+                  'room'      => $room);
                   
     $query = http_build_query($vars, '', '&');
     $html .= '<a';

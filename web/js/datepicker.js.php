@@ -143,11 +143,16 @@ $(document).on('page_ready', function() {
     };
     
   var onMinicalChange = function(selectedDates, dateStr, instance) {
+      <?php
+      // The order of the query string parameters is important here.  It needs to be the
+      // same as the order in the Prev anbd Next navigation links so that the pre-fetched
+      // pages can be used when possible.
+      ?>
       var href = 'index.php';
       href += '?view=' + args.view;
+      href += '&page_date=' + dateStr;
       href += '&area=' + args.area;
       href += '&room=' + args.room;
-      href += '&page_date=' + dateStr;
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     }; 
       
