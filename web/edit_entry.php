@@ -693,6 +693,10 @@ function get_field_custom($key, $disabled=false)
                                      'disabled' => $disabled,
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
   
+  if ($class == 'FieldTextarea' && isset($custom_fields[$key]))
+  {
+    $field->setControlText($custom_fields[$key]);
+  }
   return $field;
 }
 
