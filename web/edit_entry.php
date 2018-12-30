@@ -748,10 +748,9 @@ function get_field_custom($key, $disabled=false)
     {
       $field->setControlText($custom_fields[$key]);
     }
-    $full_key = "entry.$key";
-    if (isset($maxlength[$full_key]))
+    if (null !== ($maxlength = maxlength("entry.$key")))
     {
-      $field->setControlAttribute('maxlength', $maxlength[$full_key]);
+      $field->setControlAttribute('maxlength', $maxlength);
     }
   }
   else
