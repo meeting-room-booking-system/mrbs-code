@@ -689,14 +689,21 @@ function get_field_custom($key, $disabled=false)
   
   $field->setLabel(get_loc_field_name($tbl_entry, $key))
         ->setControlAttributes(array('name'     => VAR_PREFIX . $key,
-                                     'value'    => (isset($custom_fields[$key])) ? $custom_fields[$key] : null,
                                      'disabled' => $disabled,
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
   
-  if ($class == 'FieldTextarea' && isset($custom_fields[$key]))
+  if ($class == 'FieldTextarea')
   {
-    $field->setControlText($custom_fields[$key]);
+    if (isset($custom_fields[$key]))
+    {
+      $field->setControlText($custom_fields[$key]);
+    }
   }
+  else
+  {
+    $field->setControlAttribute('value', (isset($custom_fields[$key])) ? $custom_fields[$key] : null);
+  }
+  
   return $field;
 }
 
