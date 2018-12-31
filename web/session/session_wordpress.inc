@@ -7,41 +7,11 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
 
-/* authGet()
- * 
- * Request the user name/password
- * 
- * Returns: Nothing
- */
-function authGet()
-{
-  global $returl;
-
-  print_header();
-  $target_url = this_page(true);
-  print_login_form(this_page(), $target_url, $returl);
-
-  exit();
-}
-
-
-function getUserName()
-{
-  if (!is_user_logged_in())
-  {
-    return null;
-  }
-  
-  $current_user = wp_get_current_user();
-  return $current_user->user_login;
-}
-
-
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
   $target_url = this_page(true);
-  $user=getUserName();
+  $user = session()::getUsername();
   
   if (isset($user))
   {

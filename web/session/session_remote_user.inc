@@ -23,38 +23,13 @@ namespace MRBS;
 
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
-/* authGet()
- * 
- * Request the user name/password
- * 
- * Returns: Nothing
- */
-function authGet()
-{
-  // User is expected to already be authenticated by the web server, so do nothing
-}
-
-function getUserName()
-{
-  if ((!isset($_SERVER['REMOTE_USER'])) ||
-      (!is_string($_SERVER['REMOTE_USER'])) ||
-      (empty($_SERVER['REMOTE_USER'])))
-  {
-    return NULL;
-  } 
-  else
-  {
-    return $_SERVER['REMOTE_USER'];
-  }
-}
-
 
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
   global $auth;
   
-  $user = getUserName();
+  $user = session()::getUsername();
 
   if (isset($user))
   {

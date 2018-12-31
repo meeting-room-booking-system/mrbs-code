@@ -47,43 +47,7 @@ if (is_null($authSource))
 $ssp = new SimpleSAML_Auth_Simple($authSource);
 
 
-/* getAuth()
- * 
- *  No need to prompt for a name - this is done by SimpleSamlPhp
- */
-function authGet()
-{
-  global $ssp;
-  
-  $ssp->requireAuth();
-}
 
-
-/* getUserName()
- *
- *  If the user is authenticated using SAML, get the username
- */
-function getUserName()
-{
-  global $ssp;
-  global $auth;
-  
-  if (!$ssp->isAuthenticated())
-  {
-    return null;
-  }
-  
-  $userData = $ssp->getAttributes();
-  $userNameAttr = $auth['saml']['attr']['username'];
-  
-  if (is_null($userNameAttr))
-  {
-    header('Content-Type: text/plain', true, 500);
-    die("\$auth['saml']['attr']['username'] must be set\r\n");
-  }
-  
-  return array_key_exists($userNameAttr, $userData) ? $userData[$userNameAttr][0] : null;
-}
 
 
 // Print the logon entry on the top banner.
@@ -92,7 +56,7 @@ function print_logon_box()
   global $ssp;
 
   $target_url = this_page(true);
-  $user=getUserName();
+  $user = session()::getUsername();
 
   if ($ssp->isAuthenticated())
   {

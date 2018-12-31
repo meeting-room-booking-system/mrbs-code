@@ -7,23 +7,11 @@ use MRBS\Form\Form;
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
 
-function authGet()
-{
-  // Useless Method
-}
-
-
-function getUserName()
-{
-  return (phpCAS::isAuthenticated()) ? phpCAS::getUser() : null;
-}
-
-
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
   $target_url = this_page(true);
-  $user = getUserName();
+  $user = session()::getUsername();
   
   if (isset($user))
   {

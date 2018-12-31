@@ -14,65 +14,12 @@ namespace MRBS;
 
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
-/* authGet()
- * 
- * Request the user name/password
- * 
- * Returns: Nothing
- */
-function authGet()
-{
-  global $auth;
-  header("WWW-Authenticate: Basic realm=\"$auth[realm]\"");
-  header("HTTP/1.0 401 Unauthorized");
-}
-
-function getAuthPassword()
-{
-  if (isset($_SERVER['PHP_AUTH_PW']))
-  {
-    return unslashes($_SERVER['PHP_AUTH_PW']);
-  }
-  else
-  {
-    return null;
-  }
-}
-
-function getUserName()
-{
-  // We save the results of the user validation so that we avoid any performance
-  // penalties in authValidateUser, which can be severe if for example we are using
-  // LDAP authentication
-  static $authorised_user = null;
-
-  if (isset($_SERVER['PHP_AUTH_USER']))
-  {
-    $user = unslashes($_SERVER['PHP_AUTH_USER']);
-
-    if ((isset($authorised_user) && ($authorised_user == $user)) ||
-        (authValidateUser($user, getAuthPassword()) !== false))
-    {
-      $authorised_user = $user;
-    }
-    else
-    {
-      $authorised_user = null;
-    }
-  }
-  else
-  {
-    $authorised_user = null;
-  }
-  
-  return $authorised_user;
-}
 
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
   $target_url = this_page(true);
-  $user = getUserName();
+  $user = session()::getUsername();
   
   if (isset($user))
   {

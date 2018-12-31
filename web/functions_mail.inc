@@ -454,7 +454,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       // Give the name of the person deleting the entry (might not
       // be the same as the creator)
       $body .= get_mail_vocab("deleted_by") . ': ';
-      $user = getUserName();
+      $user = session()::getUsername();
       $body .= $user;
       break;
     default:
@@ -771,7 +771,7 @@ function create_addresses($data, $action)
   $cc[] = $mail_settings['cc'];
   
   // set the from address
-  $user = getUserName();
+  $user = session()::getUsername();
   if (isset($user) && in_array($action, array("more_info", "reject", "remind")))
   {
     $from = authGetUserEmail($user);

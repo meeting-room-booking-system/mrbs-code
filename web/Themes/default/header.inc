@@ -132,7 +132,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
 function print_outstanding($query)
 {
-  $user = getUserName();
+  $user = session()::getUsername();
   
   if (!isset($user))
   {
@@ -277,7 +277,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     }
     else
     {
-      $user = getUserName();
+      $user = session()::getUsername();
       if (isset($user))
       {
         require_once MRBS_ROOT . '/session/functions_session.inc';

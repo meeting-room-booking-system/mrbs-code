@@ -101,7 +101,7 @@ var updateBody = function(event) {
     $('h2.date').text('<?php echo get_vocab('loading')?>')
                 .addClass('loading');
                   
-    if (updateBody.prefetched[href])
+    if (updateBody.prefetched && updateBody.prefetched[href])
     {
       replaceBody(updateBody.prefetched[href], href);
     }
@@ -109,7 +109,6 @@ var updateBody = function(event) {
     {
       $.get(href, 'html', function(response){
           replaceBody(response, href);
-
         });
     }
   };

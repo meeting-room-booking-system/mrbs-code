@@ -739,9 +739,24 @@ function get_field_custom($key, $disabled=false)
   
   $field->setLabel(get_loc_field_name($tbl_entry, $key))
         ->setControlAttributes(array('name'     => VAR_PREFIX . $key,
-                                     'value'    => (isset($custom_fields[$key])) ? $custom_fields[$key] : null,
                                      'disabled' => $disabled,
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
+  
+  if ($class == 'FieldTextarea')
+  {
+    if (isset($custom_fields[$key]))
+    {
+      $field->setControlText($custom_fields[$key]);
+    }
+    if (null !== ($maxlength = maxlength("entry.$key")))
+    {
+      $field->setControlAttribute('maxlength', $maxlength);
+    }
+  }
+  else
+  {
+    $field->setControlAttribute('value', (isset($custom_fields[$key])) ? $custom_fields[$key] : null);
+  }
   
   return $field;
 }
@@ -1148,7 +1163,7 @@ if (!isset($returl))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$current_username = getUserName();
+$current_username = session()::getUsername();
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set

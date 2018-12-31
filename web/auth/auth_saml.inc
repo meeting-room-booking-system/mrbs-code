@@ -31,7 +31,7 @@ if ($auth['session'] !== 'saml')
  */
 function authValidateUser($user, $pass)
 {
-  $username = getUserName();
+  $username = session()::getUsername();
   
   if (isset($username) && $username === $user)
   {
@@ -64,7 +64,7 @@ function authGetUserLevel($user)
   global $auth;
   
   $userData = $ssp->getAttributes();
-  $username = getUserName();
+  $username = session()::getUsername();
   
   if (isset($username) && $username === $user)
   {
@@ -94,7 +94,7 @@ function authGetUserEmail($user)
   
   $mailAttr = $auth['saml']['attr']['mail'];
   $userData = $ssp->getAttributes();
-  $username = getUserName();
+  $username = session()::getUsername();
   
   if (isset($username) && $username === $user)
   {
