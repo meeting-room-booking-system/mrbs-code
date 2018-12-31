@@ -61,11 +61,15 @@ if (!defined('E_USER_DEPRECATED')) {
 /**
  * phpCAS version. accessible for the user by phpCAS::getVersion().
  */
-define('PHPCAS_VERSION', '1.3.5+');
+define('PHPCAS_VERSION', '1.3.6+');
 
 /**
  * @addtogroup public
  * @{
+ */
+
+/**
+ * phpCAS supported protocols. accessible for the user by phpCAS::getSupportedProtocols().
  */
 
 /**
@@ -325,7 +329,7 @@ class phpCAS
      *
      * @param string $server_version  the version of the CAS server
      * @param string $server_hostname the hostname of the CAS server
-     * @param string $server_port     the port the CAS server is running on
+     * @param int    $server_port     the port the CAS server is running on
      * @param string $server_uri      the URI the CAS server is responding on
      * @param bool   $changeSessionID Allow phpCAS to change the session_id (Single
      * Sign Out/handleLogoutRequests is based on that change)
@@ -714,6 +718,22 @@ class phpCAS
     public static function getVersion()
     {
         return PHPCAS_VERSION;
+    }
+
+    /**
+     * This method returns supported protocols.
+     *
+     * @return an array of all supported protocols. Use internal protocol name as array key.
+     */
+    public static function getSupportedProtocols()
+    {
+        $supportedProtocols = array();
+        $supportedProtocols[CAS_VERSION_1_0] = 'CAS 1.0';
+        $supportedProtocols[CAS_VERSION_2_0] = 'CAS 2.0';
+        $supportedProtocols[CAS_VERSION_3_0] = 'CAS 3.0';
+        $supportedProtocols[SAML_VERSION_1_1] = 'SAML 1.1';
+
+        return $supportedProtocols;
     }
 
     /** @} */
@@ -1732,7 +1752,7 @@ class phpCAS
      * For quick testing or in certain production screnarios you might want to
      * allow allow any other valid service to proxy your service. To do so, add
      * the "Any" chain:
-     *		phpcas::allowProxyChain(new CAS_ProxyChain_Any);
+     *		phpCAS::allowProxyChain(new CAS_ProxyChain_Any);
      * THIS SETTING IS HOWEVER NOT RECOMMENDED FOR PRODUCTION AND HAS SECURITY
      * IMPLICATIONS: YOU ARE ALLOWING ANY SERVICE TO ACT ON BEHALF OF A USER
      * ON THIS SERVICE.
@@ -2012,4 +2032,3 @@ class phpCAS
 /**
  * @example example_advanced_saml11.php
  */
-?>

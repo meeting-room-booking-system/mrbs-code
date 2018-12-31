@@ -131,7 +131,7 @@ class CAS_Client
         $lang = $this->getLangObj();
         $this->_htmlFilterOutput(
             empty($this->_output_footer)?
-            (phpcas::getVerbose())?
+            (phpCAS::getVerbose())?
                 '<hr><address>phpCAS __PHPCAS_VERSION__ '
                 .$lang->getUsingServer()
                 .' <a href="__SERVER_BASE_URL__">__SERVER_BASE_URL__</a> (CAS __CAS_VERSION__)</a></address></body></html>'
@@ -953,26 +953,21 @@ class CAS_Client
             );
         }
 
-        //check version
-        switch ($server_version) {
-        case CAS_VERSION_1_0:
-            if ( $this->isProxy() ) {
-                phpCAS::error(
-                    'CAS proxies are not supported in CAS '.$server_version
-                );
-            }
-            break;
-        case CAS_VERSION_2_0:
-        case CAS_VERSION_3_0:
-            break;
-        case SAML_VERSION_1_1:
-            break;
-        default:
+        // check version
+        $supportedProtocols = phpCAS::getSupportedProtocols();
+        if (isset($supportedProtocols[$server_version]) === false) {
             phpCAS::error(
                 'this version of CAS (`'.$server_version
                 .'\') is not supported by phpCAS '.phpCAS::getVersion()
             );
         }
+
+        if ($server_version === CAS_VERSION_1_0 && $this->isProxy()) {
+            phpCAS::error(
+                'CAS proxies are not supported in CAS '.$server_version
+            );
+        }
+
         $this->_server['version'] = $server_version;
 
         // check hostname
@@ -2400,8 +2395,8 @@ class CAS_Client
     private function _callback()
     {
         phpCAS::traceBegin();
-        if (preg_match('/PGTIOU-[\.\-\w]/', $_GET['pgtIou'])) {
-            if (preg_match('/[PT]GT-[\.\-\w]/', $_GET['pgtId'])) {
+        if (preg_match('/^PGTIOU-[\.\-\w]+$/', $_GET['pgtIou'])) {
+            if (preg_match('/^[PT]GT-[\.\-\w]+$/', $_GET['pgtId'])) {
                 $this->printHTMLHeader('phpCAS callback');
                 $pgt_iou = $_GET['pgtIou'];
                 $pgt = $_GET['pgtId'];
@@ -2617,7 +2612,7 @@ class CAS_Client
             $pgt_iou = trim(
                 $tree_response->getElementsByTagName("proxyGrantingTicket")->item(0)->nodeValue
             );
-            if (preg_match('/PGTIOU-[\.\-\w]/', $pgt_iou)) {
+            if (preg_match('/^PGTIOU-[\.\-\w]+$/', $pgt_iou)) {
                 $pgt = $this->_loadPGT($pgt_iou);
                 if ( $pgt == false ) {
                     phpCAS::trace('could not load PGT');
@@ -3380,7 +3375,7 @@ class CAS_Client
                 case 'user':
                 case 'proxies':
                 case 'proxyGrantingTicket':
-                    continue;
+                    break;
                 default:
                     if (strlen(trim($attr_node->nodeValue))) {
                         phpCas :: trace(
@@ -3966,5 +3961,3 @@ class CAS_Client
 
     /** @} */
 }
-
-?>
