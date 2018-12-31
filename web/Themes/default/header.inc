@@ -234,6 +234,47 @@ function print_search($view, $year, $month, $day, $area, $room)
 }
 
 
+function print_logonoff_button($params, $value)
+{
+  $form = new Form();
+  $form->setAttributes(array('method' => $params['method'],
+                             'action' => $params['action']));
+  
+  // Add the hidden fields
+  if (isset($params['hidden_inputs']))
+  {
+    $form->addHiddenInputs($params['hidden_inputs']);
+  }
+  
+  // The submit button
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', $value);
+  $form->addElement($element);
+  
+  $form->render();
+}
+
+
+function print_logon()
+{
+  $form_params = session()::getLogonFormParams();
+  if (isset($form_params))
+  {
+    print_logonoff_button($form_params, get_vocab('login'));
+  }
+}
+
+
+function print_logoff()
+{
+  $form_params = session()::getLogoffFormParams();
+  if (isset($form_params))
+  {
+    print_logonoff_button($form_params, get_vocab('logoff'));
+  }
+}
+
+
 function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
@@ -268,22 +309,18 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     
     echo "<nav class=\"logon\">\n";
     print_outstanding($query);
-    // For session protocols that define their own logon box...
-    // (Note: This really needs to be sorted out so that the HTML
-    // is taken out of the session code)
-    if (function_exists(__NAMESPACE__ . "\\print_logon_box"))
+    
+    $user = session()::getUsername();
+    if (isset($user))
     {
-      print_logon_box();
+      print_report_link($user);
+      print_logoff();
     }
     else
     {
-      $user = session()::getUsername();
-      if (isset($user))
-      {
-        require_once MRBS_ROOT . '/session/functions_session.inc';
-        print_report_link($user);
-      }
+      print_logon();
     }
+    
     echo "</nav>\n";
     
     echo "</nav>\n";

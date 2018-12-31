@@ -39,6 +39,30 @@ abstract class Session implements SessionInterface
   }
   
   
+  public static function getLogonFormParams()
+  {
+    return array(
+        'action' => 'admin.php',
+        'method' => 'post',
+        'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
+                                  'action'     => 'QueryName')
+      );
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    return array(
+        'action' => 'admin.php',
+        'method' => 'post',
+        'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
+                                  'action'     => 'SetName',
+                                  'username'   => '',
+                                  'password'   => '')
+      );
+  }
+  
+  
   // Displays the login form. 
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.

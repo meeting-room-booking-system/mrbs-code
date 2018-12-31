@@ -43,6 +43,11 @@ class SessionHttp extends Session
   }
   
   
+  public static function getLogonFormParams()
+  {
+  }
+  
+  
   private static function getAuthPassword()
   {
     if (isset($_SERVER['PHP_AUTH_PW']))
