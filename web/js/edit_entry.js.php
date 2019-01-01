@@ -1143,7 +1143,15 @@ $(document).on('page_ready', function() {
   ?>
   if (!isMobile())
   {
-    $('#create_by').wrap('<div></div>').select2({width: 'auto'});
+    $('#create_by').wrap('<div></div>').select2();
+    <?php
+    // Select2 doesn't always get the width right, so increase it by a
+    // few pixels to make sure we don't get a '...'
+    ?>
+    $('.select2-container').each(function() {
+      var container = $(this);
+      container.width(container.width() + 5);
+    });
   }
   
   <?php
