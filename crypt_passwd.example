@@ -1,2 +1,3 @@
-user1:DG.xGCMtUff7Y
-user2:B0I/s3i6RG3JA
+# SHA-512 crypted passwords, for better security
+user1:$6$FGcixVeC$J6Vb/7PKwcOn3M9ma2n4PtFx.83bA5p9s1Qk/GYOHgGZMw1rpPbZC6t1QbGETgyr.azZnAcJNJ/7Qdh9EasAf.
+user2:$6$zhZgcAMOe2$2CCvBRTPIsRaDA5Lt2gi3Nb6W1JQ2wklq3oZ/Cw8GNPYAtTO4CM7s/4ohNhJvzp1PpGD1WmsDf.bxBmAYTSxL0
