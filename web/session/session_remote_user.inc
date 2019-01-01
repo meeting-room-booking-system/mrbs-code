@@ -24,38 +24,3 @@ namespace MRBS;
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
 
-// Print the logon entry on the top banner.
-function print_logon_box()
-{
-  global $auth;
-  
-  $user = session()->getUsername();
-
-  if (isset($user))
-  {
-    print_report_link($user);
-
-    // Retrieve logout link from configuration, if specified
-    if (isset($auth['remote_user']['logout_link']) &&
-        is_string($auth['remote_user']['logout_link']) &&
-        (!empty($auth['remote_user']['logout_link'])))
-    {
-      print '<a href="' . $auth['remote_user']['logout_link'] .'">' . get_vocab('logoff') . "</a>\n";
-    }
-  }
-  else
-  {
-    if (isset($auth['remote_user']['login_link']) &&
-        is_string($auth['remote_user']['login_link']) &&
-        (!empty($auth['remote_user']['login_link'])))
-    {
-      print '<a href="' . $auth['remote_user']['login_link'] .'">' . get_vocab('login') . "</a>\n";
-    }
-    else
-    {
-      echo "<p class=\"error\">Error: REMOTE_USER was not set when it should have been.</p>";
-      exit;
-    }
-  }
-}
-

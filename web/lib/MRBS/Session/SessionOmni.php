@@ -48,6 +48,18 @@ class SessionOmni extends Session
   
   public static function getUsername()
   {
-    return $_SERVER['REMOTE_USER'];
+    return (isset($_SERVER['REMOTE_USER'])) ? $_SERVER['REMOTE_USER'] : null;
+  }
+  
+  
+  public static function getLogonFormParams()
+  {
+    // Just return NULL - you can't logon
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    // Just return NULL - you can't logoff
   }
 }

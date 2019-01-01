@@ -23,4 +23,40 @@ class SessionRemoteUser extends Session
       return $_SERVER['REMOTE_USER'];
     }
   }
+  
+  
+  public static function getLogonFormParams()
+  {
+    global $auth;
+    
+    if (isset($auth['remote_user']['login_link']))
+    {
+      return array(
+          'action' => $auth['remote_user']['login_link'],
+          'method' => 'get'
+        );
+    }
+    else
+    {
+      return null;
+    }
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    global $auth;
+    
+    if (isset($auth['remote_user']['logout_link']))
+    {
+      return array(
+          'action' => $auth['remote_user']['logout_link'],
+          'method' => 'get'
+        );
+    }
+    else
+    {
+      return null;
+    }
+  }
 }

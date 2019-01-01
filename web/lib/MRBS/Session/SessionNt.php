@@ -33,4 +33,16 @@ class SessionNt extends Session
   {
     return get_current_user(); 
   }
+  
+  
+  public static function getLogonFormParams()
+  {
+    // Just return NULL - you can't logon
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    // Just return NULL - you can't logoff
+  }
 }

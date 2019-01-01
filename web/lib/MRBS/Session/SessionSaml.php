@@ -6,14 +6,12 @@ use \SimpleSAML_Auth_Simple;
 
 class SessionSaml extends Session
 {
-  private static $ssp_path;
+  private static $ssp;
   
   
   public function __construct()
   {
     global $auth;
-    
-    private static $ssp;
     
     // Check that the config variables have been set
     if (!isset($auth['saml']['ssp_path']))
@@ -63,5 +61,47 @@ class SessionSaml extends Session
     $userNameAttr = $auth['saml']['attr']['username'];
     
     return array_key_exists($userNameAttr, $userData) ? $userData[$userNameAttr][0] : null;
+  }
+  
+  
+  public static function getLogonFormParams()
+  {
+    $target_url = '/' . \MRBS\this_page(true);
+    $url = self::$ssp->getLoginURL($target_url);
+    $baseURL = strstr($url, '?', true);
+    parse_str(substr(strstr($url, '?'), 1), $params);
+    
+    $result = array(
+        'action' => $baseURL,
+        'method' => 'get'
+      );
+      
+    if (!empty($params))
+    {
+      $result['hidden_inputs'] = $params;
+    }
+    
+    return $result;
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    $target_url = '/' . \MRBS\this_page(true);
+    $url = self::$ssp->getLogoutURL($target_url);
+    $baseURL = strstr($url, '?', true);
+    parse_str(substr(strstr($url, '?'), 1), $params);
+    
+    $result = array(
+        'action' => $baseURL,
+        'method' => 'get'
+      );
+      
+    if (!empty($params))
+    {
+      $result['hidden_inputs'] = $params;
+    }
+    
+    return $result;
   }
 }

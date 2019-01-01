@@ -927,6 +927,22 @@ $auth['joomla']['admin_access_levels'] = array(); // Can either be a single inte
 $auth['joomla']['user_access_levels'] = array(); // Can either be a single integer, or an array of integers.
 
 
+// 'auth_saml' configuration settings
+// (assuming Active Directory attributes):
+$auth['saml']['ssp_path'] = '/opt/simplesamlphp';  // must be an absolute and not a relative path
+$auth['saml']['authsource'] = 'default-sp';
+$auth['saml']['attr']['username'] = 'sAMAccountName';
+$auth['saml']['attr']['mail'] = 'mail';
+$auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+
+// This scheme assumes that you've already configured SimpleSamlPhp,
+// and that you have set up aliases in your webserver so that SimpleSamlPhp
+// can handle incoming assertions.  Refer to the SimpleSamlPhp documentation
+// for more information on how to do that.
+//
+// https://simplesamlphp.org/docs/stable/simplesamlphp-install
+// https://simplesamlphp.org/docs/stable/simplesamlphp-sp
+
 
 // 'auth_wordpress' configuration settings
 $auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation relative to MRBS.
