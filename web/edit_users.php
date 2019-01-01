@@ -82,7 +82,7 @@ elseif (isset($update_button))
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
-  $current_username = session()::getUsername();
+  $current_username = session()->getUsername();
     
   return (is_user_admin() || (strcasecmp($current_username, $target) === 0));
 }
@@ -557,7 +557,7 @@ $initial_user_creation = false;
 
 if (count($users) > 0)
 {
-  $current_username = session()::getUsername();
+  $current_username = session()->getUsername();
   $level = authGetUserLevel($current_username);
   // Check the user is authorised for this page
   checkAuthorised(this_page());

@@ -154,7 +154,7 @@ if (isset($search_str) && ($search_str !== ''))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = session()::getUsername();
+$user = session()->getUsername();
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.  We also need

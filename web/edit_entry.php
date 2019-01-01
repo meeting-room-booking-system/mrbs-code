@@ -1163,7 +1163,7 @@ if (!isset($returl))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$current_username = session()::getUsername();
+$current_username = session()->getUsername();
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set

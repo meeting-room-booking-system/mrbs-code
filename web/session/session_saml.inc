@@ -56,7 +56,7 @@ function print_logon_box()
   global $ssp;
 
   $target_url = this_page(true);
-  $user = session()::getUsername();
+  $user = session()->getUsername();
 
   if ($ssp->isAuthenticated())
   {

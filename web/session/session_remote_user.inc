@@ -29,7 +29,7 @@ function print_logon_box()
 {
   global $auth;
   
-  $user = session()::getUsername();
+  $user = session()->getUsername();
 
   if (isset($user))
   {

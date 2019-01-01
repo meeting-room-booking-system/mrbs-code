@@ -11,7 +11,7 @@ require_once MRBS_ROOT . '/session/functions_session.inc';
 function print_logon_box()
 {
   $target_url = this_page(true);
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   
   if (isset($user))
   {

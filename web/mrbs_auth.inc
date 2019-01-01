@@ -127,10 +127,10 @@ function getAuthorised($level)
   }
 
   // Otherwise we need to check who they are
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   if(!isset($user))
   {
-    session()::authGet();
+    session()->authGet();
     return false;
   }
 
@@ -158,7 +158,7 @@ function checkAuthorised($page, $just_check=false)
       return true;
     }
     
-    $user = session()::getUsername();
+    $user = session()->getUsername();
     return (isset($user)) ? (authGetUserLevel($user) >= $required_level) : false;
   }
   
@@ -199,7 +199,7 @@ function checkAuthorised($page, $just_check=false)
  */
 function getWritable($creator, $room)
 {
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   
   // Always allowed to modify your own stuff
   if(strcasecmp($creator, $user) === 0)
@@ -246,7 +246,7 @@ function is_admin()
 {
   global $max_level;
   
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   $required_level = (isset($max_level) ? $max_level : 2);
   
   return (authGetUserLevel($user) >= $required_level);
@@ -264,7 +264,7 @@ function is_admin()
 //           the room; otherwise FALSE
 function is_book_admin($room=null)
 {
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   
   return (authGetUserLevel($user) >= 2);
 }
@@ -275,7 +275,7 @@ function is_user_admin()
 {
   global $min_user_editing_level;
   
-  $user = session()::getUsername();
+  $user = session()->getUsername();
 
   return (authGetUserLevel($user) >= $min_user_editing_level);
 }

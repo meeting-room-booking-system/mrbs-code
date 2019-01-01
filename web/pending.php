@@ -247,7 +247,7 @@ function display_entry_row(array $row)
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = session()::getUsername();
+$user = session()->getUsername();
 
 print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 

@@ -1367,7 +1367,7 @@ else
   
   // Check the user is authorised for this page
   checkAuthorised(this_page());
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   $user_level = authGetUserLevel($user);
 }
 

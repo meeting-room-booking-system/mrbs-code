@@ -132,7 +132,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
 function print_outstanding($query)
 {
-  $user = session()::getUsername();
+  $user = session()->getUsername();
   
   if (!isset($user))
   {
@@ -298,7 +298,7 @@ function print_logonoff_button($params, $value)
 
 function print_logon()
 {
-  $form_params = session()::getLogonFormParams();
+  $form_params = session()->getLogonFormParams();
   if (isset($form_params))
   {
     print_logonoff_button($form_params, get_vocab('login'));
@@ -308,7 +308,7 @@ function print_logon()
 
 function print_logoff()
 {
-  $form_params = session()::getLogoffFormParams();
+  $form_params = session()->getLogoffFormParams();
   if (isset($form_params))
   {
     print_logonoff_button($form_params, get_vocab('logoff'));
@@ -351,7 +351,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     echo "<nav class=\"logon\">\n";
     print_outstanding($query);
     
-    $user = session()::getUsername();
+    $user = session()->getUsername();
     if (isset($user))
     {
       print_report_link($user);

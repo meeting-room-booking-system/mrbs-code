@@ -21,7 +21,7 @@ Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised(this_page());
-$user = session()::getUsername();
+$user = session()->getUsername();
 
 // Retrieve the booking details
 $data = get_booking_info($id, $series);
