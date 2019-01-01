@@ -1,6 +1,9 @@
 <?php
 namespace MRBS\Session;
 
+// Get user identity using the HTTP basic authentication
+
+
 class SessionHttp extends Session
 {
   
