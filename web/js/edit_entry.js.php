@@ -1439,4 +1439,6 @@ $(document).on('page_ready', function() {
     document.addEventListener(prefix + "visibilitychange", editEntryVisChanged);
   }
   
+  form.removeClass('js_hidden');
+  
 });
