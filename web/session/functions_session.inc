@@ -83,47 +83,6 @@ function print_login_form($action, $target_url, $returl, $error=null, $raw=false
 }
 
 
-// Generate the username link, which gives a report on the user's upcoming bookings.
-function print_report_link($user)
-{
-  // If possible, provide a link to the Report page, otherwise the Search page
-  // and if that's not possible just print the username with no link.  (Note that
-  // the Search page isn't the perfect solution because it searches for any bookings
-  // containing the search string, not just those created by the user.)
-  if (checkAuthorised('report.php', true))
-  {
-    $attributes = array('action' => 'report.php');
-    $hidden_inputs = array('phase'        => '2',
-                           'creatormatch' => $user);
-  }
-  elseif (checkAuthorised('search.php', true))
-  {
-    $attributes = array('action' => 'search.php');
-    $hidden_inputs = array('search_str' => $user);
-  }
-  else
-  {
-    echo '<span>' . htmlspecialchars($user) . '</span>';
-    return;
-  }
-  
-  // We're authorised for either Report or Search so print the form.
-  $form = new Form();
-  
-  $attributes['id'] = 'show_my_entries';
-  $attributes['method'] = 'post';
-  $form->setAttributes($attributes)
-       ->addHiddenInputs($hidden_inputs);
-                               
-  $submit = new ElementInputSubmit();
-  $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
-                               'value' => $user));
-  $form->addElement($submit);
-                               
-  $form->render();
-}
-
-
 function print_logon_button($target_url)
 {
   global $auth;

@@ -43,8 +43,10 @@ class SessionHttp extends Session
   }
   
   
-  public static function getLogonFormParams()
+  public static function getLogoffFormParams()
   {
+    // Just return NULL - you can't logoff
+    // (well, there are ways of achieving a logoff but we haven't implemrnted them)
   }
   
   
@@ -52,7 +54,7 @@ class SessionHttp extends Session
   {
     if (isset($_SERVER['PHP_AUTH_PW']))
     {
-      return unslashes($_SERVER['PHP_AUTH_PW']);
+      return \MRBS\unslashes($_SERVER['PHP_AUTH_PW']);
     }
     else
     {

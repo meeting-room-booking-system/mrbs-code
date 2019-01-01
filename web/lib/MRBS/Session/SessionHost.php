@@ -37,4 +37,16 @@ class SessionHost extends Session
     
     return $remotehostname;
   }
+  
+  
+  public static function getLogonFormParams()
+  {
+    // Just return NULL - you can't logon
+  }
+  
+  
+  public static function getLogoffFormParams()
+  {
+    // Just return NULL - you can't logoff
+  }
 }
