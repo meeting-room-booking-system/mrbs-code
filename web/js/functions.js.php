@@ -20,6 +20,35 @@ function isMobile()
 
 $.fn.reverse = [].reverse;
 
+
+jQuery.fn.extend({
+  
+  <?php
+  // Turn a select element into a fancy Select2 field control.  This wrapper function also
+  // (a) only does anything if we are not on a mobile device, because the native select
+  //     elements on mobile devices tend to be better.
+  // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
+  //     a table structure and because Select2 adds a sibling element the table structure is
+  //     ruined.
+  // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
+  //     resilting in a '...'
+  ?>
+  mrbsSelect: function() {
+    if (!isMobile())
+    {
+      $(this).wrap('<div></div>')
+             .select2()
+             .next('.select2-container').each(function() {
+                var container = $(this);
+                container.width(container.width() + 5);
+              });
+    }
+    return($(this));
+  }
+  
+});
+
+
 function getErrorList(errors)
 {
   var result = {html: '', text: ''},
