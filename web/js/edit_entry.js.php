@@ -1135,6 +1135,18 @@ $(document).on('page_ready', function() {
   isAdmin = args.isAdmin;
   
   <?php
+  // Turn the create_by select into a fancy select box.  It needs to be wrapped
+  // in a <div> first as Select2 creates a new sibling element which would otherwise
+  // destroy the table structure of the form.
+  // If we are using a mobile device then keep the native select elements
+  // as they tend to be better.
+  ?>
+  if (!isMobile())
+  {
+    $('#create_by').wrap('<div></div>').select2({width: 'auto'});
+  }
+  
+  <?php
   // If there's only one enabled area in the database there won't be an area
   // select input, so we'll have to create a dummy input because the code
   // relies on it.
