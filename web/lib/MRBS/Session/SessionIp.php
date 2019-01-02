@@ -24,7 +24,7 @@ class SessionIp extends SessionWithoutLogin
 
   // No need to prompt for a name - IP address always there
 
-  public static function getUsername()
+  public function getUsername()
   {
     return $_SERVER['REMOTE_ADDR'];
   }

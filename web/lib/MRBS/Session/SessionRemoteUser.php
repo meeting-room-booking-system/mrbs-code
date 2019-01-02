@@ -23,12 +23,12 @@ class SessionRemoteUser extends SessionWithLogin
 {
 
   // User is expected to already be authenticated by the web server, so do nothing
-  public static function authGet()
+  public function authGet()
   {
   }
   
   
-  public static function getUsername()
+  public function getUsername()
   {
     if ((!isset($_SERVER['REMOTE_USER'])) ||
         (!is_string($_SERVER['REMOTE_USER'])) ||
@@ -43,7 +43,7 @@ class SessionRemoteUser extends SessionWithLogin
   }
   
   
-  public static function getLogonFormParams()
+  public function getLogonFormParams()
   {
     global $auth;
     
@@ -61,7 +61,7 @@ class SessionRemoteUser extends SessionWithLogin
   }
   
   
-  public static function getLogoffFormParams()
+  public function getLogoffFormParams()
   {
     global $auth;
     

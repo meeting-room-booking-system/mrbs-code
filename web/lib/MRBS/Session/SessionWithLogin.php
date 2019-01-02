@@ -13,7 +13,7 @@ use MRBS\Form\FieldInputText;
 // An abstract class for those session schemes that implement a login form
 abstract class SessionWithLogin implements SessionInterface
 {
-  protected static $form = array();
+  protected $form = array();
   
   
   public function __construct()
@@ -21,26 +21,24 @@ abstract class SessionWithLogin implements SessionInterface
     // Get non-standard form variables
     foreach (array('action', 'username', 'password', 'target_url', 'returl') as $var)
     {
-      self::$form[$var] = \MRBS\get_form_var($var, 'string', null, INPUT_POST);
+      $this->form[$var] = \MRBS\get_form_var($var, 'string', null, INPUT_POST);
     }
   }
   
   
-  public static function authGet()
+  public function authGet()
   {
     \MRBS\print_header();
     $target_url = \MRBS\this_page(true);
-    self::printLoginForm(\MRBS\this_page(), $target_url, self::$form['returl']);
+    $this->printLoginForm(\MRBS\this_page(), $target_url, $this->form['returl']);
     exit;
   }
   
   
-  public static function getUsername()
-  {
-  }
+  abstract public function getUsername();
   
   
-  public static function getLogonFormParams()
+  public function getLogonFormParams()
   {
     return array(
         'action' => 'admin.php',
@@ -51,7 +49,7 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
-  public static function getLogoffFormParams()
+  public function getLogoffFormParams()
   {
     return array(
         'action' => 'admin.php',
@@ -71,35 +69,35 @@ abstract class SessionWithLogin implements SessionInterface
   
   public function processForm()
   {
-    if (isset(self::$form['action']))
+    if (isset($this->form['action']))
     {
       // Target of the form with sets the URL argument "action=QueryName".
       // Will eventually return to URL argument "target_url=whatever".
-      if (self::$form['action'] == 'QueryName')
+      if ($this->form['action'] == 'QueryName')
       {
         \MRBS\print_header();
-        self::printLoginForm(\MRBS\this_page(), self::$form['target_url'], self::$form['returl']);
+        $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl']);
         exit();
       }
       
       // Target of the form with sets the URL argument "action=SetName".
       // Will eventually return to URL argument "target_url=whatever".
-      if (self::$form['action'] == 'SetName')
+      if ($this->form['action'] == 'SetName')
       {
         // If we're going to do something then check the CSRF token first
         Form::checkToken();
         
         // First make sure the password is valid
-        if (self::$form['username'] == '')
+        if ($this->form['username'] == '')
         {
           $this->logoffUser();
         }
         else
         {
-          if (($valid_username = \MRBS\authValidateUser(self::$form['username'], self::$form['password'])) === false)
+          if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
           {
             \MRBS\print_header();
-            self::printLoginForm(\MRBS\this_page(), self::$form['target_url'], self::$form['returl'], \MRBS\get_vocab('unknown_user'));
+            $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
             exit();
           }
           
@@ -108,18 +106,18 @@ abstract class SessionWithLogin implements SessionInterface
           session_regenerate_id(true);
           $_SESSION['UserName'] = $valid_username;
           
-          if (!empty(self::$form['returl']))
+          if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
-            self::$form['target_url'] .= (strpos(self::$form['target_url'], '?') === false) ? '?' : '&';
-            self::$form['target_url'] .= urlencode(self::$form['returl']);
+            $this->form['target_url'] .= (strpos($this->form['target_url'], '?') === false) ? '?' : '&';
+            $this->form['target_url'] .= urlencode($this->form['returl']);
           }
         }
 
         // Problems have been reported on Windows IIS with session data not being
         // written out without a call to session_write_close()
         session_write_close();
-        header ('Location: ' . self::$form['target_url']); /* Redirect browser to initial page */
+        header ('Location: ' . $this->form['target_url']); /* Redirect browser to initial page */
         exit;
       }
     }
@@ -130,7 +128,7 @@ abstract class SessionWithLogin implements SessionInterface
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.
   // If $raw is true then the message is not HTML escaped
-  protected static function printLoginForm($action, $target_url, $returl, $error=null, $raw=false)
+  protected function printLoginForm($action, $target_url, $returl, $error=null, $raw=false)
   {
     $form = new Form();
     $form->setAttributes(array('class'  => 'standard',

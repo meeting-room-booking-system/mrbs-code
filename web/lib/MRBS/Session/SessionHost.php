@@ -26,7 +26,7 @@ class SessionHost extends SessionWithoutLogin
   
   // No need to prompt for a name: if no DNSname is returned, the IP address is used
   
-  public static function getUsername()
+  public function getUsername()
   {
     $remotehostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     

@@ -7,19 +7,19 @@ use \phpCAS;
 class SessionCas extends SessionWithLogin
 {
   
-  public static function authGet()
+  public function authGet()
   {
     // Useless Method
   }
   
   
-  public static function getUsername()
+  public function getUsername()
   {
     return (phpCAS::isAuthenticated()) ? phpCAS::getUser() : null;
   }
   
   
-  public static function getLogonFormParams()
+  public function getLogonFormParams()
   {
     $target_url = \MRBS\this_page(true);
     

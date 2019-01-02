@@ -4,7 +4,7 @@ namespace MRBS\Session;
 class SessionCookie extends SessionWithLogin
 {
   
-  public static function getUsername()
+  public function getUsername()
   {
     global $auth;
     

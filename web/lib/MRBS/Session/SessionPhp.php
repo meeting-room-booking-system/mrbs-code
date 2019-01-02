@@ -4,7 +4,7 @@ namespace MRBS\Session;
 class SessionPhp extends SessionWithLogin
 {
   
-  public static function getUsername()
+  public function getUsername()
   {
     if (isset($_SESSION['UserName']) && ($_SESSION['UserName'] !== ''))
     {

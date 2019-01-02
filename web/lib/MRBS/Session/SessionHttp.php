@@ -7,7 +7,7 @@ namespace MRBS\Session;
 class SessionHttp extends SessionWithLogin
 {
   
-  public static function authGet()
+  public function authGet()
   {
     global $auth;
     
@@ -16,7 +16,7 @@ class SessionHttp extends SessionWithLogin
   }
   
   
-  public static function getUsername()
+  public function getUsername()
   {
     // We save the results of the user validation so that we avoid any performance
     // penalties in authValidateUser, which can be severe if for example we are using
@@ -46,7 +46,7 @@ class SessionHttp extends SessionWithLogin
   }
   
   
-  public static function getLogoffFormParams()
+  public function getLogoffFormParams()
   {
     // Just return NULL - you can't logoff
     // (well, there are ways of achieving a logoff but we haven't implemrnted them)

@@ -42,7 +42,7 @@ class SessionOmni extends SessionWithoutLogin
 
   // No need to prompt for a name - this is done by the server.
   
-  public static function getUsername()
+  public function getUsername()
   {
     return (isset($_SERVER['REMOTE_USER'])) ? $_SERVER['REMOTE_USER'] : null;
   }

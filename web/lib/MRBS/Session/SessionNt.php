@@ -25,7 +25,7 @@ class SessionNt extends SessionWithoutLogin
 
   // For this scheme no need to prompt for a name - NT User always there.
   
-  public static function getUsername()
+  public function getUsername()
   {
     return get_current_user(); 
   }

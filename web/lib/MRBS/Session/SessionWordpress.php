@@ -7,7 +7,7 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 class SessionWordpress extends SessionWithLogin
 {
   
-  public static function getUsername()
+  public function getUsername()
   {
     if (!is_user_logged_in())
     {

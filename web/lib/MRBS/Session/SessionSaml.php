@@ -6,7 +6,7 @@ use \SimpleSAML_Auth_Simple;
 
 class SessionSaml extends SessionWithLogin
 {
-  private static $ssp;
+  private $ssp;
   
   
   public function __construct()
@@ -37,37 +37,37 @@ class SessionSaml extends SessionWithLogin
       $authSource = 'default-sp';
     }
     
-    self::$ssp = new SimpleSAML_Auth_Simple($authSource);
+    $this->ssp = new SimpleSAML_Auth_Simple($authSource);
   }
   
   
   // No need to prompt for a name - this is done by SimpleSamlPhp
-  public static function authGet()
+  public function authGet()
   {
-    self::$ssp->requireAuth();
+    $this->ssp->requireAuth();
   }
   
   
-  public static function getUsername()
+  public function getUsername()
   {
     global $auth;
     
-    if (!self::$ssp->isAuthenticated())
+    if (!$this->ssp->isAuthenticated())
     {
       return null;
     }
     
-    $userData = self::$ssp->getAttributes();
+    $userData = $this->ssp->getAttributes();
     $userNameAttr = $auth['saml']['attr']['username'];
     
     return array_key_exists($userNameAttr, $userData) ? $userData[$userNameAttr][0] : null;
   }
   
   
-  public static function getLogonFormParams()
+  public function getLogonFormParams()
   {
     $target_url = '/' . \MRBS\this_page(true);
-    $url = self::$ssp->getLoginURL($target_url);
+    $url = $this->ssp->getLoginURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
     
@@ -85,10 +85,10 @@ class SessionSaml extends SessionWithLogin
   }
   
   
-  public static function getLogoffFormParams()
+  public function getLogoffFormParams()
   {
     $target_url = '/' . \MRBS\this_page(true);
-    $url = self::$ssp->getLogoutURL($target_url);
+    $url = $this->ssp->getLogoutURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
     
