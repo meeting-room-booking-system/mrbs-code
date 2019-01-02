@@ -88,7 +88,7 @@ abstract class SessionWithLogin implements SessionInterface
         Form::checkToken();
         
         // First make sure the password is valid
-        if ($this->form['username'] == '')
+        if (!isset($this->form['username']) || ($this->form['username'] == ''))
         {
           $this->logoffUser();
         }
@@ -101,10 +101,8 @@ abstract class SessionWithLogin implements SessionInterface
             exit();
           }
           
-          // Successful login.  As a defence against session fixation, regenerate
-          // the session id and delete the old session.
-          session_regenerate_id(true);
-          $_SESSION['UserName'] = $valid_username;
+          // Successful login.  
+          $this->logonUser($valid_username);
           
           if (!empty($this->form['returl']))
           {
@@ -113,10 +111,7 @@ abstract class SessionWithLogin implements SessionInterface
             $this->form['target_url'] .= urlencode($this->form['returl']);
           }
         }
-
-        // Problems have been reported on Windows IIS with session data not being
-        // written out without a call to session_write_close()
-        session_write_close();
+        
         header ('Location: ' . $this->form['target_url']); /* Redirect browser to initial page */
         exit;
       }

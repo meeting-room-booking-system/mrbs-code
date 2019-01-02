@@ -78,4 +78,57 @@ class SessionCookie extends SessionWithLogin
 
     return $cached_username;
   }
+  
+  
+  public function logonUser($username)
+  {
+    global $auth;
+
+    $cookie_path = \MRBS\get_cookie_path();
+    
+    if ($auth['session_cookie']['session_expire_time'] == 0)
+    {
+      $expiry_time = 0;
+    }
+    else
+    {
+      $expiry_time = time() + $auth['session_cookie']['session_expire_time'];
+    }
+
+    $session_data = array();
+    $session_data['user'] = $username;
+    $session_data['expiry'] = $expiry_time;
+    
+    if ($auth['session_cookie']['include_ip'])
+    {
+      $session_data['ip'] = $_SERVER['REMOTE_ADDR'];
+    }
+    
+    $json_data = json_encode($session_data);
+    
+    if (!function_exists('hash_hmac'))
+    {
+      fatal_error("It appears that your PHP has the hash functions " .
+                  "disabled, which are required for the 'cookie' " .
+                  "session scheme.");
+    }
+    
+    $hash = hash_hmac($auth['session_cookie']['hash_algorithm'],
+                      $json_data,
+                      $auth['session_cookie']['secret']);
+
+    setcookie("SessionToken",
+              "${hash}_" . base64_encode($json_data),
+              $expiry_time,
+              $cookie_path);
+  }
+  
+  
+  public function logoffUser()
+  {
+    // Delete cookie
+    $cookie_path = get_cookie_path();
+    setcookie("SessionToken", '', time()-42000, $cookie_path);
+  }
+  
 }
