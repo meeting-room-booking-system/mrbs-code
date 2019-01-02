@@ -20,29 +20,14 @@ namespace MRBS\Session;
  */
  
  
-class SessionNt extends Session
+class SessionNt extends SessionWithoutLogin
 {
 
   // For this scheme no need to prompt for a name - NT User always there.
-  public static function authGet()
-  {
-  }
-  
   
   public static function getUsername()
   {
     return get_current_user(); 
   }
   
-  
-  public static function getLogonFormParams()
-  {
-    // Just return NULL - you can't logon
-  }
-  
-  
-  public static function getLogoffFormParams()
-  {
-    // Just return NULL - you can't logoff
-  }
 }

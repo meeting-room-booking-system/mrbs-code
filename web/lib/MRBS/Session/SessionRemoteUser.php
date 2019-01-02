@@ -19,7 +19,7 @@ namespace MRBS\Session;
 //                    $auth['remote_user']['logout_link'] = '/logout/link.html';
 
 
-class SessionRemoteUser extends Session
+class SessionRemoteUser extends SessionWithLogin
 {
 
   // User is expected to already be authenticated by the web server, so do nothing

@@ -4,7 +4,7 @@ namespace MRBS\Session;
 use \SimpleSAML_Auth_Simple;
 
 
-class SessionSaml extends Session
+class SessionSaml extends SessionWithLogin
 {
   private static $ssp;
   

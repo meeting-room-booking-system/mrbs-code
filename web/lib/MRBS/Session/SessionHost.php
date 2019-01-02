@@ -21,15 +21,10 @@ namespace MRBS\Session;
  */
  
  
-class SessionHost extends Session
+class SessionHost extends SessionWithoutLogin
 {
   
-  // No need to prompt for a name - if no DNSname is returned, ip address
-  // is used
-  public static function authGet()
-  {
-  }
-  
+  // No need to prompt for a name: if no DNSname is returned, the IP address is used
   
   public static function getUsername()
   {
@@ -38,15 +33,4 @@ class SessionHost extends Session
     return $remotehostname;
   }
   
-  
-  public static function getLogonFormParams()
-  {
-    // Just return NULL - you can't logon
-  }
-  
-  
-  public static function getLogoffFormParams()
-  {
-    // Just return NULL - you can't logoff
-  }
 }

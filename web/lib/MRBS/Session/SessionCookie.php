@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Session;
 
-class SessionCookie extends Session
+class SessionCookie extends SessionWithLogin
 {
   
   public static function getUsername()

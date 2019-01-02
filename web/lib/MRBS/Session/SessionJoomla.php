@@ -6,7 +6,7 @@ use \MRBS\JFactory;
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 
-class SessionJoomla extends Session
+class SessionJoomla extends SessionWithLogin
 {
   
   public static function getUsername()

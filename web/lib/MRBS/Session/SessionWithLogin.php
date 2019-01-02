@@ -10,7 +10,8 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 
 
-abstract class Session implements SessionInterface
+// An abstract class for those session schemes that implement a login form
+abstract class SessionWithLogin implements SessionInterface
 {
   protected static $form = array();
   

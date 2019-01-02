@@ -4,7 +4,7 @@ namespace MRBS\Session;
 use \phpCAS;
 
 
-class SessionCas extends Session
+class SessionCas extends SessionWithLogin
 {
   
   public static function authGet()

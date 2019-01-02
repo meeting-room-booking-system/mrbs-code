@@ -4,7 +4,7 @@ namespace MRBS\Session;
 require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
 
-class SessionWordpress extends Session
+class SessionWordpress extends SessionWithLogin
 {
   
   public static function getUsername()

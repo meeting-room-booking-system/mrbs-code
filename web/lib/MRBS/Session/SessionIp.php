@@ -19,29 +19,14 @@ namespace MRBS\Session;
  */
  
  
-class SessionIp extends Session
+class SessionIp extends SessionWithoutLogin
 {
 
   // No need to prompt for a name - IP address always there
-  public static function authGet()
-  {
-  }
-  
-  
+
   public static function getUsername()
   {
     return $_SERVER['REMOTE_ADDR'];
   }
   
-  
-  public static function getLogonFormParams()
-  {
-    // Just return NULL - you can't logon
-  }
-  
-  
-  public static function getLogoffFormParams()
-  {
-    // Just return NULL - you can't logoff
-  }
 }

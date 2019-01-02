@@ -4,7 +4,7 @@ namespace MRBS\Session;
 // Get user identity using the HTTP basic authentication
 
 
-class SessionHttp extends Session
+class SessionHttp extends SessionWithLogin
 {
   
   public static function authGet()

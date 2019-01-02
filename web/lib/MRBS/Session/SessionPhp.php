@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Session;
 
-class SessionPhp extends Session
+class SessionPhp extends SessionWithLogin
 {
   
   public static function getUsername()
