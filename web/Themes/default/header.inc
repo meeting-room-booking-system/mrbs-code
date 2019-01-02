@@ -319,6 +319,10 @@ function print_unsupported_message()
 // access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($view, $year, $month, $day, $area, $room, $simple=false)
 {
+  // Get the form token now, before any headers are sent, in case we are using the 'cookie'
+  // session scheme.  Otherwise we won't be able to store the Form token.
+  Form::getToken();
+  
   $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
   
