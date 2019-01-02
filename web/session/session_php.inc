@@ -18,13 +18,6 @@ use MRBS\Form\Form;
 require_once MRBS_ROOT . '/session/functions_session.inc';
 
 
-function logoff_user()
-{
-  // Unset the session variables
-  session_unset();
-  session_destroy();
-}
-
 global $auth;
 
 // Get non-standard form variables
@@ -54,56 +47,3 @@ if (!empty($auth["session_php"]["inactivity_expire_time"]))
 }
 
 
-if (isset($action))
-{
-  // Target of the form with sets the URL argument "action=QueryName".
-  // Will eventually return to URL argument "target_url=whatever".
-  if ($action == "QueryName")
-  {
-    print_header();
-    print_login_form(this_page(), $target_url, $returl);
-    exit();
-  }
-  
-  
-  // Target of the form with sets the URL argument "action=SetName".
-  // Will eventually return to URL argument "target_url=whatever".
-  if ($action == "SetName")
-  {
-    // If we're going to do something then check the CSRF token first
-    Form::checkToken();
-    
-    // First make sure the password is valid
-    if ($username == "")
-    {
-      logoff_user();
-    }
-    else
-    {
-      if (($valid_username = authValidateUser($username, $password)) === false)
-      {
-        print_header();
-        print_login_form(this_page(), $target_url, $returl, get_vocab('unknown_user'));
-        exit();
-      }
-      
-      // Successful login.  As a defence against session fixation, regenerate
-      // the session id and delete the old session.
-      session_regenerate_id(true);
-      $_SESSION["UserName"] = $valid_username;
-      
-      if (!empty($returl))
-      {
-        // check to see whether there's a query string already
-        $target_url .= (strpos($target_url, '?') === false) ? '?' : '&';
-        $target_url .= urlencode($returl);
-      }
-    }
-
-    // Problems have been reported on Windows IIS with session data not being
-    // written out without a call to session_write_close()
-    session_write_close();
-    header ("Location: $target_url"); /* Redirect browser to initial page */
-    exit;
-  }
-}

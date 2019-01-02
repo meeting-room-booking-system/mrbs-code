@@ -23,6 +23,8 @@ if (!isset($auth['session']))
 require_once "auth/auth_$auth[type].inc";
 require_once "session/session_$auth[session].inc";
 
+session()->processForm();
+
 
 // Convenience wrapper function to provide access to a session object
 function session()

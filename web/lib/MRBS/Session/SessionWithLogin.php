@@ -64,6 +64,68 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
+  public function logoffUser()
+  {
+  }
+  
+  
+  public function processForm()
+  {
+    if (isset(self::$form['action']))
+    {
+      // Target of the form with sets the URL argument "action=QueryName".
+      // Will eventually return to URL argument "target_url=whatever".
+      if (self::$form['action'] == 'QueryName')
+      {
+        \MRBS\print_header();
+        self::printLoginForm(\MRBS\this_page(), self::$form['target_url'], self::$form['returl']);
+        exit();
+      }
+      
+      // Target of the form with sets the URL argument "action=SetName".
+      // Will eventually return to URL argument "target_url=whatever".
+      if (self::$form['action'] == 'SetName')
+      {
+        // If we're going to do something then check the CSRF token first
+        Form::checkToken();
+        
+        // First make sure the password is valid
+        if (self::$form['username'] == '')
+        {
+          $this->logoffUser();
+        }
+        else
+        {
+          if (($valid_username = \MRBS\authValidateUser(self::$form['username'], self::$form['password'])) === false)
+          {
+            \MRBS\print_header();
+            self::printLoginForm(\MRBS\this_page(), self::$form['target_url'], self::$form['returl'], \MRBS\get_vocab('unknown_user'));
+            exit();
+          }
+          
+          // Successful login.  As a defence against session fixation, regenerate
+          // the session id and delete the old session.
+          session_regenerate_id(true);
+          $_SESSION['UserName'] = $valid_username;
+          
+          if (!empty(self::$form['returl']))
+          {
+            // check to see whether there's a query string already
+            self::$form['target_url'] .= (strpos(self::$form['target_url'], '?') === false) ? '?' : '&';
+            self::$form['target_url'] .= urlencode(self::$form['returl']);
+          }
+        }
+
+        // Problems have been reported on Windows IIS with session data not being
+        // written out without a call to session_write_close()
+        session_write_close();
+        header ('Location: ' . self::$form['target_url']); /* Redirect browser to initial page */
+        exit;
+      }
+    }
+  }
+  
+  
   // Displays the login form. 
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.
