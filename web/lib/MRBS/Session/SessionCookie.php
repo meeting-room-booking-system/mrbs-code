@@ -127,7 +127,7 @@ class SessionCookie extends SessionWithLogin
   public function logoffUser()
   {
     // Delete cookie
-    $cookie_path = get_cookie_path();
+    $cookie_path = \MRBS\get_cookie_path();
     setcookie("SessionToken", '', time()-42000, $cookie_path);
   }
   
