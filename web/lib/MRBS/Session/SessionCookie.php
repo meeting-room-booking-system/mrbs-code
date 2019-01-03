@@ -71,17 +71,8 @@ class SessionCookie extends SessionWithLogin
     
     $json_data = json_encode($data);
     
-    if (!function_exists('hash_hmac'))
-    {
-      fatal_error("It appears that your PHP has the hash functions " .
-                  "disabled, which are required for the 'cookie' " .
-                  "session scheme.");
-    }
+    $hash = self::getHash($hash_algorithm, $json_data, $secret);
     
-    $hash = hash_hmac($hash_algorithm,
-                      $json_data,
-                      $secret);
-
     setcookie($name,
               "${hash}_" . base64_encode($json_data),
               $expiry,
@@ -98,7 +89,7 @@ class SessionCookie extends SessionWithLogin
       return array();
     }
     
-    $token = unslashes($_COOKIE[$name]);
+    $token = \MRBS\unslashes($_COOKIE[$name]);
     
     if (!isset($token) || ($token === ''))
     {
@@ -107,17 +98,8 @@ class SessionCookie extends SessionWithLogin
     
     list($hash, $base64_data) = explode('_', $token);
     $json_data = base64_decode($base64_data);
-
-    if (!function_exists('hash_hmac'))
-    {
-      fatal_error("It appears that your PHP has the hash functions ".
-                  "disabled, which are required for the 'cookie' ".
-                  "session scheme.");
-    }
     
-    if (hash_hmac($hash_algorithm,
-                  $json_data,
-                  $secret) != $hash)
+    if (self::getHash($hash_algorithm, $json_data, $secret) != $hash)
     {
       throw new \Exception('Cookie has been tampered with or secret may have changed');
     }
@@ -152,5 +134,18 @@ class SessionCookie extends SessionWithLogin
     unset($data['expiry']);
     
     return $data;
+  }
+  
+  
+  private static function getHash($algo, $data, $key)
+  {
+    if (!function_exists('hash_hmac'))
+    {
+      fatal_error("It appears that your PHP has the hash functions " .
+                  "disabled, which are required for the 'cookie' " .
+                  "session scheme.");
+    }
+    
+    return hash_hmac($algo, $data, $key);
   }
 }

@@ -222,6 +222,6 @@ class Form extends Element
                                      $csrf_cookie['hash_algorithm'],
                                      $csrf_cookie['secret']);
     
-    return (isset($data[self::$token_name]])) ? $data[self::$token_name]] : null;
+    return (isset($data[self::$token_name])) ? $data[self::$token_name] : null;
   }
 }
