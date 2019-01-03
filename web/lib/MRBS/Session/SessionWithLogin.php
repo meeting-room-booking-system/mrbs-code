@@ -62,6 +62,20 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
+  // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
+  protected function getValidUser($username, $password)
+  {
+    if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
+    {
+      \MRBS\print_header();
+      $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
+      exit();
+    }
+    
+    return $valid_username;
+  }
+  
+  
   public function logoffUser()
   {
   }
@@ -94,14 +108,10 @@ abstract class SessionWithLogin implements SessionInterface
         }
         else
         {
-          if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
-          {
-            \MRBS\print_header();
-            $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
-            exit();
-          }
+          // Get a valid user
+          $valid_username = $this->getValidUser($this->form['username'], $this->form['password']);
           
-          // Successful login.  
+          // Successful login.   You can't get out of getValidUser() without a valid username and password 
           $this->logonUser($valid_username);
           
           if (!empty($this->form['returl']))
