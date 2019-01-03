@@ -3,6 +3,7 @@
 namespace MRBS\Form;
 
 use MRBS\JFactory;
+use MRBS\Session\SessionCookie;
 
 
 class Form extends Element
@@ -191,11 +192,11 @@ class Form extends Element
 
     if (!self::$cookie_set)
     {
-      mrbs_setcookie('MRBS_CSRF',
-                     $csrf_cookie['hash_algorithm'],
-                     $csrf_cookie['secret'],
-                     array(self::$token_name, $token),
-                     0);  //Always a session cookie
+      SessionCookie::setCookie('MRBS_CSRF',
+                               $csrf_cookie['hash_algorithm'],
+                               $csrf_cookie['secret'],
+                               array(self::$token_name, $token),
+                               0);  //Always a session cookie
                      
       self::$cookie_set = true;
     }
@@ -217,9 +218,9 @@ class Form extends Element
       return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
     }
     
-    $data = \MRBS\mrbs_get_cookie('MRBS_CSRF',
-                                  $csrf_cookie['hash_algorithm'],
-                                  $csrf_cookie['secret']);
+    $data = SessionCookie::getCookie('MRBS_CSRF',
+                                     $csrf_cookie['hash_algorithm'],
+                                     $csrf_cookie['secret']);
     
     return (isset($data[self::$token_name]])) ? $data[self::$token_name]] : null;
   }
