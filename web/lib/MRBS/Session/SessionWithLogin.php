@@ -62,30 +62,6 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
-  // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
-  protected function getValidUser($username, $password)
-  {
-    if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
-    {
-      \MRBS\print_header();
-      $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
-      exit();
-    }
-    
-    return $valid_username;
-  }
-  
-  
-  protected function logonUser($username)
-  {
-  }
-  
-  
-  protected function logoffUser()
-  {
-  }
-  
-  
   public function processForm()
   {
     if (isset($this->form['action']))
@@ -131,6 +107,30 @@ abstract class SessionWithLogin implements SessionInterface
         exit;
       }
     }
+  }
+  
+  
+  // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
+  protected function getValidUser($username, $password)
+  {
+    if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
+    {
+      \MRBS\print_header();
+      $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
+      exit();
+    }
+    
+    return $valid_username;
+  }
+  
+  
+  protected function logonUser($username)
+  {
+  }
+  
+  
+  protected function logoffUser()
+  {
   }
   
   
