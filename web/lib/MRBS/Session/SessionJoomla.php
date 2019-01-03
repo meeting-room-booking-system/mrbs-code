@@ -13,4 +13,18 @@ class SessionJoomla extends SessionWithLogin
   {
     return JFactory::getUser()->username;
   }
+  
+  
+  public function logonUser($username)
+  {
+    // Don't need to do anything: the user will have been logged on when the
+    // username and password were validated.
+  }
+  
+ 
+  public function logoffUser()
+  {
+    $mainframe = JFactory::getApplication('site');
+    $mainframe->logout();
+  }
 }

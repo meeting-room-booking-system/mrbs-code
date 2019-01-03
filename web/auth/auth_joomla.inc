@@ -11,6 +11,26 @@ if ($auth['session'] !== 'joomla')
 }
 
 
+/* authValidateUser($user, $pass)
+ * 
+ * Checks if the specified username/password pair are valid
+ * 
+ * $user  - The user name
+ * $pass  - The password
+ * 
+ * Returns:
+ *   false    - The pair are invalid or do not exist
+ *   true     - The user has been validated and logged in
+ */
+function authValidateUser($user, $pass)
+{
+      $mainframe = JFactory::getApplication('site');
+   
+      return $mainframe->login(array('username' => $user,
+                                     'password' => $pass));
+}
+
+
 /* authGetUserLevel($user)
  * 
  * Determines the users access level
