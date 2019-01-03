@@ -23,7 +23,10 @@ if (!isset($auth['session']))
 
 require_once "auth/auth_$auth[type].inc";
 
-session()->processForm();
+if (method_exists(session(), 'processForm'))
+{
+  session()->processForm();
+}
 
 
 // Convenience wrapper function to provide access to a session object
