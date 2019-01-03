@@ -20,8 +20,12 @@ if (!isset($auth['session']))
 }
 
 // Need to be in this order
+
 require_once "auth/auth_$auth[type].inc";
-require_once "session/session_$auth[session].inc";
+if (file_exists("session/session_$auth[session].inc"))
+{
+  require_once "session/session_$auth[session].inc";
+}
 
 session()->processForm();
 
