@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+
 /*
  * Authentication management scheme that delegates everything to a ready
  * configured SimpleSamlPhp instance.  You should use this scheme, along with
@@ -60,10 +61,9 @@ function authValidateUser($user, $pass)
  */
 function authGetUserLevel($user)
 {
-  global $ssp;
   global $auth;
   
-  $userData = $ssp->getAttributes();
+  $userData = session()->ssp->getAttributes();
   $username = session()->getUsername();
   
   if (isset($username) && $username === $user)
@@ -89,11 +89,10 @@ function authGetUserLevel($user)
 // Returns an empty string if no e-mail address was found
 function authGetUserEmail($user)
 {
-  global $ssp;
   global $auth;
   
   $mailAttr = $auth['saml']['attr']['mail'];
-  $userData = $ssp->getAttributes();
+  $userData = session()->ssp->getAttributes();
   $username = session()->getUsername();
   
   if (isset($username) && $username === $user)
