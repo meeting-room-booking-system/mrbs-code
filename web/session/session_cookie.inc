@@ -20,12 +20,6 @@ namespace MRBS;
 
 
 
-$cookie_path = get_cookie_path();
 
-// Delete old-style cookies
-if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
-{
-  setcookie("UserName", '', time()-42000, $cookie_path);
-}
 
 

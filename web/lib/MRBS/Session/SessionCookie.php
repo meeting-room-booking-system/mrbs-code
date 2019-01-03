@@ -1,8 +1,27 @@
 <?php
 namespace MRBS\Session;
 
+// Manage sessions via cookies stored in the client browser
+
 class SessionCookie extends SessionWithLogin
 {
+  
+  private static $cookie_path;
+  
+  
+  public function __construct()
+  {
+    parent::__construct();
+    
+    self::$cookie_path = \MRBS\get_cookie_path();
+
+    // Delete old-style cookies
+    if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
+    {
+      setcookie('UserName', '', time()-42000, self::$cookie_path);
+    }
+  }
+  
   
   public function getUsername()
   {
@@ -49,8 +68,7 @@ class SessionCookie extends SessionWithLogin
   public function logoffUser()
   {
     // Delete cookie
-    $cookie_path = \MRBS\get_cookie_path();
-    setcookie("SessionToken", '', time()-42000, $cookie_path);
+    setcookie('SessionToken', '', time()-42000, self::$cookie_path);
   }
   
   
@@ -76,7 +94,7 @@ class SessionCookie extends SessionWithLogin
     setcookie($name,
               "${hash}_" . base64_encode($json_data),
               $expiry,
-              \MRBS\get_cookie_path());
+              self::$cookie_path);
   }
 
 
