@@ -195,7 +195,7 @@ class Form extends Element
       SessionCookie::setCookie('MRBS_CSRF',
                                $csrf_cookie['hash_algorithm'],
                                $csrf_cookie['secret'],
-                               array(self::$token_name, $token),
+                               array(self::$token_name => $token),
                                0);  //Always a session cookie
                      
       self::$cookie_set = true;
