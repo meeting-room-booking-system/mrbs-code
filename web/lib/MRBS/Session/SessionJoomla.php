@@ -15,14 +15,14 @@ class SessionJoomla extends SessionWithLogin
   }
   
   
-  public function logonUser($username)
+  protected function logonUser($username)
   {
     // Don't need to do anything: the user will have been logged on when the
     // username and password were validated.
   }
   
  
-  public function logoffUser()
+  protected function logoffUser()
   {
     $mainframe = JFactory::getApplication('site');
     $mainframe->logout();

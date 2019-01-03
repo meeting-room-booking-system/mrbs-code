@@ -15,7 +15,7 @@ class SessionPhp extends SessionWithLogin
   }
   
   
-  public function logonUser($username)
+  protected function logonUser($username)
   {
     // As a defence against session fixation, regenerate
     // the session id and delete the old session.
@@ -28,7 +28,7 @@ class SessionPhp extends SessionWithLogin
   }
   
   
-  public function logoffUser()
+  protected function logoffUser()
   {
     // Unset the session variables
     session_unset();

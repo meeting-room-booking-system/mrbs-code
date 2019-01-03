@@ -44,7 +44,7 @@ class SessionCookie extends SessionWithLogin
   }
   
   
-  public function logonUser($username)
+  protected function logonUser($username)
   {
     global $auth;
     
@@ -65,7 +65,7 @@ class SessionCookie extends SessionWithLogin
   }
   
   
-  public function logoffUser()
+  protected function logoffUser()
   {
     // Delete cookie
     setcookie('SessionToken', '', time()-42000, self::$cookie_path);
