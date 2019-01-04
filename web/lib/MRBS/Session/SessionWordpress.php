@@ -33,11 +33,10 @@ class SessionWordpress extends SessionWithLogin
     if (is_wp_error($wp_user))
     {
       $errors = $wp_user;
-      \MRBS\print_header();
       $error_message = apply_filters('login_errors', $wp_user->get_error_message());
       // The Wordpress error message contains HTML so don't escape it.
-      $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], $error_message, $raw=true);
-      exit();
+      $this->authGet($this->form['target_url'], $error_message, $raw=true);
+      exit(); // unnecessary because authGet() exits, but just included for clarity
     }
     
     return $username;

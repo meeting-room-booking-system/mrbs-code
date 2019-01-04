@@ -26,11 +26,15 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
-  public function authGet()
+  public function authGet($target_url=null, $error=null, $raw=false)
   {
+    if (!isset($target_url))
+    {
+      $target_url = \MRBS\this_page(true);
+    }
+    
     \MRBS\print_header();
-    $target_url = \MRBS\this_page(true);
-    $this->printLoginForm(\MRBS\this_page(), $target_url, $this->form['returl']);
+    $this->printLoginForm(\MRBS\this_page(), $target_url, $this->form['returl'], $error, $raw);
     exit;
   }
   
@@ -70,9 +74,8 @@ abstract class SessionWithLogin implements SessionInterface
       // Will eventually return to URL argument "target_url=whatever".
       if ($this->form['action'] == 'QueryName')
       {
-        \MRBS\print_header();
-        $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl']);
-        exit();
+        $this->authGet($this->form['target_url']);
+        exit(); // unnecessary because authGet() exits, but just included for clarity
       }
       
       // Target of the form with sets the URL argument "action=SetName".
@@ -115,9 +118,8 @@ abstract class SessionWithLogin implements SessionInterface
   {
     if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
     {
-      \MRBS\print_header();
-      $this->printLoginForm(\MRBS\this_page(), $this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
-      exit();
+      $this->authGet($this->form['target_url'], \MRBS\get_vocab('unknown_user'));
+      exit(); // unnecessary because authGet() exits, but just included for clarity
     }
     
     return $valid_username;
