@@ -26,6 +26,7 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
+  // Gets the username and password.  Returns: Nothing
   public function authGet($target_url=null, $error=null, $raw=false)
   {
     if (!isset($target_url))
@@ -144,7 +145,7 @@ abstract class SessionWithLogin implements SessionInterface
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.
   // If $raw is true then the message is not HTML escaped
-  protected function printLoginForm($action, $target_url, $returl, $error=null, $raw=false)
+  private function printLoginForm($action, $target_url, $returl, $error=null, $raw=false)
   {
     $form = new Form();
     $form->setAttributes(array('class'  => 'standard',
