@@ -7,11 +7,6 @@ namespace MRBS\Session;
 abstract class SessionWithoutLogin implements SessionInterface
 {
   
-  public function authGet()
-  {
-  }
-  
-  
   abstract public function getUsername();
 
 }

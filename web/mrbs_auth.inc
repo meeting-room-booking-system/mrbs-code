@@ -133,9 +133,14 @@ function getAuthorised($level)
 
   // Otherwise we need to check who they are
   $user = session()->getUsername();
+  
   if(!isset($user))
   {
-    session()->authGet();
+    // Ask them to authenticate, if the session scheme supports it
+    if (method_exists(session(), 'authGet'))
+    {  
+      session()->authGet();
+    }
     return false;
   }
 

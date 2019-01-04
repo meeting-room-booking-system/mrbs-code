@@ -9,7 +9,7 @@ class SessionCas extends SessionWithLogin
   
   public function authGet()
   {
-    // Useless Method
+    // Useless Method - CAS does it all
   }
   
   
