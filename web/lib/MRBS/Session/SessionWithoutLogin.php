@@ -13,16 +13,5 @@ abstract class SessionWithoutLogin implements SessionInterface
   
   
   abstract public function getUsername();
-  
-  
-  public function getLogonFormParams()
-  {
-  }
-  
-  
-  public function getLogoffFormParams()
-  {
-  }
-  
 
 }

@@ -298,20 +298,26 @@ function print_logonoff_button($params, $value)
 
 function print_logon()
 {
-  $form_params = session()->getLogonFormParams();
-  if (isset($form_params))
+  if (method_exists(session(), 'getLogonFormParams'))
   {
-    print_logonoff_button($form_params, get_vocab('login'));
+    $form_params = session()->getLogonFormParams();
+    if (isset($form_params))
+    {
+      print_logonoff_button($form_params, get_vocab('login'));
+    }
   }
 }
 
 
 function print_logoff()
 {
-  $form_params = session()->getLogoffFormParams();
-  if (isset($form_params))
+  if (method_exists(session(), 'getLogoffFormParams'))
   {
-    print_logonoff_button($form_params, get_vocab('logoff'));
+    $form_params = session()->getLogoffFormParams();
+    if (isset($form_params))
+    {
+      print_logonoff_button($form_params, get_vocab('logoff'));
+    }
   }
 }
 

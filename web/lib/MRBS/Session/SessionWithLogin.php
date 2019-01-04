@@ -42,6 +42,8 @@ abstract class SessionWithLogin implements SessionInterface
   abstract public function getUsername();
   
   
+  // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
+  // Logon form.  Returns an array.
   public function getLogonFormParams()
   {
     return array(
@@ -53,6 +55,8 @@ abstract class SessionWithLogin implements SessionInterface
   }
   
   
+  // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
+  // Logoff form.  Returns an array.
   public function getLogoffFormParams()
   {
     return array(
