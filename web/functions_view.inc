@@ -71,7 +71,6 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     { 
       case 'name':
       case 'description':
-      case 'modified_by':
       case 'room_name':
       case 'area_name':
       case 'type':
@@ -86,6 +85,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
         
       case 'create_by':
+      case 'modified_by':
         $data[$key] = $hide_this_field ? $private_text : get_display_name($data[$key]);
         break;
       
