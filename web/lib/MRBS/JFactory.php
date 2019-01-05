@@ -21,6 +21,11 @@ class JFactory extends \JFactory {
     if (is_string($username))
     {
       $user_id = \JUserHelper::getUserId($username);
+      if (is_null($user_id))
+      {
+        // The user doesn't exist
+        return false;
+      }
     }
     else
     {
