@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Auth\AuthFactory;
 use MRBS\Session\SessionFactory;
 
 
@@ -29,7 +30,23 @@ if (method_exists(session(), 'processForm'))
 }
 
 
-// Convenience wrapper function to provide access to a session object
+// Convenience wrapper function to provide access to an Auth object
+function auth()
+{
+  global $auth;
+  
+  static $auth_obj = null;
+
+  if (is_null($auth_obj))
+  {
+    $auth_obj = AuthFactory::create($auth['type']);
+  }
+  
+  return $auth_obj;
+}
+
+
+// Convenience wrapper function to provide access to a Session object
 function session()
 {
   global $auth;

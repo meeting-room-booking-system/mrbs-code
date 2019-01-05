@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Session;
 
+
 // Uses PHP's built-in session handling
 
 class SessionPhp extends SessionWithLogin
@@ -33,6 +34,12 @@ class SessionPhp extends SessionWithLogin
   }
   
   
+  public function getCurrentUser()
+  {
+    return (isset($_SESSION['user'])) ? $_SESSION['user'] : null;
+  }
+  
+  
   public function getUsername()
   {
     if (isset($_SESSION['UserName']) && ($_SESSION['UserName'] !== ''))
@@ -46,10 +53,13 @@ class SessionPhp extends SessionWithLogin
   
   protected function logonUser($username)
   {
+    $user = \MRBS\auth()->getUser($username);
+    
     // As a defence against session fixation, regenerate
     // the session id and delete the old session.
     session_regenerate_id(true);
     $_SESSION['UserName'] = $username;
+    $_SESSION['user'] = $user;
     
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close()

@@ -142,6 +142,13 @@ function mrbs_default_timezone_get()
 }
 
 
+function get_display_name($username)
+{
+  $user = auth()->getUser($username);
+  return (isset($user)) ? $user->display_name : $username;
+}
+
+
 // Gets the default email address for $user.   Returns an empty
 // string if one can't be found
 function get_default_email($user)
