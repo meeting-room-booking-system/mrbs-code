@@ -33,7 +33,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   print_simple_header();
  
   echo '<h1>' . get_vocab('mrbs') . "</h1>\n";
-  echo '<p class="error">' . get_vocab('upgrade_required') . "</p>\n"; 
+  echo '<p><strong>' . get_vocab('upgrade_required') . "</strong></p>\n"; 
 
   $admin_handle = null;
 
