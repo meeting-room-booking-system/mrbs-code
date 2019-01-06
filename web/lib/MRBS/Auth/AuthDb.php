@@ -24,6 +24,7 @@ class AuthDb extends Auth
 
     $user = new User($username);
 
+    // $user->level will be set as part of this
     foreach ($data as $key => $value)
     {
       if ($key == 'name')

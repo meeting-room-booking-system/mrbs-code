@@ -235,7 +235,7 @@ function print_search($view, $year, $month, $day, $area, $room)
 
 
 // Generate the username link, which gives a report on the user's upcoming bookings.
-function print_report_link($user)
+function print_report_link(User $user)
 {
   // If possible, provide a link to the Report page, otherwise the Search page
   // and if that's not possible just print the username with no link.  (Note that
@@ -245,16 +245,16 @@ function print_report_link($user)
   {
     $attributes = array('action' => 'report.php');
     $hidden_inputs = array('phase'        => '2',
-                           'creatormatch' => $user);
+                           'creatormatch' => $user->username);
   }
   elseif (checkAuthorised('search.php', true))
   {
     $attributes = array('action' => 'search.php');
-    $hidden_inputs = array('search_str' => $user);
+    $hidden_inputs = array('search_str' => $user->username);
   }
   else
   {
-    echo '<span>' . htmlspecialchars($user) . '</span>';
+    echo '<span>' . htmlspecialchars($user->username) . '</span>';
     return;
   }
   
@@ -268,7 +268,7 @@ function print_report_link($user)
                                
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array('title' => get_vocab('show_my_entries'),
-                               'value' => $user));
+                               'value' => $user->username));
   $form->addElement($submit);
                                
   $form->render();
@@ -357,10 +357,11 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     echo "<nav class=\"logon\">\n";
     print_outstanding($query);
     
-    $user = session()->getUsername();
-    if (isset($user))
+    $current_user = session()->getCurrentUser();
+    
+    if (isset($current_user))
     {
-      print_report_link($user);
+      print_report_link($current_user);
       print_logoff();
     }
     else

@@ -9,45 +9,33 @@ abstract class Auth
   public function getUser($username)
   {
     $user = new User($username);
-    $user->display_name = $username;
-    $user->email = self::getDefaultEmail($username);
-    
+    $user->level = $this->getLevel($username);
+     
     return $user;
   }
   
   
-  // Gets the default email address for $username.   Returns null if one can't be found
-  private static function getDefaultEmail($username)
+  protected function getLevel($username)
   {
-    global $mail_settings;
-    
-    if (!isset($username) || $username === '')
+    global $auth;
+
+    // User not logged in, user level '0'
+    if(!isset($username))
     {
-      return null;
+      return 0;
     }
-    
-    $email = $username;
-    
-    // Remove the suffix, if there is one
-    if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
+
+    // Check whether the user is an admin
+    foreach ($auth['admin'] as $admin)
     {
-      $suffix = $mail_settings['username_suffix'];
-      if (substr($email, -strlen($suffix)) === $suffix)
+      if(strcasecmp($username, $admin) === 0)
       {
-        $email = substr($email, 0, -strlen($suffix));
+        return 2;
       }
     }
-    
-    // Add on the domain, if there is one
-    if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
-    {
-      // Trim any leading '@' character. Older versions of MRBS required the '@' character
-      // to be included in $mail_settings['domain'], and we still allow this for backwards
-      // compatibility.
-      $domain = ltrim($mail_settings['domain'], '@');
-      $email .= '@' . $domain;
-    }
-    
-    return $email;
+
+    // Everybody else is access level '1'
+    return 1;
   }
+  
 }
