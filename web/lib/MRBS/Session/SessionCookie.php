@@ -151,17 +151,6 @@ class SessionCookie extends SessionWithLogin
                     
     $data = json_decode($json_data, true);
     
-    // Special treatment for the 'user' key.   When we store the user object in a cookie json_encode
-    // converts it into an array of property data.  That's fine as it's dangerous to store an object
-    // in a cookie.  But it means we have to convert the array back into a User object when we read
-    // the cookie.
-    if (isset($data['user']))
-    {
-      $tmp = $data['user'];
-      $data['user'] = new User();
-      $data['user']->load($tmp);
-    }
-    
     // Check expiry time
     if (!isset($data['expiry']))
     {
@@ -185,9 +174,20 @@ class SessionCookie extends SessionWithLogin
       }
     }
 
-    // Everything looks OK.  Clear the internal data keys and return the data.
+    // Everything looks OK.  Clear the internal data keys, fix up objects and return the data.
     unset($data['ip']);
     unset($data['expiry']);
+    
+    // Special treatment for the 'user' key.   When we store the user object in a cookie json_encode
+    // converts it into an array of property data.  That's fine as it's dangerous to store an object
+    // in a cookie.  But it means we have to convert the array back into a User object when we read
+    // the cookie.
+    if (isset($data['user']))
+    {
+      $tmp = $data['user'];
+      $data['user'] = new User();
+      $data['user']->load($tmp);
+    }
     
     return $data;
   }
