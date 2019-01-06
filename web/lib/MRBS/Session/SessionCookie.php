@@ -1,6 +1,9 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\User;
+
+
 // Manage sessions via cookies stored in the client browser
 
 class SessionCookie extends SessionWithLogin
@@ -23,6 +26,27 @@ class SessionCookie extends SessionWithLogin
   }
   
   
+  public function getCurrentUser()
+  {
+    global $auth;
+    
+    static $cached_user = null;
+    static $have_checked_cookie = false;
+
+    if (!$have_checked_cookie)
+    {
+      $data = self::getCookie('SessionToken',
+                              $auth['session_cookie']['hash_algorithm'],
+                              $auth['session_cookie']['secret']);
+
+      $cached_user = (isset($data['user'])) ? $data['user'] : null;
+      $have_checked_cookie = true;
+    }
+    
+    return $cached_user;
+  }
+  
+  
   public function getUsername()
   {
     global $auth;
@@ -36,7 +60,7 @@ class SessionCookie extends SessionWithLogin
                               $auth['session_cookie']['hash_algorithm'],
                               $auth['session_cookie']['secret']);
 
-      $cached_username = (isset($data['user'])) ? $data['user'] : null;
+      $cached_username = (isset($data['username'])) ? $data['username'] : null;
       $have_checked_cookie = true;
     }
     
@@ -56,11 +80,14 @@ class SessionCookie extends SessionWithLogin
     {
       $expiry_time = time() + $auth['session_cookie']['session_expire_time'];
     }
-       
+    
+    $user = \MRBS\auth()->getUser($username);
+    
     self::setCookie('SessionToken',
                     $auth['session_cookie']['hash_algorithm'],
                     $auth['session_cookie']['secret'],
-                    array('user' => $username),
+                    array('user'     => $user,
+                          'username' => $username),
                     $expiry_time);
   }
   
@@ -123,6 +150,17 @@ class SessionCookie extends SessionWithLogin
     }
                     
     $data = json_decode($json_data, true);
+    
+    // Special treatment for the 'user' key.   When we store the user object in a cookie json_encode
+    // converts it into an array of property data.  That's fine as it's dangerous to store an object
+    // in a cookie.  But it means we have to convert the array back into a User object when we read
+    // the cookie.
+    if (isset($data['user']))
+    {
+      $tmp = $data['user'];
+      $data['user'] = new User();
+      $data['user']->load($tmp);
+    }
     
     // Check expiry time
     if (!isset($data['expiry']))

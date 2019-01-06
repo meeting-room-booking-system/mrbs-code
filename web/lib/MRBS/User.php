@@ -10,7 +10,7 @@ class User
   public $level;
   
   
-  public function __construct($username)
+  public function __construct($username=null)
   {
     $this->username = $username;
     
@@ -18,6 +18,15 @@ class User
     $this->display_name = $username;
     $this->setDefaultEmail();
     $this->level = 0; // Play it safe
+  }
+  
+  
+  public function load(array $data)
+  {
+    foreach ($data as $key => $value)
+    {
+      $this->$key = $value;
+    }
   }
   
   
