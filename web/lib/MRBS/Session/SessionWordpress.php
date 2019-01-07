@@ -7,6 +7,19 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 class SessionWordpress extends SessionWithLogin
 {
   
+  public function getCurrentUser()
+  {
+    if (!is_user_logged_in())
+    {
+      return null;
+    }
+    
+    $current_user = wp_get_current_user();
+    
+    return \MRBS\auth()->getUser($current_user->user_login);
+  }
+  
+  
   public function getUsername()
   {
     if (!is_user_logged_in())
