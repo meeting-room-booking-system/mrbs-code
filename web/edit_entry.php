@@ -140,6 +140,7 @@ function get_field_entry_input($params)
   if (!empty($params['disabled']))
   {
     $field->setControlAttribute('disabled', true);
+    $field->addHiddenInput($params['name'], $params['value']);
   }
   
   switch ($class)

@@ -170,7 +170,7 @@ foreach($fields as $field)
 // Don't bother with them if this is an Ajax request.
 if (!$ajax)
 {
-  if ($name === '')
+  if (!isset($name) || ($name === ''))
   {
     invalid_booking(get_vocab('must_set_description'));
   }       
