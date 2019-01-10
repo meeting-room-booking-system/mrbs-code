@@ -123,14 +123,13 @@ function authLdapAction($callback, $user, &$object)
   foreach ($all_ldap_opts['ldap_host'] as $idx => $host)
   {
     // establish ldap connection
-    // the '@' suppresses errors
     if (isset($all_ldap_opts['ldap_port'][$idx]))
     {
-      $ldap = @ldap_connect($host, $all_ldap_opts['ldap_port'][$idx]);
+      $ldap = ldap_connect($host, $all_ldap_opts['ldap_port'][$idx]);
     }
     else
     {
-      $ldap = @ldap_connect($host);
+      $ldap = ldap_connect($host);
     }
 
     // Check that connection was established
@@ -164,13 +163,13 @@ function authLdapAction($callback, $user, &$object)
             isset($all_ldap_opts['ldap_dn_search_password'][$idx]))
         {
           // Bind with DN and password
-          $res = @ldap_bind($ldap, $all_ldap_opts['ldap_dn_search_dn'][$idx],
-                            $all_ldap_opts['ldap_dn_search_password'][$idx]);
+          $res = ldap_bind($ldap, $all_ldap_opts['ldap_dn_search_dn'][$idx],
+                           $all_ldap_opts['ldap_dn_search_password'][$idx]);
         }
         else
         {
           // Anonymous bind
-          $res = @ldap_bind($ldap);
+          $res = ldap_bind($ldap);
         }
 
         if (!$res)
@@ -181,11 +180,11 @@ function authLdapAction($callback, $user, &$object)
         {
           authLdapDebug("authLdapAction: Initial bind was successful");
 
-          $res = @ldap_search($ldap,
-                              $all_ldap_opts['ldap_base_dn'][$idx],
-                              "(". $all_ldap_opts['ldap_dn_search_attrib'][$idx] ."=$user)");
+          $res = ldap_search($ldap,
+                             $all_ldap_opts['ldap_base_dn'][$idx],
+                             "(" . $all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$user)");
 
-          if (@ldap_count_entries($ldap, $res) == 1)
+          if (ldap_count_entries($ldap, $res) == 1)
           {
             authLdapDebug("authLdapAction: Found one entry using '".
                           $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
@@ -238,7 +237,7 @@ function authLdapAction($callback, $user, &$object)
 
     } // if ($ldap)
 
-    @ldap_unbind($ldap);
+    ldap_unbind($ldap);
   } // foreach
   
   return false;
@@ -319,13 +318,12 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-    $res = @ldap_read(
-                      $ldap,
-                      $dn,
-                      "(objectclass=*)",
-                      array(utf8_strtolower($email_attrib))
-                     );
-    if (@ldap_count_entries($ldap, $res) > 0)
+    $res = ldap_read($ldap,
+                     $dn,
+                     "(objectclass=*)",
+                     array(utf8_strtolower($email_attrib)) );
+                     
+    if (ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authLdapGetEmailCallback: search successful");
       $entries = ldap_get_entries($ldap, $res);
@@ -398,7 +396,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
 
   // try an authenticated bind
   // use this to confirm that the user/password pair
-  if ($dn && @ldap_bind($ldap, $dn, $pass))
+  if ($dn && ldap_bind($ldap, $dn, $pass))
   {
     $filter = $object['config']['ldap_filter'];
 
@@ -442,7 +440,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                    $f,
                    array()
                   );
-      if (@ldap_count_entries($ldap, $res) > 0)
+      if (ldap_count_entries($ldap, $res) > 0)
       {
         authLdapDebug("authValidateUserCallback: Found entry with filter");
         return true;
@@ -457,7 +455,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap_unbind_between_attempts)
   {
-    @ldap_unbind($ldap);
+    ldap_unbind($ldap);
   }
 
   // return failure if no connection is established
@@ -492,13 +490,12 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-  $res = @ldap_read(
-                    $ldap,
-                    $dn,
-                    "(objectclass=*)",
-                    array(utf8_strtolower($group_member_attrib))
-                   );
-    if (@ldap_count_entries($ldap, $res) > 0)
+    $res = ldap_read($ldap,
+                     $dn,
+                     "(objectclass=*)",
+                     array(utf8_strtolower($group_member_attrib)) );
+                     
+    if (ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authCheckAdminGroupCallback: search successful".
                     " '$group_member_attrib'");
@@ -622,13 +619,12 @@ function authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($ldap && $base_dn && $dn && $user_search)
   {
-    $res = @ldap_read(
-                      $ldap,
-                      $dn,
-                      "(objectclass=*)",
-                      array(utf8_strtolower($name_attrib))
-                     );
-    if (@ldap_count_entries($ldap, $res) > 0)
+    $res = ldap_read($ldap,
+                     $dn,
+                     "(objectclass=*)",
+                     array(utf8_strtolower($name_attrib)) );
+    
+    if (ldap_count_entries($ldap, $res) > 0)
     {
       authLdapDebug("authLdapGetNameCallback: search successful");
       $entries = ldap_get_entries($ldap, $res);
