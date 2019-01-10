@@ -389,6 +389,8 @@ function authValidateUser($user, $pass)
 function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
 {
+  global $ldap_unbind_between_attempts;
+  
   authLdapDebug("authValidateUserCallback: base_dn '$base_dn' ".
                 "dn '$dn' user '$user'");
 
