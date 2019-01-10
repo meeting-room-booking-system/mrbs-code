@@ -114,20 +114,22 @@ function output_error($heading, $body, $show_data=false)
     $default_timezone_set = true;
   }
   
-  if ($show_data)
+  if ($show_data &&
+      (isset($_GET) || isset($_POST) || isset($_SESSION)))
   {
-      if (isset($_GET))
-      {
-        $body .= "MRBS GET: " . print_r($_GET, true);
-      }
-      if (isset($_POST))
-      {
-        $body .= "MRBS POST: " . print_r($_POST, true);
-      }
-      if (isset($_SESSION))
-      {
-        $body .= "MRBS SESSION: " . print_r($_SESSION, true);
-      }
+    $body .= "\n";
+    if (isset($_GET))
+    {
+      $body .= "MRBS GET: " . print_r($_GET, true);
+    }
+    if (isset($_POST))
+    {
+      $body .= "MRBS POST: " . print_r($_POST, true);
+    }
+    if (isset($_SESSION))
+    {
+      $body .= "MRBS SESSION: " . print_r($_SESSION, true);
+    }
   }
   
   $body .= "\n";
