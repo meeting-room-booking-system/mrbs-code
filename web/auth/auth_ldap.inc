@@ -398,11 +398,9 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   // use this to confirm that the user/password pair
   if ($dn && ldap_bind($ldap, $dn, $pass))
   {
-    $filter = $object['config']['ldap_filter'];
-
     // however if there is a filter check that the
     // user is part of the group defined by the filter
-    if (! $filter)
+    if (!isset($object['config']['ldap_filter']) || ($object['config']['ldap_filter'] === ''))
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind with no \$ldap_filter");
@@ -412,6 +410,8 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     {
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking '$filter'");
+                    
+      $filter = $object['config']['ldap_filter'];
 
       // If ldap_filter_base_dn is set, set the filter to search for the user
       // in the given base_dn (OpenLDAP).  If not, read from the user
