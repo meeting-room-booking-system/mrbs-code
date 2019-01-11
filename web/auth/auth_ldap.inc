@@ -408,10 +408,10 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     }
     else
     {
+      $filter = $object['config']['ldap_filter'];
+      
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking '$filter'");
-                    
-      $filter = $object['config']['ldap_filter'];
 
       // If ldap_filter_base_dn is set, set the filter to search for the user
       // in the given base_dn (OpenLDAP).  If not, read from the user
