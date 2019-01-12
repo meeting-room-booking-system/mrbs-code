@@ -754,6 +754,10 @@ function get_field_custom($key, $disabled=false)
       $field->setControlAttribute('maxlength', $maxlength);
     }
   }
+  elseif ($class == 'FieldInputCheckbox')
+  {
+    $field->setControlChecked(($custom_fields[$key]) ? true : false);
+  }
   else
   {
     $field->setControlAttribute('value', (isset($custom_fields[$key])) ? $custom_fields[$key] : null);
