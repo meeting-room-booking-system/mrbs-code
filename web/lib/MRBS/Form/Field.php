@@ -119,6 +119,15 @@ abstract class Field extends Element
   }
   
   
+  public function setControlChecked($checked=true)
+  {
+    $elements = $this->getElements();
+    $elements['control']->setChecked($checked);
+    $this->setElements($elements);
+    return $this;
+  }
+  
+  
   public function setControlText($text)
   {
     $elements = $this->getElements();

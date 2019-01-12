@@ -16,11 +16,11 @@ function invalid_booking($message)
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
   // Print footer and exit
-  print_footer(TRUE);
+  print_footer(true);
 }
 
 $ajax = get_form_var('ajax', 'int');
-if ($ajax && !checkAuthorised(TRUE))
+if ($ajax && !checkAuthorised(true))
 {
   exit;
 }
@@ -140,18 +140,28 @@ foreach($fields as $field)
         $f_type = 'string';
         break;
       case 'integer':
-        $f_type = 'int';
+        // Smallints and tinyints are considered to be booleans
+        $f_type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
         break;
       // We can only really deal with the types above at the moment
       default:
         $f_type = 'string';
         break;
     }
+    
     $var = VAR_PREFIX . $field['name'];
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
+    
     if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
     {
-      $custom_fields[$field['name']] = NULL;
+      $custom_fields[$field['name']] = null;
+    }
+    // Turn checkboxes into booleans
+    if (($field['nature'] == 'integer') &&
+        isset($field['length']) &&
+        ($field['length'] <= 2))
+    {
+      $custom_fields[$field['name']] = ($custom_fields[$field['name']]) ? true : false;
     }
     // Trim any strings
     if (is_string($custom_fields[$field['name']]))
@@ -160,7 +170,6 @@ foreach($fields as $field)
     }
   }
 }
-
 
 
 // (3) Clean up the form variables
@@ -265,7 +274,7 @@ if ($no_mail)
   if (!$mail_settings['allow_no_mail'] &&
       (!$is_admin || !$mail_settings['allow_admins_no_mail']))
   {
-    $no_mail = FALSE;
+    $no_mail = false;
   }
 }
 
@@ -277,7 +286,7 @@ if ($no_mail)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($ajax && $commit)
 {
-  $old_booking = get_booking_info($id, FALSE);
+  $old_booking = get_booking_info($id, false);
   foreach ($formvars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
@@ -713,8 +722,8 @@ foreach ($rooms as $room_id)
 }
 
 $just_check = $ajax && !$commit;
-$this_id = (isset($id)) ? $id : NULL;
-$send_mail = ($no_mail) ? FALSE : $need_to_send_mail;
+$this_id = (isset($id)) ? $id : null;
+$send_mail = ($no_mail) ? false : $need_to_send_mail;
 
 // Wrap the editing process in a transaction, because if deleting the old booking should fail for
 // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
