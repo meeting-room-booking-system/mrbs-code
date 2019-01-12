@@ -35,7 +35,8 @@ foreach($fields as $field)
       $type = 'string';
       break;
     case 'integer':
-      $type = 'int';
+      // Smallints and tinyints are considered to be booleans
+      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
       break;
     // We can only really deal with the types above at the moment
     default:
@@ -47,6 +48,13 @@ foreach($fields as $field)
   if (($type == 'int') && ($$var === ''))
   {
     unset($$var);
+  }
+  // Turn checkboxes into booleans
+  if (($field['nature'] == 'integer') &&
+      isset($field['length']) &&
+      ($field['length'] <= 2))
+  {
+    $$var = (empty($$var)) ? 0 : 1;
   }
 }
 
