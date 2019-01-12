@@ -869,6 +869,12 @@ $ldap_group_member_attrib = 'memberof';
 // LDAP servers
 $ldap_unbind_between_attempts = false;
 
+// By default MRBS will suppress "invalid credentials" error messages when binding
+// in order to avoid the log filling up with warning messages when a user enters
+// an incorrect username/password combination.  Set this to FALSE if you want these
+// errors to be logged, eg in order to be able spot brute force attack attempts.
+$ldap_suppress_invalid_credentials = true;
+
 // Output debugging information for LDAP actions
 $ldap_debug = false;
 
