@@ -707,7 +707,7 @@ function get_field_custom($key, $disabled=false)
   }
   elseif ($class == 'FieldInputCheckbox')
   {
-    $field->setControlChecked(($custom_fields[$key]) ? true : false);
+    $field->setControlChecked(!empty($custom_fields[$key]));
   }
   else
   {
