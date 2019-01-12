@@ -798,7 +798,7 @@ if (isset($action) && ($action == "update"))
   // (b) you are a user admin or (c) you are editing your own details
   if (!$initial_user_creation &&
       !is_user_admin() && 
-      (!isset($myid) || ($id != $my_id )))
+      (!isset($my_id) || ($id != $my_id )))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
