@@ -807,7 +807,8 @@ if (isset($Action) && ($Action == "Update"))
       {
         $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
         // Turn checkboxes into booleans
-        if (($field['nature'] == 'integer') &&
+        if (($fieldname !== 'level') &&
+            ($field['nature'] == 'integer') &&
             isset($field['length']) &&
             ($field['length'] <= 2))
         {
