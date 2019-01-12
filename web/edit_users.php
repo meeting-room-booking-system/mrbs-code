@@ -144,7 +144,8 @@ function get_form_var_type($field)
       $type = 'string';
       break;
     case 'integer':
-      $type = 'int';
+      // Smallints and tinyints are considered to be booleans
+      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
       break;
     // We can only really deal with the types above at the moment
     default:
@@ -790,6 +791,7 @@ if (isset($Action) && ($Action == "Update"))
     {
       $fieldname = $field['name'];
       $type = get_form_var_type($field);
+      
       if ($fieldname == 'id')
       {
         // id: don't need to do anything except add the id to the query string;
@@ -804,6 +806,13 @@ if (isset($Action) && ($Action == "Update"))
       if ($fieldname !== 'password_hash')
       {
         $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
+        // Turn checkboxes into booleans
+        if (($field['nature'] == 'integer') &&
+            isset($field['length']) &&
+            ($field['length'] <= 2))
+        {
+          $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
+        }
         // Trim the field to remove accidental whitespace
         $values[$fieldname] = trim($values[$fieldname]);
         // Truncate the field to the maximum length as a precaution.
