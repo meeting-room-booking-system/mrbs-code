@@ -134,7 +134,8 @@ foreach($formvars as $var => $var_type)
 
 // Validate the create_by variable, checking that it's the current user, unless the
 // user is an admin and we allow admins to make bookings on behalf of others.
-if (!is_book_admin() || $auth['admin_can_only_book_for_self'])
+if (!$ajax &&
+    (!is_book_admin() || $auth['admin_can_only_book_for_self']))
 {
   if ($create_by !== $current_username)
   {
