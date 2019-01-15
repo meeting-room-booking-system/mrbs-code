@@ -828,14 +828,14 @@ if (isset($action) && ($action == "update"))
     if ($fieldname !== 'password_hash')
     {
       $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-        // Turn checkboxes into booleans
-        if (($fieldname !== 'level') &&
-            ($field['nature'] == 'integer') &&
-            isset($field['length']) &&
-            ($field['length'] <= 2))
-        {
-          $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
-        }
+      // Turn checkboxes into booleans
+      if (($fieldname !== 'level') &&
+          ($field['nature'] == 'integer') &&
+          isset($field['length']) &&
+          ($field['length'] <= 2))
+      {
+        $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
+      }
       // Trim the field to remove accidental whitespace
       $values[$fieldname] = trim($values[$fieldname]);
       // Truncate the field to the maximum length as a precaution.
