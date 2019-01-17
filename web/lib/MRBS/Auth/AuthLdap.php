@@ -123,13 +123,13 @@ class AuthLdap extends Auth
     
     $object = array();
     
-    $res = self::authLdapAction('authLdapGetNameCallback', $username, $object);
+    $res = self::action('authLdapGetNameCallback', $username, $object);
 
     return ($res) ? $object['name'] : $username;
   }
   
   
-  /* authLdapAction($callback, $username, &$object)
+  /* action($callback, $username, &$object)
    * 
    * Connects/binds to all configured LDAP servers/base DNs and
    * then performs a callback, passing the LDAP object, $base_dn,
@@ -143,7 +143,7 @@ class AuthLdap extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public static function authLdapAction($callback, $username, &$object)
+  public static function action($callback, $username, &$object)
   {
     foreach (self::$all_ldap_opts['ldap_host'] as $idx => $host)
     {
@@ -160,7 +160,7 @@ class AuthLdap extends Auth
       // Check that connection was established
       if ($ldap)
       {
-        self::debug("authLdapAction: got LDAP connection");
+        self::debug("action: got LDAP connection");
 
         if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
         {
@@ -202,11 +202,11 @@ class AuthLdap extends Auth
 
           if (!$res)
           {
-            self::debug("authLdapAction: initial bind failed: " . ldap_error($ldap));
+            self::debug("action: initial bind failed: " . ldap_error($ldap));
           }
           else
           {
-            self::debug("authLdapAction: initial bind was successful");
+            self::debug("action: initial bind was successful");
 
             $res = ldap_search($ldap,
                                self::$all_ldap_opts['ldap_base_dn'][$idx],
@@ -214,7 +214,7 @@ class AuthLdap extends Auth
 
             if (ldap_count_entries($ldap, $res) == 1)
             {
-              self::debug("authLdapAction: found one entry using '" .
+              self::debug("action: found one entry using '" .
                           self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
               $entries = ldap_get_entries($ldap, $res);
               $dn = $entries[0]["dn"];
@@ -222,10 +222,10 @@ class AuthLdap extends Auth
             }
             else
             {
-              self::debug("authLdapAction: didn't find entry using '" .
+              self::debug("action: didn't find entry using '" .
                           self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
             }
-            self::debug("authLdapAction: base_dn '" .
+            self::debug("action: base_dn '" .
                         self::$all_ldap_opts['ldap_base_dn'][$idx] .
                         "' user '$username' dn '$dn'");
           }
@@ -236,7 +236,7 @@ class AuthLdap extends Auth
           $user_search = self::$all_ldap_opts['ldap_user_attrib'][$idx] . "=" . $username;
           $dn = $user_search . "," . self::$all_ldap_opts['ldap_base_dn'][$idx];
 
-          self::debug("authLdapAction: constructed dn '$dn' and " .
+          self::debug("action: constructed dn '$dn' and " .
                       "user_search '$user_search' using '" .
                       self::$all_ldap_opts['ldap_user_attrib'][$idx] . "'");
         }
@@ -251,7 +251,7 @@ class AuthLdap extends Auth
 
         if (!$dn)
         {
-          self::debug("authLdapAction: no DN determined, not calling callback");
+          self::debug("action: no DN determined, not calling callback");
         }
         else
         {
