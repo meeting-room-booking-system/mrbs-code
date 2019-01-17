@@ -107,7 +107,7 @@ class AuthLdap extends Auth
     $user = new User($username);
     
     $user->display_name = self::getDisplayName($username);
-    
+    $user->email = self::getEmail($username);
     
     return $user;
   }
@@ -314,6 +314,70 @@ class AuthLdap extends Auth
 
         self::debug("$method: name is '" . $object['name'] . "'");
 
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  
+  private static function getEmail($username)
+  {
+    global $ldap_get_user_email;
+    
+    if (!isset($username) || $username === '')
+    {
+      return '';
+    }
+    
+    if ($ldap_get_user_email)
+    {
+      $object = array();
+      $res = self::action('getEmailCallback', $username, $object);
+      return ($res) ? $object['email'] : '';
+    }
+    
+    return self::getDefaultEmail($username);
+  }
+  
+  
+  /* getEmailCallback(&$ldap, $base_dn, $dn, $user_search,
+                      $username, &$object)
+   * 
+   * Checks if the specified username/password pair are valid
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $username    - The user name
+   * &$object     - Reference to the generic object
+   * 
+   * Returns:
+   *   false    - Didn't find a user
+   *   true     - Found a user
+   */
+  private static function getEmailCallback(&$ldap, $base_dn, $dn, $user_search,
+                                           $user, &$object)
+  {
+    $method = __METHOD__;
+    $email_attrib = $object['config']['ldap_email_attrib'];
+
+    self::debug("$method: base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
+
+    if ($ldap && $base_dn && $dn && $user_search)
+    {
+      $res = ldap_read($ldap,
+                       $dn,
+                       "(objectclass=*)",
+                       array(\MRBS\utf8_strtolower($email_attrib)) );
+                       
+      if (ldap_count_entries($ldap, $res) > 0)
+      {
+        self::debug("$method: search successful");
+        $entries = ldap_get_entries($ldap, $res);
+        $object['email'] = $entries[0][\MRBS\utf8_strtolower($email_attrib)][0];
+        self::debug("$method: email is '" . $object['email']. "'");
         return true;
       }
     }
