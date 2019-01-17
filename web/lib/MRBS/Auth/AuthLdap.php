@@ -123,7 +123,7 @@ class AuthLdap extends Auth
     
     $object = array();
     
-    $res = self::action('authLdapGetNameCallback', $username, $object);
+    $res = self::action('getNameCallback', $username, $object);
 
     return ($res) ? $object['name'] : $username;
   }
@@ -274,8 +274,8 @@ class AuthLdap extends Auth
   }
   
   
-  /* authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
-                             $username, &$object)
+  /* getNameCallback(&$ldap, $base_dn, $dn, $user_search,
+                     $username, &$object)
    *
    * Get the name of a found user
    *
@@ -290,12 +290,13 @@ class AuthLdap extends Auth
    *   false    - Didn't find a user
    *   true     - Found a user
    */
-  private static function authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
-                                                  $username, &$object)
+  private static function getNameCallback(&$ldap, $base_dn, $dn, $user_search,
+                                          $username, &$object)
   {
+    $method = __METHOD__;
     $name_attrib = $object['config']['ldap_name_attrib'];
 
-    self::debug("authLdapGetNameCallback: base_dn '$base_dn' dn '$dn' " .
+    self::debug("$method: base_dn '$base_dn' dn '$dn' " .
                 "user_search '$user_search' user '$username'");
 
     if ($ldap && $base_dn && $dn && $user_search)
@@ -307,11 +308,11 @@ class AuthLdap extends Auth
       
       if (ldap_count_entries($ldap, $res) > 0)
       {
-        self::debug("authLdapGetNameCallback: search successful");
+        self::debug("$method: search successful");
         $entries = ldap_get_entries($ldap, $res);
         $object['name'] = $entries[0][\MRBS\utf8_strtolower($name_attrib)][0];
 
-        self::debug("authLdapGetNameCallback: name is '" . $object['name'] . "'");
+        self::debug("$method: name is '" . $object['name'] . "'");
 
         return true;
       }
