@@ -180,10 +180,22 @@ class AuthLdap extends Auth
   
   public function getUser($username)
   {
+    global $ldap_admin_group_dn;
+    
     $user = new User($username);
     
     $user->display_name = self::getDisplayName($username);
     $user->email = self::getEmail($username);
+    
+    // If we've got a username and we're getting an access level from LDAP then
+    // go ahead and do so.  Otherwise we''ll stick with the default access level
+    // from the config file which will have been obtained by this method's parent
+    if (isset($username) && ($username !== '') && $ldap_admin_group_dn)
+    {
+      $object = array();
+      $res = self::action('checkAdminGroupCallback', $username, $object);
+      $user->level = ($res) ? 2 : 1;
+    }
     
     return $user;
   }
@@ -459,8 +471,60 @@ class AuthLdap extends Auth
     }
     return false;
   }
+  
+  
+  /* checkAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
+                             $username, &$object)
+   * 
+   * Checks if the specified username is in an admin group
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $username    - The user name
+   * &$object     - Reference to the generic object
+   * 
+   * Returns:
+   *   false    - Not in the admin group
+   *   true     - In the admin group
+   */
+  private static function checkAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
+                                                  $username, &$object)
+  {
+    $method = __METHOD__;
+    $admin_group_dn = $object['config']['ldap_admin_group_dn'];
+    $group_member_attrib = $object['config']['ldap_group_member_attrib'];
 
+    self::debug("$method: base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$username'");
 
+    if ($ldap && $base_dn && $dn && $user_search)
+    {
+      $res = ldap_read($ldap,
+                       $dn,
+                       "(objectclass=*)",
+                       array(\MRBS\utf8_strtolower($group_member_attrib)) );
+                       
+      if (ldap_count_entries($ldap, $res) > 0)
+      {
+        self::debug("$method: search successful '$group_member_attrib'");
+        $entries = ldap_get_entries($ldap, $res);
+        foreach ($entries[0][\MRBS\utf8_strtolower($group_member_attrib)] as $group)
+        {
+          if (strcasecmp($group, $admin_group_dn) == 0)
+          {
+            self::debug("$method: admin group successfully found in user object");
+            return true;
+          }
+        }
+        self::debug("$method: admin group not found in user object");
+      }
+    }
+    
+    return false;
+  }
+  
+  
   // A wrapper for ldap_bind() that optionally suppresses "invalid credentials" errors.
   private static function ldapBind ($link_identifier, $bind_rdn=null, $bind_password=null)
   {
