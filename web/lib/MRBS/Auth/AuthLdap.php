@@ -180,24 +180,36 @@ class AuthLdap extends Auth
   
   public function getUser($username)
   {
-    global $ldap_admin_group_dn;
-    
     $user = new User($username);
     
     $user->display_name = self::getDisplayName($username);
     $user->email = self::getEmail($username);
+    $user->level = self::getLevel($username);
     
-    // If we've got a username and we're getting an access level from LDAP then
-    // go ahead and do so.  Otherwise we''ll stick with the default access level
-    // from the config file which will have been obtained by this method's parent
-    if (isset($username) && ($username !== '') && $ldap_admin_group_dn)
+    return $user;
+  }
+  
+  
+  private static function getLevel($username)
+  {
+    global $ldap_admin_group_dn;
+    
+    if (!isset($username) || ($username === ''))
+    {
+      $level = 0;
+    }
+    elseif ($ldap_admin_group_dn)
     {
       $object = array();
       $res = self::action('checkAdminGroupCallback', $username, $object);
-      $user->level = ($res) ? 2 : 1;
+      $level = ($res) ? 2 : 1;
+    }
+    else
+    {
+      $level = self::getDefaultLevel($username);
     }
     
-    return $user;
+    return $level;
   }
   
   

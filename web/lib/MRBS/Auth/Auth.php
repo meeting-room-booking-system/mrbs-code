@@ -9,13 +9,16 @@ abstract class Auth
   public function getUser($username)
   {
     $user = new User($username);
-    $user->level = $this->getLevel($username);
+    $user->display_name = $username;
+    $user->level = $this->getDefaultLevel($username);
+    $user->email = $this->getDefaultEmail($username);
      
     return $user;
   }
   
   
-  protected function getLevel($username)
+  // Gets the level from the $auth['admin'] array in the config file
+  protected function getDefaultLevel($username)
   {
     global $auth;
 
@@ -39,6 +42,7 @@ abstract class Auth
   }
   
   
+  // Gets the default email address using config file settings
   protected function getDefaultEmail($username)
   {
     global $mail_settings;
