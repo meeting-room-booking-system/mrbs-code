@@ -34,10 +34,6 @@ create first an "Area", and then a "Room" within that area.
 There are other ways to configure authentication in MRBS, see the
 file AUTHENTICATION for a more complete description.
 
-The latest version was tested with PHP 5.3.3, Apache 2.4, and either
-MySQL 5.6+ or PostgreSQL 8.2+. It should work on just about anything
-that's got PHP 5.3.3+ with MySQL 5.1+ or PostgreSQL 8.2+.
-
 It should be pretty easy to adjust it to your corporate colours - you can
 modify the themes under "Themes" or (preferably) copy an existing theme
 to a new directory and modify the new theme.
@@ -51,8 +47,8 @@ See AUTHENTICATION for information about user authentication/passwords.
 -------------
 Requirements:
 -------------
-- PHP 5.3.3+ with MySQL and/or PostgreSQL support
-- MySQL (5.5.3 and above) or PostgreSQL
+- PHP 5.4.0 or above with MySQL and/or PostgreSQL support
+- MySQL (5.5.3 and above) or PostgreSQL 8.2 or above.
 - Any web server that is supported by PHP
 
 Recommended:
