@@ -7,6 +7,31 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.3 (Web Jab 23rd 2019):
+
+[-] Fix for problem editing long custom fields described in
+ [support-requests:#1658]
+
+[-] Fixed problem upgrading to DB schema 56, see SF Support Requests #1658.
+
+[-] Updated to latest phpCAS client to fix problem with '"continue"
+ targeting switch is equivalent to "break". Did you mean to use
+ "continue 2"?' warning messages in PHP 7.3.0.
+
+[-] Fixed 'headers already sent' problem when using the 'cookie' session
+ scheme.
+
+[*] Made the upgrade message look less like an error message. See SF
+ Support Requests #1661.
+
+[-] Fixed bug when a field is disabled in the edit_entry form. See SF
+ Support Requests #1664.
+
+[-] Fixed a number of issues with custom "checkbox" type fields, see SF
+ Bugs #429.
+
+
+-------------------------------------------------------------------------------
 Version 1.7.2 (Web Dec 19th 2018):
 
 [*] Updated included time zone files.
