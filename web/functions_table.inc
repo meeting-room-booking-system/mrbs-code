@@ -430,7 +430,7 @@ function get_n_time_slots()
 
 
 // $s is nominal seconds
-function get_query_vars($area, $room, $month, $day, $year, $s)
+function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 {
   global $morningstarts, $morningstarts_minutes;
   
@@ -447,7 +447,8 @@ function get_query_vars($area, $room, $month, $day, $year, $s)
   $minute = $date['minutes'];
   $period = period_index($s);
   
-  $vars = array('year'  => $year,
+  $vars = array('view'  => $view,
+                'year'  => $year,
                 'month' => $month,
                 'day'   => $day,
                 'area'  => $area);
@@ -460,7 +461,7 @@ function get_query_vars($area, $room, $month, $day, $year, $s)
 }
 
 
-function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -634,7 +635,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
           $is_invalid[$s] = $is_possibly_invalid && is_invalid_datetime(0, 0, $s, $month, $day, $year);
         }
         // set up the query vars to be used for the link in the cell
-        $query_vars = get_query_vars($area_id, $room['id'], $month, $day, $year, $s);
+        $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
 
         // and then draw the cell
         if (!isset($today[$room['id']][$day][$s]))
@@ -696,7 +697,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
       foreach ($rooms as $room)
       {
         // set up the query vars to be used for the link in the cell
-        $query_vars = get_query_vars($area_id, $room['id'], $month, $day, $year, $s);
+        $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
         
         if (!isset($today[$room['id']][$day][$s]))
         {
@@ -722,7 +723,7 @@ function day_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohig
 }
 
 
-function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -945,7 +946,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
         {
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
           // set up the query vars to be used for the link in the cell
-          $query_vars = get_query_vars($area_id, $room_id, $wmonth, $wday, $wyear, $s);
+          $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
 
           // and then draw the cell
           if (!isset($week_map[$room_id][$thisday][$s]))
@@ -1019,7 +1020,7 @@ function week_table_innerhtml($year, $month, $day, $area_id, $room_id, $timetohi
           $wmonth = date("m", $wt);
           $wyear = date("Y", $wt);
           $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          $query_vars = get_query_vars($area_id, $room_id, $wmonth, $wday, $wyear, $s);
+          $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
      
           // and then draw the cell
           if (!isset($week_map[$room_id][$thisday][$s]))
@@ -1165,7 +1166,7 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 }
 
 
-function month_table_innerhtml($year, $month, $day, $area, $room)
+function month_table_innerhtml($view, $year, $month, $day, $area, $room)
 {
   global $tbl_entry;
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
@@ -1313,7 +1314,7 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       $html .= "</div>\n";
       
       // then the link to make a new booking
-      unset($vars['view']);
+      $vars['view'] = $view;
       
       if ($enable_periods)
       {
@@ -1326,6 +1327,7 @@ function month_table_innerhtml($year, $month, $day, $area, $room)
       }
       
       $query = http_build_query($vars, '', '&');
+      
       $html .= '<a class="new_booking" href="edit_entry.php?' . htmlspecialchars($query) . "\">\n";
       if ($show_plus_link)
       {

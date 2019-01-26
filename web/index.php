@@ -364,13 +364,13 @@ if (!checkAuthorised(this_page(), $just_check = $ajax))
 switch ($view)
 {
   case 'day':
-    $inner_html = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'week':
-    $inner_html = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+    $inner_html = week_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'month':
-    $inner_html = month_table_innerhtml($year, $month, $day, $area, $room);
+    $inner_html = month_table_innerhtml($view, $year, $month, $day, $area, $room);
     break;
   default:
     throw new \Exception("Unknown view '$view'");
