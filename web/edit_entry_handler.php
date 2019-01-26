@@ -780,10 +780,10 @@ if ($ajax)
     switch ($view)
     {
       case 'day':
-        $result['table_innerhtml'] = day_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        $result['table_innerhtml'] = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
         break;
       case 'week':
-        $result['table_innerhtml'] = week_table_innerhtml($year, $month, $day, $area, $room, $timetohighlight);
+        $result['table_innerhtml'] = week_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
         break;
       default:
         throw new \Exception("Unsupported view '$view'");
