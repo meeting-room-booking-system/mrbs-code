@@ -226,17 +226,32 @@ foreach($fields as $field)
 // -------------------------------
 
 // Form validation checks.   Normally checked for client side.
-// Don't bother with them if this is an Ajax request.
+
+if (empty($rooms))
+{
+  if (!$ajax)
+  {
+    invalid_booking(get_vocab('no_rooms_selected'));
+  }
+  if ($commit)
+  {
+    throw new \Exception('No rooms specified');
+  }
+  // If this is an Ajax request and we're not committing the booking, ie we are just
+  // checking for conflicts, then it's perfectly possible to get here without any rooms
+  // being selected on the form (just deselect the room on the form with Ctrl Click).  So
+  // in this case just return a null response.
+  http_headers(array("Content-Type: application/json"));
+  echo json_encode(null);
+  exit;
+}
+
+// Don't bother with these checks if this is an Ajax request.
 if (!$ajax)
 {
   if (!isset($name) || ($name === ''))
   {
     invalid_booking(get_vocab('must_set_description'));
-  }       
-
-  if (empty($rooms))
-  {
-    invalid_booking(get_vocab('no_rooms_selected'));
   }
 
   if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < 1))
@@ -292,17 +307,10 @@ if (isset($id) && ($id == ''))
   unset($id);
 }
 
+// Make sure the area corresponds to the room that is being booked
+$area = get_area($rooms[0]);
+get_area_settings($area);  // Update the area settings
 
-if (empty($rooms))
-{
-  trigger_error('Internal error: no rooms specified', E_USER_WARNING);
-}
-else
-{
-  // Make sure the area corresponds to the room that is being booked
-  $area = get_area($rooms[0]);
-  get_area_settings($area);  // Update the area settings
-}
 // and that $room is in $area
 if (get_area($room) != $area)
 {
