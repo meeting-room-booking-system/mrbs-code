@@ -167,11 +167,13 @@ CREATE TABLE mrbs_variables
 CREATE TABLE mrbs_zoneinfo
 (
   id                 int NOT NULL auto_increment,
-  timezone           varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
+  timezone           varchar(127) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   outlook_compatible tinyint unsigned NOT NULL DEFAULT 0,
   vtimezone          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   last_updated       int NOT NULL DEFAULT 0,
-      
+  
+  /* Note that there is a limit on the length of keys which imposes a constraint
+     on the size of VARCHAR that can be keyed */
   PRIMARY KEY (id),
   UNIQUE KEY uq_timezone (timezone, outlook_compatible)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
