@@ -161,7 +161,7 @@ CREATE TABLE mrbs_variables
 CREATE TABLE mrbs_zoneinfo
 (
   id                 serial primary key,
-  timezone           varchar(255) DEFAULT '' NOT NULL,
+  timezone           varchar(127) DEFAULT '' NOT NULL,
   outlook_compatible smallint NOT NULL DEFAULT 0,
   vtimezone          text,
   last_updated       int NOT NULL DEFAULT 0,
@@ -171,7 +171,7 @@ CREATE TABLE mrbs_zoneinfo
 
 CREATE TABLE mrbs_sessions
 (
-  id      varchar(255) NOT NULL primary key,
+  id      varchar(191) NOT NULL primary key,
   access  int DEFAULT NULL,
   data    text DEFAULT NULL
 );
