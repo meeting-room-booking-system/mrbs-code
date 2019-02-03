@@ -104,7 +104,6 @@ $formvars = array('create_by'          => 'string',
                   'edit_type'          => 'string',
                   'rep_type'           => 'int',
                   'rep_end_date'       => 'string',
-                  'rep_id'             => 'int',
                   'rep_day'            => 'array',   // array of bools
                   'rep_num_weeks'      => 'int',
                   'month_type'         => 'int',
