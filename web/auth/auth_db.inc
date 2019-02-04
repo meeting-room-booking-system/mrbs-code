@@ -259,31 +259,6 @@ function canValidateByEmail()
 }
 
 
-/* authGetUserLevel($user)
- * 
- * Determines the user's access level
- * 
- * $user - The user name
- *
- * Returns:
- *   The users access level
- */
-function authGetUserLevel($user)
-{
-  global $tbl_users;
-  // User not logged in, user level '0'
-  if(!isset($user))
-  {
-    return 0;
-  }
-  
-  $result = db()->query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
-                       array(utf8_strtolower($user)));
-
-  return ($result == -1) ? 0 : $result;
-}
-
-
 // Gets the user's email address.   Returns an empty
 // string if one can't be found
 function authGetUserEmail($user)

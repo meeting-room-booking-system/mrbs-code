@@ -37,68 +37,6 @@ function canValidateByEmail()
 }
 
 
-/* authGetUserLevel($user)
- * 
- * Determines the user's access level
- * 
- * $user - The user name
- *
- * Returns:
- *   The users access level
- */
-function authGetUserLevel($user)
-{
-  global $auth;
-  
-  // cache the user levels for performance
-  static $user_levels = array();
-  
-  // User not logged in, user level '0'
-  if(!isset($user))
-  {
-    return 0;
-  }
-
-  if (isset($user_levels[$user]))
-  {
-    return $user_levels[$user];
-  }
-  
-  $wp_user = get_user_by('login', $user);
-  if ($wp_user === FALSE)
-  {
-    return 0;
-  }
-
-  // Check to see if the user has admin rights
-  if (isset($auth['wordpress']['admin_roles']))
-  {
-    // Check to see if one of the user's roles is an MRBS admin role
-    if (check_roles($wp_user, $auth['wordpress']['admin_roles']))
-    {
-      $user_levels[$user] = 2;
-      return $user_levels[$user];
-    }
-  }
-  
-  // Check to see if the user has user rights
-  if (isset($auth['wordpress']['user_roles']))
-  {
-    // Check to see if one of the user's roles is an MRBS user role
-    if (check_roles($wp_user, $auth['wordpress']['user_roles']))
-    {
-      $user_levels[$user] = 1;
-      return $user_levels[$user];
-    }
-  }
-  
-  // Everybody else is access level '0'
-  $user_levels[$user] = 0;
-  
-  return $user_levels[$user];
-}
-
-
 // Gets the user's email address.   Returns an empty
 // string if one can't be found
 function authGetUserEmail($user)

@@ -82,9 +82,9 @@ elseif (isset($update_button))
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
-  $current_username = session()->getUsername();
+  $current_user = session()->getCurrentUser();
     
-  return (is_user_admin() || (strcasecmp($current_username, $target) === 0));
+  return (is_user_admin() || (isset($current_user) && strcasecmp($current_user->username, $target) === 0));
 }
 
 
@@ -558,8 +558,8 @@ $initial_user_creation = false;
 
 if (count($users) > 0)
 {
-  $current_username = session()->getUsername();
-  $level = authGetUserLevel($current_username);
+  $current_user = session()->getCurrentUser();
+  $level = $current_user->level;
   // Check the user is authorised for this page
   checkAuthorised(this_page());
 }
@@ -575,7 +575,6 @@ else
     $id = null;
   }
   $level = $max_level;
-  $current_username = '';           // to avoid an undefined variable notice
 }
 
 
@@ -784,10 +783,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  if (isset($current_username))
+  if (isset($current_user))
   {
     $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                          array(utf8_strtolower($current_username)));
+                          array(utf8_strtolower($current_user->level)));
   }
   else
   {

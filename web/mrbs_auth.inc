@@ -149,9 +149,9 @@ function getAuthorised($level)
   }
 
   // Otherwise we need to check who they are
-  $user = session()->getUsername();
+  $current_user = session()->getCurrentUser();
   
-  if(!isset($user))
+  if(!isset($current_user))
   {
     // Ask them to authenticate, if the session scheme supports it
     if (method_exists(session(), 'authGet'))
@@ -161,7 +161,7 @@ function getAuthorised($level)
     return false;
   }
 
-  return authGetUserLevel($user) >= $level;
+  return ($current_user->level >= $level);
 }
 
 
@@ -185,8 +185,8 @@ function checkAuthorised($page, $just_check=false)
       return true;
     }
     
-    $user = session()->getUsername();
-    return (isset($user)) ? (authGetUserLevel($user) >= $required_level) : false;
+    $current_user = session()->getCurrentUser();
+    return (isset($current_user) && ($current_user->level >= $required_level));
   }
   
   // Check that the user has this level
@@ -273,10 +273,10 @@ function is_admin()
 {
   global $max_level;
   
-  $user = session()->getUsername();
+  $current_user = session()->getCurrentUser();
   $required_level = (isset($max_level) ? $max_level : 2);
-  
-  return (authGetUserLevel($user) >= $required_level);
+
+  return (isset($current_user) && ($current_user->level >= $required_level));
 }
 
 
@@ -291,9 +291,9 @@ function is_admin()
 //           the room; otherwise FALSE
 function is_book_admin($room=null)
 {
-  $user = session()->getUsername();
+  $current_user = session()->getCurrentUser();
   
-  return (authGetUserLevel($user) >= 2);
+  return (isset($current_user) && ($current_user->level >= 2));
 }
 
 
@@ -302,7 +302,7 @@ function is_user_admin()
 {
   global $min_user_editing_level;
   
-  $user = session()->getUsername();
+  $current_user = session()->getCurrentUser();
 
-  return (authGetUserLevel($user) >= $min_user_editing_level);
+  return (isset($current_user) && ($current_user->level >= $min_user_editing_level));
 }

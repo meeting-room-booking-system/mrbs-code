@@ -590,60 +590,6 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
 }
 
 
-/* authGetUserLevel($user)
- *
- * Determines the users access level
- *
- * $user - The user name
- *
- * Returns:
- *   The users access level
- */
-function authGetUserLevel($user)
-{
-  global $ldap_admin_group_dn;
-  
-  // cache the user levels for performance
-  static $user_levels = array();
-  
-  // User not logged in, user level '0'
-  if (!isset($user))
-  {
-    return 0;
-  }
-  
-  if (isset($user_levels[$user]))
-  {
-    return $user_levels[$user];
-  }
-  
-  if ($ldap_admin_group_dn)
-  {
-    $object = array();
-    $res = authLdapAction("authLdapCheckAdminGroupCallback", $user, $object);
-    if ($res)
-    {
-      $level = 2;
-    }
-    else
-    {
-      $level = 1;
-    }
-  }
-  elseif (authLdapIsAdmin($user))
-  {
-    $level = 2;
-  }
-  else  // Everybody else is access level '1'
-  {
-    $level = 1;
-  }
-  
-  $user_levels[$user] = $level;
-  
-  return $user_levels[$user];
-}
-
 /* authLdapGetName($user)
  *
  * Gets the name of the user from LDAP

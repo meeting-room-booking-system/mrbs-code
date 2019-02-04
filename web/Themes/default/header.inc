@@ -132,9 +132,9 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
 function print_outstanding($query)
 {
-  $user = session()->getUsername();
+  $current_user = session()->getCurrentUser();
   
-  if (!isset($user))
+  if (!isset($current_user))
   {
     return;
   }
@@ -142,7 +142,7 @@ function print_outstanding($query)
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
   $approval_somewhere = some_area('approval_enabled', TRUE);
-  if ($approval_somewhere && (authGetUserLevel($user) >= 1))
+  if ($approval_somewhere && ($current_user->level > 0))
   {
     $n_outstanding = get_entries_n_outstanding($user);
     
