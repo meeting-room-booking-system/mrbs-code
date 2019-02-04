@@ -31,21 +31,6 @@ function authValidateUser($user, $pass)
 }
 
 
-// Gets the user's email address.   Returns an empty
-// string if one can't be found
-function authGetUserEmail($username)
-{
-  if (!isset($username) || $username === '')
-  {
-    return '';
-  }
-  
-  $user = JFactory::getUser($username);
-  $email = '"' . $user->name . '"<' . $user->email . '>';
-  return $email;
-}
-
-
 // Return an array of MRBS users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {

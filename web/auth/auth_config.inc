@@ -56,19 +56,6 @@ function authValidateUser($user, $pass)
 }
 
 
-// Gets the user's email address.   Returns an empty
-// string if one can't be found
-function authGetUserEmail($user)
-{
-  if (!isset($user) || $user === '')
-  {
-    return '';
-  }
-
-  return get_default_email($user);
-}
-
-
 // Return an array of users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {

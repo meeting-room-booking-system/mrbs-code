@@ -771,17 +771,12 @@ function create_addresses($data, $action)
   $cc[] = $mail_settings['cc'];
   
   // set the from address
-  $user = session()->getUsername();
-  if (isset($user) && in_array($action, array("more_info", "reject", "remind")))
+  $current_user = session()->getCurrentUser();
+  if (isset($current_user) && in_array($action, array('more_info', 'reject', 'remind')))
   {
-    $from = authGetUserEmail($user);
-    if (empty($from))
-    {
-      // there was an error:  use a sensible default
-      $from = $mail_settings['from'];
-    }
+    $from = $current_user->email;
   }
-  else
+  if (empty($from))
   {
     $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
   }
@@ -840,11 +835,10 @@ function create_addresses($data, $action)
       $cc = array_merge($cc, $to);
       $to = array();
     }
-    $booker = $data['create_by'];
-    $booker_email = authGetUserEmail($booker);
-    if (!empty($booker_email))
+    $booker = auth()->getUser($data['create_by']);
+    if (!empty($booker->email))
     {
-      $to[] = $booker_email;
+      $to[] = $booker->email;
     }
   }
   // In case $to and $cc are empty, no need to go further

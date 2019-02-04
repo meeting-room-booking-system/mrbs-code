@@ -259,28 +259,6 @@ function canValidateByEmail()
 }
 
 
-// Gets the user's email address.   Returns an empty
-// string if one can't be found
-function authGetUserEmail($user)
-{
-  global $tbl_users;
-  
-  if (!isset($user) || $user === '')
-  {
-    return '';
-  }
-  
-  $sql = "SELECT email 
-            FROM $tbl_users 
-           WHERE name=?
-           LIMIT 1";
-           
-  $email = db()->query1($sql, array($user));
-  
-  return ($email == -1) ? '' : $email;
-}
-
-
 // Return an array of all users
 function authGetUsers()
 {

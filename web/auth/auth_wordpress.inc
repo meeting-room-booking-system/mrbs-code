@@ -37,20 +37,6 @@ function canValidateByEmail()
 }
 
 
-// Gets the user's email address.   Returns an empty
-// string if one can't be found
-function authGetUserEmail($user)
-{
-  $wp_user = get_user_by('login', $user);
-  if ($wp_user === FALSE)
-  {
-    return '';
-  }
-  
-  return (isset($wp_user->user_email)) ? $wp_user->user_email : '';
-}
-
-
 // Return an array of MRBS users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {

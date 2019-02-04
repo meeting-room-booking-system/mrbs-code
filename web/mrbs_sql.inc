@@ -564,7 +564,7 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 function get_entries_n_outstanding(User $user)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
-  
+
   $sql_approval_enabled = some_area_predicate('approval_enabled');
   $sql_params = array();
 
