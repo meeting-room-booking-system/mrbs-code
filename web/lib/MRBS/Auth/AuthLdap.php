@@ -151,7 +151,7 @@ class AuthLdap extends Auth
         {
           if (count($$item) != $count)
           {
-            fatal_error("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!");
+            \MRBS\fatal_error("MRBS configuration error: Count of LDAP array config variables doesn't match, aborting!");
           }
         }
         else
@@ -182,15 +182,15 @@ class AuthLdap extends Auth
   {
     $user = new User($username);
     
-    $user->display_name = self::getDisplayName($username);
-    $user->email = self::getEmail($username);
-    $user->level = self::getLevel($username);
+    $user->display_name = $this->getDisplayName($username);
+    $user->email = $this->getEmail($username);
+    $user->level = $this->getLevel($username);
     
     return $user;
   }
   
   
-  private static function getLevel($username)
+  private function getLevel($username)
   {
     global $ldap_admin_group_dn;
     
@@ -201,12 +201,12 @@ class AuthLdap extends Auth
     elseif ($ldap_admin_group_dn)
     {
       $object = array();
-      $res = self::action('checkAdminGroupCallback', $username, $object);
+      $res = $this->action('checkAdminGroupCallback', $username, $object);
       $level = ($res) ? 2 : 1;
     }
     else
     {
-      $level = self::getDefaultLevel($username);
+      $level = $this->getDefaultLevel($username);
     }
     
     return $level;
@@ -214,7 +214,7 @@ class AuthLdap extends Auth
   
   
   // Get the display name of the user from LDAP.  If none, returns the username
-  private static function getDisplayName($username)
+  private function getDisplayName($username)
   {
     if (!isset($username) || ($username === ''))
     {
@@ -223,7 +223,7 @@ class AuthLdap extends Auth
     
     $object = array();
     
-    $res = self::action('getNameCallback', $username, $object);
+    $res = $this->action('getNameCallback', $username, $object);
 
     return ($res) ? $object['name'] : $username;
   }
@@ -243,7 +243,7 @@ class AuthLdap extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public static function action($callback, $username, &$object)
+  public function action($callback, $username, &$object)
   {
     $method = __METHOD__;
     
@@ -421,7 +421,7 @@ class AuthLdap extends Auth
   }
   
   
-  private static function getEmail($username)
+  private function getEmail($username)
   {
     global $ldap_get_user_email;
     
@@ -433,11 +433,11 @@ class AuthLdap extends Auth
     if ($ldap_get_user_email)
     {
       $object = array();
-      $res = self::action('getEmailCallback', $username, $object);
+      $res = $this->action('getEmailCallback', $username, $object);
       return ($res) ? $object['email'] : '';
     }
     
-    return self::getDefaultEmail($username);
+    return $this->getDefaultEmail($username);
   }
   
   

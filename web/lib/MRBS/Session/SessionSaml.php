@@ -67,7 +67,7 @@ class SessionSaml extends SessionWithLogin
   
   
   // No need to prompt for a name - this is done by SimpleSamlPhp
-  public function authGet()
+  public function authGet($target_url=null, $error=null, $raw=false)
   {
     $this->ssp->requireAuth();
   }

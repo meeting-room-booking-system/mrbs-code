@@ -2,12 +2,13 @@
 namespace MRBS\Session;
 
 use \phpCAS;
+use MRBS\Form\Form;
 
 
 class SessionCas extends SessionWithLogin
 {
   
-  public function authGet()
+  public function authGet($target_url=null, $error=null, $raw=false)
   {
     // Useless Method - CAS does it all
   }
