@@ -144,7 +144,7 @@ function print_outstanding($query)
   $approval_somewhere = some_area('approval_enabled', TRUE);
   if ($approval_somewhere && ($current_user->level > 0))
   {
-    $n_outstanding = get_entries_n_outstanding($user);
+    $n_outstanding = get_entries_n_outstanding($current_user);
     
     $class = 'notification';
     

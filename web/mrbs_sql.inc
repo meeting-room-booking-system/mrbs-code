@@ -561,7 +561,7 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 
 
 // Get the number of outstanding (ie waiting to be approved) for a user
-function get_entries_n_outstanding($user)
+function get_entries_n_outstanding(User $user)
 {
   global $tbl_entry, $tbl_room, $tbl_area;
   
@@ -582,7 +582,7 @@ function get_entries_n_outstanding($user)
   {
     // Ordinary users can only see their own
     $sql .= " AND create_by=?";
-    $sql_params[] = $user;
+    $sql_params[] = $user->username;
   }
   
   return db()->query1($sql, $sql_params);
