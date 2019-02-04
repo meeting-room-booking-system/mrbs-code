@@ -83,15 +83,24 @@ function get_mail_field_name($table, $name)
 function getMailPeriodDateString($t, $mod_time=0)
 {
   global $periods, $strftime_format;
-  //
+
   $time = getdate($t);
   $p_num = $time['minutes'] + $mod_time;
-  ( $p_num < 0 ) ? $p_num = 0 : '';
-  ( $p_num >= count($periods) - 1 ) ? $p_num = count($periods ) - 1 : '';
-  // I have made the separator a ',' as a '-' leads to an ambiguous
-  // display in report.php when showing end times.
-  
+
+  // Make sure we have a valid period [should this be necessary??]
+  if ($p_num < 0)
+  {
+    $p_num = 0;
+  }
+
+  if ($p_num > count($periods) - 1)
+  {
+    $p_num = count($periods) - 1;
+  }
+
   $mailperiod = $periods[$p_num];
+
+  // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
   return array($p_num, $mailperiod . utf8_strftime(", " . $strftime_format['date'], $t, get_mail_locale()));
 }
 
@@ -339,8 +348,6 @@ function create_date_list($dates, $as_html)
 // $reps is an array of start_times that have been created/modified/deleted.
 function create_repeat_list($data, $action, $as_html, $reps)
 {
-  global $max_rep_entrys;
-  
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
   {
