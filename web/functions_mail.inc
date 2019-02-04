@@ -339,8 +339,6 @@ function create_date_list($dates, $as_html)
 // $reps is an array of start_times that have been created/modified/deleted.
 function create_repeat_list($data, $action, $as_html, $reps)
 {
-  global $max_rep_entrys;
-  
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
   {
