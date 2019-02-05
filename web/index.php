@@ -13,25 +13,23 @@ require_once "functions_table.inc";
 function get_color_key()
 {
   global $booking_types;
-  
+
+  $html = '';
+
   // No point in showing the color key if we aren't using entry types.  (Note:  count()
   // returns 0 if its parameter is not set).
-  if (count($booking_types) < 2)
+  if (count($booking_types) > 1)
   {
-    return;
-  }
-  
-  $html = '';
-  
-  $html = "<div class=\"color_key js_hidden\">\n";
+    $html = "<div class=\"color_key js_hidden\">\n";
 
-  foreach ($booking_types as $key)
-  {
-    $html .= "<div class=\"$key\">" . get_type_vocab($key) . "</div>\n";
+    foreach ($booking_types as $key)
+    {
+      $html .= "<div class=\"$key\">" . get_type_vocab($key) . "</div>\n";
+    }
+
+    $html .= "</div>\n";
   }
 
-  $html .= "</div>\n";
-  
   return $html;
 }
 
