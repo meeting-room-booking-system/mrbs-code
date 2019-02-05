@@ -3,7 +3,6 @@ namespace MRBS\Session;
 
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
-use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
