@@ -15,8 +15,15 @@ abstract class Auth
      
     return $user;
   }
-  
-  
+
+
+  // Checks whether validation of a user by email address is possible and allowed.
+  public function canValidateByEmail()
+  {
+    return false;
+  }
+
+
   // Gets the level from the $auth['admin'] array in the config file
   protected function getDefaultLevel($username)
   {

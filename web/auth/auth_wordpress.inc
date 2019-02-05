@@ -28,15 +28,6 @@ function authValidateUser($user, $pass)
 }
 
 
-// Checks whether validation of a user by email address is possible and
-// allowed.  In the case of WordPress, wp_authenticate() accepts either
-// a username or email address and so this function always returns true.
-function canValidateByEmail()
-{
-  return true;
-}
-
-
 // Return an array of MRBS users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {

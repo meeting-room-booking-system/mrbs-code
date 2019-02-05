@@ -171,15 +171,8 @@ abstract class SessionWithLogin implements SessionInterface
     $fieldset->addLegend(\MRBS\get_vocab('please_login'));
     
     // The username field
-    if (function_exists(__NAMESPACE__ . "\\canValidateByEmail")
-        && canValidateByEmail())
-    {
-      $placeholder = \MRBS\get_vocab('username_or_email');
-    }
-    else
-    {
-      $placeholder = \MRBS\get_vocab('users.name');
-    }
+    $tag = (\MRBS\auth()->canValidateByEmail()) ? 'username_or_email' : 'users.name';
+    $placeholder = \MRBS\get_vocab($tag);
     
     $field = new FieldInputText();
     $field->setLabel(\MRBS\get_vocab('user'))

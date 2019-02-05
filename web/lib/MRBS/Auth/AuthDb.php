@@ -40,5 +40,12 @@ class AuthDb extends Auth
     
     return $user;
   }
+
+
+  // Checks whether validation of a user by email address is possible and allowed.
+  public function canValidateByEmail()
+  {
+    return true;
+  }
   
 }

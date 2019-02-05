@@ -25,7 +25,16 @@ class AuthWordpress extends Auth
     
     return $user;
   }
-  
+
+
+  // Checks whether validation of a user by email address is possible and
+  // allowed.  In the case of WordPress, wp_authenticate() accepts either
+  // a username or email address and so this function always returns true.
+  public function canValidateByEmail()
+  {
+    return true;
+  }
+
   
   private static function getUserLevel(\WP_User $wp_user)
   {

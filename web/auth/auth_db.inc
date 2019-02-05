@@ -251,14 +251,6 @@ function authValidateEmail($email, $pass)
 }
 
 
-// Checks whether validation of a user by email address is possible
-// and allowed.
-function canValidateByEmail()
-{
-  return true;
-}
-
-
 // Return an array of all users
 function authGetUsers()
 {
