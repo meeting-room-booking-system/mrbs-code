@@ -20,7 +20,7 @@ function get_color_key()
   // returns 0 if its parameter is not set).
   if (count($booking_types) > 1)
   {
-    $html = "<div class=\"color_key js_hidden\">\n";
+    $html .= "<div class=\"color_key js_hidden\">\n";
 
     foreach ($booking_types as $key)
     {
