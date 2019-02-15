@@ -952,6 +952,8 @@ function get_field_rep_end_date($disabled=false)
 
 function get_field_skip_conflicts($disabled=false)
 {
+  global $skip_default;
+
   if ($disabled)
   {
     return null;
