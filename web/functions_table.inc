@@ -179,10 +179,8 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
   //
   // $is_invalid specifies whether the slot actually exists or is one of the non-existent
   // slots in the transition to DST
-    
-  global $main_table_cell_border_width;
-  global $area, $year, $month, $timetohighlight;
-  global $enable_periods, $times_along_top, $show_plus_link;
+
+  global $enable_periods, $show_plus_link;
   global $approval_enabled, $confirmation_enabled;
   
   $html = '';
@@ -311,7 +309,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
 //    $url               the url to form the basis of the link in the time cell
 function time_cell_html($s, $url)
 {
-  global $enable_periods, $periods;
+  global $enable_periods;
   
   $html = '';
   
