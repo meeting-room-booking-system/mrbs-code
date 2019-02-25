@@ -34,7 +34,7 @@ Form::checkToken();
 checkAuthorised(this_page());
 
 // Check that the user is a booking admin
-if (!is_booking_admin())
+if (!is_book_admin())
 {
   exit;
 }
