@@ -79,6 +79,21 @@ elseif (isset($update_button))
 }
 
 
+// Checks whether the current user can view the target user
+function can_view_user($target)
+{
+  global $auth, $min_user_viewing_level, $level;
+
+  $current_username = getUserName();
+
+  // You can only see this user if (a) we allow everybody to see all users or
+  // (b) you are an admin or (c) you are this user
+  return (!$auth['only_admin_can_see_other_users']  ||
+          ($level >= $min_user_viewing_level) ||
+          (strcasecmp($current_username, $target) === 0));
+}
+
+
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
@@ -1184,7 +1199,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     // The table body
     echo "<tbody>\n";
   }
-  
+
   // If we're Ajax capable and this is not an Ajax request then don't output
   // the table body, because that's going to be sent later in response to
   // an Ajax request
@@ -1192,9 +1207,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   {
     foreach ($users as $user)
     {
-      // You can only see this row if (a) we allow everybody to see all rows or
-      // (b) you are an admin or (c) you are this user
-      if (!$auth['only_admin_can_see_other_users'] || can_edit_user($user['name']))
+      if (can_view_user($user['name']))
       {
         output_row($user);
       }
