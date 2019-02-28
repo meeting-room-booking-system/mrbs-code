@@ -579,7 +579,7 @@ $initial_user_creation = false;
 if (count($users) > 0)
 {
   $current_user = session()->getCurrentUser();
-  $level = $current_user->level;
+  $level = (isset($current_user)) ? $current_user->level : 0;
   // Check the user is authorised for this page
   checkAuthorised(this_page());
 }
