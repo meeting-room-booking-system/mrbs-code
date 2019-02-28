@@ -82,15 +82,20 @@ elseif (isset($update_button))
 // Checks whether the current user can view the target user
 function can_view_user($target)
 {
-  global $auth, $min_user_viewing_level, $level;
+  global $auth, $min_user_viewing_level;
 
-  $current_username = getUserName();
+  $current_user = session()->getCurrentUser();
 
-  // You can only see this user if (a) we allow everybody to see all users or
-  // (b) you are an admin or (c) you are this user
+  // You can only see this user if you are logged in and (a) we allow everybody to see all
+  // users or (b) you are an admin or (c) you are this user
+  if (!isset($current_user))
+  {
+    return false;
+  }
+
   return (!$auth['only_admin_can_see_other_users']  ||
-          ($level >= $min_user_viewing_level) ||
-          (strcasecmp($current_username, $target) === 0));
+          ($current_user->level >= $min_user_viewing_level) ||
+          (strcasecmp($current_user->username, $target) === 0));
 }
 
 
