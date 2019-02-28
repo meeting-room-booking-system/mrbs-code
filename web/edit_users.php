@@ -382,8 +382,6 @@ function get_field_custom($custom_field, $params, $disabled=false)
   global $select_options, $datalist_options, $is_mandatory_field;
   global $text_input_max;
   
-  $key = $custom_field['name'];
-  
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($custom_field['nature'] == 'boolean') || 
