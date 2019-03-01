@@ -291,10 +291,6 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     $base = 12*SECONDS_PER_HOUR;  // The start of the first period of the day
   }
-  else
-  {
-    $format = hour_min_format();
-  }
   
   // Build the options
   $options = array();
