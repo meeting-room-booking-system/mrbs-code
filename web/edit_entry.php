@@ -543,7 +543,6 @@ function get_field_areas($value, $disabled=false)
 
 function get_field_rooms($value, $disabled=false)
 {
-  global $tbl_room, $tbl_area;
   global $multiroom_allowed, $area_id, $areas, $rooms;
   
   // First of all generate the rooms for this area
