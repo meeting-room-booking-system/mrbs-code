@@ -291,10 +291,6 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     $base = 12*SECONDS_PER_HOUR;  // The start of the first period of the day
   }
-  else
-  {
-    $format = hour_min_format();
-  }
   
   // Build the options
   $options = array();
@@ -547,7 +543,6 @@ function get_field_areas($value, $disabled=false)
 
 function get_field_rooms($value, $disabled=false)
 {
-  global $tbl_room, $tbl_area;
   global $multiroom_allowed, $area_id, $areas, $rooms;
   
   // First of all generate the rooms for this area
@@ -696,7 +691,7 @@ function get_field_custom($key, $disabled=false)
   // $edit_entry_field_order contains a value for which a field doesn't exist.
   if (!isset($custom_fields_map[$key]))
   {
-    return;
+    return null;
   }
   
   $custom_field = $custom_fields_map[$key];
