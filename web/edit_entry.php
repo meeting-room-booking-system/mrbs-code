@@ -691,7 +691,7 @@ function get_field_custom($key, $disabled=false)
   // $edit_entry_field_order contains a value for which a field doesn't exist.
   if (!isset($custom_fields_map[$key]))
   {
-    return;
+    return null;
   }
   
   $custom_field = $custom_fields_map[$key];
