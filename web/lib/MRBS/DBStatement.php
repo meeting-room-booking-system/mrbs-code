@@ -3,7 +3,6 @@
 namespace MRBS;
 
 use PDO;
-use PDOException;
 
 
 //
