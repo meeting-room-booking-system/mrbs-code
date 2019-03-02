@@ -3,7 +3,6 @@
 namespace MRBS;
 
 use PDO;
-use PDOException;
 
 
 //
@@ -13,7 +12,7 @@ class DBStatement
   protected $statement = null;
 
   //
-  public function __construct($db_obj, $sth)
+  public function __construct(DB $db_obj, \PDOStatement $sth)
   {
     $this->db_object = $db_obj;
     $this->statement = $sth;
