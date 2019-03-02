@@ -13,15 +13,14 @@ class DBFactory
     {
       case 'mysql':
       case 'mysqli':
-        $db_system = 'mysql';
+        return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
         break;
       case 'pgsql':
+        return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
         break;
       default:
         throw new Exception("Unsupported database driver '$db_system'");
         break;
     }
-    $class = "MRBS\DB_${db_system}";
-    return new $class($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
   }
 }
