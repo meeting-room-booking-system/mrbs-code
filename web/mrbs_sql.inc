@@ -1088,7 +1088,7 @@ function mrbsCreateRepeatingEntrys($data)
       (count($reps) == count($data['skip_list'])))
   {
     $result['id'] = 0;
-    return $result;;
+    return $result;
   }
   
   // Maybe one should also consider adjusting the start_time for
