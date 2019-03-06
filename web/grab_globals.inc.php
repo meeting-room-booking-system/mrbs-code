@@ -97,8 +97,6 @@ if (defined('ABSPATH'))  // standard test for WordPress
   die('MRBS internal error: Wordpress files have already been included.');
 }
 
-// Take clean copies of $_GET, $_POST and $_SERVER  before WordPress alters them
-
 // Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
 // slashed, regardless of the setting of magic_quotes.   So if we are using the
 // WordPress authentication and session scemes then this will happen when the WordPress
@@ -108,6 +106,10 @@ if (defined('ABSPATH'))  // standard test for WordPress
 // WordPress files haven't already been included).  For more details of the problem see
 // https://wordpress.org/support/topic/wp-automatically-escaping-get-and-post-etc-globals and
 // https://core.trac.wordpress.org/ticket/18322
+
+// Take clean copies of $_GET, $_POST and $_SERVER  before WordPress alters them
+// ($_COOKIE isn't a problem because if we are using WordPress auth and session then
+// we won't be using $_COOKIE).
 
 $get = $_GET;
 $post = $_POST;
