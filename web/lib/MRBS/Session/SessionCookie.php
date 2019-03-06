@@ -102,7 +102,7 @@ class SessionCookie extends SessionWithLogin
   // Wrapper for setting cookies
   public static function setCookie($name, $hash_algorithm, $secret, array $data, $expiry=0)
   {
-    global $auth;
+    global $auth, $server;
     
     assert(!isset($data['expiry']), "'expiry' is a reserved data key");
     assert(!isset($data['ip']), "'ip' is a reserved data key");
@@ -111,7 +111,7 @@ class SessionCookie extends SessionWithLogin
     
     if ($auth['session_cookie']['include_ip'])
     {
-      $data['ip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+      $data['ip'] = isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : null;
     }
     
     $json_data = json_encode($data);
@@ -127,7 +127,7 @@ class SessionCookie extends SessionWithLogin
 
   public static function getCookie($name, $hash_algorithm, $secret)
   {
-    global $auth;
+    global $auth, $server;
     
     if (empty($_COOKIE) || !isset($_COOKIE[$name]))
     {
@@ -165,11 +165,11 @@ class SessionCookie extends SessionWithLogin
     // Check IP address
     if ($auth['session_cookie']['include_ip'])
     {
-      if ((!isset($data['ip']) && !isset($_SERVER['REMOTE_ADDR'])) ||
-           ($data['ip'] !== $_SERVER['REMOTE_ADDR']))
+      if ((!isset($data['ip']) && !isset($server['REMOTE_ADDR'])) ||
+           ($data['ip'] !== $server['REMOTE_ADDR']))
       {
         $message = 'IP address should be ' . $data['ip'] . ', but REMOTE_ADDR is ' .
-                   $_SERVER['REMOTE_ADDR'];
+                   $server['REMOTE_ADDR'];
         throw new \Exception($message);
       }
     }

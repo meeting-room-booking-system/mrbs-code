@@ -44,7 +44,9 @@ class SessionOmni extends SessionWithoutLogin
   
   public function getUsername()
   {
-    return (isset($_SERVER['REMOTE_USER'])) ? $_SERVER['REMOTE_USER'] : null;
+    global $server;
+    
+    return (isset($server['REMOTE_USER'])) ? $server['REMOTE_USER'] : null;
   }
   
 }
