@@ -252,6 +252,8 @@ function getWritable($creator, $room)
  */
 function showAccessDenied($view=null, $year=null, $month=null, $day=null, $area=null, $room=null)
 {
+  global $server;
+  
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
