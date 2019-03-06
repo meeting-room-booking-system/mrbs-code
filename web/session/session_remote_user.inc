@@ -36,15 +36,17 @@ function authGet()
 
 function getUserName()
 {
-  if ((!isset($_SERVER['REMOTE_USER'])) ||
-      (!is_string($_SERVER['REMOTE_USER'])) ||
-      (empty($_SERVER['REMOTE_USER'])))
+  global $server;
+  
+  if ((!isset($server['REMOTE_USER'])) ||
+      (!is_string($server['REMOTE_USER'])) ||
+      (empty($server['REMOTE_USER'])))
   {
     return NULL;
   } 
   else
   {
-    return $_SERVER['REMOTE_USER'];
+    return $server['REMOTE_USER'];
   }
 }
 

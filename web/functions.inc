@@ -8,7 +8,7 @@ require_once "mrbs_sql.inc";
 
 function get_cookie_path()
 {
-  global $cookie_path_override;
+  global $cookie_path_override, $server;
   
   if (isset($cookie_path_override))
   {
@@ -17,7 +17,7 @@ function get_cookie_path()
   else
   {
     // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
-    $cookie_path = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['PHP_SELF'];
+    $cookie_path = isset($server['REQUEST_URI']) ? $server['REQUEST_URI'] : $server['PHP_SELF'];
     // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
   }
@@ -183,22 +183,24 @@ function get_default_email($user)
 // The query string is optionally added.
 function this_page($with_query_string=false, $suffix=null)
 {
+  global $server;
+  
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
   assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
   
-  if ((!isset($_SERVER['PHP_SELF']) || ($_SERVER['PHP_SELF'] === '') && !is_cli()))
+  if ((!isset($server['PHP_SELF']) || ($server['PHP_SELF'] === '') && !is_cli()))
   {
     trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
   }
   
   // We use basename() because the full name causes problems when reverse proxies are being used.
-  $result = basename($_SERVER['PHP_SELF'], $suffix);
+  $result = basename($server['PHP_SELF'], $suffix);
   
   if ($with_query_string &&
-      isset($_SERVER['QUERY_STRING']) && 
-     ($_SERVER['QUERY_STRING'] !== ''))
+      isset($server['QUERY_STRING']) && 
+     ($server['QUERY_STRING'] !== ''))
   {
-    $result = $result . "?" . $_SERVER['QUERY_STRING'];
+    $result = $result . "?" . $server['QUERY_STRING'];
   }
   
   return $result;
@@ -1835,22 +1837,24 @@ function is_private_event($privacy_status)
 // with a random number.
 function generate_global_uid($str)
 {
+  global $server;
+  
   $uid = uniqid('MRBS-');
   $uid .= "-" . substr(md5($str . rand(0,10000)), 0, 8);
   $uid .= "@";
   // Add on the domain name if possible, if not the server name,
   // otherwise 'MRBS'
-  if (empty($_SERVER['SERVER_NAME']))
+  if (empty($server['SERVER_NAME']))
   {
     $uid .= 'MRBS';
   }
-  elseif (strpos($_SERVER['SERVER_NAME'], 'www.') === 0)
+  elseif (strpos($server['SERVER_NAME'], 'www.') === 0)
   {
-    $uid .= utf8_substr($_SERVER['SERVER_NAME'], 4);
+    $uid .= utf8_substr($server['SERVER_NAME'], 4);
   }
   else
   {
-    $uid .= $_SERVER['SERVER_NAME'];
+    $uid .= $server['SERVER_NAME'];
   }
 
   return $uid;
@@ -1943,14 +1947,16 @@ function mrbs_ignore_user_abort($set)
 // Gets the web server software type and version, if it can.
 function get_server_software()
 {
+  global $server;
+  
   if (function_exists('apache_get_version'))
   {
     return apache_get_version();
   }
   
-  if (isset($_SERVER['SERVER_SOFTWARE']))
+  if (isset($server['SERVER_SOFTWARE']))
   {
-    return $_SERVER['SERVER_SOFTWARE'];
+    return $server['SERVER_SOFTWARE'];
   }
   
   return '';

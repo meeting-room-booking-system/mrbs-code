@@ -46,6 +46,8 @@ function authGet()
 
 function getUserName()
 {
-  return $_SERVER['REMOTE_USER'];
+  global $server;
+  
+  return $server['REMOTE_USER'];
 }
 

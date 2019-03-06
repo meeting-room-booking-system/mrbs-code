@@ -15,7 +15,7 @@ namespace MRBS;
 // have the date.   So I've taken the view here that it's not worth bothering about
 // as this upgrade procedure is only used once for existing entries).
 
-global $dbsys, $tbl_entry, $tbl_repeat, $admin_handle;
+global $dbsys, $tbl_entry, $tbl_repeat, $admin_handle, $server;
 
 // There's the option here to display some timing information as this upgrade
 // could take a while
@@ -89,17 +89,17 @@ else
   // with a random number.  [This is the same process used by the MRBS function
   // generate_global_uid()]
   
-  if (empty($_SERVER['SERVER_NAME']))
+  if (empty($server['SERVER_NAME']))
   {
     $domain_name = 'MRBS';
   }
-  elseif (strpos($_SERVER['SERVER_NAME'], 'www.') === 0)
+  elseif (strpos($server['SERVER_NAME'], 'www.') === 0)
   {
-    $domain_name = substr($_SERVER['SERVER_NAME'], 4);
+    $domain_name = substr($server['SERVER_NAME'], 4);
   }
   else
   {
-    $domain_name = $_SERVER['SERVER_NAME'];
+    $domain_name = $server['SERVER_NAME'];
   }
              
   // Give everything in the repeat table, that doesn't already have one, an ical uid

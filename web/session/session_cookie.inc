@@ -40,7 +40,7 @@ function authGet()
 
 function getUserName()
 {
-  global $auth;
+  global $auth, $server;
   
   static $cached_username = null;
   static $have_checked_cookie = false;
@@ -92,7 +92,7 @@ function getUserName()
           // Expiry is OK
           
           if (!isset($session_data['ip']) ||
-              ($session_data['ip'] == $_SERVER['REMOTE_ADDR']))
+              ($session_data['ip'] == $server['REMOTE_ADDR']))
           {
             // IP is OK
             $cached_username = $session_data['user'];
@@ -140,7 +140,7 @@ function logoff_user()
 }
 
 
-global $auth;
+global $auth, $server;
 
 // Get non-standard form variables
 $action = get_form_var('action', 'string', null, INPUT_POST);
@@ -215,7 +215,7 @@ if (isset($action))
       $session_data['expiry'] = $expiry_time;
       if ($auth['session_cookie']['include_ip'])
       {
-        $session_data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $session_data['ip'] = $server['REMOTE_ADDR'];
       }
       $json_data = json_encode($session_data);
       if (!function_exists('hash_hmac'))

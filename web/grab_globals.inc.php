@@ -18,18 +18,6 @@ namespace MRBS;
 // +---------------------------------------------------------------------------+
 
 
-// Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
-// slashed, regardless of the setting of magic_quotes.   So if we are using the 
-// WordPress authentication and session scemes then this will happen when the WordPress
-// files are included.  To get round this we take a local copy of $_GET and $_POST
-// before the WordPress files are included.   (There's no need to do this with $_SERVER
-// because we process $_SERVER when this file is included and we make sure that the
-// WordPress files haven't already been included).  For more details of the problem see
-// https://wordpress.org/support/topic/wp-automatically-escaping-get-and-post-etc-globals and
-// https://core.trac.wordpress.org/ticket/18322
-
-
-
 // Gets a form variable.
 //    $var        The variable name
 //    $var_type   The type of the variable ('int', 'string' or 'array')
@@ -109,9 +97,21 @@ if (defined('ABSPATH'))  // standard test for WordPress
   die('MRBS internal error: Wordpress files have already been included.');
 }
 
-// Take clean copies of $_POST and $_GET before WordPress alters them
+// Take clean copies of $_GET, $_POST and $_SERVER  before WordPress alters them
+
+// Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
+// slashed, regardless of the setting of magic_quotes.   So if we are using the
+// WordPress authentication and session scemes then this will happen when the WordPress
+// files are included.  To get round this we take a local copy of $_GET and $_POST
+// before the WordPress files are included.   (There's no need to do this with $_SERVER
+// because we process $_SERVER when this file is included and we make sure that the
+// WordPress files haven't already been included).  For more details of the problem see
+// https://wordpress.org/support/topic/wp-automatically-escaping-get-and-post-etc-globals and
+// https://core.trac.wordpress.org/ticket/18322
+
 $get = $_GET;
 $post = $_POST;
+$server = $_SERVER;
 
 // If we're operating from the command line then build
 // an associative array of the command line parameters
