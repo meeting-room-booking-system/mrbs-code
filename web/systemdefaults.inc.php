@@ -628,6 +628,9 @@ $csrf_cookie["secret"] = "This still isn't a very good secret!";
 
 // Configuration parameters for 'php' session scheme
 
+// The session name
+$auth["session_php"]["session_name"] = 'MRBS_SESSID';
+
 // The expiry time of a session cookie, in seconds
 // N.B. Long session expiry times rely on PHP not retiring the session
 // on the server too early. If you only want session cookies to be used,
