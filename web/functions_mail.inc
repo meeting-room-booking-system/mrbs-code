@@ -779,13 +779,13 @@ function create_addresses($data, $action)
   
   // set the from address
   $current_user = session()->getCurrentUser();
-  if (isset($current_user) && in_array($action, array('more_info', 'reject', 'remind')))
+  if (isset($current_user) &&
       in_array($action, array('more_info', 'reject', 'remind')) &&
       !$mail_settings['use_from_for_all_mail'])
   {
     $from = $current_user->email;
   }
-  if (empty($from))
+  
   if (empty($from))
   {
     $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
