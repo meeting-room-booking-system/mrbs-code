@@ -132,8 +132,8 @@ function authGetUsernames()
   $result = array();
   
   // We are only interested in MRBS users and admins
-  $mrbs_roles = array_merge($auth['wordpress']['admin_roles'],
-                            $auth['wordpress']['user_roles']);
+  $mrbs_roles = array_merge((array)$auth['wordpress']['admin_roles'],
+                            (array)$auth['wordpress']['user_roles']);
                             
   // The 'role__in' argument to get_users() is only supported in Wordpress >= 4.4.
   // Before that we have to do it one role at a time with the 'role' argument.
