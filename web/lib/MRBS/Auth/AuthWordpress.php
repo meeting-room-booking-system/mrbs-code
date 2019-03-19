@@ -53,8 +53,14 @@ class AuthWordpress extends Auth
     
     if (!isset($user_levels[$wp_user->login]))
     {
+      // Check to see if one of the user's roles is an MRBS blacklisted role
+      if (isset($auth['wordpress']['blacklisted_roles']) &&
+        self::check_roles($wp_user, $auth['wordpress']['blacklisted_roles']))
+      {
+        $user_levels[$wp_user->login] = 0;
+      }
       // Check to see if one of the user's roles is an MRBS admin role
-      if (isset($auth['wordpress']['admin_roles']) &&
+      elseif (isset($auth['wordpress']['admin_roles']) &&
           self::check_roles($wp_user, $auth['wordpress']['admin_roles']))
       {
         $user_levels[$wp_user->login] = 2;
