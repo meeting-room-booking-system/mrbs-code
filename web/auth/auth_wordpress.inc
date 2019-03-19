@@ -70,6 +70,17 @@ function authGetUserLevel($user)
     return 0;
   }
 
+  // Check to see if the user is blacklisted
+  if (isset($auth['wordpress']['blacklisted_roles']))
+  {
+    // Check to see if one of the user's roles is an MRBS blacklisted role
+    if (check_roles($wp_user, $auth['wordpress']['blacklisted_roles']))
+    {
+      $user_levels[$user] = 0;
+      return $user_levels[$user];
+    }
+  }
+
   // Check to see if the user has admin rights
   if (isset($auth['wordpress']['admin_roles']))
   {

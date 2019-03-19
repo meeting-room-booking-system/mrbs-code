@@ -952,6 +952,10 @@ $auth['wordpress']['admin_roles'] = 'administrator';  // can also be an array, e
 // List of WordPress roles that have MRBS User capabilities.  This allows you to have some WordPress users
 // who are authorised to use MRBS and some who are not. 
 $auth['wordpress']['user_roles'] = array('subscriber', 'contributor', 'author', 'editor', 'administrator');
+// List of WordPress roles that are blacklisted.  In other words if a user has a blacklisted role then they
+// will be assigned MRBS access level 0, even if they also have a user or admin role.   This feature can be
+// useful for disabling MRBS access for certain users by assigning them a WordPress role.
+$auth['wordpress']['blacklisted_roles'] = array();
 
 // Note - you are also advised to set the following in your wp-config.php so that the auth
 // cookies can be shared between MRBS and WordPress:
