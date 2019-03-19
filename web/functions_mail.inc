@@ -780,9 +780,12 @@ function create_addresses($data, $action)
   // set the from address
   $current_user = session()->getCurrentUser();
   if (isset($current_user) && in_array($action, array('more_info', 'reject', 'remind')))
+      in_array($action, array('more_info', 'reject', 'remind')) &&
+      !$mail_settings['use_from_for_all_mail'])
   {
     $from = $current_user->email;
   }
+  if (empty($from))
   if (empty($from))
   {
     $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
@@ -790,7 +793,7 @@ function create_addresses($data, $action)
   
   // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
-  if (!in_array($action, array("delete", "reject")) &&
+  if (!in_array($action, array('delete', 'reject')) &&
       $approval_enabled && 
       !is_book_admin($data['room_id']))
   {

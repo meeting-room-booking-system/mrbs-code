@@ -1048,6 +1048,12 @@ $allow_cli = false;
 // Set the email address of the From field. Default is 'admin_email@your.org'
 $mail_settings['from'] = 'admin_email@your.org';
 
+// By default MRBS will send some emails (eg booking approval emails) as though they have come from
+// the user, rather than the From address above.   However some email servers will not allow this in
+// order to prevent email spoofing.   If this is the case then set this to true in order that the
+// From address above is used for all emails.
+$mail_settings['use_from_for_all_mail'] = false;
+
 // The address to be used for the ORGANIZER in an iCalendar event.   Do not make
 // this email address the same as the admin email address or the recipients 
 // email address because on some mail systems, eg IBM Domino, the iCalendar email
@@ -1067,6 +1073,7 @@ $mail_settings['cc'] = '';
 // (Some email servers are configured not to send emails if the cc or bcc
 // fields are set)
 $mail_settings['treat_cc_as_to'] = false;
+
 
 
 // WHO TO EMAIL
