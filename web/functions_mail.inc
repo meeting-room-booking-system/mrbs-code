@@ -785,7 +785,7 @@ function create_addresses($data, $action)
   {
     $from = $current_user->email;
   }
-  
+
   if (empty($from))
   {
     $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
