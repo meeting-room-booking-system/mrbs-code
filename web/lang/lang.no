@@ -178,7 +178,6 @@ $vocab["mail_body_changed_entry"] = "Endret reservasjon; her er detaljene:";
 $vocab["mail_body_del_entry"]     = "Slettet reservasjon; her er detaljene:";
 $vocab["new_value"]               = "Ny";
 $vocab["old_value"]               = "Gammel";
-$vocab["deleted_by"]              = "Slettet av";
 $vocab["reason"]                  = "Årsak";
 $vocab["info_requested"]          = "Bedt om informasjon";
 $vocab["min_time_before"]         = "Minimum intervall mellom nå og starten på en reservasjon er";

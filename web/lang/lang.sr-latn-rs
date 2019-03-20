@@ -179,7 +179,6 @@ $vocab["mail_body_changed_entry"] = "An entry has been modified, here are the de
 $vocab["mail_body_del_entry"]     = "An entry has been deleted, here are the details:";
 $vocab["new_value"]               = "Novo";
 $vocab["old_value"]               = "Staro";
-$vocab["deleted_by"]              = "Obrisao";
 $vocab["reason"]                  = "azlog";
 $vocab["info_requested"]          = "Information requested";
 $vocab["min_time_before"]         = "The minimum interval between now and the start of a booking is";

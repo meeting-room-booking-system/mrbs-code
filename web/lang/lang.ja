@@ -176,7 +176,6 @@ $vocab["mail_body_changed_entry"] = "エントリが変更されました。詳�
 $vocab["mail_body_del_entry"]     = "エントリが削除されました。詳細は以下のとおりです:";
 $vocab["new_value"]               = "新しい内容";
 $vocab["old_value"]               = "以前の内容";
-$vocab["deleted_by"]              = "削除者";
 $vocab["reason"]                  = "理由";
 $vocab["info_requested"]          = "情報が必要です";
 $vocab["min_time_before"]         = "予約開始時刻は、現在時刻から以下の時間以上空けてください - ";

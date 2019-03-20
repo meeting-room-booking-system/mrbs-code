@@ -190,7 +190,6 @@ $vocab["mail_body_changed_entry"]    = "Sebuah entri telah diubah, Berikut ini d
 $vocab["mail_body_del_entry"]        = "Sebuah entri telah dihapus, Berikut ini detailnya:";
 $vocab["new_value"]                  = "Baru";
 $vocab["old_value"]                  = "Lawas";
-$vocab["deleted_by"]                 = "Dihapus oleh";
 $vocab["reason"]                     = "Alasan";
 $vocab["info_requested"]             = "Informasi telah dipinta";
 $vocab["min_time_before"]            = "Interval minimum antara hari ini dengan waktu pesanan adalah";

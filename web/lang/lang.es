@@ -191,7 +191,6 @@ $vocab["mail_body_changed_entry"] = "Reserva modificada, aquí están los detall
 $vocab["mail_body_del_entry"] = "Reserva borrada, aquí están los detalles:";
 $vocab["new_value"]           = "Nuevo";
 $vocab["old_value"]           = "Antiguo";
-$vocab["deleted_by"]          = "Borrado por";
 $vocab["reason"]              = "Motivo";
 $vocab["info_requested"]      = "Información requerida";
 $vocab["min_create_time_before"]     = "El intervalo mínimo desde ahora hasta el comienzo de la reservas es";

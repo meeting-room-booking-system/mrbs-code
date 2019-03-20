@@ -191,7 +191,6 @@ $vocab["mail_body_changed_entry"] = "Ein Eintrag wurde geändert, hier die Detai
 $vocab["mail_body_del_entry"]     = "Ein Eintrag wurde gelöscht, hier die Details:";
 $vocab["new_value"]           = "Neu";
 $vocab["old_value"]           = "Alt";
-$vocab["deleted_by"]          = "Gelöscht von";
 $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
 // REMOVED - $vocab["min_time_before"]     = "Die minimale Zeit zwischen jetzt und dem Beginn des Eintrags ist";

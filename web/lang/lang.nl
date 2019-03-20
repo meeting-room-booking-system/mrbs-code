@@ -162,7 +162,6 @@ $vocab["mail_subject_delete"]        = "Boeking gewist voor $mrbs_company MRBS";
 $vocab["mail_body_new_entry"]     = "Er is een nieuwe boeking geplaatst, dit zijn de details:";
 $vocab["mail_body_changed_entry"] = "Een boeking is gewijzigd, dit zijn de details:";
 $vocab["mail_body_del_entry"]     = "Er is een boeking verdwijderd, dit zijn de details:";
-$vocab["deleted_by"]          = "Verwijderd door";
 $vocab["reason"]              = "Reden";
 $vocab["info_requested"]      = "Informatie nodig";
 $vocab["min_time_before"]     = "De minimale interval tussen nu en de start van een boeking is";
