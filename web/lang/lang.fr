@@ -170,7 +170,6 @@ $vocab["mail_subject_delete"]        = "Entrée supprimée pour $mrbs_company MR
 $vocab["mail_body_new_entry"] = "Une nouvelle entrée a été réservée, voici les détails :";
 $vocab["mail_body_changed_entry"] = "Une entrée a été modifiée, voici les détails :";
 $vocab["mail_body_del_entry"] = "Une entrée a été supprimée, voici les détails :";
-$vocab["deleted_by"]          = "Supprimée par";
 $vocab["reason"]              = "Raison";
 $vocab["info_requested"]      = "Informations requises";
 $vocab["min_time_before"]     = "L'intervalle minimal entre maintenant et le début d'une réservation";
