@@ -439,7 +439,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   $body .= ($as_html) ? "<p>" : "";
 
   $user = getUserName();
-  $escaped_user = ($as_html) ? htmlspecialchars($user) : $user;
+  $user_escaped = ($as_html) ? htmlspecialchars($user) : $user;
 
   switch ($action)
   {
