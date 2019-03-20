@@ -180,7 +180,6 @@ $vocab["mail_body_changed_entry"] = "A bejegyzés módosításra került:";
 $vocab["mail_body_del_entry"]     = "A bejegyzés törölve lett:";
 $vocab["new_value"]               = "Új";
 $vocab["old_value"]               = "Régi";
-$vocab["deleted_by"]              = "Törölte:";
 $vocab["reason"]                  = "Ok";
 $vocab["info_requested"]          = "Információ szükséges";
 $vocab["min_time_before"]         = "Az aktuális dátum és a foglalás kezdete közötti legkisebb megengedett időintervallum:";

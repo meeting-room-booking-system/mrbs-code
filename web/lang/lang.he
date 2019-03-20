@@ -177,7 +177,6 @@ $vocab["mail_body_changed_entry"] = "עודכנה הזמנה, להלן הפרט�
 $vocab["mail_body_del_entry"]     = "בוטלה הזמנה, להלן הפרטים:";
 $vocab["new_value"]           = "חדש";
 $vocab["old_value"]           = "ישן";
-$vocab["deleted_by"]          = "נמחק על ידי";
 $vocab["reason"]              = "סיבה";
 $vocab["info_requested"]      = "דרושים פרטים";
 $vocab["min_time_before"]     = "על זמן הזמנת החדר להיות מאוחר לזמן הביצוע לפחות ב:";
