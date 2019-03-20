@@ -463,7 +463,6 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       break;
     case "delete":
       $body .= get_mail_vocab("mail_body_del_entry", $user_escaped);
-      $user = session()->getUsername();
       break;
     default:
       if ($compare)
