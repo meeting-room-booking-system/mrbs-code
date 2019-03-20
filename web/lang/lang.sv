@@ -190,7 +190,6 @@ $vocab["mail_body_changed_entry"] = "En bokning har ändrats; här är detaljern
 $vocab["mail_body_del_entry"] = "En bokning har raderats; här är detaljerna:";
 $vocab["new_value"]           = "Ny";
 $vocab["old_value"]           = "Gammal";
-$vocab["deleted_by"]          = "Raderad av";
 $vocab["reason"]              = "Anledning";
 $vocab["info_requested"]      = "Information behövs";
 $vocab["min_create_time_before"]  = 'Du kan inte skapa en bokning som startar mindre än %1$d %2$s';

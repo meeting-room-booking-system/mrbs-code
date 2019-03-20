@@ -192,7 +192,6 @@ $vocab["mail_body_changed_entry"] = "O noua intrare a fost modificata, aici sunt
 $vocab["mail_body_del_entry"]     = "O noua intrare a fost stearsa, aici sunt detaliile:";
 $vocab["new_value"]               = "Noua";
 $vocab["old_value"]               = "Veche";
-$vocab["deleted_by"]              = "Stearsa de";
 $vocab["reason"]                  = "Motiv";
 $vocab["info_requested"]          = "Informatii cerute";
 $vocab["min_create_time_before"]  = 'Nu poti face o rezervare care incepe in mai putin de %1$d %2$s';

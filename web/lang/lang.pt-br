@@ -160,7 +160,6 @@ $vocab["mail_subject_delete"]     = "Esta reserva foi eliminada";
 $vocab["mail_body_new_entry"]     = "Uma reserva foi efetuada, detalhes:";
 $vocab["mail_body_changed_entry"] = "Uma reserva foi alterada, veja os detalhes:";
 $vocab["mail_body_del_entry"] = "Uma reserva foi eliminada, detalhes:";
-$vocab["deleted_by"]          = "Eliminado por";
 $vocab["reason"]              = "Razão";
 $vocab["info_requested"]      = "Pedido de Informação";
 $vocab["min_time_before"]     = "O intervalo mínimo entre hoje e o início da reserva é";

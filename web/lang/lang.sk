@@ -190,7 +190,6 @@ $vocab["mail_body_changed_entry"] = "Záznam bol zmenený, tu sú detaily:";
 $vocab["mail_body_del_entry"]     = "Záznam bol zmazaný, tu sú detaily";
 $vocab["new_value"]           = "Nový";
 $vocab["old_value"]           = "Starý";
-$vocab["deleted_by"]          = "Zmazané";
 $vocab["reason"]              = "Dôvod";
 $vocab["info_requested"]      = "Požiadavka na uvedenie viac informácií";
 $vocab["min_time_before"]     = "Najmenší interval medzi aktuálnym časom a začiatkom rezervácie je";

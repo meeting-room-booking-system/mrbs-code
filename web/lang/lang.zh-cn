@@ -189,7 +189,6 @@ $vocab["mail_body_changed_entry"] = "一个条目被修改, 详细情况如下:"
 $vocab["mail_body_del_entry"]     = "一个条目被删除, 详细情况如下:";
 $vocab["new_value"]               = "新";
 $vocab["old_value"]               = "旧";
-$vocab["deleted_by"]              = "删除人";
 $vocab["reason"]                  = "原因";
 $vocab["info_requested"]          = "申请信息";
 $vocab["min_time_before"]         = "现在与预订起始之间的最小时间间隔是";

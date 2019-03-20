@@ -170,7 +170,6 @@ $vocab["mail_body_changed_entry"] = "Wpis został zmieniony, oto szczegóły ope
 $vocab["mail_body_del_entry"]     = "Wpis został usunięty, oto szczegóły operacji:";
 $vocab["new_value"]               = "Nowy";
 $vocab["old_value"]               = "Stary";
-$vocab["deleted_by"]              = "Usunięty przez";
 $vocab["reason"]                  = "Powód";
 $vocab["info_requested"]          = "Informacje o";
 $vocab["min_create_time_before"]  = 'Nie można utworzyć rezerwacji, która rozpoczyna się w czasie krótszym niż %1$d %2$s';

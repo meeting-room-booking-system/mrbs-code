@@ -175,7 +175,6 @@ $vocab["mail_body_changed_entry"] = "değiştir kayıt";
 $vocab["mail_body_del_entry"]     = "sil kayıt";
 $vocab["new_value"]               = "Yeni";
 $vocab["old_value"]               = "Eski";
-$vocab["deleted_by"]              = "tarafından silindi";
 $vocab["reason"]                  = "Sebep";
 $vocab["info_requested"]          = "Bilgi istendi";
 $vocab["min_time_before"]         = "Şimdi ve yer ayırtma başlangıcı arasındaki minimum süre";

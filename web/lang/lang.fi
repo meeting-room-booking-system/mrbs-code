@@ -176,7 +176,6 @@ $vocab["mail_body_changed_entry"] = "Varauksen tietoja muokattu:";
 $vocab["mail_body_del_entry"]     = "Varaus poistettu:";
 $vocab["new_value"]               = "Uusi";
 $vocab["old_value"]               = "Vanha";
-$vocab["deleted_by"]              = "Poistaja";
 $vocab["reason"]                  = "Syy";
 $vocab["info_requested"]          = "Pyydetyt tiedot";
 $vocab["min_time_before"]         = "Minimiaika varauksen alkuun on";

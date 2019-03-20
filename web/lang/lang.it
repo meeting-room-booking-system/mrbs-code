@@ -193,7 +193,6 @@ $vocab["mail_body_del_entry"]     = "Una prenotazione è stata cancellata, quest
 // Authentication stuff
 $vocab["new_value"]               = "Nuovo";
 $vocab["old_value"]               = "Vecchio";
-$vocab["deleted_by"]              = "Cancellato da";
 $vocab["reason"]                  = "Motivo";
 $vocab["info_requested"]          = "Informazione richiesta";
 $vocab["min_create_time_before"]  = 'Non è possibile creare una prenotazione che inizia prima di %1$d %2$s';

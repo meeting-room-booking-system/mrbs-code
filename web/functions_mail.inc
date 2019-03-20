@@ -411,6 +411,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
 
   // set up the body
   $body = "";
+
   if ($as_html)
   {
     $body .= DOCTYPE . "\n";
@@ -434,14 +435,19 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "<div id=\"header\">" . $mrbs_company . " - " . get_mail_vocab("mrbs") . "</div>\n";
     $body .= "<div id=\"contents\">\n";
   }
+
   $body .= ($as_html) ? "<p>" : "";
+
+  $user = getUserName();
+  $escaped_user = ($as_html) ? htmlspecialchars($user) : $user;
+
   switch ($action)
   {
     case "approve":
-      $body .= get_mail_vocab("mail_body_approved");
+      $body .= get_mail_vocab("mail_body_approved", $user_escaped);
       break;
     case "more_info":
-      $body .= get_mail_vocab("mail_body_more_info");
+      $body .= get_mail_vocab("mail_body_more_info", $user_escaped);
       $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("info_requested") . ": ";
       $body .= $note;
@@ -450,28 +456,23 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       $body .= get_mail_vocab("mail_body_reminder");
       break;
     case "reject":
-      $body .= get_mail_vocab("mail_body_rej_entry");
+      $body .= get_mail_vocab("mail_body_rej_entry", $user_escaped);
       $body .= ($as_html) ? "</p><p>" : "\n\n";
       $body .= get_mail_vocab("reason") . ': ';
       $body .= $note;
       break;
     case "delete":
-      $body .= get_mail_vocab("mail_body_del_entry");
-      $body .= ($as_html) ? "</p><p>" : "\n\n";
-      // Give the name of the person deleting the entry (might not
-      // be the same as the creator)
-      $body .= get_mail_vocab("deleted_by") . ': ';
+      $body .= get_mail_vocab("mail_body_del_entry", $user_escaped);
       $user = session()->getUsername();
-      $body .= $user;
       break;
     default:
       if ($compare)
       {
-        $body .= get_mail_vocab("mail_body_changed_entry");
+        $body .= get_mail_vocab("mail_body_changed_entry", $user_escaped);
       }
       else
       {
-        $body .= get_mail_vocab("mail_body_new_entry");
+        $body .= get_mail_vocab("mail_body_new_entry", $user_escaped);
       }
       break;
   }
