@@ -376,9 +376,9 @@ function create_repeat_list($data, $action, $as_html, $reps)
 // If not specified the function works them out for itself from the repeat data
 function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='', $start_times)
 {
-  global $returl, $mrbs_company;
+  global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
-  global $mail_settings, $standard_fields, $url_base;
+  global $mail_settings, $standard_fields;
   global $tbl_entry;
   global $select_options, $booking_types;
 
@@ -463,15 +463,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= ($as_html) ? "</p><p>" : "\n\n";
     $body .= ($as_html) ? "<a target=\"_blank\" href=\"" : "";
     // Set the link to view entry page
-    if (isset($url_base) && ($url_base !== ''))
-    {
-      $body .= "$url_base/view_entry.php?id=" . $data['id'];
-    }
-    else
-    {
-      ('' != $returl) ? $url = explode(basename($returl), $returl) : '';
-      $body .= $url[0] . "view_entry.php?id=" . $data['id'];
-    }
+    $body .= url_base() . '/view_entry.php?id=' . $data['id'];
     if ($series)
     {
       $body .= "&series=1";
