@@ -179,6 +179,26 @@ function get_default_email($user)
 }
 
 
+// Returns the base URL for MRBS.  If the config variable $url_base is set then that
+// overrides the automatic calculation.
+function url_base()
+{
+  global $url_base, $server;
+
+  if (isset($url_base))
+  {
+    return $url_base;
+  }
+
+  if (isset($server['HTTP_HOST']) && isset($server['PHP_SELF']))
+  {
+    return $server['HTTP_HOST'] . dirname($server['PHP_SELF']);
+  }
+
+  return '';
+}
+
+
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The query string is optionally added.
 function this_page($with_query_string=false, $suffix=null)
