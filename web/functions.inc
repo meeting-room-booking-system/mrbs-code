@@ -187,22 +187,29 @@ function get_default_email($user)
 
 
 // Returns the base URL for MRBS.  If the config variable $url_base is set then that
-// overrides the automatic calculation.
+// overrides the automatic calculation.  A '/' will be appended to the end of the string,
+// unless it is empty or already ends in a '/'.
 function url_base()
 {
   global $url_base, $server;
 
+  $result = '';
+
   if (isset($url_base))
   {
-    return $url_base;
+    $result = $url_base;
   }
-
-  if (isset($server['HTTP_HOST']) && isset($server['PHP_SELF']))
+  elseif (isset($server['HTTP_HOST']) && isset($server['PHP_SELF']))
   {
-    return $server['HTTP_HOST'] . dirname($server['PHP_SELF']);
+    $result = $server['HTTP_HOST'] . dirname($server['PHP_SELF']);
   }
 
-  return '';
+  if (($result !== '') && (substr($result, -1) !== '/'))
+  {
+    $result .= '/';
+  }
+
+  return $result;
 }
 
 
