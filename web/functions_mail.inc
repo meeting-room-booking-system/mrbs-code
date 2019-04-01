@@ -398,7 +398,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
-  global $mail_settings, $standard_fields, $url_base;
+  global $mail_settings, $standard_fields;
   global $tbl_entry;
   global $select_options, $booking_types;
 
