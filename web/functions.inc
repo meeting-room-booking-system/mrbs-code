@@ -6,26 +6,6 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
-function get_cookie_path()
-{
-  global $cookie_path_override, $server;
-  
-  if (isset($cookie_path_override))
-  {
-    $cookie_path = $cookie_path_override;
-  }
-  else
-  {
-    // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
-    $cookie_path = isset($server['REQUEST_URI']) ? $server['REQUEST_URI'] : $server['PHP_SELF'];
-    // Strip off everything after the last '/'
-    $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
-  }
-  
-  return $cookie_path;
-}
-
-
 // Returns the maximum length, in characters, of a column, or NULL if the maximum
 // length is not known.   Should only be called after any database upgrades have been
 // performed as the results are stored in a static variable and so the maximum lengths
@@ -179,6 +159,59 @@ function get_default_email($user)
 }
 
 
+function get_cookie_path()
+{
+  global $cookie_path_override, $server;
+
+  if (isset($cookie_path_override))
+  {
+    $cookie_path = $cookie_path_override;
+  }
+  else
+  {
+    // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
+    $cookie_path = isset($server['REQUEST_URI']) ? $server['REQUEST_URI'] : $server['PHP_SELF'];
+    // Strip off everything after the last '/'
+    $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
+  }
+
+  return $cookie_path;
+}
+
+
+// Gets the url path from either $_SERVER['PHP_SELF'] or $_SERVER['REQUEST_URI'], whichever
+// happens to be non-empty.  (Some systems will not have one or the other variable set).
+function url_path()
+{
+  global $server;
+
+  if (isset($server['PHP_SELF']) && ($server['PHP_SELF'] !== ''))
+  {
+    $result = $server['PHP_SELF'];
+  }
+  elseif (isset($server['REQUEST_URI']) && ($server['REQUEST_URI'] !== ''))
+  {
+    // The REQUEST_URI includes the query string, so we need to strip it off
+    $result = parse_url($server['REQUEST_URI'], PHP_URL_PATH);
+    if ($result === false)
+    {
+      trigger_error('Cannot parse $_SERVER["REQUEST_URI"] of "' . $server['REQUEST_URI'] . '"', E_USER_NOTICE);
+      $result = '';
+    }
+  }
+  else
+  {
+    if (!is_cli())
+    {
+      trigger_error('$_SERVER["PHP_SELF"] and $_SERVER["REQUEST_URI"] are both empty.  Check your server configuration.', E_USER_NOTICE);
+    }
+    $result = '';
+  }
+
+  return $result;
+}
+
+
 // Returns the base URL for MRBS.  If the config variable $url_base is set then that
 // overrides the automatic calculation.  A '/' will be appended to the end of the string,
 // unless it is empty or already ends in a '/'.
@@ -186,15 +219,17 @@ function url_base()
 {
   global $url_base, $server;
 
-  $result = '';
-
   if (isset($url_base))
   {
     $result = $url_base;
   }
-  elseif (isset($server['HTTP_HOST']) && isset($server['PHP_SELF']))
+  elseif (isset($server['HTTP_HOST']))
   {
-    $result = $server['HTTP_HOST'] . dirname($server['PHP_SELF']);
+    $result = $server['HTTP_HOST'] . dirname(url_path());
+  }
+  else
+  {
+    $result = '';
   }
 
   if (($result !== '') && (substr($result, -1) !== '/'))
@@ -215,13 +250,8 @@ function this_page($with_query_string=false, $suffix=null)
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
   assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
   
-  if ((!isset($server['PHP_SELF']) || ($server['PHP_SELF'] === '') && !is_cli()))
-  {
-    trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
-  }
-  
   // We use basename() because the full name causes problems when reverse proxies are being used.
-  $result = basename($server['PHP_SELF'], $suffix);
+  $result = basename(url_path(), $suffix);
   
   if ($with_query_string &&
       isset($server['QUERY_STRING']) && 
