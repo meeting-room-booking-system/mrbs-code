@@ -135,12 +135,19 @@ foreach ($vars as $var)
   $$var = (!empty($_SERVER) && isset($_SERVER[$var])) ? $_SERVER[$var] : null;
 }
 
-if (!isset($REQUEST_URI))
+// On some systems REQUEST_URI and/or PHP_SELF aren't set, so if we can use
+// the one that is.
+if (!isset($PHP_SELF) || ($PHP_SELF === ''))
 {
-  // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
+  if (isset($REQUEST_URI))
+  {
+    $PHP_SELF = parse_url($REQUEST_URI, PHP_URL_PATH);
+  }
+}
+elseif (!isset($REQUEST_URI))
+{
   $REQUEST_URI = $PHP_SELF;
 }
-
 
 
 // If we're operating from the command line then build
