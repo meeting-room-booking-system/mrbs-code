@@ -1319,7 +1319,7 @@ if ($cli_mode)
   // Need to set include path if we're running in CLI mode
   // (because otherwise PHP looks in the current directory rather
   // than the directory from which the script was called)
-  ini_set("include_path", dirname($server['PHP_SELF']));
+  ini_set("include_path", dirname(url_path()));
 }
 
 $default_from_time = mktime(0, 0, 0, $month, $day, $year);
