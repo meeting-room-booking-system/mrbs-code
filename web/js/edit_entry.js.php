@@ -1135,7 +1135,7 @@ $(document).on('page_ready', function() {
   isAdmin = args.isAdmin;
   
   <?php // Turn the create_by select into a fancy select box. ?>
-  $('#create_by').mrbsSelect();
+  $('select#create_by').mrbsSelect();
   
   <?php
   // If there's only one enabled area in the database there won't be an area
