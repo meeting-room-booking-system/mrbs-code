@@ -812,7 +812,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
 {
   require_once "functions_mail.inc";
   
-  global $confirmation_enabled, $mail_settings, $timezone, $vtimezone,
+  global $mail_settings, $timezone, $vtimezone,
          $default_area_room_delimiter;
   
   $use_html = $mail_settings['html'] && !empty($html_description);
