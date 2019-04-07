@@ -881,7 +881,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
   }
   else
   {
-    $results[] = "STATUS:" . (($data['tentative']) ? "TENTATIVE" : "CONFIRMED");
+    $results[] = "STATUS:" . ((empty($data['tentative'])) ? "CONFIRMED" : "TENTATIVE");
   }
   
   /*  
@@ -1013,7 +1013,7 @@ function create_icalendar($method, $components)
 //                          also contain the area name, the room name and the repeat
 //                          details (rep_type, end_date, rep_opt, rep_num_weeks)
 //    $export_end int       a Unix timestamp giving the end limit for the export
-function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
+function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_MAX)
 {
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
