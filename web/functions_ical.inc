@@ -788,7 +788,7 @@ function create_rrule($data)
 // The TZID parameter if used must be added separately
 function create_exdate_list($dates)
 {
-  global $vtimezone, $timezone;
+  global $vtimezone;
   
   $results = array();
   
