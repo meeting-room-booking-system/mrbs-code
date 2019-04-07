@@ -881,7 +881,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
   }
   else
   {
-    $results[] = "STATUS:" . (($data['tentative']) ? "TENTATIVE" : "CONFIRMED");
+    $results[] = "STATUS:" . ((empty($data['tentative'])) ? "CONFIRMED" : "TENTATIVE");
   }
   
   /*  
