@@ -33,8 +33,6 @@ function extract_vtimezone($vcalendar)
 // Returns the contents of the URL, or else FALSE on failure
 function download($url)
 {
-  global $proxy;
-  
   $connect_timeout  = 2;  // seconds
   $transfer_timeout = 2;  // seconds
   $curlopt_timeout  = 3;  // seconds
