@@ -9,6 +9,7 @@ use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
+use \ZipArchive;
 
 if (version_compare(PHP_VERSION, '5.0.0', '<'))
 {

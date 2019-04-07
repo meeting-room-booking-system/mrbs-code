@@ -16,7 +16,7 @@ function extract_vtimezone($vcalendar)
   // Would be simpler to use strstr() again, but the optional
   // third parameter was only introduced in PHP 5.3.0
   $pos = strpos($vtimezone, "END:VTIMEZONE");
-  if ($pos !== FALSE)
+  if ($pos !== false)
   {
     $vtimezone = substr($vtimezone, 0, $pos);
     if (!empty($vtimezone))
@@ -33,8 +33,6 @@ function extract_vtimezone($vcalendar)
 // Returns the contents of the URL, or else FALSE on failure
 function download($url)
 {
-  global $proxy;
-  
   $connect_timeout  = 2;  // seconds
   $transfer_timeout = 2;  // seconds
   $curlopt_timeout  = 3;  // seconds
@@ -50,9 +48,9 @@ function download($url)
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
     curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $transfer_timeout);
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $contents = curl_exec($ch);
-    if ($contents === FALSE)
+    if ($contents === false)
     {
       trigger_error(curl_error($ch), E_USER_WARNING);
     }
@@ -70,7 +68,7 @@ function download($url)
                                                            'timeout' => $transfer_timeout)));
     // Suppress any timeout warnings
     $contents = @file_get_contents($url);
-    if ($contents === FALSE)
+    if ($contents === false)
     {
       trigger_error("MRBS: could not get contents of $url", E_USER_WARNING);
     }
@@ -94,7 +92,7 @@ function get_vtimezone($tz)
   $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;  
   $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
   
-  $vtimezone = FALSE;  // Default value in case we don't find one
+  $vtimezone = false;  // Default value in case we don't find one
   
   // Convert booleans into 1 or 0 (necessary for the database)
   $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
@@ -142,7 +140,7 @@ function get_vtimezone($tz)
       
       $vcalendar = download($tz_url);
       
-      if ($vcalendar === FALSE)
+      if ($vcalendar === false)
       {
         trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
       }
@@ -234,7 +232,7 @@ function get_time($value)
     }
   }
   
-  if (strpos($value, 'Z') !== FALSE)
+  if (strpos($value, 'Z') !== false)
   {
     $value = str_replace('Z', '', $value);
     $this_timezone = 'UTC';
@@ -298,7 +296,7 @@ function get_create_by($organizer)
 
     if ($res->count() == 0)
     {
-      return NULL;
+      return null;
     }
     else
     {
@@ -316,7 +314,7 @@ function get_create_by($organizer)
   {
     // We need a function that is the inverse of authLdapGetEmail()
     trigger_error("Cannot yet get username when using LDAP", E_USER_WARNING);
-    return NULL;
+    return null;
   }
   // Otherwise we derive the username from the email address
   else
@@ -416,7 +414,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
         {
           $day = substr($byday_day, -2);     // the last two characters of the string
           $nth = substr($byday_day, 0, -2);  // everything except the last two characters
-          if ($nth === FALSE)
+          if ($nth === false)
           {
             // "If an integer modifier is not present, it means all days of this
             // type within the specified frequency.  For example, within a MONTHLY
@@ -470,7 +468,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
     $errors[] = get_vocab("no_indefinite_repeats");
   }
   
-  return (empty($errors)) ? $result: FALSE;
+  return (empty($errors)) ? $result : false;
 }
 
 
@@ -558,7 +556,7 @@ function ical_unfold($str)
   // Deal with the trivial cases
   if (!isset($str))
   {
-    return NULL;
+    return null;
   }
   if ($str == '')
   {
@@ -788,13 +786,13 @@ function create_rrule($data)
 // The TZID parameter if used must be added separately
 function create_exdate_list($dates)
 {
-  global $vtimezone, $timezone;
+  global $vtimezone;
   
   $results = array();
   
   foreach ($dates as $date)
   {
-    if ($vtimezone === FALSE)
+    if ($vtimezone === false)
     {
       $results[] = gmdate(RFC5545_FORMAT . '\Z', $date);
     }
@@ -808,14 +806,12 @@ function create_exdate_list($dates)
 
 
 // Create an RFC 5545 iCalendar Event component
-function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
+function create_ical_event($method, $data, $addresses=null, $series=false)
 {
   require_once "functions_mail.inc";
   
-  global $confirmation_enabled, $mail_settings, $timezone, $vtimezone,
+  global $mail_settings, $timezone, $vtimezone,
          $default_area_room_delimiter;
-  
-  $use_html = $mail_settings['html'] && !empty($html_description);
   
   $results = array();
 
@@ -842,7 +838,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
   // specified in local time and the appropriate set of "VTIMEZONE" calendar components
   // MUST be included.' 
   
-  if ($vtimezone === FALSE)
+  if ($vtimezone === false)
   {
     $results[] = "DTSTART:" . gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
     $results[] = "DTEND:" . gmdate(RFC5545_FORMAT . '\Z', $data['end_time']);
@@ -859,7 +855,7 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
     if (!empty($data['skip_list']))
     {
       $results[] = "EXDATE" . 
-                   (($vtimezone === FALSE) ? ":" : ";TZID=$timezone:") .
+                   (($vtimezone === false) ? ":" : ";TZID=$timezone:") .
                    create_exdate_list($data['skip_list']);
     }
   }
@@ -1135,7 +1131,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
           $row['start_time'] = $start_row['start_time'];
           $row['end_time'] = $row['start_time'] + $duration;
           $row['end_date'] = min($export_end, $row['end_date']);
-          $ical_events[$replace_index] = create_ical_event($method, $row, NULL, TRUE);
+          $ical_events[$replace_index] = create_ical_event($method, $row, null, true);
           // Clear the $replace_index now that we've found an original entry
           unset ($replace_index);
         }
@@ -1148,7 +1144,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
       {
         $start_row['skip_list'] = array_diff($expected_entries, $actual_entries);
         // Create the series event
-        $ical_events[] = create_ical_event($method, $start_row, NULL, TRUE);
+        $ical_events[] = create_ical_event($method, $start_row, null, true);
         
         // If we're at the start of a new series, then rewind one and
         // clear the actual entries
