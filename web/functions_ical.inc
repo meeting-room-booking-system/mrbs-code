@@ -815,8 +815,6 @@ function create_ical_event($method, $data, $addresses=NULL, $series=FALSE)
   global $mail_settings, $timezone, $vtimezone,
          $default_area_room_delimiter;
   
-  $use_html = $mail_settings['html'] && !empty($html_description);
-  
   $results = array();
 
   $results[] = "BEGIN:VEVENT";
