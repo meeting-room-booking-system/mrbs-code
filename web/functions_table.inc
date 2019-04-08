@@ -727,7 +727,6 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $weekstarts, $strftime_format;
-  global $hidden_days;
 
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
