@@ -1165,7 +1165,6 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 
 function month_table_innerhtml($view, $year, $month, $day, $area, $room)
 {
-  global $tbl_entry;
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $periods, $enable_periods, $morningstarts, $morningstarts_minutes;
   global $approval_enabled, $confirmation_enabled;
