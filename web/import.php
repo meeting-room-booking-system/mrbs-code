@@ -11,11 +11,6 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use \ZipArchive;
 
-if (version_compare(PHP_VERSION, '5.0.0', '<'))
-{
-  // We use stream_get_line() which is only available in PHP 5
-  exit("Import requires PHP 5.  Your system is running PHP " . PHP_VERSION);
-}
 
 require "defaultincludes.inc";
 require_once "functions_ical.inc";
