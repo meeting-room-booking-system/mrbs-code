@@ -103,7 +103,7 @@ function upgrade_echo($message)
 }
 
 
-function upgrade_database($local, $from, $to, $upgrade_handle)
+function upgrade_database($local, $from, $to, DB $upgrade_handle)
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
   // or local upgrades ($local === true);
