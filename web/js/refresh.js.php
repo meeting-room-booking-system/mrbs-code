@@ -47,7 +47,19 @@ var refreshPage = function refreshPage() {
       {
         data.timetohighlight = args.timetohighlight;
       }
-      
+
+      <?php
+      // Add a class of 'refreshable' to the table so that we know when the response comes
+      // back whether we can use it to refresh the table.   The problem is that it is
+      // possible - especially on slow connections - that in between the Ajax request being
+      // made and the response being returned, the user could have moved to a different day,
+      // which is just done by replacing the page body element.  In that case the refresh would
+      // come back and refresh the table with the wrong day's data.  By adding the 'refreshable'
+      // class to the table we ensure that this can't happen, because if the user moves to a
+      // different day the new HTML won't have the class.
+      ?>
+      $('table.dwm_main').addClass('refreshable');
+
       $.post('index.php',
              data,
              function(result){
@@ -61,7 +73,7 @@ var refreshPage = function refreshPage() {
                  if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
                  {
                    var table = $('table.dwm_main');
-                   if (!table.hasClass('resizing'))
+                   if (!table.hasClass('resizing') && table.hasClass('refreshable'))
                    {
                      table.empty();
                      table.html(result);
