@@ -283,16 +283,31 @@ function is_admin()
 
 
 // Checks whether the current user has booking administration rights
-// for $room - ie is allowed to modify and delete other people's bookings
-// and to approve bookings.   The default value for $room is all rooms.
+// for $rooms - ie is allowed to modify and delete other people's bookings
+// and to approve bookings.   $rooms can be either a single scalar value or
+// an array of room ids.  If an array, then TRUE is only returned if the user
+// is a booking admin for all rooms in the array.  The default value for $rooms
+// is all rooms.
 //
 // At the moment $room is ignored, but is passed here so that later
 // it can be enhanced to provide fine-grained permissions
 // 
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room; otherwise FALSE
-function is_book_admin($room=null)
+function is_book_admin($rooms=null)
 {
+  if (is_array($rooms) && (count($rooms) > 0))
+  {
+    foreach ($rooms as $room)
+    {
+      if (!is_book_admin($room))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
   $current_user = session()->getCurrentUser();
   
   return (isset($current_user) && ($current_user->level >= 2));
