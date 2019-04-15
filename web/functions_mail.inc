@@ -1053,13 +1053,47 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   return $result;
 }
 
+
+function debug_output($message)
+{
+  global $mail_settings;
+  
+  if (isset($mail_settings['debug_output']) &&
+      ($mail_settings['debug_output'] == 'browser'))
+  {
+    echo htmlspecialchars($message) . "<br>\n";
+    // flush in case they have output_buffering configured on
+    if (ob_get_length() !== FALSE)
+    {
+      ob_flush();
+    }
+    flush();
+  }
+  else  // anything else goes to the error log
+  {
+    error_log($message);
+  }
+}
+
+
+function mail_debug($message)
+{
+  global $mail_settings;
+  
+  if ($mail_settings['debug'])
+  {
+    debug_output('[DEBUG] ' . $message);
+  }
+}
+
+
 // }}}
 // {{{ sendMail()
 
 /**
  * Send emails using PEAR::Mail and PEAR::Mail_mime classes.
  * How to use these classes:
- *   -> http://www.pear.php.net/package/Mail 
+ *   -> http://www.pear.php.net/package/Mail
  *   -> http://www.pear.php.net/package/Mail_Mime
  * then link "View documentation".
  * Currently implemented version: Mail 1.1.3 and its dependancies
@@ -1086,39 +1120,6 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
  * @param string  $charset          character set used in body
  * @return bool                     TRUE or PEAR error object if fails
  */
-
-function debug_output($message)
-{
-  global $mail_settings;
-  
-  if (isset($mail_settings['debug_output']) &&
-      ($mail_settings['debug_output'] == 'browser'))
-  {
-    echo htmlspecialchars($message) . "<br>\n";
-    // flush in case they have output_buffering configured on
-    if (ob_get_length() !== FALSE)
-    {
-      ob_flush();
-    }
-    flush();
-  }
-  else  // anything else goes to the error log
-  {
-    error_log($message);
-  }
-}
-
-function mail_debug($message)
-{
-  global $mail_settings;
-  
-  if ($mail_settings['debug'])
-  {
-    debug_output('[DEBUG] ' . $message);
-  }
-}
-
-
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
   require_once 'Mail/mimePart.php';
