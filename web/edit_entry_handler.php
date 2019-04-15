@@ -134,7 +134,7 @@ foreach($formvars as $var => $var_type)
 // Validate the create_by variable, checking that it's the current user, unless the
 // user is an admin and we allow admins to make bookings on behalf of others.
 if (!$ajax &&
-    (!is_book_admin() || $auth['admin_can_only_book_for_self']))
+    (!is_book_admin($rooms) || $auth['admin_can_only_book_for_self']))
 {
   if ($create_by !== $current_username)
   {
@@ -146,7 +146,7 @@ if (!$ajax &&
 
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
-if (!is_book_admin() && $auth['only_admin_can_book_multiday'])
+if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
 {
   $end_date = $start_date;
 }
@@ -320,7 +320,7 @@ if (get_area($room) != $area)
 if ($no_mail)
 {
   if (!$mail_settings['allow_no_mail'] &&
-      (!is_book_admin() || !$mail_settings['allow_admins_no_mail']))
+      (!is_book_admin($rooms) || !$mail_settings['allow_admins_no_mail']))
   {
     $no_mail = false;
   }
@@ -667,7 +667,7 @@ $returl .= '?' . http_build_query($vars, '', '&');
 // prevent you ever getting here, but this check is here as a safeguard in 
 // case someone has spoofed the HTML)
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
-    !is_book_admin() &&
+    !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
   showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
