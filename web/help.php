@@ -23,6 +23,8 @@ else
   echo "<table class=\"details has_caption list\">\n";
   echo "<caption>" . get_vocab("config_details") . "</caption>\n";
   echo "<tr><td>" . get_vocab("mrbs_version") . "</td><td>" . get_mrbs_version() . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("db_schema_version") . "</td><td>" . DB::DB_SCHEMA_VERSION . "</td></tr>\n";
+  echo "<tr><td>" . get_vocab("db_local_schema_version") . "</td><td>" . DB::DB_SCHEMA_VERSION_LOCAL . "</td></tr>\n";
   echo '<tr><td>$auth[\'type\']</td><td>' . htmlspecialchars($auth['type']) . "</td></tr>\n";
   echo '<tr><td>$auth[\'session\']</td><td>' . htmlspecialchars($auth['session']) . "</td></tr>\n";
   echo "</table>\n";
