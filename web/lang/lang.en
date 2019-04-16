@@ -451,17 +451,19 @@ $vocab["NO"]                 = "NO";
 $vocab["delarea"]            = "You must delete all rooms in this area before you can delete it<p>";
 
 // Used in help.php
-$vocab["about_mrbs"]         = "About MRBS";
-$vocab["mrbs_version"]       = "MRBS version";
-$vocab["config_details"]     = "Configuration details";
-$vocab["server_details"]     = "Server details";
-$vocab["database"]           = "Database";
-$vocab["system"]             = "System";
-$vocab["servertime"]         = "Server time";
-$vocab["server_software"]    = "Server software";
-$vocab["extensions"]         = "Extensions";
-$vocab["please_contact"]     = "Please contact ";
-$vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+$vocab["about_mrbs"]              = "About MRBS";
+$vocab["mrbs_version"]            = "MRBS version";
+$vocab["db_schema_version"]       = "Database schema version";
+$vocab["db_local_schema_version"] = "Database local schema version";
+$vocab["config_details"]          = "Configuration details";
+$vocab["server_details"]          = "Server details";
+$vocab["database"]                = "Database";
+$vocab["system"]                  = "System";
+$vocab["servertime"]              = "Server time";
+$vocab["server_software"]         = "Server software";
+$vocab["extensions"]              = "Extensions";
+$vocab["please_contact"]          = "Please contact ";
+$vocab["for_any_questions"]       = "for any questions that aren't answered here.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Import an iCalendar file";
