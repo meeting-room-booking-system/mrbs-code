@@ -47,7 +47,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     {
       // Get a username and password if we haven't got them
       echo '<p>' . get_vocab('supply_userpass') . "</p>\n";
-      echo '<p>' . get_vocab('contact_admin') . "</p>\n"; 
+      echo '<p>' . get_vocab('contact_admin', $mrbs_admin) . "</p>\n"; 
       db_get_userpass();
     }
     else
