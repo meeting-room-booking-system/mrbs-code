@@ -929,7 +929,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
         }
         else
         {
-          $subject = get_mail_vocab("mail_subject_changed_entry");
+          $subject = get_mail_vocab("mail_subject_changed_entry", $mrbs_company);
         }
         break;
     }
