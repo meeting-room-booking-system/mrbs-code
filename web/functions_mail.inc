@@ -879,6 +879,7 @@ function create_addresses($data, $action)
 function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start_times, $action="book", $note='')
 {
   global $mail_settings, $enable_periods;
+  global $mrbs_company;
   
   mail_debug('Preparing email for new or changed booking ...');
 
@@ -913,7 +914,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
     switch ($action)
     {
       case "approve":
-        $subject = get_mail_vocab("mail_subject_approved");
+        $subject = get_mail_vocab("mail_subject_approved", $mrbs_company);
         break;
       case "more_info":
         $subject = get_mail_vocab("mail_subject_more_info");
@@ -983,6 +984,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
 function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete", $note="")
 {
   global $mail_settings, $enable_periods;
+  global $mrbs_company;
   
   if ($mail_settings['debug'])
   {
@@ -1014,7 +1016,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   }
   elseif ($action == "reject")
   {
-    $subject = get_mail_vocab("mail_subject_rejected");
+    $subject = get_mail_vocab("mail_subject_rejected", $mrbs_company);
   }
   else
   {
