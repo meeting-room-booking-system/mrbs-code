@@ -917,7 +917,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
         $subject = get_mail_vocab("mail_subject_approved", $mrbs_company);
         break;
       case "more_info":
-        $subject = get_mail_vocab("mail_subject_more_info");
+        $subject = get_mail_vocab("mail_subject_more_info", $mrbs_company);
         break;
       case "remind":
         $subject = get_mail_vocab("mail_subject_reminder");
