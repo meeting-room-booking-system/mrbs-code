@@ -1020,7 +1020,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   }
   else
   {
-    $subject = get_mail_vocab("mail_subject_delete");
+    $subject = get_mail_vocab("mail_subject_delete", $mrbs_company);
   }
   
   // Create the text body
