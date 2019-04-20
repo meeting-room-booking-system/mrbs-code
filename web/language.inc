@@ -534,7 +534,7 @@ function get_datatable_lang_file($dir)
 function set_vocab($lang)
 {
   global $vocab, $vocab_override;
-  global $mrbs_admin, $mrbs_company;  // Used in lang files
+  global $mrbs_admin;  // Used in lang files
   
   // Set English as a fallback language as some of the translations are
   // incomplete.
