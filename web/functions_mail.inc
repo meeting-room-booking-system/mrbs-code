@@ -925,7 +925,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
       default:
         if ($new_entry)
         {
-          $subject = get_mail_vocab("mail_subject_new_entry");
+          $subject = get_mail_vocab("mail_subject_new_entry", $mrbs_company);
         }
         else
         {
