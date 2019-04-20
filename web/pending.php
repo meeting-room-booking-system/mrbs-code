@@ -108,7 +108,7 @@ function display_buttons($row, $is_series)
                           'method' => 'post');                   
       $form->setAttributes($attributes);
       
-      $hidden_inputs = array('action' => 'remind_admin',
+      $hidden_inputs = array('action' => 'remind',
                              'id'     => $row['id'],
                              'returl' => $returl);
       $form->addHiddenInputs($hidden_inputs);
