@@ -418,7 +418,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "<html>\n";
     $body .= "<head>\n";
     $body .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . get_mail_charset() . "\">\n";
-    $body .= "<title></title>\n";
+    $body .= "<title>$mrbs_company</title>\n";
     $body .= "<style type=\"text/css\">\n";
     $css_file = 'css/mrbs-mail.css';
     if (is_readable($css_file))
