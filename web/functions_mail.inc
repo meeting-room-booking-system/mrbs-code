@@ -316,7 +316,7 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
       // parentheses will make the old value stand out.
       $result .= ($as_html) ? htmlspecialchars(" ($old)") : " ($old)";
     }
-    $result .= ($as_html) ? "<td>\n" : "";
+    $result .= ($as_html) ? "</td>\n" : "";
   }
   
   $result .= ($as_html) ? "</tr>\n" : "\n";
