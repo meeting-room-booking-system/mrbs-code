@@ -265,6 +265,7 @@ function getWritable($creator, $rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
+  $user = session()->getUsername();
 
   // Always allowed to modify your own stuff
   if (strcasecmp($creator, $user) === 0)
