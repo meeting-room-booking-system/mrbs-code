@@ -180,8 +180,6 @@ function checkAuthorised($page, $just_check=false)
  */
 function getWritable($creator, $rooms=null, $all=true)
 {
-
-
   if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
