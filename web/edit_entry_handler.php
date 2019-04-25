@@ -442,6 +442,7 @@ if (day_past_midnight())
   }
 }
 
+$target_rooms = $rooms;
 
 // Check that the user has permission to create/edit an entry for this room.
 // Get the id of the room that we are creating/editing
@@ -449,8 +450,8 @@ if (isset($id))
 {
   // Editing an existing booking: get the room_id from the database (you can't
   // get it from $rooms because they are the new rooms)
-  $target_room = db()->query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
-  if ($target_room < 0)
+  $existing_room = db()->query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
+  if ($existing_room < 0)
   {
     // Ideally we should give more feedback to the user when this happens, or
     // even lock the entry once a user starts to edit it.
@@ -460,23 +461,12 @@ if (isset($id))
     header("Location: $returl");
     exit;
   }
+  $target_rooms[] = $existing_room;
+  $target_rooms = array_unique($target_rooms);
 }
-else
-{
-  // New booking: get the room_id from the form
-  if (!isset($rooms[0]))
-  {
-    // $rooms[0] should always be set, because you can only get here
-    // from edit_entry.php, where it will be set.   If it's not set
-    // then something's gone wrong - probably somebody trying to call
-    // edit_entry_handler.php directly from the browser - so get out 
-    // of here and go somewhere safe.
-    header("Location: index.php");
-    exit;
-  }
-  $target_room = $rooms[0];
-}
-if (!getWritable($create_by, $target_room))
+
+// Must have write access to at least one of the rooms
+if (!getWritable($create_by, $target_rooms, false))
 {
   showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
@@ -682,6 +672,12 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
 $bookings = array();
 foreach ($rooms as $room_id)
 {
+  // Ignore rooms for which the user doesn't have write access
+  if (!getWritable($create_by, $room_id))
+  {
+    continue;
+  }
+
   $booking = array();
   $booking['create_by'] = $create_by;
   $booking['modified_by'] = (isset($id)) ? $current_username : '';
