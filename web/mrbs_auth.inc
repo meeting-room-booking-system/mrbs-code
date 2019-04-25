@@ -218,7 +218,11 @@ function checkAuthorised($page, $just_check=false)
  * Determines if the current user is able to modify an entry
  *
  * $creator - The creator of the entry
- * $room    - The id of the room that the entry is in
+ * $rooms   - The id(s) of the room(s) that the entries are in. Can
+ *            be a scalar or an array.
+ * $all     - Whether to check that the creator has write access
+ *            for all ($all=true) or just some ($all=false) of the
+ *            rooms.
  *
  * Returns:
  *   false  - The user does not have the required access
@@ -277,7 +281,7 @@ function getWritable($creator, $rooms=null, $all=true)
     return true;
   }
   
-  // Unathorised access
+  // Unauthorised access
   return false;
 }
 
