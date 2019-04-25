@@ -1577,7 +1577,11 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
-  $rooms[$row['area_id']][$row['id']] = $row['room_name'];
+  // Only use rooms for which the user has write access
+  if (getWritable($create_by, $row['id']))
+  {
+    $rooms[$row['area_id']][$row['id']] = $row['room_name'];
+  }
 }
     
 // Get the details of all the enabled areas
