@@ -178,18 +178,57 @@ function checkAuthorised($page, $just_check=false)
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $room)
+function getWritable($creator, $rooms=null, $all=true)
 {
+
+
+  if (is_array($rooms) && (count($rooms) > 0))
+  {
+    if ($all)
+    {
+      // We want the user to have write access for all the rooms,
+      // so if for any one room they are not, then return false.
+      foreach ($rooms as $room)
+      {
+        if (!getWritable($creator, $room))
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+    else
+    {
+      // We want the user to have write access for at least one room,
+      // so if there are no rooms for which they do, then return false.
+      foreach ($rooms as $room)
+      {
+        if (getWritable($creator, $room))
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  if (is_null($rooms) && !$all)
+  {
+    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Does it mean all rooms in the system or just all rooms in the current area?
+    throw new \Exception('$rooms===null and $all===false not yet supported.');
+  }
+
   $user = getUserName();
-  
+
   // Always allowed to modify your own stuff
-  if(strcasecmp($creator, $user) === 0)
+  if (strcasecmp($creator, $user) === 0)
   {
     return true;
   }
   
   // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($room))
+  if (is_book_admin($rooms))
   {
     return true;
   }
@@ -235,28 +274,54 @@ function is_admin()
 
 // Checks whether the current user has booking administration rights
 // for $rooms - ie is allowed to modify and delete other people's bookings
-// and to approve bookings.   $rooms can be either a single scalar value or
-// an array of room ids.  If an array, then TRUE is only returned if the user
-// is a booking admin for all rooms in the array.  The default value for $rooms
-// is all rooms.
+// and to approve bookings.
 //
-// At the moment $room is ignored, but is passed here so that later
-// it can be enhanced to provide fine-grained permissions
-// 
+// $rooms can be either a single scalar value or an array of room ids.  The default
+// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
+// so that later MRBS can be enhanced to provide fine-grained permissions.)
+//
+// $all specifies whether the user must be a booking for all $rooms, or just some of
+// them, ie at least one.
+//
 // Returns:  TRUE if the user is allowed has booking admin rights for
-//           the room; otherwise FALSE
-function is_book_admin($rooms=null)
+//           the room(s); otherwise FALSE
+function is_book_admin($rooms=null, $all=true)
 {
   if (is_array($rooms) && (count($rooms) > 0))
   {
-    foreach ($rooms as $room)
+    if ($all)
     {
-      if (!is_book_admin($room))
+      // We want the user to be a booking admin for all the rooms,
+      // so if for any one room they are not, then return false.
+      foreach ($rooms as $room)
       {
-        return false;
+        if (!is_book_admin($room))
+        {
+          return false;
+        }
       }
+      return true;
     }
-    return true;
+    else
+    {
+      // We want the user to be a booking admin for at least one room,
+      // so if there are no rooms for which they are, then return false.
+      foreach ($rooms as $room)
+      {
+        if (is_book_admin($room))
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  if (is_null($rooms) && !$all)
+  {
+    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Does it mean all rooms in the system or just all rooms in the current area?
+    throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
   $user = getUserName();
