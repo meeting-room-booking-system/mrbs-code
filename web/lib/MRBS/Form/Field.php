@@ -179,7 +179,16 @@ abstract class Field extends Element
     $this->setElements($elements);
     return $this;
   }
-  
+
+
+  public function removeLabelAttribute($name)
+  {
+    $elements = $this->getElements();
+    $elements['label']->removeAttribute($name);
+    $this->setElements($elements);
+    return $this;
+  }
+
   
   // Adds a hidden input to the form
   public function addHiddenInput($name, $value)

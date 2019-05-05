@@ -536,6 +536,12 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
         ->setControlAttributes(array('class' => 'default_action',
                                      'name'  => 'update_button',
                                      'value' => get_vocab('save')));
+
+  // Remove the 'for' attribute which will automatically have been set by
+  // setControlAttributes().  It is unnecessary and leaving it in results in
+  // an HTML5 validation error.
+  $field->removeLabelAttribute('for');
+
   $fieldset->addElement($field);
   
   return $fieldset;
