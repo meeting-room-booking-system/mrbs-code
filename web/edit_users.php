@@ -489,7 +489,8 @@ function get_fieldset_password($id=null)
     $field = new FieldInputPassword();
     $field->setLabel(get_vocab('users.password'))
           ->setControlAttributes(array('id'   => "password$i",
-                                       'name' => "password$i"));
+                                       'name' => "password$i",
+                                       'autocomplete' => 'new-password'));
     $fieldset->addElement($field);
   }
   
