@@ -293,7 +293,8 @@ function get_fieldset_periods()
     $field->setAttribute('class', 'period_name')
           ->setControlAttributes(array('name'     => 'area_periods[]',
                                        'value'    => $period_name,
-                                       'required' => true))
+                                       'required' => true),
+                                 false)
           ->addElement($span);
     $fieldset->addElement($field);
   }
