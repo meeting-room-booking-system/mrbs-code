@@ -64,19 +64,20 @@ abstract class Field extends Element
   // Sets an attribute for the field control.  Also takes care of the label
   // by associating the label with the control using a 'for' attribute, by
   // using the 'id' if one is given, or if not, by assuming that the 'id'
-  // is the same as the 'name'.
-  public function setControlAttribute($name, $value=true)
+  // is the same as the 'name' (unless $add_id is FALSE, in which case an id
+  // won't be added).
+  public function setControlAttribute($name, $value=true, $add_id=true)
   {
     $elements = $this->getElements();
     
     // If this is the name attribute and we haven't yet got an id, then
-    // make the id the same as the name
-    if (($name == 'name') && (null === $elements['control']->getAttribute('id')))
+    // make the id the same as the name - unless $add_id is FALSE
+    if ($add_id && ($name == 'name') && (null === $elements['control']->getAttribute('id')))
     {
       $this->setControlAttribute('id', $value);
     }
     
-    // If this is an id and it;s not a group field, then associate the
+    // If this is an id and it's not a group field, then associate the
     // label with the id
     if (!$this->is_group && ($name == 'id'))
     {
@@ -91,11 +92,11 @@ abstract class Field extends Element
   
   
   // Sets the attributes for the field control.
-  public function setControlAttributes(array $attributes)
+  public function setControlAttributes(array $attributes, $add_id=true)
   { 
     foreach ($attributes as $key => $value)
     {
-      $this->setControlAttribute($key, $value);
+      $this->setControlAttribute($key, $value, $add_id);
     }
     return $this;
   }
@@ -179,7 +180,16 @@ abstract class Field extends Element
     $this->setElements($elements);
     return $this;
   }
-  
+
+
+  public function removeLabelAttribute($name)
+  {
+    $elements = $this->getElements();
+    $elements['label']->removeAttribute($name);
+    $this->setElements($elements);
+    return $this;
+  }
+
   
   // Adds a hidden input to the form
   public function addHiddenInput($name, $value)
