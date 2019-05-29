@@ -222,8 +222,12 @@ init = function(args) {
       input.removeAttr('id')
            .removeAttr('name')
            .after(hiddenInput);
-           
-      input.change(function() {
+
+      <?php
+      // We use the 'input' rather than 'change' event because 'input' isn't fired in
+      // Edge when a datalist option is selected.
+      ?>
+      input.on('input', function() {
         hiddenInput.val($(this).val());
       });
 
