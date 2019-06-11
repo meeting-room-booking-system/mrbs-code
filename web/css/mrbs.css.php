@@ -171,6 +171,7 @@ h2 {
 .view_container {
   -ms-flex-positive: 1;
   flex-grow: 1;
+  width: 100%;
 }
 
 img {
@@ -577,6 +578,10 @@ div#div_custom_html {
   content: '\0000a0>>';
 }
 
+.table_container {
+  overflow-x: auto;
+}
+
 table.dwm_main {
   float: left;
   clear: both; 
@@ -789,6 +794,7 @@ table.dwm_main {
 
 .dwm_main tbody a {
   padding: 0.2em;
+  box-sizing: border-box;
 }
 
 .dwm_main th a {

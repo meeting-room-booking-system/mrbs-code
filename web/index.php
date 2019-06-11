@@ -408,9 +408,11 @@ if ($times_along_top)
   $class .= ' times-along-top';
 }
 
+echo "<div class=\"table_container\">\n";
 echo "<table class=\"$class\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
+echo "</div>\n";
 
 // The bottom navigation bar is controlled by JavaScript
 echo get_calendar_nav($view, $year, $month, $day, $area, $room, true);
