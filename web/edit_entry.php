@@ -7,6 +7,7 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputDate;
 use MRBS\Form\ElementInputHidden;
+use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
@@ -851,9 +852,11 @@ function get_field_rep_num_weeks($disabled=false)
 
 
 // Monthly repeat frequency
-function get_field_rep_num_months($disabled=false)
+function get_fieldset_rep_num_months($disabled=false)
 {
   global $rep_num_months;
+
+  $fieldset = new ElementFieldset();
 
   $field = new FieldInputNumber();
 
@@ -862,13 +865,15 @@ function get_field_rep_num_months($disabled=false)
        ->setText(get_vocab('months'));
 
   $field->setLabel(get_vocab('rep_num_months'))
-        ->setControlAttributes(array('name'     => 'rep_num_months',
-                                     'min'      => REP_NUM_MONTHS_MIN,
-                                     'value'    => $rep_num_months,
-                                     'disabled' => $disabled))
-        ->addElement($span);
+    ->setControlAttributes(array('name'     => 'rep_num_months',
+                                 'min'      => REP_NUM_MONTHS_MIN,
+                                 'value'    => $rep_num_months,
+                                 'disabled' => $disabled))
+    ->addElement($span);
 
-  return $field;
+  $fieldset->addElement($field);
+
+  return $fieldset;
 }
 
 
@@ -996,7 +1001,7 @@ function get_fieldset_rep_monthly_details($disabled=false)
                                  'id'    => 'rep_monthly'));
   $fieldset->addElement(get_fieldset_month_absolute($disabled))
            ->addElement(get_fieldset_month_relative($disabled))
-           ->addElement(get_field_rep_num_months($disabled));
+           ->addElement(get_fieldset_rep_num_months($disabled));
   
   return $fieldset;
 }
