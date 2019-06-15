@@ -755,8 +755,9 @@ function mrbsCreateEntry($table, $data)
           $sql_params[] = (empty($data[$key])) ? "'0'" : $data[$key];
           break;
           
-        // special case - rep_num_weeks
+        // special cases - rep_num_weeks, rep_num_months
         case 'rep_num_weeks':
+        case 'rep_num_months':
           if (!empty($data[$key]))
           {
             $sql_col[] = $key;
@@ -813,6 +814,7 @@ function mrbsCreateEntry($table, $data)
   {
     $col = db()->quote($col);
   }
+
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
 
   db()->command($sql, $sql_params);
@@ -901,6 +903,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one 
  *                                  repeat day must be set)
  *                  rep_num_weeks   The repeat frequency for weekly repeats
+ *                  rep_num_months  The repeat frequency for monthly repeats
  *                  month_absolute  The repeat day of the month for monthly repeats
  * $n             Maximum number of entries to find
  *
@@ -1000,7 +1003,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
       case REP_MONTHLY:
         do
         {
-          $month++;
+          $month = $month + $rep_details['rep_num_months'];
           if (isset($rep_details['month_absolute']))
           {
             // Get the day of the month back to where it should be (in case we
@@ -1064,6 +1067,7 @@ function mrbsCreateRepeatingEntrys($data)
   foreach (array('rep_type',
                  'rep_opt',
                  'rep_num_weeks',
+                 'rep_num_months',
                  'month_absolute',
                  'month_relative') as $key)
   {
@@ -1464,7 +1468,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
+      $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, rep_num_months, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=? LIMIT 1", array($row['repeat_id']));
       if (!$extra_row = $res->row_keyed(0))
@@ -1482,10 +1486,12 @@ function get_booking_info($id, $series, $silent=FALSE)
           fatal_error(get_vocab("invalid_series_id"));
         }
       }
+
       $row['rep_type']         = $extra_row['rep_type'];
       $row['end_date']         = $extra_row['end_date'];
       $row['rep_opt']          = $extra_row['rep_opt'];
       $row['rep_num_weeks']    = $extra_row['rep_num_weeks'];
+      $row['rep_num_months']   = $extra_row['rep_num_months'];
       $row['month_absolute']   = $extra_row['month_absolute'];
       $row['month_relative']   = $extra_row['month_relative'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
@@ -1889,6 +1895,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     foreach (array('rep_type',
                    'rep_opt',
                    'rep_num_weeks',
+                   'rep_num_months',
                    'month_absolute',
                    'month_relative') as $key)
     {

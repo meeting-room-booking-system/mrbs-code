@@ -426,15 +426,35 @@ function validate(form)
   }
   
   <?php
-  // Check that there's a sensible value for rep_num_weeks.   Only necessary
-  // if the browser doesn't support the HTML5 min and step attrubutes
+  // Check that there's a sensible value for rep_num_weeks and rep_num_months.   Only necessary
+  // if the browser doesn't support the HTML5 min and step attributes
   ?>
   if (!("min" in testInput) || !(("step" in testInput)))
   {
-    if ((form.find('input:radio[name=rep_type]:checked').val() === '<?php echo REP_WEEKLY ?>') &&
-        (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>))
+    var repType = form.find('input:radio[name=rep_type]:checked').val();
+    var message;
+
+    switch (repType)
     {
-      window.alert("<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>");
+      case <?php echo REP_WEEKLY ?>:
+        if (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>)
+        {
+          message = "<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>";
+        }
+        break;
+      case <?php echo REP_MONTHLY ?>:
+        if (form.find('#rep_num_months').val() < <?php echo REP_NUM_MONTHS_MIN ?>)
+        {
+          message = "<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-monthly_value')) ?>";
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (message)
+    {
+      window.alert(message);
       return false;
     }
   }

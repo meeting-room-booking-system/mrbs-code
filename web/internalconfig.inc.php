@@ -288,8 +288,9 @@ define('REGEX_TEXT_POS', '\s*\S+.*');        // At least one non-whitespace char
 define('REGEX_TEXT_NEG', '/(^$)|(^\s+$)/');  // Cannot be blank or all whitespaces
 define('REGEX_HHMM', '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/');  // A time string in the form 'hh:mm'
 
-// Minimum useful value for rep_num_weeks
+// Minimum useful value for repeat frequencies
 define('REP_NUM_WEEKS_MIN',  1);
+define('REP_NUM_MONTHS_MIN', 1);
 
 
  /*************************************************

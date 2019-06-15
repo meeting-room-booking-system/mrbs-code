@@ -367,7 +367,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
   $rep_details = array();
-  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
+  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'rep_num_months', 'month_absolute', 'month_relative') as $key)
   {
     if (isset($data[$key]))
     {
@@ -712,6 +712,15 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $new,
                                         $old,
                                         $compare, $as_html);
+        // Repeat number of months
+        $new = $data['rep_num_months'] . ' ' .
+          (($data['rep_num_months'] == 1) ? get_vocab("month") : get_vocab("months"));
+        $old = $mail_previous['rep_num_months'] . ' ' .
+          (($mail_previous['rep_num_months'] == 1) ? get_vocab("month") : get_vocab("months"));
+        $body .= create_body_table_row (get_mail_vocab("rep_num_months"),
+          $new,
+          $old,
+          $compare, $as_html);
       
       }
 

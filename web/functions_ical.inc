@@ -356,6 +356,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
   $result = array('rep_type' => REP_NONE,
                   'rep_opt' => '0000000',
                   'rep_num_weeks' => 0,
+                  'rep_num_months' => 1,
                   'end_date' => 0);
   $rules = array();
   $recur_rule_parts = explode(';', $rrule);
@@ -399,6 +400,14 @@ function get_repeat_details($rrule, $start_time, &$errors)
       break;
     case 'MONTHLY':
       $result['rep_type'] = REP_MONTHLY;
+      if (isset($rules['interval']) && ($rules['interval'] > 1))
+      {
+        $result['rep_num_months'] = $rules['interval'];
+      }
+      else
+      {
+        $result['rep_num_months'] = 1;
+      }
       if (!isset($rules['BYDAY']))
       {
         $result['month_absolute'] = $rules['BYMONTHDAY'];
@@ -757,6 +766,11 @@ function create_rrule($data)
       
     case REP_MONTHLY:
       $rule .= "FREQ=MONTHLY";
+      // Interval for MONTHLY (Interval defaults to 1)
+      if ($data['rep_num_months'] > 1)
+      {
+        $rule .= ";INTERVAL=" . $data['rep_num_months'];
+      }
       if (isset($data['month_absolute']))
       {
         $rule .= ";BYMONTHDAY=" . $data['month_absolute'];

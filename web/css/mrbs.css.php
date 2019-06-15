@@ -1362,7 +1362,7 @@ fieldset#rep_info, fieldset#booking_controls {
   padding-top: 0.7em;
 }
 
-span#num_weeks, input#rep_num_weeks {
+span#num_weeks, input#rep_num_weeks, input#rep_num_months {
   display: inline-block;
   float: left;
 }

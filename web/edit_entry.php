@@ -828,7 +828,7 @@ function get_field_rep_day($disabled=false)
 }
 
 
-// Repeat frequency
+// Weekly repeat frequency
 function get_field_rep_num_weeks($disabled=false)
 {
   global $rep_num_weeks;
@@ -846,6 +846,28 @@ function get_field_rep_num_weeks($disabled=false)
                                      'disabled' => $disabled))
         ->addElement($span);
   
+  return $field;
+}
+
+
+// Monthly repeat frequency
+function get_field_rep_num_months($disabled=false)
+{
+  global $rep_num_months;
+
+  $field = new FieldInputNumber();
+
+  $span = new ElementSpan();
+  $span->setAttribute('id', 'num_months')
+       ->setText(get_vocab('months'));
+
+  $field->setLabel(get_vocab('rep_num_months'))
+        ->setControlAttributes(array('name'     => 'rep_num_months',
+                                     'min'      => REP_NUM_MONTHS_MIN,
+                                     'value'    => $rep_num_months,
+                                     'disabled' => $disabled))
+        ->addElement($span);
+
   return $field;
 }
 
@@ -973,7 +995,8 @@ function get_fieldset_rep_monthly_details($disabled=false)
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_monthly'));
   $fieldset->addElement(get_fieldset_month_absolute($disabled))
-           ->addElement(get_fieldset_month_relative($disabled));
+           ->addElement(get_fieldset_month_relative($disabled))
+           ->addElement(get_field_rep_num_months($disabled));
   
   return $fieldset;
 }
@@ -1253,6 +1276,8 @@ if (isset($id))
   $rep_day = array();
   $rep_type = REP_NONE;
   $rep_num_weeks = 1;
+  $rep_num_months = 1;
+
   
   foreach ($entry as $column => $value)
   {
@@ -1332,7 +1357,7 @@ if (isset($id))
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
-    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks,
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks, rep_num_months,
                    month_absolute, month_relative
               FROM $tbl_repeat 
              WHERE id=?
@@ -1400,6 +1425,7 @@ if (isset($id))
           {
             trigger_error("Invalid monthly repeat", E_USER_WARNING);
           }
+          $rep_num_months = $row['rep_num_months'];
           break;
         default:
           break;
@@ -1515,6 +1541,7 @@ else
   }
   $rep_day       = array(date('w', $start_time));
   $rep_num_weeks = 1;
+  $rep_num_months = 1;
   $month_type = REP_MONTH_ABSOLUTE;
 }
 

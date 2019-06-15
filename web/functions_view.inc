@@ -323,6 +323,10 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
           trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
         }
         $tbody .= create_details_row(get_vocab("repeat_on"), $value, $as_html);
+        // Repeat number of months
+        $value = $data['rep_num_months'] . ' ';
+        $value .= ($data['rep_num_months'] == 1) ? get_vocab("month") : get_vocab("months");
+        $tbody .= create_details_row(get_vocab("rep_num_months"), $value, $as_html);
         break;
       default:
         break;
