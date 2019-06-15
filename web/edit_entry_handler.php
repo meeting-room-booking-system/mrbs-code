@@ -254,7 +254,7 @@ if (!$ajax)
     invalid_booking(get_vocab('must_set_description'));
   }
 
-  if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < RER_NUM_WEEKS_MIN))
+  if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < REP_NUM_WEEKS_MIN))
   {
     invalid_booking(get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-weekly_value"));
   }
