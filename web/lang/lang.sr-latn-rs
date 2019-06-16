@@ -457,7 +457,6 @@ $vocab["more_than_one_BYDAY"]         = "MRBS does not support more than one BYD
 $vocab["negative_BYDAY"]              = "MRBS does not support negative BYDAY values";
 $vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 5";
 $vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS does not support INTERVAL>1 with FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
 $vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
 $vocab["events_imported"]             = "events imported";

@@ -487,7 +487,6 @@ $vocab["invalid_RRULE"]               = "Felaktig RRULE: saknar FREQ del";
 $vocab["more_than_one_BYDAY"]         = "MRBS stöder inte mer än ett BYDAY värde när FREQ=";
 $vocab["BYDAY_equals_5"]              = "MRBS stöder inte BYDAY värden på 5";
 $vocab["unsupported_FREQ"]            = "MRBS stöder inte FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS stöder inte INTERVAL> 1 med FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT stöds ännu inte av MRBS";
 $vocab["no_indefinite_repeats"]       = "Obestämda upprepningar stöds ännu inte av MRBS";
 $vocab["events_imported"]             = "importerade händelser";

@@ -468,7 +468,6 @@ $vocab["invalid_RRULE"]               = "RRULE Invalid: masih kurang bagian FREQ
 $vocab["more_than_one_BYDAY"]         = "Sistem tidak mendukung lebih dari BYDAY ketika FREQ=";
 $vocab["BYDAY_equals_5"]              = "Sistem tidak mendukung nilai BYDAY dari 5";
 $vocab["unsupported_FREQ"]            = "Sistem tidak mendukung FREQ=";
-$vocab["unsupported_INTERVAL"]        = "Sistem tidak mendukung INTERVAL>1 dengan FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT belum didukung oleh Sistem";
 $vocab["no_indefinite_repeats"]       = "Sistem belum mendukung pengulangan yg tidak terdefinisi";
 $vocab["events_imported"]             = "Event telah diimpor";

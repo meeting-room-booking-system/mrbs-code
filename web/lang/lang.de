@@ -486,7 +486,6 @@ $vocab["invalid_RRULE"]             = "Fehlerhafte RRULE: FREQ Bereich fehlt";
 $vocab["more_than_one_BYDAY"]       = "MRBS unterstützt keine mehrfachen BYDAY Werte, wenn FREQ=";
 $vocab["BYDAY_equals_5"]            = "MRBS unterstützt keinen BYDAY Wert von 5";
 $vocab["unsupported_FREQ"]          = "MRBS unterstützt kein FREQ=";
-$vocab["unsupported_INTERVAL"]      = "MRBS unterstützt kein INTERVAL>1 wenn FREQ=";
 $vocab["unsupported_COUNT"]         = "COUNT wird nicht durch unterstützt";
 $vocab["no_indefinite_repeats"]     = "Wiederholungen ohne Begrenzungen werden nicht unterstützt";
 $vocab["events_imported"]           = "Veranstaltungen importiert";

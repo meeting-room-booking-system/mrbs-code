@@ -455,7 +455,6 @@ $vocab["more_than_one_BYDAY"]         = "MRBS ei tue useampaa BYDAY arvoa kun FR
 $vocab["negative_BYDAY"]              = "MRBS ei tue negatiivisia BYDAY arvoja";
 $vocab["BYDAY_equals_5"]              = "MRBS ei tue BYDAY arvoa 5";
 $vocab["unsupported_FREQ"]            = "MRBS ei tue arvoa FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS ei tue arvoja INTERVAL>1 ja FREQ=";
 $vocab["unsupported_COUNT"]           = "MRBS ei tue arvoa COUNT";
 $vocab["no_indefinite_repeats"]       = "MRBS ei tue rajoittamattomia toistoja";
 $vocab["events_imported"]             = "varaukset tuotu"; //NOTE onko oikea

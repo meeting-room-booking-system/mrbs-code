@@ -469,7 +469,6 @@ $vocab["invalid_RRULE"]               = "RRULE 无效: 缺少 FREQ 部分";
 $vocab["more_than_one_BYDAY"]         = "当 FREQ= 时, MRBS 不支持多个 BYDAY 值";
 $vocab["BYDAY_equals_5"]              = "MRBS 不支持  BYDAY 数值为 5";
 $vocab["unsupported_FREQ"]            = "MRBS 不支持 FREQ=";
-$vocab["unsupported_INTERVAL"]        = "当 FREQ= 时, MRBS 不支持 INTERVAL>1";
 $vocab["unsupported_COUNT"]           = "MRBS 尚不支持 COUNT";
 $vocab["no_indefinite_repeats"]       = "MRBS 尚不支持无限循环";
 $vocab["events_imported"]             = "事件已被导入";

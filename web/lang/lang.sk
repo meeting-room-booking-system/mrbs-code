@@ -469,7 +469,6 @@ $vocab["invalid_RRULE"]               = "Neplatné RRULE: chýba časť FREQ";
 $vocab["more_than_one_BYDAY"]         = "MRBS nepodporuje viac než jednu hodnotu BYDAY v prípade, keď FREQ=";
 $vocab["BYDAY_equals_5"]              = "MRBS nepodporuje BYDAY hodnotu 5";
 $vocab["unsupported_FREQ"]            = "MRBS nepodporuje FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS nepodporuje INTERVAL>1 s FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT nie je podporovaný v MRBS";
 $vocab["no_indefinite_repeats"]       = "Neobmedzené opakovanie nie je podporované v MRBS";
 $vocab["events_imported"]             = "udalosti naimportované";

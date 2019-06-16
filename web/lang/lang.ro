@@ -496,7 +496,6 @@ $vocab["invalid_RRULE"]               = "Regula invalida: partea FREQ lipsete";
 $vocab["more_than_one_BYDAY"]         = "MRBS nu suporta mai mult de o valoare DUPA ZI cand FREQ=";
 $vocab["BYDAY_equals_5"]              = "MRBS nu suporta o valoare DUPA ZI de 5";
 $vocab["unsupported_FREQ"]            = "MRBS nu suporta FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS nu suporta INTERVAL>1 cu FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT nu este suportat inca de MRBS";
 $vocab["no_indefinite_repeats"]       = "Repetari nedefinite nesuportate inca de MRBS";
 $vocab["events_imported"]             = "evenimente importate";
