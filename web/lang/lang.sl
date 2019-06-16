@@ -77,7 +77,6 @@ $vocab["rep_type_3"]         = "Mesečno";
 $vocab["rep_type_4"]         = "Letno";
 $vocab["rep_end_date"]       = "Datum konca ponavljanj";
 $vocab["rep_rep_day"]        = "Ponavljaj dni";
-$vocab["rep_freq"]           = "Frequenca";
 $vocab["ctrl_click"]         = "Uporabite Ctrl+klik za izbiro več prostorov";
 $vocab["entryid"]            = "ID vnosa ";
 $vocab["repeat_id"]          = "ID ponavljanj"; 

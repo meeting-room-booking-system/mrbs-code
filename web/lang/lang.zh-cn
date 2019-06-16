@@ -98,7 +98,6 @@ $vocab["ord_-4"]             = "倒数第四";
 $vocab["ord_-5"]             = "倒数第五";
 $vocab["rep_end_date"]       = "结束重复的日期";
 $vocab["rep_rep_day"]        = "重复的星期";
-$vocab["rep_freq"]           = "频率";
 $vocab["month_absolute"]     = "于天";
 $vocab["month_relative"]     = "于此日";
 $vocab["skip_conflicts"]     = "跳过以前的冲突";

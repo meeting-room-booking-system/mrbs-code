@@ -100,7 +100,6 @@ $vocab["ord_-5"]             = "femte sista";
 $vocab["rep_end_date"]       = "Repetitionsslutdatum";
 $vocab["rep_rep_day"]        = "Repetitionsdag";
 $vocab["rep_for_weekly"]     = "(vecka och n-veckor)";
-$vocab["rep_freq"]           = "Intervall";
 $vocab["rep_for_nweekly"]    = "(n-veckor)";
 $vocab["skip_conflicts"]     = "Hoppa över tidigare konflikter";
 $vocab["ctrl_click"]         = "Håll ner tangenten <I>Ctrl</I> och klicka för att välja mer än ett rum";

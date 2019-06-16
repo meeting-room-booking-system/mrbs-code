@@ -99,7 +99,6 @@ $vocab["rep_type_3"]         = "חודשי";
 $vocab["rep_type_4"]         = "שנתי";
 $vocab["rep_end_date"]       = "סיום הזמנת חדר בתאריך";
 $vocab["rep_rep_day"]        = "ביום";
-$vocab["rep_freq"]           = "תדירות";
 $vocab["ctrl_click"]         = "לחץ על מקש הקונטרול כדי לבחור יותר מחדר אחד";
 $vocab["entryid"]            = "Entry ID ";
 $vocab["repeat_id"]          = "Repeat ID "; 

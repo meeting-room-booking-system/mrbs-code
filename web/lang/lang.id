@@ -99,7 +99,6 @@ $vocab["ord_-4"]                  = "keempat terakhir";
 $vocab["ord_-5"]                  = "kelima terakhir";
 $vocab["rep_end_date"]            = "Ulangi tanggal akhir";
 $vocab["rep_rep_day"]             = "Ulangi hari";
-$vocab["rep_freq"]                = "Frekuensi";
 $vocab["rep_interval"]            = "Ulangi Setiap";
 $vocab["month_absolute"]          = "Pada hari";
 $vocab["month_relative"]          = "Pada";

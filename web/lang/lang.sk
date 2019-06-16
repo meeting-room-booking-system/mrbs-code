@@ -100,7 +100,6 @@ $vocab["ord_-4"]             = "štvrté od konca";
 $vocab["ord_-5"]             = "piate od konca";
 $vocab["rep_end_date"]       = "Dátum konca opakovania";
 $vocab["rep_rep_day"]        = "Deň opakovania";
-$vocab["rep_freq"]           = "Frekvencia";
 $vocab["rep_interval"]       = "Opakovať každé";
 $vocab["month_absolute"]     = "Deň";
 $vocab["month_relative"]     = "V";

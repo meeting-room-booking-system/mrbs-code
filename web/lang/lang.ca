@@ -75,7 +75,6 @@ $vocab["rep_type_3"]         = "Mensual";
 $vocab["rep_type_4"]         = "Anual";
 $vocab["rep_end_date"]       = "Data màxima Repetició";
 $vocab["rep_rep_day"]        = "Dia de repetició";
-$vocab["rep_freq"]           = "Freqüència";
 $vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";
 $vocab["entryid"]            = "ID d'entrada";
 $vocab["repeat_id"]          = "ID de repetició";

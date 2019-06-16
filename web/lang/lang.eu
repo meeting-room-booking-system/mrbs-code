@@ -75,7 +75,6 @@ $vocab["rep_type_3"]         = "Hilekoa";
 $vocab["rep_type_4"]         = "Urtekoa";
 $vocab["rep_end_date"]       = "Errepikapenaren bukaera data";
 $vocab["rep_rep_day"]        = "Errepikapenaren eguna";
-$vocab["rep_freq"]           = "Maiztasuna";
 $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik egin";
 $vocab["entryid"]            = "IDa sartu";
 $vocab["repeat_id"]          = "IDa errepikatu"; 

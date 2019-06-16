@@ -82,7 +82,6 @@ $vocab["rep_type_3"]         = "Miesięczny";
 $vocab["rep_type_4"]         = "Roczny";
 $vocab["rep_end_date"]       = "Powtórz Datę końcową";
 $vocab["rep_rep_day"]        = "Powtórz Datę";
-$vocab["rep_freq"]           = "Częstotliwość";
 $vocab["skip_conflicts"]     = "Pomiń konflikty";
 $vocab["ctrl_click"]         = "Klikaj myszą przytrzymując klawisz Ctrl aby wybrać więcej niż jeden pokój";
 $vocab["entryid"]            = "ID Wpisu ";
