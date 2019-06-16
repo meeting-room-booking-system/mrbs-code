@@ -974,11 +974,13 @@ function get_field_rep_end_date($disabled=false)
 
 function get_field_rep_interval($rep_interval, $disabled=false)
 {
+  global $rep_type;
+
   $field = new FieldInputNumber();
 
   $span = new ElementSpan();
   $span->setAttribute('id', 'interval_units')
-       ->setText(get_vocab('weeks'));
+       ->setText(get_rep_interval_units($rep_type, $rep_interval));
 
   $field->setLabel(get_vocab('rep_interval'))
         ->setControlAttributes(array('name'     => 'rep_interval',

@@ -71,6 +71,38 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
   };
 
 
+<?php
+// Function to change the units for the repeat interval to match the repeat type.
+?>
+var changeRepIntervalUnits = function changeRepIntervalUnits() {
+    var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+    var repInterval = parseInt($('input[name="rep_interval"]').val(), 10);
+    var units = $('#interval_units');
+    var text;
+    switch (repType)
+    {
+      case <?php echo REP_DAILY ?>:
+        text = (repInterval == 1) ? '<?php echo get_vocab('day') ?>' : '<?php echo get_vocab('days') ?>';
+        break;
+      case <?php echo REP_WEEKLY ?>:
+        text = (repInterval == 1) ? '<?php echo get_vocab('week') ?>' : '<?php echo get_vocab('weeks') ?>';
+        break;
+      case <?php echo REP_MONTHLY ?>:
+        text = (repInterval == 1) ? '<?php echo get_vocab('month') ?>' : '<?php echo get_vocab('months') ?>';
+        break;
+      case <?php echo REP_YEARLY ?>:
+        text = (repInterval == 1) ? '<?php echo get_vocab('year_lc') ?>' : '<?php echo get_vocab('years') ?>';
+        break;
+      default:
+        text = units.text();
+        break;
+    }
+    units.text(text);
+    
+    units.parent().toggle(repType !== <?php echo REP_NONE ?>);
+  };
+
+
 // areaConfig returns the properties ('enable_periods', etc.) for an area,
 // by default the current area
 var areaConfig = function areaConfig(property, areaId) {
@@ -1427,6 +1459,9 @@ $(document).on('page_ready', function() {
     
   $('input[name="rep_type"]').change(changeRepTypeDetails);
   changeRepTypeDetails();
+  
+  $('input[name="rep_interval"]').change(changeRepIntervalUnits)
+  $('input[name="rep_type"]').change(changeRepIntervalUnits).trigger('change');
   
   <?php
   // Add an event listener to detect a change in the visibility
