@@ -106,7 +106,6 @@ $formvars = array('create_by'          => 'string',
                   'rep_end_date'       => 'string',
                   'rep_day'            => 'array',   // array of bools
                   'rep_interval'       => 'int',
-                  'rep_num_months'     => 'int',
                   'month_type'         => 'int',
                   'month_absolute'     => 'int',
                   'month_relative_ord' => 'string',
