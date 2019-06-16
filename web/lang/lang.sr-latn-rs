@@ -93,7 +93,6 @@ $vocab["rep_end_date"]       = "Datum prestanka ponavljanja";
 $vocab["rep_rep_day"]        = "Dani ponavljanja";
 $vocab["rep_for_weekly"]     = "(za nedeljno ili n-nedeljno)";
 $vocab["rep_freq"]           = "Učestalost";
-$vocab["rep_num_weeks"]      = "Broj nedelja";
 $vocab["rep_for_nweekly"]    = "(za n-nedeljno)";
 $vocab["skip_conflicts"]     = "Preskoči konflikte koji su prošli";
 $vocab["ctrl_click"]         = "Pritisnite Ctrl da biste označili više prostorija";

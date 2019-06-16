@@ -90,7 +90,6 @@ $vocab["rep_type_4"]         = "ทุกปี";
 $vocab["rep_end_date"]       = "ทำซ้ำวันสิ้นสุด";
 $vocab["rep_rep_day"]        = "ทำซ้ำวัน";
 $vocab["rep_freq"]           = "สม่ำเสมอ";
-$vocab["rep_num_weeks"]      = "จำนวนสัปดาห์";
 $vocab["skip_conflicts"]     = "ข้ามการจองที่ซ้ำกัน";
 $vocab["ctrl_click"]         = "ใช้ Control+Click เพื่อเลือกมากว่า 1 ห้อง";
 $vocab["entryid"]            = "เพิ่มหมายเลขประจำตัว ";

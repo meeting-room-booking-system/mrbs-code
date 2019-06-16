@@ -710,7 +710,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
              get_rep_interval_units_mail($data['rep_type'], $data['rep_interval']);
       $old = $mail_previous['rep_interval'] . ' ' .
              get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
-      $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
+      $body .= create_body_table_row (get_mail_vocab("rep_interval"),
                                       $new,
                                       $old,
                                       $compare, $as_html);

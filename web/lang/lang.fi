@@ -90,7 +90,6 @@ $vocab["rep_end_date"]       = "Toiston loppupäivämäärä";
 $vocab["rep_rep_day"]        = "Toiston viikonpäivä";
 $vocab["rep_for_weekly"]     = "(viikottaiselle toistolle)";
 $vocab["rep_freq"]           = "Tiheys";
-$vocab["rep_num_weeks"]      = "Montako viikkoa";
 $vocab["rep_for_nweekly"]    = "(määräaikaiselle viikottaiselle)";
 $vocab["skip_conflicts"]     = "Ohita menneet ristiriidat";
 $vocab["ctrl_click"]         = "Pidä CTRL-nappi pohjassa valitaksesi useita huoneita.";

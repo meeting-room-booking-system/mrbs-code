@@ -77,7 +77,6 @@ $vocab["rep_type_4"]         = "årlig";
 $vocab["rep_end_date"]       = "Repetitions slut-dato";
 $vocab["rep_rep_day"]        = "Repetitions dag";
 $vocab["rep_freq"]           = "Frekvens";
-$vocab["rep_num_weeks"]      = "Gentag hver _ uger";
 $vocab["ctrl_click"]         = "Hold kontroltasten nede for at vælge mere end et rum";
 $vocab["entryid"]            = "Reservations ID ";
 $vocab["repeat_id"]          = "Serie ID "; 

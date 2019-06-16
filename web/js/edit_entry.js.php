@@ -426,7 +426,7 @@ function validate(form)
   }
   
   <?php
-  // Check that there's a sensible value for rep_num_weeks and rep_num_months.   Only necessary
+  // Check that there's a sensible value for rep_interval.   Only necessary
   // if the browser doesn't support the HTML5 min and step attributes
   ?>
   if (!("min" in testInput) || !(("step" in testInput)))

@@ -90,7 +90,6 @@ $vocab["rep_type_4"]         = "Année";
 $vocab["rep_end_date"]       = "Date de fin de périodicité";
 $vocab["rep_rep_day"]        = "Jour";
 $vocab["rep_freq"]           = "Fréquence";
-$vocab["rep_num_weeks"]      = "Intervalle de semaines";
 $vocab["skip_conflicts"]     = "Ignorer les conflits";
 $vocab["ctrl_click"]         = "CTRL + clic souris pour sélectionner plusieurs salles";
 $vocab["entryid"]            = "Réservation N°";

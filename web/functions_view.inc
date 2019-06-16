@@ -326,7 +326,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
 
     // Repeat interval
     $value = $data['rep_interval'] . ' ' . get_rep_interval_units($data['rep_type'], $data['rep_interval']);
-    $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
+    $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
     
     // Repeat end date
     $tbody .= create_details_row(get_vocab("rep_end_date"),

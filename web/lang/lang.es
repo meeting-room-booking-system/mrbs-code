@@ -99,7 +99,6 @@ $vocab["ord_-5"]             = "quinto desde el final";
 $vocab["rep_end_date"]       = "Fecha Tope Repetición";
 $vocab["rep_rep_day"]        = "Día Repetición";
 $vocab["rep_freq"]           = "Frecuencia";
-$vocab["rep_num_weeks"]      = "Número de Semanas";
 $vocab["month_absolute"]     = "En el día";
 $vocab["month_relative"]     = "En el";
 $vocab["skip_conflicts"]     = "Omitir conflictos pasados";
