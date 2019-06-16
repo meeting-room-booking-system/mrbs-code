@@ -80,9 +80,7 @@ $vocab["rep_num_weeks"]      = "Número de setmanes";
 $vocab["ctrl_click"]         = "Control-Clic per seleccionar més d'un recurs";
 $vocab["entryid"]            = "ID d'entrada";
 $vocab["repeat_id"]          = "ID de repetició";
-$vocab["you_have_not_entered"] = "No ha entrat";
 $vocab["brief_description"]  = "Breu descriptció.";
-$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Descripció";

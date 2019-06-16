@@ -432,29 +432,10 @@ function validate(form)
   if (!("min" in testInput) || !(("step" in testInput)))
   {
     var repType = form.find('input:radio[name=rep_type]:checked').val();
-    var message;
-
-    switch (repType)
+    
+    if ((repType !== <?php echo REP_NONE ?>) && (form.find('#rep_interval').val() < 1))
     {
-      case <?php echo REP_WEEKLY ?>:
-        if (form.find('#rep_num_weeks').val() < <?php echo REP_NUM_WEEKS_MIN ?>)
-        {
-          message = "<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-weekly_value')) ?>";
-        }
-        break;
-      case <?php echo REP_MONTHLY ?>:
-        if (form.find('#rep_num_months').val() < <?php echo REP_NUM_MONTHS_MIN ?>)
-        {
-          message = "<?php echo escape_js(get_vocab('you_have_not_entered')) . '\n' . escape_js(get_vocab('useful_n-monthly_value')) ?>";
-        }
-        break;
-      default:
-        break;
-    }
-
-    if (message)
-    {
-      window.alert(message);
+      window.alert("<?php echo escape_js(get_vocab('invalid_rep_interval')) ?>");
       return false;
     }
   }

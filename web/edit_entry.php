@@ -829,62 +829,13 @@ function get_field_rep_day($disabled=false)
 }
 
 
-// Weekly repeat frequency
-function get_field_rep_num_weeks($disabled=false)
-{
-  global $rep_num_weeks;
-  
-  $field = new FieldInputNumber();
-  
-  $span = new ElementSpan();
-  $span->setAttribute('id', 'num_weeks')
-       ->setText(get_vocab('weeks'));
-  
-  $field->setLabel(get_vocab('rep_num_weeks'))
-        ->setControlAttributes(array('name'     => 'rep_num_weeks',
-                                     'min'      => REP_NUM_WEEKS_MIN,
-                                     'value'    => $rep_num_weeks,
-                                     'disabled' => $disabled))
-        ->addElement($span);
-  
-  return $field;
-}
-
-
-// Monthly repeat frequency
-function get_fieldset_rep_num_months($disabled=false)
-{
-  global $rep_num_months;
-
-  $fieldset = new ElementFieldset();
-
-  $field = new FieldInputNumber();
-
-  $span = new ElementSpan();
-  $span->setAttribute('id', 'num_months')
-       ->setText(get_vocab('months'));
-
-  $field->setLabel(get_vocab('rep_num_months'))
-    ->setControlAttributes(array('name'     => 'rep_num_months',
-                                 'min'      => REP_NUM_MONTHS_MIN,
-                                 'value'    => $rep_num_months,
-                                 'disabled' => $disabled))
-    ->addElement($span);
-
-  $fieldset->addElement($field);
-
-  return $fieldset;
-}
-
-
 function get_fieldset_rep_weekly_details($disabled=false)
 {
   $fieldset = new ElementFieldset();
   
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_weekly'));
-  $fieldset->addElement(get_field_rep_day($disabled))
-           ->addElement(get_field_rep_num_weeks($disabled));
+  $fieldset->addElement(get_field_rep_day($disabled));
   
   return $fieldset;
 }
@@ -1000,8 +951,7 @@ function get_fieldset_rep_monthly_details($disabled=false)
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_monthly'));
   $fieldset->addElement(get_fieldset_month_absolute($disabled))
-           ->addElement(get_fieldset_month_relative($disabled))
-           ->addElement(get_fieldset_rep_num_months($disabled));
+           ->addElement(get_fieldset_month_relative($disabled));
   
   return $fieldset;
 }
@@ -1021,6 +971,24 @@ function get_field_rep_end_date($disabled=false)
   return $field;
 }
 
+
+function get_field_rep_interval($rep_interval, $disabled=false)
+{
+  $field = new FieldInputNumber();
+
+  $span = new ElementSpan();
+  $span->setAttribute('id', 'interval_units')
+       ->setText(get_vocab('weeks'));
+
+  $field->setLabel(get_vocab('rep_interval'))
+        ->setControlAttributes(array('name'     => 'rep_interval',
+                                     'min'      => 1,
+                                     'value'    => $rep_interval,
+                                     'disabled' => $disabled))
+        ->addElement($span);
+
+  return $field;
+}
 
 function get_field_skip_conflicts($disabled=false)
 {
@@ -1044,7 +1012,7 @@ function get_field_skip_conflicts($disabled=false)
 function get_fieldset_repeat()
 {
   global $edit_type, $repeats_allowed;
-  global $rep_type;
+  global $rep_type, $rep_interval;
   
   // If repeats aren't allowed or this is not a series then disable
   // the repeat fields - they're for information only
@@ -1059,6 +1027,7 @@ function get_fieldset_repeat()
   $fieldset->setAttribute('id', 'rep_info');
   
   $fieldset->addElement(get_field_rep_type($rep_type, $disabled))
+           ->addElement(get_field_rep_interval($rep_interval, $disabled))
            ->addElement(get_field_rep_end_date($disabled))
            ->addElement(get_field_skip_conflicts($disabled));
   
@@ -1280,10 +1249,8 @@ if (isset($id))
   // default settings
   $rep_day = array();
   $rep_type = REP_NONE;
-  $rep_num_weeks = 1;
-  $rep_num_months = 1;
+  $rep_interval = 1;
 
-  
   foreach ($entry as $column => $value)
   {
     switch ($column)
@@ -1362,7 +1329,7 @@ if (isset($id))
 
   if(($entry_type == ENTRY_RPT_ORIGINAL) || ($entry_type == ENTRY_RPT_CHANGED))
   {
-    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_num_weeks, rep_num_months,
+    $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_interval,
                    month_absolute, month_relative
               FROM $tbl_repeat 
              WHERE id=?
@@ -1388,6 +1355,8 @@ if (isset($id))
     // If it's a repeating entry get the repeat details
     if ($rep_type != REP_NONE)
     {
+      $rep_interval = $row['rep_interval'];
+      
       // If we're editing the series we want the start_time and end_time to be the
       // start and of the first entry of the series, not the start of this entry
       if ($edit_type == "series")
@@ -1413,7 +1382,6 @@ if (isset($id))
               $rep_day[] = $i;
             }
           }
-          $rep_num_weeks = $row['rep_num_weeks'];
           break;
         case REP_MONTHLY:
           if (isset($row['month_absolute']))
@@ -1430,7 +1398,6 @@ if (isset($id))
           {
             trigger_error("Invalid monthly repeat", E_USER_WARNING);
           }
-          $rep_num_months = $row['rep_num_months'];
           break;
         default:
           break;
@@ -1545,8 +1512,7 @@ else
     $rep_end_year  = $year;
   }
   $rep_day       = array(date('w', $start_time));
-  $rep_num_weeks = 1;
-  $rep_num_months = 1;
+  $rep_interval = 1;
   $month_type = REP_MONTH_ABSOLUTE;
 }
 
@@ -1577,13 +1543,6 @@ if (empty( $room_id ) )
 
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
-
-
-// Remove "Undefined variable" notice
-if (!isset($rep_num_weeks))
-{
-  $rep_num_weeks = "";
-}
 
 $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeString($duration, $dur_units);
 

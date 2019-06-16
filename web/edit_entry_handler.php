@@ -105,7 +105,7 @@ $formvars = array('create_by'          => 'string',
                   'rep_type'           => 'int',
                   'rep_end_date'       => 'string',
                   'rep_day'            => 'array',   // array of bools
-                  'rep_num_weeks'      => 'int',
+                  'rep_interval'       => 'int',
                   'rep_num_months'     => 'int',
                   'month_type'         => 'int',
                   'month_absolute'     => 'int',
@@ -254,17 +254,11 @@ if (!$ajax)
     invalid_booking(get_vocab('must_set_description'));
   }
 
-  if (($rep_type == REP_WEEKLY) && ($rep_num_weeks < REP_NUM_WEEKS_MIN))
+  if (($rep_type != REP_NONE) && ($rep_interval < 1))
   {
-    invalid_booking(get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-weekly_value"));
-  }
-
-  if (($rep_type == REP_MONTHLY) && ($rep_num_months < REP_NUM_MONTHS_MIN))
-  {
-    invalid_booking(get_vocab('you_have_not_entered') . " " . get_vocab("useful_n-monthly_value"));
+    invalid_booking(get_vocab('invalid_rep_interval'));
   }
   
-
   if (count($is_mandatory_field))
   {
     foreach ($is_mandatory_field as $field => $value)
@@ -561,8 +555,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   
   $rep_details = array('rep_type'       => $rep_type,
                        'rep_opt'        => $rep_opt,
-                       'rep_num_weeks'  => $rep_num_weeks,
-                       'rep_num_months' => $rep_num_months);
+                       'rep_interval'   => $rep_interval);
 
   if (isset($month_type))
   {
@@ -697,8 +690,7 @@ foreach ($rooms as $room_id)
   $booking['end_time'] = $end_time;
   $booking['rep_type'] = $rep_type;
   $booking['rep_opt'] = $rep_opt;
-  $booking['rep_num_weeks'] = $rep_num_weeks;
-  $booking['rep_num_months'] = $rep_num_months;
+  $booking['rep_interval'] = $rep_interval;
   $booking['end_date'] = $rep_end_time;
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;

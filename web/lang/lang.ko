@@ -81,9 +81,7 @@ $vocab["rep_num_weeks"]      = "몇 주";
 $vocab["ctrl_click"]         = "2개 이상을 선택하기 위해서는 Control-Click을 사용하세요";
 $vocab["entryid"]            = "엔트리 ID ";
 $vocab["repeat_id"]          = "반복 ID "; 
-$vocab["you_have_not_entered"] = "You have not entered a";
 $vocab["brief_description"]  = "간략 설명";
-$vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 
 // Used in view_entry.php
 $vocab["description"]        = "설명";

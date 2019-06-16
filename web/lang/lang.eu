@@ -80,9 +80,7 @@ $vocab["rep_num_weeks"]      = "Aste kopurua";
 $vocab["ctrl_click"]         = "Elementu bat gehiago aukeratzeko Kontrol-klik egin";
 $vocab["entryid"]            = "IDa sartu";
 $vocab["repeat_id"]          = "IDa errepikatu"; 
-$vocab["you_have_not_entered"] = "Ez duzu sartu ";
 $vocab["brief_description"]  = "Deskribapen laburra.";
-$vocab["useful_n-weekly_value"] = "n astetan baliagarria.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Deskribapena";

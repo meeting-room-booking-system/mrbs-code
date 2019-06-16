@@ -108,9 +108,7 @@ $vocab["skip_conflicts"]     = "Salta conflitti";
 $vocab["ctrl_click"]         = "Usa il tasto Ctrl per selezionare più di una stanza";
 $vocab["entryid"]            = "ID Registrazione ";
 $vocab["repeat_id"]          = "ID ripetizione "; 
-$vocab["you_have_not_entered"] = "Non hai inserito";
 $vocab["brief_description"]  = "Breve descrizione.";
-$vocab["useful_n-weekly_value"] = "utile valore n-settimanale.";
 
 // Used in view_entry.php
 $vocab["status"]             = "Stato";

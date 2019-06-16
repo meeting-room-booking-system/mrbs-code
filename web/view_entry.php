@@ -329,7 +329,7 @@ if (isset($action) && ($action == "export"))
     if ($series)
     {
       // If it's a series we want the repeat information
-      $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_num_weeks, T.month_absolute, T.month_relative";
+      $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_interval, T.month_absolute, T.month_relative";
     }
     $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
     if ($series)

@@ -6,6 +6,52 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+function get_rep_interval_units($rep_type, $rep_interval)
+{
+  switch ($rep_type)
+  {
+    case REP_DAILY:
+      return ($rep_interval == 1) ? get_vocab('day') : get_vocab('days');
+      break;
+    case REP_WEEKLY:
+      return ($rep_interval == 1) ? get_vocab('week') : get_vocab('weeks');
+      break;
+    case REP_MONTHLY:
+      return ($rep_interval == 1) ? get_vocab('month') : get_vocab('months');
+      break;
+    case REP_YEARLY:
+      return ($rep_interval == 1) ? get_vocab('year_lc') : get_vocab('years');
+      break;
+    default:
+      return '';
+      break;
+  }
+}
+
+
+function get_rep_interval_units_mail($rep_type, $rep_interval)
+{
+  switch ($rep_type)
+  {
+    case REP_DAILY:
+      return ($rep_interval == 1) ? get_mail_vocab('day') : get_mail_vocab('days');
+      break;
+    case REP_WEEKLY:
+      return ($rep_interval == 1) ? get_mail_vocab('week') : get_mail_vocab('weeks');
+      break;
+    case REP_MONTHLY:
+      return ($rep_interval == 1) ? get_mail_vocab('month') : get_mail_vocab('months');
+      break;
+    case REP_YEARLY:
+      return ($rep_interval == 1) ? get_mail_vocab('year_lc') : get_mail_vocab('years');
+      break;
+    default:
+      return '';
+      break;
+  }
+}
+
+
 // Returns the maximum length, in characters, of a column, or NULL if the maximum
 // length is not known.   Should only be called after any database upgrades have been
 // performed as the results are stored in a static variable and so the maximum lengths

@@ -81,9 +81,7 @@ $vocab["rep_num_weeks"]      = "Gentag hver _ uger";
 $vocab["ctrl_click"]         = "Hold kontroltasten nede for at vælge mere end et rum";
 $vocab["entryid"]            = "Reservations ID ";
 $vocab["repeat_id"]          = "Serie ID "; 
-$vocab["you_have_not_entered"] = "Du har ikke indtastet et";
 $vocab["brief_description"]  = "Kort beskrivelse.";
-$vocab["useful_n-weekly_value"] = "nyttig n-ugentlig værdi.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Beskrivelse";
