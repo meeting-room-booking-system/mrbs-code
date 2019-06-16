@@ -75,14 +75,10 @@ $vocab["rep_type_3"]         = "Μηνιαία";
 $vocab["rep_type_4"]         = "Χρόνια";
 $vocab["rep_end_date"]       = "Ημερομηνία ολοκλήρωσης επανάληψης";
 $vocab["rep_rep_day"]        = "Ημέρα επανάληψης";
-$vocab["rep_freq"]           = "Συχνότητα";
-$vocab["rep_num_weeks"]      = "Αριθμός εβδομάδων";
 $vocab["ctrl_click"]         = "Χρησιμοποιήστε Control-Click για να επιλέξετε περισσότερες από μία αίθουσες";
 $vocab["entryid"]            = "Αναγνωριστικός αριθμός εγγραφής ";
 $vocab["repeat_id"]          = "Αναγνωριστικός αριθμός επανάληψης "; 
-$vocab["you_have_not_entered"] = "Δεν εισάγατε το (τα)";
 $vocab["brief_description"]  = "Σύντομη Περιγραφή.";
-$vocab["useful_n-weekly_value"] = "χρήσιμη n-εβδομαδιαία τιμή.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Περιγραφή";

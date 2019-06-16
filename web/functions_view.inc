@@ -301,10 +301,6 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     switch ($data['rep_type'])
     {
       case REP_WEEKLY:
-        // Repeat number of weeks
-        $value = $data['rep_num_weeks'] . ' ';
-        $value .= ($data['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks");
-        $tbody .= create_details_row(get_vocab("rep_num_weeks"), $value, $as_html);
         // Repeat days
         $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
         break;
@@ -332,12 +328,17 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
     }
 
+    // Repeat interval
+    $value = $data['rep_interval'] . ' ' . get_rep_interval_units($data['rep_type'], $data['rep_interval']);
+    $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
+    
     // Repeat end date
     $tbody .= create_details_row(get_vocab("rep_end_date"),
                                  utf8_strftime($strftime_format['date'],
                                  $data['end_date']),
                                  $as_html);
   }
+  
   $tbody .= ($as_html) ? "</tbody>\n" : "";
   
   return $tbody;

@@ -100,7 +100,7 @@ CREATE TABLE mrbs_repeat
   name           varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   type           char DEFAULT 'E' NOT NULL,
   description    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  rep_num_weeks  smallint NULL,
+  rep_interval   smallint DEFAULT 1 NOT NULL,
   month_absolute smallint DEFAULT NULL,
   month_relative varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   status         tinyint unsigned NOT NULL DEFAULT 0,
@@ -207,6 +207,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '60');
+  VALUES ( 'db_version', '62');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');

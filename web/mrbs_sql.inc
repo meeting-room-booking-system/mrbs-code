@@ -755,8 +755,8 @@ function mrbsCreateEntry($table, $data)
           $sql_params[] = (empty($data[$key])) ? "'0'" : $data[$key];
           break;
           
-        // special case - rep_num_weeks
-        case 'rep_num_weeks':
+        // special case - rep_interval
+        case 'rep_interval':
           if (!empty($data[$key]))
           {
             $sql_col[] = $key;
@@ -813,6 +813,7 @@ function mrbsCreateEntry($table, $data)
   {
     $col = db()->quote($col);
   }
+
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
 
   db()->command($sql, $sql_params);
@@ -900,7 +901,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *                  rep_type        What type of repeat is it
  *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one 
  *                                  repeat day must be set)
- *                  rep_num_weeks   The repeat frequency for weekly repeats
+ *                  rep_interval    The repeat interval
  *                  month_absolute  The repeat day of the month for monthly repeats
  * $n             Maximum number of entries to find
  *
@@ -976,7 +977,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
     switch($rep_details['rep_type'])
     {
       case REP_DAILY:
-        $day++;
+        $day = $day + $rep_details['rep_interval'];
         break;
       
       case REP_WEEKLY:
@@ -991,7 +992,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
           // if we're repeating every two weeks)
           if ($j == $start_day)
           {
-            $day += 7 * ($rep_details['rep_num_weeks'] - 1);
+            $day += 7 * ($rep_details['rep_interval'] - 1);
           }
         }
         while (($j != $cur_day) && !$rep_details['rep_opt'][$j]);
@@ -1000,7 +1001,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
       case REP_MONTHLY:
         do
         {
-          $month++;
+          $month = $month + $rep_details['rep_interval'];
           if (isset($rep_details['month_absolute']))
           {
             // Get the day of the month back to where it should be (in case we
@@ -1019,7 +1020,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
         // Get the day of the month back to where it should be (in case we
         // decremented it to make it a valid date last time round)
         $day = $start_dom;
-        $year++;
+        $year = $year + $rep_details['rep_interval'];
         trimToEndOfMonth($month, $day, $year);
         break;
 
@@ -1063,7 +1064,7 @@ function mrbsCreateRepeatingEntrys($data)
   $rep_details = array();
   foreach (array('rep_type',
                  'rep_opt',
-                 'rep_num_weeks',
+                 'rep_interval',
                  'month_absolute',
                  'month_relative') as $key)
   {
@@ -1464,7 +1465,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
     else
     {
-      $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, month_absolute, month_relative,
+      $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_interval, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=? LIMIT 1", array($row['repeat_id']));
       if (!$extra_row = $res->row_keyed(0))
@@ -1482,10 +1483,11 @@ function get_booking_info($id, $series, $silent=FALSE)
           fatal_error(get_vocab("invalid_series_id"));
         }
       }
+
       $row['rep_type']         = $extra_row['rep_type'];
       $row['end_date']         = $extra_row['end_date'];
       $row['rep_opt']          = $extra_row['rep_opt'];
-      $row['rep_num_weeks']    = $extra_row['rep_num_weeks'];
+      $row['rep_interval']     = $extra_row['rep_interval'];
       $row['month_absolute']   = $extra_row['month_absolute'];
       $row['month_relative']   = $extra_row['month_relative'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
@@ -1888,7 +1890,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
     $rep_details = array();
     foreach (array('rep_type',
                    'rep_opt',
-                   'rep_num_weeks',
+                   'rep_interval',
                    'month_absolute',
                    'month_relative') as $key)
     {

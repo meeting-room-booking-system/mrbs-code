@@ -288,9 +288,6 @@ define('REGEX_TEXT_POS', '\s*\S+.*');        // At least one non-whitespace char
 define('REGEX_TEXT_NEG', '/(^$)|(^\s+$)/');  // Cannot be blank or all whitespaces
 define('REGEX_HHMM', '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/');  // A time string in the form 'hh:mm'
 
-// Minimum useful value for rep_num_weeks
-define('REP_NUM_WEEKS_MIN',  1);
-
 
  /*************************************************
  * ENTRY TYPES - internal use, do not change
@@ -405,7 +402,7 @@ $standard_fields['repeat'] = array('id',
                                    'name',
                                    'type',
                                    'description',
-                                   'rep_num_weeks',
+                                   'rep_interval',
                                    'month_absolute',
                                    'month_relative',
                                    'status',

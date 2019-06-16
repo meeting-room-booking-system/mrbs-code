@@ -346,8 +346,8 @@ function get_rep_opt($byday_days)
 
 
 // Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
-// details.   Indexed by rep_type, rep_num_weeks, rep_opt, end_date
-// Returns FALSE on failure with error messahes being returned in the array $errors
+// details.   Indexed by rep_type, rep_interval, rep_opt, end_date
+// Returns FALSE on failure with error messages being returned in the array $errors
 function get_repeat_details($rrule, $start_time, &$errors)
 {
   global $RFC_5545_days;
@@ -355,7 +355,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
   // Set up the result array with safe defaults
   $result = array('rep_type' => REP_NONE,
                   'rep_opt' => '0000000',
-                  'rep_num_weeks' => 0,
+                  'rep_interval' => 1,
                   'end_date' => 0);
   $rules = array();
   $recur_rule_parts = explode(';', $rrule);
@@ -377,14 +377,6 @@ function get_repeat_details($rrule, $start_time, &$errors)
       break;
     case 'WEEKLY':
       $result['rep_type'] = REP_WEEKLY;
-      if (isset($rules['interval']) && ($rules['interval'] > 1))
-      {
-        $result['rep_num_weeks'] = $rules['interval'];
-      }
-      else
-      {
-        $result['rep_num_weeks'] = 1;
-      }
       if (isset($rules['BYDAY']))
       {
         $byday_days = explode(',', $rules['BYDAY']);
@@ -442,10 +434,13 @@ function get_repeat_details($rrule, $start_time, &$errors)
       break;
   }
   
-  if (isset($rules['interval']) && ($rules['interval'] > 1) && 
-      !in_array($rules['FREQ'], array('WEEKLY')))
+  if (isset($rules['interval']) && ($rules['interval'] > 1))
   {
-    $errors[] = get_vocab("unsupported_INTERVAL") . $rules['FREQ'];
+    $result['rep_interval'] = $rules['interval'];
+  }
+  else
+  {
+    $result['rep_interval'] = 1;
   }
   
   if (isset($rules['UNTIL']))
@@ -718,27 +713,20 @@ function create_rrule($data)
   global $RFC_5545_days;
 
   $rule = '';
-  if (!isset($data['rep_type']))
+  
+  if (!isset($data['rep_type']) || ($data['rep_type'] === REP_NONE))
   {
     return $rule;
   }
+  
   switch($data['rep_type'])
   {
-    case REP_NONE:
-      return $rule;
-      break;
-      
     case REP_DAILY:
       $rule .= "FREQ=DAILY";
       break;
       
     case REP_WEEKLY:
       $rule .= "FREQ=WEEKLY";
-      // Interval for WEEKLY (Interval defaults to 1)
-      if ($data['rep_num_weeks'] > 1)
-      {
-        $rule .= ";INTERVAL=" . $data['rep_num_weeks'];
-      }
       // Get the repeat days of the week
       $days_of_week = array();
       for ($i = 0; $i < 7; $i++)
@@ -775,6 +763,13 @@ function create_rrule($data)
       $rule .= "FREQ=YEARLY";
       break;
   }
+  
+  // The interval (if necessary)
+  if ($data['rep_interval'] > 1)
+  {
+    $rule .= ";INTERVAL=" . $data['rep_interval'];
+  }
+      
   // The UNTIL date-time "MUST be specified in UTC time"
   $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
 
@@ -1011,7 +1006,7 @@ function create_icalendar($method, $components)
 //                          has been sorted by repeat_id, ical_recur_id (both ascending).
 //                          As well as all the fields in the entry table, the rows will 
 //                          also contain the area name, the room name and the repeat
-//                          details (rep_type, end_date, rep_opt, rep_num_weeks)
+//                          details (rep_type, end_date, rep_opt, rep_interval)
 //    $export_end int       a Unix timestamp giving the end limit for the export
 function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_MAX)
 {
@@ -1092,7 +1087,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
         // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
         // have changed since the series was created.)
         $rep_details = array();
-        foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
+        foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
         {
           if (isset($start_row[$key]))
           {

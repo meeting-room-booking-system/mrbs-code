@@ -100,17 +100,13 @@ $vocab["ord_-4"]             = "quartultimo";
 $vocab["ord_-5"]             = "quintultimo";
 $vocab["rep_end_date"]       = "Ripeti fino al";
 $vocab["rep_rep_day"]        = "Ripeti Girno";
-$vocab["rep_freq"]           = "Frequenza";
-$vocab["rep_num_weeks"]      = "Numero di settimane";
 $vocab["month_absolute"]     = "Il giorno";
 $vocab["month_relative"]     = "Il giorno";
 $vocab["skip_conflicts"]     = "Salta conflitti";
 $vocab["ctrl_click"]         = "Usa il tasto Ctrl per selezionare più di una stanza";
 $vocab["entryid"]            = "ID Registrazione ";
 $vocab["repeat_id"]          = "ID ripetizione "; 
-$vocab["you_have_not_entered"] = "Non hai inserito";
 $vocab["brief_description"]  = "Breve descrizione.";
-$vocab["useful_n-weekly_value"] = "utile valore n-settimanale.";
 
 // Used in view_entry.php
 $vocab["status"]             = "Stato";
@@ -484,7 +480,6 @@ $vocab["invalid_RRULE"]               = "RRULE non valida: manca la parte FREQ";
 $vocab["more_than_one_BYDAY"]         = "MRBS non supporta più di un valore BYDAY quando FREQ=";
 $vocab["BYDAY_equals_5"]              = "MRBS non supporta un valore BYDAY di 5";
 $vocab["unsupported_FREQ"]            = "MRBS non supporta FREQ=";
-$vocab["unsupported_INTERVAL"]        = "MRBS non supporta INTERVAL>1 con FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT non ancora supportato da MRBS";
 $vocab["no_indefinite_repeats"]       = "Ripetizioni indefinite non ancora supportate da MRBS";
 $vocab["events_imported"]             = "eventi importati";

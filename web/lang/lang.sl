@@ -77,14 +77,10 @@ $vocab["rep_type_3"]         = "Mesečno";
 $vocab["rep_type_4"]         = "Letno";
 $vocab["rep_end_date"]       = "Datum konca ponavljanj";
 $vocab["rep_rep_day"]        = "Ponavljaj dni";
-$vocab["rep_freq"]           = "Frequenca";
-$vocab["rep_num_weeks"]      = "Število tednov ";
 $vocab["ctrl_click"]         = "Uporabite Ctrl+klik za izbiro več prostorov";
 $vocab["entryid"]            = "ID vnosa ";
 $vocab["repeat_id"]          = "ID ponavljanj"; 
-$vocab["you_have_not_entered"] = "Niste vnesli";
 $vocab["brief_description"]  = "kratek opis.";
-$vocab["useful_n-weekly_value"] = "prave vrednosti za n-tednov.";
 
 // Used in view_entry.php
 $vocab["description"]        = "Opis";

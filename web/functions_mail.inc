@@ -367,7 +367,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
   $result .= ($as_html) ? "</p>\n" : "\n\n";
   
   $rep_details = array();
-  foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
+  foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
   {
     if (isset($data[$key]))
     {
@@ -652,15 +652,6 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       
       if ($data['rep_type'] == REP_WEEKLY)
       {
-        // Repeat number of weeks
-        $new = $data['rep_num_weeks'] . ' ' .
-               (($data['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
-        $old = $mail_previous['rep_num_weeks'] . ' ' .
-               (($mail_previous['rep_num_weeks'] == 1) ? get_vocab("week") : get_vocab("weeks"));
-        $body .= create_body_table_row (get_mail_vocab("rep_num_weeks"),
-                                        $new,
-                                        $old,
-                                        $compare, $as_html);
         // Repeat days
         // Display day names according to language and preferred weekday start.
         $opt = get_rep_day_list($data['rep_opt']);
@@ -712,9 +703,18 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $new,
                                         $old,
                                         $compare, $as_html);
-      
       }
 
+      // Repeat interval
+      $new = $data['rep_interval'] . ' ' .
+             get_rep_interval_units_mail($data['rep_type'], $data['rep_interval']);
+      $old = $mail_previous['rep_interval'] . ' ' .
+             get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
+      $body .= create_body_table_row (get_mail_vocab("rep_interval"),
+                                      $new,
+                                      $old,
+                                      $compare, $as_html);
+                                        
       // Repeat end date
       $end_previous = ($mail_previous['rep_type'] == REP_NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
