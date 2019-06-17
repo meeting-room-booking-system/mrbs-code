@@ -489,68 +489,72 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   // modify or delete them.
   if (!$room_disabled)
   {
-    // Edit and Edit Series
-    echo "<div>\n";
-    if (!$series)
+    // Only show the Edit and Delete buttons if the user is allowed to use them
+    if (getWritable($create_by, $room))
     {
+      // Edit and Edit Series
       echo "<div>\n";
-      $params = array('action' => 'edit_entry.php',
-                      'value'  => get_vocab('editentry'),
-                      'inputs' => array('id' => $id,
-                                        'returl' => $returl)
-                     );
-      generate_button($params);
+      if (!$series)
+      {
+        echo "<div>\n";
+        $params = array('action' => 'edit_entry.php',
+          'value' => get_vocab('editentry'),
+          'inputs' => array('id' => $id,
+            'returl' => $returl)
+        );
+        generate_button($params);
+        echo "</div>\n";
+      }
+      if ((!empty($repeat_id) || $series) && $repeats_allowed)
+      {
+        echo "<div>\n";
+        $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
+          'value' => get_vocab('editseries'),
+          'inputs' => array('id' => $id,
+            'edit_type' => 'series',
+            'returl' => $returl)
+        );
+        generate_button($params);
+        echo "</div>\n";
+      }
       echo "</div>\n";
-    } 
-    if ((!empty($repeat_id) || $series) && $repeats_allowed)
-    {
+
+      // Delete and Delete Series
       echo "<div>\n";
-      $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
-                      'value'  => get_vocab('editseries'),
-                      'inputs' => array('id' => $id,
-                                        'edit_type' => 'series',
-                                        'returl' => $returl)
-                     );
-      generate_button($params);
+      if (!$series)
+      {
+        echo "<div>\n";
+        $params = array('action' => 'del_entry.php',
+          'value' => get_vocab('deleteentry'),
+          'inputs' => array('id' => $id,
+            'series' => 0,
+            'returl' => $returl)
+        );
+
+        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+
+        generate_button($params, $button_attributes);
+        echo "</div>\n";
+      }
+      if ((!empty($repeat_id) || $series) && $repeats_allowed)
+      {
+        echo "<div>\n";
+        $params = array('action' => "del_entry.php?day=$day&month=$month&year=$year",
+          'value' => get_vocab('deleteseries'),
+          'inputs' => array('id' => $id,
+            'series' => 1,
+            'returl' => $returl)
+        );
+
+        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+
+        generate_button($params, $button_attributes);
+        echo "</div>\n";
+      }
       echo "</div>\n";
     }
-    echo "</div>\n";
-    
-    // Delete and Delete Series
-    echo "<div>\n";
-    if (!$series)
-    {
-      echo "<div>\n";
-      $params = array('action' => 'del_entry.php',
-                      'value'  => get_vocab('deleteentry'),
-                      'inputs' => array('id' => $id,
-                                        'series' => 0,
-                                        'returl' => $returl)
-                     );
-                                        
-      $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
-                                       
-      generate_button($params, $button_attributes);
-      echo "</div>\n";
-    }
-    if ((!empty($repeat_id) || $series) && $repeats_allowed)
-    {
-      echo "<div>\n";
-      $params = array('action' => "del_entry.php?day=$day&month=$month&year=$year",
-                      'value'  => get_vocab('deleteseries'),
-                      'inputs' => array('id' => $id,
-                                        'series' => 1,
-                                        'returl' => $returl)
-                     );
-                     
-      $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
-                                       
-      generate_button($params, $button_attributes);
-      echo "</div>\n";
-    }
-    echo "</div>\n";
   }
-  
+
   // Copy and Copy Series
   echo "<div>\n";
   if (!$series)
