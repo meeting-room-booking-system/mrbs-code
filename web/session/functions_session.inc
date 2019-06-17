@@ -55,18 +55,20 @@ function print_login_form($action, $target_url, $returl, $error=null, $raw=false
   $field = new FieldInputText();
   $field->setLabel(get_vocab('user'))
         ->setLabelAttributes(array('title' => $placeholder))
-        ->setControlAttributes(array('id'          => 'username',
-                                     'name'        => 'username',
-                                     'placeholder' => $placeholder,
-                                     'required'    => true,
-                                     'autofocus'   => true));               
+        ->setControlAttributes(array('id'           => 'username',
+                                     'name'         => 'username',
+                                     'placeholder'  => $placeholder,
+                                     'required'     => true,
+                                     'autofocus'    => true,
+                                     'autocomplete' => 'username'));               
   $fieldset->addElement($field);
   
   // The password field
   $field = new FieldInputPassword();
   $field->setLabel(get_vocab('users.password'))
-        ->setControlAttributes(array('id'          => 'password',
-                                     'name'        => 'password'));               
+        ->setControlAttributes(array('id'           => 'password',
+                                     'name'         => 'password',
+                                     'autocomplete' => 'current-password'));               
   $fieldset->addElement($field);
   
   // The submit button
