@@ -483,7 +483,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     }
     else
     {
-      $filter = $object['config']['ldap_filter'];
+      $filter = ldap_escape_filter($object['config']['ldap_filter']);
       
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking '$filter'");
@@ -733,8 +733,21 @@ function authLdapIsAdmin($user)
   
   return false;
 }
-  
-  
+
+
+function ldap_escape_filter($value)
+{
+  if (function_exists('ldap_escape'))
+  {
+    return ldap_escape($value, null, LDAP_ESCAPE_FILTER);
+  }
+  else
+  {
+    return $value;
+  }
+}
+
+
 /* authLdapDebug($message)
  *
  * Output LDAP debugging, if the configuration variable
