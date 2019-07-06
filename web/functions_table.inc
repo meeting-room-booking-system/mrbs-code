@@ -304,12 +304,26 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
 }  // end function draw_cell
 
 
+function get_timeslot_text($s, $resolution)
+{
+  global $show_slot_endtime;
+
+  $result = hour_min($s);
+
+  if ($show_slot_endtime)
+  {
+    $result .= '-' . hour_min($s + $resolution);
+  }
+
+  return $result;
+}
+
 // Draw a time cell to be used in the first and last columns of the day and week views
 //    $s                 the number of seconds since the start of the day (nominal - not adjusted for DST)
 //    $url               the url to form the basis of the link in the time cell
 function time_cell_html($s, $url)
 {
-  global $enable_periods;
+  global $enable_periods, $resolution;
   
   $html = '';
   
@@ -326,7 +340,7 @@ function time_cell_html($s, $url)
   {
     $html .= "<a href=\"$url\" title=\""
              . get_vocab("highlight_line") . "\">"
-             . hour_min($s) . "</a>\n";
+             . htmlspecialchars(get_timeslot_text($s, $resolution)) . "</a>\n";
   }
   
   return $html;
@@ -541,7 +555,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       }
       else
       {
-        $header_inner .= hour_min($s);
+        $header_inner .= htmlspecialchars(get_timeslot_text($s, $resolution));
       }
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
@@ -834,7 +848,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
       }
       else
       {
-        $header_inner .= hour_min($s);
+        $header_inner .= htmlspecialchars(get_timeslot_text($s, $resolution));
       }
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
