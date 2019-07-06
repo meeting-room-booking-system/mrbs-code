@@ -352,6 +352,10 @@ $display_mincals = true;
 // start of the week to Monday
 $mincals_week_numbers = false;
 
+// To display the endtime in the slot description, eg '09:00-09:30' instead of '09:00', set
+// this to true.
+$show_slot_endtime = false;
+
 // To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
 // set to true;   the default/traditional version of MRBS has rooms (or days) along the top and
 // times along the side.    Transposing the table can be useful if you have a large number of
