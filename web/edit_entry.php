@@ -33,11 +33,13 @@ use MRBS\Form\FieldSelect;
 //
 // MySQL        PostgreSQL            Form input type
 // -----        ----------            ---------------
-// bigint       bigint                text
-// int          integer               text
-// mediumint                          text
+// bigint       bigint                number
+// int          integer               number
+// mediumint                          number
 // smallint     smallint              checkbox
 // tinyint                            checkbox
+// decimal      decimal               number
+// numeric      numeric               number
 // text         text                  textarea
 // tinytext                           textarea
 //              character varying     textarea
@@ -714,7 +716,8 @@ function get_field_custom($key, $disabled=false)
     $class = 'FieldTextarea';
   }
   // Otherwise check if it's an integer field
-  elseif (($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2))
+  elseif ((($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2)) ||
+          ($custom_field['nature'] == 'decimal'))
   {
     $class = 'FieldInputNumber';
   }
@@ -738,7 +741,15 @@ function get_field_custom($key, $disabled=false)
         ->setControlAttributes(array('name'     => VAR_PREFIX . $key,
                                      'disabled' => $disabled,
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
-  
+
+  if ($custom_field['nature'] == 'decimal')
+  {
+    list( , $decimal_places) = explode(',', $custom_field['length']);
+    $step = pow(10, -$decimal_places);
+    $step = number_format($step, $decimal_places);
+    $field->setControlAttribute('step', $step);
+  }
+
   if ($class == 'FieldTextarea')
   {
     if (isset($custom_fields[$key]))

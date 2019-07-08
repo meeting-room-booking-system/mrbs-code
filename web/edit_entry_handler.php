@@ -189,6 +189,9 @@ foreach($fields as $field)
         // Smallints and tinyints are considered to be booleans
         $f_type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
         break;
+      case 'decimal':
+        $f_type = 'decimal';
+        break;
       // We can only really deal with the types above at the moment
       default:
         $f_type = 'string';
@@ -211,7 +214,7 @@ foreach($fields as $field)
     }
     
     // Trim any strings and truncate them to the maximum field length
-    if (is_string($custom_fields[$field['name']]))
+    if (is_string($custom_fields[$field['name']]) && ($field['nature'] != 'decimal'))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
       $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);

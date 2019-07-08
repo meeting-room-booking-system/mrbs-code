@@ -1295,6 +1295,10 @@ div#div_custom_html {
   width: 4em;
 }
 
+.standard input[type="number"][step="0.01"] {
+  width: 6em;
+}
+
 .standard input[type="radio"], .standard input[type="checkbox"] {
   vertical-align: middle;
   margin: -0.17em 0.4em 0 0;
