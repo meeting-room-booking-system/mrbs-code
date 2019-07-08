@@ -227,10 +227,12 @@ class DB_mysql extends DB
     // Map MySQL types on to a set of generic types
     $nature_map = array('bigint'    => 'integer',
                         'char'      => 'character',
+                        'decimal'   => 'decimal',
                         'double'    => 'real',
                         'float'     => 'real',
                         'int'       => 'integer',
                         'mediumint' => 'integer',
+                        'numeric'   => 'decimal',
                         'smallint'  => 'integer',
                         'text'      => 'character',
                         'tinyint'   => 'integer',
@@ -261,10 +263,10 @@ class DB_mysql extends DB
         // if it's one of the ints, then look up the length in bytes
         $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
       }
-      elseif ($nature == 'character')
+      elseif (($nature == 'character') || ($nature == 'decimal'))
       {
-        // if it's a character type then use the length that was in parentheses
-        // eg if it was a varchar(25), we want the 25
+        // if it's a character or decimal type then use the length that was in parentheses
+        // eg if it was a varchar(25), we want the 25 and if a decimal(6,2) we want the 6,2
         if (isset($parts[1]))
         {
           $length = preg_replace('/\)/', '', $parts[1]);  // strip off the closing ')'

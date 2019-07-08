@@ -73,6 +73,16 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
     {
       $value = intval(unslashes($value));
     }
+    elseif ($var_type == 'decimal')
+    {
+      $value = unslashes($value);
+      // This isn't a very good sanitisation as it will let through thousands separators and
+      // also multiple decimal points.  It needs to be improved, but care needs to be taken
+      // over, for example, whether a comma should be allowed for a decimalk point.  So for
+      // the moment it errs on the side of letting through too much.
+      $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
+                  FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+    }
     else if ($var_type == 'string')
     {
       $value = unslashes($value);

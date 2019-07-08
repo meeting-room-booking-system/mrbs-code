@@ -195,8 +195,10 @@ class DB_pgsql extends DB
                         'bytea'             => 'binary',
                         'character'         => 'character',
                         'character varying' => 'character',
+                        'decimal'           => 'decimal',
                         'double precision'  => 'real',
                         'integer'           => 'integer',
+                        'numeric'           => 'decimal',
                         'real'              => 'real',
                         'smallint'          => 'integer',
                         'text'              => 'character');
@@ -208,7 +210,7 @@ class DB_pgsql extends DB
     $sql_params = array();
  
     // $table_name and $table_schema should be trusted but escape them anyway for good measure
-    $sql = "SELECT column_name, data_type, numeric_precision, character_maximum_length,
+    $sql = "SELECT column_name, data_type, numeric_precision, numeric_scale, character_maximum_length,
                    character_octet_length, is_nullable
             FROM information_schema.columns
             WHERE table_name = ?";
@@ -231,7 +233,14 @@ class DB_pgsql extends DB
       // Get a length value;  one of these values should be set
       if (isset($row['numeric_precision']))
       {
-        $length = (int) floor($row['numeric_precision'] / 8);  // precision is in bits
+        if ($nature == 'decimal')
+        {
+          $length = $row['numeric_precision'] . ',' . $row['numeric_scale'];
+        }
+        else
+        {
+          $length = (int) floor($row['numeric_precision'] / 8);  // precision is in bits
+        }
       }
       elseif (isset($row['character_maximum_length']))
       {
