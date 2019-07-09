@@ -65,9 +65,9 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   {
     $value = (array) $value;
   }
-  
+
   // Clean up the variable
-  if ($value != NULL)
+  if ($value !== null)
   {
     if ($var_type == 'int')
     {
@@ -82,12 +82,16 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
       // the moment it errs on the side of letting through too much.
       $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
                   FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+      if ($value === '')
+      {
+        $value = null;
+      }
     }
-    else if ($var_type == 'string')
+    elseif ($var_type == 'string')
     {
       $value = unslashes($value);
     }
-    else if ($var_type == 'array')
+    elseif ($var_type == 'array')
     {
       foreach ($value as $arrkey => $arrvalue)
       {
