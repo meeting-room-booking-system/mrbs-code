@@ -586,6 +586,7 @@ table.dwm_main {
   float: left;
   clear: both; 
   width: 100%;
+  height: 100%;
   margin: 1em 0;
   border-spacing: 0;
   border-collapse: separate;
