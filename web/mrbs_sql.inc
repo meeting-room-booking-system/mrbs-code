@@ -1682,19 +1682,19 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
   
   $sql = "SELECT R.*
             FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=?";
+           WHERE R.area_id=?
+           AND R.area_id = A.id";
 
   if (!($include_disabled))
   {
-    $sql .= " AND R.area_id = A.id" .
-            " AND R.disabled = 0" .
+    $sql .= " AND R.disabled = 0" .
             " AND A.disabled = 0";
   }
 
   $sql .= " ORDER BY R.sort_key";
 
   $res = db()->query($sql, array($area));
-
+  
   $result = array();
 
   for ($i=0; $row = $res->row_keyed($i); $i++)

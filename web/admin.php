@@ -340,9 +340,9 @@ if (is_admin() || !empty($enabled_areas))
   echo "<div id=\"room_form\">\n";
   if (isset($area))
   {
-    $res = db()->query("SELECT * FROM $tbl_room WHERE area_id=? ORDER BY sort_key", array($area));
+    $rooms = get_rooms($area, true);
 
-    if ($res->count() == 0)
+    if (count($rooms) == 0)
     {
       echo "<p>" . get_vocab("norooms") . "</p>\n";
     }
@@ -351,15 +351,12 @@ if (is_admin() || !empty($enabled_areas))
        // Get the information about the fields in the room table
       $fields = db()->field_info($tbl_room);
     
-      // Build an array with the room info and also see if there are going
-      // to be any rooms to display (in other words rooms if you are not an
-      // admin whether any rooms are enabled)
-      $rooms = array();
+      // See if there are going to be any rooms to display (in other words rooms if
+      // you are not an admin whether any rooms are enabled)
       $n_displayable_rooms = 0;
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+      foreach ($rooms as $r)
       {
-        $rooms[] = $row;
-        if (is_admin() || !$row['disabled'])
+        if (is_admin() || !$r['disabled'])
         {
           $n_displayable_rooms++;
         }
