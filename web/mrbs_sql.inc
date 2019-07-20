@@ -1680,14 +1680,14 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
 {
   global $tbl_room, $tbl_area;
   
-  $sql = "SELECT R.room_name, R.capacity, R.id, R.description
+  $sql = "SELECT R.*
             FROM $tbl_room R, $tbl_area A
-           WHERE R.area_id=?
-             AND R.area_id = A.id";
+           WHERE R.area_id=?";
 
   if (!($include_disabled))
   {
-    $sql .= " AND R.disabled = 0" .
+    $sql .= " AND R.area_id = A.id" .
+            " AND R.disabled = 0" .
             " AND A.disabled = 0";
   }
 
