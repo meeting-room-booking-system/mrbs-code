@@ -269,6 +269,13 @@ $sql_pred .= ") AND (E.end_time > ?)";
 $sql_params[] = $search_start_time;
 $sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
+// We only want the bookings for rooms that are visible
+$invisible_room_ids = get_invisible_room_ids();
+if (count($invisible_room_ids) > 0)
+{
+  $sql_pred .= " AND (E.room_id NOT IN (" . implode(',', $invisible_room_ids) . "))";
+}
+
 
 // If we're not an admin (they are allowed to see everything), then we need
 // to make sure we respect the privacy settings.  (We rely on the privacy fields

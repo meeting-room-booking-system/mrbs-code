@@ -1709,6 +1709,29 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
 }
 
 
+// Gets the ids of all the invisible rooms in the system
+function get_invisible_room_ids()
+{
+  global $tbl_room;
+
+  $sql = "SELECT id FROM $tbl_room";
+
+  $res = db()->query($sql);
+
+  $result = array();
+
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    if (!is_visible($row['id']))
+    {
+      $result[] = $row['id'];
+    }
+  }
+
+  return $result;
+}
+
+
 // Gets a two-dimensional array of period names indexed by area id.
 function get_period_names()
 {
