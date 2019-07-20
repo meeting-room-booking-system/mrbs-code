@@ -1671,9 +1671,12 @@ function get_room_details($room_id)
 }
 
 
-// If $all=TRUE then all rooms are returned, otherwise just the ones that
-// are not disabled
-function get_rooms($area, $all=FALSE)
+// Gets the rooms in an area
+// If $include_disabled is TRUE then all rooms are returned, whether or not they are disabled,
+// otherwise just the ones that are not disabled.
+// If $include_invisible is TRUE then all rooms are returned, whether or not they are visible,
+// otherwise just the ones that are visible to the current user.
+function get_rooms($area, $include_disabled=false, $include_invisible=false)
 {
   global $tbl_room, $tbl_area;
   
@@ -1681,16 +1684,28 @@ function get_rooms($area, $all=FALSE)
             FROM $tbl_room R, $tbl_area A
            WHERE R.area_id=?
              AND R.area_id = A.id";
-  if (empty($all))
+
+  if (!($include_disabled))
   {
     $sql .= " AND R.disabled = 0" .
             " AND A.disabled = 0";
   }
+
   $sql .= " ORDER BY R.sort_key";
 
   $res = db()->query($sql, array($area));
-  
-  return $res->all_rows_keyed();
+
+  $result = array();
+
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    if ($include_invisible || is_visible($row['id']))
+    {
+      $result[] = $row;
+    }
+  }
+
+  return $result;
 }
 
 

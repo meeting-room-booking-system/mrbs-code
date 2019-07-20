@@ -578,11 +578,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     
     foreach($rooms as $room)
     {
-      if (!is_visible($room['id']))
-      {
-        continue;
-      }
-
       $vars = array('view' => 'week',
         'year' => $year,
         'month' => $month,
@@ -628,11 +623,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     // with times along the top and rooms down the side
     foreach ($rooms as $room)
     {
-      if (!is_visible($room['id']))
-      {
-        continue;
-      }
-
       $tbody .= "<tr>\n";
       
       $vars = array('view'  => 'week',
@@ -718,11 +708,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       // Loop through the list of rooms we have for this area
       foreach ($rooms as $room)
       {
-        if (!is_visible($room['id']))
-        {
-          continue;
-        }
-
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
         
