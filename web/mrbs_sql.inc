@@ -1419,7 +1419,10 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  if ($res->count() < 1)
+  $row = $res->row_keyed(0);
+  unset($res);
+
+  if (!is_array($row) || (!is_visible($row['room_id'])))
   {
     // It's quite possible that the id will have disappeared, eg if somebody
     // else has deleted or edited the entry, or if the back button is pressed
@@ -1434,8 +1437,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  $row = $res->row_keyed(0);
-  unset($res);
+
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
@@ -1496,7 +1498,7 @@ function get_booking_info($id, $series, $silent=FALSE)
       unset($res);
     }
   }
-  
+
   return $row;
 }
 
