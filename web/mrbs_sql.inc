@@ -1648,10 +1648,15 @@ function get_room_names($area_id, $all=FALSE)
 
 
 // Get all the room details for $room_id.
-// Returns FALSE on error, NULL if $room_id does not exist.
+// Returns FALSE on error, NULL if $room_id does not exist or is invisible.
 function get_room_details($room_id)
 {
   global $tbl_room;
+
+  if (!is_visible($room_id))
+  {
+    return null;
+  }
   
   $sql = "SELECT *
             FROM $tbl_room
@@ -1662,7 +1667,7 @@ function get_room_details($room_id)
   
   if ($res->count() == 0)
   {
-    return NULL;
+    return null;
   }
   
   $result = $res->row_keyed(0);
@@ -1694,7 +1699,7 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
   $sql .= " ORDER BY R.sort_key";
 
   $res = db()->query($sql, array($area));
-  
+
   $result = array();
 
   for ($i=0; $row = $res->row_keyed($i); $i++)
