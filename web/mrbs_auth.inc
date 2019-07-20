@@ -221,9 +221,14 @@ function getWritable($creator, $rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  $user = getUserName();
+  // You can't make bookings in rooms which are invisible
+  if (!is_visible($rooms))
+  {
+    return false;
+  }
 
   // Always allowed to modify your own stuff
+  $user = getUserName();
   if (strcasecmp($creator, $user) === 0)
   {
     return true;
