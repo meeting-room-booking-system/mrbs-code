@@ -1581,8 +1581,8 @@ $res = db()->query($sql);
 
 for ($i = 0; ($row = $res->row_keyed($i)); $i++)
 {
-  // Only use rooms for which the user has write access
-  if (getWritable($create_by, $row['id']))
+  // Only use rooms which are visible and for which the user has write access
+  if (getWritable($create_by, $row['id']) && is_visible($row['id']))
   {
     $rooms[$row['area_id']][$row['id']] = $row['room_name'];
   }
