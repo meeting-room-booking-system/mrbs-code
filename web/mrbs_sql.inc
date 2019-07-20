@@ -1637,7 +1637,10 @@ function get_room_names($area_id, $all=FALSE)
   
   for ($i=0; $row = $res->row_keyed($i); $i++)
   {
-    $rooms[$row['id']] = $row['room_name'];
+    if (is_visible($row['id']))
+    {
+      $rooms[$row['id']] = $row['room_name'];
+    }
   }
   
   return $rooms;

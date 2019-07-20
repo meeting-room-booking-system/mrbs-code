@@ -478,7 +478,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   global $enable_periods, $periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
-  
+
   $rooms = get_rooms($area_id);
   $n_rooms = count($rooms);
 
@@ -578,19 +578,24 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     
     foreach($rooms as $room)
     {
-      $vars = array('view'  => 'week',
-                    'year'  => $year,
-                    'month' => $month,
-                    'day'   => $day,
-                    'area'  => $area_id,
-                    'room'  => $room['id']);
-                    
-      $query = http_build_query($vars, '', '&'); 
-      // Put the room_id in a data attribute so that JavaScript can pick it up        
+      if (!is_visible($room['id']))
+      {
+        continue;
+      }
+
+      $vars = array('view' => 'week',
+        'year' => $year,
+        'month' => $month,
+        'day' => $day,
+        'area' => $area_id,
+        'room' => $room['id']);
+
+      $query = http_build_query($vars, '', '&');
+      // Put the room_id in a data attribute so that JavaScript can pick it up
       $header_inner .= '<th data-room="' . $room['id'] . '">' .
-                       '<a href="index.php?' . htmlspecialchars($query) . '" ' .
-                       'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
-                       htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
+        '<a href="index.php?' . htmlspecialchars($query) . '" ' .
+        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
+        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
     }
   
     // next line to display times on right side
@@ -623,6 +628,11 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     // with times along the top and rooms down the side
     foreach ($rooms as $room)
     {
+      if (!is_visible($room['id']))
+      {
+        continue;
+      }
+
       $tbody .= "<tr>\n";
       
       $vars = array('view'  => 'week',
@@ -708,6 +718,11 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       // Loop through the list of rooms we have for this area
       foreach ($rooms as $room)
       {
+        if (!is_visible($room['id']))
+        {
+          continue;
+        }
+
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($view, $area_id, $room['id'], $month, $day, $year, $s);
         
@@ -745,7 +760,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
   
-  if (is_null($room_name))
+  if (is_null($room_name) || (!is_visible($room_id)))
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
@@ -1183,9 +1198,9 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   global $periods, $enable_periods, $morningstarts, $morningstarts_minutes;
   global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
-  
+
   // Check that we've got a valid, enabled room
-  if (is_null(get_room_name($room)))
+  if (is_null(get_room_name($room)) || !is_visible($room))
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
