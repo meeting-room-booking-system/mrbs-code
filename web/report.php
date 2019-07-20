@@ -61,10 +61,21 @@ function get_field_roommatch($data)
   global $tbl_room;
   
   $field = new FieldInputDatalist();
-  
+
   // (We need DISTINCT because it's possible to have two rooms of the same name
   // in different areas)
-  $options = db()->query_array("SELECT DISTINCT room_name FROM $tbl_room ORDER BY room_name");
+  $sql = "SELECT DISTINCT room_name FROM $tbl_room";
+
+  // Don't show the invisible rooms
+  $invisible_room_ids = get_invisible_room_ids();
+  if (count($invisible_room_ids) > 0)
+  {
+    $sql .= " WHERE id NOT IN (" . implode(',', $invisible_room_ids) . ")";
+  }
+
+  $sql .=  " ORDER BY room_name";
+
+  $options = db()->query_array($sql);
   
   $field->setAttribute('id', 'div_roommatch')
         ->setLabel(get_vocab('match_room'))
