@@ -267,9 +267,14 @@ function getWritable($creator, $rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  $user = session()->getUsername();
+  // You can't make bookings in rooms which are invisible
+  if (!is_visible($rooms))
+  {
+    return false;
+  }
 
   // Always allowed to modify your own stuff
+  $user = session()->getUsername();
   if (strcasecmp($creator, $user) === 0)
   {
     return true;
@@ -389,4 +394,12 @@ function is_user_admin()
   $current_user = session()->getCurrentUser();
 
   return (isset($current_user) && ($current_user->level >= $min_user_editing_level));
+}
+
+
+// Checks whether a room is visible to the current user
+// Doesn't do anything at the moment, but allows for customisation or future development
+function is_visible($room)
+{
+  return true;
 }

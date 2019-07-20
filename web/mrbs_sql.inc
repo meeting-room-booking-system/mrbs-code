@@ -1419,7 +1419,10 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  if ($res->count() < 1)
+  $row = $res->row_keyed(0);
+  unset($res);
+
+  if (!is_array($row) || (!is_visible($row['room_id'])))
   {
     // It's quite possible that the id will have disappeared, eg if somebody
     // else has deleted or edited the entry, or if the back button is pressed
@@ -1434,8 +1437,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  $row = $res->row_keyed(0);
-  unset($res);
+
   
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
@@ -1496,7 +1498,7 @@ function get_booking_info($id, $series, $silent=FALSE)
       unset($res);
     }
   }
-  
+
   return $row;
 }
 
@@ -1637,7 +1639,10 @@ function get_room_names($area_id, $all=FALSE)
   
   for ($i=0; $row = $res->row_keyed($i); $i++)
   {
-    $rooms[$row['id']] = $row['room_name'];
+    if (is_visible($row['id']))
+    {
+      $rooms[$row['id']] = $row['room_name'];
+    }
   }
   
   return $rooms;
@@ -1645,10 +1650,15 @@ function get_room_names($area_id, $all=FALSE)
 
 
 // Get all the room details for $room_id.
-// Returns FALSE on error, NULL if $room_id does not exist.
+// Returns FALSE on error, NULL if $room_id does not exist or is invisible.
 function get_room_details($room_id)
 {
   global $tbl_room;
+
+  if (!is_visible($room_id))
+  {
+    return null;
+  }
   
   $sql = "SELECT *
             FROM $tbl_room
@@ -1659,7 +1669,7 @@ function get_room_details($room_id)
   
   if ($res->count() == 0)
   {
-    return NULL;
+    return null;
   }
   
   $result = $res->row_keyed(0);
@@ -1668,26 +1678,64 @@ function get_room_details($room_id)
 }
 
 
-// If $all=TRUE then all rooms are returned, otherwise just the ones that
-// are not disabled
-function get_rooms($area, $all=FALSE)
+// Gets the rooms in an area
+// If $include_disabled is TRUE then all rooms are returned, whether or not they are disabled,
+// otherwise just the ones that are not disabled.
+// If $include_invisible is TRUE then all rooms are returned, whether or not they are visible,
+// otherwise just the ones that are visible to the current user.
+function get_rooms($area, $include_disabled=false, $include_invisible=false)
 {
   global $tbl_room, $tbl_area;
   
-  $sql = "SELECT R.room_name, R.capacity, R.id, R.description
+  $sql = "SELECT R.*
             FROM $tbl_room R, $tbl_area A
            WHERE R.area_id=?
-             AND R.area_id = A.id";
-  if (empty($all))
+           AND R.area_id = A.id";
+
+  if (!($include_disabled))
   {
     $sql .= " AND R.disabled = 0" .
             " AND A.disabled = 0";
   }
+
   $sql .= " ORDER BY R.sort_key";
 
   $res = db()->query($sql, array($area));
-  
-  return $res->all_rows_keyed();
+
+  $result = array();
+
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    if ($include_invisible || is_visible($row['id']))
+    {
+      $result[] = $row;
+    }
+  }
+
+  return $result;
+}
+
+
+// Gets the ids of all the invisible rooms in the system
+function get_invisible_room_ids()
+{
+  global $tbl_room;
+
+  $sql = "SELECT id FROM $tbl_room";
+
+  $res = db()->query($sql);
+
+  $result = array();
+
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    if (!is_visible($row['id']))
+    {
+      $result[] = $row['id'];
+    }
+  }
+
+  return $result;
 }
 
 

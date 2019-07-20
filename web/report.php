@@ -1557,6 +1557,13 @@ if ($phase == 2)
     $sql .= get_match_condition("E.$key", $$var, $sql_params);
   }
 
+  // We only want the bookings for rooms that are visible
+  $invisible_room_ids = get_invisible_room_ids();
+  if (count($invisible_room_ids) > 0)
+  {
+    $sql .= " AND (E.room_id NOT IN (" . implode(',', $invisible_room_ids) . "))";
+  }
+
   // If we're not an admin (they are allowed to see everything), then we need
   // to make sure we respect the privacy settings.  (We rely on the privacy fields
   // in the area table being not NULL.   If they are by some chance NULL, then no
