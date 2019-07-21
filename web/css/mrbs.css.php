@@ -440,7 +440,7 @@ nav.view div.container {
 
 nav.view a, nav.arrow a {
   background: linear-gradient(<?php echo implode(', ', $button_color_stops)?>);
-  margin-right: 1px;
+  border-right: thin solid <?php echo $body_background_color ?>;
   cursor: pointer;
   line-height: 1.8em;
   font-weight: normal;
@@ -453,7 +453,7 @@ nav.view a:first-child, nav.arrow a:first-child {
 }
 
 nav.view a:last-child, nav.arrow a:last-child {
-  margin-right: 0;
+  border-right: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
