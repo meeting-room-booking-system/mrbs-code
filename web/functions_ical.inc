@@ -51,6 +51,7 @@ function download($url)
     curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $transfer_timeout);
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
     $contents = curl_exec($ch);
     if ($contents === FALSE)
     {
