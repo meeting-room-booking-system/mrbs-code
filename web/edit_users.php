@@ -527,9 +527,10 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
     $name = 'back_button';
     $value = get_vocab('back');
   }
-  $button->setAttributes(array('name'     => $name,
-                               'value'    => $value,
-                               'disabled' => $disabled));
+  $button->setAttributes(array('name'           => $name,
+                               'value'          => $value,
+                               'disabled'       => $disabled,
+                               'formnovalidate' => true));
   
   $field->setLabelAttribute('class', 'no_suffix')
         ->addLabelElement($button)
