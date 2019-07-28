@@ -991,9 +991,9 @@ function get_default_area()
   // an upgrade process before the disabled columns existed.
   $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
 
-  // If the $default_room is set and exists and enabled, then return the
-  // corresponding area
-  if (isset($default_room))
+  // If the $default_room is set and exists and is enabled and is visible to
+  // the current user, then return the corresponding area
+  if (isset($default_room) && is_visible($default_room))
   {
     $sql = "SELECT area_id
               FROM $tbl_room R, $tbl_area A
@@ -1014,23 +1014,35 @@ function get_default_area()
     }
   }
   
-  // Otherwise return the first enabled area in the database
-  $sql = "SELECT id FROM $tbl_area";
+  // Otherwise return the first enabled area in the database that has an
+  // enabled and visible room
+  $sql = "SELECT R.id, R.area_id
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id = A.id";
 
   if ($disabled_field_exists)
   {
-    $sql .= " WHERE disabled=0";
+    $sql .= " AND R.disabled = 0 AND A.disabled = 0";
   }
 
-  $sql .= " ORDER BY sort_key LIMIT 1";
-  $area = db()->query1($sql);
+  $sql .= " LIMIT 1";
+  $res = db()->query($sql);
 
-  return ((!isset($area) || ($area < 0)) ? 0 : $area);
+  for ($i=0; $row = $res->row_keyed($i); $i++)
+  {
+    if (is_visible($row['id']))
+    {
+      return $row['area_id'];
+    }
+  }
+
+  return 0;
 }
 
 // Return a default room given a valid area; used if no room is already known.
-// If the area contains $default_room, then it returns $default_room,
-// otherwise the first room in sort_key order in the database.
+// If the area contains $default_room and $default_room is visible to the current
+// user, then it returns $default_room. Otherwise it returns the first visible room
+// in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
@@ -1054,25 +1066,16 @@ function get_default_room($area)
     $sql_params = array(':id' => $default_room, ':area_id' => $area);
     $room = db()->query1($sql, $sql_params);
 
-    if ($room >= 0)
+    if (($room >= 0) && is_visible($room))
     {
       return $room;
     }
   }
   
-  // Otherwise just return the first room in the area
-  $sql = "SELECT id FROM $tbl_room WHERE area_id=:area_id";
-
-  if ($disabled_field_exists)
-  {
-    $sql .= " AND disabled=0";
-  }
-
-  $sql .= " ORDER BY sort_key LIMIT 1";
-  $sql_params = array(':area_id' => $area);
-  $room = db()->query1($sql, $sql_params);
+  // Otherwise just return the first visible room in the area
+  $rooms = get_rooms($area, !$disabled_field_exists);
   
-  return ($room < 0 ? 0 : $room);
+  return (count($rooms) > 0) ? $rooms[0]['id'] : 0;
 }
 
 // Return an area id for a given room
