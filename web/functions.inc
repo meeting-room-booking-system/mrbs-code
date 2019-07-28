@@ -1045,29 +1045,25 @@ function get_default_area()
 function get_default_room($area)
 {
   global $tbl_room, $default_room;
+
+  // It's possible that this function is being called during
+  // an upgrade process before the disabled columns existed.
+  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    try
+    $sql = "SELECT id FROM $tbl_room WHERE id=:id AND area_id=:area_id";
+
+    if ($disabled_field_exists)
     {
-      // It's possible that this function is being called during
-      // an upgrade process before the disabled columns existed,
-      // so if it fails try again without the disabled columns.
-      $room = db()->query1("SELECT id
-                              FROM $tbl_room
-                             WHERE id=$default_room
-                               AND area_id=?
-                               AND disabled=0
-                             LIMIT 1", array($area));
+      $sql .= " AND disabled=0";
     }
-    catch (DBException $e)
-    {
-      $room = db()->query1("SELECT id
-                              FROM $tbl_room
-                             WHERE id=$default_room
-                               AND area_id=?
-                             LIMIT 1", array($area));
-    }
+
+    $sql .= " LIMIT 1";
+    $sql_params = array(':id' => $default_room, ':area_id' => $area);
+    $room = db()->query1($sql, $sql_params);
+
     if ($room >= 0)
     {
       return $room;
@@ -1075,23 +1071,16 @@ function get_default_room($area)
   }
   
   // Otherwise just return the first room in the area
-  try
+  $sql = "SELECT id FROM $tbl_room WHERE area_id=:area_id";
+
+  if ($disabled_field_exists)
   {
-    $room = db()->query1("SELECT id
-                            FROM $tbl_room
-                           WHERE area_id=?
-                             AND disabled=0
-                        ORDER BY sort_key
-                           LIMIT 1", array($area));
+    $sql .= " AND disabled=0";
   }
-  catch (DBException $e)
-  {
-    // See comment above.  Cut the query down to the most basic.
-    $room = db()->query1("SELECT id
-                            FROM $tbl_room
-                           WHERE area_id=?
-                           LIMIT 1", array($area));
-  }
+
+  $sql .= " ORDER BY sort_key LIMIT 1";
+  $sql_params = array(':area_id' => $area);
+  $room = db()->query1($sql, $sql_params);
   
   return ($room < 0 ? 0 : $room);
 }
