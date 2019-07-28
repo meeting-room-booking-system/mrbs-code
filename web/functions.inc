@@ -993,114 +993,96 @@ function unslashes($s)
 function get_default_area()
 {
   global $tbl_area, $tbl_room, $default_room;
-  
-  // If the $default_room is set and exists and enabled, then return the
-  // corresponding area
-  if (isset($default_room))
+
+  // It's possible that this function is being called during
+  // an upgrade process before the disabled columns existed.
+  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+
+  // If the $default_room is set and exists and is enabled and is visible to
+  // the current user, then return the corresponding area
+  if (isset($default_room) && is_visible($default_room))
   {
-    try 
+    $sql = "SELECT area_id
+              FROM $tbl_room R, $tbl_area A
+             WHERE R.id=:id
+               AND R.area_id = A.id";
+
+    if ($disabled_field_exists)
     {
-      $area = db()->query1("SELECT area_id
-                              FROM $tbl_room R, $tbl_area A
-                             WHERE R.id=?
-                               AND R.area_id = A.id
-                               AND R.disabled = 0
-                               AND A.disabled = 0
-                             LIMIT 1", array($default_room));
+      $sql .= " AND R.disabled = 0 AND A.disabled = 0";
     }
-    catch (DBException $e)
-    {
-      // It's possible that this function is being called during
-      // an upgrade process before the disabled columns existed,
-      // so if it fails try again without the disabled columns.
-      $area = db()->query1("SELECT area_id
-                              FROM $tbl_room R, $tbl_area A
-                             WHERE R.id=?
-                               AND R.area_id = A.id
-                             LIMIT 1", array($default_room));
-    }
+
+    $sql .= " LIMIT 1";
+    $area = db()->query1($sql, array(':id' => $default_room));
+
     if ($area >= 0)
     {
       return $area;
     }
   }
   
-  // Otherwise return the first enabled area in the database
-  try
+  // Otherwise return the first enabled area in the database that has an
+  // enabled and visible room
+  $sql = "SELECT R.id, R.area_id
+            FROM $tbl_room R, $tbl_area A
+           WHERE R.area_id = A.id";
+
+  if ($disabled_field_exists)
   {
-    $area = db()->query1("SELECT id
-                            FROM $tbl_area
-                           WHERE disabled=0
-                        ORDER BY sort_key
-                           LIMIT 1");
+    $sql .= " AND R.disabled = 0 AND A.disabled = 0";
   }
-  catch (DBException $e)
+
+  $sql .= " LIMIT 1";
+  $res = db()->query($sql);
+
+  for ($i=0; $row = $res->row_keyed($i); $i++)
   {
-    // See comment above.  Cut the query down to the most basic.
-    $area = db()->query1("SELECT id
-                            FROM $tbl_area
-                           LIMIT 1");
+    if (is_visible($row['id']))
+    {
+      return $row['area_id'];
+    }
   }
-  
-  return ((!isset($area) || ($area < 0)) ? 0 : $area);
+
+  return 0;
 }
 
 // Return a default room given a valid area; used if no room is already known.
-// If the area contains $default_room, then it returns $default_room,
-// otherwise the first room in sort_key order in the database.
+// If the area contains $default_room and $default_room is visible to the current
+// user, then it returns $default_room. Otherwise it returns the first visible room
+// in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
   global $tbl_room, $default_room;
+
+  // It's possible that this function is being called during
+  // an upgrade process before the disabled columns existed.
+  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    try
+    $sql = "SELECT id FROM $tbl_room WHERE id=:id AND area_id=:area_id";
+
+    if ($disabled_field_exists)
     {
-      // It's possible that this function is being called during
-      // an upgrade process before the disabled columns existed,
-      // so if it fails try again without the disabled columns.
-      $room = db()->query1("SELECT id
-                              FROM $tbl_room
-                             WHERE id=$default_room
-                               AND area_id=?
-                               AND disabled=0
-                             LIMIT 1", array($area));
+      $sql .= " AND disabled=0";
     }
-    catch (DBException $e)
-    {
-      $room = db()->query1("SELECT id
-                              FROM $tbl_room
-                             WHERE id=$default_room
-                               AND area_id=?
-                             LIMIT 1", array($area));
-    }
-    if ($room >= 0)
+
+    $sql .= " LIMIT 1";
+    $sql_params = array(':id' => $default_room, ':area_id' => $area);
+    $room = db()->query1($sql, $sql_params);
+
+    if (($room >= 0) && is_visible($room))
     {
       return $room;
     }
   }
   
-  // Otherwise just return the first room in the area
-  try
-  {
-    $room = db()->query1("SELECT id
-                            FROM $tbl_room
-                           WHERE area_id=?
-                             AND disabled=0
-                        ORDER BY sort_key
-                           LIMIT 1", array($area));
-  }
-  catch (DBException $e)
-  {
-    // See comment above.  Cut the query down to the most basic.
-    $room = db()->query1("SELECT id
-                            FROM $tbl_room
-                           WHERE area_id=?
-                           LIMIT 1", array($area));
-  }
+  // Otherwise just return the first visible room in the area
+  $rooms = get_rooms($area, !$disabled_field_exists);
   
-  return ($room < 0 ? 0 : $room);
+  return (count($rooms) > 0) ? $rooms[0]['id'] : 0;
 }
 
 // Return an area id for a given room
