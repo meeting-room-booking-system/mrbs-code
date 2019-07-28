@@ -986,32 +986,28 @@ function unslashes($s)
 function get_default_area()
 {
   global $tbl_area, $tbl_room, $default_room;
-  
+
+  // It's possible that this function is being called during
+  // an upgrade process before the disabled columns existed.
+  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+
   // If the $default_room is set and exists and enabled, then return the
   // corresponding area
   if (isset($default_room))
   {
-    try 
+    $sql = "SELECT area_id
+              FROM $tbl_room R, $tbl_area A
+             WHERE R.id=:id
+               AND R.area_id = A.id";
+
+    if ($disabled_field_exists)
     {
-      $area = db()->query1("SELECT area_id
-                              FROM $tbl_room R, $tbl_area A
-                             WHERE R.id=?
-                               AND R.area_id = A.id
-                               AND R.disabled = 0
-                               AND A.disabled = 0
-                             LIMIT 1", array($default_room));
+      $sql .= " AND R.disabled = 0 AND A.disabled = 0";
     }
-    catch (DBException $e)
-    {
-      // It's possible that this function is being called during
-      // an upgrade process before the disabled columns existed,
-      // so if it fails try again without the disabled columns.
-      $area = db()->query1("SELECT area_id
-                              FROM $tbl_room R, $tbl_area A
-                             WHERE R.id=?
-                               AND R.area_id = A.id
-                             LIMIT 1", array($default_room));
-    }
+
+    $sql .= " LIMIT 1";
+    $area = db()->query1($sql, array(':id' => $default_room));
+
     if ($area >= 0)
     {
       return $area;
@@ -1019,22 +1015,16 @@ function get_default_area()
   }
   
   // Otherwise return the first enabled area in the database
-  try
+  $sql = "SELECT id FROM $tbl_area";
+
+  if ($disabled_field_exists)
   {
-    $area = db()->query1("SELECT id
-                            FROM $tbl_area
-                           WHERE disabled=0
-                        ORDER BY sort_key
-                           LIMIT 1");
+    $sql .= " WHERE disabled=0";
   }
-  catch (DBException $e)
-  {
-    // See comment above.  Cut the query down to the most basic.
-    $area = db()->query1("SELECT id
-                            FROM $tbl_area
-                           LIMIT 1");
-  }
-  
+
+  $sql .= " ORDER BY sort_key LIMIT 1";
+  $area = db()->query1($sql);
+
   return ((!isset($area) || ($area < 0)) ? 0 : $area);
 }
 
