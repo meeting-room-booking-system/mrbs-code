@@ -1024,8 +1024,7 @@ function get_default_area()
   {
     $sql .= " AND R.disabled = 0 AND A.disabled = 0";
   }
-
-  $sql .= " LIMIT 1";
+  
   $res = db()->query($sql);
 
   for ($i=0; $row = $res->row_keyed($i); $i++)
