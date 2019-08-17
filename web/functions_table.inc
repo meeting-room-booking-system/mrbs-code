@@ -209,7 +209,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
       $class = 'new';
     }
     
-    // If there's no booking or if there are multiple boookings then make the slot one unit long
+    // If there's no booking or if there are multiple bookings then make the slot one unit long
     $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
     
     $html .= tdcell($class, $slots);
