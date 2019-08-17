@@ -2,8 +2,11 @@
 namespace MRBS;
 
 /*
- * Authentication scheme that uses an external script as the source
+ * Authentication scheme that uses an password hash file as the source
  * for user authentication.
+ *
+ * This supports any password hash format that your installation of PHP
+ * supports.
  *
  * To use this authentication scheme set the following
  * things in config.inc.php:
@@ -59,7 +62,7 @@ function authValidateUser($user, $pass)
   {
     if (preg_match("/^\Q$user\E:(.*)/", $line, $matches))
     {
-      if (crypt($pass, $matches[1]) == $matches[1])
+      if (password_verify($pass, $matches[1]))
       {
         $ret = $user; // Success!
       }
