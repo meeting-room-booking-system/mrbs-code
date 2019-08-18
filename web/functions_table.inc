@@ -742,7 +742,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   }
   
   // We have a valid room
-  $num_of_days=7; // days in a week
+  $num_of_days = 7; // days in a week
   
   // Calculate how many days to skip back to get to the start of the week
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -754,7 +754,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   
   // Define the start and end of each day of the week in a way which is not
   // affected by daylight saving...
-  for ($j = 0; $j<=($num_of_days-1); $j++)
+  for ($j = 0; $j < $num_of_days; $j++)
   {
     $start_first_slot[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
     $start_last_slot[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
@@ -767,10 +767,9 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
-
   $week_map = array();
 
-  for ($j = 0; $j<=($num_of_days-1) ; $j++)
+  for ($j = 0; $j < $num_of_days; $j++)
   {
     $entries = get_entries_by_room($room_id, $start_first_slot[$j], $start_last_slot[$j] + $resolution);
     foreach ($entries as $entry)
@@ -843,7 +842,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   else
   {
     // the standard view, with days along the top and times down the side
-    for ($j = 0; $j<=($num_of_days-1) ; $j++)
+    for ($j = 0; $j < $num_of_days; $j++)
     {
       $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
       $date = date('Y-m-d', $t);
@@ -896,7 +895,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   {
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($thisday = 0; $thisday<=($num_of_days-1); $thisday++)
+    for ($thisday = 0; $thisday < $num_of_days; $thisday++)
     {
       if (is_hidden_day(($thisday + $weekstarts) % 7))
       {
@@ -992,7 +991,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   
   
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-      for ($thisday = 0; $thisday<=($num_of_days-1) ; $thisday++)
+      for ($thisday = 0; $thisday < $num_of_days; $thisday++)
       {
         if (is_hidden_day(($thisday + $weekstarts) % 7))
         {
