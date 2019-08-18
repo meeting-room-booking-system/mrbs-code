@@ -902,51 +902,48 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
         // These days are to be hidden in the display: don't display a row
         continue;
       }
-    
-      else
-      {
-        $tbody .= "<tr>\n";
-      
-        $wt = mktime( 12, 0, 0, $month, $day_start_week + $thisday, $year );
-        $wday = date("d", $wt);
-        $wmonth = date("m", $wt);
-        $wyear = date("Y", $wt);
-        $wdate = date('Y-n-d', $wt);
-        
-        $day_cell_text = utf8_strftime($dformat, $wt);
-        
-        $vars = array('view'  => 'day',
-                      'year'  => strftime("%Y", $wt),
-                      'month' => strftime("%m", $wt),
-                      'day'   => strftime("%d", $wt),
-                      'area'  => $area_id,
-                      'room'  => $room_id);
-                      
-        $day_cell_link = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
-                       
-        $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
-        
-        for ($s = $morning_slot_seconds;
-             $s <= $evening_slot_seconds;
-             $s += $resolution)
-        {
-          $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          // set up the query vars to be used for the link in the cell
-          $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
 
-          // and then draw the cell
-          if (!isset($week_map[$room_id][$thisday][$s]))
-          {
-            $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
-          }
-          $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
-        }  // end looping through the time slots
-        if ( false != $row_labels_both_sides )
+      $tbody .= "<tr>\n";
+
+      $wt = mktime( 12, 0, 0, $month, $day_start_week + $thisday, $year );
+      $wday = date("d", $wt);
+      $wmonth = date("m", $wt);
+      $wyear = date("Y", $wt);
+      $wdate = date('Y-n-d', $wt);
+
+      $day_cell_text = utf8_strftime($dformat, $wt);
+
+      $vars = array('view'  => 'day',
+                    'year'  => strftime("%Y", $wt),
+                    'month' => strftime("%m", $wt),
+                    'day'   => strftime("%d", $wt),
+                    'area'  => $area_id,
+                    'room'  => $room_id);
+
+      $day_cell_link = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+
+      $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
+
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
+      {
+        $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
+        // set up the query vars to be used for the link in the cell
+        $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
+
+        // and then draw the cell
+        if (!isset($week_map[$room_id][$thisday][$s]))
         {
-          $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
+          $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= "</tr>\n";
+        $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+      }  // end looping through the time slots
+      if ( false != $row_labels_both_sides )
+      {
+        $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
       }
+      $tbody .= "</tr>\n";
     
     }  // end looping through the days of the week
   
