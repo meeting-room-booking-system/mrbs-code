@@ -485,22 +485,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   if ($n_rooms == 0)
   {
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
-    return "<tbody data-empty=1><tr><td><h1>".get_vocab("no_rooms_for_area")."</h1></td></tr></tbody>";
-  }
-  
-  // ensure that $morningstarts_minutes defaults to zero if not set
-  if (!isset($morningstarts_minutes))
-  {
-    $morningstarts_minutes = 0;
-  }
-  
-  if ($enable_periods)
-  {
-    $resolution = 60;
-    $morningstarts = 12;
-    $morningstarts_minutes = 0;
-    $eveningends = 12;
-    $eveningends_minutes = count($periods) - 1;
+    return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
   }
 
   $start_first_slot = get_start_first_slot($month, $day, $year);
@@ -754,21 +739,6 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   
   // We have a valid room
   $num_of_days=7; // days in a week
-
-  // ensure that $morningstarts_minutes defaults to zero if not set
-  if (!isset($morningstarts_minutes))
-  {
-    $morningstarts_minutes = 0;
-  }
-  
-  if ($enable_periods)
-  {
-    $resolution = 60;
-    $morningstarts = 12;
-    $morningstarts_minutes = 0;
-    $eveningends = 12;
-    $eveningends_minutes = count($periods) - 1;
-  }
   
   // Calculate how many days to skip back to get to the start of the week
   $time = mktime(12, 0, 0, $month, $day, $year);
@@ -1201,15 +1171,6 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   // What column the month starts in: 0 means $weekstarts weekday.
   $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
   $days_in_month = date("t", $month_start);
-  
-  if ($enable_periods)
-  {
-    $resolution = 60;
-    $morningstarts = 12;
-    $morningstarts_minutes = 0;
-    $eveningends = 12;
-    $eveningends_minutes = count($periods)-1;
-  }
   
   // Get all meetings for this month in the room that we care about
   // This data will be retrieved day-by-day fo the whole month
