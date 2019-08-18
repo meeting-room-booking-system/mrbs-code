@@ -473,7 +473,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
-function get_times_header($start, $end, $increment)
+function get_times_header_cells($start, $end, $increment)
 {
   global $enable_periods;
 
@@ -496,6 +496,29 @@ function get_times_header($start, $end, $increment)
       $html .= htmlspecialchars(get_timeslot_text($s, $increment));
     }
     $html .= "</span>";
+    $html .= "</th>\n";
+  }
+
+  return $html;
+}
+
+
+function get_rooms_header_cells($rooms, $vars)
+{
+  $html = '';
+
+  foreach($rooms as $room)
+  {
+    $vars['room'] = $room['id'];
+    $query = http_build_query($vars, '', '&');
+    // Put the room_id in a data attribute so that JavaScript can pick it up
+    $html .= '<th data-room="' . $room['id'] . '">';
+
+    $html .= '<a href="index.php?' . htmlspecialchars($query) . '" ' .
+             'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
+             htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') .
+             '</a>';
+
     $html .= "</th>\n";
   }
 
@@ -566,28 +589,17 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header($morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
   else
   {
-    // the standard view, with rooms along the top and times down the side
-    foreach($rooms as $room)
-    {
-      $vars = array('view' => 'week',
-        'year' => $year,
-        'month' => $month,
-        'day' => $day,
-        'area' => $area_id,
-        'room' => $room['id']);
+    $vars = array('view' => 'week',
+                  'year' => $year,
+                  'month' => $month,
+                  'day' => $day,
+                  'area' => $area_id);
 
-      $query = http_build_query($vars, '', '&');
-      // Put the room_id in a data attribute so that JavaScript can pick it up
-      $header_inner .= '<th data-room="' . $room['id'] . '">' .
-        '<a href="index.php?' . htmlspecialchars($query) . '" ' .
-        'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
-        htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') . "</a></th>\n";
-    }
-
+    $header_inner .= get_rooms_header_cells($rooms, $vars);
   }  // end standard view (for the header)
 
   // next: line to display times on right side
@@ -822,7 +834,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header($morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
 
   else
