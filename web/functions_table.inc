@@ -797,15 +797,26 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     $dformat = preg_replace("/<br>/", " ", $dformat);
   }
 
+  if ($times_along_top)
+  {
+    $tag = 'date';
+  }
+  elseif ($enable_periods)
+  {
+    $tag = 'period';
+  }
+  else
+  {
+    $tag = 'time';
+  }
+
+  $first_last_html = '<th class="first_last">' . get_vocab($tag) . "</th>\n";
+  $header_inner .= $first_last_html;
 
   // We can display the table in two ways
   if ($times_along_top)
   {
     // with times along the top and days of the week down the side
-    $first_last_html = '<th class="first_last">' . 
-                       get_vocab('date') . "</th>\n";
-    $header_inner .= $first_last_html;
-    
     for ($s = $morning_slot_seconds;
          $s <= $evening_slot_seconds;
          $s += $resolution)
@@ -827,20 +838,11 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
       $header_inner .= "</span>";
       $header_inner .= "</th>\n";
     }
-    // next: line to display times on right side
-    if (!empty($row_labels_both_sides))
-    {
-      $header_inner .= $first_last_html;
-    }
   } // end "times_along_top" view (for the header)
 
   else
   {
     // the standard view, with days along the top and times down the side
-    $first_last_html = '<th class="first_last">' . 
-                       ($enable_periods ? get_vocab('period') : get_vocab('time')) . '</th>';
-    $header_inner .= $first_last_html;
-    
     for ($j = 0; $j<=($num_of_days-1) ; $j++)
     {
       $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
@@ -871,13 +873,13 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
       }
     }  // for ($j = 0 ...
     unset($j);  // Just so that we pick up any accidental attempt to use it later
-    
-    // next line to display times on right side
-    if (!empty($row_labels_both_sides))
-    {
-      $header_inner .= $first_last_html;
-    }
   }  // end standard view (for the header)
+
+  // next line to display times on right side
+  if (!empty($row_labels_both_sides))
+  {
+    $header_inner .= $first_last_html;
+  }
 
   $header_inner .= "</tr>\n";
   $thead .= $header_inner;
