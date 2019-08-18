@@ -171,7 +171,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
   // to the edit entry form.     If there is one booking, then the booking is shown in that
   // cell.    If there is more than one booking then all the bookings are shown.
   
-  // $query_vars is an array containg the query vars to be used in the link for the cell.
+  // $query_vars is an array containing the query vars to be used in the link for the cell.
   // It is indexed as follows:
   //    ['new_periods']   the vars to be used for an empty cell if using periods
   //    ['new_times']     the vars to be used for an empty cell if using times
