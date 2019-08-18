@@ -171,7 +171,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
   // to the edit entry form.     If there is one booking, then the booking is shown in that
   // cell.    If there is more than one booking then all the bookings are shown.
   
-  // $query_vars is an array containg the query vars to be used in the link for the cell.
+  // $query_vars is an array containing the query vars to be used in the link for the cell.
   // It is indexed as follows:
   //    ['new_periods']   the vars to be used for an empty cell if using periods
   //    ['new_times']     the vars to be used for an empty cell if using times
@@ -209,7 +209,7 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
       $class = 'new';
     }
     
-    // If there's no booking or if there are multiple boookings then make the slot one unit long
+    // If there's no booking or if there are multiple bookings then make the slot one unit long
     $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
     
     $html .= tdcell($class, $slots);
