@@ -473,6 +473,36 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
+function get_times_header($start, $end, $increment)
+{
+  global $enable_periods;
+
+  $html = '';
+
+  for ($s = $start; $s <= $end; $s += $increment)
+  {
+    // Put the number of seconds since the start of the day (nominal, ignoring DST)
+    // in a data attribute so that JavaScript can pick it up
+    $html .= "<th data-seconds=\"$s\">";
+    // We need the span so that we can apply some padding.   We can't apply it
+    // to the <th> because that is used by jQuery.offset() in resizable bookings
+    $html .= "<span>";
+    if ( $enable_periods )
+    {
+      $html .= htmlspecialchars(period_name($s));
+    }
+    else
+    {
+      $html .= htmlspecialchars(get_timeslot_text($s, $increment));
+    }
+    $html .= "</span>";
+    $html .= "</th>\n";
+  }
+
+  return $html;
+}
+
+
 function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods;
@@ -536,31 +566,8 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // We can display the table in two ways
   if ($times_along_top)
   {
-    // with times along the top and rooms down the side
-    for ($s = $morning_slot_seconds;
-         $s <= $evening_slot_seconds;
-         $s += $resolution)
-    {
-      // Put the number of seconds since the start of the day (nominal, ignoring DST)
-      // in a data attribute so that JavaScript can pick it up
-      $header_inner .= "<th data-seconds=\"$s\">";
-      // We need the span so that we can apply some padding.   We can't apply it
-      // to the <th> because that is used by jQuery.offset() in resizable bookings
-      $header_inner .= "<span>";
-      if ( $enable_periods )
-      {
-        $header_inner .= htmlspecialchars(period_name($s));
-      }
-      else
-      {
-        $header_inner .= htmlspecialchars(get_timeslot_text($s, $resolution));
-      }
-      $header_inner .= "</span>";
-      $header_inner .= "</th>\n";
-    }
-
-  } // end "times_along_top" view (for the header)
-  
+    $header_inner .= get_times_header($morning_slot_seconds, $evening_slot_seconds, $resolution);
+  }
   else
   {
     // the standard view, with rooms along the top and times down the side
@@ -815,29 +822,8 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // We can display the table in two ways
   if ($times_along_top)
   {
-    // with times along the top and days of the week down the side
-    for ($s = $morning_slot_seconds;
-         $s <= $evening_slot_seconds;
-         $s += $resolution)
-    {
-      // Put the seconds since the start of the day (nominal, not adjusted for DST)
-      // into a data attribute so that it can be picked up by JavaScript
-      $header_inner .= "<th data-seconds=\"$s\">";
-      // We need the span so that we can apply some padding.   We can't apply it
-      // to the <th> because that is used by jQuery.offset() in resizable bookings
-      $header_inner .= "<span>";
-      if ( $enable_periods )
-      {
-        $header_inner .= htmlspecialchars(period_name($s));
-      }
-      else
-      {
-        $header_inner .= htmlspecialchars(get_timeslot_text($s, $resolution));
-      }
-      $header_inner .= "</span>";
-      $header_inner .= "</th>\n";
-    }
-  } // end "times_along_top" view (for the header)
+    $header_inner .= get_times_header($morning_slot_seconds, $evening_slot_seconds, $resolution);
+  }
 
   else
   {
