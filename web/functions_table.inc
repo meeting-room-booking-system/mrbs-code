@@ -475,9 +475,9 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 
 function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
-  global $enable_periods, $periods;
+  global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
-  global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $resolution, $morningstarts, $morningstarts_minutes;
 
   $rooms = get_rooms($area_id);
   $n_rooms = count($rooms);
@@ -722,9 +722,9 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
 function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
-  global $enable_periods, $periods;
+  global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
-  global $resolution, $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
+  global $resolution, $morningstarts, $morningstarts_minutes;
   global $weekstarts, $strftime_format;
 
   // Check that we've got a valid, enabled room
@@ -1150,7 +1150,7 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 function month_table_innerhtml($view, $year, $month, $day, $area, $room)
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
-  global $periods, $enable_periods, $morningstarts, $morningstarts_minutes;
+  global $enable_periods, $morningstarts, $morningstarts_minutes;
   global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
 
