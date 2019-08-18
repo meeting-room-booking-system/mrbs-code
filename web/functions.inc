@@ -1238,10 +1238,19 @@ function get_area_settings($area)
     }
   }
   
-  // If we're using periods then set the resolution to 60 seconds
+  // Sanitise the settings
   if ($enable_periods)
   {
     $resolution = 60;
+    $morningstarts = 12;
+    $morningstarts_minutes = 0;
+    $eveningends = 12;
+    $eveningends_minutes = count($periods) - 1;
+  }
+  elseif (!isset($morningstarts_minutes))
+  {
+    // ensure that $morningstarts_minutes defaults to zero if not set
+    $morningstarts_minutes = 0;
   }
   
 }
