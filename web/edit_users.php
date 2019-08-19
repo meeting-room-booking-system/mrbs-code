@@ -843,7 +843,10 @@ if (isset($action) && ($action == "update"))
     {
       // id: don't need to do anything except add the id to the query string;
       // the field itself is auto-incremented
-      $q_string .= "&id=$id";
+      if (isset($id))
+      {
+        $q_string .= "&id=$id";
+      }
       continue; 
     }
 
