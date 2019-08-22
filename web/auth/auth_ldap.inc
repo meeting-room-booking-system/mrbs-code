@@ -478,7 +478,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
         authLdapDebug("authValidateUserCallback: rebinding successful");
       }
 
-      $filter = ldap_escape_filter($object['config']['ldap_filter']);
+      $filter = $object['config']['ldap_filter'];
       
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
                     "bind checking '$filter'");
@@ -676,11 +676,11 @@ function authLdapIsAdmin($user)
 }
 
 
-function ldap_escape_filter($value)
+function mrbs_ldap_escape ($value, $ignore='', $flags=0)
 {
   if (function_exists('ldap_escape'))
   {
-    return ldap_escape($value, null, LDAP_ESCAPE_FILTER);
+    return ldap_escape($value, $ignore, $flags);
   }
   else
   {
