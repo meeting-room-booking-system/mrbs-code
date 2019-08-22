@@ -36,11 +36,14 @@ abstract class Auth
     }
 
     // Check whether the user is an admin
-    foreach ($auth['admin'] as $admin)
+    if (isset($auth['admin']))
     {
-      if(strcasecmp($username, $admin) === 0)
+      foreach ($auth['admin'] as $admin)
       {
-        return 2;
+        if (strcasecmp($username, $admin) === 0)
+        {
+          return 2;
+        }
       }
     }
 
