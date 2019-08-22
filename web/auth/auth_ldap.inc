@@ -459,6 +459,25 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
     }
     else
     {
+      // If we've got a search DN and password, then bind again using those credentials because
+      // it's possible that the user doesn't have read access in the directory, even for their own
+      // entry, in which case we'll get a "No such object" result.
+      if (isset($object['config']['ldap_dn_search_dn']) &&
+          isset($object['config']['ldap_dn_search_password']))
+      {
+        authLdapDebug("authValidateUserCallback: rebinding as '" . $object['config']['ldap_dn_search_dn'] . "'");
+        if (!mrbs_ldap_bind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
+        {
+          authLdapDebug("authValidateUserCallback: rebinding failed: " . ldap_error($ldap));
+          if ($ldap_unbind_between_attempts)
+          {
+            ldap_unbind($ldap);
+          }
+          return false;
+        }
+        authLdapDebug("authValidateUserCallback: rebinding successful");
+      }
+
       $filter = ldap_escape_filter($object['config']['ldap_filter']);
       
       authLdapDebug("authValidateUserCallback: Successful authenticated ".
