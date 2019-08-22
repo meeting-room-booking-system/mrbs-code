@@ -668,7 +668,7 @@ function authLdapIsAdmin($user)
 {
   global $auth;
   
-  if (isset($user) && ($user !== ''))
+  if (isset($auth['admin']) && isset($user) && ($user !== ''))
   {
     foreach ($auth['admin'] as $admin)
     {
