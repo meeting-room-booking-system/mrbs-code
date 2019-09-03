@@ -823,10 +823,8 @@ function output_foot_rows(&$rows, $format)
 function report_row(&$rows, &$data)
 {
   global $output_format, $ajax, $ajax_capable;
-  global $csv_row_sep, $csv_col_sep;
-  global $custom_fields, $field_natures, $field_lengths, $tbl_entry;
+  global $custom_fields, $field_natures, $field_lengths;
   global $approval_somewhere, $confirmation_somewhere;
-  global $strftime_format;
   global $select_options, $booking_types;
   global $field_order_list;
   
