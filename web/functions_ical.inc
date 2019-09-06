@@ -1044,6 +1044,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
   
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
+    unpack_status($row);
     // If this is an individual entry, then construct an event
     if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))
     {
