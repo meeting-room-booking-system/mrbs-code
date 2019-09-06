@@ -185,6 +185,7 @@ $vocab["mail_subject_delete"]        = "Prenotazione cancellata per %s MRBS"; //
 $vocab["mail_body_new_entry"]     = "È stata registrata una nuova prenotazione, questi i dettagli:";
 $vocab["mail_body_changed_entry"] = "Una prenotazione è stata modificata, questi i dettagli:";
 $vocab["mail_body_del_entry"]     = "Una prenotazione è stata cancellata, questi i dettagli:";
+$vocab["cannot_change_approved_bookings"] = "Non è permesso cancellare o modificare una prenotazione già approvata";
 
 // Authentication stuff
 $vocab["new_value"]               = "Nuovo";

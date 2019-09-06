@@ -247,6 +247,12 @@ $max_booking_date = "2012-07-23";  // Must be a string in the format "yyyy-mm-dd
 $min_booking_date_enabled = false;
 $min_booking_date = "2012-04-23";  // Must be a string in the format "yyyy-mm-dd"
 
+// Set this to true if you want to prevent users editing or deleting approved bookings.
+// Note that this setting only applies if booking approval is in force for the area.
+// If it isn't in force you can prevent bookings being edited or deleted by using the
+// min and max book ahead settings.
+$approved_bookings_cannot_be_changed = false;
+
 /******************
  * Display settings
  ******************/
