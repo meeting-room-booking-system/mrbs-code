@@ -297,6 +297,7 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
   global $interval_types, $strftime_format;
+  global $approved_bookings_cannot_be_changed, $approval_enabled;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -316,6 +317,11 @@ function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
   // Check deletion policies
   if ($delete)
   {
+    if ($approval_enabled && $approved_bookings_cannot_be_changed && !$booking['awaiting_approval'])
+    {
+      $violations[] = get_vocab('cannot_change_approved_bookings');
+    }
+
     if ($min_delete_ahead_enabled)
     {
       if ($enable_periods)
