@@ -492,6 +492,21 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     // Only show the Edit and Delete buttons if the user is allowed to use them
     if (getWritable($create_by, $room))
     {
+      // Check whether the entry is deletable (and therefore editable).  Also get the
+      // reason.  We just get the first reason because it's easier just to display one
+      // reason in a tooltip, rather than a complete list.
+      $violations = mrbsCheckPolicy($row, false, false, true);
+
+      if (empty($violations['errors']))
+      {
+        $button_attributes = array();
+      }
+      else
+      {
+        $button_attributes = array('disabled' => true,
+                                   'title'    => $violations['errors'][0]);
+      }
+
       // Edit and Edit Series
       echo "<div>\n";
       if (!$series)
@@ -502,7 +517,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
           'inputs' => array('id' => $id,
             'returl' => $returl)
         );
-        generate_button($params);
+        generate_button($params, $button_attributes);
         echo "</div>\n";
       }
       if ((!empty($repeat_id) || $series) && $repeats_allowed)
@@ -514,13 +529,21 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
             'edit_type' => 'series',
             'returl' => $returl)
         );
-        generate_button($params);
+        generate_button($params, $button_attributes);
         echo "</div>\n";
       }
       echo "</div>\n";
 
       // Delete and Delete Series
       echo "<div>\n";
+
+      // For the delete buttons, either the button is disabled and we show the reason why, or else
+      // we add a click event to confirm the deletion
+      if (empty($button_attributes))
+      {
+        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+      }
+
       if (!$series)
       {
         echo "<div>\n";
@@ -530,8 +553,6 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
             'series' => 0,
             'returl' => $returl)
         );
-
-        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
 
         generate_button($params, $button_attributes);
         echo "</div>\n";
@@ -545,8 +566,6 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
             'series' => 1,
             'returl' => $returl)
         );
-
-        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
 
         generate_button($params, $button_attributes);
         echo "</div>\n";
