@@ -493,8 +493,10 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     if (getWritable($create_by, $room))
     {
       // Check whether the entry is deletable (and therefore editable).  Also get the
-      // reason.  We just get the first reason because it's easier just to display one
-      // reason in a tooltip, rather than a complete list.
+      // reason.  We only get the first reason because it's easier just to display one
+      // reason in a tooltip, rather than a complete list.  [Note: if the entry is
+      // deletable but the series is not, the series button will not be disabled.  This
+      // is something that needs to be fixed in the future.]
       $violations = mrbsCheckPolicy($row, false, false, true);
 
       if (empty($violations['errors']))
