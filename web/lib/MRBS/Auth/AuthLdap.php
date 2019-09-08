@@ -235,15 +235,17 @@ class AuthLdap extends Auth
    * then performs a callback, passing the LDAP object, $base_dn,
    * user DN (in $dn), $username and a generic object $object
    *
-   * $callback - The callback function
-   * $username - The user name
-   * &$object  - Reference to the generic object, type defined by caller
+   * $callback   - The callback function
+   * $username   - The user name
+   * &$object    - Reference to the generic object, type defined by caller
+   * $keep_going - Don't stop when a user has been found, but keep going through all the LDAP
+  *               hosts.  Useful, for example, when you want to get a list of all users.
    * 
    * Returns:
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function action($callback, $username, &$object)
+  public function action($callback, $username, &$object, $keep_going=false)
   {
     $method = __METHOD__;
     
@@ -359,7 +361,7 @@ class AuthLdap extends Auth
         {
           $res = self::$callback($ldap, self::$all_ldap_opts['ldap_base_dn'][$idx], $dn,
                                  $user_search, $username, $object);
-          if ($res)
+          if ($res && !$keep_going)
           {
             return $username;
           }
@@ -369,8 +371,8 @@ class AuthLdap extends Auth
 
       ldap_unbind($ldap);
     } // foreach
-    
-    return false;
+
+    return ($keep_going) ? true : false;
   }
   
   

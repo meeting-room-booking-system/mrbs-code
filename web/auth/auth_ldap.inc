@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 define('LDAP_SUCCESS',                        0x00);
 define('LDAP_OPERATIONS_ERROR',               0x01);
 define('LDAP_PROTOCOL_ERROR',                 0x02);
@@ -84,15 +86,17 @@ define('LDAP_REFERRAL_LIMIT_EXCEEDED',        0x61);
  * then performs a callback, passing the LDAP object, $base_dn,
  * user DN (in $dn), $user and a generic object $object
  *
- * $callback - The callback function
- * $user     - The user name
- * &$object  - Reference to the generic object, type defined by caller
+ * $callback   - The callback function
+ * $user       - The user name
+ * &$object    - Reference to the generic object, type defined by caller
+ * $keep_going - Don't stop when a user has been found, but keep going through all the LDAP
+ *               hosts.  Useful, for example, when you want to get a list of all users.
  * 
  * Returns:
  *   false    - The pair are invalid or do not exist
  *   string   - The validated username
  */
-function authLdapAction($callback, $user, &$object)
+function authLdapAction($callback, $user, &$object, $keep_going=false)
 {
   global $auth;
   global $ldap_host;
@@ -194,7 +198,7 @@ function authLdapAction($callback, $user, &$object)
       $all_ldap_opts[$item] = array_fill(0, $count, $$item);
     }
   }
-
+  
   foreach ($all_ldap_opts['ldap_host'] as $idx => $host)
   {
     // establish ldap connection
@@ -206,7 +210,7 @@ function authLdapAction($callback, $user, &$object)
     {
       $ldap = ldap_connect($host);
     }
-
+    
     // Check that connection was established
     if ($ldap)
     {
@@ -304,18 +308,18 @@ function authLdapAction($callback, $user, &$object)
       {
         $res = $ns_callback($ldap, $all_ldap_opts['ldap_base_dn'][$idx], $dn,
                             $user_search, $user, $object);
-        if ($res)
+        if ($res && !$keep_going)
         {
           return $user;
         }
       }
 
     } // if ($ldap)
-
+    
     ldap_unbind($ldap);
   } // foreach
-  
-  return false;
+
+  return ($keep_going) ? true : false;
 }
 
 
@@ -582,6 +586,101 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
     }
   }
   return false;
+}
+
+
+
+
+function authGetUsernames()
+{
+  return authLdapGetUsers();
+}
+
+
+function authLdapGetUsers()
+{
+  $object = array();
+  $object['users'] = array();
+  $users = array();
+  $user = getUserName();
+
+  $res = authLdapAction("authLdapGetUsersCallback", $user, $object, true);
+
+  if ($res && isset($object['users']))
+  {
+    $users = $object['users'];
+  }
+
+  sort_users($users);
+  
+  return $users;
+}
+
+
+function authLdapGetUsersCallback(&$ldap, $base_dn, $dn, $user_search,
+                                  $user, &$object)
+{
+  authLdapDebug("authLdapGetUsersCallback: base_dn '$base_dn'");
+  
+  if ($ldap && $base_dn &&
+      isset($object['config']['ldap_user_attrib']) &&
+      isset($object['config']['ldap_name_attrib']))
+  {
+    if (isset($object['config']['ldap_filter']))
+    {
+      $filter = $object['config']['ldap_filter'];
+    }
+    else
+    {
+      $filter = 'objectclass=*';
+    }
+    $filter = "($filter)";
+    
+    $username_attrib = utf8_strtolower($object['config']['ldap_user_attrib']);
+    $display_name_attrib = utf8_strtolower($object['config']['ldap_name_attrib']);
+    $attributes = array($username_attrib, $display_name_attrib);
+    
+    authLdapDebug("authLdapGetUsersCallback: searching with base_dn '$base_dn' and filter '$filter'");
+    
+    $res = ldap_search($ldap, $base_dn, $filter, $attributes);
+    
+    if ($res === false)
+    {
+      authLdapDebug("authLdapGetUsersCallback: ldap_search failed: " . ldap_error($ldap));
+    }
+    
+    $entries = ldap_get_entries($ldap, $res);
+    
+    if ($res === false)
+    {
+      authLdapDebug("authLdapGetUsersCallback: ldap_get_entries failed: " . ldap_error($ldap));
+    }
+    
+    authLdapDebug("authLdapGetUsersCallback: " . ldap_count_entries($ldap, $res) . " entries found");
+
+    for ($i=0; $i<$entries['count']; $i++)
+    {
+      $user = array();
+      $user['username'] = $entries[$i][$username_attrib][0];
+      if (isset($entries[$i][$display_name_attrib]))
+      {
+        $user['display_name'] = $entries[$i][$display_name_attrib][0];
+      }
+      else
+      {
+        $user['display_name'] = null;
+      }
+                    
+      $object['users'][] = $user;
+    }
+
+    return true;
+  }
+  else
+  {
+    authLdapDebug("authLdapGetUsersCallback: could not call ldap_search, returning false");
+    return false;
+  }
 }
 
 
