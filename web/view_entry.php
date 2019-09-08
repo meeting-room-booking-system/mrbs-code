@@ -543,7 +543,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       // we add a click event to confirm the deletion
       if (empty($button_attributes))
       {
-        $button_attributes = array('onclick' => "return confirm('" . get_vocab("confirmdel") . "');");
+        $button_attributes = array('onclick' => "return confirm('" . escape_js(get_vocab("confirmdel")) . "');");
       }
 
       if (!$series)
