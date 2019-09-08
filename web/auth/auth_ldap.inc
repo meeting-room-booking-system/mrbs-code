@@ -670,18 +670,18 @@ function authGetUserLevel($user)
 
 function authGetUsernames()
 {
-  return authLdapGetUsers();
+  return authLdapGetUsernames();
 }
 
 
-function authLdapGetUsers()
+function authLdapGetUsernames()
 {
   $object = array();
   $object['users'] = array();
   $users = array();
   $user = getUserName();
 
-  $res = authLdapAction("authLdapGetUsersCallback", $user, $object, true);
+  $res = authLdapAction("authLdapGetUsernamesCallback", $user, $object, true);
 
   if ($res && isset($object['users']))
   {
@@ -694,10 +694,10 @@ function authLdapGetUsers()
 }
 
 
-function authLdapGetUsersCallback(&$ldap, $base_dn, $dn, $user_search,
+function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
                                   $user, &$object)
 {
-  authLdapDebug("authLdapGetUsersCallback: base_dn '$base_dn'");
+  authLdapDebug("authLdapGetUsernamesCallback: base_dn '$base_dn'");
   
   if ($ldap && $base_dn &&
       isset($object['config']['ldap_user_attrib']) &&
@@ -717,23 +717,23 @@ function authLdapGetUsersCallback(&$ldap, $base_dn, $dn, $user_search,
     $display_name_attrib = utf8_strtolower($object['config']['ldap_name_attrib']);
     $attributes = array($username_attrib, $display_name_attrib);
     
-    authLdapDebug("authLdapGetUsersCallback: searching with base_dn '$base_dn' and filter '$filter'");
+    authLdapDebug("authLdapGetUsernamesCallback: searching with base_dn '$base_dn' and filter '$filter'");
     
     $res = ldap_search($ldap, $base_dn, $filter, $attributes);
     
     if ($res === false)
     {
-      authLdapDebug("authLdapGetUsersCallback: ldap_search failed: " . ldap_error($ldap));
+      authLdapDebug("authLdapGetUsernamesCallback: ldap_search failed: " . ldap_error($ldap));
     }
     
     $entries = ldap_get_entries($ldap, $res);
     
     if ($res === false)
     {
-      authLdapDebug("authLdapGetUsersCallback: ldap_get_entries failed: " . ldap_error($ldap));
+      authLdapDebug("authLdapGetUsernamesCallback: ldap_get_entries failed: " . ldap_error($ldap));
     }
     
-    authLdapDebug("authLdapGetUsersCallback: " . ldap_count_entries($ldap, $res) . " entries found");
+    authLdapDebug("authLdapGetUsernamesCallback: " . ldap_count_entries($ldap, $res) . " entries found");
 
     for ($i=0; $i<$entries['count']; $i++)
     {
@@ -755,7 +755,7 @@ function authLdapGetUsersCallback(&$ldap, $base_dn, $dn, $user_search,
   }
   else
   {
-    authLdapDebug("authLdapGetUsersCallback: could not call ldap_search, returning false");
+    authLdapDebug("authLdapGetUsernamesCallback: could not call ldap_search, returning false");
     return false;
   }
 }
