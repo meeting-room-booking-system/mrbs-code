@@ -622,65 +622,70 @@ function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
 {
   authLdapDebug("authLdapGetUsernamesCallback: base_dn '$base_dn'");
   
-  if ($ldap && $base_dn &&
-      isset($object['config']['ldap_user_attrib']) &&
-      isset($object['config']['ldap_name_attrib']))
-  {
-    if (isset($object['config']['ldap_filter']))
-    {
-      $filter = $object['config']['ldap_filter'];
-    }
-    else
-    {
-      $filter = 'objectclass=*';
-    }
-    $filter = "($filter)";
-    
-    $username_attrib = utf8_strtolower($object['config']['ldap_user_attrib']);
-    $display_name_attrib = utf8_strtolower($object['config']['ldap_name_attrib']);
-    $attributes = array($username_attrib, $display_name_attrib);
-    
-    authLdapDebug("authLdapGetUsernamesCallback: searching with base_dn '$base_dn' and filter '$filter'");
-    
-    $res = ldap_search($ldap, $base_dn, $filter, $attributes);
-    
-    if ($res === false)
-    {
-      authLdapDebug("authLdapGetUsernamesCallback: ldap_search failed: " . ldap_error($ldap));
-    }
-    
-    $entries = ldap_get_entries($ldap, $res);
-    
-    if ($res === false)
-    {
-      authLdapDebug("authLdapGetUsernamesCallback: ldap_get_entries failed: " . ldap_error($ldap));
-    }
-    
-    authLdapDebug("authLdapGetUsernamesCallback: " . ldap_count_entries($ldap, $res) . " entries found");
-
-    for ($i=0; $i<$entries['count']; $i++)
-    {
-      $user = array();
-      $user['username'] = $entries[$i][$username_attrib][0];
-      if (isset($entries[$i][$display_name_attrib]))
-      {
-        $user['display_name'] = $entries[$i][$display_name_attrib][0];
-      }
-      else
-      {
-        $user['display_name'] = null;
-      }
-                    
-      $object['users'][] = $user;
-    }
-
-    return true;
-  }
-  else
+  if (!$ldap || !$base_dn || !isset($object['config']['ldap_user_attrib']))
   {
     authLdapDebug("authLdapGetUsernamesCallback: could not call ldap_search, returning false");
     return false;
   }
+
+  if (isset($object['config']['ldap_filter']))
+  {
+    $filter = $object['config']['ldap_filter'];
+  }
+  else
+  {
+    $filter = 'objectclass=*';
+  }
+  $filter = "($filter)";
+
+  // Form the attributes
+  $username_attrib = utf8_strtolower($object['config']['ldap_user_attrib']);
+  $attributes = array($username_attrib);
+
+  // The display name attribute might not have been set in the config file
+  if (isset($object['config']['ldap_name_attrib']))
+  {
+    $display_name_attrib = utf8_strtolower($object['config']['ldap_name_attrib']);
+    $attributes[] = $display_name_attrib;
+  }
+
+  authLdapDebug("authLdapGetUsernamesCallback: searching with base_dn '$base_dn' and filter '$filter'");
+
+  $res = ldap_search($ldap, $base_dn, $filter, $attributes);
+
+  if ($res == false)
+  {
+    authLdapDebug("authLdapGetUsernamesCallback: ldap_search failed: " . ldap_error($ldap));
+    return false;
+  }
+
+  authLdapDebug("authLdapGetUsernamesCallback: " . ldap_count_entries($ldap, $res) . " entries found");
+
+  $entry = ldap_first_entry($ldap, $res);
+
+  while ($entry)
+  {
+    $user = array();
+    $user['username'] = ldap_get_values($ldap, $entry, $username_attrib)[0];
+
+    if (isset($display_name_attrib))
+    {
+      // Use the error suppression operator because ldap_get_values() throws an error if
+      // the attribute doesn't exist, which might be the case with the display name.
+      $user['display_name'] = @ldap_get_values($ldap, $entry, $display_name_attrib)[0];
+      // And if the display_name is FALSE, after an error, then set it to NULL.  (Although PHP
+      // seems to return NULL anyway, despite the manual saying that it should return FALSE.)
+      if ($user['display_name'] === false)
+      {
+        $user['display_name'] = null;
+      }
+    }
+
+    $object['users'][] = $user;
+    $entry = ldap_next_entry($ldap, $entry);
+  }
+
+  return true;
 }
 
 
