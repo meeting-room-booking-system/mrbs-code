@@ -618,7 +618,7 @@ function authLdapGetUsernames()
 
 
 function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
-                                  $user, &$object)
+                                      $user, &$object)
 {
   authLdapDebug("authLdapGetUsernamesCallback: base_dn '$base_dn'");
   
