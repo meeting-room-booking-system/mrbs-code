@@ -701,7 +701,7 @@ function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
   
   if (!$ldap || !$base_dn || !isset($object['config']['ldap_user_attrib']))
   {
-    authLdapDebug("authLdapGetUsernamesCallback: could not call ldap_search, returning false");
+    authLdapDebug("authLdapGetUsernamesCallback: invalid parameters, could not call ldap_search, returning false");
     return false;
   }
 
