@@ -740,22 +740,28 @@ function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
 
   $entry = ldap_first_entry($ldap, $res);
 
+  // Loop through the entries to get all the users
   while ($entry)
   {
-    $user = array();
-    $user['username'] = ldap_get_values($ldap, $entry, $username_attrib)[0];
+    // Initialise all keys in the user array to NULL, in case an attribute isn't present
+    $user = array('username' => null,
+                  'display_name' => null);
 
-    if (isset($display_name_attrib))
+    $attribute = ldap_first_attribute($ldap, $entry);
+
+    // Loop through all the attributes for this user
+    while ($attribute)
     {
-      // Use the error suppression operator because ldap_get_values() throws an error if
-      // the attribute doesn't exist, which might be the case with the display name.
-      $user['display_name'] = @ldap_get_values($ldap, $entry, $display_name_attrib)[0];
-      // And if the display_name is FALSE, after an error, then set it to NULL.  (Although PHP
-      // seems to return NULL anyway, despite the manual saying that it should return FALSE.)
-      if ($user['display_name'] === false)
+      $value = ldap_get_values($ldap, $entry, $attribute)[0];
+      if ($attribute == $username_attrib)
       {
-        $user['display_name'] = null;
+        $user['username'] = $value;
       }
+      elseif ($attribute == $display_name_attrib)
+      {
+        $user['display_name'] = $value;
+      }
+      $attribute = ldap_next_attribute($ldap, $entry);
     }
 
     $object['users'][] = $user;
