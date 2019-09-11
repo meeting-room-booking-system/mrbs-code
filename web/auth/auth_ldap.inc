@@ -752,15 +752,18 @@ function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
     // Loop through all the attributes for this user
     while ($attribute)
     {
-      $value = ldap_get_values($ldap, $entry, $attribute)[0];
+      $values = ldap_get_values($ldap, $entry, $attribute);
+      $attribute = utf8_strtolower($attribute);  // ready for the comparisons
+
       if ($attribute == $username_attrib)
       {
-        $user['username'] = $value;
+        $user['username'] = $values[0];
       }
       elseif ($attribute == $display_name_attrib)
       {
-        $user['display_name'] = $value;
+        $user['display_name'] = $values[0];
       }
+
       $attribute = ldap_next_attribute($ldap, $entry);
     }
 
