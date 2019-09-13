@@ -306,7 +306,7 @@ class AuthLdap extends Auth
 
           if (!$res)
           {
-            self::debug("$method: initial bind failed: " . ldap_error($ldap));
+            self::debug("$method: initial bind failed: " . self::ldapError($ldap));
           }
           else
           {
@@ -557,6 +557,21 @@ class AuthLdap extends Auth
       }
     }
    
+    return $result;
+  }
+
+
+  // Adds extra diagnostic information to ldap_error()
+  private static function ldapError ($link_identifier)
+  {
+    $result = ldap_error($link_identifier);
+
+    if (ldap_get_option($link_identifier, LDAP_OPT_DIAGNOSTIC_MESSAGE, $err) &&
+        isset($err) && ($err !== ''))
+    {
+      $result .= " [$err]";
+    }
+
     return $result;
   }
 
