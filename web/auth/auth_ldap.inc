@@ -253,7 +253,7 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
 
         if (!$res)
         {
-          authLdapDebug("authLdapAction: Initial bind failed: ".ldap_error($ldap));
+          authLdapDebug("authLdapAction: Initial bind failed: ". mrbs_ldap_error($ldap));
         }
         else
         {
@@ -472,7 +472,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
         authLdapDebug("authValidateUserCallback: rebinding as '" . $object['config']['ldap_dn_search_dn'] . "'");
         if (!mrbs_ldap_bind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
         {
-          authLdapDebug("authValidateUserCallback: rebinding failed: " . ldap_error($ldap));
+          authLdapDebug("authValidateUserCallback: rebinding failed: " . mrbs_ldap_error($ldap));
           if ($ldap_unbind_between_attempts)
           {
             ldap_unbind($ldap);
@@ -524,7 +524,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
   }
   else
   {
-    authLdapDebug("authValidateUserCallback: Bind to '$dn' failed: ".ldap_error($ldap));
+    authLdapDebug("authValidateUserCallback: Bind to '$dn' failed: ". mrbs_ldap_error($ldap));
   }
 
   if ($ldap_unbind_between_attempts)
@@ -655,7 +655,7 @@ function authLdapGetUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
 
   if ($res == false)
   {
-    authLdapDebug("authLdapGetUsernamesCallback: ldap_search failed: " . ldap_error($ldap));
+    authLdapDebug("authLdapGetUsernamesCallback: ldap_search failed: " . mrbs_ldap_error($ldap));
     return false;
   }
 
@@ -837,5 +837,18 @@ function mrbs_ldap_bind ($link_identifier, $bind_rdn=null, $bind_password=null)
     }
   }
  
+  return $result;
+}
+
+
+// Adds extra diagnostic information to ldap_error()
+function mrbs_ldap_error($link_identifier)
+{
+  $result = ldap_error($link_identifier);
+  if (ldap_get_option($link_identifier, LDAP_OPT_DIAGNOSTIC_MESSAGE, $err) &&
+      isset($err) && ($err !== ''))
+  {
+    $result .= " [$err]";
+  }
   return $result;
 }
