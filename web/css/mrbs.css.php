@@ -1832,8 +1832,8 @@ div#div_summary {
   border-color: <?php echo $report_table_border_color ?>;
   border-style: solid;
   border-top-width: 1px;
-  border-right-width: 0px;
-  border-bottom-width: 0px;
+  border-right-width: 0;
+  border-bottom-width: 0;
   border-left-width: 1px;
 }
 
