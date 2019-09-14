@@ -142,7 +142,7 @@ table#pending_list {
 }
 
 #pending_list th.control + th, #pending_list td.control + td {
-  border-left-width: 1
+  border-left-width: 1px;
 }
 
 /* ------------ REPORT.PHP ----------------------*/
