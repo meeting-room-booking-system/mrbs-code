@@ -624,7 +624,7 @@ function mrbsDelEntry($id, $series, $all)
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
 
-  $sql = "SELECT start_time, end_time, room_id, create_by, id, entry_type FROM $tbl_entry WHERE ";
+  $sql = "SELECT * FROM $tbl_entry WHERE ";
 
   $sql_params = array();
   
@@ -643,6 +643,8 @@ function mrbsDelEntry($id, $series, $all)
 
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
+    unpack_status($row);
+    
     if(!getWritable($row['create_by'], $room_id))
     {
       continue;
