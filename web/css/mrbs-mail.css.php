@@ -1,18 +1,25 @@
+<?php
+namespace MRBS;
+
+require_once "../systemdefaults.inc.php";
+require_once "../config.inc.php";
+require_once "../theme.inc";
+?>
 
 /* CSS to be used for email messages  */
 
 body#mrbs {
-  background-color: #e7ebee;
-  color: #0B263B;
-  font-family: Arial, 'Arial Unicode MS', Verdana, sans-serif;
+  background-color: <?php echo $body_background_color ?>;
+  color: <?php echo $standard_font_color ?>;
+  font-family: <?php echo $standard_font_family ?>;
   margin: 0;
   padding: 0;
 }
 
 div#header {
   width: 100%;
-  background-color: #4b667b;
-  color: #ffffff;
+  background-color: <?php echo $banner_back_color ?>;
+  color: <?php echo $banner_font_color ?>;
   margin: 0;
   padding: 10px;
 }
