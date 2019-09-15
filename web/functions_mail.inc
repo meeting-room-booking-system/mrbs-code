@@ -424,23 +424,14 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $css_file = 'css/mrbs-mail.css.php';
     if (is_file($css_file) && is_readable($css_file))
     {
-      // Construct the URL of the CSS file.  We need the full URL so that
+      // Construct the URL of the CSS file.  We need the full URL so that the PHP is executed.
       $url = $server['REQUEST_URI'];
       $url = substr($url, 0, strrpos($url, '/')); // Strip off everything after last '/'
       $url = $server['HTTP_HOST'] . $url . '/' . $css_file;
       $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
       $url = $protocol . '://' . $url;
 
-      // Add a User-Agent header to prevent possible 403 errors from some sites
-      $context = stream_context_create(
-        array(
-          "http" => array(
-            "header" => "User-Agent: " . $server['HTTP_USER_AGENT']
-          )
-        )
-      );
-
-      $css = file_get_contents($url, false, $context);
+      $css = url_get_contents($url);
       $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
       $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $css);  // Remove blank lines
       $body .= $css;
