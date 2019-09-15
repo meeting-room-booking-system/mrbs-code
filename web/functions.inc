@@ -6,6 +6,67 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+// Returns the contents of the URL, or else FALSE on failure
+function url_get_contents($url)
+{
+  global $server;
+
+  $connect_timeout  = 2;  // seconds
+  $transfer_timeout = 2;  // seconds
+  $curlopt_timeout  = 3;  // seconds
+
+  // If we can we use cURL to download the page because it allows us to
+  // set a timeout on establishing a connection as well as on the transfer time.
+  // (We can only set a timeout on transfer time with file_get_contents()).  The
+  // connection timeout is important because MRBS may be being used in sites
+  // where direct access to the internet is not allowed.
+  if (function_exists('curl_init'))
+  {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_USERAGENT, $server['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
+    curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $transfer_timeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $contents = curl_exec($ch);
+    if ($contents === false)
+    {
+      trigger_error(curl_error($ch), E_USER_WARNING);
+    }
+    curl_close($ch);
+  }
+
+  // If there's no cURL then use file_get_contents()
+  else
+  {
+    // Create the stream context so that we can (a) make sure the connection is closed,
+    // because file_get_contents() does not return the contents when all the bytes
+    // have been sent, but when the connection is closed, (b) set a timeout in case
+    // the transfer is slow and (c) add a User-Agent header to prevent possible 403 errors
+    // from some sites.
+    $context = stream_context_create(
+        array(
+            'http' => array(
+              'header'  => array(
+                  'Connection: close',
+                  'User-Agent: ' . $server['HTTP_USER_AGENT']
+                ),
+            'timeout' => $transfer_timeout)
+          )
+      );
+    // Suppress any timeout warnings
+    $contents = @file_get_contents($url, false, $context);
+    if ($contents === false)
+    {
+      trigger_error("MRBS: could not get contents of $url", E_USER_WARNING);
+    }
+  }
+
+  return $contents;
+}
+
+
 function get_rep_interval_units($rep_type, $rep_interval)
 {
   switch ($rep_type)
