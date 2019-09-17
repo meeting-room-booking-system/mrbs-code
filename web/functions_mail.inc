@@ -401,7 +401,6 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   global $mail_settings, $standard_fields;
   global $tbl_entry;
   global $select_options, $booking_types;
-  global $server;
 
   // If we haven't got a previous entry just give it one.   It won't get used,
   // but will prevent a series if undefined index notices.
