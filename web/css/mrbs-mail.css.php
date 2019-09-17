@@ -1,9 +1,12 @@
 <?php
 namespace MRBS;
 
-require_once "../systemdefaults.inc.php";
-require_once "../config.inc.php";
-require_once "../theme.inc";
+require_once "systemdefaults.inc.php";
+require_once "config.inc.php";
+require_once "theme.inc";
+
+global $body_background_color, $standard_font_color, $standard_font_family;
+global $banner_back_color, $banner_font_color;
 ?>
 
 /* CSS to be used for email messages  */
