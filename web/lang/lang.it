@@ -259,7 +259,7 @@ $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Clicca per visualizzare tutti gli inserimenti";
 $vocab["no_users_initial"]   = "Non ci sono utenti nel database che permettano la creazione iniziale di utenti";
 $vocab["no_users_create_first_admin"] = "Crea un utente configurato come Amministratore, quindi potrai effettuare il login e creare altri utenti.";
-$vocab["warning_last_admin"] = "Attenzione!  Questo Ã¨ l'ultimo amministratore e non puoi ne cancellarlo ne togliergli i diritti, altrimenti rimarrai tagliato fuori dal sistema.";
+$vocab["warning_last_admin"] = "Attenzione!  Questo è l'ultimo amministratore e non puoi ne cancellarlo ne togliergli i diritti, altrimenti rimarrai tagliato fuori dal sistema.";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Valore di Ricerca vuoto o sbagliato.";
@@ -292,7 +292,7 @@ $vocab["format"]                = "Formato";
 $vocab["html"]                  = "HTML";
 $vocab["csv"]                   = "CSV";
 $vocab["ical"]                  = "iCalendar (.ics file) - esclusi periodi";
-$vocab["combination_not_supported"] = "Questo tipo non Ã¨ supportato in questo formato";
+$vocab["combination_not_supported"] = "Questo tipo non è supportato in questo formato";
 $vocab["summarize_by"]          = "Raggruppa per";
 $vocab["sum_by_descrip"]        = "Breve descrizione";
 $vocab["sum_by_creator"]        = "Creatore";

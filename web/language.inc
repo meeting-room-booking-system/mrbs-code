@@ -882,13 +882,18 @@ function get_language_qualifiers()
   elseif (isset($HTTP_ACCEPT_LANGUAGE)) // Attempt to use $HTTP_ACCEPT_LANGUAGE only when defined.
   {
     $lang_specifiers = explode(',',$HTTP_ACCEPT_LANGUAGE);
+
     foreach ($lang_specifiers as $specifier)
     {
-      if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
+      // The regular expressions below are not tight definitions of permissible language tags.
+      // They let through some tags which are not permissible, but they do allow permissible
+      // tags such as 'es-419'. Note however that we currently don't handle '*', eg '*;q=0.5',
+      // which is permissible.     
+      if (preg_match('/([a-zA-Z0-9\-]+);q=([0-9\.]+)/', $specifier, $matches))
       {
         $qualifiers[$matches[1]] = (float) $matches[2];
       }
-      else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
+      else if (preg_match("/([a-zA-Z0-9\-]+)/", $specifier, $matches))
       {
         $qualifiers[$matches[1]] = 1.0;
       }
