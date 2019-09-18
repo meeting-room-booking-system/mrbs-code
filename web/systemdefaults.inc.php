@@ -609,7 +609,7 @@ $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "imap",
                       // "imap_php",  "joomla", "ldap", "nis", "none", "nw", "pop3",  
                       // "saml", "smtp" or "wordpress".
-                      
+
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
                           // "omni", "php", "remote_user", "saml" or "wordpress".
@@ -801,6 +801,11 @@ $ldap_v3 = true;
 // If you want to use TLS, change the following to true.
 // This can be an array.
 $ldap_tls = false;
+
+// Support configuring a TLS client certificate/key from within MRBS.
+// Requires PHP 7.1.0 or later
+//$ldap_client_cert = 'path-to-cert.crt';
+//$ldap_client_key = 'path-to-key.key';
 
 // LDAP base distinguish name.
 // This can be an array.
