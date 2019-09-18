@@ -92,16 +92,20 @@ function print_logon_box()
   global $ssp;
 
   $target_url = this_page(true);
+  // Get URL base as well, so we can build the absolute URL below, as
+  // otherwise the redirect from the SAML login page may go back to the
+  // wrong place
+  $url_base = url_base();
   $user=getUserName();
 
   if ($ssp->isAuthenticated())
   {
     print_report_link(isset($user) ? $user : '-invalid-');
-    print_saml_logoff_button('/'.$target_url);
+    print_saml_logoff_button($url_base.$target_url);
   }
   else
   {
-    print_saml_logon_button('/'.$target_url);
+    print_saml_logon_button($url_base.$target_url);
   }
 }
 
