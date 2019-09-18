@@ -91,7 +91,7 @@ class SessionSaml extends SessionWithLogin
   
   public function getLogonFormParams()
   {
-    $target_url = '/' . \MRBS\this_page(true);
+    $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLoginURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
@@ -112,7 +112,7 @@ class SessionSaml extends SessionWithLogin
   
   public function getLogoffFormParams()
   {
-    $target_url = '/' . \MRBS\this_page(true);
+    $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLogoutURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);

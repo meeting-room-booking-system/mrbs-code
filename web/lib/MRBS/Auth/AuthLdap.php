@@ -134,7 +134,10 @@ class AuthLdap extends Auth
                                 'ldap_disable_referrals',
                                 'ldap_deref',
                                 'ldap_filter_base_dn',
-                                'ldap_filter_user_attr');
+                                'ldap_filter_user_attr',
+                                'ldap_client_cert',
+                                'ldap_client_key'
+                                );
 
     self::$all_ldap_opts = array();
     
@@ -275,6 +278,19 @@ class AuthLdap extends Auth
             self::$all_ldap_opts['ldap_v3'][$idx])
         {
           ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        }
+
+        if (isset(self::$all_ldap_opts['ldap_client_cert'][$idx]) &&
+            self::$all_ldap_opts['ldap_client_cert'][$idx])
+        {
+          // Requires PHP 7.1.0 or later
+          ldap_set_option($ldap, LDAP_OPT_X_TLS_CERTFILE, self::$all_ldap_opts['ldap_client_cert'][$idx]);
+        }
+        if (isset(self::$all_ldap_opts['ldap_client_key'][$idx]) &&
+            self::$all_ldap_opts['ldap_client_key'][$idx])
+        {
+          // Requires PHP 7.1.0 or later
+          ldap_set_option($ldap, LDAP_OPT_X_TLS_KEYFILE, self::$all_ldap_opts['ldap_client_key'][$idx]);
         }
         
         if (isset(self::$all_ldap_opts['ldap_tls'][$idx]) &&
