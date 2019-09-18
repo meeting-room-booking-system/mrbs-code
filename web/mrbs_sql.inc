@@ -2147,19 +2147,15 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
       {
         require_once "functions_mail.inc";
         // Get room name and area name for email notifications.
-        // Would be better to avoid a database access just for that.
-        // Ran only if we need details
-        if ($mail_settings['details'])
-        {
-          $sql = "SELECT R.room_name, A.area_name
-                    FROM $tbl_room R, $tbl_area A
-                   WHERE R.id=? AND R.area_id = A.id
-                   LIMIT 1";
-          $res = db()->query($sql, array($booking['room_id']));
-          $row = $res->row_keyed(0);
-          $booking['room_name'] = $row['room_name'];
-          $booking['area_name'] = $row['area_name'];
-        }
+        $sql = "SELECT R.room_name, A.area_name
+                  FROM $tbl_room R, $tbl_area A
+                 WHERE R.id=? AND R.area_id = A.id
+                 LIMIT 1";
+        $res = db()->query($sql, array($booking['room_id']));
+        $row = $res->row_keyed(0);
+        $booking['room_name'] = $row['room_name'];
+        $booking['area_name'] = $row['area_name'];
+        
         // If this is a modified entry then get the previous entry data
         // so that we can highlight the changes
         if (isset($id))
