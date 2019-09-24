@@ -102,7 +102,7 @@ function generate_backtrace()
 
 function output_error($heading, $body, $show_data=false)
 {
-  global $debug;
+  global $debug, $auth;
   
   static $default_timezone_set = false;
   
@@ -124,6 +124,18 @@ function output_error($heading, $body, $show_data=false)
     }
     if (isset($_POST))
     {
+      if (!$auth['log_credentials'])
+      {
+        // Overwrite the username and password to stop them appearing
+        // in error logs.
+        foreach (array('username', 'password') as $var)
+        {
+          if (isset($_POST[$var]))
+          {
+            $_POST[$var] = '****';
+          }
+        }
+      }
       $body .= "MRBS POST: " . print_r($_POST, true);
     }
     if (isset($_SESSION))

@@ -1036,6 +1036,11 @@ $auth['allow_custom_html'] = false;
 // full admin access).
 $allow_cli = false;
 
+// Set to true if you want usernames and passwords submitted in the login form to be
+// recorded in the error log as part of the $_POST variable.  Otherwise they are
+// replaced by '****'.
+$auth['log_credentials'] = false;
+
 
 /**********************************************
  * Email settings
