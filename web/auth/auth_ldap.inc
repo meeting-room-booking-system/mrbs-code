@@ -314,7 +314,7 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
         }
       }
 
-      if (!$dn)
+      if (empty($dn))
       {
         authLdapDebug("authLdapAction: No DN determined, not calling callback");
         // If we are keeping going we want to be able to search all the LDAP
