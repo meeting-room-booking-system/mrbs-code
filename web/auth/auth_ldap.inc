@@ -626,7 +626,12 @@ function authLdapGetUsernames()
 
   $res = authLdapAction("authLdapGetUsernamesCallback", $user, $object, true);
 
-  if ($res && isset($object['users']))
+  if ($res === false)
+  {
+    return false;
+  }
+
+  if (isset($object['users']))
   {
     $users = $object['users'];
   }
