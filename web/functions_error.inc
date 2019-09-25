@@ -102,7 +102,7 @@ function generate_backtrace()
 
 function output_error($heading, $body, $show_data=false)
 {
-  global $debug, $auth;
+  global $debug, $auth, $get, $post;
   
   static $default_timezone_set = false;
   
@@ -115,28 +115,29 @@ function output_error($heading, $body, $show_data=false)
   }
   
   if ($show_data &&
-      (isset($_GET) || isset($_POST) || isset($_SESSION)))
+      (isset($get) || isset($post) || isset($_SESSION)))
   {
     $body .= "\n";
-    if (isset($_GET))
+    if (isset($get))
     {
-      $body .= "MRBS GET: " . print_r($_GET, true);
+      $body .= "MRBS GET: " . print_r($get, true);
     }
-    if (isset($_POST))
+    if (isset($post))
     {
+      $post_tmp = $post;
       if (!$auth['log_credentials'])
       {
         // Overwrite the username and password to stop them appearing
         // in error logs.
         foreach (array('username', 'password') as $var)
         {
-          if (isset($_POST[$var]))
+          if (isset($post_tmp[$var]))
           {
-            $_POST[$var] = '****';
+            $post_tmp[$var] = '****';
           }
         }
       }
-      $body .= "MRBS POST: " . print_r($_POST, true);
+      $body .= "MRBS POST: " . print_r($post_tmp, true);
     }
     if (isset($_SESSION))
     {
