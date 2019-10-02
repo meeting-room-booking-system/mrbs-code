@@ -189,9 +189,10 @@ function get_fieldset_general($data)
   // Description
   $field = new FieldInputText();
   $field->setLabel(get_vocab('description'))
-        ->setControlAttributes(array('name'     => 'description',
-                                     'value'    => $data['description'],
-                                     'disabled' => $disabled));
+        ->setControlAttributes(array('name'      => 'description',
+                                     'value'     => $data['description'],
+                                     'maxlength' => maxlength('room.description'),
+                                     'disabled'  => $disabled));
   $fieldset->addElement($field);
   
   // Capacity
