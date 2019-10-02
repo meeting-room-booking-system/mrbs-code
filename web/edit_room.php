@@ -69,21 +69,21 @@ function get_custom_fields($data)
   $result = array();
   $disabled = !is_admin();
   
-  // Get the information about the fields in the room table
-  $fields = db()->field_info($tbl_room);
+  // Get the information about the columns in the room table
+  $columns = db()->field_info($tbl_room);
   
-  foreach ($fields as $field)
+  foreach ($columns as $column)
   {
-    if (!in_array($field['name'], $standard_fields['room']))
+    if (!in_array($column['name'], $standard_fields['room']))
     {
-      $label = get_loc_field_name($tbl_room, $field['name']);
-      $name = VAR_PREFIX . $field['name'];
-      $value = $data[$field['name']];
+      $label = get_loc_field_name($tbl_room, $column['name']);
+      $name = VAR_PREFIX . $column['name'];
+      $value = $data[$column['name']];
       
       // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
       // assume are intended to be booleans)
-      if (($field['nature'] == 'boolean') || 
-          (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+      if (($column['nature'] == 'boolean') ||
+          (($column['nature'] == 'integer') && isset($column['length']) && ($column['length'] <= 2)) )
       {
         $field = new FieldInputCheckbox();
         $field->setLabel($label)
@@ -93,7 +93,7 @@ function get_custom_fields($data)
       }
       // Output a textarea if it's a character string longer than the limit for a
       // text input
-      elseif (($field['nature'] == 'character') && isset($field['length']) && ($field['length'] > $text_input_max))
+      elseif (($column['nature'] == 'character') && isset($column['length']) && ($column['length'] > $text_input_max))
       {
         $field = new FieldTextarea();
         $field->setLabel($label)
@@ -106,9 +106,10 @@ function get_custom_fields($data)
       {
         $field = new FieldInputText();
         $field->setLabel($label)
-              ->setControlAttributes(array('name'     => $name,
-                                           'value'    => $value,
-                                           'disabled' => $disabled));
+              ->setControlAttributes(array('name'      => $name,
+                                           'value'     => $value,
+                                           'maxlength' => maxlength('room.' . $column['name']),
+                                           'disabled'  => $disabled));
       }
       $result[] = $field;
     }
@@ -155,10 +156,11 @@ function get_fieldset_general($data)
   // Room name
   $field = new FieldInputText();
   $field->setLabel(get_vocab('name'))
-        ->setControlAttributes(array('name'     => 'room_name',
-                                     'value'    => $data['room_name'],
-                                     'required' => true,
-                                     'disabled' => $disabled));
+        ->setControlAttributes(array('name'      => 'room_name',
+                                     'value'     => $data['room_name'],
+                                     'maxlength' => maxlength('room.room_name'),
+                                     'required'  => true,
+                                     'disabled'  => $disabled));
   $fieldset->addElement($field);
   
   // Sort key
@@ -167,9 +169,10 @@ function get_fieldset_general($data)
     $field = new FieldInputText();
     $field->setLabel(get_vocab('sort_key'))
           ->setLabelAttribute('title', get_vocab('sort_key_note'))
-          ->setControlAttributes(array('name'     => 'sort_key',
-                                       'value'    => $data['sort_key'],
-                                       'disabled' => $disabled));
+          ->setControlAttributes(array('name'      => 'sort_key',
+                                       'value'     => $data['sort_key'],
+                                       'maxlength' => maxlength('room.sort_key'),
+                                       'disabled'  => $disabled));
     $fieldset->addElement($field);
   }
   
@@ -189,9 +192,10 @@ function get_fieldset_general($data)
   // Description
   $field = new FieldInputText();
   $field->setLabel(get_vocab('description'))
-        ->setControlAttributes(array('name'     => 'description',
-                                     'value'    => $data['description'],
-                                     'disabled' => $disabled));
+        ->setControlAttributes(array('name'      => 'description',
+                                     'value'     => $data['description'],
+                                     'maxlength' => maxlength('room.description'),
+                                     'disabled'  => $disabled));
   $fieldset->addElement($field);
   
   // Capacity
@@ -203,14 +207,14 @@ function get_fieldset_general($data)
                                      'disabled' => $disabled));
   $fieldset->addElement($field);
   
-  // Area admin email
+  // Room admin email
   $field = new FieldInputEmail();
   $field->setLabel(get_vocab('room_admin_email'))
         ->setLabelAttribute('title', get_vocab('email_list_note'))
-        ->setControlAttributes(array('name'     => 'room_admin_email',
-                                     'value'    => $data['room_admin_email'],
-                                     'multiple' => true,
-                                     'disabled' => $disabled));
+        ->setControlAttributes(array('name'      => 'room_admin_email',
+                                     'value'     => $data['room_admin_email'],
+                                     'multiple'  => true,
+                                     'disabled'  => $disabled));
   $fieldset->addElement($field);
   
   // The custom HTML
