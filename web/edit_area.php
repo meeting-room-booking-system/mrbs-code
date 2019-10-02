@@ -111,10 +111,11 @@ function get_fieldset_general(array $data)
   // Area name
   $field = new FieldInputText();
   $field->setLabel(get_vocab('name'))
-        ->setControlAttributes(array('id'       => 'area_name',
-                                     'name'     => 'area_name',
-                                     'required' => true,
-                                     'value'    => $data['area_name']));
+        ->setControlAttributes(array('id'        => 'area_name',
+                                     'name'      => 'area_name',
+                                     'required'  => true,
+                                     'maxlength' => maxlength('area.area_name'),
+                                     'value'     => $data['area_name']));
   $fieldset->addElement($field);
   
   // Sort key
@@ -123,7 +124,8 @@ function get_fieldset_general(array $data)
         ->setLabelAttributes(array('title' => get_vocab('sort_key_note')))
         ->setControlAttributes(array('id'    => 'sort_key',
                                      'name'  => 'sort_key',
-                                     'value' => $data['sort_key']));
+                                     'value' => $data['sort_key'],
+                                     'maxlength' => maxlength('area.sort_key')));
   $fieldset->addElement($field);
                                      
   // Status - Enabled or Disabled
