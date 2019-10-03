@@ -572,7 +572,6 @@ function get_entries_n_outstanding($user)
   global $tbl_entry, $tbl_room, $tbl_area;
   
   $sql_approval_enabled = some_area_predicate('approval_enabled');
-  $sql_params = array();
 
   // Find out how many bookings are awaiting approval
   // (but only for areas where approval is required)
@@ -585,7 +584,7 @@ function get_entries_n_outstanding($user)
              AND A.disabled = 0
              AND $sql_approval_enabled";
 
-  $res = db()->query($sql, $sql_params);
+  $res = db()->query($sql);
 
   $result = 0;
 
