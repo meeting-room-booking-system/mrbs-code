@@ -287,7 +287,17 @@ $sql .= " ORDER BY repeat_id, start_time";
 
 $res = db()->query($sql, $sql_params);
 
-if ($res->count() == 0)
+$rows = array();
+
+for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+{
+  if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
+  {
+    $rows[] = $row;
+  }
+}
+
+if (count($rows) == 0)
 {
   echo "<p>" .get_vocab("none_outstanding") . "</p>\n";
 }
@@ -300,7 +310,7 @@ else  // display them in a table
   echo "<tbody>\n";
   $last_repeat_id = null;
   $is_series = false;
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  foreach ($rows as $row)
   { 
     if ($row['repeat_id'] != $last_repeat_id)
     // there's some kind of change

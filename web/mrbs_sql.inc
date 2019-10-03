@@ -576,7 +576,7 @@ function get_entries_n_outstanding(User $user)
 
   // Find out how many bookings are awaiting approval
   // (but only for areas where approval is required)
-  $sql = "SELECT COUNT(*)
+  $sql = "SELECT room_id, create_by
             FROM $tbl_entry E, $tbl_room R, $tbl_area A
            WHERE (status&" . STATUS_AWAITING_APPROVAL . " != 0)
              AND E.room_id = R.id
@@ -584,14 +584,22 @@ function get_entries_n_outstanding(User $user)
              AND R.disabled = 0
              AND A.disabled = 0
              AND $sql_approval_enabled";
-  if (!is_book_admin())
+
+  $res = db()->query($sql, $sql_params);
+
+  $result = 0;
+
+  // Get this user's own bookings awaiting approval or those made by others in rooms
+  // for which this user is a booking admin.
+  for ($i=0; $row = $res->row_keyed($i); $i++)
   {
-    // Ordinary users can only see their own
-    $sql .= " AND create_by=?";
-    $sql_params[] = $user->username;
+    if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
+    {
+      $result++;
+    }
   }
-  
-  return db()->query1($sql, $sql_params);
+
+  return $result;
 }
 
 
