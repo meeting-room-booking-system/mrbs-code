@@ -13,43 +13,58 @@ checkAuthorised(this_page());
 
 
 // Get non-standard form variables
-$sort_key = get_form_var('sort_key', 'string');
-$area_name = get_form_var('area_name', 'string');
-$area_disabled = get_form_var('area_disabled', 'string');
-$area_timezone = get_form_var('area_timezone', 'string');
-$area_admin_email = get_form_var('area_admin_email', 'string');
-$area_start_first_slot = get_form_var('area_start_first_slot', 'string');
-$area_start_last_slot = get_form_var('area_start_last_slot', 'string');
-$area_res_mins = get_form_var('area_res_mins', 'int');
-$area_def_duration_mins = get_form_var('area_def_duration_mins', 'int');
-$area_def_duration_all_day = get_form_var('area_def_duration_all_day', 'string');
-$area_min_create_ahead_enabled = get_form_var('area_min_create_ahead_enabled', 'string');
-$area_min_create_ahead_value = get_form_var('area_min_create_ahead_value', 'int');
-$area_min_create_ahead_units = get_form_var('area_min_create_ahead_units', 'string');
-$area_max_create_ahead_enabled = get_form_var('area_max_create_ahead_enabled', 'string');
-$area_max_create_ahead_value = get_form_var('area_max_create_ahead_value', 'int');
-$area_max_create_ahead_units = get_form_var('area_max_create_ahead_units', 'string');
-$area_min_delete_ahead_enabled = get_form_var('area_min_delete_ahead_enabled', 'string');
-$area_min_delete_ahead_value = get_form_var('area_min_delete_ahead_value', 'int');
-$area_min_delete_ahead_units = get_form_var('area_min_delete_ahead_units', 'string');
-$area_max_delete_ahead_enabled = get_form_var('area_max_delete_ahead_enabled', 'string');
-$area_max_delete_ahead_value = get_form_var('area_max_delete_ahead_value', 'int');
-$area_max_delete_ahead_units = get_form_var('area_max_delete_ahead_units', 'string');
-$area_max_duration_enabled = get_form_var('area_max_duration_enabled', 'string');
-$area_max_duration_periods = get_form_var('area_max_duration_periods', 'int');
-$area_max_duration_value = get_form_var('area_max_duration_value', 'int');
-$area_max_duration_units = get_form_var('area_max_duration_units', 'string');
-$area_private_enabled = get_form_var('area_private_enabled', 'string');
-$area_private_default = get_form_var('area_private_default', 'int');
-$area_private_mandatory = get_form_var('area_private_mandatory', 'string');
-$area_private_override = get_form_var('area_private_override', 'string');
-$area_approval_enabled = get_form_var('area_approval_enabled', 'string');
-$area_reminders_enabled = get_form_var('area_reminders_enabled', 'string');
-$area_enable_periods = get_form_var('area_enable_periods', 'string');
-$area_periods = get_form_var('area_periods', 'array');
-$area_confirmation_enabled = get_form_var('area_confirmation_enabled', 'string');
-$area_confirmed_default = get_form_var('area_confirmed_default', 'string');
-$custom_html = get_form_var('custom_html', 'string');
+$form_vars = array(
+  'sort_key'                      => 'string',
+  'area_name'                     => 'string',
+  'area_disabled'                 => 'string',
+  'area_timezone'                 => 'string',
+  'area_admin_email'              => 'string',
+  'area_start_first_slot'         => 'string',
+  'area_start_last_slot'          => 'string',
+  'area_res_mins'                 => 'int',
+  'area_def_duration_mins'        => 'int',
+  'area_def_duration_all_day'     => 'string',
+  'area_min_create_ahead_enabled' => 'string',
+  'area_min_create_ahead_value'   => 'int',
+  'area_min_create_ahead_units'   => 'string',
+  'area_max_create_ahead_enabled' => 'string',
+  'area_max_create_ahead_value'   => 'int',
+  'area_max_create_ahead_units'   => 'string',
+  'area_min_delete_ahead_enabled' => 'string',
+  'area_min_delete_ahead_value'   => 'int',
+  'area_min_delete_ahead_units'   => 'string',
+  'area_max_delete_ahead_enabled' => 'string',
+  'area_max_delete_ahead_value'   => 'int',
+  'area_max_delete_ahead_units'   => 'string',
+  'area_max_duration_enabled'     => 'string',
+  'area_max_duration_periods'     => 'int',
+  'area_max_duration_value'       => 'int',
+  'area_max_duration_units'       => 'string',
+  'area_private_enabled'          => 'string',
+  'area_private_default'          => 'int',
+  'area_private_mandatory'        => 'string',
+  'area_private_override'         => 'string',
+  'area_approval_enabled'         => 'string',
+  'area_reminders_enabled'        => 'string',
+  'area_enable_periods'           => 'string',
+  'area_periods'                  => 'array',
+  'area_confirmation_enabled'     => 'string',
+  'area_confirmed_default'        => 'string',
+  'custom_html'                   => 'string'
+);
+
+foreach($form_vars as $var => $var_type)
+{
+  $$var = get_form_var($var, $var_type);
+
+  // Trim the strings and truncate them to the maximum field length
+  if (is_string($$var))
+  {
+    $$var = trim($$var);
+    $$var = truncate($$var, "area.$var");
+  }
+
+}
 
 // Get the max_per_interval form variables
 foreach ($interval_types as $interval_type)

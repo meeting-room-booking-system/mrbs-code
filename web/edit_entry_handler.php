@@ -22,30 +22,6 @@ function invalid_booking($message)
 }
 
 
-// Truncate any fields that have a maximum length as a precaution.
-// Although the MAXLENGTH attribute is used in the <input> tag, this can
-// sometimes be ignored by the browser, for example by Firefox when 
-// autocompletion is used.  The user could also edit the HTML and remove
-// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
-// does not accept a maxlength attribute.  Passing an oversize string to some
-// databases (eg some versions of PostgreSQL) results in an SQL error,
-// rather than silent truncation of the string.
-//
-// We truncate to a maximum number of UTF8 characters rather than bytes.
-// This is OK in current versions of MySQL and PostgreSQL, though in earler
-// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
-// as a VARCHAR(n) was n bytes long rather than n characters.
-function truncate($value, $column)
-{
-  if (null !== ($maxlength = maxlength($column)))
-  {
-    return utf8_substr($value, 0, $maxlength);
-  }
-  
-  return $value;
-}
-
-
 $ajax = get_form_var('ajax', 'int');
 if ($ajax && !checkAuthorised(this_page(), true))
 {
@@ -84,41 +60,43 @@ $current_username = getUserName();
 // the validity of a proposed booking and does not make the booking.
 
 // Get non-standard form variables
-$formvars = array('create_by'          => 'string',
-                  'name'               => 'string',
-                  'description'        => 'string',
-                  'start_seconds'      => 'int',
-                  'start_date'         => 'string',
-                  'end_seconds'        => 'int',
-                  'end_date'           => 'string',
-                  'all_day'            => 'string',  // bool, actually
-                  'type'               => 'string',
-                  'rooms'              => 'array',
-                  'original_room_id'   => 'int',
-                  'ical_uid'           => 'string',
-                  'ical_sequence'      => 'int',
-                  'ical_recur_id'      => 'string',
-                  'returl'             => 'string',
-                  'id'                 => 'int',
-                  'rep_id'             => 'int',
-                  'edit_type'          => 'string',
-                  'rep_type'           => 'int',
-                  'rep_end_date'       => 'string',
-                  'rep_day'            => 'array',   // array of bools
-                  'rep_interval'       => 'int',
-                  'month_type'         => 'int',
-                  'month_absolute'     => 'int',
-                  'month_relative_ord' => 'string',
-                  'month_relative_day' => 'string',
-                  'skip'               => 'string',  // bool, actually
-                  'no_mail'            => 'string',  // bool, actually
-                  'private'            => 'string',  // bool, actually
-                  'confirmed'          => 'string',
-                  'back_button'        => 'string',
-                  'timetohighlight'    => 'int',
-                  'commit'             => 'string');
+$form_vars = array(
+  'create_by'          => 'string',
+  'name'               => 'string',
+  'description'        => 'string',
+  'start_seconds'      => 'int',
+  'start_date'         => 'string',
+  'end_seconds'        => 'int',
+  'end_date'           => 'string',
+  'all_day'            => 'string',  // bool, actually
+  'type'               => 'string',
+  'rooms'              => 'array',
+  'original_room_id'   => 'int',
+  'ical_uid'           => 'string',
+  'ical_sequence'      => 'int',
+  'ical_recur_id'      => 'string',
+  'returl'             => 'string',
+  'id'                 => 'int',
+  'rep_id'             => 'int',
+  'edit_type'          => 'string',
+  'rep_type'           => 'int',
+  'rep_end_date'       => 'string',
+  'rep_day'            => 'array',   // array of bools
+  'rep_interval'       => 'int',
+  'month_type'         => 'int',
+  'month_absolute'     => 'int',
+  'month_relative_ord' => 'string',
+  'month_relative_day' => 'string',
+  'skip'               => 'string',  // bool, actually
+  'no_mail'            => 'string',  // bool, actually
+  'private'            => 'string',  // bool, actually
+  'confirmed'          => 'string',
+  'back_button'        => 'string',
+  'timetohighlight'    => 'int',
+  'commit'             => 'string'
+);
       
-foreach($formvars as $var => $var_type)
+foreach($form_vars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
   
@@ -337,7 +315,7 @@ if ($no_mail)
 if ($ajax && $commit)
 {
   $old_booking = get_booking_info($id, false);
-  foreach ($formvars as $var => $var_type)
+  foreach ($form_vars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
     {
@@ -867,7 +845,7 @@ if (empty($result['violations']['errors'])  &&
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round
   // First the ordinary fields
-  foreach ($formvars as $var => $var_type)
+  foreach ($form_vars as $var => $var_type)
   {
     if ($var_type == 'array')
     {
