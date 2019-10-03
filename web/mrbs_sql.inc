@@ -593,7 +593,7 @@ function get_entries_n_outstanding(User $user)
   // for which this user is a booking admin.
   for ($i=0; $row = $res->row_keyed($i); $i++)
   {
-    if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
+    if ((strcasecmp($row['create_by'], $user->username) === 0) || is_book_admin($row['room_id']))
     {
       $result++;
     }

@@ -275,12 +275,6 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
 
 $sql_params = array();
 
-// Ordinary users can only see their own bookings       
-if (!is_book_admin())
-{
-  $sql .= " AND E.create_by=?";
-  $sql_params[] = $user;
-}
 // We want entries for a series to appear together so that we can display
 // them as a separate table below the main entry for the series. 
 $sql .= " ORDER BY repeat_id, start_time";
