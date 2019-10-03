@@ -155,6 +155,31 @@ function maxlength($column)
   return (isset($maxlengths[$column])) ? $maxlengths[$column] : null;
 }
 
+
+// Truncate any fields that have a maximum length as a precaution.
+// Although the MAXLENGTH attribute is used in the <input> tag, this can
+// sometimes be ignored by the browser, for example by Firefox when
+// autocompletion is used.  The user could also edit the HTML and remove
+// the MAXLENGTH attribute.    Another problem is that the <datalist> tag
+// does not accept a maxlength attribute.  Passing an oversize string to some
+// databases (eg some versions of PostgreSQL) results in an SQL error,
+// rather than silent truncation of the string.
+//
+// We truncate to a maximum number of UTF8 characters rather than bytes.
+// This is OK in current versions of MySQL and PostgreSQL, though in earler
+// versions of MySQL (I haven't checked PostgreSQL) this could cause problems
+// as a VARCHAR(n) was n bytes long rather than n characters.
+function truncate($value, $column)
+{
+  if (null !== ($maxlength = maxlength($column)))
+  {
+    return utf8_substr($value, 0, $maxlength);
+  }
+
+  return $value;
+}
+
+
 // Formats a number taking into account the current locale.  (Could use
 // the NumberFormatter class, but the intl extension isn't always installed.)
 function number_format_locale($number, $decimals=0)
