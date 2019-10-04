@@ -56,7 +56,7 @@ function getUserName()
 
   if (!empty($_COOKIE) && isset($_COOKIE["SessionToken"]))
   {
-    $token = unslashes($_COOKIE["SessionToken"]);
+    $token = $_COOKIE["SessionToken"];
   }
 
   if (isset($token) && ($token != ""))

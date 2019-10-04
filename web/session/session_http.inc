@@ -31,14 +31,7 @@ function getAuthPassword()
 {
   global $server;
   
-  if (isset($server['PHP_AUTH_PW']))
-  {
-    return unslashes($server['PHP_AUTH_PW']);
-  }
-  else
-  {
-    return null;
-  }
+  return (isset($server['PHP_AUTH_PW'])) ? $server['PHP_AUTH_PW'] : null;
 }
 
 function getUserName()
@@ -52,7 +45,7 @@ function getUserName()
 
   if (isset($server['PHP_AUTH_USER']))
   {
-    $user = unslashes($server['PHP_AUTH_USER']);
+    $user = $server['PHP_AUTH_USER'];
 
     if ((isset($authorised_user) && ($authorised_user == $user)) ||
         (authValidateUser($user, getAuthPassword()) !== false))

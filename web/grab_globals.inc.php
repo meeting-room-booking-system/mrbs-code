@@ -71,11 +71,10 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   {
     if ($var_type == 'int')
     {
-      $value = intval(unslashes($value));
+      $value = intval($value);
     }
     elseif ($var_type == 'decimal')
     {
-      $value = unslashes($value);
       // This isn't a very good sanitisation as it will let through thousands separators and
       // also multiple decimal points.  It needs to be improved, but care needs to be taken
       // over, for example, whether a comma should be allowed for a decimalk point.  So for
@@ -85,17 +84,6 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
       if ($value === '')
       {
         $value = null;
-      }
-    }
-    elseif ($var_type == 'string')
-    {
-      $value = unslashes($value);
-    }
-    elseif ($var_type == 'array')
-    {
-      foreach ($value as $arrkey => $arrvalue)
-      {
-        $value[$arrkey] = unslashes($arrvalue);
       }
     }
   }

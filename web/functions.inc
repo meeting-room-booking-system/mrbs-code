@@ -1048,22 +1048,6 @@ function escape_js($str)
 }
 
 
-// Remove backslash-escape quoting if PHP is configured to do it with
-// magic_quotes_gpc. Use this whenever you need the actual value of a GET/POST
-// form parameter (which might have special characters) regardless of PHP's
-// magic_quotes_gpc setting.
-function unslashes($s)
-{
-  if (get_magic_quotes_gpc())
-  {
-    return stripslashes($s);
-  }
-  else
-  {
-    return $s;
-  }
-}
-
 // Return a default area; used if no area is already known. This returns the
 // area that contains the default room (if it is set, valid and enabled) otherwise the
 // first area in alphabetical order in the database (no guarantee there is an area 1).

@@ -239,7 +239,7 @@ class Form extends Element
 
     if (!empty($_COOKIE) && isset($_COOKIE["MRBS_CSRF"]))
     {
-      $token = \MRBS\unslashes($_COOKIE["MRBS_CSRF"]);
+      $token = $_COOKIE["MRBS_CSRF"];
     }
     
     //error_log("Checking CSRF cookie");
