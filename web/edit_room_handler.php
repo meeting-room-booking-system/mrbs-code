@@ -141,7 +141,6 @@ if (empty($errors))
     // Convert booleans into 0/1 (necessary for PostgreSQL)
     $room_disabled = (!empty($room_disabled)) ? 1 : 0;
     $sql = "UPDATE $tbl_room SET ";
-    $n_fields = count($fields);
     $sql_params = array();
     $assign_array = array();
     foreach ($fields as $field)
