@@ -134,7 +134,7 @@ class SessionCookie extends SessionWithLogin
       return array();
     }
     
-    $token = \MRBS\unslashes($_COOKIE[$name]);
+    $token = $_COOKIE[$name];
     
     if (!isset($token) || ($token === ''))
     {

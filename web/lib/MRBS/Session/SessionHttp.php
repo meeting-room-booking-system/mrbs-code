@@ -27,7 +27,7 @@ class SessionHttp extends SessionWithLogin
 
     if (isset($server['PHP_AUTH_USER']))
     {
-      $user = \MRBS\unslashes($server['PHP_AUTH_USER']);
+      $user = $server['PHP_AUTH_USER'];
 
       if ((isset($authorised_user) && ($authorised_user == $user)) ||
           (\MRBS\authValidateUser($user, self::getAuthPassword()) !== false))
@@ -59,13 +59,6 @@ class SessionHttp extends SessionWithLogin
   {
     global $server;
     
-    if (isset($server['PHP_AUTH_PW']))
-    {
-      return \MRBS\unslashes($server['PHP_AUTH_PW']);
-    }
-    else
-    {
-      return null;
-    }
+    return (isset($server['PHP_AUTH_PW'])) ? $server['PHP_AUTH_PW'] : null;
   }
 }
