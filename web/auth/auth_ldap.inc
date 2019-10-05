@@ -284,15 +284,15 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
             $entries = ldap_get_entries($ldap, $res);
             $dn = $entries[0]["dn"];
             $user_search = "distinguishedName=" . $dn;
+            authLdapDebug("authLdapAction: base_dn '".
+                          $all_ldap_opts['ldap_base_dn'][$idx].
+                          "' user '$user' dn '$dn'");
           }
           else
           {
             authLdapDebug("authLdapAction: Didn't find entry using '".
                           $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
           }
-          authLdapDebug("authLdapAction: base_dn '".
-                        $all_ldap_opts['ldap_base_dn'][$idx].
-                        "' user '$user' dn '$dn'");
         }
       }
       else
