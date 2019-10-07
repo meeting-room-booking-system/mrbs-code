@@ -726,11 +726,6 @@ table.dwm_main {
   box-sizing: content-box;
 }
 
-.dwm_main .booked.multiply a,
-.dwm_main .booked.multiply .booking {
-  position: relative;
-}
-
 <?php 
 // Catch IE10 and IE11 only
 // IE10 and IE11 don't support position: relative on the <td> so we have to do it on
@@ -746,8 +741,17 @@ table.dwm_main {
 
 .dwm_main .booking {
   width: 100%;
-  height: 100%;
+  height: 100%; <?php // overridden if .booked.multiply ?>
   min-height: <?php echo $main_cell_height ?>;
+}
+
+.dwm_main .booked.multiply a,
+.dwm_main .booked.multiply .booking {
+  position: relative;
+}
+
+.dwm_main .booked.multiply .booking {
+  height: <?php echo $main_cell_height ?>; <?php // overrides .dwm_main .booking { height: 100%; } ?>
 }
 
 .dwm_main .booked a {

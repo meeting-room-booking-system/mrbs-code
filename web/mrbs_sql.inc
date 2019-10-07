@@ -522,7 +522,7 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
              AND R.area_id = ?
              AND R.disabled = 0
              AND start_time < ? AND end_time > ?
-        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+        ORDER BY start_time, E.id";   // necessary so that multiple bookings appear in the right order
 
   $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
   
@@ -550,7 +550,7 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
             FROM $tbl_entry
            WHERE room_id = ?
              AND start_time < ? AND end_time > ?
-        ORDER BY start_time";   // necessary so that multiple bookings appear in the right order
+        ORDER BY start_time, id";   // necessary so that multiple bookings appear in the right order
         
   $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
   
