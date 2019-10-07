@@ -2,7 +2,7 @@
 namespace MRBS;
 
                             
-function map_add_booking (array $entry, &$column, $start_first_slot, $start_last_slot)
+function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot)
 {
   // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
@@ -32,8 +32,9 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   // the array consists of an array of entries that fall in that slot.
   //
   // Normally of course there will only be one entry per slot, but it is possible to have
-  // multiple entries per slot if the resolution is increased or the day shifted since the
-  // original bookings were made.  For example if you previously had a resolution of 1800 
+  // multiple entries per slot if the resolution is increased, the day shifted since the
+  // original bookings were made, or if the bookings were made using an older version of MRBS
+  // that had faulty conflict detection.  For example if you previously had a resolution of 1800
   // seconds you might have a booking (A) for 1000-1130 and another (B) for 1130-1230.
   // If you then increase the resolution to 3600 seconds, these two bookings 
   // will both occupy the 1100-1200 time slot.
@@ -41,8 +42,7 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   // Each entry also has the following keys added:
   //       is_multiday_start  a boolean indicating if the booking stretches beyond the day start
   //       is_multiday_end    a boolean indicating if the booking stretches beyond the day end                            
-  //       first_slot         the value of the first slot in nominal seconds
-  //       n_slots            the number of slots the booking lasts
+  //       n_slots            the number of slots the booking lasts (tentatively set to 1)
   
   // s is the number of nominal seconds (ie ignoring DST changes] since the
   // start of the calendar day which has the start of the booking day
@@ -95,12 +95,10 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
   // Get some additional information about the entry related to the way it displays on the page
   $entry['is_multiday_start'] = ($entry['start_time'] < $start_first_slot);
   $entry['is_multiday_end'] = ($entry['end_time'] > ($start_last_slot + $resolution));
-  
-  // Find the number of time slots that the booking occupies, and the index of the first slot
-  // that this booking has entirely to itself. We need to adjust the start and end times
-  // for DST transitions as the display ignores DST.
-  $entry['n_slots'] = intval((($end_t - $start_t) - cross_dst($start_t, $end_t))/$resolution) + 1;
-  $entry['first_slot'] = $start_s;
+
+  // Tentatively assume that this booking occupies 1 slot.  Call map_coalesce_bookings()
+  // later to fix it.
+  $entry['n_slots'] = 1;
               
   for ($s = $start_s; $s <= $end_s; $s += $resolution)
   { 
@@ -109,56 +107,58 @@ function map_add_booking (array $entry, &$column, $start_first_slot, $start_last
       $column[$s] = array();
     }
     array_push($column[$s], $entry);
-    
-    // If there is more than one booking to land in this slot then we have a multiple booking
-    // and will need to (a) make all bookings one slot long, (b) truncate the previous
-    // bookings if it hasn't already been done and (c) start this booking afresh in the next slot.
-    // Fortunately the task is made simpler because we know that MRBS will not have allowed
-    // overlapping bookings to have been made (although they may overlap when shown in the table
-    // due to the display resolution).
 
-    if (count($column[$s]) > 1)
+  }
+} // end function map_add_booking()
+
+
+function map_coalesce_bookings(&$column)
+{
+  // Coalesces map entries for a room that span consecutive time slots.
+  //
+  // The map_add_booking() function set n_slots=1 for all map entries.  For each
+  // booking in the room that spans multiple consecutive time slots, and that
+  // does not have conflicting bookings, the first entry will have its slot
+  // count adjusted, and the continuation entries will have their n_slots
+  // attribute set to NULL.
+  //
+  // $column            the column of the map to analyze, from map_add_booking()
+
+  global $resolution;
+
+  // Iterate through pairs of consecutive time slots in reverse chronological
+  // order
+  for (end($column); ($s = key($column)) !== null; prev($column))
+  {
+    $p = $s - $resolution;      // The preceding time slot
+    if (isset($column[$p]))
     {
-      // Make all the bookings in this slot one slot long
-      foreach ($column[$s] as $slot_entry)
+      if (count($column[$s]) == 1)
       {
-        $slot_entry['first_slot'] = $s;
-        $slot_entry['n_slots'] = 1;
-      }
-      
-      // Truncate the previous bookings that go into this slot (if there are some)
-      // We only need to do it if there is only one entry in the previous slot, because if
-      // there are more than one then they will already be just one slot long
-      if ($s > $start_s)
-      {
-        if (count($column[$s - $resolution]) == 1)
+        // Single booking for time slot $s.  If this event is a continuation
+        // of a sole event from time slot $p (the previous slot), then
+        // increment the slot count of the same booking in slot $p, and clear
+        // out the redundant attributes in slot $s.
+        if (count($column[$p]) == 1 && $column[$p][0]['id'] == $column[$s][0]['id'])
         {
-          $entry_id = $column[$s - $resolution][0]['id'];
-          for ($i= $start_s; $i < $s; $i += $resolution)
-          {
-            foreach ($column[$i] as &$earlier_slot_entry)
-            {
-              if ($earlier_slot_entry['id'] == $entry_id)
-              {
-                $earlier_slot_entry['n_slots']--;
-              }
-            }
-            unset($earlier_slot_entry); // Break the reference
-          }
+          $this_booking = &$column[$s][0];
+          $prev_booking = &$column[$p][0];
+          $prev_booking['n_slots'] = 1 + $this_booking['n_slots'];
+          $this_booking['n_slots'] = null;
         }
-
       }
-      
-      // Make the current booking start at the next slot (if there is one)
-      if ($s < $end_s)
+
+      else
       {
-        $entry['n_slots'] = $entry['n_slots'] - (1 + $s - $entry['first_slot'])/$resolution;
-        $entry['first_slot'] = $s + $resolution;
+        // Multiple bookings for time slot $s.  Mark all of them as 1 slot.
+        foreach ($column[$s] as &$booking)
+        {
+          $booking['n_slots'] = 1;
+        }
       }
     }
-  }  // end for
-  
-} // end function map_add_booking()
+  }
+} // end function map_coalesce_bookings()
 
 
 
@@ -184,13 +184,13 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
   global $approval_enabled, $confirmation_enabled;
   
   $html = '';
-  
-  // Don't put in a <td> cell if the slot is booked and there's no description.
+
+  // Don't put in a <td> cell if the slot is contains a single booking whose n_slots is NULL.
   // This would mean that it's the second or subsequent slot of a booking and so the
   // <td> for the first slot would have had a rowspan that extended the cell down for
   // the number of slots of the booking.
 
-  if (empty($cell) || ($cell[0]['first_slot'] == $s))
+  if (empty($cell) || !is_null($cell[0]['n_slots']))
   {
     if (!empty($cell))
     {
@@ -562,6 +562,14 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
   }
 
+  foreach ($rooms as $room)
+  {
+    if (isset($today[$room['id']]))
+    {
+      map_coalesce_bookings($today[$room['id']][$day]);
+    }
+  }
+
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
@@ -795,6 +803,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     {
       map_add_booking($entry, $week_map[$room_id][$j], $start_first_slot[$j], $start_last_slot[$j]);
     }
+    map_coalesce_bookings($week_map[$room_id][$j]);
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
   
