@@ -134,12 +134,20 @@ function authValidateUser($user, $pass)
   $valid_usernames = array_merge($valid_usernames, authValidateEmail($user, $pass));
   $valid_usernames = array_unique($valid_usernames);
 
-  $now = time();
-  $sql = "UPDATE $tbl_users SET last_login=?, timestamp=timestamp WHERE name=?";
-  $sql_params = array($now, $user);
-  db()->command($sql, $sql_params);
-
-  return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
+  if (count($valid_usernames) == 1)
+  {
+    $result = $valid_usernames[0];
+    // Update the database with this login, but don't change the timestamp
+    $now = time();
+    $sql = "UPDATE $tbl_users SET last_login=?, timestamp=timestamp WHERE name=?";
+    $sql_params = array($now, $result);
+    db()->command($sql, $sql_params);
+    return $result;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 
