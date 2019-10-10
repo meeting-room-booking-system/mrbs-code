@@ -1050,7 +1050,7 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
   // of the last repeat id we've seen
   $ical_events = array();
   $n_rows = $res->count();
-  
+
   for ($i = 0; ($row = $res->row_keyed($i)); $i++)
   {
     unpack_status($row);
@@ -1059,113 +1059,160 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
     {
       $ical_events[] = create_ical_event($method, $row);
     }
+
     // Otherwise it's a series
     else
     {
-      // If this is the first row in a series
-      if (!isset($actual_entries))
+      // If we haven't started a series, then start one
+      if (!isset($series))
       {
-        // Initialise for the new series
-        $last_repeat_id = $row['repeat_id'];
-        unset($replace_index);
-        // We need to set the repeat start and end dates because we've only been
-        // asked to export dates in the report range.  The end date will be the earlier
-        // of the series end date and the report end date.  The start date of the series
-        // will be the recurrence-id of the first entry in the series, which is this one
-        // thanks to the SQL query which ordered the entries by recurrence-id.
-        $start_row = $row;  // Make a copy of the data because we are going to tweak it.
-        $start_row['end_date'] = min($export_end, $start_row['end_date']);
-        $duration = $start_row['end_time'] - $start_row['start_time'];
-        $start_row['start_time'] = strtotime($row['ical_recur_id']);
-        $start_row['end_time'] = $start_row['start_time'] + $duration;
-        // However, if this is a series member that has been changed, then we 
-        // cannot trust the rest of the data (eg the description).   We will
-        // use this data for now in case we don't get anything better, but we
-        // will make a note that we really need an unchanged member of the series, 
-        // which will have the correct data for the series which we can use to
-        // replace this event.   (Of course, if we don't get an unchanged member
-        // then it doesn't matter because all the original members will have been
-        // changed and so there's no longer any need for the original data.)
-        if ($row['entry_type'] == ENTRY_RPT_CHANGED)
-        {
-          // Record the index number of the event that needs to be replaced.
-          // As we have not yet added that event to the array, it will be
-          // the current length of the array.
-          $replace_index = count($ical_events);
-        }
-        // Construct an array of the entries we'd expect to see in this series so that
-        // we can check whether any are missing and if so set their status to cancelled.
-        // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
-        // have changed since the series was created.)
-        $rep_details = array();
-        foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
-        {
-          if (isset($start_row[$key]))
-          {
-            $rep_details[$key] = $start_row[$key];
-          }
-        }
-        
-        $expected_entries = mrbsGetRepeatEntryList($start_row['start_time'], 
-                                                   $start_row['end_date'],
-                                                   $rep_details,
-                                                   PHP_INT_MAX);
-                                                   
-        // And keep an array of all the entries we actually see
-        $actual_entries = array();
+        $series = new Series($row, $export_end);
       }
-      
-      // If this row is a member of the current series
-      if ($row['repeat_id'] == $last_repeat_id)
+
+      // If this row is a member of the current series, add the row to the series
+      if ($row['repeat_id'] == $series->repeat_id)
       {
-        // Add this entry to the array of ones we've seen
-        $actual_entries[] = strtotime($row['ical_recur_id']);
-        // And if it's a series member that has been altered
-        if ($row['entry_type'] == ENTRY_RPT_CHANGED)
-        {
-          $ical_events[] = create_ical_event($method, $row);
-        }
-        // Otherwise it must be an original member, in which case check
-        // to see if we were looking out for one
-        elseif (isset($replace_index))
-        {
-          // Use this row to define the sequence as it has got all the original
-          // data, except that we need to change the start and end times, keeping
-          // the original duration.   We get the start time from the recurrence
-          // id of the first member of the series, which we saved earlier on.
-          $duration = $row['end_time'] - $row['start_time'];
-          $row['start_time'] = $start_row['start_time'];
-          $row['end_time'] = $row['start_time'] + $duration;
-          $row['end_date'] = min($export_end, $row['end_date']);
-          $ical_events[$replace_index] = create_ical_event($method, $row, NULL, TRUE);
-          // Clear the $replace_index now that we've found an original entry
-          unset ($replace_index);
-        }
+        $series->addRow($row);
       }
-      
-      
+
       // If it's a series that we haven't seen yet, or we've got no more
-      // rows then construct an event
-      if (($row['repeat_id'] != $last_repeat_id) || ($i == $n_rows - 1))
+      // rows then process the series
+      if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
-        $start_row['skip_list'] = array_diff($expected_entries, $actual_entries);
-        // Create the series event
-        $ical_events[] = create_ical_event($method, $start_row, NULL, TRUE);
-        
-        // If we're at the start of a new series, then rewind one and
-        // clear the actual entries
+        $series_events = $series->toEvents($method);
+        foreach ($series_events as $series_event)
+        {
+          $ical_events[] = $series_event;
+        }
+        unset($series);
+
+
+        // If we're at the start of a new series then create a new series
         if ($i < ($n_rows - 1))
         {
-          $i--;
-          unset ($actual_entries);
+          $series = new Series($row, $export_end);
         }
+
       }
-      
     }
   }
   
   // Build the iCalendar from the array of events and output it
   $icalendar = create_icalendar($method, $ical_events);
   echo $icalendar;
+}
+
+
+class Series
+{
+  public $repeat_id;
+
+  private $data;
+  private $original_row;
+  private $start_row;
+  private $expected_entries;
+  private $actual_entries;
+
+  // Constructs a new Series object and adds $row to it.
+  // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
+  // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
+  public function __construct(array $row, $limit=null)
+  {
+    if (!isset($limit))
+    {
+      $limit = PHP_INT_MAX;
+    }
+
+    $this->data = array();
+    $this->repeat_id = $row['repeat_id'];
+
+    // Save the row as an original row, in case we never get a better one
+    $this->original_row = $row;
+
+    // We need to set the repeat start and end dates because we've only been
+    // asked to export dates in the report range.  The end date will be the earlier
+    // of the series end date and the report end date.  The start date of the series
+    // will be the recurrence-id of the first entry in the series, which is this one
+    // thanks to the SQL query which ordered the entries by recurrence-id.
+    $this->start_row = $row;  // Make a copy of the data because we are going to tweak it.
+    $this->start_row['end_date'] = min($limit, $this->start_row['end_date']);
+    $duration = $this->start_row['end_time'] - $this->start_row['start_time'];
+    $this->start_row['start_time'] = strtotime($row['ical_recur_id']);
+    $this->start_row['end_time'] = $this->start_row['start_time'] + $duration;
+
+    // Construct an array of the entries we'd expect to see in this series so that
+    // we can check whether any are missing and if so set their status to cancelled.
+    // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
+    // have changed since the series was created.)
+    $rep_details = array();
+
+    foreach (array('rep_type', 'rep_opt', 'rep_num_weeks', 'month_absolute', 'month_relative') as $key)
+    {
+      if (isset($this->start_row[$key]))
+      {
+        $rep_details[$key] = $this->start_row[$key];
+      }
+    }
+
+    $this->expected_entries = mrbsGetRepeatEntryList(
+      $this->start_row['start_time'],
+      $this->start_row['end_date'],
+      $rep_details,
+      PHP_INT_MAX
+    );
+
+    // And keep an array of all the entries we actually see
+    $this->actual_entries = array();
+
+    // And finally add the row to the series
+    $this->addRow($row);
+  }
+
+
+  // Add a row to the series
+  public function addRow(array $row)
+  {
+    // Add the row to the data array
+    $this->data[] = $row;
+
+    // Add this entry to the array of ones we've seen
+    $this->actual_entries[] = strtotime($row['ical_recur_id']);
+
+    // And if it's an original row save it, because it will have all the original data,
+    // eg description, which we can use later.
+    if (($this->original_row['entry_type'] == ENTRY_RPT_CHANGED) &&
+        ($row['entry_type'] == ENTRY_RPT_ORIGINAL))
+    {
+      $this->original_row = $row;
+    }
+  }
+
+
+  // Convert the series to an array of iCalendar events.
+  // $method ids the METHOD, eg 'PUBLISH'.
+  public function toEvents($method)
+  {
+    $events = array();
+
+    $this->original_row['start_time'] = $this->start_row['start_time'];
+    $this->original_row['end_time']   = $this->start_row['end_time'];
+    $this->original_row['end_date']   = $this->start_row['end_date'];
+
+    // Create the series event
+    $this->original_row['skip_list'] = array_diff($this->expected_entries, $this->actual_entries);
+    $events[] = create_ical_event($method, $this->original_row, null, true);
+
+    // Then iterate through the series looking for changed entries
+    foreach($this->data as $entry)
+    {
+      if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
+      {
+        $events[] = create_ical_event($method, $entry);
+      }
+    }
+
+    return $events;
+  }
+
 }
 
