@@ -197,8 +197,12 @@ function get_field_entry_input($params)
 
 function get_field_create_by($create_by, $disabled=false)
 {
-  if (function_exists(__NAMESPACE__ . "\\authGetUsernames")  &&
-    !empty($users = authGetUsernames()))
+  if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
+  {
+    $users = authGetUsernames();
+  }
+
+  if (!empty($users))
   {
     // We can get a list of all users, so present a <select> element
     $options = array();
