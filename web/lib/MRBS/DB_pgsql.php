@@ -224,7 +224,7 @@ class DB_pgsql extends DB
   
     $stmt = $this->query($sql, $sql_params);
 
-    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
+    while (false !== ($row = $stmt->next_row_keyed()))
     {
       $name = $row['column_name'];
       $type = $row['data_type'];
@@ -253,14 +253,16 @@ class DB_pgsql extends DB
       // Convert the is_nullable field to a boolean
       $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? true : false;
     
-      $fields[$i]['name'] = $name;
-      $fields[$i]['type'] = $type;
-      $fields[$i]['nature'] = $nature;
-      $fields[$i]['length'] = $length;
-      $fields[$i]['is_nullable'] = $is_nullable;
+      $fields[] = array(
+          'name' => $name,
+          'type' => $type,
+          'nature' => $nature,
+          'length' => $length,
+          'is_nullable' => $is_nullable
+        );
     }
+    
     return $fields;
-
   }
   
   // Syntax methods

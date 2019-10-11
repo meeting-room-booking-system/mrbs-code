@@ -401,7 +401,7 @@ if (!$ajax_capable || $ajax)
 {
   $returl = this_page() . "?search_str=$search_str&from_date=$from_date";
 
-  for ($i = 0; ($row = $result->row_keyed($i)); $i++)
+  while (false !== ($row = $result->next_row_keyed()))
   {
     output_row($row, $returl);
   }

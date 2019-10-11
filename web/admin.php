@@ -252,7 +252,7 @@ if (isset($area))
 
   if ($res->count() == 1)
   {
-    $row = $res->row_keyed(0);
+    $row = $res->next_row_keyed();
     $area_name = $row['area_name'];
     $custom_html = $row['custom_html'];
   }
@@ -275,7 +275,8 @@ $res = db()->query($sql);
 
 $enabled_areas = array();
 $disabled_areas = array();
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+
+while (false !== ($row = $res->next_row_keyed()))
 {
   if ($row['disabled'])
   {

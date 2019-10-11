@@ -183,7 +183,7 @@ function authValidateUsername($user, $pass)
 
   $res = db()->query($sql, $sql_params);
   
-  $row = $res->row_keyed(0);
+  $row = $res->next_row_keyed();
   
   if (!isset($row['password_hash']))
   {

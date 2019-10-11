@@ -247,7 +247,8 @@ class DB_mysql extends DB
     $stmt = $this->query("SHOW COLUMNS FROM $table", array());
 
     $fields = array();
-    for ($i = 0; ($row = $stmt->row_keyed($i)); $i++)
+    
+    while (false !== ($row = $stmt->next_row_keyed()))
     {
       $name = $row['Field'];
       $type = $row['Type'];
@@ -282,11 +283,13 @@ class DB_mysql extends DB
       // Convert the is_nullable field to a boolean
       $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? true : false;
     
-      $fields[$i]['name'] = $name;
-      $fields[$i]['type'] = $type;
-      $fields[$i]['nature'] = $nature;
-      $fields[$i]['length'] = $length;
-      $fields[$i]['is_nullable'] = $is_nullable;
+      $fields[] = array(
+          'name' => $name,
+          'type' => $type,
+          'nature' => $nature,
+          'length' => $length,
+          'is_nullable' => $is_nullable
+        );
     }
     
     return $fields;

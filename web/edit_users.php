@@ -611,7 +611,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     // If it's an existing user then get the data from the database
     $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($id));
-    $data = $result->row_keyed(0);
+    $data = $result->next_row_keyed();
     unset($result);
     // Check that we've got a valid result.   We should do normally, but if somebody alters
     // the id parameter in the query string then we won't.   If the result is invalid, go somewhere
