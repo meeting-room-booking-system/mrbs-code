@@ -162,10 +162,12 @@ class DB
     $stmt = $this->query($sql, $params);
 
     $result = array();
-    for ($i = 0; ($row = $stmt->row($i)); $i++)
+    
+    while (false !== ($row = $stmt->next_row()))
     {
       $result[] = $row[0];
     }
+    
     return $result;
   }
 

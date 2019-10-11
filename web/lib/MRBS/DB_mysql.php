@@ -81,8 +81,7 @@ class DB_mysql extends DB
       return false;
     }
     
-    $row = $stmt->row(0);
-    $result = $row[0];
+    $result = $stmt->next_row()[0];
     
     if ($result == '1')
     {
@@ -147,8 +146,7 @@ class DB_mysql extends DB
       return false;
     }
     
-    $row = $stmt->row(0);
-    $result = $row[0];
+    $result = $stmt->next_row()[0];
     
     if ($result == '1')
     {
