@@ -125,6 +125,11 @@ function map_coalesce_bookings(&$column)
   // $column            the column of the map to analyze, from map_add_booking()
 
   global $resolution;
+  
+  if (!isset($column))
+  {
+    return;
+  }
 
   // Iterate through pairs of consecutive time slots in reverse chronological
   // order

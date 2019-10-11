@@ -1107,6 +1107,7 @@ $(document).on('page_ready', function() {
             if (newParams.date.length > 1)
             {
               data.rep_type = <?php echo REP_DAILY ?>;
+              data.rep_interval = 1;
               data.rep_end_date = newParams.date[newParams.date.length - 1];
             }
           }

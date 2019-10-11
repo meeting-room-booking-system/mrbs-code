@@ -709,8 +709,17 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       // Repeat interval
       $new = $data['rep_interval'] . ' ' .
              get_rep_interval_units_mail($data['rep_type'], $data['rep_interval']);
-      $old = $mail_previous['rep_interval'] . ' ' .
-             get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
+             
+      if (isset($mail_previous['rep_interval']))
+      {
+        $old = $mail_previous['rep_interval'] . ' ' .
+               get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
+      }
+      else
+      {
+        $old = '';
+      }
+      
       $body .= create_body_table_row (get_mail_vocab("rep_interval"),
                                       $new,
                                       $old,
