@@ -142,7 +142,7 @@ h2 {
 // The default width is 39px
 ?>
 .flatpickr-calendar.inline {
-  width: calc(7 * 25px);
+  width: auto;
   font-size: 85%;
   margin-bottom: 1rem;
 }
