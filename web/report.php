@@ -1761,7 +1761,7 @@ if ($phase == 2)
       open_report();
       report_header();
       $body_rows = array();
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+      while (false !== ($row = $res->next_row_keyed()))
       {
         unpack_status($row);
         report_row($body_rows, $row);
@@ -1775,7 +1775,7 @@ if ($phase == 2)
       open_summary();
       if ($nmatch > 0)
       {
-        for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+        while (false !== ($row = $res->next_row_keyed()))
         {
           unpack_status($row);
           accumulate($row, $count, $hours,

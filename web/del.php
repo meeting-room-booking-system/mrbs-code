@@ -128,7 +128,7 @@ if ($type == "room")
       
       echo "<ul>\n";
       
-      for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+      while (false !== ($row = $res->next_row_keyed()))
       {
         echo "<li>".htmlspecialchars($row['name'])." (";
         echo time_date_string($row['start_time']) . " -> ";

@@ -69,7 +69,7 @@ $sql = "SELECT DISTINCT repeat_id
            AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 $res = $admin_handle->query($sql);
 
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+while (false !== ($row = $res->next_row_keyed()))
 {
   // Set the approval status for each one
   $sql = "UPDATE $tbl_repeat

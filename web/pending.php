@@ -281,7 +281,7 @@ $res = db()->query($sql);
 
 $rows = array();
 
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+while (false !== ($row = $res->next_row_keyed()))
 {
   if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
   {

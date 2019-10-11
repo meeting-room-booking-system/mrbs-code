@@ -19,7 +19,7 @@ $old_tz = mrbs_default_timezone_get();
 
 $mods = array();
 
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+while (false !== ($row = $res->next_row_keyed()))
 {
   // We need to make sure that we have the correct timezone set when we work out
   // the day of the month that this series repeats on

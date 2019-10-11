@@ -70,7 +70,7 @@ function get_vtimezone($tz)
   {
     // If there's something in the database and it hasn't expired, then
     // that's it.
-    $row = $res->row_keyed(0);
+    $row = $res->next_row_keyed();
     $vtimezone = $row['vtimezone'];
     if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
     {
@@ -258,7 +258,7 @@ function get_create_by($organizer)
         // Could maybe do something better here
         trigger_error("ORGANIZER email address not unique", E_USER_NOTICE);
       }
-      $row = $res->row_keyed(0);
+      $row = $res->next_row_keyed();
       return $row['name'];
     }
   }
@@ -994,7 +994,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
   $ical_events = array();
   $n_rows = $res->count();
 
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
     // If this is an individual entry, then construct an event

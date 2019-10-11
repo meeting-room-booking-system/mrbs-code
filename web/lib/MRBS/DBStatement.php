@@ -22,27 +22,19 @@ class DBStatement
   // Returns the next row from a statement.
   // The row is returned as an array with index 0=first column, etc.
   // Returns FALSE if there are no more rows.
-  public function next_row ()
+  public function next_row()
   {
     return $this->statement->fetch(PDO::FETCH_NUM);
   }
 
 
   // Return a row from a statement as an associative array keyed by field name.
-  // The first row is 0.
-  // This is actually upward compatible with row() since the underlying
-  // routing also stores the data under number indexes.
-  // When called with i >= number of rows in the statement, cleans up from
-  // the query and returns 0.
-  public function row_keyed ($i)
+  // Returns FALSE if there are no more rows.
+  public function next_row_keyed()
   {
-    if ($i >= $this->count())
-    {
-      $this->statement->closeCursor();
-      return 0;
-    }
-    return $this->statement->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_ABS, $i);
+    return $this->statement->fetch(PDO::FETCH_ASSOC);
   }
+  
 
   // Return all the rows from a statement object, as an array of arrays
   // keyed on the column name
@@ -50,7 +42,7 @@ class DBStatement
   {
     $result = array();
 
-    for ($i=0; $row = $this->row_keyed($i); $i++)
+    while (false !== ($row = $this->next_row_keyed()))
     {
       $result[] = $row;
     }

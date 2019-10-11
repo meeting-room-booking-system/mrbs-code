@@ -94,7 +94,8 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 
   // Build an listing all the conflicts:
   $err = array();
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  
+  while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
     $starts = getdate($row['start_time']);
@@ -499,7 +500,7 @@ function get_entry_by_id($id)
    
   $res = db()->query($sql, array($id));
   
-  $result = ($res->count() == 0) ? null : $res->row_keyed(0);
+  $result = ($res->count() == 0) ? null : $res->next_row_keyed();
   
   // Unpack the status bits
   unpack_status($result);
@@ -590,7 +591,7 @@ function get_entries_n_outstanding(User $user)
 
   // Get this user's own bookings awaiting approval or those made by others in rooms
   // for which this user is a booking admin.
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     if ((strcasecmp($row['create_by'], $user->username) === 0) || is_book_admin($row['room_id']))
     {
@@ -627,7 +628,7 @@ function mrbsDelEntry($id, $series, $all)
   {
     return FALSE;
   }
-  $row = $res->row_keyed(0);
+  $row = $res->next_row_keyed();
   $repeat_id = $row['repeat_id'];
   $room_id = $row['room_id'];
 
@@ -648,7 +649,7 @@ function mrbsDelEntry($id, $series, $all)
 
   $res = db()->query($sql, $sql_params);
 
-  for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
     
@@ -1176,8 +1177,8 @@ function get_repeat_id($entry_id)
     trigger_error('$entry_id=' . "$entry_id does not exist.", E_USER_NOTICE);
     return NULL;
   }
-  $row = $res->row_keyed(0);
-  return $row['repeat_id'];
+  
+  return $res->next_row_keyed(0)['repeat_id'];
 }
 
 
@@ -1434,7 +1435,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
-  $row = $res->row_keyed(0);
+  $row = $res->next_row_keyed();
   unset($res);
 
   if (!is_array($row) || (!is_visible($row['room_id'])))
@@ -1485,7 +1486,8 @@ function get_booking_info($id, $series, $silent=FALSE)
       $res = db()->query("SELECT rep_type, end_date, rep_opt, rep_interval, month_absolute, month_relative,
                         info_time AS repeat_info_time, info_user AS repeat_info_user, info_text AS repeat_info_text
                         FROM $tbl_repeat WHERE id=? LIMIT 1", array($row['repeat_id']));
-      if (!$extra_row = $res->row_keyed(0))
+                        
+      if (!$extra_row = $res->next_row_keyed())
       {
         if (!$res)
         {
@@ -1539,12 +1541,7 @@ function get_area_name($id, $all=FALSE)
   
   $res = db()->query($sql, array($id));
   
-  if ($res->count() == 0)
-  {
-    return NULL;
-  }
-  
-  return $res->next_row()[0];
+  return ($res->count() == 0) ? null : $res->next_row()[0];
 }
 
 
@@ -1566,7 +1563,7 @@ function get_area_names($all=FALSE)
   
   $res = db()->query($sql);
   
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     $areas[$row['id']] = $row['area_name'];
   }
@@ -1588,14 +1585,7 @@ function get_area_details($area_id)
   
   $res = db()->query($sql, array($area_id));
   
-  if ($res->count() == 0)
-  {
-    return NULL;
-  }
-  
-  $result = $res->row_keyed(0);
-  
-  return $result;
+  return ($res->count() == 0) ? null : $res->next_row_keyed();
 }
 
 
@@ -1621,12 +1611,7 @@ function get_room_name($room_id, $all=FALSE)
   
   $res = db()->query($sql, array($room_id));
   
-  if ($res->count() == 0)
-  {
-    return NULL;
-  }
-  
-  return $res->next_row()[0];
+  return ($res->count() == 0) ? null : $res->next_row()[0];
 }
 
 
@@ -1650,7 +1635,7 @@ function get_room_names($area_id, $all=FALSE)
   
   $res = db()->query($sql, array(':area_id' => $area_id));
   
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     if (is_visible($row['id']))
     {
@@ -1680,14 +1665,7 @@ function get_room_details($room_id)
   
   $res = db()->query($sql, array($room_id));
   
-  if ($res->count() == 0)
-  {
-    return null;
-  }
-  
-  $result = $res->row_keyed(0);
-  
-  return $result;
+  return ($res->count() == 0) ? null : $res->next_row_keyed();
 }
 
 
@@ -1717,7 +1695,7 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
 
   $result = array();
 
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     if ($include_invisible || is_visible($row['id']))
     {
@@ -1740,7 +1718,7 @@ function get_invisible_room_ids()
 
   $result = array();
 
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     if (!is_visible($row['id']))
     {
@@ -1770,7 +1748,7 @@ function get_period_names()
   
   $res = db()->query($sql);
   
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     $period_names[$row['id']] = json_decode($row['periods']);
   }
@@ -2219,7 +2197,7 @@ function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $
                  WHERE R.id=? AND R.area_id = A.id
                  LIMIT 1";
         $res = db()->query($sql, array($booking['room_id']));
-        $row = $res->row_keyed(0);
+        $row = $res->next_row_keyed();
         $booking['room_name'] = $row['room_name'];
         $booking['area_name'] = $row['area_name'];
 

@@ -1104,7 +1104,7 @@ function get_default_area()
   
   $res = db()->query($sql);
 
-  for ($i=0; $row = $res->row_keyed($i); $i++)
+  while (false !== ($row = $res->next_row_keyed()))
   {
     if (is_visible($row['id']))
     {
@@ -1271,7 +1271,7 @@ function get_area_settings($area)
   }
   else
   {
-    $row = $res->row_keyed(0);
+    $row = $res->next_row_keyed();
     
     // Periods are stored as a JSON encoded string in the database
     if (isset($row['periods']))

@@ -1358,7 +1358,7 @@ if (isset($id))
       fatal_error(get_vocab("repeat_id") . $rep_id . get_vocab("not_found"));
     }
 
-    $row = $res->row_keyed(0);
+    $row = $res->next_row_keyed();
     unset($res);
    
     $rep_type = $row['rep_type'];
@@ -1553,7 +1553,7 @@ if (empty( $room_id ) )
 {
   $sql = "SELECT id FROM $tbl_room WHERE disabled=0 LIMIT 1";
   $res = db()->query($sql);
-  $row = $res->row_keyed(0);
+  $row = $res->next_row_keyed();
   $room_id = $row['id'];
 }
 
@@ -1582,7 +1582,7 @@ $sql = "SELECT R.id, R.room_name, R.area_id
       ORDER BY R.area_id, R.sort_key";
 $res = db()->query($sql);
 
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+while (false !== ($row = $res->next_row_keyed()))
 {
   // Only use rooms which are visible and for which the user has write access
   if (getWritable($create_by, $row['id']) && is_visible($row['id']))
@@ -1602,7 +1602,7 @@ $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all
       ORDER BY sort_key";
 $res = db()->query($sql);
 
-for ($i = 0; ($row = $res->row_keyed($i)); $i++)
+while (false !== ($row = $res->next_row_keyed()))
 {
   // We don't want areas that have no enabled rooms because it doesn't make sense
   // to try and select them for a booking.
