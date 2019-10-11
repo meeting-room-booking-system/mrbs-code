@@ -20,7 +20,7 @@ class AuthDb extends Auth
     }
     
     // The username does exist - return a User object
-    $data = $result->row_keyed(0);
+    $data = $result->next_row_keyed();
 
     $user = new User($username);
 
