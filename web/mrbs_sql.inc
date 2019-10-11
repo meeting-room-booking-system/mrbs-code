@@ -1544,8 +1544,7 @@ function get_area_name($id, $all=FALSE)
     return NULL;
   }
   
-  $row = $res->row(0);
-  return $row[0];
+  return $res->next_row()[0];
 }
 
 
@@ -1627,8 +1626,7 @@ function get_room_name($room_id, $all=FALSE)
     return NULL;
   }
   
-  $row = $res->row(0);
-  return $row[0];
+  return $res->next_row()[0];
 }
 
 

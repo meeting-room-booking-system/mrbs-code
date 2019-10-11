@@ -68,7 +68,7 @@ function authValidateUser($user, $pass)
 
   if ($stmt->count() == 1) // force a unique match
   {
-    $row = $stmt->row(0);
+    $row = $stmt->next_row();
 
     switch ($auth['db_ext']['password_format'])
     {
@@ -183,9 +183,7 @@ function authGetUserLevel($user)
        return 0;
      }
      
-     $row = $stmt->row(0);
-     
-     return $row[0];
+     return $stmt->next_row()[0];
   }
 
   // Everybody else is access level '1'
@@ -231,7 +229,5 @@ function authGetUserEmail($user)
     return 0;
   }
   
-  $row = $stmt->row(0);
-  
-  return $row[0];
+  return $stmt->next_row()[0];
 }

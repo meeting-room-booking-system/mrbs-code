@@ -19,19 +19,12 @@ class DBStatement
   }
 
 
-  // Return a row from a statement. The first row is 0.
+  // Returns the next row from a statement.
   // The row is returned as an array with index 0=first column, etc.
-  // When called with i >= number of rows in the statement, cleans up from
-  // the query and returns 0.
-  // Typical usage: $i = 0; while ((a = $statement_obj->row($r, $i++))) { ... }
-  public function row ($i)
+  // Returns FALSE if there are no more rows.
+  public function next_row ()
   {
-    if ($i >= $this->count())
-    {
-      $this->statement->closeCursor();
-      return 0;
-    }
-    return $this->statement->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_ABS, $i);
+    return $this->statement->fetch(PDO::FETCH_NUM);
   }
 
 
