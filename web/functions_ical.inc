@@ -994,7 +994,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
   $ical_events = array();
   $n_rows = $res->count();
 
-  while (false !== ($row = $res->next_row_keyed()))
+  for ($i=0; (false !== ($row = $res->next_row_keyed())); $i++)
   {
     unpack_status($row);
     // If this is an individual entry, then construct an event
