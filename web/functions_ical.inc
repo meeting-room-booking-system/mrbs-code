@@ -1022,25 +1022,16 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
       // rows then process the series
       if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
-        $series_events = $series->toEvents($method);
-        foreach ($series_events as $series_event)
-        {
-          $ical_events[] = $series_event;
-        }
-
+        $ical_events = array_merge($ical_events, $series->toEvents($method));
         // If we're at the start of a new series then create a new series
         if ($row['repeat_id'] != $series->repeat_id)
         {
           $series = new Series($row, $export_end);
           // And if this is the last row, ie the only member of the new series
-          // then proces the series
+          // then process the new series
           if ($i == $n_rows - 1)
           {
-            $series_events = $series->toEvents($method);
-            foreach ($series_events as $series_event)
-            {
-              $ical_events[] = $series_event;
-            }
+            $ical_events = array_merge($ical_events, $series->toEvents($method));
           }
         }
 
