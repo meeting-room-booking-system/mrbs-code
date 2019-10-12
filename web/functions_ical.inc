@@ -1071,8 +1071,8 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
         $series = new Series($row, $export_end);
       }
 
-      // If this row is a member of the current series, add the row to the series
-      if ($row['repeat_id'] == $series->repeat_id)
+      // Otherwise, if this row is a member of the current series, add the row to the series
+      elseif ($row['repeat_id'] == $series->repeat_id)
       {
         $series->addRow($row);
       }
@@ -1081,18 +1081,17 @@ function export_icalendar(&$res, $keep_private, $export_end=PHP_INT_MAX)
       // rows then process the series
       if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
-        $series_events = $series->toEvents($method);
-        foreach ($series_events as $series_event)
-        {
-          $ical_events[] = $series_event;
-        }
-        unset($series);
-
-
+        $ical_events = array_merge($ical_events, $series->toEvents($method));
         // If we're at the start of a new series then create a new series
-        if ($i < ($n_rows - 1))
+        if ($row['repeat_id'] != $series->repeat_id)
         {
           $series = new Series($row, $export_end);
+          // And if this is the last row, ie the only member of the new series
+          // then process the new series
+          if ($i == $n_rows - 1)
+          {
+            $ical_events = array_merge($ical_events, $series->toEvents($method));
+          }
         }
 
       }
