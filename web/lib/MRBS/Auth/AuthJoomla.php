@@ -12,8 +12,13 @@ class AuthJoomla extends Auth
   
   public function getUser($username=null)
   {
-    $joomla_user = JFactory::getUser($username);
+    if ($username === '')
+    {
+      return null;
+    }
     
+    $joomla_user = JFactory::getUser($username);
+
     if ($joomla_user->guest)
     {
       return null;
