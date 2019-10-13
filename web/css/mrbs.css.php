@@ -580,6 +580,15 @@ div#div_custom_html {
 
 .table_container {
   overflow-x: auto;
+  position: relative;
+}
+
+div.timeline {
+  background-color: <?php echo $timeline_color ?>;
+  height: 1px;
+  width: 0;
+  position: absolute;
+  z-index: 90;
 }
 
 table.dwm_main {

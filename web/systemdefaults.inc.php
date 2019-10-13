@@ -377,6 +377,9 @@ $row_labels_both_sides = false;
 // well as the top in the day and week views, set to true;
 $column_labels_both_ends = false;
 
+// Show a line in the day and week views corresponding to the current time
+$show_timeline = true;
+
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";
