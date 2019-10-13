@@ -159,7 +159,7 @@ $(document).on('page_ready', function() {
       }
 
       <?php
-      if ($show_timeline && !$times_along_top)
+      if ($show_timeline && !$enable_periods && !$times_along_top)
       {
         // If the page isn't hidden, then add a timeline showing the current time
         ?>
