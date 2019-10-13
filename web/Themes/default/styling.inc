@@ -37,6 +37,7 @@ $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid
 $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid slots in the day and week views
 $main_table_slot_private_type_color = "#d1d9de";          // background colour when the type has to kept private
 $main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
+$timeline_color                 = $header_back_color;
 
 $zebra_even_color = 'white';    // Colour for even rows in the main table
 $zebra_odd_color  = '#E2E4FF';  // Colour for even rows in the main table

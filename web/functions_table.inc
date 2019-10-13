@@ -717,11 +717,14 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       
       $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
       
-      $tbody.= '<tr';
+      $tbody .= '<tr';
       if (!empty($classes))
       {
         $tbody .= ' class="' . implode(' ', $classes) . '"';
       }
+      $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
+      $end_timestamp = $start_timestamp + $resolution;
+      $tbody .= ' data-start_timestamp="'. $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
       $tbody .= ">\n";
       
       $tbody .= time_cell_html($s, $url);
