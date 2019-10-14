@@ -694,18 +694,20 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     {
       // Show the time linked to the URL for highlighting that time
       $classes = array();
-      
-      $vars = array('view'  => 'day',
-                    'year'  => $year,
-                    'month' => $month,
-                    'day'   => $day,
-                    'area'  => $area_id);
-                    
+
+      $vars = array(
+          'view' => 'day',
+          'year' => $year,
+          'month' => $month,
+          'day' => $day,
+          'area' => $area_id
+        );
+
       if (isset($room_id))
       {
         $vars['room'] = $room_id;
       }
-       
+
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
         $classes[] = 'row_highlight';
@@ -714,17 +716,22 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       {
         $vars['timetohighlight'] = $s;
       }
-      
+
       $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
-      
+
       $tbody .= '<tr';
       if (!empty($classes))
       {
         $tbody .= ' class="' . implode(' ', $classes) . '"';
       }
-      $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
-      $end_timestamp = $start_timestamp + $resolution;
-      $tbody .= ' data-start_timestamp="'. $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
+      // If we're not using periods add data attributes showing the start and end timestamps for the slot
+      // so that the JavaScript knows where to draw the timeline.
+      if (!$enable_periods)
+      {
+        $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
+        $end_timestamp = $start_timestamp + $resolution;
+        $tbody .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
+      }
       $tbody .= ">\n";
       
       $tbody .= time_cell_html($s, $url);
