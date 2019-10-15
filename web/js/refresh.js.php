@@ -117,6 +117,61 @@ var refreshVisChanged = function refreshVisChanged() {
   };
 
 
+var Timeline = {
+  timerRunning: false,
+
+  show: function (id) {
+    if (!isHidden()) {
+      var now = Math.floor(Date.now() / 1000);
+      var rowHeight, delay;
+      // Iterate through each of the table rows checking to see if the current time is in that row
+      $('#day_main').find('tbody tr').each(function () {
+        var start_timestamp = $(this).data('start_timestamp');
+        var end_timestamp = $(this).data('end_timestamp');
+        if ((start_timestamp <= now) &&
+          (end_timestamp > now)) {
+          <?php
+          // If we've found the row then construct a timeline and position it corresponding to the fraction
+          // of the row that has expired
+          ?>
+          var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
+          var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
+          var labelsWidth = 0;
+          <?php
+          // We don't want to overwrite the labels so work out how wide they are so that we can set
+          // the correct width for the timeline.
+          ?>
+          $(this).find('.row_labels').each(function () {
+            labelsWidth = labelsWidth + $(this).outerWidth();
+          });
+          rowHeight = $(this).height();
+          top = top + fraction * $(this).height();
+          <?php // Remove any existing timeline ?>
+          $('.timeline').remove();
+          <?php // Build the new timeline and add it to the DOM after the table ?>
+          var timeline = $('<div class="timeline"></div>')
+            .width($(this).width() - labelsWidth)
+            .css({top: top + 'px', left: $(this).find('.row_labels').first().outerWidth() + 'px'});
+          $('table.dwm_main').after(timeline);
+        }
+      });
+      <?php
+      // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
+      // half the time represented by one pixel.  And make the delay a minimum of one second.
+      // Only set the timeout if there's not already one running (could happen if show() is called twice)
+      ?>
+      if (!Timeline.timerRunning)
+      {
+        delay = <?php echo $resolution ?>/(2 * rowHeight);
+        delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
+        delay = Math.max(delay, 1000);
+        Timeline.timerRunning = true;
+        window.setInterval(Timeline.show, delay);
+      }
+    }
+  }
+};
+
 
 $(document).on('page_ready', function() {
   
@@ -163,41 +218,7 @@ $(document).on('page_ready', function() {
       {
         // If the page isn't hidden, then add a timeline showing the current time
         ?>
-        if (!isHidden())
-        {
-          var now = Math.floor(Date.now() / 1000)
-          // Iterate through each of the table rows checking to see if the current time is in that row
-          $(this).filter('#day_main').find('tbody tr').each(function () {
-            var start_timestamp = $(this).data('start_timestamp');
-            var end_timestamp = $(this).data('end_timestamp');
-            if ((start_timestamp <= now) &&
-                (end_timestamp > now))
-            {
-              <?php
-              // If we've found the row then construct a timeline and position it corresponding to the fraction
-              // of the row that has expired
-              ?>
-              var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-              var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
-              var labelsWidth = 0;
-              <?php
-              // We don't want to overwrite the labels so work out how wide they are so that we can set
-              // the correct width for the timeline.
-              ?>
-              $(this).find('.row_labels').each(function () {
-                labelsWidth = labelsWidth + $(this).outerWidth();
-              });
-              top = top + fraction * $(this).height();
-              <?php // Remove any existing timeline ?>
-              $('.timeline').remove();
-              <?php // Build the new timeline and add it to the DOM after the table ?>
-              var timeline = $('<div class="timeline"></div>')
-                .width($(this).width() - labelsWidth)
-                .css({top: top + 'px', left: $(this).find('.row_labels').first().outerWidth() + 'px'});
-              $('table.dwm_main').after(timeline);
-            }
-          });
-        }
+        Timeline.show();
         <?php
       }
       ?>
