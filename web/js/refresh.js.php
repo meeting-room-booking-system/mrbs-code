@@ -120,7 +120,8 @@ var refreshVisChanged = function refreshVisChanged() {
 var showTimeline = function showTimeline() {
   if (!isHidden())
   {
-    var now = Math.floor(Date.now() / 1000)
+    var now = Math.floor(Date.now() / 1000);
+    var rowHeight, delay;
     // Iterate through each of the table rows checking to see if the current time is in that row
     $('#day_main').find('tbody tr').each(function () {
       var start_timestamp = $(this).data('start_timestamp');
@@ -142,6 +143,7 @@ var showTimeline = function showTimeline() {
         $(this).find('.row_labels').each(function () {
           labelsWidth = labelsWidth + $(this).outerWidth();
         });
+        rowHeight = $(this).height();
         top = top + fraction * $(this).height();
         <?php // Remove any existing timeline ?>
         $('.timeline').remove();
@@ -152,6 +154,14 @@ var showTimeline = function showTimeline() {
         $('table.dwm_main').after(timeline);
       }
     });
+    <?php
+    // Set a timeout so that the timeline will be updated with time.  No point in setting the delay for less than
+    // half the time represented by one pixel.  And make the delay a minimum of one second.
+    ?>
+    delay = <?php echo $resolution ?>/(2 * rowHeight);
+    delay = parseInt(delay*1000, 10); <?php // Convert to milliseconds ?>
+    delay = Math.max(delay, 1000);
+    setTimeout(showTimeline, delay);
   }
 }
 
