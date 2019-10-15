@@ -339,14 +339,16 @@ function time_cell_html($s, $url)
     
     $html .= "<a href=\"$url\"  title=\""
              . get_vocab("highlight_line") . "\">"
-             . htmlspecialchars(period_name($s)) . "</a>\n";
+             . htmlspecialchars(period_name($s)) . "</a>";
   }
   else
   {
     $html .= "<a href=\"$url\" title=\""
              . get_vocab("highlight_line") . "\">"
-             . htmlspecialchars(get_timeslot_text($s, $resolution)) . "</a>\n";
+             . htmlspecialchars(get_timeslot_text($s, $resolution)) . "</a>";
   }
+  
+  $html .= "</td>\n";
   
   return $html;
 }
