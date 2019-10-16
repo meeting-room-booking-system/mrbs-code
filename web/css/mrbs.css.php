@@ -591,6 +591,11 @@ div.timeline {
   z-index: 90;
 }
 
+div.timeline.times_along_top {
+  height: 0;
+  width: 1px;
+}
+
 table.dwm_main {
   float: left;
   clear: both; 
