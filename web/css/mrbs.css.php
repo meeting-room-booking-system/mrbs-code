@@ -589,6 +589,7 @@ div.timeline {
   width: 0;
   position: absolute;
   z-index: 90;
+  pointer-events: none;
 }
 
 div.timeline.times_along_top {
