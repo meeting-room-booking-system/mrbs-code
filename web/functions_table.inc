@@ -476,7 +476,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
-function get_times_header_cells($start, $end, $increment)
+function get_times_header_cells($year, $month, $day, $start, $end, $increment)
 {
   global $enable_periods;
 
@@ -486,7 +486,16 @@ function get_times_header_cells($start, $end, $increment)
   {
     // Put the number of seconds since the start of the day (nominal, ignoring DST)
     // in a data attribute so that JavaScript can pick it up
-    $html .= "<th data-seconds=\"$s\">";
+    $html .= "<th data-seconds=\"$s\"";
+    // If we're not using periods add data attributes showing the start and end timestamps for the slot
+    // so that the JavaScript knows where to draw the timeline.
+    if (!$enable_periods)
+    {
+      $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
+      $end_timestamp = $start_timestamp + $increment;
+      $html .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
+    }
+    $html .= ">";
     // We need the span so that we can apply some padding.   We can't apply it
     // to the <th> because that is used by jQuery.offset() in resizable bookings
     $html .= "<span>";
@@ -600,7 +609,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
   else
   {
@@ -856,7 +865,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
 
   else
