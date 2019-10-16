@@ -126,6 +126,7 @@ var Timeline = {
       var now = Math.floor(Date.now() / 1000);
       var slotSize, delay;
       <?php
+      // We can display the table in two ways: with times along the top ...
       if ($times_along_top)
       {
         ?>
@@ -156,6 +157,7 @@ var Timeline = {
         });
         <?php
       }
+      // ... or the standard view, with times down the side
       else
       {
         ?>
@@ -195,7 +197,7 @@ var Timeline = {
       }
       // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
       // half the time represented by one pixel.  And make the delay a minimum of one second.
-      // Only set the timeout if there's not already one running (could happen if show() is called twice)
+      // Only set the timer if there's not already one running (could happen if show() is called twice)
       ?>
       if (!Timeline.timerRunning)
       {
