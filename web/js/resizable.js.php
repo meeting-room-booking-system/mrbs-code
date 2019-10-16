@@ -345,7 +345,7 @@ var Table = {
       // same as the value in the CSS if the browsers zoom level is not 100%.
       ?>
       var table = $(Table.selector);
-      var td = table.find('tbody tr:first-child td:nth-child(2)');
+      var td = table.find('tbody tr:first-child td:first-child');
       Table.borderLeftWidth = parseFloat(td.css('border-left-width'));
       Table.borderTopWidth = parseFloat(td.css('border-top-width'));
       
@@ -422,7 +422,7 @@ var Table = {
         
       Table.grid.y = {};
       Table.grid.y.data = [];
-      var rows = table.find('tbody td:first-child');
+      var rows = table.find('tbody th:first-child');
       rows.each(function() {
           if (Table.grid.y.key === undefined)
           {
