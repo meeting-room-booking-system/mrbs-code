@@ -16,12 +16,11 @@ http_headers(array("Content-type: text/css"),
 
 td.new a, a.new_booking img { display: none; }
 
-.dwm_main th {
+.dwm_main :not(tbody) th {
   color: <?php echo $header_font_color_print ?>;
 }
 
-.dwm_main th a:link,
-.row_labels a:link {
+.dwm_main th a:link {
   color: <?php echo $anchor_link_color_header_print ?>;
 }
 
@@ -34,11 +33,12 @@ table.dwm_main {
   border-color: <?php echo $main_table_border_color_print ?>;
 }
 
-.dwm_main th {
+.dwm_main :not(tbody) th {
   border-left-color: <?php echo $main_table_header_border_color_print ?>;
 }
     
-.dwm_main td {
+.dwm_main td,
+.dwm_main tbody th {
   border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
   border-left-color: <?php echo $main_table_body_v_border_color_print ?>;
 }

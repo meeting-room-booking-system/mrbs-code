@@ -141,7 +141,7 @@ var Timeline = {
           // We don't want to overwrite the labels so work out how wide they are so that we can set
           // the correct width for the timeline.
           ?>
-          $(this).find('.row_labels').each(function () {
+          $(this).find('th').each(function () {
             labelsWidth = labelsWidth + $(this).outerWidth();
           });
           rowHeight = $(this).height();
@@ -151,7 +151,7 @@ var Timeline = {
           <?php // Build the new timeline and add it to the DOM after the table ?>
           var timeline = $('<div class="timeline"></div>')
             .width($(this).width() - labelsWidth)
-            .css({top: top + 'px', left: $(this).find('.row_labels').first().outerWidth() + 'px'});
+            .css({top: top + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
           $('table.dwm_main').after(timeline);
         }
       });

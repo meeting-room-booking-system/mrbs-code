@@ -656,7 +656,7 @@ table.dwm_main {
 // the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
 // need padding put it on the contained element.
 ?>
-.dwm_main th {
+.dwm_main :not(tbody) th {
   font-size: small;
   font-weight: normal;
   vertical-align: top;
@@ -811,29 +811,29 @@ table.dwm_main {
   box-sizing: border-box;
 }
 
-.dwm_main th a {
+.dwm_main :not(tbody) th a {
   text-decoration: none;
   font-weight: normal;
 }
 
-.dwm_main th a:link {
+.dwm_main :not(tbody) th a:link {
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.dwm_main th a:visited {
+.dwm_main :not(tbody) th a:visited, {
   color: <?php echo $anchor_visited_color_header ?>;
 }
 
-.dwm_main th a:hover {
+.dwm_main :not(tbody) th a:hover {
   color: <?php echo $anchor_hover_color_header ?>;
   text-decoration:underline;
 }
 
-.dwm_main th.first_last {
+.dwm_main :not(tbody) th.first_last {
   width: 1px;
 }
 
-.dwm_main#week_main th.first_last {
+.dwm_main#week_main :not(tbody) th.first_last {
   vertical-align: bottom;
 }
 
@@ -1020,34 +1020,34 @@ tr.row_highlight td.new {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-td.row_labels {
+tbody th {
   white-space: nowrap;
   vertical-align: middle;
 }
 
-tr:nth-child(odd) td.row_labels {
+tbody tr:nth-child(odd) th {
   background-color: <?php echo $row_odd_color ?>;
 }
 
-tr:nth-child(even) td.row_labels {
+tbody tr:nth-child(even) th {
   background-color: <?php echo $row_even_color ?>;
 }
 
-.row_labels a {
+tbody th a {
   display: inline-block;
   text-decoration: none;
   font-weight: normal
 }
 
-.row_labels a:link {
+tbody th a:link {
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.row_labels a:visited {
+tbody th a:visited {
   color: <?php echo $anchor_visited_color_header ?>;
 }
 
-.row_labels a:hover {
+tbody th a:hover {
   color: <?php echo $anchor_hover_color_header ?>;
   text-decoration: underline;
 }
@@ -1059,11 +1059,11 @@ tr:nth-child(even) td.row_labels {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main tr:hover td.row_labels {
+.dwm_main tbody tr:hover th {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main tr:hover td.row_labels a {
+.dwm_main tbody tr:hover th a {
   color: #ffffff;
 }
 
@@ -1073,38 +1073,38 @@ tr:nth-child(even) td.row_labels {
 }
 
 <?php // Disable the highlighting when we're in resize mode ?>
-.dwm_main.resizing tr:nth-child(odd) td:hover.new {
+.dwm_main.resizing tbody tr:nth-child(odd) td:hover.new {
   background-color: <?php echo $row_odd_color ?>;
 }
 
-.dwm_main.resizing tr:nth-child(even) td:hover.new {
+.dwm_main.resizing tbody tr:nth-child(even) td:hover.new {
   background-color: <?php echo $row_even_color ?>;
 }
 
-.dwm_main.resizing tr:hover td.row_labels {
+.dwm_main.resizing tbody tr:hover th {
   background-color: <?php echo $main_table_labels_back_color ?>;
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.resizing .row_labels a:hover {
+.resizing tbody th a:hover {
   text-decoration: none;
 }
 
-.dwm_main.resizing tbody tr:hover td.row_labels a:link {
+.dwm_main.resizing tbody tr:hover th a:link {
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.dwm_main.resizing tbody tr:hover td.row_labels a:visited {
+.dwm_main.resizing tbody tr:hover th a:visited {
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.dwm_main.resizing tr td.row_labels.selected {
+.dwm_main.resizing tbody tr th.selected {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main.resizing tr:hover td.row_labels.selected,
-.dwm_main.resizing tr td.row_labels.selected a:link,
-.dwm_main.resizing tr td.row_labels.selected a:visited {
+.dwm_main.resizing tbody tr:hover t.selected,
+.dwm_main.resizing tbody tr th.selected a:link,
+.dwm_main.resizing tbody tr th.selected a:visited {
   color: #ffffff;
 }
 
