@@ -293,7 +293,7 @@ var Table = {
         <?php // Cache the row label cells in an array ?>
         Table.highlightRowLabels.rows = [];
         $(Table.selector).find('tbody tr').each(function() {
-            Table.highlightRowLabels.rows.push($(this).find('td.row_labels'));
+            Table.highlightRowLabels.rows.push($(this).find('th'));
           });
       }
       var elStartRow = Table.getRowNumber(el.offset().top);

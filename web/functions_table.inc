@@ -332,23 +332,19 @@ function time_cell_html($s, $url)
   
   $html = '';
   
-  $html .= tdcell('row_labels', 1, array('seconds' => $s));
+  $html .= "<th data-seconds=\"$s\">";
+  $html .= "<a href=\"$url\"  title=\"" . get_vocab("highlight_line") . "\">";
   
-  if ( $enable_periods )
+  if ($enable_periods)
   {
-    
-    $html .= "<a href=\"$url\"  title=\""
-             . get_vocab("highlight_line") . "\">"
-             . htmlspecialchars(period_name($s)) . "</a>";
+    $html .= htmlspecialchars(period_name($s));
   }
   else
   {
-    $html .= "<a href=\"$url\" title=\""
-             . get_vocab("highlight_line") . "\">"
-             . htmlspecialchars(get_timeslot_text($s, $resolution)) . "</a>";
+    $html .= htmlspecialchars(get_timeslot_text($s, $resolution));
   }
   
-  $html .= "</td>\n";
+  $html .= "</a></th>\n";
   
   return $html;
 }
@@ -359,12 +355,12 @@ function time_cell_html($s, $url)
 function room_cell_html(array $row, $link)
 {
   $html = '';
-  $html .= tdcell('row_labels', 1, array('room' => $row['id']));
-  $html .= "<div class=\"celldiv slots1\">\n";
+  $html .= '<th data-room="' . $row['id'] . '">';
+  $html .= "<div class=\"celldiv slots1\">";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
-  $html .= "</a>\n";
-  $html .= "</div></td>\n";
+  $html .= "</a>";
+  $html .= "</div></th>\n";
   return $html;
 }
 
@@ -375,10 +371,10 @@ function room_cell_html(array $row, $link)
 function day_cell_html($text, $link, $date)
 {
   $html = '';
-  $html .= tdcell('row_labels', 1, array('date' => $date));
-  $html .= "<div class=\"celldiv slots1\">\n";
-  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>\n";
-  $html .= "</div></td>\n";
+  $html .= "<th data-date=\"$date\">";
+  $html .= "<div class=\"celldiv slots1\">";
+  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>";
+  $html .= "</div></th>\n";
   return $html;
 }
 
