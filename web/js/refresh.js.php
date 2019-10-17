@@ -118,95 +118,109 @@ var refreshVisChanged = function refreshVisChanged() {
 
 
 var Timeline = {
-  timerRunning: false,
+  timerRunning: null,
 
   show: function () {
-    if (!isHidden())
+    <?php // No point in do anything if the page is hidden ?>
+    if (isHidden())
     {
-      var now = Math.floor(Date.now() / 1000);
-      var slotSize, delay;
-      <?php
-      // We can display the table in two ways: with times along the top ...
-      if ($times_along_top)
-      {
-        ?>
-        // Iterate through each of the table columns checking to see if the current time is in that column
-        $('#day_main').find('thead th').each(function () {
-          var start_timestamp = $(this).data('start_timestamp');
-          var end_timestamp = $(this).data('end_timestamp');
-          if ((start_timestamp <= now) &&
-            (end_timestamp > now))
-          {
-            <?php
-            // If we've found the column then construct a timeline and position it corresponding to the fraction
-            // of the column that has expired
-            ?>
-            var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-            var left = $(this).offset().left - $('.dwm_main').parent().offset().left;
-            slotSize = $(this).outerWidth();
-            left = left + fraction * $(this).outerWidth();
-            <?php // Remove any existing timeline ?>
-            $('.timeline').remove();
-            <?php // Build the new timeline and add it to the DOM after the table ?>
-            var tbody = $('.dwm_main tbody');
-            var timeline = $('<div class="timeline times_along_top"></div>')
-              .height(tbody.outerHeight())
-              .css({top: tbody.offset().top - $('.dwm_main').parent().offset().top + 'px', left: left + 'px'});
-            $('table.dwm_main').after(timeline);
-          }
-        });
-        <?php
-      }
-      // ... or the standard view, with times down the side
-      else
-      {
-        ?>
-        // Iterate through each of the table rows checking to see if the current time is in that row
-        $('#day_main').find('tbody tr').each(function () {
-          var start_timestamp = $(this).data('start_timestamp');
-          var end_timestamp = $(this).data('end_timestamp');
-          if ((start_timestamp <= now) &&
-            (end_timestamp > now))
-          {
-            <?php
-            // If we've found the row then construct a timeline and position it corresponding to the fraction
-            // of the row that has expired
-            ?>
-            var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-            var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
-            var labelsWidth = 0;
-            <?php
-            // We don't want to overwrite the labels so work out how wide they are so that we can set
-            // the correct width for the timeline.
-            ?>
-            $(this).find('th').each(function () {
-              labelsWidth = labelsWidth + $(this).outerWidth();
-            });
-            slotSize = $(this).outerHeight();
-            top = top + fraction * $(this).outerHeight();
-            <?php // Remove any existing timeline ?>
-            $('.timeline').remove();
-            <?php // Build the new timeline and add it to the DOM after the table ?>
-            var timeline = $('<div class="timeline"></div>')
-              .width($(this).outerWidth() - labelsWidth)
-              .css({top: top + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
-            $('table.dwm_main').after(timeline);
-          }
-        });
-        <?php
-      }
-      // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
-      // half the time represented by one pixel.  And make the delay a minimum of one second.
-      // Only set the timer if there's not already one running (could happen if show() is called twice)
+      return;
+    }
+    
+    var now = Math.floor(Date.now() / 1000);
+    var slotSize, delay;
+
+    <?php // Remove any existing timeline ?>
+    $('.timeline').remove();
+
+    <?php
+    // We can display the table in two ways: with times along the top ...
+    if ($times_along_top)
+    {
       ?>
-      if (!Timeline.timerRunning)
-      {
-        delay = <?php echo $resolution ?>/(2 * slotSize);
-        delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
-        delay = Math.max(delay, 1000);
-        Timeline.timerRunning = true;
-        window.setInterval(Timeline.show, delay);
-      }
+      // Iterate through each of the table columns checking to see if the current time is in that column
+      $('#day_main').find('thead th').each(function () {
+        var start_timestamp = $(this).data('start_timestamp');
+        var end_timestamp = $(this).data('end_timestamp');
+        <?php
+        // Need to calculate the slot size each time, because it won't always be the same, for example
+        // if there are multiple bookings in a slot
+        ?>
+        slotSize = $(this).outerWidth();
+
+        if ((start_timestamp <= now) &&
+            (end_timestamp > now))
+        {
+          <?php
+          // If we've found the column then construct a timeline and position it corresponding to the fraction
+          // of the column that has expired
+          ?>
+          var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
+          var left = $(this).offset().left - $('.dwm_main').parent().offset().left;
+          left = left + fraction * slotSize;
+          <?php // Build the new timeline and add it to the DOM after the table ?>
+          var tbody = $('.dwm_main tbody');
+          var timeline = $('<div class="timeline times_along_top"></div>')
+            .height(tbody.outerHeight())
+            .css({top: tbody.offset().top - $('.dwm_main').parent().offset().top + 'px', left: left + 'px'});
+          $('table.dwm_main').after(timeline);
+          return false; <?php // Break out of each() loop ?>
+        }
+      });
+      <?php
+    }
+    // ... or the standard view, with times down the side
+    else
+    {
+      ?>
+      // Iterate through each of the table rows checking to see if the current time is in that row
+      $('#day_main').find('tbody tr').each(function () {
+        var start_timestamp = $(this).data('start_timestamp');
+        var end_timestamp = $(this).data('end_timestamp');
+        <?php
+        // Need to calculate the slot size each time, because it won't always be the same, for example
+        // if there are multiple bookings in a slot
+        ?>
+        slotSize = $(this).outerHeight();
+
+        if ((start_timestamp <= now) &&
+            (end_timestamp > now))
+        {
+          <?php
+          // If we've found the row then construct a timeline and position it corresponding to the fraction
+          // of the row that has expired
+          ?>
+          var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
+          var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
+          var labelsWidth = 0;
+          <?php
+          // We don't want to overwrite the labels so work out how wide they are so that we can set
+          // the correct width for the timeline.
+          ?>
+          $(this).find('th').each(function () {
+            labelsWidth = labelsWidth + $(this).outerWidth();
+          });
+          top = top + fraction * slotSize;
+          <?php // Build the new timeline and add it to the DOM after the table ?>
+          var timeline = $('<div class="timeline"></div>')
+            .width($(this).outerWidth() - labelsWidth)
+            .css({top: top + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
+          $('table.dwm_main').after(timeline);
+          return false; <?php // Break out of each() loop ?>
+        }
+      });
+      <?php
+    }
+    // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
+    // half the time represented by one pixel.  And make the delay a minimum of one second.
+    // Only set the timer if there's not already one running (could happen if show() is called twice)
+    ?>
+    if (Timeline.timerRunning === null)
+    {
+      delay = <?php echo $resolution ?>/(2 * slotSize);
+      delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
+      delay = Math.max(delay, 1000);
+      Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
 };
