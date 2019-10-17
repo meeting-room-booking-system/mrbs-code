@@ -118,7 +118,7 @@ var refreshVisChanged = function refreshVisChanged() {
 
 
 var Timeline = {
-  timerRunning: false,
+  timerRunning: null,
 
   show: function () {
     <?php // No point in do anything if the page is hidden ?>
@@ -126,9 +126,10 @@ var Timeline = {
     {
       return;
     }
-
+    
     var now = Math.floor(Date.now() / 1000);
     var slotSize, delay;
+
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
@@ -141,8 +142,14 @@ var Timeline = {
       $('#day_main').find('thead th').each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
+        <?php
+        // Need to calculate the slot size each time, because it won't always be the same, for example
+        // if there are multiple bookings in a slot
+        ?>
+        slotSize = $(this).outerWidth();
+
         if ((start_timestamp <= now) &&
-          (end_timestamp > now))
+            (end_timestamp > now))
         {
           <?php
           // If we've found the column then construct a timeline and position it corresponding to the fraction
@@ -150,8 +157,7 @@ var Timeline = {
           ?>
           var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
           var left = $(this).offset().left - $('.dwm_main').parent().offset().left;
-          slotSize = $(this).outerWidth();
-          left = left + fraction * $(this).outerWidth();
+          left = left + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
           var tbody = $('.dwm_main tbody');
           var timeline = $('<div class="timeline times_along_top"></div>')
@@ -171,9 +177,14 @@ var Timeline = {
       $('#day_main').find('tbody tr').each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
-        console.log(start_timestamp);
+        <?php
+        // Need to calculate the slot size each time, because it won't always be the same, for example
+        // if there are multiple bookings in a slot
+        ?>
+        slotSize = $(this).outerHeight();
+
         if ((start_timestamp <= now) &&
-          (end_timestamp > now))
+            (end_timestamp > now))
         {
           <?php
           // If we've found the row then construct a timeline and position it corresponding to the fraction
@@ -189,8 +200,7 @@ var Timeline = {
           $(this).find('th').each(function () {
             labelsWidth = labelsWidth + $(this).outerWidth();
           });
-          slotSize = $(this).outerHeight();
-          top = top + fraction * $(this).outerHeight();
+          top = top + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
           var timeline = $('<div class="timeline"></div>')
             .width($(this).outerWidth() - labelsWidth)
@@ -205,13 +215,12 @@ var Timeline = {
     // half the time represented by one pixel.  And make the delay a minimum of one second.
     // Only set the timer if there's not already one running (could happen if show() is called twice)
     ?>
-    if (!Timeline.timerRunning)
+    if (Timeline.timerRunning === null)
     {
       delay = <?php echo $resolution ?>/(2 * slotSize);
       delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
       delay = Math.max(delay, 1000);
-      Timeline.timerRunning = true;
-      window.setInterval(Timeline.show, delay);
+      Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
 };
