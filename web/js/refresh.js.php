@@ -160,9 +160,10 @@ var Timeline = {
           left = left + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
           var tbody = $('.dwm_main tbody');
+          var container = $('.dwm_main').parent();
           var timeline = $('<div class="timeline times_along_top"></div>')
             .height(tbody.outerHeight())
-            .css({top: tbody.offset().top - $('.dwm_main').parent().offset().top + 'px', left: left + 'px'});
+            .css({top: tbody.offset().top - container.offset().top + 'px', left: left + container.scrollLeft() + 'px'});
           $('table.dwm_main').after(timeline);
           return false; <?php // Break out of each() loop ?>
         }
@@ -204,7 +205,7 @@ var Timeline = {
           <?php // Build the new timeline and add it to the DOM after the table ?>
           var timeline = $('<div class="timeline"></div>')
             .width($(this).outerWidth() - labelsWidth)
-            .css({top: top + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
+            .css({top: top + $('.dwm_main').parent().scrollTop() + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
           $('table.dwm_main').after(timeline);
           return false; <?php // Break out of each() loop ?>
         }
