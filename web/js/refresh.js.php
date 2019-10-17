@@ -92,7 +92,7 @@ var refreshPage = function refreshPage() {
   
 var refreshVisChanged = function refreshVisChanged() {
     var pageHidden = isHidden();
-    
+
     if (pageHidden !== null)
     {
        <?php
@@ -158,6 +158,7 @@ var Timeline = {
             .height(tbody.outerHeight())
             .css({top: tbody.offset().top - $('.dwm_main').parent().offset().top + 'px', left: left + 'px'});
           $('table.dwm_main').after(timeline);
+          return false; <?php // Break out of each() loop ?>
         }
       });
       <?php
@@ -170,6 +171,7 @@ var Timeline = {
       $('#day_main').find('tbody tr').each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
+        console.log(start_timestamp);
         if ((start_timestamp <= now) &&
           (end_timestamp > now))
         {
@@ -194,6 +196,7 @@ var Timeline = {
             .width($(this).outerWidth() - labelsWidth)
             .css({top: top + 'px', left: $(this).find('th').first().outerWidth() + 'px'});
           $('table.dwm_main').after(timeline);
+          return false; <?php // Break out of each() loop ?>
         }
       });
       <?php
