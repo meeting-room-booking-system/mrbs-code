@@ -162,7 +162,8 @@ var Timeline = {
     $('.timeline').remove();
 
     var now = Math.floor(Date.now() / 1000);
-    var theadData = $('#day_main thead').data();
+    var table = $('#day_main');
+    var theadData = table.find('thead').data();
     var slotSize, delay;
 
     <?php
@@ -180,7 +181,7 @@ var Timeline = {
       {
       ?>
       // Iterate through each of the table columns checking to see if the current time is in that column
-      $('#day_main').find('thead th').each(function () {
+      table.find('thead th').each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
         <?php
@@ -195,18 +196,18 @@ var Timeline = {
           // of the column that has expired
           ?>
           var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-          var left = $(this).offset().left - $('.dwm_main').parent().offset().left;
+          var left = $(this).offset().left - table.parent().offset().left;
           left = left + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
-          var tbody = $('.dwm_main tbody');
-          var container = $('.dwm_main').parent();
+          var tbody = table.find('tbody');
+          var container = table.parent();
           var timeline = $('<div class="timeline times_along_top"></div>')
             .height(tbody.outerHeight())
             .css({
               top: tbody.offset().top + container.scrollTop() - container.offset().top + 'px',
               left: left + container.scrollLeft() + 'px'
             });
-          $('table.dwm_main').after(timeline);
+          table.after(timeline);
           return false; <?php // Break out of each() loop ?>
         }
       });
@@ -217,7 +218,7 @@ var Timeline = {
       {
       ?>
       // Iterate through each of the table rows checking to see if the current time is in that row
-      $('#day_main').find('tbody tr').each(function () {
+      table.find('tbody tr').each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
         <?php
@@ -233,7 +234,7 @@ var Timeline = {
           // of the row that has expired
           ?>
           var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-          var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
+          var top = $(this).offset().top - table.parent().offset().top;
           var labelsWidth = 0;
           <?php
           // We don't want to overwrite the labels so work out how wide they are so that we can set
@@ -244,14 +245,14 @@ var Timeline = {
           });
           top = top + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
-          var container = $('.dwm_main').parent();
+          var container = table.parent();
           var timeline = $('<div class="timeline"></div>')
             .width($(this).outerWidth() - labelsWidth)
             .css({
               top: top + container.scrollTop() + 'px',
               left: $(this).find('th').first().outerWidth() + container.scrollLeft() + 'px'
             });
-          $('table.dwm_main').after(timeline);
+          table.after(timeline);
           return false; <?php // Break out of each() loop ?>
         }
       });
@@ -276,7 +277,7 @@ var Timeline = {
       delay = <?php echo $resolution ?>/(2 * slotSize);
       delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
       delay = Math.max(delay, 1000);
-      
+
       Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
