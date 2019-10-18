@@ -587,7 +587,8 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
   
   // TABLE HEADER
-  $thead = "<thead>\n";
+  $thead = '<thead data-start_first_slot="' . $start_first_slot .
+           '" data-end_last_slot="' . ($start_last_slot + $resolution) . "\">\n";
   $header_inner = "<tr>\n";
 
   if ($times_along_top)
