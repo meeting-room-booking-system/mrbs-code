@@ -697,21 +697,25 @@ table.dwm_main {
   border-right: 0 solid <?php echo $main_table_border_color ?>;
 }
 
-.dwm_main tr:first-child th:first-child {
+.dwm_main thead tr:first-child th:first-child {
   border-top-left-radius: 5px;
 }
 
-.dwm_main tr:first-child th:last-child {
+.dwm_main thead tr:first-child th:last-child {
   border-top-right-radius: 5px;
 }
 
-.dwm_main > *:last-child tr:last-child th:first-child,
-.dwm_main > *:last-child tr:last-child td:first-child {
+<?php
+// Note that although tfoot appears at the bottom of the table, it is not the last child
+// of the table as the DOM is thead tfoot tbody.
+ ?>
+.dwm_main tfoot tr:last-child th:first-child,
+.dwm_main thead + tbody tr:last-child th:first-child {
   border-bottom-left-radius: 5px;
 }
 
-.dwm_main > *:last-child tr:last-child th:last-child,
-.dwm_main > *:last-child tr:last-child td:last-child {
+.dwm_main tfoot tr:last-child th:last-child,
+.dwm_main thead + tbody tr:last-child th:last-child {
   border-bottom-right-radius: 5px;
 }
 
