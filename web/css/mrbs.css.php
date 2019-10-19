@@ -619,9 +619,13 @@ table.dwm_main {
 .dwm_main td {
   position: relative;
   padding: 0;
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
   border-bottom: 0;
   border-right: 0;
+}
+
+.dwm_main td,
+.dwm_main tbody td + th {
+  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
 .series a::before {
@@ -673,9 +677,12 @@ table.dwm_main {
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
 
-.dwm_main tr:first-child th {
-  border-top: 0 solid <?php echo $main_table_border_color ?>;
-  border-bottom: 0 solid <?php echo $main_table_border_color ?>;
+.dwm_main thead tr:last-child th {
+  border-bottom: 1px solid <?php echo $banner_back_color ?>;
+}
+
+.dwm_main tfoot tr:first-child th {
+  border-top: 1px solid <?php echo $banner_back_color ?>;
 }
 
 .dwm_main > *:last-child tr:last-child th,

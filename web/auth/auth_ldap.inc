@@ -256,12 +256,14 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
             isset($all_ldap_opts['ldap_dn_search_password'][$idx]))
         {
           // Bind with DN and password
+          authLdapDebug("binding with search_dn and search_password");
           $res = mrbs_ldap_bind($ldap, $all_ldap_opts['ldap_dn_search_dn'][$idx],
                                 $all_ldap_opts['ldap_dn_search_password'][$idx]);
         }
         else
         {
           // Anonymous bind
+          authLdapDebug("binding anonymously");
           $res = mrbs_ldap_bind($ldap);
         }
 
@@ -276,21 +278,29 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
           $res = ldap_search($ldap,
                              $all_ldap_opts['ldap_base_dn'][$idx],
                              "(" . $all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$user)");
-
-          if (ldap_count_entries($ldap, $res) == 1)
+                             
+          if ($res === false)
           {
-            authLdapDebug("found one entry using '" .
-                          $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
-            $entries = ldap_get_entries($ldap, $res);
-            $dn = $entries[0]["dn"];
-            $user_search = "distinguishedName=" . $dn;
-            authLdapDebug("base_dn '" . $all_ldap_opts['ldap_base_dn'][$idx] .
-                          "' user '$user' dn '$dn'");
-          }
+            authLdapDebug("ldap_search failed: ". mrbs_ldap_error($ldap));
+          }                           
           else
           {
-            authLdapDebug("didn't find entry using '".
-                          $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
+            if (ldap_count_entries($ldap, $res) == 1)
+            {
+              authLdapDebug("found one entry using '" .
+                            $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
+              $entries = ldap_get_entries($ldap, $res);
+              $dn = $entries[0]["dn"];
+              $user_search = "distinguishedName=" . $dn;
+              authLdapDebug("base_dn '" . $all_ldap_opts['ldap_base_dn'][$idx] .
+                            "' user '$user' dn '$dn'");
+            }
+            else
+            {
+              authLdapDebug(ldap_count_entries($ldap, $res) . " entries found");
+              authLdapDebug("didn't find entry using '".
+                            $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
+            }
           }
         }
       }
