@@ -662,7 +662,8 @@ table.dwm_main {
 // the grid when using resizable bookings.   jQuery.offset() measures to the content.  If you
 // need padding put it on the contained element.
 ?>
-.dwm_main :not(tbody) th {
+.dwm_main thead th,
+.dwm_main tfoot th {
   font-size: small;
   font-weight: normal;
   vertical-align: top;
@@ -696,21 +697,25 @@ table.dwm_main {
   border-right: 0 solid <?php echo $main_table_border_color ?>;
 }
 
-.dwm_main tr:first-child th:first-child {
+.dwm_main thead tr:first-child th:first-child {
   border-top-left-radius: 5px;
 }
 
-.dwm_main tr:first-child th:last-child {
+.dwm_main thead tr:first-child th:last-child {
   border-top-right-radius: 5px;
 }
 
-.dwm_main > *:last-child tr:last-child th:first-child,
-.dwm_main > *:last-child tr:last-child td:first-child {
+<?php
+// Note that although tfoot appears at the bottom of the table, it is not the last child
+// of the table as the DOM is thead tfoot tbody.
+ ?>
+.dwm_main tfoot tr:last-child th:first-child,
+.dwm_main thead + tbody tr:last-child th:first-child {
   border-bottom-left-radius: 5px;
 }
 
-.dwm_main > *:last-child tr:last-child th:last-child,
-.dwm_main > *:last-child tr:last-child td:last-child {
+.dwm_main tfoot tr:last-child th:last-child,
+.dwm_main thead + tbody tr:last-child th:last-child {
   border-bottom-right-radius: 5px;
 }
 
@@ -817,29 +822,31 @@ table.dwm_main {
   box-sizing: border-box;
 }
 
-.dwm_main :not(tbody) th a {
+.dwm_main th a {
   text-decoration: none;
   font-weight: normal;
 }
 
-.dwm_main :not(tbody) th a:link {
+.dwm_main th a:link {
   color: <?php echo $anchor_link_color_header ?>;
 }
 
-.dwm_main :not(tbody) th a:visited, {
+.dwm_main th a:visited {
   color: <?php echo $anchor_visited_color_header ?>;
 }
 
-.dwm_main :not(tbody) th a:hover {
+.dwm_main th a:hover {
   color: <?php echo $anchor_hover_color_header ?>;
   text-decoration:underline;
 }
 
-.dwm_main :not(tbody) th.first_last {
+.dwm_main thead th.first_last,
+.dwm_main tfoot th.first_last {
   width: 1px;
 }
 
-.dwm_main#week_main :not(tbody) th.first_last {
+.dwm_main#week_main thead th.first_last,
+.dwm_main#week_main tfoot th.first_last {
   vertical-align: bottom;
 }
 
