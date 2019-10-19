@@ -673,9 +673,12 @@ table.dwm_main {
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
 
-.dwm_main tr:first-child th {
-  border-top: 0 solid <?php echo $main_table_border_color ?>;
-  border-bottom: 0 solid <?php echo $main_table_border_color ?>;
+.dwm_main thead tr:last-child th {
+  border-bottom: 1px solid <?php echo $banner_back_color ?>;
+}
+
+.dwm_main tfoot tr:first-child th {
+  border-top: 1px solid <?php echo $banner_back_color ?>;
 }
 
 .dwm_main > *:last-child tr:last-child th,
