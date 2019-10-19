@@ -619,9 +619,13 @@ table.dwm_main {
 .dwm_main td {
   position: relative;
   padding: 0;
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
   border-bottom: 0;
   border-right: 0;
+}
+
+.dwm_main td,
+.dwm_main tbody td + th {
+  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
 .series a::before {
