@@ -120,6 +120,12 @@ var refreshVisChanged = function refreshVisChanged() {
 var Timeline = {
   timerRunning: null,
 
+  <?php
+  // Get the first non-zero slot size in the table, or else if they are all zero then return that.
+  // This function is useful when trying to calculate an appropriate deay for pages that don't have
+  // a timeline.  For pages that do, we can't assume that all the slots are the same size, so it's
+  // better to get the size of the slot that contains the timeline.
+  ?>
   getFirstNonZeroSlotSize: function() {
     var slotSize;
     <?php
@@ -216,67 +222,72 @@ var Timeline = {
       // ... or the standard view, with times down the side
       else
       {
-      ?>
-      // Iterate through each of the table rows checking to see if the current time is in that row
-      table.find('tbody tr').each(function () {
-        var start_timestamp = $(this).data('start_timestamp');
-        var end_timestamp = $(this).data('end_timestamp');
-        <?php
-        // Need to calculate the slot size each time, because it won't always be the same, for example
-        // if there are multiple bookings in a slot
         ?>
-        slotSize = $(this).outerHeight();
+        // Iterate through each of the table rows checking to see if the current time is in that row
+        table.find('tbody tr').each(function () {
+          var start_timestamp = $(this).data('start_timestamp');
+          var end_timestamp = $(this).data('end_timestamp');
+          <?php
+          // Need to calculate the slot size each time, because it won't always be the same, for example
+          // if there are multiple bookings in a slot
+          ?>
+          slotSize = $(this).outerHeight();
 
-        if ((start_timestamp <= now) &&
-          (end_timestamp > now)) {
-          <?php
-          // If we've found the row then construct a timeline and position it corresponding to the fraction
-          // of the row that has expired
-          ?>
-          var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-          var top = $(this).offset().top - table.parent().offset().top;
-          var labelsWidth = 0;
-          <?php
-          // We don't want to overwrite the labels so work out how wide they are so that we can set
-          // the correct width for the timeline.
-          ?>
-          $(this).find('th').each(function () {
-            labelsWidth = labelsWidth + $(this).outerWidth();
-          });
-          top = top + fraction * slotSize;
-          <?php // Build the new timeline and add it to the DOM after the table ?>
-          var container = table.parent();
-          var timeline = $('<div class="timeline"></div>')
-            .width($(this).outerWidth() - labelsWidth)
-            .css({
-              top: top + container.scrollTop() + 'px',
-              left: $(this).find('th').first().outerWidth() + container.scrollLeft() + 'px'
+          if ((start_timestamp <= now) &&
+            (end_timestamp > now)) {
+            <?php
+            // If we've found the row then construct a timeline and position it corresponding to the fraction
+            // of the row that has expired
+            ?>
+            var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
+            var top = $(this).offset().top - table.parent().offset().top;
+            var labelsWidth = 0;
+            <?php
+            // We don't want to overwrite the labels so work out how wide they are so that we can set
+            // the correct width for the timeline.
+            ?>
+            $(this).find('th').each(function () {
+              labelsWidth = labelsWidth + $(this).outerWidth();
             });
-          table.after(timeline);
-          return false; <?php // Break out of each() loop ?>
-        }
-      });
-      <?php
+            top = top + fraction * slotSize;
+            <?php // Build the new timeline and add it to the DOM after the table ?>
+            var container = table.parent();
+            var timeline = $('<div class="timeline"></div>')
+              .width($(this).outerWidth() - labelsWidth)
+              .css({
+                top: top + container.scrollTop() + 'px',
+                left: $(this).find('th').first().outerWidth() + container.scrollLeft() + 'px'
+              });
+            table.after(timeline);
+            return false; <?php // Break out of each() loop ?>
+          }
+        });
+        <?php
       }
-      // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
-      // half the time represented by one pixel.  And make the delay a minimum of one second.
-      // Only set the timer if there's not already one running (could happen if show() is called twice)
-      ?>
+    // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
+    // half the time represented by one pixel.  And make the delay a minimum of one second.
+    // Only set the timer if there's not already one running (could happen if show() is called twice)
+    ?>
     }
     if (Timeline.timerRunning === null)
     {
+      <?php // If we haven't got a slot size, because the poge doesn't have a timeline, then get one ?>
       if (typeof slotSize === 'undefined')
       {
          slotSize = Timeline.getFirstNonZeroSlotSize();
       }
-      if (!slotSize)
+      <?php // If we've now got a slot size then calculate a delay ?>
+      if (slotSize)
       {
-        slotSize = 10000;
+        delay = <?php echo $resolution ?>/(2 * slotSize);
+        delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
+        delay = Math.max(delay, 1000);
       }
-
-      delay = <?php echo $resolution ?>/(2 * slotSize);
-      delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
-      delay = Math.max(delay, 1000);
+      <?php // If we still haven't got one, or else it's zero, then set a sensible default delay ?>
+      else
+      {
+        delay = 10000; <?php // 10 seconds ?>
+      }
 
       Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
