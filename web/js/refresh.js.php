@@ -171,13 +171,17 @@ var Timeline = {
     var table = $('#day_main');
     var theadData = table.find('thead').data();
     var slotSize, delay;
-
+    
     <?php
     // Only look for the slot that corresponds to the current time if we know it's going to be on this page,
     // otherwise there's no point in iterating through each time slot looking for the current time. [We could
     // optimise further and avoid iterating through the time slots by calculating which slot the current time
     // corresponds to, knowing the resolution.  However this method won't work on DST transition days without
     // some extra data, because the number of slots changes on those days.]
+    //
+    // We iterate through the slots in reverse so that we hit the correct time on the transition into DST.  If
+    // we were to iterate through the slots in the normal order we would land on the invalid hour, eg 0100-0200
+    // which is really 0200-0300 when the clocks go forward.
     ?>
     if ((theadData.start_first_slot <= now) && (theadData.end_last_slot > now))
     {
@@ -186,8 +190,8 @@ var Timeline = {
       if ($times_along_top)
       {
       ?>
-      // Iterate through each of the table columns checking to see if the current time is in that column
-      table.find('thead th').each(function () {
+      // Iterate through each of the table columns checking to see if the current time is in that column.
+      table.find('thead th').reverse().each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
         <?php
@@ -224,7 +228,7 @@ var Timeline = {
       {
         ?>
         // Iterate through each of the table rows checking to see if the current time is in that row
-        table.find('tbody tr').each(function () {
+        table.find('tbody tr').reverse().each(function () {
           var start_timestamp = $(this).data('start_timestamp');
           var end_timestamp = $(this).data('end_timestamp');
           <?php
