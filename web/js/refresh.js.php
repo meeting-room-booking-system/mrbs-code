@@ -120,26 +120,78 @@ var refreshVisChanged = function refreshVisChanged() {
 var Timeline = {
   timerRunning: null,
 
+  <?php
+  // Get the first non-zero slot size in the table, or else if they are all zero then return that.
+  // This function is useful when trying to calculate an appropriate deay for pages that don't have
+  // a timeline.  For pages that do, we can't assume that all the slots are the same size, so it's
+  // better to get the size of the slot that contains the timeline.
+  ?>
+  getFirstNonZeroSlotSize: function() {
+    var slotSize;
+    <?php
+    if ($times_along_top)
+    {
+      ?>
+      $('#day_main').find('thead th').not('.first_last').each(function () {
+          slotSize = $(this).outerWidth();
+          if (slotSize)
+          {
+            return false;
+          }
+        });
+    <?php
+    }
+    else
+    {
+      ?>
+      $('#day_main').find('tbody tr').each(function () {
+          slotSize = $(this).outerHeight();
+          if (slotSize)
+          {
+            return false;
+          }
+        });
+    <?php
+    }
+    ?>
+    return slotSize;
+  },
+
   show: function () {
     <?php // No point in do anything if the page is hidden ?>
     if (isHidden())
     {
       return;
     }
-    
-    var now = Math.floor(Date.now() / 1000);
-    var slotSize, delay;
 
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
+    var now = Math.floor(Date.now() / 1000);
+    var table = $('#day_main');
+    var theadData = table.find('thead').data();
+    var slotSize, delay;
+    
     <?php
-    // We can display the table in two ways: with times along the top ...
-    if ($times_along_top)
+    // Only look for the slot that corresponds to the current time if we know it's going to be on this page,
+    // otherwise there's no point in iterating through each time slot looking for the current time. [We could
+    // optimise further and avoid iterating through the time slots by calculating which slot the current time
+    // corresponds to, knowing the resolution.  However this method won't work on DST transition days without
+    // some extra data, because the number of slots changes on those days.]
+    //
+    // We iterate through the slots in reverse so that we hit the correct time on the transition into DST.  If
+    // we were to iterate through the slots in the normal order we would land on the invalid hour, eg 0100-0200
+    // which is really 0200-0300 when the clocks go forward.
+    ?>
+    if ((theadData.start_first_slot <= now) && (theadData.end_last_slot > now))
     {
+      <?php
+      // We can display the table in two ways: with times along the top ...
+      if ($times_along_top)
+      {
       ?>
-      // Iterate through each of the table columns checking to see if the current time is in that column
-      $('#day_main').find('thead th').each(function () {
+      // Iterate through each of the table columns checking to see if the current time is in that column.
+      table.find('thead th').reverse().each(function () {
         var start_timestamp = $(this).data('start_timestamp');
         var end_timestamp = $(this).data('end_timestamp');
         <?php
@@ -148,82 +200,99 @@ var Timeline = {
         ?>
         slotSize = $(this).outerWidth();
 
-        if ((start_timestamp <= now) &&
-            (end_timestamp > now))
-        {
+        if ((start_timestamp <= now) && (end_timestamp > now)) {
           <?php
           // If we've found the column then construct a timeline and position it corresponding to the fraction
           // of the column that has expired
           ?>
           var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-          var left = $(this).offset().left - $('.dwm_main').parent().offset().left;
+          var left = $(this).offset().left - table.parent().offset().left;
           left = left + fraction * slotSize;
           <?php // Build the new timeline and add it to the DOM after the table ?>
-          var tbody = $('.dwm_main tbody');
-          var container = $('.dwm_main').parent();
+          var tbody = table.find('tbody');
+          var container = table.parent();
           var timeline = $('<div class="timeline times_along_top"></div>')
             .height(tbody.outerHeight())
-            .css({top: tbody.offset().top + container.scrollTop() - container.offset().top + 'px',
-                  left: left + container.scrollLeft() + 'px'});
-          $('table.dwm_main').after(timeline);
+            .css({
+              top: tbody.offset().top + container.scrollTop() - container.offset().top + 'px',
+              left: left + container.scrollLeft() + 'px'
+            });
+          table.after(timeline);
           return false; <?php // Break out of each() loop ?>
         }
       });
       <?php
-    }
-    // ... or the standard view, with times down the side
-    else
-    {
-      ?>
-      // Iterate through each of the table rows checking to see if the current time is in that row
-      $('#day_main').find('tbody tr').each(function () {
-        var start_timestamp = $(this).data('start_timestamp');
-        var end_timestamp = $(this).data('end_timestamp');
-        <?php
-        // Need to calculate the slot size each time, because it won't always be the same, for example
-        // if there are multiple bookings in a slot
+      }
+      // ... or the standard view, with times down the side
+      else
+      {
         ?>
-        slotSize = $(this).outerHeight();
+        // Iterate through each of the table rows checking to see if the current time is in that row
+        table.find('tbody tr').reverse().each(function () {
+          var start_timestamp = $(this).data('start_timestamp');
+          var end_timestamp = $(this).data('end_timestamp');
+          <?php
+          // Need to calculate the slot size each time, because it won't always be the same, for example
+          // if there are multiple bookings in a slot
+          ?>
+          slotSize = $(this).outerHeight();
 
-        if ((start_timestamp <= now) &&
-            (end_timestamp > now))
-        {
-          <?php
-          // If we've found the row then construct a timeline and position it corresponding to the fraction
-          // of the row that has expired
-          ?>
-          var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
-          var top = $(this).offset().top - $('.dwm_main').parent().offset().top;
-          var labelsWidth = 0;
-          <?php
-          // We don't want to overwrite the labels so work out how wide they are so that we can set
-          // the correct width for the timeline.
-          ?>
-          $(this).find('th').each(function () {
-            labelsWidth = labelsWidth + $(this).outerWidth();
-          });
-          top = top + fraction * slotSize;
-          <?php // Build the new timeline and add it to the DOM after the table ?>
-          var container = $('.dwm_main').parent();
-          var timeline = $('<div class="timeline"></div>')
-            .width($(this).outerWidth() - labelsWidth)
-            .css({top: top + container.scrollTop() + 'px',
-                  left: $(this).find('th').first().outerWidth() + container.scrollLeft() + 'px'});
-          $('table.dwm_main').after(timeline);
-          return false; <?php // Break out of each() loop ?>
-        }
-      });
-      <?php
-    }
+          if ((start_timestamp <= now) &&
+            (end_timestamp > now)) {
+            <?php
+            // If we've found the row then construct a timeline and position it corresponding to the fraction
+            // of the row that has expired
+            ?>
+            var fraction = (now - start_timestamp) / (end_timestamp - start_timestamp);
+            var top = $(this).offset().top - table.parent().offset().top;
+            var labelsWidth = 0;
+            <?php
+            // We don't want to overwrite the labels so work out how wide they are so that we can set
+            // the correct width for the timeline.
+            ?>
+            $(this).find('th').each(function () {
+              labelsWidth = labelsWidth + $(this).outerWidth();
+            });
+            top = top + fraction * slotSize;
+            <?php // Build the new timeline and add it to the DOM after the table ?>
+            var container = table.parent();
+            var timeline = $('<div class="timeline"></div>')
+              .width($(this).outerWidth() - labelsWidth)
+              .css({
+                top: top + container.scrollTop() + 'px',
+                left: $(this).find('th').first().outerWidth() + container.scrollLeft() + 'px'
+              });
+            table.after(timeline);
+            return false; <?php // Break out of each() loop ?>
+          }
+        });
+        <?php
+      }
     // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
     // half the time represented by one pixel.  And make the delay a minimum of one second.
     // Only set the timer if there's not already one running (could happen if show() is called twice)
     ?>
+    }
     if (Timeline.timerRunning === null)
     {
-      delay = <?php echo $resolution ?>/(2 * slotSize);
-      delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
-      delay = Math.max(delay, 1000);
+      <?php // If we haven't got a slot size, because the poge doesn't have a timeline, then get one ?>
+      if (typeof slotSize === 'undefined')
+      {
+         slotSize = Timeline.getFirstNonZeroSlotSize();
+      }
+      <?php // If we've now got a slot size then calculate a delay ?>
+      if (slotSize)
+      {
+        delay = <?php echo $resolution ?>/(2 * slotSize);
+        delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
+        delay = Math.max(delay, 1000);
+      }
+      <?php // If we still haven't got one, or else it's zero, then set a sensible default delay ?>
+      else
+      {
+        delay = 10000; <?php // 10 seconds ?>
+      }
+
       Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
