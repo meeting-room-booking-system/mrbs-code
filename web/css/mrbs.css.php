@@ -715,7 +715,7 @@ table.dwm_main {
 }
 
 .dwm_main tfoot tr:last-child th:last-child,
-.dwm_main thead + tbody tr:last-child th:last-child {
+.dwm_main thead + tbody tr:last-child > *:last-child {
   border-bottom-right-radius: 5px;
 }
 
