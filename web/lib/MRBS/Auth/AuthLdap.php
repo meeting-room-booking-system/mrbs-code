@@ -335,7 +335,7 @@ class AuthLdap extends Auth
           
             if ($res === false)
             {
-              self::debug("ldap_search failed: ". mrbs_ldap_error($ldap));
+              self::debug("ldap_search failed: ". self::ldapError($ldap));
             } 
             else
             {
