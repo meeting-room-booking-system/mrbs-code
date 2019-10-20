@@ -447,8 +447,8 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   // Put the filename in as a class to aid styling.
   $classes = array($page);
   // And if the user is logged in, add another class to aid styling
-  $user = getUserName();
-  if (isset($user))
+  $current_user = session()->getCurrentUser();
+  if (isset($current_user))
   {
     $classes[] = 'logged_in';
   }
