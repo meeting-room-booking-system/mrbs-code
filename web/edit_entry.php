@@ -1365,7 +1365,7 @@ if (isset($id))
 
     if (!isset($rep_type))
     {
-      $rep_type == REP_NONE;
+      $rep_type = REP_NONE;
     }
     
     // If it's a repeating entry get the repeat details
