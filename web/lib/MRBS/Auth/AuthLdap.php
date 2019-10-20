@@ -310,12 +310,14 @@ class AuthLdap extends Auth
               isset(self::$all_ldap_opts['ldap_dn_search_password'][$idx]))
           {
             // Bind with DN and password
+            self::debug("binding with search_dn and search_password");
             $res = self::ldapBind($ldap, self::$all_ldap_opts['ldap_dn_search_dn'][$idx],
                                   self::$all_ldap_opts['ldap_dn_search_password'][$idx]);
           }
           else
           {
             // Anonymous bind
+            self::debug("binding anonymously");
             $res = self::ldapBind($ldap);
           }
 
@@ -330,22 +332,30 @@ class AuthLdap extends Auth
             $res = ldap_search($ldap,
                                self::$all_ldap_opts['ldap_base_dn'][$idx],
                                "(" . self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$username)");
-
-            if (ldap_count_entries($ldap, $res) == 1)
+          
+            if ($res === false)
             {
-              self::debug("found one entry using '" .
-                          self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
-              $entries = ldap_get_entries($ldap, $res);
-              $dn = $entries[0]["dn"];
-              $user_search = "distinguishedName=" . $dn;
-            }
+              self::debug("ldap_search failed: ". mrbs_ldap_error($ldap));
+            } 
             else
             {
-              self::debug("didn't find entry using '" .
-                          self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
+              if (ldap_count_entries($ldap, $res) == 1)
+              {
+                self::debug("found one entry using '" .
+                            self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
+                $entries = ldap_get_entries($ldap, $res);
+                $dn = $entries[0]["dn"];
+                $user_search = "distinguishedName=" . $dn;
+                self::debug("base_dn '" . self::$all_ldap_opts['ldap_base_dn'][$idx] .
+                            "' user '$username' dn '$dn'");
+              }
+              else
+              {
+                self::debug(ldap_count_entries($ldap, $res) . " entries found");
+                self::debug("didn't find entry using '" .
+                            self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "'");
+              }
             }
-            self::debug("base_dn '" . self::$all_ldap_opts['ldap_base_dn'][$idx] .
-                        "' user '$username' dn '$dn'");
           }
         }
         else
