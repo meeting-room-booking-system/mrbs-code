@@ -444,8 +444,16 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
     $data['timetohighlight'] = $timetohighlight;
   }
 
-  // Put the filename in as a class to aid styling.   
-  echo '<body class="' . htmlspecialchars($page) . '"';
+  // Put the filename in as a class to aid styling.
+  $classes = array($page);
+  // And if the user is logged in, add another class to aid styling
+  $user = getUserName();
+  if (isset($user))
+  {
+    $classes[] = 'logged_in';
+  }
+
+  echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . '"';
   foreach ($data as $key => $value)
   {
     if (isset($value))
