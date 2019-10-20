@@ -292,7 +292,15 @@ function print_theme_header($day, $month, $year, $area, $room, $simple=false, $s
 
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"non_js ".htmlspecialchars(this_page('.php'))."\">\n";
+  $classes = array('non_js', this_page('.php'));
+  // And add another class if the user is logged in
+  $user = getUserName();
+  if (isset($user))
+  {
+    $classes[] = 'logged_in';
+  }
+
+  echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . "\">\n";
    
   if (!$simple)
   {
