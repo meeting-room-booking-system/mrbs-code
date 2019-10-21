@@ -585,16 +585,30 @@ div#div_custom_html {
 
 div.timeline {
   background-color: <?php echo $timeline_color ?>;
-  height: 1px;
-  width: 0;
   position: absolute;
+  width: 0;
+  <?php
+  // The JavaScript positions the top edge of the line at the current time, but intuitively we would expect
+  // the centre of the line to represent the current time, so we need to shift the line up by half of its height.
+  // Note that in some browsers, eg Firefox, translate(0, -50%) can make the line disappear completely if its height
+  // is only 1px - probably something to do with rounding - so make the line at least 2px high.
+  ?>
+  height: 2px; <?php // Do not set to less than 2px.  See above. ?>
+  transform: translate(0, -50%);
   z-index: 90;
   pointer-events: none;
 }
 
 div.timeline.times_along_top {
   height: 0;
-  width: 1px;
+  <?php
+  // The JavaScript positions the left edge of the line at the current time, but intuitively we would expect
+  // the centre of the line to represent the current time, so we need to shift the line left by half of its width.
+  // Note that in some browsers, eg Firefox, translate(-50%, 0) can make the line disappear completely if its width
+  // is only 1px - probably something to do with rounding - so make the line at least 2px wide.
+  ?>
+  width: 2px; <?php // Do not set to less than 2px.  See above. ?>
+  transform: translate(-50%, 0);
 }
 
 table.dwm_main {
