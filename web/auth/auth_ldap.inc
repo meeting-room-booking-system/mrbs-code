@@ -275,9 +275,11 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
         {
           authLdapDebug("initial bind was successful");
 
-          $res = ldap_search($ldap,
-                             $all_ldap_opts['ldap_base_dn'][$idx],
-                             "(" . $all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$user)");
+          $base_dn = $all_ldap_opts['ldap_base_dn'][$idx];
+          $filter = "(" . $all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$user)";
+
+          authLdapDebug("searching using base_dn '$base_dn' and filter '$filter'");
+          $res = ldap_search($ldap, $base_dn, $filter);
                              
           if ($res === false)
           {
@@ -287,19 +289,14 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
           {
             if (ldap_count_entries($ldap, $res) == 1)
             {
-              authLdapDebug("found one entry using '" .
-                            $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
               $entries = ldap_get_entries($ldap, $res);
               $dn = $entries[0]["dn"];
               $user_search = "distinguishedName=" . $dn;
-              authLdapDebug("base_dn '" . $all_ldap_opts['ldap_base_dn'][$idx] .
-                            "' user '$user' dn '$dn'");
+              authLdapDebug("found one entry dn '$dn'");
             }
             else
             {
-              authLdapDebug(ldap_count_entries($ldap, $res) . " entries found");
-              authLdapDebug("didn't find entry using '".
-                            $all_ldap_opts['ldap_dn_search_attrib'][$idx]."'");
+              authLdapDebug(ldap_count_entries($ldap, $res) . " entries found, no unique dn");
             }
           }
         }
