@@ -1256,7 +1256,8 @@ $(document).on('page_ready', function() {
   startSelect = form.find('#start_seconds');
   endSelect = form.find('#end_seconds');
   allDay = form.find('#all_day');
-  if ((allDay.is(':disabled') === false) && 
+  if (allDay.is(':visible') &&
+      (allDay.is(':disabled') === false) &&
       (startSelect.val() === startSelect.find('option').first().val()) &&
       (endSelect.val() === endSelect.find('option').last().val()))
   {
