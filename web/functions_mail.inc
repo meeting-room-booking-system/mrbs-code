@@ -415,7 +415,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   if ($as_html)
   {
     $body .= DOCTYPE . "\n";
-    $body .= "<html>\n";
+    $body .= '<html lang="' . convert_to_BCP47($mail_settings['admin_lang']) . "\">\n";
     $body .= "<head>\n";
     $body .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . get_mail_charset() . "\">\n";
     $body .= "<title>$mrbs_company</title>\n";
