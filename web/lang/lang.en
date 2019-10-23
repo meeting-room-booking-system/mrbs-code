@@ -44,6 +44,7 @@ $vocab["no_rooms_for_area"]  = "No rooms defined for this area";
 $vocab["loading"]            = "Loading";
 $vocab["saving"]             = "Saving";
 $vocab["week_number"]        = "Week %s | ";
+$vocab["create_new_booking"] = "Create a new booking";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";

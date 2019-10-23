@@ -228,7 +228,8 @@ function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
         $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
         $query = http_build_query($vars, '', '&');
         
-        $html .= "<a href=\"edit_entry.php?" . htmlspecialchars($query) . "\">\n";
+        $html .= '<a href="edit_entry.php?' . htmlspecialchars($query) . '"' .
+                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
         if ($show_plus_link)
         {
           $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
@@ -1331,7 +1332,8 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
       
       $query = http_build_query($vars, '', '&');
       
-      $html .= '<a class="new_booking" href="edit_entry.php?' . htmlspecialchars($query) . "\">\n";
+      $html .= '<a class="new_booking" href="edit_entry.php?' . htmlspecialchars($query) . '"' .
+               ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
       if ($show_plus_link)
       {
         $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
