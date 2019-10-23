@@ -243,15 +243,18 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
       throw new \Exception("Unknown view '$view'");
       break;
   }
-  
+
+  $title_prev = htmlspecialchars($title_prev);
+  $title_next = htmlspecialchars($title_next);
+
   $link_prev = get_adjacent_link($view, $year, $month, $day, $area, $room, false);
   $link_today = get_today_link($view, $area, $room);
   $link_next = get_adjacent_link($view, $year, $month, $day, $area, $room, true);
   
   $html .= "<nav class=\"arrow\">\n";
-  $html .= "<a class=\"prev\" title=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
   $html .= "<a href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
-  $html .= "<a class=\"next\" title=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
+  $html .= "<a class=\"next\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
   $html .= "</nav>";
   
   return $html;
