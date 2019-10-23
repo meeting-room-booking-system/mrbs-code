@@ -538,7 +538,8 @@ function cell_html($cell, $query_strings, $is_invalid = FALSE)
         {
           $html .= "<div class=\"celldiv slots1\">\n";  // a bookable slot is only one unit high
           $html .= "<a href=\"edit_entry.php?" . 
-                   (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . 
+                   (($enable_periods) ? $query_strings['new_periods'] : $query_strings['new_times']) . '"' .
+                   ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) .
                    "\">\n";
           if ($show_plus_link)
           {

@@ -290,7 +290,8 @@ function month_table_innerhtml($day, $month, $year, $room, $area)
         $query_string .= "&amp;hour=$morningstarts&amp;minute=$morningstarts_minutes";
       }
       
-      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\">\n";
+      $html .= "<a class=\"new_booking\" href=\"edit_entry.php?$query_string\"" .
+               ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
       if ($show_plus_link)
       {
         $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
