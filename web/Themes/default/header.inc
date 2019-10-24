@@ -216,9 +216,11 @@ function print_search($view, $year, $month, $day, $area, $room)
   }
   
   $input = new ElementInputSearch();
-  
+  $search_vocab =  get_vocab('search');
+
   $input->setAttributes(array('name'        => 'search_str',
-                              'placeholder' => get_vocab('search'),
+                              'placeholder' => $search_vocab,
+                              'aria-label'  => $search_vocab,
                               'required'    => true));
                               
   $form->addElement($input);

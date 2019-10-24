@@ -58,9 +58,10 @@ function make_area_select_html($view, $year, $month, $day, $current)
                                  'page_date' => $page_date));
     
     $select = new ElementSelect();
-    $select->setAttributes(array('class'    => 'room_area_select',
-                                 'name'     => 'area',
-                                 'onchange' => 'this.form.submit()'))
+    $select->setAttributes(array('class'      => 'room_area_select',
+                                 'name'       => 'area',
+                                 'aria-label' => get_vocab('select_area'),
+                                 'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($areas, $current, true);
     $form->addElement($select);
     
@@ -98,9 +99,10 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
                                  'area'      => $area));
     
     $select = new ElementSelect();
-    $select->setAttributes(array('class'    => 'room_area_select',
-                                 'name'     => 'room',
-                                 'onchange' => 'this.form.submit()'))
+    $select->setAttributes(array('class'      => 'room_area_select',
+                                 'name'       => 'room',
+                                 'aria-label' => get_vocab('select_room'),
+                                 'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($rooms, $current, true);
     $form->addElement($select);
     
