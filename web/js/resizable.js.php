@@ -1367,7 +1367,7 @@ $(document).on('page_ready', function() {
     
     }).trigger('tableload');
     
-  $(window).resize(throttle(function(event) {
+  $(window).on('resize', throttle(function(event) {
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
       {
         <?php

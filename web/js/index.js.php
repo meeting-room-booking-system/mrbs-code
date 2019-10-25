@@ -186,8 +186,8 @@ $(document).on('page_ready', function() {
   ?>
   $('nav.main_calendar').removeClass('js_hidden');
   checkNav();
-  $(window).scroll(checkNav);
-  $(window).resize(checkNav);
+  $(window).on('scroll', checkNav);
+  $(window).on('resize', checkNav);
   
   <?php
   // Only reveal the color key once the bottom navigation has been determined,

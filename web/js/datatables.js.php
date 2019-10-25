@@ -208,7 +208,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // it's something to do with the way MRBS uses DataTables - maybe the CSS, or maybe the
   // JavaScript.
   ?>
-  $(window).resize(function () {
+  $(window).on('resize', function () {
     dataTable.columns.adjust();
   });
   
