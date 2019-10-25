@@ -1190,7 +1190,7 @@ $(document).on('page_ready', function() {
       // can be created by dragging the mouse
       ?>     
       table.find('td.new').each(function() {
-          $(this).find('a').click(function(event) {
+          $(this).find('a').on('click', function(event) {
               event.preventDefault();
             });
           $(this).on('mousedown', function(event) {

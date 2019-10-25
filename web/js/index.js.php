@@ -199,7 +199,7 @@ $(document).on('page_ready', function() {
   // Replace the navigation links with Ajax calls in order to eliminate flickering
   // as we move between pages.
   ?>
-  $('nav.arrow a, nav.view a').click(updateBody);
+  $('nav.arrow a, nav.view a').on('click', updateBody);
   
   <?php
   // Pre-fetch some pages to improve performance

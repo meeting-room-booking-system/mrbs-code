@@ -106,7 +106,7 @@ $(document).on('page_ready', function() {
       tableOptions.initComplete = function(){
         
             $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
-                  .click(function() {
+                  .on('click', function() {
                       var data = reportTable.rows({filter: 'applied'}).data().toArray(),
                           nEntries = data.length;
                           
