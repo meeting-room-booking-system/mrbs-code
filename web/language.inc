@@ -19,12 +19,14 @@ $flatpickr_lang_map = array(
   'cat' => 'ca',
   'gr'  => 'el',
   'kz'  => 'kk',
+  'sr-cyr' => 'sr-cyrl',
   'vn'  => 'vi'
 );
 
 // Map flatpickr language file names onto flatpickr fp.l10ns properties
 // so that they can be used with flatpickr.localize.
 $flatpickr_property_map = array(
+  'sr-cyr' => 'sr',
   'zh-tw' => 'zh_tw'
 );
 
