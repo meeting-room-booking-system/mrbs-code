@@ -22,6 +22,10 @@ $flatpickr_lang_map = array(
   'vn'  => 'vi'
 );
 
+$flatpickr_property_map = array(
+  'zh-tw' => 'zh_tw'
+);
+
 // The DataTables language files are for the moment given descriptive names.   I have
 // asked the DataTables team to use BCP 47 tags instead, but until that happens we have
 // to map the descriptions onto tags.  (The other method would be to rename all the files,
@@ -520,7 +524,16 @@ function get_flatpickr_lang_file($dir)
                   
   return get_best_lang_file($dir, '', '.js', null, $flatpickr_lang_map);
 }
-  
+
+
+function get_flatpickr_property($lang_file)
+{
+  global $flatpickr_property_map;
+
+  $basename = basename($lang_file, '.js');
+
+  return (isset($flatpickr_property_map[$basename])) ? $flatpickr_property_map[$basename] : $basename;
+}
 
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns NULL
