@@ -69,7 +69,7 @@ input, textarea {
 ?>
 input.date,
 .js input[type="date"],
-input.flatpickr-input {
+input.form-control.input {
   width: 6.5em;
 }
 
@@ -79,15 +79,15 @@ input.flatpickr-input {
 // date input display properly.   For example on iPad Safari, the native date input is
 // displayed as dd-mmm-yyyy, eg 1 Jan 2019, which is wider than most date inputs.
 ?>
-input.flatpickr-input.flatpickr-mobile {
+input.form-control.input.flatpickr-mobile {
   width: auto;
 }
 
-input.flatpickr-input {
+input.form-control.input {
   text-align: center;
 }
 
-.js input:not(.flatpickr-input)[type="date"] {
+.js input:not(.form-control.input)[type="date"] {
   visibility: hidden;
 }
 
@@ -1327,7 +1327,7 @@ div#div_custom_html {
   margin-bottom: 0.5em;
 }
 
-.standard input[type="text"]:not(.date):not(.flatpickr-input),
+.standard input[type="text"]:not(.date):not(.form-control.input),
 .standard input[type="email"],
 .standard input[type="password"],
 .standard input[type="search"],
