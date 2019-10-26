@@ -15,19 +15,19 @@ $lang_aliases = array
 
 // Map non-standard language codes used by flatpickr onto BCP 47 language tags
 $flatpickr_lang_map = array(
-  'at'  => 'de-at',
-  'cat' => 'ca',
-  'gr'  => 'el',
-  'kz'  => 'kk',
+  'at'     => 'de-at',
+  'cat'    => 'ca',
+  'gr'     => 'el',
+  'kz'     => 'kk',
   'sr-cyr' => 'sr-cyrl',
-  'vn'  => 'vi'
+  'vn'     => 'vi'
 );
 
 // Map flatpickr language file names onto flatpickr fp.l10ns properties
 // so that they can be used with flatpickr.localize.
 $flatpickr_property_map = array(
   'sr-cyr' => 'sr',
-  'zh-tw' => 'zh_tw'
+  'zh-tw'  => 'zh_tw'
 );
 
 // The DataTables language files are for the moment given descriptive names.   I have
