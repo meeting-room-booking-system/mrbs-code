@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.zh = {}));
+  (global = global || self, factory(global['zh-tw'] = {}));
 }(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,9 +9,9 @@
       : {
           l10ns: {}
       };
-  var Mandarin = {
+  var MandarinTraditional = {
       weekdays: {
-          shorthand: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+          shorthand: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
           longhand: [
               "星期日",
               "星期一",
@@ -53,15 +53,15 @@
           ]
       },
       rangeSeparator: " 至 ",
-      weekAbbreviation: "周",
-      scrollTitle: "滚动切换",
-      toggleTitle: "点击切换 12/24 小时时制"
+      weekAbbreviation: "週",
+      scrollTitle: "滾動切換",
+      toggleTitle: "點擊切換 12/24 小時時制"
   };
-  fp.l10ns.zh = Mandarin;
-  var zh = fp.l10ns;
+  fp.l10ns.zh_tw = MandarinTraditional;
+  var zhTw = fp.l10ns;
 
-  exports.Mandarin = Mandarin;
-  exports.default = zh;
+  exports.MandarinTraditional = MandarinTraditional;
+  exports.default = zhTw;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

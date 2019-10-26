@@ -1225,7 +1225,7 @@ $(document).on('page_ready', function() {
           adjustSlotSelectors(); 
         });
         
-  $('input[name="all_day"]').click(function() {
+  $('input[name="all_day"]').on('click', function() {
       onAllDayClick();
     });
     
@@ -1286,7 +1286,7 @@ $(document).on('page_ready', function() {
   // that the function that checks for a valid booking can see if the change was
   // triggered by a Submit button being pressed, and if so, not to send an Ajax request.
   ?>
-  form.find('[type="submit"], [type="button"], [type="image"]').click(function() {
+  form.find('[type="submit"], [type="button"], [type="image"]').on('click', function() {
     var trigger = $(this).attr('name');
     $(this).closest('form').data('submit', trigger);
   });
@@ -1320,7 +1320,7 @@ $(document).on('page_ready', function() {
   ?>
   var formFields = $('form#main').find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
   formFields.filter(':checkbox')
-            .click(function() {
+            .on('click', function() {
                 checkConflicts();
               });
   formFields.not(':checkbox')
@@ -1350,7 +1350,7 @@ $(document).on('page_ready', function() {
             .html(tabsHTML)
             .appendTo($('form#main'));
   
-  $('#conflict_check, #policy_check').click(function manageTabs() {
+  $('#conflict_check, #policy_check').on('click', function manageTabs() {
       var tabId,
           tabIndex,
           checkResults = $('#check_results'),

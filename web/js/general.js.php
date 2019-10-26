@@ -101,7 +101,7 @@ $(document).on('page_ready', function() {
       $(this).parents('form').find('input').keypress(function(event) {
           if (event.which == 13)  // the Enter key
           {
-            defaultSubmitButton.click();
+            defaultSubmitButton.trigger('click');
             return false;
           }
           else
@@ -161,7 +161,7 @@ $(document).on('page_ready', function() {
     // of course we can't clear the value if the input field needs to be
     // validated, otherwise the validation will fail.
     ?>
-    $('form:has(input[list]) input[type="submit"]').click(function() {
+    $('form:has(input[list]) input[type="submit"]').on('click', function() {
       $(this).closest('form')
              .find('input:not([name])')
              .not('input[type="submit"]')
@@ -268,7 +268,7 @@ $(document).on('page_ready', function() {
   
   $(window)
     <?php // Make resizing smoother by not redoing headers on every resize event ?>
-    .resize(throttle(function() {
+    .on('resize', throttle(function() {
         labels.width('auto');
         labels.width(getMaxWidth(labels));
       }, 100));

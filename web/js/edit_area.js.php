@@ -218,7 +218,7 @@ $(document).on('page_ready', function() {
   // [This method works if there are no periods-specific settings.
   // When we get those we will have to do something different]
   ?>
-  $('input:radio[name=area_enable_periods]').click(function() {
+  $('input:radio[name=area_enable_periods]').on('click', function() {
       toggleMode('fast');
     });
   toggleMode(0);
@@ -236,7 +236,7 @@ $(document).on('page_ready', function() {
   // name input field, clearing its contents.  Re-enable all the delete
   // icons because there must be more than one having added one.
   ?>
-  $('#add_period').click(function() {
+  $('#add_period').on('click', function() {
       var lastPeriodName = $('#period_settings .period_name').last(),
           clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
           
@@ -246,7 +246,7 @@ $(document).on('page_ready', function() {
     });
   
   <?php // Delete a period name input field ?>  
-  $('.delete_period').click(function() {
+  $('.delete_period').on('click', function() {
       $(this).parent().remove();
       checkForLastPeriodName();
     });

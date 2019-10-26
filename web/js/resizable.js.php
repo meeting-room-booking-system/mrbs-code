@@ -1190,10 +1190,10 @@ $(document).on('page_ready', function() {
       // can be created by dragging the mouse
       ?>     
       table.find('td.new').each(function() {
-          $(this).find('a').click(function(event) {
+          $(this).find('a').on('click', function(event) {
               event.preventDefault();
             });
-          $(this).mousedown(function(event) {
+          $(this).on('mousedown', function(event) {
               event.preventDefault();
               downHandler(event);
               $(document).on('mousemove', moveHandler);
@@ -1330,7 +1330,7 @@ $(document).on('page_ready', function() {
       // middle of a drag selection when we pass over a resizable handle
       ?>   
       $('.ui-resizable-handle')
-        .mouseenter(function(e) {
+        .on('mouseenter', function(e) {
             if (!mouseDown)
             {
               if ($(this).is(':hover'))
@@ -1343,20 +1343,20 @@ $(document).on('page_ready', function() {
               }
             }
           })
-        .mouseleave(function() {
+        .on('mouseleave', function() {
             if (!mouseDown)
             {
               table.removeClass('resizing');
             }
           })
-        .mousedown(function() {
+        .on('mousedown', function() {
             mouseDown = true;
             if ($(this).is(':hover'))
             {
               table.addClass('resizing');
             }
           })
-        .mouseup(function() {
+        .on('mouseup', function() {
             mouseDown = false;
             if (!$(this).is(':hover'))
             {
@@ -1367,7 +1367,7 @@ $(document).on('page_ready', function() {
     
     }).trigger('tableload');
     
-  $(window).resize(throttle(function(event) {
+  $(window).on('resize', throttle(function(event) {
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
       {
         <?php

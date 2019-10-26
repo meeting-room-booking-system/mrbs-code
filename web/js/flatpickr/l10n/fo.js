@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.no = {}));
+  (global = global || self, factory(global.fo = {}));
 }(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,17 +9,17 @@
       : {
           l10ns: {}
       };
-  var Norwegian = {
+  var Faroese = {
       weekdays: {
-          shorthand: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+          shorthand: ["Sun", "Mán", "Týs", "Mik", "Hós", "Frí", "Ley"],
           longhand: [
-              "Søndag",
-              "Mandag",
-              "Tirsdag",
-              "Onsdag",
-              "Torsdag",
-              "Fredag",
-              "Lørdag",
+              "Sunnudagur",
+              "Mánadagur",
+              "Týsdagur",
+              "Mikudagur",
+              "Hósdagur",
+              "Fríggjadagur",
+              "Leygardagur",
           ]
       },
       months: {
@@ -41,32 +41,33 @@
               "Januar",
               "Februar",
               "Mars",
-              "April",
+              "Apríl",
               "Mai",
               "Juni",
               "Juli",
               "August",
-              "September",
-              "Oktober",
-              "November",
-              "Desember",
+              "Septembur",
+              "Oktobur",
+              "Novembur",
+              "Desembur",
           ]
+      },
+      ordinal: function () {
+          return ".";
       },
       firstDayOfWeek: 1,
       rangeSeparator: " til ",
-      weekAbbreviation: "Uke",
-      scrollTitle: "Scroll for å endre",
-      toggleTitle: "Klikk for å veksle",
-      time_24hr: true,
-      ordinal: function () {
-          return ".";
-      }
+      weekAbbreviation: "vika",
+      scrollTitle: "Rulla fyri at broyta",
+      toggleTitle: "Trýst fyri at skifta",
+      yearAriaLabel: "Ár",
+      time_24hr: true
   };
-  fp.l10ns.no = Norwegian;
-  var no = fp.l10ns;
+  fp.l10ns.fo = Faroese;
+  var fo = fp.l10ns;
 
-  exports.Norwegian = Norwegian;
-  exports.default = no;
+  exports.Faroese = Faroese;
+  exports.default = fo;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

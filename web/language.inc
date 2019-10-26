@@ -15,11 +15,19 @@ $lang_aliases = array
 
 // Map non-standard language codes used by flatpickr onto BCP 47 language tags
 $flatpickr_lang_map = array(
-  'at'  => 'de-at',
-  'cat' => 'ca',
-  'gr'  => 'el',
-  'kz'  => 'kk',
-  'vn'  => 'vi'
+  'at'     => 'de-at',
+  'cat'    => 'ca',
+  'gr'     => 'el',
+  'kz'     => 'kk',
+  'sr-cyr' => 'sr-cyrl',
+  'vn'     => 'vi'
+);
+
+// Map flatpickr language file names onto flatpickr fp.l10ns properties
+// so that they can be used with flatpickr.localize.
+$flatpickr_property_map = array(
+  'sr-cyr' => 'sr',
+  'zh-tw'  => 'zh_tw'
 );
 
 // The DataTables language files are for the moment given descriptive names.   I have
@@ -520,7 +528,19 @@ function get_flatpickr_lang_file($dir)
                   
   return get_best_lang_file($dir, '', '.js', null, $flatpickr_lang_map);
 }
-  
+
+
+// Given a flatpickr localisation, find the corresponding property for
+// use with flatpickr.localize
+function get_flatpickr_property($lang_file)
+{
+  global $flatpickr_property_map;
+
+  $basename = basename($lang_file, '.js');
+
+  return (isset($flatpickr_property_map[$basename])) ? $flatpickr_property_map[$basename] : $basename;
+}
+
 
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns NULL

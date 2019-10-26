@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.id = {}));
+  (global = global || self, factory(global.bs = {}));
 }(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,10 +9,19 @@
       : {
           l10ns: {}
       };
-  var Indonesian = {
+  var Bosnian = {
+      firstDayOfWeek: 1,
       weekdays: {
-          shorthand: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
-          longhand: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+          shorthand: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+          longhand: [
+              "Nedjelja",
+              "Ponedjeljak",
+              "Utorak",
+              "Srijeda",
+              "Četvrtak",
+              "Petak",
+              "Subota",
+          ]
       },
       months: {
           shorthand: [
@@ -20,42 +29,37 @@
               "Feb",
               "Mar",
               "Apr",
-              "Mei",
+              "Maj",
               "Jun",
               "Jul",
-              "Agu",
+              "Avg",
               "Sep",
               "Okt",
               "Nov",
-              "Des",
+              "Dec",
           ],
           longhand: [
-              "Januari",
-              "Februari",
-              "Maret",
+              "Januar",
+              "Februar",
+              "Mart",
               "April",
-              "Mei",
+              "Maj",
               "Juni",
               "Juli",
-              "Agustus",
-              "September",
-              "Oktober",
-              "November",
-              "Desember",
+              "Avgust",
+              "Septembar",
+              "Oktobar",
+              "Novembar",
+              "Decembar",
           ]
       },
-      firstDayOfWeek: 1,
-      ordinal: function () {
-          return "";
-      },
-      time_24hr: true,
-      rangeSeparator: " - "
+      time_24hr: true
   };
-  fp.l10ns.id = Indonesian;
-  var id = fp.l10ns;
+  fp.l10ns.bs = Bosnian;
+  var bs = fp.l10ns;
 
-  exports.Indonesian = Indonesian;
-  exports.default = id;
+  exports.Bosnian = Bosnian;
+  exports.default = bs;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

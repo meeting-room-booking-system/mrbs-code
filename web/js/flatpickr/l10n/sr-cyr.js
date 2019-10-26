@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.mk = {}));
+  (global = global || self, factory(global['sr-cyr'] = {}));
 }(this, function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,23 +9,23 @@
       : {
           l10ns: {}
       };
-  var Macedonian = {
+  var SerbianCyrillic = {
       weekdays: {
-          shorthand: ["Не", "По", "Вт", "Ср", "Че", "Пе", "Са"],
+          shorthand: ["Нед", "Пон", "Уто", "Сре", "Чет", "Пет", "Суб"],
           longhand: [
-              "Недела",
-              "Понеделник",
-              "Вторник",
+              "Недеља",
+              "Понедељак",
+              "Уторак",
               "Среда",
-              "Четврток",
-              "Петок",
-              "Сабота",
+              "Четвртак",
+              "Петак",
+              "Субота",
           ]
       },
       months: {
           shorthand: [
               "Јан",
-              "Фев",
+              "Феб",
               "Мар",
               "Апр",
               "Мај",
@@ -34,34 +34,33 @@
               "Авг",
               "Сеп",
               "Окт",
-              "Ное",
-              "Дек",
+              "Нов",
+              "Дец",
           ],
           longhand: [
-              "Јануари",
-              "Февруари",
+              "Јануар",
+              "Фебруар",
               "Март",
               "Април",
               "Мај",
-              "Јуни",
-              "Јули",
+              "Јун",
+              "Јул",
               "Август",
-              "Септември",
-              "Октомври",
-              "Ноември",
-              "Декември",
+              "Септембар",
+              "Октобар",
+              "Новембар",
+              "Децембар",
           ]
       },
       firstDayOfWeek: 1,
       weekAbbreviation: "Нед.",
-      rangeSeparator: " до ",
-      time_24hr: true
+      rangeSeparator: " до "
   };
-  fp.l10ns.mk = Macedonian;
-  var mk = fp.l10ns;
+  fp.l10ns.sr = SerbianCyrillic;
+  var srCyr = fp.l10ns;
 
-  exports.Macedonian = Macedonian;
-  exports.default = mk;
+  exports.SerbianCyrillic = SerbianCyrillic;
+  exports.default = srCyr;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
