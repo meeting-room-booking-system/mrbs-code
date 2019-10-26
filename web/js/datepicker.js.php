@@ -50,7 +50,7 @@ $(document).on('page_ready', function() {
   // Localise the flatpickr
   if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file('flatpickr/l10n')))
   {
-    // Strip the '.js' off the end of the filename
+    // Map the flatpickr lang file onto a flatpickr l10ns property and then localize
     echo 'flatpickr.localize(flatpickr.l10ns.' . get_flatpickr_property($flatpickr_lang_file) . ');';
   }
 

@@ -22,6 +22,8 @@ $flatpickr_lang_map = array(
   'vn'  => 'vi'
 );
 
+// Map flatpickr language file names onto flatpickr fp.l10ns properties
+// so that they can be used with flatpickr.localize.
 $flatpickr_property_map = array(
   'zh-tw' => 'zh_tw'
 );
@@ -526,6 +528,8 @@ function get_flatpickr_lang_file($dir)
 }
 
 
+// Given a flatpickr localisation, find the corresponding property for
+// use with flatpickr.localize
 function get_flatpickr_property($lang_file)
 {
   global $flatpickr_property_map;
@@ -534,6 +538,7 @@ function get_flatpickr_property($lang_file)
 
   return (isset($flatpickr_property_map[$basename])) ? $flatpickr_property_map[$basename] : $basename;
 }
+
 
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns NULL
