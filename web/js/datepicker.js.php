@@ -171,7 +171,7 @@ $(document).on('page_ready', function() {
         }
         else
         {
-          $(this.element).change();
+          $(this.element).trigger('change');
         }
       }
     };

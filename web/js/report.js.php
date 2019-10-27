@@ -36,7 +36,7 @@ $(document).on('page_ready', function() {
   // disable the iCal button and, if iCal output is checked, check another format.  If the
   // Report button is pressed then re-enable the iCal button.
   ?>
-  $('input[name="output"]').change(function() {
+  $('input[name="output"]').on('change', function() {
       var output = $(this).filter(':checked').val(),
           formatButtons = $('input[name="output_format"]'),
           icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');

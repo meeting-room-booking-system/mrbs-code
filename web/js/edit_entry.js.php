@@ -1192,7 +1192,7 @@ $(document).on('page_ready', function() {
           $(this).data('current', $(this).val());
           $(this).data('previous', $(this).val());
         })
-      .change(function() {
+      .on('change', function() {
           updateSelectorData();
           reloadSlotSelector($(this), $('#area').val());
           adjustSlotSelectors();
@@ -1203,7 +1203,7 @@ $(document).on('page_ready', function() {
   areaSelect
       .data('current', areaSelect.val())
       .data('previous', areaSelect.val())
-      .change(function() {
+      .on('change', function() {
           var newArea = $(this).val();
 
           updateSelectorData();
@@ -1244,7 +1244,7 @@ $(document).on('page_ready', function() {
   
   if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
   {
-    nameInput.focus();
+    nameInput.trigger('focus');
   }
   
   adjustSlotSelectors();
@@ -1324,7 +1324,7 @@ $(document).on('page_ready', function() {
                 checkConflicts();
               });
   formFields.not(':checkbox')
-            .change(function() {
+            .on('change', function() {
                 checkConflicts();
               });
   
@@ -1419,7 +1419,7 @@ $(document).on('page_ready', function() {
   <?php
   // Actions to take when the start and end datepickers are closed
   ?>
-  $('#start_date, #end_date').change(function() {
+  $('#start_date, #end_date').on('change', function() {
     
     <?php
     // (1) If the end_datepicker isn't visible and we change the start_datepicker,
@@ -1458,11 +1458,11 @@ $(document).on('page_ready', function() {
       checkTimeSlots($(this));
     });
     
-  $('input[name="rep_type"]').change(changeRepTypeDetails);
+  $('input[name="rep_type"]').on('change', changeRepTypeDetails);
   changeRepTypeDetails();
   
-  $('input[name="rep_interval"]').change(changeRepIntervalUnits)
-  $('input[name="rep_type"]').change(changeRepIntervalUnits).trigger('change');
+  $('input[name="rep_interval"]').on('change', changeRepIntervalUnits);
+  $('input[name="rep_type"]').on('change', changeRepIntervalUnits).trigger('change');
   
   <?php
   // Add an event listener to detect a change in the visibility

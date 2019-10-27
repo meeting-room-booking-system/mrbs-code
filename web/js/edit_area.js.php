@@ -241,7 +241,7 @@ $(document).on('page_ready', function() {
           clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
           
       clone.find('input').val('');
-      clone.insertAfter(lastPeriodName).find('input').focus();
+      clone.insertAfter(lastPeriodName).find('input').trigger('focus');
       $('.delete_period').show();
     });
   
@@ -257,7 +257,7 @@ $(document).on('page_ready', function() {
   // disabled as appropriate.   Also trigger the change event when the page is loaded
   // so that the inputs are enabled/disabled correctly initially.
   ?>
-  $('.enabler').change(function(){
+  $('.enabler').on('change', function(){
       var enablerChecked = $(this).is(':checked');
       if ($(this).attr('id') === 'area_max_duration_enabled')
       {
@@ -269,15 +269,15 @@ $(document).on('page_ready', function() {
         $(this).nextAll('input, select').prop('disabled', !enablerChecked);
       }
     })
-    .change();
+    .trigger('change');
   
   <?php // Disable the default duration if "All day" is checked. ?>
-  $('input[name="area_def_duration_all_day"]').change(function() {
+  $('input[name="area_def_duration_all_day"]').on('change', function() {
       $('#area_def_duration_mins').prop('disabled', $(this).prop('checked'));
-    }).change();
+    }).trigger('change');
   
   $('input[name="area_start_first_slot"], input[name="area_res_mins"]')
-      .change(function() {
+      .on('change', function() {
           generateLastSlotSelect();
         });
   generateLastSlotSelect();

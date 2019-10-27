@@ -98,7 +98,7 @@ $(document).on('page_ready', function() {
   ?>
   $('form input.default_action').each(function() {
       var defaultSubmitButton = $(this);
-      $(this).parents('form').find('input').keypress(function(event) {
+      $(this).parents('form').find('input').on('keypress', function(event) {
           if (event.which == 13)  // the Enter key
           {
             defaultSubmitButton.trigger('click');
@@ -223,7 +223,7 @@ $(document).on('page_ready', function() {
         ?>
         if (minLength === 0)
         {
-          formInput.focus(function() {
+          formInput.on('focus', function() {
               $(this).autocomplete('search', '');
             });
         }
