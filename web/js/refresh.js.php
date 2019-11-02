@@ -183,7 +183,9 @@ var Timeline = {
     // we were to iterate through the slots in the normal order we would land on the invalid hour, eg 0100-0200
     // which is really 0200-0300 when the clocks go forward.
     ?>
-    if ((theadData.start_first_slot <= now) && (theadData.end_last_slot > now))
+    if ((typeof theadData !== 'undefined') &&
+        (theadData.start_first_slot <= now) &&
+        (theadData.end_last_slot > now))
     {
       <?php
       // We can display the table in two ways: with times along the top ...
