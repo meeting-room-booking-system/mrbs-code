@@ -167,7 +167,7 @@ function map_coalesce_bookings(&$column)
 
 
 
-function cell_html($s, array $cell, array $query_vars, $is_invalid = false)
+function cell_html(array $cell, array $query_vars, $is_invalid = false)
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -687,7 +687,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
         {
           $today[$room['id']][$day][$s] = array();
         }
-        $tbody .= cell_html($s, $today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ( false != $row_labels_both_sides )
       {
@@ -759,7 +759,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
           $today[$room['id']][$day][$s] = array();
         }
         
-        $tbody .= cell_html($s, $today[$room['id']][$day][$s], $query_vars, $is_invalid);
+        $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid);
       }
       
       // next lines to display times on right side
@@ -969,7 +969,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
         {
           $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
         }
-        $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+        $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
       }  // end looping through the time slots
       if ( false != $row_labels_both_sides )
       {
@@ -1042,7 +1042,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
           {
             $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
           }
-          $tbody .= cell_html($s, $week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
         }
   
       }    // for loop
