@@ -357,11 +357,10 @@ function room_cell_html(array $row, $link)
 {
   $html = '';
   $html .= '<th data-room="' . $row['id'] . '">';
-  $html .= "<div class=\"celldiv slots1\">";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
   $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
   $html .= "</a>";
-  $html .= "</div></th>\n";
+  $html .= "</th>\n";
   return $html;
 }
 
