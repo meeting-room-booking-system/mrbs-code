@@ -527,17 +527,8 @@ function get_rooms_header_cells($rooms, $vars)
 
   foreach($rooms as $room)
   {
-    $vars['room'] = $room['id'];
-    $query = http_build_query($vars, '', '&');
-    // Put the room_id in a data attribute so that JavaScript can pick it up
-    $html .= '<th data-room="' . $room['id'] . '">';
-
-    $html .= '<a href="index.php?' . htmlspecialchars($query) . '" ' .
-             'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
-             htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') .
-             '</a>';
-
-    $html .= "</th>\n";
+    $link = 'index.php?' . http_build_query($vars, '', '&');
+    $html .= room_cell_html($room, $link);
   }
 
   return $html;
