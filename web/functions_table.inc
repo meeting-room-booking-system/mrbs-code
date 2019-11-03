@@ -350,32 +350,37 @@ function time_cell_html($s, $url)
   return $html;
 }
 
-// Draw a room cell to be used in the first and last columns of the day view
-//    $row     contains the room details; comes from an SQL query
+// Draw a room cell to be used in the header rows/columns of the day view
+//    $room    contains the room details
 //    $link    the href to be used for the link
-function room_cell_html(array $row, $link)
+function room_cell_html(array $room, $link)
 {
+  $title = get_vocab("viewweek") . "\n\n" . $room['description'];
+  $text = $room['room_name'] . (($room['capacity'] > 0) ? ' (' . $room['capacity'] . ')' : '');
   $html = '';
-  $html .= '<th data-room="' . $row['id'] . '">';
-  $html .= "<div class=\"celldiv slots1\">";
-  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
-  $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
-  $html .= "</a>";
-  $html .= "</div></th>\n";
+  $html .= '<th data-room="' . $room['id'] . '">';
+  $html .= '<a href="' . htmlspecialchars($link) . '"' .
+           ' title = "' . htmlspecialchars($title) . '">';
+  $html .= htmlspecialchars($text);
+  $html .= '</a>';
+  $html .= "</th>\n";
   return $html;
 }
 
-// Draw a day cell to be used in the first and last columns of the week view
-//    $text     contains the date, formatted as a string
+// Draw a day cell to be used in the header rows/columns of the week view
+//    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
 //    $link     the href to be used for the link
 //    $date     the date in yyyy-mm-dd format
 function day_cell_html($text, $link, $date)
 {
   $html = '';
-  $html .= "<th data-date=\"$date\">";
-  $html .= "<div class=\"celldiv slots1\">";
-  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>";
-  $html .= "</div></th>\n";
+  // Put the date into a data attribute so that it can be picked up by JavaScript
+  $html .= '<th data-date="' . htmlspecialchars($date) . '">';
+  $html .= '<a href="' . htmlspecialchars($link) . '"' .
+           ' title="' . htmlspecialchars(get_vocab("viewday")) . '">';
+  $html .= $text;  // allowed to contain HTML tags - do not escape
+  $html .= '</a>';
+  $html .= "</th>\n";
   return $html;
 }
 
@@ -522,17 +527,8 @@ function get_rooms_header_cells($rooms, $vars)
 
   foreach($rooms as $room)
   {
-    $vars['room'] = $room['id'];
-    $query = http_build_query($vars, '', '&');
-    // Put the room_id in a data attribute so that JavaScript can pick it up
-    $html .= '<th data-room="' . $room['id'] . '">';
-
-    $html .= '<a href="index.php?' . htmlspecialchars($query) . '" ' .
-             'title="' . get_vocab("viewweek") . " &#10;&#10;" . $room['description'] . '">' .
-             htmlspecialchars($room['room_name']) . ($room['capacity'] > 0 ? ' (' . $room['capacity'] . ')' : '') .
-             '</a>';
-
-    $html .= "</th>\n";
+    $link = 'index.php?' . http_build_query($vars, '', '&');
+    $html .= room_cell_html($room, $link);
   }
 
   return $html;
@@ -662,7 +658,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
                     'area'  => $area_id,
                     'room'  => $room['id']);
                     
-      $room_cell_link = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&')); 
+      $room_cell_link = "index.php?" . http_build_query($vars, '', '&');
       
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
@@ -894,12 +890,10 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
                       'day'   => strftime('%d', $t),
                       'area'  => $area_id,
                       'room'  => $room_id);
-                      
-        $query = http_build_query($vars, '', '&');
-        // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= '<th data-date="' . $date . '">' .
-                         '<a href="index.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
-                         utf8_strftime($dformat, $t) . "</a></th>\n";
+
+        $link = 'index.php?' . http_build_query($vars, '', '&');
+        $text = utf8_strftime($dformat, $t);
+        $header_inner .= day_cell_html($text, $link, $date);
       }
     }  // for ($j = 0 ...
     unset($j);  // Just so that we pick up any accidental attempt to use it later
@@ -951,7 +945,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
                     'area'  => $area_id,
                     'room'  => $room_id);
 
-      $day_cell_link = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+      $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
 
       $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
 
