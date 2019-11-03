@@ -358,7 +358,7 @@ function room_cell_html(array $room, $link)
   $title = get_vocab("viewweek") . "\n\n" . $room['description'];
   $text = $room['room_name'] . (($room['capacity'] > 0) ? ' (' . $room['capacity'] . ')' : '');
   $html = '';
-  $html .= '<th data-room="' . $room['id'] . '">';
+  $html .= '<th data-room="' . htmlspecialchars($room['id']) . '">';
   $html .= '<a href="' . htmlspecialchars($link) . '"' .
            ' title = "' . htmlspecialchars($title) . '">';
   $html .= htmlspecialchars($text);
