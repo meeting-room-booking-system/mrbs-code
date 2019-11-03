@@ -372,10 +372,10 @@ function room_cell_html(array $row, $link)
 function day_cell_html($text, $link, $date)
 {
   $html = '';
+  // Put the date into a data attribute so that it can be picked up by JavaScript
   $html .= "<th data-date=\"$date\">";
-  $html .= "<div class=\"celldiv slots1\">";
   $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>";
-  $html .= "</div></th>\n";
+  $html .= "</th>\n";
   return $html;
 }
 
@@ -896,10 +896,9 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
                       'room'  => $room_id);
                       
         $query = http_build_query($vars, '', '&');
-        // Put the date into a data attribute so that it can be picked up by JavaScript
-        $header_inner .= '<th data-date="' . $date . '">' .
-                         '<a href="index.php?' . htmlspecialchars($query) . '" title="' . get_vocab('viewday') . '">' .
-                         utf8_strftime($dformat, $t) . "</a></th>\n";
+        $link = 'index.php?' . htmlspecialchars($query);
+        $text = utf8_strftime($dformat, $t);
+        $header_inner .= day_cell_html($text, $link, $date);
       }
     }  // for ($j = 0 ...
     unset($j);  // Just so that we pick up any accidental attempt to use it later
