@@ -351,15 +351,18 @@ function time_cell_html($s, $url)
 }
 
 // Draw a room cell to be used in the first and last columns of the day view
-//    $row     contains the room details; comes from an SQL query
+//    $room    contains the room details
 //    $link    the href to be used for the link
-function room_cell_html(array $row, $link)
+function room_cell_html(array $room, $link)
 {
+  $title = get_vocab("viewweek") . "\n\n" . $room['description'];
+  $text = $room['room_name'] . (($room['capacity'] > 0) ? ' (' . $room['capacity'] . ')' : '');
   $html = '';
-  $html .= '<th data-room="' . $row['id'] . '">';
-  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewweek") . " &#10;&#10;" . $row['description'] . "\">";
-  $html .= htmlspecialchars($row['room_name']) . ($row['capacity'] > 0 ? "(".$row['capacity'].")" : "");
-  $html .= "</a>";
+  $html .= '<th data-room="' . $room['id'] . '">';
+  $html .= '<a href="' . htmlspecialchars($link) . '"' .
+           ' title = "' . htmlspecialchars($title) . '">';
+  $html .= htmlspecialchars($text);
+  $html .= '</a>';
   $html .= "</th>\n";
   return $html;
 }
@@ -664,7 +667,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
                     'area'  => $area_id,
                     'room'  => $room['id']);
                     
-      $room_cell_link = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&')); 
+      $room_cell_link = "index.php?" . http_build_query($vars, '', '&');
       
       $tbody .= room_cell_html($room, $room_cell_link);
       $is_invalid = array();
