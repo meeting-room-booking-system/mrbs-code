@@ -356,12 +356,19 @@ function time_cell_html($s, $url)
 function room_cell_html(array $room, $link)
 {
   $title = get_vocab("viewweek") . "\n\n" . $room['description'];
-  $text = $room['room_name'] . (($room['capacity'] > 0) ? ' (' . $room['capacity'] . ')' : '');
   $html = '';
-  $html .= '<th data-room="' . $room['id'] . '">';
+  $html .= '<th data-room="' . htmlspecialchars($room['id']) . '">';
   $html .= '<a href="' . htmlspecialchars($link) . '"' .
            ' title = "' . htmlspecialchars($title) . '">';
-  $html .= htmlspecialchars($text);
+  $html .= htmlspecialchars($room['room_name']);
+  // Put the capacity in a span to give flexibility in styling
+  $html .= '<span class="capacity';
+  if ($room['capacity'] == 0)
+  {
+    $html .= ' zero';
+  }
+  $html .= '">' . htmlspecialchars($room['capacity']);
+  $html .= '</span>';
   $html .= '</a>';
   $html .= "</th>\n";
   return $html;

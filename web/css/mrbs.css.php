@@ -673,6 +673,17 @@ table.dwm_main {
   font-weight: normal;
 }
 
+.capacity::before {
+  content: ' (';
+}
+
+.capacity::after {
+  content: ')';
+}
+
+.capacity.zero {
+  display: none;
+}
 
 <?php
 // Note that it is important to have zero padding-left and padding-top on the th and td cells.
