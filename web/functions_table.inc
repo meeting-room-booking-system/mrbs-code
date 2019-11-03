@@ -365,16 +365,19 @@ function room_cell_html(array $row, $link)
   return $html;
 }
 
-// Draw a day cell to be used in the first and last columns of the week view
-//    $text     contains the date, formatted as a string
+// Draw a day cell to be used in the header rows/columns of the week view
+//    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
 //    $link     the href to be used for the link
 //    $date     the date in yyyy-mm-dd format
 function day_cell_html($text, $link, $date)
 {
   $html = '';
   // Put the date into a data attribute so that it can be picked up by JavaScript
-  $html .= "<th data-date=\"$date\">";
-  $html .= "<a href=\"$link\" title=\"" . get_vocab("viewday") . "\">$text</a>";
+  $html .= '<th data-date="' . htmlspecialchars($date) . '">';
+  $html .= '<a href="' . htmlspecialchars($link) . '"' .
+           ' title="' . htmlspecialchars(get_vocab("viewday")) . '">';
+  $html .= $text;  // allowed to contain HTML tags - do not escape
+  $html .= '</a>';
   $html .= "</th>\n";
   return $html;
 }
@@ -894,9 +897,8 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
                       'day'   => strftime('%d', $t),
                       'area'  => $area_id,
                       'room'  => $room_id);
-                      
-        $query = http_build_query($vars, '', '&');
-        $link = 'index.php?' . htmlspecialchars($query);
+
+        $link = 'index.php?' . http_build_query($vars, '', '&');
         $text = utf8_strftime($dformat, $t);
         $header_inner .= day_cell_html($text, $link, $date);
       }
@@ -950,7 +952,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
                     'area'  => $area_id,
                     'room'  => $room_id);
 
-      $day_cell_link = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+      $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
 
       $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
 
