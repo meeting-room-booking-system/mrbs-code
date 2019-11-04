@@ -363,6 +363,8 @@ function alias_header($header, array $aliases)
 
 // Returns a sorted associative array of acceptable language qualifiers, indexed
 // by language, given an Accept-Language header string.
+// If $preserve_wildcard is set then the wildcard language identifier ('*') is not
+// translated to a standard language ('en').
 function get_qualifiers($header, $preserve_wildcard=false)
 {
   $result = array();
@@ -418,6 +420,8 @@ function get_qualifiers($header, $preserve_wildcard=false)
 }
 
 // Returns a string of acceptable languages, sorted in decreasing order of preference
+// If $preserve_wildcard is set then the wildcard language identifier ('*') is not
+// translated to a standard language ('en').
 function get_browser_langs($header, $preserve_wildcard=false)
 {
   return array_keys(get_qualifiers($header, $preserve_wildcard));
