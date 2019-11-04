@@ -272,7 +272,7 @@ function get_lang_preferences()
     // Use the aliased browser preferences, if any, as a base.    Although we may add
     // higher priority languages later, these are a useful fall-back on the grounds
     // that it's better to have some language rather than none.
-    $lang_preferences = get_browser_langs($aliased_header);
+    $lang_preferences = get_browser_langs($aliased_header, true);
     
     // If we've been told not to use the browser languages then the default
     // language is more important
@@ -363,9 +363,9 @@ function alias_header($header, array $aliases)
 
 // Returns a sorted associative array of acceptable language qualifiers, indexed
 // by language, given an Accept-Language header string.
-// If $preserve_wildcard is set then the wildcard language identifier ('*') is not
-// translated to a standard language ('en').
-function get_qualifiers($header, $preserve_wildcard=false)
+// If $translate_wildcard is set then the wildcard language identifier ('*') is
+// translated to a standard language - we use 'en'.
+function get_qualifiers($header, $translate_wildcard=false)
 {
   $result = array();
 
@@ -374,7 +374,7 @@ function get_qualifiers($header, $preserve_wildcard=false)
     $pattern = array('initial'    => '/([a-zA-Z0-9\-]+|\*)/',
                      'subsequent' => '/([a-zA-Z0-9\-]+|\*);q=([0-9\.]+)/');
                      
-    if (!$preserve_wildcard)
+    if ($translate_wildcard)
     {
       // Handle the wildcard language by using English
       $header = str_replace('*', 'en', $header);
@@ -420,11 +420,11 @@ function get_qualifiers($header, $preserve_wildcard=false)
 }
 
 // Returns a string of acceptable languages, sorted in decreasing order of preference
-// If $preserve_wildcard is set then the wildcard language identifier ('*') is not
-// translated to a standard language ('en').
-function get_browser_langs($header, $preserve_wildcard=false)
+// If $translate_wildcard is set then the wildcard language identifier ('*') is
+// translated to a standard language - we use 'en'.
+function get_browser_langs($header, $translate_wildcard=false)
 {
-  return array_keys(get_qualifiers($header, $preserve_wildcard));
+  return array_keys(get_qualifiers($header, $translate_wildcard));
 }
 
 
