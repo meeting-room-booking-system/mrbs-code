@@ -214,6 +214,9 @@ class Locale
       else
       {
         trigger_error("parseLocale: could not parse subtag '$subtag'", E_USER_NOTICE);
+        // This is how the PHP version behaves: if it can't parse the locale completely
+        // it returns an empty array.
+        $result = array();
       }
     }
     
