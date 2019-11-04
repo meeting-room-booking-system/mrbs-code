@@ -55,7 +55,7 @@ echo "<p>\n" . get_vocab("browserlang") .":\n";
 
 if (isset($server['HTTP_ACCEPT_LANGUAGE']))
 {
-  echo htmlspecialchars(implode(', ', get_browser_langs($server['HTTP_ACCEPT_LANGUAGE'])));
+  echo htmlspecialchars(implode(', ', get_browser_langs($server['HTTP_ACCEPT_LANGUAGE'], true)));
 }
 
 echo "\n</p>\n";

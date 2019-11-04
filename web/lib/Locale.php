@@ -23,6 +23,7 @@ class Locale
     if (isset($header))
     {
       $accept_languages = self::toSortedArray($header);
+      
       foreach($accept_languages as $accept_language => $value)
       {
         if (System::isAvailableLocale($accept_language))
@@ -276,23 +277,7 @@ class Locale
   // quality value.
   private static function toSortedArray($header)
   {
-    $result = array();
-    $lang_specifiers = explode(',', $header);
-
-    foreach ($lang_specifiers as $specifier)
-    {
-      if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
-      {
-        $result[$matches[1]] = (float) $matches[2];
-      }
-      else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
-      {
-        $result[$matches[1]] = 1.0;
-      }
-    }
-    arsort($result, SORT_NUMERIC);
-
-    return $result;
+    return MRBS\get_qualifiers($header);
   }
   
 }
