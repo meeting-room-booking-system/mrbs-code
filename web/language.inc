@@ -272,7 +272,7 @@ function get_lang_preferences()
     // Use the aliased browser preferences, if any, as a base.    Although we may add
     // higher priority languages later, these are a useful fall-back on the grounds
     // that it's better to have some language rather than none.
-    $lang_preferences = get_browser_langs($aliased_header);
+    $lang_preferences = get_browser_langs($aliased_header, true);
     
     // If we've been told not to use the browser languages then the default
     // language is more important
@@ -363,50 +363,67 @@ function alias_header($header, array $aliases)
 
 // Returns a sorted associative array of acceptable language qualifiers, indexed
 // by language, given an Accept-Language header string.
-function get_browser_langs($header)
+// If $translate_wildcard is set then the wildcard language identifier ('*') is
+// translated to a standard language - we use 'en'.
+function get_qualifiers($header, $translate_wildcard=false)
 {
-  $qualifiers = array();
-  
+  $result = array();
+
   if (!empty($header))
   {
     $lang_specifiers = explode(',', $header);
+    
     foreach ($lang_specifiers as $specifier)
     {
+      unset($weight);
+      $specifier = trim($specifier);
+      
       // The regular expressions below are not tight definitions of permissible language tags.
       // They let through some tags which are not permissible, but they do allow permissible
-      // tags such as 'es-419'. Note however that we currently don't handle '*', eg '*;q=0.5',
-      // which is permissible.      
-      if (preg_match('/([a-zA-Z0-9\-]+);q=([0-9\.]+)/', $specifier, $matches))
+      // tags such as 'es-419'.  
+      if (preg_match('/([a-zA-Z0-9\-]+|\*);q=([0-9\.]+)/', $specifier, $matches))
       {
+        $language = $matches[1];
         $weight = (float) $matches[2];
       }
-      else if (preg_match("/([a-zA-Z0-9\-]+)/", $specifier, $matches))
+      else if (preg_match('/([a-zA-Z0-9\-]+|\*)/', $specifier, $matches))
       {
+        $language = $matches[1];
         $weight = 1.0;
       }
       else
       {
         trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
       }
-      
+
       if (isset($weight))
       {
-        // Due to $lang_aliases above, it is possible that a language may appear
-        // twice in the header.   In this case we want to use the highest weight.
-        if (!isset($qualifiers[$matches[1]]) ||
-            ($weight > $qualifiers[$matches[1]]))
+        if ($translate_wildcard && ($language == '*'))
         {
-          $qualifiers[$matches[1]] = $weight;
+          // Handle the wildcard language by using English
+          $language = 'en';
+        }
+        // If a language occurs twice (possibly as a result of a wildcard or aliasing) then
+        // only change the weight if it's greater than the one we've already got.
+        if (!isset($result[$language]) || ($weight > $result[$language]))
+        {
+          $result[$language] = $weight;
         }
       }
-      
     }
   }
   
-  arsort($qualifiers, SORT_NUMERIC);
-  $browser_langs = array_keys($qualifiers);
+  arsort($result, SORT_NUMERIC);
   
-  return $browser_langs;
+  return $result;
+}
+
+// Returns a string of acceptable languages, sorted in decreasing order of preference
+// If $translate_wildcard is set then the wildcard language identifier ('*') is
+// translated to a standard language - we use 'en'.
+function get_browser_langs($header, $translate_wildcard=false)
+{
+  return array_keys(get_qualifiers($header, $translate_wildcard));
 }
 
 

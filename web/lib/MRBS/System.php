@@ -758,35 +758,43 @@ class System
     
     // Put the $langtag into standard PHP format
     $subtags = \Locale::parseLocale($langtag);
-    $locale = \Locale::composeLocale($subtags);
     
-    // First locale to try is one with hyphens instead of underscores.  These work on newer
-    // Windows systems, whereas underscores do not.  Also, on Windows systems, although
-    // setlocale will succeed with, for example, both 'en_GB' and 'en-GB', only 'en-GB' (and
-    // indeed 'eng') will give the date in the correct format when using strftime('%x').
-    $locales[] = str_replace('_', '-', $locale);
-    
-    // First locale to try is a PHP style locale, ie with underscores
-    $locales[] = $locale;
-    
-    if (self::getServerOS() == 'windows')
+    if (!empty($subtags))
     {
-      // Add in the three-letter code if any as a last resort
-      if (isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+      $locale = \Locale::composeLocale($subtags);
+      
+      // First locale to try is one with hyphens instead of underscores.  These work on newer
+      // Windows systems, whereas underscores do not.  Also, on Windows systems, although
+      // setlocale will succeed with, for example, both 'en_GB' and 'en-GB', only 'en-GB' (and
+      // indeed 'eng') will give the date in the correct format when using strftime('%x').
+      $locales[] = str_replace('_', '-', $locale);
+      
+      // Next locale to try is a PHP style locale, ie with underscores
+      // Make sure we haven't already got it
+      if (!in_array($locale, $locales))
       {
-        $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+        $locales[] = $locale;
       }
-    }
-    
-    // If there isn't a region specified then add one, because on some systems
-    // setlocale(LC_ALL, 'en'), for example, doesn't work, even though 'en' seems
-    // to be an available locale.
-    if (!isset($subtags['region']))
-    {
-      $subtags['region'] = self::getDefaultRegion($subtags['language']);
-      if (isset($subtags['region']))  // avoid an infinite recursion
+      
+      if (self::getServerOS() == 'windows')
       {
-        $locales = array_merge($locales, self::getLocaleAlternatives(\Locale::composeLocale($subtags)));
+        // Add in the three-letter code if any as a last resort
+        if (isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+        {
+          $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
+        }
+      }
+      
+      // If there isn't a region specified then add one, because on some systems
+      // setlocale(LC_ALL, 'en'), for example, doesn't work, even though 'en' seems
+      // to be an available locale.
+      if (!isset($subtags['region']))
+      {
+        $subtags['region'] = self::getDefaultRegion($subtags['language']);
+        if (isset($subtags['region']))  // avoid an infinite recursion
+        {
+          $locales = array_merge($locales, self::getLocaleAlternatives(\Locale::composeLocale($subtags)));
+        }
       }
     }
     

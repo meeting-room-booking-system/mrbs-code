@@ -23,6 +23,7 @@ class Locale
     if (isset($header))
     {
       $accept_languages = self::toSortedArray($header);
+      
       foreach($accept_languages as $accept_language => $value)
       {
         if (System::isAvailableLocale($accept_language))
@@ -214,6 +215,9 @@ class Locale
       else
       {
         trigger_error("parseLocale: could not parse subtag '$subtag'", E_USER_NOTICE);
+        // This is how the PHP version behaves: if it can't parse the locale completely
+        // it returns an empty array.
+        $result = array();
       }
     }
     
@@ -270,26 +274,10 @@ class Locale
   // Converts an Accept-Language request-header from a string to an
   // array of acceptable languages with the language as the key and
   // the quality value as the value, sorted in decreasing order of
-  // quality value.
+  // quality value.  A wildcard in the header is translated.
   private static function toSortedArray($header)
   {
-    $result = array();
-    $lang_specifiers = explode(',', $header);
-
-    foreach ($lang_specifiers as $specifier)
-    {
-      if (preg_match('/([a-zA-Z\-]+);q=([0-9\.]+)/', $specifier, $matches))
-      {
-        $result[$matches[1]] = (float) $matches[2];
-      }
-      else if (preg_match("/([a-zA-Z\-]+)/", $specifier, $matches))
-      {
-        $result[$matches[1]] = 1.0;
-      }
-    }
-    arsort($result, SORT_NUMERIC);
-
-    return $result;
+    return MRBS\get_qualifiers($header, true);
   }
   
 }
