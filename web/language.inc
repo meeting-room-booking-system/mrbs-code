@@ -371,45 +371,44 @@ function get_qualifiers($header, $translate_wildcard=false)
 
   if (!empty($header))
   {
-    $pattern = array('initial'    => '/([a-zA-Z0-9\-]+|\*)/',
-                     'subsequent' => '/([a-zA-Z0-9\-]+|\*);q=([0-9\.]+)/');
-                     
-    if ($translate_wildcard)
-    {
-      // Handle the wildcard language by using English
-      $header = str_replace('*', 'en', $header);
-      // And don't allow the wildcard language symbol ('*')
-      $pattern = array('initial'    => '/([a-zA-Z0-9\-]+)/',
-                       'subsequent' => '/([a-zA-Z0-9\-]+);q=([0-9\.]+)/');
-    }
-    
     $lang_specifiers = explode(',', $header);
     
     foreach ($lang_specifiers as $specifier)
     {
+      unset($weight);
       $specifier = trim($specifier);
       
       // The regular expressions below are not tight definitions of permissible language tags.
       // They let through some tags which are not permissible, but they do allow permissible
       // tags such as 'es-419'.  
-      if (preg_match($pattern['subsequent'], $specifier, $matches))
+      if (preg_match('/([a-zA-Z0-9\-]+|\*);q=([0-9\.]+)/', $specifier, $matches))
       {
         $language = $matches[1];
         $weight = (float) $matches[2];
+      }
+      else if (preg_match('/([a-zA-Z0-9\-]+|\*)/', $specifier, $matches))
+      {
+        $language = $matches[1];
+        $weight = 1.0;
+      }
+      else
+      {
+        trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
+      }
+
+      if (isset($weight))
+      {
+        if ($translate_wildcard && ($language == '*'))
+        {
+          // Handle the wildcard language by using English
+          $language = 'en';
+        }
         // If a language occurs twice (possibly as a result of a wildcard or aliasing) then
         // only change the weight if it's greater than the one we've already got.
         if (!isset($result[$language]) || ($weight > $result[$language]))
         {
           $result[$language] = $weight;
         }
-      }
-      else if (preg_match($pattern['initial'], $specifier, $matches))
-      {
-        $result[$matches[1]] = 1.0;
-      }
-      else
-      {
-        trigger_error("Unexpected specifier format '$specifier'", E_USER_NOTICE);
       }
     }
   }
