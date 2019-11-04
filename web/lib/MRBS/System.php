@@ -766,8 +766,12 @@ class System
     // indeed 'eng') will give the date in the correct format when using strftime('%x').
     $locales[] = str_replace('_', '-', $locale);
     
-    // First locale to try is a PHP style locale, ie with underscores
-    $locales[] = $locale;
+    // Next locale to try is a PHP style locale, ie with underscores
+    // Make sure we haven't already got it
+    if (!in_array($locale, $locales))
+    {
+      $locales[] = $locale;
+    }
     
     if (self::getServerOS() == 'windows')
     {
