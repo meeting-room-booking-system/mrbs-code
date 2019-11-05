@@ -163,6 +163,10 @@ h2 {
   line-height: 25px;
 }
 
+.flatpickr-months .flatpickr-month {
+  height: 40px;
+}
+
 .index :not(.simple) + .contents {
   display: -ms-flexbox;
   display: flex;
