@@ -22,11 +22,6 @@ $(document).on('page_ready', function() {
   
   <?php // Use an Ajax source - gives much better performance for large tables ?>
   var queryString = window.location.search;
-  if (queryString.length === 0)
-  {
-    queryString = '?';
-  }
-  queryString += '&ajax=1';
   tableOptions.ajax = 'edit_users.php' + queryString;
   
   <?php // Get the types and feed those into dataTables ?>

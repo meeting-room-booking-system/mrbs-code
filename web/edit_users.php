@@ -54,7 +54,6 @@ $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
-$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 $back_button = get_form_var('back_button', 'string');
 $delete_button = get_form_var('delete_button', 'string');
@@ -78,6 +77,7 @@ elseif (isset($update_button))
   $action = 'update';
 }
 
+$is_ajax = is_ajax();
 
 // Checks whether the current user can view the target user
 function can_view_user($target)
@@ -181,7 +181,7 @@ function get_form_var_type($field)
 
 function output_row(&$row)
 {
-  global $ajax, $json_data;
+  global $is_ajax, $json_data;
   global $fields, $ignore_columns, $select_options;
   
   $values = array();
@@ -294,7 +294,7 @@ function output_row(&$row)
     }
   }  // end foreach
 
-  if ($ajax)
+  if ($is_ajax)
   {
     $json_data['aaData'][] = $values;
   }
@@ -554,7 +554,7 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
 // to initialise the JSON data array.
 $ajax_capable = $datatable;
 
-if ($ajax)
+if ($is_ajax)
 {
   $json_data['aaData'] = array();
 }
@@ -1136,7 +1136,7 @@ if (isset($action) && ($action == "delete"))
 
 /* Print the standard MRBS header */
 
-if (!$ajax)
+if (!$is_ajax)
 {
   print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
@@ -1167,7 +1167,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // We don't display these columns or they get special treatment
   $ignore_columns = array('id', 'password_hash', 'name'); 
   
-  if (!$ajax)
+  if (!$is_ajax)
   {
     echo "<div id=\"user_list\" class=\"datatable_container\">\n";
     echo "<table class=\"admin_table display\" id=\"users_table\">\n";
@@ -1212,7 +1212,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // If we're Ajax capable and this is not an Ajax request then don't output
   // the table body, because that's going to be sent later in response to
   // an Ajax request
-  if (!$ajax_capable || $ajax)
+  if (!$ajax_capable || $is_ajax)
   {
     foreach ($users as $user)
     {
@@ -1223,7 +1223,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     }
   }
   
-  if (!$ajax)
+  if (!$is_ajax)
   {
     echo "</tbody>\n";
   
@@ -1233,7 +1233,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   
 }   // ($initial_user_creation != 1)
 
-if ($ajax)
+if ($is_ajax)
 {
   http_headers(array("Content-Type: application/json"));
   echo json_encode($json_data);
