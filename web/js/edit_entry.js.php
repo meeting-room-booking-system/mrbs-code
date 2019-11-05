@@ -573,7 +573,7 @@ function checkConflicts(optional)
   ?>
   var timeout = 200; <?php // ms ?>
   window.setTimeout(function() {
-    var params = {'ajax': 1}; <?php // This is an Ajax request ?>
+    var params = {};
     var form = $('form#main');
     <?php
     // Don't do anything if (a) the form doesn't exist (which it won't if the user

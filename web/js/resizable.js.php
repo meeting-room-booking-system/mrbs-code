@@ -1054,7 +1054,6 @@ $(document).on('page_ready', function() {
         // request to the server to make the new booking
         ?>
         var data = {csrf_token: getCSRFToken(),
-                    ajax: 1, 
                     commit: 1},
             booking = ui.element.find('a');
         <?php // get the booking id and type ?>
