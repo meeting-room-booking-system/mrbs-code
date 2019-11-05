@@ -1178,7 +1178,7 @@ function get_repeat_id($entry_id)
     return NULL;
   }
   
-  return $res->next_row_keyed(0)['repeat_id'];
+  return $res->next_row_keyed()['repeat_id'];
 }
 
 
