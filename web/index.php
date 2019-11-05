@@ -355,11 +355,12 @@ function get_date_heading($view, $year, $month, $day)
 
 
 // Get non-standard form variables
-$ajax = get_form_var('ajax', 'int');
 $timetohighlight = get_form_var('timetohighlight', 'int');
 
+$is_ajax = is_ajax();
+
 // Check the user is authorised for this page
-if (!checkAuthorised(this_page(), $just_check = $ajax))
+if (!checkAuthorised(this_page(), $just_check = $is_ajax))
 {
   exit;
 }
@@ -381,7 +382,7 @@ switch ($view)
 }
 
 
-if ($ajax)
+if ($is_ajax)
 {
   echo $inner_html;
   exit;

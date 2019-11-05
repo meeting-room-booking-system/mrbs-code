@@ -72,7 +72,6 @@ $(document).on('page_ready', function() {
                        contentType: false,
                        data: function() {
                            var formdata = new FormData($('#report_form')[0]);
-                           formdata.append('ajax', '1');
                            return formdata;
                          } };
   <?php

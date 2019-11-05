@@ -67,7 +67,7 @@ function generate_search_nav_html($search_pos, $total, $num_records, $search_str
 
 function output_row($row, $returl)
 {
-  global $ajax, $json_data, $view;
+  global $is_ajax, $json_data, $view;
   
   $vars = array('id'     => $row['entry_id'],
                 'returl' => $returl);
@@ -108,7 +108,7 @@ function output_row($row, $returl)
   // description
   $values[] = htmlspecialchars($row['description']);
   
-  if ($ajax)
+  if ($is_ajax)
   {
     $json_data['aaData'][] = $values;
   }
@@ -119,12 +119,13 @@ function output_row($row, $returl)
     echo "</td>\n</tr>\n";
   }
 }
-  
+
+$is_ajax = is_ajax();
+ 
 // Get non-standard form variables
 $search_str = get_form_var('search_str', 'string');
 $search_pos = get_form_var('search_pos', 'int');
 $total = get_form_var('total', 'int');
-$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 // Get the start day/month/year and make them the current day/month/year
 $from_date = get_form_var('from_date', 'string');
@@ -161,7 +162,7 @@ $user = getUserName();
 // to initialise the JSON data array.
 $ajax_capable = $datatable;
 
-if ($ajax)
+if ($is_ajax)
 {
   $json_data['aaData'] = array();
 }
@@ -173,7 +174,7 @@ if (!isset($search_str))
 
 $search_start_time = mktime(0, 0, 0, $month, $day, $year);
 
-if (!$ajax)
+if (!$is_ajax)
 {
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
 
@@ -224,7 +225,7 @@ if (!$ajax)
                  htmlspecialchars($search_str),
                  htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));
   echo "</h3>\n";
-}  // if (!$ajax)
+}  // if (!$is_ajax)
 
 
 // This is the main part of the query predicate, used in both queries:
@@ -328,7 +329,7 @@ if (!isset($total))
   $total = db()->query1($sql, $sql_params);
 }
 
-if (($total <= 0) && !$ajax)
+if (($total <= 0) && !$is_ajax)
 {
   echo "<p id=\"nothing_found\">" . get_vocab("nothing_found") . "</p>\n";
   print_footer();
@@ -347,7 +348,7 @@ else if($search_pos >= $total)
 // If we're Ajax capable and this is not an Ajax request then don't ouput
 // the table body, because that's going to be sent later in response to
 // an Ajax request - so we don't need to do the query
-if (!$ajax_capable || $ajax)
+if (!$ajax_capable || $is_ajax)
 {
   // Now we set up the "real" query
   $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
@@ -357,7 +358,7 @@ if (!$ajax_capable || $ajax)
         ORDER BY E.start_time asc";
   // If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get
   // the stuff we want.
-  if (!$ajax)
+  if (!$is_ajax)
   {
     $sql .= " " . db()->syntax_limit($search["count"], $search_pos);
   }
@@ -372,7 +373,7 @@ if (!$ajax_capable)
   echo generate_search_nav_html($search_pos, $total, $num_records, $search_str);
 }
 
-if (!$ajax)
+if (!$is_ajax)
 {
   echo "<div id=\"search_output\" class=\"datatable_container\">\n";
   echo "<table id=\"search_results\" class=\"admin_table display\"";
@@ -397,7 +398,7 @@ if (!$ajax)
 // If we're Ajax capable and this is not an Ajax request then don't ouput
 // the table body, because that's going to be sent later in response to
 // an Ajax request
-if (!$ajax_capable || $ajax)
+if (!$ajax_capable || $is_ajax)
 {
   $returl = this_page() . "?search_str=$search_str&from_date=$from_date";
 
@@ -407,7 +408,7 @@ if (!$ajax_capable || $ajax)
   }
 }
 
-if ($ajax)
+if ($is_ajax)
 {
   http_headers(array("Content-Type: application/json"));
   echo json_encode($json_data);

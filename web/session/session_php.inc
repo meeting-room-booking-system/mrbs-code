@@ -92,14 +92,8 @@ if (!empty($auth["session_php"]["inactivity_expire_time"]))
   }
   // Ajax requests don't count as activity, unless it's the special Ajax request used
   // to record client side activity.
-  // Find out if it's an Ajax request.  Some Ajax requests will have the ajax parameter set.
-  // But others won't and we have to test $_SERVER['HTTP_X_REQUESTED_WITH'] using is_ajax().
-  // [Note that we can probably get rid of using the ajax parameter in future and just use
-  // is_ajax().]
-  $ajax = get_form_var('ajax', 'int');
-  $ajax = $ajax || is_ajax();
   $activity = get_form_var('activity', 'int');
-  if ($activity || !$ajax || !isset($_SESSION['LastActivity']))
+  if ($activity || !is_ajax() || !isset($_SESSION['LastActivity']))
   {
     $_SESSION['LastActivity'] = time();
   }

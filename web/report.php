@@ -567,13 +567,13 @@ function type_wrap($string, $data_type)
 // Output the first row (header row) for CSV reports
 function report_header()
 {
-  global $output_format, $ajax;
+  global $output_format, $is_ajax;
   global $custom_fields, $tbl_entry;
   global $approval_somewhere, $confirmation_somewhere;
   global $field_order_list, $booking_types;
 
   // Don't do anything if this is an Ajax request: we only want to send the data
-  if ($ajax)
+  if ($is_ajax)
   {
     return;
   }
@@ -668,9 +668,9 @@ function report_header()
 
 function open_report()
 {
-  global $output_format, $ajax;
+  global $output_format, $is_ajax;
   
-  if ($output_format == OUTPUT_HTML && !$ajax)
+  if ($output_format == OUTPUT_HTML && !$is_ajax)
   {
     echo "<div id=\"report_output\" class=\"datatable_container\">\n";
     echo "<table class=\"admin_table display\" id=\"report_table\">\n";
@@ -680,10 +680,10 @@ function open_report()
 
 function close_report()
 {
-  global $output_format, $ajax, $json_data;
+  global $output_format, $is_ajax, $json_data;
   
   // If this is an Ajax request, we can now send the JSON data
-  if ($ajax)
+  if ($is_ajax)
   {
     http_headers(array("Content-Type: application/json"));
     echo json_encode($json_data);
@@ -733,9 +733,9 @@ function close_summary()
 // Output a table row.
 function output_row(&$values, $output_format, $body_row = TRUE)
 {
-  global $json_data, $ajax, $csv_col_sep, $csv_row_sep;
+  global $json_data, $is_ajax, $csv_col_sep, $csv_row_sep;
   
-  if ($ajax && $body_row)
+  if ($is_ajax && $body_row)
   {
     $json_data['aaData'][] = $values;
   }
@@ -788,19 +788,19 @@ function output_head_rows(&$rows, $format)
 
 function output_body_rows(&$rows, $format)
 {
-  global $ajax;
+  global $is_ajax;
   
   if (count($rows) == 0)
   {
     return;
   }
   
-  echo (($format == OUTPUT_HTML) && !$ajax) ? "<tbody>\n" : "";
+  echo (($format == OUTPUT_HTML) && !$is_ajax) ? "<tbody>\n" : "";
   foreach ($rows as $row)
   {
     output_row($row, $format, TRUE);
   }
-  echo (($format == OUTPUT_HTML) && !$ajax) ? "</tbody>\n" : "";
+  echo (($format == OUTPUT_HTML) && !$is_ajax) ? "</tbody>\n" : "";
 }
 
 
@@ -822,7 +822,7 @@ function output_foot_rows(&$rows, $format)
 
 function report_row(&$rows, &$data)
 {
-  global $output_format, $ajax, $ajax_capable;
+  global $output_format, $is_ajax, $ajax_capable;
   global $custom_fields, $field_natures, $field_lengths;
   global $approval_somewhere, $confirmation_somewhere;
   global $select_options, $booking_types;
@@ -831,7 +831,7 @@ function report_row(&$rows, &$data)
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
   // get the Ajax request;  we just send the rest of the page at this stage.
-  if (($output_format == OUTPUT_HTML) && $ajax_capable && !$ajax)
+  if (($output_format == OUTPUT_HTML) && $ajax_capable && !$is_ajax)
   {
     return;
   }
@@ -1353,12 +1353,12 @@ $match_approved = get_form_var('match_approved', 'int', BOOLEAN_MATCH_BOTH);
 $match_confirmed = get_form_var('match_confirmed', 'int', BOOLEAN_MATCH_BOTH);
 $match_private = get_form_var('match_private', 'int', BOOLEAN_MATCH_BOTH);
 $phase = get_form_var('phase', 'int', 1);
-$ajax = get_form_var('ajax', 'int');  // Set if this is an Ajax request
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 
 list($from_year, $from_month, $from_day) = split_iso_date($from_date);
 list($to_year, $to_month, $to_day) = split_iso_date($to_date);
 
+$is_ajax = is_ajax();
 
 if ($cli_mode)
 {
@@ -1385,7 +1385,7 @@ else
 // to initialise the JSON data array.
 $ajax_capable = $datatable;
 
-if ($ajax)
+if ($is_ajax)
 {
   $json_data['aaData'] = array();
 }
@@ -1627,12 +1627,12 @@ if ($phase == 2)
 
 $combination_not_supported = ($output == SUMMARY) && ($output_format == OUTPUT_ICAL);
 
-$output_form = (($output_format == OUTPUT_HTML) && !$ajax &&!$cli_mode) ||
+$output_form = (($output_format == OUTPUT_HTML) && !$is_ajax &&!$cli_mode) ||
                $combination_not_supported;
                
                
 // print the page header
-if ($ajax)
+if ($is_ajax)
 {
   // don't do anything if this is an Ajax request:  we only want the data
 }
@@ -1723,7 +1723,7 @@ if ($phase == 2)
 {
   if (($nmatch == 0) && !$cli_mode && ($output_format == OUTPUT_HTML))
   {
-    if ($ajax)
+    if ($is_ajax)
     {
       http_headers(array("Content-Type: application/json"));
       echo json_encode($json_data);
@@ -1749,7 +1749,7 @@ if ($phase == 2)
       exit;
     }
     
-    if (($output_format == OUTPUT_HTML) && !$ajax)
+    if (($output_format == OUTPUT_HTML) && !$is_ajax)
     {
       echo "<p class=\"report_entries\"><span id=\"n_entries\">" . $nmatch . "</span> "
       . ($nmatch == 1 ? get_vocab("entry_found") : get_vocab("entries_found"))
