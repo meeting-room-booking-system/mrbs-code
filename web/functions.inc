@@ -6,6 +6,15 @@ use \DateTimeZone;
 require_once "mrbs_sql.inc";
 
 
+// Tests whether the request has come via an Ajax call or not.
+function is_ajax()
+{
+  global $server;
+
+  return (isset($server['HTTP_X_REQUESTED_WITH']) &&
+          (utf8_strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
+}
+
 // Returns the contents of the URL, or else FALSE on failure
 function url_get_contents($url)
 {
