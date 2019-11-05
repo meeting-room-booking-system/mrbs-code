@@ -38,8 +38,7 @@ var refreshPage = function refreshPage() {
         !$('table.dwm_main').hasClass('resizing') &&
         !isMeteredConnection())
     {
-      var data = {ajax: 1,
-                  view: args.view,
+      var data = {view: args.view,
                   page_date: args.pageDate,
                   area: args.area,
                   room: args.room};

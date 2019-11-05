@@ -22,8 +22,9 @@ function invalid_booking($message)
 }
 
 
-$ajax = get_form_var('ajax', 'int');
-if ($ajax && !checkAuthorised(this_page(), true))
+$is_ajax = is_ajax();
+
+if ($is_ajax && !checkAuthorised(this_page(), true))
 {
   exit;
 }
@@ -111,7 +112,7 @@ foreach($form_vars as $var => $var_type)
 
 // Validate the create_by variable, checking that it's the current user, unless the
 // user is an admin and we allow admins to make bookings on behalf of others.
-if (!$ajax &&
+if (!$is_ajax &&
     (!is_book_admin($rooms) || $auth['admin_can_only_book_for_self']))
 {
   if ($create_by !== $current_username)
@@ -209,7 +210,7 @@ foreach($fields as $field)
 
 if (empty($rooms))
 {
-  if (!$ajax)
+  if (!$is_ajax)
   {
     invalid_booking(get_vocab('no_rooms_selected'));
   }
@@ -227,7 +228,7 @@ if (empty($rooms))
 }
 
 // Don't bother with these checks if this is an Ajax request.
-if (!$ajax)
+if (!$is_ajax)
 {
   if (!isset($name) || ($name === ''))
   {
@@ -312,7 +313,7 @@ if ($no_mail)
 // Note: we assume that 
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
-if ($ajax && $commit)
+if ($is_ajax && $commit)
 {
   $old_booking = get_booking_info($id, false);
   foreach ($form_vars as $var => $var_type)
@@ -566,7 +567,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
 
 // If we're committing this booking, get the start day/month/year and
 // make them the current day/month/year
-if (!$ajax || $commit)
+if (!$is_ajax || $commit)
 {
   $day = $start_day;
   $month = $start_month;
@@ -712,7 +713,7 @@ foreach ($rooms as $room_id)
   $bookings[] = $booking;
 }
 
-$just_check = $ajax && !$commit;
+$just_check = $is_ajax && !$commit;
 $this_id = (isset($id)) ? $id : null;
 $send_mail = ($no_mail) ? FALSE : need_to_send_mail();
 
@@ -753,7 +754,7 @@ db()->mutex_unlock($tbl_entry);
 
 
 // If this is an Ajax request, output the result and finish
-if ($ajax)
+if ($is_ajax)
 {
   // Generate the new HTML
   if ($commit)
