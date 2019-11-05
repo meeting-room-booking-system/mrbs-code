@@ -23,8 +23,13 @@ class SessionPhp extends SessionWithLogin
         $this->logoffUser();
       }
       // Ajax requests don't count as activity, unless it's the special Ajax request used
-      // to record client side activity
+      // to record client side activity.
+      // Find out if it's an Ajax request.  Some Ajax requests will have the ajax parameter set.
+      // But others won't and we have to test $_SERVER['HTTP_X_REQUESTED_WITH'] using is_ajax().
+      // [Note that we can probably get rid of using the ajax parameter in future and just use
+      // is_ajax().]
       $ajax = \MRBS\get_form_var('ajax', 'int');
+      $ajax = $ajax || \MRBS\is_ajax();
       $activity = \MRBS\get_form_var('activity', 'int');
       if ($activity || !$ajax || !isset($_SESSION['LastActivity']))
       {
