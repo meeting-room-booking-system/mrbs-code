@@ -381,12 +381,12 @@ function get_qualifiers($header, $translate_wildcard=false)
       // The regular expressions below are not tight definitions of permissible language tags.
       // They let through some tags which are not permissible, but they do allow permissible
       // tags such as 'es-419'.  
-      if (preg_match('/([a-zA-Z0-9\-]+|\*);q=([0-9.]+)/', $specifier, $matches))
+      if (preg_match('/^([a-zA-Z0-9\-]+|\*);q=([0-9.]+)$/', $specifier, $matches))
       {
         $language = $matches[1];
         $weight = (float) $matches[2];
       }
-      else if (preg_match('/([a-zA-Z0-9\-]+|\*)/', $specifier, $matches))
+      else if (preg_match('/^([a-zA-Z0-9\-]+|\*)$/', $specifier, $matches))
       {
         $language = $matches[1];
         $weight = 1.0;
