@@ -852,18 +852,29 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     $slots = array();
     for ($j = 0; $j < DAYS_PER_WEEK; $j++)
     {
-      $slots[$j] = array();
-      $d = $day_start_week + $j;
-      for ($s = $morning_slot_seconds;
-           $s <= $evening_slot_seconds;
-           $s += $resolution)
+      // If we are using times along the top then don't include the hidden days in the array, because
+      // they don't appear in the DOM.  But they do appear in the DOM, with display: none, in standard
+      // mode.  [This anomaly should be sorted out sometime.  The difficulty with putting hidden days
+      // as rows in the DOM is that the nth-child(odd) CSS won't work because :not(.hidden_day):nth-child(odd)
+      // doesn't do what we'd like it to do, and so the zebra striping won't work.  So either we have to switch
+      // to classes of odd and even for the rows, or else take hidden days out of the DOM in standard mode.
+      // Probably the latter is the better option, but it needs checking.]
+      if ($times_along_top && !is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
       {
-        $this_slot = array();
-        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
-        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-        // seconds after the start of the slot because of the possibility of DST transitions
-        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
-        $slots[$j][] = $this_slot;
+        $this_day = array();
+        $d = $day_start_week + $j;
+        for ($s = $morning_slot_seconds;
+             $s <= $evening_slot_seconds;
+             $s += $resolution)
+        {
+          $this_slot = array();
+          $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+          // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+          // seconds after the start of the slot because of the possibility of DST transitions
+          $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+          $this_day[] = $this_slot;
+        }
+        $slots[] = $this_day;
       }
     }
   }
