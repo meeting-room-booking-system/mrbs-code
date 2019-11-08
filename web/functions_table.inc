@@ -489,7 +489,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
-function get_times_header_cells($year, $month, $day, $start, $end, $increment)
+function get_times_header_cells($start, $end, $increment)
 {
   global $enable_periods;
 
@@ -499,16 +499,7 @@ function get_times_header_cells($year, $month, $day, $start, $end, $increment)
   {
     // Put the number of seconds since the start of the day (nominal, ignoring DST)
     // in a data attribute so that JavaScript can pick it up
-    $html .= "<th data-seconds=\"$s\"";
-    // If we're not using periods add data attributes showing the start and end timestamps for the slot
-    // so that the JavaScript knows where to draw the timeline.
-    if (!$enable_periods)
-    {
-      $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
-      $end_timestamp = $start_timestamp + $increment;
-      $html .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
-    }
-    $html .= ">";
+    $html .= "<th data-seconds=\"$s\">";
     // We need the span so that we can apply some padding.   We can't apply it
     // to the <th> because that is used by jQuery.offset() in resizable bookings
     $html .= "<span>";
@@ -589,10 +580,34 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
-  
+
+  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
+  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
+  // meaningless because we don't know when periods begin and end.)
+  if (!$enable_periods)
+  {
+    $slots = array();
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution)
+    {
+      $this_slot = array();
+      $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
+      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+      // seconds after the start of the slot because of the possibility of DST transitions
+      $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
+      $slots[] = $this_slot;
+    }
+  }
+
   // TABLE HEADER
-  $thead = '<thead data-start_first_slot="' . $start_first_slot .
-           '" data-end_last_slot="' . ($start_last_slot + $resolution) . "\">\n";
+  $thead = '<thead';
+  if (isset($slots))
+  {
+    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+  }
+  $thead .= "\">\n";
+
   $header_inner = "<tr>\n";
 
   if ($times_along_top)
@@ -614,7 +629,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
   else
   {
@@ -736,14 +751,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       {
         $tbody .= ' class="' . implode(' ', $classes) . '"';
       }
-      // If we're not using periods add data attributes showing the start and end timestamps for the slot
-      // so that the JavaScript knows where to draw the timeline.
-      if (!$enable_periods)
-      {
-        $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
-        $end_timestamp = $start_timestamp + $resolution;
-        $tbody .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
-      }
       $tbody .= ">\n";
       
       $tbody .= time_cell_html($s, $url);
@@ -839,8 +846,38 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
+  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
+  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
+  // meaningless because we don't know when periods begin and end.)
+  if (!$enable_periods)
+  {
+    $slots = array();
+    for ($j = 0; $j < $num_of_days; $j++)
+    {
+      $slots[$j] = array();
+      $d = $day_start_week + $j;
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
+      {
+        $this_slot = array();
+        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+        // seconds after the start of the slot because of the possibility of DST transitions
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+        $slots[$j][] = $this_slot;
+      }
+    }
+  }
+
   // TABLE HEADER
-  $thead = "<thead>\n";
+  $thead = '<thead';
+  if (isset($slots))
+  {
+    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+  }
+  $thead .= "\">\n";
+
   $header_inner = "<tr>\n";
 
   $dformat = $strftime_format['weekview_headers'];
@@ -870,7 +907,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
 
   else
