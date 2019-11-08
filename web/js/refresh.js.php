@@ -211,7 +211,7 @@ var Timeline = {
           result.push(i);
           break;
         }
-      };
+      }
     }
 
     var result = [];
