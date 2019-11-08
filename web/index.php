@@ -133,10 +133,10 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
         $d += ($next) ? 1 : -1;
         $time = mktime(12, 0, 0, $month, $d, $year);
       }
-      while (is_hidden_day(date('w', $time)) && (abs($d - $day) < 7));  // break the loop if all days are hidden
+      while (is_hidden_day(date('w', $time)) && (abs($d - $day) < DAYS_PER_WEEK));  // break the loop if all days are hidden
       break;
     case 'week':
-      $time = mktime(12, 0, 0, $month, $day + (($next) ? 7 : -7), $year);
+      $time = mktime(12, 0, 0, $month, $day + (($next) ? DAYS_PER_WEEK : -DAYS_PER_WEEK), $year);
       break;
     case 'month':
       $time = mktime(12, 0, 0, $month + (($next) ? 1 : -1), 1, $year);
@@ -308,7 +308,7 @@ function get_date_heading($view, $year, $month, $day)
       }
       // Then display the actual dates
       $day_of_week = date('w', $time);
-      $our_day_of_week = ($day_of_week + 7 - $weekstarts) % 7;
+      $our_day_of_week = ($day_of_week + DAYS_PER_WEEK - $weekstarts) % DAYS_PER_WEEK;
       $start_of_week = mktime(12, 0, 0, $month, $day - $our_day_of_week, $year);
       $end_of_week = mktime(12, 0, 0, $month, $day + 6 - $our_day_of_week, $year);
       // We have to cater for three possible cases.  For example

@@ -825,10 +825,10 @@ function get_field_rep_day($disabled=false)
   global $weekstarts, $strftime_format;
   global $rep_day;
   
-  for ($i = 0; $i < 7; $i++)
+  for ($i = 0; $i < DAYS_PER_WEEK; $i++)
   {
     // Display day name checkboxes according to language and preferred weekday start.
-    $wday = ($i + $weekstarts) % 7;
+    $wday = ($i + $weekstarts) % DAYS_PER_WEEK;
     // We need to ensure the index is a string to force the array to be associative
     $options[$wday] = day_name($wday, $strftime_format['dayname_edit']);
   }
@@ -932,9 +932,9 @@ function get_fieldset_month_relative($disabled=false)
   $fieldset->addElement($select);
   
   $options = array();
-  for ($i=0; $i<7; $i++)
+  for ($i=0; $i<DAYS_PER_WEEK; $i++)
   {
-    $i_offset = ($i + $weekstarts)%7;
+    $i_offset = ($i + $weekstarts)%DAYS_PER_WEEK;
     $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
   }
   $select = new ElementSelect();
@@ -1391,7 +1391,7 @@ if (isset($id))
       switch ($rep_type)
       {
         case REP_WEEKLY:
-          for ($i=0; $i<7; $i++)
+          for ($i=0; $i<DAYS_PER_WEEK; $i++)
           {
             if ($row['rep_opt'][$i])
             {

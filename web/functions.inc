@@ -597,9 +597,9 @@ function toTimeString(&$dur, &$units, $translate=true)
       {
         $dur /= 24;
 
-        if((abs($dur) >= 7) && ($dur % 7 == 0))
+        if((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0))
         {
-          $dur /= 7;
+          $dur /= DAYS_PER_WEEK;
 
           if ((abs($dur) >= 52) && ($dur % 52 == 0))
           {
@@ -661,7 +661,7 @@ function fromTimeString(&$units, $dur_units)
     case "years":
       $units *= 52;
     case "weeks":
-      $units *= 7;
+      $units *= DAYS_PER_WEEK;
     case "days":
       $units *= 24;
     case "hours":
@@ -815,7 +815,7 @@ function date_byday($timestamp)
 
   $dow = $RFC_5545_days[date('w', $timestamp)];
   $dom = date('j', $timestamp);
-  $ord = intval(($dom - 1)/7) + 1;
+  $ord = intval(($dom - 1)/DAYS_PER_WEEK) + 1;
   if ($ord == 5)
   {
     $ord = -1;
@@ -856,10 +856,10 @@ function byday_to_day($year, $month, $byday)
   $byday_dow = RFC_5545_day_to_ord($dow);
   // get the difference in days
   $diff = $byday_dow - $start_dow;
-  $diff += ($ord > 0) ? 7 : -7;
-  $diff = $diff %7;
+  $diff += ($ord > 0) ? DAYS_PER_WEEK : -DAYS_PER_WEEK;
+  $diff = $diff %DAYS_PER_WEEK;
   // add in the weeks
-  $diff += ($ord > 0) ? ($ord - 1) * 7 : ($ord + 1) * 7;
+  $diff += ($ord > 0) ? ($ord - 1) * DAYS_PER_WEEK : ($ord + 1) * DAYS_PER_WEEK;
   
   $day = $start_dom + $diff;
   
@@ -1419,9 +1419,9 @@ function get_rep_day_list($rep_opt)
   
   $rep_days = array();
   
-  for ($i=0; $i<7; $i++)
+  for ($i=0; $i<DAYS_PER_WEEK; $i++)
   {
-    $daynum = ($i + $weekstarts) % 7;
+    $daynum = ($i + $weekstarts) % DAYS_PER_WEEK;
     if ($rep_opt[$daynum])
     {
       $rep_days[] = day_name($daynum);
@@ -1634,7 +1634,7 @@ function day_of_MRBS_week($time)
 {
   global $weekstarts;
   
-  return (date('w', $time) - $weekstarts + 7) % 7;
+  return (date('w', $time) - $weekstarts + DAYS_PER_WEEK) % DAYS_PER_WEEK;
 }
 
 
@@ -1883,12 +1883,12 @@ function shift_to_workday($time)
   // work out how many days to skip back to get to a working day
   while (!in_array($dow, $working_days))
   {
-    if ($skip_back == 7)
+    if ($skip_back == DAYS_PER_WEEK)
     {
       break;
     }
     $skip_back++;
-    $dow = ($dow + 6) % 7;  // equivalent to skipping back a day
+    $dow = ($dow + 6) % DAYS_PER_WEEK;  // equivalent to skipping back a day
   }
   if ($skip_back != 0)
   {
@@ -1921,7 +1921,7 @@ function working_time_diff($now, $then)
     return 0;
   }
   // and the special case where there are no holidays
-  if ($n_working_days == 7)
+  if ($n_working_days == DAYS_PER_WEEK)
   {
     return ($now - $then);
   }
@@ -1944,8 +1944,8 @@ function working_time_diff($now, $then)
   $last = mktime(12, 0, 0, date('n', $last), date('j', $last), date('Y', $last));
   $first = mktime(12, 0, 0, date('n', $first), date('j', $first), date('Y', $first));
   $days_diff = (int) round(($last - $first)/SECONDS_PER_DAY);  // the difference in days
-  $whole_weeks = (int) floor($days_diff/7);  // the number of whole weeks between the two
-  $non_working_days = $whole_weeks * (7 - $n_working_days);
+  $whole_weeks = (int) floor($days_diff/DAYS_PER_WEEK);  // the number of whole weeks between the two
+  $non_working_days = $whole_weeks * (DAYS_PER_WEEK - $n_working_days);
   // Now (b), ie we just have to calculate how many non-working days there are between the two
   // days of the week that are left
   $last_dow = date('w', $last);
@@ -1953,7 +1953,7 @@ function working_time_diff($now, $then)
   
   while ($first_dow != $last_dow)
   {
-    $first_dow = ($first_dow + 1) % 7;
+    $first_dow = ($first_dow + 1) % DAYS_PER_WEEK;
     if (!in_array($first_dow, $working_week))
     {
       $non_working_days++;

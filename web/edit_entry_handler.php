@@ -520,7 +520,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
       $rep_day[] = date('w', $start_time);
     }
     // Build string of weekdays to repeat on:
-    for ($i = 0; $i < 7; $i++)
+    for ($i = 0; $i < DAYS_PER_WEEK; $i++)
     {
       $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
     }
