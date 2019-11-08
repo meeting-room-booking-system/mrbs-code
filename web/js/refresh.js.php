@@ -280,8 +280,8 @@ var Timeline = {
       // We can display the table in two ways: with times along the top ...
       if ($times_along_top)
       {
+        // Get the row that contains the current time
         ?>
-        <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[1]);
         <?php
         // Get the top, left edge and height of the timeline.  The left edge is the left edge of he cell,
@@ -327,8 +327,8 @@ var Timeline = {
       // ... or the standard view, with times down the side
       else
       {
+        // Get the row that contains the current time
         ?>
-        <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[0]);
 
         <?php
@@ -461,9 +461,13 @@ $(document).on('page_ready', function() {
       <?php
       if ($show_timeline && !$enable_periods)
       {
-        // If the page isn't hidden, then add a timeline showing the current time
+        // Add a timeline showing the current time. Also need to recalculate the timeline if
+        // the window is resized.
         ?>
         Timeline.show();
+        $(window).on('resize', function () {
+            Timeline.show();
+          });
         <?php
       }
       ?>
