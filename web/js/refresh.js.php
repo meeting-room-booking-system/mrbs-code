@@ -211,7 +211,7 @@ var Timeline = {
           result.push(i);
           break;
         }
-      };
+      }
     }
 
     var result = [];
@@ -242,7 +242,7 @@ var Timeline = {
     var nowSlotIndices, slot, fraction, row, element;
     var view, slotSize, delay, timeline;
     var top, left, borderLeftWidth, width, height;
-    var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize
+    var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
     nowSlotIndices = Timeline.search(slots, now);
 

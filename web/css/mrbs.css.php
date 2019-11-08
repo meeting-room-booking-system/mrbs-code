@@ -890,7 +890,7 @@ table.dwm_main {
   background-color: <?php echo $main_table_slot_invalid_color ?>;
 }
 
-.dwm_main#month_main td {
+.dwm_main#month_main tbody tr:not(:first-child) td {
   border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 

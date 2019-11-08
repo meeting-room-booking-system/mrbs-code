@@ -229,12 +229,12 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         $query = http_build_query($vars, '', '&');
         
         $html .= '<a href="edit_entry.php?' . htmlspecialchars($query) . '"' .
-                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
+                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">";
         if ($show_plus_link)
         {
-          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">";
         }
-        $html .= "</a>\n";
+        $html .= "</a>";
       }
     }
     else                 // if it is booked then show the booking
@@ -299,7 +299,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
                    ' data-id="' . $booking['id'] . '"' .
                    ' data-type="' . $booking['type'] . '">';
         $html .= htmlspecialchars($booking['name']) . '</a>';
-        $html .= "</div>\n";
+        $html .= "</div>";
       }
     }
     
@@ -431,7 +431,7 @@ function tdcell($classes, $slots, array $data=null)
     }
   }
   
-  $html .= ">\n";
+  $html .= ">";
   
   return $html;
 }
