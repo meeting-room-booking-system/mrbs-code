@@ -302,7 +302,11 @@ var Timeline = {
             break;
           case 'week':
             top = row.offset().top - table.parent().offset().top;
-            height = row.innerHeight();
+            <?php
+            // Take 1px off the booking height to account for the bottom border of the <a> tag in a
+            // booked cell.  Bit of a hack, but difficult to see how to do it otherwise.
+            ?>
+            height = row.innerHeight() - 1;
             break;
           default:
             console.log('Unsupported view ' + view);
