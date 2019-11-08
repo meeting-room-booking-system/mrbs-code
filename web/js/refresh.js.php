@@ -283,10 +283,15 @@ var Timeline = {
         ?>
         <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[1]);
-        <?php // Get the top, left edge and height of the timeline ?>
+        <?php
+        // Get the top, left edge and height of the timeline.  The left edge is the left edge of he cell,
+        // adjusted for the border width and then we add on the fraction that we are through the cell.
+        ?>
         element = headers.not('.first_last').eq(nowSlotIndices[0]);
+        borderLeftWidth = parseInt(element.css('border-left-width'), 10);
         slotSize = element.innerWidth();
         left = element.offset().left - table.parent().offset().left;
+        left = left + borderLeftWidth;
         left = left + fraction * slotSize;
         switch (view)
         {
