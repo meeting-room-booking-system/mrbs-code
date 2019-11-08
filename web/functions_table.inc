@@ -489,7 +489,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
-function get_times_header_cells($year, $month, $day, $start, $end, $increment)
+function get_times_header_cells($start, $end, $increment)
 {
   global $enable_periods;
 
@@ -499,16 +499,7 @@ function get_times_header_cells($year, $month, $day, $start, $end, $increment)
   {
     // Put the number of seconds since the start of the day (nominal, ignoring DST)
     // in a data attribute so that JavaScript can pick it up
-    $html .= "<th data-seconds=\"$s\"";
-    // If we're not using periods add data attributes showing the start and end timestamps for the slot
-    // so that the JavaScript knows where to draw the timeline.
-    if (!$enable_periods)
-    {
-      $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
-      $end_timestamp = $start_timestamp + $increment;
-      $html .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
-    }
-    $html .= ">";
+    $html .= "<th data-seconds=\"$s\">";
     // We need the span so that we can apply some padding.   We can't apply it
     // to the <th> because that is used by jQuery.offset() in resizable bookings
     $html .= "<span>";
@@ -589,10 +580,34 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
-  
+
+  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
+  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
+  // meaningless because we don't know when periods begin and end.)
+  if (!$enable_periods)
+  {
+    $slots = array();
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution)
+    {
+      $this_slot = array();
+      $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
+      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+      // seconds after the start of the slot because of the possibility of DST transitions
+      $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
+      $slots[] = $this_slot;
+    }
+  }
+
   // TABLE HEADER
-  $thead = '<thead data-start_first_slot="' . $start_first_slot .
-           '" data-end_last_slot="' . ($start_last_slot + $resolution) . "\">\n";
+  $thead = '<thead';
+  if (isset($slots))
+  {
+    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+  }
+  $thead .= ">\n";
+
   $header_inner = "<tr>\n";
 
   if ($times_along_top)
@@ -614,7 +629,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
   else
   {
@@ -736,14 +751,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       {
         $tbody .= ' class="' . implode(' ', $classes) . '"';
       }
-      // If we're not using periods add data attributes showing the start and end timestamps for the slot
-      // so that the JavaScript knows where to draw the timeline.
-      if (!$enable_periods)
-      {
-        $start_timestamp = mktime(0, 0, $s, $month, $day, $year);
-        $end_timestamp = $start_timestamp + $resolution;
-        $tbody .= ' data-start_timestamp="' . $start_timestamp . '" data-end_timestamp="' . $end_timestamp . '"';
-      }
       $tbody .= ">\n";
       
       $tbody .= time_cell_html($s, $url);
@@ -796,8 +803,6 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   }
   
   // We have a valid room
-  $num_of_days = 7; // days in a week
-  
   // Calculate how many days to skip back to get to the start of the week
   $time = mktime(12, 0, 0, $month, $day, $year);
   $skipback = day_of_MRBS_week($time);
@@ -808,7 +813,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   
   // Define the start and end of each day of the week in a way which is not
   // affected by daylight saving...
-  for ($j = 0; $j < $num_of_days; $j++)
+  for ($j = 0; $j < DAYS_PER_WEEK; $j++)
   {
     $start_first_slot[$j] = get_start_first_slot($month, $day_start_week+$j, $year);
     $start_last_slot[$j] = get_start_last_slot($month, $day_start_week+$j, $year);
@@ -823,7 +828,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
 
   $week_map = array();
 
-  for ($j = 0; $j < $num_of_days; $j++)
+  for ($j = 0; $j < DAYS_PER_WEEK; $j++)
   {
     $entries = get_entries_by_room($room_id, $start_first_slot[$j], $start_last_slot[$j] + $resolution);
     foreach ($entries as $entry)
@@ -839,8 +844,45 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
+  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
+  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
+  // meaningless because we don't know when periods begin and end.)
+  if (!$enable_periods)
+  {
+    $slots = array();
+    for ($j = 0; $j < DAYS_PER_WEEK; $j++)
+    {
+      // Don't include the hidden days in the array, because they don't appear in the DOM.
+      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
+      {
+        continue;
+      }
+
+      $this_day = array();
+      $d = $day_start_week + $j;
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
+      {
+        $this_slot = array();
+        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+        // seconds after the start of the slot because of the possibility of DST transitions
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+        $this_day[] = $this_slot;
+      }
+      $slots[] = $this_day;
+    }
+  }
+
   // TABLE HEADER
-  $thead = "<thead>\n";
+  $thead = '<thead';
+  if (isset($slots))
+  {
+    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+  }
+  $thead .= ">\n";
+
   $header_inner = "<tr>\n";
 
   $dformat = $strftime_format['weekview_headers'];
@@ -870,39 +912,33 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   // We can display the table in two ways
   if ($times_along_top)
   {
-    $header_inner .= get_times_header_cells($year, $month, $day, $morning_slot_seconds, $evening_slot_seconds, $resolution);
+    $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
   }
 
   else
   {
     // the standard view, with days along the top and times down the side
-    for ($j = 0; $j < $num_of_days; $j++)
+    for ($j = 0; $j < DAYS_PER_WEEK; $j++)
     {
       $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
       $date = date('Y-m-d', $t);
     
-      if (is_hidden_day(($j + $weekstarts) % 7))
+      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
       {
-        // These days are to be hidden in the display (as they are hidden, just give the
-        // day of the week in the header row
-        $header_inner .= '<th class="hidden_day">' .
-                         utf8_strftime($dformat, $t) . 
-                         "</th>\n";
+        continue;
       }
-      else  
-      {
-        $vars = array('view'  => 'day',
-                      'year'  => strftime("%Y", $t),
-                      'month' => strftime("%m", $t),
-                      'day'   => strftime('%d', $t),
-                      'area'  => $area_id,
-                      'room'  => $room_id);
 
-        $link = 'index.php?' . http_build_query($vars, '', '&');
-        $text = utf8_strftime($dformat, $t);
-        $header_inner .= day_cell_html($text, $link, $date);
-      }
-    }  // for ($j = 0 ...
+      $vars = array('view'  => 'day',
+                    'year'  => strftime("%Y", $t),
+                    'month' => strftime("%m", $t),
+                    'day'   => strftime('%d', $t),
+                    'area'  => $area_id,
+                    'room'  => $room_id);
+
+      $link = 'index.php?' . http_build_query($vars, '', '&');
+      $text = utf8_strftime($dformat, $t);
+      $header_inner .= day_cell_html($text, $link, $date);
+    }
     unset($j);  // Just so that we pick up any accidental attempt to use it later
   }  // end standard view (for the header)
 
@@ -927,9 +963,9 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   {
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-    for ($thisday = 0; $thisday < $num_of_days; $thisday++)
+    for ($thisday = 0; $thisday < DAYS_PER_WEEK; $thisday++)
     {
-      if (is_hidden_day(($thisday + $weekstarts) % 7))
+      if (is_hidden_day(($thisday + $weekstarts) % DAYS_PER_WEEK))
       {
         // These days are to be hidden in the display: don't display a row
         continue;
@@ -1020,31 +1056,28 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   
   
       // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
-      for ($thisday = 0; $thisday < $num_of_days; $thisday++)
+      for ($thisday = 0; $thisday < DAYS_PER_WEEK; $thisday++)
       {
-        if (is_hidden_day(($thisday + $weekstarts) % 7))
+        if (is_hidden_day(($thisday + $weekstarts) % DAYS_PER_WEEK))
         {
           // These days are to be hidden in the display
-          $tbody .= "<td class=\"hidden_day\">&nbsp;</td>\n";
+          continue;
         }
-        else
+
+        // set up the query vars to be used for the link in the cell
+        $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
+        $wday = date("d", $wt);
+        $wmonth = date("m", $wt);
+        $wyear = date("Y", $wt);
+        $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
+        $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
+
+        // and then draw the cell
+        if (!isset($week_map[$room_id][$thisday][$s]))
         {
-          // set up the query vars to be used for the link in the cell
-          $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
-          $wday = date("d", $wt);
-          $wmonth = date("m", $wt);
-          $wyear = date("Y", $wt);
-          $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
-     
-          // and then draw the cell
-          if (!isset($week_map[$room_id][$thisday][$s]))
-          {
-            $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
-          }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+          $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
         }
-  
+        $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
       }    // for loop
   
       // next lines to display times on right side
@@ -1086,17 +1119,17 @@ function get_table_head()
   // Weekday name header row:
   $html .= "<thead>\n";
   $html .= "<tr>\n";
-  for ($i = 0; $i< 7; $i++)
+  for ($i = 0; $i< DAYS_PER_WEEK; $i++)
   {
-    if (is_hidden_day(($i + $weekstarts) % 7))
+    if (is_hidden_day(($i + $weekstarts) % DAYS_PER_WEEK))
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row 
-      $html .= "<th class=\"hidden_day\">" . day_name(($i + $weekstarts)%7) . "</th>";
+      $html .= "<th class=\"hidden_day\">" . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . "</th>";
     }
     else
     {
-      $html .= "<th>" . day_name(($i + $weekstarts)%7) . "</th>";
+      $html .= "<th>" . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . "</th>";
     }
   }
   $html .= "\n</tr>\n";
@@ -1110,7 +1143,7 @@ function get_blank_day($col)
 {
   global $weekstarts;
   
-  $td_class = (is_hidden_day(($col + $weekstarts) % 7)) ? 'hidden_day' : 'invalid';
+  $td_class = (is_hidden_day(($col + $weekstarts) % DAYS_PER_WEEK)) ? 'hidden_day' : 'invalid';
   return "<td class=\"$td_class\"><div class=\"cell_container\">&nbsp;</div></td>\n";
 }
 
@@ -1203,7 +1236,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   // things up when entries cross midnight.
   $month_start = mktime(0, 0, 0, $month, 1, $year);
   // What column the month starts in: 0 means $weekstarts weekday.
-  $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
+  $weekday_start = (date("w", $month_start) - $weekstarts + DAYS_PER_WEEK) % DAYS_PER_WEEK;
   $days_in_month = date("t", $month_start);
   
   // Get all meetings for this month in the room that we care about
@@ -1276,7 +1309,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
     }
     
     // output the day cell
-    if (is_hidden_day(($weekcol + $weekstarts) % 7))
+    if (is_hidden_day(($weekcol + $weekstarts) % DAYS_PER_WEEK))
     {
       // These days are to be hidden in the display (as they are hidden, just give the
       // day of the week in the header row 
@@ -1303,7 +1336,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
                     'room'  => $room);
                       
       // If it's a Monday (the start of the ISO week), show the week number
-      if ($view_week_number && (($weekcol + $weekstarts)%7 == 1))
+      if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == 1))
       {
         $vars['view'] = 'week';          
         $query = http_build_query($vars, '', '&');
@@ -1416,7 +1449,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
     }
     
     // increment the day of the week counter
-    if (++$weekcol == 7)
+    if (++$weekcol == DAYS_PER_WEEK)
     {
       $weekcol = 0;
     }
@@ -1426,7 +1459,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   // Skip from end of month to end of week:
   if ($weekcol > 0)
   {
-    for (; $weekcol < 7; $weekcol++)
+    for (; $weekcol < DAYS_PER_WEEK; $weekcol++)
     {
       $html .= get_blank_day($weekcol);
     }

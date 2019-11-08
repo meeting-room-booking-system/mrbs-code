@@ -682,7 +682,7 @@ function create_rrule($data)
       $rule .= "FREQ=WEEKLY";
       // Get the repeat days of the week
       $days_of_week = array();
-      for ($i = 0; $i < 7; $i++)
+      for ($i = 0; $i < DAYS_PER_WEEK; $i++)
       {
         if ($data['rep_opt'][$i])
         {
