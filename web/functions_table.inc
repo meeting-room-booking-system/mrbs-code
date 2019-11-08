@@ -852,14 +852,8 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     $slots = array();
     for ($j = 0; $j < DAYS_PER_WEEK; $j++)
     {
-      // If we are using times along the top then don't include the hidden days in the array, because
-      // they don't appear in the DOM.  But they do appear in the DOM, with display: none, in standard
-      // mode.  [This anomaly should be sorted out sometime.  The difficulty with putting hidden days
-      // as rows in the DOM is that the nth-child(odd) CSS won't work because :not(.hidden_day):nth-child(odd)
-      // doesn't do what we'd like it to do, and so the zebra striping won't work.  So either we have to switch
-      // to classes of odd and even for the rows, or else take hidden days out of the DOM in standard mode.
-      // Probably the latter is the better option, but it needs checking.]
-      if ($times_along_top && !is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
+      // Don't include the hidden days in the array, because they don't appear in the DOM.
+      if (!is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
       {
         $this_day = array();
         $d = $day_start_week + $j;
@@ -929,26 +923,20 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     
       if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
       {
-        // These days are to be hidden in the display (as they are hidden, just give the
-        // day of the week in the header row
-        $header_inner .= '<th class="hidden_day">' .
-                         utf8_strftime($dformat, $t) . 
-                         "</th>\n";
+        continue;
       }
-      else  
-      {
-        $vars = array('view'  => 'day',
-                      'year'  => strftime("%Y", $t),
-                      'month' => strftime("%m", $t),
-                      'day'   => strftime('%d', $t),
-                      'area'  => $area_id,
-                      'room'  => $room_id);
 
-        $link = 'index.php?' . http_build_query($vars, '', '&');
-        $text = utf8_strftime($dformat, $t);
-        $header_inner .= day_cell_html($text, $link, $date);
-      }
-    }  // for ($j = 0 ...
+      $vars = array('view'  => 'day',
+                    'year'  => strftime("%Y", $t),
+                    'month' => strftime("%m", $t),
+                    'day'   => strftime('%d', $t),
+                    'area'  => $area_id,
+                    'room'  => $room_id);
+
+      $link = 'index.php?' . http_build_query($vars, '', '&');
+      $text = utf8_strftime($dformat, $t);
+      $header_inner .= day_cell_html($text, $link, $date);
+    }
     unset($j);  // Just so that we pick up any accidental attempt to use it later
   }  // end standard view (for the header)
 
@@ -1071,26 +1059,23 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
         if (is_hidden_day(($thisday + $weekstarts) % DAYS_PER_WEEK))
         {
           // These days are to be hidden in the display
-          $tbody .= "<td class=\"hidden_day\">&nbsp;</td>\n";
+          continue;
         }
-        else
+
+        // set up the query vars to be used for the link in the cell
+        $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
+        $wday = date("d", $wt);
+        $wmonth = date("m", $wt);
+        $wyear = date("Y", $wt);
+        $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
+        $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
+
+        // and then draw the cell
+        if (!isset($week_map[$room_id][$thisday][$s]))
         {
-          // set up the query vars to be used for the link in the cell
-          $wt = mktime(12, 0, 0, $month, $day_start_week+$thisday, $year);
-          $wday = date("d", $wt);
-          $wmonth = date("m", $wt);
-          $wyear = date("Y", $wt);
-          $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
-          $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
-     
-          // and then draw the cell
-          if (!isset($week_map[$room_id][$thisday][$s]))
-          {
-            $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
-          }
-          $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+          $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
         }
-  
+        $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
       }    // for loop
   
       // next lines to display times on right side
