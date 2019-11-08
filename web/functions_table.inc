@@ -606,7 +606,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
   }
-  $thead .= "\">\n";
+  $thead .= ">\n";
 
   $header_inner = "<tr>\n";
 
@@ -876,7 +876,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
   }
-  $thead .= "\">\n";
+  $thead .= ">\n";
 
   $header_inner = "<tr>\n";
 
