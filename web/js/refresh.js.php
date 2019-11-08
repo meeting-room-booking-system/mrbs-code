@@ -215,12 +215,10 @@ var Timeline = {
     }
 
     var result = [];
-    console.dir(slots);
-    console.log(time);
+
     <?php // Only look for an index if we know that the time is definitely within the slots somewhee ?>
     if ((typeof slots !== 'undefined') && within(slots, time))
     {
-      console.log("Initial within");
       getIndex(slots, time);
     }
 
@@ -247,7 +245,6 @@ var Timeline = {
     var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize
 
     nowSlotIndices = Timeline.search(slots, now);
-    console.dir(nowSlotIndices);
 
     if (nowSlotIndices.length > 0)
     {
@@ -271,7 +268,7 @@ var Timeline = {
           view = null;
           break;
       }
-      console.log(nowSlotIndices);
+
       <?php
       // We can display the table in two ways: with times along the top ...
       if ($times_along_top)

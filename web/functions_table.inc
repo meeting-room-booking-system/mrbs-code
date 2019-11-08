@@ -857,7 +857,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
       {
         continue;
       }
-      
+
       $this_day = array();
       $d = $day_start_week + $j;
       for ($s = $morning_slot_seconds;
