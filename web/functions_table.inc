@@ -853,23 +853,25 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $t
     for ($j = 0; $j < DAYS_PER_WEEK; $j++)
     {
       // Don't include the hidden days in the array, because they don't appear in the DOM.
-      if (!is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
+      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
       {
-        $this_day = array();
-        $d = $day_start_week + $j;
-        for ($s = $morning_slot_seconds;
-             $s <= $evening_slot_seconds;
-             $s += $resolution)
-        {
-          $this_slot = array();
-          $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
-          // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-          // seconds after the start of the slot because of the possibility of DST transitions
-          $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
-          $this_day[] = $this_slot;
-        }
-        $slots[] = $this_day;
+        continue;
       }
+      
+      $this_day = array();
+      $d = $day_start_week + $j;
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
+      {
+        $this_slot = array();
+        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+        // seconds after the start of the slot because of the possibility of DST transitions
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+        $this_day[] = $this_slot;
+      }
+      $slots[] = $this_day;
     }
   }
 
