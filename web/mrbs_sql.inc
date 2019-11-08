@@ -201,7 +201,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
         $interval_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + $i, $start_date['year']);
         break;
       case 'week':
-        $interval_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + ($i * 7) - $skipback, $start_date['year']);
+        $interval_end = mktime(0, 0, 0, $start_date['mon'], $start_date['mday'] + ($i * DAYS_PER_WEEK) - $skipback, $start_date['year']);
         break;
       case 'month':
         $interval_end = mktime(0, 0, 0, $start_date['mon'] + $i, 1, $start_date['year']);
@@ -946,7 +946,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
   switch($rep_details['rep_type'])
   {
     case REP_WEEKLY:
-      for ($j=$start_day; ($j<7+$start_day) && !$rep_details['rep_opt'][$j%7]; $j++)
+      for ($j=$start_day; ($j<DAYS_PER_WEEK+$start_day) && !$rep_details['rep_opt'][$j%DAYS_PER_WEEK]; $j++)
       {
         $day++;
       }
@@ -1002,13 +1002,13 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
         do
         {
           $day++;
-          $j = ($j + 1) % 7;
+          $j = ($j + 1) % DAYS_PER_WEEK;
           // If we've got back to the beginning of the week, then skip
           // over the weeks we've got to miss out (eg miss out one week
           // if we're repeating every two weeks)
           if ($j == $start_day)
           {
-            $day += 7 * ($rep_details['rep_interval'] - 1);
+            $day += DAYS_PER_WEEK * ($rep_details['rep_interval'] - 1);
           }
         }
         while (($j != $cur_day) && !$rep_details['rep_opt'][$j]);
