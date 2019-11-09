@@ -34,7 +34,7 @@ function print_head($simple=false)
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
   
   require_once "style.inc";
-  
+
   if (!$simple)
   {
     require_once "js.inc";
@@ -465,13 +465,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   }
   echo ">\n";
    
-  if (!$simple)
-  {
-    // Load the init file now so that it gets executed as soon as possible.  We
-    // need to do things such as add the 'js' class to the body and retrieve the
-    // data attributes we have just written.
-    echo "<script src=\"js/init.js.php\"></script>\n";
-  }
+
   
   print_unsupported_message();
   
