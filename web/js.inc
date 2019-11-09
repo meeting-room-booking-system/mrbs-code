@@ -11,7 +11,10 @@ $page = this_page(false, '.php');
 // We also want the area to be in the query string so that the JavaScript page is
 // cached if the area is the same and not otherwise.
 $standard_query_string = "area=$area";
-  
+
+// Load the init file now so that it gets executed as soon as possible.  The init
+// file can't use jQuery.
+echo "<script src=\"js/init.js.php\"></script>\n";
 
 if ($debug)
 {
