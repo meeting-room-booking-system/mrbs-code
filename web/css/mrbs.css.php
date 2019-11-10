@@ -703,6 +703,7 @@ table.dwm_main {
   padding: 0.2em;
   color: <?php echo $standard_font_color ?>; 
   background-color: #ffffff;
+  background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
   border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
 
