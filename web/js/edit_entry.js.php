@@ -301,12 +301,11 @@ function validationMessages()
         {
           <?php
           // We define our own custom event called 'validate' that is triggered on the
-          // 'change' event for checkboxes and select elements, and the 'input' even
-          // for all others.   We cannot use the change event for text input because the
-          // change event is only triggered when the element loses focus and we want the
-          // validation to happen whenever a character is input.   And we cannot use the
-          // 'input' event for checkboxes or select elements because it is not triggered
-          // on them.
+          // 'change' and 'input' events.  We need both events because (a) the change event
+          // for text input is only triggered when the element loses focus and we want the
+          // validation to happen whenever a character is input, (b) autocomplete in some
+          // browsers, eg Firefox, does not trigger the input event and (c) the input event
+          // is not triggered for checkboxes or select elements.
           ?>
           $(field).on('validate', function(e) {
             <?php
@@ -319,12 +318,11 @@ function validationMessages()
               e.target.setCustomValidity(validationMessages.vocab[$(e.target).attr('id')]);
             }
           });
-          $(field).filter('select, [type="checkbox"]').on('change', function() {
+
+          $(field).on('change input', function() {
             $(this).trigger('validate');
           });
-          $(field).not('select, [type="checkbox"]').on('input', function() {
-            $(this).trigger('validate');
-          });
+
           <?php
           // When a form validation fails we need to clear the submit flag because
           // otherwise checkConflicts() won't do anything (because we don't check
