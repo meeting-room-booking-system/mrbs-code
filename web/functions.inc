@@ -391,8 +391,13 @@ function this_page($with_query_string=false, $suffix=null)
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
   assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
   
+  if ((!isset($server['SCRIPT_NAME']) || ($server['SCRIPT_NAME'] === '') && !is_cli()))
+  {
+    trigger_error('$_SERVER["SCRIPT_NAME"] is empty.  Check your server configuration.', E_USER_NOTICE);
+  }
+  
   // We use basename() because the full name causes problems when reverse proxies are being used.
-  $result = basename(url_path(), $suffix);
+  $result = basename($server['SCRIPT_NAME'], $suffix);
   
   if ($with_query_string &&
       isset($server['QUERY_STRING']) && 
