@@ -180,7 +180,7 @@ function print_menu_items($query)
     // Only print menu items for which the user is allowed to access the page
     if (checkAuthorised($page, true))
     {
-      echo "<a href=\"$page?" . htmlspecialchars($query) . '">' . get_vocab($token) . "</a>\n";
+      echo '<a href="' . htmlspecialchars("$page?$query") . '">' . get_vocab($token) . "</a>\n";
     }
   }
 }
