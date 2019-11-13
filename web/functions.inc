@@ -166,14 +166,14 @@ function url_base()
 // causes problems when reverse proxies are being used.
 function this_page($suffix=null)
 {
-  global $PHP_SELF;
+  global $SCRIPT_NAME;
   
-  if ((!isset($PHP_SELF) || ($PHP_SELF === '') && !is_cli()))
+  if ((!isset($SCRIPT_NAME) || ($SCRIPT_NAME === '') && !is_cli()))
   {
-    trigger_error('$_SERVER["PHP_SELF"] is empty.  Check your server configuration.', E_USER_NOTICE);
+    trigger_error('$_SERVER["SCRIPT_NAME"] is empty.  Check your server configuration.', E_USER_NOTICE);
   }
   
-  return basename($PHP_SELF, $suffix);
+  return basename($SCRIPT_NAME, $suffix);
 }
 
 
