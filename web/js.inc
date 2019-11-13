@@ -15,8 +15,6 @@ $is_admin = (authGetUserLevel($user) >= $max_level);
 // cached if the area is the same and not otherwise.
 $standard_query_string = "area=$area";
   
-  
-  
 // We are using the jQuery UI library, which has been custom built to include the following components:
 //   - Core
 //        - as defined by dependencies in order to support the required interactions and widgets
@@ -204,10 +202,10 @@ if (in_array($page, array('day', 'week')))
 
 $(window).on('load', function() {
 
-  var args = {area: '<?php echo $area?>',
-              room: '<?php echo $room?>',
-              page: '<?php echo $page?>',
-              page_date: '<?php echo format_iso_date($year, $month, $day) ?>',
+  var args = {area: '<?php echo htmlspecialchars($area)?>',
+              room: '<?php echo htmlspecialchars($room)?>',
+              page: '<?php echo htmlspecialchars($page)?>',
+              page_date: '<?php echo htmlspecialchars(format_iso_date($year, $month, $day)) ?>',
               isAdmin: <?php echo ($is_admin) ? 'true' : 'false'?>};
   <?php
   // We need $timetohighlight for the day and week pages
@@ -215,7 +213,7 @@ $(window).on('load', function() {
   if (isset($timetohighlight))
   {
     ?>
-    args.timetohighlight = '<?php echo $timetohighlight?>';
+    args.timetohighlight = '<?php echo htmlspecialchars($timetohighlight)?>';
     <?php
   }
   ?>
