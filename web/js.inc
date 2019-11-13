@@ -145,13 +145,13 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
 if (is_readable("js/$page.js"))
 {
   ?>
-  <script type="text/javascript" src="js/<?php echo $page?>.js"></script>
+  <script type="text/javascript" src="js/<?php echo htmlspecialchars($page)?>.js"></script>
   <?php
 }
 if (is_readable("js/$page.js.php"))
 {
   ?>
-  <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/<?php echo htmlspecialchars($page)?>.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 
