@@ -10,7 +10,7 @@ $page = this_page(false, '.php');
 // pages.  That's because some of the settings they use are area dependent.
 // We also want the area to be in the query string so that the JavaScript page is
 // cached if the area is the same and not otherwise.
-$standard_query_string = "area=$area";
+$escaped_standard_query_string = 'area=' . htmlspecialchars($area);
 
 // Load the init file now so that it gets executed as soon as possible.  The init
 // file can't use jQuery.
@@ -84,9 +84,9 @@ else
 
 // All pages
 ?>
-<script src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
-<script src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
-<script src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
+<script src="js/functions.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+<script src="js/general.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+<script src="js/datepicker.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 <script src="js/flatpickr/flatpickr.min.js"></script>
 <script src="jquery/select2/dist/js/select2.full.min.js"></script>
 
@@ -125,7 +125,7 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
   
   <script src="jquery/datatables/js/plugins.js"></script>
       
-  <script src="js/datatables.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/datatables.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 
   <?php
 }
@@ -135,13 +135,13 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
 if (is_readable("js/$page.js"))
 {
   ?>
-  <script src="js/<?php echo $page?>.js"></script>
+  <script src="js/<?php echo htmlspecialchars($page)?>.js"></script>
   <?php
 }
 if (is_readable("js/$page.js.php"))
 {
   ?>
-  <script src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/<?php echo htmlspecialchars($page)?>.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 
@@ -150,8 +150,8 @@ if (is_readable("js/$page.js.php"))
 if ($page == 'index')
 {
   ?>
-  <script src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
-  <script src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
+  <script src="js/refresh.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+  <script src="js/resizable.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 ?>
