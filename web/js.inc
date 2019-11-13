@@ -11,9 +11,9 @@ $is_admin = (authGetUserLevel($user) >= $max_level);
 
 // We need to construct a standard query string that can be passed to the *.js.php
 // pages.  That's because some of the settings they use are area dependent.
-// We also want the area to be in the queey string so that the JavaScript page is
+// We also want the area to be in the query string so that the JavaScript page is
 // cached if the area is the same and not otherwise.
-$standard_query_string = "area=$area";
+$escaped_standard_query_string = 'area=' . htmlspecialchars($area);
   
 // We are using the jQuery UI library, which has been custom built to include the following components:
 //   - Core
@@ -101,9 +101,9 @@ if (NULL !== ($datepicker_lang_file = get_datepicker_lang_file('jquery/ui/i18n')
 <?php
 // All pages
 ?>
-<script type="text/javascript" src="js/functions.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/datepicker.js.php?<?php echo $standard_query_string ?>"></script>
-<script type="text/javascript" src="js/general.js.php?<?php echo $standard_query_string ?>"></script>
+<script type="text/javascript" src="js/functions.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+<script type="text/javascript" src="js/datepicker.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+<script type="text/javascript" src="js/general.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 
     
 <?php
@@ -135,7 +135,7 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search'))
   
   <script type="text/javascript" src="jquery/datatables/js/plugins.js"></script>
       
-  <script type="text/javascript" src="js/datatables.js.php?<?php echo $standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/datatables.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 
   <?php
 }
@@ -151,7 +151,7 @@ if (is_readable("js/$page.js"))
 if (is_readable("js/$page.js.php"))
 {
   ?>
-  <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/<?php echo $page?>.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 
@@ -159,7 +159,7 @@ if (is_readable("js/$page.js.php"))
 if (in_array($page, array('day', 'week', 'month')))
 {
   ?>
-  <script type="text/javascript" src="js/refresh.js.php?<?php echo $standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/refresh.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 
@@ -168,8 +168,8 @@ if (in_array($page, array('day', 'week', 'month')))
 if (in_array($page, array('day', 'week')))
 {
   ?>
-  <script type="text/javascript" src="js/resizable.js.php?<?php echo $standard_query_string ?>"></script>
-  <script type="text/javascript" src="js/multiple.js.php?<?php echo $standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/resizable.js.php?<?php echo $escaped_standard_query_string ?>"></script>
+  <script type="text/javascript" src="js/multiple.js.php?<?php echo $escaped_standard_query_string ?>"></script>
   <?php
 }
 
