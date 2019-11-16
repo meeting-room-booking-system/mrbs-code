@@ -183,7 +183,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 }
 
 
-function exception_handler($exception)
+function exception_handler(\Exception $exception)
 {
   $class = get_class($exception);
   
