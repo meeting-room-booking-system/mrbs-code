@@ -65,7 +65,7 @@ function get_page_level($page)
     // These pages only contain admin features
     case 'add.php':                     // Adds a room
     case 'del.php':                     // Deletes a room
-    case 'del_entry.php':               // Ajax page for bulk deletion of entries
+    case 'del_entries.php':             // Ajax page for bulk deletion of entries
     case 'edit_area.php':
     case 'edit_area_handler.php':
     case 'edit_room_handler.php':
