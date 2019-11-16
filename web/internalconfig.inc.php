@@ -508,11 +508,11 @@ $area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['fut
 $area_defaults['max_per_future']           = $max_per_interval_area['future'];
 
 
-// We send Ajax requests to ajax/del_entry.php with data as an array of ids.
+// We send Ajax requests to ajax/del_entries.php with data as an array of ids.
 // In order to stop the POST request getting too large and triggering a 406
 // error, we split the requests into batches with a maximum number of ids
 // in the array defined below.
-define('DEL_ENTRY_AJAX_BATCH_SIZE', 100);
+define('DEL_ENTRIES_AJAX_BATCH_SIZE', 100);
 
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');

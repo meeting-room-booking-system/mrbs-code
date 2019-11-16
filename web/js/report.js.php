@@ -119,7 +119,7 @@ $(document).on('page_ready', function() {
                         // so we need to count them all back before we know that we've
                         // finished.  The results will be held in the results array.
                         ?>
-                        var batchSize = <?php echo DEL_ENTRY_AJAX_BATCH_SIZE ?>,
+                        var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
                             batches = [],
                             batch = [],
                             nBatches,
@@ -148,7 +148,7 @@ $(document).on('page_ready', function() {
                           $('#report_table_processing').css('visibility', 'visible');
                           for (j=0; j<nBatches; j++)
                           {
-                            $.post('ajax/del_entry.php',
+                            $.post('ajax/del_entries.php',
                                    {csrf_token: getCSRFToken(),
                                     ids: batches[j]},
                                    function(result) {
