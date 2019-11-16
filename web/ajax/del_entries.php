@@ -4,10 +4,10 @@ namespace MRBS;
 use MRBS\Form\Form;
 
 
-// A version of del_entry.php designed to be used in Ajax POST calls,.  It
-// takes an array of ids to be deleted as input.   These are always assumed
+// A page designed to be used in Ajax POST calls for bulk deletion of entries.
+// It takes an array of ids to be deleted as input.   These are always assumed
 // to be single entries.   Returns the number of entries deleted, or some
-// kind of string on failure (most likely a login page)
+// kind of string on failure (most likely a login page).
 //
 // If deleting lots of entries you may need to split the Ajax requests into
 // multiple smaller requests in order to avoid exceeding the system limit 
