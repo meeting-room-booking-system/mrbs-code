@@ -119,7 +119,7 @@ $(document).on('page_ready', function() {
                         // so we need to count them all back before we know that we've
                         // finished.  The results will be held in the results array.
                         ?>
-                        var batchSize = <?php echo DEL_ENTRY_AJAX_BATCH_SIZE ?>,
+                        var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
                             batches = [],
                             batch = [],
                             nBatches,
