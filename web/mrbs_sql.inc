@@ -5,7 +5,7 @@ define('INTERVAL_DAY', 0);
 
 
 // Pack the various status fields into a single bitmap
-function pack_status(&$data)
+function pack_status(array &$data)
 {
   $statuses = array('awaiting_approval' => STATUS_AWAITING_APPROVAL,
                     'private'           => STATUS_PRIVATE,
@@ -25,7 +25,7 @@ function pack_status(&$data)
 
 
 // Translates the status flags into a set of booleans
-function unpack_status(&$data)
+function unpack_status(array &$data)
 {
   if (isset($data))
   {
@@ -49,7 +49,7 @@ function unpack_status(&$data)
  *   nothing   - The area is free
  *   something - An error occured, the return value is an array of conflicts
  */
-function mrbsCheckFree(&$booking, $ignore, $repignore)
+function mrbsCheckFree(array &$booking, $ignore, $repignore)
 {
   global $tbl_entry, $tbl_room;
   global $enable_periods, $periods, $twentyfourhour_format;
@@ -145,7 +145,7 @@ function mrbsCheckFree(&$booking, $ignore, $repignore)
 // bookings in the interval of type $interval_type (can be 'day', 'week', 'month' or
 // 'year').   If $only_area is set then only the bookings in the same are considered.
 // Returns NULL if OK, otherwise an error string.
-function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $only_area=FALSE)
+function check_interval(array &$booking, $ignore, $repignore, $interval_type='day', $only_area=FALSE)
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $tbl_entry, $tbl_room;
@@ -287,7 +287,7 @@ function check_interval(&$booking, $ignore, $repignore, $interval_type='day', $o
  *            - An array of human readable errors, index by 'notices' or 'errors'.
  *              If there are no policy violations the array has length 0.
  */
-function mrbsCheckPolicy(&$booking, $ignore, $repignore, $delete=FALSE)
+function mrbsCheckPolicy(array &$booking, $ignore, $repignore, $delete=FALSE)
 {
   global $periods, $enable_periods;
   global $min_create_ahead_enabled, $min_create_ahead_secs;
@@ -847,7 +847,7 @@ function mrbsCreateEntry($table, $data)
  *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateSingleEntry($data)
+function mrbsCreateSingleEntry(array $data)
 {
   global $tbl_entry;
   
@@ -882,7 +882,7 @@ function mrbsCreateSingleEntry($data)
  *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateRepeatEntry($data)
+function mrbsCreateRepeatEntry(array $data)
 {
   global $tbl_repeat;
   
@@ -926,7 +926,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *   an array  - This is a list of start times of each of the repeat entrys
  */
 
-function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
+function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
 {
   $entries = array();
   
@@ -1066,7 +1066,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, $rep_details, $n)
  *   ['start_times'] - an array of start times that have been created
  *
  */
-function mrbsCreateRepeatingEntrys($data)
+function mrbsCreateRepeatingEntrys(array $data)
 {
   global $max_rep_entrys;
   
@@ -1896,7 +1896,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
-function mrbsMakeBookings($bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
+function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $tbl_room, $tbl_area;
