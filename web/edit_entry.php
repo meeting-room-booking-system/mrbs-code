@@ -322,12 +322,16 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
       $options[$s] = hour_min($s);
     }
   }
-  
+
+  // Make sure that the selected option is within the range of available options.
+  $selected = max($current_s, $area['first']);
+  $selected = min($selected, $last);
+
   $field = new ElementSelect();
   $field->setAttributes(array('id'       => $id,
                               'name'     => $name,
                               'disabled' => $disabled || $display_none))
-        ->addSelectOptions($options, $current_s, true);
+        ->addSelectOptions($options, $selected, true);
         
   if ($disabled)
   {
@@ -344,7 +348,7 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     $hidden = new ElementInputHidden();
     $hidden->setAttributes(array('name'  => $name,
-                                 'value' => $current_s));
+                                 'value' => $selected));
     $field->next($hidden);
   }
   
