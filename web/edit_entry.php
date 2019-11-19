@@ -300,6 +300,8 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   
   // Build the options
   $options = array();
+
+  $first = $area['first'];
   // If we're using periods then the last slot is actually the start of the last period,
   // or if we're using times and this is the start selector, then we don't show the last
   // time
@@ -311,7 +313,8 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     $last = $area['last'];
   }
-  for ($s = $area['first']; $s <= $last; $s += $area['resolution'])
+
+  for ($s = $first; $s <= $last; $s += $area['resolution'])
   {
     if ($area['enable_periods'])
     {
@@ -322,12 +325,16 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
       $options[$s] = hour_min($s);
     }
   }
-  
+
+  // Make sure that the selected option is within the range of available options.
+  $selected = max($current_s, $first);
+  $selected = min($selected, $last);
+
   $field = new ElementSelect();
   $field->setAttributes(array('id'       => $id,
                               'name'     => $name,
                               'disabled' => $disabled || $display_none))
-        ->addSelectOptions($options, $current_s, true);
+        ->addSelectOptions($options, $selected, true);
         
   if ($disabled)
   {
@@ -344,7 +351,7 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   {
     $hidden = new ElementInputHidden();
     $hidden->setAttributes(array('name'  => $name,
-                                 'value' => $current_s));
+                                 'value' => $selected));
     $field->next($hidden);
   }
   
