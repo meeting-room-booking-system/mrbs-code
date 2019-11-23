@@ -816,16 +816,11 @@ function escape_js($str)
 // magic_quotes_gpc. Use this whenever you need the actual value of a GET/POST
 // form parameter (which might have special characters) regardless of PHP's
 // magic_quotes_gpc setting.
+// [As we are running at least PHP 5.4 get_magic_quotes_gpc() always returns false,
+// so this function is now redundant].
 function unslashes($s)
 {
-  if (get_magic_quotes_gpc())
-  {
-    return stripslashes($s);
-  }
-  else
-  {
     return $s;
-  }
 }
 
 // Return a default area; used if no area is already known. This returns the
