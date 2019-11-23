@@ -533,19 +533,6 @@ $use_strict = false;
  * PHP System Configuration - internal use, do not change
  ********************************************************/
 
-// Disable magic quoting on database returns:
-if (get_magic_quotes_runtime())  // Will always return false as of PHP 5.4.0
-{
-  if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-  {
-    ini_set('magic_quotes_runtime', 0);
-  }
-  else
-  {
-    set_magic_quotes_runtime(false);
-  }
-}
-
 // Make sure notice errors are not reported, they can break mrbs code:
 $error_level = E_ALL & ~E_NOTICE & ~E_USER_NOTICE;
 
