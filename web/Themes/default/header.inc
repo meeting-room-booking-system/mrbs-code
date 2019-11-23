@@ -64,8 +64,11 @@ function print_header_site_info()
     // Suppress error messages in case the logo is a URL and allow_url_fopen
     // is not enabled in php.ini
     $logo_size = @getimagesize($mrbs_company_logo);
-    echo '<img src="' . $mrbs_company_logo . '" ' . $logo_size[3] . 
-         ' alt="' . htmlspecialchars($mrbs_company) . '">';
+    if (is_array($logo_size))
+    {
+      echo '<img src="' . $mrbs_company_logo . '" ' . $logo_size[3] .
+           ' alt="' . htmlspecialchars($mrbs_company) . '">';
+    }
     if (!empty($mrbs_company_url))
     {
       echo "</a>\n";
