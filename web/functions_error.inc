@@ -130,7 +130,7 @@ function shutdown_function()
 {
   $error = error_get_last();
   
-  if ((strpos($error['message'], 'undefined function iconv()') !== false))
+  if (isset($error) && (strpos($error['message'], 'undefined function iconv()') !== false))
   {
     // Help new admins understand what to do in case the iconv error occurs...
     $heading = "MRBS - iconv module not installed. ";
