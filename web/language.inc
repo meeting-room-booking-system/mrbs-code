@@ -847,7 +847,7 @@ function utf8_substr($str, $start, $length=null)
 
   $i = 0;
   $index = 0;
-  while ((ord($str[$index]) != 0) && ($i < $start))
+  while (isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
   {
     $index = utf8_next_index($str, $index);
     $i++;
@@ -870,7 +870,7 @@ function utf8_substr($str, $start, $length=null)
     $j = 0;
     $ret = "."; // dummy to fool PHP
     for ($i = $index;
-         (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
+         isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
     { 
       $ret[$j++] = $str[$i];
@@ -881,7 +881,7 @@ function utf8_substr($str, $start, $length=null)
   {
     $j = 0;
     $ret = "."; // dummy to fool PHP
-    for ($i = $index; ord($str[$i]) != 0; $i++)
+    for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j++] = $str[$i];
     }
@@ -921,7 +921,7 @@ function utf8_next($str)
     {
       $i = 0;
       $ret = "."; // dummy to fool PHP
-      while (ord($str[$index]) != 0)
+      while (isset($str[$index]) && ord($str[$index]) != 0)
       {
         $ret[$i++] = $str[$index++];
       }
@@ -940,7 +940,7 @@ function utf8_next_index($str, $start)
 
   $i = $start;
 
-  if (isset($str))
+  if (isset($str) && isset($str[$i]))
   {
     if (ord($str[$i]) < 0xc0)
     {
@@ -949,7 +949,7 @@ function utf8_next_index($str, $start)
     else
     {
       $i++;
-      while ((ord($str[$i]) & 0xc0) == 0x80)
+      while (isset($str[$i]) && ((ord($str[$i]) & 0xc0) == 0x80))
       {
         $i++;
       }
