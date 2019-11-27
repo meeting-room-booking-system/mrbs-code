@@ -898,16 +898,19 @@ class System
       if (strpos($locale_setting, '=') !== false)
       {
         list($category, $locale) = explode('=', $locale_setting);
-        // Need to turn the string back into a constant
-        $category = constant($category);
+        // Need to turn the string back into a constant (sometimes PHP doesn't recognise a LC_ constant,
+        // so check that it has been defined first before turning it into a constant).
+        $category = (defined($category)) ? constant($category) : null;
       }
       else
       {
         $category = LC_ALL;
         $locale   = $locale_setting;
       }
-
-      setlocale($category, $locale);
+      if (isset($category))
+      {
+        setlocale($category, $locale);
+      }
     }
     
     return ($result !== false);
