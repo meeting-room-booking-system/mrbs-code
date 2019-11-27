@@ -838,6 +838,7 @@ function utf8_substr($str, $start, $length=null)
 
     return mb_substr($str, $start, $length, $encoding);
   }
+  
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
@@ -845,9 +846,17 @@ function utf8_substr($str, $start, $length=null)
     return utf8_substr_old($str, $start, $length);
   }
 
+  // Deal with the trivial cases first, which won't be dealt with properly otherwise
+  // below, due to the dummy string we have to use to convince PHP to treat the result as
+  // a string rather than an array.
+  if (($str === '') || ($length === 0))
+  {
+    return '';
+  }
+  
   $i = 0;
   $index = 0;
-  while (isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
+  while (isset($index) && isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
   {
     $index = utf8_next_index($str, $index);
     $i++;
@@ -855,8 +864,9 @@ function utf8_substr($str, $start, $length=null)
 
   if (!isset($index))
   {
-    return null;
+    return '';
   }
+  
   if (func_num_args() >= 3)
   {
     $end_index = $index;
@@ -868,7 +878,7 @@ function utf8_substr($str, $start, $length=null)
       $j++;
     }
     $j = 0;
-    $ret = "."; // dummy to fool PHP
+    $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
     for ($i = $index;
          isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
@@ -880,7 +890,7 @@ function utf8_substr($str, $start, $length=null)
   else
   {
     $j = 0;
-    $ret = "."; // dummy to fool PHP
+    $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
     for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j++] = $str[$i];
@@ -920,7 +930,7 @@ function utf8_next($str)
     if ($index)
     {
       $i = 0;
-      $ret = "."; // dummy to fool PHP
+      $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
       while (isset($str[$index]) && ord($str[$index]) != 0)
       {
         $ret[$i++] = $str[$index++];
@@ -969,7 +979,7 @@ function utf8_next_index($str, $start)
 // last sequence is returned, and the byte index set to NULL
 function utf8_seq($str, &$byte_index)
 {
-  $ret = "."; // dummy to fool PHP
+  $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
 
   $next = utf8_next_index($str, $byte_index);
 
