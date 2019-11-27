@@ -868,7 +868,7 @@ function utf8_substr($str, $start, $length=null)
       $j++;
     }
     $j = 0;
-    $ret = '';
+    $ret = "."; // dummy to fool PHP
     for ($i = $index;
          isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
@@ -880,7 +880,7 @@ function utf8_substr($str, $start, $length=null)
   else
   {
     $j = 0;
-    $ret = '';
+    $ret = "."; // dummy to fool PHP
     for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j++] = $str[$i];
@@ -920,7 +920,7 @@ function utf8_next($str)
     if ($index)
     {
       $i = 0;
-      $ret = '';
+      $ret = "."; // dummy to fool PHP
       while (isset($str[$index]) && ord($str[$index]) != 0)
       {
         $ret[$i++] = $str[$index++];
@@ -969,7 +969,7 @@ function utf8_next_index($str, $start)
 // last sequence is returned, and the byte index set to NULL
 function utf8_seq($str, &$byte_index)
 {
-  $ret = '';
+  $ret = "."; // dummy to fool PHP
 
   $next = utf8_next_index($str, $byte_index);
 
