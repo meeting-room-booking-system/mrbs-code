@@ -856,7 +856,7 @@ function utf8_substr($str, $start, $length=null)
   
   $i = 0;
   $index = 0;
-  while (isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
+  while (isset($index) && isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
   {
     $index = utf8_next_index($str, $index);
     $i++;
@@ -864,8 +864,9 @@ function utf8_substr($str, $start, $length=null)
 
   if (!isset($index))
   {
-    return null;
+    return '';
   }
+  
   if (func_num_args() >= 3)
   {
     $end_index = $index;
