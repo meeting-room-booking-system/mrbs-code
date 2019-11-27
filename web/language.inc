@@ -838,6 +838,7 @@ function utf8_substr($str, $start, $length=null)
 
     return mb_substr($str, $start, $length, $encoding);
   }
+  
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
@@ -845,6 +846,14 @@ function utf8_substr($str, $start, $length=null)
     return utf8_substr_old($str, $start, $length);
   }
 
+  // Deal with the trivial cases first, which won't be dealt with properly otherwise
+  // below, due to the dummy string we have to use to convince PHP to treat the result as
+  // a string rather than an array.
+  if (($str === '') || ($length === 0))
+  {
+    return '';
+  }
+  
   $i = 0;
   $index = 0;
   while (isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
