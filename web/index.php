@@ -231,14 +231,17 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
   {
     case 'day':
       $title_prev = get_vocab('daybefore');
+      $title_this = get_vocab('gototoday');
       $title_next = get_vocab('dayafter');
       break;
     case 'week':
       $title_prev = get_vocab('weekbefore');
+      $title_this = get_vocab('gotothisweek');
       $title_next = get_vocab('weekafter');
       break;
     case 'month':
       $title_prev = get_vocab('monthbefore');
+      $title_this = get_vocab('gotothismonth');
       $title_next = get_vocab('monthafter');
       break;
     default:
@@ -255,7 +258,7 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
   
   $html .= "<nav class=\"arrow\">\n";
   $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
-  $html .= "<a href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
+  $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
   $html .= "<a class=\"next\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
   $html .= "</nav>";
   
