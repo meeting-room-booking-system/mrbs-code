@@ -1,8 +1,269 @@
+2019-11-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_error.inc:
+	Fixed warning given by PHP 7.4: "Trying to access array offset on
+	value of type null".
+	[d5dffdb2c381] [tip] <mrbs_17_branch>
+
+	* web/Themes/default/header.inc:
+	Fixed potential notice error in PHP 7.4: "Trying to access array
+	offset on value of type bool"
+	[a0d821de8bac] <mrbs_17_branch>
+
+	* web/internalconfig.inc.php:
+	Removed use of get_magic_quotes_runtime() which is deprecated in PHP
+	7.4
+	[9861f3ebfd00] <mrbs_17_branch>
+
+	* web/functions.inc:
+	Removed use of get_magic_quotes_gpc() which is deprecated in PHP 7.4
+	[d9ea3b3570f5] <mrbs_17_branch>
+
+2019-11-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Fixed a problem causing the time slot selector to be blank in some
+	circumstances. See SF Support Requests #1911.
+	[e11b2366b9a1] <mrbs_17_branch>
+
+2019-11-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/grab_globals.inc.php:
+	Switched to using $_SERVER['SCRIPT_NAME'] instead of
+	$_SERVER['PHP_SELF']
+	[f0fb6cef6b4f] <mrbs_17_branch>
+
+	* web/js.inc:
+	Added some HTML escaping
+	[4b31feea962a] <mrbs_17_branch>
+
+	* web/js.inc:
+	Added some HTML escaping
+	[eddd387ec7c5] <mrbs_17_branch>
+
+	* web/js.inc:
+	Added some HTML escaping
+	[852ca30d7a27] <mrbs_17_branch>
+
+2019-10-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_table.inc, web/lang/lang.en, web/month.php:
+	Improved accessibility. See SF Support Requests #1884.
+	[f5792eddd87f] <mrbs_17_branch>
+
+2019-10-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc:
+	Added a logged_in class to aid styling. See SF Support Requests
+	#1884.
+	[4c60f18c0375] <mrbs_17_branch>
+
+2019-10-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_ical.inc:
+	Fixed bug in export as iCalendars when the last series is only one
+	event long
+	[da5438a59e31] <mrbs_17_branch>
+
+2019-10-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/cms/wordpress.inc:
+	Fixed problem with $theme being overwritten by WordPress. See SF
+	Bugs #444. Thanks to Johan Hattne.
+	[1766190a4cf6] <mrbs_17_branch>
+
+	* web/functions_ical.inc, web/lib/MRBS/ICalendar/Series.php:
+	Moved the Series class out into its own file
+	[d129918ec19a] <mrbs_17_branch>
+
+	* web/functions_ical.inc:
+	Fixed a number of bugs in the export of entries as iCalendars. See
+	SF Support Requests #1865.
+	[9210dff4b11d] <mrbs_17_branch>
+
+2019-10-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_db.inc:
+	Fixed a bug causing the last_login field not to be updated when an
+	email address rather than username is used to login. See SF Support
+	Requests #1863.
+	[626e88d56a28] <mrbs_17_branch>
+
+2019-09-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Fixed bug resulting in undefined index errors when
+	$mail_settings['details'] is false and $mail_settings['icalendar']
+	is true. See SF Support Requests #1835.
+	[10f55dabc1ed] <mrbs_17_branch>
+
+2019-09-18  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/auth/auth_ldap.inc:
+	Merged mrbs_17_branch changes
+	[3b16fda175e0] <mrbs_17_branch>
+
+	* web/session/session_saml.inc:
+	[support-requests:#1836] (Backported fix) Make SAML authentication
+	redirects use an absolute URL to the MRBS page.
+	[df5f7157cf2b] <mrbs_17_branch>
+
+	* web/auth/auth_ldap.inc, web/systemdefaults.inc.php:
+	Added support for supplying a TLS cert/key pair for LDAP client
+	authentication - requires PHP 7.1.0 or later.
+	[454adb4e7588] <mrbs_17_branch>
+
+2019-09-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs-mail.css:
+	Fixed bug in mail CSS
+	[7d72b5ea5f5a] <mrbs_17_branch>
+
+2019-09-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.it:
+	Fixed some non-UTF8 characters. See SF Support Requests #1824.
+	[76cc76186b5f] <mrbs_17_branch>
+
+2019-09-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_ical.inc:
+	Fixed bug causing STATUS not to be exported properly when exporting
+	entries as iCalendar files. See SF Bugs #441.
+	[c2bce890cbd4] <mrbs_17_branch>
+
+2019-08-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Fixed problem with MRBS not recognising numerals in the
+	HTTP_ACCEPT_LANGUAGE header, eg 'es-419'. See SF Support Requests
+	#1828.
+	[b6347c4222a1] <mrbs_17_branch>
+
+2019-08-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_ldap.inc:
+	Reverted SF Patches #84 as it causes problems on some systems. I
+	think the escaping should be done on the individual values in the
+	filter and not on the whole filter. At the same time made the
+	ldap_escapr_filter function more generic and renamed it. It's not
+	used at tyhe moment but is ready for use in the future when we work
+	out how to do escaping.
+	[6488a3a4b358] <mrbs_17_branch>
+
+	* web/auth/auth_ldap.inc:
+	Fixed potential undefined index problem
+	[9f79fe289526] <mrbs_17_branch>
+
+	* web/auth/auth_ldap.inc:
+	Fixed a problem that caused users not being able to login when an
+	$ldap_filter is specified and the user does not have read access to
+	the directory, even for their own entry.
+	[f9637c46a5f3] <mrbs_17_branch>
+
+2019-08-17  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/auth/auth_crypt.inc:
+	Updated the 'crypt' auth method to use the safer 'password_verify()'
+	instead of 'crypt()'
+	[ebfd29135528] <mrbs_17_branch>
+
+2019-07-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed bug - removed form validation from Back button on the Add User
+	form.
+	[d9f31fc24609] <mrbs_17_branch>
+
+2019-07-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_ical.inc:
+	Fixed bug in updating timezone data. See SF Bugs #440.
+	[a704a90d9a99] <mrbs_17_branch>
+
+2019-06-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_ldap.inc:
+	Added escaping of filters - see SF Patches #84
+	[56dda07c1679] <mrbs_17_branch>
+
+2019-05-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/general.js.php:
+	Fixed problem with the areamatch and roommatch fields not being
+	passed through with the form variables in the Edge browser. See SF
+	Support Requests #1763.
+	[bebd8fc464fa] <mrbs_17_branch>
+
+2019-04-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Fixed HTML5 validation errors in email notifications
+	[a51418c6fada] <mrbs_17_branch>
+
+2019-04-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/pending.php:
+	Fixed bug causing the Remind button not to work
+	[6e11663a3808] <mrbs_17_branch>
+
+2019-04-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/import.php:
+	Fixed bug preventing compressed files from being imported.
+	[9b6e9a663c83] <mrbs_17_branch>
+
+2019-04-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/grab_globals.inc.php:
+	Fixed poroblem when $_SERVER['PHP_SELF'] is empty. See SF Bugs #437.
+	[bdb72a9768a7] <mrbs_17_branch>
+
+2019-04-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/functions_mail.inc:
+	Fixed a problem with links in email notifications not being
+	calculated automatically when $url_base is empty.
+	[f16bbfeb24ca] <mrbs_17_branch>
+
+2019-03-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_ldap.inc:
+	Fixed problem with $ldap_unbind_between_attempts not being
+	recognised
+	[22c6bc803ccc] <mrbs_17_branch>
+
+2019-02-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Fixed problem with $skip_default config setting not being
+	recognised. See SF Bugs #434.
+	[155767f5c79f] <mrbs_17_branch>
+
 2019-01-23  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_7_3 for changeset 0e071d2608ea
+	[fbecb16b9262] <mrbs_17_branch>
+
+	* Merged mrbs_17_branch changes
+	[0e071d2608ea] [mrbs-1_7_3] <mrbs_17_branch>
+
+2019-01-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* README:
+	Fixed minimum version requirements. See SF Support Requests #1671.
+	[b54b72a032c8] <mrbs_17_branch>
+
+2019-01-23  John Beranek  <jberanek@users.sourceforge.net>
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for 1.7.3 release
+	[c8fe46f24520] <mrbs_17_branch>
 
 	* web/version_num.inc:
 	Updated version number to 1.7.3
-	[18f184271b18] [tip] <mrbs_17_branch>
+	[18f184271b18] <mrbs_17_branch>
 
 2019-01-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
@@ -84,7 +345,7 @@
 
 	* .hgtags:
 	Removed tag mrbs-1_7_2
-	[2e25f23ace07] [mrbs-1_7_2]
+	[2e25f23ace07]
 
 	* ChangeLog, NEWS:
 	Updated ChangeLog and NEWS for 1.7.2 release, again

@@ -7,7 +7,95 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.7.3 (Web Jab 23rd 2019):
+Version 1.7.4 (Sun Dec 1st 2019):
+
+[-] Fixed minimum version requirements. See SF Support Requests #1671.
+
+[-] Fixed problem with $skip_default config setting not being
+ recognised. See SF Bugs #434.
+
+[-] Fixed problem with $ldap_unbind_between_attempts not being
+ recognised.
+
+[-] Fixed a problem with links in email notifications not being
+ calculated automatically when $url_base is empty.
+
+[-] Fixed problem when $_SERVER['PHP_SELF'] is empty. See SF Bugs #437.
+
+[-] Fixed bug preventing compressed files from being imported.
+
+[-] Fixed bug causing the Remind button not to work.
+
+[-] Fixed HTML5 validation errors in email notifications.
+
+[-] Fixed problem with the areamatch and roommatch fields not being
+ passed through with the form variables in the Edge browser. See SF
+ Support Requests #1763.
+
+[-] Fixed bug in updating timezone data. See SF Bugs #440.
+
+[-] Fixed bug - removed form validation from Back button on the Add User
+ form.
+
+[*] Updated the 'crypt' auth method to use the safer 'password_verify()'
+ instead of 'crypt()'
+
+[-] Fixed a problem that caused users not being able to login when an
+ $ldap_filter is specified and the user does not have read access to
+ the directory, even for their own entry.
+
+[-] Fixed potential undefined index problem.
+
+[-] Fixed problem with MRBS not recognising numerals in the
+ HTTP_ACCEPT_LANGUAGE header, eg 'es-419'. See SF Support Requests
+ #1828.
+
+[-] Fixed bug causing STATUS not to be exported properly when exporting
+ entries as iCalendar files. See SF Bugs #441.
+
+[-] Fixed some non-UTF8 characters in Italian translation. See SF Support Requests #1824.
+
+[-] Fixed bug in mail CSS.
+
+[+] Added support for supplying a TLS cert/key pair for LDAP client
+ authentication - requires PHP 7.1.0 or later.
+
+[-] Make SAML authentication redirects use an absolute URL to the MRBS page.
+
+[-] Fixed bug resulting in undefined index errors when
+ $mail_settings['details'] is false and $mail_settings['icalendar']
+ is true. See SF Support Requests #1835.
+
+[-] Fixed a bug causing the last_login field not to be updated when an
+ email address rather than username is used to login. See SF Support
+ Requests #1863.
+
+[-] Fixed a number of bugs in the export of entries as iCalendars. See
+ SF Support Requests #1865.
+
+[-] Fixed problem with $theme being overwritten by WordPress. See SF
+ Bugs #444. Thanks to Johan Hattne.
+
+[-] Fixed bug in export as iCalendars when the last series is only one
+ event long.
+
+[*] Added a logged_in class to aid styling. See SF Support Requests
+ #1884.
+
+[*] Improved accessibility. See SF Support Requests #1884.
+
+[-] Added some HTML escaping.
+
+[*] Switched to using $_SERVER['SCRIPT_NAME'] instead of
+	$_SERVER['PHP_SELF']
+
+[-] Fixed a problem causing the time slot selector to be blank in some
+ circumstances. See SF Support Requests #1911.
+
+[*] A number of fixes for PHP 7.4 compatiblity.
+
+-------------------------------------------------------------------------------
+Version 1.7.3 (Wed Jan 23rd 2019):
 
 [-] Fix for problem editing long custom fields described in
  [support-requests:#1658]
@@ -29,7 +117,6 @@ Version 1.7.3 (Web Jab 23rd 2019):
 
 [-] Fixed a number of issues with custom "checkbox" type fields, see SF
  Bugs #429.
-
 
 -------------------------------------------------------------------------------
 Version 1.7.2 (Web Dec 19th 2018):
