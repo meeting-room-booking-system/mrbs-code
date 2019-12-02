@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use \DateTimeZone;
+use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "mrbs_sql.inc";
 
@@ -1542,7 +1543,7 @@ function clean_address_list($string)
 
 function validate_email($email)
 {
-  return \PHPMailer::validateAddress($email);
+  return PHPMailer::validateAddress($email);
 }
 
 

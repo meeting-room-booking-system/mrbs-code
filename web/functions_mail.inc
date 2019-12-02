@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 // +---------------------------------------------------------------------------+
 // | Meeting Room Booking System.                                              |
 // +---------------------------------------------------------------------------+
@@ -201,7 +203,7 @@ function get_address_list($array)
     $array[$i] = trim($array[$i]);
     if ($array[$i] !== '')
     {
-      $mailer = new \PHPMailer;
+      $mailer = new PHPMailer;
       // Use parseAddresses() to validate the address because it could contain a display name
       if (count($mailer->parseAddresses($array[$i])) == 0)
       {
@@ -1144,7 +1146,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
   
-  $mail = new \PHPMailer;
+  $mail = new PHPMailer;
   
   mail_debug("Preparing to send email ...");
   if ($mail_settings['debug'])
