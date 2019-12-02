@@ -4,7 +4,7 @@ namespace MRBS;
 // Check PHP version
 // Do it now before we start including code that might fail with a syntax error,
 // for example if anonymous functions are being used.
-$min_PHP_version = '5.4.0';
+$min_PHP_version = '5.5.0';
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP_version) < 0)
 {
   die("MRBS requires PHP $min_PHP_version or above.   This server is running version " . PHP_VERSION . ".");
@@ -15,7 +15,6 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP
 // is called.
 
 require_once 'lib/autoload.inc';
-require_once 'lib/PHPMailer/PHPMailerAutoload.php';
 require_once 'grab_globals.inc.php';   // this must be included before mrbs_auth.inc (due to WordPress - see comment in file)
 require_once 'systemdefaults.inc.php';
 require_once 'areadefaults.inc.php';
