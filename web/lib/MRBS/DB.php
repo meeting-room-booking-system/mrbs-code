@@ -10,11 +10,11 @@ class DB
 {
   const DB_SCHEMA_VERSION = 62;
   const DB_SCHEMA_VERSION_LOCAL = 1;
-  
+
   const DB_DEFAULT_PORT = null;
   const DB_DBO_DRIVER = null;
   const DB_CHARSET = 'UTF8';
-  
+
   protected $dbh = null;
   protected $mutex_lock_name;
 
@@ -58,7 +58,7 @@ class DB
     catch (PDOException $e)
     {
       $message = $e->getMessage();
-      
+
       // Add in some possible solutions for common problems when migrating to the PDO version of MRBS
       // from an earlier version.
       if ($e->getCode() == 7)
@@ -74,17 +74,17 @@ class DB
                     "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
                     "deleting the MySQL user and recreating it with the same password.";
       }
-      
+
       throw new DBException($message, 0, $e);
     }
   }
 
-  
+
   //
   public function error()
   {
     $error = "No database connection!";
-    
+
     if ($this->dbh)
     {
       $error_info = $this->dbh->errorInfo();
@@ -97,7 +97,7 @@ class DB
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Throws a DBException on error.
-  public function command($sql, $params = array())
+  public function command($sql, array $params = array())
   {
     try
     {
@@ -108,18 +108,18 @@ class DB
     {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
-  
+
     return $sth->rowCount();
   }
 
-  
+
   // Execute an SQL query which should return a single non-negative number value.
   // This is a lightweight alternative to query(), good for use with count(*)
   // and similar queries.
   // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
-  function query1($sql, $params = array())
+  function query1($sql, array $params = array())
   {
     try
     {
@@ -130,17 +130,17 @@ class DB
     {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
-    
+
     if ($sth->rowCount() > 1)
     {
       throw new DBException("query1() returned more than one row.", 0, null, $sql, $params);
     }
-    
+
     if ($sth->columnCount() > 1)
     {
       throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
     }
-    
+
     if (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL)
     {
       $result = -1;
@@ -157,25 +157,25 @@ class DB
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results; throws a DBException if there's an error
-  public function query_array($sql, $params = null)
+  public function query_array($sql, array $params = null)
   {
     $stmt = $this->query($sql, $params);
 
     $result = array();
-    
+
     while (false !== ($row = $stmt->next_row()))
     {
       $result[] = $row[0];
     }
-    
+
     return $result;
   }
 
-  
+
   // Execute an SQL query. Returns a DBStatement object, a class with a number
   // of methods like row() and row_keyed() to get the results.
   // Throws a DBException on error
-  public function query ($sql, $params = array())
+  public function query ($sql, array $params = array())
   {
     try
     {
@@ -186,12 +186,12 @@ class DB
     {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
-  
+
     return new DBStatement($this, $sth);
   }
 
 
-  //  
+  //
   public function begin()
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
@@ -204,8 +204,8 @@ class DB
       $this->dbh->beginTransaction();
     }
   }
-  
-  
+
+
   // Commit (end) a transaction. See begin().
   public function commit()
   {
@@ -216,7 +216,7 @@ class DB
     mrbs_ignore_user_abort(FALSE);
   }
 
-  
+
   // Roll back a transaction, aborting it. See begin().
   public function rollback()
   {
@@ -226,8 +226,8 @@ class DB
     }
     mrbs_ignore_user_abort(FALSE);
   }
-  
-  
+
+
   // Checks if inside a transaction
   public function inTransaction()
   {
@@ -240,8 +240,8 @@ class DB
   {
     return $this->query1("SELECT VERSION()");
   }
-  
-  
+
+
   // Return a boolean depending on whether $field exists in $table
   public function field_exists($table, $field)
   {
