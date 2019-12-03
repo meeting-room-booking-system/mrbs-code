@@ -4,7 +4,7 @@ namespace MRBS;
 
 
 /* authLdapAction($callback, $user, &$object)
- * 
+ *
  * Connects/binds to all configured LDAP servers/base DNs and
  * then performs a callback, passing the LDAP object, $base_dn,
  * user DN (in $dn), $user and a generic object $object
@@ -12,7 +12,7 @@ namespace MRBS;
  * $callback - The callback function
  * $user     - The user name
  * &$object  - Reference to the generic object, type defined by caller
- * 
+ *
  * Returns:
  *   false    - The pair are invalid or do not exist
  *   string   - The validated username
@@ -46,10 +46,10 @@ function authLdapAction($callback, $user, &$object)
   }
 
   $ns_callback = __NAMESPACE__ . "\\$callback";
-  
+
   // Transfer the values from the config variables into a local
   // associative array, turning them all into arrays
-  
+
   $config_items = array(
                         'ldap_host',
                         'ldap_port',
@@ -75,7 +75,7 @@ function authLdapAction($callback, $user, &$object)
 
   $all_ldap_opts = array();
 
-  
+
   foreach ($config_items as $item)
   {
     if (!isset($$item))
@@ -171,7 +171,7 @@ function authLdapAction($callback, $user, &$object)
         // Required to do a search on Active Directory for Win 2003+
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
       }
-      
+
       if (isset($all_ldap_opts['ldap_dn_search_attrib'][$idx]))
       {
         if (isset($all_ldap_opts['ldap_dn_search_dn'][$idx]) &&
@@ -254,7 +254,7 @@ function authLdapAction($callback, $user, &$object)
 
     @ldap_unbind($ldap);
   } // foreach
-  
+
   return false;
 }
 
@@ -264,12 +264,12 @@ function authLdapAction($callback, $user, &$object)
 function authGetUserEmail($user)
 {
   global $ldap_get_user_email;
-  
+
   if (!isset($user) || $user === '')
   {
     return '';
   }
-  
+
   if ($ldap_get_user_email)
   {
     $email = authLdapGetEmail($user);
@@ -278,17 +278,17 @@ function authGetUserEmail($user)
   {
     $email = get_default_email($user);
   }
-  
+
   return $email;
 }
 
 
 /* authLdapGetEmail($user)
- * 
+ *
  * Gets the email address of the user from LDAP
- * 
+ *
  * $user  - The user name
- * 
+ *
  * Returns:
  *   The user's email address or ''
  */
@@ -309,7 +309,7 @@ function authLdapGetEmail($user)
 
 /* authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
                             $user, &$object)
- * 
+ *
  * Checks if the specified username/password pair are valid
  *
  * &$ldap       - Reference to the LDAP object
@@ -318,7 +318,7 @@ function authLdapGetEmail($user)
  * $user_search - The LDAP filter to find the user
  * $user        - The user name
  * &$object     - Reference to the generic object
- * 
+ *
  * Returns:
  *   false    - Didn't find a user
  *   true     - Found a user
@@ -347,7 +347,7 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 
       authLdapDebug("authLdapGetEmailCallback: email is '".
                     $object['email']."'");
-      
+
       return true;
     }
   }
@@ -356,12 +356,12 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 
 
 /* authValidateUser($user, $pass)
- * 
+ *
  * Checks if the specified username/password pair are valid
- * 
+ *
  * $user  - The user name
  * $pass  - The password
- * 
+ *
  * Returns:
  *   false    - The pair are invalid or do not exist
  *   string   - The validated username
@@ -386,7 +386,7 @@ function authValidateUser($user, $pass)
 
 /* authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                             $user, &$object)
- * 
+ *
  * Checks if the specified username/password pair are valid
  *
  * &$ldap       - Reference to the LDAP object
@@ -395,7 +395,7 @@ function authValidateUser($user, $pass)
  * $user_search - The LDAP filter to find the user
  * $user        - The user name
  * &$object     - Reference to the generic object
- * 
+ *
  * Returns:
  *   false      - Didn't find a user
  *   true       - Found a user
@@ -433,7 +433,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
         isset($object['config']['ldap_dn_search_password']))
       {
         authLdapDebug("authValidateUserCallback: rebinding as '" . $object['config']['ldap_dn_search_dn'] . "'");
-        if (!mrbs_ldap_bind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
+        if (!ldap_bind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
         {
           authLdapDebug("authValidateUserCallback: rebinding failed: " . ldap_error($ldap));
           if ($ldap_unbind_between_attempts)
@@ -500,7 +500,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
 
 /* authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
                             $user, &$object)
- * 
+ *
  * Checks if the specified username is in an admin group
  *
  * &$ldap       - Reference to the LDAP object
@@ -509,7 +509,7 @@ function authValidateUserCallback(&$ldap, $base_dn, $dn, $user_search,
  * $user_search - The LDAP filter to find the user
  * $user        - The user name
  * &$object     - Reference to the generic object
- * 
+ *
  * Returns:
  *   false    - Not in the admin group
  *   true     - In the admin group
@@ -563,21 +563,21 @@ function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
 function authGetUserLevel($user)
 {
   global $ldap_admin_group_dn;
-  
+
   // cache the user levels for performance
   static $user_levels = array();
-  
+
   // User not logged in, user level '0'
   if (!isset($user))
   {
     return 0;
   }
-  
+
   if (isset($user_levels[$user]))
   {
     return $user_levels[$user];
   }
-  
+
   if ($ldap_admin_group_dn)
   {
     $object = array();
@@ -599,9 +599,9 @@ function authGetUserLevel($user)
   {
     $level = 1;
   }
-  
+
   $user_levels[$user] = $level;
-  
+
   return $user_levels[$user];
 }
 
@@ -681,7 +681,7 @@ function authLdapGetNameCallback(&$ldap, $base_dn, $dn, $user_search,
 function authLdapIsAdmin($user)
 {
   global $auth;
-  
+
   if (isset($auth['admin']) && isset($user) && ($user !== ''))
   {
     foreach ($auth['admin'] as $admin)
@@ -692,7 +692,7 @@ function authLdapIsAdmin($user)
       }
     }
   }
-  
+
   return false;
 }
 
