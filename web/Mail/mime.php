@@ -494,14 +494,14 @@ class Mail_mime
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $magic_quotes = @ini_set('magic_quotes_runtime', 0);
         }
 
         $cont = file_get_contents($file_name);
 
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
+        if (isset($magic_quotes)) {
+            @ini_set('magic_quotes_runtime', $magic_quotes);
         }
 
         return $cont;
@@ -769,8 +769,8 @@ class Mail_mime
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $magic_quotes = @ini_set('magic_quotes_runtime', 0);
         }
 
         if (!($fh = fopen($filename, 'ab'))) {
@@ -785,14 +785,14 @@ class Mail_mime
 
         fclose($fh);
 
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
+        if (isset($magic_quotes)) {
+            @ini_set('magic_quotes_runtime', $magic_quotes);
         }
 
         // Write the rest of the message into file
         $res = $this->get($params, $filename);
 
-        return $res ? $res : true;
+        return $res ?: true;
     }
 
     /**
@@ -822,8 +822,8 @@ class Mail_mime
         }
 
         // Temporarily reset magic_quotes_runtime and read file contents
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $magic_quotes = @ini_set('magic_quotes_runtime', 0);
         }
 
         // Write the rest of the message into file
@@ -833,11 +833,11 @@ class Mail_mime
             fclose($fh);
         }
 
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
+        if (isset($magic_quotes)) {
+            @ini_set('magic_quotes_runtime', $magic_quotes);
         }
 
-        return $res ? $res : true;
+        return $res ?: true;
     }
 
     /**

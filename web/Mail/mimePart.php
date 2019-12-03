@@ -340,12 +340,12 @@ class Mail_mimePart
             $encoded['body'] = $this->getEncodedData($this->body, $this->encoding);
         } else if ($this->body_file) {
             // Temporarily reset magic_quotes_runtime for file reads and writes
-            if ($magic_quote_setting = get_magic_quotes_runtime()) {
-                @ini_set('magic_quotes_runtime', 0);
+            if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+                $magic_quotes = @ini_set('magic_quotes_runtime', 0);
             }
             $body = $this->getEncodedDataFromFile($this->body_file, $this->encoding);
-            if ($magic_quote_setting) {
-                @ini_set('magic_quotes_runtime', $magic_quote_setting);
+            if (isset($magic_quotes)) {
+                @ini_set('magic_quotes_runtime', $magic_quotes);
             }
 
             if (is_a($body, 'PEAR_Error')) {
@@ -392,8 +392,8 @@ class Mail_mimePart
         }
 
         // Temporarily reset magic_quotes_runtime for file reads and writes
-        if ($magic_quote_setting = get_magic_quotes_runtime()) {
-            @ini_set('magic_quotes_runtime', 0);
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $magic_quotes = @ini_set('magic_quotes_runtime', 0);
         }
 
         $res = $this->encodePartToFile($fh, $boundary, $skip_head);
@@ -402,8 +402,8 @@ class Mail_mimePart
             fclose($fh);
         }
 
-        if ($magic_quote_setting) {
-            @ini_set('magic_quotes_runtime', $magic_quote_setting);
+        if (isset($magic_quotes)) {
+            @ini_set('magic_quotes_runtime', $magic_quotes);
         }
 
         return is_a($res, 'PEAR_Error') ? $res : $this->headers;
