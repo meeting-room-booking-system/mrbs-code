@@ -1,9 +1,45 @@
+2019-12-04  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Updated version number
+	[9d13ee92eedd] [tip] <mrbs_17_branch>
+
+2019-12-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_ldap.inc:
+	Fixed SF Bug #450.
+	[745d9a061114] <mrbs_17_branch>
+
+2019-12-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* .editorconfig:
+	Updated .editorconfig to cater for iCalendar line endings
+	[eaafb6eca733] <mrbs_17_branch>
+
+2019-12-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .editorconfig:
+	First attempt at a .editorconfig file
+	[9aefd0031565] <mrbs_17_branch>
+
+	* .hgtags:
+	Added tag mrbs-1_7_4 for changeset f73cec2a5d03
+	[07f3aedb8ec1] <mrbs_17_branch>
+
+	* ChangeLog, NEWS:
+	Updated NEWS and ChangeLog for release
+	[f73cec2a5d03] [mrbs-1_7_4] <mrbs_17_branch>
+
+	* web/version_num.inc:
+	Updated version number
+	[1ad04c527a95] <mrbs_17_branch>
+
 2019-11-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/functions_error.inc:
 	Fixed warning given by PHP 7.4: "Trying to access array offset on
 	value of type null".
-	[d5dffdb2c381] [tip] <mrbs_17_branch>
+	[d5dffdb2c381] <mrbs_17_branch>
 
 	* web/Themes/default/header.inc:
 	Fixed potential notice error in PHP 7.4: "Trying to access array
@@ -103,16 +139,6 @@
 	Merged mrbs_17_branch changes
 	[3b16fda175e0] <mrbs_17_branch>
 
-	* web/session/session_saml.inc:
-	[support-requests:#1836] (Backported fix) Make SAML authentication
-	redirects use an absolute URL to the MRBS page.
-	[df5f7157cf2b] <mrbs_17_branch>
-
-	* web/auth/auth_ldap.inc, web/systemdefaults.inc.php:
-	Added support for supplying a TLS cert/key pair for LDAP client
-	authentication - requires PHP 7.1.0 or later.
-	[454adb4e7588] <mrbs_17_branch>
-
 2019-09-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
 	* web/css/mrbs-mail.css:
@@ -160,6 +186,18 @@
 	$ldap_filter is specified and the user does not have read access to
 	the directory, even for their own entry.
 	[f9637c46a5f3] <mrbs_17_branch>
+
+2019-09-18  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/session/session_saml.inc:
+	[support-requests:#1836] (Backported fix) Make SAML authentication
+	redirects use an absolute URL to the MRBS page.
+	[df5f7157cf2b] <mrbs_17_branch>
+
+	* web/auth/auth_ldap.inc, web/systemdefaults.inc.php:
+	Added support for supplying a TLS cert/key pair for LDAP client
+	authentication - requires PHP 7.1.0 or later.
+	[454adb4e7588] <mrbs_17_branch>
 
 2019-08-17  John Beranek  <jberanek@users.sourceforge.net>
 
@@ -345,7 +383,7 @@
 
 	* .hgtags:
 	Removed tag mrbs-1_7_2
-	[2e25f23ace07]
+	[2e25f23ace07] [mrbs-1_7_2]
 
 	* ChangeLog, NEWS:
 	Updated ChangeLog and NEWS for 1.7.2 release, again

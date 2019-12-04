@@ -7,6 +7,11 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.4.1 (Wed Dec 4th 2019):
+
+[-] Fixed bug in LDAP authentication, see SF Bugs #450.
+
+-------------------------------------------------------------------------------
 Version 1.7.4 (Sun Dec 1st 2019):
 
 [-] Fixed minimum version requirements. See SF Support Requests #1671.
