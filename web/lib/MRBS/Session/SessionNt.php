@@ -2,7 +2,7 @@
 namespace MRBS\Session;
 
 /*
- * Session management scheme that uses Windows NT domain users and Internet 
+ * Session management scheme that uses Windows NT domain users and Internet
  * Information Server as the source for user authentication.
  *
  * To use this authentication scheme set the following
@@ -16,18 +16,18 @@ namespace MRBS\Session;
  * $auth['admin'][] = 'nt_username1';
  * $auth['admin'][] = 'nt_username2';
  *
- * See AUTHENTICATION  for more informations.
+ * See AUTHENTICATION  for more information.
  */
- 
- 
+
+
 class SessionNt extends SessionWithoutLogin
 {
 
   // For this scheme no need to prompt for a name - NT User always there.
-  
+
   public function getUsername()
   {
-    return get_current_user(); 
+    return get_current_user();
   }
-  
+
 }
