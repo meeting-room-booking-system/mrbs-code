@@ -17,7 +17,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 //
 
 global $mail_settings;
- 
+
 if ($mail_settings['icalendar'])
 {
   require_once "functions_ical.inc";
@@ -28,7 +28,7 @@ if ($mail_settings['icalendar'])
 function need_to_send_mail()
 {
   global $mail_settings;
-  
+
   return ($mail_settings['admin_on_bookings'] or
           $mail_settings['area_admin_on_bookings'] or
           $mail_settings['room_admin_on_bookings'] or
@@ -41,7 +41,7 @@ function get_mail_locale()
 {
   static $mail_locale;
   global $mail_settings;
-  
+
   if (!isset($mail_locale))
   {
     if (isset($mail_settings['admin_lang']))
@@ -64,14 +64,14 @@ function get_mail_locale()
 function get_mail_field_name($table, $name)
 {
   global $mail_vocab, $db_tbl_prefix;
-  
+
   $tag = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
   $tag .= "." . $name;           // add on the fieldname
   // then if there's a string in the vocab array for $tag use that
   // otherwise just use the fieldname
   return (isset($mail_vocab[$tag])) ? get_mail_vocab($tag) : $name;
 }
-    
+
 // }}}
 // {{{ getMailPeriodDateString()
 
@@ -141,7 +141,7 @@ function getMailTimeDateString($t, $inc_time=TRUE)
 function getMailDateString($time)
 {
   global $enable_periods;
-  
+
   if ($enable_periods)
   {
     list($entry_period, $entry_date) = getMailPeriodDateString($time);
@@ -167,19 +167,19 @@ function parse_address($email_address)
   else
   {
     list($cn, $addr) = explode('<', $email_address, 2);
-  
+
     $cn = trim($cn);
     $cn = trim($cn, '"');
     $cn = trim($cn);
-  
+
     $addr = trim($addr);
     $addr = rtrim($addr, '>');
     $addr = trim($addr);
   }
-  
+
   $result = array();
   $result['common_name'] = $cn;
-  $result['address'] = $addr; 
+  $result['address'] = $addr;
   return $result;
 }
 
@@ -229,7 +229,7 @@ function get_address_list($array)
 function get_approvers_email($room_id)
 {
   global $mail_settings;
-  
+
   return $mail_settings['recipients'];
 }
 
@@ -240,9 +240,9 @@ function get_approvers_email($room_id)
 function get_area_admin_email($id, $series=FALSE)
 {
   global $tbl_room, $tbl_area, $tbl_entry, $tbl_repeat;
-  
+
   $id_table = ($series) ? "rep" : "e";
-  
+
   $sql = "SELECT a.area_admin_email ";
   $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
   // If this is a repeating entry...
@@ -267,9 +267,9 @@ function get_area_admin_email($id, $series=FALSE)
 function get_room_admin_email($id, $series=FALSE)
 {
   global $tbl_room, $tbl_entry, $tbl_repeat;
-  
+
   $id_table = ($series) ? "rep" : "e";
-  
+
   $sql = "SELECT r.room_admin_email ";
   $sql .= "FROM $tbl_room r, $tbl_entry e ";
   // If this is a repeating entry...
@@ -294,7 +294,7 @@ function get_room_admin_email($id, $series=FALSE)
 function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=FALSE)
 {
   $result  = ($as_html) ? "<tr>\n" : "";
-  
+
   // The label
   $result .= ($as_html) ? "<td>" : "";
   $result .= ($as_html) ? htmlspecialchars("$label: ") : "$label: ";
@@ -320,7 +320,7 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
     }
     $result .= ($as_html) ? "</td>\n" : "";
   }
-  
+
   $result .= ($as_html) ? "</tr>\n" : "\n";
   return $result;
 }
@@ -367,7 +367,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
     $result .= get_vocab("mail_body_repeats_booked");
   }
   $result .= ($as_html) ? "</p>\n" : "\n\n";
-  
+
   $rep_details = array();
   foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
   {
@@ -376,9 +376,9 @@ function create_repeat_list($data, $action, $as_html, $reps)
       $rep_details[$key] = $data[$key];
     }
   }
-  
+
   $result .= create_date_list($reps, $as_html);
-  
+
   // Now add in the list of repeat bookings that could not be booked
   if (!empty($data['skip_list']))
   {
@@ -389,7 +389,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
     // Now the list of conflicts
     $result .= create_date_list($data['skip_list'], $as_html);
   }
-  
+
   return $result;
 }
 
@@ -494,7 +494,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= ($as_html) ? "\">" . $data['name'] . "</a>" : "";
   }
   $body .= ($as_html) ? "</p>\n" : "\n\n";
-  
+
   $body .= ($as_html) ? "<table>\n" : "\n";
   if ($compare && $as_html)
   {
@@ -506,16 +506,16 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= "</tr>\n";
     $body .= "</thead>\n";
   }
-    
+
   $body .= ($as_html) ? "<tbody>\n" : "";
 
-  
+
   // Always display the brief description
   $body .= create_body_table_row (get_mail_vocab("namebooker"),
                                   $data['name'],
                                   $mail_previous['name'],
                                   $compare, $as_html);
-  
+
   // Displays/don't displays entry details
   if ($mail_settings['details'])
   {
@@ -524,9 +524,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $data['description'],
                                     $mail_previous['description'],
                                     $compare, $as_html);
-                                                                                         
+
     if ($confirmation_enabled)
-    {                        
+    {
       // Confirmation status:
       $new_status = ($data['tentative']) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
       $old_status = ($mail_previous['tentative']) ? get_mail_vocab("tentative") : get_mail_vocab("confirmed");
@@ -535,9 +535,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                       $old_status,
                                       $compare, $as_html);
     }
-                            
+
     if ($approval_enabled)
-    {                        
+    {
       // Approval status:
       $new_status = ($data['awaiting_approval']) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
       $old_status = ($mail_previous['awaiting_approval']) ? get_mail_vocab("awaiting_approval") : get_mail_vocab("approved");
@@ -546,7 +546,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                       $old_status,
                                       $compare, $as_html);
     }
-                               
+
     // Room:
     $new_room = $data['area_name'] . " - " . $data['room_name'];
     $old_room = $mail_previous['area_name'] . " - " . $mail_previous['room_name'];
@@ -554,13 +554,13 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $new_room,
                                     $old_room,
                                     $compare, $as_html);
-        
+
     // Start time
     $body .= create_body_table_row (get_mail_vocab("start_date"),
                                     getMailDateString($data['start_time']),
                                     getMailDateString($mail_previous['start_time']),
                                     $compare, $as_html);
-        
+
     // Duration
     $new_duration = $data['duration'] . " " . get_mail_vocab($data['dur_units']);
     $old_duration = $mail_previous['duration'] . " " . get_mail_vocab($mail_previous['dur_units']);
@@ -568,7 +568,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $new_duration,
                                     $old_duration,
                                     $compare, $as_html);
-                                        
+
     // End time
     $this_endtime = $data['end_time'];
     $previous_endtime = ($compare) ? $mail_previous['end_time'] : 0;
@@ -584,7 +584,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     getMailDateString($this_endtime),
                                     getMailDateString($previous_endtime),
                                     $compare, $as_html);
-    
+
     // Type of booking
     if (count($booking_types) > 1)
     {
@@ -593,13 +593,13 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                       get_type_vocab($mail_previous['type']),
                                       $compare, $as_html);
     }
-                                         
+
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
                                     $data['create_by'],
                                     $mail_previous['create_by'],
                                     $compare, $as_html);
-                     
+
     // Custom fields
     $fields = db()->field_info($tbl_entry);
     foreach ($fields as $field)
@@ -609,7 +609,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
         $key = $field['name'];
         $value = (isset($data[$key])) ? $data[$key] : '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
-        if (($field['nature'] == 'boolean') || 
+        if (($field['nature'] == 'boolean') ||
             (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
         {
           $value = ($value) ? get_mail_vocab("yes") : get_mail_vocab("no");
@@ -620,7 +620,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
         }
         // For any associative arrays we want the value rather than the key
         if (isset($select_options["entry.$key"]) &&
-            is_assoc($select_options["entry.$key"]) && 
+            is_assoc($select_options["entry.$key"]) &&
             array_key_exists($value, $select_options["entry.$key"]))
         {
           $value = $select_options["entry.$key"][$value];
@@ -636,23 +636,23 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $compare, $as_html);
       }
     }
-    
+
     // Last updated
     $body .= create_body_table_row (get_mail_vocab("lastupdate"),
                                     getMailTimeDateString(time()),
                                     ($compare) ? getMailTimeDateString($mail_previous['last_updated']) : '',
                                     $compare, $as_html);
-        
+
     // Repeat Type
     $body .= create_body_table_row (get_mail_vocab("rep_type"),
                                     get_mail_vocab("rep_type_" . $data['rep_type']),
                                     get_mail_vocab("rep_type_" . $mail_previous['rep_type']),
                                     $compare, $as_html);
-                                       
+
     // Details if a series
     if ($data['rep_type'] != REP_NONE)
-    {     
-      
+    {
+
       if ($data['rep_type'] == REP_WEEKLY)
       {
         // Repeat days
@@ -664,10 +664,10 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                         $opt_previous,
                                         $compare, $as_html);
       }
-      
+
       if ($data['rep_type'] == REP_MONTHLY)
       {
-      
+
         if (isset($data['month_absolute']))
         {
           $new = $data['month_absolute'];
@@ -711,7 +711,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       // Repeat interval
       $new = $data['rep_interval'] . ' ' .
              get_rep_interval_units_mail($data['rep_type'], $data['rep_interval']);
-             
+
       if (isset($mail_previous['rep_interval']))
       {
         $old = $mail_previous['rep_interval'] . ' ' .
@@ -721,28 +721,28 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
       {
         $old = '';
       }
-      
+
       $body .= create_body_table_row (get_mail_vocab("rep_interval"),
                                       $new,
                                       $old,
                                       $compare, $as_html);
-                                        
+
       // Repeat end date
       $end_previous = ($mail_previous['rep_type'] == REP_NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
                                       getMailTimeDateString($data['end_date'], FALSE),
                                       $end_previous,
                                       $compare, $as_html);
-                                                                   
+
     }
   }
-  
+
   if ($as_html)
   {
     $body .= "</tbody>\n";
     $body .= "</table>\n";
   }
-  
+
   // Add in a list of repeat dates.  Although we've given them the repeat characteristics
   // above, it's often helpful to have this expanded out into a list of actual dates to
   // avoid any confusion.    The repeat list also gives a list of dates that could not
@@ -751,7 +751,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   {
     $body .= create_repeat_list($data, $action, $as_html, $start_times);
   }
-  
+
   if ($as_html)
   {
     $body .= "</div>\n";
@@ -775,12 +775,12 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
 function create_addresses($data, $action)
 {
   global $approval_enabled, $mail_settings;
-  
+
   $to = array();
   $cc = array();
-  
+
   $cc[] = $mail_settings['cc'];
-  
+
   // set the from address
   $user = getUserName();
   if (isset($user) &&
@@ -794,21 +794,21 @@ function create_addresses($data, $action)
   {
     $from = (isset($mail_settings['from'])) ? $mail_settings['from'] : null;
   }
-  
+
   // if we're requiring bookings to be approved and this user needs approval
   // for this room, then get the email addresses of the approvers
   if (!in_array($action, array('delete', 'reject')) &&
-      $approval_enabled && 
+      $approval_enabled &&
       !is_book_admin($data['room_id']))
   {
     $to[] = get_approvers_email($data['room_id']);
   }
-  
+
   if ($mail_settings['admin_on_bookings'])
   {
     $to[] = $mail_settings['recipients'];
   }
-  
+
   if ($mail_settings['area_admin_on_bookings'])
   {
     // Look for list of area admins email addresses
@@ -825,7 +825,7 @@ function create_addresses($data, $action)
       $to[] = $data['area_admin_email'];
     }
   }
-  
+
   if ($mail_settings['room_admin_on_bookings'])
   {
     // Look for list of room admins email addresses
@@ -842,7 +842,7 @@ function create_addresses($data, $action)
       $to[] = $data['room_admin_email'];
     }
   }
-  
+
   if ($mail_settings['booker'])
   {
     if (in_array($action, array("approve", "more_info", "reject")))
@@ -864,7 +864,7 @@ function create_addresses($data, $action)
   {
     return FALSE;
   }
-  
+
   $addresses = array();
   $addresses['from'] = $from;
   $addresses['to']   = get_address_list($to);
@@ -892,7 +892,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
-  
+
   mail_debug('Preparing email for new or changed booking ...');
 
   // Add some values to the $data array before we go and create the addresses
@@ -901,7 +901,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
     $data['area_admin_email'] = (!empty($mail_previous['area_admin_email'])) ? $mail_previous['area_admin_email'] : NULL;
     $data['room_admin_email'] = (!empty($mail_previous['room_admin_email'])) ? $mail_previous['room_admin_email'] : NULL;
   }
-  
+
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
   if ($addresses === FALSE)
@@ -909,7 +909,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
     mail_debug('Email abandoned: no addresses.');
     return;
   }
-  
+
   // Set up the subject
   //
   // If we're sending iCalendar notifications, then it seems that some calendar
@@ -951,7 +951,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   $compare = !$new_entry;
   $text_body = array();
   $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, FALSE, $note, $start_times);
-  
+
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
@@ -959,7 +959,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
     $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, TRUE, $note, $start_times);
     $html_body['cid'] = generate_global_uid("html");
   }
-  
+
   // Create the iCalendar if required
   $attachment = array();
   if ($mail_settings['icalendar'] && !$enable_periods)
@@ -997,12 +997,12 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
-  
+
   if ($mail_settings['debug'])
   {
     mail_debug('Preparing email for deleted booking');
   }
-  
+
   // As we are going to cancel this booking we need to increment the iCalendar
   // sequence number
   $data['ical_sequence']++;
@@ -1014,7 +1014,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
     mail_debug('Email abandoned: no addresses.');
     return;
   }
-  
+
   // Set the subject
   //
   // If we're sending iCalendar notifications, then it seems that some calendar
@@ -1034,11 +1034,11 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
   {
     $subject = get_mail_vocab("mail_subject_delete", $mrbs_company);
   }
-  
+
   // Create the text body
   $text_body = array();
   $text_body['content'] = create_body($data, NULL, FALSE, $series, $action, FALSE, $note, $start_times);
-  
+
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
@@ -1046,7 +1046,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
     $html_body['content'] = create_body($data, NULL, FALSE, $series, $action, TRUE, $note, $start_times);
     $html_body['cid'] = generate_global_uid("html");
   }
-  
+
   // Set up the attachment
   $attachment = array();
   if ($mail_settings['icalendar'] && !$enable_periods)
@@ -1072,7 +1072,7 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
 function debug_output($message)
 {
   global $mail_settings;
-  
+
   if (isset($mail_settings['debug_output']) &&
       ($mail_settings['debug_output'] == 'browser'))
   {
@@ -1094,7 +1094,7 @@ function debug_output($message)
 function mail_debug($message)
 {
   global $mail_settings;
-  
+
   if ($mail_settings['debug'])
   {
     debug_output('[DEBUG] ' . $message);
@@ -1111,12 +1111,12 @@ function mail_debug($message)
  *   -> http://www.pear.php.net/package/Mail
  *   -> http://www.pear.php.net/package/Mail_Mime
  * then link "View documentation".
- * Currently implemented version: Mail 1.1.3 and its dependancies
+ * Currently implemented version: Mail 1.1.3 and its dependencies
  * Net_SMTP 1.2.6 and Net_Socket 1.0.2
  * Mail_Mime 1.8.0
  *
  * @param array   $addresses        an array of addresses, each being a comma
- *                                  separated list of email addreses.  Indexed by
+ *                                  separated list of email addresses.  Indexed by
  *                                    'from'
  *                                    'to'
  *                                    'cc'
@@ -1138,25 +1138,25 @@ function mail_debug($message)
 function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
 {
   require_once 'Mail/mimePart.php';
-  
+
   // We use the PHPMailer class to handle the sending of mail.   However PHPMailer does not
   // provide the versatility we need to be able to construct the MIME parts necessary for
   // iCalendar applications, so we use the PEAR Mail_Mime package to do that.   See the
   // discussion at https://github.com/PHPMailer/PHPMailer/issues/175
-  
+
   global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
-  
+
   $mail = new PHPMailer;
-  
+
   mail_debug("Preparing to send email ...");
   if ($mail_settings['debug'])
   {
     $mail->Debugoutput = ($mail_settings['debug_output'] == 'log') ? 'error_log' : 'html';
     $mail->SMTPDebug = \SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
   }
-  
+
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
-  
+
   // for cases where the mail server refuses
   // to send emails with cc or bcc set, put the cc
   // addresses on the to line
@@ -1178,18 +1178,18 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       trigger_error('$mail_settings["from"] has not been set in the config file.', E_USER_NOTICE);
     }
   }
-  
+
   // Need to put all the addresses into $recipients
   $recipients = $addresses['to'];
   $recipients .= (!empty($addresses['cc'])) ? "," . $addresses['cc'] : "";
   $recipients .= (!empty($addresses['bcc'])) ? "," . $addresses['bcc'] : "";
-  
+
   // Don't bother doing anything more if there are no recipients
   if ($recipients == '')
   {
     return FALSE;
   }
-  
+
   switch ($mail_settings['admin_backend'])
   {
     case 'mail':
@@ -1239,23 +1239,23 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
                     E_USER_WARNING);
       break;
   }
-  
+
   $mail->CharSet = get_mail_charset();  // PHPMailer defaults to 'iso-8859-1'
   $mail->AllowEmpty = true;  // remove this for production
   $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
-  
+
   if (isset($addresses['from']))
   {
     $from_addresses = $mail->parseAddresses($addresses['from']);
     $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
   }
-  
+
   $to_addresses = $mail->parseAddresses($addresses['to']);
   foreach ($to_addresses as $to_address)
   {
     $mail->addAddress($to_address['address'], $to_address['name']);
   }
-  
+
   if (isset($addresses['cc']))
   {
     $cc_addresses = $mail->parseAddresses($addresses['cc']);
@@ -1264,7 +1264,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       $mail->addCC($cc_address['address'], $cc_address['name']);
     }
   }
-  
+
   if (isset($addresses['bcc']))
   {
     $bcc_addresses = $mail->parseAddresses($addresses['bcc']);
@@ -1273,15 +1273,15 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       $mail->addBCC($bcc_address['address'], $bcc_address['name']);
     }
   }
-  
+
   $mail->Subject = $subject;
-  
-  
+
+
   // Build the email.   We're going to use the "alternative" subtype which means
   // that we order the sub parts according to how faithful they are to the original,
   // putting the least faithful first, ie the ordinary plain text version.   The
   // email client then uses the most faithful version that it can handle.
-  // 
+  //
   // If we are also adding the iCalendar information then we enclose this alternative
   // mime subtype in an outer mime type which is mixed.    This is necessary so that
   // the widest variety of calendar applications can access the calendar information.
@@ -1297,7 +1297,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   //        text/html
   //        text/calendar
   //      application/ics
-  
+
   // First of all build the inner mime type, ie the multipart/alternative type.
   // If we're not sending iCalendar information this will become the outer,
   // otherwise we'll then enclose it in an outer mime type.
@@ -1305,13 +1305,13 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   $mime_params['eol'] = $eol;
   $mime_params['content_type'] = "multipart/alternative";
   $mime_inner = new \Mail_mimePart('', $mime_params);
-  
+
   // Add the text part
   $mime_params['content_type'] = "text/plain";
   $mime_params['encoding']     = "8bit";
   $mime_params['charset']      = $charset;
   $mime_inner->addSubPart($text_body['content'], $mime_params);
-  
+
   // Add the HTML mail
   if (!empty($html_body))
   {
@@ -1320,7 +1320,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mime_inner->addSubPart($html_body['content'], $mime_params);
     unset($mime_params['cid']);
   }
-  
+
   if (!$mail_settings['icalendar'] || $enable_periods)
   {
     // If we're not sending iCalendar information we've now got everything,
@@ -1350,7 +1350,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     $mime_params['encoding'] = "8bit";
     $mime_params['content_type'] = $mime_inner['headers']['Content-Type'];
     $mime->addSubPart($mime_inner['body'], $mime_params);
-    
+
     // And add the attachment as the second sub part
     $mime_params['content_type'] = "application/ics";
     $mime_params['encoding']     = "base64";
@@ -1369,7 +1369,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   // This is not ideal since $MIMEHeader and $MIMEBody are protected
   // properties of the PHPMailer class.  In the future we may have to extend
   // the class to do what we want, unless the features we need are added.
-  
+
   $mime_header = '';
   foreach ($mime['headers'] as $name => $value)
   {
@@ -1389,26 +1389,26 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
     mail_debug("To: " . (isset($addresses['to']) ? $addresses['to'] : ''));
     mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
     mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
-    
+
     // Don't do aything if mail has been disabled.   Useful for testing MRBS without
     // sending emails to those who don't want them
     if ($mail_settings['disabled'])
     {
       return true;
     }
-    
+
     // PHPMailer uses escapeshellarg() and escapeshellcmd().   In many installations these will
     // have been disabled.    If they have been disabled PHP will generate a warning and the functions
     // will return NULL.   PHPMailer uses the functions to test if the sender address is shell safe
     // and can be used with the -f option.   If the escapeshell*() functions are disabled, mail
     // will still be sent, but -f will not be used.   [Note that if a function is disabled you cannot
     // redeclare it, so writing emulations of escapeshellarg() and escapeshellcmd() is not an option.]
-    
+
     // As mail still gets through, the warning message will cause error logs to fill up rapidly, so we
     // suppress the standard errors in the cases when they will be generated and issue our own NOTICE error.
-    
+
     $disabled_functions = ini_get('disable_functions');
-    
+
     if (!empty($disabled_functions) && (strpos($disabled_functions, 'escapeshell') !== FALSE)  &&
         in_array($mail_settings['admin_backend'], array('mail', 'sendmail')))
     {
@@ -1430,10 +1430,10 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
       return true;
     }
   }
-  
+
   error_log('Error sending email: ' . $mail->ErrorInfo);
   mail_debug('Failed to send email: ' . $mail->ErrorInfo);
   return false;
-  
+
 }
 

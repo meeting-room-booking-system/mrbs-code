@@ -11,7 +11,7 @@ class DB_pgsql extends DB
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER = "pgsql";
 
-  
+
   // A small utility function (not part of the DB abstraction API) to
   // resolve a qualified table name into its schema and table components.
   // Returns an an array indexed by 'table_schema' and 'table_name'.
@@ -27,12 +27,12 @@ class DB_pgsql extends DB
     {
       list($table_schema, $table_name) = explode('.', $table, 2);
     }
-  
+
     return array('table_schema' => $table_schema,
                  'table_name' => $table_name);
   }
 
-  
+
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
 
   // NOTE:  We fold the identifier to lower case here even though it is quoted.   Unlike MySQL,
@@ -41,7 +41,7 @@ class DB_pgsql extends DB
   // could be the case with user generated column names for custom fields.  But if we were also
   // to quote the table name, then queries such as 'SELECT * FROM mrbs_entry E WHERE "E"."id"=2'
   // would fail because the alias 'E' is folded to 'e', but the WHERE clause gives 'E.id'.
-  // This means that we won't be able to distiguish in PostgreSQL between column names that just
+  // This means that we won't be able to distinguish in PostgreSQL between column names that just
   // differ in case.  But having column names differing in case would be confusing anyway and so
   // should be discouraged.   And a PostgreSQL user generating custom fields would expect them to
   // be folded to lower case anyway, so presumably wouldn't try and create column names differing
@@ -53,7 +53,7 @@ class DB_pgsql extends DB
     return $quote_char . implode($quote_char . '.' . $quote_char, $parts) . $quote_char;
   }
 
-  
+
   // Return the value of an autoincrement field from the last insert.
   // For PostgreSQL, this must be a SERIAL type field.
   public function insert_id($table, $field)
@@ -62,7 +62,7 @@ class DB_pgsql extends DB
     return $this->dbh->lastInsertId($seq_name);
   }
 
-  
+
   // Acquire a mutual-exclusion lock on the named table. For portability:
   // This will not lock out SELECTs.
   // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
@@ -106,23 +106,23 @@ class DB_pgsql extends DB
     {
       $this->commit();
     }
-    
+
     $this->mutex_lock_name = null;
     return true;
   }
 
-  
+
   // Destructor cleans up the connection
   function __destruct()
   {
     //print "PostgreSQL destructor called\n";
-    
+
     // Release any forgotten locks
     if (isset($this->mutex_lock_name))
     {
       $this->command("ABORT", array());
     }
-  
+
     // Rollback any outstanding transactions
     $this->rollback();
   }
@@ -134,7 +134,7 @@ class DB_pgsql extends DB
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
     $table_parts = $this->resolve_table($table);
-  
+
     $sql_params = array();
     $sql = "SELECT COUNT(*)
               FROM information_schema.tables
@@ -147,7 +147,7 @@ class DB_pgsql extends DB
     }
 
     $res = $this->query1($sql, $sql_params);
-    
+
     if ($res == 0)
     {
       return false;
@@ -176,8 +176,8 @@ class DB_pgsql extends DB
   //  'type'        the type as reported by PostgreSQL
   //  'nature'      the type mapped onto one of a generic set of types
   //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to 
-  //                display fields, without MRBS having to worry about the 
+  //                the nature to be used by MRBS code when deciding how to
+  //                display fields, without MRBS having to worry about the
   //                differences between MySQL and PostgreSQL type names.
   //  'length'      the maximum length of the field in bytes, octets or characters
   //                (Note:  this could be null)
@@ -202,13 +202,13 @@ class DB_pgsql extends DB
                         'real'              => 'real',
                         'smallint'          => 'integer',
                         'text'              => 'character');
-  
+
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
     $table_parts = $this->resolve_table($table);
 
     $sql_params = array();
- 
+
     // $table_name and $table_schema should be trusted but escape them anyway for good measure
     $sql = "SELECT column_name, data_type, numeric_precision, numeric_scale, character_maximum_length,
                    character_octet_length, is_nullable
@@ -221,7 +221,7 @@ class DB_pgsql extends DB
       $sql_params[] = $table_parts['table_schema'];
     }
     $sql .= "ORDER BY ordinal_position";
-  
+
     $stmt = $this->query($sql, $sql_params);
 
     while (false !== ($row = $stmt->next_row_keyed()))
@@ -252,7 +252,7 @@ class DB_pgsql extends DB
       }
       // Convert the is_nullable field to a boolean
       $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? true : false;
-    
+
       $fields[] = array(
           'name' => $name,
           'type' => $type,
@@ -261,12 +261,12 @@ class DB_pgsql extends DB
           'is_nullable' => $is_nullable
         );
     }
-    
+
     return $fields;
   }
-  
+
   // Syntax methods
-  
+
   // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit($count, $offset)
   {
@@ -327,8 +327,8 @@ class DB_pgsql extends DB
   {
     return "#";
   }
-  
-  
+
+
   // Returns the syntax for a simple split of a column's value into two
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
@@ -345,7 +345,7 @@ class DB_pgsql extends DB
         throw new Exception("Invalid value ($part) given for " . '$part.');
         break;
     }
-    
+
     $params[] = $delimiter;
     return "SPLIT_PART($fieldname, ?, $count)";
   }

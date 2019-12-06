@@ -13,7 +13,7 @@ use MRBS\Form\ElementInputSubmit;
 function invalid_booking($message)
 {
   global $day, $month, $year, $area, $room;
-  
+
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
@@ -96,18 +96,18 @@ $form_vars = array(
   'timetohighlight'    => 'int',
   'commit'             => 'string'
 );
-      
+
 foreach($form_vars as $var => $var_type)
 {
   $$var = get_form_var($var, $var_type);
-  
+
   // Trim the strings and truncate them to the maximum field length
   if (is_string($$var))
   {
     $$var = trim($$var);
     $$var = truncate($$var, "entry.$var");
   }
-  
+
 }
 
 // Validate the create_by variable, checking that it's the current user, unless the
@@ -154,7 +154,7 @@ $custom_fields = array();
 
 // Get the information about the fields in the entry table
 $fields = db()->field_info($tbl_entry);
-          
+
 foreach($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -176,10 +176,10 @@ foreach($fields as $field)
         $f_type = 'string';
         break;
     }
-    
+
     $var = VAR_PREFIX . $field['name'];
     $custom_fields[$field['name']] = get_form_var($var, $f_type);
-    
+
     if (($f_type == 'int') && ($custom_fields[$field['name']] === ''))
     {
       $custom_fields[$field['name']] = null;
@@ -191,14 +191,14 @@ foreach($fields as $field)
     {
       $custom_fields[$field['name']] = ($custom_fields[$field['name']]) ? true : false;
     }
-    
+
     // Trim any strings and truncate them to the maximum field length
     if (is_string($custom_fields[$field['name']]) && ($field['nature'] != 'decimal'))
     {
       $custom_fields[$field['name']] = trim($custom_fields[$field['name']]);
       $custom_fields[$field['name']] = truncate($custom_fields[$field['name']], 'entry.' . $field['name']);
     }
-    
+
   }
 }
 
@@ -239,7 +239,7 @@ if (!$is_ajax)
   {
     invalid_booking(get_vocab('invalid_rep_interval'));
   }
-  
+
   if (count($is_mandatory_field))
   {
     foreach ($is_mandatory_field as $field => $value)
@@ -255,7 +255,7 @@ if (!$is_ajax)
         }
       }
     }
-  }        
+  }
 }
 
 if (!isset($type))
@@ -270,7 +270,7 @@ if (isset($month_relative_ord) && isset($month_relative_day))
 
 // Handle private booking
 // Enforce config file settings if needed
-if ($private_mandatory) 
+if ($private_mandatory)
 {
   $isprivate = $private_default;
 }
@@ -310,7 +310,7 @@ if ($no_mail)
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
 // the rest from the existing boking information.
-// Note: we assume that 
+// Note: we assume that
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($is_ajax && $commit)
@@ -472,9 +472,9 @@ if ($enable_periods)
 }
 
 // Round down the starttime and round up the endtime to the nearest slot boundaries
-// (This step is probably unnecesary now that MRBS always returns times aligned
+// (This step is probably unnecessary now that MRBS always returns times aligned
 // on slot boundaries, but is left in for good measure).
-$am7 = get_start_first_slot($start_month, $start_day, $start_year);                 
+$am7 = get_start_first_slot($start_month, $start_day, $start_year);
 $start_time = round_t_down($start_time, $resolution, $am7);
 $end_time = round_t_up($end_time, $resolution, $am7);
 
@@ -525,7 +525,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
       $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
     }
   }
-  
+
   // Make sure that the starttime coincides with a repeat day.  In
   // other words make sure that the first starttime defines an actual
   // entry.   We need to do this because if we are going to construct an iCalendar
@@ -533,7 +533,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   // a series.  ["The "DTSTART" property for a "VEVENT" specifies the inclusive
   // start of the event.  For recurring events, it also specifies the very first
   // instance in the recurrence set."]
-  
+
   $rep_details = array('rep_type'       => $rep_type,
                        'rep_opt'        => $rep_opt,
                        'rep_interval'   => $rep_interval);
@@ -575,7 +575,7 @@ if (!$is_ajax || $commit)
 }
 
 // Set up the return URL.    As the user has tried to book a particular room and a particular
-// day, we must consider these to be the new "sticky room" and "sticky day", so modify the 
+// day, we must consider these to be the new "sticky room" and "sticky day", so modify the
 // return URL accordingly.
 
 // First get the return URL basename, having stripped off the old query string
@@ -599,7 +599,7 @@ if (isset($returl) && ($returl !== ''))
   }
 }
 
-if (empty($returl) || 
+if (empty($returl) ||
     in_array($returl, array('edit_entry.php',
                             'edit_entry_handler.php',
                             'search.php')))
@@ -619,7 +619,7 @@ if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkd
 if (!in_array($room, $rooms))
 {
   $room = $rooms[0];
-} 
+}
 // Find the corresponding area
 $area = mrbsGetRoomArea($room);
 
@@ -630,13 +630,13 @@ $vars = array('view'  => (isset($view)) ? $view : $default_view,
               'day'   => $day,
               'area'  => $area,
               'room'  => $room);
-              
+
 $returl .= '?' . http_build_query($vars, '', '&');
 
 
 // Check to see whether this is a repeat booking and if so, whether the user
 // is allowed to make/edit repeat bookings.   (The edit_entry form should
-// prevent you ever getting here, but this check is here as a safeguard in 
+// prevent you ever getting here, but this check is here as a safeguard in
 // case someone has spoofed the HTML)
 if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !is_book_admin($rooms) &&
@@ -696,20 +696,20 @@ foreach ($rooms as $room_id)
 
   // Set the various statuses as appropriate
   // (Note: the statuses fields are the only ones that can differ by room)
-  
+
   // Privacy status
   $booking['private'] = (bool) $isprivate;
-  
+
   // If we are using booking approvals then we need to work out whether the
   // status of this booking is approved.   If the user is allowed to approve
   // bookings for this room, then the status will be approved, since they are
   // in effect immediately approving their own booking.  Otherwise the booking
   // will need to approved.
   $booking['awaiting_approval'] = ($approval_enabled && !is_book_admin($room_id));
-  
+
   // Confirmation status
   $booking['tentative'] = ($confirmation_enabled && !$confirmed);
-  
+
   $bookings[] = $booking;
 }
 
@@ -728,12 +728,12 @@ if (!db()->mutex_lock($tbl_entry))
 }
 
 db()->begin();
-  
+
 $transaction_ok = true;
 
 $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
-// If we weren't just checking and this was a succesful booking and
+// If we weren't just checking and this was a successful booking and
 // we were editing an existing booking, then delete the old booking
 if (!$just_check && $result['valid_booking'] && isset($id))
 {
@@ -761,7 +761,7 @@ if ($is_ajax)
   {
     // Generate the new HTML
     require_once "functions_table.inc";
-    
+
     switch ($view)
     {
       case 'day':
@@ -790,7 +790,7 @@ if ($result['valid_booking'])
 else
 {
   print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
-    
+
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!empty($result['violations']['errors']))
   {
@@ -825,11 +825,11 @@ $form = new Form();
 
 $form->setAttributes(array('method' => 'post',
                            'action' => $returl));
-                           
-$submit = new ElementInputSubmit(); 
+
+$submit = new ElementInputSubmit();
 $submit->setAttribute('value', get_vocab('back'));
 $form->addElement($submit);
-                 
+
 $form->render();
 
 
@@ -839,10 +839,10 @@ if (empty($result['violations']['errors'])  &&
     isset($rep_type) && ($rep_type != REP_NONE))
 {
   $form = new Form();
-  
+
   $form->setAttributes(array('method' => 'post',
                              'action' => this_page()));
-                             
+
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round
   // First the ordinary fields
@@ -876,9 +876,9 @@ if (empty($result['violations']['errors'])  &&
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array('value' => get_vocab('skip_and_book'),
                                'title' => get_vocab('skip_and_book_note')));
-  
+
   $form->addElement($submit);
-  
+
   $form->render();
 }
 

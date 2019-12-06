@@ -28,9 +28,9 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
 {
   // We use some functions from here
   require_once "functions.inc";
-  
+
   global $cli_params, $allow_cli, $get, $post;
-  
+
   // Set the default value, and make sure it's the right type
   if ($var_type == 'array')
   {
@@ -40,7 +40,7 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   {
     $value = $default;
   }
-  
+
    // Get the command line arguments if any (and we're allowed to),
    // otherwise get the POST variables
   if ($allow_cli && (!empty($cli_params) && isset($cli_params[$var])))
@@ -52,14 +52,14 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   {
     $value = $post[$var];
   }
-  
+
   // Then get the GET variables
   if ((!isset($source) || ($source === INPUT_GET)) &&
       (!empty($get) && isset($get[$var])))
   {
     $value = $get[$var];
   }
-  
+
   // Cast to an array if necessary
   if ($var_type == 'array')
   {
@@ -87,7 +87,7 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
       }
     }
   }
-  
+
   return $value;
 }
 
@@ -101,7 +101,7 @@ if (defined('ABSPATH'))  // standard test for WordPress
 
 // Unfotunately, in WordPress all $_GET, $_POST, $_COOKIE and $_SERVER superglobals are
 // slashed, regardless of the setting of magic_quotes.   So if we are using the
-// WordPress authentication and session scemes then this will happen when the WordPress
+// WordPress authentication and session schemes then this will happen when the WordPress
 // files are included.  To get round this we take a local copy of $_GET and $_POST
 // before the WordPress files are included.   (There's no need to do this with $_SERVER
 // because we process $_SERVER when this file is included and we make sure that the

@@ -224,7 +224,7 @@ Version 1.7.0 (Thu Nov 16th 2017):
  See SF Bugs #379.
 [*] Eliminated $locale_warning global and moved reporting of locale
  setting problems to the error mechanism rather than the browser.
-[*] Improved localisation, especially for French, colons are no longer 
+[*] Improved localisation, especially for French, colons are no longer
  hard-coded in HTML and instead populated by CSS.
 [*] Removed the supplementary information in the 'fulldescription' text
  string. It didn't help and indeed was misleading as things like the
@@ -340,7 +340,7 @@ Version 1.6.0 (Sat Feb 11th 2017):
 [*] Added a check to make sure that custom field names don't contain
  spaces. (See SF Support Requests #816)
 [*] Improved debugging in auth_ldap a bit, to show errors from the ldap
- extension.  
+ extension.
 [-] Fixed a problem with the end time not being selected on the booking
 	form if the default duration is not an integral number of slots
 [-] Moved the PHP version check to happen earlier, otherwise MRBS will
@@ -359,7 +359,7 @@ Version 1.6.0 (Sat Feb 11th 2017):
 [*] Changed MRBS default behaviour to be *not* to use persistent
  database connections, as they can cause problems with transactions
  and locks. At the same time changed the config variable to be
- $db_persist instead of $db_nopersist. 
+ $db_persist instead of $db_nopersist.
 [*] Added sha256 authentication support for db_ext auth scheme. [Markus Gilli]
 [*] Added ablility to read user access level from external database to
  db_ext auth scheme.[Markus Gilli]
@@ -418,7 +418,7 @@ Version 1.6.0 (Sat Feb 11th 2017):
  Bugs #362.
 [-] Fixed potential problem with end time selector in edit_entry.php
  being blank when coming from the month view. See SF Support Requests
- #983. 
+ #983.
 [+] Added Wordpress authentication scheme.
 [*] Got rid of usage of $HTTP_GET_VARS, $HTTP_POST_VARS and
  $HTTP_SERVER_VARS (no longer necessary)
@@ -475,12 +475,12 @@ Version 1.6.0 (Sat Feb 11th 2017):
 [-] Fixed bug that allowed the type colour to be shown even when the
  type was private. See SF bugs #372.
 [-] Fixed bug preventing an event whose room name includes the area-room
- separator from being imported. 
+ separator from being imported.
 [*] Added the ability to recocgnise type information in imported .ics
  files using the X-MRBS-TYPE property.
 [*] Added the ability to specify a default room if no LOCATION property
  is given when importing a VEVENT
-  
+
 -------------------------------------------------------------------------------
 Version 1.5.0 (Fri Oct 23rd 2015):
 
@@ -576,7 +576,7 @@ Version 1.5.0 (Fri Oct 23rd 2015):
  Requests #609
 [+] Added support for LDAP dereferencing behaviour, based on
  [patches:#56]
-[*] Updated the 'db' auth scheme to default to storing password hashs in
+[*] Updated the 'db' auth scheme to default to storing password hashes in
  PHP's 'password_hash' format, if the password_hash() function is
  functional.
 [-] Fixed bug causing problem upgrading when using PostgreSQL with
@@ -605,7 +605,7 @@ Version 1.5.0 (Fri Oct 23rd 2015):
  conflicts are skipped (see SF Bugs #334). Added upgrade code to fix
  existing database entries with no ical_uid.
 [-] Fixed problems with database schema version upgrades 17, 24 and 25.
- 
+
 -------------------------------------------------------------------------------
 Version 1.4.11 (Wed Jun 18 22:00:00 BST 2014):
 
@@ -805,7 +805,7 @@ Patches #35.
  recipients. Thanks to Tuomas. See SF Patches #37.
 [*] Disabled E_STRICT errors (see SF Bugs #272).
 [-] Fixed bug when using an SQL reserved word as a custom field name.
- 
+
 -------------------------------------------------------------------------------
 Version 1.4.9 (Wed Oct 03 22:00:00 BST 2012):
 
@@ -924,7 +924,7 @@ Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
  suggestion from Marco Tedaldi.
 [*] Made the week numbers and months in the mini calendars into
  links, following a suggestion by Marco Tedaldi.
-[-] iCalendar notifications expanded to allow more applications to 
+[-] iCalendar notifications expanded to allow more applications to
  understand times/time zone information. See SF tracker 3324122.
 [*] Added database error checking and handling to sql_*_field_info().
 [-] Corrected a minor error in edit_entry Javascript, thanks to Guenter
@@ -965,7 +965,7 @@ Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
  specify most of the configuration parameters as arrays, so that
  you can have multiple servers or multiple base DNs that are
  configured in different ways.
- 
+
  Additionally, you can now determine whether a user is an
  administrator by defining LDAP configuration parameters:
  $ldap_group_member_attrib and $ldap_admin_group_dn. See
@@ -1009,7 +1009,7 @@ Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
  corners.
 [-] Correctly encode subject in delete notification mails.
 [-] Changed ical output so that some email clients no longer get
- booking automatically imported into their calender, without any
+ booking automatically imported into their calendar, without any
  user action.
 [-] Fixed bug whereby $auth['only_admin_can_book'] didn't work as required
  if $auth['deny_public_access'] was set.
@@ -1061,7 +1061,7 @@ Version 1.4.8 (Sun Jan 01 22:00:00 GMT 2012):
 [*] Limited the timezones presented in the timezone drop-down box on
  the Edit Area page to those that have a corresponding VTIMEZONE
  definition.
- 
+
 -------------------------------------------------------------------------------
 Version 1.4.7 (Wed Jul 13 21:20:00 BST 2011):
 
@@ -1097,7 +1097,7 @@ Version 1.4.7 (Wed Jul 13 21:20:00 BST 2011):
 [*] Removed unnecessary <span> in the trailer. Thanks to patch from
  Thomas Bleher.
 [*] Updated German translation, thanks to SF tracker #3293801.
-[*] Clarified documention in auth_ext.php a little.
+[*] Clarified documentation in auth_ext.php a little.
 [*] Added some email debug information to help diagnose problems when
  sending emails.
 [*] Extracted the per-area default settings from systemdefaults and
@@ -1133,7 +1133,7 @@ Version 1.4.7 (Wed Jul 13 21:20:00 BST 2011):
 [-] A fix for use an uninitialised array in
  Themes/default/header.inc, as reported (and fix provided) by
  Henry Thompson on the mailing list.
- 
+
 -------------------------------------------------------------------------------
 Version 1.4.6 (Wed Feb 09 22:00:00 GMT 2011):
 
@@ -1217,7 +1217,7 @@ Version 1.4.5 (Mon Nov 22 22:00:00 GMT 2010):
 [+] Added the ability to prevent ordinary users from selecting multiple
  rooms when making a booking. Controlled by the config variable
  $auth['only_admin_can_select_multiroom'].
-[*] Updated translations for: Portugese, Dutch, Swedish, Norwegian,
+[*] Updated translations for: Portuguese, Dutch, Swedish, Norwegian,
  German, French.
 [+] Added a new configuration variable to set the default booking 'type',
  $default_type.
@@ -1317,7 +1317,7 @@ Version 1.4.4 (Wed Apr 21 17:00:00 BST 2010):
 [-] Fixed bug when using periods which meant that if you made a
  booking for N periods and there were fewer than N periods left in
  the day, the booking didn't flow on to the next day properly
- unless the start period was the first period of the day. 
+ unless the start period was the first period of the day.
 [-] Fixed bug which caused the duration to be blank in email
  notifications for bookings when "All day" was checked.
 [-]  Partially fixed a problem to do with the handling of All Day
@@ -1389,7 +1389,7 @@ Version 1.4.3 (Tue Nov 24 22:00:00 GMT 2009):
  client charset if $unicode_encoding is true.
 
 -------------------------------------------------------------------------------
-Version 1.4.2 (Thu July 15 00:00 BST 2009): 
+Version 1.4.2 (Thu July 15 00:00 BST 2009):
 
 [+] Added checking of lengths of values for user-typeable fields, so that
  overly long field values aren't passed to the MRBS database, - something
@@ -1752,7 +1752,7 @@ Version 1.2.1 (Fri Dec 10 10:00:00 GMT 2004):
 [*] RFE 1000967 - enhanced email notifications. (Neil Hawes, Stuart
       Chalmers)
 [-] Bug 1068522 fixed, changed "" around $db_password value in
-      config.inc.php to '' so that special characters are not interpeted.
+      config.inc.php to '' so that special characters are not interpreted.
       (Matt Schuler)
 [-] Bug 1035790 fixed, can now book series with pgsql. (Thekk)
 [-] Bug 994056 fixed, emails are sent when they should be now to who they
@@ -1770,7 +1770,7 @@ Version 1.2.1 (Fri Dec 10 10:00:00 GMT 2004):
 [*] Updated Netherlands translation (Marc ter Horst)
 [-] MRBS now sends content-type and charset in an HTTP header, which can
       fix some Apache installations where a charset if forced in the
-      config. 
+      config.
 
 
 -------------------------------------------------------------------------------
@@ -1869,33 +1869,33 @@ read /web/Changelog file from Dec 07 2003.
 Version 1.2-pre2 (Sun Dec 07 00:00:00 GMT 2003):
 
 [+] Completely revamped authentication logic.
-    Now MRBS make use of sessions to store temporary user informations,
-    ability to log on/off, and so on.. This is now the default mode.
+    Now MRBS make use of sessions to store temporary user data,
+    ability to log on/off, and so on... This is now the default mode.
     See AUTHENTICATION for more details.
 [+] Revamped localisation.
       Automatic language determination made much better, works for
 	  Windows and Unix servers now
 [+] Added utility to convert text in the database to UTF8.
-[+] Revamped internationalisation. MRBS can now be called  fulled Unicode. 
-      MRBS serves all of it's pages in UTF-8 and stores everything in the 
+[+] Revamped internationalisation. MRBS can now be called  fulled Unicode.
+      MRBS serves all of it's pages in UTF-8 and stores everything in the
       database in UTF-8. This means that all languages work together.
-[+] Bubbles are displayed when mouse hover entries in day, week and month 
+[+] Bubbles are displayed when mouse hover entries in day, week and month
       view, showing a more complete description.
-[+] Allow to view weeks in the bottom of the web pages as week numbers 
+[+] Allow to view weeks in the bottom of the web pages as week numbers
       instead of 'first day of the week' (Per Wermelin - SKIOLD Sæby A/S"
 	  <ela@skiold.dk>).
 [*] Added a new script for the "ext" authentication scheme that
 	  allows you to use a password file with usernames and their
 	  crypted passwords.
-[-] Fixed bug #853410: When changing a non n-weekly entry, field "Number of 
+[-] Fixed bug #853410: When changing a non n-weekly entry, field "Number of
       weeks (for n-weekly)" appear...
 [-] Fixed bug #846337: We can create rooms with no area
-[-] Fixed bug #413175, #831310: Daylight savings time shift entries one hour 
-[-] Fixed bug: Always displays "Edit Entry" instead of "Edit Series" at top 
-      of page when editing a serie.
+[-] Fixed bug #413175, #831310: Daylight savings time shift entries one hour
+[-] Fixed bug: Always displays "Edit Entry" instead of "Edit Series" at top
+      of page when editing a series.
 [-] Fixed bug in pop3 auth scheme.
 [-] and several other minor bug fixes.
-[*] Warning: MRBS does not work with postgreSQL 7.3 and above. 
+[*] Warning: MRBS does not work with postgreSQL 7.3 and above.
 
 -------------------------------------------------------------------------------
 Version 1.2-pre1 (Tue Sep 23 06:00:00 GMT 2003):
@@ -1928,23 +1928,23 @@ Version 1.2-pre1 (Tue Sep 23 06:00:00 GMT 2003):
 [+] Added translation: Finnish (Vesa Palmu), Portuguese (Lopo Pizarro),
     Danish (Claes Bolvig Pedersen).
 [*] Minor translations updates an bug fixes
-[-] Bug fix if drop-down select box is choosen to show areas/rooms
+[-] Bug fix if drop-down select box is chosen to show areas/rooms
 [*] Changed the tiny size of numbers in calendar to
       a larger one.
-      
+
 -------------------------------------------------------------------------------
 Version 1.1 (Tue Jan 14 10:00:00 GMT 2003)
 
 [+] Added configuration option ($twentyfourhour_format) to allow time
         formats to be changed to 12 hour format.
-[*] Updated all language files to be consistant
+[*] Updated all language files to be consistent
 [*] Changed minicals so they point to week when on week view and month on
         month view, rather than always pointing at day view
-[*] Changed occurences of "<?=" to "<?php echo" which means we still
+[*] Changed occurrences of "<?=" to "<?php echo" which means we still
         use the long tag form everywhere.
 [*] Removed all remainings english strings to make MRBS 100% translatable
         * Added new $vocab to del.php, edit_area_room.php, edit_entry.php,
-          edit_entry_handler.php, help.php, mysql.inc, pgsql.inc, 
+          edit_entry_handler.php, help.php, mysql.inc, pgsql.inc,
           view_entry.php, functions.inc
 [+] Modified config.inc language section to choose a site_faq.html file
         translated in another language.
@@ -1969,7 +1969,7 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2003)
 [-] Fixes submitted/suggested by Jean-François Larvoire:
         * Added closing ?> to index.php
         * Added "global $refresh_rate;" to style.inc
-        * Fixed all occurences (hopefully) of $vocab[] indices
+        * Fixed all occurrences (hopefully) of $vocab[] indices
           written without surrounding quotes.
 [*] Changed all uses of <? to <?php.
 [+] Merged change from John Beranek for an Advanced search function,
@@ -1977,7 +1977,7 @@ Version 1.1-pre2 (Thu Jan  9 17:50:00 GMT 2003)
         each language file, "search_button" should be OK, as I took
         the text from each language's "search" token.
 [-] Fixed 2 problems in edit_entry.php as submitted on the mailing list.
-[*] Added small enchancement to smb_auth.c, if you pass a username
+[*] Added small enhancement to smb_auth.c, if you pass a username
         as group/user, it will change the NT group that is used for
         authentication.
 [*] Improved shell escaping in auth_ext.inc. It now uses
@@ -2018,13 +2018,13 @@ Version 1.1-pre1 (Thu May 30 12:41:02 BST 2002)
 [*] extra javascript validation around n-weekly bookings
 [-] extra array index quoting to stop newer php warnings
 [*] Commented all authentication schemes (jberanek)
-[*] Change mrbs_repeat schema for postgres (mrbs_repeat.rep_num_weeks => 
+[*] Change mrbs_repeat schema for postgres (mrbs_repeat.rep_num_weeks =>
         smallint)
 [*] replace poxix_uname with php_uname function for portability
 [-] Declare $HTTP_ACCEPT_LANGUAGE global in config.inc
 [-] some int casts to fix a bug from sourceforge
 [*] language files normalised
-[*] update translations: 
+[*] update translations:
         Norway, Rune Johansen
         France,
         Italy, Gianni
@@ -2045,9 +2045,9 @@ Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
         time for roombooker web pages.  Set config variable $refresh_rate to the
         number of seconds to refresh after, or set to 0 to disable.
 [+] Implemented "n-weekly" repeat type. Not sure I like the way it's phrased in
-        the lang files, but the code works fine.  You can now have a meeting 
-        that is repeated every 'n' weeks. e.g. every 5th Monday.  This required 
-        a database change, which I've made available in upgrade2.my.sql and 
+        the lang files, but the code works fine.  You can now have a meeting
+        that is repeated every 'n' weeks. e.g. every 5th Monday.  This required
+        a database change, which I've made available in upgrade2.my.sql and
         upgrade2.pg.sql
 [*] Tidied lang files, and ensured every file has all the required tokens.
         'wc -l lang.*' now shows all the files as having the same line count.
@@ -2071,7 +2071,7 @@ Version 1.0-pre2 (Sun Jul  8 13:43:53 BST 2001)
 Version 1.0-pre1 (Sun Mar  4 23:26:43 GMT 2001)
 
 [*] Internationalised functions.inc. "Help", "Admin" and "Search:" are now lang
-        strings. Also, fixed an error in lang.fr, $vocab["mrbs"] was defined 
+        strings. Also, fixed an error in lang.fr, $vocab["mrbs"] was defined
         twice. (jberanek)
 [*] Added double quotes around all uses of color and class attributes, as HTML
         dictates. (jberanek)
@@ -2106,7 +2106,7 @@ Branch mrbs-0-9-1xp (2001-02-10 ljb):
         Replaced connect.inc with mysql.inc and pgsql.inc.
         New variable in config.inc "$dbsys" selects "mysql" or "pgsql".
         Renamed variables in config.inc to replace "mysql_" prefix with "db_".
-        New wrapper funtions (see README.sqlapi) to encapsulate database calls.
+        New wrapper functions (see README.sqlapi) to encapsulate database calls.
         New pgsql.inc provides PostgreSQL implementation, and connects.
         New mysql.inc provides MySQL implementation, and connects.
         Rewrote all database calls to use wrapper functions.
@@ -2139,7 +2139,7 @@ Branch mrbs-0-9-1xp (2001-02-10 ljb):
         not need authentication so they don't need to include mrbs_auth.inc.
         Removed redundant connect to datbase in search.php.
 [*] New error function fatal_error() to ensure errors are in a proper HTML page.
-[+] Added new repeat type 5: Montly repeat, corresponding weekday and week.
+[+] Added new repeat type 5: monthly repeat, corresponding weekday and week.
 [+] New authentication for Netware: auth_nw.inc (see README.nwauth). This is
         needed because nwauth takes the password on stdin, not cmdline.
 [*] Used weblint to validate output pages and corrected HTML where needed.
@@ -2168,7 +2168,7 @@ Branch mrbs-0-9-1xp (2001-02-10 ljb):
         area as a hidden parameter if it wasn't supplied in the first place.
 [*] Patch from BoK: Booking repeat Sat/Sun, only entered first Sun.
 [*] Fixes to PHP magic quoting. We now turn of magic_quotes_runtime always,
-        and use new slashes() and unslashes() to conditionaly deal with
+        and use new slashes() and unslashes() to conditionally deal with
         backslack-quotes depending on value of PHP's magic_quotes_gpc setting.
         NOTE: Possibly slightly incompatible change. Prior versions may have
         put pre-quoted values (area name, room name, booking name, booking
@@ -2207,7 +2207,7 @@ Branch mrbs-0-9-1xp (2001-02-10 ljb):
 -------------------------------------------------------------------------------
 Version 0.9.1 (Sun Feb  4 21:56:09 GMT 2001)
 
-[-] Fixed bug in mincals (sourceforge 'nobody') 
+[-] Fixed bug in mincals (sourceforge 'nobody')
 
 -------------------------------------------------------------------------------
 Version 0.9 (Sun Feb  4 21:40:16 GMT 2001)
@@ -2237,10 +2237,10 @@ Version 0.9-pre1 (13:00 Fri August 2000)
 [-] A few minor bug fixes.
 [*] Authentication is finally in properly
 [+] Big UI change, provides a toolbar at the top, help, the ability
-        to search and other usefull stuff.
+        to search and other useful stuff.
 [+] A help file for the users.
 [*] Another LDAP authentication method, this one uses `ldapsearch'
-   
+
         Thanks to Mark Belanger <mark_belanger@ltx.com> for most of this.
 
 -------------------------------------------------------------------------------
@@ -2266,11 +2266,11 @@ Version 0.8-pre5 (Thurs July 13 11:50 2000)
 
 [*] Improved "Conflict detection" code
 [*] Lots of date/time handling improvements
-    
+
 -------------------------------------------------------------------------------
 Version 0.8-pre4 (Wed July 12 11:00 2000)
 
-[+] Added repeat entrys
+[+] Added repeat entries
 [+] Added French language file
 [*] Updated German language file
 [*] Made the "view_entry" screen nicer
@@ -2290,8 +2290,8 @@ Version 0.8-pre2 (Wed Jun 21 11:34:20 GMT 2000)
 [+] Added Dutch language file
 [+] Added German language file
 [+] Added Traditional Chinese language file
-[+] Explicity set charset (from language file)
-    
+[+] Explicitly set charset (from language file)
+
 -------------------------------------------------------------------------------
 Version 0.8-pre1 (Fri Jun 16 08:22:19 GMT 2000)
 
@@ -2299,7 +2299,7 @@ Version 0.8-pre1 (Fri Jun 16 08:22:19 GMT 2000)
 [*] Better support for bookings spanning multiple days
 [+] User can specify "Whole Day" bookings
 [+] Units other than "Hours" are supported (Mins, Hours, Days, Weeks)
-    
+
         Thanks to Sam Mason <smason@mtc.ricardo.com> for much of this
 
 -------------------------------------------------------------------------------

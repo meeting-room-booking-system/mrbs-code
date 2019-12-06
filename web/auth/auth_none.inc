@@ -18,14 +18,14 @@ namespace MRBS;
  * $auth["admin"][] = "nt_username1";
  * $auth["admin"][] = "nt_username2";
  *
- * See AUTHENTICATION  for more informations.
+ * See AUTHENTICATION  for more information.
  */
 
-/** 
+/**
  * Checks if the specified username/password pair are valid.
  *
  * For this authentication scheme always validates.
- * 
+ *
  * @param   string  $user   The user name
  * @param   string  $pass   The password
  * @return  string  $user   Always valid
@@ -37,9 +37,9 @@ function authValidateUser($user, $pass)
 
 
 /* authGetUserLevel($user)
- * 
+ *
  * Determines the user's access level
- * 
+ *
  * $user - The user name
  *
  * Returns:
@@ -77,7 +77,7 @@ function authGetUserEmail($user)
   {
     return '';
   }
-  
+
   return get_default_email($user);
 }
 
