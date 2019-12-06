@@ -14,17 +14,17 @@ to know how to install, secure, run, maintain, and back up your chosen database 
 MRBS also requires that 'iconv' PHP extension, to provide
 internationalisation.
 
-You can run PHP either as a CGI or with a direct module interface (also called 
-SAPI). These servers include Apache, Microsoft Internet Information Server, 
-Netscape and iPlanet servers. Many other servers have support for ISAPI, the 
+You can run PHP either as a CGI or with a direct module interface (also called
+SAPI). These servers include Apache, Microsoft Internet Information Server,
+Netscape and iPlanet servers. Many other servers have support for ISAPI, the
 Microsoft module interface.
-You'll get better performance with PHP setup as a module.  Not only will you 
+You'll get better performance with PHP setup as a module.  Not only will you
 not have to deal with the CGI performance hit, but you'll be able to use PHP's
 database connection pooling. However, be careful that you don't exceed
 the maximum number of connections allowed to your database; with connection
 pooling PHP/Apache can potentially create a connection from each Apache
-child server to the database. 
-Also many MRBS authentication schemes use basic HTTP authentication. These 
+child server to the database.
+Also many MRBS authentication schemes use basic HTTP authentication. These
 don't work if you run PHP as a CGI.
 
 If you are using PHP as an Apache module, you probably want to ensure that
@@ -53,7 +53,7 @@ If you are using a remote webserver, unpack the files into a temporary
 directory on your local machine and then upload them to suitable directory
 on your webserver, for example mydomain.com/mrbs
 
-If you are using a Unix/Linux webserver to which you have access, then 
+If you are using a Unix/Linux webserver to which you have access, then
 an example of the installation might be:
 
 Unpack the software into a new temporary directory, something like this:
@@ -74,7 +74,7 @@ Now install MRBS by copying the contents of the "web" subdirectory of the
 distribution somewhere your web server can find it.  For example:
     $ cp -r web /var/lib/apache/htdocs/mrbs
 
-    
+
 CREATING THE MRBS TABLES IN YOUR DATABASE
 ---------------------------------------------------------------------------
 For a new install:
@@ -175,20 +175,20 @@ depends on its maximum length, with the breakpoint determined by a configuration
 variable. Ints are treated as integer types, as you would expect.   However
 smallints and tinyints are assumed to be booleans and are displayed as checkboxes.
 
-[Note:  smallints are assumed to be booleans because the boolean type in 
+[Note:  smallints are assumed to be booleans because the boolean type in
 PostgreSQL presents some problems in PHP when trying to process the results
-of a query in a database independent way, so it is more convenient to use a 
+of a query in a database independent way, so it is more convenient to use a
 smallint instead of a boolean in PostgreSQL.]
 
 Text descriptions are set in the config file using the $vocab_override variable
 using the appropriate language(s) and with the tag room.column_name,
-eg room.coffee_machine, or users.phone enabling translations to be provided.   
+eg room.coffee_machine, or users.phone enabling translations to be provided.
 If not present, the column name will be used for labels etc.  If you are adding
-columns to the entry and repeat tables then you only need to add the 
+columns to the entry and repeat tables then you only need to add the
 entry.column_name tags:  you don't need to add a repeat.column_name tag.
 
 As an example, to add a field to the room table recording whether or not
-there is a coffee machine you would, in MySQL, add the column 
+there is a coffee machine you would, in MySQL, add the column
 
 coffee_machine     tinyint(1)
 
@@ -217,7 +217,7 @@ possible values.
 For custom fields only (will be extended later) it is also possible to use
 an associative array for $select_options, for example
 
-$select_options['entry.catering'] = array('c' => 'Coffee', 
+$select_options['entry.catering'] = array('c' => 'Coffee',
                                           's' => 'Sandwiches',
                                           'h' => 'Hot Lunch');
 
@@ -261,7 +261,7 @@ Technical explanation of the restriction on column names for custom fields
 --------------------------------------------------------------------------
 // Column names for custom fields are used by MRBS in a number of ways:
 // - as the column name in the database
-// - as part of an HTML name attibute for a form input
+// - as part of an HTML name attribute for a form input
 // - as part of a PHP variable name
 //
 // MySQL, PostgreSQL, HTML and PHP all have different rules for these tokens:
@@ -334,9 +334,9 @@ that of the server) then you have two choices:
 
 (a) to set the timezone to be the same as the previous timezone.   This will
 ensure that all your existing bookings still appear correctly, but you will
-have to continue to put up with some minor inconveniences.   For example 
-"Go to Today" will not always go to the today for your rooms, if you happen 
-to be using MRBS at a time of day when the rooms are on one day but the 
+have to continue to put up with some minor inconveniences.   For example
+"Go to Today" will not always go to the today for your rooms, if you happen
+to be using MRBS at a time of day when the rooms are on one day but the
 timezone you have selected is on the day before or after.   Also if you are
 using the min and max book ahead facility then you will find that this is out
 by the difference between the timezone of your rooms and the timezone you have
@@ -367,7 +367,7 @@ Then define your database connection parameters. Set the values for:
     $db_login =     The database login username
     $db_password =  The database login password for the above login username
 
-If the database server and web server are the same machine, use 
+If the database server and web server are the same machine, use
 $db_host="localhost". Or, with PostgreSQL only, you can use $db_host="" to
 use Unix Domain Sockets to connect to the database server on the same machine.
 
@@ -388,7 +388,7 @@ then you will need to set the value of:
 
     $db_tbl_prefix = The table name prefix
 
-    
+
 3.  Other Settings
 
 Now go through systemdefaults.inc.php and areadefaults.inc.php and see which other
@@ -413,7 +413,7 @@ There is a wide variety of settings that can be changed, including
 - entry types
 
 The comments in the systemdefaults.inc.php and areadefaults.inc.php files should
-explain the purpose of the various configuration variables and how to change them. 
+explain the purpose of the various configuration variables and how to change them.
 (Note that some of the settings can be set on a per-area basis through the area
 administration page in MRBS.   In this case the setting in the areadefaults.inc.php
 and config.inc.php files defines the default settings for new areas.)
@@ -429,7 +429,7 @@ All the text strings used by MRBS, except those used on the Help page, are held 
 series of lang.* files, for example lang.en for English, or lang.fr for French.   They
 are overridden by the $vocab_override array in the config file.  If you want to change
 some of the text strings used by MRBS, for example change "Room" to "Computer", then
-look for the appropriate string in the lang files, remember its tag and set the 
+look for the appropriate string in the lang files, remember its tag and set the
 $vocab_override variable in the config file.    For example
 
 $vocab_override['en']['ctrl_click'] = "Use Control-Click to select more than one computer";
@@ -457,7 +457,7 @@ Note: Upgrading MySQL database from previous charsets to Unicode :
   move it back out of the web directory. We recommend you backup your
   database before running this script if you are at all worried.
 
-  
+
 PERIODS
 ---------------------------------------------------------------------------
 When using periods, MRBS stores bookings internally as one minute slots
@@ -467,7 +467,7 @@ adjust the times of your existing bookings unless your new period is at
 the end of the day.
 
 The simplest example is when you want to add a new period at the start of
-the day.   In this case you will need to run some SQL using phpMyAdmin or 
+the day.   In this case you will need to run some SQL using phpMyAdmin or
 a similar program to move all bookings one minute later.  In this example
 the SQL required would be
 

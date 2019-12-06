@@ -236,7 +236,7 @@ else
  ***************************************/
 
  define('DOCTYPE', '<!DOCTYPE html>');
- 
+
  // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
  // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
  // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
@@ -251,16 +251,16 @@ define('DAYS_PER_WEEK',    7);
 define('MINUTES_PER_DAY',  24*60);
 define('SECONDS_PER_DAY',  MINUTES_PER_DAY * 60);
 define('SECONDS_PER_HOUR', 3600);
- 
+
 /*************************************************
  * REPORT constants - internal use, do not change
  *************************************************/
- 
-// Constant definitions for the value of the output parameter. 
+
+// Constant definitions for the value of the output parameter.
 define('REPORT',       0);
 define('SUMMARY',      1);
 
-// Constants defining the ouput format.
+// Constants defining the output format.
 define('OUTPUT_HTML',  0);
 define('OUTPUT_CSV',   1);
 define('OUTPUT_ICAL',  2);
@@ -282,7 +282,7 @@ define('FORMAT_PERIODS', "%d");
  /*************************************************
  * USED IN FORMS - internal use, do not change
  *************************************************/
- 
+
 // Regular expressions used to define mandatory text fields, eg the 'name' field.   The first
 // is a positive version used in the HTML5 pattern attribute.   The second is a negative version
 // used by JavaScript for client side validation if the browser does not support pattern validation.
@@ -294,15 +294,15 @@ define('REGEX_HHMM', '/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/');  // A time 
  /*************************************************
  * ENTRY TYPES - internal use, do not change
  *************************************************/
- 
+
  // The entry_type field in the entry table records the type of
  // booking as follows:
- 
+
  define('ENTRY_SINGLE',       0);  // A single entry that is not part of a series
  define('ENTRY_RPT_ORIGINAL', 1);  // An entry that is part of a series and has not been modified
  define('ENTRY_RPT_CHANGED',  2);  // An entry that is part of a series and has been modified
 
- 
+
 /*************************************************
  * ENTRY STATUS CODES - internal use, do not change
  *************************************************/
@@ -326,7 +326,7 @@ define('STATUS_TENTATIVE',         0x04);
 /*************************************************
  * REPEAT TYPE CODES - internal use, do not change
  *************************************************/
- 
+
 define('REP_NONE',            0);
 define('REP_DAILY',           1);
 define('REP_WEEKLY',          2);
@@ -349,7 +349,7 @@ define('TZDIR_OUTLOOK', 'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL 
 /*****************************************
  * ICALENDAR - internal use, do not change
  *****************************************/
- 
+
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
 
@@ -390,7 +390,7 @@ $standard_fields['entry'] = array('id',
                                   'ical_uid',
                                   'ical_sequence',
                                   'ical_recur_id');
-                                  
+
 $standard_fields['repeat'] = array('id',
                                    'start_time',
                                    'end_time',
@@ -425,7 +425,7 @@ $standard_fields['room'] = array('id',
                                  'room_admin_email',
                                  'custom_html');
 
-// Boolean fields.    These are fields which are treated as booleans                                
+// Boolean fields.    These are fields which are treated as booleans
 $boolean_fields['area'] = array('area_disabled',
                                 'default_duration_all_day',
                                 'private_enabled',
@@ -446,16 +446,16 @@ $boolean_fields['area'] = array('area_disabled',
                                 'enable_periods',
                                 'confirmation_enabled',
                                 'confirmed_default');
-                                
+
 // Permitted values for 'private_override'
 $private_override_options = array('none', 'public', 'private');
-                                   
+
 /********************************************************
  * Miscellaneous
  ********************************************************/
 // Save some of the default per-area settings for later use.   We
 // do this because they will get overwritten by the values for
-// the current area in a moment - in standard_vars.inc by a call to 
+// the current area in a moment - in standard_vars.inc by a call to
 // get_area_settings().   [This isn't a very elegant way of handling
 // per-area settings and perhaps ought to be revisited at some stage]
 
@@ -517,7 +517,7 @@ define('DEL_ENTRIES_AJAX_BATCH_SIZE', 100);
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
 
- 
+
 /********************************************************
  * JavaScript - internal use, do not change
  ********************************************************/

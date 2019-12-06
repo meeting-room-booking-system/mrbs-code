@@ -6,7 +6,7 @@ use MRBS\Form\Form;
 
 // Deletes an entry, or a series.    The $id is always the id of
 // an individual entry.   If $series is set then the entire series
-// of wich $id is a member should be deleted. [Note - this use of
+// of which $id is a member should be deleted. [Note - this use of
 // $series is inconsistent with use in the rest of MRBS where it
 // means that $id is the id of an entry in the repeat table.   This
 // should be fixed sometime.]
@@ -59,7 +59,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
     $area  = mrbsGetRoomArea($info["room_id"]);
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
-    
+
     $notify_by_email = $mail_settings['on_delete'] && need_to_send_mail();
 
     if ($notify_by_email)
@@ -74,9 +74,9 @@ if ($info = get_booking_info($id, FALSE, TRUE))
         $mail_previous['entry_type'] = ENTRY_RPT_CHANGED;
       }
     }
-    
+
     $start_times = mrbsDelEntry($id, $series, 1);
-    
+
     // [At the moment MRBS does not inform the user if it was not able to delete
     // an entry, or, for a series, some entries in a series.  This could happen for
     // example if a booking policy is in force that prevents the deletion of entries
@@ -88,9 +88,9 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       if ($notify_by_email)
       {
         // Now that we've finished with mrbsDelEntry, change the id so that it's
-        // the repeat_id if we're looking at a series.   (This is a complete hack, 
+        // the repeat_id if we're looking at a series.   (This is a complete hack,
         // but brings us back into line with the rest of MRBS until the anomaly
-        // of del_entry is fixed) 
+        // of del_entry is fixed)
         if ($series)
         {
           $mail_previous['id'] = $mail_previous['repeat_id'];

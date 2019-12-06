@@ -83,7 +83,7 @@ if (empty($area))
   throw new \Exception('$area is empty');
 }
 
-// Intialise the error array
+// Initialise the error array
 $errors = array();
 
 // Clean up the address list replacing newlines by commas and removing duplicates
@@ -104,7 +104,7 @@ if (!preg_match(REGEX_HHMM, $area_start_first_slot) ||
   $errors[] = 'invalid_time_format';
 }
 else
-{   
+{
   // Get morningstarts and eveningends
   list($area_morningstarts, $area_morningstarts_minutes) = explode(':', $area_start_first_slot);
   list($area_eveningends, $area_eveningends_minutes) = explode(':', $area_start_last_slot);
@@ -125,7 +125,7 @@ else
                   'area_max_create_ahead_value',
                   'area_min_delete_ahead_value',
                   'area_max_delete_ahead_value');
-                  
+
     foreach ($vars as $var)
     {
       if (isset($$var))
@@ -162,7 +162,7 @@ else
 
 
   if (!$area_enable_periods)
-  { 
+  {
     // Avoid divide by zero errors
     if ($area_res_mins == 0)
     {
@@ -173,16 +173,16 @@ else
       // Check morningstarts, eveningends, and resolution for consistency
       $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
       $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
-      
+
       // If eveningends is before morningstarts then it's really on the next day
       if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
                     array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
       {
         $start_last_slot += MINUTES_PER_DAY;
       }
-      
+
       $start_difference = ($start_last_slot - $start_first_slot);         // minutes
-      
+
       if ($start_difference%$area_res_mins != 0)
       {
         $errors[] = 'invalid_resolution';
@@ -296,7 +296,7 @@ foreach($interval_types as $interval_type)
   $var = "max_per_${interval_type}_enabled";
   $area_var = "area_" . $var;
   $assign_array[] = "$var=" . $$area_var;
-  
+
   $var = "max_per_${interval_type}";
   $area_var = "area_" . $var;
   if (isset($$area_var))
@@ -328,13 +328,13 @@ $assign_array[] = "confirmation_enabled=?";
 $sql_params[] = $area_confirmation_enabled;
 $assign_array[] = "confirmed_default=?";
 $sql_params[] = $area_confirmed_default;
-      
+
 $sql .= implode(",", $assign_array) . " WHERE id=?";
 $sql_params[] = $area;
 
 db()->command($sql, $sql_params);
 
-  
+
 // Go back to the admin page
 header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
 exit();

@@ -94,7 +94,7 @@ if (empty($area))
   throw new \Exception('$area is empty');
 }
 
-// Intialise the error array
+// Initialise the error array
 $errors = array();
 
 // Clean up the address list replacing newlines by commas and removing duplicates
@@ -206,7 +206,7 @@ if (empty($errors))
         }
       }
     }
-    
+
     $sql .= implode(",", $assign_array) . " WHERE id=?";
     $sql_params[] = $room;
     db()->command($sql, $sql_params);

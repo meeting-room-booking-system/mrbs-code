@@ -56,8 +56,8 @@ module. There are two general categories:
 
 Internal PHP modules support the following kinds of authentication servers:
 LDAP servers; POP3 email servers; IMAP email servers; NIS servers ; NW servers.
-In addition, three special internal modules support a local list of users for 
-one; a local list of users stored in databse for the second; and 
+In addition, three special internal modules support a local list of users for
+one; a local list of users stored in the database for the second; and
 authenticating anybody for the other.
 
 External programs support: NT Domain controllers; Netware servers; PAM servers.
@@ -88,7 +88,7 @@ PHP authentication modules
 |         |                        |  - Simple to      |  - Users cannot update |
 |         |                        |  setup.           |  their own password.   |
 |         |                        |                   |                        |
-|         |                        |  - Not dependant  |  - Administrators      |
+|         |                        |  - Not dependent  |  - Administrators      |
 |         |                        |  on an external   |  manually set the user |
 |         |                        |  authentication   |  passwords, which is   |
 |         |                        |  server, so usable|  against normal        |
@@ -472,32 +472,32 @@ The first time it is accessed, the mrbs_users table is automatically
 created.
 
 *** WARNING ***
- 
-After you have set up MRBS, the first thing you must do is go to the 
-"User list" and set up a user with administrator rights.    Until you 
+
+After you have set up MRBS, the first thing you must do is go to the
+"User list" and set up a user with administrator rights.    Until you
 do this the system is open and the first person to go to the "User list" link
 will be able to set up an administrator and lock you out of the system.  You
 will then only be able to get back into the system by droppng the users
 table.
- 
+
 Once you have set up the first administrator you can then log on to
 the system using the username and password you have just created and
 create more users.
- 
+
 *** END OF WARNING ***
 
 Upgrading from pre-1.4.2 systems:
- 
+
 Versions of MRBS before 1.4.2 did not store access rights in the database
 and relied on the list of admins in the config file.    If you are upgrading
 from a pre-1.4.2 system, MRBS will automatically upgrade the users table in the
 database by adding a field for access rights level and give admin rights to
-those users for whom admin access is defined in the config file.   So, if 
+those users for whom admin access is defined in the config file.   So, if
 upgrading, you will need to make sure that your admins are set in the config
-file until you have run edit_users.php (by following the "User list" link) for 
-the first time.  Once you have run edit_users.php the admin definitions in the 
+file until you have run edit_users.php (by following the "User list" link) for
+the first time.  Once you have run edit_users.php the admin definitions in the
 config file are no longer used and can be deleted if you wish.
- 
+
 It's possible, and very simple, to add new application-specific fields in
 the mrbs_users table.
 No change is needed in edit_users.php editor code.
@@ -508,7 +508,7 @@ table in the beginning of edit_users.php (See comments there);
 Or they can be added afterwards using database admin tools
 Note: The first three fields (id, level, name, password) must not be
 tampered with. All others are modifiable at will.
- 
+
 Future improvements
  - Have a second level of administrators (level 3 users), with only such
  level 3 users allowed to edit the user database. This would be similar to
@@ -688,7 +688,7 @@ to true, respectively.
 
 This method will attempt an authenticated bind to the ldap server using
 the supplied password and a distinguished name, which is formed from the
-base distinguished name, the user attribute and the user name. 
+base distinguished name, the user attribute and the user name.
 
 This method supports multiple values for most of the configuration
 parameters, including $ldap_base_dn entries and $ldap_user_attrib
@@ -822,8 +822,8 @@ To use this session scheme, set in config.inc.php:
 If you want to display a logout link, set in config.inc.php:
 
   $auth['remote_user']['logout_link'] = '/logout/link.html'
-  
-  
+
+
 Joomla! Authentication
 ----------------------
 
@@ -865,7 +865,7 @@ $auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation r
 // 'mrbs_admin', and that you assigned that role to those users that you want to be MRBS admins.
 $auth['wordpress']['admin_roles'] = 'administrator';  // can also be an array, eg = array('administrator', 'mrbs_admin');
 // List of WordPress roles that have MRBS User capabilities.  This allows you to have some WordPress users
-// who are authorised to use MRBS and some who are not. 
+// who are authorised to use MRBS and some who are not.
 $auth['wordpress']['user_roles'] = array('subscriber', 'contributor', 'author', 'editor', 'administrator');
 
 Then in your WordPress wp-config.php file set:
@@ -876,7 +876,7 @@ define('COOKIEPATH', '/');
 define('SITECOOKIEPATH', '/');
 // In the definition below the '.' is necessary for older browsers (see
 // http://php.net/manual/en/function.setcookie.php).
-define('COOKIE_DOMAIN', ".$domain_name");  
+define('COOKIE_DOMAIN', ".$domain_name");
 define('COOKIEHASH', md5($domain_name));
 
 
@@ -940,11 +940,11 @@ says:
 $auth["admin"][] = "....";
 
 
-Crypted password authentication
+Encrypted password authentication
 -------------------------------
 
 crypt_passwd.pl is like the badpw.pl method above but uses a file containing
-usernames and their crypted passwords
+usernames and their encrypted passwords
 
 config.inc.php should be changed to have a section that reads something like:
 
@@ -958,14 +958,14 @@ As you can see the crypt_passwd.pl script takes 3 parameters.
 The first parameter is the filename of the password file.
 It must be readable by the user which PHP is running as, which is usually the
 user the web server is running as. The password file must consist of pairs of
-username and crypted password, seperated by a colon. See crypt_passwd.example
+username and encrypted password, separated by a colon. See crypt_passwd.example
 for an example password file.
 
 NOTE: Under Unix, make sure crypt_passwd.pl has execution rights: 'chmod +x
 crypt_passwd.pl'
 
 
-PAM Authentification
+PAM Authentication
 --------------------
 
 In case your Unix system uses PAM (especially Linux, but also SUN Solaris)
@@ -977,7 +977,7 @@ This perl script requires Authen::PAM.
 The script has to be run as SUID. Therefore you should take some precautions
 to not undermine your system's security. Change the group of the script to that
 of your Web Server (for Apache this is normally nobody or apache) and don't
-make it readable and executeable to anybody else, eg.:
+make it readable and executable to anybody else, eg.:
 
 chgrp nobody auth_pam.pl
 

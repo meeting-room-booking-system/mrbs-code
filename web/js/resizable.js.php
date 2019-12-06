@@ -21,7 +21,7 @@ $.fn.reverse = [].reverse;
 // the jQuery object obj.The result object is indexed by 'n', 'w', 's' and 'e' as
 // well as 'top', 'left', 'bottom' and 'right'.
 //
-// [Note: this depends on the object having box-sizing of content-box, as 
+// [Note: this depends on the object having box-sizing of content-box, as
 // jQuery has problems getting the correct dimensions when using border-box
 // and the browser zoom level is not 100%.  If you need to use border-box,
 // then JavaScript's getBoundingClientRect() works, but remember that it
@@ -30,7 +30,7 @@ $.fn.reverse = [].reverse;
 function getSides(obj, includeBorder)
 {
   var result = {};
-  
+
   if (includeBorder)
   {
     result.n = obj.offset().top;
@@ -40,7 +40,7 @@ function getSides(obj, includeBorder)
   }
   else
   {
-    <?php 
+    <?php
     // We need to use parseFloat instead of parseInt because the CSS width may be
     // a float, especially if the browser zoom level is not 100%.
     ?>
@@ -49,16 +49,16 @@ function getSides(obj, includeBorder)
     result.s = result.n + obj.innerHeight();
     result.e = result.w + obj.innerWidth();
   }
-    
+
   result.top = result.n;
   result.left = result.w;
   result.bottom = result.s;
   result.right = result.e;
-  
+
   return result;
 }
-        
-        
+
+
 <?php // Checks to see whether two rectangles occupy the same space ?>
 function rectanglesIdentical(r1, r2)
 {
@@ -68,9 +68,9 @@ function rectanglesIdentical(r1, r2)
           (Math.floor(Math.abs(r1.e - r2.e)) <= 1) &&
           (Math.floor(Math.abs(r1.w - r2.w)) <= 1));
 }
-            
-                              
-<?php // Checks whether two rectangles overlap ?>         
+
+
+<?php // Checks whether two rectangles overlap ?>
 function rectanglesOverlap(r1, r2)
 {
   <?php
@@ -90,8 +90,8 @@ function rectanglesOverlap(r1, r2)
     return true;
   }
 }
-            
-            
+
+
 <?php
 // Check whether the rectangle (with sides n,s,e,w) overlaps any
 // of the booked slots in the table.   Returns an array of overlapped
@@ -119,7 +119,7 @@ function overlapsBooked(rectangle, bookedMap, stopAtFirst, ignoreRectangle)
       }
     }
   }
-  
+
   return result;
 }
 
@@ -131,7 +131,7 @@ function overlapsBooked(rectangle, bookedMap, stopAtFirst, ignoreRectangle)
 function getClosestSide(rectangles, side)
 {
   var result = null;
-  
+
   rectangles.forEach(function(rectangle) {
       if (result === null)
       {
@@ -146,11 +146,11 @@ function getClosestSide(rectangles, side)
         result = Math.min(result, rectangle[side]);
       }
     });
-    
+
   return result;
 }
 
-      
+
 <?php
 // Get the name of the data attribute in this jQuery object.
 ?>
@@ -166,14 +166,14 @@ function getDataName(jqObject)
   }
   return false;
 }
-        
+
 
 var Table = {
   selector: ".dwm_main:not('#month_main')",
   borderLeftWidth: undefined,
   borderTopWidth: undefined,
   grid: {},
-  
+
   <?php
   // Return the parameters for the booking represented by el
   // The result is an object with property of the data name (eg
@@ -188,7 +188,7 @@ var Table = {
           cell = {x: {}, y: {}},
           i,
           axis;
-          
+
       cell.x.start = el.offset().left;
       cell.y.start = el.offset().top;
       cell.x.end = cell.x.start + el.outerWidth();
@@ -257,11 +257,11 @@ var Table = {
       return params;
     },  <?php // getBookingParams() ?>
 
-    
+
   getRowNumber: function(y) {
       for (var i=0; i<Table.grid.y.data.length - 1; i++)
       {
-        if ((y >= Table.grid.y.data[i].coord) && 
+        if ((y >= Table.grid.y.data[i].coord) &&
             (y < Table.grid.y.data[i+1].coord))
         {
           return i;
@@ -281,7 +281,7 @@ var Table = {
         }
       }
     },  <?php // clearRowLabels ?>
-  
+
 
   <?php
   // function to highlight the row labels in the table that are level
@@ -300,7 +300,7 @@ var Table = {
       var elEndRow = Table.getRowNumber(el.offset().top + el.outerHeight());
       for (var i=0; i<Table.highlightRowLabels.rows.length ; i++)
       {
-        if (((elStartRow === null) || (elStartRow <= i)) && 
+        if (((elStartRow === null) || (elStartRow <= i)) &&
             ((elEndRow === null) || (i < elEndRow)))
         {
           Table.highlightRowLabels.rows[i].addClass('selected');
@@ -319,14 +319,14 @@ var Table = {
       var headBottoms = $(Table.selector).find('thead').map(function() {
           return $(this).offset().top + $(this).outerHeight();
         }).get();
-      
+
       <?php
       // We might have floating headers in operation, in which case
       // it doesn't make sense to drag in the part of the table behind
       // the floating header because you can't see what's happening.
       // So test to see if the cursor is above the bottom of the lowest
       // table header.
-      ?>  
+      ?>
       if (p.y < (Math.max.apply(null, headBottoms)))
       {
         return true;
@@ -339,7 +339,7 @@ var Table = {
     },  <?php // outside() ?>
 
   size: function() {
-      <?php 
+      <?php
       // Get the width of the top and left borders of the first proper slot cell
       // in the main table (ie ignore the row labels cell).  This won't be the
       // same as the value in the CSS if the browsers zoom level is not 100%.
@@ -348,8 +348,8 @@ var Table = {
       var td = table.find('tbody tr:first-child td:first-child');
       Table.borderLeftWidth = parseFloat(td.css('border-left-width'));
       Table.borderTopWidth = parseFloat(td.css('border-top-width'));
-      
-      <?php 
+
+      <?php
       // Build an object holding all the data we need about the table, which is
       // the coordinates of the cell boundaries and the names and values of the
       // data attributes.    The object has two properties, x and y, which in turn
@@ -369,8 +369,8 @@ var Table = {
       var resolution = table.data('resolution');
       Table.grid.x = {};
       Table.grid.x.data = [];
-      <?php 
-      // We need :visible because there might be hidden days 
+      <?php
+      // We need :visible because there might be hidden days
       ?>
       var columns = table.find('thead tr:first-child th:visible').not('.first_last');
 
@@ -391,7 +391,7 @@ var Table = {
           Table.grid.x.data.push({coord: $(this).offset().left,
                                   value: $(this).data(Table.grid.x.key)});
         });
-      <?php 
+      <?php
       // and also get the right hand edge (and also the left hand edge if the
       // direction is RTL, as in Hebrew).  If we're dealing with seconds
       // we need to know what the end time of the slot would be
@@ -419,7 +419,7 @@ var Table = {
           Table.grid.x.data.push({coord: edge, value: value});
         });
 
-        
+
       Table.grid.y = {};
       Table.grid.y.data = [];
       var rows = table.find('tbody th:first-child');
@@ -442,7 +442,7 @@ var Table = {
                                   value: value});
         });
     }, <?php // size() ?>
-    
+
   <?php
   // Given the jQuery object 'obj', snap the side specified (can be 'left', 'right', 'top'
   // or 'bottom') to the nearest grid line, if the side is within the snapping range.
@@ -460,15 +460,15 @@ var Table = {
           isLR = (side === 'left') || (side === 'right'),
           data = (isLR) ? Table.grid.x.data : Table.grid.y.data,
           topLeft, bottomRight, gap, gapTopLeft, gapBottomRight;
-      
+
       var rectangle = obj.offset();
           rectangle.bottom = rectangle.top + obj.innerHeight();
           rectangle.right = rectangle.left + obj.innerWidth();
-          
+
       var outerWidth = rectangle.right - rectangle.left,
           outerHeight = rectangle.bottom - rectangle.top,
           thisCoord = rectangle[side];
-      
+
       for (var i=0; i<(data.length -1); i++)
       {
         topLeft = data[i].coord;
@@ -486,7 +486,7 @@ var Table = {
           topLeft += Table.borderTopWidth;
           bottomRight += Table.borderTopWidth;
         }
-        
+
         gapTopLeft = thisCoord - topLeft;
         gapBottomRight = bottomRight - thisCoord;
 
@@ -496,7 +496,7 @@ var Table = {
             ((i === (data.length-2)) && (gapBottomRight < 0)) )
         {
           gap = bottomRight - topLeft;
-                  
+
           if ((gapTopLeft <= gap/2) && (force || (gapTopLeft < snapGap)))
           {
             switch (side)
@@ -505,7 +505,7 @@ var Table = {
                 obj.offset({top: rectangle.top, left: topLeft});
                 obj.outerWidth(outerWidth + gapTopLeft);
                 break;
-                
+
               case 'right':
                 <?php // Don't let the width become zero. ?>
                 if ((outerWidth - gapTopLeft) < tolerance)
@@ -517,12 +517,12 @@ var Table = {
                   obj.outerWidth(outerWidth - gapTopLeft);
                 }
                 break;
-                
+
               case 'top':
                 obj.offset({top: topLeft, left: rectangle.left});
                 obj.outerHeight(outerHeight + gapTopLeft);
                 break;
-                
+
               case 'bottom':
                 <?php // Don't let the height become zero. ?>
                 if ((outerHeight - gapTopLeft) < tolerance)
@@ -554,11 +554,11 @@ var Table = {
                   obj.outerWidth(outerWidth - gapBottomRight);
                 }
                 break;
-                
+
               case 'right':
                 obj.outerWidth(outerWidth + gapBottomRight);
                 break;
-                
+
               case 'top':
                 <?php // Don't let the height become zero.  ?>
                 if ((outerHeight - gapBottomRight) < tolerance)
@@ -572,7 +572,7 @@ var Table = {
                   obj.outerHeight(outerHeight - gapBottomRight);
                 }
                 break;
-                
+
               case 'bottom':
                 obj.outerHeight(outerHeight + gapBottomRight);
                 break;
@@ -597,7 +597,7 @@ $(document).on('page_ready', function() {
   // with the table grid.   We also put the booking parameters (eg room id) as HTML5
   // data attributes in the cells of the header row and the column labels, so that we
   // can then get a set of parameters to send to edit_entry_handler as an Ajax request.
-  // The result is a JSON object containg a success/failure boolean and the new table
+  // The result is a JSON object containing a success/failure boolean and the new table
   // HTML if successful or the reasons for failure if not.
 
   // We set up the resizable bookings on a table load rather than a window load event
@@ -607,26 +607,26 @@ $(document).on('page_ready', function() {
   ?>
   $(Table.selector).on('tableload', function() {
       var table = $(this);
-      
+
       <?php // Don't do anything if this is an empty table ?>
       if (table.find('tbody').data('empty'))
       {
         return;
       }
-     
+
       Table.size();
-      
-      var mouseDown = false; 
-  
+
+      var mouseDown = false;
+
       var downHandler = function(e) {
           mouseDown = true;
-          
+
           <?php
           // Apply a class so that we know that resizing is in progres, eg to turn off
           // highlighting
           ?>
           table.addClass('resizing');
-          
+
           var jqTarget = $(e.target);
           <?php // If we've landed on the + symbol we want the parent ?>
           if (e.target.nodeName.toLowerCase() === "img")
@@ -646,7 +646,7 @@ $(document).on('page_ready', function() {
           {
             <?php
             // If we're not an admin and we're not allowed to book repeats (in
-            // the week view) or select multiple rooms (in the day view) then 
+            // the week view) or select multiple rooms (in the day view) then
             // constrain the box to fit in the current slot width/height
             ?>
             if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
@@ -674,18 +674,18 @@ $(document).on('page_ready', function() {
               ?>
             }
           }
-          
+
           <?php // Attach the element to the document before setting the offset ?>
           $(document.body).append(downHandler.box);
           downHandler.box.offset(downHandler.origin);
         };
-      
+
       var moveHandler = function(e) {
           var box = downHandler.box;
           var oldBoxOffset = box.offset();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
-        
+
           <?php
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
@@ -732,7 +732,7 @@ $(document).on('page_ready', function() {
                .width(oldBoxWidth)
                .height(oldBoxHeight);
           }
-          <?php 
+          <?php
           // Check to see if we've moved outside the table and if we have
           // then give some visual feedback.   If we've moved back into the box
           // remove the feedback.
@@ -751,8 +751,8 @@ $(document).on('page_ready', function() {
             box.removeClass('outside');
             moveHandler.outside = false;
           }
-          <?php 
-          // Highlight the corresponding row label cells (provided we are 
+          <?php
+          // Highlight the corresponding row label cells (provided we are
           // inside the table)
           ?>
           if (!moveHandler.outside)
@@ -761,7 +761,7 @@ $(document).on('page_ready', function() {
           }
         };
 
-           
+
       var upHandler = function(e) {
           mouseDown = false;
           e.preventDefault();
@@ -770,11 +770,11 @@ $(document).on('page_ready', function() {
           var params = Table.getBookingParams(box);
           $(document).off('mousemove',moveHandler);
           $(document).off('mouseup', upHandler);
-          
-          
+
+
           <?php
           // If the user has released the button while outside the table it means
-          // they want to cancel, so just return. 
+          // they want to cancel, so just return.
           ?>
           if (Table.outside({x: e.pageX, y: e.pageY}))
           {
@@ -786,7 +786,7 @@ $(document).on('page_ready', function() {
           // If the user has hardly moved the mouse then just treat this as a
           // traditional click and follow the original link.   This will mean
           // that things such as the default duration are used.
-        
+
           ?>
           else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
                    (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
@@ -826,8 +826,8 @@ $(document).on('page_ready', function() {
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
-        
-        
+
+
       <?php
       // resize event callback function
       ?>
@@ -836,12 +836,12 @@ $(document).on('page_ready', function() {
         var closest,
             rectangle = {},
             sides = {n: false, s: false, e: false, w: false};
-        
+
         if (resize.lastRectangle === undefined)
         {
           resize.lastRectangle = $.extend({}, resizeStart.originalRectangle);
         }
-        
+
         <?php
         // Get the sides of the desired resired rectangle and also the direction(s)
         // of resize.  Note that the desired rectangle may be being moved in two
@@ -857,7 +857,7 @@ $(document).on('page_ready', function() {
           rectangle.n = event.pageY;
           sides.n = true;
         }
-        
+
         if (Math.round(ui.position.left - ui.originalPosition.left) === 0)
         {
           rectangle.w = ui.position.left;
@@ -867,8 +867,8 @@ $(document).on('page_ready', function() {
           rectangle.w = event.pageX;
           sides.w = true;
         }
-        
-        if (Math.round((ui.position.top + ui.size.height) - 
+
+        if (Math.round((ui.position.top + ui.size.height) -
                        (ui.originalPosition.top + ui.originalSize.height)) === 0)
         {
           rectangle.s = ui.position.top + ui.size.height;
@@ -878,7 +878,7 @@ $(document).on('page_ready', function() {
           rectangle.s = event.pageY;
           sides.s = true;
         }
-        
+
         if (Math.round((ui.position.left + ui.size.width) -
                        (ui.originalPosition.left + ui.originalSize.width)) === 0)
         {
@@ -889,14 +889,14 @@ $(document).on('page_ready', function() {
           rectangle.e = event.pageX;
           sides.e = true;
         }
-        
+
         <?php
         // Get all the bookings that the desired rectangle would overlap.  Note
-        // that it could overlap more than one other booking, so we need to find them 
+        // that it could overlap more than one other booking, so we need to find them
         // all and then find the closest one.
         ?>
         var overlappedElements = overlapsBooked(rectangle, bookedMap, false, resizeStart.originalRectangle);
-        
+
         if (!overlappedElements.length)
         {
           <?php // No overlaps: remove any constraints ?>
@@ -923,7 +923,7 @@ $(document).on('page_ready', function() {
               ui.element.resizable('option', 'maxHeight', null);
             }
           }
-          
+
           if (sides.w)
           {
             closest = getClosestSide(overlappedElements, 'e');
@@ -937,7 +937,7 @@ $(document).on('page_ready', function() {
               ui.element.resizable('option', 'maxWidth', null);
             }
           }
-          
+
           if (sides.s)
           {
             closest = getClosestSide(overlappedElements, 'n');
@@ -950,7 +950,7 @@ $(document).on('page_ready', function() {
               ui.element.resizable('option', 'maxHeight', null);
             }
           }
-          
+
           if (sides.e)
           {
             closest = getClosestSide(overlappedElements, 'w');
@@ -965,14 +965,14 @@ $(document).on('page_ready', function() {
           }
         }
 
-        
+
         <?php
         // Check to see if any of the four sides of the div have moved since the last time
         // and if so, see if they've got close enough to the next boundary that we can snap
         // them to the grid.   (Note: using the condition sides.w etc. doesn't seem to work
         // properly for some reason - it will pull the other edge off the grid slightly).
         ?>
-    
+
         <?php // left edge ?>
         if (sides.w)
         {
@@ -993,28 +993,28 @@ $(document).on('page_ready', function() {
         {
           Table.snapToGrid(ui.helper, 'bottom');
         }
-        
+
         resize.lastRectangle = $.extend({}, rectangle);
-        
+
         Table.highlightRowLabels(ui.helper);
-        
+
       };  <?php // resize ?>
-        
-        
+
+
       <?php
       // callback function called when the resize starts
       ?>
       var resizeStart = function(event, ui)
       {
         resizeStart.oldParams = Table.getBookingParams(ui.originalElement.find('a'));
-        
+
         resizeStart.originalRectangle = {
             n: ui.originalPosition.top,
             s: ui.originalPosition.top + ui.originalSize.height,
             w: ui.originalPosition.left,
             e: ui.originalPosition.left + ui.originalSize.width
           };
-        
+
         <?php
         // Add a class so that we can disable the highlighting when we are
         // resizing (the flickering is a bit annoying)
@@ -1022,12 +1022,12 @@ $(document).on('page_ready', function() {
         table.addClass('resizing');
       };  <?php // resizeStart ?>
 
-      
+
       <?php
       // callback function called when the resize stops
       ?>
       var resizeStop = function(event, ui)
-      {              
+      {
         <?php
         // Snap the edges of both the helper and the element being resized to the grid,
         // regardless of where they are.
@@ -1036,7 +1036,7 @@ $(document).on('page_ready', function() {
             Table.snapToGrid(ui.helper, side, true);
             Table.snapToGrid(ui.element, side, true);
           });
-        
+
         if (rectanglesIdentical(resizeStart.originalRectangle, getSides(ui.helper)))
         {
           <?php
@@ -1049,7 +1049,7 @@ $(document).on('page_ready', function() {
           return;
         }
 
-        <?php 
+        <?php
         // We've got a change to the booking, so we need to send an Ajax
         // request to the server to make the new booking
         ?>
@@ -1120,7 +1120,7 @@ $(document).on('page_ready', function() {
           data.timetohighlight = <?php echo $timetohighlight ?>;
           <?php
         }
-        
+
         // Give some visual feedback that the change is being saved.   Note that the span
         // is inserted after the elemement rather than appended, because if it's a child
         // then any opacity rule that is applied to the parent will also apply to the child.
@@ -1167,9 +1167,9 @@ $(document).on('page_ready', function() {
                   }
                 },
                'json');
-    
+
       };  <?php // resizeStop ?>
-           
+
 
       <?php
       // bookedMap is an array of booked slots.   Each member of the array is an
@@ -1178,16 +1178,16 @@ $(document).on('page_ready', function() {
       // booking overlaps an existing booking. Select just the visible cells because there
       // could be hidden days.
       ?>
-      var bookedMap = [];  
+      var bookedMap = [];
       table.find('td.booked:visible')
            .each(function() {
           bookedMap.push(getSides($(this)));
         });
-       
+
       <?php
       // Turn all the empty cells where a new multi-cell selection
       // can be created by dragging the mouse
-      ?>     
+      ?>
       table.find('td.new').each(function() {
           $(this).find('a').on('click', function(event) {
               event.preventDefault();
@@ -1199,15 +1199,15 @@ $(document).on('page_ready', function() {
               $(document).on('mouseup', upHandler);
             });
         });
-        
-      
-      
+
+
+
       <?php
       // Make all the writable bookings resizable
       ?>
       table.find('.writable')
         .each(function() {
-          
+
             <?php
             // Get the set of directions in which we are allowed to drag the
             // box.   At this stage we will do it by reference to the two axes,
@@ -1217,12 +1217,12 @@ $(document).on('page_ready', function() {
             ?>
             var directions = {times: {plus: true, minus: true},
                               other: {plus: true, minus: true}};
-                              
+
             if ($(this).hasClass('series'))
             {
               <?php
               // We only only members of a series to have their duration changed.
-              // It would be a bit confusing to have an individual member of a 
+              // It would be a bit confusing to have an individual member of a
               // series dragged across days to make it a new daily series, or rooms
               // to create new bookings in other rooms.
               ?>
@@ -1271,7 +1271,7 @@ $(document).on('page_ready', function() {
               directions.other = {plus: false, minus: false};
             }
             <?php
-            // Now turn the directions in which we are allowed to move the 
+            // Now turn the directions in which we are allowed to move the
             // boxes into an array of n/s/e/w handles, depending on the
             // setting of $times_along_top
             ?>
@@ -1303,9 +1303,9 @@ $(document).on('page_ready', function() {
                   aHandles.push(corner);
                 }
               });
-            
+
             var handles = aHandles.join(',');
-            
+
             if (handles)
             {
               $(this).resizable({handles: handles,
@@ -1314,10 +1314,10 @@ $(document).on('page_ready', function() {
                                  resize: resize,
                                  stop: resizeStop});
             }
-            
+
             $(this).css('background-color', 'transparent');
           });
-                              
+
       <?php
       // We want to disable page refresh if the user is hovering over
       // the resizable handles.   We trigger a mouseenter event on page
@@ -1327,7 +1327,7 @@ $(document).on('page_ready', function() {
       // mouseDown will also be set by the event handlers for drag selection
       // of new bookings, so that we don't turn on page refresh while in the
       // middle of a drag selection when we pass over a resizable handle
-      ?>   
+      ?>
       $('.ui-resizable-handle')
         .on('mouseenter', function(e) {
             if (!mouseDown)
@@ -1363,9 +1363,9 @@ $(document).on('page_ready', function() {
             }
           })
         .first().trigger('mouseenter');
-    
+
     }).trigger('tableload');
-    
+
   $(window).on('resize', throttle(function(event) {
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
       {
@@ -1375,6 +1375,6 @@ $(document).on('page_ready', function() {
         Table.size();
       }
     }, 50));
-  
+
 });
 
