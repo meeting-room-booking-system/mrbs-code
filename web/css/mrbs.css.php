@@ -210,6 +210,15 @@ tr:nth-child(even) td.new,
   background-color: <?php echo $row_even_color ?>;
 }
 
+#week_main td a {
+  display: flex;
+  height: 100%;
+  padding: 0;
+}
+
+#week_main td a div {
+  min-width: 1px;
+}
 
 td, th {
   vertical-align: top;

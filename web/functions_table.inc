@@ -785,11 +785,16 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 }
 
 
+function week_div($slots, $class)
+{
+  return "<div class=\"$class\" style=\"flex: $slots\"></div>";
+}
+
 function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
 {
   global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts, $strftime_format;
-  global $resolution;
+  global $resolution, $morningstarts, $morningstarts_minutes;
 
   $rooms = get_rooms($area_id);
   $n_rooms = count($rooms);
@@ -805,6 +810,11 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
   $time = mktime(12, 0, 0, $month, $day, $year);
   $skipback = day_of_MRBS_week($time);
   $day_start_week = $day - $skipback;
+
+  // Get the time slots
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
   $dformat = $strftime_format['weekview_headers'];
   // If we've got a table with times along the top then put everything on the same line
@@ -884,6 +894,8 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
     // the standard view, with days along the top and rooms down the side
     foreach ($rooms as $room)
     {
+      $room_id = $room['id'];
+
       $tbody .= "<tr>\n";
       $row_label = "<th>" . htmlspecialchars($room['room_name']) . "</th>\n";
       $tbody .= $row_label;
@@ -908,6 +920,34 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
 
         $link = "index.php?" . http_build_query($vars, '', '&');
         $tbody .= '<a href="' . htmlspecialchars($link) . "\">\n";
+        $s = $morning_slot_seconds;
+        $slots = 0;
+        while ($s <= $evening_slot_seconds)
+        {
+          if (isset($week[$room_id][$d][$s]))
+          {
+            if ($slots > 0)
+            {
+              $tbody .= week_div($slots, 'free');
+            }
+            $n = $week[$room_id][$d][$s][0]['n_slots'];
+            $type = $week[$room_id][$d][$s][0]['type'];
+            $tbody .= week_div($n, $type);
+            $slots = 0;
+          }
+          else
+          {
+            $n = 1;
+            $slots++;
+          }
+          $s = $s + ($n * $resolution);
+        }
+
+        if ($slots > 0)
+        {
+          $tbody .= week_div($slots, 'free');
+        }
+
         $tbody .= "</a>\n";
         $tbody .= "</td>\n";
       }
