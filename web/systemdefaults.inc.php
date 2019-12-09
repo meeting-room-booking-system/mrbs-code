@@ -362,11 +362,16 @@ $mincals_week_numbers = false;
 // this to true.
 $show_slot_endtime = false;
 
-// To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
-// set to true;   the default/traditional version of MRBS has rooms (or days) along the top and
-// times along the side.    Transposing the table can be useful if you have a large number of
+// In the day view, to display times on the x-axis (along the top) and rooms on the y-axis (down
+// the side set to true; the default/traditional version of MRBS has rooms along the top and
+// times down the side.    Transposing the table can be useful if you have a large number of
 // rooms and not many time slots.
 $times_along_top = false;
+
+// In the week view, to display rooms on the x-axis (along the top) and days on the y-axis (down
+// the side) set to false; the default/traditional version of MRBS has days along the top and
+// rooms along the side.
+$days_along_top = true;
 
 // To display the row labels (times, rooms or days) on the right hand side as well as the
 // left hand side in the day and week views, set to true;
