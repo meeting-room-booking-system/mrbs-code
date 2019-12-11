@@ -918,12 +918,10 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
         $d = $day_start_week + $j;
         $tbody .= "<td>";
         $vars = array(
-            'view'  => 'day',
-            'year'  => $year,
-            'month' => $month,
-            'day'   => $day,
-            'area'  => $area_id,
-            'room'  => $room['id']
+            'view'      => 'day',
+            'page_date' => format_iso_date($year, $month, $d),
+            'area'      => $area_id,
+            'room'      => $room['id']
           );
 
         $link = "index.php?" . http_build_query($vars, '', '&');

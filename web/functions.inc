@@ -1365,9 +1365,18 @@ function some_area($field, $enabled=false)
 }
 
 
-// Returns a date in ISO 8601 format ('yyyy-mm-dd')
+// Returns a date in ISO 8601 format ('yyyy-mm-dd'), having adjusted the date if necessary
+// to make sure it's a valid date
 function format_iso_date($year, $month, $day)
 {
+  if (!checkdate($month, $day, $year))
+  {
+    $date = getdate(mktime(12, 0, 0, $month, $day, $year));
+    $year = $date['year'];
+    $month = $date['mon'];
+    $day = $date['mday'];
+  }
+
   return sprintf("%04d-%02d-%02d", $year, $month, $day);
 }
 
