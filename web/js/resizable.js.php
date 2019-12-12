@@ -339,6 +339,11 @@ var Table = {
     },  <?php // outside() ?>
 
   size: function() {
+      <?php // Don't do anything if this is the all-rooms week view ?>
+      if ((args.room < 0) && (args.view == 'week'))
+      {
+        return;
+      }
       <?php
       // Get the width of the top and left borders of the first proper slot cell
       // in the main table (ie ignore the row labels cell).  This won't be the
