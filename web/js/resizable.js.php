@@ -608,8 +608,9 @@ $(document).on('page_ready', function() {
   $(Table.selector).on('tableload', function() {
       var table = $(this);
 
-      <?php // Don't do anything if this is an empty table ?>
-      if (table.find('tbody').data('empty'))
+      <?php // Don't do anything if this is an empty table or the all-rooms week view ?>
+      if (((args.room < 0) && (args.view == 'week')) ||
+          table.find('tbody').data('empty'))
       {
         return;
       }

@@ -800,6 +800,19 @@ function week_div($slots, $class, $title=null)
 
 function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
 {
+  if ($room_id >= 0)
+  {
+    return week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+  }
+  else
+  {
+    return week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+  }
+}
+
+
+function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
+{
   global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts, $strftime_format;
   global $resolution, $morningstarts, $morningstarts_minutes;
@@ -977,7 +990,7 @@ function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
 }
 
 
-function old_week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
