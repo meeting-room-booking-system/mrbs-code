@@ -53,8 +53,8 @@ function getSides(jqObject)
   sides.e = sides.w + jqObject.outerWidth();
   return sides;
 }
-        
-        
+
+
 <?php // Checks to see whether two rectangles occupy the same space ?>
 function rectanglesIdentical(r1, r2)
 {
@@ -64,9 +64,9 @@ function rectanglesIdentical(r1, r2)
           (Math.abs(r1.e - r2.e) < tolerance) &&
           (Math.abs(r1.w - r2.w) < tolerance));
 }
-            
-                              
-<?php // Checks whether two rectangles overlap ?>         
+
+
+<?php // Checks whether two rectangles overlap ?>
 function rectanglesOverlap(r1, r2)
 {
   <?php
@@ -93,8 +93,8 @@ function rectanglesOverlap(r1, r2)
   }
   return false;
 }
-            
-            
+
+
 <?php
 // Check whether the rectangle (with sides n,s,e,w) overlaps any
 // of the booked slots in the table.
@@ -114,7 +114,7 @@ function overlapsBooked(rectangle, bookedMap)
   }
   return false;
 }
-      
+
 <?php
 // Get the name of the data attribute in this jQuery object.
 ?>
@@ -130,8 +130,8 @@ function getDataName(jqObject)
   }
   return false;
 }
-        
-        
+
+
 function redrawClones(table)
 {
   table.find('div.clone').each(function() {
@@ -141,10 +141,10 @@ function redrawClones(table)
            .height(original.outerHeight());
     });
 }
-        
+
 function getTableData(table, tableData)
 {
-  <?php 
+  <?php
   // Build an object holding all the data we need about the table, which is
   // the coordinates of the cell boundaries and the names and values of the
   // data attributes.    The object has two properties, x and y, which in turn
@@ -164,8 +164,8 @@ function getTableData(table, tableData)
   var resolution = table.data('resolution');
   tableData.x = {};
   tableData.x.data = [];
-  <?php 
-  // We need :visible because there might be hidden days 
+  <?php
+  // We need :visible because there might be hidden days
   // We need thead:first-child in case there are floating headers
   ?>
   var columns = table.find('thead:first-child tr:first-child th:visible').not('.first_last');
@@ -187,7 +187,7 @@ function getTableData(table, tableData)
       tableData.x.data.push({coord: $(this).offsetRound().left,
                              value: $(this).data(tableData.x.key)});
     });
-  <?php 
+  <?php
   // and also get the right hand edge (and also the left hand edge if the
   // direction is RTL, as in Hebrew).  If we're dealing with seconds
   // we need to know what the end time of the slot would be
@@ -215,7 +215,7 @@ function getTableData(table, tableData)
       tableData.x.data.push({coord: edge, value: value});
     });
 
-    
+
   tableData.y = {};
   tableData.y.data = [];
   var rows = table.find('tbody td:first-child').not('.multiple_booking td');
@@ -238,8 +238,8 @@ function getTableData(table, tableData)
                              value: value});
     });
 }
-        
-        
+
+
 <?php
 // Tests whether the point p with coordinates x and y is outside the table
 ?>
@@ -248,14 +248,14 @@ function outsideTable(tableData, p)
   var headBottoms = $('table.dwm_main thead').map(function() {
           return $(this).offset().top + $(this).outerHeight();
         }).get();
-  
+
   <?php
   // We might have floating headers in operation, in which case
   // it doesn't make sense to drag in the part of the table behind
   // the floating header because you can't see what's happening.
   // So test to see if the cursor is above the bottom of the lowest
   // table header.
-  ?>  
+  ?>
   if (p.y < (Math.max.apply(null, headBottoms)))
   {
     return true;
@@ -266,9 +266,9 @@ function outsideTable(tableData, p)
           (p.x > tableData.x.data[tableData.x.data.length - 1].coord) ||
           (p.y > tableData.y.data[tableData.y.data.length - 1].coord) );
 }
-        
+
 <?php
-// Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') to 
+// Given 'div', snap the side specified (can be 'left', 'right', 'top' or 'bottom') to
 // the nearest grid line, if the side is within the snapping range.
 //
 // If force is true, then the side is snapped regardless of where it is.
@@ -285,12 +285,12 @@ function snapToGrid(tableData, div, side, force)
   var snapGap = (force) ? 100000: 30; <?php // px ?>
   var tolerance = 2; <?php //px ?>
   var isLR = (side==='left') || (side==='right');
- 
+
   var data = (isLR) ? tableData.x.data : tableData.y.data;
-  
+
   var topLeft, bottomRight, divTop, divLeft, divWidth, divHeight, thisCoord,
       gap, gapTopLeft, gapBottomRight;
-      
+
   divTop = div.offsetRound().top;
   divLeft = div.offsetRound().left;
   divWidth = div.outerWidth();
@@ -315,17 +315,17 @@ function snapToGrid(tableData, div, side, force)
   {
     topLeft = data[i].coord + <?php echo $main_table_cell_border_width ?>;
     bottomRight = data[i+1].coord;
-    
+
     gapTopLeft = thisCoord - topLeft;
     gapBottomRight = bottomRight - thisCoord;
-            
+
     if (((gapTopLeft>0) && (gapBottomRight>0)) ||
         <?php // containment tests ?>
         ((i===0) && (gapTopLeft<0)) ||
         ((i===(data.length-2)) && (gapBottomRight<0)) )
     {
       gap = bottomRight - topLeft;
-              
+
       if ((gapTopLeft <= gap/2) && (gapTopLeft < snapGap))
       {
         switch (side)
@@ -393,7 +393,7 @@ function snapToGrid(tableData, div, side, force)
     }
   }  <?php // for ?>
 }  <?php // snapToGrid() ?>
-              
+
 
 <?php
 // Return the parameters for the booking represented by div
@@ -402,7 +402,7 @@ function snapToGrid(tableData, div, side, force)
 // the values for that booking (for example an array of room ids)
 ?>
 function getBookingParams(table, tableData, div)
-{ 
+{
   var rtl = (table.css('direction').toLowerCase() === 'rtl'),
       params = {},
       data,
@@ -410,7 +410,7 @@ function getBookingParams(table, tableData, div)
       cell = {x: {}, y: {}},
       i,
       axis;
-      
+
   cell.x.start = div.offsetRound().left;
   cell.y.start = div.offsetRound().top;
   cell.x.end = cell.x.start + div.outerWidth();
@@ -478,8 +478,8 @@ function getBookingParams(table, tableData, div)
   } <?php // for (axis in cell) ?>
   return params;
 }
-        
-        
+
+
 function getRowNumber(tableData, y)
 {
   for (var i=0; i<tableData.y.data.length - 1; i++)
@@ -511,7 +511,7 @@ var highlightRowLabels = function (table, tableData, div)
   var divEndRow = getRowNumber(tableData, div.offsetRound().top + div.outerHeight());
   for (var i=0; i<highlightRowLabels.rows.length ; i++)
   {
-    if (((divStartRow === null) || (divStartRow <= i)) && 
+    if (((divStartRow === null) || (divStartRow <= i)) &&
         ((divEndRow === null) || (i < divEndRow)))
     {
       highlightRowLabels.rows[i].addClass('selected');
@@ -522,8 +522,8 @@ var highlightRowLabels = function (table, tableData, div)
     }
   }
 };
-      
-      
+
+
 <?php // Remove any highlighting that has been applied to the row labels ?>
 function clearRowLabels()
 {
@@ -540,18 +540,18 @@ function clearRowLabels()
 
 // =================================================================================
 
-// Extend the init() function 
+// Extend the init() function
 ?>
 
 var oldInitResizable = init;
 init = function(args) {
 
   var tableData = {};
-  
+
   oldInitResizable.apply(this, [args]);
 
   <?php
-  // Resizable bookings work by creating a div which 
+  // Resizable bookings work by creating a div which
   // is a clone of the real booking div and making it resizable.   We can't make the
   // real div resizable because it is bound by the table cell walls.   So we give
   // the clone an absolute position and a positive z-index.    We work out what
@@ -569,18 +569,18 @@ init = function(args) {
   ?>
   $('table.dwm_main').on('load', function() {
       var table = $(this);
-      
+
       createFloatingHeaders(table);
       updateTableHeaders(table);
-      
+
       <?php // Don't do anything if this is an empty table ?>
       if (table.find('tbody').data('empty'))
       {
         return;
       }
-     
+
       getTableData(table, tableData);
-  
+
       <?php
       // bookedMap is an array of booked slots.   Each member of the array is an
       // object with four properties (n, s, e, w) representing the cooordinates (x or y)
@@ -590,8 +590,8 @@ init = function(args) {
       // resized.
       ?>
       var bookedMap = [];
-      var mouseDown = false; 
-  
+      var mouseDown = false;
+
       var downHandler = function(e) {
           mouseDown = true;
           turnOffPageRefresh();
@@ -618,12 +618,12 @@ init = function(args) {
           ?>
           downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
           downHandler.box = $('<div class="div_select">');
-          
+
           if (args.isAdmin)
           {
             <?php
             // If we're not an admin and we're not allowed to book repeats (in
-            // the week view) or select multiple rooms (in the day view) then 
+            // the week view) or select multiple rooms (in the day view) then
             // constrain the box to fit in the current slot width/height
             ?>
             if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
@@ -651,18 +651,18 @@ init = function(args) {
               ?>
             }
           }
-          
+
           <?php // Attach the element to the document before setting the offset ?>
           $(document.body).append(downHandler.box);
           downHandler.box.offset(downHandler.origin);
         };
-      
+
       var moveHandler = function(e) {
           var box = downHandler.box;
           var oldBoxOffset = box.offsetRound();
           var oldBoxWidth = box.outerWidth();
           var oldBoxHeight = box.outerHeight();
-        
+
           <?php
           // Check to see if we're only allowed to go one slot wide/high
           // and have gone over that limit.  If so, do nothing and return
@@ -707,7 +707,7 @@ init = function(args) {
                .width(oldBoxWidth)
                .height(oldBoxHeight);
           }
-          <?php 
+          <?php
           // Check to see if we've moved outside the table and if we have
           // then give some visual feedback.   If we've moved back into the box
           // remove the feedback.
@@ -726,8 +726,8 @@ init = function(args) {
             box.removeClass('outside');
             moveHandler.outside = false;
           }
-          <?php 
-          // Highlight the corresponding row label cells (provided we are 
+          <?php
+          // Highlight the corresponding row label cells (provided we are
           // inside the table)
           ?>
           if (!moveHandler.outside)
@@ -736,7 +736,7 @@ init = function(args) {
           }
         };
 
-           
+
       var upHandler = function(e) {
           mouseDown = false;
           e.preventDefault();
@@ -749,7 +749,7 @@ init = function(args) {
           $('table.dwm_main').unwrap();
           <?php
           // If the user has released the button while outside the table it means
-          // they want to cancel, so just return. 
+          // they want to cancel, so just return.
           ?>
           if (outsideTable(tableData, {x: e.pageX, y: e.pageY}))
           {
@@ -761,7 +761,7 @@ init = function(args) {
           // If the user has hardly moved the mouse then just treat this as a
           // traditional click and follow the original link.   This will mean
           // that things such as the default duration are used.
-        
+
           ?>
           else if ((Math.abs(e.pageX - downHandler.firstPosition.x) <= tolerance) &&
                    (Math.abs(e.pageY - downHandler.firstPosition.y) <= tolerance))
@@ -803,11 +803,11 @@ init = function(args) {
           return;
         };
 
-      
+
       <?php
       // Turn all the empty cells where a new multi-cell selection
       // can be created by dragging the mouse
-      ?>     
+      ?>
       table.find('td.new').each(function() {
           $(this).find('a').click(function(event) {
               event.preventDefault();
@@ -819,9 +819,9 @@ init = function(args) {
               $(document).on('mouseup', upHandler);
             });
         });
-        
-      
-      
+
+
+
       <?php
       // Turn all the writable cells into resizable bookings
       ?>
@@ -859,7 +859,7 @@ init = function(args) {
               // and if so, see if they've got close enough to the next boundary that we can snap
               // them to the grid
               ?>
-          
+
               <?php // left edge ?>
               if (divClone.position().left !== divResize.lastPosition.left)
               {
@@ -880,15 +880,15 @@ init = function(args) {
               {
                 snapToGrid(tableData, divClone, 'bottom');
               }
-            
+
               highlightRowLabels(table, tableData, divClone);
-            
+
               divResize.lastPosition = $.extend({}, divClone.position());
               divResize.lastSize = {width: divClone.outerWidth(),
                                     height: divClone.outerHeight()};
             };  <?php // divResize ?>
-        
-        
+
+
             <?php
             // callback function called when the resize starts
             ?>
@@ -902,7 +902,7 @@ init = function(args) {
               table.wrap('<div class="resizing"><\/div>');
               <?php
               // Remove the constraint on the max width of the clone.  (We've had
-              // to keep it there up until now because otherwise the div is 
+              // to keep it there up until now because otherwise the div is
               // sometimes 1px too wide.  Don't quite understand why - something to do
               // with rounding)
               ?>
@@ -927,18 +927,18 @@ init = function(args) {
                 });
 
             };  <?php // divResizeStart ?>
-        
-        
+
+
             <?php
             // callback function called when the resize stops
             ?>
             var divResizeStop = function (event, ui)
-            {          
+            {
               <?php // Clear the map of booked cells ?>
               bookedMap = [];
-          
+
               if (divClone.resizable('option', 'disabled'))
-              { 
+              {
                 <?php
                 // If the resize was disabled then just restore the original position
                 ?>
@@ -957,12 +957,12 @@ init = function(args) {
                 snapToGrid(tableData, divClone, 'top', true);
                 snapToGrid(tableData, divClone, 'bottom', true);
               }
-          
+
               <?php // Remove the outline ?>
               $('div.outline').remove();
               <?php // Remove the resizing wrapper so that highlighting comes back on ?>
               $('table.dwm_main').unwrap();
-          
+
               var r1 = getSides(divBooking);
               var r2 = getSides(divClone);
               if (rectanglesIdentical(r1, r2))
@@ -971,12 +971,12 @@ init = function(args) {
               }
               else
               {
-                <?php 
+                <?php
                 // We've got a change to the booking, so we need to send an Ajax
                 // request to the server to make the new booking
                 ?>
                 var data = {csrf_token: getCSRFToken(),
-                            ajax: 1, 
+                            ajax: 1,
                             commit: 1};
                 <?php // get the booking id and type ?>
                 data.id = divClone.data('id');
@@ -1017,7 +1017,7 @@ init = function(args) {
                 {
                   data.page = 'day';
                   data.start_date = args.page_date;
-  
+
                 }
                 else  <?php // it's 'week' ?>
                 {
@@ -1033,7 +1033,7 @@ init = function(args) {
                       data.rep_end_date = newParams.date[newParams.date.length - 1];
                     }
                   }
-                  
+
                 }
                 data.end_date = data.start_date;
                 data.rooms = (typeof newParams.room === 'undefined') ? args.room : newParams.room;
@@ -1056,7 +1056,7 @@ init = function(args) {
                             // prevent memory leaks (2) insert the updated table HTML
                             // and then (3) trigger a table load event so that the
                             // resizable bookings are re-created and then (4) give the
-                            // user some positive visual feedback that the change has 
+                            // user some positive visual feedback that the change has
                             // been saved
                             ?>
                             table.empty()
@@ -1105,9 +1105,9 @@ init = function(args) {
                         },
                        'json');
               }   <?php // if (rectanglesIdentical(r1, r2)) ?>
-          
+
             };  <?php // divResizeStop ?>
-        
+
             <?php
             // Get the set of directions in which we are allowed to drag the
             // box.   At this stage we will do it by reference to the two axes,
@@ -1121,14 +1121,14 @@ init = function(args) {
             {
               <?php
               // We only only members of a series to have their duration changed.
-              // It would be a bit confusing to have an individual member of a 
+              // It would be a bit confusing to have an individual member of a
               // series dragged across days to make it a new daily series, or rooms
               // to create new bookings in other rooms.
               ?>
               directions.other = {plus: false, minus: false};
             }
-            
-            if (args.isAdmin)
+
+            if (!args.isAdmin)
             {
               if (((args.page == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
                   ((args.page == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
@@ -1156,6 +1156,7 @@ init = function(args) {
               }
               ?>
             }
+
             <?php
             // Don't allow multiday bookings to be moved at the end
             // which is joined to another day nor along the other axis
@@ -1171,7 +1172,7 @@ init = function(args) {
               directions.other = {plus: false, minus: false};
             }
             <?php
-            // Now turn the directions in which we are allowed to move the 
+            // Now turn the directions in which we are allowed to move the
             // boxes into an array of n/s/e/w handles, depending on the
             // setting of $times_along_top
             ?>
@@ -1235,7 +1236,7 @@ init = function(args) {
             $(this).css('background-color', 'transparent')
                    .wrapInner('<div style="position: relative"><\/div>');
           });
-                              
+
       <?php
       // We want to disable page refresh if the user is hovering over
       // the resizable handles.   We trigger a mouseenter event on page
@@ -1245,7 +1246,7 @@ init = function(args) {
       // mouseDown will also be set by the event handlers for drag selection
       // of new bookings, so that we don't turn on page refresh while in the
       // middle of a drag selection when we pass over a resizable handle
-      ?>   
+      ?>
       $('div.clone .ui-resizable-handle')
         .mouseenter(function(e) {
             if (!mouseDown)
@@ -1281,7 +1282,7 @@ init = function(args) {
             }
           })
         .first().trigger('mouseenter');
-    
+
       <?php // also need to redraw and recalibrate if the multiple bookings are clicked ?>
       table.find('div.multiple_control')
           .click(function() {
@@ -1289,7 +1290,7 @@ init = function(args) {
               getTableData(table, tableData);
             });
     }).trigger('load');
-    
+
   $(window).resize(throttle(function(event) {
       var table;
       if (event.target === this)  <?php // don't want the ui-resizable event bubbling up ?>
@@ -1303,6 +1304,6 @@ init = function(args) {
         getTableData(table, tableData);
       }
     }, 50));
-  
+
 };
 
