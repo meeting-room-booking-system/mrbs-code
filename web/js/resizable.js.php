@@ -619,7 +619,7 @@ init = function(args) {
           downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
           downHandler.box = $('<div class="div_select">');
 
-          if (args.isAdmin)
+          if (!args.isAdmin)
           {
             <?php
             // If we're not an admin and we're not allowed to book repeats (in
