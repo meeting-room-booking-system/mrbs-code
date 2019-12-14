@@ -216,8 +216,24 @@ tr:nth-child(even) td.new,
   padding: 0;
 }
 
+<?php
+/* We use border-box sizing to keep the border inside the div therefore allow the div to
+ * be as thin as 1px (useful if there are lots of slots as it saves screen space).  But as
+ * the border would then obscure the background colour, we make the border dotted to allow
+ * the background colour to show through.  Note however that box-sizing doesn't work quite
+ * properly with flexbox - the sizing calculations are a bit out - but it's probably good
+ * enough.
+ */
+?>
 #week_main td a div {
+  box-sizing: border-box;
   min-width: 1px;
+  border-right: 1px dotted  <?php echo $main_table_body_v_border_color ?>;
+}
+
+#week_main td a div:last-child,
+#week_main td a div.free {
+  border-right: 0;
 }
 
 td, th {
