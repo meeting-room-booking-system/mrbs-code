@@ -201,16 +201,16 @@ a:hover {
 }
 
 tr:nth-child(odd) td.new,
-#week_main tr:nth-child(odd) td {
+#week_main.all_rooms tr:nth-child(odd) td {
   background-color: <?php echo $row_odd_color ?>;
 }
 
 tr:nth-child(even) td.new,
-#week_main tr:nth-child(even) td {
+#week_main.all_rooms tr:nth-child(even) td {
   background-color: <?php echo $row_even_color ?>;
 }
 
-#week_main td a {
+#week_main.all_rooms td a {
   display: flex;
   height: 100%;
   padding: 0;
@@ -225,15 +225,20 @@ tr:nth-child(even) td.new,
  * enough.
  */
 ?>
-#week_main td a div {
+#week_main.all_rooms td a div {
   box-sizing: border-box;
   min-width: 1px;
   border-right: 1px dotted  <?php echo $main_table_body_v_border_color ?>;
 }
 
-#week_main td a div:last-child,
-#week_main td a div.free {
+#week_main.all_rooms td a div:last-child,
+#week_main.all_rooms td a div.free {
   border-right: 0;
+}
+
+#week_main.all_rooms tbody th {
+  padding: 0.2em;
+  text-align: left;
 }
 
 td, th {

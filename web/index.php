@@ -454,14 +454,18 @@ echo "<div class=\"view_container js_hidden\">\n";
 echo get_date_heading($view, $year, $month, $day);
 echo get_calendar_nav($view, $year, $month, $day, $area, $room);
 
-$class = 'dwm_main';
+$classes = array('dwm_main');
 if ($times_along_top)
 {
-  $class .= ' times-along-top';
+  $classes[] .= 'times-along-top';
+}
+if ($room < 0)
+{
+  $classes[] = 'all_rooms';
 }
 
 echo "<div class=\"table_container\">\n";
-echo "<table class=\"$class\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
+echo '<table class="' . implode(' ', $classes) . "\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
 echo "</div>\n";
