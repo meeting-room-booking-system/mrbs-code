@@ -350,7 +350,7 @@ function time_cell_html($s, $url)
   return $html;
 }
 
-// Draw a room cell to be used in the header rows/columns of the day view
+// Draw a room cell to be used in the header rows/columns of the day and week views
 //    $room    contains the room details
 //    $link    the href to be used for the link
 function room_cell_html(array $room, $link)
