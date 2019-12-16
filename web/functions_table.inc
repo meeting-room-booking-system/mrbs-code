@@ -910,7 +910,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
 
-  $vars = array(
+  $room_link_vars = array(
       'view'      => 'week',
       'page_date' => format_iso_date($year, $month, $day),
       'area'      => $area_id
@@ -922,8 +922,8 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
     foreach ($rooms as $room)
     {
       $room_id = $room['id'];
-      $vars['room'] = $room_id;
-      $link = 'index.php?' . http_build_query($vars, '', '&');
+      $room_link_vars['room'] = $room_id;
+      $link = 'index.php?' . http_build_query($room_link_vars, '', '&');
 
       $tbody .= "<tr>\n";
       $row_label = room_cell_html($room, $link);
