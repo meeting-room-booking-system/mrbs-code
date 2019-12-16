@@ -380,36 +380,38 @@ $timetohighlight = get_form_var('timetohighlight', 'int');
 
 $is_ajax = is_ajax();
 
-// Check the user is authorised for this page
-if (!checkAuthorised(this_page(), $just_check = $is_ajax))
-{
-  exit;
-}
-
-$rooms = get_room_names($area);
-
 // If we are in the week view and there is more than one room, then make $room negative,
 // unless we have just come from the week view.  If the last page was the week view then
 // keep the current value of room, as it will have been chosen deliberately.  Otherwise
 // make it negative, ie have the 'all' option selected.
 // [The room value is negative if we want the all rooms view, while the absolute value
 // of the room is the current room for context purposes (eg if we move to another page).]
+$rooms = get_room_names($area);
+
 if (($view == 'week') && (count($rooms) > 1))
 {
-  $query_string = array();
+  $referer_query_string = array();
   if (isset($server['HTTP_REFERER']))
   {
-    parse_str(parse_url($server['HTTP_REFERER'], PHP_URL_QUERY), $query_string);
+    parse_str(parse_url($server['HTTP_REFERER'], PHP_URL_QUERY), $referer_query_string);
   }
-
   if (!(isset($server['HTTP_REFERER']) &&
-    isset($query_string['view']) &&
-    ($query_string['view'] == 'week')))
+        isset($referer_query_string['view']) &&
+        ($referer_query_string['view'] == 'week')))
   {
-    $room = -abs($room);
+    if ($room > 0)
+    {
+      $room = -$room;
+    }
   }
 }
 
+
+// Check the user is authorised for this page
+if (!checkAuthorised(this_page(), $just_check = $is_ajax))
+{
+  exit;
+}
 
 switch ($view)
 {
