@@ -70,17 +70,6 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
         $do_rehash = true;
       }
     }
-    elseif (!\PasswordCompat\binary\check())
-    {
-      // password_verify() failed and we are using a version of PHP where
-      // crypt() is broken and so we are stuck, unable to verify the 
-      // password.   What has probably happened is that the passwords were
-      // created on a system running PHP >= 5.3.7 and since then the database
-      // was migrated to a system running PHP < 5.3.7.    For further details
-      // see http://stackoverflow.com/questions/12459896/password-compat-for-older-php-version
-      trigger_error("Password created in a newer version of PHP and cannot be checked in this version",
-                    E_USER_WARNING);
-    }
   }
   /* Otherwise it's a legacy MD5 hash */
   else
@@ -88,11 +77,7 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
     if (md5($password) == $password_hash)
     {
       $result = true;
-
-      if (\PasswordCompat\binary\check())
-      {
-        $do_rehash = true;
-      }
+      $do_rehash = true;
     }
   }
 

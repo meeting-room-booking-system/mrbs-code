@@ -895,15 +895,7 @@ if (isset($action) && ($action == "update"))
         // for security reasons.
         if ($password0 !== '')
         {
-          if (\PasswordCompat\binary\check())
-          {
-            $hash = password_hash($password0, PASSWORD_DEFAULT);
-          }
-          else
-          {
-            $hash = md5($password0);
-          }
-          $values[$fieldname] = $hash;
+          $values[$fieldname] = password_hash($password0, PASSWORD_DEFAULT);
         }
         break;
       case 'level':
