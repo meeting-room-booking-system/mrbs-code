@@ -926,9 +926,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
       $link = 'index.php?' . http_build_query($vars, '', '&');
 
       $tbody .= "<tr>\n";
-      $row_label = '<th>' .
-                   '<a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($room['room_name']) . '</a>' .
-                   "</th>\n";
+      $row_label = room_cell_html($room, $link);
       $tbody .= $row_label;
 
       for ($j = 0; $j < DAYS_PER_WEEK; $j++)
