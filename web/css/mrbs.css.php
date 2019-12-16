@@ -236,11 +236,6 @@ tr:nth-child(even) td.new,
   border-right: 0;
 }
 
-#week_main.all_rooms tbody th {
-  padding: 0.2em;
-  text-align: left;
-}
-
 td, th {
   vertical-align: top;
 }
@@ -664,6 +659,10 @@ table.dwm_main {
 .dwm_main th, .dwm_main td {
   min-height: <?php echo $main_cell_height ?>;
   line-height: <?php echo $main_cell_height ?>;
+}
+
+.dwm_main tbody th {
+  text-align: left;
 }
 
 .dwm_main td {
