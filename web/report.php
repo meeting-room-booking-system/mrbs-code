@@ -1638,7 +1638,7 @@ if ($is_ajax)
 }
 elseif ($output_form)
 {
-  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 }
 else
 {

@@ -255,7 +255,7 @@ function get_fieldset_general($data)
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
 // Get the details for this room
 if (empty($room) || is_null($data = get_room_details($room)))

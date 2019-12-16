@@ -322,7 +322,7 @@ function print_unsupported_message()
 // Print the page header
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($view, $year, $month, $day, $area, $room, $simple=false)
+function print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple=false)
 {
   // Get the form token now, before any headers are sent, in case we are using the 'cookie'
   // session scheme.  Otherwise we won't be able to store the Form token.
@@ -350,6 +350,7 @@ function print_theme_header($view, $year, $month, $day, $area, $room, $simple=fa
   // cannot use these PHP variables directly in the JavaScript files as those files are cached.
   $data = array(
       'view'      => $view,
+      'view_all'  => $view_all,
       'area'      => $area,
       'room'      => $room,
       'page'      => $page,

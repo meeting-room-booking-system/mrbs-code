@@ -479,12 +479,12 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($view=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=true);
+  print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($view=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=false)
+function print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=false)
 {
   global $theme, $default_view;
 
@@ -548,7 +548,7 @@ function print_header($view=null, $year=null, $month=null, $day=null, $area=null
   }
 
   // Now go and do it
-  print_theme_header($view, $year, $month, $day, $area, $room, $simple);
+  print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple);
 
   $done_header = true;
 }

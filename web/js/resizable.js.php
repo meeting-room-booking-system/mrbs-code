@@ -340,7 +340,7 @@ var Table = {
 
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
-      if ((args.room < 0) && (args.view == 'week'))
+      if ((args.view == 'week') && args.view_all)
       {
         return;
       }
@@ -614,7 +614,7 @@ $(document).on('page_ready', function() {
       var table = $(this);
 
       <?php // Don't do anything if this is an empty table or the all-rooms week view ?>
-      if (((args.room < 0) && (args.view == 'week')) ||
+      if (((args.view == 'week') && args.view_all) ||
           table.find('tbody').data('empty'))
       {
         return;
@@ -1098,6 +1098,7 @@ $(document).on('page_ready', function() {
           }
         }
         data.view = args.view;
+        data.view_all = args.view_all;
         if (args.view === 'day')
         {
           data.start_date = args.pageDate;

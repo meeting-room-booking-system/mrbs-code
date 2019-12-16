@@ -633,11 +633,12 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   }
   else
   {
-    $vars = array('view' => 'week',
-                  'year' => $year,
-                  'month' => $month,
-                  'day' => $day,
-                  'area' => $area_id);
+    $vars = array('view'     => 'week',
+                  'view_all' => 0,
+                  'year'     => $year,
+                  'month'    => $month,
+                  'day'      => $day,
+                  'area'     => $area_id);
 
     $header_inner .= get_rooms_header_cells($rooms, $vars);
   }  // end standard view (for the header)
@@ -673,12 +674,13 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     {
       $tbody .= "<tr>\n";
 
-      $vars = array('view'  => 'week',
-                    'year'  => $year,
-                    'month' => $month,
-                    'day'   => $day,
-                    'area'  => $area_id,
-                    'room'  => $room['id']);
+      $vars = array('view'     => 'week',
+                    'view_all' => 0,
+                    'year'     => $year,
+                    'month'    => $month,
+                    'day'      => $day,
+                    'area'     => $area_id,
+                    'room'     => $room['id']);
 
       $room_cell_link = "index.php?" . http_build_query($vars, '', '&');
 
@@ -798,15 +800,15 @@ function week_div($slots, $class, $title=null)
 }
 
 
-function week_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
+function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
-  if ($room_id >= 0)
+  if ($view_all)
   {
-    return week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+    return week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
   }
   else
   {
-    return week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+    return week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
   }
 }
 
@@ -912,6 +914,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
 
   $room_link_vars = array(
       'view'      => 'week',
+      'view_all'  => 0,
       'page_date' => format_iso_date($year, $month, $day),
       'area'      => $area_id
     );

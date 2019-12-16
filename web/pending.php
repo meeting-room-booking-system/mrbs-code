@@ -249,7 +249,7 @@ checkAuthorised(this_page());
 
 $user = getUserName();
 
-print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo "<h1>" . get_vocab("pending") . "</h1>\n";
 
