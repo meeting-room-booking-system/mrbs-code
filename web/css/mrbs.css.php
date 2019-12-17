@@ -210,6 +210,10 @@ tr:nth-child(even) td.new,
   background-color: <?php echo $row_even_color ?>;
 }
 
+#week_main.all_rooms td {
+  height: 100%; <?php // for Firefox ?>
+}
+
 #week_main.all_rooms td a {
   display: flex;
   height: 100%;
