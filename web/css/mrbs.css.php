@@ -847,8 +847,7 @@ table.dwm_main {
 }
 
 .dwm_main .booked a,
-#week_main.all_rooms td div:not(.free)
-{
+#week_main.all_rooms td a div:not(.free) {
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
