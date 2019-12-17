@@ -842,7 +842,9 @@ table.dwm_main {
   height: <?php echo $main_cell_height ?>; <?php // overrides .dwm_main .booking { height: 100%; } ?>
 }
 
-.dwm_main .booked a {
+.dwm_main .booked a,
+#week_main.all_rooms td:not(free) a
+{
   box-sizing: border-box;
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
