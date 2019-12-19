@@ -249,8 +249,12 @@ tr:nth-child(even) td.new,
  * text.
  */
  ?>
-.all_rooms a div:not(.free)::before {
+.all_rooms td a div:not(.free)::before {
   content: '\00a0';
+}
+
+.all_rooms td a:hover {
+  text-decoration: none;
 }
 
 #week_main.all_rooms td a div:last-child,
