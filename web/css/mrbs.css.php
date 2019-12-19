@@ -227,12 +227,29 @@ tr:nth-child(even) td.new,
  * the background colour to show through.  Note however that box-sizing doesn't work quite
  * properly with flexbox - the sizing calculations are a bit out - but it's probably good
  * enough.
+ *
+ * 'width: 0' is essential to keep the table columns equal width when there's a lot of
+ * text in the bookings.
  */
 ?>
 #week_main.all_rooms td a div {
   box-sizing: border-box;
   min-width: 1px;
+  width: 0;
   border-right: 1px dotted  <?php echo $main_table_body_v_border_color ?>;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+<?php
+/* We can't use padding-left because that would add a fixed amount of width
+ * to every div, thus distorting their relative widths.  So add a non-breaking
+ * space before, which will just be treated in the same way as the rest of the
+ * text.
+ */
+ ?>
+.all_rooms a div:not(.free)::before {
+  content: '\00a0';
 }
 
 #week_main.all_rooms td a div:last-child,

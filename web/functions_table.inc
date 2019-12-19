@@ -787,14 +787,23 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 }
 
 
-function week_div($slots, $class, $title=null)
+function week_div($slots, $class, $title=null, $text=null)
 {
   $result = "<div class=\"$class\" style=\"flex: $slots\"";
+
   if (isset($title) && ($title !== ''))
   {
     $result .= ' title="' . htmlspecialchars($title) . '"';
   }
-  $result .= "></div>";
+
+  $result .= '>';
+
+  if (isset($text) && ($text != ''))
+  {
+    $result .= htmlspecialchars($title);
+  }
+
+  $result .= '</div>';
 
   return $result;
 }
@@ -960,10 +969,11 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
             {
               $tbody .= week_div($slots, 'free');
             }
-            $n = $week[$room_id][$d][$s][0]['n_slots'];
-            $type = $week[$room_id][$d][$s][0]['type'];
-            $title = $week[$room_id][$d][$s][0]['name'];
-            $tbody .= week_div($n, $type, $title);
+            $this_entry = $week[$room_id][$d][$s][0];
+            $n =    $this_entry['n_slots'];
+            $type = $this_entry['type'];
+            $text = $this_entry['name'];
+            $tbody .= week_div($n, $type, $text, $text);
             $slots = 0;
           }
           else
