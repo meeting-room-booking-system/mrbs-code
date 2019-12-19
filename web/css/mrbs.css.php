@@ -239,6 +239,7 @@ tr:nth-child(even) td.new,
   border-right: 1px dotted  <?php echo $main_table_body_v_border_color ?>;
   white-space: nowrap;
   overflow: hidden;
+  padding: 0.2em 0;
 }
 
 <?php
