@@ -169,7 +169,7 @@ if (false === set_vocab($lang))
 function using_rtl_lang()
 {
   global $rtl_languages;
-  
+
   $lang = get_mrbs_lang();
   return in_array(utf8_strtolower($lang), $rtl_languages);
 }
@@ -191,14 +191,14 @@ function convert_to_BCP47($locale)
 function set_mrbs_locale($locale)
 {
   $os_locale = System::getOSlocale($locale);
-  
+
   if (false === setlocale(LC_ALL, $os_locale))
   {
     // $os_locale will be an array
     $message = "Server failed to set locale to " . json_encode($os_locale) .
                " for language tag '$locale'.";;
     trigger_error($message, E_USER_NOTICE);
-    
+
     if (false === setlocale(LC_ALL, 'C'))
     {
       fatal_error("Could not set locale at all, not even to 'C'");
@@ -215,9 +215,9 @@ function get_mrbs_locale($header=null)
 {
   global $override_locale, $disable_automatic_language_changing, $default_language_tokens;
   global $cli_language;
-  
+
   static $locale = null;
-  
+
   if (!isset($locale))
   {
     // If we're running from the CLI, use the config setting
@@ -230,8 +230,10 @@ function get_mrbs_locale($header=null)
     {
       $locale = $override_locale;
     }
-    // Otherwise, if we've been told to use a fixed language, then use that 
-    elseif ($disable_automatic_language_changing)
+    // Otherwise, if we've been told to use a fixed language, then use that
+    elseif ($disable_automatic_language_changing &&
+            isset($default_language_tokens) &&
+            ($default_language_tokens !== ''))
     {
       $locale = $default_language_tokens;
     }
@@ -245,11 +247,11 @@ function get_mrbs_locale($header=null)
     {
       $locale = 'en';
     }
-    
+
     // Convert it to BCP 47 format (eg convert 'en_US' to 'en-US')
     $locale = convert_to_BCP47($locale);
   }
-  
+
   return $locale;
 }
 
@@ -264,42 +266,47 @@ function get_lang_preferences()
   global $cli_language, $disable_automatic_language_changing, $default_language_tokens;
   global $override_locale;
   global $aliased_header;
-  
+
   static $lang_preferences = null;
-  
+
   if (!isset($lang_preferences))
   {
     // Use the aliased browser preferences, if any, as a base.    Although we may add
     // higher priority languages later, these are a useful fall-back on the grounds
     // that it's better to have some language rather than none.
     $lang_preferences = get_browser_langs($aliased_header, true);
-    
+
     // If we've been told not to use the browser languages then the default
     // language is more important
-    if ($disable_automatic_language_changing)
+    if ($disable_automatic_language_changing &&
+        isset($default_language_tokens) &&
+        ($default_language_tokens) !== '')
     {
       array_unshift($lang_preferences, $default_language_tokens);
     }
-    
+
     // If there's an override locale then that's more important still
     if (!empty($override_locale))
     {
       array_unshift($lang_preferences, $override_locale);
     }
-    
+
     // If we're running from the CLI then put the CLI language at the top
     if (is_cli() && !empty($cli_language))
     {
       array_unshift($lang_preferences, $cli_language);
     }
-    
+
     // Add the default language tokens as a fallback
-    array_push($lang_preferences, $default_language_tokens);
-    
+    if (isset($default_language_tokens) && ($default_language_tokens !== ''))
+    {
+      array_push($lang_preferences, $default_language_tokens);
+    }
+
     // Finally, add a backstop at the very bottom of the list
     array_push($lang_preferences, 'en');
   }
-  
+
   return $lang_preferences;
 }
 
@@ -312,9 +319,9 @@ function get_mrbs_lang($locale=null)
   global $disable_automatic_language_changing,
          $default_language_tokens,
          $cli_language;
-  
+
   static $lang = null;
-  
+
   if (!isset($lang))
   {
     // If we're running from the CLI, use the config setting
@@ -323,7 +330,9 @@ function get_mrbs_lang($locale=null)
       $lang = $cli_language;
     }
     // Otherwise, if we've been told to use a fixed language, then use that
-    elseif ($disable_automatic_language_changing)
+    elseif ($disable_automatic_language_changing &&
+            isset($default_language_tokens) &&
+            ($default_language_tokens !== ''))
     {
       $lang = $default_language_tokens;
     }
@@ -334,7 +343,7 @@ function get_mrbs_lang($locale=null)
       $lang = Locale::lookup($available_languages, $locale, false, $default_language_tokens);
     }
   }
-  
+
   return $lang;
 }
 
@@ -347,16 +356,16 @@ function alias_header($header, array $aliases)
   {
     $patterns = array();
     $replacements = array();
-    
+
     foreach ($aliases as $key => $value)
     {
       $patterns[] = "/(?<=^|,)($key)(?=,|;|$)/i";
       $replacements[] = $value;
     }
-    
+
     $header = preg_replace($patterns, $replacements, $header);
   }
-  
+
   return $header;
 }
 
@@ -372,15 +381,15 @@ function get_qualifiers($header, $translate_wildcard=false)
   if (!empty($header))
   {
     $lang_specifiers = explode(',', $header);
-    
+
     foreach ($lang_specifiers as $specifier)
     {
       unset($weight);
       $specifier = trim($specifier);
-      
+
       // The regular expressions below are not tight definitions of permissible language tags.
       // They let through some tags which are not permissible, but they do allow permissible
-      // tags such as 'es-419'.  
+      // tags such as 'es-419'.
       if (preg_match('/^([a-zA-Z0-9\-]+|\*);q=([0-9.]+)$/', $specifier, $matches))
       {
         $language = $matches[1];
@@ -412,9 +421,9 @@ function get_qualifiers($header, $translate_wildcard=false)
       }
     }
   }
-  
+
   arsort($result, SORT_NUMERIC);
-  
+
   return $result;
 }
 
@@ -432,19 +441,19 @@ function get_browser_langs($header, $translate_wildcard=false)
 function get_langtags($dir, $prefix='', $suffix='')
 {
   $result = array();
-  
+
   if (!is_dir($dir))
   {
     trigger_error("MRBS: directory '$dir' does not exist", E_USER_NOTICE);
     return $result;
   }
-  
+
   $files = scandir($dir);
-  
+
   foreach ($files as $file)
   {
     $path = $dir . '/' . $file;
-    // . and .. will be included in the output of scandir(), so 
+    // . and .. will be included in the output of scandir(), so
     // we need to exclude them.  We also want to exclude files
     // that we can't read.
     if (!is_dir($path) && is_readable($path))
@@ -460,7 +469,7 @@ function get_langtags($dir, $prefix='', $suffix='')
       }
     }
   }
-  
+
   return $result;
 }
 
@@ -473,23 +482,23 @@ function get_langtags($dir, $prefix='', $suffix='')
 //     onto a language tag, for example array('English' => 'en').  Useful when the localisation
 //     files do not follow a language tag naming scheme.
 //
-// The file names are assumed to be of the form $prefix . $lang . $suffix, eg 
+// The file names are assumed to be of the form $prefix . $lang . $suffix, eg
 // 'datepicker-en-GB.js'
 function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtags=null, array $lang_map=null)
 {
   global $default_language_tokens;
-  
+
   if (!is_dir($dir))
   {
     trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
     return null;
   }
-  
+
   $lang_preferences = get_lang_preferences();
-  
+
   // Get the available languages
   $available_langtags = get_langtags($dir, $prefix, $suffix);
-  
+
   // Translate the non-standard names into BCP 47 tags
   if (isset($lang_map))
   {
@@ -505,13 +514,13 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
       }
     }
   }
-  
+
   // Merge in the default languages
   if (isset($default_langtags))
   {
     $available_langtags = array_unique(array_merge($available_langtags, $default_langtags));
   }
-  
+
   // Find the best fit.
   foreach ($lang_preferences as $lang)
   {
@@ -519,7 +528,7 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
     // Can't see anything about it in the manual - must be a bug that was fixed in
     // later versions.
     $locale = Locale::lookup($available_langtags, $lang, $canonicalize = false);
-    
+
     if (!empty($locale))
     {
       if (isset($default_langtags) && in_array($locale, $default_langtags))
@@ -531,7 +540,7 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
       return $prefix . $filename_body . $suffix;
     }
   }
-  
+
   return null;  // We failed to find anything acceptable
 }
 
@@ -542,7 +551,7 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
 function get_flatpickr_lang_file($dir)
 {
   global $flatpickr_lang_map;
-                  
+
   return get_best_lang_file($dir, '', '.js', null, $flatpickr_lang_map);
 }
 
@@ -565,7 +574,7 @@ function get_flatpickr_property($lang_file)
 function get_datatable_lang_file($dir)
 {
   global $datatables_lang_map;
-  
+
   return get_best_lang_file($dir, '', '.lang', null, $datatables_lang_map);
 }
 
@@ -575,14 +584,14 @@ function get_datatable_lang_file($dir)
 function set_vocab($lang)
 {
   global $vocab, $vocab_override;
-  
+
   // Set English as a fallback language as some of the translations are
   // incomplete.
   if ($lang != 'en')
   {
     set_vocab('en');
   }
-  
+
   $lang = utf8_strtolower($lang);
 
   $lang_file = MRBS_ROOT . "/lang/lang.$lang";
@@ -601,7 +610,7 @@ function set_vocab($lang)
     }
     return true;
   }
-  
+
   return false;
 }
 
@@ -636,7 +645,7 @@ function get_csv_charset()
 function get_lang()
 {
   global $lang;
-  
+
   return $lang;
 }
 
@@ -667,16 +676,16 @@ function get_bom($charset)
 function get_vocab($tag)
 {
   global $vocab;
-  
+
   // Return the tag itself if we can't find a vocab string
   if (!isset($vocab[$tag]))
   {
     return $tag;
   }
-  
+
   $args = func_get_args();
   $args[0] = $vocab[$tag];
-  
+
   return call_user_func_array('sprintf', $args);
 }
 
@@ -685,9 +694,9 @@ function get_vocab($tag)
 function get_mail_vocab($tag)
 {
   global $vocab, $mail_settings;
-  
+
   static $mail_vocab = null;
-  
+
   if (!isset($mail_vocab))
   {
     $web_vocab = $vocab;   // Save $vocab before it gets overwritten
@@ -695,13 +704,13 @@ function get_mail_vocab($tag)
     $mail_vocab = $vocab;
     $vocab = $web_vocab;  // Restore $vocab
   }
-  
+
   // Return the tag itself if we can't find a vocab string
   if (!isset($mail_vocab[$tag]))
   {
     return $tag;
   }
-  
+
   $args = func_get_args();
   $args[0] = $mail_vocab[$tag];
   $result = call_user_func_array('sprintf', $args);
@@ -724,10 +733,10 @@ function get_type_vocab($type)
 function get_loc_field_name($table, $name)
 {
   global $vocab, $db_tbl_prefix;
-  
+
   $tag = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
   $tag .= "." . $name;           // add on the fieldname
-  
+
   // then if there's a string in the vocab array for $tag use that
   // otherwise just use the fieldname
   return (isset($vocab[$tag])) ? get_vocab($tag) : $name;
@@ -753,7 +762,7 @@ function utf8_strftime($format, $time, $temp_locale=null)
     // running in the same process has changed the locale since we first set it.  See the
     // warning on the PHP manual page for setlocale():
     //
-    // "The locale information is maintained per process, not per thread. If you are 
+    // "The locale information is maintained per process, not per thread. If you are
     // running PHP on a multithreaded server API like IIS or Apache on Windows, you may
     // experience sudden changes in locale settings while a script is running, though
     // the script itself never called setlocale(). This happens due to other scripts
@@ -766,7 +775,7 @@ function utf8_strftime($format, $time, $temp_locale=null)
   {
     $new_locale = null;
   }
-  
+
   if ($server_os == "windows")
   {
     // Some formats not supported on Windows.   Replace with suitable alternatives
@@ -775,7 +784,7 @@ function utf8_strftime($format, $time, $temp_locale=null)
     $format = str_replace("%l", "%I", $format);
     $format = str_replace("%e", "%#d", $format);
   }
-  
+
   // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
@@ -790,13 +799,13 @@ function utf8_strftime($format, $time, $temp_locale=null)
 
   $result = strftime($format, $time);
   $result = System::utf8ConvertFromLocale($result, $new_locale);
-  
+
   // Restore the original locale
   if (!empty($temp_locale))
   {
     setlocale(LC_TIME, $old_locale);
   }
-  
+
   return $result;
 }
 
@@ -838,11 +847,11 @@ function utf8_substr($str, $start, $length=null)
 
     return mb_substr($str, $start, $length, $encoding);
   }
-  
+
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
-    
+
     return utf8_substr_old($str, $start, $length);
   }
 
@@ -853,7 +862,7 @@ function utf8_substr($str, $start, $length=null)
   {
     return '';
   }
-  
+
   $i = 0;
   $index = 0;
   while (isset($index) && isset($str[$index]) && (ord($str[$index]) != 0) && ($i < $start))
@@ -866,7 +875,7 @@ function utf8_substr($str, $start, $length=null)
   {
     return '';
   }
-  
+
   if (func_num_args() >= 3)
   {
     $end_index = $index;
@@ -882,7 +891,7 @@ function utf8_substr($str, $start, $length=null)
     for ($i = $index;
          isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
-    { 
+    {
       $ret[$j++] = $str[$i];
     }
     return $ret;
@@ -1011,7 +1020,7 @@ function utf8_to_utf16($string)
 {
   $ucs2 = array();
   $byte_index = 0;
-      
+
   while (!is_null($byte_index))
   {
     $next = utf8_seq($string, $byte_index);
@@ -1045,10 +1054,10 @@ function utf8_to_utf16($string)
       array_push($ucs2, $ucs);
       continue;
     }
-        
+
     $cn = ord($next[3]) ^ 0x80;
     $ucs = ($ucs << 6) | $cn;
-    
+
     // Four byte codes: 11110xxx 10xxxxxxx 10xxxxxx 10xxxxxx
     if ($c0 < 0xF8)
     {
@@ -1103,7 +1112,7 @@ function utf8_strtolower($str)
   {
     return mb_strtolower($str);
   }
-  
+
   return strtolower($str);
 }
 
