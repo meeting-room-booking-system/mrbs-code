@@ -278,7 +278,9 @@ function get_lang_preferences()
 
     // If we've been told not to use the browser languages then the default
     // language is more important
-    if ($disable_automatic_language_changing)
+    if ($disable_automatic_language_changing &&
+        isset($default_language_tokens) &&
+        ($default_language_tokens) !== '')
     {
       array_unshift($lang_preferences, $default_language_tokens);
     }
@@ -296,7 +298,10 @@ function get_lang_preferences()
     }
 
     // Add the default language tokens as a fallback
-    array_push($lang_preferences, $default_language_tokens);
+    if (isset($default_language_tokens) && ($default_language_tokens !== ''))
+    {
+      array_push($lang_preferences, $default_language_tokens);
+    }
 
     // Finally, add a backstop at the very bottom of the list
     array_push($lang_preferences, 'en');
@@ -325,7 +330,9 @@ function get_mrbs_lang($locale=null)
       $lang = $cli_language;
     }
     // Otherwise, if we've been told to use a fixed language, then use that
-    elseif ($disable_automatic_language_changing)
+    elseif ($disable_automatic_language_changing &&
+            isset($default_language_tokens) &&
+            ($default_language_tokens !== ''))
     {
       $lang = $default_language_tokens;
     }
