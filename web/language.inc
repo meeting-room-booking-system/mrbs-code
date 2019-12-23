@@ -107,6 +107,7 @@ $lang_map_windows = array
   'ja-jp' => 'jpn',
   'ko' => 'kor',
   'ko-kr' => 'kor',
+  'ms' => 'msl',
   'nb' => 'nor',
   'nb-no' => 'nor',
   'nl' => 'nld',
@@ -150,7 +151,7 @@ $lang_map_windows = array
 // This maps a Windows locale to the charset it uses, which are
 // all Windows code pages
 //
-// The code pages used by these locales found at: 
+// The code pages used by these locales found at:
 // http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
 $winlocale_codepage_map = array
 (
@@ -622,7 +623,7 @@ $need_to_send_mail = ($mail_settings['admin_on_bookings'] or
                       $mail_settings['room_admin_on_bookings'] or
                       $mail_settings['booker'] or
                       $mail_settings['book_admin_on_approval']);
-                      
+
 if ($need_to_send_mail)
 {
   $web_vocab = $vocab;   // Save $vocab before it gets overwritten
@@ -709,9 +710,9 @@ function get_os_locale($lang)
 {
   global $lang_map_unix, $lang_map_unix_postfix, $lang_map_windows;
   global $server_os;
-  
+
   $locale = FALSE;
-  
+
   if ($server_os == "windows")
   {
     if (array_key_exists(utf8_strtolower($lang), $lang_map_windows))
@@ -760,7 +761,7 @@ function get_os_locale($lang)
       case "bsd":
         $locale .= ".UTF-8";
         if (isset($lang_map_unix_postfix[$locale]))
-        { 
+        {
           $locale .= $lang_map_unix_postfix[$locale];
         }
         break;
@@ -792,7 +793,7 @@ function determine_mrbs_locale()
     $mrbs_locale = get_os_locale($locale);
   }
   $windows_locale = $mrbs_locale;
-  
+
   return $mrbs_locale;
 }
 
@@ -804,7 +805,7 @@ function set_mrbs_locale()
   static $locale = '';
   static $have_locale = FALSE;
   static $have_valid_locale = FALSE;
-  
+
   // If we've tried this before and have got a good locale, then set it.
   if ($have_locale)
   {
@@ -834,7 +835,7 @@ function set_mrbs_locale()
 function alias_qualifiers($qualifiers)
 {
   global $lang_aliases;
-  
+
   $result = array();
   foreach ($qualifiers as $lang => $qualifier)
   {
@@ -858,16 +859,16 @@ function get_language_qualifiers()
   global $cli_mode, $cli_language,
          $default_language_tokens, $disable_automatic_language_changing,
          $HTTP_ACCEPT_LANGUAGE;
-  
+
   static $qualifiers;
-  
+
   if (isset($qualifiers))
   {
     return $qualifiers;
   }
-  
+
   $qualifiers = array();
-  
+
   // If we're running from the CLI, use the config setting
   if ($cli_mode && !empty($cli_language))
   {
@@ -888,7 +889,7 @@ function get_language_qualifiers()
       // The regular expressions below are not tight definitions of permissible language tags.
       // They let through some tags which are not permissible, but they do allow permissible
       // tags such as 'es-419'. Note however that we currently don't handle '*', eg '*;q=0.5',
-      // which is permissible.     
+      // which is permissible.
       if (preg_match('/([a-zA-Z0-9\-]+);q=([0-9\.]+)/', $specifier, $matches))
       {
         $qualifiers[$matches[1]] = (float) $matches[2];
@@ -900,11 +901,11 @@ function get_language_qualifiers()
     }
   }
   // Else use the value from config.inc.php
-  else 
+  else
   {
     $qualifiers[$default_language_tokens] = 1.0;
   }
-  
+
   return $qualifiers;
 }
 
@@ -917,29 +918,29 @@ function get_language_qualifiers()
 //     onto a language tag, for example array('English' => 'en').  Useful when the localisation
 //     files do not follow a language tag naming scheme.
 //
-// The file names are assumed to be of the form $prefix . $lang . $suffix, eg 
+// The file names are assumed to be of the form $prefix . $lang . $suffix, eg
 // 'datepicker-en-GB.js'
 function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_langtags=NULL, $lang_map=NULL)
 {
   global $default_language_tokens;
-  
+
   if (!is_dir($dir))
   {
     trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
     return NULL;
   }
-  
+
   // Get the available languages
   $files = scandir($dir);
   if (!isset($default_langtags))
   {
-    $default_langtags = array(); 
-  } 
+    $default_langtags = array();
+  }
   $available_langtags = $default_langtags;
-  
+
   foreach ($files as $file)
   {
-    // . and .. will be included in the output of scandir(), so 
+    // . and .. will be included in the output of scandir(), so
     // we need to exclude them
     if (!is_dir($dir . '/' . $file))
     {
@@ -955,7 +956,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       }
     }
   }
-  
+
   // Add the default language to the bottom of the list as a backstop (unless
   // it's in the list already
   if (isset($default_language_tokens) && ($default_language_tokens !== ''))
@@ -965,7 +966,7 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
       $lang_preferences[$default_language_tokens] = 0.0;
     }
   }
-  
+
   // Find the best fit.
   foreach ($lang_preferences as $lang => $qual)
   {
@@ -995,11 +996,11 @@ function get_best_lang_file($lang_preferences, $dir, $prefix, $suffix, $default_
 function get_datepicker_lang_file($dir)
 {
   global $langs;
-  
+
   // 'en' and 'en-US' are the default settings and are built into the main
   // datepicker.js code, so are always available.
   $file = get_best_lang_file($langs, 'jquery/ui/i18n', 'datepicker-', '.js', array('en', 'en-US'));
-  
+
   if (isset($file))
   {
     return $dir . '/' . $file;
@@ -1009,7 +1010,7 @@ function get_datepicker_lang_file($dir)
     return NULL;
   }
 }
-  
+
 
 
 // Returns the pathname of the language file to use for the dataTables
@@ -1018,9 +1019,9 @@ function get_datepicker_lang_file($dir)
 function get_datatable_lang_file($dir)
 {
   global $langs, $datatable_lang_map;
-  
+
   $file = get_best_lang_file($langs, $dir, '', '.lang', NULL, $datatable_lang_map);
-  
+
   if (isset($file))
   {
     return $dir . '/' . $file;
@@ -1038,11 +1039,11 @@ function set_vocab($lang)
   global $vocab_override, $cli_mode;
   global $PHP_SELF;
   global $vocab, $mrbs_admin, $mrbs_company;  // Used in lang files
-  
+
   $lang = utf8_strtolower($lang);
 
   $lang_file = "lang/lang.$lang";
-  
+
   if ($cli_mode)
   {
     // When in CLI mode, we need to add the full path name as
@@ -1055,7 +1056,7 @@ function set_vocab($lang)
     // In this case we need to adjust the path
     $lang_file = "../lang/lang.$lang";
   }
-  
+
   if (is_readable($lang_file))
   {
     // Get the standard language tokens
@@ -1104,7 +1105,7 @@ function get_csv_charset()
 function get_lang()
 {
   global $lang;
-  
+
   return $lang;
 }
 
@@ -1194,13 +1195,13 @@ function get_aix_character_encoding($character_encoding)
 function get_vocab($tag)
 {
   global $vocab;
-  
+
   // Return the tag itself if we can't find a vocab string
   if (!isset($vocab[$tag]))
   {
     return $tag;
   }
-  
+
   $args = func_get_args();
   $args[0] = $vocab[$tag];
   return call_user_func_array('sprintf', $args);
@@ -1217,7 +1218,7 @@ function get_mail_vocab($tag)
   {
     return $tag;
   }
-  
+
   $args = func_get_args();
   $args[0] = $mail_vocab[$tag];
   $result = call_user_func_array('sprintf', $args);
@@ -1240,7 +1241,7 @@ function get_type_vocab($type)
 function get_loc_field_name($table, $name)
 {
   global $vocab, $db_tbl_prefix;
-  
+
   $tag = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
   $tag .= "." . $name;           // add on the fieldname
   // then if there's a string in the vocab array for $tag use that
@@ -1333,7 +1334,7 @@ function utf8_strftime($format, $time, $temp_locale=NULL)
     // running in the same process has changed the locale since we first set it.  See the
     // warning on the PHP manual page for setlocale():
     //
-    // "The locale information is maintained per process, not per thread. If you are 
+    // "The locale information is maintained per process, not per thread. If you are
     // running PHP on a multithreaded server API like IIS or Apache on Windows, you may
     // experience sudden changes in locale settings while a script is running, though
     // the script itself never called setlocale(). This happens due to other scripts
@@ -1341,7 +1342,7 @@ function utf8_strftime($format, $time, $temp_locale=NULL)
     // process-wide locale using setlocale()."
     set_mrbs_locale();
   }
-  
+
   if ($server_os == "windows")
   {
     // Some formats not supported on Windows.   Replace with suitable alternatives
@@ -1350,7 +1351,7 @@ function utf8_strftime($format, $time, $temp_locale=NULL)
     $format = str_replace("%l", "%I", $format);
     $format = str_replace("%e", "%#d", $format);
   }
-  
+
   // %p doesn't actually work in some locales, we have to patch it up ourselves
   if (preg_match('/%p/', $format))
   {
@@ -1365,13 +1366,13 @@ function utf8_strftime($format, $time, $temp_locale=NULL)
 
   $result = strftime($format, $time);
   $result = utf8_convert_from_locale($result, $temp_locale);
-  
+
   // Restore the original locale
   if (!empty($temp_locale))
   {
     setlocale(LC_TIME, $old_locale);
   }
-  
+
   return $result;
 }
 
@@ -1416,7 +1417,7 @@ function utf8_substr($str, $start, $length=NULL)
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
-    
+
     return utf8_substr_old($str, $start, $length);
   }
 
@@ -1447,7 +1448,7 @@ function utf8_substr($str, $start, $length=NULL)
     for ($i = $index;
          (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
-    { 
+    {
       $ret[$j++] = $str[$i];
     }
     return $ret;
@@ -1576,7 +1577,7 @@ function utf8_to_utf16($string)
 {
   $ucs2 = array();
   $byte_index = 0;
-      
+
   while (!is_null($byte_index))
   {
     $next = utf8_seq($string, $byte_index);
@@ -1610,10 +1611,10 @@ function utf8_to_utf16($string)
       array_push($ucs2, $ucs);
       continue;
     }
-        
+
     $cn = ord($next[3]) ^ 0x80;
     $ucs = ($ucs << 6) | $cn;
-    
+
     // Four byte codes: 11110xxx 10xxxxxxx 10xxxxxx 10xxxxxx
     if ($c0 < 0xF8)
     {
