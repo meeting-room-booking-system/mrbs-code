@@ -57,6 +57,7 @@
           return "";
       }
   };
+  fp.l10ns.ms = Malaysian;  // MRBS fix
   var ms = fp.l10ns;
 
   exports.Malaysian = Malaysian;

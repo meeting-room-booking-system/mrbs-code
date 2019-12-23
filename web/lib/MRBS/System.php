@@ -25,8 +25,8 @@ class System
       'sv' => 'SE',
       'zh' => 'CN',
     );
-    
-    
+
+
   // A map is needed to convert from the HTTP language specifier to a
   // locale specifier for Windows
   //
@@ -119,6 +119,7 @@ class System
       'ja-jp' => 'jpn',
       'ko' => 'kor',
       'ko-kr' => 'kor',
+      'ms' => 'msl',
       'nb' => 'nor',
       'nb-no' => 'nor',
       'nl' => 'nld',
@@ -159,12 +160,12 @@ class System
       'zh-sg' => 'zhi',
       'zh-tw' => 'cht'
     );
-    
-    
+
+
   // This maps a Windows locale to the charset it uses, which are
   // all Windows code pages
   //
-  // The code pages used by these locales found at: 
+  // The code pages used by these locales found at:
   // http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
   private static $winlocale_codepage_map = array
     (
@@ -343,7 +344,7 @@ class System
       'zhm' => 'CP950',
       'zul' => 'CP1252',
     );
-    
+
   // These are special cases, generally we can convert from the HTTP
   // language specifier to a locale specifier without a map
   private static $lang_map_unix = array
@@ -364,7 +365,7 @@ class System
       'sv' => 'sv-SE',
       'zh' => 'zh-CN',
     );
-    
+
   // IBM AIX locale to code set table
   // See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
   private static $aixlocale_codepage_map = array
@@ -502,7 +503,7 @@ class System
       'GBK',
       'TIS-620'
     );
-    
+
   // GNU iconv code set to IBM AIX libiconv code set table
   // Keys of this table should be in lowercase, and searches should be performed using lowercase!
   private static $gnu_iconv_to_aix_iconv_codepage_map = array
@@ -529,7 +530,7 @@ class System
   public static function getServerOS()
   {
     static $server_os = null;
-    
+
     if (!isset($server_os))
     {
       if (stristr(PHP_OS,'Darwin'))
@@ -561,11 +562,11 @@ class System
         $server_os = 'unsupported';
       }
     }
-    
+
     return $server_os;
   }
-  
-  
+
+
   // Checks whether $langtag is advertised as being available on this system
   private static function isAdvertisedLocale($langtag)
   {
@@ -577,7 +578,7 @@ class System
       // the intl extension, just like ResourceBundle::getLocales().
       return false;
     }
-    
+
     // Get the available locales
     $locales = \ResourceBundle::getLocales('');
     // Put our locale into PHP's format
@@ -588,8 +589,8 @@ class System
     // and set them you need hyphens!
     return in_array($locale, $locales);
   }
-  
-  
+
+
   // Checks whether $langtag, which is in BCP 47 format, is available on this system
   public static function isAvailableLocale($langtag)
   {
@@ -598,17 +599,17 @@ class System
     {
       return true;
     }
-    
+
     // Otherwise try setting the locale
     if (self::testLocale($langtag))
     {
       return true;
     }
-    
+
     // If that didn't work then we might just be running on a very old OS that does
     // things differently
     $server_os = self::getServerOS();
-    
+
     // Windows systems
     if ($server_os == "windows")
     {
@@ -644,17 +645,17 @@ class System
     {
       return false;
     }
-    
+
     // Then test it
     return self::testLocale($locale);
   }
-  
-  
+
+
   // Add a codeset suffix to $locale
   private static function addCodeset($locale)
   {
     $server_os = self::getServerOS();
-    
+
     switch ($server_os)
     {
       case 'sunos':
@@ -666,16 +667,16 @@ class System
       case 'macosx':
         $codeset = '.utf-8';
         break;
-        
+
       default:
         $codeset = '';
         break;
     }
-    
+
     return $locale . $codeset;
   }
-  
-  
+
+
   // Returns an array of locales in the correct format for the server OS given
   // a BCP 47 language tag.  There is an array of locales to try because some
   // operating systems and versions accept locales with underscores, some with
@@ -683,14 +684,14 @@ class System
   public static function getOSlocale($langtag)
   {
     $locales = self::getLocaleAlternatives($langtag);
-    
+
     // Add on a codeset [is this still necessary??]
     $locales = array_map('self::addCodeset', $locales);
-    
+
     return $locales;
   }
-  
-  
+
+
   // The inverse of getOSlocale.  Turns an OS-specific locale into a BCP 47 style
   // language tag.    This is provided for backwards compatibility with old versions
   // of MRBS where the $override_locale config setting was required to be operating
@@ -699,44 +700,44 @@ class System
   public static function getBCPlocale($locale)
   {
     $result = $locale;
-    
+
     // Strip anything like '.utf-8' off the end
     if (strpos($result, '.') !== false)
     {
       $result = strstr($locale, '.', true);
     }
-    
+
     // Convert an old style Windows locale, eg 'eng' to a BCP 47 one, eg 'en-gb'
     if ((self::getServerOS() == 'windows') && in_array($result, self::$lang_map_windows))
     {
       $result = array_search($result, self::$lang_map_windows);
     }
-    
+
     // Parse it and then recompose it.  This will get the capitalisation correct, eg
     // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
     // the capitalisation is just a convention.
     $result = \Locale::composeLocale(\Locale::parseLocale($result));
-    
+
     // Convert underscores to hyphens.  Locale::composeLocale() returns underscores.
     $result = str_replace('_', '-', $result);
-    
+
     return $result;
   }
 
-  
+
   public static function utf8ConvertFromLocale($string, $locale=null)
   {
     $server_os = self::getServerOS();
-    
+
     if ($server_os == 'windows')
     {
       if (!isset($locale))
       {
         $locale = get_mrbs_locale();
       }
-      
+
       $locale = utf8_strtolower($locale);
-      
+
       if (isset(self::$lang_map_windows[$locale]) &&
           array_key_exists(self::$lang_map_windows[$locale], self::$winlocale_codepage_map))
       {
@@ -750,32 +751,32 @@ class System
     }
     return $string;
   }
-  
-  
+
+
   private static function getLocaleAlternatives($langtag)
   {
     $locales = array();
-    
+
     // Put the $langtag into standard PHP format
     $subtags = \Locale::parseLocale($langtag);
-    
+
     if (!empty($subtags))
     {
       $locale = \Locale::composeLocale($subtags);
-      
+
       // First locale to try is one with hyphens instead of underscores.  These work on newer
       // Windows systems, whereas underscores do not.  Also, on Windows systems, although
       // setlocale will succeed with, for example, both 'en_GB' and 'en-GB', only 'en-GB' (and
       // indeed 'eng') will give the date in the correct format when using strftime('%x').
       $locales[] = str_replace('_', '-', $locale);
-      
+
       // Next locale to try is a PHP style locale, ie with underscores
       // Make sure we haven't already got it
       if (!in_array($locale, $locales))
       {
         $locales[] = $locale;
       }
-      
+
       if (self::getServerOS() == 'windows')
       {
         // Add in the three-letter code if any as a last resort
@@ -784,7 +785,7 @@ class System
           $locales[] = self::$lang_map_windows[utf8_strtolower($langtag)];
         }
       }
-      
+
       // If there isn't a region specified then add one, because on some systems
       // setlocale(LC_ALL, 'en'), for example, doesn't work, even though 'en' seems
       // to be an available locale.
@@ -797,11 +798,11 @@ class System
         }
       }
     }
-    
+
     return $locales;
   }
-  
-  
+
+
   // Returns the default region for a language
   private static function getDefaultRegion($language)
   {
@@ -809,11 +810,11 @@ class System
     {
       return self::$default_regions[$language];
     }
-    
+
     return utf8_strtoupper($language);
   }
-  
-  
+
+
   // AIX version of utf8_convert(); needed as locales won't give us UTF-8
   // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
   // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferably be used on date/time input only!
@@ -853,8 +854,8 @@ class System
 
     return $string;
   }
-  
-  
+
+
   // Translates a GNU libiconv character encoding name to its corresponding IBM AIX libiconv character
   // encoding name. Returns FALSE if character encoding name is unknown.
   private static function getAixCharacterEncoding($character_encoding)
@@ -878,17 +879,17 @@ class System
 
     return self::$gnu_iconv_to_aix_iconv_codepage_map[$character_encoding];
   }
-  
-  
+
+
   // Tests whether $langtag can be set on this system. Preserves the current locale.
   private static function testLocale($langtag)
   {
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
     $original_locales = explode(';', setlocale(LC_ALL, 0));
-    
+
     $os_locale = self::getOSLocale($langtag);
-    
+
     // Try the test locale
     $result = setlocale(LC_ALL, $os_locale);
 
@@ -912,8 +913,8 @@ class System
         setlocale($category, $locale);
       }
     }
-    
+
     return ($result !== false);
   }
-  
+
 }
