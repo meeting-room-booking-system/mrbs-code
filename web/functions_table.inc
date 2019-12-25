@@ -352,9 +352,10 @@ function time_cell_html($s, $url)
 
 // Draw a room cell to be used in the header rows/columns of the day and week views
 //    $room    contains the room details
-//    $link    the href to be used for the link
-function room_cell_html(array $room, $link)
+//    $vars    an associative array containing the variables to be used to build the link
+function room_cell_html(array $room, array $vars)
 {
+  $link = 'index.php?' . http_build_query($vars, '', '&');
   $title = get_vocab("viewweek") . "\n\n" . $room['description'];
   $html = '';
   $html .= '<th data-room="' . htmlspecialchars($room['id']) . '">';
@@ -526,8 +527,7 @@ function get_rooms_header_cells($rooms, $vars)
   foreach($rooms as $room)
   {
     $vars['room'] = $room['id'];
-    $link = 'index.php?' . http_build_query($vars, '', '&');
-    $html .= room_cell_html($room, $link);
+    $html .= room_cell_html($room, $vars);
   }
 
   return $html;
@@ -683,8 +683,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
                     'area'     => $area_id,
                     'room'     => $room['id']);
 
-      $room_cell_link = "index.php?" . http_build_query($vars, '', '&');
-      $row_label = room_cell_html($room, $room_cell_link);
+      $row_label = room_cell_html($room, $vars);
       $tbody .= $row_label;
       $is_invalid = array();
       for ($s = $morning_slot_seconds;
@@ -936,10 +935,8 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
     {
       $room_id = $room['id'];
       $room_link_vars['room'] = $room_id;
-      $link = 'index.php?' . http_build_query($room_link_vars, '', '&');
-
       $tbody .= "<tr>\n";
-      $row_label = room_cell_html($room, $link);
+      $row_label = room_cell_html($room, $room_link_vars);
       $tbody .= $row_label;
 
       for ($j = 0; $j < DAYS_PER_WEEK; $j++)
