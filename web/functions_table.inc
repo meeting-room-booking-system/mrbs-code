@@ -525,6 +525,7 @@ function get_rooms_header_cells($rooms, $vars)
 
   foreach($rooms as $room)
   {
+    $vars['room'] = $room['id'];
     $link = 'index.php?' . http_build_query($vars, '', '&');
     $html .= room_cell_html($room, $link);
   }
