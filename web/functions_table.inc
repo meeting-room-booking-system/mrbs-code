@@ -683,8 +683,8 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
                     'room'     => $room['id']);
 
       $room_cell_link = "index.php?" . http_build_query($vars, '', '&');
-
-      $tbody .= room_cell_html($room, $room_cell_link);
+      $row_label = room_cell_html($room, $room_cell_link);
+      $tbody .= $row_label;
       $is_invalid = array();
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
@@ -708,7 +708,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       }  // end for (looping through the times)
       if ( false != $row_labels_both_sides )
       {
-        $tbody .= room_cell_html($room, $room_cell_link);
+        $tbody .= $row_label;
       }
       $tbody .= "</tr>\n";
     }  // end for (looping through the rooms)
