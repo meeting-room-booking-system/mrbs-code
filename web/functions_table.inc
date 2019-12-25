@@ -1213,8 +1213,8 @@ function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
                     'room'  => $room_id);
 
       $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
-
-      $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
+      $row_label = day_cell_html($day_cell_text, $day_cell_link, $wdate);
+      $tbody .= $row_label;
 
       for ($s = $morning_slot_seconds;
            $s <= $evening_slot_seconds;
@@ -1233,7 +1233,7 @@ function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
       }  // end looping through the time slots
       if ( false != $row_labels_both_sides )
       {
-        $tbody .= day_cell_html($day_cell_text, $day_cell_link, $wdate);
+        $tbody .= $row_label;
       }
       $tbody .= "</tr>\n";
 
