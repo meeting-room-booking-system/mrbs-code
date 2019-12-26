@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 // +---------------------------------------------------------------------------+
 // | Meeting Room Booking System.                                              |
@@ -1152,7 +1153,7 @@ function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $ch
   if ($mail_settings['debug'])
   {
     $mail->Debugoutput = ($mail_settings['debug_output'] == 'log') ? 'error_log' : 'html';
-    $mail->SMTPDebug = \SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
+    $mail->SMTPDebug = SMTP::DEBUG_CONNECTION; // show connection status, client -> server and server -> client messages
   }
 
   $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
