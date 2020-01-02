@@ -3,30 +3,7 @@ namespace MRBS;
 
 global $refresh_rate, $custom_css_url;
 global $debug;
-?>
 
-
-<!--[if IE]>
-<link rel="stylesheet" href="css/mrbs-ie.css" type="text/css">
-<![endif]-->
-<?php
-if (using_rtl_lang())
-{
-  ?>
-  <!--[if IE]>
-  <link rel="stylesheet" href="css/mrbs-ie-rtl.css" type="text/css">
-  <![endif]-->
-  <?php
-}
-
-if (isset($custom_css_url))
-{
-  ?>
-  <link rel="stylesheet" href="<?php echo $custom_css_url ?>" type="text/css">
-  <?php
-}
-
-    
 if ($debug)
 {
   ?>
@@ -63,7 +40,29 @@ if (using_rtl_lang())
   <?php
 }
 ?>
+
 <link rel="stylesheet" media="print" href="css/mrbs-print.css.php" type="text/css">
+
+<!--[if IE]>
+<link rel="stylesheet" href="css/mrbs-ie.css" type="text/css">
+<![endif]-->
+<?php
+if (using_rtl_lang())
+{
+  ?>
+  <!--[if IE]>
+  <link rel="stylesheet" href="css/mrbs-ie-rtl.css" type="text/css">
+  <![endif]-->
+  <?php
+}
+
+if (isset($custom_css_url))
+{
+  ?>
+  <link rel="stylesheet" href="<?php echo $custom_css_url ?>" type="text/css">
+  <?php
+}
+?>
 
 <meta name="robots" content="noindex, nofollow">
 
