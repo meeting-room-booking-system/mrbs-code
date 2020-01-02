@@ -6,12 +6,7 @@ use MRBS\Form\Form;
 
 function init_joomla()
 {
-  // Not quite sure what's going on here.   JFactory::getSession() needs to be called
-  // before JFactory::getApplication() in order to keep Joomla 2 happy and after it for
-  // Joomla 3.  Doing it both before and after seems to keep them both happy.
-  $session = JFactory::getSession();
   $mainframe = JFactory::getApplication('site');
-  $session = JFactory::getSession();
   $mainframe->initialise();
 }
 
@@ -19,25 +14,25 @@ function init_joomla()
 function init_sessions()
 {
   global $auth;
-  
+
   // The cookie session scheme doesn't use PHP sessions
   if ($auth['session'] == 'cookie')
   {
     return;
   }
-  
+
   // Joomla has its own session management
   if ($auth['session'] == 'joomla')
   {
     init_joomla();
     return;
   }
-  
+
   // Set some session settings, as a defence against session fixation.
   ini_set('session.use_only_cookies', '1');
   ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
   ini_set('session.use_trans_sid', '0');
-  
+
   $cookie_path = get_cookie_path();
 
   if (!isset($auth['session_php']['session_expire_time']))
@@ -46,21 +41,21 @@ function init_sessions()
     // session cookies - no persistent cookie.
     $auth['session_php']['session_expire_time'] = 0;
   }
-  
+
   // We don't want the session garbage collector to delete the session before it has expired
   if ($auth['session_php']['session_expire_time'] !== 0)
   {
     ini_set('session.gc_maxlifetime', $auth['session_php']['session_expire_time']);
   }
-  
+
   session_name('MRBS_SESSID');  // call before session_set_cookie_params() - see PHP manual
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
-  
+
   $current_db_schema_version = db_schema_version();
   // The session table was created in Upgrade 56.   Before that we will ignore any errors
   // to do with DB sessions.
   $session_table_should_exist = ($current_db_schema_version >= 56);
-  
+
   try
   {
     $handler = new SessionHandlerDb();
@@ -75,25 +70,25 @@ function init_sessions()
     }
     $session_started = false;
   }
-  
+
   if ($session_started === false)
   {
     if ($session_table_should_exist)
     {
-      $message = "Could not start DB sessions, trying ordinary PHP sessions.";       
+      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
       trigger_error($message, E_USER_WARNING);
     }
-    
+
     $handler = new \SessionHandler();
     session_set_save_handler($handler, true);
-    
+
     if (false === session_start())
     {
       // Check that the session started OK.   If we're using the 'php' session scheme then
       // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
       // they are not working we will fall back to using cookies.
       $message = "MRBS: could not start sessions";
-      
+
       if ($auth['session'] == 'php')
       {
         throw new \Exception($message);
@@ -101,7 +96,7 @@ function init_sessions()
       else
       {
         trigger_error($message, E_USER_WARNING);
-        
+
         // If sessions didn't work, then set a cookie containing the CSRF token.
 
         // Note that the technique of creating a dummy form to store the token
@@ -118,6 +113,6 @@ function init_sessions()
 }
 
 
-// Start up sessions 
+// Start up sessions
 init_sessions();
 
