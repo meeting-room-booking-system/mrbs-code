@@ -834,16 +834,16 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 {
   if ($view_all)
   {
-    return week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+    return week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id);
   }
   else
   {
-    return week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id);
+    return week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id);
   }
 }
 
 
-function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_id)
+function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
   global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts, $strftime_format;
@@ -911,6 +911,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
   {
     $vars = array(
       'view'      => 'day',
+      'view_all'  => $view_all,
       'area'      => $area_id,
       'room'      => $room['id']
     );
@@ -980,6 +981,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
         $tbody .= "<td>";
         $vars = array(
             'view'      => 'day',
+            'view_all'  => $view_all,
             'page_date' => format_iso_date($year, $month, $d),
             'area'      => $area_id,
             'room'      => $room['id']
@@ -1039,7 +1041,7 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
 }
 
 
-function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -1182,12 +1184,13 @@ function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
         continue;
       }
 
-      $vars = array('view'  => 'day',
-                    'year'  => strftime("%Y", $t),
-                    'month' => strftime("%m", $t),
-                    'day'   => strftime('%d', $t),
-                    'area'  => $area_id,
-                    'room'  => $room_id);
+      $vars = array('view'     => 'day',
+                    'view_all' => $view_all,
+                    'year'     => strftime("%Y", $t),
+                    'month'    => strftime("%m", $t),
+                    'day'      => strftime('%d', $t),
+                    'area'     => $area_id,
+                    'room'     => $room_id);
 
       $link = 'index.php?' . http_build_query($vars, '', '&');
       $text = utf8_strftime($dformat, $t);
@@ -1235,12 +1238,13 @@ function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
 
       $day_cell_text = utf8_strftime($dformat, $wt);
 
-      $vars = array('view'  => 'day',
-                    'year'  => strftime("%Y", $wt),
-                    'month' => strftime("%m", $wt),
-                    'day'   => strftime("%d", $wt),
-                    'area'  => $area_id,
-                    'room'  => $room_id);
+      $vars = array('view'     => 'day',
+                    'view_all' => $view_all,
+                    'year'     => strftime("%Y", $wt),
+                    'month'    => strftime("%m", $wt),
+                    'day'      => strftime("%d", $wt),
+                    'area'     => $area_id,
+                    'room'     => $room_id);
 
       $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
       $row_label = day_cell_html($day_cell_text, $day_cell_link, $wdate);
@@ -1281,12 +1285,13 @@ function week_room_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
       // Show the time linked to the URL for highlighting that time:
       $classes = array();
 
-      $vars = array('view'  => 'week',
-                    'year'  => $year,
-                    'month' => $month,
-                    'day'   => $day,
-                    'area'  => $area_id,
-                    'room'  => $room_id);
+      $vars = array('view'     => 'week',
+                    'view_all' => $view_all,
+                    'year'     => $year,
+                    'month'    => $month,
+                    'day'      => $day,
+                    'area'     => $area_id,
+                    'room'     => $room_id);
 
       if (isset($timetohighlight) && ($s == $timetohighlight))
       {
