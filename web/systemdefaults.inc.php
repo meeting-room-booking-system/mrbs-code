@@ -389,6 +389,10 @@ $show_timeline = true;
 // Default is day
 $default_view = "day";
 
+// The default setting for the week and month views: whether to view all the
+// rooms (true) or not (false).
+$default_view_all = true;
+
 // Define default room to start with (used by index.php)
 // Room numbers can be determined by looking at the Edit or Delete URL for a
 // room on the admin page.
