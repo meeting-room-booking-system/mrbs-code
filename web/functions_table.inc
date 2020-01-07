@@ -284,7 +284,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
 
         $classes = get_entry_classes($booking);
         $classes[] = 'booking';
-        
+
         if ($booking['is_multiday_start'])
         {
           $classes[] = 'multiday_start';
@@ -797,9 +797,20 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 }
 
 
-function week_div($slots, $class, $title=null, $text=null)
+// Returns the HTML for a booking, or a free set of slots
+//    $slots    The number of slots occupied
+//    $classes  A scalar or array giving the class or classes to be used in the class attribute
+//    $title    The value of the title attribute
+//    $text     The value of the text to be used in the div
+function week_div($slots, $classes, $title=null, $text=null)
 {
-  $result = "<div class=\"$class\" style=\"flex: $slots\"";
+  $result = "<div style=\"flex: $slots\"";
+
+  if (isset($classes))
+  {
+    $value = (is_array($classes)) ? implode(' ', $classes) : $classes;
+    $result .= ' class="' . htmlspecialchars($value) . '"';
+  }
 
   if (isset($title) && ($title !== ''))
   {
@@ -898,6 +909,12 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
 
   if ($days_along_top)
   {
+    $vars = array(
+      'view'      => 'day',
+      'area'      => $area_id,
+      'room'      => $room['id']
+    );
+
     // the standard view, with days along the top and rooms down the side
     for ($j = 0; $j < DAYS_PER_WEEK; $j++)
     {
@@ -905,9 +922,12 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
       {
         continue;
       }
-
+      $vars['page_date'] = format_iso_date($year, $month, $day_start_week + $j);
+      $link = "index.php?" . http_build_query($vars, '', '&');
       $t = mktime(12, 0, 0, $month, $day_start_week + $j, $year);
-      $header_inner .= '<th>' . utf8_strftime($dformat, $t) . '</th>';
+      $header_inner .= '<th><a href="' . htmlspecialchars($link) . '">' .
+                       utf8_strftime($dformat, $t) .
+                       '</a></th>';
     }
   }
   else
@@ -979,9 +999,9 @@ function week_area_table_innerhtml($view, $year, $month, $day, $area_id, $room_i
             }
             $this_entry = $week[$room_id][$d][$s][0];
             $n =    $this_entry['n_slots'];
-            $type = $this_entry['type'];
             $text = $this_entry['name'];
-            $tbody .= week_div($n, $type, $text, $text);
+            $classes = get_entry_classes($this_entry);
+            $tbody .= week_div($n, $classes, $text, $text);
             $slots = 0;
           }
           else
