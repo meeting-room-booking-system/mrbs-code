@@ -171,7 +171,7 @@ function get_entry_classes($entry)
 {
   global $approval_enabled, $confirmation_enabled;
 
-  $classes = array();
+  $classes = array($entry['type']);
 
   if ($entry['private'])
   {
@@ -284,8 +284,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
 
         $classes = get_entry_classes($booking);
         $classes[] = 'booking';
-        $classes[] = $booking['type'];
-
+        
         if ($booking['is_multiday_start'])
         {
           $classes[] = 'multiday_start';
@@ -1453,7 +1452,6 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
-  global $approval_enabled, $confirmation_enabled;
   global $is_private_field;
 
   // Check that we've got a valid, enabled room
@@ -1592,25 +1590,8 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
             $entry['private'] = false;
           }
 
-          // give the enclosing div the appropriate width: full width if both,
-          // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-          $classes = array($entry['type'], $monthly_view_entries_details);
-          if ($entry['private'])
-          {
-            $classes[] = 'private';
-          }
-          if ($approval_enabled && ($entry['awaiting_approval']))
-          {
-            $classes[] = 'awaiting_approval';
-          }
-          if ($confirmation_enabled && ($entry['tentative']))
-          {
-            $classes[] = 'tentative';
-          }
-          if (isset($entry['repeat_id']))
-          {
-            $classes[] = 'series';
-          }
+          $classes = get_entry_classes($entry);
+          $classes[] = $monthly_view_entries_details;
 
           $html .= '<div class="' . implode(' ', $classes) . '">';
 
