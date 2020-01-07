@@ -166,6 +166,36 @@ function map_coalesce_bookings(&$column)
 } // end function map_coalesce_bookings()
 
 
+// Returns an array of classes to be used for the entry
+function get_entry_classes($entry)
+{
+  global $approval_enabled, $confirmation_enabled;
+
+  $classes = array();
+
+  if ($entry['private'])
+  {
+    $classes[] = 'private';
+  }
+
+  if ($approval_enabled && ($entry['awaiting_approval']))
+  {
+    $classes[] = 'awaiting_approval';
+  }
+
+  if ($confirmation_enabled && ($entry['tentative']))
+  {
+    $classes[] = 'tentative';
+  }
+
+  if (isset($entry['repeat_id']))
+  {
+    $classes[] = 'series';
+  }
+
+  return $classes;
+}
+
 
 function cell_html(array $cell, array $query_vars, $is_invalid = false)
 {
@@ -186,7 +216,6 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
   // slots in the transition to DST
 
   global $enable_periods, $show_plus_link;
-  global $approval_enabled, $confirmation_enabled;
 
   $html = '';
 
@@ -253,27 +282,9 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         // 'width: 100%' and 'height: 100%' to fill the table-cell with the entire booking
         // including content.
 
-        $classes = array('booking', $booking['type']);
-
-        if ($booking['private'])
-        {
-          $classes[] = 'private';
-        }
-
-        if ($approval_enabled && ($booking['awaiting_approval']))
-        {
-          $classes[] = 'awaiting_approval';
-        }
-
-        if ($confirmation_enabled && ($booking['tentative']))
-        {
-          $classes[] = 'tentative';
-        }
-
-        if (isset($booking['repeat_id']))
-        {
-          $classes[] = 'series';
-        }
+        $classes = get_entry_classes($booking);
+        $classes[] = 'booking';
+        $classes[] = $booking['type'];
 
         if ($booking['is_multiday_start'])
         {
