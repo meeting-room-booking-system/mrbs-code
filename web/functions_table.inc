@@ -1463,41 +1463,6 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   $weekday_start = (date("w", $month_start) - $weekstarts + DAYS_PER_WEEK) % DAYS_PER_WEEK;
   $days_in_month = date("t", $month_start);
 
-  // Get all meetings for this month in the room that we care about
-  // This data will be retrieved day-by-day fo the whole month
-  for ($day_num = 1; $day_num<=$days_in_month; $day_num++)
-  {
-    $start_first_slot = get_start_first_slot($month, $day_num, $year);
-    $end_last_slot = get_end_last_slot($month, $day_num, $year);
-    $entries = get_entries_by_room($room, $start_first_slot, $end_last_slot);
-
-    // Build an array of information about each day in the month.
-
-    foreach($entries as $entry)
-    {
-      // Handle private events
-      if (is_private_event($entry['private']) &&
-          !getWritable($entry['create_by'], $room))
-      {
-        $entry['private'] = true;
-        if ($is_private_field['entry.name'])
-        {
-          $entry['name'] = "[".get_vocab('unavailable')."]";
-        }
-        if (!empty($is_private_field['entry.type']))
-        {
-          $entry['type'] = 'private_type';
-        }
-      }
-      else
-      {
-        $entry['private'] = false;
-      }
-
-      $d[$day_num][] = $entry;
-    }
-  }
-
   $html .= get_table_head();
 
   // Main body
@@ -1511,10 +1476,15 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
   }
 
   // Draw the days of the month:
-  for ($cday = 1; $cday <= $days_in_month; $cday++)
+  for ($d = 1; $d <= $days_in_month; $d++)
   {
+    // Get the entries for the day
+    $start_first_slot = get_start_first_slot($month, $d, $year);
+    $end_last_slot = get_end_last_slot($month, $d, $year);
+    $entries = get_entries_by_room($room, $start_first_slot, $end_last_slot);
+
     // if we're at the start of the week (and it's not the first week), start a new row
-    if (($weekcol == 0) && ($cday > 1))
+    if (($weekcol == 0) && ($d > 1))
     {
       $html .= "</tr><tr>\n";
     }
@@ -1528,7 +1498,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
       $html .= "<div class=\"cell_container\">\n";
       $html .= "<div class=\"cell_header\">\n";
       // first put in the day of the month
-      $html .= "<span>$cday</span>\n";
+      $html .= "<span>$d</span>\n";
       $html .= "</div>\n";
       $html .= "</div>\n";
       $html .= "</td>\n";
@@ -1542,7 +1512,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
 
       $vars = array('year'  => $year,
                     'month' => $month,
-                    'day'   => $cday,
+                    'day'   => $d,
                     'area'  => $area,
                     'room'  => $room);
 
@@ -1552,13 +1522,13 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
         $html .= '<a class="week_number" href="index.php?' . htmlspecialchars($query) . '">';
-        $html .= date("W", gmmktime(12, 0, 0, $month, $cday, $year));
+        $html .= date("W", gmmktime(12, 0, 0, $month, $d, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
       $vars['view'] = 'day';
       $query = http_build_query($vars, '', '&');
-      $html .= '<a class="monthday" href="index.php?' . htmlspecialchars($query) . "\">$cday</a>\n";
+      $html .= '<a class="monthday" href="index.php?' . htmlspecialchars($query) . "\">$d</a>\n";
 
       $html .= "</div>\n";
 
@@ -1586,15 +1556,31 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
       $html .= "</a>\n";
 
       // then any bookings for the day
-      if (isset($d[$cday]))
+      if (count($entries) > 0)
       {
-        $start_first_slot = get_start_first_slot($month, $cday, $year);
-        $end_last_slot = get_end_last_slot($month, $cday, $year);
-
         $html .= "<div class=\"booking_list\">\n";
         // Show the start/stop times, 1 or 2 per line, linked to view_entry.
-        foreach($d[$cday] as $entry)
+        foreach ($entries as $entry)
         {
+          // Handle private events
+          if (is_private_event($entry['private']) &&
+              !getWritable($entry['create_by'], $room))
+          {
+            $entry['private'] = true;
+            if ($is_private_field['entry.name'])
+            {
+              $entry['name'] = "[".get_vocab('unavailable')."]";
+            }
+            if (!empty($is_private_field['entry.type']))
+            {
+              $entry['type'] = 'private_type';
+            }
+          }
+          else
+          {
+            $entry['private'] = false;
+          }
+
           // give the enclosing div the appropriate width: full width if both,
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
           $classes = array($entry['type'], $monthly_view_entries_details);
@@ -1620,7 +1606,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
           $vars = array('id'    => $entry["id"],
                         'year'  => $year,
                         'month' => $month,
-                        'day'   => $cday);
+                        'day'   => $d);
 
           $query = http_build_query($vars, '', '&');
           $booking_link = "view_entry.php?$query";
