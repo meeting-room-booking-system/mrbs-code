@@ -1472,9 +1472,6 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
     $entries = get_entries_by_room($room, $start_first_slot, $end_last_slot);
 
     // Build an array of information about each day in the month.
-    // The information is stored as:
-    //   d[monthday]["id"][] = ID of each entry, for linking.
-    //   d[monthday]["data"][] = "start-stop" times or "name" of each entry.
 
     foreach($entries as $entry)
     {
@@ -1497,17 +1494,7 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
         $entry['private'] = false;
       }
 
-      $d[$day_num]['shortdescrip'][]      = htmlspecialchars($entry['name']);
-      $d[$day_num]['id'][]                = $entry['id'];
-      $d[$day_num]['type'][]              = $entry['type'];
-      $d[$day_num]['awaiting_approval'][] = $entry['awaiting_approval'];
-      $d[$day_num]['private'][]           = $entry['private'];
-      $d[$day_num]['tentative'][]         = $entry['tentative'];
-      $d[$day_num]['is_repeat'][]         = isset($entry['repeat_id']);
-      $d[$day_num]['data'][]              = get_booking_summary($entry['start_time'],
-                                                                $entry['end_time'],
-                                                                $start_first_slot,
-                                                                $end_last_slot);
+      $d[$day_num][] = $entry;
     }
   }
 
@@ -1599,45 +1586,50 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
       $html .= "</a>\n";
 
       // then any bookings for the day
-      if (isset($d[$cday]["id"][0]))
+      if (isset($d[$cday]))
       {
+        $start_first_slot = get_start_first_slot($month, $cday, $year);
+        $end_last_slot = get_end_last_slot($month, $cday, $year);
+
         $html .= "<div class=\"booking_list\">\n";
-        $n = count($d[$cday]["id"]);
         // Show the start/stop times, 1 or 2 per line, linked to view_entry.
-        for ($i = 0; $i < $n; $i++)
+        foreach($d[$cday] as $entry)
         {
           // give the enclosing div the appropriate width: full width if both,
           // otherwise half-width (but use 49.9% to avoid rounding problems in some browsers)
-          $classes = array($d[$cday]['type'][$i],
-                           $monthly_view_entries_details);
-          if ($d[$cday]['private'][$i])
+          $classes = array($entry['type'], $monthly_view_entries_details);
+          if ($entry['private'])
           {
             $classes[] = 'private';
           }
-          if ($approval_enabled && ($d[$cday]['awaiting_approval'][$i]))
+          if ($approval_enabled && ($entry['awaiting_approval']))
           {
             $classes[] = 'awaiting_approval';
           }
-          if ($confirmation_enabled && ($d[$cday]['tentative'][$i]))
+          if ($confirmation_enabled && ($entry['tentative']))
           {
             $classes[] = 'tentative';
           }
-          if ($d[$cday]['is_repeat'][$i])
+          if (isset($entry['repeat_id']))
           {
             $classes[] = 'series';
           }
 
-          $html .= '<div class="' . implode(' ', $classes) . "\">\n";
+          $html .= '<div class="' . implode(' ', $classes) . '">';
 
-          $vars = array('id'    => $d[$cday]["id"][$i],
+          $vars = array('id'    => $entry["id"],
                         'year'  => $year,
                         'month' => $month,
                         'day'   => $cday);
 
           $query = http_build_query($vars, '', '&');
-          $booking_link = 'view_entry.php?' . htmlspecialchars($query);
-          $slot_text = $d[$cday]["data"][$i];
-          $description_text = utf8_substr($d[$cday]["shortdescrip"][$i], 0, 255);
+          $booking_link = "view_entry.php?$query";
+          $slot_text = get_booking_summary(
+                         $entry['start_time'],
+                         $entry['end_time'],
+                         $start_first_slot,
+                         $end_last_slot);
+          $description_text = utf8_substr($entry['name'], 0, 255);
           $full_text = $slot_text . " " . $description_text;
           switch ($monthly_view_entries_details)
           {
@@ -1661,8 +1653,9 @@ function month_table_innerhtml($view, $year, $month, $day, $area, $room)
               $html .= "error: unknown parameter";
             }
           }
-          $html .= "<a href=\"$booking_link\" title=\"$full_text\">";
-          $html .= "$display_text</a>\n";
+          $html .= '<a href="' . htmlspecialchars($booking_link) . '"' .
+                   ' title="' . htmlspecialchars($full_text) . '">';
+          $html .= htmlspecialchars($display_text) . '</a>';
           $html .= "</div>\n";
         }
         $html .= "</div>\n";
