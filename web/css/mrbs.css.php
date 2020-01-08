@@ -1131,7 +1131,7 @@ tr.row_highlight td.new {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-tbody th {
+th {
   white-space: nowrap;
   vertical-align: middle;
 }
