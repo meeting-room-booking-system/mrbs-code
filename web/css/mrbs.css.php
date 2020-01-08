@@ -201,20 +201,20 @@ a:hover {
 }
 
 tr:nth-child(odd) td.new,
-#week_main.all_rooms tr:nth-child(odd) td {
+.all_rooms tr:nth-child(odd) td {
   background-color: <?php echo $row_odd_color ?>;
 }
 
 tr:nth-child(even) td.new,
-#week_main.all_rooms tr:nth-child(even) td {
+.all_rooms tr:nth-child(even) td {
   background-color: <?php echo $row_even_color ?>;
 }
 
-#week_main.all_rooms td {
+.all_rooms td {
   height: 100%; <?php // for Firefox ?>
 }
 
-#week_main.all_rooms td a {
+.dwm_main.all_rooms td a {
   display: flex;
   height: 100%;
   padding: 0;
@@ -232,7 +232,7 @@ tr:nth-child(even) td.new,
  * text in the bookings.
  */
 ?>
-#week_main.all_rooms td a div {
+.all_rooms td a div {
   box-sizing: border-box;
   min-width: 1px;
   width: 0;
@@ -257,8 +257,8 @@ tr:nth-child(even) td.new,
   text-decoration: none;
 }
 
-#week_main.all_rooms td a div:last-child,
-#week_main.all_rooms td a div.free {
+.all_rooms td a div:last-child,
+.all_rooms td a div.free {
   border-right: 0;
 }
 
@@ -873,7 +873,7 @@ table.dwm_main {
 }
 
 .dwm_main .booked a,
-#week_main.all_rooms td a div:not(.free) {
+.all_rooms td a div:not(.free) {
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
@@ -952,7 +952,7 @@ table.dwm_main {
   background-color: <?php echo $main_table_slot_invalid_color ?>;
 }
 
-.dwm_main#month_main tbody tr:not(:first-child) td {
+.dwm_main#month_main:not(.all_rooms) tbody tr:not(:first-child) td {
   border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
@@ -964,7 +964,7 @@ table.dwm_main {
   background-color: <?php echo $main_table_month_invalid_color ?>;
 }
 
-.dwm_main#month_main a {
+.dwm_main#month_main:not(.all_rooms) a {
   height: 100%;
   width: 100%;
   padding: 0 2px 0 2px;

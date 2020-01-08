@@ -834,7 +834,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 {
   if ($view_all)
   {
-    return week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id);
+    return multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id);
   }
   else
   {
@@ -843,7 +843,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 }
 
 
-function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
+function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
   global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts, $strftime_format;
@@ -859,10 +859,26 @@ function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_
     return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
   }
 
-  // Calculate how many days to skip back to get to the start of the week
+  // Calculate the first day of the interval, how many days there are in it and
+  // the day of the week of the first day in the interval
   $time = mktime(12, 0, 0, $month, $day, $year);
-  $skipback = day_of_MRBS_week($time);
-  $day_start_week = $day - $skipback;
+  switch ($view)
+  {
+    case 'week':
+      $skipback = day_of_MRBS_week($time);
+      $day_start_interval = $day - $skipback;
+      $n_days = DAYS_PER_WEEK;
+      $start_dow = $weekstarts;
+      break;
+    case 'month':
+      $day_start_interval = 1;
+      $n_days = date('t', $time);
+      $start_dow = date('N', mktime(12, 0, 0, $month, 1, $year));
+      break;
+    default:
+      trigger_error("Unsupported view '$view'", E_USER_WARNING);
+      break;
+  }
 
   // Get the time slots
   $n_time_slots = get_n_time_slots();
@@ -881,9 +897,9 @@ function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   // We want to build an array containing all the data we want to show
   // and then spit it out.
   $week = array();
-  for ($j = 0; $j < DAYS_PER_WEEK; $j++)
+  for ($j = 0; $j < $n_days; $j++)
   {
-    $d = $day_start_week + $j;
+    $d = $day_start_interval + $j;
     $start_first_slot = get_start_first_slot($month, $d, $year);
     $start_last_slot = get_start_last_slot($month, $d, $year);
     $entries = get_entries_by_area($area_id, $start_first_slot, $start_last_slot + $resolution);
@@ -913,19 +929,19 @@ function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_
       'view'      => 'day',
       'view_all'  => $view_all,
       'area'      => $area_id,
-      'room'      => $room['id']
+      'room'      => $room_id
     );
 
     // the standard view, with days along the top and rooms down the side
-    for ($j = 0; $j < DAYS_PER_WEEK; $j++)
+    for ($j = 0; $j < $n_days; $j++)
     {
-      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
+      if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
       {
         continue;
       }
-      $vars['page_date'] = format_iso_date($year, $month, $day_start_week + $j);
+      $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
       $link = "index.php?" . http_build_query($vars, '', '&');
-      $t = mktime(12, 0, 0, $month, $day_start_week + $j, $year);
+      $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
       $header_inner .= '<th><a href="' . htmlspecialchars($link) . '">' .
                        utf8_strftime($dformat, $t) .
                        '</a></th>';
@@ -970,14 +986,14 @@ function week_area_table_innerhtml($view, $view_all, $year, $month, $day, $area_
       $row_label = room_cell_html($room, $room_link_vars);
       $tbody .= $row_label;
 
-      for ($j = 0; $j < DAYS_PER_WEEK; $j++)
+      for ($j = 0; $j < $n_days; $j++)
       {
-        if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
+        if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
         {
           continue;
         }
 
-        $d = $day_start_week + $j;
+        $d = $day_start_interval + $j;
         $tbody .= "<td>";
         $vars = array(
             'view'      => 'day',
@@ -1473,7 +1489,21 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 }
 
 
-function month_table_innerhtml($view, $year, $month, $day, $area, $room)
+function month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room)
+{
+
+  if ($view_all)
+  {
+    return multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+  }
+  else
+  {
+    return month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
+  }
+}
+
+
+function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room)
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;

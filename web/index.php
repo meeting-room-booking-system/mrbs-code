@@ -92,12 +92,12 @@ function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $c
     $page_date = format_iso_date($year, $month, $day);
     $options = $rooms;
 
-    // If we are in the week view and there is more than one room, then add the 'all'
-    // option to the room select, which allows the user to display all rooms in the week view.
+    // If we are in the week or month views and there is more than one room, then add the 'all'
+    // option to the room select, which allows the user to display all rooms in the view.
     // And if we are viewing all the rooms then make sure the current room is negative.
     // (The room select uses a negative value of $room to signify that we want to view all
     // rooms in an area.   The absolute value of $room is the current room.)
-    if (($view == 'week') && ($n_rooms > 1))
+    if (in_array($view, array('week', 'month')) && ($n_rooms > 1))
     {
       $all = -abs($current);
       if ($view_all)
@@ -419,7 +419,7 @@ switch ($view)
     $inner_html = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
     break;
   case 'month':
-    $inner_html = month_table_innerhtml($view, $year, $month, $day, $area, $room);
+    $inner_html = month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
     break;
   default:
     throw new \Exception("Unknown view '$view'");
