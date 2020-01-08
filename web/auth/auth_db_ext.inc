@@ -25,7 +25,7 @@ if (empty($auth['db_ext']['db_system']))
 
 $persist = 0;
 $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
-  
+
 $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
                                  $auth['db_ext']['db_host'],
                                  $auth['db_ext']['db_username'],
@@ -36,12 +36,12 @@ $db_ext_conn = DBFactory::create($auth['db_ext']['db_system'],
 
 
 /* authValidateUser($user, $pass)
- * 
+ *
  * Checks if the specified username/password pair are valid
- * 
+ *
  * $user  - The user name
  * $pass  - The password
- * 
+ *
  * Returns:
  *   false    - The pair are invalid or do not exist
  *   string   - The validated username
@@ -61,7 +61,7 @@ function authValidateUser($user, $pass)
   $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_password']) .
            "FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) .
            "WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                                utf8_strtolower($user),
+                                                                $user,
                                                                 $sql_params);
 
   $stmt = $db_ext_conn->query($query, $sql_params);
@@ -132,9 +132,9 @@ function authValidateUser($user, $pass)
 
 
 /* authGetUserLevel($user)
- * 
+ *
  * Determines the user's access level
- * 
+ *
  * $user - The user name
  *
  * Returns:
@@ -164,7 +164,7 @@ function authGetUserLevel($user)
   {
      $persist = 0;
      $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
-     
+
      // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
      // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
@@ -172,17 +172,17 @@ function authGetUserLevel($user)
      $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_level']) . "
                  FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) . "
                 WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                                    utf8_strtolower($user),
+                                                                    $user,
                                                                     $sql_params) . "
                 LIMIT 1";
 
      $stmt = $db_ext_conn->query($query, $sql_params);
-     
+
      if ($stmt->count() == 0)
      {
        return 0;
      }
-     
+
      return $stmt->next_row()[0];
   }
 
@@ -196,21 +196,21 @@ function authGetUserLevel($user)
 function authGetUserEmail($user)
 {
   global $auth, $db_ext_conn;
-  
+
   if (!isset($user) || $user === '')
   {
     return '';
   }
-  
+
   if (!isset($auth['db_ext']['column_name_email']) || ($auth['db_ext']['column_name_email'] == ''))
   {
     return get_default_email($user);
   }
-  
+
 
   $persist = 0;
   $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : NULL;
-  
+
   // syntax_casesensitive_equals() modifies our SQL params array for us.   We need an exact match -
   // MySQL allows trailing spaces when using an '=' comparison, eg 'john' = 'john '
 
@@ -218,16 +218,16 @@ function authGetUserEmail($user)
   $query = "SELECT " . $db_ext_conn->quote($auth['db_ext']['column_name_email']) . "
               FROM " . $db_ext_conn->quote($auth['db_ext']['db_table']) . "
              WHERE " . $db_ext_conn->syntax_casesensitive_equals($auth['db_ext']['column_name_username'],
-                                                                 utf8_strtolower($user),
+                                                                 $user,
                                                                  $sql_params) . "
              LIMIT 1";
 
   $stmt = $db_ext_conn->query($query, $sql_params);
-  
+
   if ($stmt->count() == 0)
   {
     return 0;
   }
-  
+
   return $stmt->next_row()[0];
 }
