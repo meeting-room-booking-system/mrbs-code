@@ -859,8 +859,11 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
     return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
   }
 
-  // Calculate the first day of the interval, how many days there are in it and
-  // the day of the week of the first day in the interval
+  // Calculate/get:
+  //    the first day of the interval
+  //    how many days there are in it
+  //    the day of the week of the first day in the interval
+  //    the format for displaying the date
   $time = mktime(12, 0, 0, $month, $day, $year);
   switch ($view)
   {
@@ -869,23 +872,19 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
       $day_start_interval = $day - $skipback;
       $n_days = DAYS_PER_WEEK;
       $start_dow = $weekstarts;
+      $dformat = $strftime_format['weekview_headers'];
       break;
     case 'month':
       $day_start_interval = 1;
       $n_days = date('t', $time);
       $start_dow = date('N', mktime(12, 0, 0, $month, 1, $year));
+      $dformat = $strftime_format['monthview_headers'];
       break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
       break;
   }
 
-  // Get the time slots
-  $n_time_slots = get_n_time_slots();
-  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
-  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
-
-  $dformat = $strftime_format['weekview_headers'];
   // If we've got a table with times along the top then put everything on the same line
   // (ie replace the <br> with a space).   It looks slightly better
   if (!$days_along_top)
@@ -893,6 +892,11 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
     $dformat = preg_replace("/<br>/", " ", $dformat);
   }
 
+  // Get the time slots
+  $n_time_slots = get_n_time_slots();
+  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+  
   // Get the data
   // We want to build an array containing all the data we want to show
   // and then spit it out.
