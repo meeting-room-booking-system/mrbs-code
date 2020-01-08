@@ -896,11 +896,11 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   $n_time_slots = get_n_time_slots();
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
-  
+
   // Get the data
   // We want to build an array containing all the data we want to show
   // and then spit it out.
-  $week = array();
+  $interval = array();
   for ($j = 0; $j < $n_days; $j++)
   {
     $d = $day_start_interval + $j;
@@ -909,13 +909,13 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
     $entries = get_entries_by_area($area_id, $start_first_slot, $start_last_slot + $resolution);
     foreach ($entries as $entry)
     {
-      map_add_booking($entry, $week[$entry['room_id']][$d], $start_first_slot, $start_last_slot);
+      map_add_booking($entry, $interval[$entry['room_id']][$d], $start_first_slot, $start_last_slot);
     }
     foreach ($rooms as $room)
     {
-      if (isset($week[$room['id']]))
+      if (isset($interval[$room['id']]))
       {
-        map_coalesce_bookings($week[$room['id']][$d]);
+        map_coalesce_bookings($interval[$room['id']][$d]);
       }
     }
   }
@@ -1013,13 +1013,13 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
         $slots = 0;
         while ($s <= $evening_slot_seconds)
         {
-          if (isset($week[$room_id][$d][$s]))
+          if (isset($interval[$room_id][$d][$s]))
           {
             if ($slots > 0)
             {
               $tbody .= week_div($slots, 'free');
             }
-            $this_entry = $week[$room_id][$d][$s][0];
+            $this_entry = $interval[$room_id][$d][$s][0];
             $n =    $this_entry['n_slots'];
             $text = $this_entry['name'];
             $classes = get_entry_classes($this_entry);
