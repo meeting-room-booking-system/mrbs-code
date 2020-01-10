@@ -12,7 +12,7 @@ class DB_mysql extends DB
   const DB_DBO_DRIVER = "mysql";
   const DB_CHARSET = "utf8mb4";
 
-  
+
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
   public function quote($identifier)
   {
@@ -21,7 +21,7 @@ class DB_mysql extends DB
     return $quote_char . implode($quote_char . '.' . $quote_char, $parts) . $quote_char;
   }
 
-  
+
   // Return the value of an autoincrement field from the last insert.
   // Must be called right after an insert on that table!
   //
@@ -31,7 +31,7 @@ class DB_mysql extends DB
     return $this->dbh->lastInsertId();
   }
 
-  
+
   // Acquire a mutual-exclusion lock on the named table. For portability:
   // This will not lock out SELECTs.
   // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
@@ -49,15 +49,15 @@ class DB_mysql extends DB
   public function mutex_lock($name)
   {
     $timeout = 20;  // seconds
-    
+
     if (isset($this->mutex_lock_name))
     {
-      $message = "Trying to set lock '$name', but lock '" . $this->mutex_lock_name . 
+      $message = "Trying to set lock '$name', but lock '" . $this->mutex_lock_name .
                  "' already exists.  Only one lock is allowed at any one time.";
       trigger_error($message, E_USER_WARNING);
       return false;
     }
-    
+
     // GET_LOCK returns 1 if the lock was obtained successfully, 0 if the attempt
     // timed out (for example, because another client has previously locked the name),
     // or NULL if an error occurred (such as running out of memory or the thread was
@@ -74,21 +74,21 @@ class DB_mysql extends DB
       return false;
     }
 
-    if (($stmt->count() != 1) || 
+    if (($stmt->count() != 1) ||
         ($stmt->num_fields() != 1))
     {
       trigger_error("Unexpected number of rows and columns in result", E_USER_WARNING);
       return false;
     }
-    
+
     $result = $stmt->next_row()[0];
-    
+
     if ($result == '1')
     {
       $this->mutex_lock_name = $name;
       return true;
     }
-    
+
     // Otherwise there's been some kind of failure to get a lock
     switch ($result)
     {
@@ -103,7 +103,7 @@ class DB_mysql extends DB
         $message = "GET_LOCK: unexpected result '$result'";
         break;
     }
-        
+
     trigger_error($message, E_USER_WARNING);
     return false;
   }
@@ -119,15 +119,15 @@ class DB_mysql extends DB
       trigger_error("Trying to release a lock ('$name') which hasn't been set", E_USER_WARNING);
       return false;
     }
-    
+
     if ($this->mutex_lock_name != $name)
     {
-      $message = "Trying to release lock '$name' when the lock that has been set is '" . 
+      $message = "Trying to release lock '$name' when the lock that has been set is '" .
                  $this->mutex_lock_name . "'";
       trigger_error($message, E_USER_WARNING);
       return false;
     }
-    
+
     // If this request looks OK, then execute the SQL query
     try
     {
@@ -139,21 +139,21 @@ class DB_mysql extends DB
       return false;
     }
 
-    if (($stmt->count() != 1) || 
+    if (($stmt->count() != 1) ||
         ($stmt->num_fields() != 1))
     {
       trigger_error("Unexpected number of rows and columns in result", E_USER_WARNING);
       return false;
     }
-    
+
     $result = $stmt->next_row()[0];
-    
+
     if ($result == '1')
     {
       $this->mutex_lock_name = null;
       return true;
     }
-    
+
     // Otherwise there's been some kind of failure to release a lock.  These should in theory
     // have been caught by the sanity checking above, but just in case ...
     switch ($result)
@@ -168,7 +168,7 @@ class DB_mysql extends DB
         $message = "RELEASE_LOCK: unexpected result '$result'";
         break;
     }
-        
+
     trigger_error($message, E_USER_WARNING);
     return false;
   }
@@ -183,23 +183,23 @@ class DB_mysql extends DB
     {
       $this->mutex_unlock($this->mutex_lock_name);
     }
-  
+
     // Rollback any outstanding transactions
     $this->rollback();
   }
 
-  
+
   // Return a string identifying the database version
   public function version()
   {
     return "MySQL ".$this->query1("SELECT VERSION()");
   }
-  
+
   // Check if a table exists
   public function table_exists($table)
   {
     $res = $this->query1("SHOW TABLES LIKE ?", array($table));
-  
+
     return ($res == -1) ? false : true;
   }
 
@@ -211,8 +211,8 @@ class DB_mysql extends DB
   //  'type'        the type as reported by MySQL
   //  'nature'      the type mapped onto one of a generic set of types
   //                (boolean, integer, real, character, binary).   This enables
-  //                the nature to be used by MRBS code when deciding how to 
-  //                display fields, without MRBS having to worry about the 
+  //                the nature to be used by MRBS code when deciding how to
+  //                display fields, without MRBS having to worry about the
   //                differences between MySQL and PostgreSQL type names.
   //  'length'      the maximum length of the field in bytes, octets or characters
   //                (Note:  this could be NULL)
@@ -236,18 +236,18 @@ class DB_mysql extends DB
                         'tinyint'   => 'integer',
                         'tinytext'  => 'character',
                         'varchar'   => 'character');
-  
-    // Length in bytes of MySQL integer types                                        
+
+    // Length in bytes of MySQL integer types
     $int_bytes = array('bigint'    => 8, // bytes
                        'int'       => 4,
                        'mediumint' => 3,
                        'smallint'  => 2,
                        'tinyint'   => 1);
-  
+
     $stmt = $this->query("SHOW COLUMNS FROM $table", array());
 
     $fields = array();
-    
+
     while (false !== ($row = $stmt->next_row_keyed()))
     {
       $name = $row['Field'];
@@ -282,7 +282,7 @@ class DB_mysql extends DB
       }
       // Convert the is_nullable field to a boolean
       $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? true : false;
-    
+
       $fields[] = array(
           'name' => $name,
           'type' => $type,
@@ -291,12 +291,12 @@ class DB_mysql extends DB
           'is_nullable' => $is_nullable
         );
     }
-    
+
     return $fields;
   }
-  
+
   // Syntax methods
-  
+
   // Generate non-standard SQL for LIMIT clauses:
   public function syntax_limit($count, $offset)
   {
@@ -318,13 +318,17 @@ class DB_mysql extends DB
   // parameters appropriately.
   //
   // NB:  This function is also assumed to do a strict comparison, ie
-  // take account of training spaces.  (The '=' comparison in MySQL allows
+  // take account of trailing spaces.  (The '=' comparison in MySQL allows
   // trailing spaces, eg 'john' = 'john ').
   public function syntax_casesensitive_equals($fieldname, $string, &$params)
   {
     $params[] = $string;
 
-    return " BINARY " . $this->quote($fieldname) . "=?";
+    // We cannot assume that the database column has utf8 collation.  We may for example be
+    // authenticating a user against an external database.  See the post at
+    // https://stackoverflow.com/questions/5629111/how-can-i-make-sql-case-sensitive-string-comparison-on-mysql#answer-56283818
+    // for an explanation of the query.
+    return " " . $this->quote($fieldname) . "=CONVERT(? using utf8mb4) COLLATE utf8mb4_bin";
   }
 
   // Generate non-standard SQL to match a string anywhere in a field's value
@@ -368,7 +372,7 @@ class DB_mysql extends DB
   {
     return "^";
   }
-  
+
   // Returns the syntax for a simple split of a column's value into two
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
@@ -387,7 +391,7 @@ class DB_mysql extends DB
         throw new Exception("Invalid value ($part) given for " . '$part.');
         break;
     }
-    
+
     $params[] = $delimiter;
     return "SUBSTRING_INDEX($fieldname, ?, $count)";
   }
