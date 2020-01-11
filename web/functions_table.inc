@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use \IntlDateFormatter;
 
 function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot)
 {
@@ -860,7 +861,24 @@ function get_date($t, $view)
 
 function get_day($t, $view)
 {
-  return utf8_strftime('%a', $t);
+  // The strftime %a format often (but not always) returns a three letter abbreviation for the day
+  // which can make the month view unnecessarily wide.  So if we able to then use the IntlDateFormatter
+  // class which gives us the ability to specify patterns for shorter day abbreviations.
+  if (($view == 'month') && class_exists('IntlDateFormatter'))
+  {
+    $pattern = 'cccccc';
+    $date = new DateTime();
+    $date->setTimestamp($t);
+    $formatter = new IntlDateFormatter(get_mrbs_locale(),
+                                       IntlDateFormatter::SHORT,
+                                       IntlDateFormatter::SHORT,
+                                       null, null, $pattern);
+    return $formatter->format($date);
+  }
+  else
+  {
+    return utf8_strftime('%a', $t);
+  }
 }
 
 
