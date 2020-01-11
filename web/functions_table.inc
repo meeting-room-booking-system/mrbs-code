@@ -861,8 +861,8 @@ function get_date($t, $view)
 
 function get_day($t, $view)
 {
-  // The strftime %a format often (but not always) returns a three letter abbreviation for the day
-  // which can make the month view unnecessarily wide.  So if we able to then use the IntlDateFormatter
+  // The strftime %a format often (but not always) returns a three letter abbreviation for the day which
+  // can make the month view unnecessarily wide.  So if we are able to then use the IntlDateFormatter
   // class which gives us the ability to specify patterns for shorter day abbreviations.
   if (class_exists('IntlDateFormatter'))
   {
