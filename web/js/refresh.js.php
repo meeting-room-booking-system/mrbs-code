@@ -26,15 +26,15 @@ var intervalId;
 // know how many columns there are.  So we have to use JavaScript.
 ?>
 var sizeColumns = function() {
-  
-    var mainCols = $('.dwm_main thead th').not('th.first_last, th.hidden_day');
+
+    var mainCols = $('.dwm_main thead tr:first-child th').not('th.first_last, th.hidden_day');
     mainCols.css('width', 100/mainCols.length + '%');
 
   };
 
 
 var refreshPage = function refreshPage() {
-    if (!isHidden() && 
+    if (!isHidden() &&
         !$('table.dwm_main').hasClass('resizing') &&
         !isMeteredConnection())
     {
@@ -65,7 +65,7 @@ var refreshPage = function refreshPage() {
              function(result){
                  <?php
                  // (1) Empty the existing table in order to get rid of events
-                 // and data and prevent memory leaks, (2) insert the updated 
+                 // and data and prevent memory leaks, (2) insert the updated
                  // table HTML, (3) clear the existing interval timer and then
                  // (4) trigger a load event so that the resizable bookings are
                  // re-created and a new timer started.
@@ -86,10 +86,10 @@ var refreshPage = function refreshPage() {
              'html');
     }  <?php // if (!isHidden() etc.?>
   };
-    
-  
 
-  
+
+
+
 var refreshVisChanged = function refreshVisChanged() {
     var pageHidden = isHidden();
 
@@ -419,7 +419,7 @@ var Timeline = {
 
 
 $(document).on('page_ready', function() {
-  
+
   <?php
   // Set up the timer on the table load rather than the window load event because
   // we will only want to reinitialise the table when it is refreshed rather than the
@@ -427,9 +427,9 @@ $(document).on('page_ready', function() {
   // to be reset.
   ?>
   $('table.dwm_main').on('tableload', function() {
-    
+
       sizeColumns();
-      
+
       <?php
       if (!empty($refresh_rate))
       {
@@ -445,13 +445,13 @@ $(document).on('page_ready', function() {
       // Add an event listener to detect a change in the visibility
       // state.  We can then suspend Ajax refreshing when the page is
       // hidden to save on server, client and network load.
-      
-      // We also need to resume refreshing and refresh the pre-fetched 
+
+      // We also need to resume refreshing and refresh the pre-fetched
       // pages when the page becomes visible again.
       ?>
       var prefix = visibilityPrefix();
       if (document.addEventListener &&
-          (prefix !== null) && 
+          (prefix !== null) &&
           !refreshListenerAdded)
       {
         document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
@@ -473,6 +473,6 @@ $(document).on('page_ready', function() {
       ?>
 
     }).trigger('tableload');
-    
+
 });
 

@@ -274,10 +274,9 @@ class DB_pgsql extends DB
   }
 
 
-  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
+  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:    return " DATE_PART('epoch', $fieldname) ";
   public function syntax_timestamp_to_unix($fieldname)
   {
-    return " DATE_PART('epoch', $fieldname) ";
   }
 
 

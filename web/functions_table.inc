@@ -843,10 +843,31 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 }
 
 
+function get_date($t, $view)
+{
+  global $strftime_format;
+
+  if ($view == 'month')
+  {
+    return utf8_strftime('%e', $t);
+  }
+  else
+  {
+    return utf8_strftime($strftime_format['weekview_date'], $t);
+  }
+}
+
+
+function get_day($t, $view)
+{
+  return utf8_strftime('%a', $t);
+}
+
+
 function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
   global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
-  global $weekstarts, $strftime_format;
+  global $weekstarts;
   global $resolution, $morningstarts, $morningstarts_minutes;
 
   $rooms = get_rooms($area_id);
@@ -863,7 +884,6 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   //    the first day of the interval
   //    how many days there are in it
   //    the day of the week of the first day in the interval
-  //    the format for displaying the date
   $time = mktime(12, 0, 0, $month, $day, $year);
   switch ($view)
   {
@@ -872,24 +892,15 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
       $day_start_interval = $day - $skipback;
       $n_days = DAYS_PER_WEEK;
       $start_dow = $weekstarts;
-      $dformat = $strftime_format['weekview_headers'];
       break;
     case 'month':
       $day_start_interval = 1;
       $n_days = date('t', $time);
       $start_dow = date('N', mktime(12, 0, 0, $month, 1, $year));
-      $dformat = $strftime_format['monthview_headers'];
       break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
       break;
-  }
-
-  // If we've got a table with times along the top then put everything on the same line
-  // (ie replace the <br> with a space).   It looks slightly better
-  if (!$days_along_top)
-  {
-    $dformat = preg_replace("/<br>/", " ", $dformat);
   }
 
   // Get the time slots
@@ -922,33 +933,47 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 
   // TABLE HEADER
   $thead = "<thead>\n";
-  $header_inner = "<tr>\n";
 
-  $first_last_html = '<th class="first_last"></th>';
-  $header_inner .= $first_last_html;
+  $header_inner_rows = array();
 
   if ($days_along_top)
   {
-    $vars = array(
-      'view'      => 'day',
-      'view_all'  => $view_all,
-      'area'      => $area_id,
-      'room'      => $room_id
-    );
-
-    // the standard view, with days along the top and rooms down the side
-    for ($j = 0; $j < $n_days; $j++)
+    // Loop through twice: one row for the days of the week, the next for the date.
+    for ($i = 0; $i < 2; $i++)
     {
-      if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
+      $header_inner_rows[$i] = "<tr>\n";
+
+      $first_last_html = '<th class="first_last"></th>';
+      $header_inner_rows[$i] .= $first_last_html;
+
+      $vars = array(
+        'view' => 'day',
+        'view_all' => $view_all,
+        'area' => $area_id,
+        'room' => $room_id
+      );
+
+      // the standard view, with days along the top and rooms down the side
+      for ($j = 0; $j < $n_days; $j++)
       {
-        continue;
+        if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
+        {
+          continue;
+        }
+        $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
+        $link = "index.php?" . http_build_query($vars, '', '&');
+        $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
+        $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+        $header_inner_rows[$i] .= '<th><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
       }
-      $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
-      $link = "index.php?" . http_build_query($vars, '', '&');
-      $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
-      $header_inner .= '<th><a href="' . htmlspecialchars($link) . '">' .
-                       utf8_strftime($dformat, $t) .
-                       '</a></th>';
+
+      // next line to display rooms on right side
+      if (!empty($row_labels_both_sides))
+      {
+        $header_inner_rows[$i] .= $first_last_html;
+      }
+
+      $header_inner_rows[$i] .= "</tr>\n";
     }
   }
   else
@@ -956,18 +981,11 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
     trigger_error("Not yet implemented", E_USER_WARNING);
   }
 
-  // next line to display rooms on right side
-  if (!empty($row_labels_both_sides))
-  {
-    $header_inner .= $first_last_html;
-  }
-
-  $header_inner .= "</tr>\n";
-  $thead .= $header_inner;
+  $thead .= implode('', $header_inner_rows);
   $thead .= "</thead>\n";
 
   // Now repeat the header in a footer if required
-  $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_inner</tfoot>\n" : '';
+  $tfoot = ($column_labels_both_ends) ? "<tfoot>\n" . implode('',array_reverse($header_inner_rows)) . "</tfoot>\n" : '';
 
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
