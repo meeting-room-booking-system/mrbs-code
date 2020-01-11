@@ -873,12 +873,16 @@ function get_day($t, $view)
                                        IntlDateFormatter::SHORT,
                                        IntlDateFormatter::SHORT,
                                        null, null, $pattern);
-    return $formatter->format($date);
+    $result = $formatter->format($date);
   }
-  else
+
+  // Fallback if IntlDateFormatter does not exist or failed
+  if (!isset($result) || ($result === false))
   {
-    return utf8_strftime('%a', $t);
+    $result = utf8_strftime('%a', $t);
   }
+
+  return $result;
 }
 
 
