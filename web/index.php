@@ -18,7 +18,7 @@ function get_color_key()
 
   // No point in showing the color key if we aren't using entry types.  (Note:  count()
   // returns 0 if its parameter is not set).
-  if (count($booking_types) > 1)
+  if (isset($booking_types) && (count($booking_types) > 1))
   {
     $html .= "<div class=\"color_key js_hidden\">\n";
 
@@ -39,7 +39,7 @@ function get_color_key()
 function make_area_select_html($view, $year, $month, $day, $current)
 {
   $out_html = '';
-  
+
   $areas = get_area_names();
 
   // Only show the areas if there are more than one of them, otherwise
@@ -47,16 +47,16 @@ function make_area_select_html($view, $year, $month, $day, $current)
   if (count($areas) > 1)
   {
     $page_date = format_iso_date($year, $month, $day);
-    
+
     $form = new Form();
-    
+
     $form->setAttributes(array('class'  => 'areaChangeForm',
                                'method' => 'get',
                                'action' => 'index.php'));
-                               
+
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date));
-    
+
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
                                  'name'       => 'area',
@@ -64,16 +64,16 @@ function make_area_select_html($view, $year, $month, $day, $current)
                                  'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($areas, $current, true);
     $form->addElement($select);
-    
+
     // Note:  the submit button will not be displayed if JavaScript is enabled
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'js_none',
                                  'value' => get_vocab('change')));
     $form->addElement($submit);
-    
+
     $out_html .= $form->toHTML();
   }
-  
+
   return $out_html;
 } // end make_area_select_html
 
@@ -81,23 +81,23 @@ function make_area_select_html($view, $year, $month, $day, $current)
 function make_room_select_html ($view, $year, $month, $day, $area, $current)
 {
   $out_html = '';
-  
+
   $rooms = get_room_names($area);
-  
+
   if (count($rooms) > 0)
   {
     $page_date = format_iso_date($year, $month, $day);
-    
+
     $form = new Form();
-    
+
     $form->setAttributes(array('class'  => 'roomChangeForm',
                                'method' => 'get',
                                'action' => 'index.php'));
-                               
+
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date,
                                  'area'      => $area));
-    
+
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
                                  'name'       => 'room',
@@ -105,16 +105,16 @@ function make_room_select_html ($view, $year, $month, $day, $area, $current)
                                  'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($rooms, $current, true);
     $form->addElement($select);
-    
+
     // Note:  the submit button will not be displayed if JavaScript is enabled
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'js_none',
                                  'value' => get_vocab('change')));
     $form->addElement($submit);
-    
+
     $out_html .= $form->toHTML();
   }
-  
+
   return $out_html;
 } // end make_room_select_html
 
@@ -129,7 +129,7 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
       // find the adjacent non-hidden day
       $d = $day;
       do
-      { 
+      {
         $d += ($next) ? 1 : -1;
         $time = mktime(12, 0, 0, $month, $d, $year);
       }
@@ -148,14 +148,14 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
       throw new \Exception("Unknown view '$view'");
       break;
   }
-  
+
   $date = getdate($time);
-  
+
   $vars = array('view'      => $view,
                 'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
                 'area'      => $area,
                 'room'      => $room);
-  
+
   return 'index.php?' . http_build_query($vars, '', '&');
 }
 
@@ -164,12 +164,12 @@ function get_adjacent_link($view, $year, $month, $day, $area, $room, $next=false
 function get_today_link($view, $area, $room)
 {
   $date = getdate();
-  
+
   $vars = array('view'      => $view,
                 'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
                 'area'      => $area,
                 'room'      => $room);
-  
+
   return 'index.php?' . http_build_query($vars, '', '&');
 }
 
@@ -177,17 +177,17 @@ function get_today_link($view, $area, $room)
 function get_location_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
-  
+
   $html .= "<nav class=\"location js_hidden\">\n";  // JavaScript will show it
   $html .= make_area_select_html($view, $year, $month, $day, $area);
-  
+
   if ($view !== 'day')
   {
     $html .= make_room_select_html($view, $year, $month, $day, $area, $room);
   }
-  
+
   $html .= "</nav>\n";
-  
+
   return $html;
 }
 
@@ -195,30 +195,30 @@ function get_location_nav($view, $year, $month, $day, $area, $room)
 function get_view_nav($current_view, $year, $month, $day, $area, $room)
 {
   $html = '';
-  
+
   $html .= '<nav class="view">';
   $html .= '<div class="container">';  // helps the CSS
-  
+
   $views = array('day' => 'nav_day',
                  'week' => 'nav_week',
                  'month' => 'nav_month');
-  
+
   foreach ($views as $view => $token)
   {
     $vars = array('view'      => $view,
                   'page_date' => format_iso_date($year, $month, $day),
                   'area'      => $area,
                   'room'      => $room);
-                  
+
     $query = http_build_query($vars, '', '&');
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
     $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
   }
-  
+
   $html .= '</div>';
   $html .= '</nav>';
-  
+
   return $html;
 }
 
@@ -226,7 +226,7 @@ function get_view_nav($current_view, $year, $month, $day, $area, $room)
 function get_arrow_nav($view, $year, $month, $day, $area, $room)
 {
   $html = '';
-  
+
   switch ($view)
   {
     case 'day':
@@ -255,13 +255,13 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
   $link_prev = get_adjacent_link($view, $year, $month, $day, $area, $room, false);
   $link_today = get_today_link($view, $area, $room);
   $link_next = get_adjacent_link($view, $year, $month, $day, $area, $room, true);
-  
+
   $html .= "<nav class=\"arrow\">\n";
   $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
   $html .= "<a title= \"$title_this\" aria-label=\"$title_this\" href=\"" . htmlspecialchars($link_today) . "\">" . get_vocab('today') . "</a>";
   $html .= "<a class=\"next\" title=\"$title_next\" aria-label=\"$title_next\" href=\"" . htmlspecialchars($link_next) . "\"></a>";  // Content will be filled in by CSS
   $html .= "</nav>";
-  
+
   return $html;
 }
 
@@ -269,17 +269,17 @@ function get_arrow_nav($view, $year, $month, $day, $area, $room)
 function get_calendar_nav($view, $year, $month, $day, $area, $room, $hidden=false)
 {
   $html = '';
-  
+
   $html .= "<nav class=\"main_calendar" .
            (($hidden) ? ' js_hidden' : '') .
            "\">\n";
-  
+
   $html .= get_arrow_nav($view, $year, $month, $day, $area, $room);
   $html .= get_location_nav($view, $year, $month, $day, $area, $room);
   $html .= get_view_nav($view, $year, $month, $day, $area, $room);
-  
+
   $html .= "</nav>\n";
-  
+
   return $html;
 }
 
@@ -288,18 +288,18 @@ function get_date_heading($view, $year, $month, $day)
 {
   global $strftime_format, $display_timezone,
          $weekstarts, $mincals_week_numbers;
-  
+
   $html = '';
   $time = mktime(12, 0, 0, $month, $day, $year);
-  
+
   $html .= '<h2 class="date">';
-  
+
   switch ($view)
   {
     case 'day':
       $html .= utf8_strftime($strftime_format['view_day'], $time);
       break;
-      
+
     case 'week':
       // Display the week number if required, provided the week starts on Monday,
       // otherwise it's spanning two ISO weeks and doesn't make sense.
@@ -333,25 +333,25 @@ function get_date_heading($view, $year, $month, $day)
       $html .= utf8_strftime($start_format, $start_of_week) . '-' .
                utf8_strftime($strftime_format['view_week_end'], $end_of_week);
       break;
-      
+
     case 'month':
       $html .= utf8_strftime($strftime_format['view_month'], $time);
       break;
-      
+
     default:
       throw new \Exception("Unknown view '$view'");
       break;
   }
-  
+
   $html .= '</h2>';
-  
+
   if ($display_timezone)
   {
     $html .= '<span class="timezone">';
     $html .= get_vocab("timezone") . ": " . date('T', $time) . " (UTC" . date('O', $time) . ")";
     $html .= '</span>';
   }
-  
+
   return $html;
 }
 
