@@ -18,7 +18,7 @@ function get_color_key()
 
   // No point in showing the color key if we aren't using entry types.  (Note:  count()
   // returns 0 if its parameter is not set).
-  if (count($booking_types) > 1)
+  if (isset($booking_types) && (count($booking_types) > 1))
   {
     $html .= "<div class=\"color_key js_hidden\">\n";
 
