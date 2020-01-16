@@ -11,9 +11,9 @@
       };
   var Malaysian = {
       weekdays: {
-          shorthand: ["Min", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"],
+          shorthand: ["Ahd", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"], // MRBS fix for Sunday
           longhand: [
-              "Minggu",
+              "Ahad",  // MRBS fix for Sunday
               "Isnin",
               "Selasa",
               "Rabu",
