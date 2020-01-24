@@ -644,7 +644,7 @@ table.dwm_main {
 
 .dwm_main td,
 .dwm_main tbody td + th {
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+  border-right: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
 .series a::before {
@@ -705,7 +705,11 @@ table.dwm_main {
   color: <?php echo $standard_font_color ?>;
   background-color: #ffffff;
   background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
+}
+
+.dwm_main th,
+.dwm_main td {
+  border-right: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
 
 .dwm_main thead tr:last-child th {
@@ -726,8 +730,8 @@ table.dwm_main {
 }
 
 .dwm_main th:first-child,
-.dwm_main td:first-child {
-  border-left: 0 solid <?php echo $main_table_border_color ?>;
+ .dwm_main td:first-child {
+   border-left: 0 solid <?php echo $main_table_border_color ?>;
 }
 
 .dwm_main th:last-child,
