@@ -1046,14 +1046,11 @@ foreach ($color_types as $type => $col)
   background-color: <?php echo $main_table_slot_private_type_color;?>;
 }
 
-.dwm_main thead th {
+.dwm_main th:first-child {
   position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -ms-sticky;
-  position: -o-sticky;
   position: sticky;
-  z-index: 200;
-  top: 0;
+  z-index: 600;
+  left: 0;
 }
 
 <?php // hidden columns (eg weekends) in the week and month views ?>
