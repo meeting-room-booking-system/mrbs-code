@@ -176,6 +176,7 @@ h2 {
   -ms-flex-positive: 1;
   flex-grow: 1;
   width: 100%;
+  overflow-x: auto;
 }
 
 img {
@@ -700,7 +701,7 @@ table.dwm_main {
 
 .dwm_main td,
 .dwm_main tbody td + th {
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
+  border-right: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
 .series a::before {
@@ -761,7 +762,11 @@ table.dwm_main {
   color: <?php echo $standard_font_color ?>;
   background-color: #ffffff;
   background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
-  border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
+}
+
+.dwm_main th,
+.dwm_main td {
+  border-right: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
 }
 
 .dwm_main thead tr:last-child th {
@@ -782,8 +787,8 @@ table.dwm_main {
 }
 
 .dwm_main th:first-child,
-.dwm_main td:first-child {
-  border-left: 0 solid <?php echo $main_table_border_color ?>;
+ .dwm_main td:first-child {
+   border-left: 0 solid <?php echo $main_table_border_color ?>;
 }
 
 .dwm_main th:last-child,
@@ -1106,14 +1111,11 @@ foreach ($color_types as $type => $col)
   background-color: <?php echo $main_table_slot_private_type_color;?>;
 }
 
-.dwm_main thead th {
+.dwm_main th:first-child {
   position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -ms-sticky;
-  position: -o-sticky;
   position: sticky;
-  z-index: 200;
-  top: 0;
+  z-index: 600;
+  left: 0;
 }
 
 <?php // hidden columns (eg weekends) in the week and month views ?>
