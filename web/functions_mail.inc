@@ -587,7 +587,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $compare, $as_html);
 
     // Type of booking
-    if (count($booking_types) > 1)
+    if (isset($booking_types) && (count($booking_types) > 1))
     {
       $body .= create_body_table_row (get_mail_vocab("type"),
                                       get_type_vocab($data['type']),
