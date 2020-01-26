@@ -151,7 +151,8 @@ CREATE TABLE mrbs_entry
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   KEY idxStartTime (start_time),
-  KEY idxEndTime   (end_time)
+  KEY idxEndTime   (end_time),
+  KEY idxRoomStartEnd (room_id, start_time, end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE mrbs_variables
@@ -207,6 +208,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '62');
+  VALUES ( 'db_version', '63');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
