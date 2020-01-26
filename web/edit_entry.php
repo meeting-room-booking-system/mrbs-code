@@ -620,7 +620,7 @@ function get_field_type($value, $disabled=false)
   global $booking_types, $is_mandatory_field;
   
   // Don't bother with types if there's only one of them (or even none)
-  if (count($booking_types) < 2)
+  if (!isset($booking_types) || (count($booking_types) < 2))
   {
     return null;
   }

@@ -91,7 +91,7 @@ function get_field_typematch($data)
 {
   global $booking_types;
   
-  if (count($booking_types) <=1)
+  if (!isset($booking_types) || (count($booking_types) < 2))
   {
     return null;
   }
@@ -606,7 +606,7 @@ function report_header()
         $values[] = get_vocab("fulldescription_short");
         break;
       case 'type':
-        if (count($booking_types) > 1)
+        if (isset($booking_types) && (count($booking_types) > 1))
         {
           $values[] = get_vocab("type");
         }
@@ -960,7 +960,7 @@ function report_row(&$rows, &$data)
     // they are going to be irrelevant
     if (($confirmation_somewhere || ($field != 'confirmation_enabled')) &&
         ($approval_somewhere || ($field != 'approval_enabled')) &&
-        ((count($booking_types) > 1) || ($field != 'type')))
+        ((isset($booking_types) && (count($booking_types) > 1)) || ($field != 'type')))
     {
       $values[] = $value;
     }
