@@ -201,7 +201,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
 
       case 'type':
         // Type
-        if (count($booking_types) > 1)
+        if (isset($booking_types) && (count($booking_types) > 1))
         {
           $type = get_type_vocab($data['type']);
           $value = (empty($type)) ? "?${data['type']}?" : $type;
