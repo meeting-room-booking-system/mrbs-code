@@ -148,6 +148,7 @@ CREATE TABLE mrbs_entry
 );
 create index mrbs_idxStartTime on mrbs_entry(start_time);
 create index mrbs_idxEndTime on mrbs_entry(end_time);
+create index mrbs_idxRoomStartEnd on mrbs_entry(room_id, start_time, end_time);
 
 CREATE TABLE mrbs_variables
 (
@@ -204,6 +205,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '62');
+  VALUES ('db_version', '63');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
