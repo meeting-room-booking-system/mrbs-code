@@ -1345,7 +1345,7 @@ div#div_custom_html {
   margin-bottom: 0.5em;
 }
 
-.standard input[type="text"]:not(.date):not(.form-control.input),
+.standard input[type="text"]:not(.date):not(.form-control),
 .standard input[type="email"],
 .standard input[type="password"],
 .standard input[type="search"],
