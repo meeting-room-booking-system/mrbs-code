@@ -13,8 +13,8 @@ the upgrade.
 2. Take a backup copy of your existing mrbs directory on your web server
 3. Upload all the files and directories, except the config file, in the web
    directory of the release to your server, overwriting your existing files.
-4. Run MRBS. You'll be prompted for a database (note database, not MRBS) username
-   and password.
+4. Go to MRBS in your browser. If a database upgrade is required, you'll be
+   prompted for a database (note database, not MRBS) username and password.
 
 MRBS database upgrades are in general intended to be backwards compatible,
 so that you should still be able to run the old version of MRBS against the
