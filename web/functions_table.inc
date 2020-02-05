@@ -1685,86 +1685,83 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
       $html .= "</a>\n";
 
       // then any bookings for the day
-      if (count($entries) > 0)
+      $html .= "<div class=\"booking_list\">\n";
+      // Show the start/stop times, 1 or 2 per line, linked to view_entry.
+      foreach ($entries as $entry)
       {
-        $html .= "<div class=\"booking_list\">\n";
-        // Show the start/stop times, 1 or 2 per line, linked to view_entry.
-        foreach ($entries as $entry)
+        // We are only interested in this day's entries
+        if (($entry['start_time'] >= $end_last_slot) ||
+            ($entry['end_time'] <= $start_first_slot))
         {
-          // We are only interested in this day's entries
-          if (($entry['start_time'] >= $end_last_slot) ||
-              ($entry['end_time'] <= $start_first_slot))
-          {
-            continue;
-          }
-
-          // Handle private events
-          if (is_private_event($entry['private']) &&
-              !getWritable($entry['create_by'], $room))
-          {
-            $entry['private'] = true;
-            if ($is_private_field['entry.name'])
-            {
-              $entry['name'] = "[".get_vocab('unavailable')."]";
-            }
-            if (!empty($is_private_field['entry.type']))
-            {
-              $entry['type'] = 'private_type';
-            }
-          }
-          else
-          {
-            $entry['private'] = false;
-          }
-
-          $classes = get_entry_classes($entry);
-          $classes[] = $monthly_view_entries_details;
-
-          $html .= '<div class="' . implode(' ', $classes) . '">';
-
-          $vars = array('id'    => $entry["id"],
-                        'year'  => $year,
-                        'month' => $month,
-                        'day'   => $d);
-
-          $query = http_build_query($vars, '', '&');
-          $booking_link = "view_entry.php?$query";
-          $slot_text = get_booking_summary(
-                         $entry['start_time'],
-                         $entry['end_time'],
-                         $start_first_slot,
-                         $end_last_slot);
-          $description_text = utf8_substr($entry['name'], 0, 255);
-          $full_text = $slot_text . " " . $description_text;
-          switch ($monthly_view_entries_details)
-          {
-            case "description":
-            {
-              $display_text = $description_text;
-              break;
-            }
-            case "slot":
-            {
-              $display_text = $slot_text;
-              break;
-            }
-            case "both":
-            {
-              $display_text = $full_text;
-              break;
-            }
-            default:
-            {
-              $html .= "error: unknown parameter";
-            }
-          }
-          $html .= '<a href="' . htmlspecialchars($booking_link) . '"' .
-                   ' title="' . htmlspecialchars($full_text) . '">';
-          $html .= htmlspecialchars($display_text) . '</a>';
-          $html .= "</div>\n";
+          continue;
         }
+
+        // Handle private events
+        if (is_private_event($entry['private']) &&
+            !getWritable($entry['create_by'], $room))
+        {
+          $entry['private'] = true;
+          if ($is_private_field['entry.name'])
+          {
+            $entry['name'] = "[".get_vocab('unavailable')."]";
+          }
+          if (!empty($is_private_field['entry.type']))
+          {
+            $entry['type'] = 'private_type';
+          }
+        }
+        else
+        {
+          $entry['private'] = false;
+        }
+
+        $classes = get_entry_classes($entry);
+        $classes[] = $monthly_view_entries_details;
+
+        $html .= '<div class="' . implode(' ', $classes) . '">';
+
+        $vars = array('id'    => $entry["id"],
+                      'year'  => $year,
+                      'month' => $month,
+                      'day'   => $d);
+
+        $query = http_build_query($vars, '', '&');
+        $booking_link = "view_entry.php?$query";
+        $slot_text = get_booking_summary(
+                       $entry['start_time'],
+                       $entry['end_time'],
+                       $start_first_slot,
+                       $end_last_slot);
+        $description_text = utf8_substr($entry['name'], 0, 255);
+        $full_text = $slot_text . " " . $description_text;
+        switch ($monthly_view_entries_details)
+        {
+          case "description":
+          {
+            $display_text = $description_text;
+            break;
+          }
+          case "slot":
+          {
+            $display_text = $slot_text;
+            break;
+          }
+          case "both":
+          {
+            $display_text = $full_text;
+            break;
+          }
+          default:
+          {
+            $html .= "error: unknown parameter";
+          }
+        }
+        $html .= '<a href="' . htmlspecialchars($booking_link) . '"' .
+                 ' title="' . htmlspecialchars($full_text) . '">';
+        $html .= htmlspecialchars($display_text) . '</a>';
         $html .= "</div>\n";
       }
+      $html .= "</div>\n";
 
       $html .= "</div>\n";
       $html .= "</td>\n";
