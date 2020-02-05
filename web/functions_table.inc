@@ -59,6 +59,14 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
   global $resolution;
   global $is_private_field;
 
+  // We're only interested in entries which occur on this day (it's possible
+  // for $entry to contain entries for other days)
+  if (($entry['start_time'] >= $start_last_slot + $resolution) ||
+      ($entry['end_time'] <= $start_first_slot))
+  {
+    return;
+  }
+
   // Check whether the event is private
   if (is_private_event($entry['private']) &&
       !getWritable($entry['create_by'], $entry['room_id']))
@@ -930,16 +938,20 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
-  // Get the data
-  // We want to build an array containing all the data we want to show
-  // and then spit it out.
+  // Get the data.  It's much quicker to do a single SQL query getting all the
+  // entries for the interval in one go, rather than doing a query for each day.
+  $entries = get_entries_by_area($area_id,
+                                 get_start_first_slot($month, $day_start_interval, $year),
+                     get_start_last_slot($month, $day_start_interval + $n_days-1, $year) + $resolution);
+
+  // We want to build an array containing all the data we want to show and then spit it out.
   $interval = array();
   for ($j = 0; $j < $n_days; $j++)
   {
     $d = $day_start_interval + $j;
     $start_first_slot = get_start_first_slot($month, $d, $year);
     $start_last_slot = get_start_last_slot($month, $d, $year);
-    $entries = get_entries_by_area($area_id, $start_first_slot, $start_last_slot + $resolution);
+
     foreach ($entries as $entry)
     {
       map_add_booking($entry, $interval[$entry['room_id']][$d], $start_first_slot, $start_last_slot);
@@ -1096,7 +1108,6 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   }
 
   $tbody .= "</tbody>\n";
-
   return $thead . $tfoot . $tbody;
 }
 
