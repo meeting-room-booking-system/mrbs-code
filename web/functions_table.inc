@@ -1425,7 +1425,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
     }
   }  // end standard view (for the body)
   $tbody .= "</tbody>\n";
-  
+
   return $thead . $tfoot . $tbody;
 }
 
@@ -1599,13 +1599,18 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
     $html .= get_blank_day($weekcol);
   }
 
+  // Get the data.  It's much quicker to do a single SQL query getting all the
+  // entries for the interval in one go, rather than doing a query for each day.
+  $entries = get_entries_by_room($room,
+                                 get_start_first_slot($month, 1, $year),
+                                 get_end_last_slot($month, $days_in_month, $year));
+
   // Draw the days of the month:
   for ($d = 1; $d <= $days_in_month; $d++)
   {
-    // Get the entries for the day
+    // Get the slot times
     $start_first_slot = get_start_first_slot($month, $d, $year);
     $end_last_slot = get_end_last_slot($month, $d, $year);
-    $entries = get_entries_by_room($room, $start_first_slot, $end_last_slot);
 
     // if we're at the start of the week (and it's not the first week), start a new row
     if (($weekcol == 0) && ($d > 1))
@@ -1686,6 +1691,13 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
         // Show the start/stop times, 1 or 2 per line, linked to view_entry.
         foreach ($entries as $entry)
         {
+          // We are only interested in this day's entries
+          if (($entry['start_time'] >= $end_last_slot) ||
+              ($entry['end_time'] <= $start_first_slot))
+          {
+            continue;
+          }
+
           // Handle private events
           if (is_private_event($entry['private']) &&
               !getWritable($entry['create_by'], $room))
