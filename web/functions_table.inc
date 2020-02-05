@@ -942,7 +942,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   // entries for the interval in one go, rather than doing a query for each day.
   $entries = get_entries_by_area($area_id,
                                  get_start_first_slot($month, $day_start_interval, $year),
-                     get_start_last_slot($month, $day_start_interval + $n_days-1, $year) + $resolution);
+                                 get_end_last_slot($month, $day_start_interval + $n_days-1, $year));
 
   // We want to build an array containing all the data we want to show and then spit it out.
   $interval = array();
