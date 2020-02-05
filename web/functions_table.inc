@@ -1118,7 +1118,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes;
   global $weekstarts, $strftime_format;
-
+  $profile = microtime(true);
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
 
@@ -1153,11 +1153,16 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
+  // Get the data.  It's much quicker to do a single SQL query getting all the
+  // entries for the interval in one go, rather than doing a query for each day.
+  $entries = get_entries_by_room($room_id,
+                                 $start_first_slot[0],
+                                 $start_last_slot[DAYS_PER_WEEK - 1] + $resolution);
+
   $week_map = array();
 
   for ($j = 0; $j < DAYS_PER_WEEK; $j++)
   {
-    $entries = get_entries_by_room($room_id, $start_first_slot[$j], $start_last_slot[$j] + $resolution);
     foreach ($entries as $entry)
     {
       map_add_booking($entry, $week_map[$room_id][$j], $start_first_slot[$j], $start_last_slot[$j]);
@@ -1420,7 +1425,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
     }
   }  // end standard view (for the body)
   $tbody .= "</tbody>\n";
-
+  error_log(microtime(true) - $profile);
   return $thead . $tfoot . $tbody;
 }
 
