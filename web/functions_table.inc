@@ -1118,7 +1118,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes;
   global $weekstarts, $strftime_format;
-  $profile = microtime(true);
+
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
 
@@ -1425,7 +1425,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
     }
   }  // end standard view (for the body)
   $tbody .= "</tbody>\n";
-  error_log(microtime(true) - $profile);
+  
   return $thead . $tfoot . $tbody;
 }
 
