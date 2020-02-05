@@ -405,7 +405,7 @@ $is_ajax = is_ajax();
 
 
 // Check the user is authorised for this page
-if (!checkAuthorised(this_page(), $just_check = $is_ajax))
+if (!checkAuthorised(this_page(), $refresh))
 {
   exit;
 }
