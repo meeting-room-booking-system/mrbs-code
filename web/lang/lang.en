@@ -523,6 +523,11 @@ $vocab["events_not_imported"]         = "events not imported";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Show / hide columns";
+$vocab["copy"]               = "Copy";
+// "csv" already defined above
+$vocab["excel"]              = "Excel";
+$vocab["pdf"]                = "PDF";
+$vocab["print"]              = "Print";
 $vocab["restore_original"]   = "Restore original";
 
 // Entry types
