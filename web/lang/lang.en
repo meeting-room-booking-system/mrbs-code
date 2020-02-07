@@ -115,7 +115,7 @@ $vocab["skip_conflicts"]     = "Skip past conflicts";
 $vocab["no_mail"]            = "Do not send email";
 $vocab["ctrl_click"]         = "Use Control-Click to select more than one room";
 $vocab["entryid"]            = "Entry ID ";
-$vocab["repeat_id"]          = "Repeat ID "; 
+$vocab["repeat_id"]          = "Repeat ID ";
 $vocab["brief_description"]  = "Brief description.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Public";
@@ -522,13 +522,18 @@ $vocab["events_not_imported"]         = "events not imported";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Show / hide columns";
+$vocab["copy"]               = "Copy";
+// "csv" already defined above
+$vocab["excel"]              = "Excel";
+$vocab["pdf"]                = "PDF";
+$vocab["print"]              = "Print";
 $vocab["restore_original"]   = "Restore original";
 
 // Entry types
 $vocab["type."]             = "Please select a type";
 $vocab["type.I"]            = "Internal";
 $vocab["type.E"]            = "External";
- 
+
 // General
 $vocab["fatal_error"]        = "Whoops!  Unfortunately MRBS has encountered a fatal error.  Please consult your system administrator.";
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace MRBS;
 
 global $view, $year, $month, $day, $area, $room;
@@ -46,7 +46,7 @@ else
   <?php
 }
 
-  
+
 // We are using the jQuery UI library, which has been custom built to include the following components:
 //   - Core
 //      - as defined by dependencies in order to support the required interactions and widgets
@@ -101,36 +101,34 @@ if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
 if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
 {
   // Include the JavaScript for those pages that use dataTables
+  // When constructing the DataTables download we want to include the following:
+  //    DataTables styling framework
+  //    DataTables package
+  //    Buttons, and all sub-options
+  //    ColReorder
+  //    FixedColumns
   if ($debug)
   {
     ?>
-    <script src="jquery/datatables/js/jquery.dataTables.js"></script>
-    <script src="jquery/datatables/js/dataTables.buttons.js"></script>
-    <script src="jquery/datatables/js/buttons.colVis.js"></script>
-    <script src="jquery/datatables/js/dataTables.fixedColumns.js"></script>
-    <script src="jquery/datatables/js/dataTables.colReorder.js"></script>
+    <script src="jquery/datatables/datatables.js"></script>
     <?php
   }
   else
   {
     ?>
-    <script src="jquery/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="jquery/datatables/js/dataTables.buttons.min.js"></script>
-    <script src="jquery/datatables/js/buttons.colVis.min.js"></script>
-    <script src="jquery/datatables/js/dataTables.fixedColumns.min.js"></script>
-    <script src="jquery/datatables/js/dataTables.colReorder.min.js"></script>
+    <script src="jquery/datatables/datatables.min.js"></script>
     <?php
   }
   ?>
-  
-  <script src="jquery/datatables/js/plugins.js"></script>
-      
+
+  <script src="jquery/datatables/plugins.js"></script>
+
   <script src="js/datatables.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 
   <?php
 }
-    
-    
+
+
 // Get any page specific JavaScript
 if (is_readable("js/$page.js"))
 {
@@ -159,7 +157,7 @@ if ($page == 'index')
 <!--[if lte IE 8]>
   <?php
   // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
-  // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the 
+  // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the
   // page which says we don't support them!).
   if ($debug)
   {
