@@ -115,11 +115,18 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   if (args.page != 'pending')
   {
     defaultOptions.buttons = defaultOptions.buttons.concat(
-      {extend: 'copy',  text: '<?php echo escape_js(get_vocab('copy')) ?>'},
-      {extend: 'csv',   text: '<?php echo escape_js(get_vocab('csv')) ?>'},
-      {extend: 'excel', text: '<?php echo escape_js(get_vocab('excel')) ?>'},
-      {extend: 'pdf',   text: '<?php echo escape_js(get_vocab('pdf')) ?>'},
-      {extend: 'print', text: '<?php echo escape_js(get_vocab('print')) ?>'}
+      {extend: 'copy',
+        text: '<?php echo escape_js(get_vocab('copy')) ?>'},
+      {extend: 'csv',
+        text: '<?php echo escape_js(get_vocab('csv')) ?>'},
+      {extend: 'excel',
+        text: '<?php echo escape_js(get_vocab('excel')) ?>'},
+      {extend: 'pdf',
+        text: '<?php echo escape_js(get_vocab('pdf')) ?>',
+        orientation: '<?php echo $pdf_default_orientation ?>',
+        pageSize: '<?php echo $pdf_default_paper ?>'},
+      {extend: 'print',
+        text: '<?php echo escape_js(get_vocab('print')) ?>'}
     );
   }
 
