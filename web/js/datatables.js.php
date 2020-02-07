@@ -19,10 +19,10 @@ var getTypes = function getTypes(table) {
     var type,
         types = {},
         result = [];
-        
+
     table.find('thead tr:first th').each(function(i) {
        var type = $(this).find('span').data('type');
-       
+
        if (type)
        {
          if (types[type] === undefined)
@@ -37,15 +37,15 @@ var getTypes = function getTypes(table) {
     {
       if (types.hasOwnProperty(type))
       {
-        result.push({type: type, 
+        result.push({type: type,
                      targets: types[type]});
       }
     }
 
     return result;
   };
-  
-        
+
+
 <?php
 // Turn the table with id 'id' into a DataTable, using specificOptions
 // which are merged with the default options.   If the browser is IE6 or less
@@ -57,7 +57,7 @@ var getTypes = function getTypes(table) {
 // If you want to do anything else as part of fnInitComplete then you'll need
 // to define fnInitComplete in specificOptions
 ?>
-        
+
 function makeDataTable(id, specificOptions, fixedColumnsOptions)
 {
   var i,
@@ -68,20 +68,20 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       table,
       dataTable,
       fixedColumns;
-  
+
   table = $(id);
   if (table.length === 0)
   {
     return false;
   }
-  
+
   <?php
   // Remove the <colgroup>.  This is only needed to assist in the formatting
   // of the non-datatable version of the table.   When we have a datatable,
   // the datatable sorts out its own formatting.
   ?>
   table.find('colgroup').remove();
-  
+
   <?php
   // In the latest releases of DataTables a CSS rule of 'width: 100%' does not work with FixedColumns.
   // Instead you have to either set a style attribute of 'width: 100%' or set a width attribute of '100%'.
@@ -91,10 +91,10 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // the width attribute here as the lesser of two evils.
   ?>
   table.attr('width', '100%');
-  
+
   <?php // Set up the default options ?>
   defaultOptions = {
-    buttons: [{extend: 'colvis', 
+    buttons: [{extend: 'colvis',
                text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
     deferRender: true,
     paging: true,
@@ -107,14 +107,21 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     scrollX: '100%',
     colReorder: {}
   };
-  
+
+  if (args.page != 'pending')
+  {
+    defaultOptions.buttons = defaultOptions.buttons.concat(
+      'copy', 'csv', 'excel', 'pdf', 'print'
+    );
+  }
+
   <?php
   // Set the language file to be used
   $datatable_dir = '../jquery/datatables/language';
   if ($lang_file = get_datatable_lang_file($datatable_dir))
   {
     // If using the language.url way of loading a DataTables language file,
-    // then the file must be valid JSON.   The .lang files that can be 
+    // then the file must be valid JSON.   The .lang files that can be
     // downloaded from GitHub are not valid JSON as they contain comments.  They
     // therefore cannot be used with language.url, but instead have to be
     // included directly.   Note that if ever we go back to using the url
@@ -126,13 +133,13 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
   ?>
 
-            
+
   <?php
   // Construct the set of columns to be included in the column visibility
   // button.  If specificOptions is set then use that.  Otherwise include
   // all columns except any fixed columns.
   ?>
-  if (specificOptions && 
+  if (specificOptions &&
       specificOptions.buttons &&
       specificOptions.buttons[0] &&
       specificOptions.buttons[0].columns)
@@ -166,7 +173,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   ?>
   mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
   dataTable = table.DataTable(mergedOptions);
-  
+
   if (fixedColumnsOptions)
   {
     fixedColumns = new $.fn.dataTable.FixedColumns(dataTable, fixedColumnsOptions);
@@ -189,9 +196,9 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // to wait for a future release of DataTables when these issues have been
     // fixed.  In the meantime the line of code we need is there below so we can see
     // how it is done, but commented out.
-            
+
     var oCR = new ColReorder(oTable, mergedOptions);
-            
+
     */
     ?>
   }
@@ -199,7 +206,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   $('.datatable_container').css('visibility', 'visible');
   <?php // Need to adjust column sizing after the table is made visible ?>
   dataTable.columns.adjust();
-  
+
   <?php
   // Adjust the column sizing on a window resize.   We shouldn't have to do this because
   // columns.adjust() is called automatically by DataTables on a window resize, but if we
@@ -211,7 +218,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   $(window).on('resize', function () {
     dataTable.columns.adjust();
   });
-  
+
   return dataTable;
 
 }
