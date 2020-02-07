@@ -446,6 +446,13 @@ $text_input_max = 70;  // characters
 // support <datalist> present the options in a scrollable select box]
 $autocomplete_length_breaks = array(25, 250, 2500);
 
+// The default orientation for PDF output
+// Options: 'portrait' or 'landscape'
+$pdf_default_orientation = 'portrait';
+
+// The default paper size for PDF output
+// Options: 'A3', 'A4', 'A5', 'LEGAL', 'LETTER' or 'TABLOID'
+$pdf_default_paper = 'A4';
 
 /************************
  * Miscellaneous settings
