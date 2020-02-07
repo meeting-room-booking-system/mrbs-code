@@ -101,6 +101,12 @@ if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
 if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
 {
   // Include the JavaScript for those pages that use dataTables
+  // When constructing the DataTables download we want to include the following:
+  //    DataTables styling framework
+  //    DataTables package
+  //    Buttons, and all sub-options
+  //    ColReorder
+  //    FixedColumns
   if ($debug)
   {
     ?>
