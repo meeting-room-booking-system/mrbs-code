@@ -116,17 +116,32 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   {
     defaultOptions.buttons = defaultOptions.buttons.concat(
       {extend: 'copy',
-        text: '<?php echo escape_js(get_vocab('copy')) ?>'},
+        text: '<?php echo escape_js(get_vocab('copy')) ?>',
+        exportOptions: {
+          columns: ':visible'
+        }},
       {extend: 'csv',
-        text: '<?php echo escape_js(get_vocab('csv')) ?>'},
+        text: '<?php echo escape_js(get_vocab('csv')) ?>',
+        exportOptions: {
+          columns: ':visible'
+        }},
       {extend: 'excel',
-        text: '<?php echo escape_js(get_vocab('excel')) ?>'},
+        text: '<?php echo escape_js(get_vocab('excel')) ?>',
+        exportOptions: {
+          columns: ':visible'
+        }},
       {extend: 'pdf',
         text: '<?php echo escape_js(get_vocab('pdf')) ?>',
         orientation: '<?php echo $pdf_default_orientation ?>',
-        pageSize: '<?php echo $pdf_default_paper ?>'},
+        pageSize: '<?php echo $pdf_default_paper ?>',
+        exportOptions: {
+          columns: ':visible'
+        }},
       {extend: 'print',
-        text: '<?php echo escape_js(get_vocab('print')) ?>'}
+        text: '<?php echo escape_js(get_vocab('print')) ?>',
+        exportOptions: {
+          columns: ':visible'
+        }}
     );
   }
 
