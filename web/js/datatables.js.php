@@ -97,6 +97,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     buttons: [{extend: 'colvis',
                text: '<?php echo escape_js(get_vocab("show_hide_columns")) ?>'}],
     deferRender: true,
+    lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, '<?php echo escape_js(get_vocab('dt_all')) ?>'] ],
     paging: true,
     pageLength: 25,
     pagingType: 'full_numbers',
