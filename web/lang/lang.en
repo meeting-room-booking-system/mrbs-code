@@ -521,6 +521,7 @@ $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
 
 // Used in DataTables
+$vocab["dt_all"]             = "All";
 $vocab["show_hide_columns"]  = "Show / hide columns";
 $vocab["copy"]               = "Copy";
 // "csv" already defined above
