@@ -99,13 +99,14 @@ $vocab["ord_-3"]             = "terzultimo";
 $vocab["ord_-4"]             = "quartultimo";
 $vocab["ord_-5"]             = "quintultimo";
 $vocab["rep_end_date"]       = "Ripeti fino al";
-$vocab["rep_rep_day"]        = "Ripeti Girno";
+$vocab["rep_rep_day"]        = "Ripeti girno";
+$vocab["rep_interval"]       = "Ripeti ogni";
 $vocab["month_absolute"]     = "Il giorno";
 $vocab["month_relative"]     = "Il giorno";
 $vocab["skip_conflicts"]     = "Salta conflitti";
 $vocab["ctrl_click"]         = "Usa il tasto Ctrl per selezionare più di una stanza";
 $vocab["entryid"]            = "ID Registrazione ";
-$vocab["repeat_id"]          = "ID ripetizione "; 
+$vocab["repeat_id"]          = "ID ripetizione ";
 $vocab["brief_description"]  = "Breve descrizione.";
 
 // Used in view_entry.php
@@ -164,7 +165,7 @@ $vocab["schedule"]           = "Programma";
 $vocab["policy"]             = "Criterio";
 $vocab["too_may_entrys"]     = "L'opzione selezionata crea troppi inserimenti. <br>Per favore usa una opzione differente!";
 $vocab["returncal"]          = "Ritorna al calendario";
-$vocab["failed_to_acquire"]  = "Fallito accesso esclusivo sul DB"; 
+$vocab["failed_to_acquire"]  = "Fallito accesso esclusivo sul DB";
 $vocab["invalid_booking"]    = "Prenotazione non valida";
 $vocab["must_set_description"] = "Devi inserire una breve descrizione per la prenotazione. Per favore torna indietro e inseriscine una.";
 $vocab["no_rooms_selected"]    = "Una stanza deve essere selezionata.";
