@@ -26,34 +26,34 @@ class Element
   private $elements = array();
   private $next = null;
   private $prev = null;
-  
-  
+
+
   public function __construct($tag, $self_closing=false)
   {
     $this->tag = $tag;
     $this->self_closing = $self_closing;
   }
-  
-  
+
+
   public function setText($text, $text_at_start=false)
   {
     if ($this->self_closing)
     {
       throw new \Exception("A self closing element cannot contain text.");
     }
-    
+
     $this->text = $text;
     $this->text_at_start = $text_at_start;
     return $this;
   }
-  
-  
+
+
   public function getAttribute($name)
   {
     return (isset($this->attributes[$name])) ? $this->attributes[$name] : null;
   }
-  
-  
+
+
   // A value of true allows for the setting of boolean attributes such as
   // 'required' and 'disabled'
   public function setAttribute($name, $value=true)
@@ -61,52 +61,52 @@ class Element
     $this->attributes[$name] = $value;
     return $this;
   }
-  
-  
+
+
   public function setAttributes(array $attributes)
   {
     foreach ($attributes as $name => $value)
     {
       $this->setAttribute($name, $value);
     }
-    
+
     return $this;
   }
-  
-  
+
+
   public function removeAttribute($name)
   {
     unset($this->attributes[$name]);
     return $this;
   }
-  
+
 
   public function getElement($key)
   {
     return $this->elements[$key];
   }
-  
-  
+
+
   public function setElement($key, Element $element)
   {
     $this->elements[$key] = $element;
     return $this;
   }
-  
-  
+
+
   public function getElements()
   {
     return $this->elements;
   }
-  
-  
+
+
   public function setElements(array $elements)
   {
     $this->elements = $elements;
     return $this;
   }
-  
-  
+
+
   public function addElement(Element $element=null, $key=null)
   {
     if (isset($element))
@@ -120,11 +120,11 @@ class Element
         $this->elements[] = $element;
       }
     }
-    
+
     return $this;
   }
-  
-  
+
+
   public function addElements(array $elements)
   {
     foreach ($elements as $element)
@@ -133,15 +133,15 @@ class Element
     }
     return $this;
   }
-  
-  
+
+
   public function removeElement($key)
   {
     unset($this->elements[$key]);
     return $this;
   }
-   
-  
+
+
   public function next(Element $element=null)
   {
     if (isset($element))
@@ -158,8 +158,8 @@ class Element
       return null;
     }
   }
-  
-  
+
+
   public function prev(Element $element=null)
   {
     if (isset($element))
@@ -176,20 +176,20 @@ class Element
       return null;
     }
   }
-  
-  
+
+
   public function addClass($class)
   {
     $classes = $this->getAttribute('class');
-    
+
     $classes = (isset($classes)) ? explode(' ', $classes) : array();
     $classes[] = $class;
     $this->setAttribute('class', implode(' ', $classes));
-    
+
     return $this;
   }
-  
-  
+
+
   // Add a set of select options to an element, eg to a <select> or <datalist> element.
   //    $options      An array of options for the select element.   Can be a one- or two-dimensional
   //                  array.  If it's two-dimensional then the keys of the outer level represent
@@ -197,9 +197,9 @@ class Element
   //                  array with value => text members for each <option> in the <select> element.
   //    $selected     The value(s) of the option(s) that are selected.  Can be a single value
   //                  or an array of values.
-  //    $associative  Whether to treat the options as a simple or an associative array.  (This 
+  //    $associative  Whether to treat the options as a simple or an associative array.  (This
   //                  parameter is necessary because if you index an array with strings that look
-  //                  like integers then PHP casts the keys to integers and the array becomes a 
+  //                  like integers then PHP casts the keys to integers and the array becomes a
   //                  simple array).   Can take the following values:
   //                      true    treat as an associative array
   //                      false   treat as a simple array
@@ -211,18 +211,18 @@ class Element
     {
       return $this;
     }
-    
+
     if (!isset($associative))
     {
       $associative = \MRBS\is_assoc($options);
     }
-    
+
     // It's possible to have multiple options selected
     if (!is_array($selected))
     {
       $selected = array($selected);
     }
-    
+
     // Test whether $options is a one-dimensional or two-dimensional array.
     // If two-dimensional then we need to use <optgroup>s.
     if (is_array(reset($options)))   // cannot use $options[0] because $options may be associative
@@ -240,32 +240,32 @@ class Element
       foreach ($options as $key => $value)
       {
         $option = new ElementOption();
-        
+
         if ($associative)
         {
           $option->setAttribute('value', $key);
         }
-        
+
         $option->setText($value);
-        
+
         if (!$associative)
         {
           $key = $value;
         }
-        
+
         if (in_array($key, $selected))
         {
           $option->setAttribute('selected');
         }
-        
+
         $this->addElement($option);
       }
     }
-    
+
     return $this;
   }
-  
-  
+
+
   // $checked is either a scalar or an array of keys that are checked
   public function addCheckboxOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
@@ -274,17 +274,17 @@ class Element
     {
       return $this;
     }
-    
+
     if (is_scalar($checked))
     {
       $checked = array($checked);
     }
-    
+
     if (!isset($associative))
     {
       $associative = \MRBS\is_assoc($options);
     }
-    
+
     foreach ($options as $key => $value)
     {
       if (!$associative)
@@ -298,23 +298,23 @@ class Element
       {
         $checkbox->setChecked(true);
       }
-      
+
       if ($disabled)
       {
         $checkbox->setAttribute('disabled', true);
       }
-      
+
       $label = new ElementLabel();
       $label->setText($value)
             ->addElement($checkbox);
-            
+
       $this->addElement($label);
     }
-    
+
     return $this;
   }
-  
-  
+
+
   public function addRadioOptions(array $options, $name, $checked=null, $associative=null, $disabled=false)
   {
     // Trivial case
@@ -322,12 +322,12 @@ class Element
     {
       return $this;
     }
-    
+
     if (!isset($associative))
     {
       $associative = \MRBS\is_assoc($options);
     }
-    
+
     foreach ($options as $key => $value)
     {
       if (!$associative)
@@ -345,20 +345,20 @@ class Element
       $label = new ElementLabel();
       $label->setText($value)
             ->addElement($radio);
-            
+
       $this->addElement($label);
     }
-    
+
     return $this;
   }
-  
-  
+
+
   public function render()
   {
     echo $this->toHTML();
   }
-  
-  
+
+
   // Turns the form into HTML.   HTML escaping is done here.
   // If $no_whitespace is true, then don't put any whitespace after opening or
   // closing tags.   This is useful for structures such as
@@ -367,25 +367,27 @@ class Element
   public function toHTML($no_whitespace=false)
   {
     $html = "";
-        
+
     $prev = $this->prev();
     if (isset($prev))
     {
       $html .= $prev->toHTML();
     }
-    
+
     $terminator = ($no_whitespace) ? '' : "\n";
     $html .= "<" . $this->tag;
-    
+
     foreach ($this->attributes as $key => $value)
     {
-      if (!isset($value) || ($value === false) || ($value === ''))
+      if (!isset($value) || ($value === false))
       {
-        // a boolean attribute, or else an empty attribute, that
-        // should be omitted
+        // a boolean attribute, or else an empty attribute, that should be omitted.
+        // We allow the empty string, '',  because that can be used, for example, in
+        // 'value=""' as an attribute for the <option> element in a <select> element
+        // that has the 'required' attribute set.
         continue;
       }
-      
+
       $html .= " $key";
       if (isset($value) && ($value !== true))
       {
@@ -393,9 +395,9 @@ class Element
         $html .= '="' . htmlspecialchars($value) . '"';
       }
     }
-    
+
     $html .= ">";
-    
+
     if ($this->self_closing)
     {
       $html .= $terminator;
@@ -406,7 +408,7 @@ class Element
       {
         $html .= htmlspecialchars($this->text);
       }
-      
+
       if (!empty($this->elements))
       {
         // If this element contains text, then don't use a terminator, otherwise
@@ -420,7 +422,7 @@ class Element
           $html .= $element->toHTML(isset($this->text));
         }
       }
-      
+
       if (isset($this->text) && !$this->text_at_start)
       {
         $html .= htmlspecialchars($this->text);
@@ -428,14 +430,14 @@ class Element
 
       $html .= "</" . $this->tag . ">$terminator";
     }
-    
+
     $next = $this->next();
     if (isset($next))
     {
       $html .= $next->toHTML();
     }
-    
+
     return $html;
   }
-  
+
 }
