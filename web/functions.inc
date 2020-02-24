@@ -908,9 +908,8 @@ function get_start_first_slot($month, $day, $year)
     return mrbs_mktime(12, 0, 0, $month, $day, $year);
   }
 
-  $t = mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
-                   $month, $day, $year);
-  return $t;
+  return mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
+                     $month, $day, $year);
 }
 
 
@@ -930,9 +929,9 @@ function get_start_last_slot($month, $day, $year)
   {
     $day++;
   }
-  $t = mrbs_mktime($eveningends, $eveningends_minutes, 0,
-                   $month, $day, $year);
-  return $t;
+
+  return mrbs_mktime($eveningends, $eveningends_minutes, 0,
+                     $month, $day, $year);
 }
 
 
