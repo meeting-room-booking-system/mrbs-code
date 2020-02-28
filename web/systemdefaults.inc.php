@@ -1365,7 +1365,10 @@ $booking_types[] = "I";
 // (Note that the default type does not apply if the type field is mandatory)
 $default_type = "I";
 
-// Default description for new bookings
+// Default short description for new bookings
+$default_name = "";
+
+// Default long description for new bookings
 $default_description = "";
 
 // Only required if your MRBS installation runs from a Mercurial repository
