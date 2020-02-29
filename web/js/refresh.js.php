@@ -473,15 +473,15 @@ $(document).on('page_ready', function() {
       ?>
 
       <?php
-      // If we've got multiple rows in the header then we need to set the 'top' for each of
-      // second and subsequent rows so that sticky headers work properly.  (It would be simpler
-      // just to make the thead sticky, but that's not supported in all browsers).
+      // If we've got a second row in the header then we need to set the 'top' for each of
+      // its cells so that sticky headers work properly.
+      // Notes:
+      //   1. We set the top of the second row to be the bottom of the top row.  This is to avoid
+      //      a problem when the page is refreshed.
+      //   2. It would be simpler just to make the thead sticky, but that's not supported in all browsers.
       ?>
-      $('.dwm_main thead tr:not(:first)').each(function() {
-          var row = $(this);
-          var top = row.find('th:first').position().top;
-          row.find('th').css('top', top + 'px');
-        })
+      var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
+      $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
 
     }).trigger('tableload');
 
