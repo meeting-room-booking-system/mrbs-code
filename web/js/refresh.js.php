@@ -472,6 +472,17 @@ $(document).on('page_ready', function() {
       }
       ?>
 
+      <?php
+      // If we've got multiple rows in the header then we need to set the 'top' for each of
+      // second and subsequent rows so that sticky headers work properly.  (It would be simpler
+      // just to make the thead sticky, but that's not supported in all browsers).
+      ?>
+      $('.dwm_main thead tr:not(:first)').each(function() {
+          var row = $(this);
+          var top = row.find('th:first').position().top;
+          row.find('th').css('top', top + 'px');
+        })
+
     }).trigger('tableload');
 
 });
