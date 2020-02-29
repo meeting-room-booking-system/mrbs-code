@@ -593,6 +593,7 @@ div#div_custom_html {
   /* For those browsers that support the max() function ensure that the maximum height is at least
      a certain height, otherwise it becomes meaningless */
   max-height: max(calc(100vh - 4em), 8em);
+  margin: 1em 0;
 }
 
 div.timeline {
@@ -628,7 +629,6 @@ table.dwm_main {
   clear: both;
   width: 100%;
   height: 100%;
-  margin: 1em 0;
   border-spacing: 0;
   border-collapse: separate;
   border-color: <?php echo $main_table_border_color ?>;
