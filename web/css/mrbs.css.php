@@ -584,8 +584,15 @@ div#div_custom_html {
 }
 
 .table_container {
-  overflow-x: auto;
+  overflow: auto;
   position: relative;
+  /* Set the maximum height to be the viewport's, less a fixed amount, which allows for a small
+   space at the top and bottom, giving a little bit of context and making it easier to position
+   the table container in the viewport */
+  max-height: calc(100vh - 4em);
+  /* For those browsers that support the max() function ensure that the maximum height is at least
+     a certain height, otherwise it becomes meaningless */
+  max-height: max(calc(100vh - 4em), 8em);
 }
 
 div.timeline {
@@ -1050,11 +1057,23 @@ foreach ($color_types as $type => $col)
   background-color: <?php echo $main_table_slot_private_type_color;?>;
 }
 
+.dwm_main thead th,
 .dwm_main th:first-child {
   position: -webkit-sticky;
   position: sticky;
   z-index: 600;
+}
+
+.dwm_main thead th {
+  top: 0;
+}
+
+.dwm_main th:first-child {
   left: 0;
+}
+
+.dwm_main thead th:first-child {
+  z-index: 610;
 }
 
 <?php // hidden columns (eg weekends) in the week and month views ?>
