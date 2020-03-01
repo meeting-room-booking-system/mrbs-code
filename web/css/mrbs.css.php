@@ -639,12 +639,16 @@ div#div_custom_html {
 .table_container {
   overflow: auto;
   position: relative;
-  /* Set the maximum height to be the viewport's, less a fixed amount, which allows for a small
-   space at the top and bottom, giving a little bit of context and making it easier to position
-   the table container in the viewport */
+  <?php
+  // A height is necessary to make sticky headers work. Set the maximum height to be the viewport's,
+  // less a fixed amount, which allows for a small space at the top and bottom, giving a little bit
+  // of context and making it easier to position the table container in the viewport.
+  ?>
   max-height: calc(100vh - 4em);
-  /* For those browsers that support the max() function ensure that the maximum height is at least
-     a certain height, otherwise it becomes meaningless */
+  <?php
+  // For those browsers that support the max() function ensure that the maximum height is at least
+  // a certain height, otherwise the element becomes too small to be meaningful.
+  ?>
   max-height: max(calc(100vh - 4em), 8em);
   margin: 1em 0;
 }
