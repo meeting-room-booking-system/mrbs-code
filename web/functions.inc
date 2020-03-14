@@ -25,6 +25,17 @@ function url_get_contents($url)
   $transfer_timeout = 2;  // seconds
   $curlopt_timeout  = 3;  // seconds
 
+  // If we can, set the User Agent string to be that of the browser, otherwise some sites
+  // fail with 403 errors.
+  if (isset($server['HTTP_USER_AGENT']) && ($server['HTTP_USER_AGENT'] !== ''))
+  {
+    $user_agent = $server['HTTP_USER_AGENT'];
+  }
+  else
+  {
+    $user_agent = 'PHP';
+  }
+
   // If we can we use cURL to download the page because it allows us to
   // set a timeout on establishing a connection as well as on the transfer time.
   // (We can only set a timeout on transfer time with file_get_contents()).  The
@@ -33,7 +44,7 @@ function url_get_contents($url)
   if (function_exists('curl_init'))
   {
     $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_USERAGENT, $server['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
     curl_setopt($ch, CURLOPT_LOW_SPEED_TIME, $transfer_timeout);
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
@@ -60,7 +71,7 @@ function url_get_contents($url)
             'http' => array(
               'header'  => array(
                   'Connection: close',
-                  'User-Agent: ' . $server['HTTP_USER_AGENT']
+                  'User-Agent: ' . $user_agent
                 ),
             'timeout' => $transfer_timeout)
           )
