@@ -369,13 +369,31 @@ function time_cell_html($s, $url)
   return $html;
 }
 
-// Draw a room cell to be used in the header rows/columns of the day and week views
+// Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    contains the room details
 //    $vars    an associative array containing the variables to be used to build the link
 function room_cell_html(array $room, array $vars)
 {
   $link = 'index.php?' . http_build_query($vars, '', '&');
-  $title = get_vocab("viewweek") . "\n\n" . $room['description'];
+
+  switch ($vars['view'])
+  {
+    case 'day':
+      $tag = 'viewday';
+      break;
+    case 'week':
+      $tag = 'viewweek';
+      break;
+    case 'month':
+      $tag = 'viewmonth';
+      break;
+    default:
+      trigger_error("Unknown view '$view'", E_USER_NOTICE);
+      $tag = 'viewweek';
+      break;
+  }
+
+  $title = get_vocab($tag) . "\n\n" . $room['description'];
   $html = '';
   $html .= '<th data-room="' . htmlspecialchars($room['id']) . '">';
   $html .= '<a href="' . htmlspecialchars($link) . '"' .
@@ -1041,7 +1059,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   $tbody = "<tbody>\n";
 
   $room_link_vars = array(
-      'view'      => 'week',
+      'view'      => $view,
       'view_all'  => 0,
       'page_date' => format_iso_date($year, $month, $day),
       'area'      => $area_id
