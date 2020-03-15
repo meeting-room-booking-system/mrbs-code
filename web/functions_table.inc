@@ -896,9 +896,24 @@ function get_day($t, $view)
 
 function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
-  global $days_along_top, $row_labels_both_sides, $column_labels_both_ends;
+  global $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts;
   global $resolution, $morningstarts, $morningstarts_minutes;
+
+  // It's theoretically possible to display a transposed table with rooms along the top and days
+  // down the side.  However it doesn't seem a very useful display and so hasn't yet been implemented.
+  // The problem is that the results don't look good whether you have the flex direction as 'row' or
+  // 'column'.  If you set it to 'row' the bookings are read from left to right within a day, but from
+  // top to bottom within the interval (week/month), so you have to read the display by snaking down
+  // the columns, which is potentially confusing.  If you set it to 'column' then the bookings are in
+  // order reading straight down the column, but the text within the bookings is usually clipped unless
+  // the booking lasts the whole day.  When the days are along the top and the text is clipped you can
+  // at least see the first few characters which is useful, but when the days are down the side you only
+  // see the top of the line.
+  //
+  // As a result $days_along_top is always true, but is here so that there can be stubs in the code in
+  // case people want a transposed view in future.
+  $days_along_top = true;
 
   $rooms = get_rooms($area_id);
   $n_rooms = count($rooms);
@@ -1012,6 +1027,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   }
   else
   {
+    // See comment above
     trigger_error("Not yet implemented", E_USER_WARNING);
   }
 
@@ -1104,6 +1120,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   }
   else
   {
+    // See comment above
     trigger_error("Not yet implemented", E_USER_WARNING);
   }
 
