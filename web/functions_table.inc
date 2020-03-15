@@ -829,7 +829,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 //    $classes  A scalar or array giving the class or classes to be used in the class attribute
 //    $title    The value of the title attribute
 //    $text     The value of the text to be used in the div
-function week_div($slots, $classes, $title=null, $text=null)
+function get_flex_div($slots, $classes, $title=null, $text=null)
 {
   $result = "<div style=\"flex: $slots\"";
 
@@ -1103,13 +1103,13 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
           {
             if ($slots > 0)
             {
-              $tbody .= week_div($slots, 'free');
+              $tbody .= get_flex_div($slots, 'free');
             }
             $this_entry = $interval[$room_id][$d][$s][0];
             $n =    $this_entry['n_slots'];
             $text = $this_entry['name'];
             $classes = get_entry_classes($this_entry);
-            $tbody .= week_div($n, $classes, $text, $text);
+            $tbody .= get_flex_div($n, $classes, $text, $text);
             $slots = 0;
           }
           else
@@ -1122,7 +1122,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 
         if ($slots > 0)
         {
-          $tbody .= week_div($slots, 'free');
+          $tbody .= get_flex_div($slots, 'free');
         }
 
         $tbody .= "</a>\n";
