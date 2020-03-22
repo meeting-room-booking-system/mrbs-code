@@ -1151,6 +1151,16 @@ function get_slots($month, $day, $year, $n_days=1)
 
     for ($j = 0; $j < $n_days; $j++)
     {
+      $d = $day + $j;
+
+      // If there's more than one day in the interval then don't include the hidden days in the array, because
+      // they don't appear in the DOM.  If there's only one day then we've managed to display the hiden day.
+      if (($n_days > 1) &&
+          is_hidden_day(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year))))
+      {
+        continue;
+      }
+
       $this_day = array();
 
       for ($s = $morning_slot_seconds;
@@ -1158,10 +1168,10 @@ function get_slots($month, $day, $year, $n_days=1)
            $s += $resolution)
       {
         $this_slot = array();
-        $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
+        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
         // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
         // seconds after the start of the slot because of the possibility of DST transitions
-        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
         $this_day[] = $this_slot;
       }
       $slots[] = $this_day;
@@ -1236,39 +1246,10 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
-  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
-  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
-  // meaningless because we don't know when periods begin and end.)
-  if (!$enable_periods)
-  {
-    $slots = array();
-    for ($j = 0; $j < DAYS_PER_WEEK; $j++)
-    {
-      // Don't include the hidden days in the array, because they don't appear in the DOM.
-      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
-      {
-        continue;
-      }
-
-      $this_day = array();
-      $d = $day_start_week + $j;
-      for ($s = $morning_slot_seconds;
-           $s <= $evening_slot_seconds;
-           $s += $resolution)
-      {
-        $this_slot = array();
-        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
-        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-        // seconds after the start of the slot because of the possibility of DST transitions
-        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
-        $this_day[] = $this_slot;
-      }
-      $slots[] = $this_day;
-    }
-  }
-
   // TABLE HEADER
   $thead = '<thead';
+
+  $slots = get_slots($month, $day_start_week, $year, DAYS_PER_WEEK);
   if (isset($slots))
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
