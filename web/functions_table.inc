@@ -1135,7 +1135,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
 // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
 // meaningless because we don't know when periods begin and end.)
-function get_slots($month, $day, $year)
+function get_slots($month, $day, $year, $n_days=1)
 {
   global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
 
@@ -1149,16 +1149,22 @@ function get_slots($month, $day, $year)
     $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
     $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
-    for ($s = $morning_slot_seconds;
-         $s <= $evening_slot_seconds;
-         $s += $resolution)
+    for ($j = 0; $j < $n_days; $j++)
     {
-      $this_slot = array();
-      $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
-      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-      // seconds after the start of the slot because of the possibility of DST transitions
-      $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
-      $slots[] = $this_slot;
+      $this_day = array();
+
+      for ($s = $morning_slot_seconds;
+           $s <= $evening_slot_seconds;
+           $s += $resolution)
+      {
+        $this_slot = array();
+        $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
+        // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+        // seconds after the start of the slot because of the possibility of DST transitions
+        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
+        $this_day[] = $this_slot;
+      }
+      $slots[] = $this_day;
     }
   }
 

@@ -184,7 +184,7 @@ var Timeline = {
       {
         if (Array.isArray(arr))
         {
-          return getFirst(arr[arr.length - 1]);
+          return getLast(arr[arr.length - 1]);
         }
         return arr;
       }
