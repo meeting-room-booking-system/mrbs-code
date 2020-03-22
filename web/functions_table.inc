@@ -619,31 +619,16 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
-  // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
-  // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
-  // meaningless because we don't know when periods begin and end.)
-  if (!$enable_periods)
-  {
-    $slots = array();
-    for ($s = $morning_slot_seconds;
-         $s <= $evening_slot_seconds;
-         $s += $resolution)
-    {
-      $this_slot = array();
-      $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
-      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
-      // seconds after the start of the slot because of the possibility of DST transitions
-      $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
-      $slots[] = $this_slot;
-    }
-  }
 
   // TABLE HEADER
   $thead = '<thead';
+
+  $slots = get_slots($month, $day, $year);
   if (isset($slots))
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
   }
+
   $thead .= ">\n";
 
   $header_inner = "<tr>\n";
@@ -1144,6 +1129,40 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 
   $tbody .= "</tbody>\n";
   return $thead . $tfoot . $tbody;
+}
+
+
+// If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
+// it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
+// meaningless because we don't know when periods begin and end.)
+function get_slots($month, $day, $year)
+{
+  global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
+
+  $slots = null;
+
+  if (!$enable_periods)
+  {
+    $slots = array();
+
+    $n_time_slots = get_n_time_slots();
+    $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+    $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
+
+    for ($s = $morning_slot_seconds;
+         $s <= $evening_slot_seconds;
+         $s += $resolution)
+    {
+      $this_slot = array();
+      $this_slot[] = mktime(0, 0, $s, $month, $day, $year);
+      // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+      // seconds after the start of the slot because of the possibility of DST transitions
+      $this_slot[] = mktime(0, 0, $s + $resolution, $month, $day, $year);
+      $slots[] = $this_slot;
+    }
+  }
+
+  return $slots;
 }
 
 
