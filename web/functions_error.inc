@@ -164,7 +164,7 @@ function output_error($heading, $body, $show_data=false)
 }
 
 
-function error_handler($errno, $errstr, $errfile, $errline, $errcontext)
+function error_handler($errno, $errstr, $errfile, $errline)
 {
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
