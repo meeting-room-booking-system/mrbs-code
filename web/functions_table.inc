@@ -626,6 +626,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $slots = get_slots($month, $day, $year);
   if (isset($slots))
   {
+    // Add some data to enable the JavaScript to draw the timeline
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="true"';
@@ -991,6 +992,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   $slots = get_slots($month, $day_start_interval, $year, $n_days, true);
   if (isset($slots))
   {
+    // Add some data to enable the JavaScript to draw the timeline
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($days_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="true"';
@@ -1278,6 +1280,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   $slots = get_slots($month, $day_start_week, $year, DAYS_PER_WEEK);
   if (isset($slots))
   {
+    // Add some data to enable the JavaScript to draw the timeline
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
     $thead .= ' data-timeline-full="false"';
