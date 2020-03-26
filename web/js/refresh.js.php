@@ -188,7 +188,7 @@ var Timeline = {
         }
         return arr;
       }
-      
+
       return ((getFirst(slots) <= time) && (getLast(slots) > time));
     }
 
@@ -215,7 +215,7 @@ var Timeline = {
     }
 
     var result = [];
-    
+
     <?php // Only look for an index if we know that the time is definitely within the slots somewhee ?>
     if ((typeof slots !== 'undefined') && within(slots, time))
     {
@@ -243,12 +243,12 @@ var Timeline = {
     var timelineVertical = thead.data('timeline-vertical');
     var timelineFull = thead.data('timeline-full');
     var nowSlotIndices, slot, fraction, row, element;
-    var view, slotSize, delay, timeline;
+    var slotSize, delay, timeline;
     var top, left, borderLeftWidth, width, height;
     var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
     nowSlotIndices = Timeline.search(slots, now);
-    
+
     if (nowSlotIndices.length > 0)
     {
       slot = slots;
@@ -258,19 +258,6 @@ var Timeline = {
       }
 
       fraction = (now-slot[0]) / (slot[1]-slot[0]);
-
-      switch(table.attr('id'))
-      {
-        case 'day_main':
-          view = 'day';
-          break;
-        case 'week_main':
-          view = 'week';
-          break;
-        default:
-          view = null;
-          break;
-      }
 
       <?php
       // We need the <th> header cells in <thead> because they are useful for working out the
