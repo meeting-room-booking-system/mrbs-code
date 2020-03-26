@@ -266,7 +266,13 @@ var Timeline = {
       ?>
       headers = table.find('thead tr').first().find('th');
 
-      <?php // We can display the table in two ways: with times along the top ... ?>
+      <?php
+      // The time line can either be vertical or horizontal and stretch the full width/height of the
+      // of the calendar or not. For example in the day view with $times_along_top = false the
+      // timeline is horizontal and stretches the full width.   And in the week view for a single room
+      // with $times_along_top = true the timeline is vertical and doesn't stretch the full height
+      // (because it only covers one day, or table row).
+      ?>
       if (timelineVertical)
       {
         <?php // Get the row that contains the current time ?>
@@ -309,7 +315,7 @@ var Timeline = {
         table.after(timeline);
       }
 
-      <?php // ... or the standard view, with times down the side ?>
+      <?php // ... or with a horizontal timeline ?>
       else
       {
         <?php // Get the row that contains the current time ?>
@@ -366,7 +372,7 @@ var Timeline = {
                 left: left + container.scrollLeft() + 'px'
             });
         table.after(timeline);
-      }  <?php // end else (standard view) ?>
+      }  <?php // end else (horizontal timeline) ?>
 
     <?php
     // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
