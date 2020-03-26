@@ -1149,7 +1149,10 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
 // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
 // meaningless because we don't know when periods begin and end.)
-function get_slots($month, $day, $year, $n_days=1, $day_slots=false)
+//    $month, $day, $year   the start of the interval
+//    $n_days               the number of days in the interval
+//    $day_cells            if the columns/rows represent a full day (as in the week/month all rooms views)
+function get_slots($month, $day, $year, $n_days=1, $day_cells=false)
 {
   global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
 
@@ -1177,7 +1180,7 @@ function get_slots($month, $day, $year, $n_days=1, $day_slots=false)
 
       $this_day = array();
 
-      if ($day_slots)
+      if ($day_cells)
       {
         $this_day[] = mktime(0, 0, $morning_slot_seconds, $month, $d, $year);
         // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
@@ -1202,10 +1205,11 @@ function get_slots($month, $day, $year, $n_days=1, $day_slots=false)
     }
   }
 
-  if ($day_slots)
+  if ($day_cells)
   {
     $slots = array($slots);
   }
+  
   return $slots;
 }
 
