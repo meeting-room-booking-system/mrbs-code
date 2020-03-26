@@ -627,6 +627,8 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   if (isset($slots))
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
+    $thead .= ' data-timeline-full="true"';
   }
 
   $thead .= ">\n";
@@ -984,7 +986,17 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
   }
 
   // TABLE HEADER
-  $thead = "<thead>\n";
+  $thead = '<thead';
+
+  $slots = get_slots($month, $day_start_interval, $year, $n_days, true);
+  if (isset($slots))
+  {
+    $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-timeline-vertical="' . (($days_along_top) ? 'true' : 'false') . '"';
+    $thead .= ' data-timeline-full="true"';
+  }
+
+  $thead .= ">\n";
 
   $header_inner_rows = array();
 
@@ -1135,7 +1147,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 // If we're not using periods, construct an array describing the slots to pass to the JavaScript so that
 // it can calculate where the timeline should be drawn.  (If we are using periods then the timeline is
 // meaningless because we don't know when periods begin and end.)
-function get_slots($month, $day, $year, $n_days=1)
+function get_slots($month, $day, $year, $n_days=1, $day_slots=false)
 {
   global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
 
@@ -1163,21 +1175,35 @@ function get_slots($month, $day, $year, $n_days=1)
 
       $this_day = array();
 
-      for ($s = $morning_slot_seconds;
-           $s <= $evening_slot_seconds;
-           $s += $resolution)
+      if ($day_slots)
       {
-        $this_slot = array();
-        $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+        $this_day[] = mktime(0, 0, $morning_slot_seconds, $month, $d, $year);
         // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
         // seconds after the start of the slot because of the possibility of DST transitions
-        $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
-        $this_day[] = $this_slot;
+        $this_day[] = mktime(0, 0, $evening_slot_seconds + $resolution, $month, $d, $year);
+      }
+      else
+      {
+        for ($s = $morning_slot_seconds;
+             $s <= $evening_slot_seconds;
+             $s += $resolution)
+        {
+          $this_slot = array();
+          $this_slot[] = mktime(0, 0, $s, $month, $d, $year);
+          // Need to do mktime() again for the end of the slot as we can't assume that the end slot is $resolution
+          // seconds after the start of the slot because of the possibility of DST transitions
+          $this_slot[] = mktime(0, 0, $s + $resolution, $month, $d, $year);
+          $this_day[] = $this_slot;
+        }
       }
       $slots[] = $this_day;
     }
   }
 
+  if ($day_slots)
+  {
+    $slots = array($slots);
+  }
   return $slots;
 }
 
@@ -1253,6 +1279,8 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   if (isset($slots))
   {
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
+    $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
+    $thead .= ' data-timeline-full="false"';
   }
   $thead .= ">\n";
 
