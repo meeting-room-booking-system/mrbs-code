@@ -120,6 +120,16 @@ var refreshVisChanged = function refreshVisChanged() {
 var Timeline = {
   timerRunning: null,
 
+  <?php // Clear the timeline and any associated timers ?>
+  clear: function() {
+    $('.timeline').remove();
+    if (Timeline.timerRunning)
+    {
+      window.clearInterval(Timeline.timerRunning);
+      Timeline.timerRunning = null;
+    }
+  },
+
   <?php
   // Get the first non-zero slot size in the table, or else if they are all zero then return that.
   // This function is useful when trying to calculate an appropriate delay for pages that don't have
@@ -231,7 +241,7 @@ var Timeline = {
     {
       return;
     }
-
+    
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
@@ -390,16 +400,16 @@ var Timeline = {
       <?php // If we've now got a slot size then calculate a delay ?>
       if (slotSize)
       {
-        delay = <?php echo $resolution ?>/(2 * slotSize);
+        <?php // The delay is half the slot length in seconds divided by the slot width/height in pixels ?>
+        delay = (slot[1] - slot[0])/(2 * slotSize);
         delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
         delay = Math.max(delay, 1000);
       }
       <?php // If we still haven't got one, or else it's zero, then set a sensible default delay ?>
       else
       {
-        delay = 10000; <?php // 10 seconds ?>
+        delay = 60000; <?php // 60 seconds ?>
       }
-
       Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
@@ -407,6 +417,8 @@ var Timeline = {
 
 
 $(document).on('page_ready', function() {
+
+  Timeline.clear();
 
   <?php
   // Set up the timer on the table load rather than the window load event because

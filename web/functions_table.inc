@@ -1209,7 +1209,7 @@ function get_slots($month, $day, $year, $n_days=1, $day_cells=false)
   {
     $slots = array($slots);
   }
-  
+
   return $slots;
 }
 
