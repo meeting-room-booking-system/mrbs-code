@@ -7,7 +7,7 @@ require_once "version.inc";
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
 echo "<h3>" . get_vocab("about_mrbs") . "</h3>\n";
 

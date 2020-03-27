@@ -97,7 +97,7 @@ if ($type == "room")
   }
   else
   {
-    print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+    print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
    
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
@@ -174,7 +174,7 @@ if ($type == "area")
   else
   {
     // There are rooms left in the area
-    print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+    print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
     echo "<p>\n";
     echo get_vocab("delarea");
     echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";

@@ -370,7 +370,7 @@ if (isset($action) && ($action == "export"))
 // PHASE 1 - VIEW THE ENTRY
 // ------------------------
 
-print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
 if (empty($series))
 {

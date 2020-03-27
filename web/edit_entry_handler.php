@@ -12,9 +12,9 @@ use MRBS\Form\ElementInputSubmit;
 
 function invalid_booking($message)
 {
-  global $day, $month, $year, $area, $room;
+  global $view, $view_all, $year, $month, $day, $area, $room;
 
-  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
   // Print footer and exit
@@ -449,7 +449,7 @@ if (isset($id))
 // Must have write access to at least one of the rooms
 if (!getWritable($create_by, $target_rooms, false))
 {
-  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -642,7 +642,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
 }
 
@@ -768,7 +768,7 @@ if ($is_ajax)
         $result['table_innerhtml'] = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
         break;
       case 'week':
-        $result['table_innerhtml'] = week_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
+        $result['table_innerhtml'] = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
         break;
       default:
         throw new \Exception("Unsupported view '$view'");
@@ -789,7 +789,7 @@ if ($result['valid_booking'])
 
 else
 {
-  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!empty($result['violations']['errors']))

@@ -201,14 +201,67 @@ a:hover {
   font-weight: bold;
 }
 
-tr:nth-child(odd) td.new {
+tr:nth-child(odd) td.new,
+.all_rooms tr:nth-child(odd) td {
   background-color: <?php echo $row_odd_color ?>;
 }
 
-tr:nth-child(even) td.new {
+tr:nth-child(even) td.new,
+.all_rooms tr:nth-child(even) td {
   background-color: <?php echo $row_even_color ?>;
 }
 
+.all_rooms td {
+  height: 100%; <?php // for Firefox ?>
+}
+
+.dwm_main.all_rooms td a {
+  display: flex;
+  height: 100%;
+  padding: 0;
+}
+
+<?php
+/* We use border-box sizing to keep the border inside the div therefore allow the div to
+ * be as thin as 1px (useful if there are lots of slots as it saves screen space).  But as
+ * the border would then obscure the background colour, we make the border dotted to allow
+ * the background colour to show through.  Note however that box-sizing doesn't work quite
+ * properly with flexbox - the sizing calculations are a bit out - but it's probably good
+ * enough.
+ *
+ * 'width: 0' is essential to keep the table columns equal width when there's a lot of
+ * text in the bookings.
+ */
+?>
+.all_rooms td a div {
+  box-sizing: border-box;
+  min-width: 1px;
+  width: 0;
+  border-right: 1px dotted  <?php echo $main_table_body_v_border_color ?>;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0.2em 0;
+}
+
+<?php
+/* We can't use padding-left because that would add a fixed amount of width
+ * to every div, thus distorting their relative widths.  So add a non-breaking
+ * space before, which will just be treated in the same way as the rest of the
+ * text.
+ */
+ ?>
+.all_rooms td a div:not(.free)::before {
+  content: '\00a0';
+}
+
+.all_rooms td a:hover {
+  text-decoration: none;
+}
+
+.all_rooms td a div:last-child,
+.all_rooms td a div.free {
+  border-right: 0;
+}
 
 td, th {
   vertical-align: top;
@@ -646,6 +699,10 @@ table.dwm_main {
   line-height: <?php echo $main_cell_height ?>;
 }
 
+.dwm_main tbody th {
+  text-align: left;
+}
+
 .dwm_main td {
   position: relative;
   padding: 0;
@@ -829,6 +886,10 @@ table.dwm_main {
 
 .dwm_main .booked a {
   box-sizing: border-box;
+}
+
+.dwm_main .booked a,
+.all_rooms td a div:not(.free) {
   border-bottom: 1px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
@@ -907,7 +968,7 @@ table.dwm_main {
   background-color: <?php echo $main_table_slot_invalid_color ?>;
 }
 
-.dwm_main#month_main tbody tr:not(:first-child) td {
+.dwm_main#month_main:not(.all_rooms) tbody tr:not(:first-child) td {
   border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
@@ -919,7 +980,7 @@ table.dwm_main {
   background-color: <?php echo $main_table_month_invalid_color ?>;
 }
 
-.dwm_main#month_main a {
+.dwm_main#month_main:not(.all_rooms) a {
   height: 100%;
   width: 100%;
   padding: 0 2px 0 2px;
@@ -1095,7 +1156,7 @@ tr.row_highlight td.new {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-tbody th {
+th {
   white-space: nowrap;
   vertical-align: middle;
 }

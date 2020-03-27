@@ -1573,11 +1573,11 @@ $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeStri
 
 if (!getWritable($create_by, $room_id))
 {
-  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
 }
 
-print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
 // Get the details of all the enabled rooms
 $rooms = array();
