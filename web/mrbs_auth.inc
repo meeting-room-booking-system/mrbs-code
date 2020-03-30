@@ -173,7 +173,7 @@ function getAuthorised($level)
  */
 function checkAuthorised($page, $just_check=false)
 {
-  global $view, $year, $month, $day, $area, $room;
+  global $view, $view_all, $year, $month, $day, $area, $room;
   
   // Get the minimum authorisation level for this page
   $required_level = get_page_level($page);
@@ -208,7 +208,7 @@ function checkAuthorised($page, $just_check=false)
     $area = get_default_area();
   }
   
-  showAccessDenied($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit();
 }
 
@@ -296,11 +296,11 @@ function getWritable($creator, $rooms=null, $all=true)
  * 
  * Returns: Nothing
  */
-function showAccessDenied($view=null, $year=null, $month=null, $day=null, $area=null, $room=null)
+function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null)
 {
   global $server;
   
-  print_header($view, $year, $month, $day, $area, isset($room) ? $room : null);
+  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
   echo "<p>" . get_vocab("norights") . "</p>\n";

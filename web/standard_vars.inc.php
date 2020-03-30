@@ -7,6 +7,7 @@ namespace MRBS;
 // Get the standard form variables
 $page_date = get_form_var('page_date', 'string');
 $view = get_form_var('view', 'string', isset($default_view) ? $default_view : 'day');
+$view_all = get_form_var('view_all', 'int', empty($default_view_all) ? 0 : 1);  // Whether to view all rooms
 $year = get_form_var('year', 'int');
 $month = get_form_var('month', 'int');
 $day = get_form_var('day', 'int');
@@ -21,6 +22,13 @@ if (empty($area))
 if (empty($room))
 {
   $room = get_default_room($area);
+}
+
+// No point in showing all the rooms if there's only one of them.  Show
+// the normal view (with time slots) instead
+if (($view == 'week') && count(get_rooms($area)) == 1)
+{
+  $view_all = false;
 }
 
 // Get the settings (resolution, etc.) for this area
@@ -48,7 +56,7 @@ else
     {
       $day   = date("d");
       $month = date("m");
-      $year  = date("Y");   
+      $year  = date("Y");
       break;
     }
   }

@@ -26,15 +26,15 @@ var intervalId;
 // know how many columns there are.  So we have to use JavaScript.
 ?>
 var sizeColumns = function() {
-  
-    var mainCols = $('.dwm_main thead th').not('th.first_last, th.hidden_day');
+
+    var mainCols = $('.dwm_main thead tr:first-child th').not('th.first_last, th.hidden_day');
     mainCols.css('width', 100/mainCols.length + '%');
 
   };
 
 
 var refreshPage = function refreshPage() {
-    if (!isHidden() && 
+    if (!isHidden() &&
         !$('table.dwm_main').hasClass('resizing') &&
         !isMeteredConnection())
     {
@@ -65,7 +65,7 @@ var refreshPage = function refreshPage() {
              function(result){
                  <?php
                  // (1) Empty the existing table in order to get rid of events
-                 // and data and prevent memory leaks, (2) insert the updated 
+                 // and data and prevent memory leaks, (2) insert the updated
                  // table HTML, (3) clear the existing interval timer and then
                  // (4) trigger a load event so that the resizable bookings are
                  // re-created and a new timer started.
@@ -86,10 +86,10 @@ var refreshPage = function refreshPage() {
              'html');
     }  <?php // if (!isHidden() etc.?>
   };
-    
-  
 
-  
+
+
+
 var refreshVisChanged = function refreshVisChanged() {
     var pageHidden = isHidden();
 
@@ -119,6 +119,16 @@ var refreshVisChanged = function refreshVisChanged() {
 
 var Timeline = {
   timerRunning: null,
+
+  <?php // Clear the timeline and any associated timers ?>
+  clear: function() {
+    $('.timeline').remove();
+    if (Timeline.timerRunning)
+    {
+      window.clearInterval(Timeline.timerRunning);
+      Timeline.timerRunning = null;
+    }
+  },
 
   <?php
   // Get the first non-zero slot size in the table, or else if they are all zero then return that.
@@ -184,7 +194,7 @@ var Timeline = {
       {
         if (Array.isArray(arr))
         {
-          return getFirst(arr[arr.length - 1]);
+          return getLast(arr[arr.length - 1]);
         }
         return arr;
       }
@@ -231,16 +241,19 @@ var Timeline = {
     {
       return;
     }
-
+    
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
     var now = Math.floor(Date.now() / 1000);
-    var table = $('#day_main, #week_main');
+    var table = $('.dwm_main');
     var container = table.parent();
-    var slots = table.find('thead').data('slots');
+    var thead = table.find('thead');
+    var slots = thead.data('slots');
+    var timelineVertical = thead.data('timeline-vertical');
+    var timelineFull = thead.data('timeline-full');
     var nowSlotIndices, slot, fraction, row, element;
-    var view, slotSize, delay, timeline;
+    var slotSize, delay, timeline;
     var top, left, borderLeftWidth, width, height;
     var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
@@ -256,19 +269,6 @@ var Timeline = {
 
       fraction = (now-slot[0]) / (slot[1]-slot[0]);
 
-      switch(table.attr('id'))
-      {
-        case 'day_main':
-          view = 'day';
-          break;
-        case 'week_main':
-          view = 'week';
-          break;
-        default:
-          view = null;
-          break;
-      }
-
       <?php
       // We need the <th> header cells in <thead> because they are useful for working out the
       // dimensions of slots in the table.  We can't rely on the <td> cells in the <tbody> because
@@ -277,11 +277,15 @@ var Timeline = {
       headers = table.find('thead tr').first().find('th');
 
       <?php
-      // We can display the table in two ways: with times along the top ...
-      if ($times_along_top)
+      // The time line can either be vertical or horizontal and stretch the full width/height of the
+      // of the calendar or not. For example in the day view with $times_along_top = false the
+      // timeline is horizontal and stretches the full width.   And in the week view for a single room
+      // with $times_along_top = true the timeline is vertical and doesn't stretch the full height
+      // (because it only covers one day, or table row).
+      ?>
+      if (timelineVertical)
       {
-        // Get the row that contains the current time
-        ?>
+        <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[1]);
         <?php
         // Get the top, left edge and height of the timeline.  The left edge is the left edge of he cell,
@@ -293,25 +297,23 @@ var Timeline = {
         left = element.offset().left - table.parent().offset().left;
         left = left + borderLeftWidth;
         left = left + fraction * slotSize;
-        switch (view)
+
+        if (timelineFull)
         {
-          case 'day':
-            var tbody = table.find('tbody');
-            top = tbody.offset().top - container.offset().top;
-            height = tbody.height();
-            break;
-          case 'week':
-            top = row.offset().top - table.parent().offset().top;
-            <?php
-            // Take 1px off the booking height to account for the bottom border of the <a> tag in a
-            // booked cell.  Bit of a hack, but difficult to see how to do it otherwise.
-            ?>
-            height = row.innerHeight() - 1;
-            break;
-          default:
-            console.log('Unsupported view ' + view);
-            break;
+          var tbody = table.find('tbody');
+          top = tbody.offset().top - container.offset().top;
+          height = tbody.height();
         }
+        else
+        {
+          top = row.offset().top - table.parent().offset().top;
+          <?php
+          // Take 1px off the booking height to account for the bottom border of the <a> tag in a
+          // booked cell.  Bit of a hack, but difficult to see how to do it otherwise.
+          ?>
+          height = row.innerHeight() - 1;
+        }
+
         <?php // Build the new timeline and add it to the DOM after the table ?>
 
         timeline = $('<div class="timeline times_along_top"></div>')
@@ -321,54 +323,50 @@ var Timeline = {
             left: left + container.scrollLeft() + 'px'
           });
         table.after(timeline);
-        <?php
       }
 
-      // ... or the standard view, with times down the side
+      <?php // ... or with a horizontal timeline ?>
       else
       {
-        // Get the row that contains the current time
-        ?>
+        <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[0]);
 
         <?php
         // Get the left edge and width of the timeline.  This is done differently depending on
         // whether it's a day or week view.
         ?>
-        switch (view)
+
+        if (timelineFull)
         {
-          case 'day':
-            <?php
-            // In the day view the width is the width of the row that contains the timeline, less the width
-            // of the first cell (the label) and, if the labels are repeated on the right hand side, the
-            // width of the last cell.
-            // The left edge is the left edge of the row, except that we have to add on the width of the label
-            // cell (because we don't want the timeline going across the label) and also add on the width of the
-            // border, so that the timeline aligns with left edge of booked slots.
-            ?>
-            headersFirstLast = headers.filter('.first_last');
-            headersNormal = headers.not('.first_last');
-            borderLeftWidth = parseInt(headersNormal.first().css('border-left-width'), 10);
-            headerFirstSize = headersFirstLast.first().outerWidth();
-            headerLastSize = (headersFirstLast.length > 1) ? headersFirstLast.last().outerWidth() : 0;
-            width = row.innerWidth() - (headerFirstSize + headerLastSize);
-            left = row.offset().left - table.parent().offset().left + borderLeftWidth + headerFirstSize;
-            break;
-          case 'week':
-            <?php
-            // In the week view the width is the same as the width of the header cell in the same column.
-            // The left edge is the left edge of the corresponding header cell, and then we adjust it to
-            // take into account the border.
-            ?>
-            element = headers.not('.first_last').eq(nowSlotIndices[1]);
-            borderLeftWidth = parseInt(element.css('border-left-width'), 10);
-            width = element.innerWidth();
-            left = element.offset().left - table.parent().offset().left + borderLeftWidth;
-            break;
-          default:
-            console.log('Unsupported view ' + view);
-            break;
+          <?php
+          // In the day view the width is the width of the row that contains the timeline, less the width
+          // of the first cell (the label) and, if the labels are repeated on the right hand side, the
+          // width of the last cell.
+          // The left edge is the left edge of the row, except that we have to add on the width of the label
+          // cell (because we don't want the timeline going across the label) and also add on the width of the
+          // border, so that the timeline aligns with left edge of booked slots.
+          ?>
+          headersFirstLast = headers.filter('.first_last');
+          headersNormal = headers.not('.first_last');
+          borderLeftWidth = parseInt(headersNormal.first().css('border-left-width'), 10);
+          headerFirstSize = headersFirstLast.first().outerWidth();
+          headerLastSize = (headersFirstLast.length > 1) ? headersFirstLast.last().outerWidth() : 0;
+          width = row.innerWidth() - (headerFirstSize + headerLastSize);
+          left = row.offset().left - table.parent().offset().left + borderLeftWidth + headerFirstSize;
         }
+        else
+        {
+          <?php
+          // In the week view the width is the same as the width of the header cell in the same column.
+          // The left edge is the left edge of the corresponding header cell, and then we adjust it to
+          // take into account the border.
+          ?>
+          element = headers.not('.first_last').eq(nowSlotIndices[1]);
+          borderLeftWidth = parseInt(element.css('border-left-width'), 10);
+          width = element.innerWidth();
+          left = element.offset().left - table.parent().offset().left + borderLeftWidth;
+        }
+
         <?php
         // Work out where the top of the timeline should be.  This is the top of the row that contains
         // the current time, plus the fraction of the height of that row that has passed.
@@ -384,9 +382,9 @@ var Timeline = {
                 left: left + container.scrollLeft() + 'px'
             });
         table.after(timeline);
-        <?php
-      }  // end else (standard view)
+      }  <?php // end else (horizontal timeline) ?>
 
+    <?php
     // Set a timer so that the timeline will be updated with time.  No point in setting the delay for less than
     // half the time represented by one pixel.  And make the delay a minimum of one second.
     // Only set the timer if there's not already one running (could happen if show() is called twice)
@@ -402,16 +400,16 @@ var Timeline = {
       <?php // If we've now got a slot size then calculate a delay ?>
       if (slotSize)
       {
-        delay = <?php echo $resolution ?>/(2 * slotSize);
+        <?php // The delay is half the slot length in seconds divided by the slot width/height in pixels ?>
+        delay = (slot[1] - slot[0])/(2 * slotSize);
         delay = parseInt(delay * 1000, 10); <?php // Convert to milliseconds ?>
         delay = Math.max(delay, 1000);
       }
       <?php // If we still haven't got one, or else it's zero, then set a sensible default delay ?>
       else
       {
-        delay = 10000; <?php // 10 seconds ?>
+        delay = 60000; <?php // 60 seconds ?>
       }
-
       Timeline.timerRunning = window.setInterval(Timeline.show, delay);
     }
   }
@@ -419,7 +417,9 @@ var Timeline = {
 
 
 $(document).on('page_ready', function() {
-  
+
+  Timeline.clear();
+
   <?php
   // Set up the timer on the table load rather than the window load event because
   // we will only want to reinitialise the table when it is refreshed rather than the
@@ -427,9 +427,9 @@ $(document).on('page_ready', function() {
   // to be reset.
   ?>
   $('table.dwm_main').on('tableload', function() {
-    
+
       sizeColumns();
-      
+
       <?php
       if (!empty($refresh_rate))
       {
@@ -445,13 +445,13 @@ $(document).on('page_ready', function() {
       // Add an event listener to detect a change in the visibility
       // state.  We can then suspend Ajax refreshing when the page is
       // hidden to save on server, client and network load.
-      
-      // We also need to resume refreshing and refresh the pre-fetched 
+
+      // We also need to resume refreshing and refresh the pre-fetched
       // pages when the page becomes visible again.
       ?>
       var prefix = visibilityPrefix();
       if (document.addEventListener &&
-          (prefix !== null) && 
+          (prefix !== null) &&
           !refreshListenerAdded)
       {
         document.addEventListener(prefix + "visibilitychange", refreshVisChanged);
@@ -472,7 +472,18 @@ $(document).on('page_ready', function() {
       }
       ?>
 
+      <?php
+      // If we've got a second row in the header then we need to set the 'top' for each of
+      // its cells so that sticky headers work properly.
+      // Notes:
+      //   1. We set the top of the second row to be the bottom of the top row.  This is to avoid
+      //      a problem when the page is refreshed.
+      //   2. It would be simpler just to make the thead sticky, but that's not supported in all browsers.
+      ?>
+      var bottom = $('.dwm_main thead tr:first th:first').outerHeight();
+      $('.dwm_main thead tr:nth-child(2) th').css('top', bottom + 'px');
+
     }).trigger('tableload');
-    
+
 });
 

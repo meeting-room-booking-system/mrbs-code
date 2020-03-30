@@ -243,7 +243,7 @@ checkAuthorised(this_page());
 // Get non-standard form variables
 $error = get_form_var('error', 'string');
 
-print_header($view, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
 
 // Get the details we need for this area
 if (isset($area))

@@ -286,24 +286,26 @@ $twentyfourhour_format = true;
 // Formats used for dates and times.   For formatting options
 // see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically
 // convert the following formats which are not supported on Windows: %e, %l, %P and %R.
-$strftime_format['date']              = "%A %d %B %Y";  // Used in Day view
-$strftime_format['date_short']        = "%x";           // Used in Search results
-$strftime_format['dayname']           = "%A";           // Used in Month view
-$strftime_format['dayname_edit']      = "%a";           // Used in edit_entry form
-$strftime_format['weekview_headers']  = "%a<br>%b %d";  // Used in the table header in Week view
-$strftime_format['minical_monthname'] = "%B %Y";        // Used in mini calendar heading
-$strftime_format['minical_dayname']   = "%a";           // Used in mini calendar heading
-$strftime_format['mon']               = "%b";           // Used in date selectors
-$strftime_format['ampm']              = "%p";
-$strftime_format['time12']            = "%I:%M%p";      // 12 hour clock
-$strftime_format['time24']            = "%H:%M";        // 24 hour clock
-$strftime_format['datetime']          = "%c";           // Used in Help
-$strftime_format['datetime12']        = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
-$strftime_format['datetime24']        = "%H:%M - %A %d %B %Y";    // 24 hour clock
+$strftime_format['date']               = "%A %d %B %Y";  // Used in Day view
+$strftime_format['date_short']         = "%x";           // Used in Search results
+$strftime_format['dayname']            = "%A";           // Used in Month view
+$strftime_format['dayname_edit']       = "%a";           // Used in edit_entry form
+$strftime_format['weekview_date']      = "%b %e";        // Used in the table header in Week view
+$strftime_format['weekview_headers']   = "%a<br>%b %e";  // Used in the table header in Month view (all rooms)
+$strftime_format['monthview_headers']  = "%a<br>%e";     // Used in the table header in Month view (all rooms)
+$strftime_format['minical_monthname']  = "%B %Y";        // Used in mini calendar heading
+$strftime_format['minical_dayname']    = "%a";           // Used in mini calendar heading
+$strftime_format['mon']                = "%b";           // Used in date selectors
+$strftime_format['ampm']               = "%p";
+$strftime_format['time12']             = "%I:%M%p";      // 12 hour clock
+$strftime_format['time24']             = "%H:%M";        // 24 hour clock
+$strftime_format['datetime']           = "%c";           // Used in Help
+$strftime_format['datetime12']         = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
+$strftime_format['datetime24']         = "%H:%M - %A %d %B %Y";    // 24 hour clock
 // If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
 // MRBS 1.4.5 and earlier) then use
-// $strftime_format['daymonth']       = "%d %b";
-$strftime_format['daymonth']          = "%b %d";
+// $strftime_format['daymonth']        = "%d %b";
+$strftime_format['daymonth']           = "%b %d";
 
 // Used in the day/week/month views.  Note that for the week view we have to
 // cater for three possible cases, for example:
@@ -312,12 +314,12 @@ $strftime_format['daymonth']          = "%b %d";
 //    Years and months the same:      6 - 12 Feb 2017
 // Note that the separator between the start and end of the week is just '-',
 // so any spaces required need to put in the formats below.
-$strftime_format['view_day']          = "%A %e %B %Y";
-$strftime_format['view_month']        = "%B %Y";
-$strftime_format['view_week_end']     = " %e %B %Y";
-$strftime_format['view_week_start']   = "%e ";        // year and month the same
-$strftime_format['view_week_start_m'] = "%e %B ";     // just the year the same
-$strftime_format['view_week_start_y'] = "%e %B %Y ";  // years (and months) different
+$strftime_format['view_day']           = "%A %e %B %Y";
+$strftime_format['view_month']         = "%B %Y";
+$strftime_format['view_week_end']      = " %e %B %Y";
+$strftime_format['view_week_start']    = "%e ";        // year and month the same
+$strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
+$strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
 
 // Whether or not to display the timezone
 $display_timezone = false;
@@ -362,9 +364,9 @@ $mincals_week_numbers = false;
 // this to true.
 $show_slot_endtime = false;
 
-// To display times on the x-axis (along the top) and rooms or days on the y-axis (down the side)
-// set to true;   the default/traditional version of MRBS has rooms (or days) along the top and
-// times along the side.    Transposing the table can be useful if you have a large number of
+// In the day view, to display times on the x-axis (along the top) and rooms on the y-axis (down
+// the side set to true; the default/traditional version of MRBS has rooms along the top and
+// times down the side.    Transposing the table can be useful if you have a large number of
 // rooms and not many time slots.
 $times_along_top = false;
 
@@ -383,6 +385,10 @@ $show_timeline = true;
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";
+
+// The default setting for the week and month views: whether to view all the
+// rooms (true) or not (false).
+$default_view_all = true;
 
 // Define default room to start with (used by index.php)
 // Room numbers can be determined by looking at the Edit or Delete URL for a
