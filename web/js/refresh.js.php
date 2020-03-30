@@ -241,7 +241,7 @@ var Timeline = {
     {
       return;
     }
-    
+
     <?php // Remove any existing timeline ?>
     $('.timeline').remove();
 
@@ -398,7 +398,7 @@ var Timeline = {
          slotSize = Timeline.getFirstNonZeroSlotSize();
       }
       <?php // If we've now got a slot size then calculate a delay ?>
-      if (slotSize)
+      if (slot && slotSize)
       {
         <?php // The delay is half the slot length in seconds divided by the slot width/height in pixels ?>
         delay = (slot[1] - slot[0])/(2 * slotSize);
