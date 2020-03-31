@@ -96,22 +96,23 @@ $color_types = array(
     'G' => "#ccffcc",
     'H' => "#d9d982",
     'I' => "#99cc66",
-    'J' => "#e6ffe6"); 
+    'J' => "#e6ffe6");
 
 // colours used for pending.php and bookings awaiting approval
-$outstanding_color         = "#FFF36C"; // font colour for the outstanding reservations message in the header
+$outstanding_color         = "#FFF36C";     // font colour for the outstanding reservations message in the header
 $pending_header_back_color = $header_back_color;; // background colour for series headers
-$series_entry_back_color   = "#FFFCDA"; // background colour for entries in a series
-$pending_control_color     = "#FFF36C"; // background colour for the series +/- controls in pending.php
-    
+$series_entry_back_color   = "#FFFCDA";     // background colour for entries in a series
+$pending_control_color     = "#FFF36C";     // background colour for the series +/- controls in pending.php
+$attention_color           = 'darkorange';  // background colour for the number of bookings awaiting approval
+
 // ***** DIMENSIONS *******************
 $banner_border_width          = '0';  // (px)  border width for the outside of the banner
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
-$main_table_border_width      = '0';  // (px)  border width for the outside of the main day/week/month tables    
+$main_table_border_width      = '0';  // (px)  border width for the outside of the main day/week/month tables
 $main_table_cell_border_width = '1';  // (px)  vertical border width for the cells of the main day/week/month tables
 $main_cell_height             = '1.5em';  // height of the cells in the main day/week tables
-         
-    
-// ***** FONTS ************************    
+
+
+// ***** FONTS ************************
 $standard_font_family  = "Arial, 'Arial Unicode MS', Verdana, sans-serif";
 
