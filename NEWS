@@ -7,7 +7,279 @@
 [============================]
 
 -------------------------------------------------------------------------------
-Version 1.7.2 (Web Dec 19th 2018):
+Version 1.8.0 (Tue 31st March 2020):
+
+[*] Navigation in/layout of the calendar views has been improved.
+
+[-] Fix for problem editing long custom fields described in [support-
+ requests:#1658]
+
+[*] Changed so that error messages relating to DB sessions are only
+ output if the current DB schema version as recorded in the database
+ is >= 56, ie the upgrade when the sessions table was created. See SF
+ Support Requests #1658.
+
+[*] Added a maxlength attribute to custom textareas.
+
+[-] Updated to latest phpCAS client to fix problem with '"continue"
+ targeting switch is equivalent to "break". Did you mean to use
+ "continue 2"?' warning messages in PHP 7.3.0.
+
+[*] Turned the create_by select into a Select2 control. See SF Support
+ Requests #1659.
+
+[*] Removed some old unsafe/fragile authentication methods.
+
+[*] Made the upgrade message look less like an error message. See SF
+ Support Requests #1661.
+
+[*] Fixed bug when a field is disabled in the edit_entry form. See SF
+ Support Requests #1664.
+
+[-] LDAP authentication: Added missing global declaration. Removed error control
+ operators. See SG Bugs #425. Fixed undefined index notice when $ldap_filter is not set
+
+[-] Fixed bug causing checkbox custom fields not to be saved. See SF
+ Bugs #429.
+
+[-] Fixed bug preventing resizing of bookings.
+
+[-] Fixed bug preventing ordinary users from editing their own details.
+
+[*] Fixed minimum version requirements. See SF Support Requests #1671.
+
+[-] Reduced the VARCHAR size to avoid running into the limit on the size
+ of the index now that we have switched to utf8mb4. VARCHAR(127)
+ should be more than enough for this field. (Strictly speaking we
+ don't need really need utf8mb4, but it keeps tings simpler using it
+ throughout).
+
+[-] Fixed problem with $skip_default config setting not being
+ recognised. See SF Bugs #434.
+
+[-] Fixed bug in bulk deletion of entries from the report page.
+
+[-] Fixed problem with $min_user_viewing_level. See SF Support Requests
+ #1690.
+
+[*] Made the PHP session name a config setting. See SF Feature Requests
+ #379.
+
+[+] Added the configuration option
+ $mail_settings['use_from_for_all_mail'] to allow the standard From
+ address to be used for all emails. See SF Support Requests #1714.
+
+[+] Added a new config option $auth['wordpress']['blacklisted_roles'].
+ See SF Support Requests #1719.
+
+[*] Added details of person booking/approving/rejecting etc to email
+ notifications. See SF Support Requests #1714.
+
+[-] Fixed a problem with links in email notifications not being
+ calculated automatically when $url_base is empty.
+
+[-] Fixed a problem with links in email notifications not being
+ calculated automatically when $url_base is empty.
+
+[-] Fixed poroblem when $_SERVER['PHP_SELF'] is empty. See SF Bugs #437.
+
+[-] Fixed problem with the create_by field being turned into a fancy
+ select box when it shouldn't be. See SF Support Requests #1732.
+
+[-] Fixed bug preventing compressed files from being imported.
+
+[-] Fixed possible undefined index error when exporting bookings as an
+ iCalendar
+
+[-] Fixed a bug that occasionally (especially on slow connections)
+ caused the wrong data to be displayed in the calendar view after
+ switching days. The problem would arise if the user switched days in
+ between an Ajax refresh request being made and the response being
+ returned.
+
+[*] Added DB schema version to Help information.
+
+[*] Moved %mrbs_company out of lang files
+
+[-] Fixed HTML5 validation errors in email notifications
+
+[-] Prevented rooms being booked for which the user doesn't have write
+ access. See SF Support Requests #1744.
+
+[*] Only displayed rooms that the user has write access for. See SF
+ Support Requests #1744.
+
+[*] Aded 'autocomplete="new-password"' attribute to password fields on
+ the Add/Edit User form to stop browsers trying to autocomplete those
+ fields.
+
+[-] Fixed some HTML5 validation errors.
+
+[-] Fixed problem with the areamatch and roommatch fields not being
+ passed through with the form variables in the Edge browser. See SF
+ Support Requests #1763.
+
+[+] Added capability of defining repeats every n months. See SF Feature
+ Requests #398
+
+[*] Changed so that thge Edit and Delete buttons are only shown if the
+ user is allowed to use them. See SF Support Requests #1776.
+
+[*] Added autocomplete attributes to the login form
+
+[+] Added an option to show the slot end times in the day and week
+ views. It is controlled by the new config variable
+ $show_slot_endtime, which is set to false by default. See SF Support
+ Requests 1796.
+
+[+] Added support for decimal/numeric custom fields in the entry table.
+ See SF Support Requests #1797.
+
+[+] Added the capability of making rooms invisible to certain users.
+
+[*] auth_crypt: Updated the 'crypt' auth method to use the safer 'password_verify()'
+ instead of 'crypt()'
+
+[+] Added support for supplying a TLS cert/key pair for LDAP client
+ authentication - requires PHP 7.1.0 or later.
+
+[-] Make SAML authentication redirects use an absolute URL to the MRBS page.
+
+[-] LDAP auth: Fixed a problem that caused users not being able to login when an
+ $ldap_filter is specified and the user does not have read access to
+ the directory, even for their own entry.
+
+[-] Fixed problem with MRBS not recognising numerals in the
+ HTTP_ACCEPT_LANGUAGE header, eg 'es-419'. See SF Support Requests
+ #1828.
+
+[*] Corrected some Italian translations. See SF Support Requests #1824
+
+[+] Added new policy allowing the prevention of changing approved
+ bookings. See SF Support Requests #1824.
+
+[-] Fixed bug causing STATUS not to be exported properly when exporting
+ entries as iCalendar files. See SF Bugs #441.
+
+[*] Disabled the edit and delete buttons if an entry can't be deleted,
+ showing the reason in a tootip. See SF Support Requests #1824.
+
+[-] LDAP auth: Fixed bug when the attribute name isn't all lower case
+
+[*] Made email CSS use the same styling as the rest of the site.
+
+[-] Fixed bug resulting in undefined index errors when
+ $mail_settings['details'] is false and $mail_settings['icalendar']
+ is true. See SF Support Requests #1835.
+
+[*] Suppressed by default the dumping of $_POST['username'] and
+ $_POST['password'] in the error log. If desired, they can be logged
+ by setting in the config file $auth['log_credentials'] = true;
+
+[-] LDAP auth: Fixed problem with presenting all users in the created by field if
+ the LDAP server can't be contacted. Fixed bug when searching for multiple
+ entries and an LDAP server is not available.
+
+[*] Added maxlength attributes to entry creation/modification forms.
+
+[*] Added server side truncation of form variables on the room and area
+ forms to ensure they fit the database columns
+
+[-] Fixed problem of multiple bookings in the same slot not being
+ displayed correctly. See SF Bugs #442. Thanks to dwpoon.
+
+[-] DB auth: Fixed a bug causing the last_login field not to be updated when an
+ email address rather than username is used to login. See SF Support
+ Requests #1863.
+
+[-] Fixed problem with $theme being overwritten by WordPress. See SF
+ Bugs #444. Thanks to Johan Hattne.
+
+[-] Fixed a number of bugs in the export of entries as iCalendars. See
+ SF Support Requests #1865.
+
+[*] Removed indexed cursors in DB abtraction, as they are not reliable
+ in the supported databases. See SF Bugs #445.
+
+[-] Joomla auth: Fixed bug preventing logged in Joomla user being recognised. See SF
+ Support Requests #1870.
+
+[+] Added a timeline view to the calendar.
+
+[*] Added a logged_in class to aid styling. See SF Support Requests
+ #1884.
+
+[*] Improved accessibility. See SF Support Requests #1884.
+
+[*] Upgraded to jQuery 3.4.1
+
+[*] Updated to flatpickr 4.6.3
+
+[*] Upgraded to Select2 version 4.0.11
+
+[*] Fixed potential notice error in PHP 7.4: "Trying to access array
+ offset on value of type bool". Fixed warning given by PHP 7.4: "Trying to
+ access array offset on value of type null".
+
+[-] Fixed a number of edge cases in internationalisation code.
+
+[*] Upgraded to the latest release of PHPMailer (6.1.3) and as a
+ consequence increased the minimum PHP version required for MRBS from
+ 5.4.0 to 5.5.0.
+
+[*] Upgraded to latest release of pear/Mail_Mime.
+
+[*] Fixed problem with exception handling in PHP7.
+
+[-] Added new views which allows the user to look at all rooms for a week
+ or month time span.
+
+[*] Made the code more resilient by not requiring getimagesize() on the
+ company logo to be successful. See SF Support Requests #1932
+
+[*] Made the code resilient to $default_language_tokens being set to ''.
+ See SF Support Requests #1932.
+
+[+] Added Malay translaton. Thanks to aizuddin hadi. See SF Support
+ Requests 1940.
+
+[+] Added a new config setting $default_view_all. See SF Support
+ Requests #1948
+
+[-] Fixed bug preventing the db_ext auth scheme working when the
+ external usernames contain uppercase characters. See SF Support
+ Requests 1949.
+
+[-] Fixed problem with users not being to login when the auth type is
+ 'db_ext' and the collation of the external database is not utf8 and
+ the username contains non-ASCII characters, eg "Müller". See SF
+ Support Requests #1949.
+
+[-] Fixed bug when $booking_types is not set. See SF Support Requests
+ #1962.
+
+[*] Added an database index for greatly improved performance
+
+[*] Clarified wording of upgrade procedure. See SF Support Requests
+ #1978.
+
+[*] Upgraded to latest version of DataTables
+
+[+] Added Copy, CSV, etc. buttons to the data table views.
+
+[*] Added missing Italian translation. See SF Bugs #456.
+
+[-] Fixed bug preventing the Type field being made into a mandatory
+ field. See SF Support Requests #1985.
+
+[*] Updated the AUTHENTICATION document. See SF Support Requests #1995.
+
+[-] Fixed bug in vocab for custom field names in email notifications.
+ See SF Patches #95.
+
+
+-------------------------------------------------------------------------------
+Version 1.7.2 (Wed Dec 19th 2018):
 
 [*] Updated included time zone files.
 
