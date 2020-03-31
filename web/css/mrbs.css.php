@@ -1728,7 +1728,7 @@ nav.logon span {
 }
 
 .banner a.attention {
-  background-color: darkorange;
+  background-color: <?php echo $attention_color ?>;
 }
 
 .banner nav a:hover,

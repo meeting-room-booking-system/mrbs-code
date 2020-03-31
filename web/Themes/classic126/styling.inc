@@ -73,7 +73,7 @@ $help_highlight_color           = "#ffe6f0";        // highlighting text on the 
 
 // Button colours
 $button_color_stops = array('#eeeeee', '#cccccc');  // linear gradient colour stops
-$button_inset_color = 'darkblue';
+$button_inset_color = '#a7c7e6';
 
 // These are the colours used for distinguishing between the dfferent types of bookings in the main
 // displays in the day, week and month views
@@ -88,21 +88,22 @@ $color_types = array(
     'H' => "#66FFFF",
     'I' => "#DDFFDD",
     'J' => "#CCCCCC");
-     
+
 // colours used for pending.php and bookings awaiting approval
-$outstanding_color         = "#FF4444"; // font colour for the outstanding reservations message in the header
+$outstanding_color         = "#FF4444";     // font colour for the outstanding reservations message in the header
 $pending_header_back_color = $header_back_color; // background colour for series headers
-$series_entry_back_color   = "#FFFBC2"; // background colour for entries in a series
-$pending_control_color     = "#FFF36C"; // background colour for the series +/- controls in pending.php
+$series_entry_back_color   = "#FFFBC2";     // background colour for entries in a series
+$pending_control_color     = "#FFF36C";     // background colour for the series +/- controls in pending.php
+$attention_color           = '#FFDFBF';     // background colour for the number of bookings awaiting approval
 
 // ***** DIMENSIONS *******************
-$banner_border_width          = '1';  // (px)  border width for the outside of the banner
+$banner_border_width          = '0';  // (px)  border width for the outside of the banner
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
-$main_table_border_width      = '1';  // (px)  the border width for the outside of the main day/week/month tables
+$main_table_border_width      = '0';  // (px)  the border width for the outside of the main day/week/month tables
 $main_table_cell_border_width = '1';  // (px)  the border width for the cells of the main day/week/month tables
 $main_cell_height             = '1.5em'; // height of the cells in the main day/week tables
-    
-    
-// ***** FONTS ************************    
+
+
+// ***** FONTS ************************
 $standard_font_family  = "Arial, 'Arial Unicode MS', Verdana, sans-serif";
 
