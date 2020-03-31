@@ -1,16 +1,16 @@
-<?php 
+<?php
 namespace MRBS;
 
 require_once "../systemdefaults.inc.php";
 require_once "../config.inc.php";
 require_once "../functions.inc";
-require_once "../theme.inc"; 
+require_once "../theme.inc";
 
 http_headers(array("Content-type: text/css"),
              60*30);  // 30 minute cache expiry
 ?>
 
-.screenonly, .banner, nav {
+.screenonly, .banner, nav, nav.main_calendar, div.minicalendars.formed {
   display: none;
 }
 
@@ -36,7 +36,7 @@ table.dwm_main {
 .dwm_main :not(tbody) th {
   border-left-color: <?php echo $main_table_header_border_color_print ?>;
 }
-    
+
 .dwm_main td,
 .dwm_main tbody th {
   border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
