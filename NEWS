@@ -7,6 +7,37 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.7.5 (Wed Apr 1st 2020):
+
+[-]  Fixed SF Bugs #453 (resizable indicator not appearing when an
+ admin).
+
+[-] Fixed bug allowing non-admins to drag-select empty cells in the week
+ view that would cause a repeat booking in the week view when they
+ are not allowed to book repeats. (Related to SF Bugs #453).
+
+[+] Added Malay translaton. Thanks to aizuddin hadi. See SF Support
+ Requests 1940.
+
+[-]  Fixed bug preventing logged in Joomla user being recognised. See SF
+ Support Requests #1745
+
+[-] Fixed problem with users not being to login when the auth type is
+ 'db_ext' and the collation of the external database is not utf8 and
+ the username contains non-ASCII characters, eg "Müller". See SF
+ Support Requests #1949.
+
+[-]  Fixed bug when $booking_types is not set. See SF Support Requests
+ #1962.
+
+[*] Fixed incorrect Italian translation. See SF Bugs #456.
+
+[-]  Fixed bug preventing the Type field being made into a mandatory
+ field. See SF Support Requests #1985.
+
+[-] Fixed bug in error handling. See SF Support Requests #1989
+
+-------------------------------------------------------------------------------
 Version 1.7.4.1 (Wed Dec 4th 2019):
 
 [-] Fixed bug in LDAP authentication, see SF Bugs #450.
@@ -257,7 +288,6 @@ Version 1.7.2 (Web Dec 19th 2018):
  to expire.
 
 [*] Upgraded PHPMailer to Version 5.2.27.
-
 
 -------------------------------------------------------------------------------
 Version 1.7.1 (Sun Feb 11th 2018):

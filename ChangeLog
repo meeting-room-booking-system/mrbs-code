@@ -1,8 +1,108 @@
+2020-04-01  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Updated version number to 1.7.5
+	[0e187f17837c] [tip] <mrbs_17_branch>
+
+2020-03-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/internalconfig.inc.php:
+	Fixed bug in error handling. See SF Support Requests #1989
+	[e5fb3c2d76fc] <mrbs_17_branch>
+
+2020-02-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Form/Element.php:
+	Fixed bug preventing the Type field being made into a mandatory
+	field. See SF Support Requests #1985.
+	[55f81ffb43b7] <mrbs_17_branch>
+
+2020-02-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.it:
+	Made capitalisation consistent.
+	[033b6b363848] <mrbs_17_branch>
+
+	* web/lang/lang.it:
+	Fixed incorrect Italian translation. See SF Bugs #456.
+	[1ae839a817ff] <mrbs_17_branch>
+
+2020-01-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/functions_mail.inc, web/functions_view.inc,
+	web/report.php:
+	Fixed a few more instances of a bug when $booking_types is not set.
+	See SF Support Requests #1962.
+	[a3c8dbbf0dce] <mrbs_17_branch>
+
+2020-01-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug when $booking_types is not set. See SF Support Requests
+	#1962.
+	[a710d804e2b9] <mrbs_17_branch>
+
+2020-01-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php:
+	Fixed typo in comment.
+	[656ae68deffe] <mrbs_17_branch>
+
+	* web/lib/MRBS/DB_mysql.php:
+	Fixed problem with users not being to login when the auth type is
+	'db_ext' and the collation of the external database is not utf8 and
+	the username contains non-ASCII characters, eg "Müller". See SF
+	Support Requests #1949.
+	[fd399336ee1e] <mrbs_17_branch>
+
+2020-01-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/auth/auth_db_ext.inc:
+	Fixed bug preventing the db_ext auth scheme working when the
+	external usernames contain uppercase characters. See SF Support
+	Requests 1949.
+	[cae89e9e2ad8] <mrbs_17_branch>
+
+2020-01-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Fixed bug preventing logged in Joomla user being recognised. See SF
+	Support Requests #1745
+	[ce6412db4f61] <mrbs_17_branch>
+
+2019-12-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.ms, web/language.inc:
+	Added Malay translaton. Thanks to aizuddin hadi. See SF Support
+	Requests 1940.
+	[9668982b5d68] <mrbs_17_branch>
+
+2019-12-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/resizable.js.php:
+	Fixed bug allowing non-admins to drag-select empty cells in the week
+	view that would cause a repeat booking in the week view when they
+	are not allowed to book repeats. (Related to SF Bugs #453).
+	[bb2c89e1bf0f] <mrbs_17_branch>
+
+	* web/js/resizable.js.php:
+	Fixed SF Bugs #453 (resizable indicator not appearing when an
+	admin).
+	[d3b613be26fa] <mrbs_17_branch>
+
 2019-12-04  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_7_4_1 for changeset 55214c7a129e
+	[7d505e29fd0f] <mrbs_17_branch>
+
+	* ChangeLog, NEWS:
+	Updated NEWS and ChangeLog for release
+	[55214c7a129e] [mrbs-1_7_4_1] <mrbs_17_branch>
 
 	* web/version_num.inc:
 	Updated version number
-	[9d13ee92eedd] [tip] <mrbs_17_branch>
+	[9d13ee92eedd] <mrbs_17_branch>
 
 2019-12-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
