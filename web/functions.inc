@@ -298,6 +298,7 @@ function get_compound_name($username)
       $result .= " ($display_name)";
     }
   }
+  
   return $result;
 }
 
