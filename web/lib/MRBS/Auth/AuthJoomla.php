@@ -23,7 +23,7 @@ class AuthJoomla extends Auth
     {
       return new User($username);
     }
-    
+
     if ($joomla_user->guest)
     {
       return null;

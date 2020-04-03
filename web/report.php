@@ -850,7 +850,7 @@ function report_row(&$rows, &$data)
     switch ($field)
     {
       case 'create_by':
-        $value  = $value . ' (' . get_display_name($value) . ')';
+        $value  = get_compound_name($value);
         break;
       case 'end_time':
         // Calculate the duration and then fall through to calculating the end date
