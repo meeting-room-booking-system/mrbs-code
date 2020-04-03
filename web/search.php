@@ -79,7 +79,7 @@ function output_row($row, $returl)
   $html_name = htmlspecialchars($row['name']);
   $values[] = "<a title=\"$html_name\" href=\"view_entry.php?" . htmlspecialchars($query) . "\">$html_name</a>";
   // created by
-  $values[] = htmlspecialchars($row['create_by']);
+  $values[] = htmlspecialchars($row['create_by'] . ' (' . get_display_name($row['create_by']) . ')');
   // start time and link to day view
   $date = getdate($row['start_time']);
 
