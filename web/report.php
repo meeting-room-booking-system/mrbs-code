@@ -849,6 +849,9 @@ function report_row(&$rows, &$data)
     // more meaningful
     switch ($field)
     {
+      case 'create_by':
+        $value  = $value . ' (' . get_display_name($value) . ')';
+        break;
       case 'end_time':
         // Calculate the duration and then fall through to calculating the end date
         // Need the duration in seconds for sorting.  Have to correct it for DST
