@@ -68,7 +68,6 @@ if (isset($action))
     // link, no matter what the value of the form parameters.
     logoff_user();
     
-    header ("Location: $target_url"); /* Redirect browser to initial page */
-    exit;
+    location_header($target_url); /* Redirect browser to initial page */
   }
 }

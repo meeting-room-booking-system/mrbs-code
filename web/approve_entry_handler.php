@@ -113,6 +113,4 @@ if (isset($action))
 }
 
 // Now it's all done go back to the previous view
-header("Location: $returl");
-exit;
-
+location_header($returl);

@@ -243,7 +243,6 @@ if (isset($action))
       }
     }
     
-    header ("Location: $target_url"); /* Redirect browser to initial page */
-    exit;
+    location_header($target_url); /* Redirect browser to initial page */
   }
 }

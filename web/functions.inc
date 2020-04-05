@@ -446,6 +446,15 @@ function rfc1123_date($timestamp)
 }
 
 
+// A wrapper for sending a Location header.   Allows the location to be manipulated
+// if necessary.
+function location_header($location)
+{
+  header("Location: $location");
+  exit;
+}
+
+
 // A little helper function to send an "Expires" header. Just one
 // parameter, the number of seconds in the future to set the expiry.
 // If $seconds is <= 0, then caching is disabled.

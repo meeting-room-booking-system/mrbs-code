@@ -92,8 +92,7 @@ if ($type == "room")
     db()->commit();
    
     // Go back to the admin page
-    header("Location: admin.php?area=$area");
-    exit;
+    location_header("admin.php?area=$area");
   }
   else
   {
@@ -168,8 +167,7 @@ if ($type == "area")
     db()->command("DELETE FROM $tbl_area WHERE id=?", array($area));
    
     // Redirect back to the admin page
-    header("Location: admin.php");
-    exit;
+    location_header('admin.php');
   }
   else
   {

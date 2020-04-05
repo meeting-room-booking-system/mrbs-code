@@ -145,8 +145,7 @@ if (!empty($back_button))
   {
     $returl = "index.php";
   }
-  header("Location: $returl");
-  exit();
+  location_header($returl);
 }
 
 // Get custom form variables
@@ -439,8 +438,7 @@ if (isset($id))
     $message = "Tried to edit an entry that no longer exists - probably because " .
                "somebody else has deleted it in the meantime.";
     trigger_error($message, E_USER_NOTICE);
-    header("Location: $returl");
-    exit;
+    location_header($returl);
   }
   $target_rooms[] = $existing_room;
   $target_rooms = array_unique($target_rooms);
@@ -610,8 +608,7 @@ if (empty($returl) ||
 // If we haven't been given a sensible date then get out of here and don't try and make a booking
 if (!isset($start_day) || !isset($start_month) || !isset($start_year) || !checkdate($start_month, $start_day, $start_year))
 {
-  header("Location: $returl");
-  exit;
+  location_header($returl);
 }
 
 // If the old sticky room is one of the rooms requested for booking, then don't change the sticky room.
@@ -783,8 +780,7 @@ if ($is_ajax)
 // Everything was OK.   Go back to where we came from
 if ($result['valid_booking'])
 {
-  header("Location: $returl");
-  exit;
+  location_header($returl);
 }
 
 else

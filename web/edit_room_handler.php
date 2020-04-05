@@ -213,8 +213,7 @@ if (empty($errors))
 
     // Release the mutex and go back to the admin page (for the new area)
     db()->mutex_unlock($tbl_area);
-    header("Location: admin.php?day=$day&month=$month&year=$year&area=$new_area&room=$room");
-    exit();
+    location_header("admin.php?day=$day&month=$month&year=$year&area=$new_area&room=$room");
   }
 
   // Release the mutex
@@ -228,5 +227,4 @@ foreach ($errors as $error)
 {
   $query_string .= '&errors[]=' . urlencode($error);
 }
-header("Location: edit_room.php?$query_string");
-exit;
+location_header("edit_room.php?$query_string");
