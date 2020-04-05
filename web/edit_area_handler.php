@@ -194,13 +194,12 @@ else
 // Errors in the form data - go back to the form
 if (!empty($errors))
 {
-  $query_string = 'area=' . urlencode($area);
+  $query_string = "area=$area";
   foreach ($errors as $error)
   {
-    $query_string .= '&errors[]=' . urlencode($error);
+    $query_string .= "&errors[]=$error";
   }
-  header("Location: edit_area.php?$query_string");
-  exit;
+  location_header("edit_area.php?$query_string");
 }
 
 // Everything is OK, update the database
@@ -336,5 +335,4 @@ db()->command($sql, $sql_params);
 
 
 // Go back to the admin page
-header("Location: admin.php?day=$day&month=$month&year=$year&area=$area");
-exit();
+location_header("admin.php?day=$day&month=$month&year=$year&area=$area");

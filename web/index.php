@@ -431,8 +431,7 @@ if ($refresh)
 // and, if so, redirect to the edit_users page so that they can set up users.
 if (($auth['type'] == 'db') && (count(authGetUsers()) == 0))
 {
-  header('Location: edit_users.php');
-  exit;
+  location_header('edit_users.php');
 }
 
 

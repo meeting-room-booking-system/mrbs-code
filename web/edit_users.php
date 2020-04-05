@@ -623,8 +623,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
     if (!$data)
     {
       trigger_error("Invalid user id $id", E_USER_NOTICE);
-      header("Location: " . this_page());
-      exit;
+      location_header(this_page());
     }
   }
   if (!isset($id) || (!$data))
@@ -827,8 +826,7 @@ if (isset($action) && ($action == "update"))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
-    header("Location: edit_users.php");
-    exit;
+    location_header('edit_users.php');
   }
   
   // otherwise go ahead and update the database
@@ -884,7 +882,7 @@ if (isset($action) && ($action == "update"))
       // some of the fields get special treatment
       case 'name':
         // name: convert it to lower case
-        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        $q_string .= "&$fieldname=" . $values[$fieldname];
         $values[$fieldname] = utf8_strtolower($values[$fieldname]);
         break;
       case 'password_hash':
@@ -910,8 +908,7 @@ if (isset($action) && ($action == "update"))
         // but someone might have spoofed the input in the edit form
         if ($values[$fieldname] > $level)
         {
-          header("Location: edit_users.php");
-          exit;
+          location_header('edit_users.php');
         }
         break;
       case 'timestamp':
@@ -921,7 +918,7 @@ if (isset($action) && ($action == "update"))
         unset($values[$fieldname]);
         break;
       default:
-        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        $q_string .= "&$fieldname=" . $values[$fieldname];
         break;
     }
   }
@@ -997,8 +994,7 @@ if (isset($action) && ($action == "update"))
   // form values 
   if (!$valid_data)
   { 
-    header("Location: edit_users.php?$q_string");
-    exit;
+    location_header("edit_users.php?$q_string");
   }
 
   
@@ -1099,7 +1095,7 @@ if (isset($action) && ($action == "update"))
   db()->command($operation, $sql_params);
 
   /* Success. Redirect to the user list, to remove the form args */
-  header("Location: edit_users.php");
+  location_header('edit_users.php');
 }
 
 /*---------------------------------------------------------------------------*\

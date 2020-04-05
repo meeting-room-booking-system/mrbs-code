@@ -315,8 +315,7 @@ if (isset($action) && ($action == "export"))
   {
     // should never normally be able to get here, but if we have then
     // go somewhere safe.
-    header("Location: index.php");
-    exit;
+    location_header('index.php');
   }
   else
   {    
