@@ -222,9 +222,9 @@ if (empty($errors))
 
 
 // Go back to the room form with errors
-$query_string = 'room=' . urlencode($room);
+$query_string = "room=$room";
 foreach ($errors as $error)
 {
-  $query_string .= '&errors[]=' . urlencode($error);
+  $query_string .= "&errors[]=$error";
 }
 location_header("edit_room.php?$query_string");

@@ -142,7 +142,7 @@ if (isset($action))
       {
         // check to see whether there's a query string already
         $target_url .= (strpos($target_url, '?') === false) ? '?' : '&';
-        $target_url .= urlencode($returl);
+        $target_url .= $returl;
       }
     }
 

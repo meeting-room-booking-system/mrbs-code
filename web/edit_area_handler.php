@@ -194,10 +194,10 @@ else
 // Errors in the form data - go back to the form
 if (!empty($errors))
 {
-  $query_string = 'area=' . urlencode($area);
+  $query_string = "area=$area";
   foreach ($errors as $error)
   {
-    $query_string .= '&errors[]=' . urlencode($error);
+    $query_string .= "&errors[]=$error";
   }
   location_header("edit_area.php?$query_string");
 }

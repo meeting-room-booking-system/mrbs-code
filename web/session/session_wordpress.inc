@@ -115,11 +115,11 @@ if (isset($action))
         // check to see whether there's a query string already
         if (strpos($target_url, '?') === false)
         {
-          $target_url .= "?returl=" . urlencode($returl);
+          $target_url .= "?returl=$returl";
         }
         else
         {
-          $target_url .= "&returl=" . urlencode($returl);
+          $target_url .= "&returl=$returl";
         }
       }
     }

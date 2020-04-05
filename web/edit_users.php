@@ -878,7 +878,7 @@ if (isset($action) && ($action == "update"))
       // some of the fields get special treatment
       case 'name':
         // name: convert it to lower case
-        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        $q_string .= "&$fieldname=" . $values[$fieldname];
         $values[$fieldname] = utf8_strtolower($values[$fieldname]);
         break;
       case 'password_hash':
@@ -914,7 +914,7 @@ if (isset($action) && ($action == "update"))
         unset($values[$fieldname]);
         break;
       default:
-        $q_string .= "&$fieldname=" . urlencode($values[$fieldname]);
+        $q_string .= "&$fieldname=" . $values[$fieldname];
         break;
     }
   }
