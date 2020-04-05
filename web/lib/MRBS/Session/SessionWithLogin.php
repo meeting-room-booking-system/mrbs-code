@@ -106,12 +106,11 @@ abstract class SessionWithLogin implements SessionInterface
           {
             // check to see whether there's a query string already
             $this->form['target_url'] .= (strpos($this->form['target_url'], '?') === false) ? '?' : '&';
-            $this->form['target_url'] .= urlencode($this->form['returl']);
+            $this->form['target_url'] .= $this->form['returl'];
           }
         }
         
-        header ('Location: ' . $this->form['target_url']); /* Redirect browser to initial page */
-        exit;
+        \MRBS\location_header($this->form['target_url']); // Redirect browser to initial page
       }
     }
   }

@@ -54,8 +54,7 @@ class SessionCas extends SessionWithLogin
         // link, no matter what the value of the form parameters.
         $this->logoffUser();
         
-        header ('Location: ' . $this->form['target_url']); /* Redirect browser to initial page */
-        exit;
+        \MRBS\location_header($this->form['target_url']); // Redirect browser to initial page
       }
     }
   }
