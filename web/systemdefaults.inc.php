@@ -1005,6 +1005,7 @@ define('COOKIEHASH', md5($domain_name));
 // the authentication type supports validation by local-part).   For example, if user
 // with username 'john' has email address 'jsmith@example.com', then he would be able
 // to enter either 'john', 'jsmith' or 'jsmith@example.com' when logging in.
+// Only supported for the 'db' authentication type.
 $auth['allow_local_part_email'] = false;
 
 // If you want only administrators to be able to make and delete bookings,
