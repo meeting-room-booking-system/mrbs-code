@@ -28,59 +28,7 @@ function authValidateUser($user, $pass)
 }
 
 
-// Return an array of MRBS users, indexed by 'username' and 'display_name'
-function authGetUsernames()
-{
-  global $auth;
-  
-  $result = array();
-  
-  // We are only interested in MRBS users and admins
-  $mrbs_roles = array_merge((array)$auth['wordpress']['admin_roles'],
-                            (array)$auth['wordpress']['user_roles']);
-                            
-  // The 'role__in' argument to get_users() is only supported in Wordpress >= 4.4.
-  // Before that we have to do it one role at a time with the 'role' argument.
-  $can_use_role__in = version_compare(get_bloginfo('version'), '4.4', '>=');
-  
-  $args = array('fields'  => array('user_login', 'display_name'),
-                'orderby' => 'display_name',
-                'order'   => 'ASC');
-  
-  if ($can_use_role__in)
-  {
-    $args['role__in'] = $mrbs_roles;
-    $users = get_users($args);
-  }
-  else
-  {
 
-    $users = array();
-    $mrbs_roles = array_unique($mrbs_roles);
-    foreach ($mrbs_roles as $mrbs_role)
-    {
-      $args['role'] = $mrbs_role;
-      $users = array_merge($users, get_users($args));
-    }
-    // Remove duplicate users
-    $users = array_map('unserialize', array_unique(array_map('serialize', $users)));
-  }
-  
-  foreach ($users as $user)
-  {
-    $result[] = array('username'     => $user->user_login,
-                      'display_name' => $user->display_name);
-  }
-  
-  if (!$can_use_role__in)
-  {
-    // We need to sort the users in this case as we've only got an array of merged
-    // sorted arrays.  So the small arrays are sorted but the merged array is not.
-    sort_users($result);
-  }
-  
-  return $result;
-}
 
 
 // Convert a WordPress role name to lowercase and replace spaces by underscores.
