@@ -2,7 +2,7 @@
 namespace MRBS;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
-require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 
 // Check we've got the right session scheme
 if ($auth['session'] !== 'joomla')

@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 
 /*****************************************************************************
 *

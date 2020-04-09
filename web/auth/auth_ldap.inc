@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once MRBS_ROOT . '/auth/functions_auth.inc';
+
 
 define('LDAP_SUCCESS',                        0x00);
 define('LDAP_OPERATIONS_ERROR',               0x01);
