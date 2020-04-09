@@ -55,23 +55,3 @@ function authValidateUser($user, $pass)
   return false;      // User unknown or password invalid
 }
 
-
-// Return an array of users, indexed by 'username' and 'display_name'
-function authGetUsernames()
-{
-  global $auth;
-  
-  $result = array();
-  
-  foreach ($auth['user'] as $user => $password)
-  {
-    $result[] = array('username'     => $user,
-                      'display_name' => $user);
-  }
-  
-  // Need to sort the users
-  sort_users($result);
-  
-  return $result;
-}
-
