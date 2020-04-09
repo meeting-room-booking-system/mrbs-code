@@ -12,7 +12,7 @@ abstract class Auth
     $user->display_name = $username;
     $user->level = $this->getDefaultLevel($username);
     $user->email = $this->getDefaultEmail($username);
-     
+
     return $user;
   }
 
@@ -50,20 +50,20 @@ abstract class Auth
     // Everybody else is access level '1'
     return 1;
   }
-  
-  
+
+
   // Gets the default email address using config file settings
   protected function getDefaultEmail($username)
   {
     global $mail_settings;
-    
+
     if (!isset($username) || $username === '')
     {
       return '';
     }
-    
+
     $email = $username;
-    
+
     // Remove the suffix, if there is one
     if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
     {
@@ -73,7 +73,7 @@ abstract class Auth
         $email = substr($email, 0, -strlen($suffix));
       }
     }
-    
+
     // Add on the domain, if there is one
     if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
     {
@@ -83,8 +83,38 @@ abstract class Auth
       $domain = ltrim($mail_settings['domain'], '@');
       $email .= '@' . $domain;
     }
-    
+
     return $email;
   }
-  
+
+
+  // Sorts an array of users indexed by 'username' and 'display_name', eg the
+  // output of getUsernames().   Sorts by display_name then username.
+  protected static function sortUsers(array &$users)
+  {
+    // Obtain a list of columns
+    if (function_exists('array_column'))  // PHP >= 5.5.0
+    {
+      $username     = array_column($users, 'username');
+      $display_name = array_column($users, 'display_name');
+    }
+    else
+    {
+      $username = array();
+      $display_name = array();
+
+      foreach ($users as $key => $user)
+      {
+        $username[$key]     = $user['username'];
+        $display_name[$key] = $user['display_name'];
+      }
+    }
+
+    // Sort the data with volume descending, edition ascending
+    // Add $data as the last parameter, to sort by the common key
+    array_multisort($display_name, SORT_ASC, SORT_LOCALE_STRING | SORT_FLAG_CASE,
+                    $username, SORT_ASC, SORT_LOCALE_STRING | SORT_FLAG_CASE,
+                    $users);
+  }
+
 }

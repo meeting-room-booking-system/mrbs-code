@@ -197,9 +197,9 @@ function get_field_entry_input($params)
 
 function get_field_create_by($create_by, $disabled=false)
 {
-  if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
+  if (method_exists(auth(), 'getUsernames'))
   {
-    $users = authGetUsernames();
+    $users = auth()->getUsernames();
   }
 
   if (!empty($users))
