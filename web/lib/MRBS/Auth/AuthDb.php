@@ -212,6 +212,17 @@ class AuthDb extends Auth
   }
 
 
+  // Return an array of all users
+  public function getUsers()
+  {
+    global $tbl_users;
+
+    $res = \MRBS\db()->query("SELECT * FROM $tbl_users ORDER BY name");
+
+    return $res->all_rows_keyed();
+  }
+
+
   private function rehash($password, $column_name, $column_value)
   {
     global $tbl_users;

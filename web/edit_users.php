@@ -567,7 +567,7 @@ if ($is_ajax)
 // Get the information about the fields in the users table
 $fields = db()->field_info($tbl_users);
 
-$users = authGetUsers();
+$users = auth()->getUsers();
 
 
 /*---------------------------------------------------------------------------*\
