@@ -8,6 +8,16 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
 class AuthWordpress extends Auth
 {
+  public function __construct()
+  {
+    global $auth;
+    
+    // Check we've got the right session scheme
+    if ($auth['session'] !== 'wordpress')
+    {
+      die("MRBS configuration error: AuthWordpress needs \$auth['session'] set to 'wordpress'.");
+    }
+  }
 
   /* validateUser($user, $pass)
    *

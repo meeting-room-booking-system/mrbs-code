@@ -16,7 +16,7 @@ class AuthJoomla extends Auth
     // Check we've got the right session scheme
     if ($auth['session'] !== 'joomla')
     {
-      die("MRBS configuration error: auth_joomla needs \$auth['session'] set to 'joomla'.");
+      die("MRBS configuration error: AuthJoomla needs \$auth['session'] set to 'joomla'.");
     }
   }
 
