@@ -21,7 +21,7 @@ class SessionHttp extends SessionWithLogin
     global $server;
     
     // We save the results of the user validation so that we avoid any performance
-    // penalties in authValidateUser, which can be severe if for example we are using
+    // penalties in auth()->validateUser, which can be severe if for example we are using
     // LDAP authentication
     static $authorised_user = null;
 
@@ -30,7 +30,7 @@ class SessionHttp extends SessionWithLogin
       $user = $server['PHP_AUTH_USER'];
 
       if ((isset($authorised_user) && ($authorised_user == $user)) ||
-          (\MRBS\authValidateUser($user, self::getAuthPassword()) !== false))
+          (\MRBS\auth()->validateUser($user, self::getAuthPassword()) !== false))
       {
         $authorised_user = $user;
       }

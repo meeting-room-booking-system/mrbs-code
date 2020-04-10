@@ -119,7 +119,7 @@ abstract class SessionWithLogin implements SessionInterface
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
   protected function getValidUser($username, $password)
   {
-    if (($valid_username = \MRBS\authValidateUser($this->form['username'], $this->form['password'])) === false)
+    if (($valid_username = \MRBS\auth()->validateUser($this->form['username'], $this->form['password'])) === false)
     {
       $this->authGet($this->form['target_url'], \MRBS\get_vocab('unknown_user'));
       exit(); // unnecessary because authGet() exits, but just included for clarity
