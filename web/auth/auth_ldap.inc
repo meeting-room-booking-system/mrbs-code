@@ -349,25 +349,6 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
 }
 
 
-// Check if the user is an admin
-function authLdapIsAdmin($user)
-{
-  global $auth;
-  
-  if (isset($auth['admin']) && isset($user) && ($user !== ''))
-  {
-    foreach ($auth['admin'] as $admin)
-    {
-      if (strcasecmp($user, $admin) === 0)
-      {
-        return true;
-      }
-    }
-  }
-  
-  return false;
-}
-
 
 function mrbs_ldap_escape ($value, $ignore='', $flags=0)
 {

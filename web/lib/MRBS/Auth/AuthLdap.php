@@ -180,7 +180,7 @@ class AuthLdap extends Auth
 
   }
 
-  
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
