@@ -1,5 +1,7 @@
 <?php
 
+global $theme, $auth;
+
 define('WP_USE_THEMES', false);
 
 // WordPress unsets the $theme variable so we need to save it and restore it afterwards.
