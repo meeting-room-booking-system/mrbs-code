@@ -9,6 +9,25 @@ require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 class AuthJoomla extends Auth
 {
+  /* authValidateUser($user, $pass)
+   *
+   * Checks if the specified username/password pair are valid
+   *
+   * $user  - The user name
+   * $pass  - The password
+   *
+   * Returns:
+   *   false    - The pair are invalid or do not exist
+   *   true     - The user has been validated and logged in
+   */
+  public function validateUser($user, $pass)
+  {
+    $mainframe = JFactory::getApplication('site');
+
+    return $mainframe->login(array('username' => $user,
+                                   'password' => $pass));
+  }
+
 
   public function getUser($username=null)
   {
