@@ -350,19 +350,6 @@ function authLdapAction($callback, $user, &$object, $keep_going=false)
 
 
 
-function mrbs_ldap_escape ($value, $ignore='', $flags=0)
-{
-  if (function_exists('ldap_escape'))
-  {
-    return ldap_escape($value, $ignore, $flags);
-  }
-  else
-  {
-    return $value;
-  }
-}
-
-
 /* authLdapDebug($message)
  *
  * Output LDAP debugging, if the configuration variable
