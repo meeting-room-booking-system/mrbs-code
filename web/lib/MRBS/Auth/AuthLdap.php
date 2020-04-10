@@ -180,6 +180,144 @@ class AuthLdap extends Auth
 
   }
 
+  /* validateUser($user, $pass)
+   *
+   * Checks if the specified username/password pair are valid
+   *
+   * $user  - The user name
+   * $pass  - The password
+   *
+   * Returns:
+   *   false    - The pair are invalid or do not exist
+   *   string   - The validated username
+   */
+  public function validateUser($user, $pass)
+  {
+    // Check if we do not have a username/password
+    // User can always bind to LDAP anonymously with empty password,
+    // therefore we need to block empty password here...
+    if (!isset($user) || !isset($pass) || strlen($pass)==0)
+    {
+      self::debug('empty username or password passed');
+      return false;
+    }
+
+    $object = array();
+    $object['pass'] = $pass;
+
+    return $this->action('validateUserCallback', $user, $object);
+  }
+
+
+  /* validateUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                          $user, &$object)
+   *
+   * Checks if the specified username/password pair are valid
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $user        - The user name
+   * &$object     - Reference to the generic object
+   *
+   * Returns:
+   *   false      - Didn't find a user
+   *   true       - Found a user
+   */
+  private static function validateUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                                               $user, &$object)
+  {
+    global $ldap_unbind_between_attempts;
+
+    self::debug("base_dn '$base_dn' dn '$dn' user '$user'");
+
+    $pass = $object['pass'];
+
+    // try an authenticated bind
+    // use this to confirm that the user/password pair
+    if ($dn && self::ldapBind($ldap, $dn, $pass))
+    {
+      // however if there is a filter check that the
+      // user is part of the group defined by the filter
+      if (!isset($object['config']['ldap_filter']) || ($object['config']['ldap_filter'] === ''))
+      {
+        self::debug("successful authenticated bind with no \$ldap_filter");
+        return true;
+      }
+      else
+      {
+        // If we've got a search DN and password, then bind again using those credentials because
+        // it's possible that the user doesn't have read access in the directory, even for their own
+        // entry, in which case we'll get a "No such object" result.
+        if (isset($object['config']['ldap_dn_search_dn']) &&
+          isset($object['config']['ldap_dn_search_password']))
+        {
+          self::debug("rebinding as '" . $object['config']['ldap_dn_search_dn'] . "'");
+          if (!self::ldapBind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
+          {
+            self::debug("rebinding failed: " . self::ldapError($ldap));
+            if ($ldap_unbind_between_attempts)
+            {
+              ldap_unbind($ldap);
+            }
+            return false;
+          }
+          self::debug('rebinding successful');
+        }
+
+        $filter = $object['config']['ldap_filter'];
+
+        self::debug("successful authenticated bind checking '$filter'");
+
+        // If ldap_filter_base_dn is set, set the filter to search for the user
+        // in the given base_dn (OpenLDAP).  If not, read from the user
+        // attribute (AD)
+        if (isset($object['config']['ldap_filter_base_dn']))
+        {
+          $f = "(&(".
+            $object['config']['ldap_filter_user_attr'].
+            "=$user)($filter))";
+          $filter_dn = $object['config']['ldap_filter_base_dn'];
+          $call = 'ldap_search';
+        }
+        else
+        {
+          $f = "($filter)";
+          $filter_dn = $dn;
+          $call = 'ldap_read';
+        }
+
+        self::debug("trying filter: $f: dn: $filter_dn: method: $call");
+
+        $res = $call(
+          $ldap,
+          $filter_dn,
+          $f,
+          array()
+        );
+        if (ldap_count_entries($ldap, $res) > 0)
+        {
+          self::debug('found entry with filter');
+          return true;
+        }
+        self::debug('no entry found with filter');
+      }
+    }
+    else
+    {
+      self::debug("bind to '$dn' failed: ". self::ldapError($ldap));
+    }
+
+    if ($ldap_unbind_between_attempts)
+    {
+      ldap_unbind($ldap);
+    }
+
+    // return failure if no connection is established
+    return false;
+  }
+
 
   public function getUser($username)
   {

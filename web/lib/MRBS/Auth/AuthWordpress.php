@@ -9,7 +9,7 @@ require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 class AuthWordpress extends Auth
 {
 
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *

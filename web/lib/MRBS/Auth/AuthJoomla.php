@@ -9,7 +9,7 @@ require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 class AuthJoomla extends Auth
 {
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
