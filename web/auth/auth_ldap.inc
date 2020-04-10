@@ -417,61 +417,6 @@ function authLdapGetEmailCallback(&$ldap, $base_dn, $dn, $user_search,
 }
 
 
-
-
-
-/* authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
-                            $user, &$object)
- * 
- * Checks if the specified username is in an admin group
- *
- * &$ldap       - Reference to the LDAP object
- * $base_dn     - The base DN
- * $dn          - The user's DN
- * $user_search - The LDAP filter to find the user
- * $user        - The user name
- * &$object     - Reference to the generic object
- * 
- * Returns:
- *   false    - Not in the admin group
- *   true     - In the admin group
- */
-function authLdapCheckAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
-                                         $user, &$object)
-{
-  $admin_group_dn = $object['config']['ldap_admin_group_dn'];
-  $group_member_attrib = $object['config']['ldap_group_member_attrib'];
-
-  authLdapDebug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
-
-  if ($ldap && $base_dn && $dn && $user_search)
-  {
-    $res = ldap_read($ldap,
-                     $dn,
-                     "(objectclass=*)",
-                     array(utf8_strtolower($group_member_attrib)) );
-                     
-    if (ldap_count_entries($ldap, $res) > 0)
-    {
-      authLdapDebug("search successful '$group_member_attrib'");
-      $entries = ldap_get_entries($ldap, $res);
-      foreach ($entries[0][utf8_strtolower($group_member_attrib)] as $group)
-      {
-        if (strcasecmp($group, $admin_group_dn) == 0)
-        {
-          authLdapDebug("admin group successfully found in user object");
-          return true;
-        }
-      }
-      authLdapDebug("admin group not found in user object");
-    }
-  }
-  return false;
-}
-
-
-
-
 /* authLdapGetName($user)
  *
  * Gets the name of the user from LDAP
