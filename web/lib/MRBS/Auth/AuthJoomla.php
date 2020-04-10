@@ -9,6 +9,18 @@ require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
 class AuthJoomla extends Auth
 {
+  public function __construct()
+  {
+    global $auth;
+    
+    // Check we've got the right session scheme
+    if ($auth['session'] !== 'joomla')
+    {
+      die("MRBS configuration error: auth_joomla needs \$auth['session'] set to 'joomla'.");
+    }
+  }
+
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
