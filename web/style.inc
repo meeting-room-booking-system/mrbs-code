@@ -58,7 +58,7 @@ if (isset($custom_css_url))
 }
 ?>
 
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex, nofollow, noarchive">
 
 <?php
 if (($refresh_rate != 0) && (this_page(false, '.php') == 'index'))
