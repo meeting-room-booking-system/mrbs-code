@@ -867,7 +867,7 @@ $form = new Form();
 $form->setAttributes(array('class'   => 'standard',
                            'method'  => 'post',
                            'enctype' => 'multipart/form-data',
-                           'action'  => this_page()));
+                           'action'  => this_page(false, null, true)));
                            
 $fieldset = new ElementFieldset();
 

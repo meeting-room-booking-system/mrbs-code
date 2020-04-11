@@ -129,6 +129,7 @@ function print_report_link($user)
 function print_logon_button($target_url)
 {
   global $auth;
+  global $multisite, $site;
   
   if ($auth['session'] == 'cas')
   {
@@ -137,6 +138,10 @@ function print_logon_button($target_url)
   else
   {
     $action = 'admin.php';
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $action .= "?site=$site";
+    }
   }
   
   $form = new Form();

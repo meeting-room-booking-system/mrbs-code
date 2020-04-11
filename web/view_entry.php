@@ -52,6 +52,7 @@ function generateApproveButtons($id, $series)
 {
   global $returl;
   global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
+  global $multisite, $site;
   
   $info_time = ($series) ? $repeat_info_time : $entry_info_time;
   $info_user = ($series) ? $repeat_info_user : $entry_info_user;
@@ -71,6 +72,10 @@ function generateApproveButtons($id, $series)
   }
   
   $query_string = "id=$id&series=" . (($series) ? 1 : 0);
+  if ($multisite && isset($site) && ($site !== ''))
+  {
+    $query_string .= "&site=$site";
+  }
   
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . "</td>\n";
@@ -108,6 +113,7 @@ function generateOwnerButtons($id, $series)
 {
   global $user, $create_by, $awaiting_approval, $area;
   global $reminders_enabled, $last_reminded, $reminder_interval;
+  global $multisite, $site;
   
   // Remind button if you're the owner AND there's a booking awaiting
   // approval AND sufficient time has passed since the last reminder
@@ -122,7 +128,13 @@ function generateOwnerButtons($id, $series)
     echo "<td>\n";
     
     $this_page = this_page();
+    $returl = "$this_page?id=$id&area=$area";
     $query_string = "id=$id&series=" . (($series) ? 1 : 0);
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $query_string .= "&site=$site";
+      $returl .= "&site=$site";;
+    }
     
     $params = array('action' => "approve_entry_handler.php?$query_string",
                     'value'  => get_vocab('remind_admin'),

@@ -103,6 +103,13 @@ $db_persist = false;
 /*********************************
  * Site identification information
  *********************************/
+ 
+// Set to true to enable multisite operation, in which case the settings below are for the
+// home site, identified by the empty string ''.   Other sites have their own supplementary
+// config fies in the sites/<sitename> directory.
+$multisite = false;
+$default_site = '';
+
 $mrbs_admin = "Your Administrator";
 $mrbs_admin_email = "admin_email@your.org";
 // NOTE:  there are more email addresses in $mail_settings below.    You can also give
