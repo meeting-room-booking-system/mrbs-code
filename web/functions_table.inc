@@ -266,7 +266,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
         $query = http_build_query($vars, '', '&');
 
-        $html .= '<a href="edit_entry.php?' . htmlspecialchars($query) . '"' .
+        $html .= '<a href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
                  ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">";
         if ($show_plus_link)
         {
@@ -312,7 +312,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         }
 
         $html .= '<div class="' . implode(' ', $classes) . '">';
-        $html .= '<a href="view_entry.php?' . htmlspecialchars($query) . '"' .
+        $html .= '<a href="' . htmlspecialchars(multisite("view_entry.php?$query")) . '"' .
                    ' title="' . htmlspecialchars($booking['description']) . '"' .
                    ' class="' . $booking['type'] . '"' .
                    ' data-id="' . $booking['id'] . '"' .
@@ -375,6 +375,7 @@ function time_cell_html($s, $url)
 function room_cell_html(array $room, array $vars)
 {
   $link = 'index.php?' . http_build_query($vars, '', '&');
+  $link = multisite($link);
 
   switch ($vars['view'])
   {
@@ -772,6 +773,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       }
 
       $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = multisite($url);
 
       $tbody .= '<tr';
       if (!empty($classes))
@@ -1028,6 +1030,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
         }
         $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
         $link = "index.php?" . http_build_query($vars, '', '&');
+        $link = multisite($link);
         $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
         $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
         $header_inner_rows[$i] .= '<th><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
@@ -1093,6 +1096,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
           );
 
         $link = "index.php?" . http_build_query($vars, '', '&');
+        $link = multisite($link);
         $tbody .= '<a href="' . htmlspecialchars($link) . "\">\n";
         $s = $morning_slot_seconds;
         $slots = 0;
@@ -1345,6 +1349,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
                     'room'     => $room_id);
 
       $link = 'index.php?' . http_build_query($vars, '', '&');
+      $link = multisite($link);
       $text = utf8_strftime($dformat, $t);
       $header_inner .= day_cell_html($text, $link, $date);
     }
@@ -1399,6 +1404,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
                     'room'     => $room_id);
 
       $day_cell_link = 'index.php?' . http_build_query($vars, '', '&');
+      $day_cell_link = multisite($day_cell_link);
       $row_label = day_cell_html($day_cell_text, $day_cell_link, $wdate);
       $tbody .= $row_label;
 
@@ -1455,6 +1461,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
       }
 
       $url = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = multisite($url);
 
       $tbody.= '<tr';
       if (!empty($classes))
@@ -1726,14 +1733,14 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
       {
         $vars['view'] = 'week';
         $query = http_build_query($vars, '', '&');
-        $html .= '<a class="week_number" href="index.php?' . htmlspecialchars($query) . '">';
+        $html .= '<a class="week_number" href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
         $html .= date("W", gmmktime(12, 0, 0, $month, $d, $year));
         $html .= "</a>\n";
       }
       // then put in the day of the month
       $vars['view'] = 'day';
       $query = http_build_query($vars, '', '&');
-      $html .= '<a class="monthday" href="index.php?' . htmlspecialchars($query) . "\">$d</a>\n";
+      $html .= '<a class="monthday" href="' . htmlspecialchars(multisite("index.php?$query")) . "\">$d</a>\n";
 
       $html .= "</div>\n";
 
@@ -1752,7 +1759,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
 
       $query = http_build_query($vars, '', '&');
 
-      $html .= '<a class="new_booking" href="edit_entry.php?' . htmlspecialchars($query) . '"' .
+      $html .= '<a class="new_booking" href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
                ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
       if ($show_plus_link)
       {
@@ -1802,7 +1809,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
                       'day'   => $d);
 
         $query = http_build_query($vars, '', '&');
-        $booking_link = "view_entry.php?$query";
+        $booking_link = multisite("view_entry.php?$query");
         $slot_text = get_booking_summary(
                        $entry['start_time'],
                        $entry['end_time'],
