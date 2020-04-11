@@ -60,6 +60,11 @@ var refreshPage = function refreshPage() {
       ?>
       $('table.dwm_main').addClass('refreshable');
 
+      if(args.site)
+      {
+        data.site = args.site;
+      }
+      
       $.post('index.php',
              data,
              function(result){

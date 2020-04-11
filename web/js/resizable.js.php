@@ -1135,6 +1135,11 @@ $(document).on('page_ready', function() {
         booking.addClass('saving')
                .after('<span class="saving"><?php echo get_vocab('saving'); ?></span>');
 
+        if(args.site)
+        {
+          data.site = args.site;
+        }
+    
         $.post('edit_entry_handler.php',
                data,
                function(result) {
