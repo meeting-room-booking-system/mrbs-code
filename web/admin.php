@@ -20,7 +20,7 @@ function generate_room_delete_form($room, $area)
 {
   $form = new Form();
 
-  $attributes = array('action' => 'del.php',
+  $attributes = array('action' => multisite('del.php'),
                       'method' => 'post');
                       
   $form->setAttributes($attributes);
@@ -130,7 +130,7 @@ function generate_new_area_form()
   
   $attributes = array('id'     => 'add_area',
                       'class'  => 'form_admin standard',
-                      'action' => 'add.php',
+                      'action' => multisite('add.php'),
                       'method' => 'post');
                       
   $form->setAttributes($attributes);
@@ -171,7 +171,7 @@ function generate_new_room_form()
   
   $attributes = array('id'     => 'add_room',
                       'class'  => 'form_admin standard',
-                      'action' => 'add.php',
+                      'action' => multisite('add.php'),
                       'method' => 'post');
                       
   $form->setAttributes($attributes);

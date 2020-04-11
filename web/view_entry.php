@@ -82,7 +82,7 @@ function generateApproveButtons($id, $series)
   echo "<td>\n";
   
   // Approve
-  $params = array('action' => "approve_entry_handler.php?$query_string",
+  $params = array('action' => multisite("approve_entry_handler.php?$query_string"),
                   'value'  => get_vocab('approve'),
                   'inputs' => array('action' => 'approve',
                                     'returl' => $returl)
@@ -90,7 +90,7 @@ function generateApproveButtons($id, $series)
   generate_button($params);
   
   // Reject
-  $params = array('action' => "$this_page?$query_string",
+  $params = array('action' => multisite("$this_page?$query_string"),
                   'value'  => get_vocab('reject'),
                   'inputs' => array('action' => 'reject',
                                     'returl' => $returl)
@@ -98,7 +98,7 @@ function generateApproveButtons($id, $series)
   generate_button($params);
   
   // More info
-  $params = array('action' => "$this_page?$query_string",
+  $params = array('action' => multisite("$this_page?$query_string"),
                   'value'  => get_vocab('more_info'),
                   'inputs' => array('action' => 'more_info',
                                     'returl' => $returl)
@@ -136,7 +136,7 @@ function generateOwnerButtons($id, $series)
       $returl .= "&site=$site";;
     }
     
-    $params = array('action' => "approve_entry_handler.php?$query_string",
+    $params = array('action' => multisite("approve_entry_handler.php?$query_string"),
                     'value'  => get_vocab('remind_admin'),
                     'inputs' => array('action' => 'remind',
                                       'returl' => "$this_page?id=$id&area=$area")
@@ -525,10 +525,10 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       if (!$series)
       {
         echo "<div>\n";
-        $params = array('action' => 'edit_entry.php',
-          'value' => get_vocab('editentry'),
-          'inputs' => array('id' => $id,
-            'returl' => $returl)
+        $params = array('action' => multisite('edit_entry.php'),
+                        'value'  => get_vocab('editentry'),
+                        'inputs' => array('id' => $id,
+                        'returl' => $returl)
         );
         generate_button($params, $button_attributes);
         echo "</div>\n";
@@ -536,11 +536,11 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       if ((!empty($repeat_id) || $series) && $repeats_allowed)
       {
         echo "<div>\n";
-        $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
-          'value' => get_vocab('editseries'),
-          'inputs' => array('id' => $id,
-            'edit_type' => 'series',
-            'returl' => $returl)
+        $params = array('action'    => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+                        'value'     => get_vocab('editseries'),
+                        'inputs'    => array('id' => $id,
+                        'edit_type' => 'series',
+                        'returl'    => $returl)
         );
         generate_button($params, $button_attributes);
         echo "</div>\n";
@@ -560,11 +560,11 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       if (!$series)
       {
         echo "<div>\n";
-        $params = array('action' => 'del_entry.php',
-          'value' => get_vocab('deleteentry'),
-          'inputs' => array('id' => $id,
-            'series' => 0,
-            'returl' => $returl)
+        $params = array('action' => multisite('del_entry.php'),
+                        'value'  => get_vocab('deleteentry'),
+                        'inputs' => array('id' => $id,
+                        'series' => 0,
+                        'returl' => $returl)
         );
 
         generate_button($params, $button_attributes);
@@ -573,11 +573,11 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       if ((!empty($repeat_id) || $series) && $repeats_allowed)
       {
         echo "<div>\n";
-        $params = array('action' => "del_entry.php?day=$day&month=$month&year=$year",
-          'value' => get_vocab('deleteseries'),
-          'inputs' => array('id' => $id,
-            'series' => 1,
-            'returl' => $returl)
+        $params = array('action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
+                        'value'  => get_vocab('deleteseries'),
+                        'inputs' => array('id' => $id,
+                        'series' => 1,
+                        'returl' => $returl)
         );
 
         generate_button($params, $button_attributes);
@@ -592,7 +592,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   if (!$series)
   {
     echo "<div>\n";
-    $params = array('action' => 'edit_entry.php',
+    $params = array('action' => multisite('edit_entry.php'),
                     'value'  => get_vocab('copyentry'),
                     'inputs' => array('id' => $id,
                                       'copy' => 1,
@@ -604,7 +604,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   if ((!empty($repeat_id) || $series) && $repeats_allowed) 
   {
     echo "<div>\n";
-    $params = array('action' => "edit_entry.php?day=$day&month=$month&year=$year",
+    $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
                     'value'  => get_vocab('copyseries'),
                     'inputs' => array('id' => $id,
                                       'edit_type' => 'series',
@@ -626,7 +626,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     if (!$series)
     {
       echo "<div>\n";
-      $params = array('action' => 'view_entry.php',
+      $params = array('action' => multisite('view_entry.php'),
                       'value'  => get_vocab('exportentry'),
                       'inputs' => array('id' => $id,
                                         'action' => 'export',
@@ -638,7 +638,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     if (!empty($repeat_id) || $series)
     {
       echo "<div>\n";
-      $params = array('action' => "view_entry.php?day=$day&month=$month&year=$year",
+      $params = array('action' => multisite("view_entry.php?day=$day&month=$month&year=$year"),
                       'value'  => get_vocab('exportseries'),
                       'inputs' => array('id' => $repeat_id,
                                         'action' => 'export',

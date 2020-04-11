@@ -52,7 +52,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
 
     $form->setAttributes(array('class'  => 'areaChangeForm',
                                'method' => 'get',
-                               'action' => 'index.php'));
+                               'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date));
@@ -111,7 +111,7 @@ function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $c
 
     $form->setAttributes(array('class'  => 'roomChangeForm',
                                'method' => 'get',
-                               'action' => 'index.php'));
+                               'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,
                                  'view_all'  => 0,

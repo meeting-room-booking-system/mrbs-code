@@ -16,7 +16,7 @@ function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
   $html = '';
 
   $form = new Form();
-  $form->setAttributes(array('action' => 'search.php',
+  $form->setAttributes(array('action' => multi_site(this_page()),
                              'method' => 'post'));
   $form->addHiddenInputs($hidden_inputs);
   $submit = new ElementInputSubmit();
@@ -182,7 +182,7 @@ if (!$is_ajax)
   $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'search_form',
                              'method' => 'post',
-                             'action' => 'search.php'));
+                             'action' => multisite(this_page())));
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('search'));

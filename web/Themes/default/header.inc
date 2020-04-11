@@ -110,7 +110,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
   $form->setAttributes(array('id'     => $form_id,
                              'method' => 'get',
-                             'action' => 'index.php'))
+                             'action' => multisite('index.php')))
        ->addHiddenInput('view', $view);
 
   if (isset($area))
@@ -189,7 +189,7 @@ function print_menu_items($query)
     // Only print menu items for which the user is allowed to access the page
     if (checkAuthorised($page, true))
     {
-      echo '<a href="' . htmlspecialchars("$page?$query") . '">' . get_vocab($token) . "</a>\n";
+      echo '<a href="' . htmlspecialchars(multisite("$page?$query")) . '">' . get_vocab($token) . "</a>\n";
     }
   }
 }
@@ -210,7 +210,7 @@ function print_search($view, $year, $month, $day, $area, $room)
 
   $form->setAttributes(array('id'     => 'header_search',
                              'method' => 'post',
-                             'action' => 'search.php'))
+                             'action' => multisite('search.php')))
        ->addHiddenInputs(array('view'  => $view,
                                'year'  => $year,
                                'month' => $month,

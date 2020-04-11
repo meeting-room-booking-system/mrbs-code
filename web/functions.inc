@@ -424,13 +424,13 @@ function this_page($with_query_string=false, $suffix=null)
   }
 
   parse_str($query_string, $query_string_parts);
-  
+
   // Add the query string back in
   if (!empty($query_string_parts))
   {
     $result .= '?' . http_build_query($query_string_parts, '', '&');
   }
-  
+
   return $result;
 }
 
@@ -482,10 +482,10 @@ function location_header($location)
 {
   // Add the site parameter if necessary
   $location = multisite($location);
-  
+
   // Encode the query string if there is one
   $parts = parse_url($location);
-  
+
   if (isset($parts['query']))
   {
     parse_str($parts['query'], $result);
@@ -501,21 +501,21 @@ function location_header($location)
 function multisite($location)
 {
   global $multisite, $site;
-  
+
   // Add the site, if there one, to the query string
   if ($multisite && isset($site) && ($site !== ''))
   {
     $parts = parse_url($location);
     if (!isset($parts['query']))
     {
-      $parts['query'] = array();
+      $parts['query'] = '';
     }
     parse_str($parts['query'], $result);
     $result['site'] = $site;
     $parts['query'] = http_build_query($result, '', '&');
     $location = build_url($parts);
   }
-  
+
   return $location;
 }
 

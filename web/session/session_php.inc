@@ -27,7 +27,7 @@ require_once MRBS_ROOT . '/session/functions_session.inc';
 function authGet()
 {
   global $returl;
-
+  
   print_header();
   $target_url = multisite(this_page(true));
   print_login_form(multisite(this_page()), $target_url, $returl);
