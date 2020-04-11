@@ -395,15 +395,13 @@ function url_base()
 
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
-// The exiusting query string is optionally added, as is the site parameter.
-function this_page($with_query_string=false, $suffix=null, $add_site = false)
+// The existing query string is optionally added.
+function this_page($with_query_string=false, $suffix=null)
 {
   global $server;
-  global $multisite, $site;
 
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
   assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
-  assert(is_bool($add_site), '$add_site should be a boolean');
 
   if ((!isset($server['SCRIPT_NAME']) || ($server['SCRIPT_NAME'] === '') && !is_cli()))
   {
@@ -426,12 +424,6 @@ function this_page($with_query_string=false, $suffix=null, $add_site = false)
   }
 
   parse_str($query_string, $query_string_parts);
-  
-  // Add the site parameter if necessary
-  if ($multisite & $add_site)
-  {
-    $query_string_parts['site'] = $site;
-  }
   
   // Add the query string back in
   if (!empty($query_string_parts))
@@ -488,19 +480,12 @@ function build_url(array $parts)
 // the site parameter as necesary
 function location_header($location)
 {
-  global $multisite, $site;
-  
-  $parts = parse_url($location);
-
-  // Add the site, if there one, to the query
-  if ($multisite && isset($site) & ($site !== ''))
-  {
-    parse_str($parts['query'], $result);
-    $result['site'] = $site;
-    $parts['query'] = http_build_query($result, '', '&');
-  }
+  // Add the site parameter if necessary
+  $location = multisite($location);
   
   // Encode the query string if there is one
+  $parts = parse_url($location);
+  
   if (isset($parts['query']))
   {
     parse_str($parts['query'], $result);
@@ -509,6 +494,29 @@ function location_header($location)
 
   header('Location: ' . build_url($parts));
   exit;
+}
+
+
+// Adds the site parameter in the query string if necessary
+function multisite($location)
+{
+  global $multisite, $site;
+  
+  // Add the site, if there one, to the query string
+  if ($multisite && isset($site) && ($site !== ''))
+  {
+    $parts = parse_url($location);
+    if (!isset($parts['query']))
+    {
+      $parts['query'] = array();
+    }
+    parse_str($parts['query'], $result);
+    $result['site'] = $site;
+    $parts['query'] = http_build_query($result, '', '&');
+    $location = build_url($parts);
+  }
+  
+  return $location;
 }
 
 

@@ -192,7 +192,7 @@ function output_row(&$row)
   {
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
-                               'action' => this_page(false, null, true)));
+                               'action' => multisite(this_page())));
     $form->addHiddenInput('id', $row['id']);
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
@@ -712,7 +712,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   $form->setAttributes(array('id'     => 'form_edit_users',
                              'class'  => 'standard',
                              'method' => 'post',
-                             'action' => this_page(false, null, true)));
+                             'action' => multisite(this_page())));
   
   if (isset($id))
   {    
@@ -1136,7 +1136,7 @@ if (!$is_ajax)
     
     $form->setAttributes(array('id'     => 'add_new_user',
                                'method' => 'post',
-                               'action' => this_page(false, null, true)));
+                               'action' => multisite(this_page())));
                                
     $form->addHiddenInput('action', 'add');
                                  

@@ -11,7 +11,7 @@ function display_buttons($row, $is_series)
   global $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-  $returl = this_page(false, null, true);
+  $returl = multisite(this_page());
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 

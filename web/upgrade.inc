@@ -193,7 +193,7 @@ function db_get_userpass()
   $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'db_logon',
                              'method' => 'post',
-                             'action' => this_page(false, null, true)));
+                             'action' => multisite(this_page())));
   
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('database_login'));

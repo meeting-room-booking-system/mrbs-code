@@ -18,8 +18,8 @@ function authGet()
   global $returl;
 
   print_header();
-  $target_url = this_page(true, null, true);
-  print_login_form(this_page(false, null, true), $target_url, $returl);
+  $target_url = multisite(this_page(true));
+  print_login_form(multisite(this_page()), $target_url, $returl);
 
   exit();
 }
@@ -32,7 +32,7 @@ function getUserName()
 // Print the logon entry on the top banner.
 function print_logon_box()
 {
-  $target_url = this_page(true, null, true);
+  $target_url = multisite(this_page(true));
   $user=getUserName();
   
   if (isset($user))
@@ -70,7 +70,7 @@ if (isset($action))
   if ($action == "QueryName")
   {
     print_header();
-    print_login_form(this_page(false, null, true), $target_url, $returl);
+    print_login_form(multisite(this_page()), $target_url, $returl);
     exit();
   }
   
@@ -96,7 +96,7 @@ if (isset($action))
       if (!$mainframe->login($credentials))
       {
         print_header();
-        print_login_form(this_page(false, null, true), $target_url, $returl, get_vocab('unknown_user'));
+        print_login_form(multisite(this_page()), $target_url, $returl, get_vocab('unknown_user'));
         exit();
       }
       
