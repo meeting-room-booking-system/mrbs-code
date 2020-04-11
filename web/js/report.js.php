@@ -66,7 +66,7 @@ $(document).on('page_ready', function() {
   // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
   // for older browsers
   ?>
-  tableOptions.ajax = {url: 'report.php',
+  tableOptions.ajax = {url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
                        method: 'POST', 
                        processData: false,
                        contentType: false,
