@@ -236,9 +236,10 @@ function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $roo
                   'room'      => $room);
 
     $query = http_build_query($vars, '', '&');
+    $href = multisite("index.php?$query");
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
+    $html .= ' href="' . htmlspecialchars($href) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
   }
 
   $html .= '</div>';
@@ -280,6 +281,10 @@ function get_arrow_nav($view, $view_all, $year, $month, $day, $area, $room)
   $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, false);
   $link_today = get_today_link($view, $view_all, $area, $room);
   $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, true);
+
+  $link_prev = multisite($link_prev);
+  $link_today = multisite($link_today);
+  $link_next = multisite($link_next);
 
   $html .= "<nav class=\"arrow\">\n";
   $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
