@@ -255,7 +255,7 @@ var Timeline = {
     var timelineFull = thead.data('timeline-full');
     var nowSlotIndices, slot, fraction, row, element;
     var slotSize, delay, timeline;
-    var top, left, borderLeftWidth, width, height;
+    var top, left, borderLeftWidth, borderRightWidth, width, height;
     var headers, headersFirstLast, headersNormal, headerFirstSize, headerLastSize;
 
     nowSlotIndices = Timeline.search(slots, now);
@@ -350,9 +350,12 @@ var Timeline = {
           headersFirstLast = headers.filter('.first_last');
           headersNormal = headers.not('.first_last');
           borderLeftWidth = parseInt(headersNormal.first().css('border-left-width'), 10);
+          borderRightWidth = parseInt(headersNormal.first().css('border-right-width'), 10);
+          console.log(borderLeftWidth);
+          console.log(borderRightWidth);
           headerFirstSize = headersFirstLast.first().outerWidth();
           headerLastSize = (headersFirstLast.length > 1) ? headersFirstLast.last().outerWidth() : 0;
-          width = row.innerWidth() - (headerFirstSize + headerLastSize);
+          width = row.innerWidth() - (headerFirstSize + headerLastSize + borderLeftWidth + borderRightWidth);
           left = row.offset().left - table.parent().offset().left + borderLeftWidth + headerFirstSize;
         }
         else
