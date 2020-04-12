@@ -785,25 +785,6 @@ table.dwm_main {
   border-top: 1px solid <?php echo $banner_back_color ?>;
 }
 
-.dwm_main > *:last-child tr:last-child th,
-.dwm_main > *:last-child tr:last-child td {
-  border-bottom: 0 solid <?php echo $main_table_border_color ?>;
-}
-
-.dwm_main > *:last-child tr:last-child th {
-  border-top: 0 solid <?php echo $main_table_border_color ?>;
-}
-
-.dwm_main th:first-child,
- .dwm_main td:first-child {
-   border-left: 0 solid <?php echo $main_table_border_color ?>;
-}
-
-.dwm_main th:last-child,
-.dwm_main td:last-child {
-  border-right: 0 solid <?php echo $main_table_border_color ?>;
-}
-
 .dwm_main thead tr:first-child th:first-child {
   border-top-left-radius: 5px;
 }
