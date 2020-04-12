@@ -411,9 +411,7 @@ $clipped_month = true;
 
 // Set to true if you want the cells in the month view to scroll if there are too
 // many bookings to display; set to false if you want the table cell to expand to
-// accommodate the bookings.   (NOTE: (1) scrolling doesn't work in IE6 and so the table
-// cell will always expand in IE6.  (2) In IE8 Beta 2 scrolling doesn't work either and
-// the cell content is clipped when $month_cell_scrolling is set to true.)
+// accommodate the bookings.
 $month_cell_scrolling = true;
 
 // Define the maximum length of a string that can be displayed in an admin table cell
