@@ -1,10 +1,7 @@
 <?php
 namespace MRBS;
 
-require_once "../systemdefaults.inc.php";
-require_once "../config.inc.php";
-require_once "../functions.inc";
-require_once "../theme.inc";
+require_once "../defaultincludes.inc";
 
 http_headers(array("Content-type: text/css"),
              60*30);  // 30 minute cache expiry
