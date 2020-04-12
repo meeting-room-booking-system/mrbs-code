@@ -351,8 +351,6 @@ var Timeline = {
           headersNormal = headers.not('.first_last');
           borderLeftWidth = parseInt(headersNormal.first().css('border-left-width'), 10);
           borderRightWidth = parseInt(headersNormal.first().css('border-right-width'), 10);
-          console.log(borderLeftWidth);
-          console.log(borderRightWidth);
           headerFirstSize = headersFirstLast.first().outerWidth();
           headerLastSize = (headersFirstLast.length > 1) ? headersFirstLast.last().outerWidth() : 0;
           width = row.innerWidth() - (headerFirstSize + headerLastSize + borderLeftWidth + borderRightWidth);
