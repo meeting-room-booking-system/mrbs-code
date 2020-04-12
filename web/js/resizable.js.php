@@ -829,6 +829,10 @@ $(document).on('page_ready', function() {
             queryString += '&start_date=' + params.date[0];
             queryString += '&end_date=' + params.date[params.date.length - 1];
           }
+          if (args.site)
+          {
+            queryString += '&site=' + encodeURIComponent(args.site);
+          }
           window.location = 'edit_entry.php?' + queryString;
           return;
         };
