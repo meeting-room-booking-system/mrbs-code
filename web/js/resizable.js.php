@@ -350,7 +350,7 @@ var Table = {
       // same as the value in the CSS if the browsers zoom level is not 100%.
       ?>
       var table = $(Table.selector);
-      var td = table.find('tbody tr:first-child td:first-child');
+      var td = table.find('tbody tr:first-child td:first-of-type');
       Table.borderLeftWidth = parseFloat(td.css('border-left-width'));
       Table.borderTopWidth = parseFloat(td.css('border-top-width'));
 
