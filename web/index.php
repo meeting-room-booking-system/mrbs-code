@@ -38,6 +38,8 @@ function get_color_key()
 // displayed.
 function make_area_select_html($view, $year, $month, $day, $current)
 {
+  global $multisite, $site;
+  
   $out_html = '';
 
   $areas = get_area_names();
@@ -56,6 +58,11 @@ function make_area_select_html($view, $year, $month, $day, $current)
 
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date));
+                                 
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $form->addHiddenInput('site', $site);
+    }
 
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
@@ -81,6 +88,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
 function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current)
 {
   global $server, $room;
+  global $multisite, $site;
 
   $out_html = '';
 
@@ -117,6 +125,11 @@ function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $c
                                  'view_all'  => 0,
                                  'page_date' => $page_date,
                                  'area'      => $area));
+                                 
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $form->addHiddenInput('site', $site);
+    }
 
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
