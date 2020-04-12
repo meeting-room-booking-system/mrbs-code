@@ -40,6 +40,7 @@ var refreshPage = function refreshPage() {
     {
       var data = {refresh: 1,
                   view: args.view,
+                  view_all: args.view_all,
                   page_date: args.pageDate,
                   area: args.area,
                   room: args.room};
