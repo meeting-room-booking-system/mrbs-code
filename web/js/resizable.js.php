@@ -172,6 +172,8 @@ var Table = {
   selector: ".dwm_main:not('#month_main')",
   borderLeftWidth: undefined,
   borderTopWidth: undefined,
+  originalScrollTop: undefined,
+  originalScrollLeft: undefined,
   grid: {},
 
   <?php
@@ -314,6 +316,11 @@ var Table = {
 
 
   init: function() {
+    <?php // Record the original scroll position of the table container ?>
+    var container = $(Table.selector).parent();
+    Table.originalScrollTop = container.scrollTop();
+    Table.originalScrollLeft = container.scrollLeft();
+    <?php // Size the table ?>
     Table.size();
   },
   
