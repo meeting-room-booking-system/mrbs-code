@@ -93,38 +93,6 @@ function rectanglesOverlap(r1, r2)
 
 
 <?php
-// Check whether the rectangle (with sides n,s,e,w) overlaps any
-// of the booked slots in the table.   Returns an array of overlapped
-// bookings.
-//    stopAtFirst       (optional) If true then only the first overlap found will
-//                      be returned.  Default false.
-//    ignoreRectangle   (optional).  A rectangle that is to be ignored when checking
-//                      for overlaps.
-?>
-function overlapsBooked(rectangle, bookedMap, stopAtFirst, ignoreRectangle)
-{
-  var result = [];
-
-  for (var i=0; i<bookedMap.length; i++)
-  {
-    if (!(ignoreRectangle && rectanglesIdentical(ignoreRectangle, bookedMap[i])))
-    {
-      if (rectanglesOverlap(rectangle, bookedMap[i]))
-      {
-        result.push(bookedMap[i]);
-        if (stopAtFirst)
-        {
-          break;
-        }
-      }
-    }
-  }
-
-  return result;
-}
-
-
-<?php
 // Gets the side-most side of the array of rectangles.
 // side can be 'n', 's', 'e' or 'w'
 ?>
@@ -363,6 +331,39 @@ var Table = {
               (p.x > Table.grid.x.data[Table.grid.x.data.length - 1].coord) ||
               (p.y > Table.grid.y.data[Table.grid.y.data.length - 1].coord) );
     },  <?php // outside() ?>
+    
+    
+  <?php
+  // Check whether the rectangle (with sides n,s,e,w) overlaps any
+  // of the booked slots in the table.   Returns an array of overlapped
+  // bookings.
+  //    stopAtFirst       (optional) If true then only the first overlap found will
+  //                      be returned.  Default false.
+  //    ignoreRectangle   (optional).  A rectangle that is to be ignored when checking
+  //                      for overlaps.
+  ?>
+  overlapsBooked: function overlapsBooked(rectangle, stopAtFirst, ignoreRectangle)
+  {
+    var result = [];
+
+    for (var i=0; i<Table.bookedMap.length; i++)
+    {
+      if (!(ignoreRectangle && rectanglesIdentical(ignoreRectangle, Table.bookedMap[i])))
+      {
+        if (rectanglesOverlap(rectangle, Table.bookedMap[i]))
+        {
+          result.push(Table.bookedMap[i]);
+          if (stopAtFirst)
+          {
+            break;
+          }
+        }
+      }
+    }
+
+    return result;
+  },
+
 
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
@@ -758,7 +759,7 @@ $(document).on('page_ready', function() {
           // We set stopAtFirst=true because we just want to know if there is
           // *any* overlap.
           ?>
-          if (overlapsBooked(getSides(box), Table.bookedMap, true).length)
+          if (Table.overlapsBooked(getSides(box), true).length)
           {
             box.offset(oldBoxOffset)
                .width(oldBoxWidth)
@@ -927,7 +928,7 @@ $(document).on('page_ready', function() {
         // that it could overlap more than one other booking, so we need to find them
         // all and then find the closest one.
         ?>
-        var overlappedElements = overlapsBooked(rectangle, Table.bookedMap, false, resizeStart.originalRectangle);
+        var overlappedElements = Table.overlapsBooked(rectangle, false, resizeStart.originalRectangle);
 
         if (!overlappedElements.length)
         {
