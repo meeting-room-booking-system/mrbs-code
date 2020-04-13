@@ -312,6 +312,12 @@ var Table = {
       }
     },  <?php // highlightRowLabels ?>
 
+
+  init: function() {
+    Table.size();
+  },
+  
+  
   <?php
   // Tests whether the point p with coordinates x and y is outside the table
   ?>
@@ -620,7 +626,7 @@ $(document).on('page_ready', function() {
         return;
       }
 
-      Table.size();
+      Table.init();
 
       var mouseDown = false;
 
@@ -1379,7 +1385,7 @@ $(document).on('page_ready', function() {
         <?php
         // The table dimensions have changed, so we need to re-map the table
         ?>
-        Table.size();
+        Table.init();
       }
     }, 50));
 
