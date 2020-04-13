@@ -174,6 +174,7 @@ var Table = {
   borderTopWidth: undefined,
   originalScrollTop: undefined,
   originalScrollLeft: undefined,
+  bookedMap: [],
   grid: {},
 
   <?php
@@ -316,10 +317,22 @@ var Table = {
 
 
   init: function() {
+    var table = $(Table.selector);
+    var container = table.parent();
     <?php // Record the original scroll position of the table container ?>
-    var container = $(Table.selector).parent();
     Table.originalScrollTop = container.scrollTop();
     Table.originalScrollLeft = container.scrollLeft();
+    <?php
+    // Initialise the bookedMap, which is an array of booked slots. Each member of the array is an
+    // object with four properties (n, s, e, w) representing the cooordinates (x or y)
+    // of the side.   We will use this array to test whether a proposed
+    // booking overlaps an existing booking. Select just the visible cells because there
+    // could be hidden days.
+    ?>
+    Table.bookedMap = [];
+    table.find('td.booked:visible').each(function() {
+        Table.bookedMap.push(getSides($(this)));
+      });
     <?php // Size the table ?>
     Table.size();
   },
@@ -745,7 +758,7 @@ $(document).on('page_ready', function() {
           // We set stopAtFirst=true because we just want to know if there is
           // *any* overlap.
           ?>
-          if (overlapsBooked(getSides(box), bookedMap, true).length)
+          if (overlapsBooked(getSides(box), Table.bookedMap, true).length)
           {
             box.offset(oldBoxOffset)
                .width(oldBoxWidth)
@@ -914,7 +927,7 @@ $(document).on('page_ready', function() {
         // that it could overlap more than one other booking, so we need to find them
         // all and then find the closest one.
         ?>
-        var overlappedElements = overlapsBooked(rectangle, bookedMap, false, resizeStart.originalRectangle);
+        var overlappedElements = overlapsBooked(rectangle, Table.bookedMap, false, resizeStart.originalRectangle);
 
         if (!overlappedElements.length)
         {
@@ -1189,20 +1202,7 @@ $(document).on('page_ready', function() {
                'json');
 
       };  <?php // resizeStop ?>
-
-
-      <?php
-      // bookedMap is an array of booked slots.   Each member of the array is an
-      // object with four properties (n, s, e, w) representing the cooordinates (x or y)
-      // of the side.   We will use this array to test whether a proposed
-      // booking overlaps an existing booking. Select just the visible cells because there
-      // could be hidden days.
-      ?>
-      var bookedMap = [];
-      table.find('td.booked:visible')
-           .each(function() {
-          bookedMap.push(getSides($(this)));
-        });
+      
 
       <?php
       // Turn all the empty cells where a new multi-cell selection
