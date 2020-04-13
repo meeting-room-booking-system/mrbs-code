@@ -140,8 +140,6 @@ var Table = {
   selector: ".dwm_main:not('#month_main')",
   borderLeftWidth: undefined,
   borderTopWidth: undefined,
-  originalScrollTop: undefined,
-  originalScrollLeft: undefined,
   bookedMap: [],
   grid: {},
 
@@ -287,9 +285,6 @@ var Table = {
   init: function() {
     var table = $(Table.selector);
     var container = table.parent();
-    <?php // Record the original scroll position of the table container ?>
-    Table.originalScrollTop = container.scrollTop();
-    Table.originalScrollLeft = container.scrollLeft();
     <?php
     // Initialise the bookedMap, which is an array of booked slots. Each member of the array is an
     // object with four properties (n, s, e, w) representing the cooordinates (x or y)
@@ -1396,6 +1391,15 @@ $(document).on('page_ready', function() {
         Table.init();
       }
     }, 50));
+   
+  <?php
+  // We need to re-initialise when the table container is scrolled because all the coordinates
+  // are relative to the document rather than  the container.  (The jQuery UI widget gives
+  // positions this way).
+  ?>  
+  $(Table.selector).parent().on('scroll', throttle(function() {
+      Table.init();
+    }));
 
 });
 
