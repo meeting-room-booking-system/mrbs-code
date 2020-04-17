@@ -24,18 +24,18 @@ else
 
 <link rel="stylesheet" href="js/flatpickr/css/flatpickr.min.css" type="text/css">
 <link rel="stylesheet" href="jquery/select2/dist/css/select2.min.css" type="text/css">
-<link rel="stylesheet" href="css/mrbs.css.php" type="text/css">
+<?php
+echo '<link rel="stylesheet" href="' . multisite('css/mrbs.css.php') . "\" type=\"text/css\">\n";
+?>
 
 <?php
 if (using_rtl_lang())
 {
-  ?>
-  <link rel="stylesheet" href="css/mrbs-rtl.css.php" type="text/css">
-  <?php
+  echo '<link rel="stylesheet" href="' . multisite('css/mrbs-rtl.css.php') . "\" type=\"text/css\">\n";
 }
-?>
 
-<link rel="stylesheet" media="print" href="css/mrbs-print.css.php" type="text/css">
+echo '<link rel="stylesheet" media="print" href="' . multisite('css/mrbs-print.css.php') . "\" type=\"text/css\">\n";
+?>
 
 <!--[if IE]>
 <link rel="stylesheet" href="css/mrbs-ie.css" type="text/css">

@@ -423,7 +423,7 @@ function url_base()
 
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
-// The query string is optionally added.
+// The existing query string is optionally added.
 function this_page($with_query_string=false, $suffix=null)
 {
   global $server;
@@ -439,11 +439,24 @@ function this_page($with_query_string=false, $suffix=null)
   // We use basename() because the full name causes problems when reverse proxies are being used.
   $result = basename($server['SCRIPT_NAME'], $suffix);
 
+  // Get the query string if required
   if ($with_query_string &&
       isset($server['QUERY_STRING']) &&
      ($server['QUERY_STRING'] !== ''))
   {
-    $result = $result . "?" . $server['QUERY_STRING'];
+    $query_string = $server['QUERY_STRING'];
+  }
+  else
+  {
+    $query_string = '';
+  }
+
+  parse_str($query_string, $query_string_parts);
+
+  // Add the query string back in
+  if (!empty($query_string_parts))
+  {
+    $result .= '?' . http_build_query($query_string_parts, '', '&');
   }
 
   return $result;
@@ -491,13 +504,16 @@ function build_url(array $parts)
 }
 
 
-// A wrapper for sending a Location header.  This function will urlencode as
-// necesary.
+// A wrapper for sending a Location header.  This function will urlencode and add
+// the site parameter as necesary
 function location_header($location)
 {
-  $parts = parse_url($location);
+  // Add the site parameter if necessary
+  $location = multisite($location);
 
   // Encode the query string if there is one
+  $parts = parse_url($location);
+
   if (isset($parts['query']))
   {
     parse_str($parts['query'], $result);
@@ -506,6 +522,29 @@ function location_header($location)
 
   header('Location: ' . build_url($parts));
   exit;
+}
+
+
+// Adds the site parameter in the query string if necessary
+function multisite($location)
+{
+  global $multisite, $site;
+
+  // Add the site, if there one, to the query string
+  if ($multisite && isset($site) && ($site !== ''))
+  {
+    $parts = parse_url($location);
+    if (!isset($parts['query']))
+    {
+      $parts['query'] = '';
+    }
+    parse_str($parts['query'], $result);
+    $result['site'] = $site;
+    $parts['query'] = http_build_query($result, '', '&');
+    $location = build_url($parts);
+  }
+
+  return $location;
 }
 
 

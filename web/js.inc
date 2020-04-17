@@ -2,6 +2,7 @@
 namespace MRBS;
 
 global $view, $year, $month, $day, $area, $room;
+global $multisite, $site;
 global $debug;
 
 $page = this_page(false, '.php');
@@ -11,6 +12,11 @@ $page = this_page(false, '.php');
 // We also want the area to be in the query string so that the JavaScript page is
 // cached if the area is the same and not otherwise.
 $escaped_standard_query_string = 'area=' . htmlspecialchars($area);
+
+if ($multisite && isset($site) && ($site !== ''))
+{
+  $escaped_standard_query_string .= '&site=' . urlencode($site);
+}
 
 // Load the init file now so that it gets executed as soon as possible.  The init
 // file can't use jQuery.

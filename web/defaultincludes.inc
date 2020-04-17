@@ -10,6 +10,8 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP
   die("MRBS requires PHP $min_PHP_version or above.   This server is running version " . PHP_VERSION . ".");
 }
 
+define('MRBS_ROOT',     __DIR__);                   // Root of MRBS installation
+
 // We use require for some files rather than require_once because the values that
 // are assigned to variables will change depending on the context in which the file
 // is called.
@@ -20,6 +22,25 @@ require_once 'systemdefaults.inc.php';
 require_once 'areadefaults.inc.php';
 require_once 'functions_error.inc';
 require_once 'config.inc.php';
+
+if ($multisite)
+{
+  $site = get_form_var('site', 'string', isset($default_site) ? $default_site : '');
+  if ($site !== '')
+  {
+    $site_config = MRBS_ROOT . "/sites/$site/config.inc.php";
+    if (is_readable($site_config))
+    {
+      require_once $site_config;
+    }
+    else
+    {
+      http_response_code(403);
+      exit;
+    }
+  }
+}
+
 require_once 'internalconfig.inc.php';
 require_once 'functions.inc';
 require_once 'language.inc';

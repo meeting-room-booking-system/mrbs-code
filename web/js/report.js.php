@@ -66,7 +66,7 @@ $(document).on('page_ready', function() {
   // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
   // for older browsers
   ?>
-  tableOptions.ajax = {url: 'report.php',
+  tableOptions.ajax = {url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
                        method: 'POST', 
                        processData: false,
                        contentType: false,
@@ -148,9 +148,14 @@ $(document).on('page_ready', function() {
                           $('#report_table_processing').css('visibility', 'visible');
                           for (j=0; j<nBatches; j++)
                           {
+                            var params = {csrf_token: getCSRFToken(),
+                                          ids: batches[j]};
+                            if(args.site)
+                            {
+                              params.site = args.site;
+                            }
                             $.post('ajax/del_entries.php',
-                                   {csrf_token: getCSRFToken(),
-                                    ids: batches[j]},
+                                   params,
                                    function(result) {
                                       var nDeleted,
                                           isInt,

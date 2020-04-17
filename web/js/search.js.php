@@ -38,7 +38,7 @@ $(document).on('page_ready', function() {
     
   if (table.length)
   {
-    tableOptions = {ajax: {url: 'search.php',
+    tableOptions = {ajax: {url: 'search.php' + ((args.site) ? '?site=' + args.site : ''),
                            method: 'POST',
                            data: function() {
                                <?php

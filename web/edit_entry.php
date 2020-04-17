@@ -1700,7 +1700,7 @@ $form = new Form();
 
 $form->setAttributes(array('class'  => 'standard js_hidden',
                            'id'     => 'main',
-                           'action' => 'edit_entry_handler.php',
+                           'action' => multisite('edit_entry_handler.php'),
                            'method' => 'post'));
 
 $hidden_inputs = array('returl'    => $returl,

@@ -104,13 +104,15 @@ function print_header_site_info()
 
 function print_goto_date($view, $year, $month, $day, $area, $room)
 {
+  global $multisite, $site;
+
   $form = new Form();
 
   $form_id = 'form_nav';
 
   $form->setAttributes(array('id'     => $form_id,
                              'method' => 'get',
-                             'action' => 'index.php'))
+                             'action' => multisite('index.php')))
        ->addHiddenInput('view', $view);
 
   if (isset($area))
@@ -121,6 +123,11 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   if (isset($room))
   {
     $form->addHiddenInput('room', $room);
+  }
+
+  if ($multisite && isset($site) && ($site !== ''))
+  {
+    $form->addHiddenInput('site', $site);
   }
 
   $input = new ElementInputDate();
@@ -189,7 +196,7 @@ function print_menu_items($query)
     // Only print menu items for which the user is allowed to access the page
     if (checkAuthorised($page, true))
     {
-      echo '<a href="' . htmlspecialchars("$page?$query") . '">' . get_vocab($token) . "</a>\n";
+      echo '<a href="' . htmlspecialchars(multisite("$page?$query")) . '">' . get_vocab($token) . "</a>\n";
     }
   }
 }
@@ -210,7 +217,7 @@ function print_search($view, $year, $month, $day, $area, $room)
 
   $form->setAttributes(array('id'     => 'header_search',
                              'method' => 'post',
-                             'action' => 'search.php'))
+                             'action' => multisite('search.php')))
        ->addHiddenInputs(array('view'  => $view,
                                'year'  => $year,
                                'month' => $month,
@@ -415,6 +422,8 @@ function print_unsupported_message()
 // access or JavaScript (useful for fatal errors and database upgrades).
 function print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple=false)
 {
+  global $multisite, $site;
+
   // Get the form token now, before any headers are sent, in case we are using the 'cookie'
   // session scheme.  Otherwise we won't be able to store the Form token.
   Form::getToken();
@@ -448,6 +457,11 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
       'page-date' => format_iso_date($year, $month, $day),
       'is-admin'  => (is_admin()) ? 'true' : 'false'
     );
+
+  if ($multisite && isset($site) && ($site !== ''))
+  {
+    $data['site'] = $site;
+  }
 
   // We need $timetohighlight for the day and week views
   $timetohighlight = get_form_var('timetohighlight', 'int');

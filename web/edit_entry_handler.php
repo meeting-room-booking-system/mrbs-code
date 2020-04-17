@@ -820,7 +820,7 @@ echo "<div id=\"submit_buttons\">\n";
 $form = new Form();
 
 $form->setAttributes(array('method' => 'post',
-                           'action' => $returl));
+                           'action' => multisite($returl)));
 
 $submit = new ElementInputSubmit();
 $submit->setAttribute('value', get_vocab('back'));
@@ -837,7 +837,7 @@ if (empty($result['violations']['errors'])  &&
   $form = new Form();
 
   $form->setAttributes(array('method' => 'post',
-                             'action' => this_page()));
+                             'action' => multisite(this_page())));
 
   // Put the booking data in as hidden inputs
   $skip = 1;  // Force a skip next time round
