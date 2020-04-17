@@ -33,11 +33,11 @@ function print_head($simple=false)
 
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
 
-  require_once "style.inc";
+  require_once MRBS_ROOT . "/style.inc";
 
   if (!$simple)
   {
-    require_once "js.inc";
+    require_once MRBS_ROOT . "/js.inc";
   }
 
   echo "</head>\n";
