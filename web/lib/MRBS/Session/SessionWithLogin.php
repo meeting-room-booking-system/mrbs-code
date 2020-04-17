@@ -13,8 +13,8 @@ use MRBS\Form\FieldInputText;
 abstract class SessionWithLogin implements SessionInterface
 {
   protected $form = array();
-  
-  
+
+
   public function __construct()
   {
     // Get non-standard form variables
@@ -23,8 +23,8 @@ abstract class SessionWithLogin implements SessionInterface
       $this->form[$var] = \MRBS\get_form_var($var, 'string', null, INPUT_POST);
     }
   }
-  
-  
+
+
   // Gets the username and password.  Returns: Nothing
   public function authGet($target_url=null, $error=null, $raw=false)
   {
@@ -32,35 +32,36 @@ abstract class SessionWithLogin implements SessionInterface
     {
       $target_url = \MRBS\this_page(true);
     }
-    
+
     \MRBS\print_header();
-    $this->printLoginForm(\MRBS\this_page(), $target_url, $this->form['returl'], $error, $raw);
+    $action = \MRBS\multisite(\MRBS\this_page());
+    $this->printLoginForm($action, $target_url, $this->form['returl'], $error, $raw);
     exit;
   }
-  
-  
+
+
   abstract public function getUsername();
-  
-  
+
+
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
   // Logon form.  Returns an array.
   public function getLogonFormParams()
   {
     return array(
-        'action' => 'admin.php',
+        'action' => \MRBS\multisite('admin.php'),
         'method' => 'post',
         'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
                                   'action'     => 'QueryName')
       );
   }
-  
-  
+
+
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
   // Logoff form.  Returns an array.
   public function getLogoffFormParams()
   {
     return array(
-        'action' => 'admin.php',
+        'action' => \MRBS\multisite('admin.php'),
         'method' => 'post',
         'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
                                   'action'     => 'SetName',
@@ -68,8 +69,8 @@ abstract class SessionWithLogin implements SessionInterface
                                   'password'   => '')
       );
   }
-  
-  
+
+
   public function processForm()
   {
     if (isset($this->form['action']))
@@ -81,14 +82,14 @@ abstract class SessionWithLogin implements SessionInterface
         $this->authGet($this->form['target_url']);
         exit(); // unnecessary because authGet() exits, but just included for clarity
       }
-      
+
       // Target of the form with sets the URL argument "action=SetName".
       // Will eventually return to URL argument "target_url=whatever".
       if ($this->form['action'] == 'SetName')
       {
         // If we're going to do something then check the CSRF token first
         Form::checkToken();
-        
+
         // First make sure the password is valid
         if (!isset($this->form['username']) || ($this->form['username'] == ''))
         {
@@ -98,10 +99,10 @@ abstract class SessionWithLogin implements SessionInterface
         {
           // Get a valid user
           $valid_username = $this->getValidUser($this->form['username'], $this->form['password']);
-          
-          // Successful login.   You can't get out of getValidUser() without a valid username and password 
+
+          // Successful login.   You can't get out of getValidUser() without a valid username and password
           $this->logonUser($valid_username);
-          
+
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
@@ -109,13 +110,13 @@ abstract class SessionWithLogin implements SessionInterface
             $this->form['target_url'] .= $this->form['returl'];
           }
         }
-        
+
         \MRBS\location_header($this->form['target_url']); // Redirect browser to initial page
       }
     }
   }
-  
-  
+
+
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
   protected function getValidUser($username, $password)
   {
@@ -124,22 +125,22 @@ abstract class SessionWithLogin implements SessionInterface
       $this->authGet($this->form['target_url'], \MRBS\get_vocab('unknown_user'));
       exit(); // unnecessary because authGet() exits, but just included for clarity
     }
-    
+
     return $valid_username;
   }
-  
-  
+
+
   protected function logonUser($username)
   {
   }
-  
-  
+
+
   protected function logoffUser()
   {
   }
-  
-  
-  // Displays the login form. 
+
+
+  // Displays the login form.
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.
   // If $raw is true then the message is not HTML escaped
@@ -150,13 +151,13 @@ abstract class SessionWithLogin implements SessionInterface
                                'id'     => 'logon',
                                'method' => 'post',
                                'action' => $action));
-    
+
     // Hidden inputs
     $hidden_inputs = array('returl'     => $returl,
                            'target_url' => $target_url,
                            'action'     => 'SetName');
     $form->addHiddenInputs($hidden_inputs);
-    
+
     // Now for the visible fields
     if (isset($error))
     {
@@ -164,14 +165,14 @@ abstract class SessionWithLogin implements SessionInterface
       $p->setText($error, false, $raw);
       $form->addElement($p);
     }
-    
+
     $fieldset = new ElementFieldset();
     $fieldset->addLegend(\MRBS\get_vocab('please_login'));
-    
+
     // The username field
     $tag = (\MRBS\auth()->canValidateByEmail()) ? 'username_or_email' : 'users.name';
     $placeholder = \MRBS\get_vocab($tag);
-    
+
     $field = new FieldInputText();
     $field->setLabel(\MRBS\get_vocab('user'))
           ->setLabelAttributes(array('title' => $placeholder))
@@ -180,26 +181,26 @@ abstract class SessionWithLogin implements SessionInterface
                                        'placeholder'  => $placeholder,
                                        'required'     => true,
                                        'autofocus'    => true,
-                                       'autocomplete' => 'username'));               
+                                       'autocomplete' => 'username'));
     $fieldset->addElement($field);
-    
+
     // The password field
     $field = new FieldInputPassword();
     $field->setLabel(\MRBS\get_vocab('users.password'))
           ->setControlAttributes(array('id'           => 'password',
                                        'name'         => 'password',
-                                       'autocomplete' => 'current-password'));               
+                                       'autocomplete' => 'current-password'));
     $fieldset->addElement($field);
-    
+
     // The submit button
     $field = new FieldInputSubmit();
     $field->setControlAttributes(array('value' => \MRBS\get_vocab('login')));
     $fieldset->addElement($field);
-    
+
     $form->addElement($fieldset);
-    
+
     $form->render();
-    
+
     // Print footer and exit
     \MRBS\print_footer(true);
   }
