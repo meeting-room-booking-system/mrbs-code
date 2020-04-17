@@ -463,21 +463,6 @@ function this_page($with_query_string=false, $suffix=null)
 }
 
 
-// Deal with $private_xxxx overrides.  Simplifies
-// logic related to private bookings.
-global $private_override;
-if ($private_override == "private" )
-{
-  $private_mandatory = true;
-  $private_default = true;
-}
-elseif ($private_override == "public" )
-{
-  $private_mandatory = true;
-  $private_default = false;
-}
-
-
 // Format a timestamp in RFC 1123 format, for HTTP headers
 //
 // e.g. Wed, 28 Jul 2010 12:43:58 GMT
@@ -1442,7 +1427,6 @@ function get_area_settings($area)
     // ensure that $morningstarts_minutes defaults to zero if not set
     $morningstarts_minutes = 0;
   }
-
 }
 
 
