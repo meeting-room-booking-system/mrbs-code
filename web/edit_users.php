@@ -213,6 +213,10 @@ function output_row(&$row)
 
   $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
 
+  // Then the display name
+  $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
+  $values[] = '<span title="' . htmlspecialchars($row['display_name']) . '"></span>' . $display_name_value;
+
   // Other columns
   foreach ($fields as $field)
   {
@@ -1188,7 +1192,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // Display the user data in a table
 
   // We don't display these columns or they get special treatment
-  $ignore_columns = array('id', 'password_hash', 'name');
+  $ignore_columns = array('id', 'password_hash', 'name', 'display_name');
 
   if (!$is_ajax)
   {
@@ -1199,8 +1203,9 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<thead>\n";
     echo "<tr>";
 
-    // First column which is the name
+    // First two columns which are the name and display name
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.display_name") . "</th>\n";
 
     // Other column headers
     foreach ($fields as $field)
