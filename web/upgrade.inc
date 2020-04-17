@@ -20,9 +20,9 @@ if (!db()->table_exists($tbl_entry))
 $current_db_schema_version = db_schema_version();
 $current_db_schema_version_local = db_schema_version_local();
 
-// If either of the database schema version numbers are out of date, then 
+// If either of the database schema version numbers are out of date, then
 // upgrade the database - provided of course that the entry table exists.
-if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) || 
+if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
 {
   // Upgrade needed
@@ -31,9 +31,9 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   // which are not available until after the database upgrade or (b) use
   // functions which are not available until after dbsys has run.
   print_simple_header();
- 
+
   echo '<h1>' . get_vocab('mrbs') . "</h1>\n";
-  echo '<p><strong>' . get_vocab('upgrade_required') . "</strong></p>\n"; 
+  echo '<p><strong>' . get_vocab('upgrade_required') . "</strong></p>\n";
 
   $admin_handle = null;
 
@@ -47,7 +47,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
     {
       // Get a username and password if we haven't got them
       echo '<p>' . get_vocab('supply_userpass') . "</p>\n";
-      echo '<p>' . get_vocab('contact_admin', $mrbs_admin) . "</p>\n"; 
+      echo '<p>' . get_vocab('contact_admin', $mrbs_admin) . "</p>\n";
       db_get_userpass();
     }
     else
@@ -58,7 +58,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
 
   // Check the CSRF token before we make any changes
   Form::checkToken();
-    
+
   $ok = true;
 
   // Do any MRBS upgrades first
@@ -71,16 +71,16 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   {
     $ok = upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $admin_handle);
   }
-  
+
   // close the database connection that has admin rights
   unset($admin_handle);
-  
+
   if ($ok)
   {
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
-  echo "<a href=\"./\">" . get_vocab('returncal') . '</a>.';
-  
+  echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">"' . get_vocab('returncal') . '</a>.';
+
   print_footer(true);
 }
 
@@ -118,7 +118,7 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
   {
     $sql_type = 'mysql';
   }
-    
+
   for ($ver = ($from+1); $ver <= $to; $ver++)
   {
     upgrade_echo('<p>' .
@@ -173,7 +173,7 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
                                "WHERE variable_name = ?", array($ver, $variable_name));
     }
     upgrade_echo("</p>\n");
-    
+
     // Now execute the PHP file if there is one
     if (is_readable($php_filename))
     {
@@ -188,40 +188,40 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
 function db_get_userpass()
 {
   print_header();
-  
+
   $form = new Form();
   $form->setAttributes(array('class'  => 'standard',
                              'id'     => 'db_logon',
                              'method' => 'post',
                              'action' => multisite(this_page())));
-  
+
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('database_login'));
-  
+
   // The username field
   $field = new FieldInputText();
   $field->setLabel('Database username')
         ->setControlAttributes(array('id'       => 'form_username',
                                      'name'     => 'form_username',
-                                     'required' => true));               
+                                     'required' => true));
   $fieldset->addElement($field);
-  
+
   // The password field
   $field = new FieldInputPassword();
   $field->setLabel('Database password')
         ->setControlAttributes(array('id'   => 'form_password',
-                                     'name' => 'form_password'));               
+                                     'name' => 'form_password'));
   $fieldset->addElement($field);
-  
+
   // The submit button
   $field = new FieldInputSubmit();
   $field->setControlAttributes(array('value' => get_vocab('login')));
   $fieldset->addElement($field);
-  
+
   $form->addElement($fieldset);
-  
+
   $form->render();
-  
+
   // Print footer and exit
   print_footer(TRUE);
 }
