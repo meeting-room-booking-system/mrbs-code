@@ -368,11 +368,11 @@ function get_field_display_name($params, $disabled=false)
   $field = new FieldInputText();
 
   $field->setLabel($params['label'])
-    ->setControlAttributes(array('display_name' => $params['name'],
-                                 'value'        => $params['value'],
-                                 'disabled'     => $disabled,
-                                 'required'     => true,
-                                 'pattern'      => REGEX_TEXT_POS));
+    ->setControlAttributes(array('name'     => $params['name'],
+                                 'value'    => $params['value'],
+                                 'disabled' => $disabled,
+                                 'required' => true,
+                                 'pattern'  => REGEX_TEXT_POS));
 
   if (null !== ($maxlength = maxlength('users.display_name')))
   {
