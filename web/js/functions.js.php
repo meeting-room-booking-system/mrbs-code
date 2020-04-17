@@ -23,7 +23,7 @@ $.fn.reverse = [].reverse;
 
 
 jQuery.fn.extend({
-  
+
   <?php
   // Turn a select element into a fancy Select2 field control.  This wrapper function also
   // (a) only does anything if we are not on a mobile device, because the native select
@@ -31,22 +31,15 @@ jQuery.fn.extend({
   // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
   //     a table structure and because Select2 adds a sibling element the table structure is
   //     ruined.
-  // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
-  //     resilting in a '...'
   ?>
   mrbsSelect: function() {
     if (!isMobile())
     {
-      $(this).wrap('<div></div>')
-             .select2()
-             .next('.select2-container').each(function() {
-                var container = $(this);
-                container.width(container.width() + 5);
-              });
+      $(this).wrap('<div></div>').select2({dropdownAutoWidth: true});
     }
     return($(this));
   }
-  
+
 });
 
 
@@ -56,9 +49,9 @@ function getErrorList(errors)
       patternSpan = /<span[\s\S]*span>/gi,
       patternTags = /<\S[^><]*>/g,
       str;
-      
+
   result.html += "<ul>";
-  
+
   for (var i=0; i<errors.length; i++)
   {
     result.html += "<li>" + errors[i] + "<\/li>";
@@ -69,9 +62,9 @@ function getErrorList(errors)
     result.text += $('<div>').html(str).text();
     result.text += "  \n";
   }
-  
+
   result.html += "<\/ul>";
-  
+
   return result;
 }
 
@@ -83,7 +76,7 @@ function getErrorList(errors)
 var visibilityPrefix = function visibilityPrefix() {
     var prefixes = ['', 'webkit', 'moz', 'ms', 'o'];
     var testProperty;
-    
+
     if (typeof visibilityPrefix.prefix === 'undefined')
     {
       visibilityPrefix.prefix = null;
@@ -131,14 +124,14 @@ function throttle(fn, threshold, scope) {
 
   var last,
       deferTimer;
-      
+
   threshold || (threshold = 250);
-  
+
   return function () {
     var context = scope || this,
         now = +new Date(),
         args = arguments;
-        
+
     if (last && now < last + threshold)
     {
       // hold on to it
@@ -148,7 +141,7 @@ function throttle(fn, threshold, scope) {
           fn.apply(context, args);
         }, threshold);
     }
-    else 
+    else
     {
       last = now;
       fn.apply(context, args);
@@ -162,20 +155,20 @@ function throttle(fn, threshold, scope) {
 ?>
 function isMeteredConnection()
 {
-  var connection = navigator.connection || 
-                   navigator.mozConnection || 
+  var connection = navigator.connection ||
+                   navigator.mozConnection ||
                    navigator.webkitConnection ||
                    navigator.msConnection ||
                    null;
-  
+
   if (connection === null)
   {
     return false;
   }
-  
+
   if ('type' in connection)
   {
-    <?php 
+    <?php
     // Although not all cellular networks will be metered, they
     // may be subject to throttling once a data threshold has passed.
     // It is probably sensible to assume that most users connected via
@@ -183,13 +176,13 @@ function isMeteredConnection()
     ?>
     return (connection.type === 'cellular');
   }
-  
+
   <?php // The older version of the interface ?>
   if ('metered' in connection)
   {
     return connection.metered;
   }
-  
+
   return false;
 }
 
@@ -239,10 +232,10 @@ function getParameterByName(name, url)
 
         if (this.length < 1)
             return;
-	
+
 	// Set direction default to 'both'.
 	direction = direction || 'both';
-	    
+
         var $t          = this.length > 1 ? this.eq(0) : this,
 						isContained = typeof container !== 'undefined' && container !== null,
 						$c				  = isContained ? $(container) : $w,
