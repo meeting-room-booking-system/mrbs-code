@@ -432,11 +432,12 @@ if (is_admin() || !empty($enabled_areas))
             echo "<tr class=\"$row_class\">\n";
 
             $html_name = htmlspecialchars($r['room_name']);
+            $href = multisite('edit_room.php?room=' . $r['id']);
             // We insert an invisible span containing the sort key so that the rooms will
             // be sorted properly
             echo "<td><div>" .
                  "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
-                 "<a title=\"$html_name\" href=\"edit_room.php?room=" . $r['id'] . "\">$html_name</a>" .
+                 "<a title=\"$html_name\" href=\"" . htmlspecialchars($href) . "\">$html_name</a>" .
                  "</div></td>\n";
             if (is_admin())
             {
