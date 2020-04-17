@@ -1702,7 +1702,7 @@ if ($output_form)
 
   $attributes = array('id'     => 'report_form',
                       'class'  => 'standard',
-                      'action' => 'report.php',
+                      'action' => multisite(this_page()),
                       'method' => 'post');
 
   $form->setAttributes($attributes)

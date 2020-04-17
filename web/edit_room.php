@@ -270,7 +270,7 @@ $form = new Form();
 
 $attributes = array('id'     => 'edit_room',
                     'class'  => 'standard',
-                    'action' => 'edit_room_handler.php',
+                    'action' => multisite('edit_room_handler.php'),
                     'method' => 'post');
                     
 // Non-admins will only be allowed to view room details, not change them

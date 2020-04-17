@@ -11,7 +11,7 @@ function display_buttons($row, $is_series)
   global $reminders_enabled, $reminder_interval;
   
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
-  $returl = this_page();
+  $returl = multisite(this_page());
                                     
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 
@@ -27,7 +27,7 @@ function display_buttons($row, $is_series)
     // approve
     $form = new Form();
 
-    $attributes = array('action' => 'approve_entry_handler.php',
+    $attributes = array('action' => multisite('approve_entry_handler.php'),
                         'method' => 'post');                   
     $form->setAttributes($attributes);
     
@@ -46,7 +46,7 @@ function display_buttons($row, $is_series)
     // reject
     $form = new Form();
 
-    $attributes = array('action' => "view_entry.php?$query_string",
+    $attributes = array('action' => multisite("view_entry.php?$query_string"),
                         'method' => 'post');                   
     $form->setAttributes($attributes);
     
@@ -78,7 +78,7 @@ function display_buttons($row, $is_series)
     
     $form = new Form();
 
-    $attributes = array('action' => "view_entry.php?$query_string",
+    $attributes = array('action' => multisite("view_entry.php?$query_string"),
                         'method' => 'post');                   
     $form->setAttributes($attributes);
     
@@ -104,7 +104,7 @@ function display_buttons($row, $is_series)
     {
       $form = new Form();
 
-      $attributes = array('action' => 'approve_entry_handler.php',
+      $attributes = array('action' => multisite('approve_entry_handler.php'),
                           'method' => 'post');                   
       $form->setAttributes($attributes);
       

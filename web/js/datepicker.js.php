@@ -153,6 +153,10 @@ $(document).on('page_ready', function() {
       href += '&page_date=' + dateStr;
       href += '&area=' + args.area;
       href += '&room=' + args.room;
+      if (args.site)
+      {
+        href += '&site=' + encodeURIComponent(args.site);
+      }
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     }; 
       

@@ -94,13 +94,13 @@ function print_report_link($user)
   // containing the search string, not just those created by the user.)
   if (checkAuthorised('report.php', true))
   {
-    $attributes = array('action' => 'report.php');
+    $attributes = array('action' => multisite('report.php'));
     $hidden_inputs = array('phase'        => '2',
                            'creatormatch' => $user);
   }
   elseif (checkAuthorised('search.php', true))
   {
-    $attributes = array('action' => 'search.php');
+    $attributes = array('action' => multisite('search.php'));
     $hidden_inputs = array('search_str' => $user);
   }
   else
@@ -129,6 +129,7 @@ function print_report_link($user)
 function print_logon_button($target_url)
 {
   global $auth;
+  global $multisite, $site;
   
   if ($auth['session'] == 'cas')
   {
@@ -137,6 +138,10 @@ function print_logon_button($target_url)
   else
   {
     $action = 'admin.php';
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $action .= "?site=$site";
+    }
   }
   
   $form = new Form();
@@ -161,7 +166,7 @@ function print_logoff_button($target_url)
 {
   $form = new Form();
   $form->setAttributes(array('method' => 'post',
-                             'action' => 'admin.php'));
+                             'action' => multisite('admin.php')));
   
   // Add the hidden fields
   $hidden_inputs = array('target_url' => $target_url,

@@ -11,7 +11,7 @@ function generate_no_form($room, $area)
 {
   $form = new Form();
   
-  $attributes = array('action' => 'admin.php',
+  $attributes = array('action' => multisite('admin.php'),
                       'method' => 'post');
                       
   $form->setAttributes($attributes);
@@ -34,7 +34,7 @@ function generate_yes_form($room, $area)
 {
   $form = new Form();
   
-  $attributes = array('action' => 'del.php',
+  $attributes = array('action' => multisite('del.php'),
                       'method' => 'post');
                       
   $form->setAttributes($attributes);

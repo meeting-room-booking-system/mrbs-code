@@ -56,7 +56,14 @@ $(document).on('page_ready', function() {
             ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
         {
           recordActivity.lastRecorded = t;
-          $.post('ajax/record_activity.php', {activity: 1}, function() {
+          
+          var params = {activity: 1};
+          if(args.site)
+          {
+            params.site = args.site;
+          }
+    
+          $.post('ajax/record_activity.php', params, function() {
             });
         }
       };

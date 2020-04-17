@@ -168,6 +168,12 @@ function checkTimeSlots(jqDate)
                   year: parseInt(siblings.filter('input[id*="year"]').val(), 10),
                   tz: areaConfig('timezone'),
                   slots: slots};
+                  
+    if(args.site)
+    {
+      params.site = args.site;
+    }
+    
     $.post('ajax/check_slot.php', params, function(result) {
         $.each(result.slots, function(key, value) {
             $('#' + result.id).find('option[value="' + value + '"]').remove();
@@ -611,6 +617,11 @@ function checkConflicts(optional)
           delete params[i];
         }
       });
+    
+    if(args.site)
+    {
+      params.site = args.site;
+    }
     
     checkConflicts.nOutstanding++; 
     $.post('edit_entry_handler.php', params, function(result) {

@@ -38,6 +38,8 @@ function get_color_key()
 // displayed.
 function make_area_select_html($view, $year, $month, $day, $current)
 {
+  global $multisite, $site;
+  
   $out_html = '';
 
   $areas = get_area_names();
@@ -52,10 +54,15 @@ function make_area_select_html($view, $year, $month, $day, $current)
 
     $form->setAttributes(array('class'  => 'areaChangeForm',
                                'method' => 'get',
-                               'action' => 'index.php'));
+                               'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,
                                  'page_date' => $page_date));
+                                 
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $form->addHiddenInput('site', $site);
+    }
 
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
@@ -81,6 +88,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
 function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current)
 {
   global $server, $room;
+  global $multisite, $site;
 
   $out_html = '';
 
@@ -111,12 +119,17 @@ function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $c
 
     $form->setAttributes(array('class'  => 'roomChangeForm',
                                'method' => 'get',
-                               'action' => 'index.php'));
+                               'action' => multisite(this_page())));
 
     $form->addHiddenInputs(array('view'      => $view,
                                  'view_all'  => 0,
                                  'page_date' => $page_date,
                                  'area'      => $area));
+                                 
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $form->addHiddenInput('site', $site);
+    }
 
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
@@ -236,9 +249,10 @@ function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $roo
                   'room'      => $room);
 
     $query = http_build_query($vars, '', '&');
+    $href = multisite("index.php?$query");
     $html .= '<a';
     $html .= ($view == $current_view) ? ' class="selected"' : '';
-    $html .= ' href="index.php?' . htmlspecialchars($query) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
+    $html .= ' href="' . htmlspecialchars($href) . '">' . htmlspecialchars(get_vocab($token)) . '</a>';
   }
 
   $html .= '</div>';
@@ -280,6 +294,10 @@ function get_arrow_nav($view, $view_all, $year, $month, $day, $area, $room)
   $link_prev = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, false);
   $link_today = get_today_link($view, $view_all, $area, $room);
   $link_next = get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, true);
+
+  $link_prev = multisite($link_prev);
+  $link_today = multisite($link_today);
+  $link_next = multisite($link_next);
 
   $html .= "<nav class=\"arrow\">\n";
   $html .= "<a class=\"prev\" title=\"$title_prev\" aria-label=\"$title_prev\" href=\"" . htmlspecialchars($link_prev) . "\"></a>";  // Content will be filled in by CSS
@@ -379,7 +397,6 @@ function get_date_heading($view, $year, $month, $day)
 
   return $html;
 }
-
 
 
 // Get non-standard form variables

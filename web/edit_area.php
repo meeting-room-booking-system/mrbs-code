@@ -732,7 +732,7 @@ $form = new Form();
 
 $attributes = array('id'     => 'edit_area',
                     'class'  => 'standard',
-                    'action' => 'edit_area_handler.php',
+                    'action' => multisite('edit_area_handler.php'),
                     'method' => 'post');
                     
 $form->setAttributes($attributes)
