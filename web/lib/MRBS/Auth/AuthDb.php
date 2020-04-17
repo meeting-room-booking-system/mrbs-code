@@ -176,7 +176,7 @@ class AuthDb extends Auth
 
     $user = new User($username);
 
-    // $user->level will be set as part of this
+    // $user->level and $user->display_name will be set as part of this
     foreach ($data as $key => $value)
     {
       if ($key == 'name')
@@ -187,9 +187,6 @@ class AuthDb extends Auth
       $user->$key = $value;
     }
 
-    // We don't yet have a displayname field in the 'db' scheme, so make it the username
-    $user->display_name = $user->username;
-
     return $user;
   }
 
@@ -199,7 +196,7 @@ class AuthDb extends Auth
   {
     global $tbl_users;
 
-    $res = \MRBS\db()->query("SELECT name AS username, name AS display_name FROM $tbl_users ORDER BY name");
+    $res = \MRBS\db()->query("SELECT name AS username, display_name AS display_name FROM $tbl_users ORDER BY display_name");
 
     return $res->all_rows_keyed();
   }
