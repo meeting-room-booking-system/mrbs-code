@@ -191,7 +191,7 @@ function output_row(&$row)
 
   $values = array();
 
-  // First column, which is the name
+  // First column, which is the display name
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($row['name']))
   {
@@ -202,20 +202,20 @@ function output_row(&$row)
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
                                  'name'  => 'edit_button',
-                                 'value' => $row['name']));
+                                 'value' => $row['display_name']));
     $form->addElement($submit);
-    $name_value = $form->toHTML();
+    $display_name_value = $form->toHTML();
   }
   else
   {
-    $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
+    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
   }
 
-  $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
-
-  // Then the display name
-  $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($row['display_name']) . '"></span>' . $display_name_value;
+
+  // Then the username
+  $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
+  $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
 
   // Other columns
   foreach ($fields as $field)
@@ -1204,8 +1204,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<tr>";
 
     // First two columns which are the name and display name
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.display_name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
 
     // Other column headers
     foreach ($fields as $field)
