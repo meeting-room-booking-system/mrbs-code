@@ -11,6 +11,7 @@ class AuthDbExt extends Auth
   private $db_table;
   private $password_format;
   private $column_name_username;
+  private $column_name_display_name;
   private $column_name_password;
   private $column_name_email;
   private $column_name_level;
@@ -42,11 +43,12 @@ class AuthDbExt extends Auth
     $vars = array(
         'db_table',
         'password_format',
-        'use_md5_passwords',
         'column_name_username',
+        'column_name_display_name',
         'column_name_password',
         'column_name_email',
-        'column_name_level'
+        'column_name_level',
+        'use_md5_passwords'
       );
 
     foreach ($vars as $var)
@@ -178,6 +180,12 @@ class AuthDbExt extends Auth
     if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
     {
       $user->email = $data[$this->column_name_email];
+    }
+
+    // Set the display name
+    if (isset($this->column_name_display_name) && isset($data[$this->column_name_display_name]))
+    {
+      $user->display_name = $data[$this->column_name_display_name];
     }
 
     // Set the level
