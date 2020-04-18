@@ -6,15 +6,15 @@ use MRBS\User;
 
 class AuthDbExt extends Auth
 {
-  private $db_ext_conn;
+  protected $db_ext_conn;
 
-  private $db_table;
-  private $password_format;
-  private $column_name_username;
-  private $column_name_display_name;
-  private $column_name_password;
-  private $column_name_email;
-  private $column_name_level;
+  protected $db_table;
+  protected $password_format;
+  protected $column_name_username;
+  protected $column_name_display_name;
+  protected $column_name_password;
+  protected $column_name_email;
+  protected $column_name_level;
 
   public function __construct()
   {
