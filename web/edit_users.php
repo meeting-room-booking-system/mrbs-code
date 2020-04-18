@@ -184,6 +184,42 @@ function get_form_var_type($field)
 }
 
 
+// Returns a name in the format last_name first_name for sorting
+function get_sortable_name($name)
+{
+  global $sort_users_by_last_name;
+
+  if (!isset($name))
+  {
+    return null;
+  }
+
+  if (empty($sort_users_by_last_name))
+  {
+    return;
+  }
+
+  $tokens = explode(' ', $name);
+
+  // Get rid of other whitespace (eg tabs)
+  $tokens = array_map('trim', $tokens);
+
+  // Get the last name
+  $result = array_pop($tokens);
+
+  // Add back in the first names
+  while (null !== ($token = array_shift($tokens)))
+  {
+    if ($token !== '') // weeds out multiple spaces in a name
+    {
+      $result .= ' ' . $token;
+    }
+  }
+
+  return $result;
+}
+
+
 function output_row(&$row)
 {
   global $is_ajax, $json_data;
@@ -211,7 +247,8 @@ function output_row(&$row)
     $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
   }
 
-  $values[] = '<span title="' . htmlspecialchars($row['display_name']) . '"></span>' . $display_name_value;
+  $sortname = get_sortable_name($row['display_name']);
+  $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $display_name_value;
 
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";

@@ -454,6 +454,9 @@ $pdf_default_orientation = 'portrait';
 // Options: 'A3', 'A4', 'A5', 'LEGAL', 'LETTER' or 'TABLOID'
 $pdf_default_paper = 'A4';
 
+// Whether to sort users by their last names or not
+$sort_users_by_last_name = false;
+
 /************************
  * Miscellaneous settings
  ************************/
