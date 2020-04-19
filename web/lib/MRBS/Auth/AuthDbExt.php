@@ -226,7 +226,7 @@ class AuthDbExt extends Auth
         $user->$key = $value;
       }
     }
-    
+
     return $user;
   }
 

@@ -103,7 +103,7 @@ $db_persist = false;
 /*********************************
  * Site identification information
  *********************************/
- 
+
 // Set to true to enable multisite operation, in which case the settings below are for the
 // home site, identified by the empty string ''.   Other sites have their own supplementary
 // config fies in the sites/<sitename> directory.
@@ -590,6 +590,8 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
+$is_mandatory_field['users.display_name'] = true;
+
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
 // if you make a repeat booking and some of the repeat dates are already
@@ -771,7 +773,7 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 // List of fields which only admins can edit.   By default these are the
 // user level (ie admin/user) and the username.   Custom fields can be added
 // as required.
-$auth['db']['protected_fields'] = array('level', 'name');
+$auth['db']['protected_fields'] = array('level', 'name', 'display_name');
 
 
 // 'auth_db_ext' configuration settings
