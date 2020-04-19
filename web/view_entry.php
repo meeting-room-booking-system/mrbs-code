@@ -111,7 +111,7 @@ function generateApproveButtons($id, $series)
 
 function generateOwnerButtons($id, $series)
 {
-  global $user, $create_by, $awaiting_approval, $area;
+  global $current_user, $create_by, $awaiting_approval, $area;
   global $reminders_enabled, $last_reminded, $reminder_interval;
   global $multisite, $site;
   
@@ -119,7 +119,7 @@ function generateOwnerButtons($id, $series)
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($user, $create_by) === 0) && 
+      (strcasecmp($current_user->username, $create_by) === 0) && 
       ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
@@ -245,7 +245,7 @@ if (isset($action))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = session()->getUsername();
+$current_user = session()->getCurrentUser();
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
@@ -476,7 +476,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       }    
     }
     // Buttons for the owner of this booking
-    elseif (strcasecmp($user, $create_by) === 0)
+    elseif (strcasecmp($current_user->username, $create_by) === 0)
     {
       generateOwnerButtons($id, $series);
     }
