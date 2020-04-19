@@ -38,7 +38,7 @@ Form::checkToken();
 //  ---------------------------------------------
 checkAuthorised(this_page());
 
-$current_username = session()->getUsername();
+$current_username = session()->getCurrentUser()->username;
 
 
 // (2) Get the form variables

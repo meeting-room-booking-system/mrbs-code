@@ -21,7 +21,7 @@ Form::checkToken();
 
 // Check the user is authorised for this page
 checkAuthorised(this_page());
-$user = session()->getUsername();
+$current_user = session()->getCurrentUser();
 
 // Retrieve the booking details
 $data = get_booking_info($id, $series);
@@ -81,7 +81,7 @@ if (isset($action))
       // originator's court, so the clock gets reset)
       update_last_reminded($id, $series);
       // update the more info fields
-      update_more_info($id, $series, $user, $note);
+      update_more_info($id, $series, $current_user->username, $note);
       $result = TRUE;  // We'll assume success and end an email anyway
       break;
     

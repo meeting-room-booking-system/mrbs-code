@@ -276,8 +276,7 @@ function getWritable($creator, $rooms=null, $all=true)
   }
 
   // Always allowed to modify your own stuff
-  $user = session()->getUsername();
-  if (strcasecmp($creator, $user) === 0)
+  if (strcasecmp($creator, session()->getCurrentUser()->username) === 0)
   {
     return true;
   }

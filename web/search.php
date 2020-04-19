@@ -155,7 +155,7 @@ if (isset($search_str) && ($search_str !== ''))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = session()->getUsername();
+$current_user = session()->getCurrentUser();
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.  We also need
@@ -284,7 +284,7 @@ if (count($invisible_room_ids) > 0)
 // entries will be found, which is at least safe from the privacy viewpoint)
 if (!is_book_admin())
 {
-  if (isset($user))
+  if (isset($current_user))
   {
     // if the user is logged in they can see:
     //   - all bookings, if private_override is set to 'public'
@@ -301,8 +301,8 @@ if (!is_book_admin())
                          )
                         )
                        )";
-    $sql_params[] = $user;
-    $sql_params[] = $user;
+    $sql_params[] = $current_user->username;
+    $sql_params[] = $current_user->username;
   }
   else
   {
