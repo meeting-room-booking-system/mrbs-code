@@ -176,6 +176,11 @@ class AuthDbExt extends Auth
 
     $user = new User($username);
 
+    // Load the user object with the data, then overwrite the properties we care
+    // about with the values we want.  (Just in case, for example, that the 'email'
+    // column doesn't actually contain the email address, for some reason).
+    $user->load($data);
+
     // Set the email address
     if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
     {
