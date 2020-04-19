@@ -1590,8 +1590,8 @@ if ($phase == 2)
       //   - their own bookings, and others' public bookings if private_override is set to 'none'
       //   - just their own bookings, if private_override is set to 'private'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND ((E.status&" . STATUS_PRIVATE . "=0) OR E.create_by = ?)) OR
-                     (A.private_override='private' AND E.create_by = ?))";
+                     ((A.private_override='none') AND ((E.status&" . STATUS_PRIVATE . "=0) OR (E.create_by = ?))) OR
+                     ((A.private_override='private') AND (E.create_by = ?)))";
       $sql_params[] = $user;
       $sql_params[] = $user;
     }
@@ -1601,7 +1601,7 @@ if ($phase == 2)
       //   - all bookings, if private_override is set to 'public'
       //   - public bookings if private_override is set to 'none'
       $sql .= " AND ((A.private_override='public') OR
-                     (A.private_override='none' AND (E.status&" . STATUS_PRIVATE . "=0)))";
+                     ((A.private_override='none') AND (E.status&" . STATUS_PRIVATE . "=0)))";
     }
   }
 
