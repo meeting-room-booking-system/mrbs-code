@@ -176,11 +176,6 @@ class AuthDbExt extends Auth
 
     $user = new User($username);
 
-    // Load the user object with the data, then overwrite the properties we care
-    // about with the values we want.  (Just in case, for example, that the 'email'
-    // column doesn't actually contain the email address, for some reason).
-    $user->load($data);
-
     // Set the email address
     if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
     {
@@ -221,6 +216,17 @@ class AuthDbExt extends Auth
       }
     }
 
+    // Then set the remaining properties. (We don't set all the properties from
+    // $data initially because we want to preserve the default values if we don't
+    // have data for the four important properties.)
+    foreach ($data as $key => $value)
+    {
+      if (!property_exists($user, $key))
+      {
+        $user->$key = $value;
+      }
+    }
+    
     return $user;
   }
 
