@@ -31,11 +31,18 @@ jQuery.fn.extend({
   // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
   //     a table structure and because Select2 adds a sibling element the table structure is
   //     ruined.
+  // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
+  //     resulting in a '...'
   ?>
   mrbsSelect: function() {
     if (!isMobile())
     {
-      $(this).wrap('<div></div>').select2({dropdownAutoWidth: true});
+      $(this).wrap('<div></div>')
+        .select2({dropdownAutoWidth: true})
+        .next('.select2-container').each(function() {
+            var container = $(this);
+            container.width(container.width() + 5);
+          });
     }
     return($(this));
   }
