@@ -16,42 +16,28 @@ class SessionHttp extends SessionWithLogin
   }
   
   
-  public function getUsername()
+  public function getCurrentUser()
   {
     global $server;
     
-    // We save the results of the user validation so that we avoid any performance
-    // penalties in auth()->validateUser, which can be severe if for example we are using
-    // LDAP authentication
-    static $authorised_user = null;
-
-    if (isset($server['PHP_AUTH_USER']))
+    if (!isset($server['PHP_AUTH_USER']) || ($server['PHP_AUTH_USER'] === ''))
     {
-      $user = $server['PHP_AUTH_USER'];
-
-      if ((isset($authorised_user) && ($authorised_user == $user)) ||
-          (\MRBS\auth()->validateUser($user, self::getAuthPassword()) !== false))
-      {
-        $authorised_user = $user;
-      }
-      else
-      {
-        $authorised_user = null;
-      }
-    }
-    else
-    {
-      $authorised_user = null;
+      return null;
     }
     
-    return $authorised_user;
+    if (\MRBS\auth()->validateUser($server['PHP_AUTH_USER'], self::getAuthPassword()) === false)
+    {
+      return null;
+    }
+    
+    return \MRBS\auth()->getUser($server['PHP_AUTH_USER']);
   }
   
   
   public function getLogoffFormParams()
   {
     // Just return NULL - you can't logoff
-    // (well, there are ways of achieving a logoff but we haven't implemrnted them)
+    // (well, there are ways of achieving a logoff but we haven't implemented them)
   }
   
   

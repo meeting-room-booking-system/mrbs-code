@@ -28,20 +28,18 @@ class SessionRemoteUser extends SessionWithLogin
   }
   
   
-  public function getUsername()
+  public function getCurrentUser()
   {
     global $server;
     
     if ((!isset($server['REMOTE_USER'])) ||
         (!is_string($server['REMOTE_USER'])) ||
-        (empty($server['REMOTE_USER'])))
+        (($server['REMOTE_USER'] === '')))
     {
       return null;
     } 
-    else
-    {
-      return $server['REMOTE_USER'];
-    }
+
+    return \MRBS\auth()->getUser($server['REMOTE_USER']);
   }
   
   

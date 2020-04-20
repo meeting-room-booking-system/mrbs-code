@@ -47,27 +47,6 @@ class SessionCookie extends SessionWithLogin
   }
   
   
-  public function getUsername()
-  {
-    global $auth;
-    
-    static $cached_username = null;
-    static $have_checked_cookie = false;
-
-    if (!$have_checked_cookie)
-    {
-      $data = self::getCookie('SessionToken',
-                              $auth['session_cookie']['hash_algorithm'],
-                              $auth['session_cookie']['secret']);
-
-      $cached_username = (isset($data['username'])) ? $data['username'] : null;
-      $have_checked_cookie = true;
-    }
-    
-    return $cached_username;
-  }
-  
-  
   protected function logonUser($username)
   {
     global $auth;

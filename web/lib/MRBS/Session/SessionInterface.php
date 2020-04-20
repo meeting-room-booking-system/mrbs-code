@@ -5,6 +5,6 @@ interface SessionInterface
 {
   
   // Returns the username of the currently logged in user
-  public function getUsername();
+  public function getCurrentUser();
 
 }

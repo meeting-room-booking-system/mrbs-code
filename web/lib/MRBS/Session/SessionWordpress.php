@@ -20,18 +20,6 @@ class SessionWordpress extends SessionWithLogin
   }
   
   
-  public function getUsername()
-  {
-    if (!is_user_logged_in())
-    {
-      return null;
-    }
-    
-    $current_user = wp_get_current_user();
-    return $current_user->user_login;
-  }
-  
-  
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
   protected function getValidUser($username, $password)
   {

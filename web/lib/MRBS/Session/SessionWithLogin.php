@@ -40,7 +40,7 @@ abstract class SessionWithLogin implements SessionInterface
   }
 
 
-  abstract public function getUsername();
+  abstract public function getCurrentUser();
 
 
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a

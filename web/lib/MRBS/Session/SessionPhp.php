@@ -39,17 +39,6 @@ class SessionPhp extends SessionWithLogin
   }
   
   
-  public function getUsername()
-  {
-    if (isset($_SESSION['UserName']) && ($_SESSION['UserName'] !== ''))
-    {
-      return $_SESSION['UserName'];
-    }
-
-    return null;
-  }
-  
-  
   protected function logonUser($username)
   {
     $user = \MRBS\auth()->getUser($username);
@@ -57,7 +46,6 @@ class SessionPhp extends SessionWithLogin
     // As a defence against session fixation, regenerate
     // the session id and delete the old session.
     session_regenerate_id(true);
-    $_SESSION['UserName'] = $username;
     $_SESSION['user'] = $user;
     
     // Problems have been reported on Windows IIS with session data not being

@@ -21,19 +21,7 @@ namespace MRBS;
  * See AUTHENTICATION  for more information.
  */
 
-/**
- * Checks if the specified username/password pair are valid.
- *
- * For this authentication scheme always validates.
- *
- * @param   string  $user   The user name
- * @param   string  $pass   The password
- * @return  string  $user   Always valid
- */
-function authValidateUser($user, $pass)
-{
-  return $user;
-}
+
 
 
 /* authGetUserLevel($user)
