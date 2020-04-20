@@ -25,14 +25,18 @@ class SessionHost extends SessionWithoutLogin
 {
   
   // No need to prompt for a name: if no DNSname is returned, the IP address is used
-  
-  public function getUsername()
+  public function getCurrentUser()
   {
     global $server;
     
-    $remotehostname = gethostbyaddr($server['REMOTE_ADDR']);
-    
-    return $remotehostname;
+    if ((!isset($server['REMOTE_ADDR'])) ||
+        (!is_string($server['REMOTE_ADDR'])) ||
+        (($server['REMOTE_ADDR'] === '')))
+    {
+      return null;
+    } 
+
+    return \MRBS\auth()->getUser(gethostbyaddr($server['REMOTE_ADDR']));
   }
   
 }

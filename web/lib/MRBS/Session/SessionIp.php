@@ -23,12 +23,18 @@ class SessionIp extends SessionWithoutLogin
 {
 
   // No need to prompt for a name - IP address always there
-
-  public function getUsername()
+  public function getCurrentUser()
   {
     global $server;
     
-    return $server['REMOTE_ADDR'];
+    if ((!isset($server['REMOTE_ADDR'])) ||
+        (!is_string($server['REMOTE_ADDR'])) ||
+        (($server['REMOTE_ADDR'] === '')))
+    {
+      return null;
+    } 
+
+    return \MRBS\auth()->getUser($server['REMOTE_ADDR']);
   }
   
 }

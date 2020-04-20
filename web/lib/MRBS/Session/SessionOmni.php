@@ -40,13 +40,19 @@ namespace MRBS\Session;
 class SessionOmni extends SessionWithoutLogin
 {
 
-  // No need to prompt for a name - this is done by the server.
-  
-  public function getUsername()
+  // No need to prompt for a name - this is done by the server. 
+  public function getCurrentUser()
   {
     global $server;
     
-    return (isset($server['REMOTE_USER'])) ? $server['REMOTE_USER'] : null;
+    if ((!isset($server['REMOTE_USER'])) ||
+        (!is_string($server['REMOTE_USER'])) ||
+        (($server['REMOTE_USER'] === '')))
+    {
+      return null;
+    } 
+
+    return \MRBS\auth()->getUser($server['REMOTE_USER']);
   }
   
 }

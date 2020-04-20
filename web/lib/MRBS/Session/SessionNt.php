@@ -24,10 +24,9 @@ class SessionNt extends SessionWithoutLogin
 {
 
   // For this scheme no need to prompt for a name - NT User always there.
-
-  public function getUsername()
+  public function getCurrentUser()
   {
-    return get_current_user();
+    return \MRBS\auth()->getUser(get_current_user());
   }
 
 }
