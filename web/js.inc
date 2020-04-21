@@ -96,9 +96,9 @@ else
 <script src="js/flatpickr/flatpickr.min.js"></script>
 <script src="jquery/select2/dist/js/select2.full.min.js"></script>
 <?php
-if (null !== ($select2_lang_file = get_select2_lang_file()))
+if (null !== ($select2_lang_path = get_select2_lang_path()))
 {
-  echo "<script src=\"${select2_lang_file}\"></script >\n";
+  echo "<script src=\"${select2_lang_path}\"></script >\n";
 }
 
 $dir = 'js/flatpickr/l10n';

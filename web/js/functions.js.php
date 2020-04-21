@@ -35,7 +35,7 @@ jQuery.fn.extend({
   //     resulting in a '...'
   //
   // Get the best available language
-  $select2_lang = basename(get_select2_lang_file(), '.js');
+  $select2_lang = basename(get_select2_lang_path(), '.js');
   ?>
   mrbsSelect: function() {
     if (!isMobile())

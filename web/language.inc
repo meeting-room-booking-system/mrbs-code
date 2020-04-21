@@ -583,13 +583,21 @@ function get_datatable_lang_file($dir)
   return get_best_lang_file($dir, '', '.lang', null, $datatables_lang_map);
 }
 
-
-function get_select2_lang_file()
+// Returns the pathname of the language file to use for the Select2
+// plugin.    If no suitable language file exists then returns NULL
+function get_select2_lang_path()
 {
-  $dir = 'jquery/select2/dist/js/i18n';
-  $file = get_best_lang_file(__DIR__ . "/$dir", '', '.js');
+  static $have_result = false;
+  static $result = null;
 
-  return (isset($file)) ? "$dir/$file" : null;
+  if (!$have_result)
+  {
+    $dir = 'jquery/select2/dist/js/i18n';
+    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.js');
+    $result = (isset($file)) ? "$dir/$file" : null;
+  }
+
+  return $result;
 }
 
 
