@@ -68,7 +68,7 @@ function session()
 function get_page_level($page)
 {
   global $auth, $max_level;
-  
+
   switch ($page)
   {
     // These pages are open to the public by default as they only contain
@@ -77,14 +77,14 @@ function get_page_level($page)
     case 'index.php':
       $result = 0;
       break;
-      
+
     // These pages reveal usernames, which could be of assistance to someone trying to
     // break into the system, so users are required to be logged in before viewing them.
     case 'search.php':
     case 'view_entry.php':
       $result = 1;
       break;
-      
+
     // These pages are set to have a minimum access level of 1 as ordinary users
     // should be able to access them because they will have read access and in some
     // cases write access for their own entries.   Where necessary further checks are
@@ -96,7 +96,7 @@ function get_page_level($page)
     case 'pending.php':                 // Ordinary users can view their own entries
       $result = 1;
       break;
-      
+
     // These pages allow users to create and delete entries
     case 'check_slot.php':              // Ajax page used by edit_entry.php
     case 'del_entry.php':
@@ -104,7 +104,7 @@ function get_page_level($page)
     case 'edit_entry_handler.php':
       $result = ($auth['only_admin_can_book']) ? 2 : 1;
       break;
-    
+
     // These pages only contain admin features
     case 'add.php':                     // Adds a room
     case 'del.php':                     // Deletes a room
@@ -114,29 +114,30 @@ function get_page_level($page)
     case 'edit_room_handler.php':
     case 'import.php':
     case 'report.php':
+    case 'usernames.php':               // Ajax page for getting a list of users
       $result = 2;
       break;
-      
+
     default:
       $result = (isset($max_level)) ? $max_level : 2;
       break;
   }
-  
+
   if ($auth['deny_public_access'])
   {
     $result = max($result, 1);
   }
-  
+
   return $result;
 }
 
 
 /* getAuthorised($level)
- * 
+ *
  * Check to see if the current user has a certain level of rights
- * 
+ *
  * $level - The access level required
- * 
+ *
  * Returns:
  *   false - The user does not have the required access
  *   true  - The user has the required access
@@ -176,27 +177,27 @@ function getAuthorised($level)
 function checkAuthorised($page, $just_check=false)
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
-  
+
   // Get the minimum authorisation level for this page
   $required_level = get_page_level($page);
-  
+
   if ($just_check)
   {
     if ($required_level == 0)
     {
       return true;
     }
-    
+
     $current_user = session()->getCurrentUser();
     return (isset($current_user) && ($current_user->level >= $required_level));
   }
-  
+
   // Check that the user has this level
   if (getAuthorised($required_level))
   {
     return true;
   }
-  
+
   // If we don't know the right date then use today's
   if (!isset($day) or !isset($month) or !isset($year))
   {
@@ -204,19 +205,19 @@ function checkAuthorised($page, $just_check=false)
     $month = date('m');
     $year  = date('Y');
   }
-  
+
   if (empty($area))
   {
     $area = get_default_area();
   }
-  
+
   showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit();
 }
 
 
 /* getWritable($creator, $room)
- * 
+ *
  * Determines if the current user is able to modify an entry
  *
  * $creator - The creator of the entry
@@ -280,27 +281,27 @@ function getWritable($creator, $rooms=null, $all=true)
   {
     return true;
   }
-  
+
   // Otherwise you have to be a (booking) admin for this room
   if (is_book_admin($rooms))
   {
     return true;
   }
-  
+
   // Unauthorised access
   return false;
 }
 
 /* showAccessDenied()
- * 
+ *
  * Displays an appropriate message when access has been denied
- * 
+ *
  * Returns: Nothing
  */
 function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null)
 {
   global $server;
-  
+
   print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
@@ -321,7 +322,7 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
 function is_admin()
 {
   global $max_level;
-  
+
   $current_user = session()->getCurrentUser();
   $required_level = (isset($max_level) ? $max_level : 2);
 
@@ -382,7 +383,7 @@ function is_book_admin($rooms=null, $all=true)
   }
 
   $current_user = session()->getCurrentUser();
-  
+
   return (isset($current_user) && ($current_user->level >= 2));
 }
 
@@ -391,7 +392,7 @@ function is_book_admin($rooms=null, $all=true)
 function is_user_admin()
 {
   global $min_user_editing_level;
-  
+
   $current_user = session()->getCurrentUser();
 
   return (isset($current_user) && ($current_user->level >= $min_user_editing_level));

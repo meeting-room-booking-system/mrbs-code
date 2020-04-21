@@ -95,8 +95,12 @@ else
 <script src="js/datepicker.js.php?<?php echo $escaped_standard_query_string ?>"></script>
 <script src="js/flatpickr/flatpickr.min.js"></script>
 <script src="jquery/select2/dist/js/select2.full.min.js"></script>
-
 <?php
+if (null !== ($select2_lang_path = get_select2_lang_path()))
+{
+  echo "<script src=\"${select2_lang_path}\"></script >\n";
+}
+
 $dir = 'js/flatpickr/l10n';
 if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
 {

@@ -199,25 +199,11 @@ function get_field_create_by($create_by, $disabled=false)
 {
   if (method_exists(auth(), 'getUsernames'))
   {
-    $users = auth()->getUsernames();
-  }
-
-  if (!empty($users))
-  {
-    // We can get a list of all users, so present a <select> element
+    // We can get a list of all users, so present a <select> element.
+    // The options will actually be provided later via Ajax, so all we
+    // do here is present one option, ie the createby user.
     $options = array();
-
-    foreach ($users as $user)
-    {
-      if (isset($user['display_name']) && ($user['display_name'] !== ''))
-      {
-        $options[$user['username']] = $user['display_name'];
-      }
-      else
-      {
-        $options[$user['username']] = $user['username'];
-      }
-    }
+    $options[$create_by] = $create_by;
 
     $field = new FieldSelect();
     $field->setLabel(get_vocab('createdby'))

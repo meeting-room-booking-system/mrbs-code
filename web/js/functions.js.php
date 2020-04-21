@@ -33,12 +33,29 @@ jQuery.fn.extend({
   //     ruined.
   // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
   //     resulting in a '...'
+  //
+  // Get the best available language
+  $select2_lang = basename(get_select2_lang_path(), '.js');
   ?>
   mrbsSelect: function() {
     if (!isMobile())
     {
       $(this).wrap('<div></div>')
-        .select2({dropdownAutoWidth: true})
+        .select2({
+          dropdownAutoWidth: true,
+          <?php
+          if (isset($select2_lang) && ($select2_lang !== ''))
+          {
+            echo "language: '$select2_lang',";
+          }
+          ?>
+          ajax: {
+            url: 'ajax/usernames.php',
+            method: 'post',
+            dataType: 'json',
+            data: {csrf_token: getCSRFToken()}
+          }
+        })
         .next('.select2-container').each(function() {
             var container = $(this);
             container.width(container.width() + 5);
