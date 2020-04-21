@@ -25,9 +25,9 @@ checkAuthorised(this_page());
 $result = (object) array();
 $result->results = array();
 
-if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
+if (method_exists(auth(), 'getUsernames'))
 {
-  $names = authGetUsernames();
+  $names = auth()->getUsernames();
 
   foreach ($names as $name)
   {
