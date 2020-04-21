@@ -584,6 +584,15 @@ function get_datatable_lang_file($dir)
 }
 
 
+function get_select2_lang_file()
+{
+  $dir = 'jquery/select2/dist/js/i18n';
+  $file = get_best_lang_file(__DIR__ . "/$dir", '', '.js');
+
+  return (isset($file)) ? "$dir/$file" : null;
+}
+
+
 // Set $vocab to $lang.  As some translations are incomplete, 'en' is set as a
 // fallback language.   Returns TRUE if a lang file is found, otherwise FALSE.
 function set_vocab($lang)

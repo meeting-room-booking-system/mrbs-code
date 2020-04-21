@@ -33,6 +33,9 @@ jQuery.fn.extend({
   //     ruined.
   // (c) adjusts the width of the select2 container because Select2 doesn't always get it right
   //     resulting in a '...'
+  //
+  // Get the best available language
+  $select2_lang = basename(get_select2_lang_file(), '.js');
   ?>
   mrbsSelect: function() {
     if (!isMobile())
@@ -40,6 +43,12 @@ jQuery.fn.extend({
       $(this).wrap('<div></div>')
         .select2({
           dropdownAutoWidth: true,
+          <?php
+          if (isset($select2_lang) && ($select2_lang !== ''))
+          {
+            echo "language: '$select2_lang',";
+          }
+          ?>
           ajax: {
             url: 'ajax/usernames.php',
             method: 'post',
