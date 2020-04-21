@@ -38,7 +38,15 @@ jQuery.fn.extend({
     if (!isMobile())
     {
       $(this).wrap('<div></div>')
-        .select2({dropdownAutoWidth: true})
+        .select2({
+          dropdownAutoWidth: true,
+          ajax: {
+            url: 'ajax/usernames.php',
+            method: 'post',
+            dataType: 'json',
+            data: {csrf_token: getCSRFToken()}
+          }
+        })
         .next('.select2-container').each(function() {
             var container = $(this);
             container.width(container.width() + 5);
