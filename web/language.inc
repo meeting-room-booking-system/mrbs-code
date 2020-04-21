@@ -584,13 +584,23 @@ function get_flatpickr_property($lang_file)
 
 
 // Returns the pathname of the language file to use for the dataTables
-// jQuery plugin.    If no suitable language file exists then returns NULL
-// $dir is the directory containing the language files
-function get_datatable_lang_file($dir)
+// jQuery plugin.    If no suitable language file exists then returns NULL.
+function get_datatable_lang_path()
 {
   global $datatables_lang_map;
 
-  return get_best_lang_file($dir, '', '.lang', null, $datatables_lang_map);
+  static $have_result = false;
+  static $result = null;
+
+  if (!$have_result)
+  {
+    $dir = 'jquery/datatables/language';
+    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.lang', null, $datatables_lang_map);
+    $result = (isset($file)) ? "$dir/$file" : null;
+    $have_result = true;
+  }
+
+  return $result;
 }
 
 // Returns the pathname of the language file to use for the Select2
