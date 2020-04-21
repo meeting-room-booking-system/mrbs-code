@@ -101,10 +101,9 @@ if (null !== ($select2_lang_path = get_select2_lang_path()))
   echo "<script src=\"${select2_lang_path}\"></script >\n";
 }
 
-$dir = 'js/flatpickr/l10n';
-if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file($dir)))
+if (null !== ($flatpickr_lang_path = get_flatpickr_lang_path()))
 {
-  echo "<script src=\"$dir/${flatpickr_lang_file}\"></script>\n";
+  echo "<script src=\"${flatpickr_lang_path}\"></script>\n";
 }
 
 // dataTables initialisation
