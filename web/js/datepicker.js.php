@@ -48,10 +48,10 @@ $(document).on('page_ready', function() {
   // on mobile devices because they are generally better.
   
   // Localise the flatpickr
-  if (null !== ($flatpickr_lang_file = get_flatpickr_lang_file('flatpickr/l10n')))
+  if (null !== ($flatpickr_lang_path = get_flatpickr_lang_path()))
   {
     // Map the flatpickr lang file onto a flatpickr l10ns property and then localize
-    echo 'flatpickr.localize(flatpickr.l10ns.' . get_flatpickr_property($flatpickr_lang_file) . ');';
+    echo 'flatpickr.localize(flatpickr.l10ns.' . get_flatpickr_property($flatpickr_lang_path) . ');';
   }
 
   
