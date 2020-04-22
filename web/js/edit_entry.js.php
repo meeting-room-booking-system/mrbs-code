@@ -1176,8 +1176,25 @@ $(document).on('page_ready', function() {
  
   isAdmin = args.isAdmin;
   
-  <?php // Turn the create_by select into a fancy select box. ?>
+  <?php // Turn the create_by select into a fancy select box. ?>;
   $('select#create_by').mrbsSelect();
+  $('body').addClass('ajax-loading');
+
+  $.post({
+      url: 'ajax/usernames.php',
+      dataType: 'json',
+      data: {csrf_token: getCSRFToken()},
+      success: function(data) {
+          $('select#create_by')
+              .select2({data: data, dropdownAutoWidth: 'true'})
+              .next('.select2-container').each(function() {
+                var container = $(this);
+                container.width(container.width() + 5);
+              });
+          $('body').removeClass('ajax-loading');
+        }
+    });
+
   
   <?php
   // If there's only one enabled area in the database there won't be an area

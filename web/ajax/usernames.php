@@ -22,8 +22,7 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$result = (object) array();
-$result->results = array();
+$result = array();
 
 if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
 {
@@ -31,10 +30,10 @@ if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
 
   foreach ($names as $name)
   {
-    $element = (object)array();
+    $element = (object) array();
     $element->id = $name['username'];
     $element->text = $name['display_name'];
-    $result->results[] = $element;
+    $result[] = $element;
   }
 }
 

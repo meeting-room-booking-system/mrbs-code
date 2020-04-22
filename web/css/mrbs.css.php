@@ -2312,3 +2312,10 @@ h2.date.loading::after {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
+
+.ajax-loading input.select2-search__field {
+  background-image: url(../images/ajax-loader.gif);
+  background-position: center right 5px;
+  background-repeat: no-repeat;
+}
+  
