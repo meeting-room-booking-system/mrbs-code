@@ -7,10 +7,6 @@ namespace MRBS;
 // There are improvements that could be made:
 //   1.  We could arrange for the usernames to be returned in a Select2 friendly
 //       format so that we don't have to iterate through them here.
-//   2.  We could take advantage of the Select2 'term' parameter to limit the number
-//       of results that have to be returned.
-//   3.  We could take advantage of pagination.
-// See https://select2.org/data-sources/ajax fot more details
 
 use MRBS\Form\Form;
 

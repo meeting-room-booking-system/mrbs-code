@@ -1178,14 +1178,41 @@ $(document).on('page_ready', function() {
   
   <?php // Turn the create_by select into a fancy select box. ?>;
   $('select#create_by').mrbsSelect();
+  <?php
+  // Add a class to the body so that we can modify the CSS when the load
+  // is in progress, eg by adding an animated GIF.  We remove the class
+  // once the Ajax data has arrived.
+  ?>
   $('body').addClass('ajax-loading');
 
+  <?php
+  // Fire off an Ajax request to get the data.  We do this because some authentication
+  // schemes, eg LDAP, will take a long time to return the data if there are very many
+  // users and we don't want to hold up the page load.  Most of the time the data won't 
+  // even be needed anyway because the booking will be made in the name of the current
+  // user.
+  //
+  // Select2 offers an Ajax option, but it is not particularly suitable because (a) the
+  // Ajax request is not fired until the Select2 element is opened, which means the clock
+  // doesn't start ticking until then and (b) a new request is fired whenever the search
+  // term is changed.  It does though offer some nice features such as pagination and 
+  // query terms, but these still aren't going to help much.  And LDAP searches of the
+  // form *TERM* can be expensive.
+
+  // See https://select2.org/data-sources/ajax for more details
+  ?>
   $.post({
       url: 'ajax/usernames.php',
       dataType: 'json',
       data: {csrf_token: getCSRFToken()},
       success: function(data) {
           $('select#create_by')
+              <?php
+              // This creates the select2 element again, so we have to 
+              // give it the original options. 
+              // TODO: do it by adding new options instead.  See
+              // https://select2.org/programmatic-control/add-select-clear-items
+              ?>
               .select2({data: data, dropdownAutoWidth: 'true'})
               .next('.select2-container').each(function() {
                 var container = $(this);
