@@ -49,12 +49,16 @@ jQuery.fn.extend({
             echo "language: '$select2_lang',";
           }
           ?>
+          <?php
+          /*
           ajax: {
             url: 'ajax/usernames.php',
             method: 'post',
             dataType: 'json',
             data: {csrf_token: getCSRFToken()}
           }
+          */
+          ?>
         })
         .next('.select2-container').each(function() {
             var container = $(this);
