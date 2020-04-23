@@ -1225,8 +1225,17 @@ $(document).on('page_ready', function() {
               var newOption = new Option(option.text, option.id, selected, selected);
               createBy.append(newOption);
             });
-          <?php // Refresh the Select2 control ?>
-          createBy.trigger('change');
+          <?php
+          // Close the Select2 control and refresh it.  If it was open before the
+          // close, then reopen it after the refresh.
+          //
+          ?>
+          var wasOpen = createBy.select2('isOpen');
+          createBy.select2('close').trigger('change');
+          if (wasOpen)
+          {
+            createBy.select2('open');
+          }
           $('body').removeClass('ajax-loading');
         }
     });
