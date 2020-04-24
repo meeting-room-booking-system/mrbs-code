@@ -152,9 +152,9 @@ function getAuthorised($level)
   }
 
   // Otherwise we need to check who they are
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
   
-  if(!isset($current_user))
+  if(!isset($mrbs_user))
   {
     // Ask them to authenticate, if the session scheme supports it
     if (method_exists(session(), 'authGet'))
@@ -164,7 +164,7 @@ function getAuthorised($level)
     return false;
   }
 
-  return ($current_user->level >= $level);
+  return ($mrbs_user->level >= $level);
 }
 
 
@@ -188,8 +188,8 @@ function checkAuthorised($page, $just_check=false)
       return true;
     }
 
-    $current_user = session()->getCurrentUser();
-    return (isset($current_user) && ($current_user->level >= $required_level));
+    $mrbs_user = session()->getCurrentUser();
+    return (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
   }
 
   // Check that the user has this level
@@ -323,10 +323,10 @@ function is_admin()
 {
   global $max_level;
 
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
   $required_level = (isset($max_level) ? $max_level : 2);
 
-  return (isset($current_user) && ($current_user->level >= $required_level));
+  return (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
 }
 
 
@@ -382,9 +382,9 @@ function is_book_admin($rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 
-  return (isset($current_user) && ($current_user->level >= 2));
+  return (isset($mrbs_user) && ($mrbs_user->level >= 2));
 }
 
 
@@ -393,9 +393,9 @@ function is_user_admin()
 {
   global $min_user_editing_level;
 
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 
-  return (isset($current_user) && ($current_user->level >= $min_user_editing_level));
+  return (isset($mrbs_user) && ($mrbs_user->level >= $min_user_editing_level));
 }
 
 

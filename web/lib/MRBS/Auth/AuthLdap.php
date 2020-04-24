@@ -337,9 +337,9 @@ class AuthLdap extends Auth
     $object = array();
     $object['users'] = array();
     $users = array();
-    $current_user = \MRBS\session()->getCurrentUser();
+    $mrbs_user = \MRBS\session()->getCurrentUser();
 
-    $res = $this->action('getUsernamesCallback', $current_user->username, $object, true);
+    $res = $this->action('getUsernamesCallback', $mrbs_user->username, $object, true);
 
     if ($res === false)
     {

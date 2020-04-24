@@ -84,27 +84,27 @@ function can_view_user($target)
 {
   global $auth, $min_user_viewing_level;
 
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 
   // You can only see this user if you are logged in and (a) we allow everybody to see all
   // users or (b) you are an admin or (c) you are this user
-  if (!isset($current_user))
+  if (!isset($mrbs_user))
   {
     return false;
   }
 
   return (!$auth['only_admin_can_see_other_users']  ||
-          ($current_user->level >= $min_user_viewing_level) ||
-          (strcasecmp($current_user->username, $target) === 0));
+          ($mrbs_user->level >= $min_user_viewing_level) ||
+          (strcasecmp($mrbs_user->username, $target) === 0));
 }
 
 
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 
-  return (is_user_admin() || (isset($current_user) && strcasecmp($current_user->username, $target) === 0));
+  return (is_user_admin() || (isset($mrbs_user) && strcasecmp($mrbs_user->username, $target) === 0));
 }
 
 
@@ -652,8 +652,8 @@ $initial_user_creation = false;
 
 if (count($users) > 0)
 {
-  $current_user = session()->getCurrentUser();
-  $level = (isset($current_user)) ? $current_user->level : 0;
+  $mrbs_user = session()->getCurrentUser();
+  $level = (isset($mrbs_user)) ? $mrbs_user->level : 0;
   // Check the user is authorised for this page
   checkAuthorised(this_page());
 }
@@ -880,10 +880,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  if (isset($current_user))
+  if (isset($mrbs_user))
   {
     $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                          array(utf8_strtolower($current_user->level)));
+                          array(utf8_strtolower($mrbs_user->level)));
   }
   else
   {

@@ -442,8 +442,8 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
 
   $body .= ($as_html) ? "<p>" : "";
 
-  $current_user = session()->getCurrentUser();
-  $user_escaped = ($as_html) ? htmlspecialchars($current_user->display_name) : $current_user->display_name;
+  $mrbs_user = session()->getCurrentUser();
+  $user_escaped = ($as_html) ? htmlspecialchars($mrbs_user->display_name) : $mrbs_user->display_name;
 
   switch ($action)
   {
@@ -783,12 +783,12 @@ function create_addresses($data, $action)
   $cc[] = $mail_settings['cc'];
 
   // set the from address
-  $current_user = session()->getCurrentUser();
-  if (isset($current_user) &&
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user) &&
       in_array($action, array('more_info', 'reject', 'remind')) &&
       !$mail_settings['use_from_for_all_mail'])
   {
-    $from = $current_user->email;
+    $from = $mrbs_user->email;
   }
 
   if (empty($from))

@@ -14,9 +14,9 @@ class SessionWordpress extends SessionWithLogin
       return null;
     }
     
-    $current_user = wp_get_current_user();
+    $mrbs_user = wp_get_current_user();
     
-    return \MRBS\auth()->getUser($current_user->user_login);
+    return \MRBS\auth()->getUser($mrbs_user->user_login);
   }
   
   

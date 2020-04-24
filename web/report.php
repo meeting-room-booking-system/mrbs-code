@@ -119,7 +119,7 @@ function get_field_typematch($data)
 
 function get_field_match_private($data)
 {
-  global $current_user, $private_somewhere;
+  global $mrbs_user, $private_somewhere;
 
   // Only show this part of the form if there are areas that allow private bookings
   if (!$private_somewhere)
@@ -130,7 +130,7 @@ function get_field_match_private($data)
   // If they're not logged in then there's no point in showing this part of the form because
   // they'll only be able to see public bookings anyway (and we don't want to alert them to
   // the existence of private bookings)
-  if (!isset($current_user) || ($current_user->level == 0))
+  if (!isset($mrbs_user) || ($mrbs_user->level == 0))
   {
     $field = new ElementInputHidden();
     $field->setAttributes(array('name'  => 'match_private',
@@ -1382,7 +1382,7 @@ else
 
   // Check the user is authorised for this page
   checkAuthorised(this_page());
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 }
 
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
@@ -1585,7 +1585,7 @@ if ($phase == 2)
   // entries will be found, which is at least safe from the privacy viewpoint)
   if (!$cli_mode && !is_book_admin())
   {
-    if (isset($current_user))
+    if (isset($mrbs_user))
     {
       // if the user is logged in they can see:
       //   - all bookings, if private_override is set to 'public'
@@ -1594,8 +1594,8 @@ if ($phase == 2)
       $sql .= " AND ((A.private_override='public') OR
                      ((A.private_override='none') AND ((E.status&" . STATUS_PRIVATE . "=0) OR (E.create_by = ?))) OR
                      ((A.private_override='private') AND (E.create_by = ?)))";
-      $sql_params[] = $current_user->username;
-      $sql_params[] = $current_user->username;
+      $sql_params[] = $mrbs_user->username;
+      $sql_params[] = $mrbs_user->username;
     }
     else
     {

@@ -148,9 +148,9 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
 function print_outstanding($query)
 {
-  $current_user = session()->getCurrentUser();
+  $mrbs_user = session()->getCurrentUser();
 
-  if (!isset($current_user))
+  if (!isset($mrbs_user))
   {
     return;
   }
@@ -158,9 +158,9 @@ function print_outstanding($query)
   // Provide a link to the list of bookings awaiting approval
   // (if there are any enabled areas where we require bookings to be approved)
   $approval_somewhere = some_area('approval_enabled', TRUE);
-  if ($approval_somewhere && ($current_user->level > 0))
+  if ($approval_somewhere && ($mrbs_user->level > 0))
   {
-    $n_outstanding = get_entries_n_outstanding($current_user);
+    $n_outstanding = get_entries_n_outstanding($mrbs_user);
 
     $class = 'notification';
 
@@ -375,11 +375,11 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     echo "<nav class=\"logon\">\n";
     print_outstanding($query);
 
-    $current_user = session()->getCurrentUser();
+    $mrbs_user = session()->getCurrentUser();
 
-    if (isset($current_user))
+    if (isset($mrbs_user))
     {
-      print_report_link($current_user);
+      print_report_link($mrbs_user);
       print_logoff();
     }
     else
@@ -473,8 +473,8 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   // Put the filename in as a class to aid styling.
   $classes = array($page);
   // And if the user is logged in, add another class to aid styling
-  $current_user = session()->getCurrentUser();
-  if (isset($current_user))
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user))
   {
     $classes[] = 'logged_in';
   }
