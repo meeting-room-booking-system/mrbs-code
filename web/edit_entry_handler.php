@@ -39,6 +39,7 @@ Form::checkToken();
 checkAuthorised(this_page());
 
 $mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 
 // (2) Get the form variables
@@ -115,11 +116,11 @@ foreach($form_vars as $var => $var_type)
 if (!$is_ajax &&
     (!is_book_admin($rooms) || $auth['admin_can_only_book_for_self']))
 {
-  if ($create_by !== $mrbs_user->username)
+  if ($create_by !== $mrbs_username)
   {
-    $message = "Attempt made by user '" . $mrbs_user->username . "' to make a booking in the name of '$create_by'";
+    $message = "Attempt made by user '" . $mrbs_username . "' to make a booking in the name of '$create_by'";
     trigger_error($message, E_USER_NOTICE);
-    $create_by = $mrbs_user->username;
+    $create_by = $mrbs_username;
   }
 }
 
@@ -659,7 +660,7 @@ foreach ($rooms as $room_id)
 
   $booking = array();
   $booking['create_by'] = $create_by;
-  $booking['modified_by'] = (isset($id)) ? $mrbs_user->username : '';
+  $booking['modified_by'] = (isset($id)) ? $mrbs_username : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;

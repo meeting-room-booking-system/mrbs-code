@@ -1173,6 +1173,7 @@ if (!isset($returl))
 checkAuthorised(this_page());
 
 $mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
@@ -1244,7 +1245,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($mrbs_user->username != $entry['create_by']))
+  if (isset($copy) && ($mrbs_username != $entry['create_by']))
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
@@ -1318,7 +1319,7 @@ if (isset($id))
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
         // different if it's an admin doing the copying)
-        $create_by   = (isset($copy)) ? $mrbs_user->username : $entry['create_by'];
+        $create_by   = (isset($copy)) ? $mrbs_username : $entry['create_by'];
         break;
 
       case 'start_time':
@@ -1420,7 +1421,7 @@ else
   // It is a new booking. The data comes from whichever button the user clicked
   $edit_type     = "series";
   $name          = $default_name;
-  $create_by     = $mrbs_user->username;
+  $create_by     = $mrbs_username;
   $description   = $default_description;
   $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
   $room_id       = $room;

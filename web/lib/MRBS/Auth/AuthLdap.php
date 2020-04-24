@@ -334,11 +334,17 @@ class AuthLdap extends Auth
 
   public function getUsernames()
   {
+    $mrbs_user = \MRBS\session()->getCurrentUser();
+    
+    if (!isset($mrbs_user))
+    {
+      return false;
+    }
+    
     $object = array();
     $object['users'] = array();
     $users = array();
-    $mrbs_user = \MRBS\session()->getCurrentUser();
-
+    
     $res = $this->action('getUsernamesCallback', $mrbs_user->username, $object, true);
 
     if ($res === false)

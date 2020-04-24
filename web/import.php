@@ -386,7 +386,9 @@ function process_event($vevent)
   // under the name of the current user
   if (!isset($booking['create_by']))
   {
-    $booking['create_by'] = session()->getCurrentUser()->username;
+    $mrbs_user = session()->getCurrentUser();
+    $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
+    $booking['create_by'] = $mrbs_username;
   }
   
   // A SUMMARY is optional in RFC 5545, however a brief description is mandatory

@@ -443,7 +443,14 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   $body .= ($as_html) ? "<p>" : "";
 
   $mrbs_user = session()->getCurrentUser();
-  $user_escaped = ($as_html) ? htmlspecialchars($mrbs_user->display_name) : $mrbs_user->display_name;
+  if (isset($mrbs_user))
+  {
+    $user_escaped = ($as_html) ? htmlspecialchars($mrbs_user->display_name) : $mrbs_user->display_name;
+  }
+  else
+  {
+    $user_escaped = '';
+  }
 
   switch ($action)
   {

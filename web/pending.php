@@ -248,6 +248,7 @@ function display_entry_row(array $row)
 checkAuthorised(this_page());
 
 $mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
@@ -283,7 +284,7 @@ $rows = array();
 
 while (false !== ($row = $res->next_row_keyed()))
 {
-  if ((strcasecmp($row['create_by'], $mrbs_user->username) === 0) || is_book_admin($row['room_id']))
+  if ((strcasecmp($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
   {
     $rows[] = $row;
   }
