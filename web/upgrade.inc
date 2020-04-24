@@ -79,7 +79,7 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   {
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
-  echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">"' . get_vocab('returncal') . '</a>.';
+  echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.';
 
   print_footer(true);
 }
