@@ -1221,8 +1221,8 @@ $(document).on('page_ready', function() {
           // Add the new data, selecting the option that was previously selected
           ?>
           $.each(data, function(index, option) {
-              var selected = (option.id === currentData[0].id);
-              var newOption = new Option(option.text, option.id, selected, selected);
+              var selected = (option.username === currentData[0].id);
+              var newOption = new Option(option.display_name, option.username, selected, selected);
               createBy.append(newOption);
             });
           <?php
