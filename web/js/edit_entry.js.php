@@ -1204,7 +1204,7 @@ $(document).on('page_ready', function() {
   $.post({
       url: 'ajax/usernames.php',
       dataType: 'json',
-      data: {csrf_token: getCSRFToken()},
+      data: {csrf_token: getCSRFToken(), site: args.site},
       success: function(data) {
           var createBy = $('select#create_by');
           <?php
