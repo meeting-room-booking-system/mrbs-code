@@ -76,7 +76,7 @@ $column_hidden_color            = $main_table_month_invalid_color;    // hidden 
 $calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
 $row_odd_color                  = "#efefef";        // even rows in the day and week views
-$row_highlight_color            = "#1976D2";        // used for highlighting a row
+$row_highlight_color            = $banner_back_color;  // used for highlighting a row
 
 $help_highlight_color           = "#ffe6f0";        // highlighting text on the help page
 
