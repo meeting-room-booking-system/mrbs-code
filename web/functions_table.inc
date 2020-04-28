@@ -353,7 +353,7 @@ function time_cell_html($s, $url)
   $html = '';
 
   $html .= "<th data-seconds=\"$s\">";
-  $html .= "<a href=\"$url\"  title=\"" . get_vocab("highlight_line") . "\">";
+  $html .= '<a href="' . htmlspecialchars($url) . '"  title="' . get_vocab("highlight_line") . "\">";
 
   if ($enable_periods)
   {
@@ -772,7 +772,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
         $vars['timetohighlight'] = $s;
       }
 
-      $url = "index.php?" . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = "index.php?" . http_build_query($vars, '', '&');
       $url = multisite($url);
 
       $tbody .= '<tr';
@@ -1460,7 +1460,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
         $vars['timetohighlight'] = $s;
       }
 
-      $url = 'index.php?' . htmlspecialchars(http_build_query($vars, '', '&'));
+      $url = 'index.php?' . http_build_query($vars, '', '&');
       $url = multisite($url);
 
       $tbody.= '<tr';
