@@ -261,13 +261,13 @@ function print_report_link(User $user)
   // containing the search string, not just those created by the user.)
   if (checkAuthorised('report.php', true))
   {
-    $attributes = array('action' => 'report.php');
+    $attributes = array('action' => multisite('report.php'));
     $hidden_inputs = array('phase'        => '2',
                            'creatormatch' => $user->username);
   }
   elseif (checkAuthorised('search.php', true))
   {
-    $attributes = array('action' => 'search.php');
+    $attributes = array('action' => multisite('search.php'));
     $hidden_inputs = array('search_str' => $user->username);
   }
   else
