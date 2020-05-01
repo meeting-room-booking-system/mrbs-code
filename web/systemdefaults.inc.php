@@ -772,7 +772,8 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 // 'auth_db' configuration settings
 // List of fields which only admins can edit.   By default these are the
 // user level (ie admin/user) and the username.   Custom fields can be added
-// as required.
+// as required.  To protect the password field use 'password_hash' - useful
+// for public demo sites.
 $auth['db']['protected_fields'] = array('level', 'name', 'display_name');
 
 
