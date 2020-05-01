@@ -1049,7 +1049,7 @@ if (isset($action) && ($action == "update"))
         // check that the password conforms to the password policy
         // if it's a new user, or else if it's an existing user
         // trying to change their password
-        if (!isset($id) || ($password0 !== ''))
+        if (!isset($id) || (isset($password0) && ($password0 !== '')))
         {
           if (!validate_password($password0))
           {
