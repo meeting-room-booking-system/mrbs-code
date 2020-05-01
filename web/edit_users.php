@@ -891,7 +891,7 @@ if (isset($action) && ($action == "update"))
   if (isset($mrbs_user))
   {
     $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                          array(utf8_strtolower($mrbs_user->level)));
+                          array(utf8_strtolower($mrbs_user->username)));
   }
   else
   {
