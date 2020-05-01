@@ -471,7 +471,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
 }
 
 
-function get_fieldset_password($id=null)
+function get_fieldset_password($id=null, $disabled=false)
 {
   $fieldset = new ElementFieldset();
 
@@ -490,7 +490,10 @@ function get_fieldset_password($id=null)
     $field->setLabel(get_vocab('users.password'))
           ->setControlAttributes(array('id'   => "password$i",
                                        'name' => "password$i",
+                                       'disabled' => $disabled,
                                        'autocomplete' => 'new-password'));
+    // No need to add a hidden input if the password is disabled because
+    // we don't put the password in the form anyway.
     $fieldset->addElement($field);
   }
 
@@ -776,8 +779,13 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
     }
   }
 
+  // Now the password fields
+  $disabled = !$initial_user_creation &&
+              !is_user_admin() &&
+              in_array('password_hash', $auth['db']['protected_fields']);
+
   $form->addElement($fieldset)
-       ->addElement(get_fieldset_password($id));
+       ->addElement(get_fieldset_password($id, $disabled));
 
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
