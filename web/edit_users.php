@@ -424,7 +424,7 @@ function get_field_display_name($params, $disabled=false)
   // otherwise it won't be posted.
   if ($disabled)
   {
-    $field->addHiddenInput($params['display_name'], $params['value']);
+    $field->addHiddenInput($params['name'], $params['value']);
   }
 
   return $field;
