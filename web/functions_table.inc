@@ -1580,7 +1580,6 @@ function get_booking_summary($start, $end, $day_start, $day_end)
   $after_today = "==>";
   $before_today = "<==";
   $midnight = "24:00";  // need to fix this so it works with AM/PM configurations (and for that matter 24h)
-  // Localized "all day" text but with non-breaking spaces:
   $all_day = get_vocab('all_day');
 
   if ($enable_periods)
