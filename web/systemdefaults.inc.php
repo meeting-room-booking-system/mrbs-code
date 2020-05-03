@@ -346,7 +346,7 @@ $ajax_refresh_rate = 10;
 // Refresh rate for page pre-fetches in the calendar views.   MRBS tries to improve
 // performance of navigation between pages in the calendar view by pre-fetching some
 // pages.   This setting determines how often (in seconds) the pre-fetches should be
-// refreshed in order to keep them from gettin out of date.  Set to 0 to disable.
+// refreshed in order to keep them from getting out of date.  Set to 0 to disable.
 $prefetch_refresh_rate = 30;
 
 // Entries in monthly view can be shown as start/end slot, brief description or
