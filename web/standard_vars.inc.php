@@ -26,7 +26,7 @@ if (empty($room))
 
 // No point in showing all the rooms if there's only one of them.  Show
 // the normal view (with time slots) instead
-if (($view == 'week') && count(get_rooms($area)) == 1)
+if (($view != 'day') && count(get_rooms($area)) == 1)
 {
   $view_all = false;
 }
