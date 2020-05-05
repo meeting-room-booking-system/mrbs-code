@@ -494,7 +494,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
     $body .= ($as_html) ? "</p><p>" : "\n\n";
     $body .= ($as_html) ? "<a target=\"_blank\" href=\"" : "";
     // Set the link to view entry page
-    $body .= url_base() . 'view_entry.php?id=' . $data['id'];
+    $body .= url_base() . multisite('view_entry.php?id=' . $data['id']);
     if ($series)
     {
       $body .= "&series=1";
