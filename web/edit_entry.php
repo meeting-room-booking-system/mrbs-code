@@ -446,8 +446,8 @@ function get_field_end_time($value, $disabled=false)
 {
   global $areas, $area_id;
   global $multiday_allowed;
-
-  $date = getbookingdate($value);
+  
+  $date = getbookingdate($value, true);
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
 
