@@ -465,7 +465,7 @@ if ($times_along_top)
 {
   $classes[] .= 'times-along-top';
 }
-if ($view_all)
+if ($view_all && ($view !== 'day'))
 {
   $classes[] = 'all_rooms';
 }
