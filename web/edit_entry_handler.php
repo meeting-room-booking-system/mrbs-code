@@ -281,7 +281,7 @@ else
 // The id must be either an integer or NULL, so that subsequent code that tests whether
 // isset($id) works.  (I suppose one could use !empty instead, but there's always the
 // possibility that sites have allowed 0 in their auto-increment/serial columns.)
-if (isset($id) && ($id == ''))
+if (isset($id) && ($id === ''))
 {
   unset($id);
 }
