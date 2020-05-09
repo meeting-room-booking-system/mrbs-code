@@ -111,19 +111,6 @@ foreach($form_vars as $var => $var_type)
 
 }
 
-// Validate the create_by variable, checking that it's the current user, unless the
-// user is an admin and we allow admins to make bookings on behalf of others.
-if (!$is_ajax &&
-    (!is_book_admin($rooms) || $auth['admin_can_only_book_for_self']))
-{
-  if ($create_by !== $mrbs_username)
-  {
-    $message = "Attempt made by user '" . $mrbs_username . "' to make a booking in the name of '$create_by'";
-    trigger_error($message, E_USER_NOTICE);
-    $create_by = $mrbs_username;
-  }
-}
-
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
 if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
@@ -208,6 +195,33 @@ foreach($fields as $field)
 
 // Form validation checks.   Normally checked for client side.
 
+// The id must be either an integer or NULL, so that subsequent code that tests whether
+// isset($id) works.  (I suppose one could use !empty instead, but there's always the
+// possibility that sites have allowed 0 in their auto-increment/serial columns.)
+if (isset($id) && ($id == ''))
+{
+  unset($id);
+}
+
+// Validate the create_by variable, checking that it's the current user, unless the
+// user is an admin and the booking is being edited or it's a new booking and we allow
+// admins to make bookings on behalf of others.
+//
+// Only carry out this check if it's not an Ajax request.  If it is an Ajax request then
+// $create_by isn't set yet, but a getWritable check will be done later,
+if (!$is_ajax)
+{
+  if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
+  {
+    if ($create_by !== $mrbs_username)
+    {
+      $message = "Attempt made by user '$mrbs_username' to make a booking in the name of '$create_by'";
+      trigger_error($message, E_USER_NOTICE);
+      $create_by = $mrbs_username;
+    }
+  }
+}
+
 if (empty($rooms))
 {
   if (!$is_ajax)
@@ -277,14 +291,6 @@ if ($private_mandatory)
 else
 {
   $isprivate = ($private) ? true : false;
-}
-
-// The id must be either an integer or NULL, so that subsequent code that tests whether
-// isset($id) works.  (I suppose one could use !empty instead, but there's always the
-// possibility that sites have allowed 0 in their auto-increment/serial columns.)
-if (isset($id) && ($id == ''))
-{
-  unset($id);
 }
 
 // Make sure the area corresponds to the room that is being booked
