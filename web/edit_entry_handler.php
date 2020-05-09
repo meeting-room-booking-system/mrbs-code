@@ -110,19 +110,6 @@ foreach($form_vars as $var => $var_type)
 
 }
 
-// Validate the create_by variable, checking that it's the current user, unless the
-// user is an admin and we allow admins to make bookings on behalf of others.
-if (!$is_ajax &&
-    (!is_book_admin($rooms) || $auth['admin_can_only_book_for_self']))
-{
-  if ($create_by !== $current_username)
-  {
-    $message = "Attempt made by user '$current_username' to make a booking in the name of '$create_by'";
-    trigger_error($message, E_USER_NOTICE);
-    $create_by = $current_username;
-  }
-}
-
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
 if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
@@ -207,6 +194,33 @@ foreach($fields as $field)
 
 // Form validation checks.   Normally checked for client side.
 
+// The id must be either an integer or NULL, so that subsequent code that tests whether
+// isset($id) works.  (I suppose one could use !empty instead, but there's always the
+// possibility that sites have allowed 0 in their auto-increment/serial columns.)
+if (isset($id) && ($id === ''))
+{
+  unset($id);
+}
+
+// Validate the create_by variable, checking that it's the current user, unless the
+// user is an admin and the booking is being edited or it's a new booking and we allow
+// admins to make bookings on behalf of others.
+//
+// Only carry out this check if it's not an Ajax request.  If it is an Ajax request then
+// $create_by isn't set yet, but a getWritable check will be done later,
+if (!$is_ajax)
+{
+  if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
+  {
+    if ($create_by !== $current_username)
+    {
+      $message = "Attempt made by user '$current_username' to make a booking in the name of '$create_by'";
+      trigger_error($message, E_USER_NOTICE);
+      $create_by = $current_username;
+    }
+  }
+}
+
 if (empty($rooms))
 {
   if (!$is_ajax)
@@ -278,14 +292,6 @@ else
   $isprivate = ($private) ? true : false;
 }
 
-// The id must be either an integer or NULL, so that subsequent code that tests whether
-// isset($id) works.  (I suppose one could use !empty instead, but there's always the
-// possibility that sites have allowed 0 in their auto-increment/serial columns.)
-if (isset($id) && ($id === ''))
-{
-  unset($id);
-}
-
 // Make sure the area corresponds to the room that is being booked
 $area = get_area($rooms[0]);
 get_area_settings($area);  // Update the area settings
@@ -308,7 +314,7 @@ if ($no_mail)
 
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
-// the rest from the existing boking information.
+// the rest from the existing booking information.
 // Note: we assume that
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
