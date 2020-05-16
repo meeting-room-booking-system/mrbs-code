@@ -1498,7 +1498,7 @@ function get_rep_day_list($rep_opt)
   for ($i=0; $i<DAYS_PER_WEEK; $i++)
   {
     $daynum = ($i + $weekstarts) % DAYS_PER_WEEK;
-    if ($rep_opt[$daynum])
+    if (isset($rep_opt[$daynum]) && $rep_opt[$daynum])
     {
       $rep_days[] = day_name($daynum);
     }
