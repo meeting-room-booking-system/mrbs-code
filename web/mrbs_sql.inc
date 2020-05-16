@@ -768,7 +768,7 @@ function mrbsCreateEntry($table, $data)
           // pgsql doesn't like empty strings
           $sql_col[] = $key;
           $sql_val[] = '?';
-          $sql_params[] = (empty($data[$key])) ? "'0'" : $data[$key];
+          $sql_params[] = (empty($data[$key])) ? '0' : $data[$key];
           break;
 
         // special case - rep_interval
