@@ -22,6 +22,9 @@ abstract class SessionWithLogin implements SessionInterface
     {
       $this->form[$var] = \MRBS\get_form_var($var, 'string', null, INPUT_POST);
     }
+
+    // It's easy for extra spaces to appear, especially on a mobile device
+    $this->form['username'] = trim($this->form['username']);
   }
 
 
