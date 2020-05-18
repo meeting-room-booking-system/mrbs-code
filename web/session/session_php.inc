@@ -81,6 +81,8 @@ $password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
+$username = trim($username); // It's easy for extra spaces to appear, especially on a mobile device
+
 // Check to see if we've been inactive for longer than allowed and if so logout
 // the user
 if (!empty($auth["session_php"]["inactivity_expire_time"]))

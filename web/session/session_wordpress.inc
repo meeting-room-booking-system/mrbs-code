@@ -68,6 +68,8 @@ $password = get_form_var('password', 'string', null, INPUT_POST);
 $target_url = get_form_var('target_url', 'string', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 
+$username = trim($username); // It's easy for extra spaces to appear, especially on a mobile device
+
 if (isset($action))
 {
   // Target of the form with sets the URL argument "action=QueryName".
