@@ -1221,7 +1221,8 @@ $(document).on('page_ready', function() {
           // Add the new data, selecting the option that was previously selected
           ?>
           $.each(data, function(index, option) {
-              var selected = (option.username === currentData[0].id);
+              // Make it a case-insensitive comparison as usernames are case-insensitive
+              var selected = (option.username.toUpperCase() === currentData[0].id.toUpperCase());
               var newOption = new Option(option.display_name, option.username, selected, selected);
               createBy.append(newOption);
             });
