@@ -26,17 +26,17 @@ function generate_button(array $params, array $button_attributes=array())
   // Note that until IE supports the form attribute on the button tag, we can't
   // use a <button> here and have to use the <input type="submit"> to create the
   // button.   This unfortunately means that styling options on the button are limited.
-  
+
   $form = new Form();
-  
+
   $attributes = array('action' => $params['action'],
                       'method' => 'post');
-                      
+
   $form->setAttributes($attributes);
 
   // Hidden inputs
   $form->addHiddenInputs($params['inputs']);
-  
+
   // Submit button
   $element = new ElementInputSubmit();
   $element->setAttribute('value', $params['value'])
@@ -53,10 +53,10 @@ function generateApproveButtons($id, $series)
   global $returl;
   global $entry_info_time, $entry_info_user, $repeat_info_time, $repeat_info_user;
   global $multisite, $site;
-  
+
   $info_time = ($series) ? $repeat_info_time : $entry_info_time;
   $info_user = ($series) ? $repeat_info_user : $entry_info_user;
-  
+
   $this_page = this_page();
   if (empty($info_time))
   {
@@ -70,17 +70,17 @@ function generateApproveButtons($id, $series)
       $info_title .= " " . get_vocab("by") . " $info_user";
     }
   }
-  
+
   $query_string = "id=$id&series=" . (($series) ? 1 : 0);
   if ($multisite && isset($site) && ($site !== ''))
   {
     $query_string .= "&site=$site";
   }
-  
+
   echo "<tr>\n";
   echo "<td>" . ($series ? get_vocab("series") : get_vocab("entry")) . "</td>\n";
   echo "<td>\n";
-  
+
   // Approve
   $params = array('action' => multisite("approve_entry_handler.php?$query_string"),
                   'value'  => get_vocab('approve'),
@@ -88,7 +88,7 @@ function generateApproveButtons($id, $series)
                                     'returl' => $returl)
                  );
   generate_button($params);
-  
+
   // Reject
   $params = array('action' => multisite("$this_page?$query_string"),
                   'value'  => get_vocab('reject'),
@@ -96,7 +96,7 @@ function generateApproveButtons($id, $series)
                                     'returl' => $returl)
                  );
   generate_button($params);
-  
+
   // More info
   $params = array('action' => multisite("$this_page?$query_string"),
                   'value'  => get_vocab('more_info'),
@@ -104,7 +104,7 @@ function generateApproveButtons($id, $series)
                                     'returl' => $returl)
                  );
   generate_button($params, array('title' => $info_title));
-  
+
   echo "</td>\n";
   echo "</tr>\n";
 }
@@ -114,19 +114,19 @@ function generateOwnerButtons($id, $series)
   global $user, $create_by, $awaiting_approval, $area;
   global $reminders_enabled, $last_reminded, $reminder_interval;
   global $multisite, $site;
-  
+
   // Remind button if you're the owner AND there's a booking awaiting
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($user, $create_by) === 0) && 
+      (strcasecmp($user, $create_by) === 0) &&
       ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
     echo "<tr>\n";
     echo "<td class=\"no_suffix\"></td>\n";
     echo "<td>\n";
-    
+
     $this_page = this_page();
     $returl = "$this_page?id=$id&area=$area";
     $query_string = "id=$id&series=" . (($series) ? 1 : 0);
@@ -135,17 +135,17 @@ function generateOwnerButtons($id, $series)
       $query_string .= "&site=$site";
       $returl .= "&site=$site";;
     }
-    
+
     $params = array('action' => multisite("approve_entry_handler.php?$query_string"),
                     'value'  => get_vocab('remind_admin'),
                     'inputs' => array('action' => 'remind',
                                       'returl' => "$this_page?id=$id&area=$area")
                    );
     generate_button($params);
-    
+
     echo "</td>\n";
     echo "</tr>\n";
-  } 
+  }
 }
 
 function generateTextArea($form_action, $id, $series, $action_type, $returl, $submit_value, $caption, $value='')
@@ -153,40 +153,40 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
   echo "<tr><td id=\"caption\" colspan=\"2\">$caption</td></tr>\n";
   echo "<tr>\n";
   echo "<td id=\"note\" class=\"no_suffix\" colspan=\"2\">\n";
-  
+
   $form = new Form();
 
   $attributes = array('action' => $form_action,
                       'method' => 'post');
-                      
+
   $form->setAttributes($attributes);
-  
+
   // Hidden inputs
   $hidden_inputs = array('id'     => $id,
                          'series' => $series,
                          'returl' => $returl,
                          'action' => $action_type);
   $form->addHiddenInputs($hidden_inputs);
-  
+
   // Visible fields
   $fieldset = new ElementFieldset();
   $fieldset->addLegend('');
-  
+
   $field = new FieldTextarea();
   $field->setControlAttribute('name', 'note')
         ->setControlText($value);
-       
+
   $fieldset->addElement($field);
-  
+
   // The submit button
   $field = new FieldInputSubmit();
   $field->setControlAttribute('value', $submit_value);
   $fieldset->addElement($field);
-  
+
   $form->addElement($fieldset);
-    
+
   $form->render();
-  
+
   echo "</td>\n";
   echo "<tr>\n";
 }
@@ -194,7 +194,7 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 
 // Get non-standard form variables
 //
-// If $series is TRUE, it means that the $id is the id of an 
+// If $series is TRUE, it means that the $id is the id of an
 // entry in the repeat table.  Otherwise it's from the entry table.
 $id = get_form_var('id', 'int');
 $series = get_form_var('series', 'int');
@@ -217,7 +217,7 @@ if (!isset($returl))
   {
     $returl = 'index.php';
   }
-  
+
   // Add on the query string
   if (isset($parsed_url) && isset($parsed_url['query']))
   {
@@ -231,7 +231,7 @@ if (!isset($returl))
                   'day'   => $day,
                   'area'  => $area,
                   'room'  => $room);
-                  
+
     $returl .= '?' . http_build_query($vars, '', '&');;
   }
 }
@@ -311,7 +311,7 @@ if ($series == 1)
 else
 {
   $repeat_id = $row['repeat_id'];
-  
+
   $entry_info_time = $row['entry_info_time'];
   $entry_info_user = $row['entry_info_user'];
   $entry_info_text = $row['entry_info_text'];
@@ -330,7 +330,7 @@ if (isset($action) && ($action == "export"))
     location_header('index.php');
   }
   else
-  {    
+  {
     // Construct the SQL query
     $sql_params = array();
     $sql = "SELECT E.*, "
@@ -355,19 +355,19 @@ if (isset($action) && ($action == "export"))
       $sql .= " WHERE E.id=?";
       $sql_params[] = $id;
     }
-    
+
     $sql .= " AND E.room_id=R.id
               AND R.area_id=A.id";
-              
+
     if ($series)
     {
       $sql .= " ORDER BY E.ical_recur_id";
     }
     $res = db()->query($sql, $sql_params);
-    
+
     // Export the calendar
     require_once "functions_ical.inc";
-    
+
     $content_type = "application/ics;  charset=" . get_charset(). "; name=\"" . $mail_settings['ics_filename'] . ".ics\"";
     $content_disposition = "attachment; filename=\"" . $mail_settings['ics_filename'] . ".ics\"";
     http_headers(array("Content-Type: $content_type",
@@ -396,7 +396,7 @@ else
 
 echo "<h3" . (($keep_private && $is_private_field['entry.name']) ? " class=\"private\"" : "") . ">\n";
 echo ($keep_private && $is_private_field['entry.name']) ? "[" . get_vocab("unavailable") . "]" : htmlspecialchars($row['name']);
-if (is_private_event($private) && $writeable) 
+if (is_private_event($private) && $writeable)
 {
   echo ' ('.get_vocab("unavailable").')';
 }
@@ -423,7 +423,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   {
     // del_entry expects the id of a member of a series
     // when deleting a series and not the repeat_id
-    generateTextArea("del_entry.php", $id, $series,
+    generateTextArea(multisite('del_entry.php'), $id, $series,
                      "reject", $returl,
                      get_vocab("reject"),
                      get_vocab("reject_reason"));
@@ -439,7 +439,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     $info_time = ($series) ? $repeat_info_time : $entry_info_time;
     $info_user = ($series) ? $repeat_info_user : $entry_info_user;
     $info_text = ($series) ? $repeat_info_text : $entry_info_text;
-    
+
     if (empty($info_time))
     {
       $value = '';
@@ -454,7 +454,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       $value .= "\n----\n";
       $value .= $info_text;
     }
-    generateTextArea("approve_entry_handler.php", $target_id, $series,
+    generateTextArea(multisite('approve_entry_handler.php'), $target_id, $series,
                      "more_info", $returl,
                      get_vocab("send"),
                      get_vocab("request_more_info"),
@@ -473,7 +473,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       if (!empty($repeat_id) || $series)
       {
         generateApproveButtons($repeat_id, true);
-      }    
+      }
     }
     // Buttons for the owner of this booking
     elseif (strcasecmp($user, $create_by) === 0)
@@ -600,8 +600,8 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
                    );
     generate_button($params);
     echo "</div>\n";
-  }          
-  if ((!empty($repeat_id) || $series) && $repeats_allowed) 
+  }
+  if ((!empty($repeat_id) || $series) && $repeats_allowed)
   {
     echo "<div>\n";
     $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
@@ -615,7 +615,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
     echo "</div>\n";
   }
   echo "</div>\n";
-  
+
   // Export and Export Series
   if (!$keep_private && !$enable_periods)
   {
@@ -634,7 +634,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
                      );
       generate_button($params);
       echo "</div>\n";
-    } 
+    }
     if (!empty($repeat_id) || $series)
     {
       echo "<div>\n";
