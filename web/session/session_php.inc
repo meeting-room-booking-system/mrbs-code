@@ -19,15 +19,15 @@ require_once MRBS_ROOT . '/session/functions_session.inc';
 
 
 /* authGet()
- * 
+ *
  * Request the user name/password
- * 
+ *
  * Returns: Nothing
  */
 function authGet()
 {
   global $returl;
-  
+
   print_header();
   $target_url = multisite(this_page(true));
   print_login_form(multisite(this_page()), $target_url, $returl);
@@ -52,7 +52,7 @@ function print_logon_box()
 {
   $target_url = multisite(this_page(true));
   $user=getUserName();
-  
+
   if (isset($user))
   {
     print_report_link($user);
@@ -61,7 +61,7 @@ function print_logon_box()
   else
   {
     print_logon_button($target_url);
-  } 
+  }
 }
 
 
@@ -112,15 +112,15 @@ if (isset($action))
     print_login_form(multisite(this_page()), $target_url, $returl);
     exit();
   }
-  
-  
+
+
   // Target of the form with sets the URL argument "action=SetName".
   // Will eventually return to URL argument "target_url=whatever".
   if ($action == "SetName")
   {
     // If we're going to do something then check the CSRF token first
     Form::checkToken();
-    
+
     // First make sure the password is valid
     if ($username == "")
     {
@@ -134,17 +134,17 @@ if (isset($action))
         print_login_form(multisite(this_page()), $target_url, $returl, get_vocab('unknown_user'));
         exit();
       }
-      
+
       // Successful login.  As a defence against session fixation, regenerate
       // the session id and delete the old session.
       session_regenerate_id(true);
       $_SESSION["UserName"] = $valid_username;
-      
+
       if (!empty($returl))
       {
         // check to see whether there's a query string already
         $target_url .= (strpos($target_url, '?') === false) ? '?' : '&';
-        $target_url .= $returl;
+        $target_url .= 'returl=' . urlencode($returl);
       }
     }
 
