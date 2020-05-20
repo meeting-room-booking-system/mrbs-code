@@ -106,11 +106,13 @@ abstract class SessionWithLogin implements SessionInterface
           // Successful login.   You can't get out of getValidUser() without a valid username and password
           $this->logonUser($valid_username);
 
+          var_dump($this->form['returl']);
+          exit;
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
             $this->form['target_url'] .= (strpos($this->form['target_url'], '?') === false) ? '?' : '&';
-            $this->form['target_url'] .= $this->form['returl'];
+            $this->form['target_url'] .= 'returl=' . urlencode($this->form['returl']);
           }
         }
 
