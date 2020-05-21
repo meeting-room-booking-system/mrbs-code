@@ -29,7 +29,10 @@ abstract class SessionWithLogin implements SessionInterface
 
 
   // Gets the username and password.  Returns: Nothing
-  public function authGet($target_url=null, $error=null, $raw=false)
+  //
+  //    $target_url   The URL to go to after successful login
+  //    $returl       The URL to return to eventually
+  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
     if (!isset($target_url))
     {
@@ -38,7 +41,7 @@ abstract class SessionWithLogin implements SessionInterface
 
     \MRBS\print_header();
     $action = \MRBS\multisite(\MRBS\this_page());
-    $this->printLoginForm($action, $target_url, $this->form['returl'], $error, $raw);
+    $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
   }
 
@@ -125,7 +128,7 @@ abstract class SessionWithLogin implements SessionInterface
   {
     if (($valid_username = \MRBS\auth()->validateUser($this->form['username'], $this->form['password'])) === false)
     {
-      $this->authGet($this->form['target_url'], \MRBS\get_vocab('unknown_user'));
+      $this->authGet($this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
       exit(); // unnecessary because authGet() exits, but just included for clarity
     }
 

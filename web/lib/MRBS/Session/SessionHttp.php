@@ -7,7 +7,7 @@ namespace MRBS\Session;
 class SessionHttp extends SessionWithLogin
 {
   
-  public function authGet($target_url=null, $error=null, $raw=false)
+  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
     global $auth;
     

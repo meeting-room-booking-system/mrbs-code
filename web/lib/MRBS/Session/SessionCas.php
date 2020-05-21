@@ -8,7 +8,7 @@ use MRBS\Form\Form;
 class SessionCas extends SessionWithLogin
 {
   
-  public function authGet($target_url=null, $error=null, $raw=false)
+  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
     // Useless Method - CAS does it all
   }

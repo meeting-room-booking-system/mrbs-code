@@ -136,13 +136,14 @@ function get_page_level($page)
  *
  * Check to see if the current user has a certain level of rights
  *
- * $level - The access level required
+ * $level  - The access level required
+ * $returl - The URL to nreturn to eventually
  *
  * Returns:
  *   false - The user does not have the required access
  *   true  - The user has the required access
  */
-function getAuthorised($level)
+function getAuthorised($level, $returl)
 {
   // If the minimum level is zero (or not set) then they are
   // authorised, whoever they are
@@ -159,7 +160,7 @@ function getAuthorised($level)
     // Ask them to authenticate, if the session scheme supports it
     if (method_exists(session(), 'authGet'))
     {  
-      session()->authGet();
+      session()->authGet(null, $returl);
     }
     return false;
   }
@@ -177,6 +178,7 @@ function getAuthorised($level)
 function checkAuthorised($page, $just_check=false)
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
+  global $returl;
 
   // Get the minimum authorisation level for this page
   $required_level = get_page_level($page);
@@ -193,7 +195,7 @@ function checkAuthorised($page, $just_check=false)
   }
 
   // Check that the user has this level
-  if (getAuthorised($required_level))
+  if (getAuthorised($required_level, $returl))
   {
     return true;
   }

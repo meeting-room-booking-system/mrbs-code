@@ -23,7 +23,7 @@ class SessionRemoteUser extends SessionWithLogin
 {
 
   // User is expected to already be authenticated by the web server, so do nothing
-  public function authGet($target_url=null, $error=null, $raw=false)
+  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
   }
   
