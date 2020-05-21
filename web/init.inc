@@ -157,3 +157,6 @@ init_errors();
 // Start up sessions
 init_sessions();
 
+// Flush the mail queue on shutdown
+register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
+
