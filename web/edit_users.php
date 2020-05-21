@@ -220,7 +220,7 @@ function get_sortable_name($name)
 }
 
 
-function output_row(&$row)
+function output_row($row)
 {
   global $is_ajax, $json_data;
   global $fields, $ignore_columns, $select_options;
@@ -228,6 +228,11 @@ function output_row(&$row)
   $values = array();
 
   // First column, which is the display name
+  // Make sure we've got a display name.  If not, use the username.
+  if (!isset($row['display_name']) || (trim($row['display_name']) === ''))
+  {
+    $row['display_name'] = $row['name'];
+  }
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($row['name']))
   {
