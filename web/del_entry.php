@@ -97,11 +97,11 @@ if ($info = get_booking_info($id, FALSE, TRUE))
         }
         if (isset($action) && ($action == "reject"))
         {
-          $result = notifyAdminOnDelete($mail_previous, $series, $start_times, $action, $note);
+          notifyAdminOnDelete($mail_previous, $series, $start_times, $action, $note);
         }
         else
         {
-          $result = notifyAdminOnDelete($mail_previous, $series, $start_times);
+          notifyAdminOnDelete($mail_previous, $series, $start_times);
         }
       }
 
