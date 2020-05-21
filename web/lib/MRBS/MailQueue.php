@@ -79,6 +79,7 @@ class MailQueue
     global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
 
     static $last_mail_sent = null;
+    static $last_n_addresses = null;
 
     $mail = new PHPMailer;
 
@@ -338,8 +339,8 @@ class MailQueue
         if (isset($last_mail_sent))
         {
           $diff = round($microtime_now - $last_mail_sent, 6);
-          mail_debug("Last mail sent $diff seconds ago");
-          $min_gap = round(1/$mail_settings['rate_limit'], 6);
+          mail_debug("Last mail sent $diff seconds ago to $last_n_addresses addresses");
+          $min_gap = round($last_n_addresses/$mail_settings['rate_limit'], 6);
           if ($min_gap > $diff)
           {
             $sleep_seconds = round($min_gap - $diff, 6);
@@ -347,6 +348,7 @@ class MailQueue
             usleep(intval($sleep_seconds * 1000000));
           }
         }
+        $last_n_addresses = count(explode(',', $recipients));
         $last_mail_sent = $microtime_now;
       }
 
