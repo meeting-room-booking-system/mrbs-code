@@ -78,6 +78,8 @@ class MailQueue
 
     global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
 
+    static $last_mail_sent = null;
+
     $mail = new PHPMailer;
 
     mail_debug("Preparing to send email ...");
@@ -322,11 +324,30 @@ class MailQueue
       mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
       mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
 
-      // Don't do aything if mail has been disabled.   Useful for testing MRBS without
+      // Don't do anything if mail has been disabled.   Useful for testing MRBS without
       // sending emails to those who don't want them
       if ($mail_settings['disabled'])
       {
         return true;
+      }
+
+      // Throttle the rate of mail sending if required
+      if (!empty($mail_settings['rate_limit']))
+      {
+        $microtime_now = round(microtime(true), 6);
+        if (isset($last_mail_sent))
+        {
+          $diff = round($microtime_now - $last_mail_sent, 6);
+          mail_debug("Last mail sent $diff seconds ago");
+          $min_gap = round(1/$mail_settings['rate_limit'], 6);
+          if ($min_gap > $diff)
+          {
+            $sleep_seconds = round($min_gap - $diff, 6);
+            mail_debug("Too soon to send the next mail; sleeping for $sleep_seconds seconds");
+            usleep(intval($sleep_seconds * 1000000));
+          }
+        }
+        $last_mail_sent = $microtime_now;
       }
 
       // PHPMailer uses escapeshellarg() and escapeshellcmd().   In many installations these will

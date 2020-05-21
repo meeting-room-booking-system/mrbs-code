@@ -1238,6 +1238,12 @@ $smtp_settings['ssl_allow_self_signed'] = false;
 // extension '.ics'
 $mail_settings['ics_filename'] = "booking";
 
+// The rate at which emails can be sent out can be throttled if necessary in order to help
+// keep within a mail server's limits.  Note that the throttle only applies to emails being
+// sent by one user.  If another user is generating email notifications at the same time
+// then these won't be taken into account.  A setting of zero disables throttling.
+$mail_settings['rate_limit'] = 0;  // emails per second (float or int)
+
 // Set this to true if you want MRBS to output debug information when you are sending email.
 // If you are not getting emails it can be helpful by telling you (a) whether the mail functions
 // are being called in the first place (b) whether there are addresses to send email to and (c)
