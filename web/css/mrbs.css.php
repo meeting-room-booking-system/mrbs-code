@@ -1595,6 +1595,7 @@ form#add_new_user {
 }
 
 .banner .logo img {
+  display: block;
   margin: 1em 2em 1em 0;
 }
 
@@ -2318,4 +2319,4 @@ h2.date.loading::after {
   background-position: center right 5px;
   background-repeat: no-repeat;
 }
-  
+
