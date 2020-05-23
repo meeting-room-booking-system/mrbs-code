@@ -500,10 +500,16 @@ function get_entry_by_id($id)
 
   $res = db()->query($sql, array($id));
 
-  $result = ($res->count() == 0) ? null : $res->next_row_keyed();
-
-  // Unpack the status bits
-  unpack_status($result);
+  if ($res->count() == 0)
+  {
+    $result = null;
+  }
+  else
+  {
+    $result = $res->next_row_keyed();
+    // Unpack the status bits
+    unpack_status($result);
+  }
 
   return $result;
 }
