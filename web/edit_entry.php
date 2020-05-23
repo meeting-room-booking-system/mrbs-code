@@ -204,7 +204,15 @@ function get_field_create_by($create_by, $disabled=false)
     // do here is present one option, ie the create_by user.
     $options = array();
     $create_by_user = auth()->getUser($create_by);
-    $options[$create_by_user->username] = $create_by_user->display_name;
+
+    if (isset($create_by_user))
+    {
+      $options[$create_by_user->username] = $create_by_user->display_name;
+    }
+    else
+    {
+      $options[$create_by] = $create_by;
+    }
 
     $field = new FieldSelect();
     $field->setLabel(get_vocab('createdby'))
@@ -447,7 +455,7 @@ function get_field_end_time($value, $disabled=false)
 {
   global $areas, $area_id;
   global $multiday_allowed;
-  
+
   $date = getbookingdate($value, true);
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
