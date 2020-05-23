@@ -1207,6 +1207,7 @@ $(document).on('page_ready', function() {
       data: {csrf_token: getCSRFToken(), site: args.site},
       success: function(data) {
           var createBy = $('select#create_by');
+          var newOption;
           <?php
           // Get the current set of options (there will only be one) so we know
           // which one should be selected in the new list
@@ -1220,12 +1221,27 @@ $(document).on('page_ready', function() {
           <?php
           // Add the new data, selecting the option that was previously selected
           ?>
+          var foundCurrent = false;
           $.each(data, function(index, option) {
               // Make it a case-insensitive comparison as usernames are case-insensitive
               var selected = (option.username.toUpperCase() === currentData[0].id.toUpperCase());
+              foundCurrent = foundCurrent || selected;
               var newOption = new Option(option.display_name, option.username, selected, selected);
               createBy.append(newOption);
             });
+          <?php
+          // It's possible that the creator of the booking is no longer a user (they may have left
+          // the organisation and been deleted from the user list).  If that's the case and we haven't
+          // found them while running through the user list, then add them and make them the selected
+          // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
+          // about locales. And having the original creator at the end of the list perhaps draws attention
+          // to the fact that they no longer exist).
+          ?>
+          if (!foundCurrent)
+          {
+            newOption = new Option(currentData[0].text, currentData[0].id, true, true);
+            createBy.append(newOption);
+          }
           <?php
           // Close the Select2 control and refresh it.  If it was open before the
           // close, then reopen it after the refresh.
