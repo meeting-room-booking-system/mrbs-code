@@ -204,7 +204,9 @@ function get_field_create_by($create_by, $disabled=false)
     // do here is present one option, ie the create_by user.
     $options = array();
     $create_by_user = auth()->getUser($create_by);
-
+    // It's possible that $create_by no longer exists - may have left the
+    // organisation and been deleted from the user list - so in that case
+    // use their username for the displayname.
     if (isset($create_by_user))
     {
       $options[$create_by_user->username] = $create_by_user->display_name;
