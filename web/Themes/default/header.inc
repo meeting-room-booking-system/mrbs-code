@@ -106,6 +106,12 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 {
   global $multisite, $site;
 
+  if (!checkAuthorised('index.php', true))
+  {
+    // Don't show the goto box if the user isn't allowed to view the calendar
+    return;
+  }
+
   $form = new Form();
 
   $form_id = 'form_nav';
