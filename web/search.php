@@ -16,7 +16,7 @@ function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
   $html = '';
 
   $form = new Form();
-  $form->setAttributes(array('action' => multi_site(this_page()),
+  $form->setAttributes(array('action' => multisite(this_page()),
                              'method' => 'post'));
   $form->addHiddenInputs($hidden_inputs);
   $submit = new ElementInputSubmit();
