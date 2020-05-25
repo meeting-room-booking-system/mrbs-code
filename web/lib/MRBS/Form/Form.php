@@ -242,7 +242,7 @@ class Form extends Element
     }
 
     $session_status = session_status();
-    
+
     // Use PHP sessions if we can
     if ($session_status !== PHP_SESSION_DISABLED)
     {
