@@ -276,6 +276,12 @@ if (!isset($type))
   $type = $default_type;
 }
 
+// Check that the type is allowed
+if (!is_book_admin($rooms) && isset($auth['admin_only_types']) && in_array($type, $auth['admin_only_types']))
+{
+  invalid_booking(get_vocab('type_reserved_for_admins', get_type_vocab($type)));
+}
+
 if (isset($month_relative_ord) && isset($month_relative_day))
 {
   $month_relative = $month_relative_ord . $month_relative_day;

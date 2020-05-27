@@ -446,7 +446,7 @@ function get_field_end_time($value, $disabled=false)
 {
   global $areas, $area_id;
   global $multiday_allowed;
-  
+
   $date = getbookingdate($value, true);
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
@@ -603,7 +603,7 @@ function get_field_rooms($value, $disabled=false)
 
 function get_field_type($value, $disabled=false)
 {
-  global $booking_types, $is_mandatory_field;
+  global $booking_types, $is_mandatory_field, $auth;
 
   // Don't bother with types if there's only one of them (or even none)
   if (!isset($booking_types) || (count($booking_types) < 2))
@@ -620,7 +620,13 @@ function get_field_type($value, $disabled=false)
 
   foreach ($booking_types as $key)
   {
-    $options[$key] = get_type_vocab($key);
+    // Only show types the user is allowed to use
+    if (!isset($auth['admin_only_types']) ||
+        !in_array($key, $auth['admin_only_types']) ||
+        is_book_admin())
+    {
+      $options[$key] = get_type_vocab($key);
+    }
   }
 
   $field = new FieldSelect();

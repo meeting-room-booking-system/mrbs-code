@@ -1039,6 +1039,9 @@ $auth['only_admin_can_see_other_users'] = false;
 // on behalf of other users
 $auth['admin_can_only_book_for_self'] = false;
 
+// An array of booking types for admin use only
+$auth['admin_only_types'] = array();  // eg array('E');
+
 // If you want to prevent the public (ie un-logged in users) from
 // being able to view bookings, set this variable to true
 $auth['deny_public_access'] = false;
