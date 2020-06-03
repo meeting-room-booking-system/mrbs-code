@@ -49,41 +49,34 @@ var replaceBody = function(response, href) {
             // this.attributes is not a plain object, but an array
             // of attribute nodes, which contain both the name and value
             ?>
-            if(this.specified) {
-              <?php // Data attributes have to be updated differently from other attributes ?>
-              if (this.name.substring(0, 5).toLowerCase() == 'data-')
-              {
-                body.data(this.name.substring(5), this.value);
-              }
-              else
-              {
-                body.attr(this.name, this.value);
-              }
+            if(this.specified)
+            {
+              body.attr(this.name, this.value);
             }
           });
       });
-    
+
     <?php
     // Trigger a page_ready event, because the normal document ready event
     // won't be triggered when we are just replacing the html.
     ?>
     $(document).trigger('page_ready');
-    
+
     <?php // change the URL in the address bar ?>
     history.pushState(null, '', href);
   };
-  
-  
+
+
 <?php
 // Update the <body> element either via an Ajax call or using a pre-fetched response,
 // in order to avoid flickering of the screen as we move between pages in the calendar view.
-// 
+//
 // 'event' can either be an event object if the function is called from an 'on'
 // handler, or else it as an href string (eg when called from flatpickr).
 ?>
 var updateBody = function(event) {
     var href;
-    
+
     if (typeof event === 'object')
     {
       href = $(this).attr('href');
@@ -93,11 +86,11 @@ var updateBody = function(event) {
     {
       href = event;
     }
-    
+
     <?php // Add a "Loading ..." message ?>
     $('h2.date').text('<?php echo get_vocab('loading')?>')
                 .addClass('loading');
-                  
+
     if (updateBody.prefetched && updateBody.prefetched[href])
     {
       replaceBody(updateBody.prefetched[href], href);
@@ -116,7 +109,7 @@ var updateBody = function(event) {
 // the two most likely pages to be required.
 ?>
 var prefetch = function() {
-  
+
   <?php
   // Don't pre-fetch if it's been disabled in the config
   if (empty($prefetch_refresh_rate))
@@ -125,21 +118,21 @@ var prefetch = function() {
     return;
     <?php
   }
-  
+
   // Don't pre-fetch and waste bandwidth if we're on a metered connection ?>
   if (isMeteredConnection())
   {
     return;
   }
-  
+
   var delay = <?php echo $prefetch_refresh_rate?> * 1000;
-  var hrefs = [$('a.prev').attr('href'), 
+  var hrefs = [$('a.prev').attr('href'),
                $('a.next').attr('href')];
-  
+
   <?php // Clear any existing pre-fetched data and any timeout ?>
   updateBody.prefetched = {};
   clearTimeout(prefetch.timeoutId);
-  
+
   <?php
   // Don't pre-fetch if the page is hidden.  Just set another timeout
   ?>
@@ -148,11 +141,11 @@ var prefetch = function() {
     prefetch.timeoutId = setTimeout(prefetch, delay);
     return;
   }
-  
+
   hrefs.forEach(function(href) {
-    $.get({ 
-        url: href, 
-        dataType: 'html', 
+    $.get({
+        url: href,
+        dataType: 'html',
         success: function(response) {
             updateBody.prefetched[href] = response;
             <?php // Once we've got all the responses back set off another timeout ?>
@@ -163,19 +156,19 @@ var prefetch = function() {
           }
       });
   });
-  
+
 };
 
 
 $(document).on('page_ready', function() {
-  
+
   <?php
   // Turn the room and area selects into fancy select boxes and then
   // show the location menu (it's hidden to avoid screen jiggling).
   ?>
   $('.room_area_select').mrbsSelect();
   $('nav.location').removeClass('js_hidden');
-  
+
   <?php
   // The bottom navigation was hidden while the Select2 boxes were formed
   // so that the correct widths could be established.  It is then shown if
@@ -185,19 +178,19 @@ $(document).on('page_ready', function() {
   checkNav();
   $(window).on('scroll', checkNav);
   $(window).on('resize', checkNav);
-  
+
   <?php
   // Only reveal the color key once the bottom navigation has been determined,
   // in order to avoid jiggling.
   ?>
   $('.color_key').removeClass('js_hidden');
-  
+
   <?php
   // Replace the navigation links with Ajax calls in order to eliminate flickering
   // as we move between pages.
   ?>
   $('nav.arrow a, nav.view a').on('click', updateBody);
-  
+
   <?php
   // Pre-fetch some pages to improve performance
   ?>

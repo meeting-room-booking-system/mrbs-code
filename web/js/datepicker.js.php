@@ -42,6 +42,8 @@ function getISODate(year, month, day)
 
 $(document).on('page_ready', function() {
 
+  var locales = $('body').data('langPrefs');
+
   <?php
   // Set up datepickers.  We convert all inputs of type 'date' into flatpickr
   // datepickers.  Note that by default flatpickr will use the native datepickers
@@ -67,7 +69,6 @@ $(document).on('page_ready', function() {
   //    else
   ?>
   var formatDate = function(dateObj, formatStr) {
-      var locales = $('body').data('langPrefs');
       <?php
       // If window.Intl is supported then we can format dates in the user's preferred
       // locale.  Otherwise, in practice just IE10, they have to make do with ISO
