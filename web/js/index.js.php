@@ -51,7 +51,29 @@ var replaceBody = function(response, href) {
             ?>
             if(this.specified)
             {
-              body.attr(this.name, this.value);
+              if (this.name.substring(0, 5).toLowerCase() == 'data-')
+              {
+                <?php
+                // Data attributes have to be updated differently from other attributes because
+                // they are cached by jQuery.  If the attribute looks like a JSON array, then turn
+                // it back into an array.
+                ?>
+                var value = this.value;
+                if (value.charAt(0) === '[')
+                {
+                  try {
+                    value = JSON.parse(value);
+                  }
+                  catch (e) {
+                    value = this.value;
+                  }
+                }
+                body.data(this.name.substring(5), value);
+              }
+              else
+              {
+                body.attr(this.name, this.value);
+              }
             }
           });
       });
