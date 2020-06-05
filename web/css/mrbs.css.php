@@ -2311,6 +2311,13 @@ div#check_tabs {background-image: none}
   box-shadow:-5px 0 0 <?php echo $flatpickr_highlight_color ?>, 5px 0 0 <?php echo $flatpickr_highlight_color ?>;
 }
 
+<?php
+// Fix to stop calendars being 1px wide when the screen is widened.
+// See https://github.com/flatpickr/flatpickr/issues/1300
+?>
+.flatpickr-calendar, .flatpickr-days {
+    width: auto !important;
+}
 
 h2.date.loading,
 h2.date.loading::after {
