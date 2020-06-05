@@ -1594,6 +1594,12 @@ form#add_new_user {
   justify-content: flex-start;
 }
 
+@media (max-width: 30rem) {
+  .banner .logo {
+    display: none;
+  }
+}
+
 .banner .logo img {
   display: block;
   margin: 1em 2em 1em 0;
