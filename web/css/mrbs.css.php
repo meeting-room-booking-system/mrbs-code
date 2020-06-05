@@ -124,11 +124,11 @@ h2 {
 }
 
 .minicalendars {
-  margin-right: 2em;
   padding-top: 0.8rem; <?php // same as margin-top on nav.main_calendar ?>
 }
 
 .minicalendars.formed {
+  margin-right: 2em;
   display: none;
 }
 
