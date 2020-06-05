@@ -124,11 +124,11 @@ h2 {
 }
 
 .minicalendars {
-  margin-right: 2em;
   padding-top: 0.8rem; <?php // same as margin-top on nav.main_calendar ?>
 }
 
 .minicalendars.formed {
+  margin-right: 2em;
   display: none;
 }
 
@@ -1594,6 +1594,12 @@ form#add_new_user {
   justify-content: flex-start;
 }
 
+@media (max-width: 30rem) {
+  .banner .logo {
+    display: none;
+  }
+}
+
 .banner .logo img {
   display: block;
   margin: 1em 2em 1em 0;
@@ -2305,6 +2311,13 @@ div#check_tabs {background-image: none}
   box-shadow:-5px 0 0 <?php echo $flatpickr_highlight_color ?>, 5px 0 0 <?php echo $flatpickr_highlight_color ?>;
 }
 
+<?php
+// Fix to stop calendars being 1px wide when the screen is widened.
+// See https://github.com/flatpickr/flatpickr/issues/1300
+?>
+.flatpickr-calendar, .flatpickr-days {
+    width: auto !important;
+}
 
 h2.date.loading,
 h2.date.loading::after {
