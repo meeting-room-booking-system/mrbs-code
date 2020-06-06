@@ -1485,6 +1485,46 @@ div#div_custom_html {
 }
 
 <?php
+// On narrow devices put the form labels above the form inputs, instead
+// of to the left.
+?>
+@media (max-width: 30rem) {
+  .standard fieldset {
+    display: block;
+  }
+  
+  .standard fieldset > div {
+    display: block;
+    float: left;
+    clear: left;
+    margin-bottom: 1em;
+  }
+  
+  .standard fieldset > div > *:not(.none) {
+    display: block;
+    vertical-align: middle;
+  }
+  
+  .standard fieldset > div > label {
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 0.2em;
+  }
+  
+  .standard div#rep_type div.long {
+    border-right: 0;
+  }
+  
+  .standard fieldset.rep_type_details {
+    margin-top: 1em;
+  }
+  
+  .standard .submit_buttons > * {
+    float: left;
+  }
+}
+<?php
 // The max number of bookings policy fieldset, where we want to display the
 // controls in tabular form
 ?>
@@ -1632,6 +1672,10 @@ form#add_new_user {
 
 @media (max-width: 30rem) {
   .banner .logo {
+    display: none;
+  }
+  
+  #form_nav input[type="submit"] {
     display: none;
   }
 }

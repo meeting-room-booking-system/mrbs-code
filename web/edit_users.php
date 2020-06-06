@@ -613,7 +613,8 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
                                'disabled'       => $disabled,
                                'formnovalidate' => true));
 
-  $field->setLabelAttribute('class', 'no_suffix')
+  $field->setAttribute('class', 'submit_buttons')
+        ->setLabelAttribute('class', 'no_suffix')
         ->addLabelElement($button)
         ->setControlAttributes(array('class' => 'default_action',
                                      'name'  => 'update_button',

@@ -237,25 +237,28 @@ $(document).on('page_ready', function() {
       });
   }
   
-  <?php 
-  // Make sure that the left hand column in the standard form is of
-  // constant width.  If there are multiple fieldsets then each fieldset
-  // will have its own width, as the display:table only applies to that
-  // fieldset.
-  ?>
-  var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
-   
-  function getMaxWidth (selection) {
-    return Math.max.apply(null, selection.map(function() {
-      return $(this).width();
-    }).get());
-  }
-  
   <?php
-  // Add on one pixel to avoid what look to be like rounding
-  // problems in some browsers
+  // If we are operating on a wide screen when the standard form fieldsets are
+  // displayed as tables, then make sure that the left hand column in the standard
+  // form is of constant width.  If there are multiple fieldsets then each fieldset
+  // will have its own width, as the display:table only applies to that fieldset.
   ?>
-  labels.width(getMaxWidth(labels) + 1);
+  if ($('.standard fieldset').css('display') == 'table')
+  {
+    var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
+     
+    function getMaxWidth (selection) {
+      return Math.max.apply(null, selection.map(function() {
+        return $(this).width();
+      }).get());
+    }
+    
+    <?php
+    // Add on one pixel to avoid what look to be like rounding
+    // problems in some browsers
+    ?>
+    labels.width(getMaxWidth(labels) + 1);
+  }
   
   <?php // Add a fallback for browsers that don't support the time input ?>
   $('[type="time"]').each(function() {
