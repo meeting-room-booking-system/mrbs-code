@@ -117,6 +117,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
   $form_id = 'form_nav';
 
   $form->setAttributes(array('id'     => $form_id,
+                             'class'  => 'js_hidden',
                              'method' => 'get',
                              'action' => multisite('index.php')))
        ->addHiddenInput('view', $view);
