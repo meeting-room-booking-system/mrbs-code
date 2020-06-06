@@ -1520,6 +1520,10 @@ div#div_custom_html {
     margin-top: 1em;
   }
   
+  .standard .start_end > div > * {
+    margin-bottom: 1em;
+  }
+  
   .standard .submit_buttons > * {
     float: left;
   }
