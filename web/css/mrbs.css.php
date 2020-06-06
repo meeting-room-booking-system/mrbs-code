@@ -482,6 +482,24 @@ nav.main_calendar > nav {
   justify-content: center;
 }
 
+<?php
+// Change the order if the element has wrapped (detected by JavaScript) in order
+// to make it looker better and improve space utilisation.
+?>
+nav.main_calendar.wrapped nav.location {
+  flex-basis: 100%;
+}
+
+nav.main_calendar.wrapped:nth-of-type(1) nav.location {
+  order: -1;
+  margin-bottom: 1em;
+}
+
+nav.main_calendar.wrapped:nth-of-type(2) nav.location {
+  order: 1;
+  margin-top: 1em;
+}
+
 nav.main_calendar > nav:first-child {
   -ms-flex-pack: start;
   justify-content: flex-start;
