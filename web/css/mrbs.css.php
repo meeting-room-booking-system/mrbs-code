@@ -71,7 +71,7 @@ input, textarea {
 input.date,
 .js input[type="date"],
 input.form-control.input {
-  width: 6.5em;
+  width: 10em;
 }
 
 <?php
