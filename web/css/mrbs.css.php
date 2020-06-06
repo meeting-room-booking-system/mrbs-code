@@ -1484,6 +1484,27 @@ div#div_custom_html {
   margin-right: 0.5em;
 }
 
+/* 30 rem */
+@media (max-width: 0rem) {
+  .standard fieldset > div {
+    display: block;
+    float: left;
+    clear: left;
+    margin-bottom: 1em;
+  }
+  
+  .standard fieldset > div > *:not(.none) {
+    display: block;
+    vertical-align: middle;
+  }
+  
+  .standard fieldset > div > label {
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 0.2em;
+  }
+}
 <?php
 // The max number of bookings policy fieldset, where we want to display the
 // controls in tabular form
@@ -1634,6 +1655,10 @@ form#add_new_user {
   .banner .logo {
     display: none;
   }
+  
+  #form_nav input[type="submit"] {
+    display: none;
+  }
 }
 
 .banner .logo img {
@@ -1766,6 +1791,8 @@ nav.logon input:hover {
   padding-right: 1rem;
   margin-right: 1rem;
 }
+
+@media
 
 input.link[type="submit"] {
   display: inline;
