@@ -1484,8 +1484,15 @@ div#div_custom_html {
   margin-right: 0.5em;
 }
 
-/* 30 rem */
-@media (max-width: 0rem) {
+<?php
+// On narrow devices put the form labels above the form inputs, instead
+// of to the left.
+?>
+@media (max-width: 30rem) {
+  .standard fieldset {
+    display: block;
+  }
+  
   .standard fieldset > div {
     display: block;
     float: left;
@@ -1503,6 +1510,18 @@ div#div_custom_html {
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 0.2em;
+  }
+  
+  .standard div#rep_type div.long {
+    border-right: 0;
+  }
+  
+  .standard fieldset.rep_type_details {
+    margin-top: 1em;
+  }
+  
+  .standard .submit_buttons > * {
+    float: left;
   }
 }
 <?php
@@ -1791,8 +1810,6 @@ nav.logon input:hover {
   padding-right: 1rem;
   margin-right: 1rem;
 }
-
-@media
 
 input.link[type="submit"] {
   display: inline;
