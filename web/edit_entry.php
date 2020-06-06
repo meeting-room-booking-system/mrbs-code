@@ -417,7 +417,8 @@ function get_field_start_time($value, $disabled=false)
                                      'disabled' => $disabled,
                                      'required' => true));
 
-  $field->setLabel(get_vocab('start'))
+  $field->setAttribute('class', 'start_end')
+        ->setLabel(get_vocab('start'))
         ->addControlElement($element_date)
         ->addControlElement(get_slot_selector($areas[$area_id],
                                               'start_seconds',
@@ -484,7 +485,8 @@ function get_field_end_time($value, $disabled=false)
   $a = $areas[$area_id];
   $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
 
-  $field->setLabel(get_vocab('end'))
+  $field->setAttribute('class', 'start_end')
+        ->setLabel(get_vocab('end'))
         ->addControlElement($element_date)
         ->addControlElement(get_slot_selector($areas[$area_id],
                                               'end_seconds',
