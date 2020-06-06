@@ -27,7 +27,11 @@ var checkNavWrapping = function() {
     navMainCalendar.removeClass('wrapped');
     navMainCalendar.first().children().each(function() {
         var thisTop = $(this).offset().top;
-        if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 1))
+        <?
+        // Allow 5px of tolerance on the calculation of the top to allow for padding, border
+        // and margin.
+        ?>
+        if ((typeof lastTop !== 'undefined') && (Math.abs(thisTop - lastTop) > 5))
         {
           wrapped = true;
           return false;

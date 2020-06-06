@@ -483,6 +483,14 @@ nav.main_calendar > nav {
 }
 
 <?php
+// Only allow the location element to wrap if the parent has already wrapped.
+?>
+nav.main_calendar.wrapped nav.location {
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+<?php
 // Change the order if the element has wrapped (detected by JavaScript) in order
 // to make it looker better and improve space utilisation.
 ?>
@@ -492,11 +500,21 @@ nav.main_calendar.wrapped nav.location {
 
 nav.main_calendar.wrapped:nth-of-type(1) nav.location {
   order: -1;
+}
+
+<?php
+// Put the margins on the children rathan the parent in case they are wrapped,
+// because then we will want some vertical separation between the wrapped items.
+?>
+nav.main_calendar.wrapped:nth-of-type(1) nav.location > * {
   margin-bottom: 1em;
 }
 
 nav.main_calendar.wrapped:nth-of-type(2) nav.location {
   order: 1;
+}
+
+nav.main_calendar.wrapped:nth-of-type(2) nav.location > * {
   margin-top: 1em;
 }
 
