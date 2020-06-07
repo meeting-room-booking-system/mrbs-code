@@ -1497,6 +1497,9 @@ div#div_custom_html {
     display: block;
     float: left;
     clear: left;
+  }
+  
+  .standard fieldset div > * {
     margin-bottom: 1em;
   }
   
@@ -1512,16 +1515,17 @@ div#div_custom_html {
     margin-bottom: 0.2em;
   }
   
+  .standard fieldset.rep_type_details {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  
+  .standard input#rep_interval {
+    float: left;
+  }
+  
   .standard div#rep_type div.long {
     border-right: 0;
-  }
-  
-  .standard fieldset.rep_type_details {
-    margin-top: 1em;
-  }
-  
-  .standard .start_end > div > * {
-    margin-bottom: 1em;
   }
   
   .standard .submit_buttons > * {
