@@ -176,7 +176,7 @@ function print_outstanding($query)
       $class .= ' attention';
     }
 
-    echo '<a href="pending.php?' . htmlspecialchars($query) . '"' .
+    echo '<a href="' . htmlspecialchars(multisite("pending.php?$query")) . '"' .
          " class=\"$class\"" .
          ' title="' . get_vocab('outstanding', $n_outstanding) .
          "\">$n_outstanding</a>\n";
