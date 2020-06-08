@@ -1206,13 +1206,17 @@ $(document).on('page_ready', function() {
       dataType: 'json',
       data: {csrf_token: getCSRFToken(), site: args.site},
       success: function(data) {
-          var createBy = $('select#create_by');
+          var createBy = $('select#create_by'); 
+          var isSelect2 = createBy.hasClass('select2-hidden-accessible');
           var newOption;
           <?php
-          // Get the current set of options (there will only be one) so we know
+          // Get the current option (there will only be one) so we know
           // which one should be selected in the new list
           ?>
-          var currentData = createBy.select2('data');
+          var currentOption = createBy.find('option').first();
+          var currentValue = currentOption.val();
+          var currentValueUpper = currentValue.toUpperCase();
+          var currentText = currentOption.text();
           <?php
           // Remove the existing option, because it will be in the new dataset in
           // the correct position.
@@ -1224,7 +1228,7 @@ $(document).on('page_ready', function() {
           var foundCurrent = false;
           $.each(data, function(index, option) {
               // Make it a case-insensitive comparison as usernames are case-insensitive
-              var selected = (option.username.toUpperCase() === currentData[0].id.toUpperCase());
+              var selected = (option.username.toUpperCase() === currentValueUpper);
               foundCurrent = foundCurrent || selected;
               var newOption = new Option(option.display_name, option.username, selected, selected);
               createBy.append(newOption);
@@ -1239,19 +1243,22 @@ $(document).on('page_ready', function() {
           ?>
           if (!foundCurrent)
           {
-            newOption = new Option(currentData[0].text, currentData[0].id, true, true);
+            newOption = new Option(currentText, currentValue, true, true);
             createBy.append(newOption);
           }
           <?php
-          // Close the Select2 control and refresh it.  If it was open before the
+          // If there was one, close the Select2 control and refresh it.  If it was open before the
           // close, then reopen it after the refresh.
           //
           ?>
-          var wasOpen = createBy.select2('isOpen');
-          createBy.select2('close').trigger('change');
-          if (wasOpen)
+          if (createBy.hasClass('select2-hidden-accessible'))
           {
-            createBy.select2('open');
+            var wasOpen = createBy.select2('isOpen');
+            createBy.select2('close').trigger('change');
+            if (wasOpen)
+            {
+              createBy.select2('open');
+            }
           }
           $('body').removeClass('ajax-loading');
         }
