@@ -3,11 +3,6 @@ namespace MRBS;
 
 use MRBS\ICalendar\Series;
 
-global $timezone;
-
-// Get the VTIMEZONE component because we'll need it for creating events
-// and the calendar
-$vtimezone = get_vtimezone($timezone);
 
 // Extracts a VTIMEZONE component from a VCALENDAR.
 function extract_vtimezone($vcalendar)
@@ -42,111 +37,117 @@ function get_vtimezone($tz)
 {
   global $tbl_zoneinfo, $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
 
-  $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
-  $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
+  static $vtimezone = array();  // Cache the componernts for performance
 
-  $vtimezone = false;  // Default value in case we don't find one
-
-  // Convert booleans into 1 or 0 (necessary for the database)
-  $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
-
-  // Acquire a mutex to lock out others who might be accessing
-  // the table, to stop somebody inserting a record at the same
-  // time as us (we want just one entry per timezone)
-  if (!db()->mutex_lock($tbl_zoneinfo))
+  if (!isset($vtimezone[$tz]))
   {
-    fatal_error(get_vocab("failed_to_acquire"));
-  }
+    $vtimezone[$tz] = false;  // Default value in case we don't find one
 
-  // Look and see if there's a component in the database
-  $sql = "SELECT vtimezone, last_updated
-            FROM $tbl_zoneinfo
-           WHERE timezone=?
-             AND outlook_compatible=?
-           LIMIT 1";
-  $res = db()->query($sql, array($tz,$zoneinfo_outlook_compatible));
+    $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
+    $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
 
-  if ($res->count() > 0)
-  {
-    // If there's something in the database and it hasn't expired, then
-    // that's it.
-    $row = $res->next_row_keyed();
-    $vtimezone = $row['vtimezone'];
-    if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
+    // Convert booleans into 1 or 0 (necessary for the database)
+    $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
+
+    // Acquire a mutex to lock out others who might be accessing
+    // the table, to stop somebody inserting a record at the same
+    // time as us (we want just one entry per timezone)
+    if (!db()->mutex_lock($tbl_zoneinfo))
     {
-      // Otherwise, provided that the config variable $zoneinfo_update
-      // is true, we get the URL of the latest version on the web,
-      // and update the database.
-      //
-      // (Note that a VTIMEZONE component can contain a TZURL property which
-      // gives the URL of the most up to date version.  Calendar applications
-      // should be able to check this themselves, but we might as well give them
-      // the most up to date version in the first place).
-      $properties = explode("\r\n", ical_unfold($vtimezone));
-      foreach ($properties as $property)
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
+    // Look and see if there's a component in the database
+    $sql = "SELECT vtimezone, last_updated
+              FROM $tbl_zoneinfo
+             WHERE timezone=?
+               AND outlook_compatible=?
+             LIMIT 1";
+    $res = db()->query($sql, array($tz,$zoneinfo_outlook_compatible));
+
+    if ($res->count() > 0)
+    {
+      // If there's something in the database and it hasn't expired, then
+      // that's it.
+      $row = $res->next_row_keyed();
+      $vtimezone[$tz] = $row['vtimezone'];
+      if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
       {
-        if (strpos($property, "TZURL:") === 0)
+        // Otherwise, provided that the config variable $zoneinfo_update
+        // is true, we get the URL of the latest version on the web,
+        // and update the database.
+        //
+        // (Note that a VTIMEZONE component can contain a TZURL property which
+        // gives the URL of the most up to date version.  Calendar applications
+        // should be able to check this themselves, but we might as well give them
+        // the most up to date version in the first place).
+        $properties = explode("\r\n", ical_unfold($vtimezone[$tz]));
+        foreach ($properties as $property)
         {
-          $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
+          if (strpos($property, "TZURL:") === 0)
+          {
+            $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
+          }
         }
-      }
 
-      $vcalendar = url_get_contents($tz_url);
+        $vcalendar = url_get_contents($tz_url);
 
-      if ($vcalendar === false)
-      {
-        trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
-      }
-      else
-      {
-        $new_vtimezone = extract_vtimezone($vcalendar);
-        if (empty($new_vtimezone))
+        if ($vcalendar === false)
         {
-          trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
+          trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
         }
         else
         {
-          // We've got a valid VTIMEZONE, so we can overwrite $vtimezone
-          $vtimezone = $new_vtimezone;
+          $new_vtimezone = extract_vtimezone($vcalendar);
+          if (empty($new_vtimezone))
+          {
+            trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
+          }
+          else
+          {
+            // We've got a valid VTIMEZONE, so we can overwrite $vtimezone
+            $vtimezone[$tz] = $new_vtimezone;
+          }
+        }
+
+        // Update the database, whether we've successfully got a new VTIMEZONE or not.
+        // If we didn't manage to get a new VTIMEZONE, updating the database will update
+        // the last_updated field and mean that MRBS will not try again until after the
+        // expiry interval has passed.  This will mean that we don't introduce a few
+        // seconds delay every time this file is included.  (The most likely reason that
+        // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
+        // access, so there's no point in retrying for a while).
+        $sql = "UPDATE $tbl_zoneinfo
+                   SET vtimezone=?,
+                       last_updated=?
+                 WHERE timezone=?
+                   AND outlook_compatible=?";
+        db()->command($sql, array($vtimezone[$tz], time(), $tz, $zoneinfo_outlook_compatible));
+      }
+    }
+    // There's nothing in the database, so try and get a VTIMEZONE component
+    // from the filesystem.
+    elseif (is_readable($tz_file))
+    {
+      $vcalendar = file_get_contents($tz_file);
+
+      if ($vcalendar)
+      {
+        $vtimezone[$tz] = extract_vtimezone($vcalendar);
+        if (!empty($vtimezone[$tz]))
+        {
+          $sql = "INSERT INTO $tbl_zoneinfo
+                              (timezone, outlook_compatible, vtimezone, last_updated)
+                       VALUES (?, ?, ?, ?)";
+          db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone[$tz], time()));
         }
       }
-
-      // Update the database, whether we've successfully got a new VTIMEZONE or not.
-      // If we didn't manage to get a new VTIMEZONE, updating the database will update
-      // the last_updated field and mean that MRBS will not try again until after the
-      // expiry interval has passed.  This will mean that we don't introduce a few
-      // seconds delay every time this file is included.  (The most likely reason that
-      // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
-      // access, so there's no point in retrying for a while).
-      $sql = "UPDATE $tbl_zoneinfo
-                 SET vtimezone=?,
-                     last_updated=?
-               WHERE timezone=?
-                 AND outlook_compatible=?";
-      db()->command($sql, array($vtimezone, time(), $tz, $zoneinfo_outlook_compatible));
     }
+    // Tidy up
+    db()->mutex_unlock($tbl_zoneinfo);  // Release the mutex
   }
-  // There's nothing in the database, so try and get a VTIMEZONE component
-  // from the filesystem.
-  elseif (is_readable($tz_file))
-  {
-    $vcalendar = file_get_contents($tz_file);
 
-    if ($vcalendar)
-    {
-      $vtimezone = extract_vtimezone($vcalendar);
-      if (!empty($vtimezone))
-      {
-        $sql = "INSERT INTO $tbl_zoneinfo
-                            (timezone, outlook_compatible, vtimezone, last_updated)
-                     VALUES (?, ?, ?, ?)";
-        db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone, time()));
-      }
-    }
-  }
-  // Tidy up and return
-  db()->mutex_unlock($tbl_zoneinfo);  // Release the mutex
-  return $vtimezone;
+  return $vtimezone[$tz];
 }
 
 
@@ -734,7 +735,9 @@ function create_rrule($data)
 // The TZID parameter if used must be added separately
 function create_exdate_list($dates)
 {
-  global $vtimezone;
+  global $timezone;
+
+  $vtimezone = get_vtimezone($timezone);
 
   $results = array();
 
@@ -758,8 +761,10 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
 {
   require_once "functions_mail.inc";
 
-  global $mail_settings, $timezone, $vtimezone,
+  global $mail_settings, $timezone,
          $default_area_room_delimiter;
+
+  $vtimezone = get_vtimezone($timezone);
 
   $results = array();
 
@@ -918,7 +923,9 @@ function create_icalendar($method, $components)
 {
   require_once "version.inc";
 
-  global $vtimezone;
+  global $timezone;
+
+  $vtimezone = get_vtimezone($timezone);
 
   $results = array();
   $results[] = "BEGIN:VCALENDAR";
