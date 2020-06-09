@@ -49,14 +49,6 @@ function get_vtimezone($tz)
     // Convert booleans into 1 or 0 (necessary for the database)
     $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
 
-    // Acquire a mutex to lock out others who might be accessing
-    // the table, to stop somebody inserting a record at the same
-    // time as us (we want just one entry per timezone)
-    if (!db()->mutex_lock($tbl_zoneinfo))
-    {
-      fatal_error(get_vocab("failed_to_acquire"));
-    }
-
     // Look and see if there's a component in the database
     $sql = "SELECT vtimezone, last_updated
               FROM $tbl_zoneinfo
@@ -136,15 +128,32 @@ function get_vtimezone($tz)
         $vtimezone[$tz] = extract_vtimezone($vcalendar);
         if (!empty($vtimezone[$tz]))
         {
-          $sql = "INSERT INTO $tbl_zoneinfo
-                              (timezone, outlook_compatible, vtimezone, last_updated)
-                       VALUES (?, ?, ?, ?)";
-          db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone[$tz], time()));
+          try
+          {
+            $sql = "INSERT INTO $tbl_zoneinfo
+                                (timezone, outlook_compatible, vtimezone, last_updated)
+                         VALUES (?, ?, ?, ?)";
+            db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone[$tz], time()));
+          }
+          catch (DBException $e)
+          {
+            // Catch any database exception because it's just possible that someone else has inserted a row just
+            // before us and then we'll get an error because of the unique constraint.   If we do then that's
+            // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
+            // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
+            // both MySQL and PostgreSQL).
+            //
+            // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
+            // PostgreSQL 9.5.
+            //
+            // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
+            // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
+            // one active lock.
+            trigger_error($e->getMessage(), E_USER_NOTICE);
+          }
         }
       }
     }
-    // Tidy up
-    db()->mutex_unlock($tbl_zoneinfo);  // Release the mutex
   }
 
   return $vtimezone[$tz];
