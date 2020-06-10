@@ -21,13 +21,13 @@ var checkNavWrapping = function() {
     <?php
     // Remove the wrapped class before we start, because the wrapped class gives the
     // element a flex-basis of 100%, which would force wrapping anyway.  (We need the
-    // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we 
+    // flex-basis of 100% to ensure that it takes up the whole line when wrapped and we
     // don't get the next element on the same line.)
     ?>
     navMainCalendar.removeClass('wrapped');
     navMainCalendar.first().children().each(function() {
         var thisTop = $(this).offset().top;
-        <?
+        <?php
         // Allow 5px of tolerance on the calculation of the top to allow for padding, border
         // and margin.
         ?>
@@ -223,14 +223,14 @@ $(document).on('page_ready', function() {
   ?>
   $('.room_area_select').mrbsSelect();
   $('nav.location').removeClass('js_hidden');
-  
+
   <?php
   // Check the wrapping on the calendar navigation so that we can change the
   // styling if it has.
   ?>
   checkNavWrapping();
   $(window).on('resize', checkNavWrapping);
-  
+
   <?php
   // The bottom navigation was hidden while the Select2 boxes were formed
   // so that the correct widths could be established.  It is then shown if
@@ -240,7 +240,7 @@ $(document).on('page_ready', function() {
   checkNav();
   $(window).on('scroll', checkNav);
   $(window).on('resize', checkNav);
-  
+
   <?php
   // Only reveal the color key once the bottom navigation has been determined,
   // in order to avoid jiggling.
