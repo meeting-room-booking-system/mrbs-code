@@ -76,7 +76,7 @@ class MailQueue
     // iCalendar applications, so we use the PEAR Mail_Mime package to do that.   See the
     // discussion at https://github.com/PHPMailer/PHPMailer/issues/175
 
-    global $mail_settings, $sendmail_settings, $smtp_settings, $enable_periods;
+    global $mail_settings, $sendmail_settings, $smtp_settings;
 
     static $last_mail_sent = null;
     static $last_n_addresses = null;
@@ -256,7 +256,7 @@ class MailQueue
       unset($mime_params['cid']);
     }
 
-    if (!$mail_settings['icalendar'] || $enable_periods)
+    if (empty($attachment))
     {
       // If we're not sending iCalendar information we've now got everything,
       // so we'll make the "inner" section the complete mime.
