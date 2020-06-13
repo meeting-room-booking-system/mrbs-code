@@ -23,6 +23,14 @@ class MailQueue
     // sending emails to those who don't want them
     if ($mail_settings['disabled'])
     {
+      mail_debug("Mail disabled: not adding message to queue");
+      return;
+    }
+    
+    // And no point in doing anything if there are no recipients
+    if (self::getNRecipients($addresses) == 0)
+    {
+      mail_debug("No recipients: not adding message to queue");
       return;
     }
 
@@ -51,6 +59,23 @@ class MailQueue
   }
 
 
+  protected static function getNRecipients($addresses)
+  {
+    if (empty($addresses))
+    {
+      return 0;
+    }
+    
+    $recipients = (!empty($addresses['to'])) ? $addresses['to'] : '';
+    $recipients .= (!empty($addresses['cc'])) ? ',' . $addresses['cc'] : '';
+    $recipients .= (!empty($addresses['bcc'])) ? ',' . $addresses['bcc'] : '';
+    $mail = new PHPMailer;
+    $parsed_addresses = $mail->parseAddresses($recipients);
+    
+    return count($parsed_addresses);
+  }
+
+  
   /**
    * Send an email
    *
@@ -121,17 +146,6 @@ class MailQueue
       {
         trigger_error('$mail_settings["from"] has not been set in the config file.', E_USER_NOTICE);
       }
-    }
-
-    // Need to put all the addresses into $recipients
-    $recipients = $addresses['to'];
-    $recipients .= (!empty($addresses['cc'])) ? "," . $addresses['cc'] : "";
-    $recipients .= (!empty($addresses['bcc'])) ? "," . $addresses['bcc'] : "";
-
-    // Don't bother doing anything more if there are no recipients
-    if ($recipients == '')
-    {
-      return FALSE;
     }
 
     switch ($mail_settings['admin_backend'])
@@ -350,7 +364,7 @@ class MailQueue
             usleep(intval($sleep_seconds * 1000000));
           }
         }
-        $last_n_addresses = count(explode(',', $recipients));
+        $last_n_addresses = self::getNRecipients($addresses);
         $last_mail_sent = $microtime_now;
       }
 
