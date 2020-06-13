@@ -17,6 +17,15 @@ class MailQueue
 
   public static function add($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
   {
+    global $mail_settings;
+
+    // Don't do anything if mail has been disabled.   Useful for testing MRBS without
+    // sending emails to those who don't want them
+    if ($mail_settings['disabled'])
+    {
+      return;
+    }
+
     $mail = array();
     foreach(array('addresses', 'subject', 'text_body', 'html_body', 'attachment', 'charset') as $var)
     {
@@ -324,13 +333,6 @@ class MailQueue
       mail_debug("To: " . (isset($addresses['to']) ? $addresses['to'] : ''));
       mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
       mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
-
-      // Don't do anything if mail has been disabled.   Useful for testing MRBS without
-      // sending emails to those who don't want them
-      if ($mail_settings['disabled'])
-      {
-        return true;
-      }
 
       // Throttle the rate of mail sending if required
       if (!empty($mail_settings['rate_limit']))
