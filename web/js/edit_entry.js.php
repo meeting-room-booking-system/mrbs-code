@@ -1206,8 +1206,7 @@ $(document).on('page_ready', function() {
       dataType: 'json',
       data: {csrf_token: getCSRFToken(), site: args.site},
       success: function(data) {
-          var createBy = $('select#create_by'); 
-          var isSelect2 = createBy.hasClass('select2-hidden-accessible');
+          var createBy = $('select#create_by');
           var newOption;
           <?php
           // Get the current option (there will only be one) so we know
