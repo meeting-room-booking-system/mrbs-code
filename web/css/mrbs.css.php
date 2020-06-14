@@ -1678,16 +1678,6 @@ form#add_new_user {
   justify-content: flex-start;
 }
 
-@media (max-width: 30rem) {
-  .banner .logo {
-    display: none;
-  }
-  
-  #form_nav input[type="submit"] {
-    display: none;
-  }
-}
-
 .banner .logo img {
   display: block;
   margin: 1em 2em 1em 0;
@@ -1832,6 +1822,24 @@ form#show_my_entries input.link[type="submit"] {
   color: <?php echo $anchor_link_color_banner ?>;
   padding: 0.3em 0;
   font-weight: normal;
+}
+
+@media (max-width: 30rem) {
+  .banner .logo {
+    display: none;
+  }
+  
+  .banner .company {
+    align-items: flex-start;
+  }
+  
+  .banner #more_info {
+    display: none;
+  }
+  
+  #form_nav input[type="submit"] {
+    display: none;
+  }
 }
 
 <?php
