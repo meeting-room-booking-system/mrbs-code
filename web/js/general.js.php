@@ -28,7 +28,7 @@ var supportsDatalist = function supportsDatalist() {
            ('options' in document.createElement('datalist')) &&
            (window.HTMLDataListElement !== undefined);
   };
-  
+
 
 var args;
 
@@ -37,7 +37,7 @@ $(document).on('page_ready', function() {
 
   <?php // Retrieve the data that the JavaScript files need. ?>
   args = $('body').data();
-  
+
   <?php
   // If we're required to log the user out after a period of inactivity then the user filling in
   // an MRBS form counts as activity and we need to record it.   In fact we'll record any key or
@@ -56,18 +56,18 @@ $(document).on('page_ready', function() {
             ((t - recordActivity.lastRecorded) > (<?php echo $auth["session_php"]["inactivity_expire_time"]?> - 1)))
         {
           recordActivity.lastRecorded = t;
-          
+
           var params = {activity: 1};
           if(args.site)
           {
             params.site = args.site;
           }
-    
+
           $.post('ajax/record_activity.php', params, function() {
             });
         }
       };
-      
+
     $(document).on('keydown mousemove mousedown', function() {
         recordActivity();
       });
@@ -77,7 +77,7 @@ $(document).on('page_ready', function() {
   // Add in a hidden input to the header search forms so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled).   We need to know this because when we're using an
   // an Ajax data source we don't want to send the HTML version of the table data.
-  // 
+  //
   // Also add 'datatable=1' to the link for the user list for the same reason
   ?>
 
@@ -86,14 +86,14 @@ $(document).on('page_ready', function() {
       name: 'datatable',
       value: '1'
     }).appendTo('form[action="search.php"]');
-    
+
   $('header a[href^="edit_users.php"]').each(function() {
       var href = $(this).attr('href');
       href += (href.indexOf('?') < 0) ? '?' : '&';
       href += 'datatable=1';
       $(this).attr('href', href);
     });
-  
+
   <?php
   // There are some forms that have multiple submit buttons, eg a "Back" and "Save"
   // buttons.   In these cases we want hitting the Enter key in a text input field
@@ -117,7 +117,7 @@ $(document).on('page_ready', function() {
           }
         });
     });
-    
+
   if (supportsDatalist())
   {
     <?php
@@ -135,7 +135,7 @@ $(document).on('page_ready', function() {
     $('input[list]').each(function() {
       var input = $(this),
           hiddenInput = $('<input type="hidden">');
-      
+
       <?php
       // Create a hidden input with the id, name and value of the original input.  Then remove the id and
       // name from the original input (so that history doesn't work).   Finally make sure that
@@ -144,7 +144,7 @@ $(document).on('page_ready', function() {
       hiddenInput.attr('id', input.attr('id'))
                  .attr('name', input.attr('name'))
                  .val(input.val());
-                 
+
       input.removeAttr('id')
            .removeAttr('name')
            .after(hiddenInput);
@@ -158,7 +158,7 @@ $(document).on('page_ready', function() {
       });
 
     });
-    
+
     <?php
     // Because there are some browsers, eg MSIE and Edge, that will still give you form history even
     // though the input has no id or name, then we need to clear the values from those inputs just
@@ -179,16 +179,16 @@ $(document).on('page_ready', function() {
                    $(this).val('');
                  }
                });
-              
+
     });
-    
+
   }
   else
   {
-    <?php 
+    <?php
     // Add jQuery UI Autocomplete functionality for those browsers that do not
     // support the <datalist> element.
-    ?> 
+    ?>
     $('datalist').each(function() {
         var datalist = $(this);
         var options = [];
@@ -202,7 +202,7 @@ $(document).on('page_ready', function() {
         <?php
         // Work out a suitable value for the autocomplete minLength
         // option, ie the number of characters that must be typed before
-        // a list of options appears.   We want to avoid presenting a huge 
+        // a list of options appears.   We want to avoid presenting a huge
         // list of options.
         if (isset($autocomplete_length_breaks) && is_array($autocomplete_length_breaks))
         {
@@ -236,7 +236,7 @@ $(document).on('page_ready', function() {
         }
       });
   }
-  
+
   <?php
   // If we are operating on a wide screen when the standard form fieldsets are
   // displayed as tables, then make sure that the left hand column in the standard
@@ -246,20 +246,20 @@ $(document).on('page_ready', function() {
   if ($('.standard fieldset').css('display') == 'table')
   {
     var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
-     
+
     function getMaxWidth (selection) {
       return Math.max.apply(null, selection.map(function() {
         return $(this).width();
       }).get());
     }
-    
+
     <?php
     // Add on one pixel to avoid what look to be like rounding
     // problems in some browsers
     ?>
     labels.width(getMaxWidth(labels) + 1);
   }
-  
+
   <?php // Add a fallback for browsers that don't support the time input ?>
   $('[type="time"]').each(function() {
     if ($(this).prop('type') != 'time')
@@ -275,14 +275,16 @@ $(document).on('page_ready', function() {
                });
     }
   });
-  
+
   $(window)
     <?php // Make resizing smoother by not redoing headers on every resize event ?>
     .on('resize', throttle(function() {
-        labels.width('auto');
-        labels.width(getMaxWidth(labels));
+        if (labels) {
+          labels.width('auto');
+          labels.width(getMaxWidth(labels));
+        }
       }, 100));
-  
+
 });
 
 <?php // We define our own page ready event so that we can trigger it after an Ajax load ?>
