@@ -25,13 +25,13 @@ echo "<script src=\"js/init.js.php\"></script>\n";
 if ($debug)
 {
   ?>
-  <script src="jquery/jquery-3.4.1.js"></script>
+  <script src="jquery/jquery-3.5.1.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script src="jquery/jquery-3.4.1.min.js"></script>
+  <script src="jquery/jquery-3.5.1.min.js"></script>
   <?php
 }
 
@@ -42,13 +42,13 @@ else
 if ($debug)
 {
   ?>
-  <script src="jquery/jquery-migrate-3.1.0.js"></script>
+  <script src="jquery/jquery-migrate-3.3.0.js"></script>
   <?php
 }
 else
 {
   ?>
-  <script src="jquery/jquery-migrate-3.1.0.min.js"></script>
+  <script src="jquery/jquery-migrate-3.3.0.min.js"></script>
   <?php
 }
 
