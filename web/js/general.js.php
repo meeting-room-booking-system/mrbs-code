@@ -13,7 +13,6 @@ if ($use_strict)
 
 global $autocomplete_length_breaks;
 
-
 // Function to determine whether the browser supports the HTML5
 // <datalist> element.
 ?>
@@ -28,6 +27,25 @@ var supportsDatalist = function supportsDatalist() {
            ('options' in document.createElement('datalist')) &&
            (window.HTMLDataListElement !== undefined);
   };
+
+
+<?php
+// If we are operating on a wide screen when the standard form fieldsets are
+// displayed as tables, then make sure that the left hand column in the standard
+// form is of constant width.  If there are multiple fieldsets then each fieldset
+// will have its own width, as the display:table only applies to that fieldset.
+?>
+var adjustLabelWidths = function adjustLabelWidths() {
+  var standardFieldset = $('.standard fieldset');
+  if ((standardFieldset.length !== 0) && (standardFieldset.css('display') == 'table'))
+  {
+    var labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
+    <?php // Let the labels find their natural widths ?>
+    labels.width('auto');
+    <?php // Add on one pixel to avoid what look to be like rounding problems in some browsers ?>
+    labels.width(getMaxWidth(labels) + 1);
+  }
+}
 
 
 var args;
@@ -237,29 +255,6 @@ $(document).on('page_ready', function() {
       });
   }
 
-  <?php
-  // If we are operating on a wide screen when the standard form fieldsets are
-  // displayed as tables, then make sure that the left hand column in the standard
-  // form is of constant width.  If there are multiple fieldsets then each fieldset
-  // will have its own width, as the display:table only applies to that fieldset.
-  ?>
-  if ($('.standard fieldset').css('display') == 'table')
-  {
-    var labels = $('.standard fieldset > div > label').not('.rep_type_details label');
-
-    function getMaxWidth (selection) {
-      return Math.max.apply(null, selection.map(function() {
-        return $(this).width();
-      }).get());
-    }
-
-    <?php
-    // Add on one pixel to avoid what look to be like rounding
-    // problems in some browsers
-    ?>
-    labels.width(getMaxWidth(labels) + 1);
-  }
-
   <?php // Add a fallback for browsers that don't support the time input ?>
   $('[type="time"]').each(function() {
     if ($(this).prop('type') != 'time')
@@ -276,13 +271,12 @@ $(document).on('page_ready', function() {
     }
   });
 
+  adjustLabelWidths();
+
   $(window)
-    <?php // Make resizing smoother by not redoing headers on every resize event ?>
+    <?php // Make resizing smoother by not redoing labels on every resize event ?>
     .on('resize', throttle(function() {
-        if (labels) {
-          labels.width('auto');
-          labels.width(getMaxWidth(labels));
-        }
+        adjustLabelWidths();
       }, 100));
 
 });

@@ -61,6 +61,13 @@ jQuery.fn.extend({
 });
 
 
+function getMaxWidth (selection) {
+  return Math.max.apply(null, selection.map(function() {
+    return $(this).width();
+  }).get());
+}
+
+
 function getErrorList(errors)
 {
   var result = {html: '', text: ''},
