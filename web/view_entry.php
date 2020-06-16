@@ -284,7 +284,7 @@ if ($series == 1)
   // So I will look for the first entry in the series where the entry is
   // as per the original series settings
   $sql = "SELECT id
-          FROM $tbl_entry
+          FROM " . _tbl('entry') . "
           WHERE repeat_id=? AND entry_type=" . ENTRY_RPT_ORIGINAL . "
           ORDER BY start_time
           LIMIT 1";
@@ -298,7 +298,7 @@ if ($series == 1)
     // this page will display the start time of the series
     // but edit_entry.php will display the start time of the entry
     $sql = "SELECT id
-            FROM $tbl_entry
+            FROM " . _tbl('entry') . "
             WHERE repeat_id=?
             ORDER BY start_time
             LIMIT 1";
@@ -342,10 +342,10 @@ if (isset($action) && ($action == "export"))
       // If it's a series we want the repeat information
       $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_interval, T.month_absolute, T.month_relative";
     }
-    $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
+    $sql .= " FROM " . _tbl('area') . " A, " . _tbl('room') . " R, " . _tbl('entry') . " E";
     if ($series)
     {
-      $sql .= ", $tbl_repeat T"
+      $sql .= ", " . _tbl('repeat') . " T"
             . " WHERE E.repeat_id=?"
             . " AND E.repeat_id=T.id";
       $sql_params[] = $repeat_id;

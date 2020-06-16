@@ -204,7 +204,7 @@ if (!empty($errors))
 
 // Everything is OK, update the database
 
-$sql = "UPDATE $tbl_area SET ";
+$sql = "UPDATE " . _tbl('area') . " SET ";
 $sql_params = array();
 $assign_array = array();
 $assign_array[] = "area_name=?";

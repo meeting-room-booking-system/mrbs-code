@@ -78,10 +78,15 @@ if ($type == "room")
     try
     {
       // First take out all appointments for this room
-      db()->command("DELETE FROM $tbl_entry WHERE room_id=?", array($room));
-      db()->command("DELETE FROM $tbl_repeat WHERE room_id=?", array($room));
+      $sql = "DELETE FROM " . _tbl('entry') . " WHERE room_id=?";
+      db()->command($sql, array($room));
+      
+      $sql = "DELETE FROM " . _tbl('repeat') . " WHERE room_id=?";
+      db()->command($sql, array($room));
+      
       // Now take out the room itself
-      db()->command("DELETE FROM $tbl_room WHERE id=?", array($room));
+      $sql = "DELETE FROM " . _tbl('room') . " WHERE id=?";
+      db()->command($sql, array($room));
     }
     catch (DBException $e)
     {
@@ -102,7 +107,10 @@ if ($type == "room")
     // Find out how many appointments would be deleted
     $limit = 20;
 
-    $sql = "SELECT COUNT(*) FROM $tbl_entry WHERE room_id=?";
+    $sql = "SELECT COUNT(*)
+              FROM " . _tbl('entry') . "
+             WHERE room_id=?";
+             
     $n_bookings = db()->query1($sql, array($room));
 
     // The LIMIT parameter should ideally be one of the parameters to the
@@ -114,9 +122,11 @@ if ($type == "room")
     // Order in descending order because the latest bookings are probably the most
     // important.
     $sql = "SELECT name, start_time, end_time
-              FROM $tbl_entry WHERE room_id=?
+              FROM " . _tbl('entry') . "
+             WHERE room_id=?
           ORDER BY start_time DESC
              LIMIT $limit";
+             
     $res = db()->query($sql, array($room));
 
     if ($res->count() > 0)
@@ -160,11 +170,18 @@ if ($type == "area")
 {
   // We are only going to let them delete an area if there are
   // no rooms. its easier
-  $n = db()->query1("SELECT COUNT(*) FROM $tbl_room WHERE area_id=?", array($area));
+  $sql = "SELECT COUNT(*)
+            FROM " . _tbl('room') . "
+           WHERE area_id=?";
+           
+  $n = db()->query1($sql, array($area));
   if ($n == 0)
   {
-    // OK, nothing there, lets blast it away
-    db()->command("DELETE FROM $tbl_area WHERE id=?", array($area));
+    // OK, nothing there, let's blast it away
+    $sql = "DELETE FROM " . _tbl('area') . "
+             WHERE id=?";
+                  
+    db()->command($sql, array($area));
 
     // Redirect back to the admin page
     location_header('admin.php');

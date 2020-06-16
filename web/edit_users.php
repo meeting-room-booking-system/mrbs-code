@@ -564,7 +564,7 @@ if ($is_ajax)
 }
 
 // Get the information about the fields in the users table
-$fields = db()->field_info($tbl_users);
+$fields = db()->field_info(_tbl('users'));
 
 $users = authGetUsers();
 
@@ -614,7 +614,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   if (isset($id))
   {
     // If it's an existing user then get the data from the database
-    $result = db()->query("SELECT * FROM $tbl_users WHERE id=?", array($id));
+    $sql = "SELECT *
+              FROM " . _tbl('users') . "
+             WHERE id=?";
+    $result = db()->query($sql, array($id));
     $data = $result->next_row_keyed();
     unset($result);
     // Check that we've got a valid result.   We should do normally, but if somebody alters
@@ -670,7 +673,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   // or admin rights are removed!
   if ($action == "edit")
   {
-    $n_admins = db()->query1("SELECT COUNT(*) FROM $tbl_users WHERE level=?", array($max_level));
+    $sql = "SELECT COUNT(*)
+              FROM " . _tbl('users') . "
+             WHERE level=?";
+    $n_admins = db()->query1($sql, array($max_level));
     $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
   }
   else
@@ -729,7 +735,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     $key = $field['name'];
 
-    $params = array('label' => get_loc_field_name($tbl_users, $key),
+    $params = array('label' => get_loc_field_name(_tbl('users'), $key),
                     'name'  => VAR_PREFIX . $key,
                     'value' => $data[$key]);
 
@@ -815,8 +821,11 @@ if (isset($action) && ($action == "update"))
   // If you haven't got the rights to do this, then exit
   if (isset($current_username))
   {
-    $my_id = db()->query1("SELECT id FROM $tbl_users WHERE name=? LIMIT 1",
-                          array(utf8_strtolower($current_username)));
+    $sql = "SELECT id
+              FROM " . _tbl('users') . "
+             WHERE name=?
+             LIMIT 1";
+    $my_id = db()->query1($sql, array(utf8_strtolower($current_username)));
   }
   else
   {
@@ -948,7 +957,9 @@ if (isset($action) && ($action == "update"))
         // If it's a new user, then to check to see if there are any rows with that name.
         // If it's an update, then check to see if there are any rows with that name, except
         // for that user.
-        $query = "SELECT id FROM $tbl_users WHERE name=?";
+        $query = "SELECT id
+                    FROM " . _tbl('users') . "
+                   WHERE name=?";
         $sql_params[] = $value;
         if (isset($id))
         {
@@ -1061,7 +1072,7 @@ if (isset($action) && ($action == "update"))
      * creating a new one */
 
     $assign_array = array();
-    $operation = "UPDATE $tbl_users SET ";
+    $operation = "UPDATE " . _tbl('users') . " SET ";
 
     foreach ($sql_fields as $fieldname => $value)
     {
@@ -1089,7 +1100,7 @@ if (isset($action) && ($action == "update"))
     {
       $field = db()->quote($field);
     }
-    $operation = "INSERT INTO $tbl_users " .
+    $operation = "INSERT INTO " . _tbl('users') . " " .
       "(". implode(",", $fields_list) . ")" .
       " VALUES " . "(" . implode(",", $values_list) . ")";
   }
@@ -1109,7 +1120,12 @@ if (isset($action) && ($action == "update"))
 
 if (isset($action) && ($action == "delete"))
 {
-  $target_level = db()->query1("SELECT level FROM $tbl_users WHERE id=? LIMIT 1", array($id));
+  $sql = "SELECT level
+            FROM " . _tbl('users') . "
+           WHERE id=?
+           LIMIT 1";
+           
+  $target_level = db()->query1($sql, array($id));
   if ($target_level < 0)
   {
     fatal_error("Fatal error while deleting a user");
@@ -1122,7 +1138,9 @@ if (isset($action) && ($action == "delete"))
     exit();
   }
 
-  db()->command("DELETE FROM $tbl_users WHERE id=?", array($id));
+  $sql = "DELETE FROM " . _tbl('users') . "
+           WHERE id=?";
+  db()->command($sql, array($id));
 
   /* Success. Do not display a message. Simply fall through into the list display. */
 }
@@ -1183,7 +1201,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 
       if (!in_array($fieldname, $ignore_columns))
       {
-        $heading = get_loc_field_name($tbl_users, $fieldname);
+        $heading = get_loc_field_name(_tbl('users'), $fieldname);
         // We give some columns a type data value so that the JavaScript knows how to sort them
         switch ($fieldname)
         {

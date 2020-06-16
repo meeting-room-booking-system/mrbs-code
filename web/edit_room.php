@@ -64,19 +64,19 @@ require_once "mrbs_sql.inc";
 
 function get_custom_fields($data)
 {
-  global $tbl_room, $standard_fields, $text_input_max;
+  global $standard_fields, $text_input_max;
 
   $result = array();
   $disabled = !is_admin();
 
   // Get the information about the columns in the room table
-  $columns = db()->field_info($tbl_room);
+  $columns = db()->field_info(_tbl('room'));
 
   foreach ($columns as $column)
   {
     if (!in_array($column['name'], $standard_fields['room']))
     {
-      $label = get_loc_field_name($tbl_room, $column['name']);
+      $label = get_loc_field_name(_tbl('room'), $column['name']);
       $name = VAR_PREFIX . $column['name'];
       $value = $data[$column['name']];
 

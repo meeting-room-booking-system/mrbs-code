@@ -238,7 +238,7 @@ $sql_pred = "(( " . db()->syntax_caseless_contains("E.create_by", $search_str, $
 
 // Also need to search custom fields (but only those with character data,
 // which can include fields that have an associative array of options)
-$fields = db()->field_info($tbl_entry);
+$fields = db()->field_info(_tbl('entry'));
 foreach ($fields as $field)
 {
   if (!in_array($field['name'], $standard_fields['entry']))
@@ -312,7 +312,7 @@ if (!is_book_admin())
 if (!isset($total))
 {
   $sql = "SELECT count(*)
-          FROM $tbl_entry E, $tbl_room R, $tbl_area A
+          FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
           WHERE $sql_pred";
   $total = db()->query1($sql, $sql_params);
 }
@@ -341,7 +341,7 @@ if (!$ajax_capable || $is_ajax)
   // Now we set up the "real" query
   $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
                  E.room_id, R.area_id, A.enable_periods
-            FROM $tbl_entry E, $tbl_room R, $tbl_area A
+            FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
            WHERE $sql_pred
         ORDER BY E.start_time asc";
   // If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get

@@ -63,11 +63,13 @@ foreach ($ids as $id)
 // Because we are not using mrbsDelEntry() we have to delete any orphaned
 // rows in the repeat table ourselves - but this does not take long.
 
-$sql = "DELETE FROM $tbl_entry WHERE id IN (" . implode(',', $ids) . ")";
+$sql = "DELETE FROM " . _tbl('entry') . "
+         WHERE id IN (" . implode(',', $ids) . ")";
 $result = db()->command($sql);
 
 // And delete any orphaned rows in the repeat table
-$sql = "DELETE FROM $tbl_repeat WHERE id NOT IN (SELECT repeat_id FROM $tbl_entry)";
+$sql = "DELETE FROM " . _tbl('repeat') . "
+         WHERE id NOT IN (SELECT repeat_id FROM " . _tbl('entry') . ")";
 $orphan_result = db()->command($sql);
 
 
