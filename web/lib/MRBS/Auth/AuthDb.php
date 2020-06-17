@@ -18,8 +18,6 @@ class AuthDb extends Auth
    */
   public function validateUser($user, $pass)
   {
-    global $tbl_users;
-
     // The string $user that the user logged on with could be either a username or
     // an email address, or even possibly just the local part of an email address.
     // So it's just possible that there is more than one user with this password and
@@ -40,7 +38,9 @@ class AuthDb extends Auth
       $result = $valid_usernames[0];
       // Update the database with this login, but don't change the timestamp
       $now = time();
-      $sql = "UPDATE $tbl_users SET last_login=?, timestamp=timestamp WHERE name=?";
+      $sql = "UPDATE " . _tbl('users') . "
+                 SET last_login=?, timestamp=timestamp
+               WHERE name=?";
       $sql_params = array($now, $result);
       \MRBS\db()->command($sql, $sql_params);
       return $result;
@@ -65,8 +65,6 @@ class AuthDb extends Auth
    */
   private function validateUsername($user, $pass)
   {
-    global $tbl_users;
-
     $sql_params = array();
 
     // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
@@ -76,7 +74,7 @@ class AuthDb extends Auth
 
     // Usernames are unique in the users table, so we only look for one.
     $sql = "SELECT password_hash
-            FROM $tbl_users
+            FROM " . _tbl('users') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
            LIMIT 1";
 
@@ -106,7 +104,6 @@ class AuthDb extends Auth
    */
   private function validateEmail($email, $pass)
   {
-    global $tbl_users;
     global $auth;
 
     $valid_usernames = array();
@@ -138,7 +135,7 @@ class AuthDb extends Auth
 
     // Email addresses are not unique in the users table, so we need to find all of them.
     $sql = "SELECT password_hash, name
-            FROM $tbl_users
+            FROM " . _tbl('users') . "
            WHERE $condition";
 
     $res = \MRBS\db()->query($sql, $sql_params);
@@ -160,9 +157,11 @@ class AuthDb extends Auth
 
   public function getUser($username)
   {
-    global $tbl_users;
-
-    $sql = "SELECT * FROM $tbl_users WHERE name=:name LIMIT 1";
+    $sql = "SELECT *
+              FROM " . _tbl('users') . "
+             WHERE name=:name
+             LIMIT 1";
+             
     $result = \MRBS\db()->query($sql, array(':name' => $username));
 
     // The username doesn't exist - return NULL
@@ -194,9 +193,11 @@ class AuthDb extends Auth
   // Return an array of users, indexed by 'username' and 'display_name'
   public function getUsernames()
   {
-    global $tbl_users;
+    $sql = "SELECT name AS username, display_name AS display_name
+              FROM " . _tbl('users') . "
+          ORDER BY display_name";
 
-    $res = \MRBS\db()->query("SELECT name AS username, display_name AS display_name FROM $tbl_users ORDER BY display_name");
+    $res = \MRBS\db()->query($sql);
 
     return $res->all_rows_keyed();
   }
@@ -212,9 +213,11 @@ class AuthDb extends Auth
   // Return an array of all users
   public function getUsers()
   {
-    global $tbl_users;
-
-    $res = \MRBS\db()->query("SELECT * FROM $tbl_users ORDER BY name");
+    $sql = "SELECT *
+              FROM " . _tbl('users') . "
+             ORDER BY name";
+             
+    $res = \MRBS\db()->query($sql);
 
     return $res->all_rows_keyed();
   }
@@ -222,8 +225,6 @@ class AuthDb extends Auth
 
   private function rehash($password, $column_name, $column_value)
   {
-    global $tbl_users;
-
     $sql_params = array(password_hash($password, PASSWORD_DEFAULT));
 
     switch ($column_name)
@@ -246,7 +247,7 @@ class AuthDb extends Auth
         break;
     }
 
-    $sql = "UPDATE $tbl_users
+    $sql = "UPDATE " . _tbl('users') . "
                SET password_hash=?
              WHERE $condition";
 
