@@ -38,7 +38,6 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields;
   global $strftime_format;
-  global $tbl_entry;
   global $select_options, $booking_types;
   global $edit_entry_field_order;
 
@@ -94,7 +93,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     }
   }
 
-  $fields = db()->field_info($tbl_entry);
+  $fields = db()->field_info(_tbl('entry'));
 
   // Get the order in which to display fields
   $field_order = (isset($edit_entry_field_order)) ? $edit_entry_field_order : array();
@@ -244,7 +243,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
           break;
         }
 
-        $label = get_loc_field_name($tbl_entry, $key);
+        $label = get_loc_field_name(_tbl('entry'), $key);
         // Output a yes/no if it's a boolean or integer <= 2 bytes (which we will
         // assume are intended to be booleans)
         if (($field['nature'] == 'boolean') ||

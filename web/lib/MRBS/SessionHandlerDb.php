@@ -14,9 +14,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   
   public function __construct()
   {
-    global $tbl_sessions;
-  
-    self::$table = $tbl_sessions;
+    self::$table = _tbl('sessions');
     
     if (!db()->table_exists(self::$table))
     {

@@ -6,9 +6,9 @@ namespace MRBS;
 
 require_once "standard_vars.inc.php";  // won't have been included yet and we need it for $area_defaults
 
-global $tbl_area, $area_defaults, $boolean_fields, $admin_handle;
+global $area_defaults, $boolean_fields, $admin_handle;
 
-$fields = $admin_handle->field_info($tbl_area);
+$fields = $admin_handle->field_info(_tbl('area'));
 foreach ($fields as $field)
 {
   $key = $field['name'];
@@ -22,7 +22,7 @@ foreach ($fields as $field)
     {
       $sql_val = $area_defaults[$key];
     }
-    $sql = "UPDATE $tbl_area SET $key=? WHERE $key IS NULL";
+    $sql = "UPDATE " . _tbl('area') . " SET $key=? WHERE $key IS NULL";
     $admin_handle->command($sql, array($sql_val));
   }
 }

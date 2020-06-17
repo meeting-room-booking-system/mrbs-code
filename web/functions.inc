@@ -137,43 +137,39 @@ function get_rep_interval_units_mail($rep_type, $rep_interval)
 // Returns the maximum length, in characters, of a column, or NULL if the maximum
 // length is not known.   Should only be called after any database upgrades have been
 // performed as the results are stored in a static variable and so the maximum lengths
-// may change after an upgrade.
+// may change after an upgrade.  $column is of the form, <table_short_name.column_name>,
+// for example, 'area.area_name'.
 function maxlength($column)
 {
-  global $table_vars;
+  static $maxlengths = array();
 
-  static $maxlengths = null;
+  list($table_short_name, $column_name) = explode('.', $column);
 
-  if (!isset($maxlengths))
+  if (!isset($maxlengths[$table_short_name]))
   {
-    $maxlengths = array();
+    $maxlengths[$table_short_name] = array();
 
-    foreach ($table_vars as $table => $var)
+    // Check to see if the table exists, as it won't yet if it's about
+    // to be created as part of an upgrade
+    if (db()->table_exists(_tbl($table_short_name)))
     {
-      global $$var;
+      // Find the maximum length of the CHAR and VARCHAR fields (we won't
+      // worry about TEXT fields)
+      $field_info = db()->field_info(_tbl($table_short_name));
 
-      // Check to see if the table exists, as it won't yet if it's about
-      // to be created as part of an upgrade
-      if (db()->table_exists($$var))
+      foreach ($field_info as $field)
       {
-        // Find the maximum length of the CHAR and VARCHAR fields (we won't
-        // worry about TEXT fields)
-        $field_info = db()->field_info($$var);
-
-        foreach ($field_info as $field)
+        if (($field['nature'] == 'character') &&
+            isset($field['length']) &&
+            ($field['length'] < 256))
         {
-          if (($field['nature'] == 'character') &&
-              isset($field['length']) &&
-              ($field['length'] < 256))
-          {
-            $maxlengths[$table . '.' . $field['name']] = (int) $field['length'];
-          }
+          $maxlengths[$table_short_name][$field['name']] = (int) $field['length'];
         }
       }
     }
   }
 
-  return (isset($maxlengths[$column])) ? $maxlengths[$column] : null;
+  return (isset($maxlengths[$table_short_name][$column_name])) ? $maxlengths[$table_short_name][$column_name] : null;
 }
 
 
@@ -1139,18 +1135,18 @@ function escape_js($str)
 // This could be changed to implement something like per-user defaults.
 function get_default_area()
 {
-  global $tbl_area, $tbl_room, $default_room;
+  global $default_room;
 
   // It's possible that this function is being called during
   // an upgrade process before the disabled columns existed.
-  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+  $disabled_field_exists = db()->field_exists(_tbl('room'), 'disabled');
 
   // If the $default_room is set and exists and is enabled and is visible to
   // the current user, then return the corresponding area
   if (isset($default_room) && is_visible($default_room))
   {
     $sql = "SELECT area_id
-              FROM $tbl_room R, $tbl_area A
+              FROM " . _tbl('room') . " R, " . _tbl('area') . " A
              WHERE R.id=:id
                AND R.area_id = A.id";
 
@@ -1171,7 +1167,7 @@ function get_default_area()
   // Otherwise return the first enabled area in the database that has an
   // enabled and visible room
   $sql = "SELECT R.id, R.area_id
-            FROM $tbl_room R, $tbl_area A
+            FROM " . _tbl('room') . " R, " . _tbl('area') . " A
            WHERE R.area_id = A.id";
 
   if ($disabled_field_exists)
@@ -1199,16 +1195,18 @@ function get_default_area()
 // This could be changed to implement something like per-user defaults.
 function get_default_room($area)
 {
-  global $tbl_room, $default_room;
+  global $default_room;
 
   // It's possible that this function is being called during
   // an upgrade process before the disabled columns existed.
-  $disabled_field_exists = db()->field_exists($tbl_room, 'disabled');
+  $disabled_field_exists = db()->field_exists(_tbl('room'), 'disabled');
 
   // Check to see whether this area contains $default_room
   if (isset($default_room))
   {
-    $sql = "SELECT id FROM $tbl_room WHERE id=:id AND area_id=:area_id";
+    $sql = "SELECT id
+              FROM " . _tbl('room') . "
+             WHERE id=:id AND area_id=:area_id";
 
     if ($disabled_field_exists)
     {
@@ -1231,11 +1229,17 @@ function get_default_room($area)
   return (count($rooms) > 0) ? $rooms[0]['id'] : 0;
 }
 
+
 // Return an area id for a given room
 function get_area($room)
 {
-  global $tbl_room;
-  $area = db()->query1("SELECT area_id FROM $tbl_room WHERE id=? LIMIT 1", array($room));
+  $sql = "SELECT area_id
+            FROM " . _tbl('room') . "
+           WHERE id=?
+           LIMIT 1";
+
+  $area = db()->query1($sql, array($room));
+
   return ($area < 0 ? 0 : $area);
 }
 
@@ -1295,7 +1299,6 @@ function clean_area_row($row)
 // If $area is empty, use the default area
 function get_area_settings($area)
 {
-  global $tbl_area;
   global $resolution, $default_duration, $default_duration_all_day;
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
@@ -1334,7 +1337,7 @@ function get_area_settings($area)
                    'confirmation_enabled', 'confirmed_default');
 
   $sql = "SELECT *
-            FROM $tbl_area
+            FROM " . _tbl('area') . "
            WHERE id=?
            LIMIT 1";
 
@@ -1423,10 +1426,8 @@ function some_area_predicate($field)
 // Returns: boolean
 function some_area($field, $enabled=false)
 {
-  global $tbl_area;
-
   $predicate = some_area_predicate($field);
-  $sql = "SELECT COUNT(*) FROM $tbl_area WHERE $predicate";
+  $sql = "SELECT COUNT(*) FROM " . _tbl('area') . " WHERE $predicate";
   $sql .= ($enabled) ? " AND disabled=0" : "";
   $sql .= " LIMIT 1";
   return (db()->query1($sql) > 0);

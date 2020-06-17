@@ -18,8 +18,6 @@ namespace MRBS;
 
 function rehash($password, $column_name, $column_value)
 {
-  global $tbl_users;
-  
   $sql_params = array(password_hash($password, PASSWORD_DEFAULT));
   
   switch ($column_name)
@@ -42,7 +40,7 @@ function rehash($password, $column_name, $column_value)
       break;
   }
   
-  $sql = "UPDATE $tbl_users
+  $sql = "UPDATE " . _tbl('users') . "
              SET password_hash=?
            WHERE $condition";
     
@@ -102,8 +100,6 @@ function checkPassword($password, $password_hash, $column_name, $column_value)
  */
 function authValidateUser($user, $pass)
 {
-  global $tbl_users;
-
   // The string $user that the user logged on with could be either a username or
   // an email address, or even possibly just the local part of an email address.
   // So it's just possible that there is more than one user with this password and
@@ -124,7 +120,9 @@ function authValidateUser($user, $pass)
     $result = $valid_usernames[0];
     // Update the database with this login, but don't change the timestamp
     $now = time();
-    $sql = "UPDATE $tbl_users SET last_login=?, timestamp=timestamp WHERE name=?";
+    $sql = "UPDATE " . _tbl('users') . "
+               SET last_login=?, timestamp=timestamp
+             WHERE name=?";
     $sql_params = array($now, $result);
     db()->command($sql, $sql_params);
     return $result;
@@ -149,8 +147,6 @@ function authValidateUser($user, $pass)
  */
 function authValidateUsername($user, $pass)
 {
-  global $tbl_users;
-
   $sql_params = array();
 
   // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
@@ -160,7 +156,7 @@ function authValidateUsername($user, $pass)
   
   // Usernames are unique in the users table, so we only look for one.
   $sql = "SELECT password_hash
-            FROM $tbl_users
+            FROM " . _tbl('users') . "
            WHERE " .
          db()->syntax_casesensitive_equals('name', utf8_strtolower($user), $sql_params) .
          "
@@ -192,7 +188,6 @@ function authValidateUsername($user, $pass)
  */
 function authValidateEmail($email, $pass)
 {
-  global $tbl_users;
   global $auth;
   
   $valid_usernames = array();
@@ -224,7 +219,7 @@ function authValidateEmail($email, $pass)
 
   // Email addresses are not unique in the users table, so we need to find all of them.
   $sql = "SELECT password_hash, name
-            FROM $tbl_users
+            FROM " . _tbl('users') . "
            WHERE $condition";
 
   $res = db()->query($sql, $sql_params);
@@ -263,15 +258,18 @@ function canValidateByEmail()
  */
 function authGetUserLevel($user)
 {
-  global $tbl_users;
   // User not logged in, user level '0'
   if(!isset($user))
   {
     return 0;
   }
   
-  $result = db()->query1("SELECT level FROM $tbl_users WHERE name=? LIMIT 1",
-                       array(utf8_strtolower($user)));
+  $sql = "SELECT level
+            FROM " . _tbl('users') . "
+           WHERE name=?
+           LIMIT 1";
+  
+  $result = db()->query1($sql, array(utf8_strtolower($user)));
 
   return ($result == -1) ? 0 : $result;
 }
@@ -281,15 +279,13 @@ function authGetUserLevel($user)
 // string if one can't be found
 function authGetUserEmail($user)
 {
-  global $tbl_users;
-  
   if (!isset($user) || $user === '')
   {
     return '';
   }
   
   $sql = "SELECT email 
-            FROM $tbl_users 
+            FROM " . _tbl('users') . "
            WHERE name=?
            LIMIT 1";
            
@@ -302,9 +298,11 @@ function authGetUserEmail($user)
 // Return an array of all users
 function authGetUsers()
 {
-  global $tbl_users;
+  $sql = "SELECT *
+            FROM " . _tbl('users') . "
+           ORDER BY name";
   
-  $res = db()->query("SELECT * FROM $tbl_users ORDER BY name");
+  $res = db()->query($sql);
   
   return $res->all_rows_keyed();
 }
@@ -313,9 +311,11 @@ function authGetUsers()
 // Return an array of users, indexed by 'username' and 'display_name'
 function authGetUsernames()
 {
-  global $tbl_users;
-  
-  $res = db()->query("SELECT name AS username, name AS display_name FROM $tbl_users ORDER BY name");
+  $sql = "SELECT name AS username, name AS display_name
+            FROM " . _tbl('users') . "
+        ORDER BY name";
+        
+  $res = db()->query($sql);
   
   return $res->all_rows_keyed();
 }

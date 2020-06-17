@@ -12,14 +12,14 @@ namespace MRBS;
 // as this upgrade procedure is only used once for existing entries).
 
 
-global $dbsys, $tbl_entry, $tbl_repeat, $admin_handle, $server;
+global $dbsys, $admin_handle, $server;
 
 // There's the option here to display some timing information as this upgrade
 // could take a while
 $display_timing = FALSE;
 
-$n_entry = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_entry");
-$n_repeat = $admin_handle->query1("SELECT COUNT(*) FROM $tbl_repeat");
+$n_entry = $admin_handle->query1("SELECT COUNT(*) FROM " . _tbl('entry'));
+$n_repeat = $admin_handle->query1("SELECT COUNT(*) FROM " . _tbl('repeat'));
 if ($display_timing)
 {
  echo "Upgrade 24: $n_entry entry rows and $n_repeat repeat rows";
@@ -35,14 +35,14 @@ $start_clock = get_microtime();
 if ($dbsys != "pgsql")
 {
   // Give all the individual entries, that haven't already got one, an ical uid
-  $sql = "UPDATE $tbl_entry
+  $sql = "UPDATE " . _tbl('entry') . "
              SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
                  timestamp=timestamp
            WHERE ical_uid='' AND repeat_id=0";
   $admin_handle->command($sql);
 
   // Give everything in the repeat table, that doesn't already have one, an ical uid
-  $sql = "UPDATE $tbl_repeat
+  $sql = "UPDATE " . _tbl('repeat') . "
              SET ical_uid=CONCAT(CAST(id AS char), '-', UUID()),
                  timestamp=timestamp
            WHERE ical_uid=''";
@@ -51,7 +51,7 @@ if ($dbsys != "pgsql")
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
   // repeat table
-  $sql = "UPDATE $tbl_entry E, $tbl_repeat R
+  $sql = "UPDATE " . _tbl('entry') . " E, " . _tbl('repeat') . " R
              SET E.ical_uid=R.ical_uid,
                  E.timestamp=E.timestamp,
                  R.timestamp=R.timestamp
@@ -61,7 +61,7 @@ if ($dbsys != "pgsql")
   
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series                      
-  $sql = "UPDATE $tbl_entry
+  $sql = "UPDATE " . _tbl('entry') . "
              SET ical_recur_id=DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(start_time), @@session.time_zone, '+0:00'), '%Y%m%dT%H%i%sZ'),
                  timestamp=timestamp
            WHERE repeat_id!=0
@@ -96,14 +96,14 @@ else
   }
 
   // Give all the individual entries, that haven't already got one, an ical uid
-  $sql = "UPDATE $tbl_entry 
+  $sql = "UPDATE " . _tbl('entry') . "
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''
              AND repeat_id=0";
   $admin_handle->command($sql);
              
   // Give everything in the repeat table, that doesn't already have one, an ical uid
-  $sql = "UPDATE $tbl_repeat
+  $sql = "UPDATE " . _tbl('repeat') . "
              SET ical_uid='MRBS-' || CAST(id AS varchar(255)) || '-' || CURRENT_DATE || CURRENT_TIME || '-' || SUBSTRING((MD5(name || CAST(RANDOM() AS varchar(255)))) from 1 for 8) || '@$domain_name'
            WHERE ical_uid=''";
   $admin_handle->command($sql);
@@ -111,17 +111,17 @@ else
   // Now go through the entry table and give all entries, that don't have an ical uid
   // and are members of a series, the ical_uid from the corresponding uid from the
   // repeat table.   (The SQL is slightly different from the MySQL case)
-  $sql = "UPDATE $tbl_entry
+  $sql = "UPDATE " . _tbl('entry') . "
              SET ical_uid=R.ical_uid
-            FROM $tbl_repeat AS R
-           WHERE $tbl_entry.ical_uid=''
-             AND $tbl_entry.repeat_id=R.id";
+            FROM " . _tbl('repeat') . " AS R
+           WHERE " . _tbl('entry') . ".ical_uid=''
+             AND " . _tbl('entry') . ".repeat_id=R.id";
   $admin_handle->command($sql);
              
   // Finally give a recurrence id to any entry in the entry table that hasn't got one
   // and should have one - ie if it is a member of a series (The SQL is slightly
   // different from the MySQL case)                   
-  $sql = "UPDATE $tbl_entry
+  $sql = "UPDATE " . _tbl('entry') . "
              SET ical_recur_id=TO_CHAR(TIMESTAMP 'epoch' + start_time * INTERVAL '1 second', 'YYYYMMDD\"T\"HH24MISS\"Z\"')
            WHERE repeat_id!=0
              AND ical_recur_id=''";

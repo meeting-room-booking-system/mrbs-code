@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-global $tbl_entry, $tbl_repeat, $admin_handle;
+global $admin_handle;
 
 // We are about to introduce a new status, the confirmation status, for bookings
 // that are not 100% certain to happen.   Instead of introducing yet another column
@@ -28,17 +28,17 @@ global $tbl_entry, $tbl_repeat, $admin_handle;
 // Acquire mutex to lock out others trying to update the entry table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
-if (!$admin_handle->mutex_lock($tbl_entry))
+if (!$admin_handle->mutex_lock(_tbl('entry')))
 {
   fatal_error(get_vocab("failed_to_acquire"));
 }
 
-$sql = "UPDATE $tbl_entry
+$sql = "UPDATE " . _tbl('entry') . "
            SET status=(((~status)&1)<<1)|(private&1),
                timestamp=timestamp";
 $admin_handle->command($sql);
 
-$admin_handle->mutex_unlock($tbl_entry);
+$admin_handle->mutex_unlock(_tbl('entry'));
 
 
 
@@ -49,12 +49,12 @@ $admin_handle->mutex_unlock($tbl_entry);
 // Acquire mutex to lock out others trying to update the repeat table (unlikely because
 // the only other people able to update the database at this stage will be site admins
 // who know the database username and password, but just in case ...)
-if (!$admin_handle->mutex_lock($tbl_repeat))
+if (!$admin_handle->mutex_lock(_tbl('repeat')))
 {
   fatal_error(get_vocab("failed_to_acquire"));
 }
 
-$sql = "UPDATE $tbl_repeat
+$sql = "UPDATE " . _tbl('repeat') . "
            SET status=private&1,
                timestamp=timestamp";
 $admin_handle->command($sql);
@@ -64,7 +64,7 @@ $admin_handle->command($sql);
 
 // Find all the rows in the entry table that are members of a series and are awaiting approval
 $sql = "SELECT DISTINCT repeat_id
-          FROM $tbl_entry
+          FROM " . _tbl('entry') . "
          WHERE repeat_id!=0
            AND (status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 $res = $admin_handle->query($sql);
@@ -72,7 +72,7 @@ $res = $admin_handle->query($sql);
 while (false !== ($row = $res->next_row_keyed()))
 {
   // Set the approval status for each one
-  $sql = "UPDATE $tbl_repeat
+  $sql = "UPDATE " . _tbl('repeat') . "
              SET status=status|" . STATUS_AWAITING_APPROVAL . ",
                  timestamp=timestamp
            WHERE id=" . $row['repeat_id'];
@@ -85,5 +85,5 @@ while (false !== ($row = $res->next_row_keyed()))
   }
 }  
 
-$admin_handle->mutex_unlock($tbl_repeat);
+$admin_handle->mutex_unlock(_tbl('repeat'));
 
