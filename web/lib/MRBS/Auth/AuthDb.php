@@ -38,7 +38,7 @@ class AuthDb extends Auth
       $result = $valid_usernames[0];
       // Update the database with this login, but don't change the timestamp
       $now = time();
-      $sql = "UPDATE " . _tbl('users') . "
+      $sql = "UPDATE " . \MRBS\_tbl('users') . "
                  SET last_login=?, timestamp=timestamp
                WHERE name=?";
       $sql_params = array($now, $result);
@@ -74,7 +74,7 @@ class AuthDb extends Auth
 
     // Usernames are unique in the users table, so we only look for one.
     $sql = "SELECT password_hash
-            FROM " . _tbl('users') . "
+            FROM " . \MRBS\_tbl('users') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
            LIMIT 1";
 
@@ -135,7 +135,7 @@ class AuthDb extends Auth
 
     // Email addresses are not unique in the users table, so we need to find all of them.
     $sql = "SELECT password_hash, name
-            FROM " . _tbl('users') . "
+            FROM " . \MRBS\_tbl('users') . "
            WHERE $condition";
 
     $res = \MRBS\db()->query($sql, $sql_params);
@@ -158,10 +158,10 @@ class AuthDb extends Auth
   public function getUser($username)
   {
     $sql = "SELECT *
-              FROM " . _tbl('users') . "
+              FROM " . \MRBS\_tbl('users') . "
              WHERE name=:name
              LIMIT 1";
-             
+
     $result = \MRBS\db()->query($sql, array(':name' => $username));
 
     // The username doesn't exist - return NULL
@@ -194,7 +194,7 @@ class AuthDb extends Auth
   public function getUsernames()
   {
     $sql = "SELECT name AS username, display_name AS display_name
-              FROM " . _tbl('users') . "
+              FROM " . \MRBS\_tbl('users') . "
           ORDER BY display_name";
 
     $res = \MRBS\db()->query($sql);
@@ -214,9 +214,9 @@ class AuthDb extends Auth
   public function getUsers()
   {
     $sql = "SELECT *
-              FROM " . _tbl('users') . "
+              FROM " . \MRBS\_tbl('users') . "
              ORDER BY name";
-             
+
     $res = \MRBS\db()->query($sql);
 
     return $res->all_rows_keyed();
@@ -247,7 +247,7 @@ class AuthDb extends Auth
         break;
     }
 
-    $sql = "UPDATE " . _tbl('users') . "
+    $sql = "UPDATE " . \MRBS\_tbl('users') . "
                SET password_hash=?
              WHERE $condition";
 
