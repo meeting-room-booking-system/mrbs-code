@@ -1666,7 +1666,12 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
             " AND A.disabled = 0";
   }
 
-  $sql .= " ORDER BY R.sort_key";
+  // In early versions of MRBS the sort_key field didn't exist and this function
+  // is called before the database can be upgraded.
+  if (db()->field_exists($tbl_room, 'sort_key'))
+  {
+    $sql .= " ORDER BY R.sort_key";
+  }
 
   $res = db()->query($sql, array($area));
 
