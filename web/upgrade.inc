@@ -12,7 +12,7 @@ use MRBS\Form\FieldInputSubmit;
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
-if (!db()->table_exists($tbl_entry))
+if (!db()->table_exists(_tbl('entry')))
 {
   fatal_error(get_vocab('fatal_no_tables'));
 }
@@ -111,7 +111,6 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
   // have admin rights (eg CREATE and ALTER)
   global $dbsys;
   global $db_tbl_prefix, $db_schema;
-  global $tbl_variables;
 
   $sql_type = $dbsys;
   if ($sql_type == 'mysqli')
@@ -169,7 +168,7 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
     if ($ver > 1)
     {
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      $upgrade_handle->command("UPDATE $tbl_variables SET variable_content = ? ".
+      $upgrade_handle->command("UPDATE " . _tbl('variables') . " SET variable_content = ? ".
                                "WHERE variable_name = ?", array($ver, $variable_name));
     }
     upgrade_echo("</p>\n");

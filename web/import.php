@@ -53,7 +53,6 @@ function get_compression_wrappers()
 function get_room_id($location, &$error)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create;
-  global $tbl_room, $tbl_area;
   
   // If there's no delimiter we assume we've just been given a room name (that will
   // have to be unique).   Otherwise we split the location into its area and room parts
@@ -81,7 +80,9 @@ function get_room_id($location, &$error)
   // know which area to put it in.
   if ($location_area == '')
   {
-    $sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_name=?";
+    $sql = "SELECT COUNT(*)
+              FROM " . _tbl('room') . "
+             WHERE room_name=?";
     $count = db()->query1($sql, array($location_room));
 
     if ($count == 0)
@@ -96,7 +97,10 @@ function get_room_id($location, &$error)
     }
     else // we've got a unique room name
     {
-      $sql = "SELECT id FROM $tbl_room WHERE room_name=? LIMIT 1";
+      $sql = "SELECT id
+                FROM " . _tbl('room') . "
+               WHERE room_name=?
+               LIMIT 1";
       $id = db()->query1($sql, array($location_room));
       return $id;
     }
@@ -107,7 +111,7 @@ function get_room_id($location, &$error)
   {
     // First of all get the area id
     $sql = "SELECT id
-              FROM $tbl_area
+              FROM " . _tbl('area') . "
              WHERE area_name=?
              LIMIT 1";
     $area_id = db()->query1($sql, array($location_area));
@@ -134,7 +138,7 @@ function get_room_id($location, &$error)
   }
   // Now we've got the area_id get the room_id
   $sql = "SELECT id
-            FROM $tbl_room
+            FROM " . _tbl('room') . "
            WHERE room_name=?
              AND area_id=?
            LIMIT 1";

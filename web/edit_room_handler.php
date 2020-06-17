@@ -39,7 +39,7 @@ foreach($form_vars as $var => $var_type)
 }
 
 // Get the information about the fields in the room table
-$fields = db()->field_info($tbl_room);
+$fields = db()->field_info(_tbl('room'));
 
 // Get any custom fields
 foreach($fields as $field)
@@ -111,12 +111,18 @@ if (empty($errors))
   $sql_params = array();
 
   // Acquire a mutex to lock out others who might be deleting the new area
-  if (!db()->mutex_lock($tbl_area))
+  if (!db()->mutex_lock(_tbl('area')))
   {
     fatal_error(get_vocab("failed_to_acquire"));
   }
+  
   // Check the new area still exists
-  if (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE id=? LIMIT 1", array($new_area)) < 1)
+  $sql = "SELECT COUNT(*)
+            FROM " . _tbl('area') . "
+           WHERE id=?
+           LIMIT 1";
+           
+  if (db()->query1($sql, array($new_area)) < 1)
   {
     $errors[] = 'invalid_area';
   }
@@ -128,7 +134,7 @@ if (empty($errors))
   //  keep the flow of this elseif block]
   elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
           && db()->query1("SELECT COUNT(*)
-                             FROM $tbl_room
+                             FROM " . _tbl('room') . "
                             WHERE" . db()->syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
                               AND area_id=?
                             LIMIT 1", array($room_name, $new_area)) > 0)
@@ -140,7 +146,7 @@ if (empty($errors))
   {
     // Convert booleans into 0/1 (necessary for PostgreSQL)
     $room_disabled = (!empty($room_disabled)) ? 1 : 0;
-    $sql = "UPDATE $tbl_room SET ";
+    $sql = "UPDATE " . _tbl('room') . " SET ";
     $sql_params = array();
     $assign_array = array();
     foreach ($fields as $field)
@@ -212,12 +218,12 @@ if (empty($errors))
     db()->command($sql, $sql_params);
 
     // Release the mutex and go back to the admin page (for the new area)
-    db()->mutex_unlock($tbl_area);
+    db()->mutex_unlock(_tbl('area'));
     location_header("admin.php?day=$day&month=$month&year=$year&area=$new_area&room=$room");
   }
 
   // Release the mutex
-  db()->mutex_unlock($tbl_area);
+  db()->mutex_unlock(_tbl('area'));
 }
 
 

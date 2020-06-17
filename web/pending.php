@@ -265,8 +265,8 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                M.room_name, M.area_id, A.area_name, A.enable_periods,
                E.info_time AS entry_info_time, E.info_user AS entry_info_user,
                T.info_time AS repeat_info_time, T.info_user AS repeat_info_user
-          FROM $tbl_room AS M, $tbl_area AS A, $tbl_entry AS E
-     LEFT JOIN $tbl_repeat AS T ON E.repeat_id=T.id
+          FROM " . _tbl('room') . " AS M, " . _tbl('area') . " AS A, " . _tbl('entry') . " AS E
+     LEFT JOIN " . _tbl('repeat') . " AS T ON E.repeat_id=T.id
          WHERE E.room_id = M.id
            AND M.area_id = A.id
            AND M.disabled = 0

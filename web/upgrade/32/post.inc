@@ -3,11 +3,11 @@ namespace MRBS;
 
 require_once "standard_vars.inc.php"; // to ensure the timezone is set
 
-global $tbl_repeat, $tbl_area, $tbl_room, $admin_handle;
+global $admin_handle;
 
 // Get all the monthly repeats
 $sql = "SELECT T.id, T.start_time, A.timezone
-          FROM $tbl_repeat T, $tbl_area A, $tbl_room M
+          FROM " . _tbl('repeat') . " T, " . _tbl('area') . " A, " . _tbl('room') . " M
          WHERE T.rep_type=" . REP_MONTHLY . "
            AND T.room_id=M.id
            AND M.area_id=A.id";
@@ -32,7 +32,10 @@ while (false !== ($row = $res->next_row_keyed()))
 
 foreach ($mods as $id => $month_absolute)
 {
-  $sql = "UPDATE $tbl_repeat SET month_absolute=$month_absolute WHERE id=$id";
+  $sql = "UPDATE " . _tbl('repeat') . "
+             SET month_absolute=$month_absolute
+           WHERE id=$id";
+           
   $admin_handle->command($sql);
 }
 

@@ -58,13 +58,11 @@ function get_field_areamatch($data)
 
 function get_field_roommatch($data)
 {
-  global $tbl_room;
-
   $field = new FieldInputDatalist();
 
   // (We need DISTINCT because it's possible to have two rooms of the same name
   // in different areas)
-  $sql = "SELECT DISTINCT room_name FROM $tbl_room";
+  $sql = "SELECT DISTINCT room_name FROM " . _tbl('room');
 
   // Don't show the invisible rooms
   $invisible_room_ids = get_invisible_room_ids();
@@ -200,11 +198,10 @@ function get_field_custom($data, $key)
   $var = "match_$key";
   global $$var;
 
-  global $tbl_entry,
-         $field_natures, $field_lengths;
+  global $field_natures, $field_lengths;
 
   $name = $var;
-  $label = get_loc_field_name($tbl_entry, $key);
+  $label = get_loc_field_name(_tbl('entry'), $key);
 
   // Output a radio group if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
@@ -571,7 +568,7 @@ function type_wrap($string, $data_type)
 function report_header()
 {
   global $output_format, $is_ajax;
-  global $custom_fields, $tbl_entry;
+  global $custom_fields;
   global $approval_somewhere, $confirmation_somewhere;
   global $field_order_list, $booking_types;
 
@@ -636,7 +633,7 @@ function report_header()
         // the custom fields
         if (array_key_exists($field, $custom_fields))
         {
-          $values[] = get_loc_field_name($tbl_entry, $field);
+          $values[] = get_loc_field_name(_tbl('entry'), $field);
         }
         break;
     }  // switch
@@ -1398,8 +1395,8 @@ if ($is_ajax)
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
-$times_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods=0") > 0);
-$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM $tbl_area WHERE enable_periods!=0") > 0);
+$times_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods=0") > 0);
+$periods_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods!=0") > 0);
 
 
 // Build the report search field order
@@ -1428,7 +1425,7 @@ foreach ($report_search_fields as $field)
 }
 
 // Get information about custom fields
-$fields = db()->field_info($tbl_entry);
+$fields = db()->field_info(_tbl('entry'));
 $custom_fields = array();
 $field_natures = array();
 $field_lengths = array();
@@ -1495,12 +1492,12 @@ if ($phase == 2)
     // information in order to construct the recurrence rule
     $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_interval, T.month_absolute, T.month_relative";
   }
-  $sql .= " FROM $tbl_area A, $tbl_room R, $tbl_entry E";
+  $sql .= " FROM " . _tbl('area') . " A, " . _tbl('room') . " R, " . _tbl('entry') . " E";
   if ($output_format == OUTPUT_ICAL)
   {
     // We do a LEFT JOIN because we still want the single entries, ie the ones
     // that won't have a match in the repeat table
-    $sql .= " LEFT JOIN $tbl_repeat T ON E.repeat_id=T.id";
+    $sql .= " LEFT JOIN " . _tbl('repeat') . " T ON E.repeat_id=T.id";
   }
   $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
         . " AND E.start_time < ? AND E.end_time > ?";

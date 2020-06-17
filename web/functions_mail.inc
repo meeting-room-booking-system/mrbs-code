@@ -239,17 +239,15 @@ function get_approvers_email($room_id)
 // Returns an empty string in the case of an error
 function get_area_admin_email($id, $series=FALSE)
 {
-  global $tbl_room, $tbl_area, $tbl_entry, $tbl_repeat;
-
   $id_table = ($series) ? "rep" : "e";
 
   $sql = "SELECT a.area_admin_email ";
-  $sql .= "FROM $tbl_room r, $tbl_area a, $tbl_entry e ";
+  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('area') . " a, " . _tbl('entry') . " e ";
   // If this is a repeating entry...
   if ($id_table == 'rep')
   {
     // ...use the repeat table
-    $sql .= ", $tbl_repeat rep ";
+    $sql .= ", " . _tbl('repeat') . " rep ";
   }
   $sql .= "WHERE ${id_table}.id=?
              AND r.id=${id_table}.room_id
@@ -266,17 +264,15 @@ function get_area_admin_email($id, $series=FALSE)
 // Returns an empty string in the case of an error
 function get_room_admin_email($id, $series=FALSE)
 {
-  global $tbl_room, $tbl_entry, $tbl_repeat;
-
   $id_table = ($series) ? "rep" : "e";
 
   $sql = "SELECT r.room_admin_email ";
-  $sql .= "FROM $tbl_room r, $tbl_entry e ";
+  $sql .= "FROM " . _tbl('room') . " r, " . _tbl('entry') . " e ";
   // If this is a repeating entry...
   if ($id_table == 'rep')
   {
     // ...use the repeat table
-    $sql .= ", $tbl_repeat rep ";
+    $sql .= ", " . _tbl('repeat') . " rep ";
   }
   $sql .= "WHERE ${id_table}.id=?
              AND r.id=${id_table}.room_id
@@ -401,7 +397,6 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
   global $mail_settings, $standard_fields;
-  global $tbl_entry;
   global $select_options, $booking_types;
 
   // If we haven't got a previous entry just give it one.   It won't get used,
@@ -608,7 +603,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
                                     $compare, $as_html);
 
     // Custom fields
-    $fields = db()->field_info($tbl_entry);
+    $fields = db()->field_info(_tbl('entry'));
     foreach ($fields as $field)
     {
       if (!in_array($field['name'], $standard_fields['entry']))
@@ -637,7 +632,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $as_html
             $mail_previous[$key] = $select_options["entry.$key"][$mail_previous[$key]];
           }
         }
-        $body .= create_body_table_row (get_mail_field_name($tbl_entry, $key),
+        $body .= create_body_table_row (get_mail_field_name(_tbl('entry'), $key),
                                         $value,
                                         ($compare) ? $mail_previous[$key] : '',
                                         $compare, $as_html);

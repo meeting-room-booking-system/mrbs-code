@@ -35,7 +35,7 @@ function extract_vtimezone($vcalendar)
 // the filesystem.
 function get_vtimezone($tz)
 {
-  global $tbl_zoneinfo, $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
+  global $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
 
   static $vtimezone = array();  // Cache the componernts for performance
 
@@ -51,7 +51,7 @@ function get_vtimezone($tz)
 
     // Look and see if there's a component in the database
     $sql = "SELECT vtimezone, last_updated
-              FROM $tbl_zoneinfo
+              FROM " . _tbl('zoneinfo') . "
              WHERE timezone=?
                AND outlook_compatible=?
              LIMIT 1";
@@ -109,7 +109,7 @@ function get_vtimezone($tz)
         // seconds delay every time this file is included.  (The most likely reason that
         // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
         // access, so there's no point in retrying for a while).
-        $sql = "UPDATE $tbl_zoneinfo
+        $sql = "UPDATE " . _tbl('zoneinfo') . "
                    SET vtimezone=?,
                        last_updated=?
                  WHERE timezone=?
@@ -130,7 +130,7 @@ function get_vtimezone($tz)
         {
           try
           {
-            $sql = "INSERT INTO $tbl_zoneinfo
+            $sql = "INSERT INTO " . _tbl('zoneinfo') . "
                                 (timezone, outlook_compatible, vtimezone, last_updated)
                          VALUES (?, ?, ?, ?)";
             db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone[$tz], time()));
@@ -245,7 +245,7 @@ function get_time($value)
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
 function get_create_by($organizer)
 {
-  global $auth, $mail_settings, $tbl_users;
+  global $auth, $mail_settings;
 
   // Get the email address.   Stripping off the 'mailto' is a very simplistic
   // method.  It will work in the majority of cases, but this needs to be improved
@@ -254,7 +254,10 @@ function get_create_by($organizer)
   // If we're using the 'db' auth rtpe, then look the username up in the users table
   if ($auth['type'] == 'db')
   {
-    $sql = "SELECT name FROM $tbl_users WHERE email=?";
+    $sql = "SELECT name
+              FROM " . _tbl('users') . "
+             WHERE email=?";
+             
     $res = db()->query($sql, array($email));
 
     if ($res->count() == 0)

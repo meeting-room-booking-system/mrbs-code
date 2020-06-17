@@ -140,7 +140,7 @@ if (!empty($back_button))
 $custom_fields = array();
 
 // Get the information about the fields in the entry table
-$fields = db()->field_info($tbl_entry);
+$fields = db()->field_info(_tbl('entry'));
 
 foreach($fields as $field)
 {
@@ -265,7 +265,7 @@ if (!$is_ajax)
             (array_key_exists($field, $custom_fields) && ($custom_fields[$field] === '')))
         {
           invalid_booking(get_vocab('missing_mandatory_field') . ' "' .
-                          get_loc_field_name($tbl_entry, $field) . '"');
+                          get_loc_field_name(_tbl('entry'), $field) . '"');
         }
       }
     }
@@ -443,7 +443,11 @@ if (isset($id))
 {
   // Editing an existing booking: get the room_id from the database (you can't
   // get it from $rooms because they are the new rooms)
-  $existing_room = db()->query1("SELECT room_id FROM $tbl_entry WHERE id=? LIMIT 1", array($id));
+  $sql = "SELECT room_id
+            FROM " . _tbl('entry') . "
+           WHERE id=?
+           LIMIT 1";
+  $existing_room = db()->query1($sql, array($id));
   if ($existing_room < 0)
   {
     // Ideally we should give more feedback to the user when this happens, or
@@ -732,7 +736,7 @@ $send_mail = ($no_mail) ? FALSE : need_to_send_mail();
 // if, for example, the database user hasn't been granted DELETE rights.
 
 // Acquire mutex to lock out others trying to book the same slot(s).
-if (!db()->mutex_lock($tbl_entry))
+if (!db()->mutex_lock(_tbl('entry')))
 {
   fatal_error(get_vocab("failed_to_acquire"));
 }
@@ -760,7 +764,7 @@ else
   trigger_error('Edit failed.', E_USER_WARNING);
 }
 
-db()->mutex_unlock($tbl_entry);
+db()->mutex_unlock(_tbl('entry'));
 
 
 // If this is an Ajax request, output the result and finish

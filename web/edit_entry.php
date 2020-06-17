@@ -77,7 +77,7 @@ require 'defaultincludes.inc';
 require_once 'mrbs_sql.inc';
 require_once 'functions_mail.inc';
 
-$fields = db()->field_info($tbl_entry);
+$fields = db()->field_info(_tbl('entry'));
 $custom_fields = array();
 
 // Fill $edit_entry_field_order with not yet specified entries.
@@ -702,7 +702,7 @@ function get_field_privacy_status($value, $disabled=false)
 
 function get_field_custom($key, $disabled=false)
 {
-  global $custom_fields, $custom_fields_map, $tbl_entry;
+  global $custom_fields, $custom_fields_map;
   global $is_mandatory_field, $text_input_max;
 
   // First check that the custom field exists.  It normally will, but won't if
@@ -740,7 +740,7 @@ function get_field_custom($key, $disabled=false)
   // <datalist>s)
   else
   {
-    $params = array('label'    => get_loc_field_name($tbl_entry, $key),
+    $params = array('label'    => get_loc_field_name(_tbl('entry'), $key),
                     'name'     => VAR_PREFIX . $key,
                     'field'    => "entry.$key",
                     'value'    => (isset($custom_fields[$key])) ? $custom_fields[$key] : NULL,
@@ -752,7 +752,7 @@ function get_field_custom($key, $disabled=false)
   $full_class = __NAMESPACE__ . "\\Form\\$class";
   $field = new $full_class();
 
-  $field->setLabel(get_loc_field_name($tbl_entry, $key))
+  $field->setLabel(get_loc_field_name(_tbl('entry'), $key))
         ->setControlAttributes(array('name'     => VAR_PREFIX . $key,
                                      'disabled' => $disabled,
                                      'required' => !empty($is_mandatory_field["entry.$key"])));
@@ -1360,7 +1360,7 @@ if (isset($id))
   {
     $sql = "SELECT rep_type, start_time, end_time, end_date, rep_opt, rep_interval,
                    month_absolute, month_relative
-              FROM $tbl_repeat
+              FROM " . _tbl('repeat') . "
              WHERE id=?
              LIMIT 1";
 
@@ -1564,7 +1564,10 @@ $start_min   = strftime('%M', $start_time);
 // If we have not been provided with a room_id
 if (empty( $room_id ) )
 {
-  $sql = "SELECT id FROM $tbl_room WHERE disabled=0 LIMIT 1";
+  $sql = "SELECT id
+            FROM " . _tbl('room') . "
+           WHERE disabled=0
+           LIMIT 1";
   $res = db()->query($sql);
   $row = $res->next_row_keyed();
   $room_id = $row['id'];
@@ -1588,7 +1591,7 @@ print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room 
 // Get the details of all the enabled rooms
 $rooms = array();
 $sql = "SELECT R.id, R.room_name, R.area_id
-          FROM $tbl_room R, $tbl_area A
+          FROM " . _tbl('room') . " R, " . _tbl('area') . " A
          WHERE R.area_id = A.id
            AND R.disabled=0
            AND A.disabled=0
@@ -1610,7 +1613,7 @@ $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all
                enable_periods, periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes,
                max_duration_enabled, max_duration_secs, max_duration_periods
-          FROM $tbl_area
+          FROM " . _tbl('area') . "
          WHERE disabled=0
       ORDER BY sort_key";
 $res = db()->query($sql);

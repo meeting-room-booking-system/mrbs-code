@@ -5,13 +5,12 @@ namespace MRBS;
 // from the config file.
 
 global $admin_handle;
-global $tbl_area;
 global $provisional_enabled, $reminders_enabled;
 
 $provisional_enabled = ($provisional_enabled) ? 1 : 0;
 $reminders_enabled = ($reminders_enabled) ? 1 : 0;
 
-$sql = "UPDATE $tbl_area SET
+$sql = "UPDATE " . _tbl('area') . " SET
         provisional_enabled=$provisional_enabled,
         reminders_enabled=$reminders_enabled";
     
