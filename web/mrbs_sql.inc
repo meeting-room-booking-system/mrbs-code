@@ -1668,7 +1668,7 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
 
   // In early versions of MRBS the sort_key field didn't exist and this function
   // is called before the database can be upgraded.
-  if (db()->field_exists($tbl_room, 'sort_key'))
+  if (db()->field_exists(_tbl('room'), 'sort_key'))
   {
     $sql .= " ORDER BY R.sort_key";
   }
@@ -1741,7 +1741,7 @@ function mrbsGetRoomArea($id)
             FROM " . _tbl('room') . "
            WHERE id=?
            LIMIT 1";
-  
+
   $id = db()->query1($sql, array($id));
 
   return ($id <= 0) ? 0 : $id;
@@ -1822,7 +1822,7 @@ function mrbsAddArea($name, &$error)
       break;
     }
   }
-  
+
   $sql = "INSERT INTO " . _tbl('area') . " (" . implode(', ',$sql_col) . ")
                VALUES (" . implode(', ',$sql_val) . ")";
   db()->command($sql, $sql_params);
