@@ -8,7 +8,7 @@ use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
 
 // This file checks to see whether the database schema versions (both global and local)
-// are up to date, and if not perfgorms the necessary upgrades.
+// are up to date, and if not performs the necessary upgrades.
 
 // Sanity check:  check that we can access the MRBS tables.  If we can't, it's
 // either because they don't exist or we don't have permission.
@@ -61,35 +61,65 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
 
   $ok = true;
 
-  // Do any MRBS upgrades first
-  if ($current_db_schema_version < DB::DB_SCHEMA_VERSION)
+  if ($multisite)
   {
-    $ok = upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $admin_handle);
-  }
-  // Then any local upgrades
-  if ($ok && $current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL)
-  {
-    $ok = upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $admin_handle);
+    // Upgrade each of the sub-sites
+    $sites_dir = 'sites';
+    foreach (new \DirectoryIterator($sites_dir) as $fileInfo)
+    {
+      // Ignore '.', '..' and anything that's not a directory
+      if ($fileInfo->isDot() || !$fileInfo->isDir())
+      {
+        continue;
+      }
+      // And ignore any directory that doesn't have a site config file
+      $site_config = $sites_dir . '/' . $fileInfo->getFilename() . '/config.inc.php';
+      if (!is_readable($site_config))
+      {
+        continue;
+      }
+      // Switch to the sub-site config settings and do the upgrade for the sub-site
+      upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $fileInfo->getFilename())) . "</h2>\n");
+      include 'systemdefaults.inc.php';
+      include 'areadefaults.inc.php';
+      include 'config.inc.php';
+      include $site_config;
+      $ok = $ok && do_upgrade($admin_handle);
+    }
+    // Then switch to the main config settings
+    include 'systemdefaults.inc.php';
+    include 'areadefaults.inc.php';
+    include 'config.inc.php';
+    // We only need this heading if we're in multi-site mode
+    upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_main_site')) . "</h2>\n");
   }
 
-  // close the database connection that has admin rights
-  unset($admin_handle);
+  // Upgrade the main site
+  $ok = $ok && do_upgrade($admin_handle);
+
+  // If we're in multisite mode then restore the config settings for the site we're supposed to be running
+  if ($multisite)
+  {
+    include 'systemdefaults.inc.php';
+    include 'areadefaults.inc.php';
+    include 'config.inc.php';
+    include 'site_config.inc';
+  }
 
   if ($ok)
   {
     echo '<p>' . get_vocab('upgrade_completed') . "</p>\n";
   }
+
+  // close the database connection that has admin rights
+  unset($admin_handle);
+
   echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('returncal') . '</a>.';
 
   print_footer(true);
 }
 
 
-
-
-
-// Upgrade between database schema versions.
-// Returns FALSE on error, TRUE is successful
 function upgrade_echo($message)
 {
   echo $message;
@@ -103,6 +133,8 @@ function upgrade_echo($message)
 }
 
 
+// Upgrade between database schema versions.
+// Returns FALSE on error, TRUE is successful
 function upgrade_database($local, $from, $to, DB $upgrade_handle)
 {
   // $local is a boolean specifying whether the upgrades are global MRBS ones ($local === false)
@@ -180,6 +212,36 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
     }
   }
   return true;
+}
+
+
+// Upgrades the database tables defined by the current config context
+function do_upgrade($upgrade_handle)
+{
+  $result = true;
+
+  if (!db()->table_exists(_tbl('entry')))
+  {
+    upgrade_echo("<p>" . htmlspecialchars(get_vocab(no_tables_found)) . "</p>\n");
+  }
+  else
+  {
+    $current_db_schema_version = db_schema_version();
+    $current_db_schema_version_local = db_schema_version_local();
+
+    // Do any MRBS upgrades first
+    if ($result && ($current_db_schema_version < DB::DB_SCHEMA_VERSION))
+    {
+      $result = $result && upgrade_database(false, $current_db_schema_version, DB::DB_SCHEMA_VERSION, $upgrade_handle);
+    }
+    // Then any local upgrades
+    if ($result && ($current_db_schema_version_local < DB::DB_SCHEMA_VERSION_LOCAL))
+    {
+      $result = $result && upgrade_database(true, $current_db_schema_version_local, DB::DB_SCHEMA_VERSION_LOCAL, $upgrade_handle);
+    }
+  }
+
+  return $result;
 }
 
 
