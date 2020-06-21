@@ -64,6 +64,8 @@ CREATE TABLE mrbs_area
   periods                   text DEFAULT NULL,
   confirmation_enabled      smallint,
   confirmed_default         smallint,
+  times_along_top           smallint DEFAULT 0 NOT NULL,
+  default_type              char DEFAULT 'E' NOT NULL,
   
   CONSTRAINT mrbs_uq_area_name UNIQUE (area_name)
 );
@@ -205,6 +207,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '63');
+  VALUES ('db_version', '64');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
