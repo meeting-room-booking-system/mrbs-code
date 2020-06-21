@@ -84,6 +84,27 @@ function get_timezone_options()
 }
 
 
+function get_type_options($include_admin_types=false)
+{
+  global $booking_types, $auth;
+
+  $result = array();
+
+  foreach ($booking_types as $key)
+  {
+    if (!$include_admin_types &&
+        isset($auth['admin_only_types']) &&
+        in_array($key, $auth['admin_only_types']))
+    {
+      continue;
+    }
+    $result[$key] = get_type_vocab($key);
+  }
+
+  return $result;
+}
+
+
 function get_fieldset_errors(array $errors)
 {
   $fieldset = new ElementFieldset();
@@ -167,6 +188,13 @@ function get_fieldset_general(array $data)
           ->setControlText($data['custom_html']);
     $fieldset->addElement($field);
   }
+
+  // Default type
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('default_type'))
+        ->setControlAttribute('name', 'area_default_type')
+        ->addSelectOptions(get_type_options(), $data['default_type'], true);
+  $fieldset->addElement($field);
 
   // Mode - Times or Periods
   $options = array('1' => get_vocab('mode_periods'),

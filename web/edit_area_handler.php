@@ -50,6 +50,7 @@ $form_vars = array(
   'area_periods'                  => 'array',
   'area_confirmation_enabled'     => 'string',
   'area_confirmed_default'        => 'string',
+  'area_default_type'             => 'string',
   'area_times_along_top'          => 'string',
   'custom_html'                   => 'string'
 );
@@ -332,6 +333,8 @@ $assign_array[] = "confirmation_enabled=?";
 $sql_params[] = $area_confirmation_enabled;
 $assign_array[] = "confirmed_default=?";
 $sql_params[] = $area_confirmed_default;
+$assign_array[] = "default_type=?";
+$sql_params[] = $area_default_type;
 $assign_array[] = "times_along_top=?";
 $sql_params[] = $area_times_along_top;
 
