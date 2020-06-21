@@ -128,16 +128,26 @@ function get_fieldset_general(array $data)
                                      'maxlength' => maxlength('area.sort_key')));
   $fieldset->addElement($field);
 
-  // Status - Enabled or Disabled
-  $options = array('0' => get_vocab('enabled'),
-                   '1' => get_vocab('disabled'));
-  $value = ($data['disabled']) ? '1' : '0';
-  $field = new FieldInputRadioGroup();
-  $field->setAttribute('id', 'status')
-        ->setLabel(get_vocab('status'))
-        ->setLabelAttributes(array('title' => get_vocab('disabled_area_note')))
-        ->addRadioOptions($options, 'area_disabled', $value, true);
+  // Area admin email
+  $field = new FieldInputEmail();
+  $field->setLabel(get_vocab('area_admin_email'))
+    ->setLabelAttribute('title', get_vocab('email_list_note'))
+    ->setControlAttributes(array('id'       => 'area_admin_email',
+      'name'     => 'area_admin_email',
+      'value'    => $data['area_admin_email'],
+      'multiple' => true));
   $fieldset->addElement($field);
+
+  // The custom HTML
+  if ($auth['allow_custom_html'])
+  {
+    $field = new FieldTextarea();
+    $field->setLabel(get_vocab('custom_html'))
+      ->setLabelAttribute('title', get_vocab('custom_html_note'))
+      ->setControlAttribute('name', 'custom_html')
+      ->setControlText($data['custom_html']);
+    $fieldset->addElement($field);
+  }
 
   // Timezone
   $field = new FieldSelect();
@@ -147,32 +157,22 @@ function get_fieldset_general(array $data)
         ->addSelectOptions(get_timezone_options(), $timezone, true);
   $fieldset->addElement($field);
 
-  // Area admin email
-  $field = new FieldInputEmail();
-  $field->setLabel(get_vocab('area_admin_email'))
-        ->setLabelAttribute('title', get_vocab('email_list_note'))
-        ->setControlAttributes(array('id'       => 'area_admin_email',
-                                     'name'     => 'area_admin_email',
-                                     'value'    => $data['area_admin_email'],
-                                     'multiple' => true));
-  $fieldset->addElement($field);
-
-  // The custom HTML
-  if ($auth['allow_custom_html'])
-  {
-    $field = new FieldTextarea();
-    $field->setLabel(get_vocab('custom_html'))
-          ->setLabelAttribute('title', get_vocab('custom_html_note'))
-          ->setControlAttribute('name', 'custom_html')
-          ->setControlText($data['custom_html']);
-    $fieldset->addElement($field);
-  }
-
   // Default type
   $field = new FieldSelect();
   $field->setLabel(get_vocab('default_type'))
         ->setControlAttribute('name', 'area_default_type')
         ->addSelectOptions(get_type_options(), $data['default_type'], true);
+  $fieldset->addElement($field);
+
+  // Status - Enabled or Disabled
+  $options = array('0' => get_vocab('enabled'),
+    '1' => get_vocab('disabled'));
+  $value = ($data['disabled']) ? '1' : '0';
+  $field = new FieldInputRadioGroup();
+  $field->setAttribute('id', 'status')
+    ->setLabel(get_vocab('status'))
+    ->setLabelAttributes(array('title' => get_vocab('disabled_area_note')))
+    ->addRadioOptions($options, 'area_disabled', $value, true);
   $fieldset->addElement($field);
 
   // Mode - Times or Periods
