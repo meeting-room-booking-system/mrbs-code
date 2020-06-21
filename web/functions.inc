@@ -94,15 +94,18 @@ function get_type_options($include_admin_types=false)
 
   $result = array();
 
-  foreach ($booking_types as $key)
+  if (isset($booking_types))
   {
-    if (!$include_admin_types &&
-      isset($auth['admin_only_types']) &&
-      in_array($key, $auth['admin_only_types']))
+    foreach ($booking_types as $key)
     {
-      continue;
+      if (!$include_admin_types &&
+        isset($auth['admin_only_types']) &&
+        in_array($key, $auth['admin_only_types']))
+      {
+        continue;
+      }
+      $result[$key] = get_type_vocab($key);
     }
-    $result[$key] = get_type_vocab($key);
   }
 
   return $result;
