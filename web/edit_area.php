@@ -84,27 +84,6 @@ function get_timezone_options()
 }
 
 
-function get_type_options($include_admin_types=false)
-{
-  global $booking_types, $auth;
-
-  $result = array();
-
-  foreach ($booking_types as $key)
-  {
-    if (!$include_admin_types &&
-        isset($auth['admin_only_types']) &&
-        in_array($key, $auth['admin_only_types']))
-    {
-      continue;
-    }
-    $result[$key] = get_type_vocab($key);
-  }
-
-  return $result;
-}
-
-
 function get_fieldset_errors(array $errors)
 {
   $fieldset = new ElementFieldset();
