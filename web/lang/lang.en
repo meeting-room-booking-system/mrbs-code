@@ -382,6 +382,7 @@ $vocab["area_first_slot_start"]   = "Start of first slot";
 $vocab["area_last_slot_start"]    = "Start of last slot";
 $vocab["area_res_mins"]           = "Resolution (minutes)";
 $vocab["area_def_duration_mins"]  = "Default duration (minutes)";
+$vocab["times_along_top"]         = "Times along the top";
 $vocab["invalid_area"]            = "Invalid area!";
 $vocab["invalid_room"]            = "Invalid room!";
 $vocab["invalid_room_name"]       = "This room name has already been used in the area!";

@@ -50,6 +50,8 @@ $form_vars = array(
   'area_periods'                  => 'array',
   'area_confirmation_enabled'     => 'string',
   'area_confirmed_default'        => 'string',
+  'area_default_type'             => 'string',
+  'area_times_along_top'          => 'string',
   'custom_html'                   => 'string'
 );
 
@@ -136,21 +138,25 @@ else
   }
 
   // Convert booleans into 0/1 (necessary for PostgreSQL)
-  $vars = array('area_disabled',
-                'area_def_duration_all_day',
-                'area_min_create_ahead_enabled',
-                'area_max_create_ahead_enabled',
-                'area_min_delete_ahead_enabled',
-                'area_max_delete_ahead_enabled',
-                'area_max_duration_enabled',
-                'area_private_enabled',
-                'area_private_default',
-                'area_private_mandatory',
-                'area_approval_enabled',
-                'area_reminders_enabled',
-                'area_enable_periods',
-                'area_confirmation_enabled',
-                'area_confirmed_default');
+  $vars = array(
+      'area_disabled',
+      'area_def_duration_all_day',
+      'area_min_create_ahead_enabled',
+      'area_max_create_ahead_enabled',
+      'area_min_delete_ahead_enabled',
+      'area_max_delete_ahead_enabled',
+      'area_max_duration_enabled',
+      'area_private_enabled',
+      'area_private_default',
+      'area_private_mandatory',
+      'area_approval_enabled',
+      'area_reminders_enabled',
+      'area_enable_periods',
+      'area_confirmation_enabled',
+      'area_confirmed_default',
+      'area_times_along_top'
+    );
+
   foreach ($interval_types as $interval_type)
   {
     $vars[] = "area_max_per_${interval_type}_enabled";
@@ -327,6 +333,10 @@ $assign_array[] = "confirmation_enabled=?";
 $sql_params[] = $area_confirmation_enabled;
 $assign_array[] = "confirmed_default=?";
 $sql_params[] = $area_confirmed_default;
+$assign_array[] = "default_type=?";
+$sql_params[] = $area_default_type;
+$assign_array[] = "times_along_top=?";
+$sql_params[] = $area_times_along_top;
 
 $sql .= implode(",", $assign_array) . " WHERE id=?";
 $sql_params[] = $area;

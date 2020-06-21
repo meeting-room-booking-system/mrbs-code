@@ -444,7 +444,8 @@ $boolean_fields['area'] = array('area_disabled',
                                 'reminders_enabled',
                                 'enable_periods',
                                 'confirmation_enabled',
-                                'confirmed_default');
+                                'confirmed_default',
+                                'times_along_top');
 
 // Permitted values for 'private_override'
 $private_override_options = array('none', 'public', 'private');
@@ -456,7 +457,7 @@ $private_override_options = array('none', 'public', 'private');
 // do this because they will get overwritten by the values for
 // the current area in a moment - in standard_vars.inc by a call to
 // get_area_settings().   [This isn't a very elegant way of handling
-// per-area settings and perhaps ought to be revisited at some stage]
+// per-area settings and ought to be revisited at some stage]
 
 $area_defaults_keys = array('timezone',
                             'resolution',
@@ -486,7 +487,9 @@ $area_defaults_keys = array('timezone',
                             'enable_periods',
                             'periods',
                             'confirmation_enabled',
-                            'confirmed_default');
+                            'confirmed_default',
+                            'times_along_top',
+                            'default_area');
 
 $area_defaults = array();
 

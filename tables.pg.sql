@@ -64,6 +64,8 @@ CREATE TABLE mrbs_area
   periods                   text DEFAULT NULL,
   confirmation_enabled      smallint,
   confirmed_default         smallint,
+  times_along_top           smallint DEFAULT 0 NOT NULL,
+  default_type              char DEFAULT 'E' NOT NULL,
   
   CONSTRAINT mrbs_uq_area_name UNIQUE (area_name)
 );

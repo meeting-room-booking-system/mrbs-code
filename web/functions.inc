@@ -88,6 +88,30 @@ function url_get_contents($url)
 }
 
 
+function get_type_options($include_admin_types=false)
+{
+  global $booking_types, $auth;
+
+  $result = array();
+
+  if (isset($booking_types))
+  {
+    foreach ($booking_types as $key)
+    {
+      if (!$include_admin_types &&
+        isset($auth['admin_only_types']) &&
+        in_array($key, $auth['admin_only_types']))
+      {
+        continue;
+      }
+      $result[$key] = get_type_vocab($key);
+    }
+  }
+
+  return $result;
+}
+
+
 function get_rep_interval_units($rep_type, $rep_interval)
 {
   switch ($rep_type)
@@ -1337,6 +1361,7 @@ function get_area_settings($area)
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
   global $interval_types;
+  global $times_along_top, $default_type;
 
   // This code can get called during the upgrade process and so must
   // not make any assumptions about the existence of extra columns in
@@ -1362,7 +1387,8 @@ function get_area_settings($area)
                    'max_per_year_enabled', 'max_per_year',
                    'max_per_future_enabled', 'max_per_future',
                    'approval_enabled', 'reminders_enabled', 'enable_periods', 'periods',
-                   'confirmation_enabled', 'confirmed_default');
+                   'confirmation_enabled', 'confirmed_default',
+                   'times_along_top', 'default_type');
 
   $sql = "SELECT *
             FROM " . _tbl('area') . "

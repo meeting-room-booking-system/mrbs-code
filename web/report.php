@@ -87,17 +87,11 @@ function get_field_roommatch($data)
 
 function get_field_typematch($data)
 {
-  global $booking_types;
+  $options = get_type_options(true);
 
-  if (!isset($booking_types) || (count($booking_types) < 2))
+  if (count($options) < 2)
   {
     return null;
-  }
-
-  $options = array();
-  foreach ($booking_types as $type)
-  {
-    $options[$type] = get_type_vocab($type);
   }
 
   $field = new FieldSelect();

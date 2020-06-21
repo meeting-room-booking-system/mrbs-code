@@ -168,6 +168,13 @@ function get_fieldset_general(array $data)
     $fieldset->addElement($field);
   }
 
+  // Default type
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('default_type'))
+        ->setControlAttribute('name', 'area_default_type')
+        ->addSelectOptions(get_type_options(), $data['default_type'], true);
+  $fieldset->addElement($field);
+
   // Mode - Times or Periods
   $options = array('1' => get_vocab('mode_periods'),
                    '0' => get_vocab('mode_times'));
@@ -176,6 +183,13 @@ function get_fieldset_general(array $data)
   $field->setAttribute('id', 'mode')
         ->setLabel(get_vocab('mode'))
         ->addRadioOptions($options, 'area_enable_periods', $value, true);
+  $fieldset->addElement($field);
+
+  // Times along the top
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('times_along_top'))
+        ->setControlAttribute('name', 'area_times_along_top')
+        ->setControlChecked($data['times_along_top']);
   $fieldset->addElement($field);
 
   return $fieldset;

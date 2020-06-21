@@ -59,6 +59,8 @@ CREATE TABLE mrbs_area
   periods                   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   confirmation_enabled      tinyint(1),
   confirmed_default         tinyint(1),
+  times_along_top           tinyint(1) NOT NULL DEFAULT 0,
+  default_type              char DEFAULT 'E' NOT NULL,
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_area_name (area_name)
