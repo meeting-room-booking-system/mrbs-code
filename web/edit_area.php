@@ -178,6 +178,13 @@ function get_fieldset_general(array $data)
         ->addRadioOptions($options, 'area_enable_periods', $value, true);
   $fieldset->addElement($field);
 
+  // Times along the top
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('times_along_top'))
+        ->setControlAttribute('name', 'area_times_along_top')
+        ->setControlChecked($data['times_along_top']);
+  $fieldset->addElement($field);
+
   return $fieldset;
 }
 
