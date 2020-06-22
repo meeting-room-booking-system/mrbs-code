@@ -371,12 +371,6 @@ $mincals_week_numbers = false;
 // this to true.
 $show_slot_endtime = false;
 
-// In the day view, to display times on the x-axis (along the top) and rooms on the y-axis (down
-// the side set to true; the default/traditional version of MRBS has rooms along the top and
-// times down the side.    Transposing the table can be useful if you have a large number of
-// rooms and not many time slots.
-$times_along_top = false;
-
 // To display the row labels (times, rooms or days) on the right hand side as well as the
 // left hand side in the day and week views, set to true;
 // (was called $times_right_side in earlier versions of MRBS)
@@ -1395,10 +1389,6 @@ $booking_types[] = "I";
 // If you don't want to use types then uncomment the following line.  (The booking will
 // still have a type associated with it in the database, which will be the default type.)
 // unset($booking_types);
-
-// Default type for new bookings
-// (Note that the default type does not apply if the type field is mandatory)
-$default_type = "I";
 
 // Default short description for new bookings
 $default_name = "";
