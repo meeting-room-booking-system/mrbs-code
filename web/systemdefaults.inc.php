@@ -216,7 +216,7 @@ $theme = "default";
 
 // The settings below are global policy settings
 
-// Set the maximum number of bookings that can be made by any one user, in an interval,
+// Set the maximum *number* of bookings that can be made by any one user, in an interval,
 // which can be a day, week, month or year, or else in the future.  (A week is defined
 // by the $weekstarts setting).   These are global settings, but you can additionally
 // configure per area settings.   This would allow you to set policies such as allowing
@@ -235,6 +235,26 @@ $max_per_interval_global['year'] = 50;    // max 50 bookings per year in total
 
 $max_per_interval_global_enabled['future'] = false;
 $max_per_interval_global['future'] = 100; // max 100 bookings in the future in total
+
+// Set the maximum total *length* of bookings that can be made by any one user, in an interval,
+// which can be a day, week, month or year, or else in the future.  (A week is defined
+// by the $weekstarts setting).   These are global settings.  Per-area settings have not
+// yet ben implemented.
+
+$max_secs_per_interval_global_enabled['day']    = false;
+$max_secs_per_interval_global['day'] = 60*60*2;      // max 2 hours per day in total
+
+$max_secs_per_interval_global_enabled['week']   = false;
+$max_secs_per_interval_global['week'] = 60*60*10;    // max 10 hours per week in total
+
+$max_secs_per_interval_global_enabled['month']  = false;
+$max_secs_per_interval_global['month'] = 60*60*25;   // max 25 hours per month in total
+
+$max_secs_per_interval_global_enabled['year']   = false;
+$max_secs_per_interval_global['year'] = 60*60*100;   // max 100 hours per year in total
+
+$max_secs_per_interval_global_enabled['future'] = false;
+$max_secs_per_interval_global['future'] = 60*60*100; // max 100 hours in the future in total
 
 // Set the latest date for which you can make a booking.    This can be useful if you
 // want to set an absolute date, eg the end of term, beyond which bookings cannot be made.
