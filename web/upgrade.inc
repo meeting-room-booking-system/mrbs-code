@@ -65,21 +65,24 @@ if (($current_db_schema_version < DB::DB_SCHEMA_VERSION) ||
   {
     // Upgrade each of the sub-sites
     $sites_dir = 'sites';
-    foreach (new \DirectoryIterator($sites_dir) as $fileInfo)
+    // Use scandir() rather than the DirectoryIterator in order to ensure that
+    // the sites are sorted.
+    $dirs = array_diff(scandir($sites_dir), array('.', '..'));
+    foreach ($dirs as $dir)
     {
-      // Ignore '.', '..' and anything that's not a directory
-      if ($fileInfo->isDot() || !$fileInfo->isDir())
+      // Ignore anything that's not a directory
+      if (!is_dir($sites_dir . '/' . $dir))
       {
         continue;
       }
       // And ignore any directory that doesn't have a site config file
-      $site_config = $sites_dir . '/' . $fileInfo->getFilename() . '/config.inc.php';
+      $site_config = $sites_dir . '/' . $dir . '/config.inc.php';
       if (!is_readable($site_config))
       {
         continue;
       }
       // Switch to the sub-site config settings and do the upgrade for the sub-site
-      upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $fileInfo->getFilename())) . "</h2>\n");
+      upgrade_echo("<h2>" . htmlspecialchars(get_vocab('upgrading_site', $dir)) . "</h2>\n");
       include 'systemdefaults.inc.php';
       include 'areadefaults.inc.php';
       include 'config.inc.php';
