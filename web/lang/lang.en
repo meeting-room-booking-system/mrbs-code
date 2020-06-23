@@ -221,6 +221,16 @@ $vocab["max_per_week_area"]       = "The maximum number of bookings per week per
 $vocab["max_per_month_area"]      = "The maximum number of bookings per month per user in this area is";
 $vocab["max_per_year_area"]       = "The maximum number of bookings per year per user in this area is";
 $vocab["max_per_future_area"]     = "The maximum number of outstanding bookings per user in this area is";
+$vocab["max_secs_per_day_global"]     = 'The maximum total length of bookings per day per user across the whole system is %1$s %2$s';  // eg 2 hours
+$vocab["max_secs_per_week_global"]    = 'The maximum total length of bookings per week per user across the whole system is %1$s %2$s';
+$vocab["max_secs_per_month_global"]   = 'The maximum total length of bookings per month per user across the whole system is %1$s %2$s';
+$vocab["max_secs_per_year_global"]    = 'The maximum total length of bookings per year per user across the whole system is %1$s %2$s';
+$vocab["max_secs_per_future_global"]  = 'The maximum total length of outstanding bookings per user across the whole system is %1$s %2$s';
+$vocab["max_secs_per_day_area"]       = 'The maximum total length of bookings per day per user in this area is %1$s %2$s';
+$vocab["max_secs_per_week_area"]      = 'The maximum total length of bookings per week per user in this area is %1$s %2$s';
+$vocab["max_secs_per_month_area"]     = 'The maximum total length of bookings per month per user in this area is %1$s %2$s';
+$vocab["max_secs_per_year_area"]      = 'The maximum total length of bookings per year per user in this area is %1$s %2$s';
+$vocab["max_secs_per_future_area"]    = 'The maximum total length of outstanding bookings per user in this area is %1$s %2$s';
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 
