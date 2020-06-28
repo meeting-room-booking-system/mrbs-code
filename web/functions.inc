@@ -1023,11 +1023,11 @@ function get_start_first_slot($month, $day, $year)
 
   if ($enable_periods)
   {
-    return mrbs_mktime(12, 0, 0, $month, $day, $year);
+    return mktime(12, 0, 0, $month, $day, $year);
   }
 
-  return mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
-                     $month, $day, $year);
+  return mktime($morningstarts, $morningstarts_minutes, 0,
+                $month, $day, $year);
 }
 
 
@@ -1038,7 +1038,7 @@ function get_start_last_slot($month, $day, $year)
 
   if ($enable_periods)
   {
-    return mrbs_mktime(12, count($periods) -1, 0, $month, $day, $year);
+    return mktime(12, count($periods) -1, 0, $month, $day, $year);
   }
 
   // Work out if $evening_ends is really on the next day
@@ -1048,8 +1048,8 @@ function get_start_last_slot($month, $day, $year)
     $day++;
   }
 
-  return mrbs_mktime($eveningends, $eveningends_minutes, 0,
-                     $month, $day, $year);
+  return mktime($eveningends, $eveningends_minutes, 0,
+                $month, $day, $year);
 }
 
 
@@ -1769,38 +1769,6 @@ function day_of_MRBS_week($time)
 }
 
 
-// This will return the appropriate value for isdst for mktime().
-// The order of the arguments was chosen to match those of mktime.
-// hour is added so that this function can when necessary only be
-// run if the time is between midnight and 3am (all DST changes
-// occur in this period.
-function is_dst($month, $day, $year, $hour="-1")
-{
-  if ( $hour != -1  && $hour > 3)
-  {
-    return( -1 );
-  }
-
-  // entering DST
-  if( !date( "I", mktime(12, 0, 0, $month, $day-1, $year)) &&
-      date( "I", mktime(12, 0, 0, $month, $day, $year)))
-  {
-    return( 0 );
-  }
-
-  // leaving DST
-  else if( date( "I", mktime(12, 0, 0, $month, $day-1, $year)) &&
-           !date( "I", mktime(12, 0, 0, $month, $day, $year)))
-  {
-    return( 1 );
-  }
-  else
-  {
-    return( -1 );
-  }
-}
-
-
 // Compares two nominal dates which are indexed by'hours', 'minutes', 'seconds',
 // 'mon', 'mday' and 'year', ie as in the output of getdate().  Returns -1 if the
 // first date is before the second, 0 if they are equal and +1 if the first date
@@ -1934,36 +1902,6 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=n
   return $result;
 }
 
-
-// Returns TRUE if $t is in that part of daylight saving time that will have
-// the same nominal time as another timestamp shortly after the DST transition.
-// For example, will return TRUE for the $t equivalent to the first occurrence
-// of 0230 on Sunday 27th October 2013 in timezone Europe/London
-function is_dst_first_duplicate($t)
-{
-  if (date('I', $t))
-  {
-    $change = cross_dst($t, $t+SECONDS_PER_DAY);
-    return !date('I', $t + $change);
-  }
-  return false;
-}
-
-
-// A PHP version independent version of mktime().   (The $is_dst parameter
-// became deporecated at PHP 5.1.0)
-function mrbs_mktime($hour, $minute, $second, $month, $day, $year)
-{
-  if (version_compare(PHP_VERSION, '5.1.0') >= 0)
-  {
-    return mktime($hour, $minute, $second, $month, $day, $year);
-  }
-  else
-  {
-    return mktime($hour, $minute, $second, $month, $day, $year,
-                  is_dst($month, $day, $year, $hour));
-  }
-}
 
 // returns the modification (in seconds) necessary on account of any DST
 // transitions when going from $start to $end
