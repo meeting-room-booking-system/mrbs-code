@@ -12,7 +12,7 @@ if ($use_strict)
 }
 ?>
 
-var isAdmin;
+var isBookAdmin;
 
 <?php
 // Set (if set is true) or clear (if set is false) a timer
@@ -1087,9 +1087,9 @@ function adjustSlotSelectors()
 
       <?php
       // Limit the end slots to the maximum duration if that is enabled, if the
-      // user is not an admin
+      // user is not a booking admin
       ?>
-      if (!isAdmin)
+      if (!isBookAdmin)
       {
         if (maxDurationEnabled)
         {
@@ -1174,7 +1174,7 @@ var editEntryVisChanged = function editEntryVisChanged() {
 
 $(document).on('page_ready', function() {
 
-  isAdmin = args.isAdmin;
+  isBookAdmin = args.isBookAdmin;
 
   <?php // Turn the create_by select into a fancy select box. ?>;
   $('select#create_by').mrbsSelect();

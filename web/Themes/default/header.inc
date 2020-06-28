@@ -371,14 +371,15 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
   // cannot use these PHP variables directly in the JavaScript files as those files are cached.
   $data = array(
-      'view'       => $view,
-      'view_all'   => $view_all,
-      'area'       => $area,
-      'room'       => $room,
-      'page'       => $page,
-      'page-date'  => format_iso_date($year, $month, $day),
-      'is-admin'   => (is_admin()) ? 'true' : 'false',
-      'lang-prefs' => json_encode(get_lang_preferences())
+      'view'          => $view,
+      'view_all'      => $view_all,
+      'area'          => $area,
+      'room'          => $room,
+      'page'          => $page,
+      'page-date'     => format_iso_date($year, $month, $day),
+      'is-admin'      => (is_admin()) ? 'true' : 'false',
+      'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
+      'lang-prefs'    => json_encode(get_lang_preferences())
     );
 
   if ($multisite && isset($site) && ($site !== ''))
