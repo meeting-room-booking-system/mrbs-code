@@ -982,13 +982,13 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
  * Send email to administrator to notify a new/changed entry.
  *
  * @param   array   $data      contains deleted entry data for email body
- * @param   bool    $series    whether this is a series or not
  * @param   array   $start_times an array of start times that have been deleted
- * @param   string  $action    the booking action (eg "delete", "more_info", etc.)
- * @param   string  $note      a note that is used with "reject"
+ * @param   bool    $series    whether this is a series or not
+ * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
+ * @param   string  $note      a note that is used with 'reject'
  * @return  bool    TRUE or PEAR error object if fails
  */
-function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete", $note="")
+function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete', $note='')
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
