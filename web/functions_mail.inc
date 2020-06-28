@@ -392,7 +392,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body($data, $mail_previous, $compare, $series, $action, $as_html=FALSE, $note='', $start_times)
+function create_body($data, $mail_previous, $compare, $series, $action, $start_times, $as_html=false, $note='')
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
@@ -944,13 +944,13 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   // Create the text body
   $compare = !$new_entry;
   $text_body = array();
-  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, FALSE, $note, $start_times);
+  $text_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, $start_times, false, $note);
 
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, TRUE, $note, $start_times);
+    $html_body['content'] = create_body($data, $mail_previous, $compare, $series, $action, $start_times, true, $note);
     $html_body['cid'] = generate_global_uid("html");
   }
 
@@ -1032,13 +1032,13 @@ function notifyAdminOnDelete($data, $series=FALSE, $start_times, $action="delete
 
   // Create the text body
   $text_body = array();
-  $text_body['content'] = create_body($data, NULL, FALSE, $series, $action, FALSE, $note, $start_times);
+  $text_body['content'] = create_body($data, null, false, $series, $action, $start_times, false, $note);
 
   // Create the HTML body
   $html_body = array();
   if ($mail_settings['html'])
   {
-    $html_body['content'] = create_body($data, NULL, FALSE, $series, $action, TRUE, $note, $start_times);
+    $html_body['content'] = create_body($data, null, false, $series, $action, $start_times, true, $note);
     $html_body['cid'] = generate_global_uid("html");
   }
 
