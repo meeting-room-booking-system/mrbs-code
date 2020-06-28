@@ -169,7 +169,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
   // Check to see whether error reporting has been disabled by
   // the error suppression operator (@), because the custom error
   // handler is still called even if errors are suppressed.
-  if (error_reporting() === 0)
+  if (!(error_reporting() & $errno))
   {
     return;
   }
