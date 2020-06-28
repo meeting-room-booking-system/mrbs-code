@@ -695,7 +695,7 @@ $(document).on('page_ready', function() {
           downHandler.originalLink = jqTarget.find('a').addBack('a').attr('href');
           downHandler.box = $('<div class="div_select">');
 
-          if (!args.isAdmin)
+          if (!args.isBookAdmin)
           {
             <?php
             // If we're not an admin and we're not allowed to book repeats (in
@@ -1160,7 +1160,7 @@ $(document).on('page_ready', function() {
         {
           data.start_date = newParams.date[0];
           var onlyAdminCanBookRepeat = <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false';?>;
-          if (args.isAdmin || !onlyAdminCanBookRepeat)
+          if (args.isBookAdmin || !onlyAdminCanBookRepeat)
           {
             if (newParams.date.length > 1)
             {
@@ -1279,7 +1279,7 @@ $(document).on('page_ready', function() {
               ?>
               directions.other = {plus: false, minus: false};
             }
-            if (!args.isAdmin)
+            if (!args.isBookAdmin)
             {
               if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
                   ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
