@@ -995,11 +995,11 @@ function get_start_first_slot($month, $day, $year)
 
   if ($enable_periods)
   {
-    return mrbs_mktime(12, 0, 0, $month, $day, $year);
+    return mktime(12, 0, 0, $month, $day, $year);
   }
 
-  return mrbs_mktime($morningstarts, $morningstarts_minutes, 0,
-                     $month, $day, $year);
+  return mktime($morningstarts, $morningstarts_minutes, 0,
+                $month, $day, $year);
 }
 
 
@@ -1010,7 +1010,7 @@ function get_start_last_slot($month, $day, $year)
 
   if ($enable_periods)
   {
-    return mrbs_mktime(12, count($periods) -1, 0, $month, $day, $year);
+    return mktime(12, count($periods) -1, 0, $month, $day, $year);
   }
 
   // Work out if $evening_ends is really on the next day
@@ -1020,8 +1020,8 @@ function get_start_last_slot($month, $day, $year)
     $day++;
   }
 
-  return mrbs_mktime($eveningends, $eveningends_minutes, 0,
-                     $month, $day, $year);
+  return mktime($eveningends, $eveningends_minutes, 0,
+                $month, $day, $year);
 }
 
 
@@ -1921,21 +1921,6 @@ function is_dst_first_duplicate($t)
   return false;
 }
 
-
-// A PHP version independent version of mktime().   (The $is_dst parameter
-// became deporecated at PHP 5.1.0)
-function mrbs_mktime($hour, $minute, $second, $month, $day, $year)
-{
-  if (version_compare(PHP_VERSION, '5.1.0') >= 0)
-  {
-    return mktime($hour, $minute, $second, $month, $day, $year);
-  }
-  else
-  {
-    return mktime($hour, $minute, $second, $month, $day, $year,
-                  is_dst($month, $day, $year, $hour));
-  }
-}
 
 // returns the modification (in seconds) necessary on account of any DST
 // transitions when going from $start to $end
