@@ -1537,26 +1537,37 @@ div#div_custom_html {
 // controls in tabular form
 ?>
 
-#max_number div:first-of-type span, #max_number div div div {
+.standard fieldset.max_limits > div > label {
+  vertical-align: top;
+  margin-bottom: 0.5em;
+}
+
+.max_limits div:first-of-type span {
   display: inline-block;
   width: 50%;
 }
 
-#max_number div:first-of-type span {
+.max_limits div div div {
+  float: left;
+  margin-bottom: 0.5em;
+}
+
+.max_limits div:first-of-type span {
   white-space: normal;
   font-style: italic;
 }
 
-#max_number div div {
+.max_limits div div {
   white-space: nowrap;
 }
 
-#max_number input {
+.max_limits input {
   display: inline-block;
 }
 
-
-
+.max_limits input[type="checkbox"] {
+  margin-right: 1em;
+}
 
 div#rep_type div.long{
   border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;

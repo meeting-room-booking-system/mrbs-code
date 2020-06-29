@@ -700,52 +700,61 @@ function print_footer($and_exit=false)
 
 // Converts a duration of $dur seconds into a duration of
 // $dur $units
-function toTimeString(&$dur, &$units, $translate=true)
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// is used to specify a maximum size of unit to use.  For example if
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather 
+// than 1 hour.
+function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 {
-  if (abs($dur) >= 60)
+  if (!isset($max_unit))
+  {
+    $max_unit = 'years';
+  }
+  
+  if (($max_unit != 'seconds') && (abs($dur) >= 60))
   {
     $dur /= 60;
 
-    if (abs($dur) >= 60)
+    if (($max_unit != 'minutes') && (abs($dur) >= 60))
     {
       $dur /= 60;
 
-      if((abs($dur) >= 24) && ($dur % 24 == 0))
+      if(($max_unit != 'hours') && ((abs($dur) >= 24) && ($dur % 24 == 0)))
       {
         $dur /= 24;
 
-        if((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0))
+        if(($max_unit != 'days') && ((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0)))
         {
           $dur /= DAYS_PER_WEEK;
 
-          if ((abs($dur) >= 52) && ($dur % 52 == 0))
+          if (($max_unit != 'weeks') && ((abs($dur) >= 52) && ($dur % 52 == 0)))
           {
             $dur  /= 52;
-            $units = "years";
+            $units = 'years';
           }
           else
           {
-            $units = "weeks";
+            $units = 'weeks';
           }
         }
         else
         {
-          $units = "days";
+          $units = 'days';
         }
       }
       else
       {
-        $units = "hours";
+        $units = 'hours';
       }
     }
     else
     {
-      $units = "minutes";
+      $units = 'minutes';
     }
   }
   else
   {
-    $units = "seconds";
+    $units = 'seconds';
   }
 
   // Limit any floating point values to three decimal places
@@ -1360,6 +1369,7 @@ function get_area_settings($area)
   global $approval_enabled, $reminders_enabled, $enable_periods, $periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
+  global $max_secs_per_interval_area_enabled, $max_secs_per_interval_area;
   global $interval_types;
   global $times_along_top, $default_type;
 
@@ -1386,6 +1396,11 @@ function get_area_settings($area)
                    'max_per_month_enabled', 'max_per_month',
                    'max_per_year_enabled', 'max_per_year',
                    'max_per_future_enabled', 'max_per_future',
+                   'max_secs_per_day_enabled', 'max_secs_per_day',
+                   'max_secs_per_week_enabled', 'max_secs_per_week',
+                   'max_secs_per_month_enabled', 'max_secs_per_month',
+                   'max_secs_per_year_enabled', 'max_secs_per_year',
+                   'max_secs_per_future_enabled', 'max_secs_per_future',
                    'approval_enabled', 'reminders_enabled', 'enable_periods', 'periods',
                    'confirmation_enabled', 'confirmed_default',
                    'times_along_top', 'default_type');
@@ -1425,8 +1440,9 @@ function get_area_settings($area)
   // Set the timezone
   mrbs_default_timezone_set($timezone);
 
-  // Set the $max_per_interval_area_enabled and $max_per_interval_area arrays,
-  // which are handled slightly differently
+  // Set the $max_per_interval_area_enabled, $max_per_interval_area,
+  // $max_secs_per_interval_area_enabled and $max_secs_per_interval_area
+  // arrays, which are handled slightly differently
   foreach ($interval_types as $interval_type)
   {
     $var = "max_per_${interval_type}_enabled";
@@ -1439,6 +1455,18 @@ function get_area_settings($area)
     if (isset($$var))
     {
       $max_per_interval_area[$interval_type] = $$var;
+    }
+    
+    $var = "max_secs_per_${interval_type}_enabled";
+    if (isset($$var))
+    {
+      $max_secs_per_interval_area_enabled[$interval_type] = $$var;
+    }
+
+    $var = "max_secs_per_${interval_type}";
+    if (isset($$var))
+    {
+      $max_secs_per_interval_area[$interval_type] = $$var;
     }
   }
 

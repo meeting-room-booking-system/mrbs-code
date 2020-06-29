@@ -29,7 +29,9 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
-function get_time_unit_options()
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// can be used to specify the maximum unit to return.
+function get_time_unit_options($max_unit=null)
 {
   $options = array();
   $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
@@ -37,6 +39,10 @@ function get_time_unit_options()
   foreach ($units as $unit)
   {
     $options[$unit] = get_vocab($unit);
+    if (isset($max_unit) && ($max_unit == $unit))
+    {
+      break;
+    }
   }
 
   return $options;
@@ -465,7 +471,7 @@ function get_fieldset_max_number()
          $max_per_interval_area, $max_per_interval_global;
 
   $fieldset = new ElementFieldset();
-  $fieldset->setAttribute('id', 'max_number')
+  $fieldset->setAttribute('class', 'max_limits')
            ->addLegend(get_vocab('booking_limits'));
 
   // Add the column headings
@@ -519,6 +525,100 @@ function get_fieldset_max_number()
                ->addElement($number_global);
 
     $field->setLabel(get_vocab("max_per_${interval_type}"))
+          ->addControlElement($div_area)
+          ->addControlElement($div_global);
+
+    $fieldset->addElement($field);
+  }
+
+  return $fieldset;
+}
+
+
+function get_fieldset_max_secs()
+{
+  global $interval_types,
+         $max_secs_per_interval_area_enabled, $max_secs_per_interval_global_enabled,
+         $max_secs_per_interval_area, $max_secs_per_interval_global;
+
+  // Limit the units to 'hours' because 'days' can confuse the user.  That's because
+  // the policy check only checks for time used during the booking 'day', ie between
+  // the start of the first slot and the end of the last slot, which is normally less
+  // than 24 hours.  So a 'day' would be 24 hours, not a booking 'day'.
+  $max_unit = 'hours';
+
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('class', 'max_limits')
+           ->addLegend(get_vocab('booking_limits_secs'));
+
+  // Add the column headings
+  $field = new FieldDiv;
+
+  $span_area = new ElementSpan();
+  $span_area->setText(get_vocab('this_area'));
+
+  $span_global = new ElementSpan();
+  $span_global->setAttribute('title', get_vocab('whole_system_note'))
+              ->setText(get_vocab('whole_system'));
+
+  $field->addControlElement($span_area)
+        ->addControlElement($span_global);
+
+  $fieldset->addElement($field);
+
+  // Then do the individual settings
+  foreach ($interval_types as $interval_type)
+  {
+    $field = new FieldDiv;
+
+    $checkbox_area = new ElementInputCheckbox();
+    $checkbox_area->setAttributes(array('name'  => "area_max_secs_per_${interval_type}_enabled",
+                                        'id'    => "area_max_secs_per_${interval_type}_enabled",
+                                        'class' => 'enabler'))
+                  ->setChecked($max_secs_per_interval_area_enabled[$interval_type]);
+
+    $max = $max_secs_per_interval_area[$interval_type];
+    toTimeString($max, $units, true, $max_unit);
+    $options = get_time_unit_options($max_unit);
+
+    $select = new ElementSelect();
+    $select->setAttribute('name', "area_max_secs_per_${interval_type}_units")
+           ->addSelectOptions($options, array_search($units, $options), true);
+
+    $time_area = new ElementInputNumber();
+    $time_area->setAttributes(array('min'   => '0',
+                                    'name'  => "area_max_secs_per_${interval_type}",
+                                    'value' => $max));
+
+    // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
+    $div_area = new ElementDiv();
+    $div_area->addElement($checkbox_area)
+             ->addElement($time_area)
+             ->addElement($select);
+
+    // The global settings can't be changed here: they are just shown for information.  The global
+    // settings have to be changed in the config file.
+    $checkbox_global = new ElementInputCheckbox();
+    $checkbox_global->setAttributes(array('disabled' => true))
+                    ->setChecked($max_secs_per_interval_global_enabled[$interval_type]);
+
+    $max = $max_secs_per_interval_global[$interval_type];
+    toTimeString($max, $units, true, $max_unit);
+
+    $time_global = new ElementInputNumber();
+    $time_global->setAttributes(array('value' => $max,
+                                      'disabled' => true));
+
+    $select = new ElementSelect();
+    $select->setAttribute('disabled', true)
+           ->addSelectOptions($options, array_search($units, $options), true);
+
+    $div_global = new ElementDiv();
+    $div_global->addElement($checkbox_global)
+               ->addElement($time_global)
+               ->addElement($select);
+
+    $field->setLabel(get_vocab("max_secs_per_${interval_type}"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
@@ -594,6 +694,7 @@ function get_fieldset_booking_policies()
            ->addElement(get_fieldset_create_ahead())
            ->addElement(get_fieldset_delete_ahead())
            ->addElement(get_fieldset_max_number())
+           ->addElement(get_fieldset_max_secs())
            ->addElement(get_fieldset_max_duration());
 
   return $fieldset;
