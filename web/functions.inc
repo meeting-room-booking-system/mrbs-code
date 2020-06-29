@@ -1332,6 +1332,7 @@ function get_area_settings($area)
   global $approval_enabled, $reminders_enabled, $enable_periods, $periods;
   global $confirmation_enabled, $confirmed_default, $timezone;
   global $max_per_interval_area_enabled, $max_per_interval_area;
+  global $max_secs_per_interval_area_enabled, $max_secs_per_interval_area;
   global $interval_types;
   global $times_along_top, $default_type;
 
@@ -1358,6 +1359,11 @@ function get_area_settings($area)
                    'max_per_month_enabled', 'max_per_month',
                    'max_per_year_enabled', 'max_per_year',
                    'max_per_future_enabled', 'max_per_future',
+                   'max_secs_per_day_enabled', 'max_secs_per_day',
+                   'max_secs_per_week_enabled', 'max_secs_per_week',
+                   'max_secs_per_month_enabled', 'max_secs_per_month',
+                   'max_secs_per_year_enabled', 'max_secs_per_year',
+                   'max_secs_per_future_enabled', 'max_secs_per_future',
                    'approval_enabled', 'reminders_enabled', 'enable_periods', 'periods',
                    'confirmation_enabled', 'confirmed_default',
                    'times_along_top', 'default_type');
@@ -1397,8 +1403,9 @@ function get_area_settings($area)
   // Set the timezone
   mrbs_default_timezone_set($timezone);
 
-  // Set the $max_per_interval_area_enabled and $max_per_interval_area arrays,
-  // which are handled slightly differently
+  // Set the $max_per_interval_area_enabled, $max_per_interval_area,
+  // $max_secs_per_interval_area_enabled and $max_secs_per_interval_area
+  // arrays, which are handled slightly differently
   foreach ($interval_types as $interval_type)
   {
     $var = "max_per_${interval_type}_enabled";
@@ -1411,6 +1418,18 @@ function get_area_settings($area)
     if (isset($$var))
     {
       $max_per_interval_area[$interval_type] = $$var;
+    }
+    
+    $var = "max_secs_per_${interval_type}_enabled";
+    if (isset($$var))
+    {
+      $max_secs_per_interval_area_enabled[$interval_type] = $$var;
+    }
+
+    $var = "max_secs_per_${interval_type}";
+    if (isset($$var))
+    {
+      $max_secs_per_interval_area[$interval_type] = $$var;
     }
   }
 

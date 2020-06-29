@@ -509,6 +509,17 @@ $area_defaults['max_per_year']             = $max_per_interval_area['year'];
 $area_defaults['max_per_future_enabled']   = $max_per_interval_area_enabled['future'];
 $area_defaults['max_per_future']           = $max_per_interval_area['future'];
 
+$area_defaults['max_secs_per_day_enabled']      = $max_secs_per_interval_area_enabled['day'];
+$area_defaults['max_secs_per_day']              = $max_secs_per_interval_area['day'];
+$area_defaults['max_secs_per_week_enabled']     = $max_secs_per_interval_area_enabled['week'];
+$area_defaults['max_secs_per_week']             = $max_secs_per_interval_area['week'];
+$area_defaults['max_secs_per_month_enabled']    = $max_secs_per_interval_area_enabled['month'];
+$area_defaults['max_secs_per_month']            = $max_secs_per_interval_area['month'];
+$area_defaults['max_secs_per_year_enabled']     = $max_secs_per_interval_area_enabled['year'];
+$area_defaults['max_secs_per_year']             = $max_secs_per_interval_area['year'];
+$area_defaults['max_secs_per_future_enabled']   = $max_secs_per_interval_area_enabled['future'];
+$area_defaults['max_secs_per_future']           = $max_secs_per_interval_area['future'];
+
 
 // We send Ajax requests to ajax/del_entries.php with data as an array of ids.
 // In order to stop the POST request getting too large and triggering a 406

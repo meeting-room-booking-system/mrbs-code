@@ -1537,21 +1537,21 @@ div#div_custom_html {
 // controls in tabular form
 ?>
 
-#max_number div:first-of-type span, #max_number div div div {
+.max_limits div:first-of-type span, .max_limits div div div {
   display: inline-block;
   width: 50%;
 }
 
-#max_number div:first-of-type span {
+.max_limits div:first-of-type span {
   white-space: normal;
   font-style: italic;
 }
 
-#max_number div div {
+.max_limits div div {
   white-space: nowrap;
 }
 
-#max_number input {
+.max_limits input {
   display: inline-block;
 }
 
