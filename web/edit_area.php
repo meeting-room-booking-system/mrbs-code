@@ -29,7 +29,9 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
 
-function get_time_unit_options()
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// can be used to specify the maximum unit to return.
+function get_time_unit_options($max_unit=null)
 {
   $options = array();
   $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
@@ -37,6 +39,10 @@ function get_time_unit_options()
   foreach ($units as $unit)
   {
     $options[$unit] = get_vocab($unit);
+    if (isset($max_unit) && ($max_unit == $unit))
+    {
+      break;
+    }
   }
 
   return $options;
@@ -535,6 +541,12 @@ function get_fieldset_max_secs()
          $max_secs_per_interval_area_enabled, $max_secs_per_interval_global_enabled,
          $max_secs_per_interval_area, $max_secs_per_interval_global;
 
+  // Limit the units to 'hours' because 'days' can confuse the user.  That's because
+  // the policy check only checks for time used during the booking 'day', ie between
+  // the start of the first slot and the end of the last slot, which is normally less
+  // than 24 hours.  So a 'day' would be 24 hours, not a booking 'day'.
+  $max_unit = 'hours';
+
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('class', 'max_limits')
            ->addLegend(get_vocab('booking_limits_secs'));
@@ -566,12 +578,12 @@ function get_fieldset_max_secs()
                   ->setChecked($max_secs_per_interval_area_enabled[$interval_type]);
 
     $max = $max_secs_per_interval_area[$interval_type];
-    toTimeString($max, $max_units);
-    $options = get_time_unit_options();
+    toTimeString($max, $units, true, $max_unit);
+    $options = get_time_unit_options($max_unit);
 
     $select = new ElementSelect();
     $select->setAttribute('name', "area_max_secs_per_${interval_type}_units")
-           ->addSelectOptions($options, array_search($max_units, $options), true);
+           ->addSelectOptions($options, array_search($units, $options), true);
 
     $time_area = new ElementInputNumber();
     $time_area->setAttributes(array('min'   => '0',
@@ -591,7 +603,7 @@ function get_fieldset_max_secs()
                     ->setChecked($max_secs_per_interval_global_enabled[$interval_type]);
 
     $max = $max_secs_per_interval_global[$interval_type];
-    toTimeString($max, $max_units);
+    toTimeString($max, $units, true, $max_unit);
 
     $time_global = new ElementInputNumber();
     $time_global->setAttributes(array('value' => $max,
@@ -599,7 +611,7 @@ function get_fieldset_max_secs()
 
     $select = new ElementSelect();
     $select->setAttribute('disabled', true)
-           ->addSelectOptions($options, array_search($max_units, $options), true);
+           ->addSelectOptions($options, array_search($units, $options), true);
 
     $div_global = new ElementDiv();
     $div_global->addElement($checkbox_global)

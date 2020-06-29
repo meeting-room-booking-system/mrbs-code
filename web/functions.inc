@@ -672,52 +672,61 @@ function print_footer($and_exit=false)
 
 // Converts a duration of $dur seconds into a duration of
 // $dur $units
-function toTimeString(&$dur, &$units, $translate=true)
+// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+// is used to specify a maximum size of unit to use.  For example if
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather 
+// than 1 hour.
+function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 {
-  if (abs($dur) >= 60)
+  if (!isset($max_unit))
+  {
+    $max_unit = 'years';
+  }
+  
+  if (($max_unit != 'seconds') && (abs($dur) >= 60))
   {
     $dur /= 60;
 
-    if (abs($dur) >= 60)
+    if (($max_unit != 'minutes') && (abs($dur) >= 60))
     {
       $dur /= 60;
 
-      if((abs($dur) >= 24) && ($dur % 24 == 0))
+      if(($max_unit != 'hours') && ((abs($dur) >= 24) && ($dur % 24 == 0)))
       {
         $dur /= 24;
 
-        if((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0))
+        if(($max_unit != 'days') && ((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0)))
         {
           $dur /= DAYS_PER_WEEK;
 
-          if ((abs($dur) >= 52) && ($dur % 52 == 0))
+          if (($max_unit != 'weeks') && ((abs($dur) >= 52) && ($dur % 52 == 0)))
           {
             $dur  /= 52;
-            $units = "years";
+            $units = 'years';
           }
           else
           {
-            $units = "weeks";
+            $units = 'weeks';
           }
         }
         else
         {
-          $units = "days";
+          $units = 'days';
         }
       }
       else
       {
-        $units = "hours";
+        $units = 'hours';
       }
     }
     else
     {
-      $units = "minutes";
+      $units = 'minutes';
     }
   }
   else
   {
-    $units = "seconds";
+    $units = 'seconds';
   }
 
   // Limit any floating point values to three decimal places
