@@ -1537,9 +1537,19 @@ div#div_custom_html {
 // controls in tabular form
 ?>
 
-.max_limits div:first-of-type span, .max_limits div div div {
+.standard fieldset.max_limits > div > label {
+  vertical-align: top;
+  margin-bottom: 0.5em;
+}
+
+.max_limits div:first-of-type span {
   display: inline-block;
   width: 50%;
+}
+
+.max_limits div div div {
+  float: left;
+  margin-bottom: 0.5em;
 }
 
 .max_limits div:first-of-type span {
@@ -1555,8 +1565,9 @@ div#div_custom_html {
   display: inline-block;
 }
 
-
-
+.max_limits input[type="checkbox"] {
+  margin-right: 1em;
+}
 
 div#rep_type div.long{
   border-right: 1px solid <?php echo $site_faq_entry_border_color ?>;
