@@ -2033,8 +2033,15 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
       {
         for ($i = 0; $i < count($reps); $i++)
         {
-          // calculate diff each time and correct where events
-          // cross DST
+          // Check that this entry doesn't overlap with the next in the series.
+          // (This can happen if peoople mistake the end date for the repeat end date.)
+          if (isset($reps[$i+1]) && ($booking['end_time'] > $reps[$i+1]))
+          {
+            $valid_booking = false;
+            $conflicts[] = get_vocab('conflicts_with_self');
+            break;
+          }
+          // Calculate diff each time and correct where events cross DST
           $diff = $duration_seconds;
           $diff += cross_dst($reps[$i], $reps[$i] + $diff);
 
