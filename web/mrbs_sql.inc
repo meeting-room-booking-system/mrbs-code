@@ -2034,7 +2034,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
         for ($i = 0; $i < count($reps); $i++)
         {
           // Check that this entry doesn't overlap with the next in the series.
-          // (This can happen if peoople mistake the end date for the repeat end date.)
+          // (This can happen if people mistake the end date for the repeat end date.)
           if (isset($reps[$i+1]) && ($booking['end_time'] > $reps[$i+1]))
           {
             $valid_booking = false;
@@ -2122,9 +2122,9 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
         $valid_booking = FALSE;
       }
     }
-    
+
   } // end foreach bookings
-  
+
   // If we are editing an existing booking then we need to check that we are
   // allowed to delete it
   if (isset($id))
@@ -2154,7 +2154,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     }
 
   }
-  
+
   // Tidy up the lists of conflicts and rules broken, getting rid of duplicates
   $conflicts = array_values(array_unique($conflicts));
   foreach (array('notices', 'errors') as $key)
@@ -2298,7 +2298,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
 
   $result['new_details'] = $new_details;
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
-  
+
   return $result;
 }
 
