@@ -2084,8 +2084,16 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
       }
       else
       {
-        $valid_booking = FALSE;
-        $violations[] = get_vocab("too_may_entrys");
+        if (is_book_admin($booking['room_id']))
+        {
+          $violation_status = 'notices';
+        }
+        else
+        {
+          $violation_status = 'errors';
+          $valid_booking = false;
+        }
+        $violations[$violation_status][] = get_vocab("too_may_entrys");
       }
     }
     else
@@ -2107,9 +2115,9 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
         $valid_booking = FALSE;
       }
     }
-
+    
   } // end foreach bookings
-
+  
   // If we are editing an existing booking then we need to check that we are
   // allowed to delete it
   if (isset($id))
@@ -2139,7 +2147,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     }
 
   }
-
+  
   // Tidy up the lists of conflicts and rules broken, getting rid of duplicates
   $conflicts = array_values(array_unique($conflicts));
   foreach (array('notices', 'errors') as $key)
@@ -2151,7 +2159,6 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   $result['valid_booking'] = $valid_booking;
   $result['violations'] = $violations;
   $result['conflicts'] = $conflicts;
-
   // If we've just been asked to check the bookings, or if it wasn't a valid
   // booking, then stop here and return the results
   if ($just_check || !$valid_booking)
@@ -2284,7 +2291,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
 
   $result['new_details'] = $new_details;
   $result['slots'] = intval(($common['end_time'] - $common['start_time'])/$resolution);
-
+  
   return $result;
 }
 
