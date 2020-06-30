@@ -69,8 +69,7 @@ class MailQueue
     $recipients = (!empty($addresses['to'])) ? $addresses['to'] : '';
     $recipients .= (!empty($addresses['cc'])) ? ',' . $addresses['cc'] : '';
     $recipients .= (!empty($addresses['bcc'])) ? ',' . $addresses['bcc'] : '';
-    $mail = new PHPMailer;
-    $parsed_addresses = $mail->parseAddresses($recipients);
+    $parsed_addresses = PHPMailer::parseAddresses($recipients);
     
     return count($parsed_addresses);
   }
@@ -204,11 +203,11 @@ class MailQueue
 
     if (isset($addresses['from']))
     {
-      $from_addresses = $mail->parseAddresses($addresses['from']);
+      $from_addresses = PHPMailer::parseAddresses($addresses['from']);
       $mail->setFrom($from_addresses[0]['address'], $from_addresses[0]['name']);
     }
 
-    $to_addresses = $mail->parseAddresses($addresses['to']);
+    $to_addresses = PHPMailer::parseAddresses($addresses['to']);
     foreach ($to_addresses as $to_address)
     {
       $mail->addAddress($to_address['address'], $to_address['name']);
@@ -216,7 +215,7 @@ class MailQueue
 
     if (isset($addresses['cc']))
     {
-      $cc_addresses = $mail->parseAddresses($addresses['cc']);
+      $cc_addresses = PHPMailer::parseAddresses($addresses['cc']);
       foreach ($cc_addresses as $cc_address)
       {
         $mail->addCC($cc_address['address'], $cc_address['name']);
@@ -225,7 +224,7 @@ class MailQueue
 
     if (isset($addresses['bcc']))
     {
-      $bcc_addresses = $mail->parseAddresses($addresses['bcc']);
+      $bcc_addresses = PHPMailer::parseAddresses($addresses['bcc']);
       foreach ($bcc_addresses as $bcc_address)
       {
         $mail->addBCC($bcc_address['address'], $bcc_address['name']);
