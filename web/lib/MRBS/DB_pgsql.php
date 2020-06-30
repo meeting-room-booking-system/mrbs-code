@@ -206,7 +206,7 @@ class DB_pgsql extends DB
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
     $table_parts = self::resolve_table($table);
-    
+
     $sql_params = array();
 
     // $table_name and $table_schema should be trusted but escape them anyway for good measure

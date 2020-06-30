@@ -208,9 +208,10 @@ class Form extends Element
       $json_data = json_encode($session_data);
       if (!function_exists('hash_hmac'))
       {
-        fatal_error("It appears that your PHP has the hash functions " .
-                    "disabled, which are required for the CSRF prevention " .
-                    "cookie fallback code.");
+        $message = "It appears that your PHP has the hash functions " .
+                   "disabled, which are required for the CSRF prevention " .
+                   "cookie fallback code.";
+        throw new \Exception($message);
       }
       global $csrf_cookie;
       $hash = hash_hmac(
@@ -286,9 +287,10 @@ class Form extends Element
 
       if (!function_exists('hash_hmac'))
       {
-        fatal_error("It appears that your PHP has the hash functions " .
-                    "disabled, which are required for the CSRF prevention " .
-                    "cookie fallback code.");
+        $message = "It appears that your PHP has the hash functions " .
+                   "disabled, which are required for the CSRF prevention " .
+                   "cookie fallback code.";
+        throw new \Exception($message);
       }
       if (hash_hmac(
                     $csrf_cookie["hash_algorithm"],
