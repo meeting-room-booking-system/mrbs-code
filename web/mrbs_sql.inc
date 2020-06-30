@@ -2093,7 +2093,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
           $violation_status = 'errors';
           $valid_booking = false;
         }
-        $violations[$violation_status][] = get_vocab("too_may_entrys");
+        $violations[$violation_status][] = get_vocab("too_many_entries", $max_rep_entrys - 1);
       }
     }
     else
