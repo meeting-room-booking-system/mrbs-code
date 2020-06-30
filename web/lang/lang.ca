@@ -96,7 +96,7 @@ $vocab["invalid_series_id"]  = "Valor de sèrie invàlid.";
 $vocab["error"]              = "Error";
 $vocab["sched_conflict"]     = "Conflicte de planificació";
 $vocab["conflict"]           = "La nova reserva entra en conflicte amb le(s) següent(s) entrade(s)";
-$vocab["too_may_entrys"]     = "Les opcions sel·leccionades crearan mases entrades.<br>Si us plau, revisi les opcions";
+$vocab["too_many_entries"]   = "Les opcions sel·leccionades crearan mases entrades.<br>Si us plau, revisi les opcions";
 $vocab["returncal"]          = "Tornar a la vista del calendari";
 $vocab["failed_to_acquire"]  = "Fallada en l'intent d'obtenir accés a la base de dades"; 
 

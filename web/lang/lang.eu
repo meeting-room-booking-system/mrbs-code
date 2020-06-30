@@ -96,7 +96,7 @@ $vocab["invalid_series_id"]  = "Invalid series id.";
 $vocab["error"]              = "Errorea";
 $vocab["sched_conflict"]     = "Planifikazio-gatazka";
 $vocab["conflict"]           = "Erreserba berria beste erreserba hauekin bateraezina da:";
-$vocab["too_may_entrys"]     = "Aukeratu duzunak arazoak sortzen ditu.<br>Aukera(k) berriz aztertu, mesedez";
+$vocab["too_many_entries"]   = "Aukeratu duzunak arazoak sortzen ditu.<br>Aukera(k) berriz aztertu, mesedez";
 $vocab["returncal"]          = "Egutegiaren bistara itzuli, mesedez";
 $vocab["failed_to_acquire"]  = "Datubasera sartzeko arazoa"; 
 
