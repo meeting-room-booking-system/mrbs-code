@@ -1023,7 +1023,7 @@ if (isset($action) && ($action == "update"))
   // For each db column get the value ready for the database
   foreach ($fields as $field)
   {
-    $fieldname = $field['name'];;
+    $fieldname = $field['name'];
 
     // Stop ordinary users trying to change fields they are not allowed to
     if (!$initial_user_creation &&
@@ -1124,7 +1124,7 @@ if (isset($action) && ($action == "delete"))
             FROM " . _tbl('users') . "
            WHERE id=?
            LIMIT 1";
-           
+
   $target_level = db()->query1($sql, array($id));
   if ($target_level < 0)
   {

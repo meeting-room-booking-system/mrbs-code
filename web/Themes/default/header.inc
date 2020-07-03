@@ -353,7 +353,7 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
 
-  echo DOCTYPE . "\n";;
+  echo DOCTYPE . "\n";
 
   // We produce two <html> tags: one for versions of IE that we don't support and one for all
   // other browsers.  This enables us to use CSS to hide and show the appropriate text.

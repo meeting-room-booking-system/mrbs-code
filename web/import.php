@@ -20,13 +20,13 @@ $wrapper_mime_types = array('file'            => 'text/calendar',
                             'zip'             => 'application/zip',
                             'compress.zlib'   => 'application/x-gzip',
                             'compress.bzip2'  => 'application/x-bzip2');
-                            
+
 $wrapper_descriptions = array('file'            => get_vocab('import_text_file'),
                               'zip'             => get_vocab('import_zip'),
                               'compress.zlib'   => get_vocab('import_gzip'),
                               'compress.bzip2'  => get_vocab('import_bzip2'));
 
-// Get the available compression wrappers that we can use. 
+// Get the available compression wrappers that we can use.
 // Returns an array
 function get_compression_wrappers()
 {
@@ -53,7 +53,7 @@ function get_compression_wrappers()
 function get_room_id($location, &$error)
 {
   global $area_room_order, $area_room_delimiter, $area_room_create;
-  
+
   // If there's no delimiter we assume we've just been given a room name (that will
   // have to be unique).   Otherwise we split the location into its area and room parts
   if (strpos($location, $area_room_delimiter) === FALSE)
@@ -71,12 +71,12 @@ function get_room_id($location, &$error)
   }
   $location_area = trim($location_area);
   $location_room = trim($location_room);
-  
+
   // Now search the database for the room
-  
+
   // Case 1:  we've just been given a room name, in which case we hope it happens
   // to be unique, because if we find more than one we won't know which one is intended
-  // and if we don't find one at all we won't be able to create it because we won't 
+  // and if we don't find one at all we won't be able to create it because we won't
   // know which area to put it in.
   if ($location_area == '')
   {
@@ -105,7 +105,7 @@ function get_room_id($location, &$error)
       return $id;
     }
   }
-  
+
   // Case 2:  we've got an area and room name
   else
   {
@@ -192,7 +192,7 @@ function get_unfolded_line($handle)
       $unfolded_line = $line;
     }
     else
-    {  
+    {
       $first_char = utf8_substr($line, 0, 1);
       // If the first character of the line is a space or tab then it's
       // part of a fold
@@ -209,7 +209,7 @@ function get_unfolded_line($handle)
       }
     }
   }
-  
+
   return (isset($unfolded_line)) ? $unfolded_line : FALSE;
 }
 
@@ -217,7 +217,7 @@ function get_unfolded_line($handle)
 // Get the next event from the stream.
 // Returns FALSE if EOF has been reached, or else an array
 // of lines for the event.  The BEGIN:VEVENT and END:VEVENT
-// lines are not included in the array. 
+// lines are not included in the array.
 function get_event($handle)
 {
   // Advance to the beginning of the event
@@ -247,18 +247,18 @@ function process_event($vevent)
   global $import_default_room, $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
-  
+
   // We are going to cache the settings ($resolution etc.) for the rooms
   // in order to avoid lots of database lookups
   static $room_settings = array();
-  
+
   // Set up the booking with some defaults
   $booking = array();
   $booking['awaiting_approval'] = false;
   $booking['rep_type'] = REP_NONE;
   $booking['type'] = $import_default_type;
   $booking['room_id'] = $import_default_room;
-  
+
   // Parse all the lines first because we'll need to get the start date
   // for calculating some of the other settings
   $properties = array();
@@ -283,7 +283,7 @@ function process_event($vevent)
       while (!(($property['name'] == 'END') && ($property['value'] == $component)) &&
              ($line = next($vevent)))
       {
-        $property = parse_ical_property($line);;
+        $property = parse_ical_property($line);
       }
     }
     $line = next($vevent);
@@ -307,15 +307,15 @@ function process_event($vevent)
         $booking['create_by'] = get_create_by($details['value']);
         $booking['modified_by'] = '';
         break;
-        
+
       case 'SUMMARY':
         $booking['name'] = $details['value'];
         break;
-        
+
       case 'DESCRIPTION':
         $booking['description'] = $details['value'];
         break;
-        
+
       case 'LOCATION':
         $error = '';
         $booking['room_id'] = get_room_id($details['value'], $error);
@@ -324,15 +324,15 @@ function process_event($vevent)
           $problems[] = $error;
         }
         break;
-        
+
       case 'DTEND':
         $booking['end_time'] = get_time($details['value'], $details['params']);
         break;
-        
+
       case 'DURATION':
         trigger_error("DURATION not yet supported by MRBS", E_USER_WARNING);
         break;
-        
+
       case 'RRULE':
         $rrule_errors = array();
         $repeat_details = get_repeat_details($details['value'], $booking['start_time'], $rrule_errors);
@@ -348,15 +348,15 @@ function process_event($vevent)
           }
         }
         break;
-        
+
       case 'CLASS':
         $booking['private'] = in_array($details['value'], array('PRIVATE', 'CONFIDENTIAL'));
         break;
-        
+
       case 'STATUS':
         $booking['tentative'] = ($details['value'] == 'TENTATIVE');
         break;
-        
+
       case 'X-MRBS-TYPE':
         foreach($booking_types as $type)
         {
@@ -367,39 +367,39 @@ function process_event($vevent)
           }
         }
         break;
-        
+
       case 'UID':
         $booking['ical_uid'] = $details['value'];
         break;
-        
+
       case 'SEQUENCE':
         $booking['ical_sequence'] = $details['value'];
         break;
-        
+
       case 'LAST-MODIFIED':
         // We probably ought to do something with LAST-MODIFIED and use it
         // for the timestamp field
         break;
-        
+
       default:
         break;
     }
   }
-  
+
   // If we didn't manage to work out a username then just put the booking
   // under the name of the current user
   if (!isset($booking['create_by']))
   {
     $booking['create_by'] = getUserName();
   }
-  
+
   // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
   // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
   if (!isset($booking['name']))
   {
     $booking['name'] = "Imported event - no SUMMARY name";
   }
-  
+
   // On the other hand a UID is mandatory in RFC 5545.   We'll be lenient and
   // provide one if it is missing
   if (!isset($booking['ical_uid']))
@@ -407,7 +407,7 @@ function process_event($vevent)
     $booking['ical_uid'] = generate_global_uid($booking['name']);
     $booking['sequence'] = 0;  // and we'll start the sequence from 0
   }
-  
+
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
   // If there is no LOCATION property we use the default_room specified on
   // the form, but if there is no default room (most likely because no rooms
@@ -416,7 +416,7 @@ function process_event($vevent)
   {
     $problems[] = get_vocab("no_LOCATION");
   }
-  
+
   if (empty($problems))
   {
     // Get the area settings for this room, if we haven't got them already
@@ -479,7 +479,7 @@ function process_event($vevent)
   }
   echo "</ul>\n";
   echo "</div>\n";
-  
+
   return FALSE;
 }
 
@@ -507,7 +507,7 @@ function get_file_details_bzip2($file)
 
 function get_file_details_gzip($file)
 {
-  // Get the uncompressed size of the gzip file which is stored in the last four 
+  // Get the uncompressed size of the gzip file which is stored in the last four
   // bytes of the file, little-endian
   if (FALSE !== ($handle = fopen($file['tmp_name'], 'rb')))
   {
@@ -532,7 +532,7 @@ function get_file_details_gzip($file)
 function get_file_details_zip($file)
 {
   $files = array();
-  
+
   if (class_exists('ZipArchive'))
   {
     $zip = new ZipArchive();
@@ -577,7 +577,7 @@ function get_file_details_zip($file)
         // and also https://bugs.php.net/bug.php?id=54128
         if ($result == ZipArchive::ER_OPEN)
         {
-          $message .= " If your server is running Windows, check the permissions on " . 
+          $message .= " If your server is running Windows, check the permissions on " .
                       dirname($file['tmp_name']) . ". 'List Folder' permission is required " .
                       "for user IUSR_XXXX.";
         }
@@ -634,17 +634,17 @@ function get_fieldset_location_settings()
 {
   global $default_room;
   global $area_room_order, $area_room_delimiter, $area_room_create;
-  
+
   $fieldset = new ElementFieldset();
-  
+
   $fieldset->addLegend(get_vocab('area_room_settings'));
-  
+
   // Default room
   $areas = get_area_names($all=true);
   if (count($areas) > 0)
   {
     $options = array();
-    
+
     foreach($areas as $area_id => $area_name)
     {
       $rooms = get_room_names($area_id, $all=true);
@@ -657,20 +657,20 @@ function get_fieldset_location_settings()
         }
       }
     }
-    
+
     if (count($options) > 0)
     {
       $field = new FieldSelect();
-      
+
       $field->setLabel(get_vocab('default_room'))
             ->setLabelAttribute('title', get_vocab('default_room_note'))
             ->setControlAttribute('name', 'import_default_room')
             ->addSelectOptions($options, $default_room, true);
-      
+
       $fieldset->addElement($field);
     }
   }
-  
+
   // Area-room order
   $field = new FieldInputRadioGroup();
   $options = array('area_room' => get_vocab('area_room'),
@@ -679,7 +679,7 @@ function get_fieldset_location_settings()
         ->setLabelAttribute('title', get_vocab('area_room_order_note'))
         ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
   $fieldset->addElement($field);
-  
+
   // Area-room delimiter
   $field = new FieldInputText();
   $field->setLabel(get_vocab('area_room_delimiter'))
@@ -689,14 +689,14 @@ function get_fieldset_location_settings()
                                      'class'    => 'short',
                                      'required' => true));
   $fieldset->addElement($field);
-  
+
   // Area/room create
   $field =new FieldInputCheckbox();
   $field->setLabel(get_vocab('area_room_create'))
         ->setControlAttribute('name', 'area_room_create')
         ->setChecked($area_room_create);
   $fieldset->addElement($field);
-  
+
   return $fieldset;
 }
 
@@ -705,32 +705,32 @@ function get_fieldset_other_settings()
 {
   global $booking_types;
   global $import_default_type, $skip;
-  
+
   $fieldset = new ElementFieldset();
-  
+
   $fieldset->addLegend(get_vocab('other_settings'));
-  
+
   // Default type
   $field = new FieldSelect();
-  
+
   $options = array();
   foreach ($booking_types as $type)
   {
     $options[$type] = get_type_vocab($type);
   }
-  
+
   $field->setLabel(get_vocab('default_type'))
         ->setControlAttribute('name', 'import_default_type')
         ->addSelectOptions($options, $import_default_type, true);
   $fieldset->addElement($field);
-  
+
   // Skip conflicts
   $field =new FieldInputCheckbox();
   $field->setLabel(get_vocab('skip_conflicts'))
         ->setControlAttribute('name', 'skip')
         ->setChecked($skip);
   $fieldset->addElement($field);
-  
+
   return $fieldset;
 }
 
@@ -738,7 +738,7 @@ function get_fieldset_other_settings()
 function get_fieldset_submit_button()
 {
   $fieldset = new ElementFieldset();
-  
+
   // The Submit button
   $field = new FieldInputSubmit();
   $field->setControlAttributes(array('name'  => 'import',
@@ -817,12 +817,12 @@ if (!empty($import))
       foreach ($archive['files'] as $file)
       {
         echo "<h3>" . $file['name'] . "</h3>";
-        
+
         $n_success = 0;
         $n_failure = 0;
-        
+
         $handle = fopen($archive['wrapper'] . '://' . $file['tmp_name'], 'rb');
-        
+
         if ($handle === FALSE)
         {
           echo "<p>" . get_vocab("could_not_process") . "</p>\n";
@@ -833,9 +833,9 @@ if (!empty($import))
           {
             (process_event($vevent)) ? $n_success++ : $n_failure++;
           }
-          
+
           fclose($handle);
-          
+
           echo "<p>\n";
           echo "$n_success " . get_vocab("events_imported");
           if ($n_failure > 0)
@@ -872,7 +872,7 @@ $form->setAttributes(array('class'   => 'standard',
                            'method'  => 'post',
                            'enctype' => 'multipart/form-data',
                            'action'  => multisite(this_page())));
-                           
+
 $fieldset = new ElementFieldset();
 
 // The file
@@ -900,5 +900,5 @@ $form->addElement($fieldset);
 
 $form->render();
 
-  
+
 print_footer();
