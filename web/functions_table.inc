@@ -847,7 +847,7 @@ function get_flex_div($slots, $classes, $title=null, $text=null)
 }
 
 
-function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
+function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight)
 {
   if ($view_all)
   {
@@ -855,7 +855,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
   }
   else
   {
-    return week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id);
+    return week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight);
   }
 }
 
