@@ -225,7 +225,7 @@ function do_upgrade($upgrade_handle)
 
   if (!db()->table_exists(_tbl('entry')))
   {
-    upgrade_echo("<p>" . htmlspecialchars(get_vocab(no_tables_found)) . "</p>\n");
+    upgrade_echo("<p>" . htmlspecialchars(get_vocab('no_tables_found')) . "</p>\n");
   }
   else
   {
