@@ -1012,7 +1012,7 @@ function increment_count(&$array, $index1, $index2, $increment)
 // Collect summary statistics on one entry.
 // This also builds hash tables of all unique names and rooms. When sorted,
 // these will become the column and row headers of the summary table.
-function accumulate(&$row, &$count, &$hours, $report_start, $report_end,
+function accumulate($row, &$count, &$hours, $report_start, $report_end,
                     &$room_hash, &$name_hash)
 {
   global $output_format, $periods;

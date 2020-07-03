@@ -340,7 +340,7 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
  *            - An array of human readable errors, index by 'notices' or 'errors'.
  *              If there are no policy violations the array has length 0.
  */
-function mrbsCheckPolicy(array &$booking, $ignore, $repignore, $delete=FALSE)
+function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
 {
   global $periods, $enable_periods;
   global $min_create_ahead_enabled, $min_create_ahead_secs;
