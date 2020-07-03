@@ -1176,7 +1176,7 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
-  <?php // Turn the create_by select into a fancy select box. ?>;
+  <?php // Turn the create_by select into a fancy select box. ?>
   $('select#create_by').mrbsSelect();
   <?php
   // Add a class to the body so that we can modify the CSS when the load
@@ -1330,7 +1330,7 @@ $(document).on('page_ready', function() {
   //  be any conflicts
   ?>
   var form = $('#main');
-  
+
   adjustSlotSelectors();
 
   <?php
@@ -1561,7 +1561,7 @@ $(document).on('page_ready', function() {
   }
 
   form.removeClass('js_hidden');
-  
+
   <?php
   // Put the booking name field in focus (but only for new bookings,
   // ie when the field is empty:  if it's a new booking you have to
@@ -1569,7 +1569,7 @@ $(document).on('page_ready', function() {
   // want to edit any field)
   ?>
   var nameInput = form.find('#name');
-  
+
   if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
   {
     nameInput.trigger('focus');
