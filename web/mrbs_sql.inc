@@ -49,7 +49,7 @@ function unpack_status(array &$data)
  *   nothing   - The area is free
  *   something - An error occurred, the return value is an array of conflicts
  */
-function mrbsCheckFree(array &$booking, $ignore, $repignore)
+function mrbsCheckFree(array $booking, $ignore, $repignore)
 {
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format, $is_private_field;
@@ -145,7 +145,7 @@ function mrbsCheckFree(array &$booking, $ignore, $repignore)
 // 'future').  If $only_area is set then only the bookings in the same area are considered.
 // If $check_seconds is set then the total length of bookings is checked, otherwise the number.
 // Returns NULL if OK, otherwise an error string.
-function check_interval(array &$booking, $ignore, $repignore, $interval_type='day', $only_area=false, $check_seconds=false)
+function check_interval(array $booking, $ignore, $repignore, $interval_type='day', $only_area=false, $check_seconds=false)
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $max_secs_per_interval_global, $max_secs_per_interval_area;
