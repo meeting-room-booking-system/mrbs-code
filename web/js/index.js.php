@@ -48,13 +48,14 @@ var checkNavWrapping = function() {
 // Only show the bottom nav bar if no part of the top one is visible.
 ?>
 var checkNav = function() {
-    if ($('nav.main_calendar').eq(0).visible(true))
+    var nav = $('nav.main_calendar');
+    if (nav.eq(0).visible(true))
     {
-      $('nav.main_calendar').eq(1).hide();
+      nav.eq(1).hide();
     }
     else
     {
-      $('nav.main_calendar').eq(1).show();
+      nav.eq(1).show();
     }
   };
 
