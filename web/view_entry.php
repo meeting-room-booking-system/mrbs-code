@@ -133,7 +133,7 @@ function generateOwnerButtons($id, $series)
     if ($multisite && isset($site) && ($site !== ''))
     {
       $query_string .= "&site=$site";
-      $returl .= "&site=$site";;
+      $returl .= "&site=$site";
     }
 
     $params = array('action' => multisite("approve_entry_handler.php?$query_string"),
@@ -232,7 +232,7 @@ if (!isset($returl))
                   'area'  => $area,
                   'room'  => $room);
 
-    $returl .= '?' . http_build_query($vars, '', '&');;
+    $returl .= '?' . http_build_query($vars, '', '&');
   }
 }
 

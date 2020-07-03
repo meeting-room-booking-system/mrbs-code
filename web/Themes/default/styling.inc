@@ -100,7 +100,7 @@ $color_types = array(
 
 // colours used for pending.php and bookings awaiting approval
 $outstanding_color         = "#FFF36C";     // font colour for the outstanding reservations message in the header
-$pending_header_back_color = $header_back_color;; // background colour for series headers
+$pending_header_back_color = $header_back_color; // background colour for series headers
 $series_entry_back_color   = "#FFFCDA";     // background colour for entries in a series
 $pending_control_color     = "#FFF36C";     // background colour for the series +/- controls in pending.php
 $attention_color           = 'darkorange';  // background colour for the number of bookings awaiting approval

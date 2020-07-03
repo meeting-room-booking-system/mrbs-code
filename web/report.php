@@ -725,7 +725,7 @@ function close_summary()
 
 
 // Output a table row.
-function output_row(&$values, $output_format, $body_row = TRUE)
+function output_row($values, $output_format, $body_row = TRUE)
 {
   global $json_data, $is_ajax, $csv_col_sep, $csv_row_sep;
 
@@ -755,7 +755,7 @@ function output_row(&$values, $output_format, $body_row = TRUE)
 }
 
 
-function output_head_rows(&$rows, $format)
+function output_head_rows($rows, $format)
 {
   if (count($rows) == 0)
   {
@@ -780,7 +780,7 @@ function output_head_rows(&$rows, $format)
 }
 
 
-function output_body_rows(&$rows, $format)
+function output_body_rows($rows, $format)
 {
   global $is_ajax;
 
@@ -798,7 +798,7 @@ function output_body_rows(&$rows, $format)
 }
 
 
-function output_foot_rows(&$rows, $format)
+function output_foot_rows($rows, $format)
 {
   if (count($rows) == 0)
   {
@@ -814,7 +814,7 @@ function output_foot_rows(&$rows, $format)
 }
 
 
-function report_row(&$rows, &$data)
+function report_row(&$rows, $data)
 {
   global $output_format, $is_ajax, $ajax_capable;
   global $custom_fields, $field_natures, $field_lengths;
@@ -973,7 +973,7 @@ function report_row(&$rows, &$data)
 }
 
 
-function get_sumby_name_from_row(&$row)
+function get_sumby_name_from_row($row)
 {
   global $sumby;
 
@@ -1081,7 +1081,7 @@ function entries_format($str)
 // Output the summary table (a "cross-tab report"). $count and $hours are
 // 2-dimensional sparse arrays indexed by [area/room][name].
 // $room_hash & $name_hash are arrays with indexes naming unique rooms and names.
-function do_summary(&$count, &$hours, &$room_hash, &$name_hash)
+function do_summary($count, $hours, &$room_hash, &$name_hash)
 {
   global $output_format, $csv_col_sep;
   global $times_somewhere, $periods_somewhere;
