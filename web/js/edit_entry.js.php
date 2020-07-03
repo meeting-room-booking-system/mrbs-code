@@ -1324,23 +1324,13 @@ $(document).on('page_ready', function() {
     });
 
   <?php
-  // (1) put the booking name field in focus (but only for new bookings,
-  // ie when the field is empty:  if it's a new booking you have to
-  // complete that field, but if it's an existing booking you might
-  // want to edit any field)
-  // (2) Adjust the slot selectors
-  // (3) Add some Ajax capabilities to the form (if we can) so that when
+  // (1) Adjust the slot selectors
+  // (2) Add some Ajax capabilities to the form (if we can) so that when
   //  a booking parameter is changed MRBS checks to see whether there would
   //  be any conflicts
   ?>
-  var form = $('#main'),
-      nameInput = form.find('#name');
-
-  if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
-  {
-    nameInput.trigger('focus');
-  }
-
+  var form = $('#main');
+  
   adjustSlotSelectors();
 
   <?php
@@ -1571,5 +1561,18 @@ $(document).on('page_ready', function() {
   }
 
   form.removeClass('js_hidden');
+  
+  <?php
+  // Put the booking name field in focus (but only for new bookings,
+  // ie when the field is empty:  if it's a new booking you have to
+  // complete that field, but if it's an existing booking you might
+  // want to edit any field)
+  ?>
+  var nameInput = form.find('#name');
+  
+  if (nameInput.length && !(nameInput.prop('disabled') || nameInput.val().length))
+  {
+    nameInput.trigger('focus');
+  }
 
 });
