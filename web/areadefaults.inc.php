@@ -216,6 +216,7 @@ $max_per_interval_area['future'] = 100; // max 100 bookings in the future in an 
 // by the $weekstarts setting).   These are per-area settings but you can use them
 // in conjunction with the global settings.   This would allow you to set policies such as
 // allowing a maximum of 10 hours per week in total with a maximum of 1 hour per day in Area A.
+// These settings only apply to areas in "times" mode.
 
 $max_secs_per_interval_area_enabled['day']    = false;
 $max_secs_per_interval_area['day'] = 60*60*2;      // max 2 hours per day in total

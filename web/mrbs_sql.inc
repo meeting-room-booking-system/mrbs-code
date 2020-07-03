@@ -218,7 +218,7 @@ function check_interval(array &$booking, $ignore, $repignore, $interval_type='da
     if (!isset($existing[$location][$interval_type][$interval_start]))
     {
       $sql = "SELECT E.start_time, E.end_time
-                FROM " . _tbl('entry') . " E, " . _tbl('room') . " R
+                FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
                WHERE E.start_time < ?
                  AND E.end_time > ?
                  AND E.create_by = ?
@@ -229,6 +229,11 @@ function check_interval(array &$booking, $ignore, $repignore, $interval_type='da
                           $interval_start,
                           $booking['create_by']);
 
+      if ($check_seconds)
+      {
+        // If we're checking for the actual time of bookings, then exclude areas using periods
+        $sql .= " AND R.area_id=A.id AND A.enable_periods=0";
+      }
       if ($only_area)
       {
         $sql .= " AND R.area_id=?";
