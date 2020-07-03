@@ -179,7 +179,7 @@ function get_form_var_type($field)
 }
 
 
-function output_row(&$row)
+function output_row($row)
 {
   global $is_ajax, $json_data;
   global $fields, $ignore_columns, $select_options;
