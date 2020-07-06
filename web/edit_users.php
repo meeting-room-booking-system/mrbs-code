@@ -711,7 +711,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       echo "<ul class=\"error\">\n";
       foreach ($pwd_policy as $rule => $value)
       {
-        echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
+        if ($value != 0)
+        {
+          echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
+        }
       }
       echo "</ul>\n";
     }
