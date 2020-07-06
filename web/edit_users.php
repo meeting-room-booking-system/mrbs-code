@@ -713,7 +713,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       {
         if ($value != 0)
         {
-          echo "<li>$value " . get_vocab("policy_" . $rule) . "</li>\n";
+          echo "<li>" . get_vocab('policy_' . $rule, $value) . "</li>\n";
         }
       }
       echo "</ul>\n";
