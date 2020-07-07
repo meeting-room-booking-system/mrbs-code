@@ -32,9 +32,7 @@ class AuthPop3 extends Auth
    */
   public function validateUser($user, $pass)
   {
-    global $auth;
-    global $pop3_host;
-    global $pop3_port;
+    global $pop3_host, $pop3_port;
 
     $match = array();
     $shared_secret = '';
@@ -84,8 +82,8 @@ class AuthPop3 extends Auth
     // iterate over all hosts and return if you get a successful login
     foreach ($all_pop3_hosts as $idx => $host)
     {
-      $error_number = "";
-      $error_string = "";
+      $error_number = '';
+      $error_string = '';
 
       // Connect to POP3 server
       $stream = fsockopen( $host, $all_pop3_ports[$idx], $error_number,
@@ -96,7 +94,7 @@ class AuthPop3 extends Auth
       // traditional stuff
 
       // get the shared secret ( something on the greeting line that looks like <XXXX> )
-      if ( preg_match( '/(<[^>]*>)/', $response, $match ) )
+      if (preg_match( '/(<[^>]*>)/', $response, $match ))
       {
         $shared_secret = $match[0];
       }
@@ -125,26 +123,26 @@ class AuthPop3 extends Auth
       // need to reconnect if we tried APOP
       if ($shared_secret)
       {
-        $stream = fsockopen( $host, $all_pop3_ports[$idx], $error_number,
-          $error_string, 15 );
-        $response = fgets( $stream, 1024 );
+        $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number,
+                            $error_string, 15);
+        $response = fgets($stream, 1024);
       }
 
       // send standard POP3 USER and PASS commands
-      if ( $stream )
+      if ($stream)
       {
-        fputs( $stream, "USER $user\r\n" );
-        $response = fgets( $stream, 1024 );
-        if( substr( $response, 0, 3 ) == '+OK' )
+        fputs($stream, "USER $user\r\n");
+        $response = fgets($stream, 1024);
+        if(substr( $response, 0, 3 ) == '+OK')
         {
-          fputs( $stream, "PASS $pass\r\n" );
+          fputs($stream, "PASS $pass\r\n");
           $response = fgets( $stream, 1024 );
           if ( substr( $response, 0, 3 ) == '+OK' )
           {
             return $user;
           }
         }
-        fputs( $stream, "QUIT\r\n" );
+        fputs($stream, "QUIT\r\n");
       }
     }
 
