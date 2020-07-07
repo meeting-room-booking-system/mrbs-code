@@ -3,41 +3,49 @@ namespace MRBS\Auth;
 
 use MRBS\User;
 
+/*
+ * Authentication scheme that uses IMAP as the source for user
+ * authentication. It requires you to have the PHP 'imap' extension
+ * installed and enabled.
+ *
+ * To use this authentication scheme set the following
+ * things in config.inc.php:
+ *
+ * $auth["realm"] = "MRBS";    // Or any other string
+ * $auth["type"]  = "imap_php";
+ *
+ * You must also configure at least:
+ *
+ * $auth["imap_php"]["hostname"] = "mailserver.hostname";
+ *
+ * You can also specify any of the following options:
+ *
+ * // Specifies the port number to connect to
+ * $auth["imap_php"]["port"] = 993;
+ *
+ * // Use SSL
+ * $auth["imap_php"]["ssl"] = TRUE;
+ *
+ * // Use TLS
+ * $auth["imap_php"]["tls"] = TRUE;
+ *
+ * // Turn off SSL/TLS certificate validation
+ * $auth["imap_php"]["novalidate-cert"] = TRUE;
+ *
+ * Then, you may configure admin users:
+ *
+ * $auth["admin"][] = "imapuser1";
+ * $auth["admin"][] = "imapuser2";
+ */
+
 class AuthImapPhp extends Auth
 {
-  /*
-   * Authentication scheme that uses IMAP as the source for user
-   * authentication. It requires you to have the PHP 'imap' extension
-   * installed and enabled.
+  /* authValidateUser($user, $pass)
    *
-   * To use this authentication scheme set the following
-   * things in config.inc.php:
+   * Checks if the specified username/password pair are valid
    *
-   * $auth["realm"] = "MRBS";    // Or any other string
-   * $auth["type"]  = "imap_php";
-   *
-   * You must also configure at least:
-   *
-   * $auth["imap_php"]["hostname"] = "mailserver.hostname";
-   *
-   * You can also specify any of the following options:
-   *
-   * // Specifies the port number to connect to
-   * $auth["imap_php"]["port"] = 993;
-   *
-   * // Use SSL
-   * $auth["imap_php"]["ssl"] = TRUE;
-   *
-   * // Use TLS
-   * $auth["imap_php"]["tls"] = TRUE;
-   *
-   * // Turn off SSL/TLS certificate validation
-   * $auth["imap_php"]["novalidate-cert"] = TRUE;
-   *
-   * Then, you may configure admin users:
-   *
-   * $auth["admin"][] = "imapuser1";
-   * $auth["admin"][] = "imapuser2";
+   * $user  - The user name
+   * $pass  - The password
    *
    * Returns:
    *   false    - The pair are invalid or do not exist
