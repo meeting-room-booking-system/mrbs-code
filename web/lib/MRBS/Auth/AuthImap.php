@@ -22,9 +22,8 @@ class AuthImap extends Auth
    */
   public function validateUser($user, $pass)
   {
-    global $auth;
-    global $imap_host;
-    global $imap_port;
+    global $imap_host, $imap_port;
+
     $all_imap_hosts = array();
     $all_imap_ports = array();
 
@@ -43,7 +42,7 @@ class AuthImap extends Auth
       return false;
     }
 
-    // Transfer the list of imap hosts to an new value to ensure that
+    // Transfer the list of imap hosts to a new value to ensure that
     // an array is always used.
     // If a single value is passed then turn it into an array
     if (is_array( $imap_host ) )
