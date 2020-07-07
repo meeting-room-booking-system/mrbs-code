@@ -1,7 +1,6 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\User;
 
 class AuthNw extends Auth
 {
@@ -38,7 +37,7 @@ class AuthNw extends Auth
     }
 
     fputs($p, $pass);
-    
+
     if (pclose($p) == 0)
     {
       return $user;

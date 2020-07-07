@@ -1,8 +1,6 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\User;
-
 /*
  * Authentication scheme that uses IMAP as the source for user
  * authentication. It requires you to have the PHP 'imap' extension

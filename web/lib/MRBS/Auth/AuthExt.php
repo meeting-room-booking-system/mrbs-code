@@ -1,8 +1,6 @@
 <?php
 namespace MRBS\Auth;
 
-use MRBS\User;
-
 /*
  * Authentication scheme that uses an external script as the source
  * for user authentication.
