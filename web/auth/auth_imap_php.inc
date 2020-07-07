@@ -68,17 +68,17 @@ function authValidateUser($user, $pass)
 
   $location .= "/imap";
 
-  if ($auth["imap_php"]["ssl"])
+  if (!empty($auth["imap_php"]["ssl"]))
   {
     $location .= "/ssl";
   }
 
-  if ($auth["imap_php"]["tls"])
+  if (!empty($auth["imap_php"]["tls"]))
   {
     $location .= "/tls";
   }
 
-  if ($auth["imap_php"]["novalidate-cert"])
+  if (!empty($auth["imap_php"]["novalidate-cert"]))
   {
     $location .= "/novalidate-cert";
   }
