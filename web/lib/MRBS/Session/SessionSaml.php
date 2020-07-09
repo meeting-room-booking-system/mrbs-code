@@ -27,31 +27,31 @@ use \SimpleSAML_Auth_Simple;
  * https://simplesamlphp.org/docs/stable/simplesamlphp-install
  * https://simplesamlphp.org/docs/stable/simplesamlphp-sp
  */
- 
+
 
 class SessionSaml extends SessionWithLogin
 {
   public $ssp;
-  
-  
+
+
   public function __construct()
   {
     global $auth;
-    
+
     // Check that the config variables have been set
     if (!isset($auth['saml']['ssp_path']))
     {
       throw new \Exception('$auth["saml"]["ssp_path"] must be set in the config file.');
     }
-    
+
     if (!isset($auth['saml']['attr']['username']))
     {
       throw new \Exception('$auth["saml"]["attr"]["username"] must be set in the config file.');
     }
-    
+
     // Include the SimpleSamlPhp autoloader
     require_once $auth['saml']['ssp_path'] . '/lib/_autoload.php';
-    
+
     // Get the SimpleSamlPhp instance for the configured auth source
     if (isset($auth['saml']['authsource']))
     {
@@ -61,79 +61,87 @@ class SessionSaml extends SessionWithLogin
     {
       $authSource = 'default-sp';
     }
-    
+
     $this->ssp = new SimpleSAML_Auth_Simple($authSource);
   }
-  
-  
+
+
   // No need to prompt for a name - this is done by SimpleSamlPhp
   public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
     $this->ssp->requireAuth();
   }
-  
-  
+
+
+  public function getCurrentUser()
+  {
+    $current_username = $this->getUsername();
+
+    return (isset($current_username)) ? \MRBS\auth()->getUser($current_username) : null;
+  }
+
+
   public function getUsername()
   {
     global $auth;
-    
+
     if (!$this->ssp->isAuthenticated())
     {
       return null;
     }
-    
+
     $userData = $this->ssp->getAttributes();
     $userNameAttr = $auth['saml']['attr']['username'];
-    
+
     return array_key_exists($userNameAttr, $userData) ? $userData[$userNameAttr][0] : null;
   }
-  
-  
+
+
   public function getLogonFormParams()
   {
     $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLoginURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
-    
+
     $result = array(
         'action' => $baseURL,
         'method' => 'get'
       );
-      
+
     if (!empty($params))
     {
       $result['hidden_inputs'] = $params;
     }
-    
+
     return $result;
   }
-  
-  
+
+
   public function getLogoffFormParams()
   {
     $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLogoutURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
-    
+
     $result = array(
         'action' => $baseURL,
         'method' => 'get'
       );
-      
+
     if (!empty($params))
     {
       $result['hidden_inputs'] = $params;
     }
-    
+
     return $result;
   }
-  
-  
+
+
   public function processForm()
   {
     // No need to do anything - all handled by SAML
   }
-  
+
 }
