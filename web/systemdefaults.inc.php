@@ -650,7 +650,7 @@ $report_presentation_field_order = array();
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "imap",
                       // "imap_php",  "joomla", "ldap", "none", "nw", "pop3",
-                      // "saml", "smtp" or "wordpress".
+                      // "saml" or "wordpress".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
