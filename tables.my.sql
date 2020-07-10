@@ -206,14 +206,14 @@ CREATE TABLE mrbs_sessions
 
 CREATE TABLE mrbs_users
 (
-  /* The first four fields are required. Don't remove. */
-  id        int NOT NULL auto_increment,
-  level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
-  name      varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  password_hash  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  email     varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  timestamp timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  last_login  int DEFAULT '0' NOT NULL,
+  id            int NOT NULL auto_increment,
+  level         smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
+  name          varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  display_name  varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  password_hash varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  email         varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  timestamp     timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_login    int DEFAULT '0' NOT NULL,
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_name (name)

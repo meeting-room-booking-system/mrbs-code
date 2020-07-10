@@ -82,24 +82,29 @@ $is_ajax = is_ajax();
 // Checks whether the current user can view the target user
 function can_view_user($target)
 {
-  global $auth, $min_user_viewing_level, $level;
+  global $auth, $min_user_viewing_level;
 
-  $current_username = getUserName();
+  $mrbs_user = session()->getCurrentUser();
 
-  // You can only see this user if (a) we allow everybody to see all users or
-  // (b) you are an admin or (c) you are this user
+  // You can only see this user if you are logged in and (a) we allow everybody to see all
+  // users or (b) you are an admin or (c) you are this user
+  if (!isset($mrbs_user))
+  {
+    return false;
+  }
+
   return (!$auth['only_admin_can_see_other_users']  ||
-          ($level >= $min_user_viewing_level) ||
-          (strcasecmp($current_username, $target) === 0));
+          ($mrbs_user->level >= $min_user_viewing_level) ||
+          (strcasecmp($mrbs_user->username, $target) === 0));
 }
 
 
 // Checks whether the current user can edit the target user
 function can_edit_user($target)
 {
-  $current_username = getUserName();
+  $mrbs_user = session()->getCurrentUser();
 
-  return (is_user_admin() || (strcasecmp($current_username, $target) === 0));
+  return (is_user_admin() || (isset($mrbs_user) && strcasecmp($mrbs_user->username, $target) === 0));
 }
 
 
@@ -179,6 +184,42 @@ function get_form_var_type($field)
 }
 
 
+// Returns a name in the format last_name first_name for sorting
+function get_sortable_name($name)
+{
+  global $sort_users_by_last_name;
+
+  if (!isset($name))
+  {
+    return null;
+  }
+
+  if (empty($sort_users_by_last_name))
+  {
+    return;
+  }
+
+  $tokens = explode(' ', $name);
+
+  // Get rid of other whitespace (eg tabs)
+  $tokens = array_map('trim', $tokens);
+
+  // Get the last name
+  $result = array_pop($tokens);
+
+  // Add back in the first names
+  while (null !== ($token = array_shift($tokens)))
+  {
+    if ($token !== '') // weeds out multiple spaces in a name
+    {
+      $result .= ' ' . $token;
+    }
+  }
+
+  return $result;
+}
+
+
 function output_row($row)
 {
   global $is_ajax, $json_data;
@@ -186,7 +227,12 @@ function output_row($row)
 
   $values = array();
 
-  // First column, which is the name
+  // First column, which is the display name
+  // Make sure we've got a display name.  If not, use the username.
+  if (!isset($row['display_name']) || (trim($row['display_name']) === ''))
+  {
+    $row['display_name'] = $row['name'];
+  }
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($row['name']))
   {
@@ -197,15 +243,20 @@ function output_row($row)
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
                                  'name'  => 'edit_button',
-                                 'value' => $row['name']));
+                                 'value' => $row['display_name']));
     $form->addElement($submit);
-    $name_value = $form->toHTML();
+    $display_name_value = $form->toHTML();
   }
   else
   {
-    $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
+    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
   }
 
+  $sortname = get_sortable_name($row['display_name']);
+  $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $display_name_value;
+
+  // Then the username
+  $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
 
   // Other columns
@@ -343,6 +394,33 @@ function get_field_name($params, $disabled=false)
                                      'pattern'  => REGEX_TEXT_POS));
 
   if (null !== ($maxlength = maxlength('users.name')))
+  {
+    $field->setControlAttribute('maxlength', $maxlength);
+  }
+
+  // If the name field is disabled we need to add a hidden input, because
+  // otherwise it won't be posted.
+  if ($disabled)
+  {
+    $field->addHiddenInput($params['name'], $params['value']);
+  }
+
+  return $field;
+}
+
+
+function get_field_display_name($params, $disabled=false)
+{
+  $field = new FieldInputText();
+
+  $field->setLabel($params['label'])
+    ->setControlAttributes(array('name'     => $params['name'],
+                                 'value'    => $params['value'],
+                                 'disabled' => $disabled,
+                                 'required' => true,
+                                 'pattern'  => REGEX_TEXT_POS));
+
+  if (null !== ($maxlength = maxlength('users.display_name')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
   }
@@ -566,7 +644,7 @@ if ($is_ajax)
 // Get the information about the fields in the users table
 $fields = db()->field_info(_tbl('users'));
 
-$users = authGetUsers();
+$users = auth()->getUsers();
 
 
 /*---------------------------------------------------------------------------*\
@@ -583,8 +661,8 @@ $initial_user_creation = false;
 
 if (count($users) > 0)
 {
-  $current_username = getUserName();
-  $level = authGetUserLevel($current_username);
+  $mrbs_user = session()->getCurrentUser();
+  $level = (isset($mrbs_user)) ? $mrbs_user->level : 0;
   // Check the user is authorised for this page
   checkAuthorised(this_page());
 }
@@ -600,7 +678,6 @@ else
     $id = null;
   }
   $level = $max_level;
-  $current_username = '';           // to avoid an undefined variable notice
 }
 
 
@@ -777,6 +854,10 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
         $fieldset->addElement(get_field_name($params, $disabled));
         break;
 
+      case 'display_name':
+        $fieldset->addElement(get_field_display_name($params, $disabled));
+        break;
+
       case 'email':
         $fieldset->addElement(get_field_email($params, $disabled));
         break;
@@ -822,13 +903,13 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  if (isset($current_username))
+  if (isset($mrbs_user))
   {
     $sql = "SELECT id
               FROM " . _tbl('users') . "
              WHERE name=?
              LIMIT 1";
-    $my_id = db()->query1($sql, array(utf8_strtolower($current_username)));
+    $my_id = db()->query1($sql, array(utf8_strtolower($mrbs_user->username)));
   }
   else
   {
@@ -1026,7 +1107,7 @@ if (isset($action) && ($action == "update"))
   // For each db column get the value ready for the database
   foreach ($fields as $field)
   {
-    $fieldname = $field['name'];
+    $fieldname = $field['name'];;
 
     // Stop ordinary users trying to change fields they are not allowed to
     if (!$initial_user_creation &&
@@ -1127,7 +1208,7 @@ if (isset($action) && ($action == "delete"))
             FROM " . _tbl('users') . "
            WHERE id=?
            LIMIT 1";
-
+           
   $target_level = db()->query1($sql, array($id));
   if ($target_level < 0)
   {
@@ -1183,7 +1264,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // Display the user data in a table
 
   // We don't display these columns or they get special treatment
-  $ignore_columns = array('id', 'password_hash', 'name');
+  $ignore_columns = array('id', 'password_hash', 'name', 'display_name');
 
   if (!$is_ajax)
   {
@@ -1194,7 +1275,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<thead>\n";
     echo "<tr>";
 
-    // First column which is the name
+    // First two columns which are the name and display name
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.display_name") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
 
     // Other column headers

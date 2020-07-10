@@ -642,7 +642,7 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
 
 
 // Get the number of outstanding (ie waiting to be approved) for a user
-function get_entries_n_outstanding($user)
+function get_entries_n_outstanding(User $user)
 {
   $sql_approval_enabled = some_area_predicate('approval_enabled');
 
@@ -665,7 +665,7 @@ function get_entries_n_outstanding($user)
   // for which this user is a booking admin.
   while (false !== ($row = $res->next_row_keyed()))
   {
-    if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
+    if ((strcasecmp($row['create_by'], $user->username) === 0) || is_book_admin($row['room_id']))
     {
       $result++;
     }

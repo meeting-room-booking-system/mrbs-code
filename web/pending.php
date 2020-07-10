@@ -9,10 +9,10 @@ require "defaultincludes.inc";
 function display_buttons($row, $is_series)
 {
   global $reminders_enabled, $reminder_interval;
-  
+
   $last_reminded = (empty($row['reminded'])) ? $row['last_updated'] : $row['reminded'];
   $returl = multisite(this_page());
-                                    
+
   $target_id = ($is_series) ? $row['repeat_id'] : $row['id'];
 
   // When we're going to view_entry.php we need to pass the id and series in a
@@ -21,45 +21,45 @@ function display_buttons($row, $is_series)
   // needs to have a valid id.
   $query_string = "id=$target_id";
   $query_string .= ($is_series) ? "&series=1" : "";
-  
+
   if (is_book_admin($row['room_id']))
   {
     // approve
     $form = new Form();
 
     $attributes = array('action' => multisite('approve_entry_handler.php'),
-                        'method' => 'post');                   
+                        'method' => 'post');
     $form->setAttributes($attributes);
-    
+
     $hidden_inputs = array('action' => 'approve',
                            'id'     => $target_id,
                            'series' => ($is_series) ? 1 : 0,
                            'returl' => $returl);
     $form->addHiddenInputs($hidden_inputs);
-    
+
     $element = new ElementInputSubmit();
     $element->setAttribute('value', get_vocab('approve'));
     $form->addElement($element);
 
     $form->render();
-    
+
     // reject
     $form = new Form();
 
     $attributes = array('action' => multisite("view_entry.php?$query_string"),
-                        'method' => 'post');                   
+                        'method' => 'post');
     $form->setAttributes($attributes);
-    
+
     $hidden_inputs = array('action' => 'reject',
                            'returl' => $returl);
     $form->addHiddenInputs($hidden_inputs);
-    
+
     $element = new ElementInputSubmit();
     $element->setAttribute('value', get_vocab('reject'));
     $form->addElement($element);
 
     $form->render();
-    
+
     // more info
     $info_time = ($is_series) ? $row['repeat_info_time'] : $row['entry_info_time'];
     $info_user = ($is_series) ? $row['repeat_info_user'] : $row['entry_info_user'];
@@ -75,17 +75,17 @@ function display_buttons($row, $is_series)
         $info_title .= " " . get_vocab("by") . " $info_user";
       }
     }
-    
+
     $form = new Form();
 
     $attributes = array('action' => multisite("view_entry.php?$query_string"),
-                        'method' => 'post');                   
+                        'method' => 'post');
     $form->setAttributes($attributes);
-    
+
     $hidden_inputs = array('action' => 'more_info',
                            'returl' => $returl);
     $form->addHiddenInputs($hidden_inputs);
-    
+
     $element = new ElementInputSubmit();
     $element->setAttributes(array('value' => get_vocab('more_info'),
                                   'title' => $info_title));
@@ -99,20 +99,20 @@ function display_buttons($row, $is_series)
     get_area_settings(get_area($row['room_id']));
     // if enough time has passed since the last reminder
     // output a "Remind Admin" button, otherwise nothing
-    if ($reminders_enabled  && 
+    if ($reminders_enabled  &&
         (working_time_diff(time(), $last_reminded) >= $reminder_interval))
     {
       $form = new Form();
 
       $attributes = array('action' => multisite('approve_entry_handler.php'),
-                          'method' => 'post');                   
+                          'method' => 'post');
       $form->setAttributes($attributes);
-      
+
       $hidden_inputs = array('action' => 'remind',
                              'id'     => $row['id'],
                              'returl' => $returl);
       $form->addHiddenInputs($hidden_inputs);
-      
+
       $element = new ElementInputSubmit();
       $element->setAttribute('value', get_vocab('remind_admin'));
       $form->addElement($element);
@@ -152,14 +152,14 @@ function display_subtable_head($row)
   echo "<th class=\"control\">&nbsp;</th>\n";
   // reservation name, with a link to the view_entry page
   echo "<th><a href=\"view_entry.php?id=".$row['repeat_id']."&amp;series=1\">" . htmlspecialchars($row['name']) ."</a></th>\n";
-  
+
   // create_by, area and room names
   echo "<th>" . htmlspecialchars($row['create_by']) . "</th>\n";
   echo "<th>"   . htmlspecialchars($row['area_name']) . "</th>\n";
   echo "<th>"   . htmlspecialchars($row['room_name']) . "</th>\n";
-  
+
   echo "<th><span class=\"normal\" data-type=\"title-numeric\">" . get_vocab("series") . "</span></th>\n";
-  
+
   echo "<th>&nbsp;</th>\n";
   echo "</tr>\n";
   echo "</thead>\n";
@@ -168,23 +168,23 @@ function display_subtable_head($row)
 
 // display the title row for a series
 function display_series_title_row($row)
-{  
+{
   echo "<tr id=\"row_" . $row['repeat_id'] . "\">\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
   // reservation name, with a link to the view_entry page
   echo "<td><a href=\"view_entry.php?id=".$row['repeat_id']."&amp;series=1\">" . htmlspecialchars($row['name']) ."</a></td>\n";
-  
+
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars($row['create_by']) . "</td>\n";
-  echo "<td>"   . htmlspecialchars($row['area_name']) . "</td>\n";
-  echo "<td>"   . htmlspecialchars($row['room_name']) . "</td>\n";
-  
+  echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
+  echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
+  echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
+
   echo "<td>";
   // <span> for sorting
   echo "<span title=\"" . $row['start_time'] . "\"></span>";
   echo get_vocab("series");
   echo "</td>\n";
-  
+
   echo "<td>\n";
   display_buttons($row, true);
   echo "</td>\n";
@@ -195,36 +195,36 @@ function display_series_title_row($row)
 function display_entry_row(array $row)
 {
   global $view;
-  
+
   echo "<tr>\n";
   echo "<td>&nbsp;</td>\n";
-    
+
   // reservation name, with a link to the view_entry page
   echo "<td>";
   echo "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) ."</a></td>\n";
-    
+
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars($row['create_by']) . "</td>\n";
+  echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
-    
+
   // start date, with a link to the calendar view
   $link = getdate($row['start_time']);
   echo "<td>";
   // <span> for sorting
   echo "<span title=\"" . $row['start_time'] . "\"></span>";
-  
+
   $vars = array('view'  => $view,
                 'year'  => $link['year'],
                 'month' => $link['mon'],
                 'day'   => $link['mday'],
                 'area'  => $row['area_id'],
                 'room'  => $row['room_id']);
-                
+
   $query = http_build_query($vars, '', '&');
-  
+
   echo '<a href="index.php?' .htmlspecialchars($query) . '">';
-  
+
   if(empty($row['enable_periods']))
   {
     $link_str = time_date_string($row['start_time']);
@@ -233,21 +233,22 @@ function display_entry_row(array $row)
   {
     list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
   }
-  
+
   echo htmlspecialchars($link_str) . "</a></td>";
-    
+
   // action buttons
   echo "<td>\n";
   display_buttons($row, false);
   echo "</td>\n";
-  echo "</tr>\n";  
+  echo "</tr>\n";
 }
 
 
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$user = getUserName();
+$mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
 
@@ -257,7 +258,7 @@ echo "<h1>" . get_vocab("pending") . "</h1>\n";
 // We are only interested in areas where approval is required
 
 $sql_approval_enabled = some_area_predicate('approval_enabled');
-        
+
 $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
                db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated,
                E.reminded, E.repeat_id,
@@ -274,7 +275,7 @@ $sql = "SELECT E.id, E.name, E.room_id, E.start_time, E.create_by, " .
            AND (E.status&" . STATUS_AWAITING_APPROVAL . " != 0)";
 
 // We want entries for a series to appear together so that we can display
-// them as a separate table below the main entry for the series. 
+// them as a separate table below the main entry for the series.
 $sql .= " ORDER BY repeat_id, start_time";
 
 $res = db()->query($sql);
@@ -283,7 +284,7 @@ $rows = array();
 
 while (false !== ($row = $res->next_row_keyed()))
 {
-  if ((strcasecmp($row['create_by'], $user) === 0) || is_book_admin($row['room_id']))
+  if ((strcasecmp($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
   {
     $rows[] = $row;
   }
@@ -298,12 +299,12 @@ else  // display them in a table
   echo "<div id=\"pending_list\" class=\"datatable_container\">\n";
   echo "<table id=\"pending_table\" class=\"admin_table display\">\n";
   display_table_head();
-  
+
   echo "<tbody>\n";
   $last_repeat_id = null;
   $is_series = false;
   foreach ($rows as $row)
-  { 
+  {
     if ($row['repeat_id'] != $last_repeat_id)
     // there's some kind of change
     {
@@ -314,7 +315,7 @@ else  // display them in a table
         $is_series = false;
         echo "</tbody></table></div></td></tr>\n";
       }
-    
+
       if (!empty($row['repeat_id']))
       {
         // we're starting a new series
@@ -328,7 +329,7 @@ else  // display them in a table
         echo "<table id=\"$table_id\" class=\"admin_table display sub\">\n";
         display_subtable_head($row);
         echo "<tbody>\n";
-      }      
+      }
     }
     display_entry_row($row);
   }
@@ -337,7 +338,7 @@ else  // display them in a table
     // if we were in a series, then close the sub-table
     echo "</tbody></table></div></td></tr>\n";
   }
-  echo "</tbody>\n"; 
+  echo "</tbody>\n";
   echo "</table>\n";
   echo "</div>\n";
 }

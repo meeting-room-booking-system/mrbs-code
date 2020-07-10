@@ -38,7 +38,8 @@ Form::checkToken();
 //  ---------------------------------------------
 checkAuthorised(this_page());
 
-$current_username = getUserName();
+$mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 
 // (2) Get the form variables
@@ -197,7 +198,7 @@ foreach($fields as $field)
 // The id must be either an integer or NULL, so that subsequent code that tests whether
 // isset($id) works.  (I suppose one could use !empty instead, but there's always the
 // possibility that sites have allowed 0 in their auto-increment/serial columns.)
-if (isset($id) && ($id === ''))
+if (isset($id) && ($id == ''))
 {
   unset($id);
 }
@@ -212,11 +213,11 @@ if (!$is_ajax)
 {
   if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
   {
-    if ($create_by !== $current_username)
+    if ($create_by !== $mrbs_username)
     {
-      $message = "Attempt made by user '$current_username' to make a booking in the name of '$create_by'";
+      $message = "Attempt made by user '$mrbs_username' to make a booking in the name of '$create_by'";
       trigger_error($message, E_USER_NOTICE);
-      $create_by = $current_username;
+      $create_by = $mrbs_username;
     }
   }
 }
@@ -320,7 +321,7 @@ if ($no_mail)
 
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
-// the rest from the existing booking information.
+// the rest from the existing boking information.
 // Note: we assume that
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
@@ -675,7 +676,7 @@ foreach ($rooms as $room_id)
 
   $booking = array();
   $booking['create_by'] = $create_by;
-  $booking['modified_by'] = (isset($id)) ? $current_username : '';
+  $booking['modified_by'] = (isset($id)) ? $mrbs_username : '';
   $booking['name'] = $name;
   $booking['type'] = $type;
   $booking['description'] = $description;

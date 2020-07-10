@@ -16,9 +16,9 @@ checkAuthorised(this_page());
 
 $result = array();
 
-if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
+if (method_exists(auth(), 'getUsernames'))
 {
-  $result = authGetUsernames();
+  $result = auth()->getUsernames();
 }
 
 http_headers(array("Content-Type: application/json"));

@@ -62,6 +62,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
 
   foreach ($data as $key => $value)
   {
+    $hide_this_field = $keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"];
     // We could just test each column against $is_private_field["entry.$key"]
     // but restricting the test to the columns below guards against the possibility
     // that somebody has accidentally configured a 'system' field to be private
@@ -69,8 +70,6 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
     {
       case 'name':
       case 'description':
-      case 'create_by':
-      case 'modified_by':
       case 'room_name':
       case 'area_name':
       case 'type':
@@ -81,13 +80,18 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'repeat_info_time':
       case 'repeat_info_user':
       case 'repeat_info_text':
-        $data[$key] = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+        $data[$key] = $hide_this_field ? $private_text : $data[$key];
+        break;
+        
+      case 'create_by':
+      case 'modified_by':
+        $data[$key] = $hide_this_field ? $private_text : get_display_name($data[$key]);
         break;
 
       default:
         if (!in_array($key, $standard_fields['entry']))
         {
-          $data[$key] = ($keep_private && isset($is_private_field["entry.$key"]) && $is_private_field["entry.$key"]) ? $private_text : $data[$key];
+          $data[$key] = $hide_this_field ? $private_text : $data[$key];
         }
         break;
     }

@@ -435,8 +435,15 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
   $body .= ($as_html) ? "<p>" : "";
 
-  $user = getUserName();
-  $user_escaped = ($as_html) ? htmlspecialchars($user) : $user;
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user))
+  {
+    $user_escaped = ($as_html) ? htmlspecialchars($mrbs_user->display_name) : $mrbs_user->display_name;
+  }
+  else
+  {
+    $user_escaped = '';
+  }
 
   switch ($action)
   {
@@ -590,8 +597,8 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
-                                    $data['create_by'],
-                                    $mail_previous['create_by'],
+                                    get_display_name($data['create_by']),
+                                    get_display_name($mail_previous['create_by']),
                                     $compare, $as_html);
 
     // Custom fields
@@ -776,12 +783,12 @@ function create_addresses($data, $action)
   $cc[] = $mail_settings['cc'];
 
   // set the from address
-  $user = getUserName();
-  if (isset($user) &&
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user) &&
       in_array($action, array('more_info', 'reject', 'remind')) &&
       !$mail_settings['use_from_for_all_mail'])
   {
-    $from = authGetUserEmail($user);
+    $from = $mrbs_user->email;
   }
 
   if (empty($from))
@@ -846,11 +853,10 @@ function create_addresses($data, $action)
       $cc = array_merge($cc, $to);
       $to = array();
     }
-    $booker = $data['create_by'];
-    $booker_email = authGetUserEmail($booker);
-    if (!empty($booker_email))
+    $booker = auth()->getUser($data['create_by']);
+    if (!empty($booker->email))
     {
-      $to[] = $booker_email;
+      $to[] = $booker->email;
     }
   }
   // In case $to and $cc are empty, no need to go further

@@ -197,13 +197,24 @@ function get_field_entry_input($params)
 
 function get_field_create_by($create_by, $disabled=false)
 {
-  if (function_exists(__NAMESPACE__ . "\\authGetUsernames"))
+  if (method_exists(auth(), 'getUsernames'))
   {
     // We can get a list of all users, so present a <select> element.
     // The options will actually be provided later via Ajax, so all we
-    // do here is present one option, ie the createby user.
+    // do here is present one option, ie the create_by user.
     $options = array();
-    $options[$create_by] = $create_by;
+    $create_by_user = auth()->getUser($create_by);
+    // It's possible that $create_by no longer exists - may have left the
+    // organisation and been deleted from the user list - so in that case
+    // use their username for the displayname.
+    if (isset($create_by_user))
+    {
+      $options[$create_by_user->username] = $create_by_user->display_name;
+    }
+    else
+    {
+      $options[$create_by] = $create_by;
+    }
 
     $field = new FieldSelect();
     $field->setLabel(get_vocab('createdby'))
@@ -1169,7 +1180,8 @@ if (!isset($returl))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$current_username = getUserName();
+$mrbs_user = session()->getCurrentUser();
+$mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 // You're only allowed to make repeat bookings if you're an admin
 // or else if $auth['only_admin_can_book_repeat'] is not set
@@ -1241,7 +1253,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($current_username != $entry['create_by']))
+  if (isset($copy) && ($mrbs_username != $entry['create_by']))
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
@@ -1315,7 +1327,7 @@ if (isset($id))
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
         // different if it's an admin doing the copying)
-        $create_by   = (isset($copy)) ? $current_username : $entry['create_by'];
+        $create_by   = (isset($copy)) ? $mrbs_username : $entry['create_by'];
         break;
 
       case 'start_time':
@@ -1417,7 +1429,7 @@ else
   // It is a new booking. The data comes from whichever button the user clicked
   $edit_type     = "series";
   $name          = $default_name;
-  $create_by     = $current_username;
+  $create_by     = $mrbs_username;
   $description   = $default_description;
   $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
   $room_id       = $room;

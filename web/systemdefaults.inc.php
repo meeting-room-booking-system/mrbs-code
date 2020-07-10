@@ -470,6 +470,9 @@ $pdf_default_orientation = 'portrait';
 // Options: 'A3', 'A4', 'A5', 'LEGAL', 'LETTER' or 'TABLOID'
 $pdf_default_paper = 'A4';
 
+// Whether to sort users by their last names or not
+$sort_users_by_last_name = false;
+
 /************************
  * Miscellaneous settings
  ************************/
@@ -603,6 +606,8 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
+$is_mandatory_field['users.display_name'] = true;
+
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
 // if you make a repeat booking and some of the repeat dates are already
@@ -644,8 +649,8 @@ $report_presentation_field_order = array();
 
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "imap",
-                      // "imap_php",  "joomla", "ldap", "nis", "none", "nw", "pop3",
-                      // "saml", "smtp" or "wordpress".
+                      // "imap_php",  "joomla", "ldap", "none", "nw", "pop3",
+                      // "saml" or "wordpress".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
@@ -785,7 +790,7 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 // user level (ie admin/user) and the username.   Custom fields can be added
 // as required.  To protect the password field use 'password_hash' - useful
 // for public demo sites.
-$auth['db']['protected_fields'] = array('level', 'name');
+$auth['db']['protected_fields'] = array('level', 'name', 'display_name');
 
 
 // 'auth_db_ext' configuration settings
@@ -806,11 +811,12 @@ $auth['db_ext']['db_password'] = 'authpass';
 $auth['db_ext']['db_name'] = 'authdb';
 $auth['db_ext']['db_table'] = 'users';
 $auth['db_ext']['column_name_username'] = 'name';
+$auth['db_ext']['column_name_display_name'] = 'display_name';  // optional
 $auth['db_ext']['column_name_password'] = 'password';
 $auth['db_ext']['column_name_email'] = 'email';
 // Below is an example if you want to put the MRBS user level in the DB
 //$auth['db_ext']['column_name_level'] = 'mrbs_level';
-// Either 'password_hash' (from PHP 5.5.0), 'md5', 'sha1', 'crypt' or 'plaintext'
+// Either 'password_hash' (from PHP 5.5.0), 'md5', 'sha1', 'sha256', 'crypt' or 'plaintext'
 $auth['db_ext']['password_format'] = 'md5';
 
 // 'auth_ldap' configuration settings
@@ -984,6 +990,22 @@ $auth['joomla']['admin_access_levels'] = array(); // Can either be a single inte
 // and assign that level to user groups as appropriate.
 $auth['joomla']['user_access_levels'] = array(); // Can either be a single integer, or an array of integers.
 
+
+// 'auth_saml' configuration settings
+// (assuming Active Directory attributes):
+$auth['saml']['ssp_path'] = '/opt/simplesamlphp';  // must be an absolute and not a relative path
+$auth['saml']['authsource'] = 'default-sp';
+$auth['saml']['attr']['username'] = 'sAMAccountName';
+$auth['saml']['attr']['mail'] = 'mail';
+$auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+
+// This scheme assumes that you've already configured SimpleSamlPhp,
+// and that you have set up aliases in your webserver so that SimpleSamlPhp
+// can handle incoming assertions.  Refer to the SimpleSamlPhp documentation
+// for more information on how to do that.
+//
+// https://simplesamlphp.org/docs/stable/simplesamlphp-install
+// https://simplesamlphp.org/docs/stable/simplesamlphp-sp
 
 
 // 'auth_wordpress' configuration settings
