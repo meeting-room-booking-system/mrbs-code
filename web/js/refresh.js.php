@@ -65,7 +65,7 @@ var refreshPage = function refreshPage() {
       {
         data.site = args.site;
       }
-      
+
       $.post('index.php',
              data,
              function(result){
@@ -209,12 +209,14 @@ var Timeline = {
     }
 
     <?php
-    // Finds the index of the element that contains time and pushes it on to the result.
+    // Finds the indices (two, if successful) of the element that contains time and pushes it on to the result.
     // We iterate through the slots in reverse so that we hit the correct time on the transition into DST.  If
     // we were to iterate through the slots in the normal order we would land on the invalid hour, eg 0100-0200
     // which is really 0200-0300 when the clocks go forward.
+    // Note that sometimes only one index will be returned.  This will happen if the time is within the overall
+    // interval but not within any individual element, because time is outside the booking day.
     ?>
-    function getIndex(slots, time) {
+    function getIndices(slots, time) {
       var element;
       for (var i=slots.length - 1; i>=0; i--) {
         element = slots[i];
@@ -222,7 +224,7 @@ var Timeline = {
         {
           if (Array.isArray(element[0]))
           {
-            getIndex(element, time);
+            getIndices(element, time);
           }
           result.push(i);
           break;
@@ -232,10 +234,10 @@ var Timeline = {
 
     var result = [];
 
-    <?php // Only look for an index if we know that the time is definitely within the slots somewhee ?>
+    <?php // Only look for an index if we know that the time is possibly within the slots somewhere ?>
     if ((typeof slots !== 'undefined') && within(slots, time))
     {
-      getIndex(slots, time);
+      getIndices(slots, time);
     }
 
     return result;
@@ -265,7 +267,7 @@ var Timeline = {
 
     nowSlotIndices = Timeline.search(slots, now);
 
-    if (nowSlotIndices.length > 0)
+    if (nowSlotIndices.length > 1)
     {
       slot = slots;
       for (var i=nowSlotIndices.length - 1; i>=0; i--)
@@ -399,7 +401,7 @@ var Timeline = {
     }
     if (Timeline.timerRunning === null)
     {
-      <?php // If we haven't got a slot size, because the poge doesn't have a timeline, then get one ?>
+      <?php // If we haven't got a slot size, because the page doesn't have a timeline, then get one ?>
       if (typeof slotSize === 'undefined')
       {
          slotSize = Timeline.getFirstNonZeroSlotSize();
