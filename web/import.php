@@ -558,7 +558,7 @@ function get_file_details_zip($file)
       //
       // It's safe to use ReflectionClass (PHP 5) as we already know that
       // ZipArchive (PHP 5.2.0) exists
-      $reflection = new ReflectionClass('ZipArchive');
+      $reflection = new \ReflectionClass('ZipArchive');
       $constants = $reflection->getConstants();
       foreach ($constants as $key => $value)
       {
