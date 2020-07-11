@@ -60,7 +60,7 @@ class SessionCas extends SessionWithLogin
   }
 
 
-  protected function logoffUser()
+  public function logoffUser()
   {
     phpCAS::logout();
   }

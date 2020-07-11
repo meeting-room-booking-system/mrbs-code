@@ -71,7 +71,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  protected function logoffUser()
+  public function logoffUser()
   {
     // Delete cookie
     setcookie('SessionToken', '', time()-42000, self::$cookie_path);

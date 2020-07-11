@@ -51,7 +51,7 @@ class SessionWordpress extends SessionWithLogin
   }
   
   
-  protected function logoffUser()
+  public function logoffUser()
   {
     wp_logout();
   }

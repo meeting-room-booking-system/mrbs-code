@@ -54,7 +54,7 @@ class SessionPhp extends SessionWithLogin
   }
   
   
-  protected function logoffUser()
+  public function logoffUser()
   {
     // Unset the session variables
     session_unset();

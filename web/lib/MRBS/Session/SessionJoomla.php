@@ -22,7 +22,7 @@ class SessionJoomla extends SessionWithLogin
   }
 
 
-  protected function logoffUser()
+  public function logoffUser()
   {
     $mainframe = JFactory::getApplication('site');
     $mainframe->logout();

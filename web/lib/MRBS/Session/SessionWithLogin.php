@@ -141,7 +141,7 @@ abstract class SessionWithLogin implements SessionInterface
   }
 
 
-  protected function logoffUser()
+  public function logoffUser()
   {
   }
 

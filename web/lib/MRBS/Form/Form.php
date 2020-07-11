@@ -87,9 +87,9 @@ class Form extends Element
         trigger_error('Possible CSRF attack from IP address ' . $server['REMOTE_ADDR'], E_USER_WARNING);
       }
 
-      if (function_exists("\\MRBS\\logoff_user"))
+      if (method_exists(\MRBS\session(), 'logoffUser'))
       {
-        \MRBS\logoff_user();
+        \MRBS\session()->logoffUser();
       }
 
       \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
