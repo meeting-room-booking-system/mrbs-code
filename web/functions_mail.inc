@@ -991,7 +991,6 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
  * @param   bool    $series    whether this is a series or not
  * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
  * @param   string  $note      a note that is used with 'reject'
- * @return  bool    TRUE or PEAR error object if fails
  */
 function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete', $note='')
 {
