@@ -223,6 +223,7 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
                  AND E.end_time > ?
                  AND E.create_by = ?
                  AND E.room_id = R.id
+                 AND R.area_id = A.id
                  AND R.disabled = 0";
 
       $sql_params = array($interval_end,
@@ -232,7 +233,7 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
       if ($check_seconds)
       {
         // If we're checking for the actual time of bookings, then exclude areas using periods
-        $sql .= " AND R.area_id=A.id AND A.enable_periods=0";
+        $sql .= " AND A.enable_periods=0";
       }
       if ($only_area)
       {
