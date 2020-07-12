@@ -354,6 +354,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   global $max_secs_per_interval_global_enabled, $max_secs_per_interval_area_enabled;
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
+  global $prevent_simultaneous_bookings;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -410,6 +411,30 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   // Check creation policies
   else
   {
+    // Check whether the user is trying to book two rooms simultaneously
+    if ($prevent_simultaneous_bookings)
+    {
+      $sql = "SELECT id
+                FROM " . _tbl('entry') . "
+               WHERE start_time < :end_time
+                 AND end_time > :start_time
+                 AND create_by = :create_by
+               LIMIT 1";
+
+      $sql_params = array(
+          ':end_time'   => $booking['end_time'],
+          ':start_time' => $booking['start_time'],
+          ':create_by'  => $booking['create_by']
+        );
+
+      $res = db()->query($sql, $sql_params);
+
+      if ($res->count() > 0)
+      {
+        $violations[] = get_vocab('no_simultaneous_bookings');
+      }
+    }
+
     if ($min_create_ahead_enabled)
     {
       if ($enable_periods)
@@ -1964,6 +1989,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
+  global $prevent_simultaneous_bookings;
 
   // All the data, except for the status and room id, will be common
   // across the bookings
@@ -2017,16 +2043,42 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   else
   {
     $ignore_id = 0;
-    $repeat_id = NULL;
+    $repeat_id = null;
   }
 
   // Validate the booking for (a) conflicting bookings and (b) conformance to policy rules
-  $valid_booking = TRUE;
+  $valid_booking = true;
   $conflicts  = array();                      // Holds a list of all the conflicts
   $violations = array('notices' => array(),   // Holds an array of the policy rules that have been broken
                       'errors'  => array());  // classified by 'notices' and 'errors'
   $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                             // by room id and start time
+
+  // Do the simple check for simultaneous bookings: if there is more than one booking
+  // then this is going to result in a simultaneous booking.  The only question is whether
+  // this a notice or an error.  If the user is an ordinary user in more than one of
+  // the rooms, then it's an error, otherwise a notice.
+  // The policy check later on will check whether the booking is at the same time as
+  // any other bookings made by this user.
+  if ($prevent_simultaneous_bookings && (count($bookings) > 1))
+  {
+    $violation_status = 'notices';
+    $non_admin_rooms = 0;
+    foreach($bookings as $booking)
+    {
+      if (!is_book_admin($booking['room_id']))
+      {
+        $non_admin_rooms++;
+        if ($non_admin_rooms > 1)
+        {
+          $violation_status = 'errors';
+          $valid_booking = false;
+          break;
+        }
+      }
+    }
+    $violations[$violation_status][] = get_vocab('no_simultaneous_bookings');
+  }
 
   // Check for any schedule conflicts in each room we're going to try and
   // book in;  also check that the booking conforms to the policy
