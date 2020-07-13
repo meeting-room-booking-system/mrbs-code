@@ -93,9 +93,6 @@ abstract class SessionWithLogin implements SessionInterface
       // Will eventually return to URL argument "target_url=whatever".
       if ($this->form['action'] == 'SetName')
       {
-        // If we're going to do something then check the CSRF token first
-        Form::checkToken();
-
         // First make sure the password is valid
         if (!isset($this->form['username']) || ($this->form['username'] == ''))
         {
@@ -103,6 +100,13 @@ abstract class SessionWithLogin implements SessionInterface
         }
         else
         {
+          // If we're going to do something then check the CSRF token first.
+          // (Don't check the token before logging off the user because if the session has
+          // expired due to inactivity, the token will be invalid, but that won't matter because
+          // the result will be the same anyway - logging off the user - and we avoid
+          // generating an unnecessary CSRF error message.)
+          Form::checkToken();
+          
           // Get a valid user
           $valid_username = $this->getValidUser($this->form['username'], $this->form['password']);
 
