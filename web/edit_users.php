@@ -196,7 +196,7 @@ function get_sortable_name($name)
 
   if (empty($sort_users_by_last_name))
   {
-    return;
+    return $name;
   }
 
   $tokens = explode(' ', $name);
@@ -1208,7 +1208,7 @@ if (isset($action) && ($action == "delete"))
             FROM " . _tbl('users') . "
            WHERE id=?
            LIMIT 1";
-           
+
   $target_level = db()->query1($sql, array($id));
   if ($target_level < 0)
   {
