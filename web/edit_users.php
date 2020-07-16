@@ -1107,7 +1107,7 @@ if (isset($action) && ($action == "update"))
   // For each db column get the value ready for the database
   foreach ($fields as $field)
   {
-    $fieldname = $field['name'];;
+    $fieldname = $field['name'];
 
     // Stop ordinary users trying to change fields they are not allowed to
     if (!$initial_user_creation &&
