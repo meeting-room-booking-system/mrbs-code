@@ -153,8 +153,12 @@ var updateBody = function(event) {
     }
     else
     {
-      $.get(href, 'html', function(response){
-          replaceBody(response, href);
+      $.get({
+          url: href,
+          dataType: 'html',
+          success: function(response) {
+            replaceBody(response, href);
+          }
         });
     }
   };
