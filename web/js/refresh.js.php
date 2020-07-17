@@ -66,30 +66,33 @@ var refreshPage = function refreshPage() {
         data.site = args.site;
       }
 
-      $.post('index.php',
-             data,
-             function(result){
-                 <?php
-                 // (1) Empty the existing table in order to get rid of events
-                 // and data and prevent memory leaks, (2) insert the updated
-                 // table HTML, (3) clear the existing interval timer and then
-                 // (4) trigger a load event so that the resizable bookings are
-                 // re-created and a new timer started.
-                 ?>
-                 if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
+      return $.post(
+          'index.php',
+           data,
+           function(result){
+               <?php
+               // (1) Empty the existing table in order to get rid of events
+               // and data and prevent memory leaks, (2) insert the updated
+               // table HTML, (3) clear the existing interval timer and then
+               // (4) trigger a load event so that the resizable bookings are
+               // re-created and a new timer started.
+               ?>
+               if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
+               {
+                 var table = $('table.dwm_main');
+                 if (!table.hasClass('resizing') && table.hasClass('refreshable'))
                  {
-                   var table = $('table.dwm_main');
-                   if (!table.hasClass('resizing') && table.hasClass('refreshable'))
-                   {
-                     table.empty();
-                     table.html(result);
-                     window.clearInterval(intervalId);
-                     intervalId = undefined;
-                     table.trigger('tableload');
-                   }
+                   table.empty();
+                   table.html(result);
+                   window.clearInterval(intervalId);
+                   intervalId = undefined;
+                   table.trigger('tableload');
                  }
-               },
-             'html');
+
+               }
+             },
+           'html'
+        );
     }  <?php // if (!isHidden() etc.?>
   };
 
@@ -114,10 +117,19 @@ var refreshVisChanged = function refreshVisChanged() {
         window.clearInterval(intervalId);
         intervalId = undefined;
       }
+      <?php
+      // If the page is now visible then refresh the page and, once that has been
+      // done, refresh the prefetched pages.  Don't initiate the prefetch refresh
+      // until after the main refresh is complete because simultaneous Ajax requests
+      // will cause problems if the inactivity timeout has been exceeded and the
+      // user is logged off as a result: the server code will try and log the user
+      // off each time resulting in session_destroy() throwing an error.
+      ?>
       if (!pageHidden)
       {
-        prefetch();  <?php // Refresh the prefetched pages ?>
-        refreshPage();
+        refreshPage().done(function() {
+          prefetch();
+        });
       }
     }
   };
