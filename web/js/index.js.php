@@ -186,8 +186,14 @@ var prefetch = function() {
   }
 
   var delay = <?php echo $prefetch_refresh_rate?> * 1000;
-  var hrefs = [$('a.prev').attr('href'),
-               $('a.next').attr('href')];
+  var hrefs = [];
+  ['a.prev', 'a.next'].forEach(function(link) {
+      var href = $(link).attr('href');
+      if (typeof href !== 'undefined')
+      {
+        hrefs.push(href);
+      }
+    });
 
   <?php // Clear any existing pre-fetched data and any timeout ?>
   updateBody.prefetched = {};
