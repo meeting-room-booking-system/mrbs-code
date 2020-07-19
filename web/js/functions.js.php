@@ -13,10 +13,19 @@ if ($use_strict)
 
 ?>
 
+// Fix for iOS 13 where the User Agent string has been changed.
+// See https://github.com/flatpickr/flatpickr/issues/1992
+function isIos()
+{
+  return (window.navigator.userAgent.match(/iPad/i) ||
+          window.navigator.userAgent.match(/iPhone/i) ||
+          /iPad|iPhone|iPod/.test(navigator.platform) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+}
 
 function isMobile()
 {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || isIos());
 }
 
 $.fn.reverse = [].reverse;

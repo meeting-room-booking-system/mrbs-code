@@ -11,8 +11,27 @@ if ($use_strict)
   echo "'use strict';\n";
 }
 
+// Fix for iOS 13 where the User Agent string has been changed.
+// See https://github.com/flatpickr/flatpickr/issues/1992
+?>
+function iPadMobileFix() {
+  return function(instance) {
+    return {
+      onParseConfig: function() {
+          if (instance.isMobile)
+          {
+            return;
+          }
+          if (isIos())
+          {
+            instance.isMobile = true;
+          }
+        }
+      };
+    };
+};
 
-
+<?php
 // Turn a JavaScript year, month, day (ie with Jan = 0) into an
 // ISO format YYYY-MM-DD date string.    Can cope with months
 // outside the range 0..11, but days must be valid.
@@ -155,6 +174,7 @@ $(document).on('page_ready', function() {
     };
 
   var config = {
+      plugins: [iPadMobileFix()],
       dateFormat: 'Y-m-d',
       altInput: true,
       altFormat: 'custom',
