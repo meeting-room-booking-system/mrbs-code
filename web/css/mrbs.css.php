@@ -88,10 +88,6 @@ input.form-control.input {
   text-align: center;
 }
 
-.js input:not(.form-control.input)[type="date"] {
-  visibility: hidden;
-}
-
 input.date {
   text-align: center;
 }
