@@ -131,7 +131,7 @@ function output_error($heading, $body, $show_data=false)
         // in error logs.
         foreach (array('username', 'password') as $var)
         {
-          if (isset($post_tmp[$var]))
+          if (isset($post_tmp[$var]) && ($post_tmp[$var] !== ''))
           {
             $post_tmp[$var] = '****';
           }
