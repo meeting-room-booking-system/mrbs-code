@@ -1026,6 +1026,43 @@ function get_field_skip_conflicts($disabled=false)
   return $field;
 }
 
+function get_fieldset_registration()
+{
+  global $allow_registration, $enable_registrant_limit, $registrant_limit;
+
+  $fieldset = new ElementFieldset();
+
+  $fieldset->setAttribute('id', 'registration');
+
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('allow_registration'))
+    ->setControlAttribute('name', 'allow_registration')
+    ->setChecked($allow_registration);
+
+  $fieldset->addElement($field);
+
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('enable_registrant_limit'))
+    ->setControlAttribute('name', 'enable_registrant_limit')
+    ->setChecked($enable_registrant_limit);
+
+  $fieldset->addElement($field);
+
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('registrant_limit'))
+        ->setControlAttributes(array(
+              'id'       => 'registrant_limit',
+              'name'     => 'registrant_limit',
+              'min'      => '0',
+              'value'    => $registrant_limit
+            )
+          );
+
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
 
 function get_fieldset_repeat()
 {
@@ -1309,6 +1346,9 @@ if (isset($id))
       case 'ical_recur_id':
       case 'entry_type':
       case 'tentative':
+      case 'allow_registration':
+      case 'enable_registrant_limit':
+      case 'registrant_limit':
         $$column = $entry[$column];
         break;
 
@@ -1435,6 +1475,9 @@ else
   $room_id       = $room;
   $private       = $private_default;
   $tentative     = !$confirmed_default;
+  $allow_registration      = false;
+  $enable_registrant_limit = true;
+  $registrant_limit        = 1;
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults
@@ -1794,6 +1837,8 @@ foreach ($edit_entry_field_order as $key)
 } // foreach
 
 $form->addElement($fieldset);
+
+$form->addElement(get_fieldset_registration());
 
 // Show the repeat fields if (a) it's a new booking and repeats are allowed,
 // or else if it's an existing booking and it's a series.  (It's not particularly obvious but
