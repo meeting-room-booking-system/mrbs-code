@@ -490,167 +490,166 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   }
   echo "</tfoot>\n";
 }
+echo "</table>\n";
 
-?>
-</table>
 
-<div id="view_entry_nav">
-  <?php
-  // Only show the links for Edit and Delete if the room is enabled.    We're
-  // allowed to view and copy existing bookings in disabled rooms, but not to
-  // modify or delete them.
-  if (!$room_disabled)
+echo "<div id=\"view_entry_nav\">\n";
+
+// Only show the links for Edit and Delete if the room is enabled.    We're
+// allowed to view and copy existing bookings in disabled rooms, but not to
+// modify or delete them.
+if (!$room_disabled)
+{
+  // Only show the Edit and Delete buttons if the user is allowed to use them
+  if (getWritable($create_by, $room))
   {
-    // Only show the Edit and Delete buttons if the user is allowed to use them
-    if (getWritable($create_by, $room))
+    // Check whether the entry is deletable (and therefore editable).  Also get the
+    // reason.  We only get the first reason because it's easier just to display one
+    // reason in a tooltip, rather than a complete list.  [Note: if the entry is
+    // deletable but the series is not, the series button will not be disabled.  This
+    // is something that needs to be fixed in the future.]
+    $violations = mrbsCheckPolicy($row, false, false, true);
+
+    if (empty($violations['errors']))
     {
-      // Check whether the entry is deletable (and therefore editable).  Also get the
-      // reason.  We only get the first reason because it's easier just to display one
-      // reason in a tooltip, rather than a complete list.  [Note: if the entry is
-      // deletable but the series is not, the series button will not be disabled.  This
-      // is something that needs to be fixed in the future.]
-      $violations = mrbsCheckPolicy($row, false, false, true);
+      $button_attributes = array();
+    }
+    else
+    {
+      $button_attributes = array('disabled' => true,
+                                 'title'    => $violations['errors'][0]);
+    }
 
-      if (empty($violations['errors']))
-      {
-        $button_attributes = array();
-      }
-      else
-      {
-        $button_attributes = array('disabled' => true,
-                                   'title'    => $violations['errors'][0]);
-      }
-
-      // Edit and Edit Series
+    // Edit and Edit Series
+    echo "<div>\n";
+    if (!$series)
+    {
       echo "<div>\n";
-      if (!$series)
-      {
-        echo "<div>\n";
-        $params = array('action' => multisite('edit_entry.php'),
-                        'value'  => get_vocab('editentry'),
-                        'inputs' => array('id' => $id,
-                        'returl' => $returl)
-        );
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-      if ((!empty($repeat_id) || $series) && $repeats_allowed)
-      {
-        echo "<div>\n";
-        $params = array('action'    => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-                        'value'     => get_vocab('editseries'),
-                        'inputs'    => array('id' => $id,
-                        'edit_type' => 'series',
-                        'returl'    => $returl)
-        );
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-      echo "</div>\n";
-
-      // Delete and Delete Series
-      echo "<div>\n";
-
-      // For the delete buttons, either the button is disabled and we show the reason why, or else
-      // we add a click event to confirm the deletion
-      if (empty($button_attributes))
-      {
-        $button_attributes = array('onclick' => "return confirm('" . escape_js(get_vocab("confirmdel")) . "');");
-      }
-
-      if (!$series)
-      {
-        echo "<div>\n";
-        $params = array('action' => multisite('del_entry.php'),
-                        'value'  => get_vocab('deleteentry'),
-                        'inputs' => array('id' => $id,
-                        'series' => 0,
-                        'returl' => $returl)
-        );
-
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
-      if ((!empty($repeat_id) || $series) && $repeats_allowed)
-      {
-        echo "<div>\n";
-        $params = array('action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
-                        'value'  => get_vocab('deleteseries'),
-                        'inputs' => array('id' => $id,
-                        'series' => 1,
-                        'returl' => $returl)
-        );
-
-        generate_button($params, $button_attributes);
-        echo "</div>\n";
-      }
+      $params = array('action' => multisite('edit_entry.php'),
+                      'value'  => get_vocab('editentry'),
+                      'inputs' => array('id' => $id,
+                      'returl' => $returl)
+      );
+      generate_button($params, $button_attributes);
       echo "</div>\n";
     }
-  }
+    if ((!empty($repeat_id) || $series) && $repeats_allowed)
+    {
+      echo "<div>\n";
+      $params = array('action'    => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+                      'value'     => get_vocab('editseries'),
+                      'inputs'    => array('id' => $id,
+                      'edit_type' => 'series',
+                      'returl'    => $returl)
+      );
+      generate_button($params, $button_attributes);
+      echo "</div>\n";
+    }
+    echo "</div>\n";
 
-  // Copy and Copy Series
+    // Delete and Delete Series
+    echo "<div>\n";
+
+    // For the delete buttons, either the button is disabled and we show the reason why, or else
+    // we add a click event to confirm the deletion
+    if (empty($button_attributes))
+    {
+      $button_attributes = array('onclick' => "return confirm('" . escape_js(get_vocab("confirmdel")) . "');");
+    }
+
+    if (!$series)
+    {
+      echo "<div>\n";
+      $params = array('action' => multisite('del_entry.php'),
+                      'value'  => get_vocab('deleteentry'),
+                      'inputs' => array('id' => $id,
+                      'series' => 0,
+                      'returl' => $returl)
+      );
+
+      generate_button($params, $button_attributes);
+      echo "</div>\n";
+    }
+    if ((!empty($repeat_id) || $series) && $repeats_allowed)
+    {
+      echo "<div>\n";
+      $params = array('action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
+                      'value'  => get_vocab('deleteseries'),
+                      'inputs' => array('id' => $id,
+                      'series' => 1,
+                      'returl' => $returl)
+      );
+
+      generate_button($params, $button_attributes);
+      echo "</div>\n";
+    }
+    echo "</div>\n";
+  }
+}
+
+// Copy and Copy Series
+echo "<div>\n";
+if (!$series)
+{
+  echo "<div>\n";
+  $params = array('action' => multisite('edit_entry.php'),
+                  'value'  => get_vocab('copyentry'),
+                  'inputs' => array('id' => $id,
+                                    'copy' => 1,
+                                    'returl' => $returl)
+                 );
+  generate_button($params);
+  echo "</div>\n";
+}
+if ((!empty($repeat_id) || $series) && $repeats_allowed)
+{
+  echo "<div>\n";
+  $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+                  'value'  => get_vocab('copyseries'),
+                  'inputs' => array('id' => $id,
+                                    'edit_type' => 'series',
+                                    'copy' => 1,
+                                    'returl' => $returl)
+                 );
+  generate_button($params);
+  echo "</div>\n";
+}
+echo "</div>\n";
+
+// Export and Export Series
+if (!$keep_private && !$enable_periods)
+{
+  // The iCalendar information has the full booking details in it, so we will not allow
+  // it to be exported if it is private and the user is not authorised to see it.
+  // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
   echo "<div>\n";
   if (!$series)
   {
     echo "<div>\n";
-    $params = array('action' => multisite('edit_entry.php'),
-                    'value'  => get_vocab('copyentry'),
+    $params = array('action' => multisite('view_entry.php'),
+                    'value'  => get_vocab('exportentry'),
                     'inputs' => array('id' => $id,
-                                      'copy' => 1,
+                                      'action' => 'export',
                                       'returl' => $returl)
                    );
     generate_button($params);
     echo "</div>\n";
   }
-  if ((!empty($repeat_id) || $series) && $repeats_allowed)
+  if (!empty($repeat_id) || $series)
   {
     echo "<div>\n";
-    $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-                    'value'  => get_vocab('copyseries'),
-                    'inputs' => array('id' => $id,
-                                      'edit_type' => 'series',
-                                      'copy' => 1,
+    $params = array('action' => multisite("view_entry.php?day=$day&month=$month&year=$year"),
+                    'value'  => get_vocab('exportseries'),
+                    'inputs' => array('id' => $repeat_id,
+                                      'action' => 'export',
+                                      'series' => 1,
                                       'returl' => $returl)
                    );
     generate_button($params);
     echo "</div>\n";
   }
   echo "</div>\n";
-
-  // Export and Export Series
-  if (!$keep_private && !$enable_periods)
-  {
-    // The iCalendar information has the full booking details in it, so we will not allow
-    // it to be exported if it is private and the user is not authorised to see it.
-    // iCalendar information doesn't work with periods at the moment (no periods to times mapping)
-    echo "<div>\n";
-    if (!$series)
-    {
-      echo "<div>\n";
-      $params = array('action' => multisite('view_entry.php'),
-                      'value'  => get_vocab('exportentry'),
-                      'inputs' => array('id' => $id,
-                                        'action' => 'export',
-                                        'returl' => $returl)
-                     );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    if (!empty($repeat_id) || $series)
-    {
-      echo "<div>\n";
-      $params = array('action' => multisite("view_entry.php?day=$day&month=$month&year=$year"),
-                      'value'  => get_vocab('exportseries'),
-                      'inputs' => array('id' => $repeat_id,
-                                        'action' => 'export',
-                                        'series' => 1,
-                                        'returl' => $returl)
-                     );
-      generate_button($params);
-      echo "</div>\n";
-    }
-    echo "</div>\n";
-  }
+}
 echo "</div>\n";
 
 if (isset($server['HTTP_REFERER'])) //remove the link if displayed from an email
