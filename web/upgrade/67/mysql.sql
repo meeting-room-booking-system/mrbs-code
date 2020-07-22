@@ -10,6 +10,7 @@ CREATE TABLE %DB_TBL_PREFIX%participants
 (
   entry_id    int NOT NULL,
   username    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  registered  int,
   
   UNIQUE KEY uq_entryid_username (entry_id, username),
   FOREIGN KEY (entry_id) 

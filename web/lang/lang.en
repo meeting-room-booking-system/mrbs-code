@@ -169,6 +169,9 @@ $vocab["by"]                  = "by";                           // Used for the 
 $vocab["sent_at"]             = "Sent at ";
 $vocab["yes"]                 = "Yes";
 $vocab["no"]                  = "No";
+$vocab["event_registration"]  = "Event registration";
+$vocab["already_registered"]  = "You have registered for this event";
+$vocab["cancel_registration"] = "Cancel registration";
 
 // Used in edit_entry_handler.php
 $vocab["error"]                  = "Error";

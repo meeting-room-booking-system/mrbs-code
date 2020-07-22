@@ -23,12 +23,13 @@ if ((session()->getCurrentUser()->username !== $username) && !is_book_admin($roo
   location_header($returl);
 }
 
-$sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username)
-             VALUES (:entry_id, :username)";
+$sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
+             VALUES (:entry_id, :username, :registered)";
 
 $sql_params = array(
   ':entry_id' => $event_id,
-  ':username' => $username
+  ':username' => $username,
+  ':registered' => time()
 );
 
 db()->command($sql, $sql_params);
