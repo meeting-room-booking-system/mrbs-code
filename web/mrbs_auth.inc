@@ -36,14 +36,14 @@ if (method_exists(session(), 'processForm'))
 function auth()
 {
   global $auth;
-  
+
   static $auth_obj = null;
 
   if (is_null($auth_obj))
   {
     $auth_obj = AuthFactory::create($auth['type']);
   }
-  
+
   return $auth_obj;
 }
 
@@ -52,14 +52,14 @@ function auth()
 function session()
 {
   global $auth;
-  
+
   static $session_obj = null;
 
   if (is_null($session_obj))
   {
     $session_obj = SessionFactory::create($auth['session']);
   }
-  
+
   return $session_obj;
 }
 
@@ -94,6 +94,7 @@ function get_page_level($page)
     case 'edit_room.php':               // Ordinary users can view room details
     case 'edit_users.php':              // Ordinary users can edit their own details
     case 'pending.php':                 // Ordinary users can view their own entries
+    case 'registration_handler.php':    // Ordinary users can register for an event
       $result = 1;
       break;
 
@@ -154,12 +155,12 @@ function getAuthorised($level, $returl)
 
   // Otherwise we need to check who they are
   $mrbs_user = session()->getCurrentUser();
-  
+
   if(!isset($mrbs_user))
   {
     // Ask them to authenticate, if the session scheme supports it
     if (method_exists(session(), 'authGet'))
-    {  
+    {
       session()->authGet(null, $returl);
     }
     return false;

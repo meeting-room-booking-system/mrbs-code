@@ -1420,7 +1420,7 @@ function mrbsApproveEntry($id, $series)
 
 
 // Get the number of people registered for an event
-function get_n_registered($id, $series)
+function get_registrants($id, $series)
 {
   // You can't register for a series (yet)
   if ($series)
@@ -1428,11 +1428,11 @@ function get_n_registered($id, $series)
     return null;
   }
 
-  $sql = "SELECT COUNT(username)
+  $sql = "SELECT username
             FROM " . _tbl('participants') . "
            WHERE entry_id=:entry_id";
 
-  return db()->query1($sql, array(':entry_id' => $id));
+  return db()->query_array($sql, array(':entry_id' => $id));
 }
 
 
@@ -1583,7 +1583,7 @@ function get_booking_info($id, $series, $silent=FALSE)
   unpack_status($row);
 
   // Get some extra information
-  $row['n_registered'] = get_n_registered($id, $series);
+  $row['registrants'] = get_registrants($id, $series);
 
   if ($series)
   {

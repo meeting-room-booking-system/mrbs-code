@@ -12,6 +12,79 @@ require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
 
+
+function generate_event_registration($row)
+{
+  if (empty($row['allow_registration']))
+  {
+    return;
+  }
+
+  $n_registered = count($row['registrants']);
+
+  echo '<h4>' . get_vocab('event_registration') . "</h4>\n";
+  echo "<table class=\"list\">\n";
+  echo "<tbody>\n";
+
+  if (!empty($row['enable_registrant_limit']))
+  {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars(get_vocab('registrant_limit')) . '</td>';
+    echo '<td>' . htmlspecialchars($row['registrant_limit']) . '</td>';
+    echo "</tr>\n";
+  }
+
+  echo '<tr>';
+  echo '<td>' . htmlspecialchars(get_vocab('n_registered')) . '</td>';
+  echo '<td>' . htmlspecialchars($n_registered) . '</td>';
+  echo "</tr>\n";
+  echo "</tbody>\n";
+  echo "</table>\n";
+
+  $mrbs_user = session()->getCurrentUser();
+  if (in_array($mrbs_user->username, $row['registrants']))
+  {
+    echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
+    $button_value = get_vocab('cancel_registration');
+    $button_action = 'cancel';
+  }
+  else
+  {
+    if (empty($row['enable_registrant_limit']) ||
+      ($row['registrant_limit'] > $n_registered))
+    {
+      $button_value = get_vocab('register');
+      $button_action = 'register';
+    }
+    else
+    {
+      echo '<p>' . htmlspecialchars(get_vocab('event_full')) . "</p>\n";
+    }
+  }
+
+  if (isset($button_value))
+  {
+    $form = new Form();
+    $form->setAttributes(array('action' => 'registration_handler.php',
+                               'method' => 'post'));
+    // Hidden inputs
+    $form->addHiddenInputs(array(
+        'action' => $button_action,
+        'event_id' => $row['id'],
+        'username' => $mrbs_user->username,
+        'returl' => this_page(true)
+      ));
+
+    // Submit button
+    $element = new ElementInputSubmit();
+    $element->setAttribute('value', $button_value);
+    $form->addElement($element);
+
+    $form->render();
+  }
+}
+
+
 // Generates a single button.  Parameters in the array $params
 //
 //    Manadatory parameters
@@ -119,7 +192,7 @@ function generateOwnerButtons($id, $series)
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($mrbs_username, $create_by) === 0) && 
+      (strcasecmp($mrbs_username, $create_by) === 0) &&
       ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
@@ -492,6 +565,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
 }
 echo "</table>\n";
 
+generate_event_registration($row);
 
 echo "<div id=\"view_entry_nav\">\n";
 

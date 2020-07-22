@@ -293,17 +293,6 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
     }  // switch
   }  // foreach
-
-  // Registration
-  $value = empty($data['allow_registration']) ? get_vocab('no') : get_vocab('yes');
-  $tbody .= create_details_row(get_vocab('allow_registration'), $value, $as_html);
-  if (!empty($data['allow_registration']))
-  {
-    $value = empty($data['enable_registrant_limit']) ? get_vocab('no') : get_vocab('yes');
-    $tbody .= create_details_row(get_vocab('enable_registrant_limit'), $value, $as_html);
-    $tbody .= create_details_row(get_vocab('registrant_limit'), $data['registrant_limit'], $as_html);
-    $tbody .= create_details_row(get_vocab('n_registered'), $data['n_registered'], $as_html);
-  }
   
   // Repeat type
   $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
