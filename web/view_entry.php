@@ -13,8 +13,10 @@ require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
 
 
-function generate_event_registration($row)
+function generate_event_registration($row, $previous_page=null)
 {
+  global $server;
+
   if (empty($row['allow_registration']))
   {
     return;
@@ -67,12 +69,27 @@ function generate_event_registration($row)
     $form = new Form();
     $form->setAttributes(array('action' => multisite('registration_handler.php'),
                                'method' => 'post'));
+
+    // Add the previous_page (ie the one we were on before view_entry) to the query string
+    // so that it is preserved.
+    $returl  = this_page();
+    $query_string = isset($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+    parse_str($query_string, $query_string_parts);
+    if (isset($previous_page))
+    {
+      $query_string_parts['previous_page'] = $previous_page;
+    }
+    if (!empty($query_string_parts))
+    {
+      $returl .= '?' . http_build_query($query_string_parts, '', '&');
+    }
+
     // Hidden inputs
     $form->addHiddenInputs(array(
         'action' => $button_action,
         'event_id' => $row['id'],
         'username' => $mrbs_user->username,
-        'returl' => this_page(true)
+        'returl' => $returl
       ));
 
     // Submit button
@@ -274,6 +291,12 @@ $series = get_form_var('series', 'int');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
+$previous_page = get_form_var('previous_page', 'string');
+
+if (!isset($previous_page) && isset($server['HTTP_REFERER']))
+{
+  $previous_page = $server['HTTP_REFERER'];
+}
 
 // Need to tell all the links where to go back to after an edit or delete
 if (!isset($returl))
@@ -565,7 +588,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
 }
 echo "</table>\n";
 
-generate_event_registration($row);
+generate_event_registration($row, $previous_page);
 
 echo "<div id=\"view_entry_nav\">\n";
 
@@ -726,10 +749,10 @@ if (!$keep_private && !$enable_periods)
 }
 echo "</div>\n";
 
-if (isset($server['HTTP_REFERER'])) //remove the link if displayed from an email
+if (isset($previous_page)) //remove the link if displayed from an email
 {
   echo "<div id=\"returl\">\n";
-  echo '<a href="' . htmlspecialchars($server['HTTP_REFERER']) . '">' . get_vocab('returnprev') . "</a>\n";
+  echo '<a href="' . htmlspecialchars($previous_page) . '">' . get_vocab('returnprev') . "</a>\n";
   echo "</div>\n";
 }
 
