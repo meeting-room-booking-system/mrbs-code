@@ -65,7 +65,7 @@ function generate_event_registration($row)
   if (isset($button_value))
   {
     $form = new Form();
-    $form->setAttributes(array('action' => 'registration_handler.php',
+    $form->setAttributes(array('action' => multisite('registration_handler.php'),
                                'method' => 'post'));
     // Hidden inputs
     $form->addHiddenInputs(array(
