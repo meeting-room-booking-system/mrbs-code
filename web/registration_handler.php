@@ -5,6 +5,35 @@ require "defaultincludes.inc";
 
 use MRBS\Form\Form;
 
+
+function cancel($username, $event_id)
+{
+  $sql = "DELETE FROM " . _tbl('participants') . "
+                WHERE username=:username AND entry_id=:entry_id";
+
+  $sql_params = array(
+    ':entry_id' => $event_id,
+    ':username' => $username
+  );
+
+  db()->command($sql, $sql_params);
+}
+
+
+function register($username, $event_id)
+{
+  $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
+               VALUES (:entry_id, :username, :registered)";
+
+  $sql_params = array(
+    ':entry_id' => $event_id,
+    ':username' => $username,
+    ':registered' => time()
+  );
+
+  db()->command($sql, $sql_params);
+}
+
 // Check the CSRF token.
 Form::checkToken();
 
@@ -23,15 +52,18 @@ if ((session()->getCurrentUser()->username !== $username) && !is_book_admin($roo
   location_header($returl);
 }
 
-$sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
-             VALUES (:entry_id, :username, :registered)";
+switch ($action)
+{
+  case 'cancel':
+    cancel($username, $event_id);
+    break;
+  case 'register':
+    register($username, $event_id);
+    break;
+  default:
+    trigger_error("Unknown action '$action'", E_USER_WARNING);
+    break;
+}
 
-$sql_params = array(
-  ':entry_id' => $event_id,
-  ':username' => $username,
-  ':registered' => time()
-);
-
-db()->command($sql, $sql_params);
 
 location_header($returl);
