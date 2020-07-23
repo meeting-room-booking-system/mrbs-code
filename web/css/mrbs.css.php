@@ -2230,6 +2230,11 @@ div#site_faq_body {
   margin-top: 1em;
 }
 
+.view_entry h4 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
 .view_entry div#view_entry_nav {
   display: table;
   margin-top: 1em;
