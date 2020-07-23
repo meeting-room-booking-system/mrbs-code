@@ -52,10 +52,10 @@ abstract class Field extends Element
   }
   
   
-  public function setLabel($text)
+  public function setLabel($text, $text_at_start=false, $raw=false)
   {
     $label = $this->getElement('label');
-    $label->setText($text);
+    $label->setText($text, $text_at_start, $raw);
     $this->setElement('label', $label);
     return $this;
   }
