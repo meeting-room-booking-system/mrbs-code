@@ -503,6 +503,9 @@ if (is_private_event($private) && $writeable)
 }
 echo "</h3>\n";
 
+generate_event_registration($row, $previous_page);
+
+echo '<h4>' . get_vocab('event_details') . "</h4>\n";
 
 echo "<table id=\"entry\" class=\"list\">\n";
 
@@ -591,8 +594,6 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
   echo "</tfoot>\n";
 }
 echo "</table>\n";
-
-generate_event_registration($row, $previous_page);
 
 echo "<div id=\"view_entry_nav\">\n";
 

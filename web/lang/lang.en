@@ -170,6 +170,7 @@ $vocab["sent_at"]             = "Sent at ";
 $vocab["yes"]                 = "Yes";
 $vocab["no"]                  = "No";
 $vocab["event_registration"]  = "Event registration";
+$vocab["event_details"]       = "Event details";
 $vocab["already_registered"]  = "You have registered for this event";
 $vocab["register"]            = "Register";
 $vocab["cancel_registration"] = "Cancel registration";
