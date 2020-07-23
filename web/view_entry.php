@@ -24,7 +24,9 @@ function generate_event_registration($row, $previous_page=null)
 
   $n_registered = count($row['registrants']);
 
+
   echo '<h4>' . get_vocab('event_registration') . "</h4>\n";
+  echo "<div id=\"registration\">\n";
   echo "<table class=\"list\">\n";
   echo "<tbody>\n";
 
@@ -98,6 +100,8 @@ function generate_event_registration($row, $previous_page=null)
     $form->addElement($element);
 
     $form->render();
+    
+    echo "</div>\n";
   }
 }
 
