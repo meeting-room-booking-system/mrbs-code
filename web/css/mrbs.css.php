@@ -2217,6 +2217,19 @@ div#site_faq_body {
   padding-left: 1em;
 }
 
+.view_entry #registration p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.view_entry #registration table {
+  margin-bottom: 1em;
+}
+
+.view_entry #registration input[type="submit"] {
+  margin-top: 1em;
+}
+
 .view_entry div#view_entry_nav {
   display: table;
   margin-top: 1em;
