@@ -619,12 +619,15 @@ function get_entry_by_id($id)
 // corresponding to the entry table columns
 function get_entries_by_area($area_id, $interval_start, $interval_end)
 {
-  $sql = "SELECT E.*
-            FROM " . _tbl('entry') . " E, " . _tbl('room') . " R
-           WHERE E.room_id = R.id
-             AND R.area_id = ?
+  // The GROUP BY is necessary to get n_registered to work
+  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
+       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
+           WHERE R.area_id = ?
              AND R.disabled = 0
              AND start_time < ? AND end_time > ?
+        GROUP BY E.id
         ORDER BY start_time, E.id";   // necessary so that multiple bookings appear in the right order
 
   $res = db()->query($sql, array($area_id, $interval_end, $interval_start));

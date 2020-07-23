@@ -1127,13 +1127,14 @@ if ($clipped_month)
 // Generate the classes to give the colour coding by booking type in the day/week/month views
 foreach ($color_types as $type => $col)
 {
-  echo ".$type {background-color: $col}\n";
+  echo ".$type {background: $col}\n";
+  echo ".$type.spaces {background: linear-gradient(to right bottom, white 50%, $col 50%)}\n";
 }
 
 ?>
 
 .private_type {
-  background-color: <?php echo $main_table_slot_private_type_color;?>;
+  background: <?php echo $main_table_slot_private_type_color;?>;
 }
 
 .dwm_main thead th,

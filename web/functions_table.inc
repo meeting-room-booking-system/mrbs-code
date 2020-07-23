@@ -58,7 +58,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 
   global $resolution;
   global $is_private_field;
-
+  
   // We're only interested in entries which occur on this day (it's possible
   // for $entry to contain entries for other days)
   if (($entry['start_time'] >= $start_last_slot + $resolution) ||
@@ -302,6 +302,19 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         if ($booking['is_multiday_end'])
         {
           $classes[] = 'multiday_end';
+        }
+        
+        if ($booking['allow_registration'])
+        {
+          if ($booking['enable_registrant_limit'] &&
+              ($booking['n_registered'] >= $booking['registrant_limit']))
+          {
+            $classes[] = 'full';
+          }
+          else
+          {
+            $classes[] = 'spaces';
+          }
         }
 
         // Tell JavaScript to make bookings resizable
