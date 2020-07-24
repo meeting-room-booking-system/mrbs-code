@@ -201,6 +201,19 @@ function get_entry_classes($entry)
   {
     $classes[] = 'series';
   }
+  
+  if ($entry['allow_registration'])
+  {
+    if ($entry['enable_registrant_limit'] &&
+        ($entry['n_registered'] >= $entry['registrant_limit']))
+    {
+      $classes[] = 'full';
+    }
+    else
+    {
+      $classes[] = 'spaces';
+    }
+  }
 
   return $classes;
 }
@@ -302,19 +315,6 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
         if ($booking['is_multiday_end'])
         {
           $classes[] = 'multiday_end';
-        }
-        
-        if ($booking['allow_registration'])
-        {
-          if ($booking['enable_registrant_limit'] &&
-              ($booking['n_registered'] >= $booking['registrant_limit']))
-          {
-            $classes[] = 'full';
-          }
-          else
-          {
-            $classes[] = 'spaces';
-          }
         }
 
         // Tell JavaScript to make bookings resizable
