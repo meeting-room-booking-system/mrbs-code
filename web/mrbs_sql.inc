@@ -650,10 +650,13 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
 // corresponding to the entry table columns
 function get_entries_by_room($room_id, $interval_start, $interval_end)
 {
-  $sql = "SELECT *
-            FROM " . _tbl('entry') . "
+  // The GROUP BY is necessary to get n_registered to work
+  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
            WHERE room_id = ?
              AND start_time < ? AND end_time > ?
+        GROUP BY E.id
         ORDER BY start_time, id";   // necessary so that multiple bookings appear in the right order
 
   $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
