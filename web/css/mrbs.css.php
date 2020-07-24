@@ -1128,10 +1128,14 @@ if ($clipped_month)
 foreach ($color_types as $type => $col)
 {
   echo ".$type {background: $col}\n";
-  echo ".$type.spaces {background: linear-gradient(to right bottom, white 50%, $col 50%)}\n";
+  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color 50%, $col 50%)}\n";
 }
 
 ?>
+
+.spaces a {
+  background: transparent;
+}
 
 .private_type {
   background: <?php echo $main_table_slot_private_type_color;?>;
