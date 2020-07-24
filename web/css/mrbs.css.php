@@ -1128,11 +1128,13 @@ if ($clipped_month)
 foreach ($color_types as $type => $col)
 {
   echo ".$type {background: $col}\n";
-  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color 50%, $col 50%)}\n";
+  echo ".full.$type {background: linear-gradient(to right bottom, $col 49%, $row_even_color 49.5% 50.5%, $col 51%)}\n";
+  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color 49.75%, $col 50.25%)}\n";
 }
 
 ?>
 
+.full a,
 .spaces a {
   background: transparent;
 }
