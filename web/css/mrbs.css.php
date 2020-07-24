@@ -1125,11 +1125,14 @@ if ($clipped_month)
 
 <?php
 // Generate the classes to give the colour coding by booking type in the day/week/month views
+// Don't go for hard stops on the linear gradient because it doesn't do anti-aliasing.  Instead leave
+// a pixel gap to allow the linear gradient to do some blurring.  (Unfortunately calc() doesn't
+// work with linear-gradient in IE11).
 foreach ($color_types as $type => $col)
 {
   echo ".$type {background: $col}\n";
-  echo ".full.$type {background: linear-gradient(to right bottom, $col 49%, $row_even_color 49.5% 50.5%, $col 51%)}\n";
-  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color 49.75%, $col 50.25%)}\n";
+  echo ".full.$type {background: linear-gradient(to right bottom, $col calc(50% - 1.5px), $row_even_color calc(50% - 0.5px) calc(50% + 0.5px), $col calc(50% + 1.5px))}\n";
+  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color calc(50% - 0.5px), $col calc(50% + 0.5px))}\n";
 }
 
 ?>
