@@ -57,8 +57,10 @@ function generate_event_registration($row, $previous_page=null)
 
     foreach ($row['registrants'] as $registrant)
     {
+      $registrant_user = auth()->getUser($registrant);
+      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant;
       echo '<tr>';
-      echo '<td>' . htmlspecialchars(auth()->getUser($registrant)->display_name) . '</td>';
+      echo '<td>' . htmlspecialchars($display_name) . '</td>';
       echo "</tr>\n";
     }
 
