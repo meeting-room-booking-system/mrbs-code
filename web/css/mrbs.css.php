@@ -2216,7 +2216,7 @@ div#site_faq_body {
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
 .view_entry #entry td:first-child,
-.view_entry #registration td:first-child {
+.view_entry #registration .list td:first-child {
   text-align: right;
   font-weight: bold;
   padding-right: 1.0em;
