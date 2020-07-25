@@ -1442,6 +1442,21 @@ function get_registrants($id, $series)
 }
 
 
+// Check whether any entries in a series have users registered
+function series_has_registrants($repeat_id)
+{
+  $sql = "SELECT COUNT(username)
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+           WHERE E.repeat_id=:repeat_id
+           LIMIT 1";
+
+  $sql_params = array(':repeat_id' => $repeat_id);
+
+  return (db()->query1($sql, $sql_params) > 0);
+}
+
+
 // get_booking_info($id, $series)
 //
 // Gets all the details for a booking with $id, which is in the

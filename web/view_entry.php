@@ -668,6 +668,13 @@ if (!$room_disabled)
                       'edit_type' => 'series',
                       'returl'    => $returl)
       );
+
+      if (empty($button_attributes['disabled']) &&
+          isset($repeat_id) &&
+          series_has_registrants($repeat_id))
+      {
+        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab("confirm_edit_series")) . "');";
+      }
       generate_button($params, $button_attributes);
       echo "</div>\n";
     }
@@ -678,11 +685,14 @@ if (!$room_disabled)
 
     // For the delete buttons, either the button is disabled and we show the reason why, or else
     // we add a click event to confirm the deletion
-    if (empty($button_attributes))
+    if (empty($button_attributes['disabled']))
     {
-      $button_attributes = array('onclick' => "return confirm('" . escape_js(get_vocab("confirmdel")) . "');");
+      $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab("confirmdel")) . "');";
     }
-
+    else
+    {
+      unset($button_attributes['onclick']);
+    }
     if (!$series)
     {
       echo "<div>\n";

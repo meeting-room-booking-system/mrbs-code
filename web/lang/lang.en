@@ -146,6 +146,9 @@ $vocab["deleteseries"]        = "Delete Series";
 $vocab["exportentry"]         = "Export Entry";
 $vocab["exportseries"]        = "Export Series";
 $vocab["confirmdel"]          = "Are you sure you want to delete this entry?";
+$vocab["confirm_edit_series"] = "Users have registered for one or more events in this series and " .
+                                "editing the series will cause their names to be lost.  Are you sure " .
+                                "you want to continue?";
 $vocab["returnprev"]          = "Return to previous page";
 $vocab["invalid_entry_id"]    = "Invalid entry id.";
 $vocab["invalid_series_id"]   = "Invalid series id.";
