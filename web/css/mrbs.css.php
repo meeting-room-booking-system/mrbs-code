@@ -2240,6 +2240,16 @@ div#site_faq_body {
   margin-top: 1em;
 }
 
+.view_entry #registrants {
+  padding-left: 1em;
+}
+
+.view_entry #registrants tbody {
+  display: block;
+  max-height: 12em;
+  overflow-y: auto;
+}
+
 .view_entry h4 {
   margin-top: 2em;
   margin-bottom: 1em;
