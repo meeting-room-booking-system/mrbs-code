@@ -2020,6 +2020,29 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 }
 
 
+function update_participants($old_id, $new_id)
+{
+  $sql = "UPDATE " . _tbl('participants') . "
+             SET entry_id=:new_id
+           WHERE entry_id=:old_id";
+
+  $sql_params = array(':new_id' => $new_id, ':old_id' => $old_id);
+
+  try
+  {
+    db()->command($sql, $sql_params);
+  }
+  catch (DBException $exception)
+  {
+    trigger_error($exception->getMessage(), E_USER_WARNING);
+    return false;
+  }
+
+  return true;
+}
+
+
+
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
@@ -2343,6 +2366,12 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($booking);
+      // Update the participants table
+      if (isset($id))
+      {
+        update_participants($id, $new_id);
+      }
+
       $is_repeat_table = FALSE;
       $result['start_times'] = array($booking['start_time']);
     }
