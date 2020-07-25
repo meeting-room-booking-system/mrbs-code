@@ -45,6 +45,28 @@ function generate_event_registration($row, $previous_page=null)
   echo "</tbody>\n";
   echo "</table>\n";
 
+  // Display the list of registrants, if the user is allowed to see it, which is if
+  // they have write access for this booking.
+  // Display it as a table because in the future we might want to (a) add more columns,
+  // eg date and time of registration and (b) use DataTables to make the list searchable
+  // and exportable.
+  if (($n_registered > 0) && getWritable($row['create_by'], $row['room_id']))
+  {
+    echo "<table id=\"registrants\">\n";
+    echo "<tbody>\n";
+
+    foreach ($row['registrants'] as $registrant)
+    {
+      echo '<tr>';
+      echo '<td>' . htmlspecialchars(auth()->getUser($registrant)->display_name) . '</td>';
+      echo "</tr>\n";
+    }
+
+    echo "</tbody>\n";
+    echo "</table>\n";
+  }
+
+  // Display registration information and buttons for this user
   $mrbs_user = session()->getCurrentUser();
   if (in_array($mrbs_user->username, $row['registrants']))
   {
@@ -100,7 +122,7 @@ function generate_event_registration($row, $previous_page=null)
     $form->addElement($element);
 
     $form->render();
-    
+
     echo "</div>\n";
   }
 }
