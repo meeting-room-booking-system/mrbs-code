@@ -1030,6 +1030,11 @@ function get_fieldset_registration()
 {
   global $allow_registration, $enable_registrant_limit, $registrant_limit;
 
+  if (!is_book_admin())
+  {
+    return null;
+  }
+
   $fieldset = new ElementFieldset();
 
   $fieldset->setAttribute('id', 'registration');
