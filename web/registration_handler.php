@@ -52,7 +52,7 @@ function register($username, $event_id)
   }
 
   // Release the lock
-  db()->mutex_lock(_tbl('participants'));
+  db()->mutex_unlock(_tbl('participants'));
 }
 
 // Check the CSRF token.
