@@ -89,7 +89,7 @@ CREATE TABLE mrbs_room
   custom_html      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
 
   PRIMARY KEY (id),
-  FOREIGN KEY (area_id) 
+  FOREIGN KEY (area_id)
     REFERENCES mrbs_area(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
@@ -122,9 +122,9 @@ CREATE TABLE mrbs_repeat
   info_text      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   ical_uid       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   ical_sequence  smallint DEFAULT 0 NOT NULL,
-  
+
   PRIMARY KEY (id),
-  FOREIGN KEY (room_id) 
+  FOREIGN KEY (room_id)
     REFERENCES mrbs_room(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
@@ -132,33 +132,36 @@ CREATE TABLE mrbs_repeat
 
 CREATE TABLE mrbs_entry
 (
-  id             int NOT NULL auto_increment,
-  start_time     int DEFAULT '0' NOT NULL,
-  end_time       int DEFAULT '0' NOT NULL,
-  entry_type     int DEFAULT '0' NOT NULL,
-  repeat_id      int DEFAULT NULL,
-  room_id        int DEFAULT '1' NOT NULL,
-  timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  create_by      varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
-  modified_by    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
-  name           varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
-  type           char DEFAULT 'E' NOT NULL,
-  description    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  status         tinyint unsigned NOT NULL DEFAULT 0,
-  reminded       int,
-  info_time      int,
-  info_user      varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  info_text      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  ical_uid       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL,
-  ical_recur_id  varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  id                      int NOT NULL auto_increment,
+  start_time              int DEFAULT '0' NOT NULL,
+  end_time                int DEFAULT '0' NOT NULL,
+  entry_type              int DEFAULT '0' NOT NULL,
+  repeat_id               int DEFAULT NULL,
+  room_id                 int DEFAULT '1' NOT NULL,
+  timestamp               timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  create_by               varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
+  modified_by             varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
+  name                    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
+  type                    char DEFAULT 'E' NOT NULL,
+  description             text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  status                  tinyint unsigned NOT NULL DEFAULT 0,
+  reminded                int,
+  info_time               int,
+  info_user               varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  info_text               text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  ical_uid                varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
+  ical_sequence           smallint DEFAULT 0 NOT NULL,
+  ical_recur_id           varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  allow_registration      tinyint(1) DEFAULT 0 NOT NULL,
+  enable_registrant_limit tinyint(1) DEFAULT 1 NOT NULL,
+  registrant_limit        int DEFAULT 0 NOT NULL,
 
   PRIMARY KEY (id),
-  FOREIGN KEY (room_id) 
+  FOREIGN KEY (room_id)
     REFERENCES mrbs_room(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
-  FOREIGN KEY (repeat_id) 
+  FOREIGN KEY (repeat_id)
     REFERENCES mrbs_repeat(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
@@ -167,12 +170,25 @@ CREATE TABLE mrbs_entry
   KEY idxRoomStartEnd (room_id, start_time, end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE mrbs_participants
+(
+  entry_id    int NOT NULL,
+  username    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  registered  int,
+
+  UNIQUE KEY uq_entryid_username (entry_id, username),
+  FOREIGN KEY (entry_id)
+  REFERENCES mrbs_entry(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE mrbs_variables
 (
   id               int NOT NULL auto_increment,
   variable_name    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   variable_content text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-      
+
   PRIMARY KEY (id),
   UNIQUE KEY uq_variable_name (variable_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -184,7 +200,7 @@ CREATE TABLE mrbs_zoneinfo
   outlook_compatible tinyint unsigned NOT NULL DEFAULT 0,
   vtimezone          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   last_updated       int NOT NULL DEFAULT 0,
-  
+
   /* Note that there is a limit on the length of keys which imposes a constraint
      on the size of VARCHAR that can be keyed */
   PRIMARY KEY (id),
@@ -196,7 +212,7 @@ CREATE TABLE mrbs_sessions
   id      varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   access  int unsigned DEFAULT NULL,
   data    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  
+
   /* Note that there is a limit on the length of keys which imposes a constraint
      on the size of VARCHAR that can be keyed */
   PRIMARY KEY (id),
@@ -220,6 +236,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '66');
+  VALUES ( 'db_version', '67');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
