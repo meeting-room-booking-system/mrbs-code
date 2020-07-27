@@ -76,7 +76,7 @@ CREATE TABLE mrbs_area
   confirmed_default           smallint,
   times_along_top             smallint DEFAULT 0 NOT NULL,
   default_type                char DEFAULT 'E' NOT NULL,
-  
+
   CONSTRAINT mrbs_uq_area_name UNIQUE (area_name)
 );
 
@@ -94,80 +94,95 @@ CREATE TABLE mrbs_room
   capacity          int DEFAULT 0 NOT NULL,
   room_admin_email  text,
   custom_html       text,
-  
+
   CONSTRAINT mrbs_uq_room_name UNIQUE (area_id, room_name)
 );
 create index mrbs_idxSortKey on mrbs_room(sort_key);
 
 CREATE TABLE mrbs_repeat
 (
-  id             serial primary key,
-  start_time     int DEFAULT 0 NOT NULL,
-  end_time       int DEFAULT 0 NOT NULL,
-  rep_type       int DEFAULT 0 NOT NULL,
-  end_date       int DEFAULT 0 NOT NULL,
-  rep_opt        varchar(32) NOT NULL,
-  room_id        int DEFAULT 1 NOT NULL
-                   REFERENCES mrbs_room(id)
-                   ON UPDATE CASCADE
-                   ON DELETE RESTRICT,
-  timestamp      timestamptz DEFAULT current_timestamp,
-  create_by      varchar(80) NOT NULL,
-  modified_by    varchar(80) NOT NULL,
-  name           varchar(80) NOT NULL,
-  type           char DEFAULT 'E' NOT NULL,
-  description    text,
-  rep_interval   smallint DEFAULT 1 NOT NULL,
-  month_absolute smallint DEFAULT NULL,
-  month_relative varchar(4) DEFAULT NULL,
-  status         smallint DEFAULT 0 NOT NULL,
-  reminded       int,
-  info_time      int,
-  info_user      varchar(80),
-  info_text      text,
-  ical_uid       varchar(255) DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL
+  id              serial primary key,
+  start_time      int DEFAULT 0 NOT NULL,
+  end_time        int DEFAULT 0 NOT NULL,
+  rep_type        int DEFAULT 0 NOT NULL,
+  end_date        int DEFAULT 0 NOT NULL,
+  rep_opt         varchar(32) NOT NULL,
+  room_id         int DEFAULT 1 NOT NULL
+                    REFERENCES mrbs_room(id)
+                    ON UPDATE CASCADE
+                    ON DELETE RESTRICT,
+  timestamp       timestamptz DEFAULT current_timestamp,
+  create_by       varchar(80) NOT NULL,
+  modified_by     varchar(80) NOT NULL,
+  name            varchar(80) NOT NULL,
+  type            char DEFAULT 'E' NOT NULL,
+  description     text,
+  rep_interval    smallint DEFAULT 1 NOT NULL,
+  month_absolute  smallint DEFAULT NULL,
+  month_relative  varchar(4) DEFAULT NULL,
+  status          smallint DEFAULT 0 NOT NULL,
+  reminded        int,
+  info_time       int,
+  info_user       varchar(80),
+  info_text       text,
+  ical_uid        varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence   smallint DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE mrbs_entry
 (
-  id             serial primary key,
-  start_time     int DEFAULT 0 NOT NULL,
-  end_time       int DEFAULT 0 NOT NULL,
-  entry_type     int DEFAULT 0 NOT NULL,
-  repeat_id      int DEFAULT NULL
-                   REFERENCES mrbs_repeat(id)
-                   ON UPDATE CASCADE
-                   ON DELETE CASCADE,
-  room_id        int DEFAULT 1 NOT NULL
-                   REFERENCES mrbs_room(id)
-                   ON UPDATE CASCADE
-                   ON DELETE RESTRICT,
-  timestamp      timestamptz DEFAULT current_timestamp,
-  create_by      varchar(80) NOT NULL,
-  modified_by    varchar(80) NOT NULL,
-  name           varchar(80) NOT NULL,
-  type           char DEFAULT 'E' NOT NULL,
-  description    text,
-  status         smallint DEFAULT 0 NOT NULL,
-  reminded       int,
-  info_time      int,
-  info_user      varchar(80),
-  info_text      text,
-  ical_uid       varchar(255) DEFAULT '' NOT NULL,
-  ical_sequence  smallint DEFAULT 0 NOT NULL,
-  ical_recur_id  varchar(16) DEFAULT NULL
+  id                      serial primary key,
+  start_time              int DEFAULT 0 NOT NULL,
+  end_time                int DEFAULT 0 NOT NULL,
+  entry_type              int DEFAULT 0 NOT NULL,
+  repeat_id               int DEFAULT NULL
+                            REFERENCES mrbs_repeat(id)
+                            ON UPDATE CASCADE
+                            ON DELETE CASCADE,
+  room_id                 int DEFAULT 1 NOT NULL
+                            REFERENCES mrbs_room(id)
+                            ON UPDATE CASCADE
+                            ON DELETE RESTRICT,
+  timestamp               timestamptz DEFAULT current_timestamp,
+  create_by               varchar(80) NOT NULL,
+  modified_by             varchar(80) NOT NULL,
+  name                    varchar(80) NOT NULL,
+  type                    char DEFAULT 'E' NOT NULL,
+  description             text,
+  status                  smallint DEFAULT 0 NOT NULL,
+  reminded                int,
+  info_time               int,
+  info_user               varchar(80),
+  info_text               text,
+  ical_uid                varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence           smallint DEFAULT 0 NOT NULL,
+  ical_recur_id           varchar(16) DEFAULT NULL,
+  allow_registration      smallint DEFAULT 0 NOT NULL,
+  enable_registrant_limit smallint DEFAULT 1 NOT NULL,
+  registrant_limit        int DEFAULT 0 NOT NULL
 );
 create index mrbs_idxStartTime on mrbs_entry(start_time);
 create index mrbs_idxEndTime on mrbs_entry(end_time);
 create index mrbs_idxRoomStartEnd on mrbs_entry(room_id, start_time, end_time);
+
+CREATE TABLE mrbs_participants
+(
+  entry_id    int NOT NULL
+                REFERENCES mrbs_entry(id)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+  username    varchar(255),
+  registered  int,
+
+  CONSTRAINT mrbs_uq_entryid_username UNIQUE (entry_id, username)
+);
 
 CREATE TABLE mrbs_variables
 (
   id               serial primary key,
   variable_name    varchar(80),
   variable_content text,
-  
+
   CONSTRAINT mrbs_uq_variable_name UNIQUE (variable_name)
 );
 
@@ -178,7 +193,7 @@ CREATE TABLE mrbs_zoneinfo
   outlook_compatible smallint NOT NULL DEFAULT 0,
   vtimezone          text,
   last_updated       int NOT NULL DEFAULT 0,
-  
+
   CONSTRAINT mrbs_uq_timezone UNIQUE (timezone, outlook_compatible)
 );
 
@@ -217,6 +232,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '66');
+  VALUES ('db_version', '67');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
