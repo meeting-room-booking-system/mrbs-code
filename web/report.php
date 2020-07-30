@@ -933,9 +933,10 @@ function report_row(&$rows, $data)
       {
         case 'name':
           // Add a link to the entry and also a data-id value for the Bulk Delete JavaScript
-          $value = "<a href=\"view_entry.php?id=" . $data['id'] . "\"" .
-                   " data-id=\"" . $data['id'] . "\"" .
-                   " title=\"$value\">$value</a>";
+          $href = multisite('view_entry.php?id="' . urlencode($data['id']) . '"');
+          $value = '<a href="' . htmlspecialchars($href) . '"' .
+                   ' data-id="' . htmlspecialchars($data['id']) . '"' .
+                   ' title="' . $value . '">' . $value . '</a>';  // $value already escaped
           break;
         case 'end_time':
           // Process the duration and then fall through to the end_time
