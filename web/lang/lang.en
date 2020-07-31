@@ -274,33 +274,34 @@ $vocab["level_2"]            = "admin";
 $vocab["level_3"]            = "user admin";
 
 // Authentication database
-$vocab["user_list"]          = "Users";
-$vocab["edit_user"]          = "Edit user";
-$vocab["delete_user"]        = "Delete this user";
-//$vocab["users.name"]         = Use the same as above, for consistency.
-//$vocab["users.password"]     = Use the same as above, for consistency.
-$vocab["users.email"]        = "Email address";
-$vocab["password_twice"]     = "If you wish to change the password, please type the new password twice";
-$vocab["passwords_not_eq"]   = "The passwords did not match!";
-$vocab["password_invalid"]   = "The password does not conform to the policy.  It must contain at least:";
-$vocab["policy_length"]      = "%d character(s)";
-$vocab["policy_alpha"]       = "%d letter(s)";
-$vocab["policy_lower"]       = "%d lower-case letter(s)";
-$vocab["policy_upper"]       = "%d upper-case letter(s)";
-$vocab["policy_numeric"]     = "%d numeric character(s)";
-$vocab["policy_special"]     = "%d special character(s)";
-$vocab["add_new_user"]       = "Add a new user";
-$vocab["action"]             = "Action";
-$vocab["user"]               = "User";
-$vocab["administrator"]      = "Administrator";
-$vocab["unknown"]            = "Unknown";
-$vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "Click to display my upcoming entries";
-$vocab["no_users_initial"]   = "Welcome to MRBS!";
+$vocab["user_list"]             = "Users";
+$vocab["edit_user"]             = "Edit user";
+$vocab["delete_user"]           = "Delete this user";
+//$vocab["users.name"]          = Use the same as above, for consistency.
+//$vocab["users.password"]      = Use the same as above, for consistency.
+$vocab["users.email"]           = "Email address";
+$vocab["password_twice"]        = "If you wish to change the password, please type the new password twice";
+$vocab["passwords_not_eq"]      = "The passwords did not match!";
+$vocab["password_invalid"]      = "The password does not conform to the policy.  It must contain at least:";
+$vocab["policy_length"]         = "%d character(s)";
+$vocab["policy_alpha"]          = "%d letter(s)";
+$vocab["policy_lower"]          = "%d lower-case letter(s)";
+$vocab["policy_upper"]          = "%d upper-case letter(s)";
+$vocab["policy_numeric"]        = "%d numeric character(s)";
+$vocab["policy_special"]        = "%d special character(s)";
+$vocab["add_new_user"]          = "Add a new user";
+$vocab["action"]                = "Action";
+$vocab["user"]                  = "User";
+$vocab["administrator"]         = "Administrator";
+$vocab["unknown"]               = "Unknown";
+$vocab["ok"]                    = "OK";
+$vocab["show_my_entries"]       = "Click to display my upcoming entries";
+$vocab["no_users_initial"]      = "Welcome to MRBS!";
 $vocab["no_users_create_first_admin"] = "Before you can do anything else you need to create an admin " .
                                         "user. Then login as that user and create more users and create " .
                                         "areas and rooms.";
-$vocab["warning_last_admin"] = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
+$vocab["warning_last_admin"]    = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
+$vocab["copy_email_addresses"]  = "Copy email addresses";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";

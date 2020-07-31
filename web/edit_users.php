@@ -1298,7 +1298,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
           default:
             break;
         }
-        echo "<th>$heading</th>";
+        echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
       }
     }
 
