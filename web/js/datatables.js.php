@@ -48,8 +48,9 @@ var getTypes = function getTypes(table) {
 
 <?php
 // Turn the table with id 'id' into a DataTable, using specificOptions
-// which are merged with the default options.   If the browser is IE6 or less
-// we don't bother making a dataTable:  it can be done, but it's not worth it.
+// which are merged with the default options.  If the buttons property is
+// set in specificOptions then the first element in the array should be the
+// colvis button and any other elements are extra buttons.
 //
 // fixedColumnsOptions is an optional object that gets passed directly to the
 // DataTables FixedColumns constructor
@@ -108,6 +109,18 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     scrollX: '100%',
     colReorder: {}
   };
+
+  <?php
+  // Make room for any extra buttons after the first button, which is assumed
+  // to be the colvis button.
+  ?>
+  if (specificOptions && specificOptions.buttons)
+  {
+    for (i=0; i<specificOptions.buttons.length - 1; i++)
+    {
+      defaultOptions.buttons.push({});
+    }
+  }
 
   <?php
   // For all pages except the pending page, which has collapsible rows which don't work well with the
