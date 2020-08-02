@@ -257,7 +257,7 @@ function get_create_by($organizer)
     $sql = "SELECT name
               FROM " . _tbl('users') . "
              WHERE email=?";
-             
+
     $res = db()->query($sql, array($email));
 
     if ($res->count() == 0)
@@ -922,9 +922,8 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
 
   $results[] = "END:VEVENT";
 
-  $result = implode(ICAL_EOL, $results);  // No CRLF at end: that will be added later
-
-  return $result;
+  // No CRLF at end: that will be added later
+  return implode(ICAL_EOL, $results);
 }
 
 

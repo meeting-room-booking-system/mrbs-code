@@ -503,9 +503,7 @@ function get_n_time_slots()
   {
     $end_last += SECONDS_PER_DAY;
   }
-  $n_slots = ($end_last - $start_first)/$resolution;
-
-  return $n_slots;
+  return ($end_last - $start_first)/$resolution;
 }
 
 

@@ -992,8 +992,7 @@ function mrbsCreateSingleEntry(array $data)
     {
       $data['ical_recur_id'] = gmdate(RFC5545_FORMAT . '\Z', $data['start_time']);
     }
-    $result = mrbsCreateEntry(_tbl('entry'), $data);
-    return $result;
+    return mrbsCreateEntry(_tbl('entry'), $data);
   }
   else
   {
