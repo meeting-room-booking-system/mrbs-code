@@ -14,7 +14,17 @@ function invalid_booking($message)
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
 
-  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  $context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => $area,
+    'room'      => isset($room) ? $room : null
+  );
+
+  print_header($context);
   echo "<h1>" . get_vocab('invalid_booking') . "</h1>\n";
   echo "<p>$message</p>\n";
   // Print footer and exit
@@ -802,7 +812,17 @@ if ($result['valid_booking'])
 
 else
 {
-  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  $context = array(
+      'view'      => $view,
+      'view_all'  => $view_all,
+      'year'      => $year,
+      'month'     => $month,
+      'day'       => $day,
+      'area'      => $area,
+      'room'      => isset($room) ? $room : null
+    );
+
+  print_header($context);
 
   echo "<h2>" . get_vocab("sched_conflict") . "</h2>\n";
   if (!empty($result['violations']['errors']))

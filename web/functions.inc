@@ -318,7 +318,7 @@ function get_compound_name($username)
       $result .= " ($display_name)";
     }
   }
-  
+
   return $result;
 }
 
@@ -597,20 +597,48 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=true);
+  print_header($context=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=false)
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// any of which can be NULL.
+function print_header($context=null, $simple=false)
 {
-  global $theme, $default_view;
+  global $theme, $default_view, $default_view_all;
 
   static $done_header = false;
 
   if ($done_header)
   {
     return;
+  }
+
+  // Set the context values if they haven't been given
+  if (!isset($context))
+  {
+    $context = array();
+  }
+
+  if (empty($context['area']))
+  {
+    $context['area'] = get_default_area();
+  }
+
+  if (empty($context['room']))
+  {
+    $context['room'] = get_default_room($context['area']);
+  }
+
+  if (!isset($context['view']))
+  {
+    $context['view'] = (isset($default_view)) ? $default_view : 'day';
+  }
+
+  if (!isset($context['view_all']))
+  {
+    $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
   }
 
   // Need to set the timezone before we can use date()
@@ -622,36 +650,21 @@ function print_header($view=null, $view_all=null, $year=null, $month=null, $day=
   else
   {
     // This will set the correct timezone for the area
-    get_area_settings($area);
-  }
-
-  if (!isset($view))
-  {
-    $view = (isset($default_view)) ? $default_view : 'day';
+    get_area_settings($context['area']);
   }
 
   // If we dont know the right date then use today's
-  if (!isset($year))
+  if (!isset($context['year']))
   {
-    $year = date('Y');
+    $context['year'] = date('Y');
   }
-  if (!isset($month))
+  if (!isset($context['month']))
   {
-    $month = date('m');
+    $context['month'] = date('m');
   }
-  if (!isset($day))
+  if (!isset($context['day']))
   {
-    $day = date('d');
-  }
-
-  if (empty($area))
-  {
-    $area = get_default_area();
-  }
-
-  if (empty($room))
-  {
-    $room = get_default_room($area);
+    $context['day'] = date('d');
   }
 
   // Load the print_theme_header function appropriate to the theme.    If there
@@ -666,7 +679,16 @@ function print_header($view=null, $view_all=null, $year=null, $month=null, $day=
   }
 
   // Now go and do it
-  print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple);
+  print_theme_header(
+      $context['view'],
+      $context['view_all'],
+      $context['year'],
+      $context['month'],
+      $context['day'],
+      $context['area'],
+      $context['room'],
+      $simple
+    );
 
   $done_header = true;
 }
@@ -702,7 +724,7 @@ function print_footer($and_exit=false)
 // $dur $units
 // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
 // is used to specify a maximum size of unit to use.  For example if
-// it is set to 'minutes', 3600 seconds will give 60 minutes rather 
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather
 // than 1 hour.
 function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 {
@@ -710,7 +732,7 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
   {
     $max_unit = 'years';
   }
-  
+
   if (($max_unit != 'seconds') && (abs($dur) >= 60))
   {
     $dur /= 60;
@@ -1456,7 +1478,7 @@ function get_area_settings($area)
     {
       $max_per_interval_area[$interval_type] = $$var;
     }
-    
+
     $var = "max_secs_per_${interval_type}_enabled";
     if (isset($$var))
     {

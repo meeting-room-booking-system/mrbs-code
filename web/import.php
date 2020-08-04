@@ -768,7 +768,17 @@ if (!empty($import))
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-print_header($view, $view_all, $year, $month, $day, $area, $room);
+$context = array(
+  'view'      => $view,
+  'view_all'  => $view_all,
+  'year'      => $year,
+  'month'     => $month,
+  'day'       => $day,
+  'area'      => $area,
+  'room'      => isset($room) ? $room : null
+);
+
+print_header($context);
 
 
 // PHASE 2 - Process the files

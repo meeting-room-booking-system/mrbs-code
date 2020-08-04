@@ -119,7 +119,7 @@ function generateOwnerButtons($id, $series)
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($mrbs_username, $create_by) === 0) && 
+      (strcasecmp($mrbs_username, $create_by) === 0) &&
       ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
@@ -382,7 +382,17 @@ if (isset($action) && ($action == "export"))
 // PHASE 1 - VIEW THE ENTRY
 // ------------------------
 
-print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+$context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => $area,
+    'room'      => isset($room) ? $room : null
+  );
+
+print_header($context);
 
 if (empty($series))
 {

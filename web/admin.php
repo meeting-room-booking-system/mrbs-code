@@ -243,7 +243,18 @@ checkAuthorised(this_page());
 // Get non-standard form variables
 $error = get_form_var('error', 'string');
 
-print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+
+$context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => isset($area) ? $area : null,
+    'room'      => isset($room) ? $room : null
+  );
+
+print_header($context);
 
 // Get the details we need for this area
 if (isset($area))
@@ -252,7 +263,7 @@ if (isset($area))
             FROM " . _tbl('area') . "
            WHERE id=?
            LIMIT 1";
-           
+
   $res = db()->query($sql, array($area));
 
   if ($res->count() == 1)

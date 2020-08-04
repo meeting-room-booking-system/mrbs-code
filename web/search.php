@@ -176,7 +176,17 @@ $search_start_time = mktime(0, 0, 0, $month, $day, $year);
 
 if (!$is_ajax)
 {
-  print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  $context = array(
+      'view'      => $view,
+      'view_all'  => $view_all,
+      'year'      => $year,
+      'month'     => $month,
+      'day'       => $day,
+      'area'      => $area,
+      'room'      => isset($room) ? $room : null
+    );
+
+  print_header($context);
 
   $form = new Form();
   $form->setAttributes(array('class'  => 'standard',
