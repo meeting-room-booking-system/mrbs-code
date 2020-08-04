@@ -346,28 +346,27 @@ function print_logoff()
   }
 }
 
-
-function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// all of which have to be set.
+function print_banner($context, $simple=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
+  
+  $vars = array('view'  => $context['view'],
+                'page_date' => format_iso_date($context['year'], $context['month'], $context['day']));
 
-  $vars = array('view'  => $view,
-                'page_date' => format_iso_date($year, $month, $day));
-
-  if (!empty($area))
+  if (!empty($context['area']))
   {
-    $vars['area'] = $area;
+    $vars['area'] = $context['area'];
   }
-  if (!empty($room))
+  if (!empty($context['room']))
   {
-    $vars['room'] = $room;
+    $vars['room'] = $context['room'];
   }
 
   $query = http_build_query($vars, '', '&');
 
   print_header_site_info();
-
-
 
   if (!$simple)
   {
@@ -399,8 +398,22 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     echo "</nav>\n";
 
     echo "<nav>\n";
-    print_goto_date($view, $year, $month, $day, $area, $room);
-    print_search($view, $year, $month, $day, $area, $room);
+    print_goto_date(
+        $context['view'],
+        $context['year'],
+        $context['month'],
+        $context['day'],
+        $context['area'],
+        $context['room']
+      );
+    print_search(
+        $context['view'],
+        $context['year'],
+        $context['month'],
+        $context['day'],
+        $context['area'],
+        $context['room']
+      );
     echo "</nav>\n";
 
     echo "</nav>\n";
@@ -413,10 +426,10 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
 
 // Print a message which will only be displayed (thanks to CSS) if the user is
 // using an unsupported browser.
-function print_unsupported_message()
+function print_unsupported_message($context)
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner(null, null, null, null, null, null, $simple=true);
+  print_banner($context, $simple=true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
@@ -552,17 +565,9 @@ function print_theme_header($context=null, $simple=false)
   }
   echo ">\n";
 
-  print_unsupported_message();
+  print_unsupported_message($context);
 
-  print_banner(
-      $context['view'],
-      $context['year'],
-      $context['month'],
-      $context['day'],
-      $context['area'],
-      $context['room'],
-      $simple
-    );
+  print_banner($context, $simple);
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>
