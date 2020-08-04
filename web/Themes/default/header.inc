@@ -102,7 +102,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($view, $year, $month, $day, $area, $room)
+function print_goto_date($context)
 {
   global $multisite, $site;
 
@@ -120,16 +120,16 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
                              'class'  => 'js_hidden',
                              'method' => 'get',
                              'action' => multisite('index.php')))
-       ->addHiddenInput('view', $view);
+       ->addHiddenInput('view', $context['view']);
 
-  if (isset($area))
+  if (isset($context['area']))
   {
-    $form->addHiddenInput('area', $area);
+    $form->addHiddenInput('area', $context['area']);
   }
 
   if (isset($room))
   {
-    $form->addHiddenInput('room', $room);
+    $form->addHiddenInput('room', $context['room']);
   }
 
   if ($multisite && isset($site) && ($site !== ''))
@@ -139,7 +139,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
   $input = new ElementInputDate();
   $input->setAttributes(array('name'        => 'page_date',
-                              'value'       => format_iso_date($year, $month, $day),
+                              'value'       => format_iso_date($context['year'], $context['month'], $context['day']),
                               'required'    => true,
                               'data-submit' => $form_id));
 
@@ -210,7 +210,7 @@ function print_menu_items($query)
 
 
 
-function print_search($view, $year, $month, $day, $area, $room)
+function print_search($context)
 {
   if (!checkAuthorised('search.php', true))
   {
@@ -225,17 +225,17 @@ function print_search($view, $year, $month, $day, $area, $room)
   $form->setAttributes(array('id'     => 'header_search',
                              'method' => 'post',
                              'action' => multisite('search.php')))
-       ->addHiddenInputs(array('view'  => $view,
-                               'year'  => $year,
-                               'month' => $month,
-                               'day'   => $day));
-  if (!empty($area))
+       ->addHiddenInputs(array('view'  => $context['view'],
+                               'year'  => $context['year'],
+                               'month' => $context['month'],
+                               'day'   => $context['day']));
+  if (!empty($context['area']))
   {
-    $form->addHiddenInput('area', $area);
+    $form->addHiddenInput('area', $context['area']);
   }
-  if (!empty($room))
+  if (!empty($context['room']))
   {
-    $form->addHiddenInput('room', $room);
+    $form->addHiddenInput('room', $context['room']);
   }
 
   $input = new ElementInputSearch();
@@ -351,7 +351,7 @@ function print_logoff()
 function print_banner($context, $simple=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
-  
+
   $vars = array('view'  => $context['view'],
                 'page_date' => format_iso_date($context['year'], $context['month'], $context['day']));
 
@@ -398,22 +398,8 @@ function print_banner($context, $simple=false)
     echo "</nav>\n";
 
     echo "<nav>\n";
-    print_goto_date(
-        $context['view'],
-        $context['year'],
-        $context['month'],
-        $context['day'],
-        $context['area'],
-        $context['room']
-      );
-    print_search(
-        $context['view'],
-        $context['year'],
-        $context['month'],
-        $context['day'],
-        $context['area'],
-        $context['room']
-      );
+    print_goto_date($context);
+    print_search($context);
     echo "</nav>\n";
 
     echo "</nav>\n";
