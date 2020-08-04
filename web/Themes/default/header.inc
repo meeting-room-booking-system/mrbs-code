@@ -102,7 +102,7 @@ function print_header_site_info()
 }
 
 
-function print_goto_date($view, $year, $month, $day, $area, $room)
+function print_goto_date($context)
 {
   global $multisite, $site;
 
@@ -120,16 +120,16 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
                              'class'  => 'js_hidden',
                              'method' => 'get',
                              'action' => multisite('index.php')))
-       ->addHiddenInput('view', $view);
+       ->addHiddenInput('view', $context['view']);
 
-  if (isset($area))
+  if (isset($context['area']))
   {
-    $form->addHiddenInput('area', $area);
+    $form->addHiddenInput('area', $context['area']);
   }
 
   if (isset($room))
   {
-    $form->addHiddenInput('room', $room);
+    $form->addHiddenInput('room', $context['room']);
   }
 
   if ($multisite && isset($site) && ($site !== ''))
@@ -139,7 +139,7 @@ function print_goto_date($view, $year, $month, $day, $area, $room)
 
   $input = new ElementInputDate();
   $input->setAttributes(array('name'        => 'page_date',
-                              'value'       => format_iso_date($year, $month, $day),
+                              'value'       => format_iso_date($context['year'], $context['month'], $context['day']),
                               'required'    => true,
                               'data-submit' => $form_id));
 
@@ -210,7 +210,7 @@ function print_menu_items($query)
 
 
 
-function print_search($view, $year, $month, $day, $area, $room)
+function print_search($context)
 {
   if (!checkAuthorised('search.php', true))
   {
@@ -225,17 +225,17 @@ function print_search($view, $year, $month, $day, $area, $room)
   $form->setAttributes(array('id'     => 'header_search',
                              'method' => 'post',
                              'action' => multisite('search.php')))
-       ->addHiddenInputs(array('view'  => $view,
-                               'year'  => $year,
-                               'month' => $month,
-                               'day'   => $day));
-  if (!empty($area))
+       ->addHiddenInputs(array('view'  => $context['view'],
+                               'year'  => $context['year'],
+                               'month' => $context['month'],
+                               'day'   => $context['day']));
+  if (!empty($context['area']))
   {
-    $form->addHiddenInput('area', $area);
+    $form->addHiddenInput('area', $context['area']);
   }
-  if (!empty($room))
+  if (!empty($context['room']))
   {
-    $form->addHiddenInput('room', $room);
+    $form->addHiddenInput('room', $context['room']);
   }
 
   $input = new ElementInputSearch();
@@ -346,28 +346,28 @@ function print_logoff()
   }
 }
 
-
-function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// all of which have to be set.
+// When $omit_login is true the Login link is omitted.
+function print_banner($context, $simple=false, $omit_login=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
 
-  $vars = array('view'  => $view,
-                'page_date' => format_iso_date($year, $month, $day));
+  $vars = array('view'  => $context['view'],
+                'page_date' => format_iso_date($context['year'], $context['month'], $context['day']));
 
-  if (!empty($area))
+  if (!empty($context['area']))
   {
-    $vars['area'] = $area;
+    $vars['area'] = $context['area'];
   }
-  if (!empty($room))
+  if (!empty($context['room']))
   {
-    $vars['room'] = $room;
+    $vars['room'] = $context['room'];
   }
 
   $query = http_build_query($vars, '', '&');
 
   print_header_site_info();
-
-
 
   if (!$simple)
   {
@@ -389,7 +389,7 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
       print_report_link($mrbs_user);
       print_logoff();
     }
-    else
+    elseif (!$omit_login)
     {
       print_logon();
     }
@@ -399,8 +399,8 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
     echo "</nav>\n";
 
     echo "<nav>\n";
-    print_goto_date($view, $year, $month, $day, $area, $room);
-    print_search($view, $year, $month, $day, $area, $room);
+    print_goto_date($context);
+    print_search($context);
     echo "</nav>\n";
 
     echo "</nav>\n";
@@ -413,10 +413,10 @@ function print_banner($view, $year, $month, $day, $area, $room, $simple=false)
 
 // Print a message which will only be displayed (thanks to CSS) if the user is
 // using an unsupported browser.
-function print_unsupported_message()
+function print_unsupported_message($context)
 {
   echo "<div class=\"unsupported_message\">\n";
-  print_banner(null, null, null, null, null, null, $simple=true);
+  print_banner($context, $simple=true);
   echo "<div class=\"contents\">\n";
   echo "<p>" . get_vocab('browser_not_supported', get_vocab('mrbs_abbr')) . "</p>\n";
   echo "</div>\n";
@@ -425,11 +425,66 @@ function print_unsupported_message()
 
 
 // Print the page header
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// any of which can be NULL.
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple=false)
+// When $omit_login is true the Login link is omitted.
+function print_theme_header($context=null, $simple=false, $omit_login=false)
 {
-  global $multisite, $site;
+  global $multisite, $site, $default_view, $default_view_all;
+
+  // Set the context values if they haven't been given
+  if (!isset($context))
+  {
+    $context = array();
+  }
+
+  if (empty($context['area']))
+  {
+    $context['area'] = get_default_area();
+  }
+
+  if (empty($context['room']))
+  {
+    $context['room'] = get_default_room($context['area']);
+  }
+
+  if (!isset($context['view']))
+  {
+    $context['view'] = (isset($default_view)) ? $default_view : 'day';
+  }
+
+  if (!isset($context['view_all']))
+  {
+    $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
+  }
+
+  // Need to set the timezone before we can use date()
+  if ($simple)
+  {
+    // We don't really care what timezone is being used
+    mrbs_default_timezone_set();
+  }
+  else
+  {
+    // This will set the correct timezone for the area
+    get_area_settings($context['area']);
+  }
+
+  // If we dont know the right date then use today's
+  if (!isset($context['year']))
+  {
+    $context['year'] = date('Y');
+  }
+  if (!isset($context['month']))
+  {
+    $context['month'] = date('m');
+  }
+  if (!isset($context['day']))
+  {
+    $context['day'] = date('d');
+  }
 
   // Get the form token now, before any headers are sent, in case we are using the 'cookie'
   // session scheme.  Otherwise we won't be able to store the Form token.
@@ -456,12 +511,12 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
   // cannot use these PHP variables directly in the JavaScript files as those files are cached.
   $data = array(
-      'view'          => $view,
-      'view_all'      => $view_all,
-      'area'          => $area,
-      'room'          => $room,
+      'view'          => $context['view'],
+      'view_all'      => $context['view_all'],
+      'area'          => $context['area'],
+      'room'          => $context['room'],
       'page'          => $page,
-      'page-date'     => format_iso_date($year, $month, $day),
+      'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
       'lang-prefs'    => json_encode(get_lang_preferences())
@@ -498,11 +553,9 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   }
   echo ">\n";
 
+  print_unsupported_message($context);
 
-
-  print_unsupported_message();
-
-  print_banner($view, $year, $month, $day, $area, $room, $simple);
+  print_banner($context, $simple, $omit_login);
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>

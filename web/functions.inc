@@ -318,7 +318,7 @@ function get_compound_name($username)
       $result .= " ($display_name)";
     }
   }
-  
+
   return $result;
 }
 
@@ -597,61 +597,23 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=true);
+  print_header($context=null, $simple=true);
 }
 
 
 // Print the page header
-function print_header($view=null, $view_all=null, $year=null, $month=null, $day=null, $area=null, $room=null, $simple=false)
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// any of which can be NULL.
+// When $omit_login is true the Login link is omitted.
+function print_header($context=null, $simple=false, $omit_login=false)
 {
-  global $theme, $default_view;
+  global $theme;
 
   static $done_header = false;
 
   if ($done_header)
   {
     return;
-  }
-
-  // Need to set the timezone before we can use date()
-  if ($simple)
-  {
-    // We don't really care what timezone is being used
-    mrbs_default_timezone_set();
-  }
-  else
-  {
-    // This will set the correct timezone for the area
-    get_area_settings($area);
-  }
-
-  if (!isset($view))
-  {
-    $view = (isset($default_view)) ? $default_view : 'day';
-  }
-
-  // If we dont know the right date then use today's
-  if (!isset($year))
-  {
-    $year = date('Y');
-  }
-  if (!isset($month))
-  {
-    $month = date('m');
-  }
-  if (!isset($day))
-  {
-    $day = date('d');
-  }
-
-  if (empty($area))
-  {
-    $area = get_default_area();
-  }
-
-  if (empty($room))
-  {
-    $room = get_default_room($area);
   }
 
   // Load the print_theme_header function appropriate to the theme.    If there
@@ -666,7 +628,7 @@ function print_header($view=null, $view_all=null, $year=null, $month=null, $day=
   }
 
   // Now go and do it
-  print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple);
+  print_theme_header($context, $simple, $omit_login);
 
   $done_header = true;
 }
@@ -702,7 +664,7 @@ function print_footer($and_exit=false)
 // $dur $units
 // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
 // is used to specify a maximum size of unit to use.  For example if
-// it is set to 'minutes', 3600 seconds will give 60 minutes rather 
+// it is set to 'minutes', 3600 seconds will give 60 minutes rather
 // than 1 hour.
 function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 {
@@ -710,7 +672,7 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
   {
     $max_unit = 'years';
   }
-  
+
   if (($max_unit != 'seconds') && (abs($dur) >= 60))
   {
     $dur /= 60;
@@ -1456,7 +1418,7 @@ function get_area_settings($area)
     {
       $max_per_interval_area[$interval_type] = $$var;
     }
-    
+
     $var = "max_secs_per_${interval_type}_enabled";
     if (isset($$var))
     {

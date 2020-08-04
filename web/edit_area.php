@@ -832,7 +832,17 @@ function get_fieldset_submit_buttons()
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+$context = array(
+  'view'      => $view,
+  'view_all'  => $view_all,
+  'year'      => $year,
+  'month'     => $month,
+  'day'       => $day,
+  'area'      => isset($area) ? $area : null,
+  'room'      => isset($room) ? $room : null
+);
+
+print_header($context);
 
 // Get the details for this area
 if (!isset($area) || is_null($data = get_area_details($area)))

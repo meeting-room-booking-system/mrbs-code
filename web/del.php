@@ -65,9 +65,18 @@ checkAuthorised(this_page());
 $type = get_form_var('type', 'string');
 $confirm = get_form_var('confirm', 'string', null, INPUT_POST);
 
+$context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => $area,
+    'room'      => isset($room) ? $room : null
+  );
+
 // This is gonna blast away something. We want them to be really
 // really sure that this is what they want to do.
-
 if ($type == "room")
 {
   // We are supposed to delete a room
@@ -80,10 +89,10 @@ if ($type == "room")
       // First take out all appointments for this room
       $sql = "DELETE FROM " . _tbl('entry') . " WHERE room_id=?";
       db()->command($sql, array($room));
-      
+
       $sql = "DELETE FROM " . _tbl('repeat') . " WHERE room_id=?";
       db()->command($sql, array($room));
-      
+
       // Now take out the room itself
       $sql = "DELETE FROM " . _tbl('room') . " WHERE id=?";
       db()->command($sql, array($room));
@@ -101,7 +110,7 @@ if ($type == "room")
   }
   else
   {
-    print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+    print_header($context);
 
     // We tell them how bad what they're about to do is
     // Find out how many appointments would be deleted
@@ -110,7 +119,7 @@ if ($type == "room")
     $sql = "SELECT COUNT(*)
               FROM " . _tbl('entry') . "
              WHERE room_id=?";
-             
+
     $n_bookings = db()->query1($sql, array($room));
 
     // The LIMIT parameter should ideally be one of the parameters to the
@@ -126,7 +135,7 @@ if ($type == "room")
              WHERE room_id=?
           ORDER BY start_time DESC
              LIMIT $limit";
-             
+
     $res = db()->query($sql, array($room));
 
     if ($res->count() > 0)
@@ -173,14 +182,14 @@ if ($type == "area")
   $sql = "SELECT COUNT(*)
             FROM " . _tbl('room') . "
            WHERE area_id=?";
-           
+
   $n = db()->query1($sql, array($area));
   if ($n == 0)
   {
     // OK, nothing there, let's blast it away
     $sql = "DELETE FROM " . _tbl('area') . "
              WHERE id=?";
-                  
+
     db()->command($sql, array($area));
 
     // Redirect back to the admin page
@@ -189,7 +198,7 @@ if ($type == "area")
   else
   {
     // There are rooms left in the area
-    print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+    print_header($context);
     echo "<p>\n";
     echo get_vocab("delarea");
     echo '<a href="' . htmlspecialchars(multisite('admin.php')) . '">' . get_vocab('backadmin') . '</a>';

@@ -728,7 +728,17 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
     exit();
   }
 
-  print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+  $context = array(
+      'view'      => $view,
+      'view_all'  => $view_all,
+      'year'      => $year,
+      'month'     => $month,
+      'day'       => $day,
+      'area'      => isset($area) ? $area : null,
+      'room'      => isset($room) ? $room : null
+    );
+
+  print_header($context);
 
   echo "<h2>";
   if ($initial_user_creation)
@@ -1237,7 +1247,17 @@ if (isset($action) && ($action == "delete"))
 
 if (!$is_ajax)
 {
-  print_header($view, $view_all, $year, $month, $day, isset($area) ? $area : null, isset($room) ? $room : null);
+  $context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => isset($area) ? $area : null,
+    'room'      => isset($room) ? $room : null
+  );
+
+  print_header($context);
 
   echo "<h2>" . get_vocab("user_list") . "</h2>\n";
 

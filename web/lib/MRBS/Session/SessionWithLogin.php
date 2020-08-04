@@ -39,7 +39,8 @@ abstract class SessionWithLogin implements SessionInterface
       $target_url = \MRBS\this_page(true);
     }
 
-    \MRBS\print_header();
+    // Omit the Login link in the header when we're on the login page itself
+    \MRBS\print_header(null, null, true);
     $action = \MRBS\multisite(\MRBS\this_page());
     $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
@@ -106,13 +107,13 @@ abstract class SessionWithLogin implements SessionInterface
           // the result will be the same anyway - logging off the user - and we avoid
           // generating an unnecessary CSRF error message.)
           Form::checkToken();
-          
+
           // Get a valid user
           $valid_username = $this->getValidUser($this->form['username'], $this->form['password']);
 
           // Successful login.   You can't get out of getValidUser() without a valid username and password
           $this->logonUser($valid_username);
-          
+
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already

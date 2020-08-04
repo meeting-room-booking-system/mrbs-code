@@ -506,7 +506,17 @@ if (isset($action) && ($action == "export"))
 // PHASE 1 - VIEW THE ENTRY
 // ------------------------
 
-print_header($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+$context = array(
+    'view'      => $view,
+    'view_all'  => $view_all,
+    'year'      => $year,
+    'month'     => $month,
+    'day'       => $day,
+    'area'      => $area,
+    'room'      => isset($room) ? $room : null
+  );
+
+print_header($context);
 
 if (empty($series))
 {
