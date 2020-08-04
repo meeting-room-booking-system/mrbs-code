@@ -348,7 +348,8 @@ function print_logoff()
 
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
 // all of which have to be set.
-function print_banner($context, $simple=false)
+// When $omit_login is true the Login link is omitted.
+function print_banner($context, $simple=false, $omit_login=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
 
@@ -388,7 +389,7 @@ function print_banner($context, $simple=false)
       print_report_link($mrbs_user);
       print_logoff();
     }
-    else
+    elseif (!$omit_login)
     {
       print_logon();
     }
@@ -428,7 +429,8 @@ function print_unsupported_message($context)
 // any of which can be NULL.
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($context=null, $simple=false)
+// When $omit_login is true the Login link is omitted.
+function print_theme_header($context=null, $simple=false, $omit_login=false)
 {
   global $multisite, $site, $default_view, $default_view_all;
 
@@ -553,7 +555,7 @@ function print_theme_header($context=null, $simple=false)
 
   print_unsupported_message($context);
 
-  print_banner($context, $simple);
+  print_banner($context, $simple, $omit_login);
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>

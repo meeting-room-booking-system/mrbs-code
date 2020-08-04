@@ -604,7 +604,8 @@ function print_simple_header()
 // Print the page header
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
 // any of which can be NULL.
-function print_header($context=null, $simple=false)
+// When $omit_login is true the Login link is omitted.
+function print_header($context=null, $simple=false, $omit_login=false)
 {
   global $theme;
 
@@ -627,7 +628,7 @@ function print_header($context=null, $simple=false)
   }
 
   // Now go and do it
-  print_theme_header($context, $simple);
+  print_theme_header($context, $simple, $omit_login);
 
   $done_header = true;
 }
