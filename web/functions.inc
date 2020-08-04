@@ -606,65 +606,13 @@ function print_simple_header()
 // any of which can be NULL.
 function print_header($context=null, $simple=false)
 {
-  global $theme, $default_view, $default_view_all;
+  global $theme;
 
   static $done_header = false;
 
   if ($done_header)
   {
     return;
-  }
-
-  // Set the context values if they haven't been given
-  if (!isset($context))
-  {
-    $context = array();
-  }
-
-  if (empty($context['area']))
-  {
-    $context['area'] = get_default_area();
-  }
-
-  if (empty($context['room']))
-  {
-    $context['room'] = get_default_room($context['area']);
-  }
-
-  if (!isset($context['view']))
-  {
-    $context['view'] = (isset($default_view)) ? $default_view : 'day';
-  }
-
-  if (!isset($context['view_all']))
-  {
-    $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
-  }
-
-  // Need to set the timezone before we can use date()
-  if ($simple)
-  {
-    // We don't really care what timezone is being used
-    mrbs_default_timezone_set();
-  }
-  else
-  {
-    // This will set the correct timezone for the area
-    get_area_settings($context['area']);
-  }
-
-  // If we dont know the right date then use today's
-  if (!isset($context['year']))
-  {
-    $context['year'] = date('Y');
-  }
-  if (!isset($context['month']))
-  {
-    $context['month'] = date('m');
-  }
-  if (!isset($context['day']))
-  {
-    $context['day'] = date('d');
   }
 
   // Load the print_theme_header function appropriate to the theme.    If there

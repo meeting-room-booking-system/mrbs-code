@@ -426,12 +426,64 @@ function print_unsupported_message()
 
 // Print the page header
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
-// all of which have to be set.
+// any of which can be NULL.
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($context, $simple=false)
+function print_theme_header($context=null, $simple=false)
 {
-  global $multisite, $site;
+  global $multisite, $site, $default_view, $default_view_all;
+
+  // Set the context values if they haven't been given
+  if (!isset($context))
+  {
+    $context = array();
+  }
+
+  if (empty($context['area']))
+  {
+    $context['area'] = get_default_area();
+  }
+
+  if (empty($context['room']))
+  {
+    $context['room'] = get_default_room($context['area']);
+  }
+
+  if (!isset($context['view']))
+  {
+    $context['view'] = (isset($default_view)) ? $default_view : 'day';
+  }
+
+  if (!isset($context['view_all']))
+  {
+    $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
+  }
+
+  // Need to set the timezone before we can use date()
+  if ($simple)
+  {
+    // We don't really care what timezone is being used
+    mrbs_default_timezone_set();
+  }
+  else
+  {
+    // This will set the correct timezone for the area
+    get_area_settings($context['area']);
+  }
+
+  // If we dont know the right date then use today's
+  if (!isset($context['year']))
+  {
+    $context['year'] = date('Y');
+  }
+  if (!isset($context['month']))
+  {
+    $context['month'] = date('m');
+  }
+  if (!isset($context['day']))
+  {
+    $context['day'] = date('d');
+  }
 
   // Get the form token now, before any headers are sent, in case we are using the 'cookie'
   // session scheme.  Otherwise we won't be able to store the Form token.
@@ -499,8 +551,6 @@ function print_theme_header($context, $simple=false)
     }
   }
   echo ">\n";
-
-
 
   print_unsupported_message();
 
