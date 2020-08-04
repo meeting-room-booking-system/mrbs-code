@@ -425,9 +425,11 @@ function print_unsupported_message()
 
 
 // Print the page header
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
+// all of which have to be set.
 // If $simple is true, then just print a simple header that doesn't require any database
 // access or JavaScript (useful for fatal errors and database upgrades).
-function print_theme_header($view, $view_all, $year, $month, $day, $area, $room, $simple=false)
+function print_theme_header($context, $simple=false)
 {
   global $multisite, $site;
 
@@ -456,12 +458,12 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
   // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
   // cannot use these PHP variables directly in the JavaScript files as those files are cached.
   $data = array(
-      'view'          => $view,
-      'view_all'      => $view_all,
-      'area'          => $area,
-      'room'          => $room,
+      'view'          => $context['view'],
+      'view_all'      => $context['view_all'],
+      'area'          => $context['area'],
+      'room'          => $context['room'],
       'page'          => $page,
-      'page-date'     => format_iso_date($year, $month, $day),
+      'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
       'is-admin'      => (is_admin()) ? 'true' : 'false',
       'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
       'lang-prefs'    => json_encode(get_lang_preferences())
@@ -502,7 +504,15 @@ function print_theme_header($view, $view_all, $year, $month, $day, $area, $room,
 
   print_unsupported_message();
 
-  print_banner($view, $year, $month, $day, $area, $room, $simple);
+  print_banner(
+      $context['view'],
+      $context['year'],
+      $context['month'],
+      $context['day'],
+      $context['area'],
+      $context['room'],
+      $simple
+    );
 
   // This <div> should really be moved out of here so that we can always see
   // the matching closing </div>

@@ -679,16 +679,7 @@ function print_header($context=null, $simple=false)
   }
 
   // Now go and do it
-  print_theme_header(
-      $context['view'],
-      $context['view_all'],
-      $context['year'],
-      $context['month'],
-      $context['day'],
-      $context['area'],
-      $context['room'],
-      $simple
-    );
+  print_theme_header($context, $simple);
 
   $done_header = true;
 }
