@@ -1077,6 +1077,10 @@ $auth['only_admin_can_select_multiroom'] = false;
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
 
+// For events that allow registration, the other registrants' names are by default
+// not shown unless you have write access to the booking.
+$auth['show_registrant_names'] = false;
+
 // Set this to true if you don't want admins to be able to make bookings
 // on behalf of other users
 $auth['admin_can_only_book_for_self'] = false;

@@ -15,7 +15,7 @@ require_once "functions_view.inc";
 
 function generate_event_registration($row, $previous_page=null)
 {
-  global $server;
+  global $auth, $server;
 
   if (empty($row['allow_registration']))
   {
@@ -50,7 +50,8 @@ function generate_event_registration($row, $previous_page=null)
   // Display it as a table because in the future we might want to (a) add more columns,
   // eg date and time of registration and (b) use DataTables to make the list searchable
   // and exportable.
-  if (($n_registered > 0) && getWritable($row['create_by'], $row['room_id']))
+  if (($n_registered > 0) &&
+      ($auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id'])))
   {
     echo "<table id=\"registrants\">\n";
     echo "<tbody>\n";
