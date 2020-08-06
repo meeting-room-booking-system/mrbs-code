@@ -1844,7 +1844,11 @@ form#show_my_entries input.link[type="submit"] {
     display: none;
   }
   
-  #form_nav input[type="submit"] {
+  <?php
+  // Save room on the index page by not showing the "Goto" button.  However
+  // it's useful on other pages as a means of returning to the index page.
+  ?>
+  .index #form_nav input[type="submit"] {
     display: none;
   }
 }
