@@ -480,6 +480,19 @@ having changed "mrbs_" to your table prefix if necessary.
 Before running this SQL you should of course backup your database.
 
 
+MULTISITE
+---------------------------------------------------------------------------
+MRBS can be run in multisite mode by setting in the config file
+
+$multisite = true;
+
+In multisite mode a single instance of the MRBS code can serve a number of
+sites. Each site has its own config file in the sites/<sitename> directory
+which will override any settings in the global config file.  At a minimum
+the local config file will contain a table prefix for the site, but can also
+contain any other config settings including a theme and custom CSS.
+
+
 SECURITY NOTES!
 ---------------------------------------------------------------------------
 You can configure your web server so that users can not obtain the ".inc"
