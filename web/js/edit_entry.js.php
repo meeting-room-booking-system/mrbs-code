@@ -920,7 +920,7 @@ function adjustSlotSelectors()
       oldEndValue = parseInt(endSelect.data('previous'), 10);
 
   var nbsp = '\u00A0',
-      startValue, endValue, optionClone;
+      startValue, endValue, lastValue, optionClone;
 
   if (startSelect.length === 0)
   {
@@ -1151,7 +1151,8 @@ function adjustSlotSelectors()
       }
     });
 
-  endValue = Math.min(endValue, parseInt(endSelect.find('option').last().val(), 10));
+  lastValue = parseInt(endSelect.find('option').last().val(), 10);
+  endValue = isNaN(endValue) ? lastValue : Math.min(endValue, lastValue);
   endSelect.val(endValue);
   endSelect.data('current', endValue);
 
