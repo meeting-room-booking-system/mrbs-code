@@ -46,12 +46,14 @@ jQuery.fn.extend({
   // Get the best available language
   $select2_lang = basename(get_select2_lang_path(), '.js');
   ?>
-  mrbsSelect: function() {
+  mrbsSelect: function(tags) {
     if (!isMobile())
     {
+      tags = Boolean(tags);
       $(this).wrap('<div></div>')
         .select2({
           dropdownAutoWidth: true,
+          tags: tags,
           <?php
           if (isset($select2_lang) && ($select2_lang !== ''))
           {

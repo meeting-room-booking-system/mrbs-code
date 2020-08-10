@@ -115,9 +115,26 @@ function generate_event_registration($row, $previous_page=null)
     $form->addHiddenInputs(array(
         'action' => $button_action,
         'event_id' => $row['id'],
-        'username' => $mrbs_user->username,
         'returl' => $returl
       ));
+
+    if (($button_action != 'register') || !is_book_admin($row['room_id']))
+    {
+      $form->addHiddenInput('username', $mrbs_user->username);
+    }
+    else
+    {
+      $params = array(
+        'value'     => $mrbs_user->username,
+        'disabled'  => false,
+        'required'  => true,
+        'field'     => 'participants.username',
+        'label'     => $button_value,
+        'name'      => 'username',
+      );
+      $field = get_user_field($params, true);
+      $form->addElement($field);
+    }
 
     // Submit button
     $element = new ElementInputSubmit();
