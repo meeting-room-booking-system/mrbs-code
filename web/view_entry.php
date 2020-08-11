@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\FieldDiv;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
@@ -95,6 +96,7 @@ function generate_event_registration($row, $previous_page=null)
   {
     $form = new Form();
     $form->setAttributes(array('action' => multisite('registration_handler.php'),
+                               'class'  => 'standard',
                                'method' => 'post'));
 
     // Add the previous_page (ie the one we were on before view_entry) to the query string
@@ -124,6 +126,7 @@ function generate_event_registration($row, $previous_page=null)
     }
     else
     {
+      $fieldset = new ElementFieldset();
       $params = array(
         'value'     => $mrbs_user->username,
         'disabled'  => false,
@@ -132,14 +135,18 @@ function generate_event_registration($row, $previous_page=null)
         'label'     => $button_value,
         'name'      => 'username',
       );
-      $field = get_user_field($params, true);
-      $form->addElement($field);
+      $fieldset->addElement(get_user_field($params, true));
+      $form->addElement($fieldset);
     }
 
     // Submit button
+    $fieldset = new ElementFieldset();
+    $field = new FieldDiv();
     $element = new ElementInputSubmit();
     $element->setAttribute('value', $button_value);
-    $form->addElement($element);
+    $field->addControl($element);
+    $fieldset->addElement($field);
+    $form->addElement($fieldset);
 
     $form->render();
 

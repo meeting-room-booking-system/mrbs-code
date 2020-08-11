@@ -1498,42 +1498,42 @@ div#div_custom_html {
   .standard fieldset {
     display: block;
   }
-  
+
   .standard fieldset > div {
     display: block;
     float: left;
     clear: left;
   }
-  
+
   .standard fieldset div > * {
     margin-bottom: 1em;
   }
-  
+
   .standard fieldset > div > *:not(.none) {
     display: block;
     vertical-align: middle;
   }
-  
+
   .standard fieldset > div > label {
     text-align: left;
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 0.2em;
   }
-  
+
   .standard fieldset.rep_type_details {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  
+
   .standard input#rep_interval {
     float: left;
   }
-  
+
   .standard div#rep_type div.long {
     border-right: 0;
   }
-  
+
   .standard .submit_buttons > * {
     float: left;
   }
@@ -1847,15 +1847,15 @@ form#show_my_entries input.link[type="submit"] {
   .banner .logo {
     display: none;
   }
-  
+
   .banner .company {
     align-items: flex-start;
   }
-  
+
   .banner #more_info {
     display: none;
   }
-  
+
   <?php
   // Save room on the index page by not showing the "Goto" button.  However
   // it's useful on other pages as a means of returning to the index page.
@@ -2240,6 +2240,19 @@ div#site_faq_body {
   margin-bottom: 1em;
 }
 
+.view_entry #registration .standard {
+  margin-top: 0;
+}
+
+.view_entry #registration .standard fieldset {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.view_entry #registration .standard fieldset > div > label {
+  padding-left: 0;
+}
+
 .view_entry #registration input[type="submit"] {
   margin-top: 1em;
 }
@@ -2257,6 +2270,7 @@ div#site_faq_body {
 .view_entry h4 {
   margin-top: 2em;
   margin-bottom: 1em;
+  clear: left;
 }
 
 .view_entry div#view_entry_nav {
