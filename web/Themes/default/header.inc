@@ -306,6 +306,19 @@ function print_logonoff_button($params, $value)
   $form->setAttributes(array('method' => $params['method'],
                              'action' => $params['action']));
 
+  // A Get method will replace the query string in the action URL with a query
+  // string made up of the hidden inputs.  So put any parameters in the action
+  // query string into hidden inputs.
+  if (utf8_strtolower($params['method']) == 'get')
+  {
+    $query_string = parse_url($params['action'], PHP_URL_QUERY);
+    if (isset($query_string))
+    {
+      parse_str($query_string, $query_parameters);
+      $form->addHiddenInputs($query_parameters);
+    }
+  }
+
   // Add the hidden fields
   if (isset($params['hidden_inputs']))
   {
