@@ -133,7 +133,7 @@ function generate_event_registration($row, $previous_page=null)
         'disabled'  => false,
         'required'  => true,
         'field'     => 'participants.username',
-        'label'     => $button_value,
+        'label'     => get_vocab('name'),
         'name'      => 'username',
       );
       $fieldset->addElement(get_user_field($params, true));
