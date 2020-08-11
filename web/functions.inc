@@ -8,6 +8,15 @@ use PHPMailer\PHPMailer\PHPMailer;
 require_once "mrbs_sql.inc";
 
 
+// Case-insensitive in_array
+// See https://www.php.net/manual/en/function.in-array.php#Hcom89256
+function in_arrayi($needle, $haystack)
+{
+  return in_array(utf8_strtolower($needle),
+                  array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack));
+}
+
+
 // Tests whether the request has come via an Ajax call or not.
 function is_ajax()
 {

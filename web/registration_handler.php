@@ -39,7 +39,7 @@ function register($username, $event_id)
       ($data['registrant_limit'] > $n_registered))
     {
       // ... and that the user hasn't already been registered
-      if (!in_array($username, $data['registrants']))
+      if (!in_arrayi($username, $data['registrants']))
       {
         // then register the user
         $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
