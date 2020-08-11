@@ -38,16 +38,21 @@ function register($username, $event_id)
     if (empty($data['enable_registrant_limit']) ||
       ($data['registrant_limit'] > $n_registered))
     {
-      $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
+      // ... and that the user hasn't already been registered
+      if (!in_array($username, $data['registrants']))
+      {
+        // then register the user
+        $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
                VALUES (:entry_id, :username, :registered)";
 
-      $sql_params = array(
+        $sql_params = array(
           ':entry_id' => $event_id,
           ':username' => $username,
           ':registered' => time()
         );
 
-      db()->command($sql, $sql_params);
+        db()->command($sql, $sql_params);
+      }
     }
   }
 
