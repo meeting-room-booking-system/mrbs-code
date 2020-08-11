@@ -318,6 +318,8 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
 
   print_header($context);
 
+  // Wrap the contents in a <div> to help with styling.  Not a very nice solution, but anyway.
+  echo "<div>\n";
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
   echo "<p>" . get_vocab("norights") . "</p>\n";
   if (isset($server['HTTP_REFERER']))
@@ -326,6 +328,7 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
     echo "<a href=\"" . htmlspecialchars($server['HTTP_REFERER']) . "\">\n" . get_vocab("returnprev") . "</a>\n";
     echo "</p>\n";
   }
+  echo "</div>\n";
 
   // Print footer and exit
   print_footer(true);
