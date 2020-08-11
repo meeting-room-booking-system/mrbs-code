@@ -60,9 +60,12 @@ function generate_event_registration($row, $previous_page=null)
 
     foreach ($row['registrants'] as $registrant)
     {
+      echo '<tr>';
       $registrant_user = auth()->getUser($registrant['username']);
       $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
-      echo '<tr>';
+      echo '<td>' . htmlspecialchars($display_name) . '</td>';
+      $registrant_creator = auth()->getUser($registrant['create_by']);
+      $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
       echo '<td>' . htmlspecialchars($display_name) . '</td>';
       echo "</tr>\n";
     }

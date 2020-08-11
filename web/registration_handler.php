@@ -41,13 +41,16 @@ function register($username, $event_id)
       // ... and that the user hasn't already been registered
       if (!in_arrayi($username, array_column($data['registrants'], 'username')))
       {
+        $mrbs_user = session()->getCurrentUser();
+        $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
         // then register the user
-        $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, registered)
-               VALUES (:entry_id, :username, :registered)";
+        $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, create_by, registered)
+                     VALUES (:entry_id, :username, :create_by, :registered)";
 
         $sql_params = array(
-          ':entry_id' => $event_id,
-          ':username' => $username,
+          ':entry_id'   => $event_id,
+          ':username'   => $username,
+          ':create_by'  => $mrbs_username,
           ':registered' => time()
         );
 
