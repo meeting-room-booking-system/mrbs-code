@@ -1436,7 +1436,7 @@ function mrbsApproveEntry($id, $series)
 }
 
 
-// Get the number of people registered for an event
+// Get the people registered for an event
 function get_registrants($id, $series)
 {
   // You can't register for a series (yet)
@@ -1445,11 +1445,13 @@ function get_registrants($id, $series)
     return null;
   }
 
-  $sql = "SELECT username
+  $sql = "SELECT *
             FROM " . _tbl('participants') . "
            WHERE entry_id=:entry_id";
 
-  return db()->query_array($sql, array(':entry_id' => $id));
+  $res = db()->query($sql, array(':entry_id' => $id));
+
+  return $res->all_rows_keyed();
 }
 
 

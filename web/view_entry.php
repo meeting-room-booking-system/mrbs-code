@@ -60,8 +60,8 @@ function generate_event_registration($row, $previous_page=null)
 
     foreach ($row['registrants'] as $registrant)
     {
-      $registrant_user = auth()->getUser($registrant);
-      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant;
+      $registrant_user = auth()->getUser($registrant['username']);
+      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
       echo '<tr>';
       echo '<td>' . htmlspecialchars($display_name) . '</td>';
       echo "</tr>\n";
@@ -73,7 +73,8 @@ function generate_event_registration($row, $previous_page=null)
 
   // Display registration information and buttons for this user
   $mrbs_user = session()->getCurrentUser();
-  if (!$can_register_others && in_array($mrbs_user->username, $row['registrants']))
+  if (!$can_register_others && in_arrayi($mrbs_user->username,
+                                         array_column($row['registrants'], 'username')))
   {
     echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
     $button_value = get_vocab('cancel_registration');
