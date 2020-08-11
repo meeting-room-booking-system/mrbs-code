@@ -17,6 +17,15 @@ require_once "functions_view.inc";
 function generate_registrant_table($row)
 {
   echo "<table id=\"registrants\">\n";
+
+  echo "<thead>\n";
+  echo '<tr>';
+  echo '<th>' . get_vocab('name') . '</th>';
+  echo '<th>' . get_vocab('registered_by') . '</th>';
+  echo '<th>' . get_vocab('registered_on') . '</th>';
+  echo "</tr>\n";
+  echo "</thead>\n";
+
   echo "<tbody>\n";
 
   foreach ($row['registrants'] as $registrant)
@@ -28,6 +37,8 @@ function generate_registrant_table($row)
     $registrant_creator = auth()->getUser($registrant['create_by']);
     $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
     echo '<td>' . htmlspecialchars($display_name) . '</td>';
+    $time = time_date_string($registrant['registered']);
+    echo '<td>' . htmlspecialchars($time) . '</td>';
     echo "</tr>\n";
   }
 

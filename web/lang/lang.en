@@ -177,6 +177,9 @@ $vocab["event_details"]       = "Event details";
 $vocab["already_registered"]  = "You have registered for this event";
 $vocab["register"]            = "Register";
 $vocab["cancel_registration"] = "Cancel registration";
+$vocab["registered_by"]       = "Registered by";
+$vocab["registered_on"]       = "Registered on";
+$vocab["event_full"]          = "This event is full.";
 
 // Used in edit_entry_handler.php
 $vocab["error"]                  = "Error";

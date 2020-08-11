@@ -2261,10 +2261,8 @@ div#site_faq_body {
   padding-left: 1em;
 }
 
-.view_entry #registrants tbody {
-  display: block;
-  max-height: 12em;
-  overflow-y: auto;
+.view_entry #registrants thead th {
+  text-align: left;
 }
 
 .view_entry h4 {
