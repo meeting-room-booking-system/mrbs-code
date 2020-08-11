@@ -23,6 +23,7 @@ function generate_event_registration($row, $previous_page=null)
     return;
   }
 
+  $can_register_others = is_book_admin($row['room_id']);
   $n_registered = count($row['registrants']);
 
 
@@ -72,7 +73,7 @@ function generate_event_registration($row, $previous_page=null)
 
   // Display registration information and buttons for this user
   $mrbs_user = session()->getCurrentUser();
-  if (in_array($mrbs_user->username, $row['registrants']))
+  if (!$can_register_others && in_array($mrbs_user->username, $row['registrants']))
   {
     echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
     $button_value = get_vocab('cancel_registration');
@@ -120,7 +121,7 @@ function generate_event_registration($row, $previous_page=null)
         'returl' => $returl
       ));
 
-    if (($button_action != 'register') || !is_book_admin($row['room_id']))
+    if (($button_action != 'register') || !$can_register_others)
     {
       $form->addHiddenInput('username', $mrbs_user->username);
     }
