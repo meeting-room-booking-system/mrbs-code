@@ -14,6 +14,28 @@ require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
 
 
+function generate_registrant_table($row)
+{
+  echo "<table id=\"registrants\">\n";
+  echo "<tbody>\n";
+
+  foreach ($row['registrants'] as $registrant)
+  {
+    echo '<tr>';
+    $registrant_user = auth()->getUser($registrant['username']);
+    $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+    echo '<td>' . htmlspecialchars($display_name) . '</td>';
+    $registrant_creator = auth()->getUser($registrant['create_by']);
+    $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
+    echo '<td>' . htmlspecialchars($display_name) . '</td>';
+    echo "</tr>\n";
+  }
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 function generate_event_registration($row, $previous_page=null)
 {
   global $auth, $server;
@@ -55,23 +77,7 @@ function generate_event_registration($row, $previous_page=null)
   if (($n_registered > 0) &&
       ($auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id'])))
   {
-    echo "<table id=\"registrants\">\n";
-    echo "<tbody>\n";
-
-    foreach ($row['registrants'] as $registrant)
-    {
-      echo '<tr>';
-      $registrant_user = auth()->getUser($registrant['username']);
-      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
-      echo '<td>' . htmlspecialchars($display_name) . '</td>';
-      $registrant_creator = auth()->getUser($registrant['create_by']);
-      $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
-      echo '<td>' . htmlspecialchars($display_name) . '</td>';
-      echo "</tr>\n";
-    }
-
-    echo "</tbody>\n";
-    echo "</table>\n";
+    generate_registrant_table($row);
   }
 
   // Display registration information and buttons for this user
