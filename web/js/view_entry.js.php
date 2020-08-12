@@ -14,8 +14,6 @@ if ($use_strict)
 
 $(document).on('page_ready', function() {
   
-  var fixedColumnsOptions = {leftColumns: 1};
-  
-  makeDataTable('#registrants', {}, fixedColumnsOptions);
+  makeDataTable('#registrants', {});
 });
 

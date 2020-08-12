@@ -37,10 +37,10 @@ function generate_registrant_table($row, $previous_page=null)
     if (getWritable($registrant['username'], $row['room_id']))
     {
       generate_cancel_registration_button(
-          $registrant,
-          get_vocab('delete'),
-          $previous_page
-        );
+        $registrant,
+        get_vocab('delete'),
+        $previous_page
+      );
     }
     echo '</td>';
     $registrant_user = auth()->getUser($registrant['username']);

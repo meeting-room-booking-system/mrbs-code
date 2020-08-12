@@ -2249,7 +2249,7 @@ div#site_faq_body {
   padding-left: 0;
 }
 
-.view_entry #registrants {
+.view_entry #registrant_list {
   padding-left: 1em;
 }
 
