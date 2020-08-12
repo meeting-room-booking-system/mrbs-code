@@ -16,7 +16,8 @@ require_once "functions_view.inc";
 
 function generate_registrant_table($row, $previous_page=null)
 {
-  echo "<table id=\"registrants\">\n";
+  echo "<div id=\"registrant_list\" class=\"datatable_container\">\n";
+  echo "<table id=\"registrants\" class=\"admin_table display\">\n";
 
   echo "<thead>\n";
   echo '<tr>';
@@ -55,6 +56,7 @@ function generate_registrant_table($row, $previous_page=null)
 
   echo "</tbody>\n";
   echo "</table>\n";
+  echo "</div>\n";
 }
 
 

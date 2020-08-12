@@ -2236,10 +2236,6 @@ div#site_faq_body {
   margin-bottom: 0;
 }
 
-.view_entry #registration table {
-  margin-bottom: 1em;
-}
-
 .view_entry #registration .standard {
   margin-top: 0;
 }

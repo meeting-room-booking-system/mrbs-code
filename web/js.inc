@@ -107,7 +107,7 @@ if (null !== ($flatpickr_lang_path = get_flatpickr_lang_path()))
 }
 
 // dataTables initialisation
-if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search')))
+if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search', 'view_entry')))
 {
   // Include the JavaScript for those pages that use dataTables
   // When constructing the DataTables download we want to include the following:
