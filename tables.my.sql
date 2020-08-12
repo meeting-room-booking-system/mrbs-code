@@ -172,15 +172,18 @@ CREATE TABLE mrbs_entry
 
 CREATE TABLE mrbs_participants
 (
+  id          int NOT NULL auto_increment,
   entry_id    int NOT NULL,
   username    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  create_by   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   registered  int,
 
+  PRIMARY KEY (id),
   UNIQUE KEY uq_entryid_username (entry_id, username),
   FOREIGN KEY (entry_id)
-  REFERENCES mrbs_entry(id)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE
+    REFERENCES mrbs_entry(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE mrbs_variables
@@ -236,6 +239,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '67');
+  VALUES ( 'db_version', '68');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
