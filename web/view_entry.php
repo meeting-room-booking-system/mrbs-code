@@ -36,7 +36,7 @@ function generate_registrant_table($row, $previous_page=null)
     if (getWritable($registrant['username'], $row['room_id']))
     {
       generate_cancel_registration_button(
-          $registrant['id'],
+          $registrant,
           get_vocab('delete'),
           $previous_page
         );
@@ -85,7 +85,7 @@ function get_returl($previous_page=null)
 }
 
 
-function generate_cancel_registration_button($registration_id, $label_text, $previous_page=null, $as_field=false)
+function generate_cancel_registration_button(array $registrant, $label_text, $previous_page=null, $as_field=false)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('registration_handler.php'),
@@ -99,13 +99,20 @@ function generate_cancel_registration_button($registration_id, $label_text, $pre
   // Hidden inputs
   $form->addHiddenInputs(array(
     'action' => 'cancel',
-    'registration_id' => $registration_id,
+    'registration_id' => $registrant['id'],
     'returl' => get_returl($previous_page)
   ));
 
   // Submit button
   $button = new ElementInputSubmit();
-  $button->setAttribute('value', $label_text);
+  $registrant_user = auth()->getUser($registrant['username']);
+  $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+  $message = get_vocab("confirm_del_registrant", $display_name);
+  $button->setAttributes(array(
+      'value' => $label_text,
+      'onclick' => "return confirm('" . escape_js($message) . "');"
+    ));
+
   if ($as_field)
   {
     $fieldset = new ElementFieldset();
@@ -177,12 +184,12 @@ function generate_event_registration($row, $previous_page=null)
     {
       if (strcasecmp($mrbs_user->username, $registrant['username']) === 0)
       {
-        $registration_id = $registrant['id'];
+        $this_registrant = $registrant;
         break;
       }
     }
     generate_cancel_registration_button(
-        $registration_id,
+        $this_registrant,
         get_vocab('cancel_registration'),
         $previous_page,
         true
