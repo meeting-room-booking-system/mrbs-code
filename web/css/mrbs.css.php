@@ -2264,6 +2264,7 @@ div#site_faq_body {
 .view_entry #registrants th,
 .view_entry #registrants td {
   vertical-align: middle;
+  padding: 0.2em 0.5em;
 }
 
 .view_entry h4 {
