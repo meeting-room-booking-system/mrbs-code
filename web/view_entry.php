@@ -35,7 +35,11 @@ function generate_registrant_table($row, $previous_page=null)
     echo '<td>';
     if (getWritable($registrant['username'], $row['room_id']))
     {
-      generate_cancel_registration_button($registrant['id'], $previous_page);
+      generate_cancel_registration_button(
+          $registrant['id'],
+          get_vocab('delete'),
+          $previous_page
+        );
     }
     echo '</td>';
     $registrant_user = auth()->getUser($registrant['username']);
@@ -81,7 +85,7 @@ function get_returl($previous_page=null)
 }
 
 
-function generate_cancel_registration_button($registration_id, $previous_page=null, $as_field=false)
+function generate_cancel_registration_button($registration_id, $label_text, $previous_page=null, $as_field=false)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('registration_handler.php'),
@@ -101,7 +105,7 @@ function generate_cancel_registration_button($registration_id, $previous_page=nu
 
   // Submit button
   $button = new ElementInputSubmit();
-  $button->setAttribute('value', get_vocab('cancel_registration'));
+  $button->setAttribute('value', $label_text);
   if ($as_field)
   {
     $fieldset = new ElementFieldset();
@@ -177,7 +181,12 @@ function generate_event_registration($row, $previous_page=null)
         break;
       }
     }
-    generate_cancel_registration_button($registration_id, $previous_page, true);
+    generate_cancel_registration_button(
+        $registration_id,
+        get_vocab('cancel_registration'),
+        $previous_page,
+        true
+      );
   }
   else
   {
