@@ -2260,7 +2260,11 @@ div#site_faq_body {
 .view_entry #registrants th,
 .view_entry #registrants td {
   vertical-align: middle;
-  padding: 0.2em 0.5em;
+  padding: 0.4em 0.8em;
+}
+
+.view_entry #registrants td:not(:first-child) {
+  width: 33%;
 }
 
 .view_entry h4 {
