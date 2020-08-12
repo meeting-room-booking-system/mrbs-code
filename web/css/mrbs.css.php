@@ -2253,16 +2253,17 @@ div#site_faq_body {
   padding-left: 0;
 }
 
-.view_entry #registration input[type="submit"] {
-  margin-top: 1em;
-}
-
 .view_entry #registrants {
   padding-left: 1em;
 }
 
 .view_entry #registrants thead th {
   text-align: left;
+}
+
+.view_entry #registrants th,
+.view_entry #registrants td {
+  vertical-align: middle;
 }
 
 .view_entry h4 {

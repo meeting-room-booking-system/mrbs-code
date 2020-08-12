@@ -1436,6 +1436,33 @@ function mrbsApproveEntry($id, $series)
 }
 
 
+function get_registration_by_id($id)
+{
+  if (!isset($id))
+  {
+    return null;
+  }
+
+  $sql = "SELECT *
+            FROM " . _tbl('participants') . "
+           WHERE id=?
+           LIMIT 1";
+
+  $res = db()->query($sql, array($id));
+
+  if ($res->count() == 0)
+  {
+    $result = null;
+  }
+  else
+  {
+    $result = $res->next_row_keyed();
+  }
+
+  return $result;
+}
+
+
 // Get the people registered for an event
 function get_registrants($id, $series)
 {

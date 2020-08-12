@@ -14,12 +14,13 @@ require_once "mrbs_sql.inc";
 require_once "functions_view.inc";
 
 
-function generate_registrant_table($row)
+function generate_registrant_table($row, $previous_page=null)
 {
   echo "<table id=\"registrants\">\n";
 
   echo "<thead>\n";
   echo '<tr>';
+  echo '<th></th>';
   echo '<th>' . get_vocab('name') . '</th>';
   echo '<th>' . get_vocab('registered_by') . '</th>';
   echo '<th>' . get_vocab('registered_on') . '</th>';
@@ -31,6 +32,12 @@ function generate_registrant_table($row)
   foreach ($row['registrants'] as $registrant)
   {
     echo '<tr>';
+    echo '<td>';
+    if (getWritable($registrant['username'], $row['room_id']))
+    {
+      generate_cancel_registration_button($registrant['id'], $previous_page);
+    }
+    echo '</td>';
     $registrant_user = auth()->getUser($registrant['username']);
     $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
     echo '<td>' . htmlspecialchars($display_name) . '</td>';
@@ -44,6 +51,71 @@ function generate_registrant_table($row)
 
   echo "</tbody>\n";
   echo "</table>\n";
+}
+
+
+function get_returl($previous_page=null)
+{
+  global $server;
+
+  static $returl=null;
+
+  if (!isset($returl))
+  {
+    // Add the previous_page (ie the one we were on before view_entry) to the query string
+    // so that it is preserved.
+    $returl = this_page();
+    $query_string = isset($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+    parse_str($query_string, $query_string_parts);
+    if (isset($previous_page))
+    {
+      $query_string_parts['previous_page'] = $previous_page;
+    }
+    if (!empty($query_string_parts))
+    {
+      $returl .= '?' . http_build_query($query_string_parts, '', '&');
+    }
+  }
+
+  return $returl;
+}
+
+
+function generate_cancel_registration_button($registration_id, $previous_page=null, $as_field=false)
+{
+  $form = new Form();
+  $form->setAttributes(array('action' => multisite('registration_handler.php'),
+    'method' => 'post'));
+
+  if ($as_field)
+  {
+    $form->setAttribute('class', 'standard');
+  }
+
+  // Hidden inputs
+  $form->addHiddenInputs(array(
+    'action' => 'cancel',
+    'registration_id' => $registration_id,
+    'returl' => get_returl($previous_page)
+  ));
+
+  // Submit button
+  $button = new ElementInputSubmit();
+  $button->setAttribute('value', get_vocab('cancel_registration'));
+  if ($as_field)
+  {
+    $fieldset = new ElementFieldset();
+    $field = new FieldDiv();
+    $field->addControl($button);
+    $fieldset->addElement($field);
+    $form->addElement($fieldset);
+  }
+  else
+  {
+    $form->addElement($button);
+  }
+
+  $form->render();
 }
 
 
@@ -88,7 +160,7 @@ function generate_event_registration($row, $previous_page=null)
   if (($n_registered > 0) &&
       ($auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id'])))
   {
-    generate_registrant_table($row);
+    generate_registrant_table($row, $previous_page);
   }
 
   // Display registration information and buttons for this user
@@ -97,8 +169,15 @@ function generate_event_registration($row, $previous_page=null)
                                          array_column($row['registrants'], 'username')))
   {
     echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
-    $button_value = get_vocab('cancel_registration');
-    $button_action = 'cancel';
+    foreach ($row['registrants'] as $registrant)
+    {
+      if (strcasecmp($mrbs_user->username, $registrant['username']) === 0)
+      {
+        $registration_id = $registrant['id'];
+        break;
+      }
+    }
+    generate_cancel_registration_button($registration_id, $previous_page, true);
   }
   else
   {

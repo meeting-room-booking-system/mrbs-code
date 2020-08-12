@@ -7,15 +7,29 @@ use MRBS\Form\Form;
 
 
 // Cancel a user's registration
-function cancel($username, $event_id)
+function cancel($registration_id)
 {
+  // Check that the user is authorised for this operation
+  $registration = get_registration_by_id($registration_id);
+
+  if (!isset($registration))
+  {
+    return;
+  }
+
+  $entry = get_entry_by_id($registration['id']);
+  if (!isset($entry) || !getWritable($registration['username'], $entry['room_id']))
+  {
+    return;
+  }
+
+  // They are authorised, so go ahead and delete the registration
   $sql = "DELETE FROM " . _tbl('participants') . "
-                WHERE username=:username AND entry_id=:entry_id";
+                WHERE id=:registration_id";
 
   $sql_params = array(
-    ':entry_id' => $event_id,
-    ':username' => $username
-  );
+      ':registration_id' => $registration_id
+    );
 
   db()->command($sql, $sql_params);
 }
@@ -24,6 +38,13 @@ function cancel($username, $event_id)
 // Register a user for an event
 function register($username, $event_id)
 {
+  // Check that the user is authorised for this operation
+  $entry = get_entry_by_id($event_id);
+  if (!isset($entry) || !getWritable($username, $entry['room_id']))
+  {
+    return;
+  }
+
   // Obtain a lock to make sure no one else registers after we've checked that there
   // are spare places
   db()->mutex_lock(_tbl('participants'));
@@ -73,26 +94,22 @@ checkAuthorised(this_page());
 $action = get_form_var('action', 'string');
 $event_id = get_form_var('event_id', 'int');
 $returl = get_form_var('returl', 'string');
-$username = get_form_var('username', 'string');
 
-// Check that the user is authorised for this operation
-if ((session()->getCurrentUser()->username !== $username) && !is_book_admin($room))
-{
-  location_header($returl);
-}
-
+// Take the appropriate action.  The individual functions check that the user
+// is authorised to take the acttion.
 switch ($action)
 {
   case 'cancel':
-    cancel($username, $event_id);
+    $registration_id = get_form_var('registration_id', 'int');
+    cancel($registration_id);
     break;
   case 'register':
+    $username = get_form_var('username', 'string');
     register($username, $event_id);
     break;
   default:
     trigger_error("Unknown action '$action'", E_USER_WARNING);
     break;
 }
-
 
 location_header($returl);
