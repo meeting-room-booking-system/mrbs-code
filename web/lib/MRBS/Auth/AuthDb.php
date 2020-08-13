@@ -73,7 +73,7 @@ class AuthDb extends Auth
     // messy.  WE could use STRCMP, but that's MySQL only.
 
     // Usernames are unique in the users table, so we only look for one.
-    $sql = "SELECT password_hash
+    $sql = "SELECT password_hash, name
             FROM " . \MRBS\_tbl('users') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
            LIMIT 1";
@@ -88,7 +88,7 @@ class AuthDb extends Auth
       return false;
     }
 
-    return ($this->checkPassword($pass, $row['password_hash'], 'name', $user)) ? $user : false;
+    return ($this->checkPassword($pass, $row['password_hash'], 'name', $row['name'])) ? $row['name'] : false;
   }
 
 
