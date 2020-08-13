@@ -69,11 +69,11 @@ class AuthDb extends Auth
 
     // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
     // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
-    // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
+    // permits wildcards, so we could use a combination of LIKE and '=' but that's a bit
     // messy.  WE could use STRCMP, but that's MySQL only.
 
     // Usernames are unique in the users table, so we only look for one.
-    $sql = "SELECT password_hash
+    $sql = "SELECT password_hash, name
             FROM " . \MRBS\_tbl('users') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
            LIMIT 1";
@@ -88,7 +88,7 @@ class AuthDb extends Auth
       return false;
     }
 
-    return ($this->checkPassword($pass, $row['password_hash'], 'name', $user)) ? $user : false;
+    return ($this->checkPassword($pass, $row['password_hash'], 'name', $row['name'])) ? $row['name'] : false;
   }
 
 
