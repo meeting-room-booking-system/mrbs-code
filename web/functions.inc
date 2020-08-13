@@ -17,6 +17,42 @@ function in_arrayi($needle, $haystack)
 }
 
 
+// Returns a name in the format last_name first_name for sorting
+function get_sortable_name($name)
+{
+  global $sort_users_by_last_name;
+
+  if (!isset($name))
+  {
+    return null;
+  }
+
+  if (empty($sort_users_by_last_name))
+  {
+    return $name;
+  }
+
+  $tokens = explode(' ', $name);
+
+  // Get rid of other whitespace (eg tabs)
+  $tokens = array_map('trim', $tokens);
+
+  // Get the last name
+  $result = array_pop($tokens);
+
+  // Add back in the first names
+  while (null !== ($token = array_shift($tokens)))
+  {
+    if ($token !== '') // weeds out multiple spaces in a name
+    {
+      $result .= ' ' . $token;
+    }
+  }
+
+  return $result;
+}
+
+
 // Tests whether the request has come via an Ajax call or not.
 function is_ajax()
 {

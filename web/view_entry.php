@@ -22,8 +22,8 @@ function generate_registrant_table($row, $previous_page=null)
   echo "<thead>\n";
   echo '<tr>';
   echo '<th></th>';
-  echo '<th>' . get_vocab('name') . '</th>';
-  echo '<th>' . get_vocab('registered_by') . '</th>';
+  echo '<th><span data-type="title-string">' . get_vocab('name') . '</th>';
+  echo '<th><span data-type="title-string">' . get_vocab('registered_by') . '</th>';
   echo '<th>' . get_vocab('registered_on') . '</th>';
   echo "</tr>\n";
   echo "</thead>\n";
@@ -43,12 +43,17 @@ function generate_registrant_table($row, $previous_page=null)
       );
     }
     echo '</td>';
+    // Registrant
     $registrant_user = auth()->getUser($registrant['username']);
     $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
-    echo '<td>' . htmlspecialchars($display_name) . '</td>';
+    $sortname = get_sortable_name($display_name);
+    echo '<td><span title="' . htmlspecialchars($sortname) . '"></span>' . htmlspecialchars($display_name) . '</td>';
+    // Registered by
     $registrant_creator = auth()->getUser($registrant['create_by']);
     $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
-    echo '<td>' . htmlspecialchars($display_name) . '</td>';
+    $sortname = get_sortable_name($display_name);
+    echo '<td><span title="' . htmlspecialchars($sortname) . '"></span>' . htmlspecialchars($display_name) . '</td>';
+    // Time of registration
     $time = time_date_string($registrant['registered']);
     echo '<td>' . htmlspecialchars($time) . '</td>';
     echo "</tr>\n";
