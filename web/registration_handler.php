@@ -17,7 +17,7 @@ function cancel($registration_id)
     return;
   }
 
-  $entry = get_entry_by_id($registration['id']);
+  $entry = get_entry_by_id($registration['entry_id']);
   if (!isset($entry) || !getWritable($registration['username'], $entry['room_id']))
   {
     return;
