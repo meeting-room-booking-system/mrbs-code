@@ -69,7 +69,7 @@ class AuthDb extends Auth
 
     // We use syntax_casesensitive_equals() rather than just '=' because '=' in MySQL
     // permits trailing spacings, eg 'john' = 'john '.   We could use LIKE, but that then
-    // permits wildcards, so we could use a comnination of LIKE and '=' but that's a bit
+    // permits wildcards, so we could use a combination of LIKE and '=' but that's a bit
     // messy.  WE could use STRCMP, but that's MySQL only.
 
     // Usernames are unique in the users table, so we only look for one.
