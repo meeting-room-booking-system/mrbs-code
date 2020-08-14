@@ -1600,7 +1600,6 @@ fieldset.rep_type_details fieldset {
   clear: none;
 }
 
-fieldset#registration,
 fieldset#rep_info,
 fieldset#booking_controls {
   border-top: 1px solid <?php echo $site_faq_entry_border_color ?>;
@@ -2236,6 +2235,11 @@ div#site_faq_body {
 .view_entry #entry,
 .view_entry #registration {
   padding-left: 1em;
+}
+
+.view_entry #registration {
+  float: left;
+  margin-bottom: 2em;
 }
 
 .view_entry #registration p {
