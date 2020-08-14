@@ -273,9 +273,8 @@ function generate_event_registration($row, $previous_page=null)
     $form->addElement($fieldset);
 
     $form->render();
-
-    echo "</div>\n";
   }
+  echo "</div>\n";
 }
 
 
