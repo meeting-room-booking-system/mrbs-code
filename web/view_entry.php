@@ -48,9 +48,17 @@ function generate_registrant_table($row, $previous_page=null)
     $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
     $sortname = get_sortable_name($display_name);
     echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
-    // Registered by
+    // Registered by - only show if it's someone other than the registrant
     $registrant_creator = auth()->getUser($registrant['create_by']);
-    $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
+    if (isset($registrant_creator) && isset($registrant_user) &&
+        ($registrant_creator->username === $registrant_user->username))
+    {
+      $display_name = '';
+    }
+    else
+    {
+      $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
+    }
     $sortname = get_sortable_name($display_name);
     echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
     // Time of registration
