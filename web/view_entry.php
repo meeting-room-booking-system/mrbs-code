@@ -196,6 +196,7 @@ function generate_event_registration($row, $previous_page=null)
   }
 
   $can_register_others = is_book_admin($row['room_id']);
+  $can_see_others = $auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id']);
   $n_registered = count($row['registrants']);
 
 
@@ -224,8 +225,7 @@ function generate_event_registration($row, $previous_page=null)
   // Display it as a table because in the future we might want to (a) add more columns,
   // eg date and time of registration and (b) use DataTables to make the list searchable
   // and exportable.
-  if (($n_registered > 0) &&
-      ($auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id'])))
+  if (($n_registered > 0) && $can_see_others)
   {
     generate_registrant_table($row, $previous_page);
   }
@@ -244,12 +244,17 @@ function generate_event_registration($row, $previous_page=null)
         break;
       }
     }
-    generate_cancel_registration_button(
-        $this_registrant,
-        get_vocab('cancel_registration'),
-        $previous_page,
-        true
-      );
+    // If they can see others they'll have a delete button against their name.  Otherwise
+    // we'll need to provide one for them.
+    if (!$can_see_others)
+    {
+      generate_cancel_registration_button(
+          $this_registrant,
+          get_vocab('cancel_registration'),
+          $previous_page,
+          true
+        );
+    }
   }
   else
   {
