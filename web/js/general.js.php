@@ -56,15 +56,14 @@ function fillUsernameFields()
       <?php // Turn the create_by select into a fancy select box. ?>
       var el = $(this);
       el.mrbsSelect(el.hasClass('datalist'));
+      <?php
+      // Add a class to the body so that we can modify the CSS when the load
+      // is in progress, eg by adding an animated GIF.  We remove the class
+      // once the Ajax data has arrived.
+      ?>
+      $('body').addClass('ajax-loading');
     });
     
-  <?php
-  // Add a class to the body so that we can modify the CSS when the load
-  // is in progress, eg by adding an animated GIF.  We remove the class
-  // once the Ajax data has arrived.
-  ?>
-  $('body').addClass('ajax-loading');
-  
   <?php
   // Fire off an Ajax request to get the data.  We do this because some authentication
   // schemes, eg LDAP, will take a long time to return the data if there are very many
