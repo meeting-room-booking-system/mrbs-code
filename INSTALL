@@ -492,6 +492,9 @@ which will override any settings in the global config file.  At a minimum
 the local config file will contain a table prefix for the site, but can also
 contain any other config settings including a theme and custom CSS.
 
+Individual sites can even have their own authentication methods, but note that
+authentication against WordPress multisite is not supported.
+
 
 SECURITY NOTES!
 ---------------------------------------------------------------------------
