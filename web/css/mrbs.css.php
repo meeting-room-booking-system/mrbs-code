@@ -1142,6 +1142,13 @@ foreach ($color_types as $type => $col)
   background: transparent;
 }
 
+<?php
+// Put a line at the top of the div to separate the rows when the div is below an even row.
+?>
+tbody tr:nth-child(odd) .spaces {
+  box-shadow: 0 1px 0 <?php echo $row_odd_color ?> inset;
+}
+
 .private_type {
   background: <?php echo $main_table_slot_private_type_color;?>;
 }
