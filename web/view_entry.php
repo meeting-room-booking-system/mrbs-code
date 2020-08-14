@@ -47,12 +47,12 @@ function generate_registrant_table($row, $previous_page=null)
     $registrant_user = auth()->getUser($registrant['username']);
     $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
     $sortname = get_sortable_name($display_name);
-    echo '<td data-order="' . htmlspecialchars($sortname) . '"></span>' . htmlspecialchars($display_name) . '</td>';
+    echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
     // Registered by
     $registrant_creator = auth()->getUser($registrant['create_by']);
     $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
     $sortname = get_sortable_name($display_name);
-    echo '<td data-order="' . htmlspecialchars($sortname) . '"></span>' . htmlspecialchars($display_name) . '</td>';
+    echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
     // Time of registration
     $time = time_date_string($registrant['registered']);
     echo '<td data-order="' . htmlspecialchars($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
