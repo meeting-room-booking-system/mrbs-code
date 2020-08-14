@@ -51,7 +51,7 @@ var adjustLabelWidths = function adjustLabelWidths() {
 function fillUsernameFields()
 {
   var select = $('.ajax_usernames');
-  
+
   select.each(function() {
       <?php // Turn the create_by select into a fancy select box. ?>
       var el = $(this);
@@ -63,7 +63,7 @@ function fillUsernameFields()
       ?>
       $('body').addClass('ajax-loading');
     });
-    
+
   <?php
   // Fire off an Ajax request to get the data.  We do this because some authentication
   // schemes, eg LDAP, will take a long time to return the data if there are very many
@@ -153,7 +153,7 @@ $(document).on('page_ready', function() {
 
   <?php // Retrieve the data that the JavaScript files need. ?>
   args = $('body').data();
-  
+
   <?php // Fire off the Ajax requests for username fields ?>
   fillUsernameFields();
 
@@ -168,7 +168,7 @@ $(document).on('page_ready', function() {
         var d = new Date(),
             t = d.getTime()/1000;
         <?php
-        // Only tewll the server that there's been some user activity if we're coming up to
+        // Only tell the server that there's been some user activity if we're coming up to
         // the inactivity timeout
         ?>
         if ((typeof recordActivity.lastRecorded === 'undefined') ||

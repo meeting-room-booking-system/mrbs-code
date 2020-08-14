@@ -499,7 +499,7 @@ nav.main_calendar.wrapped:nth-of-type(1) nav.location {
 }
 
 <?php
-// Put the margins on the children rathan the parent in case they are wrapped,
+// Put the margins on the children rather than the parent in case they are wrapped,
 // because then we will want some vertical separation between the wrapped items.
 ?>
 nav.main_calendar.wrapped:nth-of-type(1) nav.location > * {

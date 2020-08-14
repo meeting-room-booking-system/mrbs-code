@@ -57,7 +57,7 @@ $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 // NOTE:  the code on this page assumes that array form variables are passed
 // as an array of values, rather than an array indexed by value.   This is
-// particularly important for checkbox arrays whicgh should be formed like this:
+// particularly important for checkbox arrays which should be formed like this:
 //
 //    <input type="checkbox" name="foo[]" value="n">
 //    <input type="checkbox" name="foo[]" value="m">

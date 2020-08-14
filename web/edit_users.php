@@ -161,7 +161,7 @@ function validate_password($password)
 function get_form_var_type($field)
 {
   // "Level" is an exception because we've forced the value to be a string
-  // so that it can be used in an associative aeeay
+  // so that it can be used in an associative array
   if ($field['name'] == 'level')
   {
     return 'string';

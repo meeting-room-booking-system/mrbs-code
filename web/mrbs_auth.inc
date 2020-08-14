@@ -138,7 +138,7 @@ function get_page_level($page)
  * Check to see if the current user has a certain level of rights
  *
  * $level  - The access level required
- * $returl - The URL to nreturn to eventually
+ * $returl - The URL to return to eventually
  *
  * Returns:
  *   false - The user does not have the required access

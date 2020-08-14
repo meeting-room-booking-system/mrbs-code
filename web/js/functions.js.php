@@ -35,7 +35,7 @@ jQuery.fn.extend({
 
   <?php
   // Turn a select element into a fancy Select2 field control.  This wrapper function also
-  // (a) only does anything if we are usibg tags or are not on a mobile device, because the native select
+  // (a) only does anything if we are using tags or are not on a mobile device, because the native select
   //     elements on mobile devices tend to be better.  [Could maybe turn the element from a <select>
   //     into a <datalist> if we are using tags?]
   // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
