@@ -2232,6 +2232,10 @@ div#site_faq_body {
   padding-right: 1.0em;
 }
 
+.view_entry #registration .list {
+  margin-bottom: 1em;
+}
+
 .view_entry #entry,
 .view_entry #registration {
   padding-left: 1em;

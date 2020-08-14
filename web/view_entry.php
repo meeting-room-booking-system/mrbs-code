@@ -137,6 +137,55 @@ function generate_cancel_registration_button(array $registrant, $label_text, $pr
 }
 
 
+function generate_register_button($row, $previous_page=null)
+{
+  $mrbs_user = session()->getCurrentUser();
+  $can_register_others = is_book_admin($row['room_id']);
+
+  $form = new Form();
+  $form->setAttributes(array('action' => multisite('registration_handler.php'),
+                             'class'  => 'standard',
+                             'method' => 'post'));
+
+  // Hidden inputs
+  $form->addHiddenInputs(array(
+      'action' => 'register',
+      'event_id' => $row['id'],
+      'returl' => get_returl($previous_page)
+    ));
+
+  if (!$can_register_others)
+  {
+    $form->addHiddenInput('username', $mrbs_user->username);
+  }
+  else
+  {
+    $fieldset = new ElementFieldset();
+    $params = array(
+        'value'     => $mrbs_user->username,
+        'disabled'  => false,
+        'required'  => true,
+        'field'     => 'participants.username',
+        'label'     => get_vocab('name'),
+        'name'      => 'username',
+      );
+    $fieldset->addElement(get_user_field($params, true));
+    $form->addElement($fieldset);
+  }
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('register'));
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
+
 function generate_event_registration($row, $previous_page=null)
 {
   global $auth, $server;
@@ -207,8 +256,7 @@ function generate_event_registration($row, $previous_page=null)
     if (empty($row['enable_registrant_limit']) ||
       ($row['registrant_limit'] > $n_registered))
     {
-      $button_value = get_vocab('register');
-      $button_action = 'register';
+      generate_register_button($row, $previous_page);
     }
     else
     {
@@ -216,64 +264,6 @@ function generate_event_registration($row, $previous_page=null)
     }
   }
 
-  if (isset($button_value))
-  {
-    $form = new Form();
-    $form->setAttributes(array('action' => multisite('registration_handler.php'),
-                               'class'  => 'standard',
-                               'method' => 'post'));
-
-    // Add the previous_page (ie the one we were on before view_entry) to the query string
-    // so that it is preserved.
-    $returl  = this_page();
-    $query_string = isset($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
-    parse_str($query_string, $query_string_parts);
-    if (isset($previous_page))
-    {
-      $query_string_parts['previous_page'] = $previous_page;
-    }
-    if (!empty($query_string_parts))
-    {
-      $returl .= '?' . http_build_query($query_string_parts, '', '&');
-    }
-
-    // Hidden inputs
-    $form->addHiddenInputs(array(
-        'action' => $button_action,
-        'event_id' => $row['id'],
-        'returl' => $returl
-      ));
-
-    if (($button_action != 'register') || !$can_register_others)
-    {
-      $form->addHiddenInput('username', $mrbs_user->username);
-    }
-    else
-    {
-      $fieldset = new ElementFieldset();
-      $params = array(
-        'value'     => $mrbs_user->username,
-        'disabled'  => false,
-        'required'  => true,
-        'field'     => 'participants.username',
-        'label'     => get_vocab('name'),
-        'name'      => 'username',
-      );
-      $fieldset->addElement(get_user_field($params, true));
-      $form->addElement($fieldset);
-    }
-
-    // Submit button
-    $fieldset = new ElementFieldset();
-    $field = new FieldDiv();
-    $element = new ElementInputSubmit();
-    $element->setAttribute('value', $button_value);
-    $field->addControl($element);
-    $fieldset->addElement($field);
-    $form->addElement($fieldset);
-
-    $form->render();
-  }
   echo "</div>\n";
 }
 
