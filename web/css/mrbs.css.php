@@ -2242,7 +2242,6 @@ div#site_faq_body {
 }
 
 .view_entry #registration {
-  float: left;
   margin-bottom: 2em;
 }
 
@@ -2252,6 +2251,8 @@ div#site_faq_body {
 }
 
 .view_entry #registration .standard {
+  display: inline-block;
+  float: none;
   margin-top: 0;
 }
 
