@@ -106,7 +106,7 @@ if (isset($action))
   if ($result && need_to_send_mail())
   {
     // Get the area settings for this area (we will need to know if periods are enabled
-    // so that we will kniow whether to include iCalendar information in the email)
+    // so that we will know whether to include iCalendar information in the email)
     get_area_settings($data['area_id']);
     // Send the email
     notifyAdminOnBooking($data, $mail_previous, $is_new_entry, $series, $start_times, $action, $note);
