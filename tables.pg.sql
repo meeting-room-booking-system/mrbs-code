@@ -167,11 +167,13 @@ create index mrbs_idxRoomStartEnd on mrbs_entry(room_id, start_time, end_time);
 
 CREATE TABLE mrbs_participants
 (
+  id          serial primary key,
   entry_id    int NOT NULL
                 REFERENCES mrbs_entry(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,
   username    varchar(255),
+  create_by   varchar(255),
   registered  int,
 
   CONSTRAINT mrbs_uq_entryid_username UNIQUE (entry_id, username)
@@ -232,6 +234,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '67');
+  VALUES ('db_version', '68');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
