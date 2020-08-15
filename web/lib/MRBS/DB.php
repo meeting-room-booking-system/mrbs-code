@@ -256,4 +256,16 @@ class DB
     return false;
   }
 
+
+  // Checks whether a table has duplicate values for a field
+  public function tableHasDuplicates($table, $field)
+  {
+    $sql = "SELECT $field, COUNT(*)
+              FROM $table
+          GROUP BY $field
+            HAVING COUNT(*) > 1";
+    $res = $this->query($sql);
+    return ($res->count() > 0);
+  }
+
 }

@@ -203,6 +203,19 @@ class AuthDb extends Auth
   }
 
 
+  // Return an array of all users
+  public function getUsers()
+  {
+    $sql = "SELECT *
+              FROM " . \MRBS\_tbl('users') . "
+             ORDER BY name";
+
+    $res = \MRBS\db()->query($sql);
+
+    return $res->all_rows_keyed();
+  }
+
+
   // Checks whether validation of a user by email address is possible and allowed.
   public function canValidateByEmail()
   {
@@ -217,23 +230,12 @@ class AuthDb extends Auth
   }
 
 
-  // Checks whether the password by reset by supplying an email address
+  // Checks whether the password by reset by supplying an email address.
+  // If there are duplicate email addresses in the table (only the username is required
+  // to be unique) then we can't, because we won't know which user has requested the reset.
   public function canResetByEmail()
   {
-    return $this->canValidateByEmail();
-  }
-
-
-  // Return an array of all users
-  public function getUsers()
-  {
-    $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users') . "
-             ORDER BY name";
-
-    $res = \MRBS\db()->query($sql);
-
-    return $res->all_rows_keyed();
+    return ($this->canValidateByEmail() && !\MRBS\db()->tableHasDuplicates(\MRBS\_tbl('users'),'email'));
   }
 
 
