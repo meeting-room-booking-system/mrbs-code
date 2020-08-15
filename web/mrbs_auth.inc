@@ -75,6 +75,7 @@ function get_page_level($page)
     // read features.
     case 'help.php':
     case 'index.php':
+    case 'reset_password.php':
       $result = 0;
       break;
 

@@ -257,20 +257,25 @@ $vocab["pending"]            = "Bookings awaiting approval";
 $vocab["none_outstanding"]   = "You have no bookings awaiting approval.";
 
 // Authentication stuff
-$vocab["accessdenied"]       = "Access Denied";
-$vocab["norights"]           = "You do not have the necessary rights to view this page.";
-$vocab["please_login"]       = "Please log in";
-$vocab["users.name"]         = "Username";
-$vocab["users.display_name"] = "Name";
-$vocab["users.password"]     = "Password";
-$vocab["users.level"]        = "Rights";
-$vocab["users.timestamp"]    = "Last updated";
-$vocab["users.last_login"]   = "Last login";
-$vocab["unknown_user"]       = "Unknown user";
-$vocab["login"]              = "Log in";
-$vocab["logoff"]             = "Log off";
-$vocab["username_or_email"]  = "Username or email address";
-$vocab["lost_password"]      = "Lost your password?";
+$vocab["accessdenied"]              = "Access Denied";
+$vocab["norights"]                  = "You do not have the necessary rights to view this page.";
+$vocab["please_login"]              = "Please log in";
+$vocab["users.name"]                = "Username";
+$vocab["users.display_name"]        = "Name";
+$vocab["users.password"]            = "Password";
+$vocab["users.level"]               = "Rights";
+$vocab["users.timestamp"]           = "Last updated";
+$vocab["users.last_login"]          = "Last login";
+$vocab["unknown_user"]              = "Unknown user";
+$vocab["login"]                     = "Log in";
+$vocab["logoff"]                    = "Log off";
+$vocab["username_or_email"]         = "Username or email address";
+$vocab["lost_password"]             = "Lost your password?";
+$vocab["get_new_password"]          = "Get new password";
+$vocab["password_reset"]            = "Password reset";
+$vocab["enter_username"]            = "Please enter your username here.";
+$vocab["enter_username_or_email"]   = "Please enter your username or email address here.";
+$vocab["will_be_sent_instructions"] = "You will be sent an email message with instructions on how to reset your password.";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";
