@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
+use MRBS\MailQueue;
 use MRBS\User;
 
 class AuthDb extends Auth
@@ -234,6 +235,8 @@ class AuthDb extends Auth
 
   public function resetPassword($login)
   {
+    global $auth, $mail_settings;
+
     if (!isset($login) || ($login === ''))
     {
       return false;
@@ -254,7 +257,7 @@ class AuthDb extends Auth
       $users = $this->getUsersByEmail($login);
       if (!empty($users))
       {
-        foreach($users as $user)
+        foreach ($users as $user)
         {
           $possible_user_ids[] = $user['id'];
         }
@@ -271,11 +274,34 @@ class AuthDb extends Auth
     $key = \MRBS\generate_token(32);
 
     // Update the database
-    $key_hash = password_hash($key, PASSWORD_DEFAULT);
     $user_id = $possible_user_ids[0];
     $this->setResetKey($user_id, $key);
 
-    exit;
+    // Email the user
+    $user = $this->getUserByUserId($user_id);
+    if (!isset($user['email']) || ($user['email'] === ''))
+    {
+      return false;
+    }
+    $expiry_time = $auth['db']['reset_key_expiry'];
+    \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
+    $addresses = array(
+        'from'  => $mail_settings['from'],
+        'to'    => $user['email']
+      );
+    $subject = \MRBS\get_vocab('password_reset_subject');
+    $body = '<p>';
+    $body .= \MRBS\get_vocab('password_reset_body', $user['name'], intval($expiry_time), $expiry_units);
+    $body .= "</p>\n";
+    MailQueue::add(
+        $addresses,
+        $subject,
+        array('content' => strip_tags($body)),
+        array('content' => $body,
+              'cid'     => \MRBS\generate_global_uid("html")),
+        null,
+        \MRBS\get_mail_charset()
+      );
     return true;
   }
 
@@ -308,6 +334,25 @@ class AuthDb extends Auth
              LIMIT 1";
 
     $result = \MRBS\db()->query($sql, array(':name' => $username));
+
+    // The username doesn't exist - return NULL
+    if ($result->count() === 0)
+    {
+      return null;
+    }
+
+    return $result->next_row_keyed();
+  }
+
+
+  private function getUserByUserId($id)
+  {
+    $sql = "SELECT *
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE id=:id
+             LIMIT 1";
+
+    $result = \MRBS\db()->query($sql, array(':id' => $id));
 
     // The username doesn't exist - return NULL
     if ($result->count() === 0)

@@ -273,6 +273,11 @@ $vocab["username_or_email"]         = "Username or email address";
 $vocab["lost_password"]             = "Lost your password?";
 $vocab["get_new_password"]          = "Get new password";
 $vocab["password_reset"]            = "Password reset";
+$vocab["password_reset_subject"]    = "Password reset request";
+$vocab["password_reset_body"]       = 'Someone has generated a password reset request for \'%1$s\'. ' .
+                                      "If this wasn't you then you can ignore this email.  Otherwise " .
+                                      "you should follow the link below to reset your password. " .
+                                      'The link will expire in %2$d %3$s.';
 $vocab["enter_username"]            = "Please enter your username here.";
 $vocab["enter_username_or_email"]   = "Please enter your username or email address here.";
 $vocab["will_be_sent_instructions"] = "You will be sent an email message with instructions on how to reset your password.";
