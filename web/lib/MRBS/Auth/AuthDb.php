@@ -210,6 +210,13 @@ class AuthDb extends Auth
   }
 
 
+  // Checks whether the method has a password reset facility
+  public function canResetPassword()
+  {
+    return true;
+  }
+
+
   // Return an array of all users
   public function getUsers()
   {

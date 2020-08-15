@@ -1,7 +1,9 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\Form\FieldDiv;
 use MRBS\Form\Form;
+use MRBS\Form\ElementA;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputPassword;
@@ -203,14 +205,31 @@ abstract class SessionWithLogin implements SessionInterface
                                        'autocomplete' => 'current-password'));
     $fieldset->addElement($field);
 
+    $form->addElement($fieldset);
+
     // The submit button
+    $fieldset = new ElementFieldset();
     $field = new FieldInputSubmit();
     $field->setControlAttributes(array('value' => \MRBS\get_vocab('login')));
     $fieldset->addElement($field);
 
     $form->addElement($fieldset);
 
+    if (\MRBS\auth()->canResetPassword())
+    {
+      $fieldset = new ElementFieldset();
+      $field = new FieldDiv();
+      $a = new ElementA();
+      $a->setAttribute('href', \MRBS\multisite('reset_password.php'))
+        ->setText(\MRBS\get_vocab('lost_password'));
+      $field->addControl($a);
+      $fieldset->addElement($field);
+      $form->addElement($fieldset);
+    }
+
     $form->render();
+
+
 
     // Print footer and exit
     \MRBS\print_footer(true);

@@ -1402,6 +1402,10 @@ div#div_custom_html {
   padding: 1em 1em 1em 0;
 }
 
+.standard#logon fieldset {
+  padding-bottom: 0;
+}
+
 .standard fieldset > div {
   display: table-row;
 }

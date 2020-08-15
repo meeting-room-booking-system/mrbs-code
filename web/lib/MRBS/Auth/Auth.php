@@ -24,6 +24,12 @@ abstract class Auth
   }
 
 
+  // Checks whether the method has a password reset facility
+  public function canResetPassword()
+  {
+    return false;
+  }
+
   // Gets the level from the $auth['admin'] array in the config file
   protected function getDefaultLevel($username)
   {

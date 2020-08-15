@@ -270,6 +270,7 @@ $vocab["unknown_user"]       = "Unknown user";
 $vocab["login"]              = "Log in";
 $vocab["logoff"]             = "Log off";
 $vocab["username_or_email"]  = "Username or email address";
+$vocab["lost_password"]      = "Lost your password?";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";
