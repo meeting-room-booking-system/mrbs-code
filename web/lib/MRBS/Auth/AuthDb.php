@@ -217,6 +217,13 @@ class AuthDb extends Auth
   }
 
 
+  // Checks whether the password by reset by supplying an email address
+  public function canResetByEmail()
+  {
+    return $this->canValidateByEmail();
+  }
+
+
   // Return an array of all users
   public function getUsers()
   {

@@ -30,6 +30,14 @@ abstract class Auth
     return false;
   }
 
+
+  // Checks whether the password by reset by supplying an email address
+  public function canResetByEmail()
+  {
+    return false;
+  }
+
+
   // Gets the level from the $auth['admin'] array in the config file
   protected function getDefaultLevel($username)
   {

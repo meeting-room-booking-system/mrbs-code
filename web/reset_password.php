@@ -14,7 +14,7 @@ require "defaultincludes.inc";
 
 function generate_request_reset_form()
 {
-  $can_reset_by_email = auth()->canValidateByEmail();
+  $can_reset_by_email = auth()->canResetByEmail();
 
   $form = new Form();
   $form->setAttributes(array(
