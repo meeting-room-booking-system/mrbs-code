@@ -75,7 +75,9 @@ function get_page_level($page)
     // read features.
     case 'help.php':
     case 'index.php':
+    // If you're resetting your password you won't be logged in
     case 'reset_password.php':
+    case 'reset_password_handler.php':
       $result = 0;
       break;
 
