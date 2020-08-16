@@ -1426,6 +1426,7 @@ div#div_custom_html {
 
 .standard fieldset > div > div > * {
   float: left;
+  margin-top: 0;
 }
 
 .standard ul {
