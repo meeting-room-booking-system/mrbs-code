@@ -7,6 +7,101 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.9.0 (Tue 16th August 2020):
+
+[*] Authentication and session schemes refactored into classes.
+
+[*] Updated Norwegian translation from Pål Viland Monstad.
+
+[+] Added multi-site ability, to allow more than one sites to be run from the same
+ installation, just with different configuration files.
+
+[-] Fixed bug causing problems in resizing booking.
+
+[-] Fixed bug when resizing bookings after the table container has been
+ scrolled.
+
+[*] Upgraded to Select2 version 4.0.13.
+
+[+] Added a display name to the users table.
+
+[-] Added Ajax loading of usernames. See SF Support Requests #2031
+
+[-] Fixed problem with escaping of HTML. See SF Support Requests #2045.
+
+[-] Fixed bug when the booking day goes past midnight. See SF Support
+ Requests #2045.
+
+[-] Fixed CSS problem. See SF Bugs #460.
+
+[-] Fixed bug causing the create_by value to be changed in some
+ circumstances. See Support Requests #2052.
+
+[-] Fixed bug when editing an entry without being logged in first. See
+ SF Bugs #464.
+
+[*] Moved mail sending into a MailQueue class. Normally the queue is
+ flushed on shutdown using a register_shutdown_function() callback.
+ However the class could easily be extended so that the mail queue is
+ held in the database and emptied by a cron job. This would enable
+ rate limits to be adhered to more accurately, as there would be just
+ one queue.
+
+[+] Added a config option for types that can only be used by admins.
+
+[*] Removed inclusion of language preferences in the datepicker
+ JavaScript code in order to avoid caching problems. The language
+ preferences are now obtained dynamically from a data atrtribute in
+ the body tag. See SF Support Requests #2073.
+
+[*] Various improvements for display on mobile devices.
+
+[*] Updated Spanish translation. Thanks to Jose Luis Martin Jimenez. See
+ SF Feature Requests #355.
+
+[*] Upgraded to jQuery 3.5.1.
+
+[+] Added per-area configuration for "times along top" and "default type".
+
+[-] Implemented global limits on the total *length" of bookings per
+ day/week/month/year
+
+[*] PHP 8 compatibility fixes.
+
+[-] Fixed SF Bugs #463.
+
+[-] Fixed problem with booking admins not being able to resize rooms.
+ See also SF Bugs #463.
+
+[-] per-area settings for total length of bookings.
+
+[-] Fixed SF Bugs #466 (it's possible to create a series which has
+ overlapping entries)
+
+[-] Fixed problem with the brief description field not receiving focus.
+ See SF Bugs #468.
+
+[-] Fixed bug causing high client CPU load in some circumstances when
+ $show_timeline is true. See SF Support Requests #2107.
+
+[+] Added a config option $prevent_simultaneous_bookings to stop users
+ booking two different rooms at the same time. See SF Bugs #472.
+
+[-] Fixed problem with an unnecessary CSRF error message being generated
+ if the user logs off after the session has expired due to
+ inactivity.
+
+[-] Fixed problem caused by trailing spaces in the username in the
+ 'http' session scheme.
+
+[-] Fixed bug causing datepickers not to be shown in Safari and Firefox
+ on iPhone. See SF Bugs #473.
+
+[*] Updates to authentication schemes to allow a user's real name to be
+ used instead of their username, if that information is available. includes
+ addition of this field in MRBS's buit-in DB authentication scheme.
+
+-------------------------------------------------------------------------------
 Version 1.8.0 (Tue 31st March 2020):
 
 [*] Navigation in/layout of the calendar views has been improved.
