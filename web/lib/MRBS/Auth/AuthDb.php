@@ -293,8 +293,7 @@ class AuthDb extends Auth
                SET password_hash=:password_hash,
                    reset_key_hash=NULL,
                    reset_key_expiry=0
-             WHERE name=:name
-             LIMIT 1";
+             WHERE name=:name";  // PostgreSQL does not support LIMIT with UPDATE
 
     $sql_params = array(
         ':password_hash' => password_hash($password, PASSWORD_DEFAULT),
@@ -391,8 +390,7 @@ class AuthDb extends Auth
     $sql = "UPDATE " . \MRBS\_tbl('users') . "
                SET reset_key_hash=:reset_key_hash,
                    reset_key_expiry=:reset_key_expiry
-             WHERE id=:id
-             LIMIT 1";
+             WHERE id=:id";  // PostgreSQL does not support LIMIT with UPDATE
 
     $sql_params = array(
         ':reset_key_hash' => password_hash($key, PASSWORD_DEFAULT),
