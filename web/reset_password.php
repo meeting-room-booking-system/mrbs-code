@@ -1,10 +1,11 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Element;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementP;
-use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\Form;
@@ -66,6 +67,8 @@ function generate_reset_request_form()
 
 function generate_reset_form($user, $key)
 {
+  global $pwd_policy;
+
   $form = new Form();
   $form->setAttributes(array(
     'class'  => 'standard',
@@ -76,6 +79,44 @@ function generate_reset_form($user, $key)
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
+
+  $field = new FieldDiv();
+  $p = new ElementP();
+  $text = get_vocab('enter_new_password');
+  if (isset($pwd_policy))
+  {
+    $text .= ' ' . get_vocab('pwd_must_contain');
+  }
+  $p->setText($text);
+  $field->addControlElement($p);
+
+  if (isset($pwd_policy))
+  {
+    $ul = new Element('ul');
+    $ul->setAttribute('id', 'pwd_policy');
+    foreach ($pwd_policy as $rule => $value)
+    {
+      if ($value != 0)
+      {
+        $li = new Element('li');
+        $li->setText(get_vocab('policy_' . $rule, $value));
+        $ul->addElement($li);
+      }
+    }
+    $field->addControlElement($ul);
+  }
+
+  $fieldset->addElement($field);
+
+  for ($i=0; $i<2; $i++)
+  {
+    $field = new FieldInputPassword();
+    $field->setLabel(\MRBS\get_vocab('users.password'))
+          ->setControlAttributes(array('id' => "password$i",
+                                       'name' => "password$i",
+                                       'autocomplete' => 'new-password'));
+    $fieldset->addElement($field);
+  }
 
   $form->addElement($fieldset);
 

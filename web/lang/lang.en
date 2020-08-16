@@ -284,6 +284,8 @@ $vocab["will_be_sent_instructions"] = "You will be sent an email message with in
 $vocab["reset_password"]            = "Reset password";
 $vocab["invalid_link"]              = "Invalid link";
 $vocab["link_invalid"]              = "The password reset link is invalid or has expired.";
+$vocab["enter_new_password"]        = "Enter your new password twice below.";
+$vocab["pwd_must_contain"]          = "The password must contain at least:";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";

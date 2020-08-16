@@ -1428,6 +1428,10 @@ div#div_custom_html {
   float: left;
 }
 
+.standard ul {
+  clear: left;
+}
+
 .standard fieldset fieldset {
   padding: 1em 0;
 }
