@@ -280,6 +280,40 @@ class AuthDb extends Auth
   }
 
 
+  public function isValidReset($user, $key)
+  {
+    if (!isset($user) || !isset($key) || ($user === '') || ($key === ''))
+    {
+      return false;
+    }
+
+    $sql = "SELECT reset_key_hash, reset_key_expiry
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE name=:name
+             LIMIT 1";
+
+    $sql_params = array(':name' => $user);
+    $res = \MRBS\db()->query($sql,$sql_params);
+
+    // Check we've found a row
+    if ($res->count() == 0)
+    {
+      return false;
+    }
+
+    $row = $res->next_row_keyed();
+
+    // Check that the reset hasn't expired
+    if (time() > $row['reset_key_expiry'])
+    {
+      return false;
+    }
+
+    // Check we've got the correct key
+    return password_verify($key, $row['reset_key_hash']);
+  }
+
+
   private function notifyUser($user_id, $key)
   {
     global $auth, $mail_settings;

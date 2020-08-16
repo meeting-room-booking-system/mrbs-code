@@ -281,6 +281,9 @@ $vocab["password_reset_body"]       = 'Someone has generated a password reset re
 $vocab["enter_username"]            = "Please enter your username here.";
 $vocab["enter_username_or_email"]   = "Please enter your username or email address here.";
 $vocab["will_be_sent_instructions"] = "You will be sent an email message with instructions on how to reset your password.";
+$vocab["reset_password"]            = "Reset password";
+$vocab["invalid_link"]              = "Invalid link";
+$vocab["link_invalid"]              = "The password reset link is invalid or has expired.";
 
 // Database upgrade code
 $vocab["database_login"]           = "Database login";

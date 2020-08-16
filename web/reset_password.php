@@ -12,7 +12,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_request_reset_form()
+function generate_reset_request_form()
 {
   $can_reset_by_email = auth()->canResetByEmail();
 
@@ -64,6 +64,39 @@ function generate_request_reset_form()
 }
 
 
+function generate_reset_form($user, $key)
+{
+  $form = new Form();
+  $form->setAttributes(array(
+    'class'  => 'standard',
+    'id'     => 'lost_password',
+    'method' => 'post',
+    'action' => multisite('reset_password_handler.php')
+  ));
+
+  $fieldset = new ElementFieldset();
+  $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
+
+  $form->addElement($fieldset);
+
+  // The submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldInputSubmit();
+  $field->setControlAttributes(array('value' => \MRBS\get_vocab('reset_password')));
+  $fieldset->addElement($field);
+
+  $form->addElement($fieldset);
+  $form->render();
+}
+
+
+function generate_invalid_link()
+{
+  echo "<h2>" . get_vocab('invalid_link') . "</h2>\n";
+  echo "<p>" . get_vocab('link_invalid') . "</p>";
+}
+
+
 // If we haven't got the ability to reset passwords then get out of here
 if (!auth()->canResetPassword())
 {
@@ -85,6 +118,24 @@ $context = array(
 
 print_header($context);
 
-generate_request_reset_form();
+$action = get_form_var('action', 'string');
+
+if (isset($action) && ($action == 'reset'))
+{
+  $user = get_form_var('user', 'string');
+  $key = get_form_var('key', 'string');
+  if (auth()->isValidReset($user, $key))
+  {
+    generate_reset_form($user, $key);
+  }
+  else
+  {
+    generate_invalid_link();
+  }
+}
+else
+{
+  generate_reset_request_form();
+}
 
 print_footer();
