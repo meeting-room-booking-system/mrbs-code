@@ -13,7 +13,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_reset_request_form()
+function generate_reset_request_form($result=null)
 {
   $can_reset_by_email = auth()->canResetByEmail();
 
@@ -25,10 +25,20 @@ function generate_reset_request_form()
       'action' => multisite('reset_password_handler.php')
     ));
 
+  $form->addHiddenInputs(array(
+      'action' => 'request',
+    ));
+
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
 
   $field = new FieldDiv();
+  if (isset($result) && ($result=='request_failed'))
+  {
+    $p = new ElementP();
+    $p->setText(get_vocab('pwd_request_failed'));
+    $field->addControlElement($p);
+  }
   $p = new ElementP();
   $text = ($can_reset_by_email) ? get_vocab('enter_username_or_email') : get_vocab('enter_username');
   $text .= ' ' . get_vocab('will_be_sent_instructions');
@@ -65,22 +75,35 @@ function generate_reset_request_form()
 }
 
 
-function generate_reset_form($user, $key)
+function generate_reset_form($username, $key, $result=null)
 {
   global $pwd_policy;
 
   $form = new Form();
   $form->setAttributes(array(
-    'class'  => 'standard',
-    'id'     => 'lost_password',
-    'method' => 'post',
-    'action' => multisite('reset_password_handler.php')
-  ));
+      'class'  => 'standard',
+      'id'     => 'lost_password',
+      'method' => 'post',
+      'action' => multisite('reset_password_handler.php')
+    ));
+
+  $form->addHiddenInputs(array(
+      'action'   => 'reset',
+      'username' => $username,
+      'key'      => $key
+    ));
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
 
   $field = new FieldDiv();
+  if (isset($result) && ($result=='pwd_not_match'))
+  {
+    $p = new ElementP();
+    $p->setText(get_vocab('passwords_not_eq'))
+      ->setAttribute('class', 'error');
+    $field->addControlElement($p);
+  }
   $p = new ElementP();
   $text = get_vocab('enter_new_password');
   if (isset($pwd_policy))
@@ -94,6 +117,10 @@ function generate_reset_form($user, $key)
   {
     $ul = new Element('ul');
     $ul->setAttribute('id', 'pwd_policy');
+    if (isset($result) && ($result=='pwd_invalid'))
+    {
+      $ul->setAttribute('class', 'error');
+    }
     foreach ($pwd_policy as $rule => $value)
     {
       if ($value != 0)
@@ -134,7 +161,20 @@ function generate_reset_form($user, $key)
 function generate_invalid_link()
 {
   echo "<h2>" . get_vocab('invalid_link') . "</h2>\n";
-  echo "<p>" . get_vocab('link_invalid') . "</p>";
+  echo "<p>" . get_vocab('link_invalid') . "</p>\n";
+}
+
+
+function generate_request_sent()
+{
+  echo "<h2>" . get_vocab('password_reset') . "</h2>\n";
+  echo "<p>" . get_vocab('pwd_check_email') . "</p>\n";
+}
+
+function generate_reset_success()
+{
+  echo "<h2>" . get_vocab('password_reset') . "</h2>\n";
+  echo "<p>" . get_vocab('pwd_reset_success') . "</p>\n";
 }
 
 
@@ -160,18 +200,40 @@ $context = array(
 print_header($context);
 
 $action = get_form_var('action', 'string');
+$result = get_form_var('result', 'string');
+$username = get_form_var('username', 'string');
+$key = get_form_var('key', 'string');
 
 if (isset($action) && ($action == 'reset'))
 {
-  $user = get_form_var('user', 'string');
-  $key = get_form_var('key', 'string');
-  if (auth()->isValidReset($user, $key))
+  if (auth()->isValidReset($username, $key))
   {
-    generate_reset_form($user, $key);
+    generate_reset_form($username, $key);
   }
   else
   {
     generate_invalid_link();
+  }
+}
+elseif (isset($result))
+{
+  switch($result)
+  {
+    case 'pwd_invalid':
+    case 'pwd_not_match':
+      generate_reset_form($username, $key, $result);
+      break;
+    case 'pwd_reset':
+      generate_reset_success();
+      break;
+    case 'request_failed':
+      generate_reset_request_form($result);
+      break;
+    case 'request_sent':
+      generate_request_sent();
+      break;
+    default:
+      break;
   }
 }
 else

@@ -1433,6 +1433,11 @@ div#div_custom_html {
   clear: left;
 }
 
+.reset_password .standard p {
+  float: left;
+  clear: left;
+}
+
 .standard fieldset fieldset {
   padding: 1em 0;
 }

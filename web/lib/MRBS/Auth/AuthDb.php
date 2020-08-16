@@ -233,7 +233,7 @@ class AuthDb extends Auth
   }
 
 
-  public function resetPassword($login)
+  public function requestPassword($login)
   {
     if (!isset($login) || ($login === ''))
     {
@@ -277,6 +277,33 @@ class AuthDb extends Auth
 
     // Email the user
     return $this->notifyUser($user_id, $key);
+  }
+
+
+  public function resetPassword($username, $key, $password)
+  {
+    // Check that we've got a password and we're allowed to reset the password
+    if (!isset($password) || !\MRBS\auth()->isValidReset($username, $key))
+    {
+      return false;
+    }
+
+    // Set the new password and clear the reset key
+    $sql = "UPDATE " . \MRBS\_tbl('users') . "
+               SET password_hash=:password_hash,
+                   reset_key_hash=NULL,
+                   reset_key_expiry=0
+             WHERE name=:name
+             LIMIT 1";
+
+    $sql_params = array(
+        ':password_hash' => password_hash($password, PASSWORD_DEFAULT),
+        ':name' => $username
+      );
+
+    \MRBS\db()->command($sql, $sql_params);
+
+    return true;
   }
 
 
@@ -336,9 +363,9 @@ class AuthDb extends Auth
     $body .= "</p>\n";
     // Construct and add in the link
     $vars = array(
-        'action' => 'reset',
-        'user'   => $user['name'],
-        'key'    => $key
+        'action'   => 'reset',
+        'username' => $user['name'],
+        'key'      => $key
       );
     $query = http_build_query($vars, '', '&');
     $href = \MRBS\url_base() . \MRBS\multisite("reset_password.php?$query");
