@@ -235,8 +235,6 @@ class AuthDb extends Auth
 
   public function resetPassword($login)
   {
-    global $auth, $mail_settings;
-
     if (!isset($login) || ($login === ''))
     {
       return false;
@@ -278,33 +276,52 @@ class AuthDb extends Auth
     $this->setResetKey($user_id, $key);
 
     // Email the user
+    return $this->notifyUser($user_id, $key);
+  }
+
+
+  private function notifyUser($user_id, $key)
+  {
+    global $auth, $mail_settings;
+
     $user = $this->getUserByUserId($user_id);
     if (!isset($user['email']) || ($user['email'] === ''))
     {
       return false;
     }
+
     $expiry_time = $auth['db']['reset_key_expiry'];
     \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
     $addresses = array(
-        'from'  => $mail_settings['from'],
-        'to'    => $user['email']
-      );
+      'from'  => $mail_settings['from'],
+      'to'    => $user['email']
+    );
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
     $body .= \MRBS\get_vocab('password_reset_body', $user['name'], intval($expiry_time), $expiry_units);
     $body .= "</p>\n";
-    MailQueue::add(
-        $addresses,
-        $subject,
-        array('content' => strip_tags($body)),
-        array('content' => $body,
-              'cid'     => \MRBS\generate_global_uid("html")),
-        null,
-        \MRBS\get_mail_charset()
+    // Construct and add in the link
+    $vars = array(
+        'action' => 'reset',
+        'user'   => $user['name'],
+        'key'    => $key
       );
+    $query = http_build_query($vars, '', '&');
+    $href = \MRBS\url_base() . \MRBS\multisite("reset_password.php?$query");
+    $body .= "<p><a href=\"$href\">$href</a></p>";
+
+    MailQueue::add(
+      $addresses,
+      $subject,
+      array('content' => strip_tags($body)),
+      array('content' => $body,
+        'cid'     => \MRBS\generate_global_uid("html")),
+      null,
+      \MRBS\get_mail_charset()
+    );
+
     return true;
   }
-
 
   private function setResetKey($user_id, $key)
   {
