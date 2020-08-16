@@ -69,6 +69,14 @@ function get_page_level($page)
 {
   global $auth, $max_level;
 
+  // If you're resetting your password you won't be logged in and $auth['deny_public_access']
+  // should not apply.
+  if (in_array($page, array('reset_password.php', 'reset_password_handler.php')))
+  {
+    return 0;
+  }
+
+  // Otherwise ...
   switch ($page)
   {
     // These pages are open to the public by default as they only contain

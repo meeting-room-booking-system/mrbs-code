@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
+use MRBS\MailQueue;
 use MRBS\User;
 
 class AuthDb extends Auth
@@ -157,26 +158,19 @@ class AuthDb extends Auth
 
   public function getUser($username)
   {
-    $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users') . "
-             WHERE name=:name
-             LIMIT 1";
-
-    $result = \MRBS\db()->query($sql, array(':name' => $username));
+    $row = $this->getUserByUsername($username);
 
     // The username doesn't exist - return NULL
-    if ($result->count() === 0)
+    if (!isset($row))
     {
       return null;
     }
 
     // The username does exist - return a User object
-    $data = $result->next_row_keyed();
-
     $user = new User($username);
 
     // $user->level and $user->display_name will be set as part of this
-    foreach ($data as $key => $value)
+    foreach ($row as $key => $value)
     {
       if ($key == 'name')
       {
@@ -203,13 +197,6 @@ class AuthDb extends Auth
   }
 
 
-  // Checks whether validation of a user by email address is possible and allowed.
-  public function canValidateByEmail()
-  {
-    return true;
-  }
-
-
   // Return an array of all users
   public function getUsers()
   {
@@ -220,6 +207,258 @@ class AuthDb extends Auth
     $res = \MRBS\db()->query($sql);
 
     return $res->all_rows_keyed();
+  }
+
+
+  // Checks whether validation of a user by email address is possible and allowed.
+  public function canValidateByEmail()
+  {
+    return true;
+  }
+
+
+  // Checks whether the method has a password reset facility
+  public function canResetPassword()
+  {
+    return true;
+  }
+
+
+  // Checks whether the password by reset by supplying an email address.
+  // If there are duplicate email addresses in the table (only the username is required
+  // to be unique) then we can't, because we won't know which user has requested the reset.
+  public function canResetByEmail()
+  {
+    return ($this->canValidateByEmail() && !\MRBS\db()->tableHasDuplicates(\MRBS\_tbl('users'),'email'));
+  }
+
+
+  public function requestPassword($login)
+  {
+    if (!isset($login) || ($login === ''))
+    {
+      return false;
+    }
+
+    // Get the possible user ids given this login, which could be a username or email address
+    $possible_user_ids = array();
+
+    $user = $this->getUserByUsername($login);
+
+    if (!empty($user))
+    {
+      $possible_user_ids[] = $user['id'];
+    }
+
+    if ($this->canValidateByEmail())
+    {
+      $users = $this->getUsersByEmail($login);
+      if (!empty($users))
+      {
+        foreach ($users as $user)
+        {
+          $possible_user_ids[] = $user['id'];
+        }
+      }
+    }
+
+    // If we haven't got exactly one user with this login, then don't do anything.
+    if (count($possible_user_ids) !== 1)
+    {
+      return false;
+    }
+
+    // Generate a key
+    $key = \MRBS\generate_token(32);
+
+    // Update the database
+    $user_id = $possible_user_ids[0];
+    $this->setResetKey($user_id, $key);
+
+    // Email the user
+    return $this->notifyUser($user_id, $key);
+  }
+
+
+  public function resetPassword($username, $key, $password)
+  {
+    // Check that we've got a password and we're allowed to reset the password
+    if (!isset($password) || !\MRBS\auth()->isValidReset($username, $key))
+    {
+      return false;
+    }
+
+    // Set the new password and clear the reset key
+    $sql = "UPDATE " . \MRBS\_tbl('users') . "
+               SET password_hash=:password_hash,
+                   reset_key_hash=NULL,
+                   reset_key_expiry=0
+             WHERE name=:name
+             LIMIT 1";
+
+    $sql_params = array(
+        ':password_hash' => password_hash($password, PASSWORD_DEFAULT),
+        ':name' => $username
+      );
+
+    \MRBS\db()->command($sql, $sql_params);
+
+    return true;
+  }
+
+
+  public function isValidReset($user, $key)
+  {
+    if (!isset($user) || !isset($key) || ($user === '') || ($key === ''))
+    {
+      return false;
+    }
+
+    $sql = "SELECT reset_key_hash, reset_key_expiry
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE name=:name
+             LIMIT 1";
+
+    $sql_params = array(':name' => $user);
+    $res = \MRBS\db()->query($sql,$sql_params);
+
+    // Check we've found a row
+    if ($res->count() == 0)
+    {
+      return false;
+    }
+
+    $row = $res->next_row_keyed();
+
+    // Check that the reset hasn't expired
+    if (time() > $row['reset_key_expiry'])
+    {
+      return false;
+    }
+
+    // Check we've got the correct key
+    return password_verify($key, $row['reset_key_hash']);
+  }
+
+
+  private function notifyUser($user_id, $key)
+  {
+    global $auth, $mail_settings;
+
+    $user = $this->getUserByUserId($user_id);
+    if (!isset($user['email']) || ($user['email'] === ''))
+    {
+      return false;
+    }
+
+    $expiry_time = $auth['db']['reset_key_expiry'];
+    \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
+    $addresses = array(
+      'from'  => $mail_settings['from'],
+      'to'    => $user['email']
+    );
+    $subject = \MRBS\get_vocab('password_reset_subject');
+    $body = '<p>';
+    $body .= \MRBS\get_vocab('password_reset_body', $user['name'], intval($expiry_time), $expiry_units);
+    $body .= "</p>\n";
+    // Construct and add in the link
+    $vars = array(
+        'action'   => 'reset',
+        'username' => $user['name'],
+        'key'      => $key
+      );
+    $query = http_build_query($vars, '', '&');
+    $href = \MRBS\url_base() . \MRBS\multisite("reset_password.php?$query");
+    $body .= "<p><a href=\"$href\">$href</a></p>";
+
+    MailQueue::add(
+      $addresses,
+      $subject,
+      array('content' => strip_tags($body)),
+      array('content' => $body,
+        'cid'     => \MRBS\generate_global_uid("html")),
+      null,
+      \MRBS\get_mail_charset()
+    );
+
+    return true;
+  }
+
+  private function setResetKey($user_id, $key)
+  {
+    global $auth;
+
+    $sql = "UPDATE " . \MRBS\_tbl('users') . "
+               SET reset_key_hash=:reset_key_hash,
+                   reset_key_expiry=:reset_key_expiry
+             WHERE id=:id
+             LIMIT 1";
+
+    $sql_params = array(
+        ':reset_key_hash' => password_hash($key, PASSWORD_DEFAULT),
+        ':reset_key_expiry' => time() + $auth['db']['reset_key_expiry'],
+        ':id' => $user_id
+      );
+
+    \MRBS\db()->command($sql, $sql_params);
+  }
+
+
+  private function getUserByUsername($username)
+  {
+    $sql = "SELECT *
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE name=:name
+             LIMIT 1";
+
+    $result = \MRBS\db()->query($sql, array(':name' => $username));
+
+    // The username doesn't exist - return NULL
+    if ($result->count() === 0)
+    {
+      return null;
+    }
+
+    return $result->next_row_keyed();
+  }
+
+
+  private function getUserByUserId($id)
+  {
+    $sql = "SELECT *
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE id=:id
+             LIMIT 1";
+
+    $result = \MRBS\db()->query($sql, array(':id' => $id));
+
+    // The username doesn't exist - return NULL
+    if ($result->count() === 0)
+    {
+      return null;
+    }
+
+    return $result->next_row_keyed();
+  }
+
+
+  private function getUsersByEmail($email)
+  {
+    $result = array();
+
+    $sql = "SELECT *
+              FROM " . \MRBS\_tbl('users') . "
+             WHERE email=:email";
+
+    $res = \MRBS\db()->query($sql, array(':email' => $email));
+
+    // The username doesn't exist - return NULL
+    while (false !== ($row = $res->next_row_keyed()))
+    {
+      $result[] = $row;
+    }
+
+    return $result;
   }
 
 

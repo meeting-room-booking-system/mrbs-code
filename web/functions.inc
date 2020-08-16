@@ -17,6 +17,27 @@ function in_arrayi($needle, $haystack)
 }
 
 
+function generate_token($length)
+{
+  if (function_exists('random_bytes'))
+  {
+    return bin2hex(random_bytes($length));  // PHP 7 and above
+  }
+
+  if (function_exists('mcrypt_create_iv'))
+  {
+    return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+  }
+
+  if (function_exists('openssl_random_pseudo_bytes'))
+  {
+    return bin2hex(openssl_random_pseudo_bytes($length));
+  }
+
+  return md5(uniqid(rand(), true));
+}
+
+
 // Returns a name in the format last_name first_name for sorting
 function get_sortable_name($name)
 {

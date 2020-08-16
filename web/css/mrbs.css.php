@@ -1402,6 +1402,10 @@ div#div_custom_html {
   padding: 1em 1em 1em 0;
 }
 
+.standard#logon fieldset {
+  padding-bottom: 0;
+}
+
 .standard fieldset > div {
   display: table-row;
 }
@@ -1422,6 +1426,16 @@ div#div_custom_html {
 
 .standard fieldset > div > div > * {
   float: left;
+  margin-top: 0;
+}
+
+.standard ul {
+  clear: left;
+}
+
+.reset_password .standard p {
+  float: left;
+  clear: left;
 }
 
 .standard fieldset fieldset {

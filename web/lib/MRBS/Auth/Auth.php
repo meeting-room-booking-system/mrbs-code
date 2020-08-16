@@ -24,6 +24,68 @@ abstract class Auth
   }
 
 
+  // Checks whether the method has a password reset facility
+  public function canResetPassword()
+  {
+    return false;
+  }
+
+
+  // Checks whether the password by reset by supplying an email address
+  public function canResetByEmail()
+  {
+    return false;
+  }
+
+
+  // Validates that the password conforms to the password policy
+  // (Ideally this function should also be matched by client-side
+  // validation, but unfortunately JavaScript's native support for Unicode
+  // pattern matching is very limited.   Would need to be implemented using
+  // an add-in library).
+  function validatePassword($password)
+  {
+    global $pwd_policy;
+
+    if (isset($pwd_policy))
+    {
+      // Set up regular expressions.  Use p{Ll} instead of [a-z] etc.
+      // to make sure accented characters are included
+      $pattern = array('alpha'   => '/\p{L}/',
+                       'lower'   => '/\p{Ll}/',
+                       'upper'   => '/\p{Lu}/',
+                       'numeric' => '/\p{N}/',
+                       'special' => '/[^\p{L}|\p{N}]/');
+      // Check for conformance to each rule
+      foreach($pwd_policy as $rule => $value)
+      {
+        switch($rule)
+        {
+          case 'length':
+            if (\MRBS\utf8_strlen($password) < $pwd_policy[$rule])
+            {
+              return false;
+            }
+            break;
+          default:
+            // turn on Unicode matching
+            $pattern[$rule] .= 'u';
+
+            $n = preg_match_all($pattern[$rule], $password, $matches);
+            if (($n === false) || ($n < $pwd_policy[$rule]))
+            {
+              return false;
+            }
+            break;
+        }
+      }
+    }
+
+    // Everything is OK
+    return true;
+  }
+
+
   // Gets the level from the $auth['admin'] array in the config file
   protected function getDefaultLevel($username)
   {
