@@ -204,6 +204,11 @@ $result = get_form_var('result', 'string');
 $username = get_form_var('username', 'string');
 $key = get_form_var('key', 'string');
 
+if (isset($username))
+{
+  $username = trim($username);
+}
+
 if (isset($action) && ($action == 'reset'))
 {
   if (auth()->isValidReset($username, $key))

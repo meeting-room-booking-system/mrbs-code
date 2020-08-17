@@ -21,6 +21,7 @@ $username = get_form_var('username', 'string');
 
 if (isset($username) && ($username !== ''))
 {
+  $username = trim($username);
   $action = get_form_var('action', 'string');
   if (isset($action))
   {
