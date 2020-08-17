@@ -795,6 +795,8 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 // as required.  To protect the password field use 'password_hash' - useful
 // for public demo sites.
 $auth['db']['protected_fields'] = array('level', 'name', 'display_name');
+// Expiry time for a password reset key
+$auth['db']['reset_key_expiry'] = 60*60*24; // seconds
 
 
 // 'auth_db_ext' configuration settings
@@ -1076,6 +1078,10 @@ $auth['only_admin_can_select_multiroom'] = false;
 // If you don't want ordinary users to be able to see the other users'
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
+
+// For events that allow registration, the other registrants' names are by default
+// not shown unless you have write access to the booking.
+$auth['show_registrant_names'] = false;
 
 // Set this to true if you don't want admins to be able to make bookings
 // on behalf of other users

@@ -619,12 +619,15 @@ function get_entry_by_id($id)
 // corresponding to the entry table columns
 function get_entries_by_area($area_id, $interval_start, $interval_end)
 {
-  $sql = "SELECT E.*
-            FROM " . _tbl('entry') . " E, " . _tbl('room') . " R
-           WHERE E.room_id = R.id
-             AND R.area_id = ?
+  // The GROUP BY is necessary to get n_registered to work
+  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
+       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
+           WHERE R.area_id = ?
              AND R.disabled = 0
              AND start_time < ? AND end_time > ?
+        GROUP BY E.id
         ORDER BY start_time, E.id";   // necessary so that multiple bookings appear in the right order
 
   $res = db()->query($sql, array($area_id, $interval_end, $interval_start));
@@ -647,10 +650,13 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
 // corresponding to the entry table columns
 function get_entries_by_room($room_id, $interval_start, $interval_end)
 {
-  $sql = "SELECT *
-            FROM " . _tbl('entry') . "
+  // The GROUP BY is necessary to get n_registered to work
+  $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
            WHERE room_id = ?
              AND start_time < ? AND end_time > ?
+        GROUP BY E.id
         ORDER BY start_time, id";   // necessary so that multiple bookings appear in the right order
 
   $res = db()->query($sql, array($room_id, $interval_end,  $interval_start));
@@ -837,6 +843,17 @@ function mrbsCreateEntry($table, $data)
     {
       switch ($key)
       {
+        // booleans
+        case 'allow_registration':
+        case 'enable_registrant_limit':
+          if (isset($data[$key]))
+          {
+            $sql_col[] = $key;
+            $sql_val[] = '?';
+            $sql_params[] = ($data[$key]) ? 1 : 0;
+          }
+          break;
+
         // integers
         case 'start_time':
         case 'end_time':
@@ -851,6 +868,16 @@ function mrbsCreateEntry($table, $data)
           $sql_col[] = $key;
           $sql_val[] = '?';
           $sql_params[] = (isset($data[$key])) ? (int)$data[$key] : null;
+          break;
+
+        // integers NOT NULL
+        case 'registrant_limit':
+          if (isset($data[$key]))
+          {
+            $sql_col[] = $key;
+            $sql_val[] = '?';
+            $sql_params[] = (int)$data[$key];
+          }
           break;
 
         // strings
@@ -1409,6 +1436,67 @@ function mrbsApproveEntry($id, $series)
 }
 
 
+function get_registration_by_id($id)
+{
+  if (!isset($id))
+  {
+    return null;
+  }
+
+  $sql = "SELECT *
+            FROM " . _tbl('participants') . "
+           WHERE id=?
+           LIMIT 1";
+
+  $res = db()->query($sql, array($id));
+
+  if ($res->count() == 0)
+  {
+    $result = null;
+  }
+  else
+  {
+    $result = $res->next_row_keyed();
+  }
+
+  return $result;
+}
+
+
+// Get the people registered for an event
+function get_registrants($id, $series)
+{
+  // You can't register for a series (yet)
+  if ($series)
+  {
+    return null;
+  }
+
+  $sql = "SELECT *
+            FROM " . _tbl('participants') . "
+           WHERE entry_id=:entry_id";
+
+  $res = db()->query($sql, array(':entry_id' => $id));
+
+  return $res->all_rows_keyed();
+}
+
+
+// Check whether any entries in a series have users registered
+function series_has_registrants($repeat_id)
+{
+  $sql = "SELECT COUNT(username)
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+           WHERE E.repeat_id=:repeat_id
+           LIMIT 1";
+
+  $sql_params = array(':repeat_id' => $repeat_id);
+
+  return (db()->query1($sql, $sql_params) > 0);
+}
+
+
 // get_booking_info($id, $series)
 //
 // Gets all the details for a booking with $id, which is in the
@@ -1463,6 +1551,9 @@ function get_booking_info($id, $series, $silent=FALSE)
       case 'entry_type':
       case 'repeat_id':
       case 'ical_recur_id':
+      case 'allow_registration':
+      case 'enable_registrant_limit':
+      case 'registrant_limit':
         array_push($terms, $field['name']);
         break;
 
@@ -1553,6 +1644,8 @@ function get_booking_info($id, $series, $silent=FALSE)
   unpack_status($row);
 
   // Get some extra information
+  $row['registrants'] = get_registrants($id, $series);
+
   if ($series)
   {
     $row['entry_info_time'] = '';
@@ -1982,6 +2075,29 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
 }
 
 
+function update_participants($old_id, $new_id)
+{
+  $sql = "UPDATE " . _tbl('participants') . "
+             SET entry_id=:new_id
+           WHERE entry_id=:old_id";
+
+  $sql_params = array(':new_id' => $new_id, ':old_id' => $old_id);
+
+  try
+  {
+    db()->command($sql, $sql_params);
+  }
+  catch (DBException $exception)
+  {
+    trigger_error($exception->getMessage(), E_USER_WARNING);
+    return false;
+  }
+
+  return true;
+}
+
+
+
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
@@ -2305,6 +2421,12 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($booking);
+      // Update the participants table
+      if (isset($id))
+      {
+        update_participants($id, $new_id);
+      }
+
       $is_repeat_table = FALSE;
       $result['start_times'] = array($booking['start_time']);
     }

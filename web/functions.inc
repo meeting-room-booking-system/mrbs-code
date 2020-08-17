@@ -2,9 +2,76 @@
 namespace MRBS;
 
 use \DateTimeZone;
+use MRBS\Form\FieldSelect;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "mrbs_sql.inc";
+
+
+// Case-insensitive in_array
+// See https://www.php.net/manual/en/function.in-array.php#Hcom89256
+function in_arrayi($needle, $haystack)
+{
+  return in_array(utf8_strtolower($needle),
+                  array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack));
+}
+
+
+function generate_token($length)
+{
+  if (function_exists('random_bytes'))
+  {
+    return bin2hex(random_bytes($length));  // PHP 7 and above
+  }
+
+  if (function_exists('mcrypt_create_iv'))
+  {
+    return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+  }
+
+  if (function_exists('openssl_random_pseudo_bytes'))
+  {
+    return bin2hex(openssl_random_pseudo_bytes($length));
+  }
+
+  return md5(uniqid(rand(), true));
+}
+
+
+// Returns a name in the format last_name first_name for sorting
+function get_sortable_name($name)
+{
+  global $sort_users_by_last_name;
+
+  if (!isset($name))
+  {
+    return null;
+  }
+
+  if (empty($sort_users_by_last_name))
+  {
+    return $name;
+  }
+
+  $tokens = explode(' ', $name);
+
+  // Get rid of other whitespace (eg tabs)
+  $tokens = array_map('trim', $tokens);
+
+  // Get the last name
+  $result = array_pop($tokens);
+
+  // Add back in the first names
+  while (null !== ($token = array_shift($tokens)))
+  {
+    if ($token !== '') // weeds out multiple spaces in a name
+    {
+      $result .= ' ' . $token;
+    }
+  }
+
+  return $result;
+}
 
 
 // Tests whether the request has come via an Ajax call or not.
@@ -2199,3 +2266,146 @@ function get_server_software()
 
   return '';
 }
+
+
+
+function get_field_entry_input($params)
+{
+  global $select_options, $datalist_options;
+
+  if (isset($params['field']))
+  {
+    if (!empty($select_options[$params['field']]))
+    {
+      $class = 'FieldSelect';
+    }
+    elseif (!empty($datalist_options[$params['field']]))
+    {
+      $class = 'FieldInputDatalist';
+    }
+    elseif ($params['field'] == 'entry.description')
+    {
+      $class = 'FieldTextarea';
+    }
+    else
+    {
+      $class = 'FieldInputText';
+    }
+  }
+  else
+  {
+    $class = 'FieldInputText';
+  }
+
+  $full_class = __NAMESPACE__ . "\\Form\\$class";
+  $field = new $full_class();
+  $field->setLabel($params['label'])
+    ->setControlAttribute('name', $params['name']);
+
+  if (!empty($params['required']))
+  {
+    $field->setControlAttribute('required', true);
+  }
+  if (!empty($params['disabled']))
+  {
+    $field->setControlAttribute('disabled', true);
+    $field->addHiddenInput($params['name'], $params['value']);
+  }
+
+  switch ($class)
+  {
+    case 'FieldSelect':
+      $options = $select_options[$params['field']];
+      $field->addSelectOptions($options, $params['value']);
+      break;
+
+    case 'FieldInputDatalist':
+      $options = $datalist_options[$params['field']];
+      $field->addDatalistOptions($options);
+    // Drop through
+
+    case 'FieldInputText':
+      if (!empty($params['required']))
+      {
+        // Set a pattern as well as required to prevent a string of whitespace
+        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
+      }
+    // Drop through
+
+    case 'FieldTextarea':
+      if ($class == 'FieldTextarea')
+      {
+        $field->setControlText($params['value']);
+      }
+      else
+      {
+        $field->setControlAttribute('value', $params['value']);
+      }
+      if (isset($params['field']) &&
+        (null !== ($maxlength = maxlength($params['field']))))
+      {
+        $field->setControlAttribute('maxlength', $maxlength);
+      }
+      break;
+
+    default:
+      throw new \Exception("Unknown class '$class'");
+      break;
+  }
+
+  return $field;
+}
+
+
+// Returns a Field object for selecting as user from the list of available users.
+// If $datalist is true a datalist is returned, otherwise a select element.
+// $params is an associative array with the following keys
+//    value       the value of the current selection
+//    disabled    boolean, whether the field should be disabled
+//    required    boolean
+//    field       the field name, eg 'entry.create_by'
+//    label       the field label
+//    name        the field name
+function get_user_field(array $params, $datalist=false)
+{
+  if (method_exists(auth(), 'getUsernames'))
+  {
+    // We can get a list of all users, so present a <select> or <datalist> element.
+    // The options will actually be provided later via Ajax, so all we
+    // do here is present one option, ie the create_by user.
+    $options = array();
+    $selected_user = auth()->getUser($params['value']);
+    // It's possible that $selected_user no longer exists - may have left the
+    // organisation and been deleted from the user list - so in that case
+    // use their username for the displayname.
+    if (isset($selected_user))
+    {
+      $options[$selected_user->username] = $selected_user->display_name;
+    }
+    else
+    {
+      $options[$params['value']] = $params['value'];
+    }
+
+    $field = new FieldSelect();
+    $class = 'ajax_usernames';
+    if ($datalist)
+    {
+      $class .= ' datalist';
+    }
+    $field->setLabel($params['label'])
+      ->setControlAttributes(array('name'     => $params['name'],
+                                   'class'    => $class,
+                                   'disabled' => $params['disabled']))
+      ->addSelectOptions($options, $params['value'], true);
+  }
+  else
+  {
+    // We don't know all the available users, so we'll just present
+    // a text input field and rely on the user to enter a valid username.
+    $field = get_field_entry_input($params);
+  }
+
+  return $field;
+}
+

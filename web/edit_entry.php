@@ -107,136 +107,16 @@ foreach ($fields as $field)
 }
 
 
-function get_field_entry_input($params)
-{
-  global $select_options, $datalist_options;
-
-  if (isset($params['field']))
-  {
-    if (!empty($select_options[$params['field']]))
-    {
-      $class = 'FieldSelect';
-    }
-    elseif (!empty($datalist_options[$params['field']]))
-    {
-      $class = 'FieldInputDatalist';
-    }
-    elseif ($params['field'] == 'entry.description')
-    {
-      $class = 'FieldTextarea';
-    }
-    else
-    {
-      $class = 'FieldInputText';
-    }
-  }
-  else
-  {
-    $class = 'FieldInputText';
-  }
-
-  $full_class = __NAMESPACE__ . "\\Form\\$class";
-  $field = new $full_class();
-  $field->setLabel($params['label'])
-        ->setControlAttribute('name', $params['name']);
-
-  if (!empty($params['required']))
-  {
-    $field->setControlAttribute('required', true);
-  }
-  if (!empty($params['disabled']))
-  {
-    $field->setControlAttribute('disabled', true);
-    $field->addHiddenInput($params['name'], $params['value']);
-  }
-
-  switch ($class)
-  {
-    case 'FieldSelect':
-      $options = $select_options[$params['field']];
-      $field->addSelectOptions($options, $params['value']);
-      break;
-
-    case 'FieldInputDatalist':
-      $options = $datalist_options[$params['field']];
-      $field->addDatalistOptions($options);
-      // Drop through
-
-    case 'FieldInputText':
-      if (!empty($params['required']))
-      {
-        // Set a pattern as well as required to prevent a string of whitespace
-        $field->setControlAttribute('pattern', REGEX_TEXT_POS);
-      }
-      // Drop through
-
-    case 'FieldTextarea':
-      if ($class == 'FieldTextarea')
-      {
-        $field->setControlText($params['value']);
-      }
-      else
-      {
-        $field->setControlAttribute('value', $params['value']);
-      }
-      if (isset($params['field']) &&
-          (null !== ($maxlength = maxlength($params['field']))))
-      {
-        $field->setControlAttribute('maxlength', $maxlength);
-      }
-      break;
-
-    default:
-      throw new \Exception("Unknown class '$class'");
-      break;
-  }
-
-  return $field;
-}
-
-
 function get_field_create_by($create_by, $disabled=false)
 {
-  if (method_exists(auth(), 'getUsernames'))
-  {
-    // We can get a list of all users, so present a <select> element.
-    // The options will actually be provided later via Ajax, so all we
-    // do here is present one option, ie the create_by user.
-    $options = array();
-    $create_by_user = auth()->getUser($create_by);
-    // It's possible that $create_by no longer exists - may have left the
-    // organisation and been deleted from the user list - so in that case
-    // use their username for the displayname.
-    if (isset($create_by_user))
-    {
-      $options[$create_by_user->username] = $create_by_user->display_name;
-    }
-    else
-    {
-      $options[$create_by] = $create_by;
-    }
+  $params = array('label'    => get_vocab('createdby'),
+                  'name'     => 'create_by',
+                  'field'    => 'entry.create_by',
+                  'value'    => $create_by,
+                  'required' => true,
+                  'disabled' => $disabled);
 
-    $field = new FieldSelect();
-    $field->setLabel(get_vocab('createdby'))
-          ->setControlAttributes(array('name'     => 'create_by',
-                                       'disabled' => $disabled))
-          ->addSelectOptions($options, $create_by, true);
-  }
-  else
-  {
-    // We don't know all the available users, so we'll just present
-    // a text input field and rely on the user to enter a valid username.
-    $params = array('label'    => get_vocab('createdby'),
-                    'name'     => 'create_by',
-                    'field'    => 'entry.create_by',
-                    'value'    => $create_by,
-                    'required' => true,
-                    'disabled' => $disabled);
-
-    $field = get_field_entry_input($params);
-  }
-
-  return $field;
+  return get_user_field($params);
 }
 
 
@@ -1026,6 +906,48 @@ function get_field_skip_conflicts($disabled=false)
   return $field;
 }
 
+function get_fieldset_registration()
+{
+  global $allow_registration, $enable_registrant_limit, $registrant_limit;
+
+  if (!is_book_admin())
+  {
+    return null;
+  }
+
+  $fieldset = new ElementFieldset();
+
+  $fieldset->setAttribute('id', 'registration');
+
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('allow_registration'))
+    ->setControlAttribute('name', 'allow_registration')
+    ->setChecked($allow_registration);
+
+  $fieldset->addElement($field);
+
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('enable_registrant_limit'))
+    ->setControlAttribute('name', 'enable_registrant_limit')
+    ->setChecked($enable_registrant_limit);
+
+  $fieldset->addElement($field);
+
+  $field = new FieldInputNumber();
+  $field->setLabel(get_vocab('registrant_limit'))
+        ->setControlAttributes(array(
+              'id'       => 'registrant_limit',
+              'name'     => 'registrant_limit',
+              'min'      => '0',
+              'value'    => $registrant_limit
+            )
+          );
+
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
 
 function get_fieldset_repeat()
 {
@@ -1309,6 +1231,9 @@ if (isset($id))
       case 'ical_recur_id':
       case 'entry_type':
       case 'tentative':
+      case 'allow_registration':
+      case 'enable_registrant_limit':
+      case 'registrant_limit':
         $$column = $entry[$column];
         break;
 
@@ -1435,6 +1360,9 @@ else
   $room_id       = $room;
   $private       = $private_default;
   $tentative     = !$confirmed_default;
+  $allow_registration      = false;
+  $enable_registrant_limit = true;
+  $registrant_limit        = 1;
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults
@@ -1804,6 +1732,8 @@ foreach ($edit_entry_field_order as $key)
 } // foreach
 
 $form->addElement($fieldset);
+
+$form->addElement(get_fieldset_registration());
 
 // Show the repeat fields if (a) it's a new booking and repeats are allowed,
 // or else if it's an existing booking and it's a series.  (It's not particularly obvious but

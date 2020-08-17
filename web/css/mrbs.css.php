@@ -499,7 +499,7 @@ nav.main_calendar.wrapped:nth-of-type(1) nav.location {
 }
 
 <?php
-// Put the margins on the children rathan the parent in case they are wrapped,
+// Put the margins on the children rather than the parent in case they are wrapped,
 // because then we will want some vertical separation between the wrapped items.
 ?>
 nav.main_calendar.wrapped:nth-of-type(1) nav.location > * {
@@ -1125,15 +1125,32 @@ if ($clipped_month)
 
 <?php
 // Generate the classes to give the colour coding by booking type in the day/week/month views
+// Don't go for hard stops on the linear gradient because it doesn't do anti-aliasing.  Instead leave
+// a pixel gap to allow the linear gradient to do some blurring.  (Unfortunately calc() doesn't
+// work with linear-gradient in IE11).
 foreach ($color_types as $type => $col)
 {
-  echo ".$type {background-color: $col}\n";
+  echo ".$type {background: $col}\n";
+  echo ".full.$type {background: linear-gradient(to right bottom, $col calc(50% - 1.5px), $row_even_color calc(50% - 0.5px) calc(50% + 0.5px), $col calc(50% + 1.5px))}\n";
+  echo ".spaces.$type {background: linear-gradient(to right bottom, $row_even_color calc(50% - 0.5px), $col calc(50% + 0.5px))}\n";
 }
 
 ?>
 
+.full a,
+.spaces a {
+  background: transparent;
+}
+
+<?php
+// Put a line at the top of the div to separate the rows when the div is below an even row.
+?>
+tbody tr:nth-child(odd) .spaces {
+  box-shadow: 0 1px 0 <?php echo $row_odd_color ?> inset;
+}
+
 .private_type {
-  background-color: <?php echo $main_table_slot_private_type_color;?>;
+  background: <?php echo $main_table_slot_private_type_color;?>;
 }
 
 .dwm_main thead th,
@@ -1385,6 +1402,10 @@ div#div_custom_html {
   padding: 1em 1em 1em 0;
 }
 
+.standard#logon fieldset {
+  padding-bottom: 0;
+}
+
 .standard fieldset > div {
   display: table-row;
 }
@@ -1405,6 +1426,16 @@ div#div_custom_html {
 
 .standard fieldset > div > div > * {
   float: left;
+  margin-top: 0;
+}
+
+.standard ul {
+  clear: left;
+}
+
+.reset_password .standard p {
+  float: left;
+  clear: left;
 }
 
 .standard fieldset fieldset {
@@ -1488,42 +1519,42 @@ div#div_custom_html {
   .standard fieldset {
     display: block;
   }
-  
+
   .standard fieldset > div {
     display: block;
     float: left;
     clear: left;
   }
-  
+
   .standard fieldset div > * {
     margin-bottom: 1em;
   }
-  
+
   .standard fieldset > div > *:not(.none) {
     display: block;
     vertical-align: middle;
   }
-  
+
   .standard fieldset > div > label {
     text-align: left;
     padding-left: 0;
     padding-right: 0;
     margin-bottom: 0.2em;
   }
-  
+
   .standard fieldset.rep_type_details {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-  
+
   .standard input#rep_interval {
     float: left;
   }
-  
+
   .standard div#rep_type div.long {
     border-right: 0;
   }
-  
+
   .standard .submit_buttons > * {
     float: left;
   }
@@ -1583,7 +1614,8 @@ fieldset.rep_type_details fieldset {
   clear: none;
 }
 
-fieldset#rep_info, fieldset#booking_controls {
+fieldset#rep_info,
+fieldset#booking_controls {
   border-top: 1px solid <?php echo $site_faq_entry_border_color ?>;
   border-radius: 0;
   padding-top: 0.7em;
@@ -1835,15 +1867,15 @@ form#show_my_entries input.link[type="submit"] {
   .banner .logo {
     display: none;
   }
-  
+
   .banner .company {
     align-items: flex-start;
   }
-  
+
   .banner #more_info {
     display: none;
   }
-  
+
   <?php
   // Save room on the index page by not showing the "Goto" button.  However
   // it's useful on other pages as a means of returning to the index page.
@@ -2207,10 +2239,68 @@ div#site_faq_body {
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
-.view_entry #entry td:first-child {
+.view_entry #entry td:first-child,
+.view_entry #registration .list td:first-child {
   text-align: right;
   font-weight: bold;
   padding-right: 1.0em;
+}
+
+.view_entry #registration .list {
+  margin-bottom: 1em;
+}
+
+.view_entry #entry,
+.view_entry #registration {
+  padding-left: 1em;
+}
+
+.view_entry #registration {
+  margin-bottom: 2em;
+}
+
+.view_entry #registration p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.view_entry #registration .standard {
+  display: inline-block;
+  float: none;
+  margin-top: 0;
+}
+
+.view_entry #registration .standard fieldset {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.view_entry #registration .standard fieldset > div > label {
+  padding-left: 0;
+}
+
+.view_entry #registrant_list {
+  padding-left: 1em;
+}
+
+.view_entry #registrants thead th {
+  text-align: left;
+}
+
+.view_entry #registrants th,
+.view_entry #registrants td {
+  vertical-align: middle;
+  padding: 0.4em 0.8em;
+}
+
+.view_entry #registrants td:not(:first-child) {
+  width: 33%;
+}
+
+.view_entry h4 {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  clear: left;
 }
 
 .view_entry div#view_entry_nav {

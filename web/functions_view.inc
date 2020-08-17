@@ -138,6 +138,9 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'ical_uid':
       case 'ical_sequence':
       case 'ical_recur_id':
+      case 'allow_registration':
+      case 'enable_registrant_limit':
+      case 'registrant_limit':
         break;
 
       case 'description':
@@ -290,8 +293,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
     }  // switch
   }  // foreach
-
-
+  
   // Repeat type
   $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
   // Repeat details

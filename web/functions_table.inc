@@ -58,7 +58,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 
   global $resolution;
   global $is_private_field;
-
+  
   // We're only interested in entries which occur on this day (it's possible
   // for $entry to contain entries for other days)
   if (($entry['start_time'] >= $start_last_slot + $resolution) ||
@@ -200,6 +200,19 @@ function get_entry_classes($entry)
   if (isset($entry['repeat_id']))
   {
     $classes[] = 'series';
+  }
+  
+  if ($entry['allow_registration'])
+  {
+    if ($entry['enable_registrant_limit'] &&
+        ($entry['n_registered'] >= $entry['registrant_limit']))
+    {
+      $classes[] = 'full';
+    }
+    else
+    {
+      $classes[] = 'spaces';
+    }
   }
 
   return $classes;

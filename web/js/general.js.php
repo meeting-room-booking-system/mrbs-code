@@ -48,6 +48,104 @@ var adjustLabelWidths = function adjustLabelWidths() {
 }
 
 
+function fillUsernameFields()
+{
+  var select = $('.ajax_usernames');
+
+  select.each(function() {
+      <?php // Turn the create_by select into a fancy select box. ?>
+      var el = $(this);
+      el.mrbsSelect(el.hasClass('datalist'));
+      <?php
+      // Add a class to the body so that we can modify the CSS when the load
+      // is in progress, eg by adding an animated GIF.  We remove the class
+      // once the Ajax data has arrived.
+      ?>
+      $('body').addClass('ajax-loading');
+    });
+
+  <?php
+  // Fire off an Ajax request to get the data.  We do this because some authentication
+  // schemes, eg LDAP, will take a long time to return the data if there are very many
+  // users and we don't want to hold up the page load.  Most of the time the data won't
+  // even be needed anyway because the booking will be made in the name of the current
+  // user.
+  //
+  // Select2 offers an Ajax option, but it is not particularly suitable because (a) the
+  // Ajax request is not fired until the Select2 element is opened, which means the clock
+  // doesn't start ticking until then and (b) a new request is fired whenever the search
+  // term is changed.  It does though offer some nice features such as pagination and
+  // query terms, but these still aren't going to help much.  And LDAP searches of the
+  // form "*TERM*" can be expensive.
+
+  // See https://select2.org/data-sources/ajax for more details
+  ?>
+  $.post({
+      url: 'ajax/usernames.php',
+      dataType: 'json',
+      data: {csrf_token: getCSRFToken(), site: args.site},
+      success: function(data) {
+          select.each(function() {
+              var el = $(this);
+              var newOption;
+              <?php
+              // Get the current option (there will only be one) so we know
+              // which one should be selected in the new list
+              ?>
+              var currentOption = el.find('option').first();
+              var currentValue = currentOption.val();
+              var currentValueUpper = currentValue.toUpperCase();
+              var currentText = currentOption.text();
+              <?php
+              // Remove the existing option, because it will be in the new dataset in
+              // the correct position.
+              ?>
+              el.empty();
+              <?php
+              // Add the new data, selecting the option that was previously selected
+              ?>
+              var foundCurrent = false;
+              $.each(data, function(index, option) {
+                  // Make it a case-insensitive comparison as usernames are case-insensitive
+                  var selected = (option.username.toUpperCase() === currentValueUpper);
+                  foundCurrent = foundCurrent || selected;
+                  var newOption = new Option(option.display_name, option.username, selected, selected);
+                  el.append(newOption);
+                });
+              <?php
+              // It's possible that the creator of the booking is no longer a user (they may have left
+              // the organisation and been deleted from the user list).  If that's the case and we haven't
+              // found them while running through the user list, then add them and make them the selected
+              // option.  (Ideally the list should perhaps be sorted again, but then we'd have to worry
+              // about locales. And having the original creator at the end of the list perhaps draws attention
+              // to the fact that they no longer exist).
+              ?>
+              if (!foundCurrent)
+              {
+                newOption = new Option(currentText, currentValue, true, true);
+                el.append(newOption);
+              }
+              <?php
+              // If there was one, close the Select2 control and refresh it.  If it was open before the
+              // close, then reopen it after the refresh.
+              //
+              ?>
+              if (el.hasClass('select2-hidden-accessible'))
+              {
+                var wasOpen = el.select2('isOpen');
+                el.select2('close').trigger('change');
+                if (wasOpen)
+                {
+                  el.select2('open');
+                }
+              }
+            });
+          $('body').removeClass('ajax-loading');
+        }
+    });
+}
+
+
 var args;
 
 
@@ -55,6 +153,9 @@ $(document).on('page_ready', function() {
 
   <?php // Retrieve the data that the JavaScript files need. ?>
   args = $('body').data();
+
+  <?php // Fire off the Ajax requests for username fields ?>
+  fillUsernameFields();
 
   <?php
   // If we're required to log the user out after a period of inactivity then the user filling in
@@ -67,7 +168,7 @@ $(document).on('page_ready', function() {
         var d = new Date(),
             t = d.getTime()/1000;
         <?php
-        // Only tewll the server that there's been some user activity if we're coming up to
+        // Only tell the server that there's been some user activity if we're coming up to
         // the inactivity timeout
         ?>
         if ((typeof recordActivity.lastRecorded === 'undefined') ||

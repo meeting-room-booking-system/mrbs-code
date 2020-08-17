@@ -115,13 +115,13 @@ if (empty($errors))
   {
     fatal_error(get_vocab("failed_to_acquire"));
   }
-  
+
   // Check the new area still exists
   $sql = "SELECT COUNT(*)
             FROM " . _tbl('area') . "
            WHERE id=?
            LIMIT 1";
-           
+
   if (db()->query1($sql, array($new_area)) < 1)
   {
     $errors[] = 'invalid_area';
@@ -141,7 +141,7 @@ if (empty($errors))
   {
     $errors[] = 'invalid_room_name';
   }
-  // If everything is still OK, update the databasae
+  // If everything is still OK, update the database
   else
   {
     // Convert booleans into 0/1 (necessary for PostgreSQL)

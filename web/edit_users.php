@@ -108,60 +108,12 @@ function can_edit_user($target)
 }
 
 
-// Validates that the password conforms to the password policy
-// (Ideally this function should also be matched by client-side
-// validation, but unfortunately JavaScript's native support for Unicode
-// pattern matching is very limited.   Would need to be implemented using
-// an add-in library).
-function validate_password($password)
-{
-  global $pwd_policy;
-
-  if (isset($pwd_policy))
-  {
-    // Set up regular expressions.  Use p{Ll} instead of [a-z] etc.
-    // to make sure accented characters are included
-    $pattern = array('alpha'   => '/\p{L}/',
-                     'lower'   => '/\p{Ll}/',
-                     'upper'   => '/\p{Lu}/',
-                     'numeric' => '/\p{N}/',
-                     'special' => '/[^\p{L}|\p{N}]/');
-    // Check for conformance to each rule
-    foreach($pwd_policy as $rule => $value)
-    {
-      switch($rule)
-      {
-        case 'length':
-          if (utf8_strlen($password) < $pwd_policy[$rule])
-          {
-            return false;
-          }
-          break;
-        default:
-          // turn on Unicode matching
-          $pattern[$rule] .= 'u';
-
-          $n = preg_match_all($pattern[$rule], $password, $matches);
-          if (($n === false) || ($n < $pwd_policy[$rule]))
-          {
-            return false;
-          }
-          break;
-      }
-    }
-  }
-
-  // Everything is OK
-  return true;
-}
-
-
 // Get the type that should be used with get_form_var() for
 // a field which is a member of the array returned by get_field_info()
 function get_form_var_type($field)
 {
   // "Level" is an exception because we've forced the value to be a string
-  // so that it can be used in an associative aeeay
+  // so that it can be used in an associative array
   if ($field['name'] == 'level')
   {
     return 'string';
@@ -181,42 +133,6 @@ function get_form_var_type($field)
       break;
   }
   return $type;
-}
-
-
-// Returns a name in the format last_name first_name for sorting
-function get_sortable_name($name)
-{
-  global $sort_users_by_last_name;
-
-  if (!isset($name))
-  {
-    return null;
-  }
-
-  if (empty($sort_users_by_last_name))
-  {
-    return $name;
-  }
-
-  $tokens = explode(' ', $name);
-
-  // Get rid of other whitespace (eg tabs)
-  $tokens = array_map('trim', $tokens);
-
-  // Get the last name
-  $result = array_pop($tokens);
-
-  // Add back in the first names
-  while (null !== ($token = array_shift($tokens)))
-  {
-    if ($token !== '') // weeds out multiple spaces in a name
-    {
-      $result .= ' ' . $token;
-    }
-  }
-
-  return $result;
 }
 
 
@@ -839,6 +755,8 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       case 'password_hash': // We don't want to do anything with this
       case 'timestamp':     // Nor this
       case 'last_login':
+      case 'reset_key_hash':
+      case 'reset_key_expiry':
         break;
 
       case 'level':
@@ -1081,7 +999,7 @@ if (isset($action) && ($action == "update"))
         // trying to change their password
         if (!isset($id) || (isset($password0) && ($password0 !== '')))
         {
-          if (!validate_password($password0))
+          if (!auth()->validatePassword($password0))
           {
             $valid_data = false;
             $q_string .= "&pwd_invalid=1";
@@ -1284,7 +1202,14 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // Display the user data in a table
 
   // We don't display these columns or they get special treatment
-  $ignore_columns = array('id', 'password_hash', 'name', 'display_name');
+  $ignore_columns = array(
+      'id',
+      'password_hash',
+      'name',
+      'display_name',
+      'reset_key_hash',
+      'reset_key_expiry'
+    );
 
   if (!$is_ajax)
   {

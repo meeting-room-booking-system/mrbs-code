@@ -299,8 +299,8 @@ var Table = {
     <?php // Size the table ?>
     Table.size();
   },
-  
-  
+
+
   <?php
   // Tests whether the point p with coordinates x and y is outside the table
   ?>
@@ -326,8 +326,8 @@ var Table = {
               (p.x > Table.grid.x.data[Table.grid.x.data.length - 1].coord) ||
               (p.y > Table.grid.y.data[Table.grid.y.data.length - 1].coord) );
     },  <?php // outside() ?>
-    
-    
+
+
   <?php
   // Check whether the rectangle (with sides n,s,e,w) overlaps any
   // of the booked slots in the table.   Returns an array of overlapped
@@ -366,7 +366,7 @@ var Table = {
   ?>
   setClipPath: function(el) {
       var path = 'none';
-      <?php 
+      <?php
       // Because we have shifted the th cells using JavaScript to give the effect of a sticky
       // header, we have to look at the th cells rather than the thead.
       ?>
@@ -375,16 +375,16 @@ var Table = {
       var elTop = el.offset().top;
       var elHeight = el.outerHeight();
       var above = theadBottom - elTop;
-     
+
       if (above > 0)
       {
         path = 'inset(' + above + 'px 0 0 0)';
       }
-      
+
       el.css('clip-path', path);
     },
-  
-  
+
+
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
       if ((args.view == 'week') && args.view_all)
@@ -675,7 +675,7 @@ $(document).on('page_ready', function() {
           mouseDown = true;
 
           <?php
-          // Apply a class so that we know that resizing is in progres, eg to turn off
+          // Apply a class so that we know that resizing is in progress, eg to turn off
           // highlighting
           ?>
           table.addClass('resizing');
@@ -1054,7 +1054,7 @@ $(document).on('page_ready', function() {
         resize.lastRectangle = $.extend({}, rectangle);
 
         Table.highlightRowLabels(ui.helper);
-        
+
         Table.setClipPath(ui.helper);
       };  <?php // resize ?>
 
@@ -1191,7 +1191,7 @@ $(document).on('page_ready', function() {
         {
           data.site = args.site;
         }
-    
+
         $.post('edit_entry_handler.php',
                data,
                function(result) {
@@ -1233,7 +1233,7 @@ $(document).on('page_ready', function() {
                'json');
 
       };  <?php // resizeStop ?>
-      
+
 
       <?php
       // Turn all the empty cells where a new multi-cell selection
@@ -1426,12 +1426,12 @@ $(document).on('page_ready', function() {
         Table.init();
       }
     }, 50));
-   
+
   <?php
   // We need to re-initialise when the table container is scrolled because all the coordinates
   // are relative to the document rather than  the container.  (The jQuery UI widget gives
   // positions this way).
-  ?>  
+  ?>
   $(Table.selector).parent().on('scroll', throttle(function() {
       Table.init();
     }));

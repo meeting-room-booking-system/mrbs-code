@@ -69,6 +69,14 @@ function get_page_level($page)
 {
   global $auth, $max_level;
 
+  // If you're resetting your password you won't be logged in and $auth['deny_public_access']
+  // should not apply.
+  if (in_array($page, array('reset_password.php', 'reset_password_handler.php')))
+  {
+    return 0;
+  }
+
+  // Otherwise ...
   switch ($page)
   {
     // These pages are open to the public by default as they only contain
@@ -94,6 +102,7 @@ function get_page_level($page)
     case 'edit_room.php':               // Ordinary users can view room details
     case 'edit_users.php':              // Ordinary users can edit their own details
     case 'pending.php':                 // Ordinary users can view their own entries
+    case 'registration_handler.php':    // Ordinary users can register for an event
       $result = 1;
       break;
 
@@ -137,7 +146,7 @@ function get_page_level($page)
  * Check to see if the current user has a certain level of rights
  *
  * $level  - The access level required
- * $returl - The URL to nreturn to eventually
+ * $returl - The URL to return to eventually
  *
  * Returns:
  *   false - The user does not have the required access

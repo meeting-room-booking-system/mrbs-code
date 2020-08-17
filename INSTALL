@@ -329,7 +329,7 @@ server in case they are different.
 
 However, if you already have bookings in your system which were made under
 a different timezone (perhaps if you are upgrading from a previous version
-of MRBS where the timezone wasn't set explicitly and the timzone defaulted to
+of MRBS where the timezone wasn't set explicitly and the timezone defaulted to
 that of the server) then you have two choices:
 
 (a) to set the timezone to be the same as the previous timezone.   This will
@@ -405,7 +405,7 @@ There is a wide variety of settings that can be changed, including
 - booking policies
 - display and time format settings
 - private bookings settings
-- provisisional bookings settings
+- provisional bookings settings
 - authentication settings
 - email settings
 - language settings

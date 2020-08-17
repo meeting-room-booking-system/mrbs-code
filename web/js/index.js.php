@@ -61,7 +61,7 @@ var checkNav = function() {
 
 
 <?php
-// Replace the body elememt with the body in response, for the page href.
+// Replace the body element with the body in response, for the page href.
 ?>
 var replaceBody = function(response, href) {
     <?php

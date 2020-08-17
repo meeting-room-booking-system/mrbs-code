@@ -107,6 +107,8 @@ class Form extends Element
   // Get a CSRF token
   public static function getToken()
   {
+    $token_length = 32;
+    
     if (!isset(self::$token))
     {
       $stored_token = self::getStoredToken();
@@ -116,7 +118,7 @@ class Form extends Element
       }
       else
       {
-        self::$token = self::generateToken();
+        self::$token = \MRBS\generate_token($token_length);
         self::storeToken(self::$token);
       }
     }
@@ -124,30 +126,7 @@ class Form extends Element
     return self::$token;
   }
 
-
-  private static function generateToken()
-  {
-    $length = 32;
-
-    if (function_exists('random_bytes'))
-    {
-      return bin2hex(random_bytes($length));  // PHP 7 and above
-    }
-
-    if (function_exists('mcrypt_create_iv'))
-    {
-      return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
-    }
-
-    if (function_exists('openssl_random_pseudo_bytes'))
-    {
-      return bin2hex(openssl_random_pseudo_bytes($length));
-    }
-
-    return md5(uniqid(rand(), true));
-  }
-
-
+  
   // Compare two tokens in a timing attack safe manner.
   // Returns true if they are equal, otherwise false.
   // Note: it is important to provide the user-supplied string as the
