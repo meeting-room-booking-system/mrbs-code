@@ -8,6 +8,7 @@ use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
 
 require "defaultincludes.inc";
@@ -75,10 +76,27 @@ function generate_reset_request_form($result=null)
 }
 
 
-function generate_reset_form($username, $key, $result=null)
+function generate_reset_form(array $usernames, $key, $error=null)
 {
   global $pwd_policy;
 
+  // Get the usernames for which we have a valid, unexpired key
+  $valid_usernames = array();
+
+  foreach($usernames as $username)
+  {
+    if (auth()->isValidReset($username, $key))
+    {
+      $valid_usernames[] = $username;
+    }
+  }
+
+  if (empty($valid_usernames))
+  {
+    return false;
+  }
+
+  // Construct the form
   $form = new Form();
   $form->setAttributes(array(
       'class'  => 'standard',
@@ -89,7 +107,6 @@ function generate_reset_form($username, $key, $result=null)
 
   $form->addHiddenInputs(array(
       'action'   => 'reset',
-      'username' => $username,
       'key'      => $key
     ));
 
@@ -97,7 +114,7 @@ function generate_reset_form($username, $key, $result=null)
   $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
 
   $field = new FieldDiv();
-  if (isset($result) && ($result=='pwd_not_match'))
+  if (isset($error) && ($error=='pwd_not_match'))
   {
     $p = new ElementP();
     $p->setText(get_vocab('passwords_not_eq'))
@@ -117,7 +134,7 @@ function generate_reset_form($username, $key, $result=null)
   {
     $ul = new Element('ul');
     $ul->setAttribute('id', 'pwd_policy');
-    if (isset($result) && ($result=='pwd_invalid'))
+    if (isset($error) && ($error=='pwd_invalid'))
     {
       $ul->setAttribute('class', 'error');
     }
@@ -135,6 +152,17 @@ function generate_reset_form($username, $key, $result=null)
 
   $fieldset->addElement($field);
 
+  // The username.  Present it as a select even if there's only one option
+  // so that if the password is invalid the user knows which username they
+  // are resetting the password for.
+  sort($valid_usernames);
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('users.name'))
+        ->setControlAttribute('name', 'username')
+        ->addSelectOptions($valid_usernames);
+  $fieldset->addElement($field);
+
+  // The password fields
   for ($i=0; $i<2; $i++)
   {
     $field = new FieldInputPassword();
@@ -155,6 +183,8 @@ function generate_reset_form($username, $key, $result=null)
 
   $form->addElement($fieldset);
   $form->render();
+
+  return true;
 }
 
 
@@ -200,22 +230,14 @@ $context = array(
 print_header($context);
 
 $action = get_form_var('action', 'string');
+$error = get_form_var('error', 'string');
 $result = get_form_var('result', 'string');
-$username = get_form_var('username', 'string');
+$usernames = get_form_var('usernames', 'array');
 $key = get_form_var('key', 'string');
-
-if (isset($username))
-{
-  $username = trim($username);
-}
 
 if (isset($action) && ($action == 'reset'))
 {
-  if (auth()->isValidReset($username, $key))
-  {
-    generate_reset_form($username, $key);
-  }
-  else
+  if (!generate_reset_form($usernames, $key, $error))
   {
     generate_invalid_link();
   }
@@ -224,10 +246,6 @@ elseif (isset($result))
 {
   switch($result)
   {
-    case 'pwd_invalid':
-    case 'pwd_not_match':
-      generate_reset_form($username, $key, $result);
-      break;
     case 'pwd_reset':
       generate_reset_success();
       break;

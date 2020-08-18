@@ -17,15 +17,15 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
+$action = get_form_var('action', 'string');
 $username = get_form_var('username', 'string');
 
-if (isset($username) && ($username !== ''))
+if (isset($action) && isset($username))
 {
   $username = trim($username);
-  $action = get_form_var('action', 'string');
-  if (isset($action))
+  if ($username !== '')
   {
-    switch($action)
+    switch ($action)
     {
       case 'request':
         if (auth()->requestPassword($username))
@@ -47,11 +47,11 @@ if (isset($username) && ($username !== ''))
         $password1 = get_form_var('password1', 'string');
         if ($password0 !== $password1)
         {
-          $result = 'pwd_not_match';
+          $error = 'pwd_not_match';
         }
         elseif (!auth()->validatePassword($password0))
         {
-          $result = 'pwd_invalid';
+          $error = 'pwd_invalid';
         }
         else
         {
@@ -69,7 +69,19 @@ if (isset($username) && ($username !== ''))
         // Shouldn't get here
         break;
     }
-    location_header("reset_password.php?result=$result");
+    if (isset($result))
+    {
+      $query_string = "result=$result";
+    }
+    elseif (isset($error))
+    {
+      $query_string = "action=reset&error=$error&usernames[0]=$username&key=$key";
+    }
+    else
+    {
+      // Shouldn't get here
+    }
+    location_header("reset_password.php?$query_string");
   }
 }
 

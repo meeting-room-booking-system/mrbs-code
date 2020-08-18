@@ -225,11 +225,11 @@ class AuthDb extends Auth
 
 
   // Checks whether the password by reset by supplying an email address.
-  // If there are duplicate email addresses in the table (only the username is required
-  // to be unique) then we can't, because we won't know which user has requested the reset.
+  // We allow resetting by email, even if there are multiple users with the
+  // same email address.
   public function canResetByEmail()
   {
-    return ($this->canValidateByEmail() && !\MRBS\db()->tableHasDuplicates(\MRBS\_tbl('users'),'email'));
+    return $this->canValidateByEmail();
   }
 
 
@@ -240,14 +240,17 @@ class AuthDb extends Auth
       return false;
     }
 
-    // Get the possible user ids given this login, which could be a username or email address
-    $possible_user_ids = array();
+    // Get the possible users given this login, which could be a username or email address.
+    // However all the possible users must have the same email address, so check the email
+    // addresses at the same time.
+    $possible_users = array();
 
     $user = $this->getUserByUsername($login);
 
-    if (!empty($user))
+    // Users must have an email address otherwise we won't be able to mail a reset link
+    if (isset($user) && isset($user['email']) && ($user['email'] !== ''))
     {
-      $possible_user_ids[] = $user['id'];
+      $possible_users[] = $user;
     }
 
     if ($this->canValidateByEmail())
@@ -255,28 +258,33 @@ class AuthDb extends Auth
       $users = $this->getUsersByEmail($login);
       if (!empty($users))
       {
+        // Check that the email addresses are the same
+        if (!empty($possible_users) &&
+            (\MRBS\utf8_strtolower($possible_users[0]['email']) !== \MRBS\utf8_strtolower($login)))
+        {
+          return false;
+        }
         foreach ($users as $user)
         {
-          $possible_user_ids[] = $user['id'];
+          $possible_users[] = $user;
         }
       }
     }
 
-    // If we haven't got exactly one user with this login, then don't do anything.
-    if (count($possible_user_ids) !== 1)
+    if (!empty($possible_users))
     {
-      return false;
+      // Generate a key
+      $key = \MRBS\generate_token(32);
+
+      // Update the database
+      if ($this->setResetKey($possible_users, $key))
+      {
+        // Email the user
+        return $this->notifyUser($possible_users, $key);
+      }
     }
 
-    // Generate a key
-    $key = \MRBS\generate_token(32);
-
-    // Update the database
-    $user_id = $possible_user_ids[0];
-    $this->setResetKey($user_id, $key);
-
-    // Email the user
-    return $this->notifyUser($user_id, $key);
+    return false;
   }
 
 
@@ -340,12 +348,11 @@ class AuthDb extends Auth
   }
 
 
-  private function notifyUser($user_id, $key)
+  private function notifyUser(array $users, $key)
   {
     global $auth, $mail_settings;
 
-    $user = $this->getUserByUserId($user_id);
-    if (!isset($user['email']) || ($user['email'] === ''))
+    if (empty($users) || !isset($users[0]['email']) || ($users[0]['email'] === ''))
     {
       return false;
     }
@@ -353,52 +360,73 @@ class AuthDb extends Auth
     $expiry_time = $auth['db']['reset_key_expiry'];
     \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
     $addresses = array(
-      'from'  => $mail_settings['from'],
-      'to'    => $user['email']
-    );
+        'from'  => $mail_settings['from'],
+        'to'    => $users[0]['email']
+      );
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
-    $body .= \MRBS\get_vocab('password_reset_body', $user['name'], intval($expiry_time), $expiry_units);
+    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry_time), $expiry_units);
     $body .= "</p>\n";
+
     // Construct and add in the link
+    $usernames = array();
+    foreach ($users as $user)
+    {
+      $usernames[] = $user['name'];
+    }
+    $usernames = array_unique($usernames);
+
     $vars = array(
-        'action'   => 'reset',
-        'username' => $user['name'],
-        'key'      => $key
+        'action'    => 'reset',
+        'usernames' => $usernames,
+        'key'       => $key
       );
     $query = http_build_query($vars, '', '&');
     $href = \MRBS\url_base() . \MRBS\multisite("reset_password.php?$query");
     $body .= "<p><a href=\"$href\">$href</a></p>";
 
     MailQueue::add(
-      $addresses,
-      $subject,
-      array('content' => strip_tags($body)),
-      array('content' => $body,
-        'cid'     => \MRBS\generate_global_uid("html")),
-      null,
-      \MRBS\get_mail_charset()
-    );
+        $addresses,
+        $subject,
+        array('content' => strip_tags($body)),
+        array('content' => $body,
+          'cid'     => \MRBS\generate_global_uid("html")),
+        null,
+        \MRBS\get_mail_charset()
+      );
 
     return true;
   }
 
-  private function setResetKey($user_id, $key)
+  private function setResetKey(array $users, $key)
   {
     global $auth;
+
+    if (empty($users))
+    {
+      return false;
+    }
+
+    $ids = array();
+    foreach($users as $user)
+    {
+      // Use intval to make sure the string is safe for the SQL query
+      $ids[] = intval($user['id']);
+    }
 
     $sql = "UPDATE " . \MRBS\_tbl('users') . "
                SET reset_key_hash=:reset_key_hash,
                    reset_key_expiry=:reset_key_expiry
-             WHERE id=:id";  // PostgreSQL does not support LIMIT with UPDATE
+             WHERE id IN (" . implode(',', $ids) . ")";
 
     $sql_params = array(
         ':reset_key_hash' => password_hash($key, PASSWORD_DEFAULT),
-        ':reset_key_expiry' => time() + $auth['db']['reset_key_expiry'],
-        ':id' => $user_id
+        ':reset_key_expiry' => time() + $auth['db']['reset_key_expiry']
       );
 
     \MRBS\db()->command($sql, $sql_params);
+
+    return true;
   }
 
 
