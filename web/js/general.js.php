@@ -52,6 +52,12 @@ function fillUsernameFields()
 {
   var select = $('.ajax_usernames');
 
+  <?php // We don't want to fire off an unnecessary POST request ?>
+  if (select.length === 0)
+  {
+    return;
+  }
+
   select.each(function() {
       <?php // Turn the create_by select into a fancy select box. ?>
       var el = $(this);
@@ -80,6 +86,7 @@ function fillUsernameFields()
 
   // See https://select2.org/data-sources/ajax for more details
   ?>
+
   $.post({
       url: 'ajax/usernames.php',
       dataType: 'json',
