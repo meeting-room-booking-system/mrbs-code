@@ -335,16 +335,16 @@ class AuthLdap extends Auth
   public function getUsernames()
   {
     $mrbs_user = \MRBS\session()->getCurrentUser();
-    
+
     if (!isset($mrbs_user))
     {
       return false;
     }
-    
+
     $object = array();
     $object['users'] = array();
     $users = array();
-    
+
     $res = $this->action('getUsernamesCallback', $mrbs_user->username, $object, true);
 
     if ($res === false)
@@ -581,7 +581,7 @@ class AuthLdap extends Auth
             self::debug("initial bind was successful");
 
             $base_dn = self::$all_ldap_opts['ldap_base_dn'][$idx];
-            $filter = "(" . self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$user)";
+            $filter = "(" . self::$all_ldap_opts['ldap_dn_search_attrib'][$idx] . "=$username)";
 
             self::debug("searching using base_dn '$base_dn' and filter '$filter'");
             $res = ldap_search($ldap, $base_dn, $filter);
