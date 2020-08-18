@@ -86,7 +86,6 @@ function fillUsernameFields()
 
   // See https://select2.org/data-sources/ajax for more details
   ?>
-
   $.post({
       url: 'ajax/usernames.php',
       dataType: 'json',
