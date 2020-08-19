@@ -207,7 +207,7 @@ CREATE TABLE mrbs_sessions
 );
 create index mrbs_idxAccess on mrbs_sessions(access);
 
-CREATE TABLE mrbs_users
+CREATE TABLE mrbs_users_db
 (
   id            serial primary key,
   level         smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
@@ -236,6 +236,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '69');
+  VALUES ('db_version', '70');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
