@@ -185,9 +185,9 @@ $vocab["none_outstanding"]   = "Onayınızı bekleyen kayıt yoktur";
 $vocab["accessdenied"]       = "Erişim Engellendi";
 $vocab["norights"]           = "Bunu değiştirecek giriş haklarınız yoktur.";
 $vocab["please_login"]       = "Lütfen girin";
-$vocab["users.name"]          = "Ad";
-$vocab["users.password"]      = "Şifre";
-$vocab["users.level"]         = "Haklar";
+$vocab["users_db.name"]          = "Ad";
+$vocab["users_db.password"]      = "Şifre";
+$vocab["users_db.level"]         = "Haklar";
 $vocab["unknown_user"]       = "Bilinmeyen kullanıcı";
 $vocab["login"]              = "Giriş";
 $vocab["logoff"]             = "Çıkış";
@@ -214,11 +214,11 @@ $vocab["level_3"]            = "Sistem Yöneticisi";
 $vocab["user_list"]          = "Kullanıcı listesi";
 $vocab["edit_user"]          = "Kullanıcı düzenle";
 $vocab["delete_user"]        = "Bu kullanıcıyı sil";
-//$vocab["users.name"]       = Tutarlılık için yukardaki ayarın aynısını kullan.
-//$vocab["users.password"]   = Tutarlılık için yukardaki ayarın aynısını kullan.
+//$vocab["users_db.name"]       = Tutarlılık için yukardaki ayarın aynısını kullan.
+//$vocab["users_db.password"]   = Tutarlılık için yukardaki ayarın aynısını kullan.
 
 
-$vocab["users.email"]        = "Eposta adresi";
+$vocab["users_db.email"]        = "Eposta adresi";
 $vocab["password_twice"]     = "Eğer şifremnizi değiştirmek istiyorsanız, lütfen yeni şifrenizi iki kez giriniz.";
 
 $vocab["passwords_not_eq"]   = "Hata: Şifreler uyuşmadı.";

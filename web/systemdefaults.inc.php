@@ -610,7 +610,7 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
-$is_mandatory_field['users.display_name'] = true;
+$is_mandatory_field['users_db.display_name'] = true;
 
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that

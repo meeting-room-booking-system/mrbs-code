@@ -255,7 +255,7 @@ function get_create_by($organizer)
   if ($auth['type'] == 'db')
   {
     $sql = "SELECT name
-              FROM " . _tbl('users') . "
+              FROM " . _tbl('users_db') . "
              WHERE email=?";
 
     $res = db()->query($sql, array($email));

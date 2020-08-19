@@ -1266,7 +1266,7 @@ function get_default_area()
   }
 
   $sql .= " ORDER BY A.sort_key";
-  
+
   $res = db()->query($sql);
 
   while (false !== ($row = $res->next_row_keyed()))

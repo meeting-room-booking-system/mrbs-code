@@ -223,7 +223,7 @@ CREATE TABLE mrbs_sessions
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_users
+CREATE TABLE mrbs_users_db
 (
   id                int NOT NULL auto_increment,
   level             smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
@@ -241,6 +241,6 @@ CREATE TABLE mrbs_users
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '69');
+  VALUES ( 'db_version', '70');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
