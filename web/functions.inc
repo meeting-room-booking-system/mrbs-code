@@ -1265,6 +1265,8 @@ function get_default_area()
     $sql .= " AND R.disabled = 0 AND A.disabled = 0";
   }
 
+  $sql .= " ORDER BY A.sort_key";
+  
   $res = db()->query($sql);
 
   while (false !== ($row = $res->next_row_keyed()))
