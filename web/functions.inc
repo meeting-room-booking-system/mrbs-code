@@ -21,7 +21,15 @@ function generate_token($length)
 {
   if (function_exists('random_bytes'))
   {
-    return bin2hex(random_bytes($length));  // PHP 7 and above
+    try
+    {
+      return bin2hex(random_bytes($length));  // PHP 7 and above
+    }
+    catch (\Exception $e)
+    {
+      // random_bytes() will throw an Exception if an appropriate source of randomness cannot be found.
+      // If that happens, just fall through and use one of the other methods.
+    }
   }
 
   if (function_exists('mcrypt_create_iv'))
@@ -1266,7 +1274,7 @@ function get_default_area()
   }
 
   $sql .= " ORDER BY A.sort_key";
-  
+
   $res = db()->query($sql);
 
   while (false !== ($row = $res->next_row_keyed()))
