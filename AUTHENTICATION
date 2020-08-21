@@ -487,9 +487,9 @@ file until you have run edit_users.php (by following the "User list" link) for
 the first time.  Once you have run edit_users.php the admin definitions in the
 config file are no longer used and can be deleted if you wish.
 
-It's possible, and very simple, to add new application-specific fields in
-the mrbs_users table. No change is needed to the MRBS code. It will automatically
-detect the new fields and add columns for them.  You can turn the field names
+It's possible, and very simple, to add new application-specific fields in the
+mrbs_users_db table. No change is needed to the MRBS code. It will automatically 
+detect the new fields and add columns for them.  You can turn the field names 
 into meaningful labels by using the $vocab_override config setting, eg
 
 $vocab_override['en']['address'] = 'Postal address';

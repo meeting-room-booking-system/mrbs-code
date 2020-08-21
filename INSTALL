@@ -146,7 +146,7 @@ It is possible to add extra columns to the entry, repeat, room and users
 tables, if you need to hold extra information about bookings, rooms and users.
 For example you might want to add a column in the room table to record whether
 or not a room has a coffee machine and you might want to record the phone
-numbers of users. (Note that the users table is only used if you are using
+numbers of users. (Note that the users_db table is only used if you are using
 the 'db' authentication scheme).   Similarly you might want to add a field
 to the entry and repeat tables to record the number of participants for
 a meeting.

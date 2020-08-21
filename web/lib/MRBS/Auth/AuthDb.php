@@ -73,7 +73,7 @@ class AuthDb extends Auth
     // permits wildcards, so we could use a combination of LIKE and '=' but that's a bit
     // messy.  WE could use STRCMP, but that's MySQL only.
 
-    // Usernames are unique in the users table, so we only look for one.
+    // Usernames are unique in the users_db table, so we only look for one.
     $sql = "SELECT password_hash, name
             FROM " . \MRBS\_tbl('users_db') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
@@ -134,7 +134,7 @@ class AuthDb extends Auth
       $condition = "LOWER(?)=LOWER(email)";
     }
 
-    // Email addresses are not unique in the users table, so we need to find all of them.
+    // Email addresses are not unique in the users_db table, so we need to find all of them.
     $sql = "SELECT password_hash, name
             FROM " . \MRBS\_tbl('users_db') . "
            WHERE $condition";

@@ -14,7 +14,7 @@ function generate_add_form()
 {
   $form = new Form();
   $form->addHiddenInput('action', 'add')
-       ->setAttributes(array('action' => multisite(this_page()),
+       ->setAttributes(array('action' => multisite('edit_role_handler.php'),
                              'class'  => 'standard',
                              'method' => 'post'));
 

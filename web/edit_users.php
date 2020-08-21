@@ -557,7 +557,7 @@ if ($is_ajax)
   $json_data['aaData'] = array();
 }
 
-// Get the information about the fields in the users table
+// Get the information about the fields in the users_db table
 $fields = db()->field_info(_tbl('users_db'));
 
 $users = auth()->getUsers();

@@ -338,6 +338,11 @@ $vocab["no_users_create_first_admin"] = "Before you can do anything else you nee
 $vocab["warning_last_admin"]    = "Warning!  This is the last admin and so you cannot delete this user or remove admin rights, otherwise you will be locked out of the system.";
 $vocab["copy_email_addresses"]  = "Copy email addresses";
 
+// Roles
+$vocab['roles']              = "Roles";
+$vocab['add_role']           = "Add role";
+$vocab['role_name']          = "Name";
+
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
 $vocab["search_results"]     = 'Search results for \'%1$s\' from %2$s';
