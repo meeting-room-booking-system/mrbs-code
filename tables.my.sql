@@ -240,7 +240,16 @@ CREATE TABLE mrbs_users_db
   UNIQUE KEY uq_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE mrbs_roles
+(
+  id        int NOT NULL auto_increment,
+  name      varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '70');
+  VALUES ( 'db_version', '71');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
