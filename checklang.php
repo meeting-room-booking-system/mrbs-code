@@ -1,5 +1,16 @@
 <html>
-<head><title>Language File Checker</title></head>
+<head>
+  <title>Language File Checker</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 0.2em 0.5em;
+    }
+  </style>
+</head>
 <body>
 <h1>Language File Checker</h1>
 <p>
@@ -168,7 +179,7 @@ foreach ($lang as $l)
   }
 ?>
 <h2>Language: <?php echo htmlspecialchars($l) ?></h2>
-<table border="1">
+<table>
   <tr>
     <th>Problem</th>
     <th>Key</th>
