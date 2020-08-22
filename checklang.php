@@ -1,5 +1,28 @@
-<html>
-<head><title>Language File Checker</title></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Language File Checker</title>
+  <style>
+    form div {
+      display: flex;
+      align-items: flex-start;
+    }
+    label {
+      margin-right: 1em;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 0.2em 0.5em;
+      text-align: left;
+    }
+    select {
+      vertical-align: bottom;
+    }
+  </style>
+</head>
 <body>
 <h1>Language File Checker</h1>
 <p>
@@ -44,7 +67,9 @@ sort($files);
 ?>
 
 <form method="get" action="checklang.php">
-<select multiple="multiple" size=5 name="lang[]">
+  <div>
+  <label for="languages">Select one or more languages:</label>
+<select id="languages" multiple="multiple" size="5" name="lang[]">
 <?php
 foreach ($files as $filename)
 {
@@ -65,6 +90,7 @@ foreach ($files as $filename)
 
 ?>
 </select>
+  </div>
 <br>
 <input type="checkbox" name="update">
 Update file(s) with new token lines (web server user requires write permission
@@ -168,7 +194,7 @@ foreach ($lang as $l)
   }
 ?>
 <h2>Language: <?php echo htmlspecialchars($l) ?></h2>
-<table border="1">
+<table>
   <tr>
     <th>Problem</th>
     <th>Key</th>
