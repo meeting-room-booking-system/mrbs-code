@@ -38,7 +38,7 @@ while (($filename = readdir($dh)) !== false)
   $files[] = $filename;
 }
 closedir($dh);
-  
+
 sort($files);
 
 ?>
@@ -68,7 +68,7 @@ foreach ($files as $filename)
 <br>
 <input type="checkbox" name="update">
 Update file(s) with new token lines (web server user requires write permission
-on files and directory) 
+on files and directory)
 <br>
 <input type="submit" name="submit" value="Go">
 </form>
@@ -153,7 +153,7 @@ foreach ($lang as $l)
         die("Failed to rename $path_to_mrbs/$langs$l to $path_to_mrbs/$langs$l.old");
       rename("$path_to_mrbs/$langs$l.new", "$path_to_mrbs/$langs$l") or
         die("Failed to rename $path_to_mrbs/$langs$l.new to $path_to_mrbs/$langs$l");
-      
+
       // Re-read the updated file
       unset($vocab);
       include "$path_to_mrbs/$langs$l";
@@ -179,7 +179,7 @@ foreach ($lang as $l)
   $nmissing = 0;
   $nunxlate = 0;
   reset($ref);
-  while (list($key, $val) = each($ref))
+  foreach ($ref as $key => $val)
   {
     $ntotal++;
     $status = "";
@@ -187,7 +187,7 @@ foreach ($lang as $l)
     {
       $nmissing++;
       $status = "Missing";
-      
+
     } else if (($key != "charset") &&
                ($vocab[$key] == $ref[$key]) &&
                ($ref[$key] != "") &&
