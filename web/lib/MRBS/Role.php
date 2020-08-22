@@ -51,10 +51,17 @@ class Role
 
   public function save()
   {
-    $sql = "INSERT INTO " . \MRBS\_tbl(self::TABLE_NAME) . " (name)
-                 VALUES (:name)";
-    $sql_params = array(':name' => $this->data['name']);
-    \MRBS\db()->command($sql, $sql_params);
+    \MRBS\db()->mutex_lock(\MRBS\_tbl(self::TABLE_NAME));
+    // As there's only one column at the moment there's no point in doing an update
+    // if the name already exists.
+    if (!self::exists($this->data['name']))
+    {
+      $sql = "INSERT INTO " . \MRBS\_tbl(self::TABLE_NAME) . " (name)
+                   VALUES (:name)";
+      $sql_params = array(':name' => $this->data['name']);
+      \MRBS\db()->command($sql, $sql_params);
+    }
+    \MRBS\db()->mutex_unlock(\MRBS\_tbl(self::TABLE_NAME));
   }
 
 
