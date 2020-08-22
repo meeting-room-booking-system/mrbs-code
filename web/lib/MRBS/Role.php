@@ -18,6 +18,18 @@ class Role
   }
 
 
+  public function __get($name)
+  {
+    return (isset($this->data) && isset($this->data[$name])) ? $this->data[$name] : null;
+  }
+
+
+  public function __set($name, $value)
+  {
+    $this->data[$name] = $value;
+  }
+
+
   public function getByName($name)
   {
     $sql = "SELECT * FROM " . \MRBS\_tbl(self::TABLE_NAME) . "
@@ -65,7 +77,7 @@ class Role
   }
 
 
-  private function load(array $row)
+  public function load(array $row)
   {
     foreach ($row as $key => $value)
     {

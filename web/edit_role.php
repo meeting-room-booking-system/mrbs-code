@@ -58,6 +58,27 @@ function generate_add_form($error=null, $name=null)
 }
 
 
+function generate_roles_table()
+{
+  $roles = new Roles();
+
+  echo "<table>\n";
+  echo "<tbody>\n";
+
+  foreach ($roles as $role)
+  {
+    echo "<tr>";
+    echo "<td>";
+    echo $role->name;
+    echo "</td>";
+    echo "</tr>\n";
+  }
+
+  echo "</tbody>\n";
+  echo "</table>\n";
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
@@ -77,6 +98,8 @@ $name = get_form_var('name', 'string');
 print_header($context);
 
 echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
+
 generate_add_form($error, $name);
+generate_roles_table();
 
 print_footer();
