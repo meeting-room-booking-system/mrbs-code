@@ -9,6 +9,7 @@
     th, td {
       border: 1px solid black;
       padding: 0.2em 0.5em;
+      text-align: left;
     }
   </style>
 </head>
