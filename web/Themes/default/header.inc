@@ -9,6 +9,8 @@ use MRBS\Form\ElementInputSubmit;
 
 function print_head($simple=false)
 {
+  global $refresh_rate;
+  
   echo "<head>\n";
 
   echo "<meta charset=\"" . get_charset() . "\">\n";
@@ -29,6 +31,18 @@ function print_head($simple=false)
   {
     // Add the CSRF token so that JavaScript can use it
     echo "<meta name=\"csrf_token\" content=\"" . htmlspecialchars(Form::getToken()) . "\">\n";
+  }
+
+  echo "<meta name=\"robots\" content=\"noindex, nofollow, noarchive\">\n";
+
+  if (($refresh_rate != 0) && (this_page(false, '.php') == 'index'))
+  {
+    // If we're using JavaScript we'll do the refresh by getting a new
+    // table using Ajax requests, which means we only have to download
+    // the table not the whole page each time
+    echo "<noscript>\n";
+    echo "<meta http-equiv=\"Refresh\" content=\"$refresh_rate\">\n";
+    echo "</noscript>\n";
   }
 
   echo "<title>" . get_vocab("mrbs") . "</title>\n";
