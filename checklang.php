@@ -204,7 +204,7 @@ foreach ($lang as $l)
   $ntotal = 0;
   $nmissing = 0;
   $nunxlate = 0;
-  reset($ref);
+
   foreach ($ref as $key => $val)
   {
     $ntotal++;
@@ -229,6 +229,7 @@ foreach ($lang as $l)
         htmlspecialchars($ref[$key]) . "</td></tr>\n";
     }
   }
+  
   echo "</table>\n";
   echo "<p>Total entries in reference language file: $ntotal\n";
   echo "<br>For language file $l: ";
