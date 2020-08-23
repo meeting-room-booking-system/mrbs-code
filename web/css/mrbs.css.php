@@ -2237,6 +2237,13 @@ div#site_faq_body {
 }
 
 
+/* ----------------- ROLES ------------------*/
+
+table#roles {
+  clear: left;
+}
+
+
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
 .view_entry #entry td:first-child,

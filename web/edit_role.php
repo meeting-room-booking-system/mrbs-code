@@ -62,7 +62,7 @@ function generate_roles_table()
 {
   $roles = new Roles();
 
-  echo "<table>\n";
+  echo "<table id=\"roles\">\n";
   echo "<tbody>\n";
 
   foreach ($roles as $role)
