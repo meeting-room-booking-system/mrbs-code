@@ -108,8 +108,8 @@ if (is_readable("js/$page.js.php"))
 // We need the resizable bookings for the day and week views
 if ($page == 'index')
 {
-  script("js/refresh.js.php?query_string", true);
-  script("js/resizable.js.php?query_string", true);
+  script("js/refresh.js.php?$query_string", true);
+  script("js/resizable.js.php?$query_string", true);
 }
 
 // Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
