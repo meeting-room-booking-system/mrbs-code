@@ -605,6 +605,22 @@ function location_header($location)
 }
 
 
+function add_query_parameter($location, $name, $value)
+{
+  $parts = parse_url($location);
+  if (!isset($parts['query']))
+  {
+    $parts['query'] = '';
+  }
+  parse_str($parts['query'], $result);
+  $result[$name] = $value;
+  $parts['query'] = http_build_query($result, '', '&');
+  $location = build_url($parts);
+
+  return $location;
+}
+
+
 // Adds the site parameter in the query string if necessary
 function multisite($location)
 {
@@ -613,18 +629,19 @@ function multisite($location)
   // Add the site, if there one, to the query string
   if ($multisite && isset($site) && ($site !== ''))
   {
-    $parts = parse_url($location);
-    if (!isset($parts['query']))
-    {
-      $parts['query'] = '';
-    }
-    parse_str($parts['query'], $result);
-    $result['site'] = $site;
-    $parts['query'] = http_build_query($result, '', '&');
-    $location = build_url($parts);
+    return add_query_parameter($location, 'site', $site);
   }
 
   return $location;
+}
+
+
+// Add a version parameter to a filename in order to force the use of the new
+// file instead of the cached version
+function add_version($filename)
+{
+  $mtime = filemtime(parse_url($filename, PHP_URL_PATH));
+  return ($mtime === false) ? $filename : add_query_parameter($filename, 'v', $mtime);
 }
 
 
