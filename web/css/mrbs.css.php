@@ -2243,6 +2243,12 @@ table#roles {
   clear: left;
 }
 
+#roles th,
+#roles td {
+  vertical-align: middle;
+  padding: 0.4em 0.8em;
+}
+
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
