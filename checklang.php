@@ -3,21 +3,31 @@
 <head>
   <title>Language File Checker</title>
   <style>
+    form {
+      padding-left: 2em;
+    }
+
     form div {
       display: flex;
       align-items: flex-start;
+      margin: 0.8em 0;
     }
-    label {
+
+    label,
+    input[type="checkbox"] {
       margin-right: 1em;
     }
+
     table {
       border-collapse: collapse;
     }
+
     th, td {
       border: 1px solid black;
       padding: 0.2em 0.5em;
       text-align: left;
     }
+
     select {
       vertical-align: bottom;
     }
@@ -91,12 +101,17 @@ foreach ($files as $filename)
 ?>
 </select>
   </div>
-<br>
-<input type="checkbox" name="update">
-Update file(s) with new token lines (web server user requires write permission
-on files and directory)
-<br>
+
+<div>
+<input id="update" type="checkbox" name="update">
+<label for="update">Update file(s) with new token lines (web server user requires write permission
+  on files and directory)</label>
+</div>
+
+<div>
 <input type="submit" name="submit" value="Go">
+</div>
+
 </form>
 
 <?php
@@ -204,7 +219,7 @@ foreach ($lang as $l)
   $ntotal = 0;
   $nmissing = 0;
   $nunxlate = 0;
-  reset($ref);
+
   foreach ($ref as $key => $val)
   {
     $ntotal++;
@@ -229,6 +244,7 @@ foreach ($lang as $l)
         htmlspecialchars($ref[$key]) . "</td></tr>\n";
     }
   }
+
   echo "</table>\n";
   echo "<p>Total entries in reference language file: $ntotal\n";
   echo "<br>For language file $l: ";
