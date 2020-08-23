@@ -45,9 +45,6 @@
 // the MRBS 'web' directory
 $path_to_mrbs = ".";
 
-require_once "$path_to_mrbs/systemdefaults.inc.php";
-require_once "$path_to_mrbs/config.inc.php";
-
 unset($lang);
 $lang = array();
 
