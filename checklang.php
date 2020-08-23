@@ -92,9 +92,9 @@ foreach ($files as $filename)
 </select>
   </div>
 <br>
-<input type="checkbox" name="update">
-Update file(s) with new token lines (web server user requires write permission
-on files and directory)
+<input id="update" type="checkbox" name="update">
+<label for="update">Update file(s) with new token lines (web server user requires write permission
+  on files and directory)</label>
 <br>
 <input type="submit" name="submit" value="Go">
 </form>
@@ -229,7 +229,7 @@ foreach ($lang as $l)
         htmlspecialchars($ref[$key]) . "</td></tr>\n";
     }
   }
-  
+
   echo "</table>\n";
   echo "<p>Total entries in reference language file: $ntotal\n";
   echo "<br>For language file $l: ";
