@@ -11,7 +11,7 @@ function link($href, $add_version=false, $media=null)
   {
     echo " media=\"$media\"";
   }
-  echo "></link>\n";
+  echo ">\n";
 }
 
 
