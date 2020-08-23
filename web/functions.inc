@@ -640,8 +640,15 @@ function multisite($location)
 // file instead of the cached version
 function add_version($filename)
 {
-  $mtime = filemtime(parse_url($filename, PHP_URL_PATH));
-  return ($mtime === false) ? $filename : add_query_parameter($filename, 'v', $mtime);
+  if (is_readable($filename))
+  {
+    $mtime = filemtime(parse_url($filename, PHP_URL_PATH));
+    if ($mtime !== false)
+    {
+      return add_query_parameter($filename, 'v', $mtime);
+    }
+  }
+  return $filename;
 }
 
 
