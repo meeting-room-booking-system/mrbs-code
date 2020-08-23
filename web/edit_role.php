@@ -58,6 +58,31 @@ function generate_add_form($error=null, $name=null)
 }
 
 
+function generate_delete_button(Role $role)
+{
+  $form = new Form();
+  $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
+                             'method' => 'post'));
+
+  // Hidden inputs
+  $form->addHiddenInputs(array(
+    'action' => 'delete',
+    'role_id' => $role->id
+  ));
+
+  // Submit button
+  $button = new ElementInputSubmit();
+  $message = get_vocab("confirm_del_role", $role->name);
+  $button->setAttributes(array(
+      'value' => get_vocab('delete'),
+      'onclick' => "return confirm('" . escape_js($message) . "');"
+    ));
+
+  $form->addElement($button);
+  $form->render();
+}
+
+
 function generate_roles_table()
 {
   $roles = new Roles();
@@ -68,6 +93,10 @@ function generate_roles_table()
   foreach ($roles as $role)
   {
     echo "<tr>";
+    echo "<td>";
+    generate_delete_button($role);
+    echo "</td>";
+
     echo "<td>";
     echo $role->name;
     echo "</td>";

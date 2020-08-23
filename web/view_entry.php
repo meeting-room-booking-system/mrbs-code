@@ -104,7 +104,7 @@ function generate_cancel_registration_button(array $registrant, $label_text, $pr
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('registration_handler.php'),
-    'method' => 'post'));
+                             'method' => 'post'));
 
   if ($as_field)
   {

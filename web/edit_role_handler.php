@@ -37,6 +37,12 @@ if (isset($action))
         add_role($name);
       }
       break;
+
+    case 'delete':
+      $role_id = get_form_var('role_id', 'string');
+      Role::deleteById($role_id);
+      break;
+
     default:
       break;
   }

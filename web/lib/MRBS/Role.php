@@ -61,6 +61,16 @@ class Role
   }
 
 
+  public static function deleteById($id)
+  {
+    $sql = "DELETE FROM " . \MRBS\_tbl(self::TABLE_NAME) . "
+                  WHERE id=:id
+                  LIMIT 1";
+    $sql_params = array(':id' => $id);
+    \MRBS\db()->command($sql, $sql_params);
+  }
+
+
   public function save()
   {
     \MRBS\db()->mutex_lock(\MRBS\_tbl(self::TABLE_NAME));
