@@ -1449,10 +1449,13 @@ foreach ($custom_fields as $key => $value)
   $$var = get_form_var($var, 'string');
   if (($field_natures[$key] == 'integer') &&
       ($field_lengths[$key] > 2) &&
-      isset($$var) &&
-      (trim($$var) !== ''))
+      isset($$var))
   {
-    $$var = intval($$var);
+    $$var = trim($$var);
+    if ($$var !== '')
+    {
+      $$var = intval($$var);
+    }
   }
 }
 
