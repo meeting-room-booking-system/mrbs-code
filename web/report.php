@@ -1445,15 +1445,15 @@ foreach ($fields as $field)
 foreach ($custom_fields as $key => $value)
 {
   $var = "match_$key";
-  if (($field_natures[$key] == 'integer') && ($field_lengths[$key] > 2))
+  // Get the field as a string to check whether it is empty (ie match anything)
+  $$var = get_form_var($var, 'string');
+  if (($field_natures[$key] == 'integer') &&
+      ($field_lengths[$key] > 2) &&
+      isset($$var) &&
+      (trim($$var) !== ''))
   {
-    $var_type = 'int';
+    $$var = intval($$var);
   }
-  else
-  {
-    $var_type = 'string';
-  }
-  $$var = get_form_var($var, $var_type);
 }
 
 // Set the field order list
