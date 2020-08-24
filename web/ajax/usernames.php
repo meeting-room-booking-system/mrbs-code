@@ -18,7 +18,14 @@ $result = array();
 
 if (method_exists(auth(), 'getUsernames'))
 {
-  $result = auth()->getUsernames();
+  try
+  {
+    $result = auth()->getUsernames();
+  }
+  catch (\Exception $e)
+  {
+    trigger_error($e->getMessage(), E_USER_WARNING);
+  }
 }
 
 http_headers(array("Content-Type: application/json"));
