@@ -30,23 +30,15 @@ class Role
   }
 
 
-  public function getByName($name)
+  public static function getById($id)
   {
-    $sql = "SELECT * FROM " . \MRBS\_tbl(self::TABLE_NAME) . "
-                    WHERE name=:name
-                    LIMIT 1";
-    $sql_params = array(':name' => $name);
-    $res = \MRBS\db()->query($sql, $sql_params);
-    if ($res->count() == 0)
-    {
-      $result = null;
-    }
-    else
-    {
-      $result = new self();
-      $result->load($res->next_row_keyed());
-    }
-    return $result;
+    return self::getByColumn('id', $id);
+  }
+
+
+  public static function getByName($name)
+  {
+    return self::getByColumn('name', $name);
   }
 
 
@@ -93,5 +85,25 @@ class Role
     {
       $this->data[$key] = $value;
     }
+  }
+
+
+  private static function getByColumn($column, $value)
+  {
+    $sql = "SELECT * FROM " . \MRBS\_tbl(self::TABLE_NAME) . "
+                      WHERE $column=:value
+                      LIMIT 1";
+    $sql_params = array(':value' => $value);
+    $res = \MRBS\db()->query($sql, $sql_params);
+    if ($res->count() == 0)
+    {
+      $result = null;
+    }
+    else
+    {
+      $result = new self();
+      $result->load($res->next_row_keyed());
+    }
+    return $result;
   }
 }

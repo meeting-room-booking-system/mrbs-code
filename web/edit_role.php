@@ -98,7 +98,8 @@ function generate_roles_table()
     echo "</td>";
 
     echo "<td>";
-    echo $role->name;
+    $href = multisite(this_page() . '?id=' . $role->id);
+    echo '<a href="' . htmlspecialchars($href). '">' . htmlspecialchars($role->name) . '</a>';
     echo "</td>";
     echo "</tr>\n";
   }
@@ -122,13 +123,23 @@ $context = array(
   );
 
 $error = get_form_var('error', 'string');
+$id = get_form_var('id', 'int');
 $name = get_form_var('name', 'string');
 
 print_header($context);
 
 echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
 
-generate_add_form($error, $name);
-generate_roles_table();
+if (isset($id))
+{
+  $role = Role::getById($id);
+  echo $role->name;
+}
+else
+{
+  echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
+  generate_add_form($error, $name);
+  generate_roles_table();
+}
 
 print_footer();
