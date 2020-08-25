@@ -249,7 +249,25 @@ CREATE TABLE mrbs_roles
   UNIQUE KEY uq_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE mrbs_roles_areas
+(
+  role_id     int NOT NULL,
+  area_id     int NOT NULL,
+  permission  char CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  state       char CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+
+  UNIQUE KEY uq_role_area (role_id, area_id),
+  FOREIGN KEY (role_id)
+    REFERENCES mrbs_roles(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (area_id)
+    REFERENCES mrbs_area(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '71');
+  VALUES ( 'db_version', '72');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
