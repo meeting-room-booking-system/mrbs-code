@@ -12,6 +12,12 @@ function add_role($name)
 }
 
 
+function add_role_area($role_id, $area_id, $permission, $state)
+{
+  $area_permission = new AreaPermission($area_id, $role_id);
+}
+
+
 // Check the CSRF token.
 Form::checkToken();
 
@@ -24,8 +30,7 @@ $permission = get_form_var('permission', 'string');
 $role_id = get_form_var('role_id', 'string');
 $state = get_form_var('state', 'string');
 
-
-if (!isset($action))
+if (isset($action))
 {
   $returl = 'edit_role.php';
   switch ($action)
@@ -43,7 +48,7 @@ if (!isset($action))
       break;
 
     case 'add_role_area':
-      echo "TODO";
+      add_role_area($role_id, $area_id, $permission, $state);
       break;
 
     case 'delete':
