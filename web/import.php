@@ -642,20 +642,20 @@ function get_fieldset_location_settings()
   $fieldset->addLegend(get_vocab('area_room_settings'));
 
   // Default room
-  $areas = get_area_names($all=true);
+  $areas = new Areas();
   if (count($areas) > 0)
   {
     $options = array();
 
-    foreach($areas as $area_id => $area_name)
+    foreach($areas as $area)
     {
-      $rooms = get_room_names($area_id, $all=true);
+      $rooms = get_room_names($area->id, $all=true);
       if (count($rooms) > 0)
       {
-        $options[$area_name] = array();
+        $options[$area->area_name] = array();
         foreach($rooms as $room_id => $room_name)
         {
-          $options[$area_name][$room_id] = $room_name;
+          $options[$area->area_name][$room_id] = $room_name;
         }
       }
     }

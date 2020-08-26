@@ -75,6 +75,12 @@ class Area
   }
 
 
+  public function isDisabled()
+  {
+    return (bool) $this->data['disabled'];
+  }
+
+
   private static function getByColumn($column, $value)
   {
     $sql = "SELECT * FROM " . _tbl(self::TABLE_NAME) . "

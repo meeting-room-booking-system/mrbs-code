@@ -1728,31 +1728,6 @@ function get_area_name($id, $all=FALSE)
 }
 
 
-// Gets an array of area names indexed by area id.
-// If $all=TRUE then all areas are returned, otherwise just the ones that
-// are not disabled
-function get_area_names($all=FALSE)
-{
-  $areas = array();
-
-  $sql = "SELECT id, area_name FROM " . _tbl('area');
-  if (empty($all))
-  {
-    $sql .= " WHERE disabled=0";
-  }
-  $sql .= " ORDER BY sort_key";
-
-  $res = db()->query($sql);
-
-  while (false !== ($row = $res->next_row_keyed()))
-  {
-    $areas[$row['id']] = $row['area_name'];
-  }
-
-  return $areas;
-}
-
-
 // Get all the area details for $area_id.
 // Returns NULL if $area_id does not exist.
 function get_area_details($area_id)

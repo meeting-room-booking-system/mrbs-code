@@ -45,12 +45,12 @@ function get_field_to_date($data)
 function get_field_areamatch($data)
 {
   $field = new FieldInputDatalist();
-  $options = get_area_names($all=true);
+  $areas = new Areas();
   $field->setAttribute('id', 'div_areamatch')
         ->setLabel(get_vocab('match_area'))
         ->setControlAttributes(array('name'  => 'areamatch',
                                      'value' => $data['areamatch']))
-        ->addDatalistOptions($options, false);
+        ->addDatalistOptions($areas->getNames(true), false);
 
   return $field;
 }

@@ -145,12 +145,12 @@ function get_fieldset_general($data)
   $fieldset = new ElementFieldset();
 
   // The area select
-  $areas = get_area_names($all=true);
+  $areas = new Areas();
   $field = new FieldSelect();
   $field->setLabel(get_vocab('area'))
         ->setControlAttributes(array('name'     => 'new_area',
                                      'disabled' => $disabled))
-        ->addSelectOptions($areas, $data['area_id'], true);
+        ->addSelectOptions($areas->getNames(true), $data['area_id'], true);
   $fieldset->addElement($field);
 
   // Room name

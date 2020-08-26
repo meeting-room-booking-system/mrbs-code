@@ -42,11 +42,12 @@ function make_area_select_html($view, $year, $month, $day, $current)
 
   $out_html = '';
 
-  $areas = get_area_names();
+  $areas = new Areas();
+  $options = $areas->getNames();
 
   // Only show the areas if there are more than one of them, otherwise
   // there's no point
-  if (count($areas) > 1)
+  if (count($options) > 1)
   {
     $page_date = format_iso_date($year, $month, $day);
 
@@ -69,7 +70,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
                                  'name'       => 'area',
                                  'aria-label' => get_vocab('select_area'),
                                  'onchange'   => 'this.form.submit()'))
-           ->addSelectOptions($areas, $current, true);
+           ->addSelectOptions($options, $current, true);
     $form->addElement($select);
 
     // Note:  the submit button will not be displayed if JavaScript is enabled

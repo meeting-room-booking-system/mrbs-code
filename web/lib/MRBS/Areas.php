@@ -11,6 +11,21 @@ class Areas extends TableIterator
   }
 
 
+  // Returns an array of area names indexed by area id.
+  public function getNames($include_disabled=false)
+  {
+    $result = array();
+    foreach ($this as $area)
+    {
+      if ($include_disabled || !$area->isDisabled())
+      {
+        $result[$area->id] = $area->area_name;
+      }
+    }
+    return $result;
+  }
+
+
   protected function getRes()
   {
     $class_name = $this->base_class;
