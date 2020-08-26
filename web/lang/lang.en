@@ -346,7 +346,14 @@ $vocab['role_exists']        = "The role '%s' already exists.";
 $vocab["confirm_del_role"]   = "Are you sure you want to delete the role '%s'?";
 $vocab["role_heading"]       = "Role: %s";
 $vocab["add_role_area"]      = "Add area permissions";
-
+$vocab["permission"]         = "Permission";
+$vocab["permission_read"]    = "Read";
+$vocab["permission_write"]   = "Write";
+$vocab["permission_all"]     = "All";
+$vocab["state"]              = "State";
+$vocab["state_neither"]      = "Neither";
+$vocab["state_granted"]      = "Granted";
+$vocab["state_denied"]       = "Denied";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";

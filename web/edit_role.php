@@ -5,7 +5,9 @@ use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldDiv;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldSelect;
 use MRBS\Form\Form;
 
 require "defaultincludes.inc";
@@ -82,10 +84,53 @@ function generate_add_role_area_button(Role $role)
 
 function generate_add_role_area_form(Role $role)
 {
-  echo 'Hello';
+  $form = new Form();
+  $form->addHiddenInputs(array('action' => 'add_role_area',
+                               'role_id' => $role->id))
+       ->setAttributes(array('action' => multisite('edit_role_handler.php'),
+                             'class'  => 'standard',
+                             'method' => 'post'));
+
+  $fieldset = new ElementFieldset();
+
+  // The area select
   $areas = new Areas();
-  $options = $areas->getNames(true);
-  var_dump($options);
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('area'))
+        ->setControlAttributes(array('name' => 'area_id'))
+        ->addSelectOptions($areas->getNames(true), null, true);
+  $fieldset->addElement($field);
+
+  // Permission
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('permission'))
+        ->addRadioOptions(AreaPermission::getPermissionOptions(),
+                          'permission',
+                          AreaPermission::$permission_default,
+                          true);
+  $fieldset->addElement($field);
+
+  // State
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('state'))
+        ->addRadioOptions(AreaPermission::getStateOptions(),
+                          'state',
+                          AreaPermission::$state_default,
+                          true);
+  $fieldset->addElement($field);
+
+  $form->addElement($fieldset);
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('add_role_area'));
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
 }
 
 

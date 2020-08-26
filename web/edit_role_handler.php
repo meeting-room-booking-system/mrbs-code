@@ -19,9 +19,13 @@ Form::checkToken();
 checkAuthorised(this_page());
 
 $action = get_form_var('action', 'string');
+$area_id = get_form_var('area_id', 'string');
+$permission = get_form_var('permission', 'string');
+$role_id = get_form_var('role_id', 'string');
+$state = get_form_var('state', 'string');
 
 
-if (isset($action))
+if (!isset($action))
 {
   $returl = 'edit_role.php';
   switch ($action)
@@ -38,8 +42,11 @@ if (isset($action))
       }
       break;
 
+    case 'add_role_area':
+      echo "TODO";
+      break;
+
     case 'delete':
-      $role_id = get_form_var('role_id', 'string');
       Role::deleteById($role_id);
       break;
 
@@ -48,7 +55,7 @@ if (isset($action))
   }
   if (isset($error))
   {
-    $query_string = "error=$error&name=$name";
+    $returl .= "?error=$error&name=$name";
   }
   location_header($returl);
 }
