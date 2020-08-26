@@ -10,7 +10,7 @@ use MRBS\Form\ElementInputSubmit;
 function print_head($simple=false)
 {
   global $refresh_rate;
-  
+
   echo "<head>\n";
 
   echo "<meta charset=\"" . get_charset() . "\">\n";
@@ -205,7 +205,8 @@ function print_menu_items($query)
   $menu_items = array('help'   => 'help.php',
                       'report' => 'report.php',
                       'import' => 'import.php',
-                      'rooms'  => 'admin.php');
+                      'rooms'  => 'admin.php',
+                      'roles'  => 'edit_role.php');
 
   if ($auth['type'] == 'db')
   {
