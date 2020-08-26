@@ -11,7 +11,7 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function generate_add_form($error=null, $name=null)
+function generate_add_role_form($error=null, $name=null)
 {
   $form = new Form();
   $form->addHiddenInput('action', 'add')
@@ -58,6 +58,34 @@ function generate_add_form($error=null, $name=null)
 }
 
 
+function generate_add_role_area_button(Role $role)
+{
+  $form = new Form();
+  $form->addHiddenInputs(array('action' => 'add_role_area',
+                               'role_id' => $role->id))
+       ->setAttributes(array('action' => multisite(this_page()),
+                             'class'  => 'standard',
+                             'method' => 'post'));
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('add_role_area'));
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
+
+function generate_add_role_area_form(Role $role)
+{
+  echo 'Hello';
+}
+
+
 function generate_delete_button(Role $role)
 {
   $form = new Form();
@@ -98,7 +126,7 @@ function generate_roles_table()
     echo "</td>";
 
     echo "<td>";
-    $href = multisite(this_page() . '?id=' . $role->id);
+    $href = multisite(this_page() . '?role_id=' . $role->id);
     echo '<a href="' . htmlspecialchars($href). '">' . htmlspecialchars($role->name) . '</a>';
     echo "</td>";
     echo "</tr>\n";
@@ -122,23 +150,34 @@ $context = array(
     'room'      => isset($room) ? $room : null
   );
 
+$action = get_form_var('action', 'string');
 $error = get_form_var('error', 'string');
-$id = get_form_var('id', 'int');
+$role_id = get_form_var('role_id', 'int');
 $name = get_form_var('name', 'string');
 
 print_header($context);
 
-echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
-
-if (isset($id))
+if (isset($role_id))
 {
-  $role = Role::getById($id);
-  echo $role->name;
+  $role = Role::getById($role_id);
+  echo "<h2>" . htmlspecialchars(get_vocab('role_heading', $role->name)) . "</h2>";
+  if (isset($action) && ($action == 'add_role_area'))
+  {
+    generate_add_role_area_form($role);
+  }
+  else
+  {
+    generate_add_role_area_button($role);
+
+    $permissions = new AreaPermissions();
+    $permissions->getByRole($role);
+    var_dump($permissions);
+  }
 }
 else
 {
   echo "<h2>" . htmlspecialchars(get_vocab('roles')) . "</h2>";
-  generate_add_form($error, $name);
+  generate_add_role_form($error, $name);
   generate_roles_table();
 }
 
