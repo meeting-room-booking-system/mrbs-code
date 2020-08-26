@@ -83,6 +83,11 @@ function generate_add_role_area_button(Role $role)
 function generate_add_role_area_form(Role $role)
 {
   echo 'Hello';
+  $areas = new Areas();
+  foreach ($areas as $area)
+  {
+    echo $area->area_name;
+  }
 }
 
 
