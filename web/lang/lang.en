@@ -343,6 +343,7 @@ $vocab['roles']              = "Roles";
 $vocab['add_role']           = "Add role";
 $vocab['role_name']          = "Name";
 $vocab['role_exists']        = "The role '%s' already exists.";
+$vocab['role_area_exists']   = "Permissions already exist for area '%s'.";
 $vocab["confirm_del_role"]   = "Are you sure you want to delete the role '%s'?";
 $vocab["role_heading"]       = "Role: %s";
 $vocab["add_role_area"]      = "Add area permissions";

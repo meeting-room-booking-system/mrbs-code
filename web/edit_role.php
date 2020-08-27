@@ -82,7 +82,7 @@ function generate_add_role_area_button(Role $role)
 }
 
 
-function generate_add_role_area_form(Role $role)
+function generate_add_role_area_form(Role $role, $error, $area_id)
 {
   $form = new Form();
   $form->addHiddenInputs(array('action' => 'add_role_area',
@@ -92,6 +92,17 @@ function generate_add_role_area_form(Role $role)
                              'method' => 'post'));
 
   $fieldset = new ElementFieldset();
+
+  if (isset($error))
+  {
+    $area = Area::getById($area_id);
+    $field = new FieldDiv();
+    $p = new ElementP();
+    $p->setText(get_vocab($error, $area->area_name))
+      ->setAttribute('class', 'error');
+    $field->addControlElement($p);
+    $fieldset->addElement($field);
+  }
 
   // The area select
   $areas = new Areas();
@@ -200,6 +211,7 @@ $context = array(
 
 $action = get_form_var('action', 'string');
 $error = get_form_var('error', 'string');
+$area_id = get_form_var('area_id', 'int');
 $role_id = get_form_var('role_id', 'int');
 $name = get_form_var('name', 'string');
 
@@ -211,7 +223,7 @@ if (isset($role_id))
   echo "<h2>" . htmlspecialchars(get_vocab('role_heading', $role->name)) . "</h2>";
   if (isset($action) && ($action == 'add_role_area'))
   {
-    generate_add_role_area_form($role);
+    generate_add_role_area_form($role, $error, $area_id);
   }
   else
   {
