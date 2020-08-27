@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-class AreaPermission
+class AreaPermission extends Table
 {
   // Possible permissions
   const READ  = 'r';  // Can view the area
@@ -14,19 +14,20 @@ class AreaPermission
   const GRANTED = 'g';
   const DENIED  = 'd';
 
-  public $area_id;
-  public $role_id;
-  public $permission;
-  public $state;
+  const TABLE_NAME = 'roles_areas';
 
   public static $permission_default = self::WRITE;
   public static $state_default = self::GRANTED;
 
+  protected static $unique_columns = array('role_id', 'area_id');
 
-  public function __construct($area_id, $role_id)
+
+  public function __construct($role_id=null, $area_id=null)
   {
-    $this->area_id = $area_id;
+    parent::__construct();
     $this->role_id = $role_id;
+    $this->area_id = $area_id;
+
     // Default values
     $this->permission = self::$permission_default;
     $this->state = self::$state_default;

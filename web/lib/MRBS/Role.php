@@ -12,32 +12,13 @@ class Role extends Table
   public function __construct($name=null)
   {
     parent::__construct();
-    if (isset($name))
-    {
-      $this->data = array('name' => $name);
-    }
-  }
-
-
-  public static function getById($id)
-  {
-    return self::getByColumn('id', $id);
+    $this->name = $name;
   }
 
 
   public static function getByName($name)
   {
     return self::getByColumn('name', $name);
-  }
-
-
-  public static function deleteById($id)
-  {
-    $sql = "DELETE FROM " . _tbl(self::TABLE_NAME) . "
-                  WHERE id=:id
-                  LIMIT 1";
-    $sql_params = array(':id' => $id);
-    db()->command($sql, $sql_params);
   }
 
 }

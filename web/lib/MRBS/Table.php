@@ -144,6 +144,22 @@ abstract class Table
   }
 
 
+  public static function getById($id)
+  {
+    return static::getByColumn('id', $id);
+  }
+
+
+  public static function deleteById($id)
+  {
+    $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
+                  WHERE id=:id
+                  LIMIT 1";
+    $sql_params = array(':id' => $id);
+    db()->command($sql, $sql_params);
+  }
+
+
   protected static function getByColumn($column, $value)
   {
     $sql = "SELECT *
