@@ -37,7 +37,8 @@ if (isset($action))
   {
     case 'add':
       $name = get_form_var('name', 'string');
-      if (Role::exists($name))
+      $role = new Role($name);
+      if ($role->exists())
       {
         $returl .= "?error=role_exists&name=$name";
       }
