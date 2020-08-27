@@ -1728,21 +1728,6 @@ function get_area_name($id, $all=FALSE)
 }
 
 
-// Get all the area details for $area_id.
-// Returns NULL if $area_id does not exist.
-function get_area_details($area_id)
-{
-  $sql = "SELECT *
-            FROM " . _tbl('area') . "
-           WHERE id=?
-           LIMIT 1";
-
-  $res = db()->query($sql, array($area_id));
-
-  return ($res->count() == 0) ? null : $res->next_row_keyed();
-}
-
-
 // Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns NULL if the id does not exist
