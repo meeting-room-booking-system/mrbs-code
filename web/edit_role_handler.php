@@ -5,12 +5,6 @@ use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
-function add_role($name)
-{
-  $role = new Role($name);
-  $role->save();
-}
-
 
 function add_role_area($role_id, $area_id, $permission, $state)
 {
@@ -44,7 +38,7 @@ if (isset($action))
       }
       else
       {
-        add_role($name);
+        $role->save();
       }
       break;
 

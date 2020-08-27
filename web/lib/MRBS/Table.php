@@ -100,7 +100,7 @@ abstract class Table
       {
         continue;
       }
-      
+
       $key = $column_info['name'];
       $columns[] = $key;
       if (array_key_exists($key, $this->data))
