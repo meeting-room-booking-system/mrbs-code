@@ -1705,29 +1705,6 @@ function get_booking_info($id, $series, $silent=FALSE)
 }
 
 
-
-// Get the name of the area with id $id.   If $all is set to TRUE then all areas
-// are searched, otherwise just those which have not been disabled
-// Returns FALSE if there is an error, NULL if the id does not exist
-function get_area_name($id, $all=FALSE)
-{
-  $id = (int)$id;
-
-  $sql = "SELECT area_name
-            FROM " . _tbl('area') . "
-           WHERE id=?";
-  if (empty($all))
-  {
-    $sql .= " AND disabled=0";
-  }
-  $sql .= " LIMIT 1";
-
-  $res = db()->query($sql, array($id));
-
-  return ($res->count() == 0) ? null : $res->next_row()[0];
-}
-
-
 // Get the name of the room with id $room_id.   If $all is set to TRUE then all rooms
 // are searched, otherwise just those which have not been disabled
 // Returns NULL if the id does not exist
