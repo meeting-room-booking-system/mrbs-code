@@ -96,29 +96,31 @@ abstract class Table
     // assumed to be auto-increment.
     foreach ($this->column_info as $column_info)
     {
-      if ($column_info['name'] != 'id')
+      if ($column_info['name'] == 'id')
       {
-        $key = $column_info['name'];
-        $columns[] = $key;
-        if (array_key_exists($key, $this->data))
+        continue;
+      }
+      
+      $key = $column_info['name'];
+      $columns[] = $key;
+      if (array_key_exists($key, $this->data))
+      {
+        $value = $this->data[$key];
+        if (is_null($value))
         {
-          $value = $this->data[$key];
-          if (is_null($value))
+          $values[] = 'NULL';
+        }
+        else
+        {
+          $values[] = '?';
+          if (is_bool($value))
           {
-            $values[] = 'NULL';
+            // Need to convert booleans
+            $sql_params[] = ($value) ? 1 : 0;
           }
           else
           {
-            $values[] = '?';
-            if (is_bool($value))
-            {
-              // Need to convert booleans
-              $sql_params[] = ($value) ? 1 : 0;
-            }
-            else
-            {
-              $sql_params[] = $value;
-            }
+            $sql_params[] = $value;
           }
         }
       }
