@@ -17,10 +17,8 @@ class AreaPermissions implements \Countable, \Iterator
 
   public function current()
   {
-    $current =  $this->data[$this->cursor];
-    $permission = new AreaPermission($current['area_id'], $current['role_id']);
-    $permission->permission = $current['permission'];
-    $permission->state = $current['state'];
+    $permission = new AreaPermission();
+    $permission->load($this->data[$this->cursor]);
 
     return $permission;
   }
@@ -52,8 +50,10 @@ class AreaPermissions implements \Countable, \Iterator
 
   public function getByRole(Role $role)
   {
-    $sql = "SELECT *
-              FROM " . \MRBS\_tbl(self::TABLE_NAME) . "
+    $sql = "SELECT R.*, A.area_name
+              FROM " . _tbl(self::TABLE_NAME) . " R
+         LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
+                ON R.area_id=A.id
              WHERE role_id=:role_id";
 
     $sql_params = array(':role_id' => $role->id);

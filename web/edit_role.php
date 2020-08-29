@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Element;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
@@ -196,6 +197,37 @@ function generate_roles_table()
 }
 
 
+function generate_area_roles_table(Role $role)
+{
+  $permissions = new AreaPermissions();
+  $permissions->getByRole($role);
+
+  $form = new Form();
+  $form->setAttributes(array(
+      'class' => 'standard'
+    ));
+  $fieldset = new ElementFieldset();
+
+  $table = new Element('table');
+  $tbody = new Element('tbody');
+
+  foreach ($permissions as $permission)
+  {
+    $tr = new Element('tr');
+    $th = new Element('th');
+    $th->setText($permission->area_name);
+    $tr->addElement($th);
+    $tbody->addElement($tr);
+  }
+
+  $table->addElement($tbody);
+  $fieldset->addElement($table);
+  $form->addElement($fieldset);
+
+  $form->render();;
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
@@ -228,10 +260,7 @@ if (isset($role_id))
   else
   {
     generate_add_role_area_button($role);
-
-    $permissions = new AreaPermissions();
-    $permissions->getByRole($role);
-    var_dump($permissions);
+    generate_area_roles_table($role);
   }
 }
 else
