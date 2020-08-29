@@ -204,10 +204,11 @@ function generate_area_roles_table(Role $role)
   $permissions->getByRole($role);
   $permission_options = AreaPermission::getPermissionOptions();
   $state_options = AreaPermission::getStateOptions();
+  $n_columns = count($permission_options) + count($state_options);
 
   $form = new Form();
   $form->setAttributes(array(
-      'class' => 'standard'
+      'class' => 'roles_table'
     ));
   $fieldset = new ElementFieldset();
 
@@ -280,6 +281,15 @@ function generate_area_roles_table(Role $role)
 
   $table->addElement($tbody);
   $fieldset->addElement($table);
+  $form->addElement($fieldset);
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $button = new ElementInputSubmit();
+  $button->setAttributes(array(
+      'value' => get_vocab('save')
+    ));
+  $fieldset->addElement($button);
   $form->addElement($fieldset);
 
   $form->render();;
