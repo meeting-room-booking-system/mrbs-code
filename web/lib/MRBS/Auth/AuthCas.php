@@ -6,10 +6,24 @@ use \phpCAS;
 
 class AuthCas extends Auth
 {
-  // Initialise CAS
+
   public function __construct()
   {
+    $this->init();
+  }
+
+
+  // Initialise CAS
+  public function init()
+  {
     global $auth;
+
+    static $init_complete = false;
+
+    if ($init_complete)
+    {
+      return;
+    }
 
     if ($auth['cas']['debug'])
     {
@@ -59,7 +73,10 @@ class AuthCas extends Auth
     {
       phpCAS::setLang($cas_lang_map[$locale['language']]);
     }
+
+    $init_complete = true;
   }
+
 
   /* authValidateUser($user, $pass)
    *
