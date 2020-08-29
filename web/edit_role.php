@@ -3,6 +3,7 @@ namespace MRBS;
 
 use MRBS\Form\Element;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldDiv;
@@ -201,6 +202,8 @@ function generate_area_roles_table(Role $role)
 {
   $permissions = new AreaPermissions();
   $permissions->getByRole($role);
+  $permission_options = AreaPermission::getPermissionOptions();
+  $state_options = AreaPermission::getStateOptions();
 
   $form = new Form();
   $form->setAttributes(array(
@@ -209,14 +212,69 @@ function generate_area_roles_table(Role $role)
   $fieldset = new ElementFieldset();
 
   $table = new Element('table');
+  $thead = new Element('thead');
+  $tr = new Element('tr');
+  // Area name
+  $th = new Element('th');
+  $th->setAttribute('rowspan', 2)
+     ->setText(get_vocab('area'));
+  $tr->addElement($th);
+  // Permission
+  $th = new Element('th');
+  $th->setAttribute('colspan', count($permission_options))
+     ->setText(get_vocab('permission'));
+  $tr->addElement($th);
+  // State
+  $th = new Element('th');
+  $th->setAttribute('colspan', count($state_options))
+    ->setText(get_vocab('state'));
+  $tr->addElement($th);
+  $thead->addElement($tr);
+
+  $tr = new Element('tr');
+  // Permission options
+  foreach ($permission_options as $key => $value)
+  {
+    $th = new Element('th');
+    $th->setText($value);
+    $tr->addElement($th);
+  }
+  // State options
+  foreach ($state_options as $key => $value)
+  {
+    $th = new Element('th');
+    $th->setText($value);
+    $tr->addElement($th);
+  }
+  $thead->addElement($tr);
+  $table->addElement($thead);
+
   $tbody = new Element('tbody');
+
 
   foreach ($permissions as $permission)
   {
     $tr = new Element('tr');
+    // Area name
     $th = new Element('th');
     $th->setText($permission->area_name);
     $tr->addElement($th);
+    // Permission
+    foreach ($permission_options as $option)
+    {
+      $td = new Element('td');
+      $radio = new ElementInputRadio();
+      $td->addElement($radio);
+      $tr->addElement($td);
+    }
+    // State
+    foreach ($permission_options as $option)
+    {
+      $td = new Element('td');
+      $radio = new ElementInputRadio();
+      $td->addElement($radio);
+      $tr->addElement($td);
+    }
     $tbody->addElement($tr);
   }
 
