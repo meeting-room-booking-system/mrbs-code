@@ -43,7 +43,7 @@ abstract class Auth
   // validation, but unfortunately JavaScript's native support for Unicode
   // pattern matching is very limited.   Would need to be implemented using
   // an add-in library).
-  function validatePassword($password)
+  public function validatePassword($password)
   {
     global $pwd_policy;
 

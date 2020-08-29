@@ -13,7 +13,7 @@ class SessionWordpress extends SessionWithLogin
     parent::__construct();
   }
 
-  
+
   public function getCurrentUser()
   {
     if (!is_user_logged_in())
