@@ -179,4 +179,19 @@ abstract class Auth
                     $users);
   }
 
+
+  // Check we've got the right session scheme for the type.
+  // To be called for those authentication types which require the same
+  // session scheme.
+  protected function checkSessionMatchesType()
+  {
+    global $auth;
+
+    if ($auth['session'] !== $auth['type'])
+    {
+      $class = get_called_class();
+      $message = "MRBS configuration error: $class needs \$auth['session'] set to '" . $auth['type'] . "'";
+      die($message);
+    }
+  }
 }

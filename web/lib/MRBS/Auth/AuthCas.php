@@ -9,6 +9,7 @@ class AuthCas extends Auth
 
   public function __construct()
   {
+    $this->checkSessionMatchesType();
     $this->init();
   }
 
