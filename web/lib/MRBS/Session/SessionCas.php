@@ -10,6 +10,7 @@ class SessionCas extends SessionWithLogin
 
   public function __construct()
   {
+    $this->checkTypeMatchesSession();
     \MRBS\auth()->init();  // Initialise CAS
     parent::__construct();
   }
