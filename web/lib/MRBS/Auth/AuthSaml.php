@@ -18,13 +18,7 @@ class AuthSaml extends Auth
 {
   public function __construct()
   {
-    global $auth;
-
-    if ($auth['session'] !== 'saml')
-    {
-      header('Content-Type: text/plain', true, 500);
-      die("auth_saml doesn't work alone, set \$config['session'] = 'saml'; too.\r\n");
-    }
+    $this->checkSessionMatchesType();
   }
 
 

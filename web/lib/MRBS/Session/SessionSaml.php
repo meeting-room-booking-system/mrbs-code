@@ -38,6 +38,8 @@ class SessionSaml extends SessionWithLogin
   {
     global $auth;
 
+    $this->checkTypeMatchesSession();
+
     // Check that the config variables have been set
     if (!isset($auth['saml']['ssp_path']))
     {
@@ -63,6 +65,7 @@ class SessionSaml extends SessionWithLogin
     }
 
     $this->ssp = new SimpleSAML_Auth_Simple($authSource);
+    parent::__construct();
   }
 
 

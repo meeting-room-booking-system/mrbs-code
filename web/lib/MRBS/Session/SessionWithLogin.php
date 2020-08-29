@@ -234,4 +234,20 @@ abstract class SessionWithLogin implements SessionInterface
     // Print footer and exit
     \MRBS\print_footer(true);
   }
+
+
+  // Check we've got the right authentication type for the session scheme.
+  // To be called for those session schemes which require the same
+  // authentication type
+  protected function checkTypeMatchesSession()
+  {
+    global $auth;
+
+    if ($auth['type'] !== $auth['session'])
+    {
+      $class = get_called_class();
+      $message = "MRBS configuration error: $class needs \$auth['type'] set to '" . $auth['session'] . "'";
+      die($message);
+    }
+  }
 }

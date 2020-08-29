@@ -8,6 +8,14 @@ use MRBS\Form\Form;
 class SessionCas extends SessionWithLogin
 {
 
+  public function __construct()
+  {
+    $this->checkTypeMatchesSession();
+    \MRBS\auth()->init();  // Initialise CAS
+    parent::__construct();
+  }
+
+
   public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
   {
     // Useless Method - CAS does it all

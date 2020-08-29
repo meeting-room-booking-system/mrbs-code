@@ -9,6 +9,13 @@ require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 class SessionJoomla extends SessionWithLogin
 {
 
+  public function __construct()
+  {
+    $this->checkTypeMatchesSession();
+    parent::__construct();
+  }
+
+
   public function getCurrentUser()
   {
     return \MRBS\auth()->getUser();
