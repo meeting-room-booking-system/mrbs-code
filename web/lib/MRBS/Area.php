@@ -28,9 +28,17 @@ class Area extends Table
   }
 
 
+  // Returns an array of room names for the area indexed by area id.
+  public function getRoomNames($include_disabled=false)
+  {
+    $rooms = new Rooms($this->id);
+    return $rooms->getNames($include_disabled);
+  }
+
+
   public function isDisabled()
   {
-    return (bool) $this->data['disabled'];
+    return (bool) $this->disabled;
   }
 
 }

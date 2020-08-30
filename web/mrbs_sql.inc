@@ -1729,36 +1729,6 @@ function get_room_name($room_id, $all=FALSE)
 }
 
 
-// Gets an array of room names in an area indexed by room id.
-// If $all=TRUE then all areas are returned, otherwise just the ones that
-// are not disabled
-function get_room_names($area_id, $all=FALSE)
-{
-  $rooms = array();
-
-  $sql = "SELECT id, room_name
-            FROM " . _tbl('room') . "
-           WHERE area_id = :area_id";
-  if (empty($all))
-  {
-    $sql .= " AND disabled=0";
-  }
-  $sql .= " ORDER BY sort_key";
-
-  $res = db()->query($sql, array(':area_id' => $area_id));
-
-  while (false !== ($row = $res->next_row_keyed()))
-  {
-    if (is_visible($row['id']))
-    {
-      $rooms[$row['id']] = $row['room_name'];
-    }
-  }
-
-  return $rooms;
-}
-
-
 // Get all the room details for $room_id.
 // Returns FALSE on error, NULL if $room_id does not exist or is invisible.
 function get_room_details($room_id)

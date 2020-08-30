@@ -649,11 +649,11 @@ function get_fieldset_location_settings()
 
     foreach($areas as $area)
     {
-      $rooms = get_room_names($area->id, $all=true);
-      if (count($rooms) > 0)
+      $room_names = $area->getRoomNames(true);
+      if (count($room_names) > 0)
       {
         $options[$area->area_name] = array();
-        foreach($rooms as $room_id => $room_name)
+        foreach($room_names as $room_id => $room_name)
         {
           $options[$area->area_name][$room_id] = $room_name;
         }
