@@ -200,8 +200,7 @@ function generate_roles_table()
 
 function generate_area_roles_table(Role $role)
 {
-  $permissions = new AreaPermissions();
-  $permissions->getByRole($role);
+  $permissions = new AreaPermissions($role);
   $permission_options = AreaPermission::getPermissionOptions();
   $state_options = AreaPermission::getStateOptions();
   $n_columns = count($permission_options) + count($state_options);

@@ -19,5 +19,5 @@ class AreaPermission extends AreaRoomPermission
     $this->permission = self::$permission_default;
     $this->state = self::$state_default;
   }
-  
+
 }
