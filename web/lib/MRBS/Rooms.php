@@ -35,9 +35,10 @@ class Rooms extends TableIterator
   protected function getRes()
   {
     $class_name = $this->base_class;
+    $table_name = _tbl($class_name::TABLE_NAME);
     $sql_params = array();
     $sql = "SELECT R.*, A.area_name, A.disabled as area_disabled
-              FROM " . _tbl($class_name::TABLE_NAME) . " R
+              FROM $table_name R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id ";
     if (isset($this->area_id))
@@ -45,7 +46,12 @@ class Rooms extends TableIterator
       $sql .= " WHERE R.area_id=:area_id";
       $sql_params[':area_id'] = $this->area_id;
     }
-    $sql .= " ORDER BY R.sort_key";
+    // In early versions of MRBS the sort_key field didn't exist and this method
+    // may be called before the database can be upgraded.
+    if (db()->field_exists($table_name, 'sort_key'))
+    {
+      $sql .= " ORDER BY R.sort_key";
+    }
     $this->res = db()->query($sql, $sql_params);
     $this->cursor = -1;
     $this->item = null;
