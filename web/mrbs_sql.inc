@@ -1705,26 +1705,6 @@ function get_booking_info($id, $series, $silent=FALSE)
 }
 
 
-// Get all the room details for $room_id.
-// Returns FALSE on error, NULL if $room_id does not exist or is invisible.
-function get_room_details($room_id)
-{
-  if (!is_visible($room_id))
-  {
-    return null;
-  }
-
-  $sql = "SELECT *
-            FROM " . _tbl('room') . "
-           WHERE id=?
-           LIMIT 1";
-
-  $res = db()->query($sql, array($room_id));
-
-  return ($res->count() == 0) ? null : $res->next_row_keyed();
-}
-
-
 // Gets the rooms in an area
 // If $include_disabled is TRUE then all rooms are returned, whether or not they are disabled,
 // otherwise just the ones that are not disabled.

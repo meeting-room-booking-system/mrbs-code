@@ -62,7 +62,7 @@ require_once "mrbs_sql.inc";
 // it will use the fieldname, eg 'coffee_machine'.
 
 
-function get_custom_fields($data)
+function get_custom_fields(Room $room)
 {
   global $standard_fields, $text_input_max;
 
@@ -78,7 +78,7 @@ function get_custom_fields($data)
     {
       $label = get_loc_field_name(_tbl('room'), $column['name']);
       $name = VAR_PREFIX . $column['name'];
-      $value = $data[$column['name']];
+      $value = $room->{$column['name']};
 
       // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
       // assume are intended to be booleans)
@@ -136,7 +136,7 @@ function get_fieldset_errors($errors)
 }
 
 
-function get_fieldset_general($data)
+function get_fieldset_general(Room $room)
 {
   global $auth;
 
@@ -150,14 +150,14 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('area'))
         ->setControlAttributes(array('name'     => 'new_area',
                                      'disabled' => $disabled))
-        ->addSelectOptions($areas->getNames(true), $data['area_id'], true);
+        ->addSelectOptions($areas->getNames(true), $room->area_id, true);
   $fieldset->addElement($field);
 
   // Room name
   $field = new FieldInputText();
   $field->setLabel(get_vocab('name'))
         ->setControlAttributes(array('name'      => 'room_name',
-                                     'value'     => $data['room_name'],
+                                     'value'     => $room->room_name,
                                      'maxlength' => maxlength('room.room_name'),
                                      'required'  => true,
                                      'disabled'  => $disabled));
@@ -170,7 +170,7 @@ function get_fieldset_general($data)
     $field->setLabel(get_vocab('sort_key'))
           ->setLabelAttribute('title', get_vocab('sort_key_note'))
           ->setControlAttributes(array('name'      => 'sort_key',
-                                       'value'     => $data['sort_key'],
+                                       'value'     => $room->sort_key,
                                        'maxlength' => maxlength('room.sort_key'),
                                        'disabled'  => $disabled));
     $fieldset->addElement($field);
@@ -181,7 +181,7 @@ function get_fieldset_general($data)
   {
     $options = array('0' => get_vocab('enabled'),
                      '1' => get_vocab('disabled'));
-    $value = ($data['disabled']) ? '1' : '0';
+    $value = ($room->isDisabled()) ? '1' : '0';
     $field = new FieldInputRadioGroup();
     $field->setLabel(get_vocab('status'))
           ->setLabelAttributes(array('title' => get_vocab('disabled_room_note')))
@@ -193,7 +193,7 @@ function get_fieldset_general($data)
   $field = new FieldInputText();
   $field->setLabel(get_vocab('description'))
         ->setControlAttributes(array('name'      => 'description',
-                                     'value'     => $data['description'],
+                                     'value'     => $room->description,
                                      'maxlength' => maxlength('room.description'),
                                      'disabled'  => $disabled));
   $fieldset->addElement($field);
@@ -203,7 +203,7 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('capacity'))
         ->setControlAttributes(array('name'     => 'capacity',
                                      'min'      => '0',
-                                     'value'    => $data['capacity'],
+                                     'value'    => $room->capacity,
                                      'disabled' => $disabled));
   $fieldset->addElement($field);
 
@@ -212,7 +212,7 @@ function get_fieldset_general($data)
   $field->setLabel(get_vocab('room_admin_email'))
         ->setLabelAttribute('title', get_vocab('email_list_note'))
         ->setControlAttributes(array('name'      => 'room_admin_email',
-                                     'value'     => $data['room_admin_email'],
+                                     'value'     => $room->room_admin_email,
                                      'multiple'  => true,
                                      'disabled'  => $disabled));
   $fieldset->addElement($field);
@@ -225,12 +225,12 @@ function get_fieldset_general($data)
     $field->setLabel(get_vocab('custom_html'))
           ->setLabelAttribute('title', get_vocab('custom_html_note'))
           ->setControlAttribute('name', 'custom_html')
-          ->setControlText($data['custom_html']);
+          ->setControlText($room->custom_html);
     $fieldset->addElement($field);
   }
 
   // Then the custom fields
-  $fields = get_custom_fields($data);
+  $fields = get_custom_fields($room);
   $fieldset->addElements($fields);
 
   // The Submit and Back buttons
@@ -252,6 +252,57 @@ function get_fieldset_general($data)
 }
 
 
+function generate_room_form($room_id, $errors=null)
+{
+  global $auth;
+
+  // Get the details for this room
+  if (empty($room_id) ||
+      is_null($room = Room::getById($room_id)) ||
+      !$room->isVisible())
+  {
+    fatal_error(get_vocab('invalid_room'));
+  }
+
+  // Generate the form
+  $form = new Form();
+
+  $attributes = array(
+      'id'     => 'edit_room',
+      'class'  => 'standard',
+      'action' => multisite('edit_room_handler.php'),
+      'method' => 'post'
+    );
+
+  // Non-admins will only be allowed to view room details, not change them
+  $legend = (is_admin()) ? get_vocab('editroom') : get_vocab('viewroom');
+
+  $form->setAttributes($attributes)
+       ->addHiddenInput('room', $room->id)
+       ->addHiddenInput('old_area', $room->area_id)
+       ->addHiddenInput('old_room_name', $room->room_name);
+
+  $outer_fieldset = new ElementFieldset();
+
+  $outer_fieldset->addLegend($legend)
+                 ->addElement(get_fieldset_errors($errors))
+                 ->addElement(get_fieldset_general($room));
+
+  $form->addElement($outer_fieldset);
+
+  $form->render();
+
+  if ($auth['allow_custom_html'])
+  {
+    // Now the custom HTML
+    echo "<div id=\"div_custom_html\">\n";
+    // no htmlspecialchars() because we want the HTML!
+    echo (isset($room->custom_html)) ? $room->custom_html . "\n" : "";
+    echo "</div>\n";
+  }
+}
+
+
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
@@ -267,48 +318,7 @@ $context = array(
 
 print_header($context);
 
-// Get the details for this room
-if (empty($room) || is_null($data = get_room_details($room)))
-{
-  fatal_error(get_vocab('invalid_room'));
-}
-
 $errors = get_form_var('errors', 'array');
-
-// Generate the form
-$form = new Form();
-
-$attributes = array('id'     => 'edit_room',
-                    'class'  => 'standard',
-                    'action' => multisite('edit_room_handler.php'),
-                    'method' => 'post');
-
-// Non-admins will only be allowed to view room details, not change them
-$legend = (is_admin()) ? get_vocab('editroom') : get_vocab('viewroom');
-
-$form->setAttributes($attributes)
-     ->addHiddenInput('room', $data['id'])
-     ->addHiddenInput('old_area', $data['area_id'])
-     ->addHiddenInput('old_room_name', $data['room_name']);
-
-$outer_fieldset = new ElementFieldset();
-
-$outer_fieldset->addLegend($legend)
-               ->addElement(get_fieldset_errors($errors))
-               ->addElement(get_fieldset_general($data));
-
-$form->addElement($outer_fieldset);
-
-$form->render();
-
-if ($auth['allow_custom_html'])
-{
-  // Now the custom HTML
-  echo "<div id=\"div_custom_html\">\n";
-  // no htmlspecialchars() because we want the HTML!
-  echo (isset($data['custom_html'])) ? $data['custom_html'] . "\n" : "";
-  echo "</div>\n";
-}
-
+generate_room_form($room, $errors);
 
 print_footer();
