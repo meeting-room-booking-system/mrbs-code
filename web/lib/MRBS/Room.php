@@ -28,9 +28,16 @@ class Room extends Table
   }
 
 
+  // Checks if the room is disabled.  A room is disabled if either it or
+  // its area has ben disabled.
   public function isDisabled()
   {
-    return (bool) $this->disabled;
+    if ($this->disabled)
+    {
+      return true;
+    }
+    $area = Area::getById($this->area_id);
+    return $area->isDisabled();
   }
 
 

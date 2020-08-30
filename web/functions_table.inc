@@ -58,7 +58,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 
   global $resolution;
   global $is_private_field;
-  
+
   // We're only interested in entries which occur on this day (it's possible
   // for $entry to contain entries for other days)
   if (($entry['start_time'] >= $start_last_slot + $resolution) ||
@@ -201,7 +201,7 @@ function get_entry_classes($entry)
   {
     $classes[] = 'series';
   }
-  
+
   if ($entry['allow_registration'])
   {
     if ($entry['enable_registrant_limit'] &&
@@ -1236,10 +1236,9 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   global $resolution, $morningstarts, $morningstarts_minutes;
   global $weekstarts, $strftime_format;
 
-  // Check that we've got a valid, enabled room
-  $room_name = get_room_name($room_id);
-
-  if (is_null($room_name) || (!is_visible($room_id)))
+  // Check that we've got a valid, enabled and visible room
+  $room = Room::getById($room_id);
+  if (!isset($room) || $room->isDisabled() || !$room->isVisible())
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
@@ -1656,14 +1655,15 @@ function month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $ro
 }
 
 
-function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room)
+function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
   global $is_private_field;
 
-  // Check that we've got a valid, enabled room
-  if (is_null(get_room_name($room)) || !is_visible($room))
+  // Check that we've got a valid, enabled and visible room
+  $room = Room::getById($room_id);
+  if (!isset($room) || $room->isDisabled() || !$room->isVisible())
   {
     // No rooms have been created yet, or else they are all disabled
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
@@ -1694,7 +1694,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
 
   // Get the data.  It's much quicker to do a single SQL query getting all the
   // entries for the interval in one go, rather than doing a query for each day.
-  $entries = get_entries_by_room($room,
+  $entries = get_entries_by_room($room_id,
                                  get_start_first_slot($month, 1, $year),
                                  get_end_last_slot($month, $days_in_month, $year));
 
@@ -1735,8 +1735,8 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
       $vars = array('year'  => $year,
                     'month' => $month,
                     'day'   => $d,
-                    'area'  => $area,
-                    'room'  => $room);
+                    'area'  => $area_id,
+                    'room'  => $room_id);
 
       // If it's a Monday (the start of the ISO week), show the week number
       if ($view_week_number && (($weekcol + $weekstarts)%DAYS_PER_WEEK == 1))
@@ -1791,7 +1791,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
 
         // Handle private events
         if (is_private_event($entry['private']) &&
-            !getWritable($entry['create_by'], $room))
+            !getWritable($entry['create_by'], $room_id))
         {
           $entry['private'] = true;
           if ($is_private_field['entry.name'])
