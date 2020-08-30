@@ -87,7 +87,6 @@ function make_area_select_html($view, $year, $month, $day, $current)
 
 function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current)
 {
-  global $server, $room;
   global $multisite, $site;
 
   $out_html = '';
