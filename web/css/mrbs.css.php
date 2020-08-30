@@ -1384,6 +1384,39 @@ div#div_custom_html {
   margin-left: 1em;
 }
 
+.roles_table {
+  clear: left;
+}
+
+.roles_table table {
+  border-collapse: collapse;
+}
+
+.roles_table th,
+.roles_table td {
+  text-align: center;
+  padding: 0.2em 0.5em;
+}
+
+.roles_table thead tr:first-child th:first-child,
+.roles_table tbody th:first-child {
+  text-align: left;
+}
+
+.roles_table thead tr:first-child th:not(:last-child),
+.roles_table tbody th:first-child,
+.roles_table tbody td:nth-of-type(3) {
+  border-right: 1px solid red;
+}
+
+
+
+
+
+
+
+
+
 
 <?php // The standard form ?>
 
