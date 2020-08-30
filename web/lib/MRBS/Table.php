@@ -163,11 +163,11 @@ abstract class Table
   protected static function getByColumn($column, $value)
   {
     $sql = "SELECT *
-              FROM " . \MRBS\_tbl(static::TABLE_NAME) . "
+              FROM " . _tbl(static::TABLE_NAME) . "
              WHERE $column=:value
              LIMIT 1";
     $sql_params = array(':value' => $value);
-    $res = \MRBS\db()->query($sql, $sql_params);
+    $res = db()->query($sql, $sql_params);
     if ($res->count() == 0)
     {
       $result = null;

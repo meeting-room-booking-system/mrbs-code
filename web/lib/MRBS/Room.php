@@ -32,12 +32,7 @@ class Room extends Table
   // its area has ben disabled.
   public function isDisabled()
   {
-    if ($this->disabled)
-    {
-      return true;
-    }
-    $area = Area::getById($this->area_id);
-    return $area->isDisabled();
+    return ($this->disabled || $this->area_disabled);
   }
 
 
@@ -45,4 +40,30 @@ class Room extends Table
   {
     return is_visible($this->id);
   }
+
+
+  // For efficiency we get some information about the area at the same time.
+  protected static function getByColumn($column, $value)
+  {
+    $sql = "SELECT R.*, A.area_name, A.disabled as area_disabled
+              FROM " . _tbl(static::TABLE_NAME) . " R
+         LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
+                ON R.area_id=A.id
+             WHERE R.$column=:value
+             LIMIT 1";
+    $sql_params = array(':value' => $value);
+    $res = db()->query($sql, $sql_params);
+    if ($res->count() == 0)
+    {
+      $result = null;
+    }
+    else
+    {
+      $class = get_called_class();
+      $result = new $class();
+      $result->load($res->next_row_keyed());
+    }
+    return $result;
+  }
+
 }
