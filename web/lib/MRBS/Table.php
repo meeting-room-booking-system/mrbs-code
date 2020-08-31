@@ -74,18 +74,19 @@ abstract class Table
     db()->mutex_lock(_tbl(static::TABLE_NAME));
     if ($this->exists())
     {
-      $this->update();
+      $this->upsert('update');
     }
     else
     {
-      $this->insert();
+      $this->upsert('insert');
     }
     db()->mutex_unlock(_tbl(static::TABLE_NAME));
   }
 
 
-  // Insert into the table.  Assumes that the row doesn't already exist.
-  public function insert()
+  // Inserts/updates into the table depending on $action.  Assumes that the
+  // row doesn't already exist for an insert and does for an update.
+  private function upsert($action='update')
   {
     $columns = array();
     $values = array();
@@ -108,27 +109,56 @@ abstract class Table
         $value = $this->data[$key];
         if (is_null($value))
         {
+          if (in_array($key, static::$unique_columns))
+          {
+            throw new \Exception("Unique column '$key' is null");
+          }
           $values[] = 'NULL';
         }
         else
         {
-          $values[] = '?';
+          $named_parameter = ":$key";
+          $values[] = $named_parameter;
           if (is_bool($value))
           {
             // Need to convert booleans
-            $sql_params[] = ($value) ? 1 : 0;
+            $sql_params[$named_parameter] = ($value) ? 1 : 0;
           }
           else
           {
-            $sql_params[] = $value;
+            $sql_params[$named_parameter] = $value;
           }
         }
       }
     }
 
-    $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
-                        (" . implode(',', $columns) . ")
-                 VALUES (" . implode(',', $values) . ")";
+    if ($action == 'insert')
+    {
+      $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
+                          (" . implode(',', $columns) . ")
+                   VALUES (" . implode(',', $values) . ")";
+    }
+    else
+    {
+      $sql = "UPDATE " . _tbl(static::TABLE_NAME) . " SET ";
+      $assignments = array();
+      $conditions = array();
+      for ($i=0; $i<count($columns); $i++)
+      {
+        $column = $columns[$i];
+        $value = $values[$i];
+        if (in_array($column, static::$unique_columns))
+        {
+          $conditions[] = "$column=$value";
+        }
+        else
+        {
+          $assignments[] = "$column=$value";
+        }
+      }
+      $sql .= implode(', ', $assignments);
+      $sql .= " WHERE " . implode(' AND ', $conditions);
+    }
 
     db()->command($sql, $sql_params);
   }

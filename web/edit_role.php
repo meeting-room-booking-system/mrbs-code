@@ -288,14 +288,14 @@ function generate_row(AreaRoomPermission $permission, array $permission_options,
   if ($type == 'area')
   {
     $text = $permission->area_name;
-    $name_permission = $type. '[' . $permission->role_id . '][' . $permission->area_id . '][permission]';
-    $name_state      = $type. '[' . $permission->role_id . '][' . $permission->area_id . '][state]';
+    $name_permission = $type. '[' . $permission->area_id . '][permission]';
+    $name_state      = $type. '[' . $permission->area_id . '][state]';
   }
   else
   {
     $text = $permission->room_name;
-    $name_permission = $type. '[' . $permission->role_id . '][' . $permission->room_id . '][permission]';
-    $name_state      = $type. '[' . $permission->role_id . '][' . $permission->room_id . '][state]';
+    $name_permission = $type. '[' . $permission->room_id . '][permission]';
+    $name_state      = $type. '[' . $permission->room_id . '][state]';
   }
 
   $tr = new Element('tr');
@@ -349,7 +349,13 @@ function generate_area_roles_table(Role $role)
 
   $form = new Form();
   $form->setAttributes(array(
-      'class' => 'roles_table'
+      'class' => 'roles_table',
+      'action' => multisite('edit_role_handler.php'),
+      'method' => 'post'
+    ));
+  $form->addHiddenInputs(array(
+      'role_id' => $role->id,
+      'action'  => 'edit_role_area_room'
     ));
   $fieldset = new ElementFieldset();
 

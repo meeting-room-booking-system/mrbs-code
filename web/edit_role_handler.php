@@ -6,9 +6,23 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function add_role_area($role_id, $area_id, $permission, $state)
+function update_permissions($role_id, array $area_permissions, array $room_permissions)
 {
-  $area_permission = new AreaPermission($area_id, $role_id);
+  foreach ($area_permissions as $area_id => $settings)
+  {
+    $p = new AreaPermission($role_id, $area_id);
+    $p->permission = $settings['permission'];
+    $p->state = $settings['state'];
+    $p->save();
+  }
+
+  foreach ($room_permissions as $room_id => $settings)
+  {
+    $p = new RoomPermission($role_id, $room_id);
+    $p->permission = $settings['permission'];
+    $p->state = $settings['state'];
+    $p->save();
+  }
 }
 
 
@@ -25,6 +39,8 @@ $name = get_form_var('name', 'string');
 $permission = get_form_var('permission', 'string');
 $role_id = get_form_var('role_id', 'int');
 $state = get_form_var('state', 'string');
+$area_permissions = get_form_var('area', 'array');
+$room_permissions = get_form_var('room', 'array');
 
 if (isset($action))
 {
@@ -88,6 +104,10 @@ if (isset($action))
 
     case 'delete':
       Role::deleteById($role_id);
+      break;
+
+    case 'edit_role_area_room':
+      update_permissions($role_id, $area_permissions, $room_permissions);
       break;
 
     default:
