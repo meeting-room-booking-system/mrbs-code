@@ -196,7 +196,7 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
   $field = new FieldSelect();
   $field->setLabel(get_vocab('room'))
         ->setControlAttributes(array('name' => 'area_id'))
-        ->addSelectOptions($rooms->getNames(true), null, true);
+        ->addSelectOptions($rooms->getGroupedNames(true), null, true);
   $fieldset->addElement($field);
 
   // Permission

@@ -15,8 +15,8 @@ class Rooms extends TableIterator
   }
 
 
-  // Returns an array of room names indexed by room id.
-  // Only visible rooms are included.
+  // Returns an array of room names indexed by room id. Only visible rooms are included.
+  // Useful for passing to the addSelectOptions() method.
   public function getNames($include_disabled=false)
   {
     $result = array();
@@ -25,6 +25,24 @@ class Rooms extends TableIterator
       if (($include_disabled || !$room->isDisabled()) && $room->isVisible())
       {
         $result[$room->id] = $room->room_name;
+      }
+    }
+    return $result;
+  }
+
+
+  // Returns a two-dimensional array of room names indexed first by area name,
+  // then by room id.  Only visible rooms are included.
+  // Useful for passing to the addSelectOptions() method to get <select> options
+  // with option groups.
+  public function getGroupedNames($include_disabled=false)
+  {
+    $result = array();
+    foreach ($this as $room)
+    {
+      if (($include_disabled || !$room->isDisabled()) && $room->isVisible())
+      {
+        $result[$room->area_name][$room->id] = $room->room_name;
       }
     }
     return $result;
