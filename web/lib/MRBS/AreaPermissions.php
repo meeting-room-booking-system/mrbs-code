@@ -15,11 +15,12 @@ class AreaPermissions extends TableIterator
 
   protected function getRes()
   {
-    $sql = "SELECT R.*, A.area_name
+    $sql = "SELECT R.*, A.id, A.area_name
               FROM " . _tbl(AreaPermission::TABLE_NAME) . " R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id
-             WHERE role_id=:role_id";
+             WHERE role_id=:role_id
+          ORDER BY A.sort_key";
 
     $sql_params = array(':role_id' => $this->role->id);
     $this->res = db()->query($sql, $sql_params);
