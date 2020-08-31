@@ -50,7 +50,7 @@ class Rooms extends TableIterator
     // may be called before the database can be upgraded.
     if (db()->field_exists($table_name, 'sort_key'))
     {
-      $sql .= " ORDER BY R.sort_key";
+      $sql .= " ORDER BY A.sort_key, R.sort_key";
     }
     $this->res = db()->query($sql, $sql_params);
     $this->cursor = -1;

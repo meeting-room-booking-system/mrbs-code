@@ -169,6 +169,69 @@ function generate_add_role_area_form(Role $role, $error, $area_id)
 }
 
 
+function generate_add_role_room_form(Role $role, $error, $room_id)
+{
+  $form = new Form();
+  $form->addHiddenInputs(array('action' => 'add_role_room',
+                               'role_id' => $role->id))
+       ->setAttributes(array('action' => multisite('edit_role_handler.php'),
+                             'class'  => 'standard',
+                             'method' => 'post'));
+
+  $fieldset = new ElementFieldset();
+
+  if (isset($error))
+  {
+    $room = Room::getById($room_id);
+    $field = new FieldDiv();
+    $p = new ElementP();
+    $p->setText(get_vocab($error, $room->room_name))
+      ->setAttribute('class', 'error');
+    $field->addControlElement($p);
+    $fieldset->addElement($field);
+  }
+
+  // The area select
+  $rooms = new Rooms();
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('room'))
+        ->setControlAttributes(array('name' => 'area_id'))
+        ->addSelectOptions($rooms->getNames(true), null, true);
+  $fieldset->addElement($field);
+
+  // Permission
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('permission'))
+        ->addRadioOptions(AreaPermission::getPermissionOptions(),
+                          'permission',
+                          AreaPermission::$permission_default,
+                          true);
+  $fieldset->addElement($field);
+
+  // State
+  $field = new FieldInputRadioGroup();
+  $field->setLabel(get_vocab('state'))
+        ->addRadioOptions(AreaPermission::getStateOptions(),
+                          'state',
+                          AreaPermission::$state_default,
+                          true);
+  $fieldset->addElement($field);
+
+  $form->addElement($fieldset);
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('add_role_room'));
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
+
 function generate_delete_button(Role $role)
 {
   $form = new Form();
@@ -333,6 +396,7 @@ $context = array(
 $action = get_form_var('action', 'string');
 $error = get_form_var('error', 'string');
 $area_id = get_form_var('area_id', 'int');
+$room_id = get_form_var('room_id', 'int');
 $role_id = get_form_var('role_id', 'int');
 $name = get_form_var('name', 'string');
 
@@ -342,9 +406,20 @@ if (isset($role_id))
 {
   $role = Role::getById($role_id);
   echo "<h2>" . htmlspecialchars(get_vocab('role_heading', $role->name)) . "</h2>";
-  if (isset($action) && ($action == 'add_role_area'))
+  if (isset($action))
   {
-    generate_add_role_area_form($role, $error, $area_id);
+    switch($action)
+    {
+      case 'add_role_area':
+        generate_add_role_area_form($role, $error, $area_id);
+        break;
+      case 'add_role_room':
+        generate_add_role_room_form($role, $error, $room_id);
+        break;
+      default:
+        throw new \Exception("Unknown action'$action'");
+        break;
+    }
   }
   else
   {
