@@ -285,26 +285,54 @@ function generate_roles_table()
 
 function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
 {
+  if ($type == 'area')
+  {
+    $text = $permission->area_name;
+    $name_permission = $type. '[' . $permission->role_id . '][' . $permission->area_id . '][permission]';
+    $name_state      = $type. '[' . $permission->role_id . '][' . $permission->area_id . '][state]';
+  }
+  else
+  {
+    $text = $permission->room_name;
+    $name_permission = $type. '[' . $permission->role_id . '][' . $permission->room_id . '][permission]';
+    $name_state      = $type. '[' . $permission->role_id . '][' . $permission->room_id . '][state]';
+  }
+
   $tr = new Element('tr');
   $tr->setAttribute('class', $type);
   // Area/room name
   $th = new Element('th');
-  $name = ($type == 'area') ? $permission->area_name : $permission->room_name;
-  $th->setText($name);
+  $th->setText($text);
   $tr->addElement($th);
   // Permission
-  foreach ($permission_options as $option)
+  foreach ($permission_options as $key => $value)
   {
     $td = new Element('td');
     $radio = new ElementInputRadio();
+    $radio->setAttributes(array(
+        'name' => $name_permission,
+        'value' => $key
+      ));
+    if ($permission->permission === $key)
+    {
+      $radio->setAttribute('checked');
+    }
     $td->addElement($radio);
     $tr->addElement($td);
   }
   // State
-  foreach ($state_options as $option)
+  foreach ($state_options as $key => $value)
   {
     $td = new Element('td');
     $radio = new ElementInputRadio();
+    $radio->setAttributes(array(
+        'name' => $name_state,
+        'value' => $key
+      ));
+    if ($permission->state === $key)
+    {
+      $radio->setAttribute('checked');
+    }
     $td->addElement($radio);
     $tr->addElement($td);
   }
