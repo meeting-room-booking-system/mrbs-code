@@ -1398,6 +1398,11 @@ div#div_custom_html {
   padding: 0.2em 0.5em;
 }
 
+.roles_table .room th {
+  padding-left: 1.7em;
+  font-weight: normal;
+}
+
 .roles_table thead tr:first-child th:first-child,
 .roles_table tbody th:first-child {
   text-align: left;
@@ -1408,14 +1413,6 @@ div#div_custom_html {
 .roles_table tbody td:nth-of-type(3) {
   border-right: 1px solid red;
 }
-
-
-
-
-
-
-
-
 
 
 <?php // The standard form ?>

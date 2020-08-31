@@ -286,6 +286,7 @@ function generate_roles_table()
 function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
 {
   $tr = new Element('tr');
+  $tr->setAttribute('class', $type);
   // Area/room name
   $th = new Element('th');
   $name = ($type == 'area') ? $permission->area_name : $permission->room_name;
