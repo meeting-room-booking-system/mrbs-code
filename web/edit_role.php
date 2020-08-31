@@ -283,9 +283,37 @@ function generate_roles_table()
 }
 
 
+function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $name)
+{
+  $tr = new Element('tr');
+  // Area name
+  $th = new Element('th');
+  $th->setText($name);
+  $tr->addElement($th);
+  // Permission
+  foreach ($permission_options as $option)
+  {
+    $td = new Element('td');
+    $radio = new ElementInputRadio();
+    $td->addElement($radio);
+    $tr->addElement($td);
+  }
+  // State
+  foreach ($state_options as $option)
+  {
+    $td = new Element('td');
+    $radio = new ElementInputRadio();
+    $td->addElement($radio);
+    $tr->addElement($td);
+  }
+
+  return $tr;
+}
+
+
 function generate_area_roles_table(Role $role)
 {
-  $permissions = new AreaPermissions($role);
+  $area_permissions = new AreaPermissions($role);
   $permission_options = AreaPermission::getPermissionOptions();
   $state_options = AreaPermission::getStateOptions();
 
@@ -336,30 +364,20 @@ function generate_area_roles_table(Role $role)
   $tbody = new Element('tbody');
 
 
-  foreach ($permissions as $permission)
+  foreach ($area_permissions as $area_permission)
   {
-    $tr = new Element('tr');
-    // Area name
-    $th = new Element('th');
-    $th->setText($permission->area_name);
-    $tr->addElement($th);
-    // Permission
-    foreach ($permission_options as $option)
+    $tbody->addElement(generate_row($area_permission,
+                                    $permission_options,
+                                    $state_options,
+                                    $area_permission->area_name));
+    $room_permissions = new RoomPermissions($role, $area_permission->area_id);
+    foreach ($room_permissions as $room_permission)
     {
-      $td = new Element('td');
-      $radio = new ElementInputRadio();
-      $td->addElement($radio);
-      $tr->addElement($td);
+      $tbody->addElement(generate_row($room_permission,
+                                      $permission_options,
+                                      $state_options,
+                                      $room_permission->room_name));
     }
-    // State
-    foreach ($permission_options as $option)
-    {
-      $td = new Element('td');
-      $radio = new ElementInputRadio();
-      $td->addElement($radio);
-      $tr->addElement($td);
-    }
-    $tbody->addElement($tr);
   }
 
   $table->addElement($tbody);
