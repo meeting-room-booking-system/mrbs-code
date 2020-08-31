@@ -19,10 +19,11 @@ Form::checkToken();
 checkAuthorised(this_page());
 
 $action = get_form_var('action', 'string');
-$area_id = get_form_var('area_id', 'string');
+$area_id = get_form_var('area_id', 'int');
+$room_id = get_form_var('room_id', 'int');
 $name = get_form_var('name', 'string');
 $permission = get_form_var('permission', 'string');
-$role_id = get_form_var('role_id', 'string');
+$role_id = get_form_var('role_id', 'int');
 $state = get_form_var('state', 'string');
 
 if (isset($action))
@@ -63,6 +64,25 @@ if (isset($action))
         $area_permission->permission = $permission;
         $area_permission->state = $state;
         $area_permission->save();
+      }
+      break;
+
+    case 'add_role_room':
+      $room_permission = new RoomPermission($role_id, $room_id);
+      if ($room_permission->exists())
+      {
+        $query_string_args = array(
+          'action'  => $action,
+          'error'   => 'role_room_exists',
+          'role_id' => $role_id,
+          'room_id' => $room_id
+        );
+      }
+      else
+      {
+        $room_permission->permission = $permission;
+        $room_permission->state = $state;
+        $room_permission->save();
       }
       break;
 

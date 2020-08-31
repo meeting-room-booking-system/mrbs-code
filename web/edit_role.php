@@ -185,17 +185,17 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
     $room = Room::getById($room_id);
     $field = new FieldDiv();
     $p = new ElementP();
-    $p->setText(get_vocab($error, $room->room_name))
+    $p->setText(get_vocab($error, $room->area_name, $room->room_name))
       ->setAttribute('class', 'error');
     $field->addControlElement($p);
     $fieldset->addElement($field);
   }
 
-  // The area select
+  // The room select
   $rooms = new Rooms();
   $field = new FieldSelect();
   $field->setLabel(get_vocab('room'))
-        ->setControlAttributes(array('name' => 'area_id'))
+        ->setControlAttributes(array('name' => 'room_id'))
         ->addSelectOptions($rooms->getGroupedNames(true), null, true);
   $fieldset->addElement($field);
 
@@ -288,7 +288,6 @@ function generate_area_roles_table(Role $role)
   $permissions = new AreaPermissions($role);
   $permission_options = AreaPermission::getPermissionOptions();
   $state_options = AreaPermission::getStateOptions();
-  $n_columns = count($permission_options) + count($state_options);
 
   $form = new Form();
   $form->setAttributes(array(
