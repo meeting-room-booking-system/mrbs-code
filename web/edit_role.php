@@ -283,11 +283,12 @@ function generate_roles_table()
 }
 
 
-function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $name)
+function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
 {
   $tr = new Element('tr');
-  // Area name
+  // Area/room name
   $th = new Element('th');
+  $name = ($type == 'area') ? $permission->area_name : $permission->room_name;
   $th->setText($name);
   $tr->addElement($th);
   // Permission
@@ -369,14 +370,14 @@ function generate_area_roles_table(Role $role)
     $tbody->addElement(generate_row($area_permission,
                                     $permission_options,
                                     $state_options,
-                                    $area_permission->area_name));
+                                    'area'));
     $room_permissions = new RoomPermissions($role, $area_permission->area_id);
     foreach ($room_permissions as $room_permission)
     {
       $tbody->addElement(generate_row($room_permission,
                                       $permission_options,
                                       $state_options,
-                                      $room_permission->room_name));
+                                      'room'));
     }
   }
 
