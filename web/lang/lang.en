@@ -347,6 +347,7 @@ $vocab['role_area_exists']   = "Permissions already exist for area '%s'.";
 $vocab["confirm_del_role"]   = "Are you sure you want to delete the role '%s'?";
 $vocab["role_heading"]       = "Role: %s";
 $vocab["add_role_area"]      = "Add area permissions";
+$vocab["add_role_room"]      = "Add room permissions";
 $vocab["permission"]         = "Permission";
 $vocab["permission_read"]    = "Read";
 $vocab["permission_write"]   = "Write";

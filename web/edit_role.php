@@ -84,6 +84,28 @@ function generate_add_role_area_button(Role $role)
 }
 
 
+function generate_add_role_room_button(Role $role)
+{
+  $form = new Form();
+  $form->addHiddenInputs(array('action' => 'add_role_room',
+                               'role_id' => $role->id))
+    ->setAttributes(array('action' => multisite(this_page()),
+                         'class'  => 'standard',
+                         'method' => 'post'));
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttribute('value', get_vocab('add_role_room'));
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
+
 function generate_add_role_area_form(Role $role, $error, $area_id)
 {
   $form = new Form();
@@ -327,6 +349,7 @@ if (isset($role_id))
   else
   {
     generate_add_role_area_button($role);
+    generate_add_role_room_button($role);
     generate_area_roles_table($role);
   }
 }
