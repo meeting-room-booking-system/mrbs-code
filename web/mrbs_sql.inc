@@ -431,7 +431,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
         $sql .= " AND id <> :ignore";
         $sql_params[':ignore'] = $ignore;
       }
-      
+
       $sql .= " LIMIT 1";
 
       $res = db()->query($sql, $sql_params);
