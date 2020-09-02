@@ -414,18 +414,25 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     // Check whether the user is trying to book two rooms simultaneously
     if ($prevent_simultaneous_bookings)
     {
-      $sql = "SELECT id
-                FROM " . _tbl('entry') . "
-               WHERE start_time < :end_time
-                 AND end_time > :start_time
-                 AND create_by = :create_by
-               LIMIT 1";
-
       $sql_params = array(
           ':end_time'   => $booking['end_time'],
           ':start_time' => $booking['start_time'],
           ':create_by'  => $booking['create_by']
         );
+
+      $sql = "SELECT id
+                FROM " . _tbl('entry') . "
+               WHERE start_time < :end_time
+                 AND end_time > :start_time
+                 AND create_by = :create_by";
+
+      if ($ignore > 0)
+      {
+        $sql .= " AND id <> :ignore";
+        $sql_params[':ignore'] = $ignore;
+      }
+      
+      $sql .= " LIMIT 1";
 
       $res = db()->query($sql, $sql_params);
 
