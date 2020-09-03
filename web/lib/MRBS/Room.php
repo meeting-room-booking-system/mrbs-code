@@ -40,7 +40,7 @@ class Room extends Table
 
 
   // Checks if the room is disabled.  A room is disabled if either it or
-  // its area has ben disabled.
+  // its area has been disabled.
   public function isDisabled()
   {
     return ($this->disabled || $this->area_disabled);
@@ -62,8 +62,10 @@ class Room extends Table
                 ON R.area_id=A.id
              WHERE R.$column=:value
              LIMIT 1";
+
     $sql_params = array(':value' => $value);
     $res = db()->query($sql, $sql_params);
+
     if ($res->count() == 0)
     {
       $result = null;
@@ -74,6 +76,7 @@ class Room extends Table
       $result = new $class();
       $result->load($res->next_row_keyed());
     }
+
     return $result;
   }
 
