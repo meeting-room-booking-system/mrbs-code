@@ -1917,11 +1917,6 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   $name = utf8_substr($name, 0, maxlength('room.room_name'));
   $description = utf8_substr($description, 0, maxlength('room.description'));
 
-  if (empty($capacity))
-  {
-    $capacity = 0;
-  }
-
   $room = new Room($name);
 
   if ($room->exists())
