@@ -11,8 +11,9 @@ abstract class Table
 
   // protected static $unique_columns // an array of unique columns, eg array('area_name')
 
-  protected $data;  // Will contain the column keys, but could also contain extra keys
   protected $column_info;
+
+  private $data;  // Will contain the column keys, but could also contain extra keys
 
 
   public function __construct($name=null)
@@ -185,7 +186,7 @@ abstract class Table
   {
     foreach ($row as $key => $value)
     {
-      $this->data[$key] = $value;
+      $this->{$key} = $value;
     }
   }
 
