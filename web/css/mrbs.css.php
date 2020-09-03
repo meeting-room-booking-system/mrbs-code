@@ -129,8 +129,24 @@ h2 {
 }
 
 @media screen and (min-width: 80rem) {
+  
   .minicalendars.formed {
     display: block;
+  }
+}
+
+@media screen and (max-width: 80rem) {
+  
+  .minicalendars.formed {
+    display: flex;
+  }
+  
+  .flatpickr-calendar.inline {
+    margin-right: 2em;
+  }
+  
+  .index :not(.simple) + .contents {
+    flex-direction: column;
   }
 }
 
