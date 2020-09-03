@@ -1937,32 +1937,6 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   $room->save();
 
   return $room->id;
-
-  // Acquire a mutex to lock out others who might be editing rooms
-  if (!db()->mutex_lock(_tbl('room')))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
-  }
-  // Check that the room name is unique within the area
-  $sql = "SELECT COUNT(*)
-            FROM " . _tbl('room') . "
-           WHERE room_name=? AND area_id=?
-           LIMIT 1";
-  if (db()->query1($sql, array($name, $area)) > 0)
-  {
-    db()->mutex_unlock(_tbl('room'));
-    $error = "invalid_room_name";
-    return FALSE;
-  }
-  // If so, insert the room into the database
-  $sql = "INSERT INTO " . _tbl('room') . " (room_name, sort_key, area_id, description, capacity, room_admin_email)
-          VALUES (?, ?, ?, ?, ?, ?)";
-  db()->command($sql, array($name,$name,$area,$description,$capacity,$room_admin_email));
-  $room = db()->insert_id(_tbl('room'), 'id');
-
-  // Release the mutex
-  db()->mutex_unlock(_tbl('room'));
-  return $room;
 }
 
 

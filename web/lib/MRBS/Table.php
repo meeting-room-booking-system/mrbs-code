@@ -1,7 +1,9 @@
 <?php
 namespace MRBS;
 
-// A generic class for reading and writing data from tables.
+// A generic class for reading and writing data from tables.  It assumes that:
+//    - if an auto increment column exists then it is called 'id'
+//    - the table has one or more unique columns
 abstract class Table
 {
   // All sub-classes must declare the following
@@ -90,6 +92,7 @@ abstract class Table
     $columns = array();
     $values = array();
     $sql_params = array();
+    $has_id_column = false;
 
     // Merge the accessible and inaccessible properties for the table into
     // a single array.
@@ -107,36 +110,34 @@ abstract class Table
     {
       $key = $column_info['name'];
 
-      if ($key == 'id')
+      if (($key == 'id') || !array_key_exists($key, $table_data))
       {
+        $has_id_column = true;
         continue;
       }
 
-      if (array_key_exists($key, $table_data))
+      $columns[] = $key;
+      $value = $table_data[$key];
+      if (is_null($value))
       {
-        $columns[] = $key;
-        $value = $table_data[$key];
-        if (is_null($value))
+        if (in_array($key, static::$unique_columns))
         {
-          if (in_array($key, static::$unique_columns))
-          {
-            throw new \Exception("Unique column '$key' is null");
-          }
-          $values[] = 'NULL';
+          throw new \Exception("Unique column '$key' is null");
+        }
+        $values[] = 'NULL';
+      }
+      else
+      {
+        $named_parameter = ":$key";
+        $values[] = $named_parameter;
+        if (is_bool($value))
+        {
+          // Need to convert booleans
+          $sql_params[$named_parameter] = ($value) ? 1 : 0;
         }
         else
         {
-          $named_parameter = ":$key";
-          $values[] = $named_parameter;
-          if (is_bool($value))
-          {
-            // Need to convert booleans
-            $sql_params[$named_parameter] = ($value) ? 1 : 0;
-          }
-          else
-          {
-            $sql_params[$named_parameter] = $value;
-          }
+          $sql_params[$named_parameter] = $value;
         }
       }
     }
@@ -170,6 +171,12 @@ abstract class Table
     }
 
     db()->command($sql, $sql_params);
+
+    // If this was an insert action and there's an id column, get the new id.
+    if (($action == 'insert') && $has_id_column)
+    {
+      $this->id = db()->insert_id(static::TABLE_NAME, 'id');
+    }
   }
 
 
