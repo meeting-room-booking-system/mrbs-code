@@ -6,6 +6,15 @@ class Room extends Table
 {
   const TABLE_NAME = 'room';
 
+  public $id;
+  public $room_name;
+  public $sort_key;
+  public $area_id;
+  public $description;
+  public $capacity;
+  public $room_admin_email;
+  public $disabled;
+
   protected static $unique_columns = array('room_name');
 
 
@@ -13,6 +22,8 @@ class Room extends Table
   {
     parent::__construct();
     $this->room_name = $room_name;
+    $this->sort_key = $room_name;
+    $this->disabled = false;
   }
 
 

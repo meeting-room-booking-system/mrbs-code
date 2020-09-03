@@ -1909,8 +1909,8 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   // First of all check that we've got a name
   if (!isset($name) || ($name === ''))
   {
-    $error = "empty_name";
-    return FALSE;
+    $error = 'empty_name';
+    return false;
   }
 
   // Truncate the name and description fields to the maximum length as a precaution.
@@ -1921,6 +1921,23 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   {
     $capacity = 0;
   }
+
+  $room = new Room($name);
+
+  if ($room->exists())
+  {
+    $error = 'invalid_room_name';
+    return false;
+  }
+
+  $room->area_id = $area;
+  $room->description = $description;
+  $room->capacity = (empty($capacity)) ? 0 : $capacity;
+  $room->room_admin_email = $room_admin_email;
+  $room->save();
+
+  return $room->id;
+
   // Acquire a mutex to lock out others who might be editing rooms
   if (!db()->mutex_lock(_tbl('room')))
   {

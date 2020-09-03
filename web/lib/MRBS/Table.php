@@ -28,7 +28,6 @@ abstract class Table
     }
 
     $this->data = array();
-    $this->unique_columns = array();
     $this->column_info = db()->field_info(_tbl(static::TABLE_NAME));
   }
 
@@ -53,7 +52,7 @@ abstract class Table
     foreach (static::$unique_columns as $unique_column)
     {
       $where_condition_parts[] = $unique_column . '=?';
-      $sql_params[] = $this->data[$unique_column];
+      $sql_params[] = $this->{$unique_column};
     }
     $where_condition = implode(' AND ', $where_condition_parts);
 
@@ -92,21 +91,31 @@ abstract class Table
     $values = array();
     $sql_params = array();
 
-    // We are only interested in those elements of $this->data that have
+    // Merge the accessible and inaccessible properties for the table into
+    // a single array.
+    $table_data = $this->data;
+    $accessible_properties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
+    foreach ($accessible_properties as $property)
+    {
+      $table_data[$property->name] = $property->getValue($this);
+    }
+
+    // We are only interested in those elements of $table_data that have
     // a corresponding column in the table - except for 'id' which is
     // assumed to be auto-increment.
     foreach ($this->column_info as $column_info)
     {
-      if ($column_info['name'] == 'id')
+      $key = $column_info['name'];
+
+      if ($key == 'id')
       {
         continue;
       }
 
-      $key = $column_info['name'];
-      $columns[] = $key;
-      if (array_key_exists($key, $this->data))
+      if (array_key_exists($key, $table_data))
       {
-        $value = $this->data[$key];
+        $columns[] = $key;
+        $value = $table_data[$key];
         if (is_null($value))
         {
           if (in_array($key, static::$unique_columns))
