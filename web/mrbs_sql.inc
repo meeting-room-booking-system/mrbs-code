@@ -161,6 +161,8 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
   // Get the location for indexing the $existing and $proposed arrays.   If it's a
   // global check then $location = 0, otherwise use the area_id.
   $location = ($only_area) ? $area_id : 0;
+  // Get the check type for indexing the $existing and $proposed arrays
+  $check_type = ($check_seconds) ? 'length' : 'number';
 
   // Set up arrays recording the number of existing and proposed bookings for the interval,
   // indexed by the interval type and the Unix time at the start of that interval.  These
@@ -215,7 +217,7 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
         break;
     }
 
-    if (!isset($existing[$location][$interval_type][$interval_start]))
+    if (!isset($existing[$location][$check_type][$interval_type][$interval_start]))
     {
       $sql = "SELECT E.start_time, E.end_time
                 FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
@@ -251,8 +253,8 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
         $sql_params[] = $repignore;
       }
 
-      $existing[$location][$interval_type][$interval_start] = 0;
-      $proposed[$location][$interval_type][$interval_start] = 0;
+      $existing[$location][$check_type][$interval_type][$interval_start] = 0;
+      $proposed[$location][$check_type][$interval_type][$interval_start] = 0;
       $res = db()->query($sql, $sql_params);
       while (false !== ($row = $res->next_row_keyed()))
       {
@@ -261,11 +263,11 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
         if ($check_seconds)
         {
           $seconds = min($row['end_time'], $interval_end) - max($row['start_time'], $interval_start);
-          $existing[$location][$interval_type][$interval_start] += $seconds;
+          $existing[$location][$check_type][$interval_type][$interval_start] += $seconds;
         }
         else
         {
-          $existing[$location][$interval_type][$interval_start]++;
+          $existing[$location][$check_type][$interval_type][$interval_start]++;
         }
       }
     }
@@ -275,18 +277,19 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
     if ($check_seconds)
     {
       $seconds = min($booking['end_time'], $interval_end) - max($booking['start_time'], $interval_start);
-      $proposed[$location][$interval_type][$interval_start] += $seconds;
+      $proposed[$location][$check_type][$interval_type][$interval_start] += $seconds;
     }
     else
     {
-      $proposed[$location][$interval_type][$interval_start]++;
+      $proposed[$location][$check_type][$interval_type][$interval_start]++;
     }
 
     // Check to see if the maximum number/length of bookings would be exceeded
     if ($check_seconds)
     {
       $max_allowed = ($only_area) ? $max_secs_per_interval_area[$interval_type] : $max_secs_per_interval_global[$interval_type];
-      if (($existing[$location][$interval_type][$interval_start] + $proposed[$location][$interval_type][$interval_start]) >
+      if (($existing[$location][$check_type][$interval_type][$interval_start] +
+           $proposed[$location][$check_type][$interval_type][$interval_start]) >
           $max_allowed)
       {
         if ($only_area)
@@ -306,7 +309,8 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
     else
     {
       $max_allowed = ($only_area) ? $max_per_interval_area[$interval_type] : $max_per_interval_global[$interval_type];
-      if (($existing[$location][$interval_type][$interval_start] + $proposed[$location][$interval_type][$interval_start]) >
+      if (($existing[$location][$check_type][$interval_type][$interval_start] +
+           $proposed[$location][$check_type][$interval_type][$interval_start]) >
           $max_allowed)
       {
         if ($only_area)
