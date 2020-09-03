@@ -1928,7 +1928,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   $room->area_id = $area;
   $room->description = $description;
   $room->capacity = (empty($capacity)) ? 0 : $capacity;
-  $room->room_admin_email = $room_admin_email;
+  $room->room_admin_email = clean_address_list($room_admin_email);
   $room->save();
 
   return $room->id;
