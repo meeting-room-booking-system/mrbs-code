@@ -11,8 +11,6 @@ abstract class Table
 
   // protected static $unique_columns // an array of unique columns, eg array('area_name')
 
-  protected $column_info;
-
   private $data;  // Will contain the column keys, but could also contain extra keys
 
 
@@ -31,7 +29,6 @@ abstract class Table
     }
 
     $this->data = array();
-    $this->column_info = db()->field_info(_tbl(static::TABLE_NAME));
   }
 
 
@@ -104,32 +101,32 @@ abstract class Table
       $table_data[$property->name] = $property->getValue($this);
     }
 
+    $column_names = Columns::getInstance(_tbl(static::TABLE_NAME))->getNames();
+
     // We are only interested in those elements of $table_data that have
     // a corresponding column in the table - except for 'id' which is
     // assumed to be auto-increment.
-    foreach ($this->column_info as $column_info)
+    foreach ($column_names as $column_name)
     {
-      $key = $column_info['name'];
-
-      if (($key == 'id') || !array_key_exists($key, $table_data))
+      if (($column_name == 'id') || !array_key_exists($column_name, $table_data))
       {
         $has_id_column = true;
         continue;
       }
 
-      $columns[] = $key;
-      $value = $table_data[$key];
+      $columns[] = $column_name;
+      $value = $table_data[$column_name];
       if (is_null($value))
       {
-        if (in_array($key, static::$unique_columns))
+        if (in_array($column_name, static::$unique_columns))
         {
-          throw new \Exception("Unique column '$key' is null");
+          throw new \Exception("Unique column '$column_name' is null");
         }
         $values[] = 'NULL';
       }
       else
       {
-        $named_parameter = ":$key";
+        $named_parameter = ":$column_name";
         $values[] = $named_parameter;
         if (is_bool($value))
         {
