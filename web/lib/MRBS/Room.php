@@ -15,14 +15,15 @@ class Room extends Table
   public $room_admin_email;
   public $disabled;
 
-  protected static $unique_columns = array('room_name');
+  protected static $unique_columns = array('room_name', 'area_id');
 
 
-  public function __construct($room_name=null)
+  public function __construct($room_name=null, $area_id=null)
   {
     parent::__construct();
     $this->room_name = $room_name;
     $this->sort_key = $room_name;
+    $this->area_id = $area_id;
     $this->disabled = false;
   }
 
