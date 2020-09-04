@@ -44,6 +44,12 @@ abstract class Table
   }
 
 
+  public function __isset($name)
+  {
+    return (isset($this->data) && isset($this->data[$name]));
+  }
+
+
   // Checks if this instance already exists in the table
   public function exists()
   {
