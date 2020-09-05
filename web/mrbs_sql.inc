@@ -1904,7 +1904,7 @@ function mrbsAddArea($name, &$error)
 
 // Adds a room, returning the new id, or FALSE on failure with the
 // error in $error
-function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room_admin_email='')
+function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $room_admin_email='')
 {
   // First of all check that we've got a name
   if (!isset($name) || ($name === ''))
@@ -1917,7 +1917,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   $name = utf8_substr($name, 0, maxlength('room.room_name'));
   $description = utf8_substr($description, 0, maxlength('room.description'));
 
-  $room = new Room($name);
+  $room = new Room($name, $area_id);
 
   if ($room->exists())
   {
@@ -1925,7 +1925,6 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
     return false;
   }
 
-  $room->area_id = $area;
   $room->description = $description;
   $room->capacity = (empty($capacity)) ? 0 : $capacity;
   $room->room_admin_email = clean_address_list($room_admin_email);
