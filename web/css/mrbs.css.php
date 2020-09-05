@@ -1400,42 +1400,43 @@ div#div_custom_html {
   margin-left: 1em;
 }
 
-.roles_table {
+.roles_table_form {
   clear: left;
 }
 
-.roles_table table {
+.roles_table {
   border-collapse: collapse;
+  margin-bottom: 2em;
 }
 
 .roles_table th,
 .roles_table td {
   text-align: center;
-  padding: 0.2em 0.5em;
+  padding: 0.4em 0.7em;
 }
 
 .roles_table thead th {
   background-color: #ffffff;
 }
 
-.roles_table .area th,
-.roles_table .area td {
+.roles_table tbody .area th,
+.roles_table tbody .area td {
   background-color: #444444;
   color: white;
 }
 
-.roles_table .area:nth-of-type(odd) th,
-.roles_table .area:nth-of-type(odd) td {
+.roles_table tbody .area:nth-of-type(odd) th,
+.roles_table tbody .area:nth-of-type(odd) td {
   background-color: #777777;
 }
 
-.roles_table .room th,
-.roles_table .room td {
+.roles_table tbody .room th,
+.roles_table tbody .room td {
   background-color: #ffffff;
 }
 
-.roles_table .room:nth-of-type(odd) th,
-.roles_table .room:nth-of-type(odd) td {
+.roles_table tbody .room:nth-of-type(odd) th,
+.roles_table tbody .room:nth-of-type(odd) td {
   background-color: #eeeeee;
 }
 
@@ -1444,15 +1445,15 @@ div#div_custom_html {
   font-weight: normal;
 }
 
-.roles_table thead tr:first-child th:first-child,
-.roles_table tbody th:first-child {
+.roles_table th:first-child {
   text-align: left;
 }
 
 .roles_table thead tr:first-child th:not(:last-child),
-.roles_table tbody th:first-child,
+.roles_table thead tr:nth-child(2) th:nth-child(4),
+.roles_table th:first-child,
 .roles_table tbody td:nth-of-type(3) {
-  border-right: 1px solid red;
+  border-right: 1px solid darkgrey;
 }
 
 

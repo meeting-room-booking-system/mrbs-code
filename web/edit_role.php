@@ -365,7 +365,7 @@ function generate_area_roles_table(Role $role)
 
   $form = new Form();
   $form->setAttributes(array(
-      'class' => 'roles_table',
+      'class' => 'roles_table_form',
       'action' => multisite('edit_role_handler.php'),
       'method' => 'post'
     ));
@@ -376,12 +376,13 @@ function generate_area_roles_table(Role $role)
   $fieldset = new ElementFieldset();
 
   $table = new Element('table');
+  $table->setAttribute('class', 'roles_table');
   $thead = new Element('thead');
   $tr = new Element('tr');
+  $tr->setAttribute('class', 'area');
   // Area name
   $th = new Element('th');
-  $th->setAttribute('rowspan', 2)
-     ->setText(get_vocab('area'));
+  $th->setText(get_vocab('area'));
   $tr->addElement($th);
   // Permission
   $th = new Element('th');
@@ -396,6 +397,10 @@ function generate_area_roles_table(Role $role)
   $thead->addElement($tr);
 
   $tr = new Element('tr');
+  $tr->setAttribute('class', 'room');
+  $th = new Element('th');
+  $th->setText(get_vocab('room'));
+  $tr->addElement($th);
   // Permission options
   foreach ($permission_options as $key => $value)
   {
