@@ -74,9 +74,11 @@ abstract class Table
   // Saves to the database
   public function save()
   {
+    // Obtain a lock (see also Delete)
+    db()->mutex_lock(_tbl(static::TABLE_NAME));
+
     // Could do an INSERT ... ON DUPLICATE KEY UPDATE but there's no
     // easy equivalent in PostgreSQL until PostgreSQL 9.5.
-    db()->mutex_lock(_tbl(static::TABLE_NAME));
     if ($this->exists())
     {
       $this->upsert('update');
@@ -85,6 +87,8 @@ abstract class Table
     {
       $this->upsert('insert');
     }
+
+    // Release the lock
     db()->mutex_unlock(_tbl(static::TABLE_NAME));
   }
 
@@ -202,11 +206,17 @@ abstract class Table
 
   public static function deleteById($id)
   {
+    // Obtain a lock (see also save)
+    db()->mutex_lock(_tbl(static::TABLE_NAME));
+
     $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
                   WHERE id=:id
                   LIMIT 1";
     $sql_params = array(':id' => $id);
     db()->command($sql, $sql_params);
+
+    // Release the lock
+    db()->mutex_unlock(_tbl(static::TABLE_NAME));
   }
 
 
