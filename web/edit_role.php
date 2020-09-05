@@ -288,7 +288,8 @@ function generate_empty_row(Area $area)
   $tr = new Element('tr');
   $th = new Element('th');
   $th->setText($area->area_name);
-  $tr->addElement($th);
+  $tr->addElement($th)
+     ->setAttribute('class', 'area');
   for ($i=0; $i<6; $i++)
   {
     $td = new Element('td');

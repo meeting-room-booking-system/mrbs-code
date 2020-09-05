@@ -1414,6 +1414,31 @@ div#div_custom_html {
   padding: 0.2em 0.5em;
 }
 
+.roles_table thead th {
+  background-color: #ffffff;
+}
+
+.roles_table .area th,
+.roles_table .area td {
+  background-color: #444444;
+  color: white;
+}
+
+.roles_table .area:nth-of-type(odd) th,
+.roles_table .area:nth-of-type(odd) td {
+  background-color: #777777;
+}
+
+.roles_table .room th,
+.roles_table .room td {
+  background-color: #ffffff;
+}
+
+.roles_table .room:nth-of-type(odd) th,
+.roles_table .room:nth-of-type(odd) td {
+  background-color: #eeeeee;
+}
+
 .roles_table .room th {
   padding-left: 1.7em;
   font-weight: normal;
