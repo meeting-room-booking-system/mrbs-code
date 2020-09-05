@@ -1450,8 +1450,11 @@ div#div_custom_html {
 }
 
 .roles_table .room th {
-  padding-left: 1.7em;
   font-weight: normal;
+}
+  
+.roles_table .room th:first-child {
+  padding-left: 1.7em;
 }
 
 .roles_table th:first-child {
