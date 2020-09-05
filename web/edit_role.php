@@ -455,17 +455,20 @@ function generate_area_roles_table(Role $role)
 
   // Submit buttons
   $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('class', 'buttons');
+  // The Save button needs to be the first in the HTML source in
+  // order to make it the default.  Use CSS to change the display order.
   $button = new ElementInputSubmit();
   $button->setAttributes(array(
-      'name' => 'button_back',
-      'value' => get_vocab('back')
-    ));
+    'name' => 'button_save',
+    'value' => get_vocab('save')
+  ));
   $fieldset->addElement($button);
 
   $button = new ElementInputSubmit();
   $button->setAttributes(array(
-      'name' => 'button_save',
-      'value' => get_vocab('save')
+      'name' => 'button_back',
+      'value' => get_vocab('back')
     ));
   $fieldset->addElement($button);
   $form->addElement($fieldset);

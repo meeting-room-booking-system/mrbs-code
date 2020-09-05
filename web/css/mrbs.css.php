@@ -1404,8 +1404,13 @@ div#div_custom_html {
   clear: left;
 }
 
-.roles_table_form input[type="submit"]:first-of-type {
-  margin-right: 3em;
+.roles_table_form .buttons {
+  display: flex;
+}
+
+.roles_table_form .buttons input[name="button_save"] {
+  order: 1;
+  margin-left: 3em;
 }
 
 .roles_table {
