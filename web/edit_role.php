@@ -453,10 +453,18 @@ function generate_area_roles_table(Role $role)
   $fieldset->addElement($table);
   $form->addElement($fieldset);
 
-  // Submit button
+  // Submit buttons
   $fieldset = new ElementFieldset();
   $button = new ElementInputSubmit();
   $button->setAttributes(array(
+      'name' => 'button_back',
+      'value' => get_vocab('back')
+    ));
+  $fieldset->addElement($button);
+
+  $button = new ElementInputSubmit();
+  $button->setAttributes(array(
+      'name' => 'button_save',
       'value' => get_vocab('save')
     ));
   $fieldset->addElement($button);

@@ -41,10 +41,12 @@ $role_id = get_form_var('role_id', 'int');
 $state = get_form_var('state', 'string');
 $area_permissions = get_form_var('area', 'array');
 $room_permissions = get_form_var('room', 'array');
+$button_save = get_form_var('button_save', 'string');
 
-if (isset($action))
+$returl = 'edit_role.php';
+
+if (isset($button_save) && isset($action))
 {
-  $returl = 'edit_role.php';
   $query_string_args = array();
   switch ($action)
   {
@@ -117,8 +119,7 @@ if (isset($action))
   {
     $returl .= '?' . http_build_query($query_string_args, '', '&');
   }
-  location_header($returl);
+
 }
 
-// Shouldn't normally get here
-location_header('index.php');
+location_header($returl);

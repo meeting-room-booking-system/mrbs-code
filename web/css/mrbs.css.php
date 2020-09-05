@@ -1404,6 +1404,10 @@ div#div_custom_html {
   clear: left;
 }
 
+.roles_table_form input[type="submit"]:first-of-type {
+  margin-right: 3em;
+}
+
 .roles_table {
   border-collapse: collapse;
   margin-bottom: 2em;
