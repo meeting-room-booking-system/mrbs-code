@@ -283,6 +283,22 @@ function generate_roles_table()
 }
 
 
+function generate_empty_row(Area $area)
+{
+  $tr = new Element('tr');
+  $th = new Element('th');
+  $th->setText($area->area_name);
+  $tr->addElement($th);
+  for ($i=0; $i<6; $i++)
+  {
+    $td = new Element('td');
+    $tr->addElement($td);
+  }
+
+  return $tr;
+}
+
+
 function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
 {
   if ($type == 'area')
@@ -343,7 +359,6 @@ function generate_row(AreaRoomPermission $permission, array $permission_options,
 
 function generate_area_roles_table(Role $role)
 {
-  $area_permissions = new AreaPermissions($role);
   $permission_options = AreaPermission::getPermissionOptions();
   $state_options = AreaPermission::getStateOptions();
 
@@ -399,14 +414,26 @@ function generate_area_roles_table(Role $role)
 
   $tbody = new Element('tbody');
 
+  $areas = new Areas();
 
-  foreach ($area_permissions as $area_permission)
+  foreach ($areas as $area)
   {
-    $tbody->addElement(generate_row($area_permission,
-                                    $permission_options,
-                                    $state_options,
-                                    'area'));
-    $room_permissions = new RoomPermissions($role, $area_permission->area_id);
+    $area_permission = AreaPermission::getByRoleArea($role->id, $area->id);
+    $room_permissions = new RoomPermissions($role, $area->id);
+
+    if (isset($area_permission))
+    {
+      $tbody->addElement(generate_row($area_permission,
+                         $permission_options,
+                         $state_options,
+                         'area'));
+    }
+    elseif (count($room_permissions) > 0)
+    {
+      // We need a "header" row for the row permissions
+      $tbody->addElement(generate_empty_row($area));
+    }
+
     foreach ($room_permissions as $room_permission)
     {
       $tbody->addElement(generate_row($room_permission,

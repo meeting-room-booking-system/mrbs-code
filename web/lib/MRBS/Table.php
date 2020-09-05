@@ -212,12 +212,29 @@ abstract class Table
 
   protected static function getByColumn($column, $value)
   {
+    return static::getByColumns(array($column => $value));
+  }
+
+
+  protected static function getByColumns(array $columns)
+  {
+    $conditions = array();
+    $sql_params = array();
+
+    foreach ($columns as $name => $value)
+    {
+      $named_parameter = ":$name";
+      $conditions[] = "$name=$named_parameter";
+      $sql_params[$named_parameter] = $value;
+    }
+
     $sql = "SELECT *
               FROM " . _tbl(static::TABLE_NAME) . "
-             WHERE $column=:value
+             WHERE " . implode(' AND ', $conditions) . "
              LIMIT 1";
-    $sql_params = array(':value' => $value);
+
     $res = db()->query($sql, $sql_params);
+
     if ($res->count() == 0)
     {
       $result = null;
@@ -228,6 +245,7 @@ abstract class Table
       $result = new $class();
       $result->load($res->next_row_keyed());
     }
+
     return $result;
   }
 }
