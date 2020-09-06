@@ -39,6 +39,8 @@ class Columns implements \Countable, \Iterator
         return $column;
       }
     }
+
+    return null;
   }
 
 
