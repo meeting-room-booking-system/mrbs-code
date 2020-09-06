@@ -3,46 +3,105 @@ namespace MRBS;
 
 
 // Holds information about table columns
-class Columns
+class Columns implements \Countable, \Iterator
 {
-  private static $instances = array();
+
   private $data;
+  private $index = 0;
 
 
-  private function __construct($table_name)
+  public function __construct($table_name)
   {
     // Get the column info
-    $this->data = array();
-    $info = db()->field_info($table_name);
-    // And rearrange the array so that it is indexed by name
-    foreach ($info as $field)
-    {
-      $name = $field['name'];
-      $this->data[$name] = array();
-      foreach ($field as $key => $value)
-      {
-        if ($key != 'name')
-        {
-          $this->data[$name][$key] = $value;
-        }
-      }
-    }
-  }
-
-
-  public static function getInstance($table_name)
-  {
-    if (!isset(self::$instances[$table_name]))
-    {
-      self::$instances[$table_name] = new self($table_name);
-    }
-
-    return self::$instances[$table_name];
+    $this->data = db()->field_info($table_name);
   }
 
 
   public function getNames()
   {
-    return array_keys($this->data);
+    $result = array();
+
+    foreach ($this as $column)
+    {
+      $result[] = $column->name;
+    }
+
+    return $result;
+  }
+
+
+  public function getColumnByName($name)
+  {
+    foreach ($this as $column)
+    {
+      if ($column->name == $name)
+      {
+        return $column;
+      }
+    }
+  }
+
+
+  public function current()
+  {
+    $info = $this->data[$this->index];
+    $column = new Column($info['name']);
+    $column->setLength($info['length']);
+
+    switch ($info['nature'])
+    {
+      case 'binary':
+        $column->setNature(Column::NATURE_BINARY);
+        break;
+      case 'boolean':
+        $column->setNature(Column::NATURE_BOOLEAN);
+        break;
+      case 'character':
+        $column->setNature(Column::NATURE_CHARACTER);
+        break;
+      case 'decimal':
+        $column->setNature(Column::NATURE_DECIMAL);
+        break;
+      case 'integer':
+        $column->setNature(Column::NATURE_INTEGER);
+        break;
+      case 'real':
+        $column->setNature(Column::NATURE_REAL);
+        break;
+      default:
+        throw new \Exception("Unknown nature '" . $info['nature'] . "'");
+        break;
+    }
+
+    return $column;
+  }
+
+
+  public function next()
+  {
+    $this->index++;
+  }
+
+  public function key()
+  {
+    return $this->index;
+  }
+
+
+  public function valid()
+  {
+    return isset($this->data[$this->key()]);
+  }
+
+
+  public function rewind()
+  {
+    $this->index = 0;
+  }
+
+
+  public function count()
+  {
+    return count($this->data);
   }
 }

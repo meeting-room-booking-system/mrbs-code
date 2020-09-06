@@ -5,124 +5,125 @@ require "defaultincludes.inc";
 
 use MRBS\Form\Form;
 
-// Check the CSRF token.
-Form::checkToken();
 
-// Check the user is authorised for this page
-checkAuthorised(this_page());
-
-// Get non-standard form variables
-$form_vars = array(
-  'new_area'         => 'int',
-  'old_area'         => 'int',
-  'room_name'        => 'string',
-  'sort_key'         => 'string',
-  'room_disabled'    => 'string',
-  'old_room_name'    => 'string',
-  'description'      => 'string',
-  'capacity'         => 'int',
-  'room_admin_email' => 'string',
-  'custom_html'      => 'string'
-);
-
-foreach($form_vars as $var => $var_type)
+function get_form()
 {
-  $$var = get_form_var($var, $var_type);
+  $form = array();
 
-  // Trim the strings and truncate them to the maximum field length
-  if (is_string($$var))
+  // Get non-standard form variables
+  $form_vars = array(
+    'new_area'         => 'int',
+    'old_area'         => 'int',
+    'room_name'        => 'string',
+    'sort_key'         => 'string',
+    'room_disabled'    => 'string',
+    'old_room_name'    => 'string',
+    'description'      => 'string',
+    'capacity'         => 'int',
+    'room_admin_email' => 'string',
+    'custom_html'      => 'string'
+  );
+
+  // Add in the custom fields, which have a special prefix
+  $columns = new Columns(_tbl(Room::TABLE_NAME));
+
+  foreach ($columns as $column)
   {
-    $$var = trim($$var);
-    $$var = truncate($$var, "room.$var");
+    if (array_key_exists(VAR_PREFIX . $column->name, $_POST))
+    {
+      $nature = $column->getNature();
+      $length = $column->getLength();
+      switch($nature)
+      {
+        case Column::NATURE_CHARACTER:
+          $var_type = 'string';
+          break;
+        case Column::NATURE_INTEGER:
+          // Smallints and tinyints are considered to be booleans
+          $var_type = (isset($length) && ($length <= 2)) ? 'string' : 'int';
+          break;
+        // We can only really deal with the types above at the moment
+        default:
+          $var_type = 'string';
+          break;
+      }
+      $form_vars[VAR_PREFIX . $column->name] = $var_type;
+    }
   }
 
-}
+  $prefix_length = strlen(VAR_PREFIX);
+  foreach($form_vars as $var => $var_type)
+  {
+    $key = (strpos($var, VAR_PREFIX) === 0) ? substr($var, $prefix_length) : $var;
+    $form[$key] = get_form_var($var, $var_type);
 
-// Get the information about the fields in the room table
-$fields = db()->field_info(_tbl('room'));
-
-// Get any custom fields
-foreach($fields as $field)
-{
-  switch($field['nature'])
-  {
-    case 'character':
-      $type = 'string';
-      break;
-    case 'integer':
-      // Smallints and tinyints are considered to be booleans
-      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
-      break;
-    // We can only really deal with the types above at the moment
-    default:
-      $type = 'string';
-      break;
-  }
-  $var = VAR_PREFIX . $field['name'];
-  $$var = get_form_var($var, $type);
-  if (($type == 'int') && ($$var === ''))
-  {
-    unset($$var);
-  }
-  // Turn checkboxes into booleans
-  if (($field['nature'] == 'integer') &&
-      isset($field['length']) &&
-      ($field['length'] <= 2))
-  {
-    $$var = (empty($$var)) ? 0 : 1;
+    // Trim the strings and truncate them to the maximum field length
+    if (is_string($form[$key]))
+    {
+      $column = $columns->getColumnByName($key);
+      // Some variables, eg decimals, will also be PHP strings, so only
+      // trim columns with a database nature of 'character'.
+      if (!isset($column) || ($column->getNature() === Column::NATURE_CHARACTER))
+      {
+        $form[$key] = trim($form[$key]);
+        $form[$key] = truncate($form[$key], "room.$key");
+      }
+    }
   }
 
-  // Trim any strings and truncate them to the maximum field length
-  if (is_string($$var) && ($field['nature'] != 'decimal'))
-  {
-    $$var = trim($$var);
-    $$var = truncate($$var, 'room.' . $field['name']);
-  }
-}
-
-if (empty($capacity))
-{
-  $capacity = 0;
+  return $form;
 }
 
 
-// UPDATE THE DATABASE
-// -------------------
-
-if (empty($area))
+function update_room($room_id, array $form)
 {
-  throw new \Exception('$area is empty');
-}
+  $errors = array();
+  $room = Room::getById($room_id);
 
-// Initialise the error array
-$errors = array();
+  foreach($form as $key => $value)
+  {
+    switch ($key)
+    {
+      case 'capacity':
+        $room->capacity = (empty($value)) ? 0 : $value;
+        break;
+      case 'new_area':
+        $room->area_id = $value;
+        break;
+      case 'old_area':
+      case 'old_room_name':
+        // Don't do anything with these
+        break;
+      case 'room_admin_email':
+        // Clean up the address list replacing newlines by commas and removing duplicates
+        $value = clean_address_list($value);
+        // Validate email addresses
+        if (!validate_email_list($value))
+        {
+          $errors[] = 'invalid_email';
+        }
+        $room->room_admin_email = $value;
+        break;
+      case 'room_disabled':
+        $room->disabled = $value;
+        break;
+      default:
+        $room->{$key} = $value;
+        break;
+    }
+  }
 
-// Clean up the address list replacing newlines by commas and removing duplicates
-$room_admin_email = clean_address_list($room_admin_email);
-// Validate email addresses
-if (!validate_email_list($room_admin_email))
-{
-  $errors[] = 'invalid_email';
-}
-
-if (empty($errors))
-{
-  // Used purely for the syntax_casesensitive_equals() call below, and then ignored
-  $sql_params = array();
-
+  /* TODO
   // Acquire a mutex to lock out others who might be deleting the new area
-  if (!db()->mutex_lock(_tbl('area')))
+  if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
   {
     fatal_error(get_vocab("failed_to_acquire"));
   }
+  */
 
-  // Check the new area still exists
-  $sql = "SELECT COUNT(*)
-            FROM " . _tbl('area') . "
-           WHERE id=?
-           LIMIT 1";
-
-  if (db()->query1($sql, array($new_area)) < 1)
+  // Check that the area still exists
+  $area = Area::getById($room->area_id);
+  if (!isset($area))
   {
     $errors[] = 'invalid_area';
   }
@@ -130,107 +131,49 @@ if (empty($errors))
   // (only do this if you're changing the room name or the area - if you're
   // just editing the other details for an existing room we don't want to reject
   // the edit because the room already exists!)
-  // [syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
-  //  keep the flow of this elseif block]
-  elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
-          && db()->query1("SELECT COUNT(*)
-                             FROM " . _tbl('room') . "
-                            WHERE" . db()->syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
-                              AND area_id=?
-                            LIMIT 1", array($room_name, $new_area)) > 0)
+  elseif ( (($form['new_area'] != $form['old_area']) || ($room->room_name != $form['old_room_name'])) &&
+           $room->exists())
   {
     $errors[] = 'invalid_room_name';
   }
   // If everything is still OK, update the database
   else
   {
-    // Convert booleans into 0/1 (necessary for PostgreSQL)
-    $room_disabled = (!empty($room_disabled)) ? 1 : 0;
-    $sql = "UPDATE " . _tbl('room') . " SET ";
-    $sql_params = array();
-    $assign_array = array();
-    foreach ($fields as $field)
-    {
-      if ($field['name'] != 'id')  // don't do anything with the id field
-      {
-        switch ($field['name'])
-        {
-          // first of all deal with the standard MRBS fields
-          case 'area_id':
-            $assign_array[] = "area_id=?";
-            $sql_params[] = $new_area;
-            break;
-          case 'disabled':
-            $assign_array[] = "disabled=?";
-            $sql_params[] = $room_disabled;
-            break;
-          case 'room_name':
-            $assign_array[] = "room_name=?";
-            $sql_params[] = $room_name;
-            break;
-          case 'sort_key':
-            $assign_array[] = "sort_key=?";
-            $sql_params[] = $sort_key;
-            break;
-          case 'description':
-            $assign_array[] = "description=?";
-            $sql_params[] = $description;
-            break;
-          case 'capacity':
-            $assign_array[] = "capacity=?";
-            $sql_params[] = $capacity;
-            break;
-          case 'room_admin_email':
-            $assign_array[] = "room_admin_email=?";
-            $sql_params[] = $room_admin_email;
-            break;
-          case 'custom_html':
-            $assign_array[] = "custom_html=?";
-            $sql_params[] = $custom_html;
-            break;
-          // then look at any user defined fields
-          default:
-            $var = VAR_PREFIX . $field['name'];
-            switch ($field['nature'])
-            {
-              case 'integer':
-                if (!isset($$var) || ($$var === ''))
-                {
-                  // Try and set it to NULL when we can because there will be cases when we
-                  // want to distinguish between NULL and 0 - especially when the field
-                  // is a genuine integer.
-                  $$var = ($field['is_nullable']) ? null : 0;
-                }
-                break;
-              default:
-                // Do nothing
-                break;
-            }
-            $assign_array[] = db()->quote($field['name']) . "=?";
-            $sql_params[] = $$var;
-            break;
-        }
-      }
-    }
-
-    $sql .= implode(",", $assign_array) . " WHERE id=?";
-    $sql_params[] = $room;
-    db()->command($sql, $sql_params);
-
-    // Release the mutex and go back to the admin page (for the new area)
-    db()->mutex_unlock(_tbl('area'));
-    location_header("admin.php?day=$day&month=$month&year=$year&area=$new_area&room=$room");
+    $room->save();
   }
 
-  // Release the mutex
-  db()->mutex_unlock(_tbl('area'));
+  /* TODO
+  // Release the lock
+  db()->mutex_unlock(_tbl(Area::TABLE_NAME));
+  */
+  return $errors;
 }
 
 
-// Go back to the room form with errors
-$query_string = "room=$room";
-foreach ($errors as $error)
+// Check the CSRF token.
+Form::checkToken();
+
+// Check the user is authorised for this page
+checkAuthorised(this_page());
+
+$form = get_form();
+$errors = update_room($room, $form);
+
+if (count($errors) == 0)
 {
-  $query_string .= "&errors[]=$error";
+  // Go back to the admin page (for the new area)
+  $returl = 'admin.php';
+  $query_string = "day=$day&month=$month&year=$year&area=${form['new_area']}&room=$room";
 }
-location_header("edit_room.php?$query_string");
+else
+{
+  // Go back to the room form with errors
+  $returl = 'edit_room.php';
+  $query_string = "room=$room";
+  foreach ($errors as $error)
+  {
+    $query_string .= "&errors[]=$error";
+  }
+}
+
+location_header("$returl?$query_string");

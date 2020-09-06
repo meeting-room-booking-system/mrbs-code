@@ -71,16 +71,16 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   {
     if ($var_type == 'int')
     {
-      $value = intval($value);
+      $value = ($value === '') ? null : intval($value);
     }
     elseif ($var_type == 'decimal')
     {
       // This isn't a very good sanitisation as it will let through thousands separators and
       // also multiple decimal points.  It needs to be improved, but care needs to be taken
-      // over, for example, whether a comma should be allowed for a decimalk point.  So for
+      // over, for example, whether a comma should be allowed for a decimal point.  So for
       // the moment it errs on the side of letting through too much.
       $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
-                  FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+                          FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
       if ($value === '')
       {
         $value = null;

@@ -229,6 +229,7 @@ class DB_mysql extends DB
                         'double'    => 'real',
                         'float'     => 'real',
                         'int'       => 'integer',
+                        'longtext'  => 'character',
                         'mediumint' => 'integer',
                         'numeric'   => 'decimal',
                         'smallint'  => 'integer',

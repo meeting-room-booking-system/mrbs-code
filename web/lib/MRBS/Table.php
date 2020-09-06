@@ -58,6 +58,10 @@ abstract class Table
     foreach (static::$unique_columns as $unique_column)
     {
       $where_condition_parts[] = $unique_column . '=?';
+      if (!isset($this->{$unique_column}))
+      {
+        throw new \Exception("Column '$unique_column' is not set.");
+      }
       $sql_params[] = $this->{$unique_column};
     }
     $where_condition = implode(' AND ', $where_condition_parts);
@@ -111,7 +115,8 @@ abstract class Table
       $table_data[$property->name] = $property->getValue($this);
     }
 
-    $column_names = Columns::getInstance(_tbl(static::TABLE_NAME))->getNames();
+    $cols = new Columns(_tbl(static::TABLE_NAME));
+    $column_names = $cols->getNames();
 
     // We are only interested in those elements of $table_data that have
     // a corresponding column in the table - except for 'id' which is
