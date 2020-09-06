@@ -129,26 +129,13 @@ h2 {
 }
 
 @media screen and (min-width: 80rem) {
-  
+
   .minicalendars.formed {
     display: block;
   }
 }
 
-@media screen and (max-width: 80rem) {
-  
-  .minicalendars.formed {
-    display: flex;
-  }
-  
-  .flatpickr-calendar.inline {
-    margin-right: 2em;
-  }
-  
-  .index :not(.simple) + .contents {
-    flex-direction: column;
-  }
-}
+
 
 <?php
 // Make the inline minicalendars smaller than the pop-up calendars.
@@ -1575,6 +1562,7 @@ div#div_custom_html {
     float: left;
   }
 }
+
 <?php
 // The max number of bookings policy fieldset, where we want to display the
 // controls in tabular form
@@ -1902,6 +1890,7 @@ form#show_my_entries input.link[type="submit"] {
 }
 
 <?php
+
 // THE COLOR KEY
 //
 // Displays as a grid for those browsers that support it, falling back to a flexbox.  The
