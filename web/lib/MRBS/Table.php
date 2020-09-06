@@ -14,7 +14,7 @@ abstract class Table
   private $data;  // Will contain the column keys, but could also contain extra keys
 
 
-  public function __construct($name=null)
+  public function __construct()
   {
     if (!defined('static::TABLE_NAME'))
     {
