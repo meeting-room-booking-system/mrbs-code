@@ -385,8 +385,13 @@ $monthly_view_entries_details = "both";
 $view_week_number = false;
 
 // Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
-// displayed anyway if the screen is wide enough.)
+// displayed anyway if the window is wide enough.)
 $display_mincals = true;
+
+// If the window is too narrow the mini-calendars are normally not displayed.  However by
+// setting the following variable to true they will be displayed above the main calendar,
+// provided the window is high enough.
+$display_mincals_above = false;
 
 // To display week numbers in the mini-calendars, set this to true. The week
 // numbers are only accurate if you set $weekstarts to 1, i.e. set the

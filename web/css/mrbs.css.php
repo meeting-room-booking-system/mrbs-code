@@ -135,9 +135,34 @@ h2 {
   }
 }
 
-
-
 <?php
+if ($display_mincals_above)
+{
+  ?>
+  @media screen and (max-width: 80rem) and (min-width: 30rem) and (min-height: 55rem)  {
+
+    .index :not(.simple) + .contents {
+      flex-direction: column;
+    }
+
+    .minicalendars.formed {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-height: 18em;
+      overflow: hidden;
+      margin-right: 0;
+    }
+
+    .flatpickr-calendar.inline {
+      margin-left: 1.5em;
+      margin-right: 1.5em;
+    }
+
+  }
+  <?php
+}
+
 // Make the inline minicalendars smaller than the pop-up calendars.
 // The default width is 39px
 ?>
