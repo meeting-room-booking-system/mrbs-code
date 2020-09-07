@@ -606,39 +606,37 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 
   if (isset($id))
   {
-    // If it's an existing user then get the data from the database
-    $sql = "SELECT *
-              FROM " . _tbl('user') . "
-             WHERE id=?";
-    $result = db()->query($sql, array($id));
-    $data = $result->next_row_keyed();
-    unset($result);
-    // Check that we've got a valid result.   We should do normally, but if somebody alters
-    // the id parameter in the query string then we won't.   If the result is invalid, go somewhere
-    // safe.
-    if (!$data)
+    // If it's an existing user then get the user from the database
+    $user = User::getById($id);
+    if (!isset($user))
     {
       trigger_error("Invalid user id $id", E_USER_NOTICE);
       location_header(this_page());
     }
   }
-  if (!isset($id) || (!$data))
+  if (!isset($id) || (!$user))
   {
-    // Otherwise try and get the data from the query string, and if it's
-    // not there set the default to be blank.  (The data will be in the
-    // query string if there was an error on validating the data after it
-    // had been submitted.   We want to preserve the user's original values
-    // so that they don't have to re-type them).
+    // Otherwise try and construct the user from the query string.
+    // (The data will be in the query string if there was an error on
+    // validating the data after it had been submitted.   We want to
+    // preserve the user's original values so that they don't have to
+    // re-type them).
+    $user = new User();
     foreach ($fields as $field)
     {
+      if ($field['name'] == 'auth_db')
+      {
+        continue;
+      }
       $type = get_form_var_type($field);
       $value = get_form_var($field['name'], $type);
-      $data[$field['name']] = (isset($value)) ? $value : "";
+      $user->{$field['name']} = (isset($value)) ? $value : '';
     }
+    $user->username = $user->name;
   }
 
   // First make sure the user is authorized
-  if (!$initial_user_creation && !can_edit_user($data['name']))
+  if (!$initial_user_creation && !can_edit_user($user->username))
   {
     showAccessDenied();
     exit();
@@ -680,7 +678,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
               FROM " . _tbl('user') . "
              WHERE level=?";
     $n_admins = db()->query1($sql, array($max_level));
-    $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
+    $editing_last_admin = ($n_admins <= 1) && ($user->level == $max_level);
   }
   else
   {
@@ -743,7 +741,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 
     $params = array('label' => get_loc_field_name(_tbl('user'), $key),
                     'name'  => VAR_PREFIX . $key,
-                    'value' => $data[$key]);
+                    'value' => $user->{$key});
 
     $disabled = !$initial_user_creation &&
                 !is_user_admin() &&
@@ -813,7 +811,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   // the same level as them or lower.  Otherwise present a Back button.
   $delete = isset($id) &&
             is_user_admin() &&
-            ($level >= $data['level']);
+            ($level >= $user->level);
 
   // Don't let the last admin be deleted, otherwise you'll be locked out.
   $button_disabled = $delete && $editing_last_admin;
