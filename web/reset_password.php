@@ -48,7 +48,7 @@ function generate_reset_request_form($result=null)
 
   $fieldset->addElement($field);
 
-  $tag = ($can_reset_by_email) ? 'username_or_email' : 'users_db.name';
+  $tag = ($can_reset_by_email) ? 'username_or_email' : 'user.name';
   $placeholder = \MRBS\get_vocab($tag);
 
   $field = new FieldInputText();
@@ -157,7 +157,7 @@ function generate_reset_form(array $usernames, $key, $error=null)
   // are resetting the password for.
   sort($valid_usernames);
   $field = new FieldSelect();
-  $field->setLabel(get_vocab('users_db.name'))
+  $field->setLabel(get_vocab('user.name'))
         ->setControlAttribute('name', 'username')
         ->addSelectOptions($valid_usernames);
   $fieldset->addElement($field);
@@ -166,7 +166,7 @@ function generate_reset_form(array $usernames, $key, $error=null)
   for ($i=0; $i<2; $i++)
   {
     $field = new FieldInputPassword();
-    $field->setLabel(\MRBS\get_vocab('users_db.password'))
+    $field->setLabel(\MRBS\get_vocab('user.password'))
           ->setControlAttributes(array('id' => "password$i",
                                        'name' => "password$i",
                                        'autocomplete' => 'new-password'));

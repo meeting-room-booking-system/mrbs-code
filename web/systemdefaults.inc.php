@@ -553,7 +553,7 @@ $working_days = array(1,2,3,4,5);  // Mon-Fri
 
 // At the moment $select_options is only supported as follows:
 //     - Entry table: name, description and custom fields
-//     - Users_db table: custom fields
+//     - User table:  custom fields
 
 // For custom fields only (will be extended later) it is also possible to use
 // an associative array for $select_options, for example
@@ -615,7 +615,7 @@ $is_mandatory_field = array();
 // $is_mandatory_field['entry.type'] = true;
 // $is_mandatory_field['entry.terms_and_conditions'] = true;
 
-$is_mandatory_field['users_db.display_name'] = true;
+$is_mandatory_field['user.display_name'] = true;
 
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
@@ -1228,7 +1228,7 @@ $mail_settings['admin_lang'] = 'en';   // Default is 'en'.
 // the room and area administrators are set though the edit_area.php and edit_room.php
 // pages in MRBS.  But if you have set $mail_settings['booker'] above to true, MRBS will
 // need the email addresses of ordinary users.   If you are using the "db"
-// authentication method then MRBS will be able to get them from the users_db table.  But
+// authentication method then MRBS will be able to get them from the user table.  But
 // if you are using any other authentication scheme then the following settings allow
 // you to specify a domain name that will be appended to the username to produce a
 // valid email address (eg "@domain.com").  MRBS will add the '@' character for you.

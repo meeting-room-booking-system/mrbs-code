@@ -183,7 +183,7 @@ abstract class SessionWithLogin implements SessionInterface
     $fieldset->addLegend(\MRBS\get_vocab('please_login'));
 
     // The username field
-    $tag = (\MRBS\auth()->canValidateByEmail()) ? 'username_or_email' : 'users_db.name';
+    $tag = (\MRBS\auth()->canValidateByEmail()) ? 'username_or_email' : 'user.name';
     $placeholder = \MRBS\get_vocab($tag);
 
     $field = new FieldInputText();
@@ -199,7 +199,7 @@ abstract class SessionWithLogin implements SessionInterface
 
     // The password field
     $field = new FieldInputPassword();
-    $field->setLabel(\MRBS\get_vocab('users_db.password'))
+    $field->setLabel(\MRBS\get_vocab('user.password'))
           ->setControlAttributes(array('id'           => 'password',
                                        'name'         => 'password',
                                        'autocomplete' => 'current-password'));

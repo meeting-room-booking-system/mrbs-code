@@ -4,7 +4,7 @@ namespace MRBS;
 
 // This is a class for a general MRBS user, regardless of the authentication type.  Once authenticated each
 // user is converted into a standard MRBS user object with defined properties.  (Do not confuse this user
-// with a user in the users_db table: the 'db' authentication method is just one of many that MRBS supports.)
+// with a user in the user table: the 'db' authentication method is just one of many that MRBS supports.)
 class User
 {
   public $username;

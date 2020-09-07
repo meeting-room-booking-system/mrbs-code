@@ -251,11 +251,11 @@ function get_create_by($organizer)
   // method.  It will work in the majority of cases, but this needs to be improved
   $email = preg_replace('/^mailto:/', '', $organizer);
 
-  // If we're using the 'db' auth rtpe, then look the username up in the users_db table
+  // If we're using the 'db' auth type, then look the username up in the user table
   if ($auth['type'] == 'db')
   {
     $sql = "SELECT name
-              FROM " . _tbl('users_db') . "
+              FROM " . _tbl('user') . "
              WHERE email=?";
 
     $res = db()->query($sql, array($email));

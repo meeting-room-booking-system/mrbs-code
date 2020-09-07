@@ -39,7 +39,7 @@ class AuthDb extends Auth
       $result = $valid_usernames[0];
       // Update the database with this login, but don't change the timestamp
       $now = time();
-      $sql = "UPDATE " . \MRBS\_tbl('users_db') . "
+      $sql = "UPDATE " . \MRBS\_tbl('user') . "
                  SET last_login=?, timestamp=timestamp
                WHERE name=?";
       $sql_params = array($now, $result);
@@ -73,9 +73,9 @@ class AuthDb extends Auth
     // permits wildcards, so we could use a combination of LIKE and '=' but that's a bit
     // messy.  WE could use STRCMP, but that's MySQL only.
 
-    // Usernames are unique in the users_db table, so we only look for one.
+    // Usernames are unique in the user table, so we only look for one.
     $sql = "SELECT password_hash, name
-            FROM " . \MRBS\_tbl('users_db') . "
+            FROM " . \MRBS\_tbl('user') . "
            WHERE " . \MRBS\db()->syntax_casesensitive_equals('name', \MRBS\utf8_strtolower($user), $sql_params) . "
            LIMIT 1";
 
@@ -134,9 +134,9 @@ class AuthDb extends Auth
       $condition = "LOWER(?)=LOWER(email)";
     }
 
-    // Email addresses are not unique in the users_db table, so we need to find all of them.
+    // Email addresses are not unique in the user table, so we need to find all of them.
     $sql = "SELECT password_hash, name
-            FROM " . \MRBS\_tbl('users_db') . "
+            FROM " . \MRBS\_tbl('user') . "
            WHERE $condition";
 
     $res = \MRBS\db()->query($sql, $sql_params);
@@ -188,7 +188,7 @@ class AuthDb extends Auth
   public function getUsernames()
   {
     $sql = "SELECT name AS username, display_name AS display_name
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
           ORDER BY display_name";
 
     $res = \MRBS\db()->query($sql);
@@ -201,7 +201,7 @@ class AuthDb extends Auth
   public function getUsers()
   {
     $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
              ORDER BY name";
 
     $res = \MRBS\db()->query($sql);
@@ -297,7 +297,7 @@ class AuthDb extends Auth
     }
 
     // Set the new password and clear the reset key
-    $sql = "UPDATE " . \MRBS\_tbl('users_db') . "
+    $sql = "UPDATE " . \MRBS\_tbl('user') . "
                SET password_hash=:password_hash,
                    reset_key_hash=NULL,
                    reset_key_expiry=0
@@ -322,7 +322,7 @@ class AuthDb extends Auth
     }
 
     $sql = "SELECT reset_key_hash, reset_key_expiry
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
              WHERE name=:name
              LIMIT 1";
 
@@ -414,7 +414,7 @@ class AuthDb extends Auth
       $ids[] = intval($user['id']);
     }
 
-    $sql = "UPDATE " . \MRBS\_tbl('users_db') . "
+    $sql = "UPDATE " . \MRBS\_tbl('user') . "
                SET reset_key_hash=:reset_key_hash,
                    reset_key_expiry=:reset_key_expiry
              WHERE id IN (" . implode(',', $ids) . ")";
@@ -433,7 +433,7 @@ class AuthDb extends Auth
   private function getUserByUsername($username)
   {
     $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
              WHERE name=:name
              LIMIT 1";
 
@@ -452,7 +452,7 @@ class AuthDb extends Auth
   private function getUserByUserId($id)
   {
     $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
              WHERE id=:id
              LIMIT 1";
 
@@ -473,7 +473,7 @@ class AuthDb extends Auth
     $result = array();
 
     $sql = "SELECT *
-              FROM " . \MRBS\_tbl('users_db') . "
+              FROM " . \MRBS\_tbl('user') . "
              WHERE email=:email";
 
     $res = \MRBS\db()->query($sql, array(':email' => $email));
@@ -512,7 +512,7 @@ class AuthDb extends Auth
         break;
     }
 
-    $sql = "UPDATE " . \MRBS\_tbl('users_db') . "
+    $sql = "UPDATE " . \MRBS\_tbl('user') . "
                SET password_hash=?
              WHERE $condition";
 

@@ -226,12 +226,12 @@ function output_row($row)
         default:
           // Where there's an associative array of options, display
           // the value rather than the key
-          if (isset($select_options["users_db.$key"]) &&
-              is_assoc($select_options["users_db.$key"]))
+          if (isset($select_options["user.$key"]) &&
+              is_assoc($select_options["user.$key"]))
           {
-            if (isset($select_options["users_db.$key"][$row[$key]]))
+            if (isset($select_options["user.$key"][$row[$key]]))
             {
-              $col_value = $select_options["users_db.$key"][$row[$key]];
+              $col_value = $select_options["user.$key"][$row[$key]];
             }
             else
             {
@@ -309,7 +309,7 @@ function get_field_name($params, $disabled=false)
                                      'required' => true,
                                      'pattern'  => REGEX_TEXT_POS));
 
-  if (null !== ($maxlength = maxlength('users_db.name')))
+  if (null !== ($maxlength = maxlength('user.name')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
   }
@@ -336,7 +336,7 @@ function get_field_display_name($params, $disabled=false)
                                  'required' => true,
                                  'pattern'  => REGEX_TEXT_POS));
 
-  if (null !== ($maxlength = maxlength('users_db.display_name')))
+  if (null !== ($maxlength = maxlength('user.display_name')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
   }
@@ -362,7 +362,7 @@ function get_field_email($params, $disabled=false)
                                      'disabled' => $disabled,
                                      'multiple' => true));
 
-  if (null !== ($maxlength = maxlength('users_db.email')))
+  if (null !== ($maxlength = maxlength('user.email')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
   }
@@ -481,7 +481,7 @@ function get_fieldset_password($id=null, $disabled=false)
   for ($i=0; $i<2; $i++)
   {
     $field = new FieldInputPassword();
-    $field->setLabel(get_vocab('users_db.password'))
+    $field->setLabel(get_vocab('user.password'))
           ->setControlAttributes(array('id'   => "password$i",
                                        'name' => "password$i",
                                        'disabled' => $disabled,
@@ -557,8 +557,8 @@ if ($is_ajax)
   $json_data['aaData'] = array();
 }
 
-// Get the information about the fields in the users_db table
-$fields = db()->field_info(_tbl('users_db'));
+// Get the information about the fields in the user table
+$fields = db()->field_info(_tbl('user'));
 
 $users = auth()->getUsers();
 
@@ -608,7 +608,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     // If it's an existing user then get the data from the database
     $sql = "SELECT *
-              FROM " . _tbl('users_db') . "
+              FROM " . _tbl('user') . "
              WHERE id=?";
     $result = db()->query($sql, array($id));
     $data = $result->next_row_keyed();
@@ -677,7 +677,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   if ($action == "edit")
   {
     $sql = "SELECT COUNT(*)
-              FROM " . _tbl('users_db') . "
+              FROM " . _tbl('user') . "
              WHERE level=?";
     $n_admins = db()->query1($sql, array($max_level));
     $editing_last_admin = ($n_admins <= 1) && ($data['level'] == $max_level);
@@ -741,7 +741,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     $key = $field['name'];
 
-    $params = array('label' => get_loc_field_name(_tbl('users_db'), $key),
+    $params = array('label' => get_loc_field_name(_tbl('user'), $key),
                     'name'  => VAR_PREFIX . $key,
                     'value' => $data[$key]);
 
@@ -791,7 +791,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
         break;
 
       default:
-        $params['field'] = "users_db.$key";
+        $params['field'] = "user.$key";
         $fieldset->addElement(get_field_custom($field, $params, $disabled));
         break;
 
@@ -834,7 +834,7 @@ if (isset($action) && ($action == "update"))
   if (isset($mrbs_user))
   {
     $sql = "SELECT id
-              FROM " . _tbl('users_db') . "
+              FROM " . _tbl('user') . "
              WHERE name=?
              LIMIT 1";
     $my_id = db()->query1($sql, array(utf8_strtolower($mrbs_user->username)));
@@ -891,7 +891,7 @@ if (isset($action) && ($action == "update"))
       // Trim the field to remove accidental whitespace
       $values[$fieldname] = trim($values[$fieldname]);
       // Truncate the field to the maximum length as a precaution.
-      if (null !== ($maxlength = maxlength("users_db.$fieldname")))
+      if (null !== ($maxlength = maxlength("user.$fieldname")))
       {
         $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
       }
@@ -970,7 +970,7 @@ if (isset($action) && ($action == "update"))
         // If it's an update, then check to see if there are any rows with that name, except
         // for that user.
         $query = "SELECT id
-                    FROM " . _tbl('users_db') . "
+                    FROM " . _tbl('user') . "
                    WHERE name=?";
         $sql_params[] = $value;
         if (isset($id))
@@ -1084,7 +1084,7 @@ if (isset($action) && ($action == "update"))
      * creating a new one */
 
     $assign_array = array();
-    $operation = "UPDATE " . _tbl('users_db') . " SET ";
+    $operation = "UPDATE " . _tbl('user') . " SET ";
 
     foreach ($sql_fields as $fieldname => $value)
     {
@@ -1112,7 +1112,7 @@ if (isset($action) && ($action == "update"))
     {
       $field = db()->quote($field);
     }
-    $operation = "INSERT INTO " . _tbl('users_db') . " " .
+    $operation = "INSERT INTO " . _tbl('user') . " " .
       "(". implode(",", $fields_list) . ")" .
       " VALUES " . "(" . implode(",", $values_list) . ")";
   }
@@ -1133,7 +1133,7 @@ if (isset($action) && ($action == "update"))
 if (isset($action) && ($action == "delete"))
 {
   $sql = "SELECT level
-            FROM " . _tbl('users_db') . "
+            FROM " . _tbl('user') . "
            WHERE id=?
            LIMIT 1";
 
@@ -1150,7 +1150,7 @@ if (isset($action) && ($action == "delete"))
     exit();
   }
 
-  $sql = "DELETE FROM " . _tbl('users_db') . "
+  $sql = "DELETE FROM " . _tbl('user') . "
            WHERE id=?";
   db()->command($sql, array($id));
 
@@ -1221,8 +1221,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<tr>";
 
     // First two columns which are the name and display name
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users_db.display_name") . "</th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users_db.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
 
     // Other column headers
     foreach ($fields as $field)
@@ -1231,7 +1231,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
 
       if (!in_array($fieldname, $ignore_columns))
       {
-        $heading = get_loc_field_name(_tbl('users_db'), $fieldname);
+        $heading = get_loc_field_name(_tbl('user'), $fieldname);
         // We give some columns a type data value so that the JavaScript knows how to sort them
         switch ($fieldname)
         {
