@@ -5,31 +5,30 @@ namespace MRBS;
 // This is a class for a general MRBS user, regardless of the authentication type.  Once authenticated each
 // user is converted into a standard MRBS user object with defined properties.  (Do not confuse this user
 // with a user in the user table: the 'db' authentication method is just one of many that MRBS supports.)
-class User
+class User extends Table
 {
+  const TABLE_NAME = 'user';
+
   public $username;
   public $display_name;
   public $email;
   public $level;
+  public $auth_type;
+
+  protected static $unique_columns = array('name', 'auth_type');
 
 
   public function __construct($username=null)
   {
-    $this->username = $username;
+    global $auth;
 
+    parent::__construct();
+    $this->username = $username;
     // Set some default properties
+    $this->auth_type = $auth['type'];
     $this->display_name = $username;
     $this->setDefaultEmail();
     $this->level = 0; // Play it safe
-  }
-
-
-  public function load(array $data)
-  {
-    foreach ($data as $key => $value)
-    {
-      $this->$key = $value;
-    }
   }
 
 
