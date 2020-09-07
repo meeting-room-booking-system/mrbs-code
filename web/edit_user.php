@@ -832,20 +832,9 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  if (isset($mrbs_user))
-  {
-    $sql = "SELECT id
-              FROM " . _tbl('user') . "
-             WHERE name=?
-             LIMIT 1";
-    $my_id = db()->query1($sql, array(utf8_strtolower($mrbs_user->username)));
-  }
-  else
-  {
-    $my_id = null;
-  }
+  $my_id = (isset($mrbs_user)) ? $mrbs_user->id : null;
 
-  // You are only alowed to do this if (a) you're creating the first user or
+  // You are only allowed to do this if (a) you're creating the first user or
   // (b) you are a user admin or (c) you are editing your own details
   if (!$initial_user_creation &&
       !is_user_admin() &&
