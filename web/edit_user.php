@@ -751,9 +751,12 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 
     switch ($key)
     {
-      case 'id':            // We've already got this in a hidden input
-      case 'password_hash': // We don't want to do anything with this
-      case 'timestamp':     // Nor this
+      // We've already got this in a hidden input
+      case 'id':
+      // We don't want to do anything with these
+      case 'auth_type':
+      case 'password_hash': 
+      case 'timestamp':
       case 'last_login':
       case 'reset_key_hash':
       case 'reset_key_expiry':
@@ -1204,6 +1207,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
   // We don't display these columns or they get special treatment
   $ignore_columns = array(
       'id',
+      'auth_type',
       'password_hash',
       'name',
       'display_name',
