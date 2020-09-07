@@ -210,7 +210,7 @@ function print_menu_items($query)
 
   if ($auth['type'] == 'db')
   {
-    $menu_items['user_list'] = 'edit_user_db.php';
+    $menu_items['user_list'] = 'edit_user.php';
   }
 
   foreach ($menu_items as $token => $page)

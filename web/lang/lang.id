@@ -410,7 +410,7 @@ $vocab["disabled_room_note"]      = "Jika dinonaktifkan, ruangan tidak akan munc
                                     "tetap eksis dan muncul pada halaman pencarian dan laporan.";
 $vocab["book_ahead_note_periods"] = "Ketika menggunakan periode, pesanan yg melebihi waktu akan dibulatkan kebawah mendekati satu hari penuh.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "Anda harus menulis sebuah nama.";
 $vocab["name_not_unique"]    = "Sudah ada.  Silahkan gunakan nama lain.";
 

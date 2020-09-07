@@ -365,7 +365,7 @@ $vocab["disabled_room_note"]      = "אם החדר הזה אינו פעיל, ה�
                                     "יישמרו ויהיה אפשר לראותם בתוצאות חיפוש ובדוחות";
 $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "אתה חייב להכניס שם";
 $vocab["name_not_unique"]    = "שם זה כבר קיים. בבקשה בחר שם אחר";
 

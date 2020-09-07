@@ -1768,7 +1768,7 @@ div#checks span {
 }
 
 
-/* ------------ EDIT_USER_DB.PHP ------------------*/
+/* ------------ EDIT_USER.PHP ------------------*/
 
 div#user_list {
   padding: 2em 0;

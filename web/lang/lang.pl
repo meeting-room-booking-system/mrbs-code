@@ -395,7 +395,7 @@ $vocab["disabled_room_note"]      = "Jeśli to pomieszczenie jest wyłączone, n
                                     "zostaną zachowane i będą widoczne w wynikach wyszukiwania i raporcie.";
 $vocab["book_ahead_note_periods"] = "Podczas korzystania z okresów, czasy rezerwacji z wyprzedzeniem są zaokrąglane w dół do najbliższego pełnego dnia.";
 
-// Uzyte w edit_user_db.php
+// Uzyte w edit_user.php
 $vocab["name_empty"]         = "Musisz podać nazwę.";
 $vocab["name_not_unique"]    = "Nazwa aktualnie istnieje.  Prosze wybrać inną.";
 

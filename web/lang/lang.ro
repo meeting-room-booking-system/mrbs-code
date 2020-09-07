@@ -425,7 +425,7 @@ $vocab["disabled_room_note"]      = "Daca aceasta sala este dezactivata, nu va a
                                     "vor fi pastrate si vor fi vizibile in rezultatele de Cautare si Raportare.";
 $vocab["book_ahead_note_periods"] = "La folosirea perioadelor,rezervarile inaintea timpului sunt rotunjite prin reducere la cea mai apropiata zi intreaga.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "Trebuie sa introduci un nume.";
 $vocab["name_not_unique"]    = "deja exista.  Alege altul.";
 

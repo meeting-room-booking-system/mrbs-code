@@ -409,7 +409,7 @@ $vocab["disabled_room_note"]      = "如果这个房间被禁用, 它他就不�
                                     "将会保留并且能在搜索和报表结果中显示.";
 $vocab["book_ahead_note_periods"] = "当使用期间时, 预订前时间往下舍入到最接近的整天.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "你必须输入一个名字.";
 $vocab["name_not_unique"]    = "已存在.   请选用另外一个名字.";
 

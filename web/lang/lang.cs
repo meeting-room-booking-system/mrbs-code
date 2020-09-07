@@ -409,7 +409,7 @@ $vocab["disabled_room_note"]      = "Tato místnost je zakázána, nezobrazí se
                                     "budou zachovány a zůstanou viditelné ve výsledích hledání a ve výpisech.";
 $vocab["book_ahead_note_periods"] = "Při použití období je rezervace zaokrouhlena dolů na nejbližší celý den.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "Musíte vložit jméno.";
 $vocab["name_not_unique"]    = "již existuje. Prosím vyberte jiné jméno.";
 

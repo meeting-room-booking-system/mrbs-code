@@ -22,7 +22,7 @@ $(document).on('page_ready', function() {
 
   <?php // Use an Ajax source - gives much better performance for large tables ?>
   var queryString = window.location.search;
-  tableOptions.ajax = 'edit_user_db.php' + queryString;
+  tableOptions.ajax = 'edit_user.php' + queryString;
 
   <?php // Get the types and feed those into dataTables ?>
   tableOptions.columnDefs = getTypes($('#users_table'));

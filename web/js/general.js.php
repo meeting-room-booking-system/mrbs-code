@@ -212,7 +212,7 @@ $(document).on('page_ready', function() {
       value: '1'
     }).appendTo('form[action="search.php"]');
 
-  $('header a[href^="edit_user_db.php"]').each(function() {
+  $('header a[href^="edit_user.php"]').each(function() {
       var href = $(this).attr('href');
       href += (href.indexOf('?') < 0) ? '?' : '&';
       href += 'datatable=1';

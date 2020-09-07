@@ -333,7 +333,7 @@ $vocab["mode_periods"]            = "Periode";
 $vocab["mode_times"]              = "Tijden";
 $vocab["times_only"]              = "Alleen gebruik van Tijden";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "U moet een naam invoeren.";
 $vocab["name_not_unique"]    = "betaat al. Kies aub een andere naam.";
 

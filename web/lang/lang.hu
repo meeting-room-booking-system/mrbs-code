@@ -377,7 +377,7 @@ $vocab["disabled_room_note"]      = "Ha letiltod a tárgyalót, akkor az nem fog
                                     "megmaradnak, és szerepelni fognak a keresések és a riportok kimeneteiben.";
 $vocab["book_ahead_note_periods"] = "Ismétlődések használatakor az előre foglalások lefelé kerekítve fognak megjelenni a hozzájuk legközelebb eső nap irányába.";
 
-// Used in edit_user_db.php
+// Used in edit_user.php
 $vocab["name_empty"]         = "A név megadása kötelező.";
 $vocab["name_not_unique"]    = "már létező név. Kérlek, válassz egy másik nevet.";
 

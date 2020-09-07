@@ -13,7 +13,7 @@ use MRBS\Form\FieldSelect;
 
 /*****************************************************************************\
 *                                                                            *
-*   File name     edit_user_db.php                                             *
+*   File name     edit_user.php                                             *
 *                                                                            *
 *   Description   Edit the user database                                     *
 *                                                                            *
@@ -725,7 +725,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 
   $form = new Form();
 
-  $form->setAttributes(array('id'     => 'form_edit_user_db',
+  $form->setAttributes(array('id'     => 'form_edit_user',
                              'class'  => 'standard',
                              'method' => 'post',
                              'action' => multisite(this_page())));
