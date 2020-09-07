@@ -755,7 +755,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       case 'id':
       // We don't want to do anything with these
       case 'auth_type':
-      case 'password_hash': 
+      case 'password_hash':
       case 'timestamp':
       case 'last_login':
       case 'reset_key_hash':
@@ -945,6 +945,9 @@ if (isset($action) && ($action == "update"))
         // Don't update this field ourselves at all
         unset($fields[$index]);
         unset($values[$fieldname]);
+        break;
+      case 'auth_type':
+        $values[$fieldname] = 'db';
         break;
       default:
         $q_string .= "&$fieldname=" . $values[$fieldname];
