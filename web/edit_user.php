@@ -847,7 +847,9 @@ if (isset($action) && ($action == "update"))
 
   // otherwise go ahead and update the database
   $values = array();
-  $q_string = (isset($id)) ? "action=edit" : "action=add";
+  $query_string_parts = array();
+  $query_string_parts['action'] = (isset($id)) ? 'edit' : 'add';
+
   foreach ($fields as $index => $field)
   {
     $fieldname = $field['name'];
@@ -859,7 +861,7 @@ if (isset($action) && ($action == "update"))
       // the field itself is auto-incremented
       if (isset($id))
       {
-        $q_string .= "&id=$id";
+        $query_string_parts['id'] = $id;
       }
       continue;
     }
@@ -898,7 +900,7 @@ if (isset($action) && ($action == "update"))
       // some of the fields get special treatment
       case 'name':
         // name: convert it to lower case
-        $q_string .= "&$fieldname=" . $values[$fieldname];
+        $query_string_parts[$fieldname] = $values[$fieldname];
         $values[$fieldname] = utf8_strtolower($values[$fieldname]);
         break;
       case 'password_hash':
@@ -915,7 +917,7 @@ if (isset($action) && ($action == "update"))
       case 'level':
         // level:  set a safe default (lowest level of access)
         // if there is no value set
-        $q_string .= "&$fieldname=" . $values[$fieldname];
+        $query_string_parts[$fieldname] = $values[$fieldname];
         if (!isset($values[$fieldname]))
         {
           $values[$fieldname] = 0;
@@ -937,7 +939,7 @@ if (isset($action) && ($action == "update"))
         $values[$fieldname] = 'db';
         break;
       default:
-        $q_string .= "&$fieldname=" . $values[$fieldname];
+        $query_string_parts[$fieldname] = $values[$fieldname];
         break;
     }
   }
@@ -953,7 +955,7 @@ if (isset($action) && ($action == "update"))
         if ($value === '')
         {
           $valid_data = false;
-          $q_string .= "&name_empty=1";
+          $query_string_parts['name_empty'] = 1;
         }
 
         $sql_params = array();
@@ -976,8 +978,8 @@ if (isset($action) && ($action == "update"))
         if ($result->count() > 0)
         {
           $valid_data = false;
-          $q_string .= "&name_not_unique=1";
-          $q_string .= "&taken_name=$value";
+          $query_string_parts['name_not_unique'] = 1;
+          $query_string_parts['taken_name'] = $value;
         }
         break;
       case 'password_hash':
@@ -985,7 +987,7 @@ if (isset($action) && ($action == "update"))
         if ($password0 != $password1)
         {
           $valid_data = false;
-          $q_string .= "&pwd_not_match=1";
+          $query_string_parts['pwd_not_match'] = 1;
         }
         // check that the password conforms to the password policy
         // if it's a new user, or else if it's an existing user
@@ -995,7 +997,7 @@ if (isset($action) && ($action == "update"))
           if (!auth()->validatePassword($password0))
           {
             $valid_data = false;
-            $q_string .= "&pwd_invalid=1";
+            $query_string_parts['pwd_invalid'] = 1;
           }
         }
         break;
@@ -1004,7 +1006,7 @@ if (isset($action) && ($action == "update"))
         if (isset($value) && ($value !== '') && !validate_email_list($value))
         {
           $valid_data = false;
-          $q_string .= "&invalid_email=1";
+          $query_string_parts['invalid_email'] = 1;
         }
         break;
     }
@@ -1015,7 +1017,8 @@ if (isset($action) && ($action == "update"))
   // form values
   if (!$valid_data)
   {
-    location_header(this_page() . "?$q_string");
+    $query_string = http_build_query($query_string_parts, '', '&');
+    location_header(this_page() . "?$query_string");
   }
 
 
@@ -1138,7 +1141,7 @@ if (isset($action) && ($action == "delete"))
     showAccessDenied();
     exit();
   }
-  
+
   $target_user->delete();
   // Success. Do not display a message. Simply fall through into the list display.
 }
