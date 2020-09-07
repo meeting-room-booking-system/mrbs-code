@@ -75,6 +75,27 @@ abstract class Table
   }
 
 
+  // Delete from the database
+  public function delete()
+  {
+    $conditions = array();
+    $sql_params = array();
+    $cols = new Columns(_tbl(static::TABLE_NAME));
+    $condition_columns = $cols->hasIdColumn() ? array('id') : static::$unique_columns;
+
+    foreach ($condition_columns as $condition_column)
+    {
+      $named_parameter = ":$condition_column";
+      $conditions[] = "$condition_column=$named_parameter";
+      $sql_params[$named_parameter] = $this->{$condition_column};
+    }
+
+    $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
+                  WHERE " . implode(' AND ', $conditions);
+    db()->command($sql, $sql_params);
+  }
+
+
   // Saves to the database
   public function save()
   {
@@ -104,7 +125,6 @@ abstract class Table
     $columns = array();
     $values = array();
     $sql_params = array();
-    $has_id_column = false;
 
     // Merge the accessible and inaccessible properties for the table into
     // a single array.
@@ -125,7 +145,6 @@ abstract class Table
     {
       if (($column_name == 'id') || !array_key_exists($column_name, $table_data))
       {
-        $has_id_column = true;
         continue;
       }
 
@@ -186,7 +205,7 @@ abstract class Table
     db()->command($sql, $sql_params);
 
     // If this was an insert action and there's an id column, get the new id.
-    if (($action == 'insert') && $has_id_column)
+    if (($action == 'insert') && $cols->hasIdColumn())
     {
       $this->id = db()->insert_id(static::TABLE_NAME, 'id');
     }

@@ -30,6 +30,13 @@ class Columns implements \Countable, \Iterator
   }
 
 
+  public function hasIdColumn()
+  {
+    $column = $this->getColumnByName('id');
+    return isset($column);
+  }
+
+
   public function getColumnByName($name)
   {
     foreach ($this as $column)

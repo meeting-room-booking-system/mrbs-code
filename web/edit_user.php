@@ -1138,7 +1138,8 @@ if (isset($action) && ($action == "delete"))
     showAccessDenied();
     exit();
   }
-  User::deleteById($id);
+  
+  $target_user->delete();
   // Success. Do not display a message. Simply fall through into the list display.
 }
 
