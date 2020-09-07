@@ -1125,29 +1125,21 @@ if (isset($action) && ($action == "update"))
 
 if (isset($action) && ($action == "delete"))
 {
-  $sql = "SELECT level
-            FROM " . _tbl('user') . "
-           WHERE id=?
-           LIMIT 1";
+  $target_user = User::getById($id);
 
-  $target_level = db()->query1($sql, array($id));
-  if ($target_level < 0)
+  if (!isset($target_user))
   {
     fatal_error("Fatal error while deleting a user");
   }
-  // you can't delete a user if you're not some kind of admin, and then you can't
+  // You can't delete a user if you're not some kind of admin, and then you can't
   // delete someone higher than you
-  if (!is_user_admin() || ($level < $target_level))
+  if (!is_user_admin() || (isset($target_user->level) && ($level < $target_user->level)))
   {
     showAccessDenied();
     exit();
   }
-
-  $sql = "DELETE FROM " . _tbl('user') . "
-           WHERE id=?";
-  db()->command($sql, array($id));
-
-  /* Success. Do not display a message. Simply fall through into the list display. */
+  User::deleteById($id);
+  // Success. Do not display a message. Simply fall through into the list display.
 }
 
 /*---------------------------------------------------------------------------*\
