@@ -1186,7 +1186,7 @@ if (!$is_ajax)
   }
 }
 
-if ($initial_user_creation != 1)   // don't print the user table if there are no users
+if (!$initial_user_creation)   // don't print the user table if there are no users
 {
   // Display the user data in a table
 
@@ -1266,7 +1266,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "</div>\n";
   }
 
-}   // ($initial_user_creation != 1)
+}   // (!$initial_user_creation)
 
 if ($is_ajax)
 {
