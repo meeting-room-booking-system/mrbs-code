@@ -442,7 +442,7 @@ $vocab["disabled_room_note"]      = "Si esta Sala está deshabilitada, no aparec
                                     "serán respetadas y por ello serán visibles en los resultados de Búsqueda e Informes.";
 $vocab["book_ahead_note_periods"] = "Cuando se usan periodos, las horas de reservas futuras se redondearán al día completo más cercano  .";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]              = "Se debe introducir un nombre.";
 $vocab["name_not_unique"]         = "ya existe.  Por favor, elija otro nombre.";
 

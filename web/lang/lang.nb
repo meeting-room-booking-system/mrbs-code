@@ -449,7 +449,7 @@ $vocab["disabled_room_note"]      = "Dersom dette rommet blir deaktivert, så vi
                                     "blir opprettholdt og er synlige i søk og rapporter.";
 $vocab["book_ahead_note_periods"] = "Når perioder er i bruk, reservasjoner fram i tid er rundet ned til nærmeste dag.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Du må skrive et navn.";
 $vocab["name_not_unique"]    = "finnes allerede. Vennligst velg et annet navn.";
 

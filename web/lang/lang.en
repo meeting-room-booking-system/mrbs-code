@@ -522,7 +522,7 @@ $vocab["disabled_room_note"]      = "If this room is disabled, it will not appea
                                     "will be preserved and will be visible in Search and Report results.";
 $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "You must enter a name.";
 $vocab["name_not_unique"]    = "already exists.   Please choose another name.";
 

@@ -714,7 +714,7 @@ $auth["session_php"]["inactivity_expire_time"] = 0; // seconds
 // This list is not needed when using the 'db' authentication scheme EXCEPT
 // when upgrading from a pre-MRBS 1.4.2 system that used db authentication.
 // Pre-1.4.2 the 'db' authentication scheme did need this list.   When running
-// edit_users.php for the first time in a 1.4.2 system or later, with an existing
+// edit_user_db.php for the first time in a 1.4.2 system or later, with an existing
 // users list in the database, the system will automatically add a field to
 // the table for access rights and give admin rights to those users in the database
 // for whom admin rights are defined here.   After that this list is ignored.
@@ -745,7 +745,7 @@ $auth["prog"]   = "";
 $auth["params"] = "";
 
 // 'auth_db' configuration settings
-// The highest level of access (0=none; 1=user; 2+=admin).    Used in edit_users.php
+// The highest level of access (0=none; 1=user; 2+=admin).    Used in edit_user_db.php
 // In the future we might want a higher level of granularity, eg to distinguish between
 // different levels of admin
 $max_level = 2;

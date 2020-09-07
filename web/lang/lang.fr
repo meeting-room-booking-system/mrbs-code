@@ -350,7 +350,7 @@ $vocab["mode_periods"]            = "Périodes";
 $vocab["mode_times"]              = "Heures";
 $vocab["times_only"]              = "Mode heures seules";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Vous devez entrer un nom.";
 $vocab["name_not_unique"]    = "existe déjà. Choissez un autre nom.";
 

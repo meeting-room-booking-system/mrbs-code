@@ -377,7 +377,7 @@ $vocab["disabled_room_note"]      = "Eğer bu toplantı odası kapalı ise takvi
                                     "bu durumda yer ayırtma mümkün olmaz, Buna rağmen geçmiş kayıtlar kalır arama ve raporlamada görülür." .
 $vocab["book_ahead_note_periods"] = "Dönemleri kullanırken, yer ayırtma en yakın tam günün aşağısına yuvarlanır.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Bir ad girmelisiniz";
 $vocab["name_not_unique"]    = "Bu ad zaten kullanılmakta. Lütfen başka bir ad seçiniz.";
 

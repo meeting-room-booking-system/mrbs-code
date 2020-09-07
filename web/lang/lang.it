@@ -419,7 +419,7 @@ $vocab["disabled_room_note"]      = "Se questa stanza viene disabilitata, non co
                                     "saranno mantenute e saranno visibili nei risultati di ricerca e nei report.";
 $vocab["book_ahead_note_periods"] = "Quando si usano i periodi, l'anticipo prenotazioni viene arrotondato al giorno intero più vicino.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]              = "Devi inserire un nome.";
 $vocab["name_not_unique"]         = "esiste già.   Scegli un altro nome.";
 

@@ -466,7 +466,7 @@ $vocab["disabled_room_note"]      = "Wird dieser Raum deaktiviert, wird er nicht
                                     "bleiben erhalten und werden in Suchergebnissen und Berichten ausgegeben.";
 $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Serien werden Buchungszeiten in die Zukunft auf den nächsten ganzen Tag gerundet.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
 

@@ -394,7 +394,7 @@ $vocab["disabled_room_note"]      = "Mikäli huone on poistettu käytöstä, sit
                                     "säilytetään ja ne ovat nähtävissä haun ja raportoinnin kautta.";
 $vocab["book_ahead_note_periods"] = "Käytettäessä aikajaksoja varaukset pyöristetään lähimpiin kokonaisiin päiviin.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Merkinnän nimeä ei määritelty.";
 $vocab["name_not_unique"]    = "on jo käytössä. Valitse toinen nimi.";
 

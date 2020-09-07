@@ -419,7 +419,7 @@ $vocab["disabled_room_note"]      = "Om detta rum är inaktiverat, kommer det in
                                       "kommer att visas i sök och rapportresultaten. ";
 $vocab["book_ahead_note_periods"] = "När man använder perioder är förbokningstiderna avrundade nedåt till närmaste hel dag.";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Du måste ange ett namn.";
 $vocab["name_not_unique"]    = "finns redan.   Ange ett annat namn.";
 

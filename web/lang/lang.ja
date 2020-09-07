@@ -395,7 +395,7 @@ $vocab["disabled_room_note"]      = "この部屋が無効になっている場�
                                     "検索や報告の結果には表示されます。" .
 $vocab["book_ahead_note_periods"] = "期間を使用すると、この先の予約は最も近い週日で丸められます。";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "名前を入力する必要があります。";
 $vocab["name_not_unique"]    = "既に存在します。別の名前を入力して下さい。";
 

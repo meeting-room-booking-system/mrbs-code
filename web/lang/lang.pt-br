@@ -330,7 +330,7 @@ $vocab["mode_periods"]            = "Períodos";
 $vocab["mode_times"]              = "Tempo";
 $vocab["times_only"]              = "Apenas tempo";
 
-// Used in edit_users.php
+// Used in edit_user_db.php
 $vocab["name_empty"]         = "Insira um nome.";
 $vocab["name_not_unique"]    = "já existe. Por favor escolha outro nome.";
 

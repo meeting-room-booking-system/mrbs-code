@@ -13,7 +13,7 @@ use MRBS\Form\FieldSelect;
 
 /*****************************************************************************\
 *                                                                            *
-*   File name     edit_users.php                                             *
+*   File name     edit_user_db.php                                             *
 *                                                                            *
 *   Description   Edit the user database                                     *
 *                                                                            *
@@ -725,7 +725,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 
   $form = new Form();
 
-  $form->setAttributes(array('id'     => 'form_edit_users',
+  $form->setAttributes(array('id'     => 'form_edit_user_db',
                              'class'  => 'standard',
                              'method' => 'post',
                              'action' => multisite(this_page())));
@@ -852,7 +852,7 @@ if (isset($action) && ($action == "update"))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
-    location_header('edit_users.php');
+    location_header(this_page());
   }
 
   // otherwise go ahead and update the database
@@ -934,7 +934,7 @@ if (isset($action) && ($action == "update"))
         // but someone might have spoofed the input in the edit form
         if ($values[$fieldname] > $level)
         {
-          location_header('edit_users.php');
+          location_header(this_page());
         }
         break;
       case 'timestamp':
@@ -1022,7 +1022,7 @@ if (isset($action) && ($action == "update"))
   // form values
   if (!$valid_data)
   {
-    location_header("edit_users.php?$q_string");
+    location_header(this_page() . "?$q_string");
   }
 
 
@@ -1123,7 +1123,7 @@ if (isset($action) && ($action == "update"))
   db()->command($operation, $sql_params);
 
   /* Success. Redirect to the user list, to remove the form args */
-  location_header('edit_users.php');
+  location_header(this_page());
 }
 
 /*---------------------------------------------------------------------------*\
