@@ -602,7 +602,7 @@ else
 |             Edit a given entry - 1st phase: Get the user input.             |
 \*---------------------------------------------------------------------------*/
 
-if (isset($action) && ( ($action == "edit") or ($action == "add") ))
+if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 {
 
   if (isset($id))
@@ -615,6 +615,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
       location_header(this_page());
     }
   }
+
   if (!isset($id) || (!$user))
   {
     // Otherwise try and construct the user from the query string.
@@ -829,13 +830,11 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
 if (isset($action) && ($action == "update"))
 {
   // If you haven't got the rights to do this, then exit
-  $my_id = (isset($mrbs_user)) ? $mrbs_user->id : null;
-
   // You are only allowed to do this if (a) you're creating the first user or
   // (b) you are a user admin or (c) you are editing your own details
   if (!$initial_user_creation &&
       !is_user_admin() &&
-      (!isset($my_id) || ($id != $my_id )))
+      (!isset($mrbs_user) || ($id != $mrbs_user->id )))
   {
     // It shouldn't normally be possible to get here.
     trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
