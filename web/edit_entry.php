@@ -561,10 +561,13 @@ function get_field_privacy_status($value, $disabled=false)
 
   $value = ($value) ? 1 : 0;
 
+  // Admins are allowed to do what they want
+  $disable_field = (!is_book_admin() && $private_mandatory) || $disabled;
+
   $field = new FieldInputRadioGroup();
 
   $field->setLabel(get_vocab('privacy_status'))
-        ->addRadioOptions($options, 'private', $value, true, $private_mandatory || $disabled);
+        ->addRadioOptions($options, 'private', $value, true, $disable_field);
 
   return $field;
 }
