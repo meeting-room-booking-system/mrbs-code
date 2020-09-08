@@ -57,6 +57,12 @@ function get_form()
     $key = (strpos($var, VAR_PREFIX) === 0) ? substr($var, $prefix_length) : $var;
     $form[$key] = get_form_var($var, $var_type);
 
+    // Turn the "booleans" into 0/1 values
+    if (($nature == Column::NATURE_INTEGER) && (isset($length) && ($length <= 2)))
+    {
+      $form[$key] = (empty($form[$key])) ? 0 : 1;
+    }
+
     // Trim the strings and truncate them to the maximum field length
     if (is_string($form[$key]))
     {
@@ -66,7 +72,7 @@ function get_form()
       if (!isset($column) || ($column->getNature() === Column::NATURE_CHARACTER))
       {
         $form[$key] = trim($form[$key]);
-        $form[$key] = truncate($form[$key], "room.$key");
+        $form[$key] = truncate($form[$key], Room::TABLE_NAME . ".$key");
       }
     }
   }

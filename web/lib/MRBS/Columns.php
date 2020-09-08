@@ -77,6 +77,9 @@ class Columns implements \Countable, \Iterator
       case 'real':
         $column->setNature(Column::NATURE_REAL);
         break;
+      case 'timestamp':
+        $column->setNature(Column::NATURE_TIMESTAMP);
+        break;
       default:
         throw new \Exception("Unknown nature '" . $info['nature'] . "'");
         break;

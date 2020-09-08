@@ -548,6 +548,194 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
 }
 
 
+function get_form()
+{
+  $params = array();
+
+  // Get the special parameters which don't have a corresponding column
+  $params['password0'] = get_form_var('password0', 'string', null, INPUT_POST);
+  $params['password1'] = get_form_var('password1', 'string', null, INPUT_POST);
+
+  // Get all the others
+  $columns = new Columns(_tbl(User::TABLE_NAME));
+
+  foreach ($columns as $column)
+  {
+    $name = $column->name;
+
+    $ignore = array('password_hash', 'timestamp', 'last_login', 'reset_key_hash', 'reset_key_expiry', 'auth_type');
+
+    if (in_array($name, $ignore))
+    {
+      continue;
+    }
+
+    if (!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET)))
+    {
+      continue;
+    }
+
+    $nature = $column->getNature();
+    $length = $column->getLength();
+
+    switch ($nature)
+    {
+      case Column::NATURE_CHARACTER:
+        $var_type = 'string';
+        break;
+      case Column::NATURE_INTEGER:
+        // Smallints and tinyints are considered to be booleans
+        $var_type = (isset($length) && ($length <= 2)) ? 'string' : 'int';
+        break;
+      // We can only really deal with the types above at the moment
+      default:
+        $var_type = 'string';
+        break;
+    }
+
+    // "Level" is an exception because we've forced the value to be a string
+    // so that it can be used in an associative array.
+    // (As it's a smallint it will be turned into a string anyway, so this check
+    // isn't strictly necessary but is included in case the column type is changed).
+    if ($name == 'level')
+    {
+      $var_type = 'string';
+    }
+
+    $params[$name] = get_form_var($name, $var_type);
+
+    // Turn the "booleans" into 0/1 values
+    if (($nature == Column::NATURE_INTEGER) && (isset($length) && ($length <= 2)))
+    {
+      $params[$name] = (empty($params[$name])) ? 0 : 1;
+    }
+
+    // Trim the strings and truncate them to the maximum field length
+    if (is_string($params[$name]))
+    {
+      // Some variables, eg decimals, will also be PHP strings, so only
+      // trim columns with a database nature of 'character'.
+      if ($nature === Column::NATURE_CHARACTER)
+      {
+        $params[$name] = trim($params[$name]);
+        $params[$name] = truncate($params[$name], User::TABLE_NAME . ".$name");
+      }
+    }
+  }
+
+  return $params;
+}
+
+
+function validate_form(array $form)
+{
+  global $auth, $level;
+
+  $mrbs_user = session()->getCurrentUser();
+
+  $errors = array();
+
+  // EMAIL ADDRESS
+  // check that the email address is valid
+  if (isset($form['email']) &&
+      ($form['email'] !== '') &&
+      !validate_email_list($form['email']))
+  {
+    $errors['invalid_email'] = 1;
+  }
+
+  // LEVEL
+  // Check that we are not trying to upgrade our level.    This shouldn't be
+  // possible but someone might have spoofed the input in the edit form
+  if (isset($form['level']) && ($form['level'] > $level))
+  {
+    $message = "Attempt to edit or create a user with a higher level than the current user's.";
+    throw new \Exception($message);
+  }
+
+  // NAME
+  // Check that the name is not empty.
+  if ($form['name'] === '')
+  {
+    $errors['name_empty'] = 1;
+  }
+  // Check that the name is unique.
+  // If there's already a user with this name then it can only be this user.
+  $user = User::getByName($form['name'], $auth['type']);
+  if (isset($user) && (!isset($form['id']) || ($form['id'] != $user->id)))
+  {
+    $errors['name_not_unique'] = 1;
+    $errors['taken_name'] = $form['name'];
+  }
+
+  // PASSWORD
+  // Check that the two passwords match
+  if ($form['password0'] !== $form['password1'])
+  {
+    $errors['pwd_not_match'] = 1;
+  }
+  // Check that the password conforms to the password policy
+  // if it's a new user, or else if it's an existing user
+  // trying to change their password
+  if (!isset($form['id']) ||
+      (isset($form['password0']) && ($form['password0'] !== '')))
+  {
+    if (!auth()->validatePassword($form['password0']))
+    {
+      $errors['pwd_invalid'] = 1;
+    }
+  }
+
+  return $errors;
+}
+
+
+// Adds/updates the user specified by the $form parameters.
+// $form is assumed to have been validated already.
+function update_user(array $form)
+{
+  global $auth, $initial_user_creation;
+
+  $user = new User();
+  $user->auth_type = $auth['type'];
+
+  foreach ($form as $key => $value)
+  {
+    // Stop ordinary users trying to change fields they are not allowed to
+    if (($auth['type'] == 'db') &&
+        !$initial_user_creation &&
+        !is_user_admin() &&
+        in_array($key, $auth['db']['protected_fields']))
+    {
+      continue;
+    }
+
+    // Some of the fields get special treatment
+    switch ($key)
+    {
+      case 'level':
+        $user->level = (isset($value)) ? $value : 0;
+        break;
+      case 'name':
+        // Convert the name to lowercase for the 'db' scheme, otherwise respect the case.
+        $user->name = ($auth['type'] == 'db') ? utf8_strtolower($value) : $value;
+        break;
+      case 'password0':
+        // If the password field is blank then we are not changing it
+        if (isset($value) && ($value !== ''))
+        {
+          $user->password_hash = password_hash($value, PASSWORD_DEFAULT);
+        }
+        break;
+      default:
+        $user->{$key} = $value;
+        break;
+    }
+  }
+
+  $user->save();
+}
+
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.    We also need
 // to initialise the JSON data array.
@@ -738,7 +926,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
     $key = $field['name'];
 
     $params = array('label' => get_loc_field_name(_tbl('user'), $key),
-                    'name'  => VAR_PREFIX . $key,
+                    'name'  => $key,
                     'value' => $user->{$key});
 
     $disabled = !$initial_user_creation &&
@@ -829,6 +1017,8 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
 if (isset($action) && ($action == "update"))
 {
+  $returl = this_page();
+
   // If you haven't got the rights to do this, then exit
   // You are only allowed to do this if (a) you're creating the first user or
   // (b) you are a user admin or (c) you are editing your own details
@@ -842,280 +1032,32 @@ if (isset($action) && ($action == "update"))
   }
 
   // otherwise go ahead and update the database
-  $values = array();
-  $query_string_parts = array();
-  $query_string_parts['action'] = (isset($id)) ? 'edit' : 'add';
-
-  foreach ($fields as $index => $field)
+  $form_params = get_form();
+  $errors = validate_form($form_params);
+  if (empty($errors))
   {
-    $fieldname = $field['name'];
-    $type = get_form_var_type($field);
-
-    if ($fieldname == 'id')
-    {
-      // id: don't need to do anything except add the id to the query string;
-      // the field itself is auto-incremented
-      if (isset($id))
-      {
-        $query_string_parts['id'] = $id;
-      }
-      continue;
-    }
-
-    // first, get all the other form variables, except for password_hash which is
-    // a special case,and put them into an array, $values, which  we will use
-    // for entering into the database assuming we pass validation
-    if ($fieldname !== 'password_hash')
-    {
-      $values[$fieldname] = get_form_var(VAR_PREFIX. $fieldname, $type);
-      // Turn checkboxes into booleans
-      if (($fieldname !== 'level') &&
-          ($field['nature'] == 'integer') &&
-          isset($field['length']) &&
-          ($field['length'] <= 2))
-      {
-        $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
-      }
-      // Trim the field to remove accidental whitespace
-      $values[$fieldname] = trim($values[$fieldname]);
-      // Truncate the field to the maximum length as a precaution.
-      if (null !== ($maxlength = maxlength("user.$fieldname")))
-      {
-        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
-      }
-    }
-
-    // we will also put the data into a query string which we will use for passing
-    // back to this page if we fail validation.   This will enable us to reload the
-    // form with the original data so that the user doesn't have to
-    // re-enter it.  (Instead of passing the data in a query string we
-    // could pass them as session variables, but at the moment MRBS does
-    // not rely on PHP sessions).
-    switch ($fieldname)
-    {
-      // some of the fields get special treatment
-      case 'name':
-        // name: convert it to lower case
-        $query_string_parts[$fieldname] = $values[$fieldname];
-        $values[$fieldname] = utf8_strtolower($values[$fieldname]);
-        break;
-      case 'password_hash':
-        // password: if the password field is blank it means
-        // that the user doesn't want to change the password
-        // so don't do anything; otherwise calculate the hash.
-        // Note: we don't put the password in the query string
-        // for security reasons.
-        if ($password0 !== '')
-        {
-          $values[$fieldname] = password_hash($password0, PASSWORD_DEFAULT);
-        }
-        break;
-      case 'level':
-        // level:  set a safe default (lowest level of access)
-        // if there is no value set
-        $query_string_parts[$fieldname] = $values[$fieldname];
-        if (!isset($values[$fieldname]))
-        {
-          $values[$fieldname] = 0;
-        }
-        // Check that we are not trying to upgrade our level.    This shouldn't be possible
-        // but someone might have spoofed the input in the edit form
-        if ($values[$fieldname] > $level)
-        {
-          location_header(this_page());
-        }
-        break;
-      case 'timestamp':
-      case 'last_login':
-        // Don't update this field ourselves at all
-        unset($fields[$index]);
-        unset($values[$fieldname]);
-        break;
-      case 'auth_type':
-        $values[$fieldname] = 'db';
-        break;
-      default:
-        $query_string_parts[$fieldname] = $values[$fieldname];
-        break;
-    }
-  }
-
-  // Now do some form validation
-  $valid_data = true;
-  foreach ($values as $fieldname => $value)
-  {
-    switch ($fieldname)
-    {
-      case 'name':
-        // check that the name is not empty
-        if ($value === '')
-        {
-          $valid_data = false;
-          $query_string_parts['name_empty'] = 1;
-        }
-
-        $sql_params = array();
-
-        // Check that the name is unique.
-        // If it's a new user, then to check to see if there are any rows with that name.
-        // If it's an update, then check to see if there are any rows with that name, except
-        // for that user.
-        $query = "SELECT id
-                    FROM " . _tbl('user') . "
-                   WHERE name=?";
-        $sql_params[] = $value;
-        if (isset($id))
-        {
-          $query .= " AND id != ?";
-          $sql_params[] = $id;
-        }
-        $query .= " LIMIT 1";  // we only want to know if there is at least one instance of the name
-        $result = db()->query($query, $sql_params);
-        if ($result->count() > 0)
-        {
-          $valid_data = false;
-          $query_string_parts['name_not_unique'] = 1;
-          $query_string_parts['taken_name'] = $value;
-        }
-        break;
-      case 'password_hash':
-        // check that the two passwords match
-        if ($password0 != $password1)
-        {
-          $valid_data = false;
-          $query_string_parts['pwd_not_match'] = 1;
-        }
-        // check that the password conforms to the password policy
-        // if it's a new user, or else if it's an existing user
-        // trying to change their password
-        if (!isset($id) || (isset($password0) && ($password0 !== '')))
-        {
-          if (!auth()->validatePassword($password0))
-          {
-            $valid_data = false;
-            $query_string_parts['pwd_invalid'] = 1;
-          }
-        }
-        break;
-      case 'email':
-        // check that the email address is valid
-        if (isset($value) && ($value !== '') && !validate_email_list($value))
-        {
-          $valid_data = false;
-          $query_string_parts['invalid_email'] = 1;
-        }
-        break;
-    }
-  }
-
-  // if validation failed, go back to this page with the query
-  // string, which by now has both the error codes and the original
-  // form values
-  if (!$valid_data)
-  {
-    $query_string = http_build_query($query_string_parts, '', '&');
-    location_header(this_page() . "?$query_string");
-  }
-
-
-  // If we got here, then we've passed validation and we need to
-  // enter the data into the database
-
-  $sql_params = array();
-  $sql_fields = array();
-
-  // For each db column get the value ready for the database
-  foreach ($fields as $field)
-  {
-    $fieldname = $field['name'];
-
-    // Stop ordinary users trying to change fields they are not allowed to
-    if (!$initial_user_creation &&
-        !is_user_admin() &&
-        in_array($fieldname, $auth['db']['protected_fields']))
-    {
-      continue;
-    }
-
-    // If the password field is blank then we are not changing it
-    if (($fieldname == 'password_hash') && (!isset($values[$fieldname])))
-    {
-      continue;
-    }
-
-    if ($fieldname != 'id')
-    {
-      // pre-process the field value for SQL
-      $value = $values[$fieldname];
-      switch ($field['nature'])
-      {
-        case 'integer':
-          if (!isset($value) || ($value === ''))
-          {
-            // Try and set it to NULL when we can because there will be cases when we
-            // want to distinguish between NULL and 0 - especially when the field
-            // is a genuine integer.
-            $value = ($field['is_nullable']) ? null : 0;
-          }
-          break;
-        default:
-          // No special handling
-          break;
-      }
-
-      /* If we got here, we have a valid, sql-ified value for this field,
-       * so save it for later */
-      $sql_fields[$fieldname] = $value;
-    }
-  } /* end for each column of user database */
-
-  /* Now generate the SQL operation based on the given array of fields */
-  if (isset($id))
-  {
-    /* if the id exists - then we are editing an existing user, rather than
-     * creating a new one */
-
-    $assign_array = array();
-    $operation = "UPDATE " . _tbl('user') . " SET ";
-
-    foreach ($sql_fields as $fieldname => $value)
-    {
-      array_push($assign_array, db()->quote($fieldname) . "=?");
-      $sql_params[] = $value;
-    }
-    $operation .= implode(",", $assign_array) . " WHERE id=?";
-    $sql_params[] = $id;
+    update_user($form_params);
   }
   else
   {
-    /* The id field doesn't exist, so we're adding a new user */
-
-    $fields_list = array();
-    $values_list = array();
-
-    foreach ($sql_fields as $fieldname => $value)
+    $query_string_parts = $errors;
+    $query_string_parts['action'] = (isset($form_params['id'])) ? 'edit' : 'add';
+    // Add the form parameters to the query string so that the user doesn't have to
+    // retype them.  (We could use session variables, but we can't assume the use of
+    // sessions.)
+    foreach ($form_params as $key => $value)
     {
-      array_push($fields_list,$fieldname);
-      array_push($values_list,'?');
-      $sql_params[] = $value;
+      if (!in_array($key, array('password0', 'password1')))
+      {
+        $query_string_parts[$key] = $value;
+      }
     }
-
-    foreach ($fields_list as &$field)
-    {
-      $field = db()->quote($field);
-    }
-    $operation = "INSERT INTO " . _tbl('user') . " " .
-      "(". implode(",", $fields_list) . ")" .
-      " VALUES " . "(" . implode(",", $values_list) . ")";
   }
-
-  /* DEBUG lines - check the actual sql statement going into the db */
-  //echo "Final SQL string: <code>" . htmlspecialchars($operation) . "</code>";
-  //exit;
-  db()->command($operation, $sql_params);
-
-  /* Success. Redirect to the user list, to remove the form args */
-  location_header(this_page());
+  if (!empty($query_string_parts))
+  {
+    $returl .= '?' . http_build_query($query_string_parts, '', '&');
+  }
+  location_header($returl);
 }
 
 /*---------------------------------------------------------------------------*\

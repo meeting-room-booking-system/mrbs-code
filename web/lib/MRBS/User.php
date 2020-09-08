@@ -32,6 +32,15 @@ class User extends Table
   }
 
 
+  public static function getByName($username, $auth_type)
+  {
+    return self::getByColumns(array(
+        'name'      => $username,
+        'auth_type' => $auth_type
+      ));
+  }
+
+
   // Sets the default email address for the user (null if one can't be found)
   private function setDefaultEmail()
   {

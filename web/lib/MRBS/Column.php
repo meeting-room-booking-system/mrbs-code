@@ -10,6 +10,7 @@ class Column
   const NATURE_DECIMAL    = 3;
   const NATURE_INTEGER    = 4;
   const NATURE_REAL       = 5;
+  const NATURE_TIMESTAMP  = 6;
 
   public $name;
 
