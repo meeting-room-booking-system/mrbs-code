@@ -79,6 +79,7 @@ elseif (isset($update_button))
 
 $is_ajax = is_ajax();
 
+
 // Checks whether the current user can view the target user
 function can_view_user($target)
 {
@@ -674,11 +675,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   // or admin rights are removed!
   if ($action == "edit")
   {
-    $sql = "SELECT COUNT(*)
-              FROM " . _tbl('user') . "
-             WHERE level=?";
-    $n_admins = db()->query1($sql, array($max_level));
-    $editing_last_admin = ($n_admins <= 1) && ($user->level == $max_level);
+    $editing_last_admin = (UserDb::getNAdmins() <= 1) && ($user->level == $max_level);
   }
   else
   {
