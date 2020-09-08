@@ -77,7 +77,7 @@ function get_custom_fields(Room $room)
     if (!in_array($column['name'], $standard_fields['room']))
     {
       $label = get_loc_field_name(_tbl('room'), $column['name']);
-      $name = VAR_PREFIX . $column['name'];
+      $name = $column['name'];
       $value = $room->{$column['name']};
 
       // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will

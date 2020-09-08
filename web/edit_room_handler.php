@@ -8,76 +8,32 @@ use MRBS\Form\Form;
 
 function get_form()
 {
-  $form = array();
+  $params = array();
 
-  // Get non-standard form variables
-  $form_vars = array(
-    'new_area'         => 'int',
-    'old_area'         => 'int',
-    'room_name'        => 'string',
-    'sort_key'         => 'string',
-    'room_disabled'    => 'string',
-    'old_room_name'    => 'string',
-    'description'      => 'string',
-    'capacity'         => 'int',
-    'room_admin_email' => 'string',
-    'custom_html'      => 'string'
-  );
+  // Get the special parameters which don't have a corresponding column
+  $params['new_area'] = get_form_var('new_area', 'int');
+  $params['old_area'] = get_form_var('old_area', 'int');
+  $params['old_room_name'] = get_form_var('old_room_name', 'int');
 
-  // Add in the custom fields, which have a special prefix
+  // Get all the others
   $columns = new Columns(_tbl(Room::TABLE_NAME));
 
   foreach ($columns as $column)
   {
-    if (array_key_exists(VAR_PREFIX . $column->name, $_POST))
+    $name = $column->name;
+
+    if (!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET)))
     {
-      $nature = $column->getNature();
-      $length = $column->getLength();
-      switch($nature)
-      {
-        case Column::NATURE_CHARACTER:
-          $var_type = 'string';
-          break;
-        case Column::NATURE_INTEGER:
-          // Smallints and tinyints are considered to be booleans
-          $var_type = (isset($length) && ($length <= 2)) ? 'string' : 'int';
-          break;
-        // We can only really deal with the types above at the moment
-        default:
-          $var_type = 'string';
-          break;
-      }
-      $form_vars[VAR_PREFIX . $column->name] = $var_type;
+      continue;
     }
+
+    $var_type = $column->getFormVarType();
+
+    $params[$name] = get_form_var($name, $var_type);
+    $params[$name] = $column->sanitizeFormVar($params[$name]);
   }
 
-  $prefix_length = strlen(VAR_PREFIX);
-  foreach($form_vars as $var => $var_type)
-  {
-    $key = (strpos($var, VAR_PREFIX) === 0) ? substr($var, $prefix_length) : $var;
-    $form[$key] = get_form_var($var, $var_type);
-
-    // Turn the "booleans" into 0/1 values
-    if (($nature == Column::NATURE_INTEGER) && (isset($length) && ($length <= 2)))
-    {
-      $form[$key] = (empty($form[$key])) ? 0 : 1;
-    }
-
-    // Trim the strings and truncate them to the maximum field length
-    if (is_string($form[$key]))
-    {
-      $column = $columns->getColumnByName($key);
-      // Some variables, eg decimals, will also be PHP strings, so only
-      // trim columns with a database nature of 'character'.
-      if (!isset($column) || ($column->getNature() === Column::NATURE_CHARACTER))
-      {
-        $form[$key] = trim($form[$key]);
-        $form[$key] = truncate($form[$key], Room::TABLE_NAME . ".$key");
-      }
-    }
-  }
-
-  return $form;
+  return $params;
 }
 
 
