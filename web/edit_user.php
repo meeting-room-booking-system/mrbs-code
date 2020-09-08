@@ -575,52 +575,14 @@ function get_form()
       continue;
     }
 
-    $nature = $column->getNature();
-    $length = $column->getLength();
-
-    switch ($nature)
-    {
-      case Column::NATURE_CHARACTER:
-        $var_type = 'string';
-        break;
-      case Column::NATURE_INTEGER:
-        // Smallints and tinyints are considered to be booleans
-        $var_type = (isset($length) && ($length <= 2)) ? 'string' : 'int';
-        break;
-      // We can only really deal with the types above at the moment
-      default:
-        $var_type = 'string';
-        break;
-    }
-
     // "Level" is an exception because we've forced the value to be a string
     // so that it can be used in an associative array.
     // (As it's a smallint it will be turned into a string anyway, so this check
     // isn't strictly necessary but is included in case the column type is changed).
-    if ($name == 'level')
-    {
-      $var_type = 'string';
-    }
+    $var_type = ($name == 'level') ? 'string' : $column->getFormVarType();
 
     $params[$name] = get_form_var($name, $var_type);
-
-    // Turn the "booleans" into 0/1 values
-    if (($nature == Column::NATURE_INTEGER) && (isset($length) && ($length <= 2)))
-    {
-      $params[$name] = (empty($params[$name])) ? 0 : 1;
-    }
-
-    // Trim the strings and truncate them to the maximum field length
-    if (is_string($params[$name]))
-    {
-      // Some variables, eg decimals, will also be PHP strings, so only
-      // trim columns with a database nature of 'character'.
-      if ($nature === Column::NATURE_CHARACTER)
-      {
-        $params[$name] = trim($params[$name]);
-        $params[$name] = truncate($params[$name], User::TABLE_NAME . ".$name");
-      }
-    }
+    $params[$name] = $column->sanitizeFormVar($params[$name]);
   }
 
   return $params;

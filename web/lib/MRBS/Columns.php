@@ -8,10 +8,12 @@ class Columns implements \Countable, \Iterator
 
   private $data;
   private $index = 0;
+  private $table_name;
 
 
   public function __construct($table_name)
   {
+    $this->$table_name = $table_name;
     // Get the column info
     $this->data = db()->field_info($table_name);
   }
@@ -54,7 +56,7 @@ class Columns implements \Countable, \Iterator
   public function current()
   {
     $info = $this->data[$this->index];
-    $column = new Column($info['name']);
+    $column = new Column($this->table_name, $info['name']);
     $column->setLength($info['length']);
 
     switch ($info['nature'])
