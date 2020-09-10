@@ -4,7 +4,7 @@ namespace MRBS;
 
 class RoomPermission extends AreaRoomPermission
 {
-  const TABLE_NAME = 'roles_rooms';
+  const TABLE_NAME = 'role_room';
 
   protected static $unique_columns = array('role_id', 'room_id');
 

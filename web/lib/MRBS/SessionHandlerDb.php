@@ -14,7 +14,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   
   public function __construct()
   {
-    self::$table = _tbl('sessions');
+    self::$table = _tbl('session');
     
     if (!db()->table_exists(self::$table))
     {
@@ -24,6 +24,9 @@ class SessionHandlerDb implements \SessionHandlerInterface
       // when a new SessionHandlerDb object is created we do it in a try/catch block.  [Note that
       // the exception can't be thrown on open() because a try/catch round session_start() won't
       // catch the exception - maybe because open() is a callback function??]
+      //
+      // This exception will also be thrown on the upgrade to database schema version 76, when the
+      // table was renamed.
       throw new \Exception("MRBS: session table does not exist");
     }
   }

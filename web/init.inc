@@ -105,9 +105,9 @@ function init_sessions()
   session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
 
   $current_db_schema_version = db_schema_version();
-  // The session table was created in Upgrade 56.   Before that we will ignore any errors
-  // to do with DB sessions.
-  $session_table_should_exist = ($current_db_schema_version >= 56);
+  // The session table was created in Upgrade 56 and then renamed in Upgrade 76.   Before that we
+  // will ignore any errors to do with DB sessions.
+  $session_table_should_exist = ($current_db_schema_version >= 76);
 
   try
   {

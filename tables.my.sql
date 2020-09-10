@@ -186,7 +186,7 @@ CREATE TABLE mrbs_participant
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_variables
+CREATE TABLE mrbs_variable
 (
   id               int NOT NULL auto_increment,
   variable_name    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -210,7 +210,7 @@ CREATE TABLE mrbs_zoneinfo
   UNIQUE KEY uq_timezone (timezone, outlook_compatible)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_sessions
+CREATE TABLE mrbs_session
 (
   id      varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   access  int unsigned DEFAULT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE mrbs_role
   UNIQUE KEY uq_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_users_roles
+CREATE TABLE mrbs_user_role
 (
   user_id     int NOT NULL,
   role_id     int NOT NULL,
@@ -266,7 +266,7 @@ CREATE TABLE mrbs_users_roles
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_roles_areas
+CREATE TABLE mrbs_role_area
 (
   role_id     int NOT NULL,
   area_id     int NOT NULL,
@@ -284,7 +284,7 @@ CREATE TABLE mrbs_roles_areas
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mrbs_roles_rooms
+CREATE TABLE mrbs_role_room
 (
   role_id     int NOT NULL,
   room_id     int NOT NULL,
@@ -302,7 +302,7 @@ CREATE TABLE mrbs_roles_rooms
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ( 'db_version', '75');
-INSERT INTO mrbs_variables (variable_name, variable_content)
+INSERT INTO mrbs_variable (variable_name, variable_content)
+  VALUES ( 'db_version', '76');
+INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
