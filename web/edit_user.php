@@ -310,7 +310,7 @@ function get_field_roles($user)
 
   $field = new FieldSelect();
   $field->setLabel(get_vocab('roles'))
-        ->setControlAttributes(array('name' => 'roles',
+        ->setControlAttributes(array('name' => 'roles[]',
                                      'disabled' => !is_user_admin(),
                                      'multiple' => true))
         ->addSelectOptions($roles->getNames(), $user->roles, true);
@@ -575,6 +575,10 @@ function get_form()
   // Get the special parameters which don't have a corresponding column
   $params['password0'] = get_form_var('password0', 'string', null, INPUT_POST);
   $params['password1'] = get_form_var('password1', 'string', null, INPUT_POST);
+  $params['roles'] = get_form_var('roles', 'array');
+
+  // Clean up the roles
+  $params['roles'] = array_map('intval', $params['roles']);
 
   // Get all the others
   $columns = new Columns(_tbl(User::TABLE_NAME));

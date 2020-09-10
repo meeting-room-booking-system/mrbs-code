@@ -32,6 +32,13 @@ class User extends Table
   }
 
 
+  public function save()
+  {
+    parent::save();
+    $this->saveRoles();
+  }
+
+
   public static function getById($id)
   {
     // TODO: there's no doubt a faster way of doing this using a single SQL
@@ -53,6 +60,54 @@ class User extends Table
         'name'      => $username,
         'auth_type' => $auth_type
       ));
+  }
+
+
+  private function saveRoles()
+  {
+    $existing = self::getRolesByUserId($this->id);
+
+    // If there's been no change then don't do anything
+    if (array_diff($existing, $this->roles) == array_diff($this->roles, $existing))
+    {
+      return;
+    }
+
+    // Otherwise delete the old ones and insert the new ones
+    // TODO: add some locking?
+    $this->deleteRoles();
+    $this->insertRoles();
+  }
+
+
+  private function deleteRoles()
+  {
+    $sql = "DELETE FROM " . _tbl('user_role') . "
+                  WHERE user_id=:user_id";
+    db()->command($sql, array(':user_id' => $this->id));
+  }
+
+
+  private function insertRoles()
+  {
+    // If there aren't any roles then there's no need to do anything
+    if (empty($this->roles))
+    {
+      return;
+    }
+
+    // Otherwise insert the roles
+    $sql_params = array(':user_id' => $this->id);
+    $values = array();
+    foreach ($this->roles as $i => $role_id)
+    {
+      $named_parameter = ":role_id$i";
+      $sql_params[$named_parameter] = $role_id;
+      $values[] = "(:user_id, $named_parameter)";
+    }
+    $sql = "INSERT INTO " . _tbl('user_role') . " (user_id, role_id) VALUES ";
+    $sql .= implode(', ', $values);
+    db()->command($sql, $sql_params);
   }
 
 
