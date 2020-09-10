@@ -53,7 +53,10 @@ function generate_add_role_form($error=null, $name=null)
   $fieldset = new ElementFieldset();
   $field = new FieldDiv();
   $element = new ElementInputSubmit();
-  $element->setAttribute('value', get_vocab('add_role'));
+  $element->setAttributes(array(
+      'name'  => 'button_save',
+      'value' => get_vocab('add_role'))
+    );
   $field->addControl($element);
   $fieldset->addElement($field);
   $form->addElement($fieldset);
@@ -75,7 +78,10 @@ function generate_add_role_area_button(Role $role)
   $fieldset = new ElementFieldset();
   $field = new FieldDiv();
   $element = new ElementInputSubmit();
-  $element->setAttribute('value', get_vocab('add_role_area'));
+  $element->setAttributes(array(
+    'name'  => 'button_save',
+    'value' => get_vocab('add_role_area'))
+  );
   $field->addControl($element);
   $fieldset->addElement($field);
   $form->addElement($fieldset);
@@ -97,7 +103,10 @@ function generate_add_role_room_button(Role $role)
   $fieldset = new ElementFieldset();
   $field = new FieldDiv();
   $element = new ElementInputSubmit();
-  $element->setAttribute('value', get_vocab('add_role_room'));
+  $element->setAttributes(array(
+      'name'  => 'button_save',
+      'value' => get_vocab('add_role_room'))
+    );
   $field->addControl($element);
   $fieldset->addElement($field);
   $form->addElement($fieldset);
@@ -160,7 +169,10 @@ function generate_add_role_area_form(Role $role, $error, $area_id)
   $fieldset = new ElementFieldset();
   $field = new FieldDiv();
   $element = new ElementInputSubmit();
-  $element->setAttribute('value', get_vocab('add_role_area'));
+  $element->setAttributes(array(
+      'name'  => 'button_save',
+      'value' => get_vocab('add_role_area'))
+    );
   $field->addControl($element);
   $fieldset->addElement($field);
   $form->addElement($fieldset);
@@ -223,7 +235,10 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
   $fieldset = new ElementFieldset();
   $field = new FieldDiv();
   $element = new ElementInputSubmit();
-  $element->setAttribute('value', get_vocab('add_role_room'));
+  $element->setAttributes(array(
+      'name'  => 'button_save',
+      'value' => get_vocab('add_role_room'))
+    );
   $field->addControl($element);
   $fieldset->addElement($field);
   $form->addElement($fieldset);
@@ -248,7 +263,8 @@ function generate_delete_button(Role $role)
   $button = new ElementInputSubmit();
   $message = get_vocab("confirm_del_role", $role->name);
   $button->setAttributes(array(
-      'value' => get_vocab('delete'),
+      'name'    => 'button_save',
+      'value'   => get_vocab('delete'),
       'onclick' => "return confirm('" . escape_js($message) . "');"
     ));
 
