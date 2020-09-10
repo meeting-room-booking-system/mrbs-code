@@ -13,7 +13,7 @@ class AreaPermissions extends TableIterator
     parent::__construct(__NAMESPACE__ . '\\AreaPermission');
   }
 
-  protected function getRes()
+  protected function getRes($sort_column = null)
   {
     $sql = "SELECT P.*, A.area_name
               FROM " . _tbl(AreaPermission::TABLE_NAME) . " P

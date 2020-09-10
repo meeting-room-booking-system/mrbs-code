@@ -50,7 +50,7 @@ class Rooms extends TableIterator
 
 
   // For efficiency we get some information about the area at the same time.
-  protected function getRes()
+  protected function getRes($sort_column = null)
   {
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);

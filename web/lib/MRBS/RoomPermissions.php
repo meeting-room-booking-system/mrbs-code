@@ -15,7 +15,7 @@ class RoomPermissions extends TableIterator
     parent::__construct(__NAMESPACE__ . '\\RoomPermission');
   }
 
-  protected function getRes()
+  protected function getRes($sort_column = null)
   {
     $sql_params = array(':role_id' => $this->role->id);
 

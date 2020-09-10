@@ -299,6 +299,25 @@ function get_field_level($params, $disabled=false)
 }
 
 
+function get_field_roles()
+{
+  $roles = new Roles();
+
+  if (count($roles) == 0)
+  {
+    return null;
+  }
+
+  $field = new FieldSelect();
+  $field->setLabel(get_vocab('roles'))
+         ->setControlAttributes(array('name' => 'roles',
+                                      'disabled' => false))
+         ->addSelectOptions($roles->getNames(), 2, true);
+
+  return $field;
+}
+
+
 function get_field_name($params, $disabled=false)
 {
   $field = new FieldInputText();
@@ -925,6 +944,8 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         {
           $form->addHiddenInput($params['name'], $params['value']);
         }
+        // Add in the roles
+        $fieldset->addElement(get_field_roles());
         break;
 
       case 'name':

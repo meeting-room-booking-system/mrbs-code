@@ -26,14 +26,8 @@ class Areas extends TableIterator
   }
 
 
-  protected function getRes()
+  protected function getRes($sort_column = null)
   {
-    $class_name = $this->base_class;
-    $sql = "SELECT *
-              FROM " . _tbl($class_name::TABLE_NAME) . "
-          ORDER BY sort_key";
-    $this->res = db()->query($sql);
-    $this->cursor = -1;
-    $this->item = null;
+    parent::getRes('sort_key');
   }
 }

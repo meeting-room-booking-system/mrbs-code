@@ -62,10 +62,14 @@ abstract class TableIterator implements \Countable, \Iterator
   }
 
 
-  protected function getRes()
+  protected function getRes($sort_column=null)
   {
     $class_name = $this->base_class;
     $sql = "SELECT * FROM " . _tbl($class_name::TABLE_NAME);
+    if (isset($sort_column) && ($sort_column !== ''))
+    {
+      $sql .= " ORDER BY $sort_column";
+    }
     $this->res = db()->query($sql);
     $this->cursor = -1;
     $this->item = null;
