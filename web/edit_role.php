@@ -42,7 +42,7 @@ function generate_add_role_form($error=null, $name=null)
         ->setControlAttributes(array('name'     => 'name',
                                      'required' => true,
                                      'pattern'  => REGEX_TEXT_POS));
-  if (null !== ($maxlength = maxlength('roles.name')))
+  if (null !== ($maxlength = maxlength('role.name')))
   {
     $field->setControlAttribute('maxlength', $maxlength);
   }

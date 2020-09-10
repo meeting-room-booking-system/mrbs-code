@@ -4,7 +4,7 @@ namespace MRBS;
 
 class Role extends Table
 {
-  const TABLE_NAME = 'roles';
+  const TABLE_NAME = 'role';
 
   protected static $unique_columns = array('name');
 

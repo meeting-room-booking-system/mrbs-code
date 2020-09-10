@@ -173,7 +173,7 @@ function generate_register_button($row, $previous_page=null)
         'value'     => $mrbs_user->username,
         'disabled'  => false,
         'required'  => true,
-        'field'     => 'participants.username',
+        'field'     => 'participant.username',
         'label'     => get_vocab('name'),
         'name'      => 'username',
       );

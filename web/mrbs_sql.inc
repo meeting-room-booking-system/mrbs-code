@@ -634,7 +634,7 @@ function get_entries_by_area($area_id, $interval_start, $interval_end)
   $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
             FROM " . _tbl('entry') . " E
        LEFT JOIN " . _tbl('room') . " R ON E.room_id = R.id
-       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
+       LEFT JOIN " . _tbl('participant') . " P ON P.entry_id = E.id
            WHERE R.area_id = ?
              AND R.disabled = 0
              AND start_time < ? AND end_time > ?
@@ -664,7 +664,7 @@ function get_entries_by_room($room_id, $interval_start, $interval_end)
   // The GROUP BY is necessary to get n_registered to work
   $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
             FROM " . _tbl('entry') . " E
-       LEFT JOIN " . _tbl('participants') . " P ON P.entry_id = E.id
+       LEFT JOIN " . _tbl('participant') . " P ON P.entry_id = E.id
            WHERE room_id = ?
              AND start_time < ? AND end_time > ?
         GROUP BY E.id
@@ -1455,7 +1455,7 @@ function get_registration_by_id($id)
   }
 
   $sql = "SELECT *
-            FROM " . _tbl('participants') . "
+            FROM " . _tbl('participant') . "
            WHERE id=?
            LIMIT 1";
 
@@ -1484,7 +1484,7 @@ function get_registrants($id, $series)
   }
 
   $sql = "SELECT *
-            FROM " . _tbl('participants') . "
+            FROM " . _tbl('participant') . "
            WHERE entry_id=:entry_id";
 
   $res = db()->query($sql, array(':entry_id' => $id));
@@ -1498,7 +1498,7 @@ function series_has_registrants($repeat_id)
 {
   $sql = "SELECT COUNT(username)
             FROM " . _tbl('entry') . " E
-       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+       LEFT JOIN " . _tbl('participant') . " P ON E.id=P.entry_id
            WHERE E.repeat_id=:repeat_id
            LIMIT 1";
 
@@ -1936,7 +1936,7 @@ function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $r
 
 function update_participants($old_id, $new_id)
 {
-  $sql = "UPDATE " . _tbl('participants') . "
+  $sql = "UPDATE " . _tbl('participant') . "
              SET entry_id=:new_id
            WHERE entry_id=:old_id";
 
@@ -2280,7 +2280,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     {
       // Create the entry:
       $new_id = mrbsCreateSingleEntry($booking);
-      // Update the participants table
+      // Update the participant table
       if (isset($id))
       {
         update_participants($id, $new_id);
