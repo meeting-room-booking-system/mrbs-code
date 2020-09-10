@@ -310,9 +310,10 @@ function get_field_roles()
 
   $field = new FieldSelect();
   $field->setLabel(get_vocab('roles'))
-         ->setControlAttributes(array('name' => 'roles',
-                                      'disabled' => false))
-         ->addSelectOptions($roles->getNames(), 2, true);
+        ->setControlAttributes(array('name' => 'roles',
+                                     'disabled' => !is_user_admin(),
+                                     'multiple' => true))
+        ->addSelectOptions($roles->getNames(), 2, true);
 
   return $field;
 }
