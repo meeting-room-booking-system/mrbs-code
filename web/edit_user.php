@@ -299,7 +299,7 @@ function get_field_level($params, $disabled=false)
 }
 
 
-function get_field_roles()
+function get_field_roles($user)
 {
   $roles = new Roles();
 
@@ -313,7 +313,7 @@ function get_field_roles()
         ->setControlAttributes(array('name' => 'roles',
                                      'disabled' => !is_user_admin(),
                                      'multiple' => true))
-        ->addSelectOptions($roles->getNames(), 2, true);
+        ->addSelectOptions($roles->getNames(), $user->roles, true);
 
   return $field;
 }
@@ -946,7 +946,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
           $form->addHiddenInput($params['name'], $params['value']);
         }
         // Add in the roles
-        $fieldset->addElement(get_field_roles());
+        $fieldset->addElement(get_field_roles($user));
         break;
 
       case 'name':

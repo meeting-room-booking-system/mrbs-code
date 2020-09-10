@@ -32,12 +32,37 @@ class User extends Table
   }
 
 
+  public static function getById($id)
+  {
+    // TODO: there's no doubt a faster way of doing this using a single SQL
+    // query, though it needs to work for both MySQL and PostgreSQL.
+    $user = parent::getById($id);
+
+    if (isset($user))
+    {
+      $user->roles = self::getRolesByUserId($id);
+    }
+
+    return $user;
+  }
+
+
   public static function getByName($username, $auth_type)
   {
     return self::getByColumns(array(
         'name'      => $username,
         'auth_type' => $auth_type
       ));
+  }
+
+
+  private static function getRolesByUserId($id)
+  {
+    $sql = "SELECT role_id
+              FROM " . _tbl('user_role') . "
+             WHERE user_id=:user_id";
+    $sql_params = array(':user_id' => $id);
+    return db()->query_array($sql, $sql_params);
   }
 
 
