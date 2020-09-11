@@ -17,6 +17,8 @@ class Room extends Table
 
   protected static $unique_columns = array('room_name', 'area_id');
 
+  private $is_visible;
+
 
   public function __construct($room_name=null, $area_id=null)
   {
@@ -50,14 +52,12 @@ class Room extends Table
 
   public function isVisible()
   {
-    static $is_visible = null;  // Cache the result
-
-    if (!isset($is_visible))
+    if (!isset($this->is_visible))
     {
       // Admins can see all rooms
       if (is_admin())
       {
-        $is_visible = true;
+        $this->is_visible = true;
       }
       else
       {
@@ -65,7 +65,7 @@ class Room extends Table
         if (!isset($user))
         {
           // TODO: need to have a guest role or something like that
-          $is_visible = true;
+          $this->is_visible = true;
         }
         else
         {
@@ -92,17 +92,17 @@ class Room extends Table
           }
           if (isset($lowest_denied) && ($lowest_denied == RoomPermission::READ))
           {
-            $is_visible = false;
+            $this->is_visible = false;
           }
           else
           {
-            $is_visible = true;
+            $this->is_visible = true;
           }
         }
       }
     }
 
-    return $is_visible;
+    return $this->is_visible;
   }
 
 
