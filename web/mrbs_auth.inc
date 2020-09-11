@@ -427,8 +427,8 @@ function is_user_admin()
 
 
 // Checks whether a room is visible to the current user
-// Doesn't do anything at the moment, but allows for customisation or future development
-function is_visible($room)
+function is_visible($room_id)
 {
-  return true;
+  $room = Room::getById($room_id);
+  return (isset($room)) ? $room->isVisible() : false;
 }

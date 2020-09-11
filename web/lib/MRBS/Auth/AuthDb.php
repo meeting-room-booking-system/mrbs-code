@@ -162,7 +162,7 @@ class AuthDb extends Auth
 
   public function getUser($username)
   {
-    return UserDb::getUserByUsername($username);
+    return User::getByName($username, 'db');
   }
 
 

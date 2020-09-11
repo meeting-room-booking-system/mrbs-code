@@ -23,12 +23,18 @@ class User extends Table
     global $auth;
 
     parent::__construct();
-    $this->username = $username;
-    // Set some default properties
-    $this->auth_type = $auth['type'];
-    $this->display_name = $username;
-    $this->setDefaultEmail();
-    $this->level = 0; // Play it safe
+
+    if (isset($username) && ($username !== ''))
+    {
+      $this->username = $username;
+      // Set some default properties
+      $this->auth_type = $auth['type'];
+      $this->display_name = $username;
+      $this->setDefaultEmail();
+      $this->level = 0; // Play it safe
+      $this->id = self::getIdByName($username, $this->auth_type);
+      $this->roles = self::getRolesByUserId($this->id);
+    }
   }
 
 
@@ -56,10 +62,17 @@ class User extends Table
 
   public static function getByName($username, $auth_type)
   {
-    return self::getByColumns(array(
+    $user = self::getByColumns(array(
         'name'      => $username,
         'auth_type' => $auth_type
       ));
+
+    if (isset($user))
+    {
+      $user->roles = self::getRolesByUserId($user->id);
+    }
+
+    return $user;
   }
 
 
@@ -111,8 +124,31 @@ class User extends Table
   }
 
 
+  private static function getIdByName($username, $auth_type)
+  {
+    $sql = "SELECT id FROM " . _tbl(self::TABLE_NAME) ."
+             WHERE name=:name
+               AND auth_type=:auth_type
+             LIMIT 1";
+
+    $sql_params = array(
+        ':name:' => $username,
+        ':auth_type' => $auth_type
+      );
+
+    $id = db()->query1($sql, $sql_params);
+
+    return ($id < 0) ? null : $id;
+  }
+
+
   private static function getRolesByUserId($id)
   {
+    if (!isset($id))
+    {
+      return array();
+    }
+
     $sql = "SELECT role_id
               FROM " . _tbl('user_role') . "
              WHERE user_id=:user_id";

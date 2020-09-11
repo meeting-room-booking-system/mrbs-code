@@ -50,7 +50,15 @@ class Room extends Table
 
   public function isVisible()
   {
-    return is_visible($this->id);
+    // Admins can see all rooms
+    if (is_admin())
+    {
+      return true;
+    }
+
+    $user = session()->getCurrentUser();
+    //var_dump($user);
+    return true;
   }
 
 
