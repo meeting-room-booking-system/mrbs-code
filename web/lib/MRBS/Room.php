@@ -69,6 +69,7 @@ class Room extends Table
         }
         else
         {
+          // TODO: defaults?
           $highest_granted = null;
           $lowest_denied = null;
           $room_permissions = $this->getPermissions($user->roles);
