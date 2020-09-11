@@ -17,6 +17,8 @@ abstract class AreaRoomPermission extends Table
   public static $permission_default = self::WRITE;
   public static $state_default = self::GRANTED;
 
+  private static $permissions = array(self::READ, self::WRITE, self::ALL);  // Must be in order
+
   public static function getPermissionOptions()
   {
     return array(
@@ -34,5 +36,43 @@ abstract class AreaRoomPermission extends Table
         AreaPermission::GRANTED => get_vocab('state_granted'),
         AreaPermission::DENIED  => get_vocab('state_denied')
       );
+  }
+
+
+  public static function max($a, $b)
+  {
+    // Check we've got valid parameters
+    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
+    {
+      throw new \Exception("Invalid parameters");
+    }
+    // Simple case
+    if ($a == $b)
+    {
+      return $a;
+    }
+    // Otherwise work out which is higher
+    $max_key = max(array_search($a, self::$permissions),
+                   array_search($b, self::$permissions));
+    return self::$permissions[$max_key];
+  }
+
+
+  public static function min($a, $b)
+  {
+    // Check we've got valid parameters
+    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
+    {
+      throw new \Exception("Invalid parameters");
+    }
+    // Simple case
+    if ($a == $b)
+    {
+      return $a;
+    }
+    // Otherwise work out which is lower
+    $min_key = min(array_search($a, self::$permissions),
+                   array_search($b, self::$permissions));
+    return self::$permissions[$min_key];
   }
 }

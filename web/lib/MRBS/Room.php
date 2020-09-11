@@ -50,15 +50,96 @@ class Room extends Table
 
   public function isVisible()
   {
-    // Admins can see all rooms
-    if (is_admin())
+    static $is_visible = null;  // Cache the result
+
+    if (!isset($is_visible))
     {
-      return true;
+      // Admins can see all rooms
+      if (is_admin())
+      {
+        $is_visible = true;
+      }
+      else
+      {
+        $user = session()->getCurrentUser();
+        if (!isset($user))
+        {
+          // TODO: need to have a guest role or something like that
+          $is_visible = true;
+        }
+        else
+        {
+          $highest_granted = null;
+          $lowest_denied = null;
+          $room_permissions = $this->getPermissions($user->roles);
+          foreach ($room_permissions as $room_permission)
+          {
+            switch ($room_permission->state)
+            {
+              case RoomPermission::GRANTED:
+                $highest_granted = (isset($highest_granted)) ?
+                                    RoomPermission::max($highest_granted, $room_permission->permission) :
+                                    $room_permission->permission;
+                break;
+              case RoomPermission::DENIED:
+                $lowest_denied = (isset($lowest_denied)) ?
+                                  RoomPermission::max($lowest_denied, $room_permission->permission) :
+                                  $room_permission->permission;
+                break;
+              default:
+                break;
+            }
+          }
+          if (isset($lowest_denied) && ($lowest_denied == RoomPermission::READ))
+          {
+            $is_visible = false;
+          }
+          else
+          {
+            $is_visible = true;
+          }
+        }
+      }
     }
 
-    $user = session()->getCurrentUser();
-    //var_dump($user);
-    return true;
+    return $is_visible;
+  }
+
+
+  private function getPermissions(array $role_ids)
+  {
+    if (empty($role_ids))
+    {
+      return array();
+    }
+
+    $sql_params = array(':room_id' => $this->id);
+    $ins = array();
+
+    foreach ($role_ids as $i => $role_id)
+    {
+      $named_parameter = ":role_id$i";
+      $ins[] = $named_parameter;
+      $sql_params[$named_parameter] = $role_id;
+    }
+
+    $sql = "SELECT *
+              FROM " . _tbl(RoomPermission::TABLE_NAME) . "
+             WHERE room_id=:room_id
+               AND role_id IN (" . implode(', ', $ins) . ")";
+
+    $res = db()->query($sql, $sql_params);
+
+    $result = array();
+
+    while (false !== ($row = $res->next_row_keyed()))
+    {
+      $permission = new RoomPermission();
+      $permission->load($row);
+      $result[] = $permission;
+    }
+
+    return $result;
   }
 
 
