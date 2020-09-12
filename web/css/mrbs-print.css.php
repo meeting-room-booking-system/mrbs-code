@@ -10,8 +10,13 @@ http_headers(array("Content-type: text/css"),
              60*30);  // 30 minute cache expiry
 ?>
 
-.screenonly, .banner, nav, nav.main_calendar, div.minicalendars.formed {
+.screenonly, .banner, div.minicalendars.formed,
+nav:not(.main_calendar):not(.arrow):not(.location):not(.view) {
   display: none;
+}
+
+nav.arrow, nav.view {
+  visibility: hidden;
 }
 
 td.new a, a.new_booking img { display: none; }
