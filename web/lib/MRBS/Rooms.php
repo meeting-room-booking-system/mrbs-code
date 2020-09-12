@@ -31,6 +31,13 @@ class Rooms extends TableIterator
   }
 
 
+  // Returns an array of room ids
+  public function getIds($include_disabled=false)
+  {
+    return array_keys($this->getNames());
+  }
+
+
   // Returns a two-dimensional array of room names indexed first by area name,
   // then by room id.  Only visible rooms are included.
   // Useful for passing to the addSelectOptions() method to get <select> options

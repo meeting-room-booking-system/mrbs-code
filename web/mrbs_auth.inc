@@ -372,6 +372,12 @@ function is_admin()
 //           the room(s); otherwise FALSE
 function is_book_admin($rooms=null, $all=true)
 {
+  if (!isset($rooms))
+  {
+    $all_rooms = new Rooms();
+    $rooms = $all_rooms->getIds();
+  }
+
   if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
