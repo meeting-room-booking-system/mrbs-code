@@ -72,20 +72,20 @@ class Room extends Table
           // TODO: defaults?
           $highest_granted = null;
           $lowest_denied = null;
-          $room_permissions = $this->getPermissions($user->roles);
-          foreach ($room_permissions as $room_permission)
+          $permissions = $this->getPermissions($user->roles);
+          foreach ($permissions as $permission)
           {
-            switch ($room_permission->state)
+            switch ($permission->state)
             {
               case RoomPermission::GRANTED:
                 $highest_granted = (isset($highest_granted)) ?
-                                    RoomPermission::max($highest_granted, $room_permission->permission) :
-                                    $room_permission->permission;
+                                    RoomPermission::max($highest_granted, $permission->permission) :
+                                    $permission->permission;
                 break;
               case RoomPermission::DENIED:
                 $lowest_denied = (isset($lowest_denied)) ?
-                                  RoomPermission::max($lowest_denied, $room_permission->permission) :
-                                  $room_permission->permission;
+                                  RoomPermission::max($lowest_denied, $permission->permission) :
+                                  $permission->permission;
                 break;
               default:
                 break;
