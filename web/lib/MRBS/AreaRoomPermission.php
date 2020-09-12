@@ -39,25 +39,25 @@ abstract class AreaRoomPermission extends Table
   }
 
 
-  public static function canRead(array $permissions)
+  public static function canWrite(array $permissions)
   {
     // TODO: defaults?
     $highest_granted = null;
     $lowest_denied = null;
-
+    throw new \Exception("Not yet implemented - need to change logic");
     foreach ($permissions as $permission)
     {
       switch ($permission->state)
       {
         case self::GRANTED:
           $highest_granted = (isset($highest_granted)) ?
-                              self::max($highest_granted, $permission->permission) :
-                              $permission->permission;
+            self::max($highest_granted, $permission->permission) :
+            $permission->permission;
           break;
         case self::DENIED:
           $lowest_denied = (isset($lowest_denied)) ?
-                            self::max($lowest_denied, $permission->permission) :
-                            $permission->permission;
+            self::max($lowest_denied, $permission->permission) :
+            $permission->permission;
           break;
         default:
           break;
@@ -71,6 +71,27 @@ abstract class AreaRoomPermission extends Table
     {
       return true;
     }
+  }
+
+
+  // Check whether the given permissions allow reading
+  public static function canRead(array $permissions)
+  {
+    // TODO: defaults?
+    // Just need to check for denied permissions as Read is the lowest permission
+    $lowest_denied = null;
+
+    foreach ($permissions as $permission)
+    {
+      if ($permission->state === self::DENIED)
+      {
+        $lowest_denied = (isset($lowest_denied)) ?
+                          self::max($lowest_denied, $permission->permission) :
+                          $permission->permission;
+      }
+    }
+
+    return (!isset($lowest_denied) || ($lowest_denied !== RoomPermission::READ));
   }
 
 
