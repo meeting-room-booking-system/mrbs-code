@@ -111,38 +111,7 @@ class Room extends Table
 
   private function getPermissions(array $role_ids)
   {
-    if (empty($role_ids))
-    {
-      return array();
-    }
-
-    $sql_params = array(':room_id' => $this->id);
-    $ins = array();
-
-    foreach ($role_ids as $i => $role_id)
-    {
-      $named_parameter = ":role_id$i";
-      $ins[] = $named_parameter;
-      $sql_params[$named_parameter] = $role_id;
-    }
-
-    $sql = "SELECT *
-              FROM " . _tbl(RoomPermission::TABLE_NAME) . "
-             WHERE room_id=:room_id
-               AND role_id IN (" . implode(', ', $ins) . ")";
-
-    $res = db()->query($sql, $sql_params);
-
-    $result = array();
-
-    while (false !== ($row = $res->next_row_keyed()))
-    {
-      $permission = new RoomPermission();
-      $permission->load($row);
-      $result[] = $permission;
-    }
-
-    return $result;
+    return RoomPermission::getPermissionsByRoles($role_ids, $this->id);
   }
 
 

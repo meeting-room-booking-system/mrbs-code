@@ -75,4 +75,42 @@ abstract class AreaRoomPermission extends Table
                    array_search($b, self::$permissions));
     return self::$permissions[$min_key];
   }
+
+
+  protected static function getPermissions(array $role_ids, $location_id, $location_column)
+  {
+    if (empty($role_ids))
+    {
+      return array();
+    }
+
+    $sql_params = array(":location" => $location_id);
+    $ins = array();
+
+    foreach ($role_ids as $i => $role_id)
+    {
+      $named_parameter = ":role_id$i";
+      $ins[] = $named_parameter;
+      $sql_params[$named_parameter] = $role_id;
+    }
+
+    $sql = "SELECT *
+              FROM " . _tbl(static::TABLE_NAME) . "
+             WHERE $location_column=:location
+               AND role_id IN (" . implode(', ', $ins) . ")";
+
+    $res = db()->query($sql, $sql_params);
+
+    $result = array();
+
+    while (false !== ($row = $res->next_row_keyed()))
+    {
+      $permission = new RoomPermission();
+      $permission->load($row);
+      $result[] = $permission;
+    }
+
+    return $result;
+  }
+
 }

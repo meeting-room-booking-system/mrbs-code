@@ -19,5 +19,11 @@ class RoomPermission extends AreaRoomPermission
     $this->permission = self::$permission_default;
     $this->state = self::$state_default;
   }
-  
+
+
+  public static function getPermissionsByRoles(array $role_ids, $room_id)
+  {
+    return parent::getPermissions($role_ids, $room_id, 'room_id');
+  }
+
 }
