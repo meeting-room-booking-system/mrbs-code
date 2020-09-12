@@ -39,41 +39,38 @@ abstract class AreaRoomPermission extends Table
   }
 
 
-  public static function max($a, $b)
+  public static function canRead(array $permissions)
   {
-    // Check we've got valid parameters
-    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
-    {
-      throw new \Exception("Invalid parameters");
-    }
-    // Simple case
-    if ($a == $b)
-    {
-      return $a;
-    }
-    // Otherwise work out which is higher
-    $max_key = max(array_search($a, self::$permissions),
-                   array_search($b, self::$permissions));
-    return self::$permissions[$max_key];
-  }
+    // TODO: defaults?
+    $highest_granted = null;
+    $lowest_denied = null;
 
-
-  public static function min($a, $b)
-  {
-    // Check we've got valid parameters
-    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
+    foreach ($permissions as $permission)
     {
-      throw new \Exception("Invalid parameters");
+      switch ($permission->state)
+      {
+        case self::GRANTED:
+          $highest_granted = (isset($highest_granted)) ?
+                              self::max($highest_granted, $permission->permission) :
+                              $permission->permission;
+          break;
+        case self::DENIED:
+          $lowest_denied = (isset($lowest_denied)) ?
+                            self::max($lowest_denied, $permission->permission) :
+                            $permission->permission;
+          break;
+        default:
+          break;
+      }
     }
-    // Simple case
-    if ($a == $b)
+    if (isset($lowest_denied) && ($lowest_denied == RoomPermission::READ))
     {
-      return $a;
+      return false;
     }
-    // Otherwise work out which is lower
-    $min_key = min(array_search($a, self::$permissions),
-                   array_search($b, self::$permissions));
-    return self::$permissions[$min_key];
+    else
+    {
+      return true;
+    }
   }
 
 
@@ -111,6 +108,44 @@ abstract class AreaRoomPermission extends Table
     }
 
     return $result;
+  }
+
+
+  private static function max($a, $b)
+  {
+    // Check we've got valid parameters
+    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
+    {
+      throw new \Exception("Invalid parameters");
+    }
+    // Simple case
+    if ($a == $b)
+    {
+      return $a;
+    }
+    // Otherwise work out which is higher
+    $max_key = max(array_search($a, self::$permissions),
+                   array_search($b, self::$permissions));
+    return self::$permissions[$max_key];
+  }
+
+
+  private static function min($a, $b)
+  {
+    // Check we've got valid parameters
+    if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
+    {
+      throw new \Exception("Invalid parameters");
+    }
+    // Simple case
+    if ($a == $b)
+    {
+      return $a;
+    }
+    // Otherwise work out which is lower
+    $min_key = min(array_search($a, self::$permissions),
+                   array_search($b, self::$permissions));
+    return self::$permissions[$min_key];
   }
 
 }

@@ -69,38 +69,10 @@ class Room extends Table
         }
         else
         {
-          // TODO: defaults?
-          $highest_granted = null;
-          $lowest_denied = null;
           $room_permissions = $this->getPermissions($user->roles);
           $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
           $permissions = array_merge($room_permissions, $area_permissions);
-          foreach ($permissions as $permission)
-          {
-            switch ($permission->state)
-            {
-              case RoomPermission::GRANTED:
-                $highest_granted = (isset($highest_granted)) ?
-                                    RoomPermission::max($highest_granted, $permission->permission) :
-                                    $permission->permission;
-                break;
-              case RoomPermission::DENIED:
-                $lowest_denied = (isset($lowest_denied)) ?
-                                  RoomPermission::max($lowest_denied, $permission->permission) :
-                                  $permission->permission;
-                break;
-              default:
-                break;
-            }
-          }
-          if (isset($lowest_denied) && ($lowest_denied == RoomPermission::READ))
-          {
-            $this->is_visible = false;
-          }
-          else
-          {
-            $this->is_visible = true;
-          }
+          $this->is_visible = AreaRoomPermission::canRead($permissions);
         }
       }
     }
