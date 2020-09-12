@@ -8,6 +8,8 @@ class Area extends Table
 
   protected static $unique_columns = array('area_name');
 
+  private $is_visible;
+
 
   public function __construct($area_name=null)
   {
@@ -39,6 +41,35 @@ class Area extends Table
   public function isDisabled()
   {
     return (bool) $this->disabled;
+  }
+
+
+  public function isVisible()
+  {
+    if (!isset($this->is_visible))
+    {
+      // Admins can see everything
+      if (is_admin())
+      {
+        $this->is_visible = true;
+      }
+      else
+      {
+        $user = session()->getCurrentUser();
+        if (!isset($user))
+        {
+          // TODO: need to have a guest role or something like that
+          $this->is_visible = true;
+        }
+        else
+        {
+          $permissions = $this->getPermissions($user->roles);
+          $this->is_visible = AreaRoomPermission::canRead($permissions);
+        }
+      }
+    }
+
+    return $this->is_visible;
   }
 
 

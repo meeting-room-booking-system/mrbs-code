@@ -54,7 +54,7 @@ class Room extends Table
   {
     if (!isset($this->is_visible))
     {
-      // Admins can see all rooms
+      // Admins can see everything
       if (is_admin())
       {
         $this->is_visible = true;
