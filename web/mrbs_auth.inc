@@ -412,9 +412,8 @@ function is_book_admin($rooms=null, $all=true)
   // We're down to one room, either as a scalar or an array with one element
   assert(!is_array($rooms) || (count($rooms) == 1), '$rooms invalid');
   $room_id = (is_array($rooms)) ? $rooms[0] : $rooms;
-  $mrbs_user = session()->getCurrentUser();
-
-  return (isset($mrbs_user) && ($mrbs_user->level >= 2));
+  $room = Room::getById($room_id);
+  return (isset($room)) ? $room->isBookAdmin() : false;
 }
 
 

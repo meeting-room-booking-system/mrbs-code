@@ -53,6 +53,7 @@ class User extends Table
 
     if (isset($user))
     {
+      $user->username = $user->name;
       $user->roles = self::getRolesByUserId($id);
     }
 
@@ -69,6 +70,7 @@ class User extends Table
 
     if (isset($user))
     {
+      $user->username = $user->name;
       $user->roles = self::getRolesByUserId($user->id);
     }
 

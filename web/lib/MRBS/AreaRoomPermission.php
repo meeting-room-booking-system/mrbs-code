@@ -95,6 +95,33 @@ abstract class AreaRoomPermission extends Table
   }
 
 
+  public static function canAll(array $permissions)
+  {
+    // TODO: defaults?
+    $highest_granted = null;
+
+    foreach ($permissions as $permission)
+    {
+      switch ($permission->state)
+      {
+        case self::GRANTED:
+          $highest_granted = (isset($highest_granted)) ?
+                              self::max($highest_granted, $permission->permission) :
+                              $permission->permission;
+          break;
+        case self::DENIED:
+          // If any permissions are denied then immediately return false
+          return false;
+          break;
+        default:
+          break;
+      }
+    }
+
+    return (isset($highest_granted) && ($highest_granted === self::ALL));
+  }
+
+
   protected static function getPermissions(array $role_ids, $location_id, $location_column)
   {
     if (empty($role_ids))
