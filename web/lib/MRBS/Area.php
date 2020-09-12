@@ -44,7 +44,7 @@ class Area extends Table
 
   public function getPermissions(array $role_ids)
   {
-    return array();
+    return AreaPermission::getPermissionsByRoles($role_ids, $this->id);
   }
 
 }

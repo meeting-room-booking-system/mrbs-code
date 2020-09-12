@@ -51,4 +51,10 @@ class AreaPermission extends AreaRoomPermission
     return $result;
   }
 
+
+  public static function getPermissionsByRoles(array $role_ids, $area_id)
+  {
+    return parent::getPermissions($role_ids, $area_id, 'area_id');
+  }
+
 }
