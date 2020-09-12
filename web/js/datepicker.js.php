@@ -106,19 +106,18 @@ $(document).on('page_ready', function() {
 
   var onDayCreate = function(dObj, dStr, fp, dayElem) {
       <?php
-      // If this is a hidden day, add a class to the element. If we're not an admin
-      // then add 'disabled', which will grey out the dates and prevent them being picked.
-      // If we are an admin then add 'nextMonthDay' will will grey out the dates, but
-      // still allow them to be picked.  [Note: it would be better to define our own
-      // class instead of using 'nextMonthDay' as that will probably have some
-      // unintended consequences if we want to do special things with the next month.]
+      // If this is a hidden day and the user is a booking admin then add a class to
+      // the day so that it can be styled differently.  If they're not a booking admin
+      // the day will be disabled - see later on in this file.
       if (!empty($hidden_days))
       {
         ?>
-        var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
-        if (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0)
+        if (args.isBookAdmin)
         {
-          dayElem.classList.add((args.isAdmin) ? 'nextMonthDay' : 'disabled');
+          var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+          if (hiddenDays.indexOf(dayElem.dateObj.getDay()) >= 0) {
+            dayElem.classList.add('mrbs-hidden');
+          }
         }
         <?php
       }
@@ -193,6 +192,25 @@ $(document).on('page_ready', function() {
         }
       }
     };
+
+  <?php
+  // Disable hidden days, unless the user is a booking admin.  (If they're a booking
+  // admin then they'll still be able to select the date but it will be given a different
+  // class so that it can be styled differently - see code above in this file.)
+  if (!empty($hidden_days))
+  {
+    ?>
+    if (!args.isBookAdmin)
+    {
+      config.disable = [
+        function (date) {
+          return ([<?php echo implode(',', $hidden_days); ?>].indexOf(date.getDay()) >= 0);
+        }
+      ];
+    }
+    <?php
+  }
+  ?>
 
 
   <?php
