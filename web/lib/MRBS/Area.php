@@ -41,4 +41,10 @@ class Area extends Table
     return (bool) $this->disabled;
   }
 
+
+  public function getPermissions(array $role_ids)
+  {
+    return array();
+  }
+
 }

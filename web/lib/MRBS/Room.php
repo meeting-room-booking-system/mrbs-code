@@ -72,7 +72,9 @@ class Room extends Table
           // TODO: defaults?
           $highest_granted = null;
           $lowest_denied = null;
-          $permissions = $this->getPermissions($user->roles);
+          $room_permissions = $this->getPermissions($user->roles);
+          $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
+          $permissions = array_merge($room_permissions, $area_permissions);
           foreach ($permissions as $permission)
           {
             switch ($permission->state)
