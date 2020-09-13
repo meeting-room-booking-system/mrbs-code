@@ -180,20 +180,6 @@ class AuthDb extends Auth
   }
 
 
-  // Return an array of all users
-  public function getUsers()
-  {
-    $sql = "SELECT *
-              FROM " . \MRBS\_tbl(UserDb::TABLE_NAME) . "
-             WHERE auth_type='db'
-             ORDER BY name";
-
-    $res = \MRBS\db()->query($sql);
-
-    return $res->all_rows_keyed();
-  }
-
-
   // Checks whether validation of a user by email address is possible and allowed.
   public function canValidateByEmail()
   {

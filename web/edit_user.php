@@ -135,7 +135,7 @@ function get_form_var_type($field)
 }
 
 
-function output_row($row)
+function output_row(User $user)
 {
   global $is_ajax, $json_data;
   global $fields, $ignore_columns, $select_options;
@@ -144,35 +144,35 @@ function output_row($row)
 
   // First column, which is the display name
   // Make sure we've got a display name.  If not, use the username.
-  if (!isset($row['display_name']) || (trim($row['display_name']) === ''))
+  if (!isset($user->display_name) || (trim($user->display_name) === ''))
   {
-    $row['display_name'] = $row['name'];
+    $user->display_name = $user->name;
   }
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-  if (can_edit_user($row['name']))
+  if (can_edit_user($user->name))
   {
     $form = new Form();
     $form->setAttributes(array('method' => 'post',
                                'action' => multisite(this_page())));
-    $form->addHiddenInput('id', $row['id']);
+    $form->addHiddenInput('id', $user->id);
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
                                  'name'  => 'edit_button',
-                                 'value' => $row['display_name']));
+                                 'value' => $user->display_name));
     $form->addElement($submit);
     $display_name_value = $form->toHTML();
   }
   else
   {
-    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($row['display_name']) . "</span>";
+    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($user->display_name) . "</span>";
   }
 
-  $sortname = get_sortable_name($row['display_name']);
+  $sortname = get_sortable_name($user->display_name);
   $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $display_name_value;
 
   // Then the username
-  $name_value = "<span class=\"normal\">" . htmlspecialchars($row['name']) . "</span>";
-  $values[] = '<span title="' . htmlspecialchars($row['name']) . '"></span>' . $name_value;
+  $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
+  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
 
   // Other columns
   foreach ($fields as $field)
@@ -180,12 +180,12 @@ function output_row($row)
     $key = $field['name'];
     if (!in_array($key, $ignore_columns))
     {
-      $col_value = $row[$key];
+      $col_value = $user->{$key};
 
       // If you are not a user admin then you are only allowed to see the last_updated
       // and last_login times for yourself.
       if (in_array($key, array('timestamp', 'last_login')) &&
-          !can_edit_user($row['name']))
+          !can_edit_user($user->name))
       {
         $col_value = null;
       }
@@ -733,7 +733,7 @@ if ($is_ajax)
 // Get the information about the fields in the user table
 $fields = db()->field_info(_tbl('user'));
 
-$users = auth()->getUsers();
+$users = new Users();
 
 
 /*---------------------------------------------------------------------------*\
@@ -1175,7 +1175,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
   {
     foreach ($users as $user)
     {
-      if (can_view_user($user['name']))
+      if (can_view_user($user->name))
       {
         output_row($user);
       }
