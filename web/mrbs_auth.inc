@@ -252,7 +252,7 @@ function getWritable($creator, $room_ids=null, $all=true)
     $room_ids = $rooms->getIds();
   }
 
-  if (is_array($room_ids) && (count($room_ids) > 0))
+  if (is_array($room_ids) && (count($room_ids) > 1))
   {
     if ($all)
     {
@@ -391,7 +391,7 @@ function is_book_admin($room_ids=null, $all=true)
     $room_ids = $rooms->getIds();
   }
 
-  if (is_array($room_ids) && (count($room_ids) > 0))
+  if (is_array($room_ids) && (count($room_ids) > 1))
   {
     if ($all)
     {
