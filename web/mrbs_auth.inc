@@ -246,6 +246,12 @@ function checkAuthorised($page, $just_check=false)
  */
 function getWritable($creator, $rooms=null, $all=true)
 {
+  if (!isset($rooms))
+  {
+    $all_rooms = new Rooms();
+    $rooms = $all_rooms->getIds();
+  }
+
   if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
@@ -283,27 +289,28 @@ function getWritable($creator, $rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  // You can't make bookings in rooms which are invisible
-  if (!is_visible($rooms))
+  // We're down to one room, either as a scalar or an array with one element
+  assert(!is_array($rooms) || (count($rooms) == 1), '$rooms invalid');
+  $room_id = (is_array($rooms)) ? $rooms[0] : $rooms;
+
+  $room = Room::getById($room_id);
+  if (!isset($room))
   {
     return false;
   }
 
-  // Always allowed to modify your own stuff
+  // Booking admins have write access
+  if ($room->isBookAdmin())
+  {
+    return true;
+  }
+
+  // Otherwise it has to be (a) your own booking and (b) writable
   $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user) && (strcasecmp($creator, $mrbs_user->username) === 0))
-  {
-    return true;
-  }
 
-  // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($rooms))
-  {
-    return true;
-  }
-
-  // Unauthorised access
-  return false;
+  return (isset($mrbs_user) &&
+          (strcasecmp($creator, $mrbs_user->username) === 0) &&
+          ($room->isWritable()));
 }
 
 /* showAccessDenied()

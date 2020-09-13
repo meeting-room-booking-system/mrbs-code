@@ -18,6 +18,7 @@ class Room extends Table
   protected static $unique_columns = array('room_name', 'area_id');
 
   private $is_visible;
+  private $is_writable;
   private $is_book_admin;
 
 
@@ -80,6 +81,38 @@ class Room extends Table
 
     return $this->is_visible;
   }
+
+
+  public function isWritable()
+  {
+    if (!isset($this->is_writable))
+    {
+      // Admins can see everything
+      if (is_admin())
+      {
+        $this->is_writable = true;
+      }
+      else
+      {
+        $user = session()->getCurrentUser();
+        if (!isset($user))
+        {
+          // TODO: need to have a guest role or something like that
+          $this->is_writable = true;
+        }
+        else
+        {
+          $room_permissions = $this->getPermissions($user->roles);
+          $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
+          $permissions = array_merge($room_permissions, $area_permissions);
+          $this->is_writable = AreaRoomPermission::canWrite($permissions);
+        }
+      }
+    }
+
+    return $this->is_writable;
+  }
+
 
   public function isBookAdmin()
   {

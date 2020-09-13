@@ -39,12 +39,35 @@ abstract class AreaRoomPermission extends Table
   }
 
 
+  // Check whether the given permissions allow reading
+  public static function canRead(array $permissions)
+  {
+    // TODO: defaults?
+    // Just need to check for denied permissions as Read is the lowest permission
+    $lowest_denied = null;
+
+    foreach ($permissions as $permission)
+    {
+      if ($permission->state === self::DENIED)
+      {
+        $lowest_denied = (isset($lowest_denied)) ?
+                          self::max($lowest_denied, $permission->permission) :
+                          $permission->permission;
+      }
+    }
+
+    return (!isset($lowest_denied) || ($lowest_denied !== self::READ));
+  }
+
+
+  // Check whether the given permissions allow writing
   public static function canWrite(array $permissions)
   {
     // TODO: defaults?
-    $highest_granted = null;
+    $mrbs_user = session()->getCurrentUser();
+    $highest_granted = (isset($mrbs_user) && ($mrbs_user->level > 0)) ? self::WRITE : null;
     $lowest_denied = null;
-    throw new \Exception("Not yet implemented - need to change logic");
+
     foreach ($permissions as $permission)
     {
       switch ($permission->state)
@@ -63,35 +86,13 @@ abstract class AreaRoomPermission extends Table
           break;
       }
     }
-    if (isset($lowest_denied) && ($lowest_denied == RoomPermission::READ))
+
+    if (isset($lowest_denied) && ($lowest_denied !== self::ALL))
     {
       return false;
     }
-    else
-    {
-      return true;
-    }
-  }
 
-
-  // Check whether the given permissions allow reading
-  public static function canRead(array $permissions)
-  {
-    // TODO: defaults?
-    // Just need to check for denied permissions as Read is the lowest permission
-    $lowest_denied = null;
-
-    foreach ($permissions as $permission)
-    {
-      if ($permission->state === self::DENIED)
-      {
-        $lowest_denied = (isset($lowest_denied)) ?
-                          self::max($lowest_denied, $permission->permission) :
-                          $permission->permission;
-      }
-    }
-
-    return (!isset($lowest_denied) || ($lowest_denied !== RoomPermission::READ));
+    return (isset($highest_granted) && ($highest_granted !== self::READ));
   }
 
 
