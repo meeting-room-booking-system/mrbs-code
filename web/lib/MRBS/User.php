@@ -134,7 +134,7 @@ class User extends Table
              LIMIT 1";
 
     $sql_params = array(
-        ':name:' => $username,
+        ':name' => $username,
         ':auth_type' => $auth_type
       );
 
