@@ -233,34 +233,34 @@ function checkAuthorised($page, $just_check=false)
  *
  * Determines if the current user is able to modify an entry
  *
- * $creator - The creator of the entry
- * $rooms   - The id(s) of the room(s) that the entries are in. Can
- *            be a scalar or an array.
- * $all     - Whether to check that the creator has write access
- *            for all ($all=true) or just some ($all=false) of the
- *            rooms.
+ * $creator   - The creator of the entry
+ * $room_ids  - The id(s) of the room(s) that the entries are in. Can
+ *              be a scalar or an array.
+ * $all       - Whether to check that the creator has write access
+ *              for all ($all=true) or just some ($all=false) of the
+ *              rooms.
  *
  * Returns:
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $rooms=null, $all=true)
+function getWritable($creator, $room_ids=null, $all=true)
 {
-  if (!isset($rooms))
+  if (!isset($room_ids))
   {
-    $all_rooms = new Rooms();
-    $rooms = $all_rooms->getIds();
+    $rooms = new Rooms();
+    $room_ids = $rooms->getIds();
   }
 
-  if (is_array($rooms) && (count($rooms) > 0))
+  if (is_array($room_ids) && (count($room_ids) > 0))
   {
     if ($all)
     {
       // We want the user to have write access for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (!getWritable($creator, $room))
+        if (!getWritable($creator, $room_id))
         {
           return false;
         }
@@ -271,9 +271,9 @@ function getWritable($creator, $rooms=null, $all=true)
     {
       // We want the user to have write access for at least one room,
       // so if there are no rooms for which they do, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (getWritable($creator, $room))
+        if (getWritable($creator, $room_id))
         {
           return true;
         }
@@ -282,22 +282,22 @@ function getWritable($creator, $rooms=null, $all=true)
     }
   }
 
-  if (is_null($rooms) && !$all)
+  if (is_null($room_ids) && !$all)
   {
-    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$rooms===null and $all===false not yet supported.');
+    throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
 
   // We're down to one room, either as a scalar or an array with no more than one element
-  assert(!is_array($rooms) || (count($rooms) < 2), '$rooms invalid');
-  if (is_array($rooms))
+  assert(!is_array($room_ids) || (count($room_ids) < 2), '$rooms invalid');
+  if (is_array($room_ids))
   {
-    $room_id = (count($rooms) == 1) ? $rooms[0] : null;
+    $room_id = (count($room_ids) == 1) ? $room_ids[0] : null;
   }
   else
   {
-    $room_id = $rooms;
+    $room_id = $room_ids;
   }
 
   $room = Room::getById($room_id);
@@ -372,35 +372,34 @@ function is_admin()
 
 
 // Checks whether the current user has booking administration rights
-// for $rooms - ie is allowed to modify and delete other people's bookings
+// for $room_ids - ie is allowed to modify and delete other people's bookings
 // and to approve bookings.
 //
-// $rooms can be either a single scalar value or an array of room ids.  The default
-// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
-// so that later MRBS can be enhanced to provide fine-grained permissions.)
+// $room_ids can be either a single scalar value or an array of room ids.  The default
+// value for $room_ids is all rooms.
 //
-// $all specifies whether the user must be a booking for all $rooms, or just some of
+// $all specifies whether the user must be a booking for all $room_ids, or just some of
 // them, ie at least one.
 //
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room(s); otherwise FALSE
-function is_book_admin($rooms=null, $all=true)
+function is_book_admin($room_ids=null, $all=true)
 {
-  if (!isset($rooms))
+  if (!isset($room_ids))
   {
-    $all_rooms = new Rooms();
-    $rooms = $all_rooms->getIds();
+    $rooms = new Rooms();
+    $room_ids = $rooms->getIds();
   }
 
-  if (is_array($rooms) && (count($rooms) > 0))
+  if (is_array($room_ids) && (count($room_ids) > 0))
   {
     if ($all)
     {
       // We want the user to be a booking admin for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (!is_book_admin($room))
+        if (!is_book_admin($room_id))
         {
           return false;
         }
@@ -411,9 +410,9 @@ function is_book_admin($rooms=null, $all=true)
     {
       // We want the user to be a booking admin for at least one room,
       // so if there are no rooms for which they are, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (is_book_admin($room))
+        if (is_book_admin($room_id))
         {
           return true;
         }
@@ -422,22 +421,22 @@ function is_book_admin($rooms=null, $all=true)
     }
   }
 
-  if (is_null($rooms) && !$all)
+  if (is_null($room_ids) && !$all)
   {
     // Not yet supported.  Could support it but need to decide what $rooms=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$rooms===null and $all===false not yet supported.');
+    throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
 
   // We're down to one room, either as a scalar or an array with no more than one element
-  assert(!is_array($rooms) || (count($rooms) < 2), '$rooms invalid');
-  if (is_array($rooms))
+  assert(!is_array($room_ids) || (count($room_ids) < 2), '$room_ids invalid');
+  if (is_array($room_ids))
   {
-    $room_id = (count($rooms) == 1) ? $rooms[0] : null;
+    $room_id = (count($room_ids) == 1) ? $room_ids[0] : null;
   }
   else
   {
-    $room_id = $rooms;
+    $room_id = $room_ids;
   }
 
   $room = Room::getById($room_id);
