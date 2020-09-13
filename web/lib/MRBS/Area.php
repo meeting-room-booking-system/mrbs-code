@@ -56,16 +56,10 @@ class Area extends Table
       else
       {
         $user = session()->getCurrentUser();
-        if (!isset($user))
-        {
-          // TODO: need to have a guest role or something like that
-          $this->is_visible = true;
-        }
-        else
-        {
-          $permissions = $this->getPermissions($user->roles);
-          $this->is_visible = AreaRoomPermission::can($permissions, AreaPermission::READ);
-        }
+        // TODO: need to have default roles
+        $roles = (isset($user)) ? $user->roles : array();
+        $permissions = $this->getPermissions($roles);
+        $this->is_visible = AreaRoomPermission::can($permissions, AreaPermission::READ);
       }
     }
 

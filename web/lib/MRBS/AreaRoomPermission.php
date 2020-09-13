@@ -62,8 +62,7 @@ abstract class AreaRoomPermission extends Table
   // Check whether the given permissions allow reading
   private static function canRead(array $permissions)
   {
-    // TODO: defaults?
-    // Just need to check for denied permissions as Read is the lowest permission
+    $highest_granted = self::getDefaultPermission();
     $lowest_denied = null;
 
     foreach ($permissions as $permission)
@@ -83,9 +82,7 @@ abstract class AreaRoomPermission extends Table
   // Check whether the given permissions allow writing
   private static function canWrite(array $permissions)
   {
-    // TODO: defaults?
-    $mrbs_user = session()->getCurrentUser();
-    $highest_granted = (isset($mrbs_user) && ($mrbs_user->level > 0)) ? self::WRITE : null;
+    $highest_granted = self::getDefaultPermission();
     $lowest_denied = null;
 
     foreach ($permissions as $permission)
@@ -118,8 +115,7 @@ abstract class AreaRoomPermission extends Table
 
   private static function canAll(array $permissions)
   {
-    // TODO: defaults?
-    $highest_granted = null;
+    $highest_granted = self::getDefaultPermission();
 
     foreach ($permissions as $permission)
     {
@@ -140,6 +136,35 @@ abstract class AreaRoomPermission extends Table
     }
 
     return (isset($highest_granted) && ($highest_granted === self::ALL));
+  }
+
+
+  // TODO: replace with default roles
+  private static function getDefaultPermission()
+  {
+    $mrbs_user = session()->getCurrentUser();
+
+    if (!isset($mrbs_user))
+    {
+      return self::READ;
+    }
+
+    switch ($mrbs_user->level)
+    {
+      case 0:
+        return self::READ;
+        break;
+      case 1:
+        return self::WRITE;
+        break;
+      case 2:
+        return self::ALL;
+        break;
+      default:
+        return null;
+        break;
+    }
+
   }
 
 

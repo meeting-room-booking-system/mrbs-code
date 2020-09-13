@@ -83,18 +83,12 @@ class Room extends Table
       else
       {
         $user = session()->getCurrentUser();
-        if (!isset($user))
-        {
-          // TODO: need to have a guest role or something like that
-          $this->is_able[$operation] = false;
-        }
-        else
-        {
-          $room_permissions = $this->getPermissions($user->roles);
-          $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
-          $permissions = array_merge($room_permissions, $area_permissions);
-          $this->is_able[$operation] = AreaRoomPermission::can($permissions, $operation);
-        }
+        // TODO: need to have default roles
+        $roles = (isset($user)) ? $user->roles : array();
+        $room_permissions = $this->getPermissions($roles);
+        $area_permissions = Area::getById($this->area_id)->getPermissions($roles);
+        $permissions = array_merge($room_permissions, $area_permissions);
+        $this->is_able[$operation] = AreaRoomPermission::can($permissions, $operation);
       }
     }
 
