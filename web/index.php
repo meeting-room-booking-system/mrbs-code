@@ -415,9 +415,13 @@ $is_ajax = is_ajax();
 
 // If we're using the 'db' authentication type, check to see if MRBS has just been installed
 // and, if so, redirect to the edit_user page so that they can set up users.
-if (($auth['type'] == 'db') && (count(auth()->getUsers()) == 0))
+if ($auth['type'] == 'db')
 {
-  location_header('edit_user.php');
+  $users = new Users();
+  if (count($users) == 0)
+  {
+    location_header('edit_user.php');
+  }
 }
 
 // Check the user is authorised for this page
