@@ -39,6 +39,7 @@ abstract class AreaRoomPermission extends Table
   }
 
 
+  // Checks whether $permissions allow $operation (READ | WRITE | ALL)
   public static function can(array $permissions, $operation)
   {
     switch ($operation)
@@ -127,6 +128,7 @@ abstract class AreaRoomPermission extends Table
   }
 
 
+  // Checks whether the given permissions allow all access
   private static function canAll(array $permissions)
   {
     $highest_granted = self::getDefaultPermission();
@@ -175,7 +177,7 @@ abstract class AreaRoomPermission extends Table
         return self::ALL;
         break;
       default:
-        return null;
+        return ($mrbs_user->level > 2) ? self::ALL : null;
         break;
     }
 
