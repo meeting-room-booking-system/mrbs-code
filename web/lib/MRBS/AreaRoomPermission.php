@@ -67,15 +67,29 @@ abstract class AreaRoomPermission extends Table
 
     foreach ($permissions as $permission)
     {
-      if ($permission->state === self::DENIED)
+      switch ($permission->state)
       {
-        $lowest_denied = (isset($lowest_denied)) ?
-                          self::max($lowest_denied, $permission->permission) :
-                          $permission->permission;
+        case self::GRANTED:
+          $highest_granted = (isset($highest_granted)) ?
+            self::max($highest_granted, $permission->permission) :
+            $permission->permission;
+          break;
+        case self::DENIED:
+          $lowest_denied = (isset($lowest_denied)) ?
+            self::max($lowest_denied, $permission->permission) :
+            $permission->permission;
+          break;
+        default:
+          break;
       }
     }
 
-    return (!isset($lowest_denied) || ($lowest_denied !== self::READ));
+    if (isset($lowest_denied) && ($lowest_denied === self::READ))
+    {
+      return false;
+    }
+
+    return (isset($highest_granted));
   }
 
 
