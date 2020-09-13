@@ -137,6 +137,7 @@ function get_form_var_type($field)
 
 function output_row(User $user)
 {
+  global $auth;
   global $is_ajax, $json_data;
   global $fields, $ignore_columns, $select_options;
 
@@ -148,6 +149,9 @@ function output_row(User $user)
   {
     $user->display_name = $user->name;
   }
+
+  $form_value = ($auth['type'] == 'db') ? $user->display_name : $user->name;
+
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($user->name))
   {
@@ -158,107 +162,113 @@ function output_row(User $user)
     $submit = new ElementInputSubmit();
     $submit->setAttributes(array('class' => 'link',
                                  'name'  => 'edit_button',
-                                 'value' => $user->display_name));
+                                 'value' => $form_value));
     $form->addElement($submit);
-    $display_name_value = $form->toHTML();
+    $first_column_value = $form->toHTML();
   }
   else
   {
-    $display_name_value = "<span class=\"normal\">" . htmlspecialchars($user->display_name) . "</span>";
+    $first_column_value = "<span class=\"normal\">" . htmlspecialchars($form_value) . "</span>";
   }
 
-  $sortname = get_sortable_name($user->display_name);
-  $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $display_name_value;
+  if ($auth['type'] == 'db')
+  {
+    $sortname = get_sortable_name($user->display_name);
+    $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
+  }
 
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
-  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
+  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . (($auth['type'] == 'db') ? $name_value : $first_column_value);
 
-  // Other columns
-  foreach ($fields as $field)
+  if ($auth['type'] == 'db')
   {
-    $key = $field['name'];
-    if (!in_array($key, $ignore_columns))
+    // Other columns
+    foreach ($fields as $field)
     {
-      $col_value = $user->{$key};
+      $key = $field['name'];
+      if (!in_array($key, $ignore_columns))
+      {
+        $col_value = $user->{$key};
 
-      // If you are not a user admin then you are only allowed to see the last_updated
-      // and last_login times for yourself.
-      if (in_array($key, array('timestamp', 'last_login')) &&
+        // If you are not a user admin then you are only allowed to see the last_updated
+        // and last_login times for yourself.
+        if (in_array($key, array('timestamp', 'last_login')) &&
           !can_edit_user($user->name))
-      {
-        $col_value = null;
-      }
+        {
+          $col_value = null;
+        }
 
-      switch($key)
-      {
-        // special treatment for some fields
-        case 'level':
-          // the level field contains a code and we want to display a string
-          // (but we put the code in a span for sorting)
-          $values[] = "<span title=\"$col_value\"></span>" .
-                      "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
-          break;
-        case 'email':
-          // we don't want to truncate the email address
-          $escaped_email = htmlspecialchars($col_value);
-          $values[] = "<div class=\"string\">\n" .
-                      "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
-                      "</div>\n";
-          break;
-        case 'timestamp':
-          // Convert the SQL timestamp into a time value and back into a localised string and
-          // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-          $unix_timestamp = strtotime($col_value);
-          if (($unix_timestamp === false) || ($unix_timestamp < 0))
-          {
-            // To cater for timestamps before the start of the Unix Epoch
-            $unix_timestamp = 0;
-          }
-          $values[] = "<span title=\"$unix_timestamp\"></span>" .
-                      (($unix_timestamp) ? time_date_string($unix_timestamp) : '');
-          break;
-        case 'last_login':
-          $values[] = "<span title=\"$col_value\"></span>" .
-                      (($col_value) ? time_date_string($col_value) : '');
-          break;
-        default:
-          // Where there's an associative array of options, display
-          // the value rather than the key
-          if (isset($select_options["user.$key"]) &&
-              is_assoc($select_options["user.$key"]))
-          {
-            if (isset($select_options["user.$key"][$row[$key]]))
+        switch ($key)
+        {
+          // special treatment for some fields
+          case 'level':
+            // the level field contains a code and we want to display a string
+            // (but we put the code in a span for sorting)
+            $values[] = "<span title=\"$col_value\"></span>" .
+              "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
+            break;
+          case 'email':
+            // we don't want to truncate the email address
+            $escaped_email = htmlspecialchars($col_value);
+            $values[] = "<div class=\"string\">\n" .
+              "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
+              "</div>\n";
+            break;
+          case 'timestamp':
+            // Convert the SQL timestamp into a time value and back into a localised string and
+            // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
+            $unix_timestamp = strtotime($col_value);
+            if (($unix_timestamp === false) || ($unix_timestamp < 0))
             {
-              $col_value = $select_options["user.$key"][$row[$key]];
+              // To cater for timestamps before the start of the Unix Epoch
+              $unix_timestamp = 0;
+            }
+            $values[] = "<span title=\"$unix_timestamp\"></span>" .
+              (($unix_timestamp) ? time_date_string($unix_timestamp) : '');
+            break;
+          case 'last_login':
+            $values[] = "<span title=\"$col_value\"></span>" .
+              (($col_value) ? time_date_string($col_value) : '');
+            break;
+          default:
+            // Where there's an associative array of options, display
+            // the value rather than the key
+            if (isset($select_options["user.$key"]) &&
+              is_assoc($select_options["user.$key"]))
+            {
+              if (isset($select_options["user.$key"][$row[$key]]))
+              {
+                $col_value = $select_options["user.$key"][$row[$key]];
+              }
+              else
+              {
+                $col_value = '';
+              }
+              $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
+            }
+            elseif (($field['nature'] == 'boolean') ||
+              (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)))
+            {
+              // booleans: represent by a checkmark
+              $values[] = (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+            }
+            elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+            {
+              // integer values
+              $values[] = $col_value;
             }
             else
             {
-              $col_value = '';
+              // strings
+              $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
+                htmlspecialchars($col_value) . "</div>";
             }
-            $values[] = "<div class=\"string\">" . htmlspecialchars($col_value) . "</div>";
-          }
-          elseif (($field['nature'] == 'boolean') ||
-              (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
-          {
-            // booleans: represent by a checkmark
-            $values[] = (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
-          }
-          elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
-          {
-            // integer values
-            $values[] = $col_value;
-          }
-          else
-          {
-             // strings
-            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
-                        htmlspecialchars($col_value) . "</div>";
-          }
-          break;
-      }  // end switch
-    }
-  }  // end foreach
+            break;
+        }  // end switch
+      }
+    }  // end foreach
+  }
 
   if ($is_ajax)
   {
@@ -615,27 +625,7 @@ function validate_form(array $form)
 {
   global $auth, $level;
 
-  $mrbs_user = session()->getCurrentUser();
-
   $errors = array();
-
-  // EMAIL ADDRESS
-  // check that the email address is valid
-  if (isset($form['email']) &&
-      ($form['email'] !== '') &&
-      !validate_email_list($form['email']))
-  {
-    $errors['invalid_email'] = 1;
-  }
-
-  // LEVEL
-  // Check that we are not trying to upgrade our level.    This shouldn't be
-  // possible but someone might have spoofed the input in the edit form
-  if (isset($form['level']) && ($form['level'] > $level))
-  {
-    $message = "Attempt to edit or create a user with a higher level than the current user's.";
-    throw new \Exception($message);
-  }
 
   // NAME
   // Check that the name is not empty.
@@ -643,30 +633,52 @@ function validate_form(array $form)
   {
     $errors['name_empty'] = 1;
   }
-  // Check that the name is unique.
-  // If there's already a user with this name then it can only be this user.
-  $user = User::getByName($form['name'], $auth['type']);
-  if (isset($user) && (!isset($form['id']) || ($form['id'] != $user->id)))
-  {
-    $errors['name_not_unique'] = 1;
-    $errors['taken_name'] = $form['name'];
-  }
 
-  // PASSWORD
-  // Check that the two passwords match
-  if ($form['password0'] !== $form['password1'])
+  if ($auth['type'] == 'db')
   {
-    $errors['pwd_not_match'] = 1;
-  }
-  // Check that the password conforms to the password policy
-  // if it's a new user, or else if it's an existing user
-  // trying to change their password
-  if (!isset($form['id']) ||
-      (isset($form['password0']) && ($form['password0'] !== '')))
-  {
-    if (!auth()->validatePassword($form['password0']))
+    // EMAIL ADDRESS
+    // check that the email address is valid
+    if (isset($form['email']) &&
+      ($form['email'] !== '') &&
+      !validate_email_list($form['email']))
     {
-      $errors['pwd_invalid'] = 1;
+      $errors['invalid_email'] = 1;
+    }
+
+    // LEVEL
+    // Check that we are not trying to upgrade our level.    This shouldn't be
+    // possible but someone might have spoofed the input in the edit form
+    if (isset($form['level']) && ($form['level'] > $level))
+    {
+      $message = "Attempt to edit or create a user with a higher level than the current user's.";
+      throw new \Exception($message);
+    }
+
+    // Check that the name is unique.
+    // If there's already a user with this name then it can only be this user.
+    $user = User::getByName($form['name'], $auth['type']);
+    if (isset($user) && (!isset($form['id']) || ($form['id'] != $user->id)))
+    {
+      $errors['name_not_unique'] = 1;
+      $errors['taken_name'] = $form['name'];
+    }
+
+    // PASSWORD
+    // Check that the two passwords match
+    if ($form['password0'] !== $form['password1'])
+    {
+      $errors['pwd_not_match'] = 1;
+    }
+    // Check that the password conforms to the password policy
+    // if it's a new user, or else if it's an existing user
+    // trying to change their password
+    if (!isset($form['id']) ||
+      (isset($form['password0']) && ($form['password0'] !== '')))
+    {
+      if (!auth()->validatePassword($form['password0']))
+      {
+        $errors['pwd_invalid'] = 1;
+      }
     }
   }
 
@@ -715,6 +727,12 @@ function update_user(array $form)
         $user->{$key} = $value;
         break;
     }
+  }
+
+  // TODO: do something more elegant
+  if ($auth['type'] != 'db')
+  {
+    $user->level = 0;
   }
 
   $user->save();
@@ -890,7 +908,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
       echo "</ul>\n";
     }
   }
-
+  // TODO: rewrite all of this
   $form = new Form();
 
   $form->setAttributes(array('id'     => 'form_edit_user',
@@ -908,6 +926,11 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   foreach ($fields as $field)
   {
     $key = $field['name'];
+
+    if (($auth['type'] != 'db') && ($key != 'name'))
+    {
+      continue;
+    }
 
     $params = array('label' => get_loc_field_name(_tbl('user'), $key),
                     'name'  => $key,
@@ -971,13 +994,24 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
     }
   }
 
-  // Now the password fields
-  $disabled = !$initial_user_creation &&
-              !is_user_admin() &&
-              in_array('password_hash', $auth['db']['protected_fields']);
+  if ($auth['type'] != 'db')
+  {
+    // Add in the roles
+    $fieldset->addElement(get_field_roles($user));
+  }
 
-  $form->addElement($fieldset)
-       ->addElement(get_fieldset_password($id, $disabled));
+  $form->addElement($fieldset);
+
+  if ($auth['type'] == 'db')
+  {
+    // Now the password fields
+    $disabled = !$initial_user_creation &&
+      !is_user_admin() &&
+      in_array('password_hash', $auth['db']['protected_fields']);
+
+
+    $form->addElement(get_fieldset_password($id, $disabled));
+  }
 
   // Administrators get the right to delete users, but only those at the
   // the same level as them or lower.  Otherwise present a Back button.
@@ -1135,29 +1169,35 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo "<tr>";
 
     // First two columns which are the name and display name
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
+    if ($auth['type'] == 'db')
+    {
+      echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
+    }
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
 
     // Other column headers
-    foreach ($fields as $field)
+    if ($auth['type'] == 'db')
     {
-      $fieldname = $field['name'];
-
-      if (!in_array($fieldname, $ignore_columns))
+      foreach ($fields as $field)
       {
-        $heading = get_loc_field_name(_tbl('user'), $fieldname);
-        // We give some columns a type data value so that the JavaScript knows how to sort them
-        switch ($fieldname)
+        $fieldname = $field['name'];
+
+        if (!in_array($fieldname, $ignore_columns))
         {
-          case 'level':
-          case 'timestamp':
-          case 'last_login':
-            $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
-            break;
-          default:
-            break;
+          $heading = get_loc_field_name(_tbl('user'), $fieldname);
+          // We give some columns a type data value so that the JavaScript knows how to sort them
+          switch ($fieldname)
+          {
+            case 'level':
+            case 'timestamp':
+            case 'last_login':
+              $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
+              break;
+            default:
+              break;
+          }
+          echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
         }
-        echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
       }
     }
 
