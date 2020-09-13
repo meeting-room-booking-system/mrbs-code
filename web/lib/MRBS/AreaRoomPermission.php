@@ -39,8 +39,28 @@ abstract class AreaRoomPermission extends Table
   }
 
 
+  public static function can(array $permissions, $operation)
+  {
+    switch ($operation)
+    {
+      case self::READ:
+        return self::canRead($permissions);
+        break;
+      case self::WRITE:
+        return self::canWrite($permissions);
+        break;
+      case self::ALL:
+        return self::canAll($permissions);
+        break;
+      default:
+        throw new \Exception("Unknown operation '$operation'");
+        break;
+    }
+  }
+
+
   // Check whether the given permissions allow reading
-  public static function canRead(array $permissions)
+  private static function canRead(array $permissions)
   {
     // TODO: defaults?
     // Just need to check for denied permissions as Read is the lowest permission
@@ -61,7 +81,7 @@ abstract class AreaRoomPermission extends Table
 
 
   // Check whether the given permissions allow writing
-  public static function canWrite(array $permissions)
+  private static function canWrite(array $permissions)
   {
     // TODO: defaults?
     $mrbs_user = session()->getCurrentUser();
@@ -96,7 +116,7 @@ abstract class AreaRoomPermission extends Table
   }
 
 
-  public static function canAll(array $permissions)
+  private static function canAll(array $permissions)
   {
     // TODO: defaults?
     $highest_granted = null;

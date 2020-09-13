@@ -20,6 +20,7 @@ class Room extends Table
   private $is_visible;
   private $is_writable;
   private $is_book_admin;
+  private $is_able;
 
 
   public function __construct($room_name=null, $area_id=null)
@@ -54,74 +55,30 @@ class Room extends Table
 
   public function isVisible()
   {
-    if (!isset($this->is_visible))
-    {
-      // Admins can see everything
-      if (is_admin())
-      {
-        $this->is_visible = true;
-      }
-      else
-      {
-        $user = session()->getCurrentUser();
-        if (!isset($user))
-        {
-          // TODO: need to have a guest role or something like that
-          $this->is_visible = true;
-        }
-        else
-        {
-          $room_permissions = $this->getPermissions($user->roles);
-          $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
-          $permissions = array_merge($room_permissions, $area_permissions);
-          $this->is_visible = AreaRoomPermission::canRead($permissions);
-        }
-      }
-    }
-
-    return $this->is_visible;
+    return $this->isAble(RoomPermission::READ);
   }
 
 
   public function isWritable()
   {
-    if (!isset($this->is_writable))
-    {
-      // Admins can see everything
-      if (is_admin())
-      {
-        $this->is_writable = true;
-      }
-      else
-      {
-        $user = session()->getCurrentUser();
-        if (!isset($user))
-        {
-          // TODO: need to have a guest role or something like that
-          $this->is_writable = true;
-        }
-        else
-        {
-          $room_permissions = $this->getPermissions($user->roles);
-          $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
-          $permissions = array_merge($room_permissions, $area_permissions);
-          $this->is_writable = AreaRoomPermission::canWrite($permissions);
-        }
-      }
-    }
-
-    return $this->is_writable;
+    return $this->isAble(RoomPermission::WRITE);
   }
 
 
   public function isBookAdmin()
   {
-    if (!isset($this->is_book_admin))
+    return $this->isAble(RoomPermission::ALL);
+  }
+
+
+  private function isAble($operation)
+  {
+    if (!isset($this->is_able ) || !isset($this->is_able[$operation]))
     {
       // Admins can do anything
       if (is_admin())
       {
-        $this->is_book_admin = true;
+        $this->is_able[$operation] = true;
       }
       else
       {
@@ -129,19 +86,19 @@ class Room extends Table
         if (!isset($user))
         {
           // TODO: need to have a guest role or something like that
-          $this->is_book_admin = false;
+          $this->is_able[$operation] = false;
         }
         else
         {
           $room_permissions = $this->getPermissions($user->roles);
           $area_permissions = Area::getById($this->area_id)->getPermissions($user->roles);
           $permissions = array_merge($room_permissions, $area_permissions);
-          $this->is_book_admin = AreaRoomPermission::canAll($permissions);
+          $this->is_able[$operation] = AreaRoomPermission::can($permissions, $operation);
         }
       }
     }
 
-    return $this->is_book_admin;
+    return $this->is_able[$operation];
   }
 
 
