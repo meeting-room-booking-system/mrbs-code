@@ -289,9 +289,16 @@ function getWritable($creator, $rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  // We're down to one room, either as a scalar or an array with one element
-  assert(!is_array($rooms) || (count($rooms) == 1), '$rooms invalid');
-  $room_id = (is_array($rooms)) ? $rooms[0] : $rooms;
+  // We're down to one room, either as a scalar or an array with no more than one element
+  assert(!is_array($rooms) || (count($rooms) < 2), '$rooms invalid');
+  if (is_array($rooms))
+  {
+    $room_id = (count($rooms) == 1) ? $rooms[0] : null;
+  }
+  else
+  {
+    $room_id = $rooms;
+  }
 
   $room = Room::getById($room_id);
   if (!isset($room))
@@ -422,9 +429,17 @@ function is_book_admin($rooms=null, $all=true)
     throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  // We're down to one room, either as a scalar or an array with one element
-  assert(!is_array($rooms) || (count($rooms) == 1), '$rooms invalid');
-  $room_id = (is_array($rooms)) ? $rooms[0] : $rooms;
+  // We're down to one room, either as a scalar or an array with no more than one element
+  assert(!is_array($rooms) || (count($rooms) < 2), '$rooms invalid');
+  if (is_array($rooms))
+  {
+    $room_id = (count($rooms) == 1) ? $rooms[0] : null;
+  }
+  else
+  {
+    $room_id = $rooms;
+  }
+
   $room = Room::getById($room_id);
   return (isset($room)) ? $room->isBookAdmin() : false;
 }
