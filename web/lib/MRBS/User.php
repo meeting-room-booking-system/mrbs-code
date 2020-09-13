@@ -3,8 +3,7 @@ namespace MRBS;
 
 
 // This is a class for a general MRBS user, regardless of the authentication type.  Once authenticated each
-// user is converted into a standard MRBS user object with defined properties.  (Do not confuse this user
-// with a user in the user table: the 'db' authentication method is just one of many that MRBS supports.)
+// user is converted into a standard MRBS User object with defined properties.
 class User extends Table
 {
   const TABLE_NAME = 'user';
