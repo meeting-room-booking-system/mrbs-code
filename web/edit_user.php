@@ -748,7 +748,7 @@ if (isset($action) && in_array($action, array('delete', 'update')))
 
 $initial_user_creation = false;
 
-if (count($users) > 0)
+if (($auth['type'] != 'db') || (count($users) > 0))
 {
   $mrbs_user = session()->getCurrentUser();
   $level = (isset($mrbs_user)) ? $mrbs_user->level : 0;
@@ -756,7 +756,7 @@ if (count($users) > 0)
   checkAuthorised(this_page());
 }
 else
-// We've just created the table.   Assume the person doing this IS an administrator
+// We've just installed MRBS.   Assume the person doing this IS an administrator
 // and then send them through to the screen to add the first user (which we'll force
 // to be an admin)
 {
