@@ -15,6 +15,23 @@ class Rooms extends TableIterator
   }
 
 
+  // Returns the number of visible rooms
+  public function countVisible($include_disabled=false)
+  {
+    $result = 0;
+
+    foreach ($this as $room)
+    {
+      if (($include_disabled || !$room->isDisabled()) && $room->isVisible())
+      {
+        $result++;
+      }
+    }
+
+    return $result;
+  }
+
+
   // Returns an array of room names indexed by room id. Only visible rooms are included.
   // Useful for passing to the addSelectOptions() method.
   public function getNames($include_disabled=false)

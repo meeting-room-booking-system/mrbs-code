@@ -595,9 +595,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
   $rooms = new Rooms($area_id);
 
-  // Check how many enabled and visible rooms there are (getNames() will
-  // just return the enabled and visible ones).
-  if (count($rooms->getNames()) == 0)
+  if ($rooms->countVisible() == 0)
   {
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
@@ -951,9 +949,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 
   $rooms = new Rooms($area_id);
 
-  // Check how many enabled and visible rooms there are (getNames() will
-  // just return the enabled and visible ones).
-  if (count($rooms->getNames()) == 0)
+  if ($rooms->countVisible() == 0)
   {
     // Add an 'empty' data flag so that the JavaScript knows whether this is a real table or not
     return "<tbody data-empty=1><tr><td><h1>" . get_vocab("no_rooms_for_area") . "</h1></td></tr></tbody>";
