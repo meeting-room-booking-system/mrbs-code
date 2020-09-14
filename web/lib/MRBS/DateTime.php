@@ -16,7 +16,7 @@ class DateTime extends \DateTime
 
     $date = getdate($this->getTimestamp());
     $modification = self::parse($modify);
-    
+
     foreach ($modification as $unit => $amount)
     {
       switch($amount['mode'])
@@ -32,11 +32,29 @@ class DateTime extends \DateTime
           break;
       }
     }
-    
+
     $modified_timestamp = mktime($date['hours'], $date['minutes'], $date['seconds'],
                                  $date['mon'], $date['mday'], $date['year']);
-                                
+
     return $this->setTimestamp($modified_timestamp);
+  }
+
+
+  public function getDay()
+  {
+    return intval($this->format('j'));
+  }
+
+
+  public function getMonth()
+  {
+    return intval($this->format('n'));
+  }
+
+
+  public function getYear()
+  {
+    return intval($this->format('Y'));
   }
 
 
@@ -48,7 +66,7 @@ class DateTime extends \DateTime
   private static function parse($modify)
   {
    $modify = self::map($modify);
-   
+
    // Test for a simple hh:mm pattern (or hhmm or hh.mm)
    $pattern = '/([01][0-9]|[2][0-3])[.:]?([0-5][0-9])/';
    if (preg_match($pattern, $modify, $matches))
@@ -61,7 +79,7 @@ class DateTime extends \DateTime
                     'seconds' => array('mode'     => 'absolute',
                                        'quantity' => 0));
    }
-   
+
    // Could add more tests later if need be.
    throw new Exception("Modify string '$modify' not supported by MRBS");
   }
@@ -72,7 +90,7 @@ class DateTime extends \DateTime
   {
    $mappings = array('midnight' => '00:00',
                      'noon'     => '12:00');
-                     
+
    return (isset($mappings[$modify])) ? $mappings[$modify] : $modify;
   }
 }

@@ -61,3 +61,18 @@ else
     }
   }
 }
+
+// Advance to the next non-hidden day
+if ((count($hidden_days) > 0) &&
+    (count($hidden_days) < 7))  // Avoid an infinite loop
+{
+  $date = new DateTime();
+  $date->setDate($year, $month, $day);
+  while (in_array($date->format('w'), $hidden_days))
+  {
+    $date->add(new \DateInterval('P1D'));
+  }
+  $day = $date->getDay();
+  $month = $date->getMonth();
+  $year = $date->getYear();
+}
