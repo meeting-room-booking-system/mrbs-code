@@ -26,9 +26,13 @@ if (empty($room))
 
 // No point in showing all the rooms if there's only one of them.  Show
 // the normal view (with time slots) instead
-if (($view != 'day') && count(get_rooms($area)) == 1)
+if ($view != 'day')
 {
-  $view_all = false;
+  $rooms = new Rooms($area);
+  if ($rooms->countVisible() == 1)
+  {
+    $view_all = false;
+  }
 }
 
 // Get the settings (resolution, etc.) for this area
