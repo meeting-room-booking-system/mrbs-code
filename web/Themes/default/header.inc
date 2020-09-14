@@ -200,8 +200,6 @@ function print_outstanding($query)
 
 function print_menu_items($query)
 {
-  global $auth;
-
   $menu_items = array(
       'help'      => 'help.php',
       'report'    => 'report.php',
