@@ -34,7 +34,7 @@ class Rooms extends TableIterator
   // Returns an array of room ids
   public function getIds($include_disabled=false)
   {
-    return array_keys($this->getNames());
+    return array_keys($this->getNames($include_disabled));
   }
 
 

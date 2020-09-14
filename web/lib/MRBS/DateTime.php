@@ -3,7 +3,7 @@ namespace MRBS;
 
 class DateTime extends \DateTime
 {
-  
+
   public function getDay()
   {
     return intval($this->format('j'));
