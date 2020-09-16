@@ -203,6 +203,9 @@ function output_row(User $user)
         {
           // special treatment for some fields
           case 'level':
+            // And add the roles, which aren't one of the table columns
+            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($user->roles) . "\">" .
+              htmlspecialchars($user->roles) . "</div>";
             // the level field contains a code and we want to display a string
             // (but we put the code in a span for sorting)
             $values[] = "<span title=\"$col_value\"></span>" .
@@ -1168,12 +1171,13 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo "<thead>\n";
     echo "<tr>";
 
-    // First two columns which are the name and display name
+    // First three columns which are the name, display name and roles
     if ($auth['type'] == 'db')
     {
       echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
     }
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</th>\n";
 
     // Other column headers
     if ($auth['type'] == 'db')
