@@ -19,7 +19,7 @@ class Users extends TableIterator
   public function next()
   {
     $this->cursor++;
-    
+
     if (false !== ($row = $this->res->next_row_keyed()))
     {
       $role_names = array();

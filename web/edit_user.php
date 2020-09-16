@@ -180,7 +180,11 @@ function output_row(User $user)
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . (($auth['type'] == 'db') ? $name_value : $first_column_value);
-
+  // And add the roles, which aren't one of the table columns
+  $role_name_list = implode(', ', $user->role_names);
+  $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
+    htmlspecialchars($role_name_list) . "</div>";
+  
   if ($auth['type'] == 'db')
   {
     // Other columns
@@ -203,10 +207,6 @@ function output_row(User $user)
         {
           // special treatment for some fields
           case 'level':
-            // And add the roles, which aren't one of the table columns
-            $role_name_list = implode(', ', $user->role_names);
-            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
-              htmlspecialchars($role_name_list) . "</div>";
             // the level field contains a code and we want to display a string
             // (but we put the code in a span for sorting)
             $values[] = "<span title=\"$col_value\"></span>" .
