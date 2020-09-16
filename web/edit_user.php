@@ -204,8 +204,9 @@ function output_row(User $user)
           // special treatment for some fields
           case 'level':
             // And add the roles, which aren't one of the table columns
-            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($user->roles) . "\">" .
-              htmlspecialchars($user->roles) . "</div>";
+            $role_name_list = implode(', ', $user->role_names);
+            $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
+              htmlspecialchars($role_name_list) . "</div>";
             // the level field contains a code and we want to display a string
             // (but we put the code in a span for sorting)
             $values[] = "<span title=\"$col_value\"></span>" .

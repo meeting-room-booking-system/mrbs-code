@@ -5,9 +5,43 @@ namespace MRBS;
 class Users extends TableIterator
 {
 
+  private $role_names;
+
+
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\User');
+    $roles = new Roles();
+    $this->role_names = $roles->getNames();
+  }
+
+
+  public function next()
+  {
+    $this->cursor++;
+    
+    if (false !== ($row = $this->res->next_row_keyed()))
+    {
+      $role_names = array();
+
+      if (isset($row['roles']))
+      {
+        $row['roles'] = explode(',', $row['roles']);
+        foreach ($row['roles'] as $role_id)
+        {
+          $role_names[] = $this->role_names[$role_id];
+        }
+      }
+      else
+      {
+        $row['roles'] = array();
+      }
+
+      $row['role_names'] = $role_names;
+
+      $this->item = new $this->base_class();
+      $this->item->load($row);
+    }
   }
 
 
