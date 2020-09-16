@@ -22,6 +22,8 @@ class Users extends TableIterator
 
     if (false !== ($row = $this->res->next_row_keyed()))
     {
+      // Convert the string of role ids into an array and also add an
+      // array of role names
       $role_names = array();
 
       if (isset($row['roles']))

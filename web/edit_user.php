@@ -184,7 +184,7 @@ function output_row(User $user)
   $role_name_list = implode(', ', $user->role_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
     htmlspecialchars($role_name_list) . "</div>";
-  
+
   if ($auth['type'] == 'db')
   {
     // Other columns
