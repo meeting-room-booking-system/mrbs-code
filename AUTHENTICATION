@@ -151,6 +151,9 @@ PHP authentication modules
 |         |                        |                   |  same mail server.     |
 |         |                        |                   |                        |
 +---------+------------------------+-------------------+------------------------+
+|imap_php |A more up to date       |                   |                        |
+|         |version of imap         |                   |                        |
++---------+------------------------+-------------------+------------------------+
 |nw       |Users validated by      |                   |  - TThis is only going |
 |         |Netware server          |                   |   to work on Linux.    |
 |         |(user contrib.)         |  - ?              |                        |
@@ -184,6 +187,12 @@ PHP authentication modules
 |         |installation running on |  - Single signoff |  - SAML knowledge      |
 |         |the same server         |  - Hooks into     |    recommended         |
 |         |                        |    SAML infra     |                        |
++---------+------------------------+-------------------+------------------------+
+|idcheck  |For use with mod_idcheck|                   |                        |
+|         |idcheck.sourceforge.net |                   |                        |
+|         |Must be used together   |                   |                        |
+|         |with the 'remote_user'  |                   |                        |
+|         |session scheme.         |                   |                        |
 +---------+------------------------+-------------------+------------------------+
 
 External authentication programs
