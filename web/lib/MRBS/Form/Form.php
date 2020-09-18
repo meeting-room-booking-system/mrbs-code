@@ -84,7 +84,7 @@ class Form extends Element
         // Only report a possible CSRF attack if the stored token exists.   If it doesn't
         // it's normally because the user session has expired in between the form being
         // displayed and submitted.
-        trigger_error('Possible CSRF attack from IP address ' . $server['REMOTE_ADDR'], E_USER_WARNING);
+        trigger_error('Possible CSRF attack from IP address ' . $server['REMOTE_ADDR'], E_USER_NOTICE);
       }
 
       if (method_exists(\MRBS\session(), 'logoffUser'))
@@ -108,7 +108,7 @@ class Form extends Element
   public static function getToken()
   {
     $token_length = 32;
-    
+
     if (!isset(self::$token))
     {
       $stored_token = self::getStoredToken();
@@ -126,7 +126,7 @@ class Form extends Element
     return self::$token;
   }
 
-  
+
   // Compare two tokens in a timing attack safe manner.
   // Returns true if they are equal, otherwise false.
   // Note: it is important to provide the user-supplied string as the
