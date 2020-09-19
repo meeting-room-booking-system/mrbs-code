@@ -26,7 +26,7 @@ class Users extends TableIterator
       // array of role names
       $role_names = array();
 
-      if (isset($row['roles']))
+      if (isset($row['roles']) && ($row['roles'] !== ''))
       {
         $row['roles'] = explode(',', $row['roles']);
         foreach ($row['roles'] as $role_id)
@@ -56,12 +56,12 @@ class Users extends TableIterator
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);
     $sql_params = array(':auth_type' => $auth['type']);
-    $sql = "SELECT U.*, GROUP_CONCAT(R.role_id) AS roles
+    $sql = "SELECT U.*, " . db()->syntax_group_array_as_string('R.role_id') . " AS roles
               FROM $table_name U
          LEFT JOIN " . _tbl('user_role') . " R
                 ON R.user_id=U.id
              WHERE U.auth_type=:auth_type
-          GROUP BY U.name
+          GROUP BY U.id
           ORDER BY U.name";
     $this->res = db()->query($sql, $sql_params);
     $this->cursor = -1;

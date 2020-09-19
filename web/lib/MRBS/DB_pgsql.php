@@ -190,18 +190,21 @@ class DB_pgsql extends DB
     $fields = array();
 
     // Map PostgreSQL types on to a set of generic types
-    $nature_map = array('bigint'            => 'integer',
-                        'boolean'           => 'boolean',
-                        'bytea'             => 'binary',
-                        'character'         => 'character',
-                        'character varying' => 'character',
-                        'decimal'           => 'decimal',
-                        'double precision'  => 'real',
-                        'integer'           => 'integer',
-                        'numeric'           => 'decimal',
-                        'real'              => 'real',
-                        'smallint'          => 'integer',
-                        'text'              => 'character');
+    $nature_map = array(
+        'bigint'                    => 'integer',
+        'boolean'                   => 'boolean',
+        'bytea'                     => 'binary',
+        'character'                 => 'character',
+        'character varying'         => 'character',
+        'decimal'                   => 'decimal',
+        'double precision'          => 'real',
+        'integer'                   => 'integer',
+        'numeric'                   => 'decimal',
+        'real'                      => 'real',
+        'smallint'                  => 'integer',
+        'text'                      => 'character',
+        'timestamp with time zone'  => 'timestamp'
+      );
 
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
@@ -348,6 +351,14 @@ class DB_pgsql extends DB
 
     $params[] = $delimiter;
     return "SPLIT_PART($fieldname, ?, $count)";
+  }
+
+
+  // Returns the syntax for aggregating a number of rows as a delimited string
+  public function syntax_group_array_as_string($fieldname, $delimiter=',')
+  {
+    // array_agg introduced in PostgreSQL version 8.4
+    return "array_to_string(array_agg($fieldname), '$delimiter')";
   }
 
 }

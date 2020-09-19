@@ -207,7 +207,7 @@ abstract class Table
     // If this was an insert action and there's an id column, get the new id.
     if (($action == 'insert') && $cols->hasIdColumn())
     {
-      $this->id = db()->insert_id(static::TABLE_NAME, 'id');
+      $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
     }
   }
 

@@ -396,4 +396,11 @@ class DB_mysql extends DB
     $params[] = $delimiter;
     return "SUBSTRING_INDEX($fieldname, ?, $count)";
   }
+
+
+  // Returns the syntax for aggregating a number of rows as a delimited string
+  public function syntax_group_array_as_string($fieldname, $delimiter=',')
+  {
+    return "GROUP_CONCAT($fieldname SEPARATOR '$delimiter')";
+  }
 }
