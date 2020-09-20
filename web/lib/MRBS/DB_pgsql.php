@@ -11,6 +11,20 @@ class DB_pgsql extends DB
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER = "pgsql";
 
+  private static $min_version = '8.4';  // Required for array_agg()
+
+  public function __construct($db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
+  {
+    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+    $this_version = $this->server_version();
+    if (version_compare($this_version, self::$min_version) < 0)
+    {
+      $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
+                 " This server is running version $this_version.";
+      die($message);
+    }
+  }
+
 
   // A small utility function (not part of the DB abstraction API) to
   // resolve a qualified table name into its schema and table components.
@@ -132,6 +146,14 @@ class DB_pgsql extends DB
   {
     return $this->query1("SELECT VERSION()");
   }
+
+
+  // Just returns a version number, eg "9.2.24"
+  private function server_version()
+  {
+    return $this->query1("SHOW SERVER_VERSION");
+  }
+
 
   // Check if a table exists
   public function table_exists($table)
