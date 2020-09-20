@@ -26,6 +26,7 @@ class Users extends TableIterator
       // array of role names
       $role_names = array();
 
+      // If there are no roles, MySQL will return NULL and PostgreSQL ''.
       if (isset($row['roles']) && ($row['roles'] !== ''))
       {
         $row['roles'] = explode(',', $row['roles']);
