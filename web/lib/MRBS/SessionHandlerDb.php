@@ -11,11 +11,11 @@ namespace MRBS;
 class SessionHandlerDb implements \SessionHandlerInterface
 {
   private static $table;
-  
+
   public function __construct()
   {
     self::$table = _tbl('session');
-    
+
     if (!db()->table_exists(self::$table))
     {
       // We throw an exception if the table doesn't exist rather than returning FALSE, because in some
@@ -30,15 +30,15 @@ class SessionHandlerDb implements \SessionHandlerInterface
       throw new \Exception("MRBS: session table does not exist");
     }
   }
-  
-  // The return value (usually TRUE on success, FALSE on failure). Note this value is 
+
+  // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
   public function open($save_path , $session_name)
   {
     return true;
   }
 
-  
+
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
   public function close()
@@ -46,10 +46,12 @@ class SessionHandlerDb implements \SessionHandlerInterface
     return true;
   }
 
-  
+
   // Returns an encoded string of the read data. If nothing was read, it must
   // return an empty string. Note this value is returned internally to PHP for
-  // processing.
+  // processing.  Note that the data is base64_encoded in the database (otherwise
+  // there were problems with PostgreSQL in storing some objects - needs further
+  // investigation).
   public function read($session_id)
   {
     try
@@ -58,7 +60,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
                 FROM " . self::$table . "
                WHERE id=:id
                LIMIT 1";
-               
+
       $result = db()->query1($sql, array(':id' => $session_id));
     }
     catch (DBException $e)
@@ -73,18 +75,19 @@ class SessionHandlerDb implements \SessionHandlerInterface
       }
       throw $e;
     }
-    
-    return ($result === -1) ? '' : $result;
+
+    return ($result === -1) ? '' : base64_decode($result);
   }
 
-  
+
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
-  // returned internally to PHP for processing.
+  // returned internally to PHP for processing.  Note that the data is base64_encoded
+  // in the database (see read() above).
   public function write($session_id , $session_data)
   {
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $session_id));
-    
+
     if ($rows > 0)
     {
       $sql = "UPDATE " . self::$table . "
@@ -99,17 +102,17 @@ class SessionHandlerDb implements \SessionHandlerInterface
                           (id, data, access)
                    VALUES (:id, :data, :access)";
     }
-                 
+
     $sql_params = array(':id' => $session_id,
-                        ':data' => $session_data,
+                        ':data' => base64_encode($session_data),
                         ':access' => time());
-    
+
     db()->command($sql, $sql_params);
-    
+
     return true;
   }
 
-  
+
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
   public function destroy($session_id)
@@ -119,13 +122,13 @@ class SessionHandlerDb implements \SessionHandlerInterface
     return ($rows === 1);
   }
 
-  
+
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
   public function gc($maxlifetime)
   {
-    $sql = "DELETE FROM " . self::$table . " WHERE access<:old"; 
-    db()->command($sql, array(':old' => time() - $maxlifetime));  
+    $sql = "DELETE FROM " . self::$table . " WHERE access<:old";
+    db()->command($sql, array(':old' => time() - $maxlifetime));
     return true;  // An exception will be thrown on error
   }
 }
