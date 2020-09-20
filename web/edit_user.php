@@ -613,12 +613,22 @@ function get_form()
 
     // "Level" is an exception because we've forced the value to be a string
     // so that it can be used in an associative array.
-    // (As it's a smallint it will be turned into a string anyway, so this check
-    // isn't strictly necessary but is included in case the column type is changed).
+    // TODO: revisit why level has to be a string.
     $var_type = ($name == 'level') ? 'string' : $column->getFormVarType();
 
     $params[$name] = get_form_var($name, $var_type);
-    $params[$name] = $column->sanitizeFormVar($params[$name]);
+
+    // Don't sanitize level because it's a smallint and will thus be treated as
+    // a boolean.
+    // TODO: implement proper boolean data types in the database tables.
+    if ($name == 'level')
+    {
+      $params[$name] = trim($params[$name]);
+    }
+    else
+    {
+      $params[$name] = $column->sanitizeFormVar($params[$name]);
+    }
   }
 
   return $params;
