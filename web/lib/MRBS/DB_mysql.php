@@ -175,7 +175,7 @@ class DB_mysql extends DB
 
 
   // Destructor cleans up the connection
-  function __destruct()
+  public function __destruct()
   {
     //print "MySQL destructor called\n";
      // Release any forgotten locks
@@ -192,8 +192,9 @@ class DB_mysql extends DB
   // Return a string identifying the database version
   public function version()
   {
-    return "MySQL ".$this->query1("SELECT VERSION()");
+    return "MySQL " . $this->query1("SELECT VERSION()");
   }
+
 
   // Check if a table exists
   public function table_exists($table)

@@ -113,7 +113,7 @@ class DB_pgsql extends DB
 
 
   // Destructor cleans up the connection
-  function __destruct()
+  public function __destruct()
   {
     //print "PostgreSQL destructor called\n";
 
@@ -127,6 +127,11 @@ class DB_pgsql extends DB
     $this->rollback();
   }
 
+  // Return a string identifying the database version
+  public function version()
+  {
+    return $this->query1("SELECT VERSION()");
+  }
 
   // Check if a table exists
   public function table_exists($table)
@@ -314,6 +319,14 @@ class DB_pgsql extends DB
     $params[] = quotemeta($string);
 
     return " $fieldname ~* ? ";
+  }
+
+  // Generate non-standard SQL to add a table column after another specified
+  // column
+  public function syntax_addcolumn_after($fieldname)
+  {
+    // Can't be done in PostgreSQL without dropping and tr-creating the table.
+    return '';
   }
 
 

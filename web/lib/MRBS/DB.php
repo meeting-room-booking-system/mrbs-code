@@ -6,7 +6,7 @@ use PDO;
 use PDOException;
 
 
-class DB
+abstract class DB
 {
   const DB_SCHEMA_VERSION = 76;
   const DB_SCHEMA_VERSION_LOCAL = 1;
@@ -235,13 +235,6 @@ class DB
   }
 
 
-  // Return a string identifying the database version
-  public function version()
-  {
-    return $this->query1("SELECT VERSION()");
-  }
-
-
   // Return a boolean depending on whether $field exists in $table
   public function field_exists($table, $field)
   {
@@ -267,5 +260,95 @@ class DB
     $res = $this->query($sql);
     return ($res->count() > 0);
   }
+
+  // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
+  abstract public function quote($identifier);
+
+  // Return the value of an autoincrement field from the last insert.
+  // Must be called right after an insert on that table!
+  abstract public function insert_id($table, $field);
+
+  // Acquire a mutual-exclusion lock on the named table. For portability:
+  // This will not lock out SELECTs.
+  // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
+  // It will lock out other callers of this routine with the same name argument.
+  // It will timeout in 20 seconds and return false.
+  // It returns true when the lock has been acquired.
+  // Caller must release the lock with mutex_unlock().
+  // Caller must not have more than one mutex at any time.
+  // Do not mix this with begin()/end() calls.
+  abstract public function mutex_lock($name);
+
+  // Release a mutual-exclusion lock on the named table.
+  // Returns true if the lock is released successfully, otherwise false
+  abstract public function mutex_unlock($name);
+
+  // Destructor cleans up the connection
+  abstract public function __destruct();
+
+  // Return a string identifying the database version
+  abstract public function version();
+
+  // Check if a table exists
+  abstract public function table_exists($table);
+
+  // Get information about the columns in a table
+  // Returns an array with the following indices for each column
+  //
+  //  'name'        the column name
+  //  'type'        the type as reported by MySQL
+  //  'nature'      the type mapped onto one of a generic set of types
+  //                (boolean, integer, real, character, binary).   This enables
+  //                the nature to be used by MRBS code when deciding how to
+  //                display fields, without MRBS having to worry about the
+  //                differences between MySQL and PostgreSQL type names.
+  //  'length'      the maximum length of the field in bytes, octets or characters
+  //                (Note:  this could be NULL)
+  //  'is_nullable' whether the column can be set to NULL (boolean)
+  //
+  //  NOTE: the type mapping is incomplete and just covers the types commonly
+  //  used by MRBS
+  abstract public function field_info($table);
+
+  // Generate non-standard SQL for LIMIT clauses:
+  abstract public function syntax_limit($count, $offset);
+
+  // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
+  abstract public function syntax_timestamp_to_unix($fieldname);
+
+  // Returns the syntax for a case sensitive string "equals" function
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  //
+  // NB:  This function is also assumed to do a strict comparison, ie
+  // take account of trailing spaces.
+  abstract public function syntax_casesensitive_equals($fieldname, $string, &$params);
+
+  // Generate non-standard SQL to match a string anywhere in a field's value
+  // in a case insensitive manner. $s is the un-escaped/un-slashed string.
+  //
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  abstract public function syntax_caseless_contains($fieldname, $string, &$params);
+
+  // Generate non-standard SQL to add a table column after another specified
+  // column
+  abstract public function syntax_addcolumn_after($fieldname);
+
+  // Generate non-standard SQL to specify a column as an auto-incrementing
+  // integer while doing a CREATE TABLE
+  abstract public function syntax_createtable_autoincrementcolumn();
+
+  // Returns the syntax for a bitwise XOR operator
+  abstract public function syntax_bitwise_xor();
+
+  // Returns the syntax for a simple split of a column's value into two
+  // parts, separated by a delimiter.  $part can be 1 or 2.
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  abstract public function syntax_simple_split($fieldname, $delimiter, $part, &$params);
+
+  // Returns the syntax for aggregating a number of rows as a delimited string
+  abstract public function syntax_group_array_as_string($fieldname, $delimiter=',');
 
 }
