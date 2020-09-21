@@ -203,9 +203,9 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
     if ($ver > 1)
     {
       // The table was renamed in Upgrade 76
-      $table = ($ver >= 76) ? 'variable' : 'variables';
+      $short_name = ($ver >= 76) ? 'variable' : 'variables';
       $variable_name = ($local) ? "local_db_version" : "db_version";
-      $sql = "UPDATE $table
+      $sql = "UPDATE " . _tbl($short_name) . "
                  SET variable_content = ?
                WHERE variable_name = ?";
       $upgrade_handle->command($sql, array($ver, $variable_name));
