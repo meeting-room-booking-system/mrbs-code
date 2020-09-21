@@ -444,7 +444,7 @@ class AuthLdap extends Auth
   }
 
 
-  private function getLevel($username)
+  protected function getLevel($username)
   {
     global $ldap_admin_group_dn;
 
@@ -468,7 +468,7 @@ class AuthLdap extends Auth
 
 
   // Get the display name of the user from LDAP.  If none, returns the username
-  private function getDisplayName($username)
+  protected function getDisplayName($username)
   {
     if (!isset($username) || ($username === ''))
     {
@@ -700,7 +700,7 @@ class AuthLdap extends Auth
   }
 
 
-  private function getEmail($username)
+  protected function getEmail($username)
   {
     global $ldap_get_user_email;
 
