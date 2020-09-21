@@ -39,6 +39,24 @@ class System
   // https://www.microsoft.com/resources/msdn/goglobal/default.mspx
   private static $lang_map_windows = array
     (
+      'af-za' => 'afk',           // Afrikaans_South Africa.1252
+      'am-et' => 'amh',           // Amharic_Ethiopia.utf8
+      'ar-ae' => 'aru',           // Arabic_United Arab Emirates.1256
+      'ar-bh' => 'arh',           // Arabic_Bahrain.1256
+      'ar-dz' => 'arg',           // Arabic_Algeria.1256
+      'ar-eg' => 'are',           // Arabic_Egypt.1256
+      'ar-iq' => 'ari',           // Arabic_Iraq.1256
+      'ar-jo' => 'arj',           // Arabic_Jordan.1256
+      'ar-kw' => 'ark',           // Arabic_Kuwait.1256
+      'ar-lb' => 'arb',           // Arabic_Lebanon.1256
+      'ar-ly' => 'arl',           // Arabic_Libya.1256
+      'ar-ma' => 'arm',           // Arabic_Morocco.1256
+      'ar-om' => 'aro',           // Arabic_Oman.1256
+      'ar-qa' => 'arq',           // Arabic_Qatar.1256
+      'ar-sa' => 'ara',           // Arabic_Saudi Arabia.1256
+      'ar-sy' => 'ars',           // Arabic_Syria.1256
+      'ar-tn' => 'art',           // Arabic_Tunisia.1256
+      'ar-ye' => 'ary',           // Arabic_Yemen.1256
       'bg' => 'bgr',
       'bg-bg' => 'bgr',
       'ca' => 'cat',
@@ -172,6 +190,7 @@ class System
   private static $winlocale_codepage_map = array
     (
       'afk' => 'CP1252',
+      'amh' => 'utf-8',
       'ara' => 'CP1256',
       'arb' => 'CP1256',
       'are' => 'CP1256',
@@ -186,6 +205,7 @@ class System
       'arq' => 'CP1256',
       'ars' => 'CP1256',
       'art' => 'CP1256',
+      'aru' => 'CP1256',
       'ary' => 'CP1256',
       'aze' => 'CP1254',
       'bas' => 'CP1251',
