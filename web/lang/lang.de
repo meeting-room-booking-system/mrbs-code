@@ -116,7 +116,7 @@ $vocab["skip_conflicts"]     = "Termine überspringen, die mit bestehenden Termi
 $vocab["no_mail"]            = "Keine email schicken";
 $vocab["ctrl_click"]         = "Strg-Taste plus Mausklick um mehr als einen Raum auszuwählen";
 $vocab["entryid"]            = "Eintrags-ID. ";
-$vocab["repeat_id"]          = "ID wiederholen "; 
+$vocab["repeat_id"]          = "ID wiederholen ";
 $vocab["brief_description"]  = "Kurzbeschreibung.";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Öffentlich";
@@ -129,7 +129,7 @@ $vocab["start_after_end"]    = "Anfangsdatum nach Enddatum";
 $vocab["start_after_end_long"] = "Fehler: Das Anfangsdatum liegt nach dem Enddatum";
 $vocab["invalid_rep_interval"]     = "Das Wiederholungsintervall muss größer Null sein.";
 $vocab["type_reserved_for_admins"] = "Die Kategorie '%s' ist Administratoren vorbehalten.";
-                                                                            
+
 // Used in view_entry.php
 $vocab["description"]        = "Beschreibung";
 $vocab["room"]               = "Raum";
@@ -394,7 +394,7 @@ $vocab["area_admin_email"]   = "E-Mail des Bereichsadministrators";
 $vocab["area_first_slot_start"]   = "Beginn des ersten Abschnitts";
 $vocab["area_last_slot_start"]    = "Beginn des letzten Abschnitts";
 $vocab["area_res_mins"]      = "Zeitraster (Minuten)";
-$vocab["area_def_duration_mins"]  = "Standarddauer (Minuten)";      
+$vocab["area_def_duration_mins"]  = "Standarddauer (Minuten)";
 $vocab["times_along_top"]         = "Zeiten oben (vertikal) zeigen";
 $vocab["invalid_area"]       = "Ungültiger Bereich!";
 $vocab["invalid_room"]            = "Ungültiger Raum!";
@@ -456,7 +456,7 @@ $vocab["email_list_note"]         = "Geben Sie eine Liste von Email-Adressen zum
 $vocab["mode"]                    = "Einteilung";
 $vocab["mode_periods"]            = "Serien";
 $vocab["mode_times"]              = "Zeiten";
-$vocab["times_only"]              = "nur Zeiten";               
+$vocab["times_only"]              = "nur Zeiten";
 $vocab["enabled"]                 = "Aktiviert";
 $vocab["disabled"]                = "Deaktiviert";
 $vocab["disabled_area_note"]      = "Wird dieser Bereich deaktiviert, wird er nicht mehr in der Kalenderansicht gezeigt " .
@@ -499,14 +499,14 @@ $vocab["import_icalendar"]          = "iCalendar-Datei importieren";
 $vocab["area_room_settings"]        = "Bereiche und Räume";
 $vocab["other_settings"]            = "Weitere Einstellungen";
 $vocab["import_intro"]              = "Dieses Formular erlaubt Ihnen eine RFC 5545 kompatibles " .
-                                     "iCalendar-Datei zu importieren.   Nur die Serientermine, " .
-                                     "die einer MRBS-Regel entsprechen werden korrekt ins" .
-                                     "MRBS importiert.";
-$vocab["supported_file_types"]        = "Die folgenden Dateitypen werden unterstützt:";
-$vocab["import_text_file"]            = "unkomprimiert iCalendar Dateien";
-$vocab["import_zip"]                  = "Zip-Archiv, einschließlich mehrerer Dateien in einem Archiv";
-$vocab["import_gzip"]                 = "gzip Dateien";
-$vocab["import_bzip2"]                = "bzip2 Dateien";
+                                      "iCalendar-Datei zu importieren.   Nur die Serientermine, " .
+                                      "die einer MRBS-Regel entsprechen werden korrekt ins " .
+                                      "MRBS importiert.";
+$vocab["supported_file_types"]      = "Die folgenden Dateitypen werden unterstützt:";
+$vocab["import_text_file"]          = "unkomprimiert iCalendar Dateien";
+$vocab["import_zip"]                = "Zip-Archiv, einschließlich mehrerer Dateien in einem Archiv";
+$vocab["import_gzip"]               = "gzip Dateien";
+$vocab["import_bzip2"]              = "bzip2 Dateien";
 $vocab["file_name"]                 = "Dateiname";
 $vocab["import"]                    = "Importieren";
 $vocab["upload_failed"]             = "Hochladen mit Fehler abgebrochen";
