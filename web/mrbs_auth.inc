@@ -20,11 +20,6 @@ if (!isset($auth['session']))
   }
 }
 
-// Need to be in this order
-if (is_readable("auth/auth_$auth[type].inc"))
-{
-  require_once "auth/auth_$auth[type].inc";
-}
 
 if (method_exists(session(), 'processForm'))
 {
