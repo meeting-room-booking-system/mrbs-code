@@ -226,7 +226,7 @@ function get_fieldset_general(Room $room)
             'name'     => 'invalid_types[]',
             'multiple' => true)
           )
-        ->addSelectOptions(get_type_options(true), $data['invalid_types'], true);
+        ->addSelectOptions(get_type_options(true), $room->invalid_types, true);
   $fieldset->addElement($field);
 
   // The custom HTML
