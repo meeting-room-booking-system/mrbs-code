@@ -1,10 +1,17 @@
 <?php
+namespace MRBS;
 
-use MRBS\System;
 
-
-// Emulates the PHP Locale class, for those sites that do not have the Intl extension installed.
-// The class will only be found by the autoloader if the global Locale class doesn't exist.
+// A partial emulation of the \Locale class.   We use the emulation because
+//  (a) the standard class in the intl extension has some bugs in it, in particular when using
+//      Locale::acceptFromHttp('zh-TW') [See https://www.php.net/manual/en/locale.acceptfromhttp.php#122623]
+//      [See also https://sourceforge.net/p/mrbs/support-requests/2178/]
+//  (b) the intl extension isn't enabled on all sites.
+//
+// If \Locale were working properly then one possibility would be to put this class in the directory above and
+// in the global namespace. Then this class would only be found by the autoloader if the global Locale class
+// didn't already exist.  In other words this class would just be a fallback on systems where the intl
+// extension wasn't installed.
 class Locale
 {
   const LANG_TAG               = 'language';
@@ -14,8 +21,8 @@ class Locale
   const VARIANT_TAG            = 'variant';
   const GRANDFATHERED_LANG_TAG = 'grandfathered';
   const PRIVATE_TAG            = 'private';
-  
-  
+
+
   // Tries to find out best available locale based on HTTP "Accept-Language" header
   // Returns locale in normalised form, or NULL if none found
   public static function acceptFromHttp($header)
@@ -23,7 +30,7 @@ class Locale
     if (isset($header))
     {
       $accept_languages = self::toSortedArray($header);
-      
+
       foreach($accept_languages as $accept_language => $value)
       {
         if (System::isAvailableLocale($accept_language))
@@ -32,11 +39,11 @@ class Locale
         }
       }
     }
-    
+
     return null;
   }
-  
-  
+
+
   // Returns a correctly ordered and delimited locale ID
   public static function composeLocale($subtags)
   {
@@ -44,9 +51,9 @@ class Locale
     {
       return $subtags[self::GRANDFATHERED_LANG_TAG];
     }
-    
+
     $pieces = array();
-    
+
     foreach (array(self::LANG_TAG, self::EXTLANG_TAG, self::SCRIPT_TAG, self::REGION_TAG) as $subtag_label)
     {
       if (isset($subtags[$subtag_label]))
@@ -54,7 +61,7 @@ class Locale
         $pieces[] = $subtags[$subtag_label];
       }
     }
-    
+
     if (array_key_exists(self::VARIANT_TAG . '0', $subtags))
     {
       for ($i=0; $i<15; $i++)
@@ -65,7 +72,7 @@ class Locale
         }
       }
     }
-    
+
     if (array_key_exists(self::PRIVATE_TAG . '0', $subtags))
     {
       $pieces[] = 'x';
@@ -77,13 +84,13 @@ class Locale
         }
       }
     }
-    
+
     return implode('_', $pieces);
   }
-  
-  
+
+
   // Returns a key-value array of locale ID subtag elements.
-  // Parses a language tag according to BCP 47 
+  // Parses a language tag according to BCP 47
   // See http://tools.ietf.org/html/bcp47
   public static function parseLocale($locale)
   {
@@ -91,7 +98,7 @@ class Locale
                           'script'  => '/^[[:alpha:]]{4}$/',  // 4ALPHA
                           'region'  => '/^[[:alpha:]]{2}$|^[[:digit:]]{3}$/', // 2ALPHA or 3DIGIT
                           'variant' => '/^[[:alnum:]]{5,8}$|^[[:digit:]][[:alnum:]]{3}$/');  // 5*8alphanum or (DIGIT 3alphanum)
-                          
+
     static $grandfathered = array('en-GB-oed',      // Irregular
                                   'i-ami',
                                   'i-bnn',
@@ -118,16 +125,16 @@ class Locale
                                   'zh-min',
                                   'zh-min-nan',
                                   'zh-xiang');
-                                  
+
     // First check for a grandfathered tag
     if (isset($locale) && in_array($locale, $grandfathered))
     {
       return array(self::GRANDFATHERED_LANG_TAG => $locale);
     }
-    
+
     // Otherwise parse the subtags
     $result = array();
-    
+
     if (isset($locale))
     {
       $subtags = preg_split('/[-_]/', $locale);
@@ -136,13 +143,13 @@ class Locale
     {
       $subtags = array();
     }
-    
+
     while (null !== ($subtag = array_shift($subtags)))
     {
       // Tags are case insensitive, so convert to lowercase before processing and then
       // later convert as necessary according to convention
       $subtag = strtolower($subtag);
-      
+
       if ($subtag == 'x')
       {
         // If the subtag is an 'x' then everything else is a private subtag,
@@ -157,13 +164,13 @@ class Locale
           $i++;
         }
       }
-      
+
       // The primary language subtag is the first subtag in a language tag and
       // cannot be omitted, with two exceptions:
       //
       //  o  The single-character subtag 'x' as the primary subtag ...
       //  o  The single-character subtag 'i' is used by some grandfathered tags ...
-      elseif (!isset($result[self::LANG_TAG])) 
+      elseif (!isset($result[self::LANG_TAG]))
       {
         // [ISO639-1] recommends that language codes be written in lowercase ('mn' Mongolian).
         // As the subtag will already be lowercase there's no need to do anything else
@@ -177,7 +184,7 @@ class Locale
           }
         }
       }
-      
+
       // Script
       elseif (preg_match($regex['script'], $subtag))
       {
@@ -185,7 +192,7 @@ class Locale
         // initial letter capitalized ('Cyrl' Cyrillic).
         $result[self::SCRIPT_TAG] = ucfirst($subtag);
       }
-      
+
       // Region
       elseif (preg_match($regex['region'], $subtag))
       {
@@ -193,7 +200,7 @@ class Locale
         // Mongolia).
         $result[self::REGION_TAG] = strtoupper($subtag);
       }
-      
+
       // Variants
       elseif (preg_match($regex['variant'], $subtag))
       {
@@ -211,7 +218,7 @@ class Locale
         }
         while (null !== ($subtag = array_shift($subtags)));
       }
-      
+
       else
       {
         trigger_error("parseLocale: could not parse subtag '$subtag'", E_USER_NOTICE);
@@ -220,11 +227,11 @@ class Locale
         $result = array();
       }
     }
-    
+
     return $result;
   }
-  
-  
+
+
   // Searches the items in the array $langtag for the best match to the language range
   // specified in $locale according to RFC 4647's lookup algorithm.   The langtags and
   // locale can have subtags separated by '-' or '_' and the search is case insensitive.
@@ -237,14 +244,14 @@ class Locale
     {
       throw new Exception('MRBS: the MRBS version of Locale::lookup() does not yet support $canonicalize = true');
     }
-    
+
     // Get the langtags and locale in the same format, ie separated by '-' and
     // all lower case
     $standard_langtags = self::standardise($langtag);
     // Strip off any charset (eg '.UTF-8');
     $locale = preg_replace('/\..*$/', '', $locale);
     $standard_locale = self::standardise($locale);
-    
+
     // Look for a match.   If there isn't one remove the last subtag from the end
     // of the locale and try again.
     while (false === ($index = array_search($standard_locale, $standard_langtags)))
@@ -255,29 +262,29 @@ class Locale
       }
       $standard_locale = substr($standard_locale, 0, $pos);
     }
-    
+
     return $langtag[$index];  // Return the match in its original format
   }
-  
-  
+
+
   // Converts $langtag, which can be a string or an array, into a standard form with
   // subtags all in lower case and separated by '-';
   private static function standardise($langtag)
   {
     $glue = ',';
     $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = MRBS\utf8_strtolower(str_replace('_', '-', $result));
+    $result = \MRBS\utf8_strtolower(str_replace('_', '-', $result));
     return (is_array($langtag)) ? explode($glue, $result) : $result;
   }
-  
-  
+
+
   // Converts an Accept-Language request-header from a string to an
   // array of acceptable languages with the language as the key and
   // the quality value as the value, sorted in decreasing order of
   // quality value.  A wildcard in the header is translated.
   private static function toSortedArray($header)
   {
-    return MRBS\get_qualifiers($header, true);
+    return \MRBS\get_qualifiers($header, true);
   }
-  
+
 }
