@@ -383,7 +383,7 @@ class AuthDb extends Auth
       );
     $query = http_build_query($vars, '', '&');
     $href = \MRBS\url_base() . \MRBS\multisite("reset_password.php?$query");
-    $body .= "<p><a href=\"$href\">$href</a></p>";
+    $body .= "<p><a href=\"$href\">" . \MRBS\get_vocab('reset_password') . "</a>.</p>";
 
     MailQueue::add(
         $addresses,
