@@ -1,7 +1,8 @@
 <?php
 namespace MRBS;
 
-use \Locale;
+// Note that we are using \MRBS\Locale because \Locale has some bugs in it (and also
+// isn't always installed).
 
 require_once "functions.inc";
 

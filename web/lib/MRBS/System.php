@@ -624,7 +624,7 @@ class System
     // Get the available locales
     $locales = \ResourceBundle::getLocales('');
     // Put our locale into PHP's format
-    $locale = \Locale::composeLocale(\Locale::parseLocale($langtag));
+    $locale = Locale::composeLocale(Locale::parseLocale($langtag));
     // See whether our locale exists.   Note that if it does we return the original
     // $langtag, which will be in BCP 47 format, rather than the locale in PHP's
     // format.  Although PHP will give you locales with underscores, when you try
@@ -758,7 +758,7 @@ class System
     // Parse it and then recompose it.  This will get the capitalisation correct, eg
     // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
     // the capitalisation is just a convention.
-    $result = \Locale::composeLocale(\Locale::parseLocale($result));
+    $result = Locale::composeLocale(Locale::parseLocale($result));
 
     // Convert underscores to hyphens.  Locale::composeLocale() returns underscores.
     $result = str_replace('_', '-', $result);
@@ -800,11 +800,11 @@ class System
     $locales = array();
 
     // Put the $langtag into standard PHP format
-    $subtags = \Locale::parseLocale($langtag);
+    $subtags = Locale::parseLocale($langtag);
 
     if (!empty($subtags))
     {
-      $locale = \Locale::composeLocale($subtags);
+      $locale = Locale::composeLocale($subtags);
 
       // First locale to try is one with hyphens instead of underscores.  These work on newer
       // Windows systems, whereas underscores do not.  Also, on Windows systems, although
@@ -836,7 +836,7 @@ class System
         $subtags['region'] = self::getDefaultRegion($subtags['language']);
         if (isset($subtags['region']))  // avoid an infinite recursion
         {
-          $locales = array_merge($locales, self::getLocaleAlternatives(\Locale::composeLocale($subtags)));
+          $locales = array_merge($locales, self::getLocaleAlternatives(Locale::composeLocale($subtags)));
         }
       }
     }
