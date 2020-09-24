@@ -415,6 +415,7 @@ if (is_admin() || !empty($enabled_areas))
               case 'description':
               case 'capacity':
               case 'room_admin_email':
+              case 'invalid_types':
                 $text = get_vocab($field['name']);
                 break;
               // any user defined fields
@@ -473,6 +474,9 @@ if (is_admin() || !empty($enabled_areas))
                     break;
                   case 'capacity':
                     echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+                    break;
+                  case 'invalid_types':
+                    echo "<td><div>" . get_type_names($r[$field['name']]) . "</div></td>\n";
                     break;
                   // any user defined fields
                   default:
