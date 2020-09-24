@@ -1749,6 +1749,10 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
   {
     if ($include_invisible || is_visible($row['id']))
     {
+      if (isset($row['invalid_types']))
+      {
+        $row['invalid_types'] = json_decode($row['invalid_types']);
+      }
       $result[] = $row;
     }
   }
