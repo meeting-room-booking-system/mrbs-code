@@ -14,6 +14,8 @@ function get_form()
   $params['new_area'] = get_form_var('new_area', 'int');
   $params['old_area'] = get_form_var('old_area', 'int');
   $params['old_room_name'] = get_form_var('old_room_name', 'int');
+  // And get the ones that have a different type
+  $params['invalid_types'] = get_form_var('invalid_types', 'array');
 
   // Get all the others
   $columns = new Columns(_tbl(Room::TABLE_NAME));
@@ -22,7 +24,8 @@ function get_form()
   {
     $name = $column->name;
 
-    if (!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET)))
+    if ((!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET))) ||
+        ($name == 'invalid_types'))
     {
       continue;
     }
@@ -39,6 +42,8 @@ function get_form()
 
 function update_room($room_id, array $form)
 {
+  global $booking_types;
+
   $errors = array();
   $room = Room::getById($room_id);
 
@@ -68,6 +73,10 @@ function update_room($room_id, array $form)
         break;
       case 'room_disabled':
         $room->disabled = $value;
+        break;
+      case 'invalid_types':
+        // Make sure the invalid types exist
+        $room->invalid_types = array_intersect($value, $booking_types);
         break;
       default:
         $room->{$key} = $value;
