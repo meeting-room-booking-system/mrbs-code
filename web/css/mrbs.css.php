@@ -1412,6 +1412,10 @@ div#div_custom_html {
   margin-left: 1em;
 }
 
+.buttons input {
+  margin-top: 2em;
+}
+
 
 <?php // The standard form ?>
 

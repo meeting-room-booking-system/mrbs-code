@@ -217,6 +217,18 @@ function get_fieldset_general($data)
                                      'disabled'  => $disabled));
   $fieldset->addElement($field);
 
+  // Invalid types
+  $field = new FieldSelect();
+  $field->setAttribute('class', 'multiline')
+        ->setLabel(get_vocab('invalid_types'))
+        ->setLabelAttribute('title', get_vocab('invalid_types_note'))
+        ->setControlAttributes(array(
+            'name'     => 'invalid_types[]',
+            'multiple' => true)
+          )
+        ->addSelectOptions(get_type_options(true), $data['invalid_types'], true);
+  $fieldset->addElement($field);
+
   // The custom HTML
   if (is_admin() && $auth['allow_custom_html'])
   {
@@ -239,7 +251,8 @@ function get_fieldset_general($data)
   $back = new ElementInputSubmit();
   $back->setAttributes(array('value'      => get_vocab('backadmin'),
                              'formaction' => multisite('admin.php')));
-  $field->addLabelClass('no_suffix')
+  $field->setAttribute('class', 'buttons')
+        ->addLabelClass('no_suffix')
         ->addLabelElement($back)
         ->setControlAttribute('value', get_vocab('change'));
   if (!is_admin())

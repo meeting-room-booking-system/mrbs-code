@@ -425,6 +425,7 @@ $standard_fields['room'] = array('id',
                                  'description',
                                  'capacity',
                                  'room_admin_email',
+                                 'invalid_types',
                                  'custom_html');
 
 // Boolean fields.    These are fields which are treated as booleans

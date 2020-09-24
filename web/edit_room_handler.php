@@ -22,6 +22,7 @@ $form_vars = array(
   'description'      => 'string',
   'capacity'         => 'int',
   'room_admin_email' => 'string',
+  'invalid_types'    => 'array',
   'custom_html'      => 'string'
 );
 
@@ -105,6 +106,9 @@ if (!validate_email_list($room_admin_email))
   $errors[] = 'invalid_email';
 }
 
+// Make sure the invalid types exist
+$invalid_types = array_intersect($invalid_types, $booking_types);
+
 if (empty($errors))
 {
   // Used purely for the syntax_casesensitive_equals() call below, and then ignored
@@ -183,6 +187,10 @@ if (empty($errors))
           case 'room_admin_email':
             $assign_array[] = "room_admin_email=?";
             $sql_params[] = $room_admin_email;
+            break;
+          case 'invalid_types':
+            $assign_array[] = "invalid_types=?";
+            $sql_params[] = json_encode($invalid_types);
             break;
           case 'custom_html':
             $assign_array[] = "custom_html=?";

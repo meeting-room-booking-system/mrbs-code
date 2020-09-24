@@ -1849,7 +1849,15 @@ function get_room_details($room_id)
 
   $res = db()->query($sql, array($room_id));
 
-  return ($res->count() == 0) ? null : $res->next_row_keyed();
+  $details = ($res->count() == 0) ? null : $res->next_row_keyed();
+
+  // The invalid types column is json_encoded
+  if (isset($details['invalid_types']))
+  {
+    $details['invalid_types'] = json_decode($details['invalid_types']);
+  }
+
+  return $details;
 }
 
 
@@ -1886,6 +1894,10 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
   {
     if ($include_invisible || is_visible($row['id']))
     {
+      if (isset($row['invalid_types']))
+      {
+        $row['invalid_types'] = json_decode($row['invalid_types']);
+      }
       $result[] = $row;
     }
   }

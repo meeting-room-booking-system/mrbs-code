@@ -187,6 +187,27 @@ function get_type_options($include_admin_types=false)
 }
 
 
+// Converts an array of types into a string
+function get_type_names($types, $glue=', ')
+{
+  global $booking_types;
+
+  if (empty($types))
+  {
+    return '';
+  }
+
+  $names = array();
+
+  foreach($types as $type)
+  {
+    $names[] = get_type_vocab($type);
+  }
+
+  return implode($glue, $names);
+}
+
+
 function get_rep_interval_units($rep_type, $rep_interval)
 {
   switch ($rep_type)
