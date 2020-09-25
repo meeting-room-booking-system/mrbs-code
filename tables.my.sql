@@ -86,6 +86,7 @@ CREATE TABLE mrbs_room
   description      varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   capacity         int DEFAULT '0' NOT NULL,
   room_admin_email text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  invalid_types    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   custom_html      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
 
   PRIMARY KEY (id),
@@ -303,6 +304,6 @@ CREATE TABLE mrbs_role_room
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '76');
+  VALUES ( 'db_version', '77');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
