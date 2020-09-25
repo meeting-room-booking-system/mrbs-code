@@ -449,11 +449,11 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     // Check whether this booking type is allowed in this room
     if ($prevent_invalid_types)
     {
-      $room_details = get_room_details($booking['room_id']);
-      if (isset($room_details['invalid_types']) &&
-          in_array($booking['type'], $room_details['invalid_types']))
+      $room = Room::getById($booking['room_id']);
+      if (isset($room->invalid_types) &&
+          in_array($booking['type'], $room->invalid_types))
       {
-        $violations[] = get_vocab('type_not_allowed', $booking['type'], $room_details['room_name']);
+        $violations[] = get_vocab('type_not_allowed', $booking['type'], $room->room_name);
       }
     }
 
