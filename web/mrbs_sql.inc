@@ -358,7 +358,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   global $max_secs_per_interval_global_enabled, $max_secs_per_interval_area_enabled;
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
-  global $prevent_simultaneous_bookings;
+  global $prevent_simultaneous_bookings, $prevent_invalid_types;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -443,6 +443,17 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       if ($res->count() > 0)
       {
         $violations[] = get_vocab('no_simultaneous_bookings');
+      }
+    }
+
+    // Check whether this booking type is allowed in this room
+    if ($prevent_invalid_types)
+    {
+      $room_details = get_room_details($booking['room_id']);
+      if (isset($room_details['invalid_types']) &&
+          in_array($booking['type'], $room_details['invalid_types']))
+      {
+        $violations[] = get_vocab('type_not_allowed', $booking['type'], $room_details['room_name']);
       }
     }
 

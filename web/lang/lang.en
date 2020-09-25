@@ -222,6 +222,7 @@ $vocab["reason"]                  = "Reason";
 $vocab["info_requested"]          = "Information requested";
 $vocab["cannot_change_approved_bookings"] = "Bookings that have been approved cannot be edited or deleted";
 $vocab["no_simultaneous_bookings"]        = "You cannot have bookings for two different rooms at the same time";
+$vocab["type_not_allowed"]        = 'Bookings of type %1$s are not allowed in %2$s';
 $vocab["min_create_time_before"]  = 'You cannot create a booking which starts in less than %1$d %2$s';
 $vocab["max_create_time_before"]  = 'You cannot create a booking which ends in more than %1$d %2$s';
 $vocab["min_delete_time_before"]  = 'You cannot edit or delete a booking which starts in less than %1$d %2$s';

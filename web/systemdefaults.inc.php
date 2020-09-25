@@ -286,6 +286,9 @@ $approved_bookings_cannot_be_changed = false;
 // at the same time.
 $prevent_simultaneous_bookings = false;
 
+// Set this to true if you want to prevent bookings of a type that is invalid for a room
+$prevent_invalid_types = true;
+
 /******************
  * Display settings
  ******************/
