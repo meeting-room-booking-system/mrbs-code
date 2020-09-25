@@ -71,6 +71,30 @@ class Room extends Table
   }
 
 
+  // Function to decode any columns that are stored encoded in the database
+  protected static function onRead($row)
+  {
+    if (isset($row['invalid_types']))
+    {
+      $row['invalid_types'] = json_decode($row['invalid_types']);
+    }
+
+    return $row;
+  }
+
+
+  // Function to encode any columns that are stored encoded in the database
+  protected static function onWrite($row)
+  {
+    if (isset($row['invalid_types']))
+    {
+      $row['invalid_types'] = json_encode($row['invalid_types']);
+    }
+
+    return $row;
+  }
+
+
   private function isAble($operation)
   {
     if (!isset($this->is_able ) || !isset($this->is_able[$operation]))

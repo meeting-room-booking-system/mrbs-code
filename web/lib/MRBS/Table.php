@@ -128,7 +128,7 @@ abstract class Table
 
     // Merge the accessible and inaccessible properties for the table into
     // a single array.
-    $table_data = $this->data;
+    $table_data = static::onWrite($this->data);
     $accessible_properties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
     foreach ($accessible_properties as $property)
     {
@@ -212,9 +212,24 @@ abstract class Table
   }
 
 
+  // Function to decode any columns that are stored encoded in the database
+  protected static function onRead($row)
+  {
+    return $row;
+  }
+
+
+  // Function to encode any columns that are stored encoded in the database
+  protected static function onWrite($data)
+  {
+    return $data;
+  }
+
 
   public function load(array $row)
   {
+    $row = static::onRead($row);
+
     foreach ($row as $key => $value)
     {
       $this->{$key} = $value;
