@@ -453,7 +453,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       if (isset($room_details['invalid_types']) &&
           in_array($booking['type'], $room_details['invalid_types']))
       {
-        $violations[] = get_vocab('type_not_allowed', $booking['type'], $room_details['room_name']);
+        $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), $room_details['room_name']);
       }
     }
 
