@@ -948,7 +948,7 @@ class System
       {
         return false;
       }
-      $locale = $lang_map_windows[utf8_strtolower($langtag)];
+      $locale = self::$lang_map_windows[utf8_strtolower($langtag)];
     }
     // All of these Unix OSes work in mostly the same way...
     elseif (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
