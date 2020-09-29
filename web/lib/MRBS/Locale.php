@@ -273,7 +273,7 @@ class Locale
   {
     $glue = ',';
     $result = (is_array($langtag)) ? implode($glue, $langtag) : $langtag;
-    $result = \MRBS\utf8_strtolower(str_replace('_', '-', $result));
+    $result = utf8_strtolower(str_replace('_', '-', $result));
     return (is_array($langtag)) ? explode($glue, $result) : $result;
   }
 
@@ -284,7 +284,7 @@ class Locale
   // quality value.  A wildcard in the header is translated.
   private static function toSortedArray($header)
   {
-    return \MRBS\get_qualifiers($header, true);
+    return get_qualifiers($header, true);
   }
 
 }
