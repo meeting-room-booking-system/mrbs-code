@@ -6,8 +6,7 @@ class System
 {
   // A set of special cases for mapping a language to a default region
   // (normally the region is the same as the language, eg 'fr' => 'FR')
-  private static $default_regions = array
-    (
+  private static $default_regions = array(
       'ca' => 'ES',
       'cs' => 'CZ',
       'da' => 'DK',
@@ -35,11 +34,32 @@ class System
   // locale by finding the first occurrence of a value and then using the
   // corresponding key.
   //
-  // These locale TLAs found at:
-  // https://www.microsoft.com/resources/msdn/goglobal/default.mspx
-  private static $lang_map_windows = array
-    (
+  // See https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
+  // for language tags.
+  //
+  // Windows locales can be found by running the following PHP code on a Windows system
+  /*
+  foreach (range('a', 'z') as $a)
+  {
+    foreach (range('a', 'z') as $b)
+    {
+      foreach (range('a', 'z') as $c)
+      {
+        $locale = "$a$b$c";
+        setlocale(LC_ALL, $locale);
+        $result = setlocale(LC_ALL, 0);
+        if ($locale != $result)
+        {
+          echo "$locale: $result\n";
+        }
+      }
+    }
+  }
+  */
+  private static $lang_map_windows = array(
+      'aa-et' => 'zzz',           // Afar_Ethiopia.utf8
       'af-za' => 'afk',           // Afrikaans_South Africa.1252
+      'am' => 'amh',              // Amharic.utf8
       'am-et' => 'amh',           // Amharic_Ethiopia.utf8
       'ar-ae' => 'aru',           // Arabic_United Arab Emirates.1256
       'ar-bh' => 'arh',           // Arabic_Bahrain.1256
@@ -82,15 +102,16 @@ class System
       'ca' => 'cat',              // Catalan_Spain.1252
       'ca-es' => 'cat',           // Catalan_Spain.1252
       'chr-us' => 'cre',          // Cherokee_United States.utf8
+      'ckb-iq' => 'kur',          // Central Kurdish_Iraq.1256
       'co' => 'cos',              // Corsican.1252
       'co-fr' => 'cos',           // Corsican_France.1252
       'cs' => 'csy',              // Czech.1250
       'cs-cz' => 'csy',           // Czech_Czechia.1250
       'cy' => 'cym',              // Welsh.1252'
       'cy-gb' => 'cym',           // Welsh_United Kingdom.1252'
-      'da' => 'dan',
+      'da' => 'dan',              // Danish.1252
       'da-dk' => 'dan',           // Danish_Denmark.1252
-      'de' => 'deu',
+      'de' => 'deu',              // German.1252
       'de-at' => 'dea',           // German_Austria.1252
       'de-ch' => 'des',           // German_Switzerland.1252
       'de-de' => 'deu',           // German_Germany.1252
@@ -100,7 +121,7 @@ class System
       'dv-mv' => 'div',           // Divehi_Maldives.utf8'
       'el' => 'ell',              // Greek.1253
       'el-gr' => 'ell',           // Greek_Greece.1253
-      'en' => 'enu',
+      'en' => 'enu',              // English.1252
       'en-au' => 'ena',           // English_Australia.1252
       'en-bz' => 'enl',           // English_Belize.1252
       'en-ca' => 'enc',           // English_Canada.1252
@@ -141,23 +162,25 @@ class System
       'es-us' => 'est',           // Spanish_United States.1252
       'es-uy' => 'esy',           // Spanish_Uruguay.1252
       'es-ve' => 'esv',           // Spanish_Venezuela.1252
-      'et' => 'eti',
+      'et' => 'eti',              // Estonian.1257
       'et-ee' => 'eti',           // Estonian_Estonia.1257
-      'eu' => 'euq',
+      'eu' => 'euq',              // Basque.1252
       'eu-es' => 'euq',           // Basque_Spain.1252
       'fa' => 'far',              // Persian.1256
       'fa-ir' => 'far',           // Persian_Iran.1256
+      'ff-latn-sn' => 'ful',      // Fulah (Latin)_Senegal.1252
       'fi' => 'fin',              // Finnish.1252
       'fi-fi' => 'fin',           // Finnish_Finland.1252
       'fil' => 'fpo',             // Filipino.1252
       'fil-ph' => 'fpo',          // Filipino_Philippines.1252
       'fo' => 'fos',              // Faroese.1252
       'fo-fo' => 'fos',           // Faroese_Faroe Islands.1252
-      'fr' => 'fra',
+      'fr' => 'fra',              // French.1252
       'fr-be' => 'frb',           // French_Belgium.1252
       'fr-ca' => 'frc',           // French_Canada.1252
       'fr-cg' => 'frd',           // French_Congo (DRC).1252
       'fr-ch' => 'frs',           // French_Switzerland.1252
+      'fr-ci' => 'fri',           // French_Côte d'Ivoire.1252
       'fr-cm' => 'fre',           // French_Cameroon.1252
       'fr-fr' => 'fra',           // French_France.1252
       'fr-ht' => 'frh',           // French_Haiti.1252
@@ -165,6 +188,7 @@ class System
       'fr-ma' => 'fro',           // French_Morocco.1252
       'fr-mc' => 'frm',           // French_Monaco.1252
       'fr-ml' => 'frf',           // French_Mali.1252
+      'fr-re' => 'frr',           // French_Réunion.1252'
       'fr-sn' => 'frn',           // French_Senegal.1252
       'fy' => 'fyn',              // Western Frisian.1252
       'fy-nl' => 'fyn',           // Western Frisian_Netherlands.1252
@@ -176,6 +200,7 @@ class System
       'gl' => 'glc',              // Galician.1252
       'gl-es' => 'glc',           // Galician_Spain.1252
       'gn-py' => 'grn',           // Guarani_Paraguay.1252
+      'gsw-fr' => 'gsw',          // Alsatian_France.1252
       'gu' => 'guj',              // Gujarati.utf8
       'gu-in' => 'guj',           // Gujarati_India.utf8
       'ha' => 'hau',              // Hausa.1252
@@ -186,7 +211,7 @@ class System
       'he-il' => 'heb',           // Hebrew_Israel.1255
       'hi' => 'hin',              // Hindi.utf8
       'hi-in' => 'hin',           // Hindi_India.utf8
-      'hr' => 'hrv',
+      'hr' => 'hrv',              // Croatian.1250
       'hr-ba' => 'hrb',           // Croatian_Bosnia and Herzegovina.1250
       'hr-hr' => 'hrv',           // Croatian_Croatia.1250
       'hsb' => 'hsb',             // Upper Sorbian.1252
@@ -212,6 +237,7 @@ class System
       'iu-latn-ca' => 'iuk',      // Inuktitut_Canada.1252
       'ja' => 'jpn',              // Japanese.932
       'ja-jp' => 'jpn',           // Japanese_Japan.932
+      'jv-id' => 'jav',           // Javanese_Indonesia.1252
       'ka' => 'kat',              // Georgian.utf8
       'ka-ge' => 'kat',           // Georgian_Georgia.utf8
       'kk' => 'kkz',              // Kazakh.utf8
@@ -240,6 +266,10 @@ class System
       'mi-nz' => 'mri',           // Maori_New Zealand.utf8
       'ml' => 'mym',              // Malayalam.utf8
       'ml-in' => 'mym',           // Malayalam_India.utf8
+      'mn' => 'mnn',              // Mongolian_Mongolia.1251
+      'mn-mn' => 'mnn',           // Mongolian_Mongolia.1251
+      'mn-mong-cn' => 'mng',      // Mongolian (Traditional Mongolian)_China.utf8
+      'mn-mong-mn' => 'mnm',      // Mongolian (Traditional Mongolian)_Mongolia.utf8
       'moh' => 'mwk',             // Mohawk.1252
       'moh-ca' => 'mwk',          // Mohawk_Canada.1252
       'mr' => 'mar',              // Marathi.utf8
@@ -249,29 +279,37 @@ class System
       'ms-my' => 'msl',           // Malay_Malaysia.1252
       'mt' => 'mlt',              // Maltese.utf8
       'mt-mt' => 'mlt',           // Maltese_Malta.utf8
+      'my' => 'mya',              // Burmese.utf8
       'my-mm' => 'mya',           // Burmese_Myanmar.utf8
-      'nb' => 'nor',
-      'nb-no' => 'nor',
+      'nb' => 'nor',              // Norwegian Bokmål.1252
+      'nb-no' => 'nor',           // Norwegian Bokmål_Norway.1252
       'ne-in' => 'nei',           // Nepali_India.utf8
       'ne-np' => 'nep',           // Nepali_Nepal.utf8
+      'ngo-gn' => 'nqo',          // N'ko_Guinea.utf8
       'nl' => 'nld',              // Dutch.1252
       'nl-be' => 'nlb',           // Dutch_Belgium.1252
       'nl-nl' => 'nld',           // Dutch_Netherlands.1252
       'nn' => 'non',              // Norwegian Nynorsk.1252
       'nn-no' => 'non',           // Norwegian Nynorsk_Norway.1252
-      'no' => 'nor',
-      'no-no' => 'nor',
+      'no' => 'nor',              // Norwegian.1252
+      'no-no' => 'nor',           // Norwegian_Norway.1252
+      'nso-za' => 'nso',          // Sesotho sa Leboa_South Africa.1252
       'oc' => 'oci',              // Occitan.1252
       'oc-fr' => 'oci',           // Occitan_France.1252
+      'ory-in' => 'ori',          // Odia_India.utf8
+      'pa-in' => 'pan',           // Punjabi_India.utf8
+      'pa-pk' => 'pap',           // Punjabi_Pakistan.1256
       'pl' => 'plk',              // Polish.1250
       'pl-pl' => 'plk',           // Polish_Poland.1250
       'plt-mg' => 'mlg',          // Malagasy_Madagascar.utf8
       'prs' => 'prs',             // Dari.1256
       'prs-af' => 'prs',          // Dari_Afghanistan.1256
+      'ps-af' => 'pas',           // Pashto_Afghanistan.utf8
       'pt' => 'ptb',              // Portuguese.1252
       'pt-ao' => 'pta',           // Portuguese_Angola.1252
       'pt-br' => 'ptb',           // Portuguese_Brazil.1252
       'pt-pt' => 'ptg',           // Portuguese_Portugal.1252
+      'quc-gt' => 'qut',          // K'iche'_Guatemala.1252
       'quz-bo' => 'qub',          // Quechua_Bolivia.1252
       'quz-ec' => 'que',          // Quechua_Ecuador.1252
       'quz-pe' => 'qup',          // Quechua_Peru.1252
@@ -286,6 +324,7 @@ class System
       'rw-rw' => 'kin',           // Kinyarwanda_Rwanda.1252
       'sa' => 'san',              // Sanskrit.utf8
       'sa-in' => 'san',           // Sanskrit_India.utf8
+      'sah-ru' => 'sah',          // Sakha_Russia.1251
       'sd-pk' => 'sip',           // Sindhi_Pakistan.1256
       'se-fi' => 'smg',           // Sami (Northern)_Finland.1252
       'se-no' => 'sme',           // Northern Sami_Norway.1252
@@ -302,17 +341,20 @@ class System
       'smj-se' => 'smk',          // Sami (Lule)_Sweden.1252
       'smn-fi' => 'smn',          // Sami (Inari)_Finland.1252
       'sms-fi' => 'sms',          // Sami (Skolt)_Finland.1252
+      'sn-zw' => 'sna',           // Shona_Zimbabwe.utf8
       'so-so' => 'som',           // Somali_Somalia.utf8
       'sq' => 'sqi',              // Albanian.1250
       'sq-al' => 'sqi',           // Albanian_Albania.1250
-      'sr' => 'srl',
+      'sr' => 'srl',              // Serbian.1250
       'sr-cyrl-ba' => 'srn',      // Serbian (Cyrillic)_Bosnia and Herzegovina.1251
       'sr-cyrl-me' => 'srq',      // Serbian (Cyrillic)_Montenegro.1251
       'sr-cyrl-rs' => 'sro',      // Serbian (Cyrillic)_Serbia.1251
       'sr-latn-ba' => 'srs',      // Serbian (Latin)_Bosnia and Herzegovina.1250
       'sr-latn-me' => 'srp',      // Serbian (Latin)_Montenegro.1250
       'sr-latn-rs' => 'srm',      // Serbian (Latin)_Serbia.1250
-      'sr-hr' => 'srb',
+      'sr-hr' => 'srb',           // Serbian_Croatia.1250
+      'sr-rs' => 'srb',           // Serbian_Serbia.1250
+      'st-za' => 'sot',           // Sesotho_South Africa.utf8
       'sv' => 'sve',              // Swedish.1252
       'sv-fi' => 'svf',           // Swedish_Finland.1252
       'sv-se' => 'sve',           // Swedish_Sweden.1252
@@ -339,12 +381,36 @@ class System
       'tt-ru' => 'ttt',           // Tatar_Russia.1251
       'tzm-latn-dz' => 'tza',     // Central Atlas Tamazight_Algeria.1252
       'tzm-latn-ma' => 'tzm',     // Central Atlas Tamazight (Tifinagh)_Morocco.utf8
-      'zh' => 'chs',
-      'zh-cn' => 'chs',
-      'zh-hk' => 'zhh',
-      'zh-mo' => 'zhm',
-      'zh-sg' => 'zhi',
-      'zh-tw' => 'cht'
+      'ug' => 'uig',              // Uyghur.1256
+      'ug-cn' => 'uig',           // Uyghur_China.1256
+      'uk' => 'ukr',              // Ukrainian.1251
+      'uk-ua' => 'ukr',           // Ukrainian_Ukraine.1251
+      'ur-in' => 'uri',           // Urdu_India.1256
+      'ur-pk' => 'urd',           // Urdu_Pakistan.1256
+      'uz-cyrl' => 'uzc',         // Uzbek (Cyrillic).1251
+      'uz-cyrl-uz' => 'uzc',      // Uzbek (Cyrillic)_Uzbekistan.1251
+      'uz-latn' => 'uzb',         // Uzbek.1254
+      'uz-latn-uz' => 'uzb',      // Uzbek_Uzbekistan.1254
+      'vi' => 'vit',              // Vietnamese.1258
+      'vi-vn' => 'vit',           // Vietnamese_Vietnam.1258
+      'wo' => 'wol',              // Wolof.1252
+      'wo-sn' => 'wol',           // Wolof_Senegal.1252
+      'xh' => 'xho',              // isiXhosa.1252
+      'xh-za' => 'xho',           // isiXhosa_South Africa.1252
+      'yo' => 'yor',              // Yoruba.1252
+      'yo-ng' => 'yor',           // Yoruba_Nigeria.1252
+      'zgh-ma' => 'zhg',          // Standard Moroccan Tamazight_Morocco.utf8
+      'zh' => 'chs',              // Chinese.936
+      'zh-cn' => 'chs',           // Chinese_China.936
+      'zh-hans-sg' => 'zhi',      // Chinese (Simplified)_Singapore.936
+      'zh-hant-hk' => 'zhh',      // Chinese (Traditional)_Hong Kong SAR.950
+      'zh-hant-mo' => 'zhm',      // Chinese (Traditional)_Macao SAR.950
+      'zh-hk' => 'zhh',           // Chinese_Hong Kong SAR.950
+      'zh-mo' => 'zhm',           // Chinese_Macao SAR.950
+      'zh-sg' => 'zhi',           // Chinese_Singapore.936
+      'zh-tw' => 'cht',           // Chinese_Taiwan.950
+      'zu' => 'zul',              // isiZulu.1252
+      'zu-za' => 'zul'            // isiZulu_South Africa.1252
     );
 
 
@@ -353,8 +419,7 @@ class System
   //
   // The code pages used by these locales found at:
   // http://msdn.microsoft.com/en-us/goglobal/bb896001.aspx
-  private static $winlocale_codepage_map = array
-    (
+  private static $winlocale_codepage_map = array(
       'afk' => 'CP1252',
       'amh' => 'utf-8',
       'ara' => 'CP1256',
@@ -386,6 +451,8 @@ class System
       'bsb' => 'CP1250',
       'bsc' => 'CP1251',
       'cat' => 'CP1252',
+      'chh' => 'CP950',
+      'chi' => 'CP936',
       'chs' => 'CP936',
       'cht' => 'CP950',
       'cos' => 'CP1252',
@@ -461,6 +528,7 @@ class System
       'fro' => 'CP1252',
       'frr' => 'CP1252',
       'frs' => 'CP1252',
+      'ful' => 'CP1252',
       'fyn' => 'CP1252',
       'gla' => 'CP1252',
       'glc' => 'CP1252',
@@ -485,6 +553,8 @@ class System
       'its' => 'CP1252',
       'ius' => 'utf-8',
       'iuk' => 'CP1252',
+      'ivl' => 'CP1252',        // Invariant Language_Invariant Country.1252
+      'jav' => 'CP1252',
       'jpn' => 'CP932',
       'kal' => 'CP1252',
       'kat' => 'utf-8',
@@ -494,6 +564,7 @@ class System
       'kkz' => 'utf-8',
       'knk' => 'utf-8',
       'kor' => 'CP949',
+      'kur' => 'CP1256',
       'kyr' => 'CP1251',
       'lao' => 'utf-8',
       'lbx' => 'CP1252',
@@ -503,6 +574,9 @@ class System
       'mki' => 'CP1251',
       'mlg' => 'utf-8',
       'mlt' => 'utf-8',
+      'mng' => 'utf-8',
+      'mnm' => 'utf-8',
+      'mnn' => 'CP1251',
       'mon' => 'CP1251',
       'mpd' => 'CP1252',
       'mri' => 'utf-8',
@@ -513,13 +587,18 @@ class System
       'mym' => 'utf-8',
       'nei' => 'utf-8',
       'nep' => 'utf-8',
+      'ngo' => 'utf-8',
       'nlb' => 'CP1252',
       'nld' => 'CP1252',
       'non' => 'CP1252',
       'nor' => 'CP1252',
       'nso' => 'CP1252',
       'oci' => 'CP1252',
+      'ori' => 'utf-8',
       'orm' => 'utf-8',
+      'pan' => 'utf-8',
+      'pap' => 'CP1256',
+      'pas' => 'utf-8',
       'plk' => 'CP1250',
       'prs' => 'CP1256',
       'pta' => 'CP1252',
@@ -534,7 +613,7 @@ class System
       'rom' => 'CP1250',
       'rum' => 'CP1251',
       'rus' => 'CP1251',
-      'sah' => 'CP1252',
+      'sah' => 'CP1251',
       'san' => 'utf-8',
       'sin' => 'utf-8',
       'sip' => 'CP1256',
@@ -549,9 +628,11 @@ class System
       'smk' => 'CP1252',
       'smn' => 'CP1252',
       'sms' => 'CP1252',
+      'sna' => 'utf-8',
       'som' => 'utf-8',
+      'sot' => 'utf-8',
       'sqi' => 'CP1250',
-      'srb' => 'CP1251',
+      'srb' => 'CP1250',
       'srl' => 'CP1250',
       'srm' => 'CP1250',
       'srn' => 'CP1251',
@@ -581,21 +662,27 @@ class System
       'uig' => 'CP1256',
       'ukr' => 'CP1251',
       'urb' => 'CP1256',
+      'urd' => 'CP1256',
+      'uri' => 'CP1256',
+      'usa' => 'CP1252',
       'uzb' => 'CP1254',
+      'uzc' => 'CP1251',
+      'val' => 'CP1252',
       'vit' => 'CP1258',
       'wol' => 'CP1252',
       'xho' => 'CP1252',
       'yor' => 'CP1252',
+      'zhg' => 'utf-8',
       'zhh' => 'CP950',
       'zhi' => 'CP936',
       'zhm' => 'CP950',
       'zul' => 'CP1252',
+      'zzz' => 'utf-8'
     );
 
   // These are special cases, generally we can convert from the HTTP
   // language specifier to a locale specifier without a map
-  private static $lang_map_unix = array
-    (
+  private static $lang_map_unix = array(
       'ca' => 'ca-ES',
       'cs' => 'cs-CZ',
       'da' => 'da-DK',
@@ -615,8 +702,7 @@ class System
 
   // IBM AIX locale to code set table
   // See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
-  private static $aixlocale_codepage_map = array
-    (
+  private static $aixlocale_codepage_map = array(
       'Ar_AA' => 'IBM-1046',
       'ar_AA' => 'ISO8859-6',
       'bg_BG' => 'ISO8856-5',
@@ -679,8 +765,7 @@ class System
 
   // IBM AIX libiconv UTF-8 converters
   // See http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/aixprggd/genprogc/convert_prg.htm#HDRDNNRI49HOWA
-  private static $aix_utf8_converters = array
-    (
+  private static $aix_utf8_converters = array(
       'ISO8859-1',
       'ISO8859-2',
       'ISO8859-3',
@@ -753,8 +838,7 @@ class System
 
   // GNU iconv code set to IBM AIX libiconv code set table
   // Keys of this table should be in lowercase, and searches should be performed using lowercase!
-  private static $gnu_iconv_to_aix_iconv_codepage_map = array
-    (
+  private static $gnu_iconv_to_aix_iconv_codepage_map = array(
       // "iso-8859-[1-9]" --> "ISO8859-[1-9]" according to http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
       'iso-8859-1' => 'ISO8859-1',
       'iso-8859-2' => 'ISO8859-2',
