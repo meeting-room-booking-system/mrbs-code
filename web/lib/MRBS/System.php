@@ -944,11 +944,12 @@ class System
     // Windows systems
     if ($server_os == "windows")
     {
-      if (!isset(self::$lang_map_windows[utf8_strtolower($langtag)]))
+      $langtag_lower = utf8_strtolower($langtag);
+      if (!isset(self::$lang_map_windows[$langtag_lower]))
       {
         return false;
       }
-      $locale = self::$lang_map_windows[utf8_strtolower($langtag)];
+      $locale = self::$lang_map_windows[$langtag_lower];
     }
     // All of these Unix OSes work in mostly the same way...
     elseif (in_array($server_os, array('linux', 'sunos', 'bsd', 'aix', 'macosx')))
