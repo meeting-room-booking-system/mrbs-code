@@ -1727,51 +1727,6 @@ function get_booking_info($id, $series, $silent=FALSE)
 }
 
 
-// Gets the rooms in an area
-// If $include_disabled is TRUE then all rooms are returned, whether or not they are disabled,
-// otherwise just the ones that are not disabled.
-// If $include_invisible is TRUE then all rooms are returned, whether or not they are visible,
-// otherwise just the ones that are visible to the current user.
-function get_rooms($area, $include_disabled=false, $include_invisible=false)
-{
-  $sql = "SELECT R.*
-            FROM " . _tbl('room') . " R, " . _tbl('area') . " A
-           WHERE R.area_id=?
-           AND R.area_id = A.id";
-
-  if (!($include_disabled))
-  {
-    $sql .= " AND R.disabled = 0" .
-            " AND A.disabled = 0";
-  }
-
-  // In early versions of MRBS the sort_key field didn't exist and this function
-  // is called before the database can be upgraded.
-  if (db()->field_exists(_tbl('room'), 'sort_key'))
-  {
-    $sql .= " ORDER BY R.sort_key";
-  }
-
-  $res = db()->query($sql, array($area));
-
-  $result = array();
-
-  while (false !== ($row = $res->next_row_keyed()))
-  {
-    if ($include_invisible || is_visible($row['id']))
-    {
-      if (isset($row['invalid_types']))
-      {
-        $row['invalid_types'] = json_decode($row['invalid_types']);
-      }
-      $result[] = $row;
-    }
-  }
-
-  return $result;
-}
-
-
 // Gets the ids of all the invisible rooms in the system
 function get_invisible_room_ids()
 {

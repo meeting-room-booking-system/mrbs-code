@@ -1369,9 +1369,17 @@ function get_default_room($area)
   }
 
   // Otherwise just return the first visible room in the area
-  $rooms = get_rooms($area, !$disabled_field_exists);
+  $rooms = new Rooms($area);
+  foreach ($rooms as $room)
+  {
+    if (!$room->isDisabled() && $room->isVisible())
+    {
+      return $room->id;
+    }
+  }
 
-  return (count($rooms) > 0) ? $rooms[0]['id'] : 0;
+  // If all else fails
+  return 0;
 }
 
 
