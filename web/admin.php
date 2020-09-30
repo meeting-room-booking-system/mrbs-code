@@ -242,8 +242,8 @@ function display_rooms($area_id)
   }
   else
   {
-    // Get the information about the fields in the room table
-    $fields = db()->field_info(_tbl('room'));
+    // Get the information about the columns in the room table
+    $columns = new Columns(_tbl('room'));
 
     // See if there are going to be any rooms to display (in other words rooms if
     // you are not an admin whether any rooms are enabled)
@@ -279,25 +279,26 @@ function display_rooms($area_id)
         // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
         echo "<th>" . get_vocab("enabled") . "</th>\n";
       }
-      // ignore these columns, either because we don't want to display them,
+      // Ignore these columns, either because we don't want to display them,
       // or because we have already displayed them in the header column
       $ignore = array('id', 'area_id', 'room_name', 'disabled', 'sort_key', 'custom_html');
-      foreach($fields as $field)
+
+      foreach($columns as $column)
       {
-        if (!in_array($field['name'], $ignore))
+        if (!in_array($column->name, $ignore))
         {
-          switch ($field['name'])
+          switch ($column->name)
           {
             // the standard MRBS fields
             case 'description':
             case 'capacity':
             case 'room_admin_email':
             case 'invalid_types':
-              $text = get_vocab($field['name']);
+              $text = get_vocab($column->name);
               break;
             // any user defined fields
             default:
-              $text = get_loc_field_name(_tbl('room'), $field['name']);
+              $text = get_loc_field_name(_tbl('room'), $column->name);
               break;
           }
           // We don't use htmlspecialchars() here because the column names are
@@ -338,42 +339,41 @@ function display_rooms($area_id)
             // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
             echo "<td class=\"boolean\"><div>" . ((!$room->isDisabled()) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
           }
-          foreach($fields as $field)
+          foreach($columns as $column)
           {
-            if (!in_array($field['name'], $ignore))
+            if (!in_array($column->name, $ignore))
             {
-              switch ($field['name'])
+              switch ($column->name)
               {
                 // the standard MRBS fields
                 case 'description':
                 case 'room_admin_email':
-                  echo "<td><div>" . htmlspecialchars($room->{$field['name']}) . "</div></td>\n";
+                  echo "<td><div>" . htmlspecialchars($room->{$column->name}) . "</div></td>\n";
                   break;
                 case 'capacity':
-                  echo "<td class=\"int\"><div>" . $room->{$field['name']} . "</div></td>\n";
+                  echo "<td class=\"int\"><div>" . $room->{$column->name} . "</div></td>\n";
                   break;
                 case 'invalid_types':
-                  echo "<td><div>" . get_type_names($room->{$field['name']}) . "</div></td>\n";
+                  echo "<td><div>" . get_type_names($room->{$column->name}) . "</div></td>\n";
                   break;
                 // any user defined fields
                 default:
-                  if (($field['nature'] == 'boolean') ||
-                    (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+                  if ($column->isBooleanLike())
                   {
                     // booleans: represent by a checkmark
                     echo "<td class=\"boolean\"><div>";
                     echo (!empty($room->{$field['name']})) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
                     echo "</div></td>\n";
                   }
-                  elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
+                  elseif ($column->getNature() == Column::NATURE_INTEGER)
                   {
                     // integer values
-                    echo "<td class=\"int\"><div>" . $room->{$field['name']} . "</div></td>\n";
+                    echo "<td class=\"int\"><div>" . $room->{$column->name} . "</div></td>\n";
                   }
                   else
                   {
                     // strings
-                    $value = $room->{$field['name']};
+                    $value = $room->{$column->name};
                     $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
                     // Truncate before conversion, otherwise you could chop off in the middle of an entity
                     $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));

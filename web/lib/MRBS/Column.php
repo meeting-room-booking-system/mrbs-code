@@ -66,7 +66,7 @@ class Column
         $var_type = 'string';
         break;
       case self::NATURE_INTEGER:
-        $var_type = ($this->isPseudoBoolean()) ? 'string' : 'int';
+        $var_type = ($this->isBooleanLike()) ? 'string' : 'int';
         break;
       // We can only really deal with the types above at the moment
       default:
@@ -83,7 +83,7 @@ class Column
   public function sanitizeFormVar($value)
   {
     // Turn the "booleans" into 0/1 values
-    if ($this->isPseudoBoolean())
+    if ($this->isBooleanLike())
     {
       $value = (empty($value)) ? 0 : 1;
     }
@@ -103,11 +103,12 @@ class Column
   }
 
 
-  // Smallints and tinyints are considered to be booleans
-  private function isPseudoBoolean()
+  public function isBooleanLike()
   {
-    return (($this->nature == self::NATURE_INTEGER) &&
-            (isset($this->length) && ($this->length <= 2)));
+    // Smallints and tinyints are considered to be booleans
+    return (($this->nature == self::NATURE_BOOLEAN) ||
+            (($this->nature == self::NATURE_INTEGER) &&
+             (isset($this->length) && ($this->length <= 2))));
   }
 
 
