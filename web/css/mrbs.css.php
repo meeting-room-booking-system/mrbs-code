@@ -1744,7 +1744,7 @@ div#checks span {
 }
 
 .good::after {
-  content: '\002714';  <?php // checkmark ?>
+  content: '\002714';  <?php // heavy checkmark ?>
   color: green;
 }
 
