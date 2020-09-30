@@ -230,11 +230,11 @@ function generate_new_room_form()
 }
 
 
-function display_rooms($area)
+function display_rooms($area_id)
 {
   global $max_content_length;
-  
-  $rooms = get_rooms($area, true);
+
+  $rooms = get_rooms($area_id, true);
 
   if (count($rooms) == 0)
   {
@@ -390,7 +390,7 @@ function display_rooms($area)
           if (is_admin())
           {
             echo "<td>\n<div>\n";
-            generate_room_delete_form($r['id'], $area);
+            generate_room_delete_form($r['id'], $area_id);
 
 
             echo "</div>\n</td>\n";
