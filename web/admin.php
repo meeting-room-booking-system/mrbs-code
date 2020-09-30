@@ -234,9 +234,9 @@ function display_rooms($area_id)
 {
   global $max_content_length;
 
-  $rooms = get_rooms($area_id, true);
+  $rooms = new Rooms($area_id);
 
-  if (count($rooms) == 0)
+  if ($rooms->countVisible(true) == 0)
   {
     echo "<p>" . get_vocab("norooms") . "</p>\n";
   }
@@ -248,9 +248,9 @@ function display_rooms($area_id)
     // See if there are going to be any rooms to display (in other words rooms if
     // you are not an admin whether any rooms are enabled)
     $n_displayable_rooms = 0;
-    foreach ($rooms as $r)
+    foreach ($rooms as $room)
     {
-      if (is_admin() || !$r['disabled'])
+      if (is_admin() || !$room->isDisabled())
       {
         $n_displayable_rooms++;
       }
@@ -317,26 +317,26 @@ function display_rooms($area_id)
       // The body
       echo "<tbody>\n";
       $row_class = "odd";
-      foreach ($rooms as $r)
+      foreach ($rooms as $room)
       {
-        // Don't show ordinary users disabled rooms
-        if (is_admin() || !$r['disabled'])
+        // Don't show ordinary users disabled or invisible rooms
+        if (is_admin() || (!$room->isDisabled() && $room->isVisible()))
         {
           $row_class = ($row_class == "even") ? "odd" : "even";
           echo "<tr class=\"$row_class\">\n";
 
-          $html_name = htmlspecialchars($r['room_name']);
-          $href = multisite('edit_room.php?room=' . $r['id']);
+          $html_name = htmlspecialchars($room->room_name);
+          $href = multisite('edit_room.php?room=' . $room->id);
           // We insert an invisible span containing the sort key so that the rooms will
           // be sorted properly
           echo "<td><div>" .
-            "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
+            "<span>" . htmlspecialchars($room->sort_key) . "</span>" .
             "<a title=\"$html_name\" href=\"" . htmlspecialchars($href) . "\">$html_name</a>" .
             "</div></td>\n";
           if (is_admin())
           {
             // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
-            echo "<td class=\"boolean\"><div>" . ((!$r['disabled']) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
+            echo "<td class=\"boolean\"><div>" . ((!$room->isDisabled()) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
           }
           foreach($fields as $field)
           {
@@ -347,13 +347,13 @@ function display_rooms($area_id)
                 // the standard MRBS fields
                 case 'description':
                 case 'room_admin_email':
-                  echo "<td><div>" . htmlspecialchars($r[$field['name']]) . "</div></td>\n";
+                  echo "<td><div>" . htmlspecialchars($room->{$field['name']}) . "</div></td>\n";
                   break;
                 case 'capacity':
-                  echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+                  echo "<td class=\"int\"><div>" . $room->{$field['name']} . "</div></td>\n";
                   break;
                 case 'invalid_types':
-                  echo "<td><div>" . get_type_names($r[$field['name']]) . "</div></td>\n";
+                  echo "<td><div>" . get_type_names($room->{$field['name']}) . "</div></td>\n";
                   break;
                 // any user defined fields
                 default:
@@ -362,18 +362,18 @@ function display_rooms($area_id)
                   {
                     // booleans: represent by a checkmark
                     echo "<td class=\"boolean\"><div>";
-                    echo (!empty($r[$field['name']])) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+                    echo (!empty($room->{$field['name']})) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
                     echo "</div></td>\n";
                   }
                   elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
                   {
                     // integer values
-                    echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+                    echo "<td class=\"int\"><div>" . $room->{$field['name']} . "</div></td>\n";
                   }
                   else
                   {
                     // strings
-                    $value = $r[$field['name']];
+                    $value = $room->{$field['name']};
                     $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
                     // Truncate before conversion, otherwise you could chop off in the middle of an entity
                     $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));
@@ -390,7 +390,7 @@ function display_rooms($area_id)
           if (is_admin())
           {
             echo "<td>\n<div>\n";
-            generate_room_delete_form($r['id'], $area_id);
+            generate_room_delete_form($room->id, $area_id);
 
 
             echo "</div>\n</td>\n";
