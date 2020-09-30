@@ -190,8 +190,6 @@ function get_type_options($include_admin_types=false)
 // Converts an array of types into a string
 function get_type_names($types, $glue=', ')
 {
-  global $booking_types;
-
   if (empty($types))
   {
     return '';
