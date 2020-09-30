@@ -241,9 +241,9 @@ function output_row(User $user)
             if (isset($select_options["user.$key"]) &&
               is_assoc($select_options["user.$key"]))
             {
-              if (isset($select_options["user.$key"][$row[$key]]))
+              if (isset($select_options["user.$key"][$user->{$key}]))
               {
-                $col_value = $select_options["user.$key"][$row[$key]];
+                $col_value = $select_options["user.$key"][$user->{$key}];
               }
               else
               {
