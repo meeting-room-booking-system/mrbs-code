@@ -337,7 +337,7 @@ function display_rooms($area_id)
           if (is_admin())
           {
             // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
-            echo "<td class=\"boolean\"><div>" . ((!$room->isDisabled()) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;") . "</div></td>\n";
+            echo "<td class=\"boolean\"><div>" . ((!$room->isDisabled()) ? MRBS_HEAVY_CHECK_MARK : '') . "</div></td>\n";
           }
           foreach($columns as $column)
           {
@@ -362,7 +362,7 @@ function display_rooms($area_id)
                   {
                     // booleans: represent by a checkmark
                     echo "<td class=\"boolean\"><div>";
-                    echo (!empty($room->{$field['name']})) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+                    echo (!empty($room->{$field['name']})) ? MRBS_HEAVY_CHECK_MARK : '';
                     echo "</div></td>\n";
                   }
                   elseif ($column->getNature() == Column::NATURE_INTEGER)

@@ -255,7 +255,7 @@ function output_row(User $user)
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)))
             {
               // booleans: represent by a checkmark
-              $values[] = (!empty($col_value)) ? "<img src=\"images/check.png\" alt=\"check mark\" width=\"16\" height=\"16\">" : "&nbsp;";
+              $values[] = (!empty($col_value)) ? MRBS_HEAVY_CHECK_MARK : '';
             }
             elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
             {

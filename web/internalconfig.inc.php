@@ -252,6 +252,8 @@ define('MINUTES_PER_DAY',  24*60);
 define('SECONDS_PER_DAY',  MINUTES_PER_DAY * 60);
 define('SECONDS_PER_HOUR', 3600);
 
+define('MRBS_HEAVY_CHECK_MARK', '&#10004;');
+
 /*************************************************
  * REPORT constants - internal use, do not change
  *************************************************/
