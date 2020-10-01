@@ -334,36 +334,17 @@ class AuthLdap extends Auth
 
   public function getUsers()
   {
-    $mrbs_user = \MRBS\session()->getCurrentUser();
-
-    if (!isset($mrbs_user))
-    {
-      return false;
-    }
-
-    $object = array();
-    $object['users'] = array();
-    $users = array();
-
-    $res = $this->action('getUsersCallback', $mrbs_user->username, $object, true);
-
-    if ($res === false)
-    {
-      return false;
-    }
-
-    if (isset($object['users']))
-    {
-      $users = $object['users'];
-    }
-
-    self::sortUsers($users);
-
-    return $users;
+    return $this->getUsersGeneric('getUsersCallback');
   }
 
 
   public function getUsernames()
+  {
+    return $this->getUsersGeneric('getUsernamesCallback');
+  }
+
+
+  private function getUsersGeneric($callback)
   {
     $mrbs_user = \MRBS\session()->getCurrentUser();
 
@@ -376,7 +357,7 @@ class AuthLdap extends Auth
     $object['users'] = array();
     $users = array();
 
-    $res = $this->action('getUsernamesCallback', $mrbs_user->username, $object, true);
+    $res = $this->action($callback, $mrbs_user->username, $object, true);
 
     if ($res === false)
     {
