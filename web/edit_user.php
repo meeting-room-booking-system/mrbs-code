@@ -1153,8 +1153,25 @@ if (!$is_ajax)
     $submit = new ElementInputSubmit();
     $submit->setAttribute('value', get_vocab('add_new_user'));
     $form->addElement($submit);
-
     $form->render();
+
+
+    // Sync button for auth types other than 'db'
+    if ($auth['type'] != 'db')
+    {
+      $form = new Form();
+      $form->setAttributes(array('id' => 'sync',
+                                 'method' => 'post',
+                                 'action' => multisite(this_page())));
+
+      $form->addHiddenInput('action', 'sync');
+
+      $submit = new ElementInputSubmit();
+      $submit->setAttribute('value', get_vocab('sync'));
+      $form->addElement($submit);
+      $form->render();
+    }
+
   }
 }
 

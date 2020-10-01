@@ -326,6 +326,7 @@ $vocab["policy_upper"]          = "%d upper-case letter(s)";
 $vocab["policy_numeric"]        = "%d numeric character(s)";
 $vocab["policy_special"]        = "%d special character(s)";
 $vocab["add_new_user"]          = "Add a new user";
+$vocab["sync"]                  = "Sync";
 $vocab["action"]                = "Action";
 $vocab["user"]                  = "User";
 $vocab["administrator"]         = "Administrator";

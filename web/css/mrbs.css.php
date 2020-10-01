@@ -1468,7 +1468,7 @@ div#div_custom_html {
 .roles_table .room th {
   font-weight: normal;
 }
-  
+
 .roles_table .room th:first-child {
   padding-left: 1.7em;
 }
@@ -1778,7 +1778,8 @@ div#user_list {
   padding: 2em 0;
 }
 
-form#add_new_user {
+form#add_new_user, form#sync {
+  float: left;
   margin-left: 1em;
 }
 
