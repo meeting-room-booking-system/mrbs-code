@@ -52,8 +52,6 @@ class Users extends TableIterator
   {
     global $auth;
 
-    // TODO: PostgreSQL equivalent for GROUP_CONCAT
-
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);
     $sql_params = array(':auth_type' => $auth['type']);
@@ -67,5 +65,22 @@ class Users extends TableIterator
     $this->res = db()->query($sql, $sql_params);
     $this->cursor = -1;
     $this->item = null;
+  }
+
+
+  // Sync users from an external source.
+  public static function sync()
+  {
+    global $auth;
+
+    // Make sure this is a valid use of the method
+    if (($auth['type'] == 'db') || !method_exists(auth(), 'getUsers'))
+    {
+      return;
+    }
+
+    $users = auth()->getUsers();
+    var_dump($users);
+    exit;
   }
 }

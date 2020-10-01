@@ -332,6 +332,37 @@ class AuthLdap extends Auth
   }
 
 
+  public function getUsers()
+  {
+    $mrbs_user = \MRBS\session()->getCurrentUser();
+
+    if (!isset($mrbs_user))
+    {
+      return false;
+    }
+
+    $object = array();
+    $object['users'] = array();
+    $users = array();
+
+    $res = $this->action('getUsersCallback', $mrbs_user->username, $object, true);
+
+    if ($res === false)
+    {
+      return false;
+    }
+
+    if (isset($object['users']))
+    {
+      $users = $object['users'];
+    }
+
+    self::sortUsers($users);
+
+    return $users;
+  }
+
+
   public function getUsernames()
   {
     $mrbs_user = \MRBS\session()->getCurrentUser();
@@ -360,6 +391,102 @@ class AuthLdap extends Auth
     self::sortUsers($users);
 
     return $users;
+  }
+
+
+  private static function getUsersCallback(&$ldap, $base_dn, $dn, $user_search,
+                                               $user, &$object)
+  {
+    self::debug("base_dn '$base_dn'");
+
+    if (!$ldap || !$base_dn || !isset($object['config']['ldap_user_attrib']))
+    {
+      self::debug("invalid parameters, could not call ldap_search, returning false");
+      return false;
+    }
+
+    if (isset($object['config']['ldap_filter']))
+    {
+      $filter = $object['config']['ldap_filter'];
+    }
+    else
+    {
+      $filter = 'objectclass=*';
+    }
+    $filter = "($filter)";
+
+    // Form the attributes
+    $username_attrib = \MRBS\utf8_strtolower($object['config']['ldap_user_attrib']);
+    $attributes = array($username_attrib);
+
+    // The display name attribute might not have been set in the config file
+    if (isset($object['config']['ldap_name_attrib']))
+    {
+      $display_name_attrib = \MRBS\utf8_strtolower($object['config']['ldap_name_attrib']);
+      $attributes[] = $display_name_attrib;
+    }
+
+    // The group name attribute might not have been set in the config file
+    if (isset($object['config']['ldap_group_member_attrib']))
+    {
+      $group_member_attrib = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
+      $attributes[] = $group_member_attrib;
+    }
+
+    self::debug("searching with base_dn '$base_dn' and filter '$filter'");
+
+    $res = ldap_search($ldap, $base_dn, $filter, $attributes);
+
+    if ($res == false)
+    {
+      self::debug("ldap_search failed: " . self::ldapError($ldap));
+      return false;
+    }
+
+    self::debug(ldap_count_entries($ldap, $res) . " entries found");
+
+    $entry = ldap_first_entry($ldap, $res);
+
+    // Loop through the entries to get all the users
+    while ($entry)
+    {
+      // Initialise all keys in the user array to NULL, in case an attribute isn't present
+      $user = array('username' => null,
+                    'display_name' => null,
+                    'groups' => array());
+
+      $attribute = ldap_first_attribute($ldap, $entry);
+
+      // Loop through all the attributes for this user
+      while ($attribute)
+      {
+        $values = ldap_get_values($ldap, $entry, $attribute);
+        $attribute = \MRBS\utf8_strtolower($attribute);  // ready for the comparisons
+
+        if ($attribute == $username_attrib)
+        {
+          $user['username'] = $values[0];
+        }
+        elseif ($attribute == $display_name_attrib)
+        {
+          $user['display_name'] = $values[0];
+        }
+        elseif ($attribute == $group_member_attrib)
+        {
+          for ($i=0; $i<$values['count']; $i++)
+          {
+            $user['groups'][] = $values[$i];
+          }
+        }
+
+        $attribute = ldap_next_attribute($ldap, $entry);
+      }
+
+      $object['users'][] = $user;
+      $entry = ldap_next_entry($ldap, $entry);
+    }
+
+    return true;
   }
 
 

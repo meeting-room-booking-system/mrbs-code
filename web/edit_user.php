@@ -1045,6 +1045,17 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   exit;
 }
 
+
+/*---------------------------------------------------------------------------*\
+|             Sync users                                                      |
+\*---------------------------------------------------------------------------*/
+
+if (isset($action) && ($action == "sync"))
+{
+  Users::sync();
+}
+
+
 /*---------------------------------------------------------------------------*\
 |             Edit a given entry - 2nd phase: Update the database.            |
 \*---------------------------------------------------------------------------*/
@@ -1156,8 +1167,8 @@ if (!$is_ajax)
     $form->render();
 
 
-    // Sync button for auth types other than 'db'
-    if ($auth['type'] != 'db')
+    // Sync button for auth types other than 'db' where we can get all the users
+    if (($auth['type'] != 'db') && method_exists(auth(), 'getUsers'))
     {
       $form = new Form();
       $form->setAttributes(array('id' => 'sync',
