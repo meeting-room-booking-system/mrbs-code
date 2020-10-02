@@ -69,7 +69,7 @@ class Users extends TableIterator
 
 
   // Sync users from an external source.
-  public static function sync()
+  public static function sync($verbose=false)
   {
     global $auth;
 
@@ -79,8 +79,82 @@ class Users extends TableIterator
       return;
     }
 
-    $users = auth()->getUsers();
-    var_dump($users);
+    // Get the external users
+    if (false === ($ext_users = auth()->getUsers()))
+    {
+      return;
+    }
+
+    // Get the existing usernames
+    $usernames = self::getUsernames();
+    // Get the external usernames
+    $ext_usernames = array_column($ext_users, 'username');
+    // Get the existing usernames that are no longer in the external source
+    $old_names = array_values(array_diff($usernames, $ext_usernames));
+
+    // TODO  Lock table
+    self::deleteUsers($old_names, $verbose);
+    self::upsertUsers($ext_users, $verbose);
+
+    // TODO  Unlock table
     exit;
+  }
+
+
+  private static function getUsernames()
+  {
+    global $auth;
+
+    $sql_params = array(':auth_type' => $auth['type']);
+
+    $sql = "SELECT name
+              FROM " . _tbl(User::TABLE_NAME) . "
+             WHERE auth_type=:auth_type
+          ORDER BY name";
+
+    return db()->query_array($sql, $sql_params);
+  }
+
+
+  private static function deleteUsers(array $usernames, $verbose=false)
+  {
+    global $auth;
+
+    $n_users = count($usernames);
+
+    if ($n_users == 0)
+    {
+      if ($verbose)
+      {
+        echo get_vocab("sync_delete_no_users") . "\n\n";
+      }
+      return;
+    }
+
+    if ($verbose)
+    {
+      echo get_vocab("sync_deleting_n_users", $n_users) . "\n";
+      echo implode("\n", $usernames);
+      echo "\n\n";
+    }
+
+    $q_marks = str_repeat('?,', $n_users - 1) . '?';
+    $sql = "DELETE
+              FROM " . _tbl(User::TABLE_NAME) . "
+             WHERE name IN ($q_marks)
+               AND auth_type=?";
+    $sql_params = $usernames;
+    array_push($sql_params, $auth['type']);
+    db()->command($sql, $sql_params);
+  }
+
+
+  private static function upsertUsers(array $users, $verbose)
+  {
+    foreach ($users as $user)
+    {
+      var_dump($user);
+      echo "<br>\n";
+    }
   }
 }
