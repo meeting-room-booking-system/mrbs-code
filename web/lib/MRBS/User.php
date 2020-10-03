@@ -8,12 +8,6 @@ class User extends Table
 {
   const TABLE_NAME = 'user';
 
-  public $username;
-  public $display_name;
-  public $email;
-  public $level;
-  public $auth_type;
-
   protected static $unique_columns = array('name', 'auth_type');
 
 
@@ -191,6 +185,26 @@ class User extends Table
         $this->email .= '@' . $domain;
       }
     }
+  }
+
+
+  // Function to decode any columns that are stored encoded in the database
+  protected static function onRead($row)
+  {
+    $row['username'] = $row['name'];
+
+    return $row;
+  }
+
+  // Function to encode any columns that are stored encoded in the database
+  protected static function onWrite($row)
+  {
+    if (!isset($row['name']))
+    {
+      $row['name'] = $row['username'];
+    }
+
+    return $row;
   }
 
 }

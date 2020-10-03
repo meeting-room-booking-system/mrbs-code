@@ -6,15 +6,6 @@ class Room extends Table
 {
   const TABLE_NAME = 'room';
 
-  public $id;
-  public $room_name;
-  public $sort_key;
-  public $area_id;
-  public $description;
-  public $capacity;
-  public $room_admin_email;
-  public $disabled;
-
   protected static $unique_columns = array('room_name', 'area_id');
 
   private $is_visible;

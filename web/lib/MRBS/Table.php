@@ -6,10 +6,11 @@ namespace MRBS;
 //    - the table has one or more unique columns
 abstract class Table
 {
-  // All sub-classes must declare the following
-  // const TABLE_NAME  // the short name for the table, eg 'area'
-
-  // protected static $unique_columns // an array of unique columns, eg array('area_name')
+  // All sub-classes must declare the following:
+  //    const TABLE_NAME  // the short name for the table, eg 'area'
+  //    protected static $unique_columns // an array of unique columns, eg array('area_name')
+  //
+  // All properties are accessed via magic methods; there should be no public properties
 
   private $data;  // Will contain the column keys, but could also contain extra keys
 
@@ -102,6 +103,8 @@ abstract class Table
     // Obtain a lock (see also Delete)
     db()->mutex_lock(_tbl(static::TABLE_NAME));
 
+    $this->data = static::onWrite($this->data);
+
     // Could do an INSERT ... ON DUPLICATE KEY UPDATE but there's no
     // easy equivalent in PostgreSQL until PostgreSQL 9.5.
     if ($this->exists())
@@ -126,14 +129,7 @@ abstract class Table
     $values = array();
     $sql_params = array();
 
-    // Merge the accessible and inaccessible properties for the table into
-    // a single array.
-    $table_data = static::onWrite($this->data);
-    $accessible_properties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
-    foreach ($accessible_properties as $property)
-    {
-      $table_data[$property->name] = $property->getValue($this);
-    }
+    $table_data = $this->data;
 
     $cols = new Columns(_tbl(static::TABLE_NAME));
     $column_names = $cols->getNames();

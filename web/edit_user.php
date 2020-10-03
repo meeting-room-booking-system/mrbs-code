@@ -150,7 +150,7 @@ function output_row(User $user)
     $user->display_name = $user->name;
   }
 
-  $form_value = ($auth['type'] == 'db') ? $user->display_name : $user->name;
+  $form_value = $user->display_name;
 
   // You can only edit a user if you have sufficient admin rights, or else if that user is yourself
   if (can_edit_user($user->name))
@@ -171,15 +171,12 @@ function output_row(User $user)
     $first_column_value = "<span class=\"normal\">" . htmlspecialchars($form_value) . "</span>";
   }
 
-  if ($auth['type'] == 'db')
-  {
-    $sortname = get_sortable_name($user->display_name);
-    $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
-  }
+  $sortname = get_sortable_name($user->display_name);
+  $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
 
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
-  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . (($auth['type'] == 'db') ? $name_value : $first_column_value);
+  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
   // And add the roles, which aren't one of the table columns
   $role_name_list = implode(', ', $user->role_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
@@ -1052,7 +1049,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
 if (isset($action) && ($action == "sync"))
 {
-  Users::sync();
+  $users->sync();
 }
 
 
@@ -1211,10 +1208,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo "<tr>";
 
     // First three columns which are the name, display name and roles
-    if ($auth['type'] == 'db')
-    {
-      echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
-    }
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</th>\n";
 

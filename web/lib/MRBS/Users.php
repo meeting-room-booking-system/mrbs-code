@@ -69,7 +69,7 @@ class Users extends TableIterator
 
 
   // Sync users from an external source.
-  public static function sync($verbose=false)
+  public function sync($verbose=false)
   {
     global $auth;
 
@@ -86,37 +86,36 @@ class Users extends TableIterator
     }
 
     // Get the existing usernames
-    $usernames = self::getUsernames();
+    $usernames = $this->getUsernames();
     // Get the external usernames
     $ext_usernames = array_column($ext_users, 'username');
     // Get the existing usernames that are no longer in the external source
     $old_names = array_values(array_diff($usernames, $ext_usernames));
 
     // TODO  Lock table
-    self::deleteUsers($old_names, $verbose);
-    self::upsertUsers($ext_users, $verbose);
+    $this->deleteUsers($old_names, $verbose);
+    $this->upsertUsers($ext_users, $verbose);
 
     // TODO  Unlock table
-    exit;
   }
 
 
-  private static function getUsernames()
+  private function getUsernames()
   {
-    global $auth;
+    $result = array();
+    $this->rewind();
 
-    $sql_params = array(':auth_type' => $auth['type']);
+    while ($this->valid())
+    {
+      $result[] = $this->current()->name;
+      $this->next();
+    }
 
-    $sql = "SELECT name
-              FROM " . _tbl(User::TABLE_NAME) . "
-             WHERE auth_type=:auth_type
-          ORDER BY name";
-
-    return db()->query_array($sql, $sql_params);
+    return $result;
   }
 
 
-  private static function deleteUsers(array $usernames, $verbose=false)
+  private function deleteUsers(array $usernames, $verbose=false)
   {
     global $auth;
 
@@ -149,12 +148,50 @@ class Users extends TableIterator
   }
 
 
-  private static function upsertUsers(array $users, $verbose)
+  private function upsertUsers(array $external_users, $verbose=false)
   {
-    foreach ($users as $user)
+    global $auth;
+
+    if ($verbose)
     {
-      var_dump($user);
-      echo "<br>\n";
+      $added = array();
+      $updated = array();
+    }
+
+    // TODO Check for change in groups
+
+    // Sort the external users by username
+    $usernames = array_column($external_users, 'username');
+    array_multisort($usernames, $external_users);
+
+    // Loop through the external users and add them or update them as necessary
+    foreach ($external_users as $external_user)
+    {
+      // Try and get the user from the database
+      $sql = "SELECT name, display_name
+                FROM " . _tbl(User::TABLE_NAME) . "
+               WHERE name=:name
+                 AND auth_type=:auth_type
+               LIMIT 1";
+
+      $sql_params = array(
+          ':name' => $external_user['username'],
+          ':auth_type' => $auth['type']
+        );
+
+      $res = db()->query($sql, $sql_params);
+
+      if ($res->count() == 0)
+      {
+        $user = new User($external_user['username']);
+        $user->display_name = $external_user['display_name'];
+        $user->save();
+        $added[] = $external_user['display_name'];
+      }
+      else
+      {
+        $updated[] = $external_user['display_name'];
+      }
     }
   }
 }
