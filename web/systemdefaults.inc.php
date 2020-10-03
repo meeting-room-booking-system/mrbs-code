@@ -920,6 +920,8 @@ $ldap_email_attrib = 'mail';
 // The LDAP attribute which holds a user's name. Another common attribute
 // to use (with Active Directory) is 'displayname'.
 // This can be an array.
+// The name attribute can also be a composite attribute consisting of individual
+// LDAP attributes separated by spaces, eg 'givenName sn'.
 $ldap_name_attrib = 'cn';
 
 // The DN of the LDAP group that MRBS admins must be in. If this is defined
