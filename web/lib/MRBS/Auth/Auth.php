@@ -155,22 +155,8 @@ abstract class Auth
   protected static function sortUsers(array &$users)
   {
     // Obtain a list of columns
-    if (function_exists('array_column'))  // PHP >= 5.5.0
-    {
-      $username     = array_column($users, 'username');
-      $display_name = array_column($users, 'display_name');
-    }
-    else
-    {
-      $username = array();
-      $display_name = array();
-
-      foreach ($users as $key => $user)
-      {
-        $username[$key]     = $user['username'];
-        $display_name[$key] = $user['display_name'];
-      }
-    }
+    $username     = array_column($users, 'username');
+    $display_name = array_column($users, 'display_name');
 
     // Sort the data with volume descending, edition ascending
     // Add $data as the last parameter, to sort by the common key
