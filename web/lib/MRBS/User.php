@@ -25,8 +25,6 @@ class User extends Table
       $this->display_name = $username;
       $this->setDefaultEmail();
       $this->level = 0; // Play it safe
-      $this->id = self::getIdByName($username, $this->auth_type);
-      $this->roles = self::getRolesByUserId($this->id);
     }
   }
 
@@ -41,7 +39,7 @@ class User extends Table
   public static function getById($id)
   {
     // TODO: there's no doubt a faster way of doing this using a single SQL
-    // query, though it needs to work for both MySQL and PostgreSQL.
+    // TODO: query, though it needs to work for both MySQL and PostgreSQL.
     $user = parent::getById($id);
 
     if (isset($user))
