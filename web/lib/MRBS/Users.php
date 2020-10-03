@@ -95,7 +95,6 @@ class Users extends TableIterator
     // TODO  Lock table
     $this->deleteUsers($old_names, $verbose);
     $this->upsertUsers($ext_users, $verbose);
-
     // TODO  Unlock table
   }
 
@@ -183,6 +182,7 @@ class Users extends TableIterator
 
       if ($res->count() == 0)
       {
+        // It's a new user: add them to the table
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
         $user->save();
@@ -190,7 +190,21 @@ class Users extends TableIterator
       }
       else
       {
-        $updated[] = $external_user['display_name'];
+        // It's an existing user: check to see whether there's been any
+        // change and, if so, update the database.
+        $row = $res->next_row_keyed();
+        if ($external_user['display_name'] != $row['display_name'])
+        {
+          $sql = "UPDATE " . _tbl(User::TABLE_NAME) . "
+                     SET display_name=:display_name
+                   WHERE name=:name";
+          $sql_params = array(
+              ':display_name' => $external_user['display_name'],
+              ':name' => $external_user['username']
+            );
+          db()->command($sql, $sql_params);
+          $updated[] = $external_user['display_name'];
+        }
       }
     }
   }
