@@ -1150,22 +1150,24 @@ if (!$is_ajax)
 
   if (is_user_admin()) /* Administrators get the right to add new users */
   {
-    $form = new Form();
+    // Add button for the 'db' auth type or where we can't get all the users
+    if (($auth['type'] == 'db') || !method_exists(auth(), 'getUsers'))
+    {
+      $form = new Form();
 
-    $form->setAttributes(array('id'     => 'add_new_user',
-                               'method' => 'post',
-                               'action' => multisite(this_page())));
+      $form->setAttributes(array('id' => 'add_new_user',
+        'method' => 'post',
+        'action' => multisite(this_page())));
 
-    $form->addHiddenInput('action', 'add');
+      $form->addHiddenInput('action', 'add');
 
-    $submit = new ElementInputSubmit();
-    $submit->setAttribute('value', get_vocab('add_new_user'));
-    $form->addElement($submit);
-    $form->render();
-
-
-    // Sync button for auth types other than 'db' where we can get all the users
-    if (($auth['type'] != 'db') && method_exists(auth(), 'getUsers'))
+      $submit = new ElementInputSubmit();
+      $submit->setAttribute('value', get_vocab('add_new_user'));
+      $form->addElement($submit);
+      $form->render();
+    }
+    // Sync button otherwise
+    else
     {
       $form = new Form();
       $form->setAttributes(array('id' => 'sync',
