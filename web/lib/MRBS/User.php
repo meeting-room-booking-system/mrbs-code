@@ -25,6 +25,7 @@ class User extends Table
       $this->display_name = $username;
       $this->setDefaultEmail();
       $this->level = 0; // Play it safe
+      $this->roles = array();
     }
   }
 

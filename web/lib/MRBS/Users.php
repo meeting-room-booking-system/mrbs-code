@@ -207,5 +207,33 @@ class Users extends TableIterator
         }
       }
     }
+
+    // Output a summary
+    if ($verbose)
+    {
+      $n_added = count($added);
+      if ($n_added == 0)
+      {
+        echo get_vocab("sync_add_no_users");
+      }
+      else
+      {
+        echo get_vocab("sync_adding_n_users", $n_added) . "\n";
+        echo implode("\n", $added);
+      }
+      echo "\n\n";
+
+      $n_updated = count($updated);
+      if ($n_updated == 0)
+      {
+        echo get_vocab("sync_update_no_users");
+      }
+      else
+      {
+        echo get_vocab("sync_updating_n_users", $n_updated) . "\n";
+        echo implode("\n", $updated);
+      }
+      echo "\n\n";
+    }
   }
 }
