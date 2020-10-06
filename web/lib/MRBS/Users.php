@@ -43,6 +43,8 @@ class Users extends TableIterator
         $row['groups'] = array();
       }
 
+      // Sort the group names
+      sort($group_names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
       $row['group_names'] = $group_names;
 
       // Convert the string of role ids into an array and also add an
