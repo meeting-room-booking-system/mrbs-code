@@ -187,10 +187,6 @@ class Users extends TableIterator
 
     // TODO Check for change in groups
 
-    // Sort the external users by username
-    $usernames = array_column($external_users, 'username');
-    array_multisort($usernames, $external_users);
-
     // Loop through the external users and add them or update them as necessary
     foreach ($external_users as $external_user)
     {
