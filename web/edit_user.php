@@ -177,7 +177,11 @@ function output_row(User $user)
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
-  // And add the roles, which aren't one of the table columns
+  // And add the groups, which aren't one of the table columns
+  $group_name_list = implode(', ', $user->group_names);
+  $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($group_name_list) . "\">" .
+    htmlspecialchars($group_name_list) . "</div>";
+  // And add the roles, which aren't one of the table columns either
   $role_name_list = implode(', ', $user->role_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
     htmlspecialchars($role_name_list) . "</div>";
@@ -1212,6 +1216,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     // First three columns which are the name, display name and roles
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("groups") . "</th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</th>\n";
 
     // Other column headers

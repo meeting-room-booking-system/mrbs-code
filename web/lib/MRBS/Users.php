@@ -5,12 +5,15 @@ namespace MRBS;
 class Users extends TableIterator
 {
 
+  private $group_names;
   private $role_names;
 
 
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\User');
+    $groups = new Groups();
+    $this->group_names = $groups->getNames();
     $roles = new Roles();
     $this->role_names = $roles->getNames();
   }
@@ -22,6 +25,26 @@ class Users extends TableIterator
 
     if (false !== ($row = $this->res->next_row_keyed()))
     {
+      // Convert the string of group ids into an array and also add an
+      // array of group names
+      $group_names = array();
+
+      // If there are no groups, MySQL will return NULL and PostgreSQL ''.
+      if (isset($row['groups']) && ($row['groups'] !== ''))
+      {
+        $row['groups'] = explode(',', $row['groups']);
+        foreach ($row['groups'] as $group_id)
+        {
+          $group_names[] = $this->group_names[$group_id];
+        }
+      }
+      else
+      {
+        $row['groups'] = array();
+      }
+
+      $row['group_names'] = $group_names;
+
       // Convert the string of role ids into an array and also add an
       // array of role names
       $role_names = array();
@@ -55,10 +78,13 @@ class Users extends TableIterator
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);
     $sql_params = array(':auth_type' => $auth['type']);
-    $sql = "SELECT U.*, " . db()->syntax_group_array_as_string('R.role_id') . " AS roles
+    $sql = "SELECT U.*, " . db()->syntax_group_array_as_string('R.role_id') . " AS roles,
+                        " . db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
               FROM $table_name U
          LEFT JOIN " . _tbl('user_role') . " R
                 ON R.user_id=U.id
+         LEFT JOIN " . _tbl('user_group') . " G
+                ON G.user_id=U.id
              WHERE U.auth_type=:auth_type
           GROUP BY U.id
           ORDER BY U.name";
