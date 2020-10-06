@@ -33,6 +33,7 @@ class User extends Table
   public function save()
   {
     parent::save();
+    $this->saveGroups();
     $this->saveRoles();
   }
 
@@ -70,6 +71,23 @@ class User extends Table
   }
 
 
+  private function saveGroups()
+  {
+    $existing = self::getGroupsByUserId($this->id);
+
+    // If there's been no change then don't do anything
+    if (array_diff($existing, $this->groups) == array_diff($this->groups, $existing))
+    {
+      return;
+    }
+
+    // Otherwise delete the old ones and insert the new ones
+    // TODO: add some locking?
+    $this->deleteGroups();
+    $this->insertGroups();
+  }
+
+
   private function saveRoles()
   {
     $existing = self::getRolesByUserId($this->id);
@@ -87,11 +105,42 @@ class User extends Table
   }
 
 
+  private function deleteGroups()
+  {
+    $sql = "DELETE FROM " . _tbl('user_group') . "
+                  WHERE user_id=:user_id";
+    db()->command($sql, array(':user_id' => $this->id));
+  }
+
+
   private function deleteRoles()
   {
     $sql = "DELETE FROM " . _tbl('user_role') . "
                   WHERE user_id=:user_id";
     db()->command($sql, array(':user_id' => $this->id));
+  }
+
+
+  private function insertGroups()
+  {
+    // If there aren't any groups then there's no need to do anything
+    if (empty($this->groups))
+    {
+      return;
+    }
+
+    // Otherwise insert the groups
+    $sql_params = array(':user_id' => $this->id);
+    $values = array();
+    foreach ($this->groups as $i => $group_id)
+    {
+      $named_parameter = ":group_id$i";
+      $sql_params[$named_parameter] = $group_id;
+      $values[] = "(:user_id, $named_parameter)";
+    }
+    $sql = "INSERT INTO " . _tbl('user_group') . " (user_id, group_id) VALUES ";
+    $sql .= implode(', ', $values);
+    db()->command($sql, $sql_params);
   }
 
 
@@ -133,6 +182,21 @@ class User extends Table
     $id = db()->query1($sql, $sql_params);
 
     return ($id < 0) ? null : $id;
+  }
+
+
+  private static function getGroupsByUserId($id)
+  {
+    if (!isset($id))
+    {
+      return array();
+    }
+
+    $sql = "SELECT group_id
+              FROM " . _tbl('user_group') . "
+             WHERE user_id=:user_id";
+    $sql_params = array(':user_id' => $id);
+    return db()->query_array($sql, $sql_params);
   }
 
 

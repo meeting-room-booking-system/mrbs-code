@@ -211,6 +211,24 @@ class Users extends TableIterator
         // It's a new user: add them to the table
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
+        // Get the user's group ids
+        $group_ids = array();
+        foreach ($external_user['groups'] as $group_name)
+        {
+          $group_id = array_search($group_name, $this->group_names);
+          // If the group doesn't exist then create it
+          if ($group_id === false)
+          {
+            $group = new Group($group_name);
+            $group->save();
+            $group_id = $group->id;
+            // and update the group names
+            $this->group_names[$group_id] = $group_name;
+          }
+          $group_ids[] = $group_id;
+        }
+        $user->groups = $group_ids;
+        // Save the user to the database
         $user->save();
         $added[] = $external_user['display_name'];
       }
@@ -218,6 +236,7 @@ class Users extends TableIterator
       {
         // It's an existing user: check to see whether there's been any
         // change and, if so, update the database.
+        // TODO Check for change in groups
         $row = $res->next_row_keyed();
         if ($external_user['display_name'] != $row['display_name'])
         {
