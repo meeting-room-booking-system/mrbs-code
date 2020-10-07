@@ -17,17 +17,14 @@ class User extends Table
 
     parent::__construct();
 
-    if (isset($username) && ($username !== ''))
-    {
-      $this->username = $username;
-      // Set some default properties
-      $this->auth_type = $auth['type'];
-      $this->display_name = $username;
-      $this->setDefaultEmail();
-      $this->level = 0; // Play it safe
-      $this->groups = array();
-      $this->roles = array();
-    }
+    $this->username = $username;
+    // Set some default properties
+    $this->auth_type = $auth['type'];
+    $this->display_name = $username;
+    $this->setDefaultEmail();
+    $this->level = 0; // Play it safe
+    $this->groups = array();
+    $this->roles = array();
   }
 
 
