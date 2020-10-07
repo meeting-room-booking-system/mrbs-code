@@ -15,5 +15,5 @@ CREATE TABLE %DB_TBL_PREFIX%participants
   username    varchar(255),
   registered  int,
 
-  CONSTRAINT %DB_TBL_PREFIX%uq_entryid_username UNIQUE (entry_id, username)
+  CONSTRAINT "%DB_TBL_PREFIX%uq_entryid_username" UNIQUE (entry_id, username)
 );
