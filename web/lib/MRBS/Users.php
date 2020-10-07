@@ -144,8 +144,6 @@ class Users extends TableIterator
       $updated = array();
     }
 
-    // TODO Check for change in groups
-
     // Loop through the external users and add them or update them as necessary
     foreach ($external_users as $external_user)
     {
@@ -198,7 +196,7 @@ class Users extends TableIterator
       {
         // It's an existing user: check to see whether there's been any
         // change and, if so, update the database.
-        // TODO Check for change in groups
+        // TODO: implement local groups and check for changes
         $row = $res->next_row_keyed();
         $this->stringsToArrays($row);
         if (($external_user['display_name'] != $row['display_name']) ||
