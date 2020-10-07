@@ -5,6 +5,8 @@
 
 ALTER TABLE %DB_TBL_PREFIX%users_db
   RENAME TO %DB_TBL_PREFIX%user;
+ 
+ALTER SEQUENCE %DB_TBL_PREFIX%users_db_id_seq RENAME TO %DB_TBL_PREFIX%user_id_seq;
 
 ALTER TABLE %DB_TBL_PREFIX%user
   ALTER COLUMN level SET DEFAULT 0,
@@ -78,9 +80,13 @@ CREATE TABLE %DB_TBL_PREFIX%user_role
 -- Rename tables for consistency with other tables
 ALTER TABLE %DB_TBL_PREFIX%variables
   RENAME TO %DB_TBL_PREFIX%variable;
+  
+ALTER SEQUENCE %DB_TBL_PREFIX%variables_id_seq RENAME TO %DB_TBL_PREFIX%variable_id_seq;
 
 ALTER TABLE %DB_TBL_PREFIX%sessions
-    RENAME TO %DB_TBL_PREFIX%session;
+  RENAME TO %DB_TBL_PREFIX%session;
 
 ALTER TABLE %DB_TBL_PREFIX%participants
-    RENAME TO %DB_TBL_PREFIX%participant;
+  RENAME TO %DB_TBL_PREFIX%participant;
+    
+ALTER SEQUENCE %DB_TBL_PREFIX%participants_id_seq RENAME TO %DB_TBL_PREFIX%participant_id_seq;
