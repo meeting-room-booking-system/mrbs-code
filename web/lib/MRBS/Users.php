@@ -191,10 +191,14 @@ class Users extends TableIterator
     foreach ($external_users as $external_user)
     {
       // Try and get the user from the database
-      $sql = "SELECT name, display_name
-                FROM " . _tbl(User::TABLE_NAME) . "
-               WHERE name=:name
+      $sql = "SELECT U.name, U.display_name, " .
+                     db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
+                FROM " . _tbl(User::TABLE_NAME) . " U
+           LEFT JOIN " . _tbl('user_group') . " G
+                  ON G.user_id=U.id
+               WHERE U.name=:name
                  AND auth_type=:auth_type
+            GROUP BY U.id
                LIMIT 1";
 
       $sql_params = array(
