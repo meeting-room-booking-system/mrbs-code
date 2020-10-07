@@ -234,6 +234,31 @@ CREATE TABLE mrbs_user
 );
 
 
+CREATE TABLE mrbs_group
+(
+  id          serial primary key,
+  auth_type   varchar(30) NOT NULL DEFAULT 'db',
+  name        varchar(191) NOT NULL,
+
+  CONSTRAINT mrbs_uq_group_name_auth_type UNIQUE (name, auth_type)
+);
+
+
+CREATE TABLE mrbs_user_group
+(
+  user_id   int NOT NULL
+              REFERENCES mrbs_user(id)
+              ON UPDATE CASCADE
+              ON DELETE CASCADE,
+  group_id  int NOT NULL
+              REFERENCES mrbs_group(id)
+              ON UPDATE CASCADE
+              ON DELETE CASCADE,
+
+  CONSTRAINT mrbs_uq_user_group UNIQUE (user_id, group_id)
+);
+
+
 CREATE TABLE mrbs_role
 (
   id     serial primary key,
@@ -306,6 +331,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_user_timestamp BEFORE UPDATE ON mrbs_user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ('db_version', '77');
+  VALUES ('db_version', '79');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ('local_db_version', '1');
