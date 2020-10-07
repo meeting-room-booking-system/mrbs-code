@@ -202,7 +202,7 @@ class Users extends TableIterator
         $row = $res->next_row_keyed();
         $this->stringsToArrays($row);
         if (($external_user['display_name'] != $row['display_name']) ||
-            !array_equal_values($external_user['group_ids'], $row['groups']))
+            !array_values_equal($external_user['group_ids'], $row['groups']))
         {
           $user = User::getByName($row['name'], $auth['type']);
           $user->display_name = $external_user['display_name'];

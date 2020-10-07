@@ -77,7 +77,7 @@ class User extends Table
     $existing = self::getGroupsByUserId($this->id);
 
     // If there's been no change then don't do anything
-    if (array_diff($existing, $this->groups) == array_diff($this->groups, $existing))
+    if (array_values_equal($existing, $this->groups))
     {
       return;
     }
@@ -94,7 +94,7 @@ class User extends Table
     $existing = self::getRolesByUserId($this->id);
 
     // If there's been no change then don't do anything
-    if (array_diff($existing, $this->roles) == array_diff($this->roles, $existing))
+    if (array_values_equal($existing, $this->roles))
     {
       return;
     }
