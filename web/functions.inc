@@ -17,6 +17,14 @@ function in_arrayi($needle, $haystack)
 }
 
 
+// Tests if two arrays have the same values. The test ignores the order of the values
+// and also ignores duplicated values.
+function array_equal_values(array $a, array $b)
+{
+  return !array_diff($a, $b) && !array_diff($b, $a);
+}
+
+
 function generate_token($length)
 {
   if (function_exists('random_bytes'))

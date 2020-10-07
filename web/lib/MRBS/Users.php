@@ -25,48 +25,7 @@ class Users extends TableIterator
 
     if (false !== ($row = $this->res->next_row_keyed()))
     {
-      // Convert the string of group ids into an array and also add an
-      // array of group names
-      $group_names = array();
-
-      // If there are no groups, MySQL will return NULL and PostgreSQL ''.
-      if (isset($row['groups']) && ($row['groups'] !== ''))
-      {
-        $row['groups'] = explode(',', $row['groups']);
-        foreach ($row['groups'] as $group_id)
-        {
-          $group_names[] = $this->group_names[$group_id];
-        }
-      }
-      else
-      {
-        $row['groups'] = array();
-      }
-
-      // Sort the group names
-      sort($group_names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
-      $row['group_names'] = $group_names;
-
-      // Convert the string of role ids into an array and also add an
-      // array of role names
-      $role_names = array();
-
-      // If there are no roles, MySQL will return NULL and PostgreSQL ''.
-      if (isset($row['roles']) && ($row['roles'] !== ''))
-      {
-        $row['roles'] = explode(',', $row['roles']);
-        foreach ($row['roles'] as $role_id)
-        {
-          $role_names[] = $this->role_names[$role_id];
-        }
-      }
-      else
-      {
-        $row['roles'] = array();
-      }
-
-      $row['role_names'] = $role_names;
-
+      $this->stringsToArrays($row);
       $this->item = new $this->base_class();
       $this->item->load($row);
     }
@@ -190,6 +149,23 @@ class Users extends TableIterator
     // Loop through the external users and add them or update them as necessary
     foreach ($external_users as $external_user)
     {
+      // Get the user's group ids
+      $external_user['group_ids'] = array();
+      foreach ($external_user['groups'] as $group_name)
+      {
+        $group_id = array_search($group_name, $this->group_names);
+        // If the group doesn't exist then create it
+        if ($group_id === false)
+        {
+          $group = new Group($group_name);
+          $group->save();
+          $group_id = $group->id;
+          // and update the group names
+          $this->group_names[$group_id] = $group_name;
+        }
+        $external_user['group_ids'][] = $group_id;
+      }
+
       // Try and get the user from the database
       $sql = "SELECT U.name, U.display_name, " .
                      db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
@@ -213,23 +189,7 @@ class Users extends TableIterator
         // It's a new user: add them to the table
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
-        // Get the user's group ids
-        $group_ids = array();
-        foreach ($external_user['groups'] as $group_name)
-        {
-          $group_id = array_search($group_name, $this->group_names);
-          // If the group doesn't exist then create it
-          if ($group_id === false)
-          {
-            $group = new Group($group_name);
-            $group->save();
-            $group_id = $group->id;
-            // and update the group names
-            $this->group_names[$group_id] = $group_name;
-          }
-          $group_ids[] = $group_id;
-        }
-        $user->groups = $group_ids;
+        $user->groups = $external_users['group_ids'];
         // Save the user to the database
         $user->save();
         $added[] = $external_user['display_name'];
@@ -240,16 +200,15 @@ class Users extends TableIterator
         // change and, if so, update the database.
         // TODO Check for change in groups
         $row = $res->next_row_keyed();
-        if ($external_user['display_name'] != $row['display_name'])
+        $this->stringsToArrays($row);
+        if (($external_user['display_name'] != $row['display_name']) ||
+            !array_equal_values($external_user['group_ids'], $row['groups']))
         {
-          $sql = "UPDATE " . _tbl(User::TABLE_NAME) . "
-                     SET display_name=:display_name
-                   WHERE name=:name";
-          $sql_params = array(
-              ':display_name' => $external_user['display_name'],
-              ':name' => $external_user['username']
-            );
-          db()->command($sql, $sql_params);
+          $user = User::getByName($row['name'], $auth['type']);
+          $user->display_name = $external_user['display_name'];
+          $user->groups = $external_user['group_ids'];
+          // Save the user to the database
+          $user->save();
           $updated[] = $external_user['display_name'];
         }
       }
@@ -281,6 +240,60 @@ class Users extends TableIterator
         echo implode("\n", $updated);
       }
       echo "\n\n";
+    }
+  }
+
+
+  // Converts the result of db()->syntax_group_array_as_string() queries
+  // back into arrays.
+  private function stringsToArrays(&$row)
+  {
+    // Convert the string of group ids into an array and also add an
+    // array of group names
+    if (array_key_exists('groups', $row))
+    {
+      $group_names = array();
+
+      // If there are no groups, MySQL will return NULL and PostgreSQL ''.
+      if (isset($row['groups']) && ($row['groups'] !== ''))
+      {
+        $row['groups'] = explode(',', $row['groups']);
+        foreach ($row['groups'] as $group_id)
+        {
+          $group_names[] = $this->group_names[$group_id];
+        }
+      }
+      else
+      {
+        $row['groups'] = array();
+      }
+
+      // Sort the group names
+      sort($group_names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+      $row['group_names'] = $group_names;
+    }
+
+    // Convert the string of role ids into an array and also add an
+    // array of role names
+    if (array_key_exists('roles', $row))
+    {
+      $role_names = array();
+
+      // If there are no roles, MySQL will return NULL and PostgreSQL ''.
+      if (isset($row['roles']) && ($row['roles'] !== ''))
+      {
+        $row['roles'] = explode(',', $row['roles']);
+        foreach ($row['roles'] as $role_id)
+        {
+          $role_names[] = $this->role_names[$role_id];
+        }
+      }
+      else
+      {
+        $row['roles'] = array();
+      }
+
+      $row['role_names'] = $role_names;
     }
   }
 }
