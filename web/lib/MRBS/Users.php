@@ -5,17 +5,16 @@ namespace MRBS;
 class Users extends TableIterator
 {
 
-  private $group_names;
-  private $role_names;
-
+  private $names;
 
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\User');
+    $this->names = array();
     $groups = new Groups();
-    $this->group_names = $groups->getNames();
+    $this->names['groups'] = $groups->getNames();
     $roles = new Roles();
-    $this->role_names = $roles->getNames();
+    $this->names['roles'] = $roles->getNames();
   }
 
 
@@ -151,7 +150,7 @@ class Users extends TableIterator
       $external_user['group_ids'] = array();
       foreach ($external_user['groups'] as $group_name)
       {
-        $group_id = array_search($group_name, $this->group_names);
+        $group_id = array_search($group_name, $this->names['groups']);
         // If the group doesn't exist then create it
         if ($group_id === false)
         {
@@ -159,7 +158,7 @@ class Users extends TableIterator
           $group->save();
           $group_id = $group->id;
           // and update the group names
-          $this->group_names[$group_id] = $group_name;
+          $this->names['groups'][$group_id] = $group_name;
         }
         $external_user['group_ids'][] = $group_id;
       }
@@ -246,52 +245,45 @@ class Users extends TableIterator
   // back into arrays.
   private function stringsToArrays(&$row)
   {
-    // Convert the string of group ids into an array and also add an
-    // array of group names
-    if (array_key_exists('groups', $row))
+    foreach (array('groups', 'roles') as $key)
     {
-      $group_names = array();
-
-      // If there are no groups, MySQL will return NULL and PostgreSQL ''.
-      if (isset($row['groups']) && ($row['groups'] !== ''))
+      // Convert the string of ids into an array and also add an
+      // array of names
+      if (array_key_exists($key, $row))
       {
-        $row['groups'] = explode(',', $row['groups']);
-        foreach ($row['groups'] as $group_id)
+        $names = array();
+
+        // If there are no groups/roles, MySQL will return NULL and PostgreSQL ''.
+        if (isset($row[$key]) && ($row[$key] !== ''))
         {
-          $group_names[] = $this->group_names[$group_id];
+          $row[$key] = explode(',', $row[$key]);
+          foreach ($row[$key] as $id)
+          {
+            $names[] = $this->names[$key][$id];
+          }
+        }
+        else
+        {
+          $row[$key] = array();
+        }
+
+        // Sort the names
+        sort($names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+
+        // Add the names to the result
+        switch ($key)
+        {
+          case 'groups':
+            $row['group_names'] = $names;
+            break;
+          case 'roles':
+            $row['role_names'] = $names;
+            break;
+          default:
+            throw new \Exception("Unknown key '$key'");
+            break;
         }
       }
-      else
-      {
-        $row['groups'] = array();
-      }
-
-      // Sort the group names
-      sort($group_names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
-      $row['group_names'] = $group_names;
-    }
-
-    // Convert the string of role ids into an array and also add an
-    // array of role names
-    if (array_key_exists('roles', $row))
-    {
-      $role_names = array();
-
-      // If there are no roles, MySQL will return NULL and PostgreSQL ''.
-      if (isset($row['roles']) && ($row['roles'] !== ''))
-      {
-        $row['roles'] = explode(',', $row['roles']);
-        foreach ($row['roles'] as $role_id)
-        {
-          $role_names[] = $this->role_names[$role_id];
-        }
-      }
-      else
-      {
-        $row['roles'] = array();
-      }
-
-      $row['role_names'] = $role_names;
     }
   }
 }
