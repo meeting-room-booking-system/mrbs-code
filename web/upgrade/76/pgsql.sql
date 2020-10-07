@@ -11,8 +11,8 @@ ALTER SEQUENCE %DB_TBL_PREFIX%users_db_id_seq RENAME TO %DB_TBL_PREFIX%user_id_s
 ALTER TABLE %DB_TBL_PREFIX%user
   ALTER COLUMN level SET DEFAULT 0,
   ADD COLUMN auth_type varchar(30) NOT NULL DEFAULT 'db',
-  DROP CONSTRAINT %DB_TBL_PREFIX%uq_name,
-  ADD CONSTRAINT %DB_TBL_PREFIX%uq_name_auth_type UNIQUE (name, auth_type);
+  DROP CONSTRAINT "%DB_TBL_PREFIX%uq_name",
+  ADD CONSTRAINT "%DB_TBL_PREFIX%uq_name_auth_type" UNIQUE (name, auth_type);
 
 -- Create the role table
 CREATE TABLE %DB_TBL_PREFIX%role
@@ -20,11 +20,11 @@ CREATE TABLE %DB_TBL_PREFIX%role
   id     serial primary key,
   name   varchar(191) NOT NULL,
 
-  CONSTRAINT %DB_TBL_PREFIX%uq_name UNIQUE (name)
+  CONSTRAINT "%DB_TBL_PREFIX%uq_name" UNIQUE (name)
 );
 
 -- Fix the existing trigger
-CREATE TRIGGER update_%DB_TBL_PREFIX%user_timestamp BEFORE UPDATE ON %DB_TBL_PREFIX%user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
+CREATE TRIGGER "update_%DB_TBL_PREFIX%user_timestamp" BEFORE UPDATE ON %DB_TBL_PREFIX%user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 -- Create the role_room table
 CREATE TABLE %DB_TBL_PREFIX%role_room
@@ -40,7 +40,7 @@ CREATE TABLE %DB_TBL_PREFIX%role_room
   permission  char NOT NULL,
   state       char NOT NULL,
 
-  CONSTRAINT %DB_TBL_PREFIX%uq_role_room UNIQUE (role_id, room_id)
+  CONSTRAINT "%DB_TBL_PREFIX%uq_role_room" UNIQUE (role_id, room_id)
 );
 
 
@@ -58,7 +58,7 @@ CREATE TABLE %DB_TBL_PREFIX%role_area
   permission  char NOT NULL,
   state       char NOT NULL,
 
-  CONSTRAINT %DB_TBL_PREFIX%uq_role_area UNIQUE (role_id, area_id)
+  CONSTRAINT "%DB_TBL_PREFIX%uq_role_area" UNIQUE (role_id, area_id)
 );
 
 
@@ -74,7 +74,7 @@ CREATE TABLE %DB_TBL_PREFIX%user_role
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,
 
-  CONSTRAINT %DB_TBL_PREFIX%uq_user_role UNIQUE (user_id, role_id)
+  CONSTRAINT "%DB_TBL_PREFIX%uq_user_role" UNIQUE (user_id, role_id)
 );
 
 -- Rename tables for consistency with other tables
