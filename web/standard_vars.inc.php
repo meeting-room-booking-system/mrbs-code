@@ -63,7 +63,7 @@ else
 }
 
 // Advance to the next non-hidden day
-if ((count($hidden_days) > 0) &&
+if (!empty($hidden_days) &&     // Use !empty in case $hidden_days is not set
     (count($hidden_days) < 7))  // Avoid an infinite loop
 {
   $date = new DateTime();
