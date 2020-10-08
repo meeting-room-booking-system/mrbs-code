@@ -1278,8 +1278,8 @@ function get_default_area()
 {
   global $default_room;
 
-  // It's possible that this function is being called during
-  // an upgrade process before the disabled columns existed.
+  // It's possible that this function is being called during an upgrade
+  // process before the disabled column existed.
   $disabled_field_exists = db()->field_exists(_tbl('room'), 'disabled');
 
   // If the $default_room is set and exists and is enabled and is visible to
@@ -1316,7 +1316,8 @@ function get_default_area()
     $sql .= " AND R.disabled = 0 AND A.disabled = 0";
   }
 
-  $sql .= " ORDER BY A.sort_key";
+  $order_by_column = (db()->field_exists(_tbl('area'), 'sort_key')) ? 'sort_key' : 'area_name';
+  $sql .= " ORDER BY A.$order_by_column";
 
   $res = db()->query($sql);
 
