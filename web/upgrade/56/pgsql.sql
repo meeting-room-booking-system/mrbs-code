@@ -5,4 +5,4 @@ CREATE TABLE %DB_TBL_PREFIX%sessions
   access  int DEFAULT NULL,
   data    text DEFAULT NULL
 );
-create index "%DB_TBL_PREFIX%idxAccess" on %DB_TBL_PREFIX%sessions(access);
+create index "%DB_TBL_PREFIX_SHORT%idxAccess" on %DB_TBL_PREFIX%sessions(access);
