@@ -89,8 +89,11 @@ class Rooms extends TableIterator
       $sql_params[':area_id'] = $this->area_id;
     }
     // In early versions of MRBS the sort_key field didn't exist and this method
-    // may be called before the database can be upgraded.
-    if (db()->field_exists($table_name, 'sort_key'))
+    // may be called before the database can be upgraded.  Note that the sort_key
+    // was introduced into the area table after it was introduced into the room
+    // table, so we need to check both tables.
+    if (db()->field_exists(_tbl(Area::TABLE_NAME), 'sort_key') &&
+        db()->field_exists($table_name, 'sort_key'))
     {
       $sql .= " ORDER BY A.sort_key, R.sort_key";
     }
