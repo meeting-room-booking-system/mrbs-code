@@ -145,7 +145,6 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
   // $upgrade_handle is the database handle to use for the upgrade.   It will typically
   // have admin rights (eg CREATE and ALTER)
   global $dbsys;
-  global $db_tbl_prefix, $db_schema;
 
   $sql_type = $dbsys;
   if ($sql_type == 'mysqli')
@@ -181,13 +180,13 @@ function upgrade_database($local, $from, $to, DB $upgrade_handle)
     fclose($handle);
 
     // PostgreSQL databases can have multiple schemas and so need a qualified
-    // table name
-    $prefix = $db_tbl_prefix;
-    if (($sql_type != 'mysql') && isset($db_schema))
-    {
-      $prefix = $db_schema . '.' . $prefix;
-    }
-    $sql = str_replace('%DB_TBL_PREFIX%', $prefix, $sql);
+    // table name when referring to the table name.  However the table prefix is also
+    // used to make, for example, constraint, index and trigger names unique.  These
+    // are unique within the schema and do not need to be schema-qualified.  Also, when
+    // the tables were created from tables.pg.sql they would just have had "mrbs_"
+    // replaced by the unqualified table prefix.
+    $sql = str_replace('%DB_TBL_PREFIX%', _tbl('', true), $sql);
+    $sql = str_replace('%DB_TBL_PREFIX_SHORT%', _tbl('', false), $sql);
 
     foreach (explode(";", $sql) as $query)
     {

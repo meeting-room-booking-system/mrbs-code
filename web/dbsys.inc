@@ -4,7 +4,7 @@ namespace MRBS;
 // Returns the full table name including schema and prefix for a given table.
 // Needs to be dynamic rather than static in case we are running a multisite
 // installation and want to switch sites, eg during a database upgrade.
-function _tbl($short_name)
+function _tbl($short_name, $include_schema=true)
 {
   global $dbsys, $db_tbl_prefix, $db_schema;
 
@@ -20,7 +20,7 @@ function _tbl($short_name)
   // other than MySQL, which is one of the few that doesn't support schemas.
   // (Although in practice this means PostgreSQL at the moment, it's possible that
   // in the future support for more databases may be added)
-  if ((strpos($dbsys, 'mysql') === false) && isset($db_schema))
+  if ($include_schema && (strpos($dbsys, 'mysql') === false) && isset($db_schema))
   {
     $result = $db_schema . '.' . $result;
   }
