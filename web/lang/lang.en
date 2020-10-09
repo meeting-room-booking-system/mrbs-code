@@ -283,7 +283,8 @@ $vocab["enter_username"]            = "Please enter your username here.";
 $vocab["enter_username_or_email"]   = "Please enter your username or email address here.";
 $vocab["will_be_sent_instructions"] = "You will be sent an email message with instructions on how to reset your password.";
 $vocab["reset_password"]            = "Reset password";
-$vocab["pwd_check_email"]           = "Please check your email for the password reset instructions.";
+$vocab["pwd_check_email"]           = "Thank you.  If there's a user account corresponding to those details then you " .
+                                      "will shortly receive an email with instructions for resetting your password.";
 $vocab["invalid_link"]              = "Invalid link";
 $vocab["pwd_request_failed"]        = "An email could not be sent to this user.";
 $vocab["link_invalid"]              = "The password reset link is invalid or has expired.";
