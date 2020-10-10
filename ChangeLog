@@ -1,10 +1,736 @@
+2020-10-10  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	Updated version number for release.
+	[e6e50f75982a] [tip]
+
+2020-10-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en:
+	Improved the password reset request acknowledgement message.
+	[fef3fab822be]
+
+2020-10-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/standard_vars.inc.php:
+	Fixed bug in upgrade process
+	[5815433bacca]
+
+	* web/upgrade/52/post.inc:
+	Fixed bug in PostgreQSL update process when a schema is being used
+	[0ada3c06f4d7]
+
+	* web/functions.inc:
+	Fixed bug when upgrading from a version before the area table had a
+	sort_key column.
+	[2837e85d5b8d]
+
+	* web/dbsys.inc, web/upgrade.inc, web/upgrade/44/pgsql.sql,
+	web/upgrade/56/pgsql.sql, web/upgrade/63/pgsql.sql,
+	web/upgrade/67/pgsql.sql, web/upgrade/8/pgsql.sql:
+	Used unqualified table prefix for PostgreSQL constraint, index and
+	trigger names
+	[06e8ba3d0ec1]
+
+2020-10-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/upgrade/67/pgsql.sql:
+	Quoted PostgreSQL constraint identifiers
+	[ff960c6fc8c7]
+
+2020-10-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/Auth.php:
+	Removed redundant code given that the minimum PHP version is 5.5.0
+	[994a282e6120]
+
+2020-09-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Removed redundant global declaration
+	[b5dd18742303]
+
+2020-09-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Locale.php:
+	Removed unnecessary qualifiers
+	[d8a08bbde9d1]
+
+	* web/lib/MRBS/System.php:
+	Simplified code
+	[127bed0d180b]
+
+	* web/lib/MRBS/System.php:
+	Fixed potential bug
+	[54a3a7ff483b]
+
+	* web/lib/MRBS/System.php:
+	Added support for more languages in Windows
+	[cd319296e701]
+
+2020-09-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/System.php:
+	Added support for more languages in Windows
+	[62a8125701b1]
+
+2020-09-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/System.php:
+	Added support for more languages in Windows
+	[5d7ab3aa21d5]
+
+2020-09-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Fixed minor mistake in error message
+	[678e9ebe7360]
+
+2020-09-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en, web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	Added policy check for invalid types
+	[53085b08d77d]
+
+	* web/upgrade/77/pgsql.sql:
+	Fixed upgrade for PostgreSQL
+	[e8b18fbd3f91]
+
+2020-09-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/admin.php, web/css/mrbs.css.php,
+	web/edit_room.php, web/edit_room_handler.php, web/functions.inc,
+	web/internalconfig.inc.php, web/lang/lang.en, web/lib/MRBS/DB.php,
+	web/mrbs_sql.inc, web/upgrade/70/mysql.sql,
+	web/upgrade/70/pgsql.sql, web/upgrade/71/mysql.sql,
+	web/upgrade/71/pgsql.sql, web/upgrade/72/mysql.sql,
+	web/upgrade/72/pgsql.sql, web/upgrade/73/mysql.sql,
+	web/upgrade/73/pgsql.sql, web/upgrade/74/mysql.sql,
+	web/upgrade/74/pgsql.sql, web/upgrade/75/mysql.sql,
+	web/upgrade/75/pgsql.sql, web/upgrade/76/mysql.sql,
+	web/upgrade/76/pgsql.sql, web/upgrade/77/mysql.sql,
+	web/upgrade/77/pgsql.sql:
+	Added the invalid_types column to the room table. Not used yet -
+	have yet to implement the policy code.
+	[618bf84ed432]
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Made the password reset link shorter to avoid problems with the
+	complete address not being copied into the browser address bar.
+	[e5700de96384]
+
+	* web/language.inc, web/lib/Locale.php, web/lib/MRBS/Auth/AuthCas.php,
+	web/lib/MRBS/Locale.php, web/lib/MRBS/System.php:
+	Fixed problem with MRBS not accepting 'zh-TW' as a locale when using
+	the intl extension. See SF Support Requests #2178.
+	[2541a2f0d349]
+
+	* web/mrbs_auth.inc:
+	Fixed bug causing problems if the old auth files are still present
+	[857d61d107fc]
+
+2020-09-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/System.php:
+	Added support in Windows for more languages
+	[26202cbf32c1]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Changed methods to be protected instead of private to allow
+	extension
+	[85a1eabee016]
+
+	* web/lang/lang.de:
+	Fixed typo in German translation
+	[5a4f7d12643e]
+
+	* web/lib/MRBS/System.php:
+	Added support in Windows for more Arabic languages
+	[b2fe1a54b0f3]
+
+2020-09-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.fr:
+	Fixed typo
+	[6fcf1e3728e6]
+
+	* web/lang/lang.fr:
+	Updated French translations. Thanks to Philippe. See SF Patches
+	#105.
+	[f64c7fdb04a5]
+
+	* web/lib/MRBS/System.php:
+	Added Windows support for Cuban (es-CU) and Latin American (es-419)
+	Spanish.
+	[f2e274f79abb]
+
+2020-09-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* AUTHENTICATION, web/lib/MRBS/Auth/AuthIdcheck.php,
+	web/systemdefaults.inc.php:
+	Added the 'idcheck' authentication type. See SF Support Requests
+	#2173.
+	[4e8ef3b99a4b]
+
+	* web/lib/MRBS/Form/Form.php:
+	Changed "Possible CSRF attack" message from E_USER_WARNING to
+	E_USER_NOTICE. See SF Support Requests #2174.
+	[363e6ab420b2]
+
+2020-09-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DateTime.php:
+	Removed code that's redundant now that the minimum supported PHP
+	version is 5.5.0.
+	[9afd3fa37fce]
+
+	* web/lib/MRBS/DateTime.php, web/standard_vars.inc.php:
+	Advanced the date to the first non-hidden day. See SF Bugs #482
+	[59d3c332ab6f]
+
+2020-09-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/js/datepicker.js.php,
+	web/systemdefaults.inc.php:
+	Fixed SF Bugs #482 (hidden days not disabled in datepickers).
+	[d4e9316f5e5c]
+
+	* web/css/mrbs-print.css.php:
+	Fixed bug causing the location not to be shown in print view. See SF
+	Feature Requests #426.
+	[dcb938600347]
+
+2020-09-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Allowed admins to override the private_mandatory setting. See SF
+	Patches #102.
+	[3a545a04d78e]
+
+2020-09-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/systemdefaults.inc.php:
+	Added a configuration option to display the mini-calendars above the
+	main calendar when the window narrrows. See SF Support Requests
+	#2156.
+	[c44541cdfee6]
+
+	* web/css/mrbs.css.php:
+	Reverted accidental change
+	[ad4f8aca75ba]
+
+2020-09-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/add.php, web/css/mrbs.css.php:
+	Fixed typo in comment
+	[dc96122d1a9e]
+
+	* web/mrbs_sql.inc:
+	Fixed bug when a limit is set on both the maximum number and also
+	the total length of bookings per day. See SF Bugs #480.
+	[6f2ddeb5a023]
+
+2020-09-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Trivial change forced by editorconfig
+	[973d517085b6]
+
+	* web/mrbs_sql.inc:
+	Fixed SF Bugs #479 (cannot edit a booking when
+	$prevent_simultaneous_bookings = true;)
+	[84b3377f361d]
+
+2020-08-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/index.php:
+	Removed redundant global declarations
+	[904c95abcbb5]
+
+2020-08-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/Auth.php,
+	web/lib/MRBS/Session/SessionWordpress.php:
+	Added missing 'public' declaration
+	[04cfa60afe5f]
+
+	* web/lib/MRBS/Session/SessionCas.php,
+	web/lib/MRBS/Session/SessionJoomla.php,
+	web/lib/MRBS/Session/SessionSaml.php,
+	web/lib/MRBS/Session/SessionWithLogin.php,
+	web/lib/MRBS/Session/SessionWordpress.php:
+	Added checks where necessary that the authentication type is the
+	same as the session scheme.
+	[f9c48e42fa75]
+
+	* web/lib/MRBS/Auth/Auth.php, web/lib/MRBS/Auth/AuthCas.php,
+	web/lib/MRBS/Auth/AuthJoomla.php, web/lib/MRBS/Auth/AuthSaml.php,
+	web/lib/MRBS/Auth/AuthWordpress.php:
+	Added checks where necessary that the session sdcheme is the same as
+	the authentication type.
+	[361b0e3be86d]
+
+	* web/lib/MRBS/Auth/AuthCas.php, web/lib/MRBS/Session/SessionCas.php:
+	Fixed SF Bugs #477 - CAS setup error
+	[64627e4d9a85]
+
+2020-08-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc:
+	Updated DataTables language mappings for new languages.
+	[dd0f6251fcf9]
+
+	* web/jquery/datatables/Buttons-1.6.1/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.6.1/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.6.1/css/common.scss,
+	web/jquery/datatables/Buttons-1.6.1/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.flash.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.flash.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.6.1/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.6.1/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.6.1/js/dataTables.buttons.min.js,
+	web/jquery/datatables/Buttons-1.6.1/swf/flashExport.swf, web/jquery/
+	datatables/DataTables-1.10.20/css/dataTables.bootstrap.css, web/jque
+	ry/datatables/DataTables-1.10.20/css/dataTables.bootstrap.min.css, w
+	eb/jquery/datatables/DataTables-1.10.20/css/dataTables.bootstrap4.cs
+	s, web/jquery/datatables/DataTables-1.10.20/css/dataTables.bootstrap
+	4.min.css, web/jquery/datatables/DataTables-1.10.20/css/dataTables.f
+	oundation.css, web/jquery/datatables/DataTables-1.10.20/css/dataTabl
+	es.foundation.min.css, web/jquery/datatables/DataTables-1.10.20/css/
+	dataTables.jqueryui.css, web/jquery/datatables/DataTables-1.10.20/cs
+	s/dataTables.jqueryui.min.css, web/jquery/datatables/DataTables-1.10
+	.20/css/dataTables.semanticui.css, web/jquery/datatables/DataTables-
+	1.10.20/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.20/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.20/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.20/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.20/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.20/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.20/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.20/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.20/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.20/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.20/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.20/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.20/js/dataTables.
+	foundation.js, web/jquery/datatables/DataTables-1.10.20/js/dataTable
+	s.foundation.min.js,
+	web/jquery/datatables/DataTables-1.10.20/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.20/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.20/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.20/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.20/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.20/js/jquery.dataTables.min.js,
+	w
+	eb/jquery/datatables/FixedColumns-3.3.0/css/fixedColumns.bootstrap.c
+	ss, web/jquery/datatables/FixedColumns-3.3.0/css/fixedColumns.bootst
+	rap.min.css, web/jquery/datatables/FixedColumns-3.3.0/css/fixedColum
+	ns.bootstrap4.css, web/jquery/datatables/FixedColumns-3.3.0/css/fixe
+	dColumns.bootstrap4.min.css, web/jquery/datatables/FixedColumns-3.3.
+	0/css/fixedColumns.dataTables.css, web/jquery/datatables/FixedColumn
+	s-3.3.0/css/fixedColumns.dataTables.min.css, web/jquery/datatables/F
+	ixedColumns-3.3.0/css/fixedColumns.foundation.css, web/jquery/datata
+	bles/FixedColumns-3.3.0/css/fixedColumns.foundation.min.css, web/jqu
+	ery/datatables/FixedColumns-3.3.0/css/fixedColumns.jqueryui.css, web
+	/jquery/datatables/FixedColumns-3.3.0/css/fixedColumns.jqueryui.min.
+	css, web/jquery/datatables/FixedColumns-3.3.0/css/fixedColumns.seman
+	ticui.css, web/jquery/datatables/FixedColumns-3.3.0/css/fixedColumns
+	.semanticui.min.css, web/jquery/datatables/FixedColumns-3.3.0/js/dat
+	aTables.fixedColumns.js, web/jquery/datatables/FixedColumns-3.3.0/js
+	/dataTables.fixedColumns.min.js, web/jquery/datatables/FixedColumns-
+	3.3.0/js/fixedColumns.bootstrap.js, web/jquery/datatables/FixedColum
+	ns-3.3.0/js/fixedColumns.bootstrap.min.js, web/jquery/datatables/Fix
+	edColumns-3.3.0/js/fixedColumns.bootstrap4.js, web/jquery/datatables
+	/FixedColumns-3.3.0/js/fixedColumns.bootstrap4.min.js, web/jquery/da
+	tatables/FixedColumns-3.3.0/js/fixedColumns.dataTables.js, web/jquer
+	y/datatables/FixedColumns-3.3.0/js/fixedColumns.foundation.js, web/j
+	query/datatables/FixedColumns-3.3.0/js/fixedColumns.foundation.min.j
+	s, web/jquery/datatables/FixedColumns-3.3.0/js/fixedColumns.jqueryui
+	.js, web/jquery/datatables/FixedColumns-3.3.0/js/fixedColumns.jquery
+	ui.min.js, web/jquery/datatables/FixedColumns-3.3.0/js/fixedColumns.
+	semanicui.js, web/jquery/datatables/FixedColumns-3.3.0/js/fixedColum
+	ns.semanticui.js, web/jquery/datatables/FixedColumns-3.3.0/js/fixedC
+	olumns.semanticui.min.js:
+	Removed old versions of DataTables
+	[ccc277368a52]
+
+	* web/jquery/datatables/language/Catalan.lang,
+	web/jquery/datatables/language/Kannada.lang,
+	web/jquery/datatables/language/Mongolian.lang,
+	web/jquery/datatables/language/Portuguese.lang,
+	web/jquery/datatables/language/Punjabi.lang,
+	web/jquery/datatables/language/Rumantsch.lang,
+	web/jquery/datatables/language/Serbian.lang,
+	web/jquery/datatables/language/Serbian_latin.lang,
+	web/jquery/datatables/language/Slovak.lang,
+	web/jquery/datatables/language/Spanish.lang,
+	web/jquery/datatables/language/Swedish.lang:
+	Updated DataTables translations
+	[57b5dacd697d]
+
+	* web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/common.scss,
+	web/jquery/datatables/Buttons-1.6.3/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.flash.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.flash.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.6.3/js/dataTables.buttons.min.js,
+	web/jquery/datatables/Buttons-1.6.3/swf/flashExport.swf, web/jquery/
+	datatables/DataTables-1.10.21/css/dataTables.bootstrap.css, web/jque
+	ry/datatables/DataTables-1.10.21/css/dataTables.bootstrap.min.css, w
+	eb/jquery/datatables/DataTables-1.10.21/css/dataTables.bootstrap4.cs
+	s, web/jquery/datatables/DataTables-1.10.21/css/dataTables.bootstrap
+	4.min.css, web/jquery/datatables/DataTables-1.10.21/css/dataTables.f
+	oundation.css, web/jquery/datatables/DataTables-1.10.21/css/dataTabl
+	es.foundation.min.css, web/jquery/datatables/DataTables-1.10.21/css/
+	dataTables.jqueryui.css, web/jquery/datatables/DataTables-1.10.21/cs
+	s/dataTables.jqueryui.min.css, web/jquery/datatables/DataTables-1.10
+	.21/css/dataTables.semanticui.css, web/jquery/datatables/DataTables-
+	1.10.21/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.21/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.21/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.21/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.21/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.21/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.21/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.21/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.
+	foundation.js, web/jquery/datatables/DataTables-1.10.21/js/dataTable
+	s.foundation.min.js,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.21/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.21/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.21/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.21/js/jquery.dataTables.min.js,
+	w
+	eb/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.bootstrap.c
+	ss, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.bootst
+	rap.min.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColum
+	ns.bootstrap4.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixe
+	dColumns.bootstrap4.min.css, web/jquery/datatables/FixedColumns-3.3.
+	1/css/fixedColumns.dataTables.css, web/jquery/datatables/FixedColumn
+	s-3.3.1/css/fixedColumns.dataTables.min.css, web/jquery/datatables/F
+	ixedColumns-3.3.1/css/fixedColumns.foundation.css, web/jquery/datata
+	bles/FixedColumns-3.3.1/css/fixedColumns.foundation.min.css, web/jqu
+	ery/datatables/FixedColumns-3.3.1/css/fixedColumns.jqueryui.css, web
+	/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.jqueryui.min.
+	css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.seman
+	ticui.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns
+	.semanticui.min.css, web/jquery/datatables/FixedColumns-3.3.1/js/dat
+	aTables.fixedColumns.js, web/jquery/datatables/FixedColumns-3.3.1/js
+	/dataTables.fixedColumns.min.js, web/jquery/datatables/FixedColumns-
+	3.3.1/js/fixedColumns.bootstrap.js, web/jquery/datatables/FixedColum
+	ns-3.3.1/js/fixedColumns.bootstrap.min.js, web/jquery/datatables/Fix
+	edColumns-3.3.1/js/fixedColumns.bootstrap4.js, web/jquery/datatables
+	/FixedColumns-3.3.1/js/fixedColumns.bootstrap4.min.js, web/jquery/da
+	tatables/FixedColumns-3.3.1/js/fixedColumns.dataTables.js, web/jquer
+	y/datatables/FixedColumns-3.3.1/js/fixedColumns.foundation.js, web/j
+	query/datatables/FixedColumns-3.3.1/js/fixedColumns.foundation.min.j
+	s, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.jqueryui
+	.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.jquery
+	ui.min.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.
+	semanicui.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColum
+	ns.semanticui.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedC
+	olumns.semanticui.min.js, web/jquery/datatables/datatables.css,
+	web/jquery/datatables/datatables.js,
+	web/jquery/datatables/datatables.min.css,
+	web/jquery/datatables/datatables.min.js:
+	Upgraded to latest version of DataTables
+	[c561611edb6f]
+
+	* web/ajax/usernames.php:
+	Improved error handling
+	[791f19196660]
+
+	* web/report.php:
+	Improved previous fix
+	[e879b0c029ec]
+
+	* web/report.php:
+	Fixed bug causing no entries to be found in a report when there's a
+	custom field which is an integer and it is left blank in the report
+	form. See SF Support Requests #2142.
+	[9a029f09ae65]
+
+2020-08-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/style.inc:
+	Restructured code
+	[6dbbbadf7c90]
+
+	* web/style.inc:
+	Fixed bug in earlier commit
+	[ebfab3e66352]
+
+	* web/js.inc:
+	Fixed bug in earlier commit
+	[1e6583d71a4b]
+
+	* web/functions.inc, web/style.inc:
+	Added a version parameter to the query string for CSS files to avoid
+	problems with caching.
+	[854b01bcab4f]
+
+	* web/functions.inc, web/js.inc:
+	Added a version parameter to the query string for JavaScript files
+	to avoid problems with caching.
+	[a93c1c865c1c]
+
+	* checklang.php:
+	Removed redundant require statements
+	[45cc7d6223ee]
+
+	* checklang.php:
+	Tweaked layout
+	[1c654b889fa1]
+
+	* checklang.php:
+	Associated the label with the checkbox
+	[4e880f1bb0b1]
+
+	* checklang.php:
+	Removed redundant code
+	[91996c9684e5]
+
+2020-08-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* checklang.php:
+	Added label
+	[88ccaabd5e34]
+
+	* checklang.php:
+	Added a lang attribute.
+	[4433196aa1c5]
+
+	* checklang.php:
+	Tweaked CSS
+	[b63977ceb666]
+
+	* checklang.php:
+	Added a DOCTYPE
+	[b01dfadb3c79]
+
+	* checklang.php:
+	Fixed use of deprecated HTML attribute 'border'.
+	[f3d552814298]
+
+	* web/lang/lang.no:
+	Added translation for 'times_along_top'. See SF Support Requests
+	#2137
+	[63957f535a3a]
+
+	* checklang.php:
+	Fixed use of deprecated each() function.
+	[c3ac4b4cdbd2]
+
+2020-08-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Added exception handling when calling random_bytes()
+	[a47bc4fe7de5]
+
+2020-08-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.de:
+	Updated German translation. Thanks to Tobias Zeumer. See SF Patches
+	#101.
+	[dd0b14a7e5e4]
+
+	* web/functions.inc:
+	Respected the sort key when getting the deefault area.
+	[18f6fcabcc22]
+
+2020-08-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/init.inc:
+	Fixed bug with error logging. Se SF Support Requests #2132.
+	[f8c257896596]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed LDAP bug. See SF Bugs #475.
+	[bc2920688fed]
+
+	* web/js/general.js.php:
+	Tweaked comment
+	[2a9bed893bcc]
+
+	* web/js/general.js.php:
+	Fixed bug causing unnecessary Ajax POST requests to be fired.
+	[1a55ad1e1ecc]
+
+	* web/lang/lang.en, web/lib/MRBS/Auth/AuthDb.php,
+	web/reset_password.php, web/reset_password_handler.php:
+	Enhanced password reset so that it can handle users with the same
+	email address.
+	[7f531df4c8c6]
+
+2020-08-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/reset_password.php, web/reset_password_handler.php:
+	Added trimming of the username on password reset requests
+	[651057be44d2]
+
+	* Merge with sign_ups
+	[2a3eb38b3067]
+
 2020-08-16  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_9_0 for changeset f6573540c7f1
+	[0f663c63c01e]
+
+	* ChangeLog, NEWS:
+	Updated ChangeLog and NEWS for 1.9.0 release
+	[f6573540c7f1] [mrbs-1_9_0]
 
 	* web/version_num.inc:
 	Updated version number for 1.9.0 release
-	[6a40ed96ecff] [tip]
+	[6a40ed96ecff]
+
+2020-08-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.pg.sql, web/lib/MRBS/Auth/AuthDb.php,
+	web/upgrade/69/pgsql.sql:
+	Fixed password reset for PostgreSQL
+	[bf1944370798] <sign_ups>
+
+	* Merge with db_password_reset
+	[5896de979e35] <sign_ups>
+
+	* web/edit_users.php:
+	Fixed problems with edit_users caused by the new columns
+	[9a01f42cdf37] <db_password_reset>
+
+	* web/mrbs_auth.inc:
+	Fixed problem when £auth['deny_public_access'] is set.
+	[4bd78b01daa7] <db_password_reset>
+
+	* web/css/mrbs.css.php, web/edit_users.php, web/lang/lang.en,
+	web/lib/MRBS/Auth/Auth.php, web/lib/MRBS/Auth/AuthDb.php,
+	web/reset_password.php, web/reset_password_handler.php:
+	Fleshed out.
+	[87d799dd911f] <db_password_reset>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[d5717e8cc0bb] <db_password_reset>
+
+	* web/css/mrbs.css.php, web/lang/lang.en, web/reset_password.php:
+	Completed new password form
+	[a00eaec3defb] <db_password_reset>
+
+	* web/lang/lang.en, web/lib/MRBS/Auth/AuthDb.php,
+	web/reset_password.php:
+	Checked for a valid reset link
+	[2ad0ae76c9f4] <db_password_reset>
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Included the link in the mail message
+	[829e37df17b9] <db_password_reset>
 
 2020-08-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en, web/lib/MRBS/Auth/AuthDb.php,
+	web/reset_password_handler.php:
+	Almost completed email notification
+	[3fd5f4f97763] <db_password_reset>
+
+	* tables.my.sql:
+	Implemented writing the reset key to the database
+	[24b62f5109b8] <db_password_reset>
+
+	* web/functions.inc, web/lib/MRBS/Auth/AuthDb.php,
+	web/lib/MRBS/DB.php, web/lib/MRBS/Form/Form.php, web/mrbs_auth.inc,
+	web/systemdefaults.inc.php, web/upgrade/69/mysql.sql:
+	Implemented writing the reset key to the database
+	[ac21041dcf6c] <db_password_reset>
+
+	* web/lib/MRBS/Auth/AuthDb.php, web/lib/MRBS/DB.php:
+	Don't allow the user to enter an email address if there are
+	duplicate email addresses in the table
+	[57396b42dbc0] <db_password_reset>
+
+	* web/lib/MRBS/Auth/Auth.php, web/lib/MRBS/Auth/AuthDb.php,
+	web/reset_password.php:
+	Restructured
+	[98714bdb9e11] <db_password_reset>
+
+	* web/lang/lang.en, web/mrbs_auth.inc, web/reset_password.php:
+	Added password reset form
+	[e3e0bdefe045] <db_password_reset>
+
+	* web/css/mrbs.css.php, web/lang/lang.en, web/lib/MRBS/Auth/Auth.php,
+	web/lib/MRBS/Auth/AuthDb.php, web/lib/MRBS/Form/ElementA.php,
+	web/lib/MRBS/Session/SessionWithLogin.php:
+	Added a "Lost your password?" link
+	[cb69443c845f] <db_password_reset>
+
+	* Operned a new branch for the development of a password reset feature
+	for the 'db' auth scheme.
+	[148092f9906e] <db_password_reset>
 
 	* Merge with password_reset
 	[195cdc168406]
@@ -15,11 +741,69 @@
 
 2020-08-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
+	* INSTALL, web/css/mrbs.css.php, web/edit_entry_handler.php,
+	web/edit_room_handler.php, web/edit_users.php,
+	web/js/functions.js.php, web/js/general.js.php, web/js/index.js.php,
+	web/js/resizable.js.php, web/mrbs_auth.inc:
+	Fixed typos in comments
+	[776c95ac5dfd] <sign_ups>
+
+	* web/approve_entry_handler.php:
+	Fixed typo in comment
+	[078d50c7951e] <sign_ups>
+
+	* tables.pg.sql, web/upgrade/68/pgsql.sql:
+	Added upgrade for PostgreSQL
+	[12ad2900cf55] <sign_ups>
+
+	* web/js/general.js.php:
+	Fixed bug causing ajax-loading gif to appear when it shouldn't
+	[b25571483af8] <sign_ups>
+
+	* web/view_entry.php:
+	Only show the person who registered someone if it's someone other
+	than the registrant
+	[a158e6005e26] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[eaa7e95444aa] <sign_ups>
+
+	* web/view_entry.php:
+	Removed superfluous buttons
+	[85c47a21539a] <sign_ups>
+
+	* web/css/mrbs.css.php, web/view_entry.php:
+	Restructured code
+	[fcf309c92b78] <sign_ups>
+
+	* web/view_entry.php:
+	Fixed HTML validation error
+	[fc25bfaab1fd] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[4440831e79d5] <sign_ups>
+
+	* web/view_entry.php:
+	Fixed HTML validation errors
+	[887a3f72bdee] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[bb8b461ce31c] <sign_ups>
+
+	* Merge with default
+	[e7bdb1cbe182] <sign_ups>
+
 	* INSTALL:
 	Added note about wotdPress multisite.
 	[e05981cc5d12]
 
 2020-08-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge with default
+	[401c6889efb8] <sign_ups>
 
 	* web/lib/MRBS/Auth/AuthDb.php:
 	Fixed typo in comment
@@ -31,28 +815,147 @@
 	containing some uppercase characters.
 	[e6af98a5739a]
 
+	* web/js/functions.js.php:
+	Made the datalist work on mobiles
+	[29c5f2e67d89] <sign_ups>
+
+	* web/view_entry.php:
+	Fixed sorting
+	[ebeb20634642] <sign_ups>
+
+	* web/registration_handler.php:
+	Fixed bug
+	[7f23fd5b1dbd] <sign_ups>
+
+	* web/edit_users.php, web/functions.inc, web/view_entry.php:
+	Made names sortable by last name
+	[ff6652ac13a1] <sign_ups>
+
+2020-08-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql:
+	Brought into step with latest schema version
+	[243637660239] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked datatable layout
+	[eb9e9ad43c9c] <sign_ups>
+
+	* web/css/mrbs.css.php, web/js/view_entry.js.php, web/view_entry.php:
+	Tidied up datatable
+	[02b9e4536439] <sign_ups>
+
+	* web/css/mrbs.css.php, web/js.inc, web/js/view_entry.js.php,
+	web/view_entry.php:
+	Made the table into a datatable
+	[1578a14f8986] <sign_ups>
+
+	* web/lang/lang.en, web/view_entry.php:
+	Added a confirm delete message
+	[0a5001201863] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[fd03824473d3] <sign_ups>
+
+	* web/view_entry.php:
+	Changed cancel button text
+	[68775fc426e3] <sign_ups>
+
+	* web/css/mrbs.css.php, web/mrbs_sql.inc,
+	web/registration_handler.php, web/view_entry.php:
+	Added a cancel button in table of registrants
+	[ed6376c279dc] <sign_ups>
+
 2020-08-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/lang/lang.en, web/view_entry.php:
+	Added registration date
+	[13a6e4d55b08] <sign_ups>
+
+	* web/view_entry.php:
+	Restructured
+	[befc8d0a193f] <sign_ups>
+
+	* web/registration_handler.php, web/view_entry.php:
+	Added a create_by column to the list of registrants
+	[581d55c62f67] <sign_ups>
+
+	* web/mrbs_sql.inc, web/registration_handler.php, web/view_entry.php:
+	Restructured
+	[327ae5bb88ff] <sign_ups>
+
+	* web/view_entry.php:
+	Changed text string
+	[a50f70615bc9] <sign_ups>
+
+	* web/functions.inc, web/registration_handler.php:
+	Made the existing registrant check case insensitive
+	[13bf2184bdc7] <sign_ups>
+
+	* web/registration_handler.php:
+	Stopped a user from being registered twice
+	[de5004614051] <sign_ups>
+
+	* web/view_entry.php:
+	Fixed problem preventing others being registered when you are
+	already registered
+	[26d57b8b0377] <sign_ups>
+
+	* web/mrbs_auth.inc:
+	Merge with default
+	[795693dbdb47] <sign_ups>
 
 	* web/mrbs_auth.inc:
 	Fixed layout problem
 	[47375fba8ff0]
+
+	* Merge with default
+	[f5ac5d001528] <sign_ups>
 
 	* web/Themes/default/header.inc:
 	Fixed bug when a remote_user login/logoff link has a query string.
 	See SF Support Requests #2126.
 	[3b5a1520b933]
 
+	* web/css/mrbs.css.php, web/view_entry.php:
+	Tweaked CSS
+	[ad94c3b400bc] <sign_ups>
+
+2020-08-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/functions.inc, web/js/edit_entry.js.php,
+	web/js/functions.js.php, web/js/general.js.php, web/lib/MRBS/DB.php,
+	web/upgrade/68/mysql.sql, web/view_entry.php:
+	Added the ability for admins to register others
+	[d17dfcd82e7b] <sign_ups>
+
 2020-08-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge with default
+	[f95fe98ba21d] <sign_ups>
 
 	* INSTALL:
 	Added information on multisite operation.
 	[6b97b9ba5332]
+
+	* Merge with default
+	[fe79abb12e62] <sign_ups>
 
 	* web/js/edit_entry.js.php:
 	Fixed SF Bugs #470
 	[04135463b306]
 
 2020-08-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php, web/view_entry.php:
+	Added a config option to control whether other registrants' names
+	are shown.
+	[d935f1d5400a] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Merge with default
+	[b434e6c4331d] <sign_ups>
 
 	* web/css/mrbs.css.php:
 	Restored the "Goto" button in the banner on small screens on all
@@ -61,6 +964,11 @@
 	[8a948c053620]
 
 2020-08-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/edit_entry_handler.php, web/mrbs_auth.inc,
+	web/view_entry.php:
+	Merge with default
+	[f27f2efe412b] <sign_ups>
 
 	* web/Themes/default/header.inc, web/functions.inc,
 	web/lib/MRBS/Session/SessionWithLogin.php:
@@ -95,6 +1003,10 @@
 
 2020-08-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
+	* web/functions_table.inc, web/mrbs_sql.inc:
+	Merge with default
+	[237aaf81a612] <sign_ups>
+
 	* web/functions_ical.inc:
 	Removed unnecessary local variable
 	[6738b345954a]
@@ -109,6 +1021,10 @@
 
 2020-07-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
+	* web/lang/lang.en:
+	Merge with default
+	[262f1dc74890] <sign_ups>
+
 	* web/edit_users.php, web/js/datatables.js.php,
 	web/js/edit_users.js.php, web/lang/lang.en:
 	Added a "Copy email addresses" button to the users table so that
@@ -118,24 +1034,174 @@
 
 2020-07-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
+	* Merge with default
+	[1d6358af8335] <sign_ups>
+
 	* web/report.php:
 	Fixed bug in last commit
 	[555537b87aca]
+
+	* Merge with default
+	[a54acdd635d9] <sign_ups>
 
 	* web/report.php:
 	Fixed multisite bug in link in report output
 	[212db8c5c924]
 
+2020-07-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.pg.sql, web/upgrade/67/pgsql.sql:
+	Added support for PostgreSQL
+	[bdb3074ae821] <sign_ups>
+
+	* tables.my.sql:
+	Updated for schema version 67
+	[e3d30077a163] <sign_ups>
+
+2020-07-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/registration_handler.php:
+	Fixed bug causing mutex lock not to be released.
+	[22e291265dcc] <sign_ups>
+
+	* web/edit_entry.php, web/mrbs_sql.inc:
+	Restricted ability to create sign-on events to booking admins
+	[2699c37d0877] <sign_ups>
+
+	* web/lang/lang.en, web/mrbs_sql.inc, web/view_entry.php:
+	Added a warning about editing series
+	[f5db119c5e7c] <sign_ups>
+
+	* web/mrbs_sql.inc:
+	Fixed edit_entry so that participants are preserved
+	[03e56a66fa52] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[0b1566b8a724] <sign_ups>
+
+	* web/view_entry.php:
+	Converted to showing display names
+	[823e874ff391] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[acab97e90900] <sign_ups>
+
+	* web/view_entry.php:
+	Added list of registrants
+	[a3a2a3177c1b] <sign_ups>
+
+2020-07-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[66bd0502b48c] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[0db7b49c086a] <sign_ups>
+
+	* web/functions_table.inc:
+	Made CSS work on all_rooms view
+	[b71544754d4c] <sign_ups>
+
+	* web/mrbs_sql.inc:
+	Made ordinary week view work
+	[04a8478a8a90] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Fixed CSS
+	[a43733990213] <sign_ups>
+
 2020-07-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/functions_table.inc, web/mrbs_sql.inc:
+	Added styling for registrable events
+	[a2cad15cf18a] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[90d09e2a530e] <sign_ups>
+
+	* web/lang/lang.en, web/view_entry.php:
+	Tweaked layout
+	[e49d90cbaaf3] <sign_ups>
+
+	* web/css/mrbs.css.php:
+	Tweaked CSS
+	[e14fea07624a] <sign_ups>
+
+	* Merge with default
+	[d12c6b6de12b] <sign_ups>
 
 	* web/lib/MRBS/Form/Field.php:
 	Added comment
 	[f9331e75a69d]
 
+	* Merge with default
+	[f86feca1004c] <sign_ups>
+
 	* web/lib/MRBS/Form/Field.php:
 	Added a $raw parameter to Field->setLabel() to enable HTML tags to
 	be used in a label. See SF Feature Requests #422.
 	[b99329d555b5]
+
+	* web/css/mrbs.css.php, web/lang/lang.en, web/view_entry.php:
+	Tweaked CSS
+	[00ff93ca42b7] <sign_ups>
+
+2020-07-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Fixed returning to the previous page
+	[78ff96031cd0] <sign_ups>
+
+	* web/view_entry.php:
+	Fixed bug when working in multisite mode
+	[d8dedfa88e07] <sign_ups>
+
+	* web/registration_handler.php:
+	Added a check that there are spare places
+	[ae5b91f91ac8] <sign_ups>
+
+	* web/registration_handler.php:
+	Started on cancellation
+	[27a5a0a9b06c] <sign_ups>
+
+	* web/lang/lang.en, web/registration_handler.php,
+	web/upgrade/67/mysql.sql:
+	Added timestamp
+	[4d6622bfedf5] <sign_ups>
+
+	* web/functions_view.inc, web/lang/lang.en, web/mrbs_auth.inc,
+	web/mrbs_sql.inc, web/registration_handler.php, web/view_entry.php:
+	Started registering
+	[9986579541d5] <sign_ups>
+
+2020-07-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Restructured
+	[7cf801d40709] <sign_ups>
+
+	* web/functions_view.inc, web/lang/lang.en, web/mrbs_sql.inc,
+	web/upgrade/67/mysql.sql:
+	Added number of registrants
+	[2d1961edd463] <sign_ups>
+
+	* web/functions_view.inc:
+	Fixed view_entry
+	[ccb6fd880c17] <sign_ups>
+
+	* web/css/mrbs.css.php, web/edit_entry.php,
+	web/edit_entry_handler.php, web/internalconfig.inc.php,
+	web/lang/lang.en, web/lib/MRBS/DB.php, web/mrbs_sql.inc:
+	Initial columns added and working
+	[68f0e6cf59ca] <sign_ups>
+
+	* Opened a new branch to allow users to sign up to a booking
+	[898383fea382] <sign_ups>
 
 2020-07-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
 

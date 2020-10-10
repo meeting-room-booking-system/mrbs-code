@@ -7,6 +7,83 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.9.1 (Sat 10th October 2020):
+
+[+] Added the ability to request a password reset, as long as MRBS can determine the user's
+ email address.
+
+[+] Added ability to configure a meeting to allow for a set number of users to "sign up"
+ for the meeting.
+
+[-] Fixed bug recently introduced in LDAP authentication scheme, see SF Bugs #475.
+
+[-] Fixed bug with error logging, see SF Support Requests #2312.
+
+[*] Now respects the sort key when getting the default area.
+
+[*] Updated German translation with thanks to Tobias Zeumer.
+
+[*] Improvements to utility page checklang.php.
+
+[*] Added version parameters to query strings for Javascript and CSS files to
+ avoid problems with over-eager caching.
+
+[-] Fixed bug causing no entries to be found in a report when there's a
+ custom field which is an integer and it is left blank in the report
+ form. See SF Support Requests #2142.
+
+[*] Upgraded to latest version of DataTables.
+
+[-] Fixed SF Bugs #477 - CAS setup error.
+
+[*] Added checks where necessary that the authentication type is the
+ same as the session scheme.
+
+[-] Fixed SF Bugs #479 (cannot edit a booking when
+ $prevent_simultaneous_bookings = true;)
+
+[-] Fixed bug when a limit is set on both the maximum number and also
+ the total length of bookings per day. See SF Bugs #480.
+
+[+] Added a configuration option to display the mini-calendars above the
+ main calendar when the window narrrows. See SF Support Requests
+ #2156.
+
+[+] Allowed admins to override the private_mandatory setting. See SF
+ Patches #102.
+
+[-] Fixed bug causing the location not to be shown in print view. See SF
+ Feature Requests #426.
+
+[-] Fixed SF Bugs #482 (hidden days not disabled in datepickers).
+
+[-] Advanced the date to the first non-hidden day. See SF Bugs #482.
+
+[*] Changed "Possible CSRF attack" message from E_USER_WARNING to
+ E_USER_NOTICE. See SF Support Requests #2174.
+
+[+] Added the 'idcheck' authentication type. See SF Support Requests
+ #2173.
+
+[+] Added Windows support for Cuban (es-CU) and Latin American (es-419)
+ Spanish.
+
+[*] Updated French translations. Thanks to Philippe. See SF Patches
+ #105.
+
+[*] Added support in Windows for more languages.
+
+[-] Fixed bug causing problems if the old auth files are still present.
+
+[-] Fixed problem with MRBS not accepting 'zh-TW' as a locale when using
+ the intl extension. See SF Support Requests #2178.
+
+[+] Added the ability to configure a room to disallow certain booking types.
+
+[-] Fixed a few issues with PostgreSQL upgrades/schema.
+
+
+-------------------------------------------------------------------------------
 Version 1.9.0 (Tue 16th August 2020):
 
 [*] Authentication and session schemes refactored into classes.
