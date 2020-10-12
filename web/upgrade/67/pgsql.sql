@@ -12,7 +12,7 @@ CREATE TABLE %DB_TBL_PREFIX%participants
                 REFERENCES %DB_TBL_PREFIX%entry(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,
-  username    varchar(255),
+  username    varchar(191),
   registered  int,
 
   CONSTRAINT "%DB_TBL_PREFIX_SHORT%uq_entryid_username" UNIQUE (entry_id, username)
