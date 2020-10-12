@@ -175,7 +175,7 @@ CREATE TABLE mrbs_participants
 (
   id          int NOT NULL auto_increment,
   entry_id    int NOT NULL,
-  username    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  username    varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   create_by   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   registered  int,
 

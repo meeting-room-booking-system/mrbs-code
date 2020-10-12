@@ -173,7 +173,7 @@ CREATE TABLE mrbs_participants
                 REFERENCES mrbs_entry(id)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE,
-  username    varchar(255),
+  username    varchar(191),
   create_by   varchar(255),
   registered  int,
 
