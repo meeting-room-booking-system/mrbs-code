@@ -10,6 +10,20 @@ function generate_groups_table()
   $groups = new Groups();
 
   echo "<table id=\"roles\">\n";
+
+  echo "<thead>\n";
+  echo "<tr>";
+  if ($auth['type'] == 'db')
+  {
+    echo "<th>";
+    // TODO 1. Implement delete button
+    // generate_delete_button($group);
+    echo "</th>";
+  }
+  echo "<th>" . htmlspecialchars(get_vocab('group')) . "</th>";
+  echo "<tr>\n";
+  echo "</thead>\n";
+
   echo "<tbody>\n";
 
   foreach ($groups as $group)

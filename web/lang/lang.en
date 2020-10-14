@@ -348,6 +348,7 @@ $vocab["warning_last_admin"]    = "Warning!  This is the last admin and so you c
 $vocab["copy_email_addresses"]  = "Copy email addresses";
 
 // Groups
+$vocab['group']              = "Group";
 $vocab['groups']             = "Groups";
 
 // Roles
