@@ -616,6 +616,10 @@ $is_mandatory_field = array();
 
 $is_mandatory_field['users.display_name'] = true;
 
+// Set this to false if you do not want to have the ability to create events for which
+// other people can register.
+$enable_registration = true;
+
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
 // if you make a repeat booking and some of the repeat dates are already
