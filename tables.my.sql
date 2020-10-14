@@ -306,6 +306,23 @@ CREATE TABLE mrbs_user_role
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+CREATE TABLE mrbs_group_role
+(
+  group_id    int NOT NULL,
+  role_id     int NOT NULL,
+
+  UNIQUE KEY uq_group_role (group_id, role_id),
+  FOREIGN KEY (group_id)
+    REFERENCES mrbs_group(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (role_id)
+    REFERENCES mrbs_role(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 CREATE TABLE mrbs_role_area
 (
   role_id     int NOT NULL,
@@ -345,6 +362,6 @@ CREATE TABLE mrbs_role_room
 
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '79');
+  VALUES ( 'db_version', '80');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
