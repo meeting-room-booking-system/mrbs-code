@@ -37,6 +37,7 @@ function generate_registrant_table($row, $previous_page=null)
     if (getWritable($registrant['username'], $row['room_id']))
     {
       generate_cancel_registration_button(
+        $row,
         $registrant,
         get_vocab('delete'),
         $previous_page
@@ -100,8 +101,14 @@ function get_returl($previous_page=null)
 }
 
 
-function generate_cancel_registration_button(array $registrant, $label_text, $previous_page=null, $as_field=false)
+function generate_cancel_registration_button(array $row, array $registrant, $label_text, $previous_page=null, $as_field=false)
 {
+  // Ordinary users cannot cancel registrations after the event has started
+  if (!is_book_admin($row['room_id']) && (time() > $row['start_time']))
+  {
+    return;
+  }
+
   $form = new Form();
   $form->setAttributes(array('action' => multisite('registration_handler.php'),
     'method' => 'post'));
@@ -257,6 +264,7 @@ function generate_event_registration($row, $previous_page=null)
     if (!$can_see_others)
     {
       generate_cancel_registration_button(
+          $row,
           $this_registrant,
           get_vocab('cancel_registration'),
           $previous_page,

@@ -23,6 +23,12 @@ function cancel($registration_id)
     return;
   }
 
+  // Ordinary users cannot cancel registrations after the event has started
+  if (!is_book_admin($entry['room_id']) && (time() > $entry['start_time']))
+  {
+    return;
+  }
+
   // They are authorised, so go ahead and delete the registration
   $sql = "DELETE FROM " . _tbl('participants') . "
                 WHERE id=:registration_id";
