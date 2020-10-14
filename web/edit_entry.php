@@ -911,9 +911,10 @@ function get_field_skip_conflicts($disabled=false)
 
 function get_fieldset_registration()
 {
+  global $enable_registration;
   global $allow_registration, $enable_registrant_limit, $registrant_limit;
 
-  if (!is_book_admin())
+  if (!$enable_registration || !is_book_admin())
   {
     return null;
   }
