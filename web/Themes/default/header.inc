@@ -206,6 +206,7 @@ function print_menu_items($query)
       'import'    => 'import.php',
       'rooms'     => 'admin.php',
       'roles'     => 'edit_role.php',
+      'groups'    => 'edit_group.php',
       'user_list' => 'edit_user.php'
     );
 
