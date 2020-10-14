@@ -7,6 +7,20 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.9.2 (Wed 14th October 2020):
+
+[-] Fixed bug when upgrading to or installing MRBS 1.9.1 and using MySQL
+ 5.6 or below. See SF Bugs #486.
+
+[*] Prevented ordinary users from cancelling a registration for an event
+ after it has started.
+
+[*] Added a new config variable, $enable_registration, to allow sites to
+ remove the ability to create events for which other people can
+ register. See SF Support Requests #2199.
+
+
+-------------------------------------------------------------------------------
 Version 1.9.1 (Sat 10th October 2020):
 
 [+] Added the ability to request a password reset, as long as MRBS can determine the user's
