@@ -186,7 +186,7 @@ class Users extends TableIterator
         // It's a new user: add them to the table
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
-        $user->groups = $external_users['group_ids'];
+        $user->groups = $external_user['group_ids'];
         // Save the user to the database
         $user->save();
         $added[] = $external_user['display_name'];
