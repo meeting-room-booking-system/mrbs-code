@@ -436,7 +436,15 @@ class AuthLdap extends Auth
         $attribute = ldap_next_attribute($ldap, $entry);
       }
 
-      $object['users'][] = $user;
+      if (isset($user['username']))
+      {
+        if (!isset($user['display_name']))
+        {
+          $user['display_name'] = $user['username'];
+        }
+        $object['users'][] = $user;
+      }
+
       $entry = ldap_next_entry($ldap, $entry);
     }
 
