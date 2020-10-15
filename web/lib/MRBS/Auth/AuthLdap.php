@@ -498,7 +498,7 @@ class AuthLdap extends Auth
         }
         $object['users'][] = $user;
       }
-      
+
       $entry = ldap_next_entry($ldap, $entry);
     }
 
