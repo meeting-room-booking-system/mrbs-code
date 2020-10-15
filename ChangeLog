@@ -1,8 +1,43 @@
-2020-10-10  John Beranek  <jberanek@users.sourceforge.net>
+2020-10-14  John Beranek  <jberanek@users.sourceforge.net>
 
 	* web/version_num.inc:
 	Updated version number for release.
-	[e6e50f75982a] [tip]
+	[4aa28b4675ad] [tip]
+
+2020-10-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/registration_handler.php, web/view_entry.php:
+	Prevented ordinary users from cancelling a registration for an event
+	after it has started.
+	[0d2c8fc033cd]
+
+	* web/edit_entry.php, web/systemdefaults.inc.php:
+	Added a new config variable, $enable_registration, to allow sites to
+	remove the ability to create events for which other people can
+	register. See SF Support Requests #2199.
+	[8e43d96b0e9a]
+
+2020-10-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/upgrade/67/mysql.sql,
+	web/upgrade/67/pgsql.sql:
+	Fixed bug when upgrading to or installing MRBS 1.9.1 and using MySQL
+	5.6 or below. See SF Bugs #486.
+	[b0aed04e8224]
+
+2020-10-10  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_9_1 for changeset ca4d9201a657
+	[81f28cd0acfa]
+
+	* ChangeLog, NEWS:
+	NEWS and ChangeLog updated for 1.9.1 release.
+	[ca4d9201a657] [mrbs-1_9_1]
+
+	* web/version_num.inc:
+	Updated version number for release.
+	[e6e50f75982a]
 
 2020-10-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
