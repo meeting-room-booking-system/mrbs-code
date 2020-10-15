@@ -490,7 +490,15 @@ class AuthLdap extends Auth
         $user['display_name'] = self::implodeNameAttribute($object['config']['ldap_name_attrib'], $display_name_parts);
       }
 
-      $object['users'][] = $user;
+      if (isset($user['username']))
+      {
+        if (!isset($user['display_name']))
+        {
+          $user['display_name'] = $user['username'];
+        }
+        $object['users'][] = $user;
+      }
+      
       $entry = ldap_next_entry($ldap, $entry);
     }
 
