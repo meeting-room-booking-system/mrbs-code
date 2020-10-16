@@ -77,7 +77,8 @@ function output_row($row, $returl)
   $values = array();
   // booking name
   $html_name = htmlspecialchars($row['name']);
-  $values[] = "<a title=\"$html_name\" href=\"view_entry.php?" . htmlspecialchars($query) . "\">$html_name</a>";
+  $values[] = '<a title="' . $html_name . '"' .
+                ' href="' . htmlspecialchars(multisite("view_entry.php?$query")) . '">' . $html_name . '</a>';
   // created by
   $values[] = htmlspecialchars(get_compound_name($row['create_by']));
   // start time and link to day view
@@ -92,7 +93,7 @@ function output_row($row, $returl)
 
   $query = http_build_query($vars, '', '&');
 
-  $link = '<a href="index.php?' . htmlspecialchars($query) . '">';
+  $link = '<a href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
 
   if(empty($row['enable_periods']))
   {
