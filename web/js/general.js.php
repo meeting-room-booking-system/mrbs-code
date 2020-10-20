@@ -112,11 +112,14 @@ function fillUsernameFields()
               ?>
               var foundCurrent = false;
               $.each(data, function(index, option) {
-                  // Make it a case-insensitive comparison as usernames are case-insensitive
-                  var selected = (option.username.toUpperCase() === currentValueUpper);
-                  foundCurrent = foundCurrent || selected;
-                  var newOption = new Option(option.display_name, option.username, selected, selected);
-                  el.append(newOption);
+                  if (option.username !== null)
+                  {
+                    // Make it a case-insensitive comparison as usernames are case-insensitive
+                    var selected = (option.username.toUpperCase() === currentValueUpper);
+                    foundCurrent = foundCurrent || selected;
+                    var newOption = new Option(option.display_name, option.username, selected, selected);
+                    el.append(newOption);
+                  }
                 });
               <?php
               // It's possible that the creator of the booking is no longer a user (they may have left
