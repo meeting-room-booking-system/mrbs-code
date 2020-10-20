@@ -284,6 +284,21 @@ CREATE TABLE mrbs_user_role
 );
 
 
+CREATE TABLE mrbs_group_role
+(
+  group_id    int NOT NULL
+                REFERENCES mrbs_group(id)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+  role_id     int NOT NULL
+                REFERENCES mrbs_role(id)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE,
+
+  CONSTRAINT mrbs_uq_group_role UNIQUE (group_id, role_id)
+);
+
+
 CREATE TABLE mrbs_role_area
 (
   role_id     int NOT NULL
@@ -331,6 +346,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_user_timestamp BEFORE UPDATE ON mrbs_user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ('db_version', '79');
+  VALUES ('db_version', '80');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ('local_db_version', '1');
