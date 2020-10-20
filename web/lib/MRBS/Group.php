@@ -11,8 +11,12 @@ class Group extends Table
 
   public function __construct($name=null)
   {
+    global $auth;
+    
     parent::__construct();
     $this->name = $name;
+    // Set some default properties
+    $this->auth_type = $auth['type'];
   }
 
 
