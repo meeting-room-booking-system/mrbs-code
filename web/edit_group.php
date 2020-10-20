@@ -21,6 +21,7 @@ function generate_groups_table()
     echo "</th>";
   }
   echo "<th>" . htmlspecialchars(get_vocab('group')) . "</th>";
+  echo "<th>" . htmlspecialchars(get_vocab('roles')) . "</th>";
   echo "<tr>\n";
   echo "</thead>\n";
 
@@ -41,6 +42,12 @@ function generate_groups_table()
     $href = multisite(this_page() . '?group_id=' . $group->id);
     echo '<a href="' . htmlspecialchars($href). '">' . htmlspecialchars($group->name) . '</a>';
     echo "</td>";
+
+    echo "<td>";
+    $role_name_list = implode(', ', $group->role_names);
+    echo htmlspecialchars($role_name_list);
+    echo "</td>";
+
     echo "</tr>\n";
   }
 

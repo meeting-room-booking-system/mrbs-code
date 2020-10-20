@@ -74,4 +74,52 @@ abstract class TableIterator implements \Countable, \Iterator
     $this->cursor = -1;
     $this->item = null;
   }
+
+
+  // Converts the result of db()->syntax_group_array_as_string() queries
+  // back into arrays.
+  protected function stringsToArrays(&$row)
+  {
+    foreach (array('groups', 'roles') as $key)
+    {
+      // Convert the string of ids into an array and also add an
+      // array of names
+      if (array_key_exists($key, $row))
+      {
+        $names = array();
+
+        // If there are no groups/roles, MySQL will return NULL and PostgreSQL ''.
+        if (isset($row[$key]) && ($row[$key] !== ''))
+        {
+          $row[$key] = explode(',', $row[$key]);
+          foreach ($row[$key] as $id)
+          {
+            $names[] = $this->names[$key][$id];
+          }
+        }
+        else
+        {
+          $row[$key] = array();
+        }
+
+        // Sort the names
+        sort($names, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+
+        // Add the names to the result
+        switch ($key)
+        {
+          case 'groups':
+            $row['group_names'] = $names;
+            break;
+          case 'roles':
+            $row['role_names'] = $names;
+            break;
+          default:
+            throw new \Exception("Unknown key '$key'");
+            break;
+        }
+      }
+    }
+  }
+
 }
