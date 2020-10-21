@@ -22,7 +22,7 @@ function generate_groups_table()
   }
   echo "<th>" . htmlspecialchars(get_vocab('group')) . "</th>";
   echo "<th>" . htmlspecialchars(get_vocab('roles')) . "</th>";
-  echo "<tr>\n";
+  echo "</tr>\n";
   echo "</thead>\n";
 
   echo "<tbody>\n";
