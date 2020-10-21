@@ -64,11 +64,10 @@ function generate_groups_table()
 function generate_edit_group_form(Group $group)
 {
   $form = new Form();
-  $form->setAttributes(array(
-      'class' => 'standard',
-      'action' => multisite('edit_group_handler.php'),
-      'method' => 'post'
-    ));
+  $form->addHiddenInputs(array('group_id' => $group->id))
+       ->setAttributes(array('class' => 'standard',
+                             'action' => multisite('edit_group_handler.php'),
+                             'method' => 'post'));
 
   $fieldset = new ElementFieldset();
   $roles = new Roles();
