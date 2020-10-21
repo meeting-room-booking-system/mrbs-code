@@ -526,6 +526,10 @@ print_header($context);
 if (isset($role_id))
 {
   $role = Role::getById($role_id);
+}
+
+if (isset($role))
+{
   echo "<h2>" . htmlspecialchars(get_vocab('role_heading', $role->name)) . "</h2>";
   if (isset($action))
   {
