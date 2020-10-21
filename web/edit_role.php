@@ -278,6 +278,14 @@ function generate_roles_table()
   $roles = new Roles();
 
   echo "<table class=\"admin_table display\" id=\"roles\">\n";
+
+  echo "<thead>\n";
+  echo "<tr>";
+  echo "<th></th>";
+  echo "<th>" . htmlspecialchars(get_vocab('role')) . "</th>";
+  echo "</tr>\n";
+  echo "</thead>\n";
+
   echo "<tbody>\n";
 
   foreach ($roles as $role)

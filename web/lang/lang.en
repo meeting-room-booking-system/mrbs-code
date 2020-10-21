@@ -352,6 +352,7 @@ $vocab['group']              = "Group";
 $vocab['groups']             = "Groups";
 
 // Roles
+$vocab['role']               = "Role";
 $vocab['roles']              = "Roles";
 $vocab['add_role']           = "Add role";
 $vocab['role_name']          = "Name";
