@@ -277,7 +277,7 @@ function generate_roles_table()
 {
   $roles = new Roles();
 
-  echo "<table id=\"roles\">\n";
+  echo "<table class=\"admin_table display\" id=\"roles\">\n";
   echo "<tbody>\n";
 
   foreach ($roles as $role)

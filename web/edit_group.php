@@ -9,7 +9,7 @@ function generate_groups_table()
 
   $groups = new Groups();
 
-  echo "<table id=\"roles\">\n";
+  echo "<table class=\"admin_table display\" id=\"groups\">\n";
 
   echo "<thead>\n";
   echo "<tr>";
