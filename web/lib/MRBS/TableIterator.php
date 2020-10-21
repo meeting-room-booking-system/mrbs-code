@@ -8,6 +8,7 @@ abstract class TableIterator implements \Countable, \Iterator
   protected $cursor;
   protected $item;
   protected $base_class;
+  protected $names;
 
 
   public function __construct($base_class)

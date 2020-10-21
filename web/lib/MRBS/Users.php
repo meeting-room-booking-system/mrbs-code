@@ -5,8 +5,6 @@ namespace MRBS;
 class Users extends TableIterator
 {
 
-  private $names;
-
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\User');
