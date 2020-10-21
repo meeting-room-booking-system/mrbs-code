@@ -350,6 +350,7 @@ $vocab["copy_email_addresses"]  = "Copy email addresses";
 // Groups
 $vocab['group']              = "Group";
 $vocab['groups']             = "Groups";
+$vocab["group_heading"]      = "Group: %s";
 
 // Roles
 $vocab['role']               = "Role";

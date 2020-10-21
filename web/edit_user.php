@@ -315,20 +315,7 @@ function get_field_level($params, $disabled=false)
 function get_field_roles($user)
 {
   $roles = new Roles();
-
-  if (count($roles) == 0)
-  {
-    return null;
-  }
-
-  $field = new FieldSelect();
-  $field->setLabel(get_vocab('roles'))
-        ->setControlAttributes(array('name' => 'roles[]',
-                                     'disabled' => !is_user_admin(),
-                                     'multiple' => true))
-        ->addSelectOptions($roles->getNames(), $user->roles, true);
-
-  return $field;
+  return $roles->getFormField($user->roles, !is_user_admin());
 }
 
 

@@ -484,9 +484,9 @@ function generate_area_roles_table(Role $role)
   // order to make it the default.  Use CSS to change the display order.
   $button = new ElementInputSubmit();
   $button->setAttributes(array(
-    'name' => 'button_save',
-    'value' => get_vocab('save')
-  ));
+      'name' => 'button_save',
+      'value' => get_vocab('save')
+    ));
   $fieldset->addElement($button);
 
   $button = new ElementInputSubmit();

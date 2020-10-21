@@ -1,6 +1,11 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\Form;
+
 require "defaultincludes.inc";
 
 function generate_groups_table()
@@ -56,6 +61,44 @@ function generate_groups_table()
 }
 
 
+function generate_edit_group_form(Group $group)
+{
+  $form = new Form();
+  $form->setAttributes(array(
+      'class' => 'standard',
+      'action' => multisite('edit_group_handler.php'),
+      'method' => 'post'
+    ));
+
+  $fieldset = new ElementFieldset();
+  $roles = new Roles();
+  $fieldset->addElement($roles->getFormField($group->roles));
+  $form->addElement($fieldset);
+
+  // Submit buttons
+  $fieldset = new ElementFieldset();
+  $field = new FieldInputSubmit();
+  $field->setAttribute('class', 'submit_buttons')
+        ->setLabelAttribute('class', 'no_suffix');
+
+  $button = new ElementInputSubmit();
+  $button->setAttributes(array('name'           => 'button_back',
+                               'value'          => get_vocab('back'),
+                               'formnovalidate' => true));
+
+  $field->setAttribute('class', 'submit_buttons')
+        ->setLabelAttribute('class', 'no_suffix')
+        ->addLabelElement($button)
+        ->setControlAttributes(array('class' => 'default_action',
+                                     'name'  => 'button_save',
+                                     'value' => get_vocab('save')));
+
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
@@ -69,10 +112,24 @@ $context = array(
   'room'      => isset($room) ? $room : null
 );
 
+$group_id = get_form_var('group_id', 'int');
+
 print_header($context);
 
-echo "<h2>" . htmlspecialchars(get_vocab('groups')) . "</h2>";
+if (isset($group_id))
+{
+  $group = Group::getById($group_id);
+}
 
-generate_groups_table();
+if (isset($group))
+{
+  echo "<h2>" . htmlspecialchars(get_vocab('group_heading', $group->name)) . "</h2>";
+  generate_edit_group_form($group);
+}
+else
+{
+  echo "<h2>" . htmlspecialchars(get_vocab('groups')) . "</h2>";
+  generate_groups_table();
+}
 
 print_footer();

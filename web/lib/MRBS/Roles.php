@@ -2,6 +2,8 @@
 namespace MRBS;
 
 
+use MRBS\Form\FieldSelect;
+
 class Roles extends TableIterator
 {
 
@@ -19,6 +21,25 @@ class Roles extends TableIterator
       $result[$role->id] = $role->name;
     }
     return $result;
+  }
+
+
+  // Gets a form field for a standard form for selecting roles
+  public function getFormField(array $selected, $disabled=false)
+  {
+    if ($this->count() == 0)
+    {
+      return null;
+    }
+
+    $field = new FieldSelect();
+    $field->setLabel(get_vocab('roles'))
+          ->setControlAttributes(array('name' => 'roles[]',
+                                       'disabled' => $disabled,
+                                       'multiple' => true))
+          ->addSelectOptions($this->getNames(), $selected, true);
+
+    return $field;
   }
 
 
