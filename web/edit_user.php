@@ -934,7 +934,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   {
     $key = $field['name'];
 
-    if (($auth['type'] != 'db') && ($key != 'name'))
+    if (($auth['type'] != 'db') && !in_array($key, array('name', 'display_name')))
     {
       continue;
     }
@@ -943,9 +943,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
                     'name'  => $key,
                     'value' => $user->{$key});
 
-    $disabled = !$initial_user_creation &&
-                !is_user_admin() &&
-                in_array($key, $auth['db']['protected_fields']);
+    $disabled = ($auth['type'] != 'db') ||
+                (!$initial_user_creation &&
+                 !is_user_admin() &&
+                 in_array($key, $auth['db']['protected_fields']));
 
     switch ($key)
     {
