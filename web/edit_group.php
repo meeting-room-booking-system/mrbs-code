@@ -69,10 +69,8 @@ function generate_edit_group_form(Group $group)
                              'action' => multisite('edit_group_handler.php'),
                              'method' => 'post'));
 
-  $fieldset = new ElementFieldset();
   $roles = new Roles();
-  $fieldset->addElement($roles->getFormField($group->roles));
-  $form->addElement($fieldset);
+  $form->addElement($roles->getFieldset($group->roles));
 
   // Submit buttons
   $fieldset = new ElementFieldset();

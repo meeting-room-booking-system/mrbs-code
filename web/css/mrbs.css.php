@@ -1542,6 +1542,7 @@ div#div_custom_html {
   padding: 1em 0;
 }
 
+.edit_user fieldset legend,
 .standard fieldset fieldset legend{
   font-size: small;
   font-style: italic;

@@ -2,7 +2,8 @@
 namespace MRBS;
 
 
-use MRBS\Form\FieldSelect;
+use MRBS\Form\ElementFieldset;
+use MRBS\Form\FieldInputCheckbox;
 
 class Roles extends TableIterator
 {
@@ -25,21 +26,32 @@ class Roles extends TableIterator
 
 
   // Gets a form field for a standard form for selecting roles
-  public function getFormField(array $selected, $disabled=false)
+  public function getFieldset(array $selected, $disabled=false)
   {
     if ($this->count() == 0)
     {
       return null;
     }
 
-    $field = new FieldSelect();
-    $field->setLabel(get_vocab('roles'))
-          ->setControlAttributes(array('name' => 'roles[]',
-                                       'disabled' => $disabled,
-                                       'multiple' => true))
-          ->addSelectOptions($this->getNames(), $selected, true);
+    $fieldset = new ElementFieldset();
+    $fieldset->addLegend(get_vocab('roles'));
 
-    return $field;
+    $this->rewind();
+
+    while ($this->valid())
+    {
+      $role = $this->current();
+      $field = new FieldInputCheckbox();
+      $field->setLabel($role->name)
+            ->setControlAttributes(array('name' => 'roles[]',
+                                         'value' => $role->id,
+                                         'disabled' => $disabled))
+            ->setChecked(in_array($role->id, $selected));
+      $fieldset->addElement($field);
+      $this->next();
+    }
+
+    return $fieldset;
   }
 
 

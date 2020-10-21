@@ -312,10 +312,13 @@ function get_field_level($params, $disabled=false)
 }
 
 
-function get_field_roles($user)
+function get_fieldset_roles($user)
 {
+  global $initial_user_creation;
+
   $roles = new Roles();
-  return $roles->getFormField($user->roles, !is_user_admin());
+  $disabled = !$initial_user_creation && !is_user_admin();
+  return $roles->getFieldset($user->roles, $disabled);
 }
 
 
@@ -489,6 +492,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
 function get_fieldset_password($id=null, $disabled=false)
 {
   $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('user.password'));
 
   // If this is an existing user then give them the message about optionally
   // changing their password.
@@ -924,6 +928,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   }
 
   $fieldset = new ElementFieldset();
+  $fieldset->addLegend(get_vocab('general_settings'));
 
   foreach ($fields as $field)
   {
@@ -972,8 +977,6 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         {
           $form->addHiddenInput($params['name'], $params['value']);
         }
-        // Add in the roles
-        $fieldset->addElement(get_field_roles($user));
         break;
 
       case 'name':
@@ -996,13 +999,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
     }
   }
 
-  if ($auth['type'] != 'db')
-  {
-    // Add in the roles
-    $fieldset->addElement(get_field_roles($user));
-  }
-
   $form->addElement($fieldset);
+
+  // Add in the roles
+  $form->addElement(get_fieldset_roles($user));
 
   if ($auth['type'] == 'db')
   {
