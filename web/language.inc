@@ -788,6 +788,10 @@ function get_loc_field_name($table, $name)
   {
     $tag = utf8_substr($table, utf8_strlen($full_prefix));
   }
+  else
+  {
+    $tag = $table;
+  }
   // Add on the field name
   $tag .= "." . $name;
 
