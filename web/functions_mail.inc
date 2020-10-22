@@ -960,8 +960,15 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   }
 
   // Create the iCalendar if required
+  // Don't add an iCalendar if we're using periods, because MRBS doesn't know when periods
+  // occur in the day, so can't construct a VEVENT.
+  // Don't add an iCalendar if this is a reminder or a request for more info because then
+  // the recipient probably won't be able to reply to the email: we just want an ordinary
+  // email and not a calendar notification.
   $attachment = array();
-  if ($mail_settings['icalendar'] && !$enable_periods)
+  if ($mail_settings['icalendar'] &&
+      !$enable_periods &&
+      !in_array($action, array('more_info', 'remind')))
   {
     $attachment['method']   = "REQUEST";
     $ical_components = array();
