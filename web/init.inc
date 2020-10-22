@@ -16,8 +16,8 @@ function init_errors()
   $error_log = ini_get('error_log');
   if (isset($error_log) &&
       ($error_log !== '') &&
-      (strpos($error_log, '/') === false) &&
-      (strpos($error_log, '\\') === false))
+      (utf8_strpos($error_log, '/') === false) &&
+      (utf8_strpos($error_log, '\\') === false))
   {
     ini_set('error_log', getcwd() . '/' . $error_log);
   }

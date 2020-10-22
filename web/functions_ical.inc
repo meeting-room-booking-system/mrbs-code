@@ -12,7 +12,7 @@ function extract_vtimezone($vcalendar)
   $vtimezone = strstr($vcalendar, "BEGIN:VTIMEZONE");
   // Would be simpler to use strstr() again, but the optional
   // third parameter was only introduced in PHP 5.3.0
-  $pos = strpos($vtimezone, "END:VTIMEZONE");
+  $pos = utf8_strpos($vtimezone, "END:VTIMEZONE");
   if ($pos !== false)
   {
     $vtimezone = substr($vtimezone, 0, $pos);
@@ -76,7 +76,7 @@ function get_vtimezone($tz)
         $properties = explode("\r\n", ical_unfold($vtimezone[$tz]));
         foreach ($properties as $property)
         {
-          if (strpos($property, "TZURL:") === 0)
+          if (utf8_strpos($property, "TZURL:") === 0)
           {
             $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
           }
@@ -195,7 +195,7 @@ function get_time($value)
     }
   }
 
-  if (strpos($value, 'Z') !== false)
+  if (utf8_strpos($value, 'Z') !== false)
   {
     $value = str_replace('Z', '', $value);
     $this_timezone = 'UTC';

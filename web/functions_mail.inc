@@ -159,7 +159,7 @@ function getMailDateString($time)
 // Returns the result as an array index by 'common_name' and 'address'.
 function parse_address($email_address)
 {
-  if (strpos($email_address, '<') === FALSE)
+  if (utf8_strpos($email_address, '<') === false)
   {
     $cn = '';
     $addr = $email_address;
