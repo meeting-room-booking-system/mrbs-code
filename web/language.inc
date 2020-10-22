@@ -779,12 +779,12 @@ function get_type_vocab($type)
 // return the column name
 function get_loc_field_name($table, $name)
 {
-  global $vocab, $db_tbl_prefix;
+  global $vocab;
 
   // Get the qualified prefix
   $full_prefix = _tbl('');
   // Strip the prefix, if any, off the table name
-  if (strpos($table, $full_prefix) === 0)
+  if (utf8_strpos($table, $full_prefix) === 0)
   {
     $tag = utf8_substr($table, utf8_strlen($full_prefix));
   }
@@ -1182,4 +1182,15 @@ function utf8_strtoupper($str)
     return mb_strtoupper($str);
   }
   return strtoupper($str);
+}
+
+
+// Wrapper round mb_strpos()
+function utf8_strpos($haystack, $needle, $offset=0)
+{
+  if (function_exists('mb_strpos'))
+  {
+    return mb_strpos($haystack, $needle, $offset);
+  }
+  return strpos($haystack, $needle, $offset);
 }
