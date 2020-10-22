@@ -492,7 +492,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
 function get_fieldset_password($id=null, $disabled=false)
 {
   $fieldset = new ElementFieldset();
-  $fieldset->addLegend(get_vocab('user.password'));
+  $fieldset->addLegend(get_loc_field_name(User::TABLE_NAME, 'password'));
 
   // If this is an existing user then give them the message about optionally
   // changing their password.
@@ -506,7 +506,7 @@ function get_fieldset_password($id=null, $disabled=false)
   for ($i=0; $i<2; $i++)
   {
     $field = new FieldInputPassword();
-    $field->setLabel(get_vocab('user.password'))
+    $field->setLabel(get_loc_field_name(User::TABLE_NAME, 'password'))
           ->setControlAttributes(array('id'   => "password$i",
                                        'name' => "password$i",
                                        'disabled' => $disabled,
@@ -755,7 +755,7 @@ if ($is_ajax)
 }
 
 // Get the information about the fields in the user table
-$fields = db()->field_info(_tbl('user'));
+$fields = db()->field_info(_tbl(User::TABLE_NAME));
 
 $users = new Users();
 
@@ -939,7 +939,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
       continue;
     }
 
-    $params = array('label' => get_loc_field_name(_tbl('user'), $key),
+    $params = array('label' => get_loc_field_name(_tbl(User::TABLE_NAME), $key),
                     'name'  => $key,
                     'value' => $user->{$key});
 
@@ -1216,7 +1216,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
 
         if (!in_array($fieldname, $ignore_columns))
         {
-          $heading = get_loc_field_name(_tbl('user'), $fieldname);
+          $heading = get_loc_field_name(_tbl(User::TABLE_NAME), $fieldname);
           // We give some columns a type data value so that the JavaScript knows how to sort them
           switch ($fieldname)
           {
