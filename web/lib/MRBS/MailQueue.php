@@ -26,7 +26,7 @@ class MailQueue
       mail_debug("Mail disabled: not adding message to queue");
       return;
     }
-    
+
     // And no point in doing anything if there are no recipients
     if (self::getNRecipients($addresses) == 0)
     {
@@ -65,16 +65,16 @@ class MailQueue
     {
       return 0;
     }
-    
+
     $recipients = (!empty($addresses['to'])) ? $addresses['to'] : '';
     $recipients .= (!empty($addresses['cc'])) ? ',' . $addresses['cc'] : '';
     $recipients .= (!empty($addresses['bcc'])) ? ',' . $addresses['bcc'] : '';
     $parsed_addresses = PHPMailer::parseAddresses($recipients);
-    
+
     return count($parsed_addresses);
   }
 
-  
+
   /**
    * Send an email
    *
@@ -100,7 +100,11 @@ class MailQueue
    */
   protected static function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
   {
-    set_include_path(get_include_path() . PATH_SEPARATOR . MRBS_ROOT);
+    // Modify the include path because this is run after shutdown when the working directory may have
+    // changed (see the note in https://www.php.net/manual/en/function.register-shutdown-function.php).
+    // Put the new path at the beginning of the list in case there is an open_basedir restriction in effect
+    // and one of the paths triggers a warning preventing the remaining paths from being reached.
+    set_include_path(MRBS_ROOT . PATH_SEPARATOR . get_include_path());
 
     require_once 'Mail/mimePart.php';
 
