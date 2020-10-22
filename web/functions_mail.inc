@@ -782,13 +782,22 @@ function create_addresses($data, $action)
 
   $cc[] = $mail_settings['cc'];
 
-  // set the from address
+  // Set the From address.  If this is a reminder email or a request for more info
+  // then set the From address to be the user's - unless we've configured MRBS not
+  // to do this (to avoid the email being rejected as spam), in which case we'll
+  // put the user's address on the Cc line, which will enable the recipient to
+  // use it in a reply.
   $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user) &&
-      in_array($action, array('more_info', 'reject', 'remind')) &&
-      !$mail_settings['use_from_for_all_mail'])
+  if (isset($mrbs_user) && in_array($action, array('more_info', 'remind')))
   {
-    $from = $mrbs_user->email;
+    if ($mail_settings['use_from_for_all_mail'])
+    {
+      $cc[] = $mrbs_user->email;
+    }
+    else
+    {
+      $from = $mrbs_user->email;
+    }
   }
 
   if (empty($from))
@@ -862,7 +871,7 @@ function create_addresses($data, $action)
   // In case $to and $cc are empty, no need to go further
   if (empty($to) && empty($cc))
   {
-    return FALSE;
+    return false;
   }
 
   $addresses = array();
@@ -960,8 +969,15 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   }
 
   // Create the iCalendar if required
+  // Don't add an iCalendar if we're using periods, because MRBS doesn't know when periods
+  // occur in the day, so can't construct a VEVENT.
+  // Don't add an iCalendar if this is a reminder or a request for more info because then
+  // the recipient probably won't be able to reply to the email: we just want an ordinary
+  // email and not a calendar notification.
   $attachment = array();
-  if ($mail_settings['icalendar'] && !$enable_periods)
+  if ($mail_settings['icalendar'] &&
+      !$enable_periods &&
+      !in_array($action, array('more_info', 'remind')))
   {
     $attachment['method']   = "REQUEST";
     $ical_components = array();
