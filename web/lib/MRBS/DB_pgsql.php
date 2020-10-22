@@ -18,7 +18,7 @@ class DB_pgsql extends DB
   // 'table_schema' can be NULL
   private static function resolve_table($table)
   {
-    if (strpos($table, '.') === false)
+    if (utf8_strpos($table, '.') === false)
     {
       $table_schema = null;
       $table_name = $table;

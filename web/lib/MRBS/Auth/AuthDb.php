@@ -116,7 +116,7 @@ class AuthDb extends Auth
     // be case sensitive.   But before we can take account of this, the email addresses in the database
     // need to be normalised so that all the domain names are stored in lower case.  Then it will be
     // possible to do a case sensitive comparison.
-    if (strpos($email, '@') === false)
+    if (\MRBS\utf8_strpos($email, '@') === false)
     {
       if (!empty($auth['allow_local_part_email']))
       {

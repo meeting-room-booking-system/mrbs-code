@@ -497,7 +497,7 @@ function csv_conv($string)
     $boms = array("\xFE\xFF", "\xFF\xFE");
     foreach ($boms as $bom)
     {
-      if (strpos($result, $bom) === 0)
+      if (utf8_strpos($result, $bom) === 0)
       {
         $result = substr($result, strlen($bom));
       }
@@ -1275,7 +1275,7 @@ function get_match_condition($full_column_name, $match, &$sql_params)
       // We have to use strpos() rather than stripos() because we cannot
       // assume PHP5
       if (($option_key !== '') &&
-          (strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
+          (utf8_strpos(utf8_strtolower($option_value), utf8_strtolower($match)) !== FALSE))
       {
         $or_array[] = "$full_column_name=?";
         $sql_params[] = $option_key;

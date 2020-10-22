@@ -119,7 +119,7 @@ abstract class SessionWithLogin implements SessionInterface
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
-            $this->form['target_url'] .= (strpos($this->form['target_url'], '?') === false) ? '?' : '&';
+            $this->form['target_url'] .= (\MRBS\utf8_strpos($this->form['target_url'], '?') === false) ? '?' : '&';
             $this->form['target_url'] .= 'returl=' . urlencode($this->form['returl']);
           }
         }

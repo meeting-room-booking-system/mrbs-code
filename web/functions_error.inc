@@ -8,7 +8,7 @@ function get_error_name($errno)
   $constants = get_defined_constants(true);
   $keys = array_keys($constants['Core'], $errno);
   $keys = array_filter($keys, function($value) {
-      return (strpos($value, 'E_') === 0);
+      return (utf8_strpos($value, 'E_') === 0);
     });
   return implode('|', $keys); // There should only be one member of the array, all being well.
 }
@@ -229,7 +229,7 @@ function shutdown_function()
   $error = error_get_last();
 
   if (isset($error) &&
-      (strpos($error['message'], 'iconv()') !== false) &&
+      (utf8_strpos($error['message'], 'iconv()') !== false) &&
       !function_exists('iconv'))
   {
     // Help new admins understand what to do in case the iconv error occurs...

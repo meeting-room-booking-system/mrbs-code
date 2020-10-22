@@ -59,7 +59,7 @@ function get_timezone_options()
 
   foreach ($timezone_identifiers as $value)
   {
-    if (strpos($value, '/') === FALSE)
+    if (utf8_strpos($value, '/') === FALSE)
     {
       // There are some timezone identifiers (eg 'UTC') on some operating
       // systems that don't fit the Continent/City model.   We'll put them

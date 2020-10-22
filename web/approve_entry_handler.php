@@ -33,7 +33,7 @@ $mail_previous = array();
 $start_times = array();
 
 // Give the return URL a query string if it doesn't already have one
-if (strpos($returl, '?') === FALSE)
+if (utf8_strpos($returl, '?') === false)
 {
   $returl .= "?year=$year&month=$month&day=$day&area=$area&room=$room";
 }
