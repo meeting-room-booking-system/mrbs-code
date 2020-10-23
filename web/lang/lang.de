@@ -90,6 +90,10 @@ $vocab["periods"]            = "Serien";
 $vocab["all_day"]            = "Ganztägig";
 $vocab["area"]               = "Bereich";
 $vocab["type"]               = "Kategorie";
+$vocab["allow_registration"]      = "Anmeldung erlauben";
+$vocab["enable_registrant_limit"] = "Maximale Teilnehmeranzahl festlegen";
+$vocab["registrant_limit"]        = "Maximale Teilnehmeranzahl";
+$vocab["n_registered"]            = "Momentan angemeldet";
 $vocab["save"]               = "Speichern";
 $vocab["rep_type"]           = "Serientyp";
 $vocab["rep_type_0"]         = "Keine";
@@ -142,6 +146,9 @@ $vocab["deleteseries"]       = "Alle Einträge löschen";
 $vocab["exportentry"]        = "Eintrag exportieren";
 $vocab["exportseries"]       = "Serie exportieren";
 $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?";
+$vocab["confirm_edit_series"]     = "Für ein oder mehr Ereignisse der Serie haben sich Benutzer angemeldet." .
+									"Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
+									"Sind Sie sicher, dass Sie fortfahren möchten?";															
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
 $vocab["invalid_series_id"]  = "Ungültige ID der Serie.";
@@ -165,7 +172,15 @@ $vocab["by"]                 = "von";                                    // Used
 $vocab["sent_at"]            = "Verschickt am ";
 $vocab["yes"]                = "Ja";
 $vocab["no"]                 = "Nein";
-
+$vocab["event_registration"]      = "Anmeldung";
+$vocab["event_details"]		 = "Details";
+$vocab["already_registered"]      = "Sie haben sich für diese Veranstaltung angemeldet.";
+$vocab["register"]                = "Anmelden";
+$vocab["cancel_registration"]     = "Abmelden";
+$vocab["registered_by"]           = "Angemeldet durch";
+$vocab["registered_on"]           = "Angemeldet am";
+$vocab["event_full"]              = "Die Veranstaltung ist ausgebucht.";
+$vocab["confirm_del_registrant"]  = "Möchten Sie '%s' wirklich abmelden?";
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Fehler";
 $vocab["sched_conflict"]     = "Konflikt in der Planung";
@@ -187,9 +202,9 @@ $vocab["mail_subject_approved"]  = "Eintrag für %s MRBS genehmigt"; // $mrbs_co
 $vocab["mail_subject_rejected"]  = "Eintrag für %s MRBS abgelehnt"; // $mrbs_company
 $vocab["mail_subject_more_info"] = "%s MRBS: Weitere Informationen angefordert"; // $mrbs_company
 $vocab["mail_subject_reminder"]  = "Erinnerung für %s MRBS"; // $mrbs_company
-$vocab["mail_body_approved"]     = "Ein Eintrag wurde von den Administratoren genehmigt; hier die Details:";
-$vocab["mail_body_rej_entry"]    = "Ein Eintrag wurde von den Administratoren abgelehnt; hier die Details:";
-$vocab["mail_body_more_info"]    = "Die Administratoren benötigen weitere Informationen zu einem Eintrag; hier die Details:";
+$vocab["mail_body_approved"]     = "Ein Eintrag wurde von %s genehmigt; hier die Details:";
+$vocab["mail_body_rej_entry"]    = "Ein Eintrag wurde von %s abgelehnt; hier die Details:";
+$vocab["mail_body_more_info"]    = "%s benötigt weitere Informationen zu einem Eintrag; hier die Details:";
 $vocab["mail_body_reminder"]     = "Erinnerung - ein Eintrag wartet auf Genehmigung; hier die Details:";
 $vocab["mail_body_repeats_booked"]   = "Die folgenden Tage wurden gebucht:";
 $vocab["mail_body_repeats_deleted"]  = "Die folgenden Buchungen wurden gelöscht:";
@@ -197,15 +212,16 @@ $vocab["mail_body_exceptions"]       = "Auf Grund von Überschneidungen konnten 
 $vocab["mail_subject_new_entry"]     = "Neuer Eintrag für %s MRBS."; // $mrbs_company
 $vocab["mail_subject_changed_entry"] = "Eintrag für %s MRBS geändert"; // $mrbs_company
 $vocab["mail_subject_delete"]        = "Eintrag für %s MRBS gelöscht"; // $mrbs_company
-$vocab["mail_body_new_entry"]     = "Ein neuer Eintrag wurde vorgenommen; hier die Details:";
-$vocab["mail_body_changed_entry"] = "Ein Eintrag wurde geändert, hier die Details:";
-$vocab["mail_body_del_entry"]     = "Ein Eintrag wurde gelöscht, hier die Details:";
+$vocab["mail_body_new_entry"]     = "Ein neuer Eintrag wurde von %s vorgenommen; hier die Details:";
+$vocab["mail_body_changed_entry"] = "Ein Eintrag wurde von %s geändert, hier die Details:";
+$vocab["mail_body_del_entry"]     = "Ein Eintrag wurde von %s gelöscht, hier die Details:";
 $vocab["new_value"]           = "Neu";
 $vocab["old_value"]           = "Alt";
 $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
 $vocab["cannot_change_approved_bookings"] = "Genehmigte Buchung können nicht bearbeitet oder gelöscht werden";
 $vocab["no_simultaneous_bookings"]        = "Buchungen dürfen sich zeitlich nicht mit einer bereits vorhandenen Buchung überschneiden";
+$vocab["type_not_allowed"]        = 'Buchungen der Kategorie %1$s sind in %2$s nicht erlaubt';
 $vocab["min_create_time_before"]  = 'Sie können keine Buchung erstellen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_create_time_before"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s endet';
 $vocab["min_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in weniger als %1$d %2$s beginnt';
@@ -254,6 +270,26 @@ $vocab["unknown_user"]       = "Unbekannter Benutzer";
 $vocab["login"]              = "Anmelden";
 $vocab["logoff"]             = "Abmelden";
 $vocab["username_or_email"]  = "Benutzername oder E-Mail-Adresse";
+$vocab["lost_password"]             = "Passwort vergessen?";
+$vocab["get_new_password"]          = "E-Mail Nachricht anfordern";
+$vocab["password_reset"]            = "Passwort zurücksetzen";
+$vocab["password_reset_subject"]    = "Anfrage zum Zurücksetzen des Passworts";
+$vocab["password_reset_body"]       = "Jemand hat für diese E-Mail-Adresse eine Anfrage zum Zurücksetzen des Passworts gestellt. " .
+                                      "Falls das nicht Sie waren, können Sie diese E-Mail ignorieren.  Andernfalls " .
+                                      "folgen Sie dem Link unten, um Ihr Passwort zurückzusetzen. " .
+                                      'Der Link läuft in %1$d %2$s ab.';
+$vocab["enter_username"]            = "Bitte geben Sie Ihren Benutzernamen hier ein.";
+$vocab["enter_username_or_email"]   = "Bitte geben Sie Ihren Benutzernamen oder Ihre E-Mail Adresse hier ein.";
+$vocab["will_be_sent_instructions"] = "Sie erhalten eine E-Mail Nachricht mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können.";
+$vocab["reset_password"]            = "Passwort zurücksetzen";
+$vocab["pwd_check_email"]           = "Danke.  Wenn es ein Benutzerkonto gibt, das diesen Angaben entspricht, " .
+										"erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
+$vocab["invalid_link"]              = "Ungültiger Link";
+$vocab["pwd_request_failed"]        = "Zu diesem Benutzer konnte keine E-Mail zugestellt werden.";
+$vocab["link_invalid"]              = "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.";
+$vocab["enter_new_password"]        = "Geben Sie unten zweimal Ihr neues Passwort ein.";
+$vocab["pwd_must_contain"]          = "Das Passwort muss mindestens enthalten:";
+$vocab["pwd_reset_success"]         = "Ihr Passwort wurde erfolgreich zurückgesetzt.";
 
 // Database upgrade code
 $vocab["database_login"]           = "Datenbankbenutzer";
@@ -466,7 +502,8 @@ $vocab["disabled_room_note"]      = "Wird dieser Raum deaktiviert, wird er nicht
                                     "und es können keine Buchungen mehr durchgeführt werden.   Bestehende Buchungen " .
                                     "bleiben erhalten und werden in Suchergebnissen und Berichten ausgegeben.";
 $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Serien werden Buchungszeiten in die Zukunft auf den nächsten ganzen Tag gerundet.";
-
+$vocab["invalid_types"]           = "Ungültige Kategorie";
+$vocab["invalid_types_note"]      = "Dies sind Kategorien, die in diesem Raum nicht verwendet werden dürfen.";
 // Used in edit_users.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
