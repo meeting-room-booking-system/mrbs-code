@@ -282,7 +282,7 @@ $vocab["enter_username"]            = "Bitte geben Sie Ihren Benutzernamen hier 
 $vocab["enter_username_or_email"]   = "Bitte geben Sie Ihren Benutzernamen oder Ihre E-Mail Adresse hier ein.";
 $vocab["will_be_sent_instructions"] = "Sie erhalten eine E-Mail Nachricht mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können.";
 $vocab["reset_password"]            = "Passwort zurücksetzen";
-$vocab["pwd_check_email"]           = "Danke.  Wenn es ein Benutzerkonto gibt, das diesen Angaben entspricht, " .
+$vocab["pwd_check_email"]           = "Wenn es ein Benutzerkonto gibt welches diesen Angaben entspricht, " .
 										"erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
 $vocab["invalid_link"]              = "Ungültiger Link";
 $vocab["pwd_request_failed"]        = "Zu diesem Benutzer konnte keine E-Mail zugestellt werden.";
