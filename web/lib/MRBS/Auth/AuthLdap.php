@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
+use MRBS\Group;
 use MRBS\User;
 
 
@@ -327,6 +328,10 @@ class AuthLdap extends Auth
     $user->display_name = $this->getDisplayName($username);
     $user->email = $this->getEmail($username);
     $user->level = $this->getLevel($username);
+    $user->groups = $this->getGroups($username);
+    // TODO: get roles
+    // TODO: update user table?
+    // TODO: think about other auth types
 
     return $user;
   }
@@ -542,6 +547,43 @@ class AuthLdap extends Auth
     $res = $this->action('getNameCallback', $username, $object);
 
     return ($res) ? $object['name'] : $username;
+  }
+
+
+  // Get the user's groups from LDAP.  Returns an array of group ids, ie
+  // the LDAP group names mapped to MRBS group ids.
+  protected function getGroups($username)
+  {
+    if (!isset($username) || ($username === ''))
+    {
+      return array();
+    }
+
+    $object = array();
+
+    $res = $this->action('getGroupsCallback', $username, $object);
+
+    if ($res === false)
+    {
+      return array();
+    }
+
+    // We've got a good result.  Convert the group names into ids
+    $result = array();
+
+    foreach ($object['groups'] as $group_name)
+    {
+      $group = Group::getByName($group_name);
+      // If the group doesn't exist create it
+      if (!isset($group))
+      {
+        $group = new Group($group_name);
+        $group->save();
+      }
+      $result[] = $group->id;
+    }
+
+    return $result;
   }
 
 
@@ -770,6 +812,60 @@ class AuthLdap extends Auth
           self::debug("name is '" . $object['name'] . "'");
 
           return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+  /* getGroupsCallback(&$ldap, $base_dn, $dn, $user_search,
+                         $username, &$object)
+   *
+   * Get the groups of a found user
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $username    - The user name
+   * &$object     - Reference to the generic object
+   *
+   * Returns:
+   *   false    - Didn't find a user
+   *   true     - Found a user
+   */
+  private static function getGroupsCallback(&$ldap, $base_dn, $dn, $user_search,
+                                            $user, &$object)
+  {
+    if (isset($object['config']['ldap_group_member_attrib']))
+    {
+      $group_member_attrib = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
+
+      self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
+
+      if ($ldap && $base_dn && $dn && $user_search)
+      {
+        $res = ldap_read($ldap,
+                         $dn,
+                         "(objectclass=*)",
+                         array($group_member_attrib));
+
+        if ($entry = ldap_first_entry($ldap, $res))
+        {
+          self::debug("search successful");
+          if ($values = ldap_get_values($ldap, $entry, $group_member_attrib))
+          {
+            $object['groups'] = array();
+            for ($i = 0; $i < $values['count']; $i++)
+            {
+              $object['groups'][] = $values[$i];
+            }
+            self::debug("groups are " . json_encode($object['groups']));
+            return true;
+          }
+          self::debug("no values");
         }
       }
     }

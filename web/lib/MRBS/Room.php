@@ -99,7 +99,7 @@ class Room extends Table
       {
         $user = session()->getCurrentUser();
         // TODO: need to have default roles
-        $roles = (isset($user)) ? $user->roles : array();
+        $roles = (isset($user)) ? $user->combinedRoles() : array();
         $room_permissions = $this->getPermissions($roles);
         $area_permissions = Area::getById($this->area_id)->getPermissions($roles);
         $permissions = array_merge($room_permissions, $area_permissions);

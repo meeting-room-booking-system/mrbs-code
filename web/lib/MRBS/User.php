@@ -45,6 +45,7 @@ class User extends Table
     if (isset($user))
     {
       $user->username = $user->name;
+      $user->groups = self::getGroupsByUserId($user->id);
       $user->roles = self::getRolesByUserId($id);
     }
 
@@ -54,6 +55,8 @@ class User extends Table
 
   public static function getByName($username, $auth_type)
   {
+    // TODO: there's no doubt a faster way of doing this using a single SQL
+    // TODO: query, though it needs to work for both MySQL and PostgreSQL.
     $user = self::getByColumns(array(
         'name'      => $username,
         'auth_type' => $auth_type
@@ -62,10 +65,19 @@ class User extends Table
     if (isset($user))
     {
       $user->username = $user->name;
+      $user->groups = self::getGroupsByUserId($user->id);
       $user->roles = self::getRolesByUserId($user->id);
     }
 
     return $user;
+  }
+
+
+  // Gets the combined individual and group roles for the user
+  public function combinedRoles()
+  {
+    $group_roles = Group::getRoles($this->groups);
+    return array_unique(array_merge($this->roles, $group_roles));
   }
 
 

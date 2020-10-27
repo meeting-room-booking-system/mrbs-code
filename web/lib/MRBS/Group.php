@@ -50,6 +50,22 @@ class Group extends Table
   }
 
 
+  // Gets the roles assigned to a set of groups
+  public static function getRoles(array $groups)
+  {
+    if (empty($groups))
+    {
+      return array();
+    }
+
+    $sql = "SELECT role_id
+              FROM " . _tbl('group_role') . "
+             WHERE group_id IN (" . rtrim(str_repeat('?,', count($groups)), ',') . ")";
+
+    return db()->query_array($sql, $groups);
+  }
+
+
   private static function getRolesByGroupId($id)
   {
     if (!isset($id))
