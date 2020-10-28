@@ -56,7 +56,7 @@ class Area extends Table
       else
       {
         $user = session()->getCurrentUser();
-        $roles = (isset($user)) ? $user->roles : array();
+        $roles = (isset($user)) ? $user->combinedRoles() : array();
         $permissions = $this->getPermissions($roles);
         $this->is_visible = AreaRoomPermission::can($permissions, AreaPermission::READ);
       }
