@@ -63,9 +63,6 @@ abstract class AreaRoomPermission extends Table
   // Check whether the given permissions allow reading
   private static function canRead(array $permissions)
   {
-    $highest_granted = self::getDefaultPermission();
-    $lowest_denied = null;
-
     foreach ($permissions as $permission)
     {
       switch ($permission->state)
@@ -97,9 +94,6 @@ abstract class AreaRoomPermission extends Table
   // Check whether the given permissions allow writing
   private static function canWrite(array $permissions)
   {
-    $highest_granted = self::getDefaultPermission();
-    $lowest_denied = null;
-
     foreach ($permissions as $permission)
     {
       switch ($permission->state)
@@ -131,8 +125,6 @@ abstract class AreaRoomPermission extends Table
   // Checks whether the given permissions allow all access
   private static function canAll(array $permissions)
   {
-    $highest_granted = self::getDefaultPermission();
-
     foreach ($permissions as $permission)
     {
       switch ($permission->state)
@@ -155,66 +147,56 @@ abstract class AreaRoomPermission extends Table
   }
 
 
-  // TODO: replace with default roles
+  // Gets the default permission for a user
+  // TODO: make this is configurable?  Either in the config file or through the browser
   private static function getDefaultPermission()
   {
-    $mrbs_user = session()->getCurrentUser();
+    $result = new static();
+    $result->state = self::GRANTED;
 
-    if (!isset($mrbs_user))
+    if (is_admin())
     {
-      return self::READ;
+      $result->permission = self::ALL;
+    }
+    else
+    {
+      $current_user = session()->getCurrentUser();
+      $result->permission = isset($current_user) ? self::WRITE : self::READ;
     }
 
-    switch ($mrbs_user->level)
-    {
-      case 0:
-        return self::READ;
-        break;
-      case 1:
-        return self::WRITE;
-        break;
-      case 2:
-        return self::ALL;
-        break;
-      default:
-        return ($mrbs_user->level > 2) ? self::ALL : null;
-        break;
-    }
-
+    return $result;
   }
 
 
   protected static function getPermissions(array $role_ids, $location_id, $location_column)
   {
-    if (empty($role_ids))
+    $result = array(self::getDefaultPermission());
+
+    if (!empty($role_ids))
     {
-      return array();
-    }
+      $sql_params = array(":location" => $location_id);
+      $ins = array();
 
-    $sql_params = array(":location" => $location_id);
-    $ins = array();
+      foreach ($role_ids as $i => $role_id)
+      {
+        $named_parameter = ":role_id$i";
+        $ins[] = $named_parameter;
+        $sql_params[$named_parameter] = $role_id;
+      }
 
-    foreach ($role_ids as $i => $role_id)
-    {
-      $named_parameter = ":role_id$i";
-      $ins[] = $named_parameter;
-      $sql_params[$named_parameter] = $role_id;
-    }
-
-    $sql = "SELECT *
+      $sql = "SELECT *
               FROM " . _tbl(static::TABLE_NAME) . "
              WHERE $location_column=:location
                AND role_id IN (" . implode(', ', $ins) . ")";
 
-    $res = db()->query($sql, $sql_params);
+      $res = db()->query($sql, $sql_params);
 
-    $result = array();
-
-    while (false !== ($row = $res->next_row_keyed()))
-    {
-      $permission = new RoomPermission();
-      $permission->load($row);
-      $result[] = $permission;
+      while (false !== ($row = $res->next_row_keyed()))
+      {
+        $permission = new static();
+        $permission->load($row);
+        $result[] = $permission;
+      }
     }
 
     return $result;
