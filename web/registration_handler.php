@@ -102,7 +102,7 @@ $event_id = get_form_var('event_id', 'int');
 $returl = get_form_var('returl', 'string');
 
 // Take the appropriate action.  The individual functions check that the user
-// is authorised to take the acttion.
+// is authorised to take the action.
 switch ($action)
 {
   case 'cancel':
