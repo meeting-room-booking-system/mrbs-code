@@ -790,6 +790,15 @@ echo "</table>\n";
 
 echo "<div id=\"view_entry_nav\">\n";
 
+// Set the return URL.  If $previous_page is set then it means that we've come from
+// the registration handler and the original return URL is held in $previous_page.
+// TODO: simplify the code concerning return urls, target urls and the previous page
+// TODO: throughout MRBS.
+if (isset($previous_page))
+{
+  $returl = $previous_page;
+}
+
 // Only show the links for Edit and Delete if the room is enabled.    We're
 // allowed to view and copy existing bookings in disabled rooms, but not to
 // modify or delete them.
