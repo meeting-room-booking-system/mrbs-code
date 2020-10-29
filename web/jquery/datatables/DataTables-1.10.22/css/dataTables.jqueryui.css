@@ -1,16 +1,4 @@
 /*
- * This combined file was created by the DataTables downloader builder:
- *   https://datatables.net/download
- *
- * To rebuild or modify this file with the latest versions of the included
- * software please visit:
- *   https://datatables.net/download/#dt/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.22/b-1.6.5/b-colvis-1.6.5/b-flash-1.6.5/b-html5-1.6.5/b-print-1.6.5/cr-1.5.2/fc-3.3.1
- *
- * Included libraries:
- *   JSZip 2.5.0, pdfmake 0.1.36, DataTables 1.10.22, Buttons 1.6.5, Column visibility 1.6.5, Flash export 1.6.5, HTML5 export 1.6.5, Print view 1.6.5, ColReorder 1.5.2, FixedColumns 3.3.1
- */
-
-/*
  * Table styles
  */
 table.dataTable {
@@ -33,7 +21,6 @@ table.dataTable tfoot th {
 table.dataTable thead th,
 table.dataTable thead td {
   padding: 10px 18px;
-  border-bottom: 1px solid #111;
 }
 table.dataTable thead th:active,
 table.dataTable thead td:active {
@@ -42,32 +29,6 @@ table.dataTable thead td:active {
 table.dataTable tfoot th,
 table.dataTable tfoot td {
   padding: 10px 18px 6px 18px;
-  border-top: 1px solid #111;
-}
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc,
-table.dataTable thead .sorting_asc_disabled,
-table.dataTable thead .sorting_desc_disabled {
-  cursor: pointer;
-  *cursor: hand;
-  background-repeat: no-repeat;
-  background-position: center right;
-}
-table.dataTable thead .sorting {
-  background-image: url("DataTables-1.10.22/images/sort_both.png");
-}
-table.dataTable thead .sorting_asc {
-  background-image: url("DataTables-1.10.22/images/sort_asc.png");
-}
-table.dataTable thead .sorting_desc {
-  background-image: url("DataTables-1.10.22/images/sort_desc.png");
-}
-table.dataTable thead .sorting_asc_disabled {
-  background-image: url("DataTables-1.10.22/images/sort_asc_disabled.png");
-}
-table.dataTable thead .sorting_desc_disabled {
-  background-image: url("DataTables-1.10.22/images/sort_desc_disabled.png");
 }
 table.dataTable tbody tr {
   background-color: #ffffff;
@@ -469,427 +430,63 @@ table.dataTable td {
     margin-top: 0.5em;
   }
 }
-
-
-@keyframes dtb-spinner {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes dtb-spinner {
-  100% {
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-ms-keyframes dtb-spinner {
-  100% {
-    -ms-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes dtb-spinner {
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-moz-keyframes dtb-spinner {
-  100% {
-    -moz-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-div.dt-button-info {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  margin-top: -100px;
-  margin-left: -200px;
-  background-color: white;
-  border: 2px solid #111;
-  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  text-align: center;
-  z-index: 21;
-}
-div.dt-button-info h2 {
-  padding: 0.5em;
-  margin: 0;
-  font-weight: normal;
-  border-bottom: 1px solid #ddd;
-  background-color: #f3f3f3;
-}
-div.dt-button-info > div {
-  padding: 1em;
-}
-
-div.dt-button-collection-title {
-  text-align: center;
-  padding: 0.3em 0 0.5em;
-  font-size: 0.9em;
-}
-
-div.dt-button-collection-title:empty {
-  display: none;
-}
-
-button.dt-button,
-div.dt-button,
-a.dt-button,
-input.dt-button {
+table.dataTable thead th div.DataTables_sort_wrapper {
   position: relative;
+}
+table.dataTable thead th div.DataTables_sort_wrapper span {
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+  right: -18px;
+}
+table.dataTable thead th.ui-state-default,
+table.dataTable tfoot th.ui-state-default {
+  border-left-width: 0;
+}
+table.dataTable thead th.ui-state-default:first-child,
+table.dataTable tfoot th.ui-state-default:first-child {
+  border-left-width: 1px;
+}
+
+/*
+ * Control feature layout
+ */
+.dataTables_wrapper .dataTables_paginate .fg-button {
+  box-sizing: border-box;
   display: inline-block;
-  box-sizing: border-box;
-  margin-right: 0.333em;
-  margin-bottom: 0.333em;
-  padding: 0.5em 1em;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 2px;
+  min-width: 1.5em;
+  padding: 0.5em;
+  margin-left: 2px;
+  text-align: center;
+  text-decoration: none !important;
   cursor: pointer;
-  font-size: 0.88em;
-  line-height: 1.6em;
-  color: black;
-  white-space: nowrap;
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
-  background: -webkit-linear-gradient(top, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='rgba(230, 230, 230, 0.1)', EndColorStr='rgba(0, 0, 0, 0.1)');
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-decoration: none;
-  outline: none;
-  text-overflow: ellipsis;
+  *cursor: hand;
+  border: 1px solid transparent;
 }
-button.dt-button.disabled,
-div.dt-button.disabled,
-a.dt-button.disabled,
-input.dt-button.disabled {
-  cursor: default;
-  opacity: 0.4;
-}
-button.dt-button:active:not(.disabled), button.dt-button.active:not(.disabled),
-div.dt-button:active:not(.disabled),
-div.dt-button.active:not(.disabled),
-a.dt-button:active:not(.disabled),
-a.dt-button.active:not(.disabled),
-input.dt-button:active:not(.disabled),
-input.dt-button.active:not(.disabled) {
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
-  background: -webkit-linear-gradient(top, rgba(179, 179, 179, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, rgba(179, 179, 179, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, rgba(179, 179, 179, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, rgba(179, 179, 179, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, rgba(179, 179, 179, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='rgba(179, 179, 179, 0.1)', EndColorStr='rgba(0, 0, 0, 0.1)');
-  box-shadow: inset 1px 1px 3px #999999;
-}
-button.dt-button:active:not(.disabled):hover:not(.disabled), button.dt-button.active:not(.disabled):hover:not(.disabled),
-div.dt-button:active:not(.disabled):hover:not(.disabled),
-div.dt-button.active:not(.disabled):hover:not(.disabled),
-a.dt-button:active:not(.disabled):hover:not(.disabled),
-a.dt-button.active:not(.disabled):hover:not(.disabled),
-input.dt-button:active:not(.disabled):hover:not(.disabled),
-input.dt-button.active:not(.disabled):hover:not(.disabled) {
-  box-shadow: inset 1px 1px 3px #999999;
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
-  background: -webkit-linear-gradient(top, rgba(128, 128, 128, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, rgba(128, 128, 128, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, rgba(128, 128, 128, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, rgba(128, 128, 128, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, rgba(128, 128, 128, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='rgba(128, 128, 128, 0.1)', EndColorStr='rgba(0, 0, 0, 0.1)');
-}
-button.dt-button:hover,
-div.dt-button:hover,
-a.dt-button:hover,
-input.dt-button:hover {
-  text-decoration: none;
-}
-button.dt-button:hover:not(.disabled),
-div.dt-button:hover:not(.disabled),
-a.dt-button:hover:not(.disabled),
-input.dt-button:hover:not(.disabled) {
-  border: 1px solid #666;
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
-  background: -webkit-linear-gradient(top, rgba(153, 153, 153, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, rgba(153, 153, 153, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, rgba(153, 153, 153, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, rgba(153, 153, 153, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, rgba(153, 153, 153, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='rgba(153, 153, 153, 0.1)', EndColorStr='rgba(0, 0, 0, 0.1)');
-}
-button.dt-button:focus:not(.disabled),
-div.dt-button:focus:not(.disabled),
-a.dt-button:focus:not(.disabled),
-input.dt-button:focus:not(.disabled) {
-  border: 1px solid #426c9e;
-  text-shadow: 0 1px 0 #c4def1;
-  outline: none;
-  background-color: #79ace9;
-  /* Fallback */
-  background: -webkit-linear-gradient(top, #d1e2f7 0%, #79ace9 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, #d1e2f7 0%, #79ace9 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, #d1e2f7 0%, #79ace9 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, #d1e2f7 0%, #79ace9 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, #d1e2f7 0%, #79ace9 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#d1e2f7', EndColorStr='#79ace9');
-}
-
-.dt-button embed {
+.dataTables_wrapper .dataTables_paginate .fg-button:active {
   outline: none;
 }
-
-div.dt-buttons {
-  position: relative;
-  float: left;
+.dataTables_wrapper .dataTables_paginate .fg-button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
-div.dt-buttons.buttons-right {
-  float: right;
+.dataTables_wrapper .dataTables_paginate .fg-button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
-
-div.dataTables_layout_cell div.dt-buttons {
-  float: none;
+.dataTables_wrapper .ui-widget-header {
+  font-weight: normal;
 }
-div.dataTables_layout_cell div.dt-buttons.buttons-right {
-  float: none;
+.dataTables_wrapper .ui-toolbar {
+  padding: 8px;
 }
-
-div.dt-button-collection {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px;
-  margin-top: 3px;
-  padding: 8px 8px 4px 8px;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  background-color: white;
-  overflow: hidden;
-  z-index: 2002;
-  border-radius: 5px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
-}
-div.dt-button-collection button.dt-button,
-div.dt-button-collection div.dt-button,
-div.dt-button-collection a.dt-button {
-  position: relative;
-  left: 0;
-  right: 0;
-  width: 100%;
-  display: block;
-  float: none;
-  margin-bottom: 4px;
-  margin-right: 0;
-}
-div.dt-button-collection button.dt-button:active:not(.disabled), div.dt-button-collection button.dt-button.active:not(.disabled),
-div.dt-button-collection div.dt-button:active:not(.disabled),
-div.dt-button-collection div.dt-button.active:not(.disabled),
-div.dt-button-collection a.dt-button:active:not(.disabled),
-div.dt-button-collection a.dt-button.active:not(.disabled) {
-  background-color: #dadada;
-  /* Fallback */
-  background: -webkit-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background: -moz-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* FF3.6 */
-  background: -ms-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* IE10 */
-  background: -o-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* Opera 11.10+ */
-  background: linear-gradient(to bottom, #f0f0f0 0%, #dadada 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f0f0f0', EndColorStr='#dadada');
-  box-shadow: inset 1px 1px 3px #666;
-}
-div.dt-button-collection.fixed {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-left: -75px;
-  border-radius: 0;
-}
-div.dt-button-collection.fixed.two-column {
-  margin-left: -200px;
-}
-div.dt-button-collection.fixed.three-column {
-  margin-left: -225px;
-}
-div.dt-button-collection.fixed.four-column {
-  margin-left: -300px;
-}
-div.dt-button-collection > :last-child {
-  display: block !important;
-  -webkit-column-gap: 8px;
-  -moz-column-gap: 8px;
-  -ms-column-gap: 8px;
-  -o-column-gap: 8px;
-  column-gap: 8px;
-}
-div.dt-button-collection > :last-child > * {
-  -webkit-column-break-inside: avoid;
-  break-inside: avoid;
-}
-div.dt-button-collection.two-column {
-  width: 400px;
-}
-div.dt-button-collection.two-column > :last-child {
-  padding-bottom: 1px;
-  -webkit-column-count: 2;
-  -moz-column-count: 2;
-  -ms-column-count: 2;
-  -o-column-count: 2;
-  column-count: 2;
-}
-div.dt-button-collection.three-column {
-  width: 450px;
-}
-div.dt-button-collection.three-column > :last-child {
-  padding-bottom: 1px;
-  -webkit-column-count: 3;
-  -moz-column-count: 3;
-  -ms-column-count: 3;
-  -o-column-count: 3;
-  column-count: 3;
-}
-div.dt-button-collection.four-column {
-  width: 600px;
-}
-div.dt-button-collection.four-column > :last-child {
-  padding-bottom: 1px;
-  -webkit-column-count: 4;
-  -moz-column-count: 4;
-  -ms-column-count: 4;
-  -o-column-count: 4;
-  column-count: 4;
-}
-div.dt-button-collection .dt-button {
-  border-radius: 0;
-}
-
-div.dt-button-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  /* Fallback */
-  background: -ms-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* IE10 Consumer Preview */
-  background: -moz-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Firefox */
-  background: -o-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Opera */
-  background: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, rgba(0, 0, 0, 0.3)), color-stop(1, rgba(0, 0, 0, 0.7)));
-  /* Webkit (Safari/Chrome 10) */
-  background: -webkit-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Webkit (Chrome 11+) */
-  background: radial-gradient(ellipse farthest-corner at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* W3C Markup, IE10 Release Preview */
-  z-index: 2001;
-}
-
-@media screen and (max-width: 640px) {
-  div.dt-buttons {
-    float: none !important;
-    text-align: center;
-  }
-}
-button.dt-button.processing,
-div.dt-button.processing,
-a.dt-button.processing {
-  color: rgba(0, 0, 0, 0.2);
-}
-button.dt-button.processing:after,
-div.dt-button.processing:after,
-a.dt-button.processing:after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  box-sizing: border-box;
-  display: block;
-  content: ' ';
-  border: 2px solid #282828;
-  border-radius: 50%;
-  border-left-color: transparent;
-  border-right-color: transparent;
-  animation: dtb-spinner 1500ms infinite linear;
-  -o-animation: dtb-spinner 1500ms infinite linear;
-  -ms-animation: dtb-spinner 1500ms infinite linear;
-  -webkit-animation: dtb-spinner 1500ms infinite linear;
-  -moz-animation: dtb-spinner 1500ms infinite linear;
-}
-
-
-table.DTCR_clonedTable.dataTable {
-  position: absolute !important;
-  background-color: rgba(255, 255, 255, 0.7);
-  z-index: 202;
-}
-
-div.DTCR_pointer {
-  width: 1px;
-  background-color: #0259C4;
-  z-index: 201;
-}
-
-
-table.DTFC_Cloned thead,
-table.DTFC_Cloned tfoot {
-  background-color: white;
-}
-
-div.DTFC_Blocker {
-  background-color: white;
-}
-
-div.DTFC_LeftWrapper table.dataTable,
-div.DTFC_RightWrapper table.dataTable {
-  margin-bottom: 0;
-  z-index: 2;
-}
-div.DTFC_LeftWrapper table.dataTable.no-footer,
-div.DTFC_RightWrapper table.dataTable.no-footer {
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
   border-bottom: none;
 }
-
-table.dataTable.display tbody tr.DTFC_NoData {
-  background-color: transparent;
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+  color: inherit;
 }
-
-
