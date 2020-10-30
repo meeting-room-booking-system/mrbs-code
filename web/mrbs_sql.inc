@@ -1576,6 +1576,8 @@ function get_booking_info($id, $series, $silent=FALSE)
       case 'allow_registration':
       case 'enable_registrant_limit':
       case 'registrant_limit':
+      case 'registration_opens':
+      case 'registration_closes':
         array_push($terms, $field['name']);
         break;
 

@@ -391,7 +391,9 @@ $standard_fields['entry'] = array('id',
                                   'ical_recur_id',
                                   'allow_registration',
                                   'enable_registrant_limit',
-                                  'registrant_limit');
+                                  'registrant_limit',
+                                  'registration_opens',
+                                  'registration_closes');
 
 $standard_fields['repeat'] = array('id',
                                    'start_time',

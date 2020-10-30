@@ -82,7 +82,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'repeat_info_text':
         $data[$key] = $hide_this_field ? $private_text : $data[$key];
         break;
-        
+
       case 'create_by':
       case 'modified_by':
         $data[$key] = $hide_this_field ? $private_text : get_display_name($data[$key]);
@@ -141,6 +141,8 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'allow_registration':
       case 'enable_registrant_limit':
       case 'registrant_limit':
+      case 'registration_opens':
+      case 'registration_closes':
         break;
 
       case 'description':
@@ -293,7 +295,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
         break;
     }  // switch
   }  // foreach
-  
+
   // Repeat type
   $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
   // Repeat details
