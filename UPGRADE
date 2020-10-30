@@ -16,22 +16,11 @@ the upgrade.
 4. Go to MRBS in your browser. If a database upgrade is required, you'll be
    prompted for a database (note database, not MRBS) username and password.
 
-MRBS database upgrades are in general intended to be backwards compatible,
-so that you should still be able to run the old version of MRBS against the
-new database schema.   This will allow you to install the new version of MRBS
-in a separate directory while you configure and test it.   When you are happy
-with the new release you can switch the directory to be your production
-directory.
-
-There are however some exceptions to this backward compatibility, namely at
-the following transitions:
-
-MRBS 1.4.4.1 -> 1.4.5
-
-In these cases you will not be able to run the old version of MRBS against
-the upgraded database.   You may therefore choose to make a copy of the
-database for test purposes and check that the upgrade process works before
-performing the upgrade on your production database.
+MRBS database upgrades are in general not backwards compatible, ie you won't
+be able to run an older version of MRBS against a later version of the
+database. You may therefore choose to make a copy of the database for test
+purposes and check that the upgrade process works before performing the
+upgrade on your production database.
 
 See the advice in INSTALL about potentially creating a fresh "config.inc.php"
 when you upgrade MRBS, especially for a major version change.
