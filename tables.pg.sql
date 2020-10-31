@@ -163,8 +163,12 @@ CREATE TABLE mrbs_entry
   ical_recur_id           varchar(16) DEFAULT NULL,
   allow_registration      smallint DEFAULT 0 NOT NULL,
   enable_registrant_limit smallint DEFAULT 1 NOT NULL,
-  registrant_limit        int DEFAULT 0 NOT NULL
+  registrant_limit        int DEFAULT 0 NOT NULL,
+  registration_opens      int DEFAULT NULL,
+  registration_closes     int DEFAULT NULL
 );
+comment on column mrbs_entry.registration_opens is 'Seconds before the start time';
+comment on column mrbs_entry.registration_closes is 'Seconds before the start time';
 create index mrbs_idxStartTime on mrbs_entry(start_time);
 create index mrbs_idxEndTime on mrbs_entry(end_time);
 create index mrbs_idxRoomStartEnd on mrbs_entry(room_id, start_time, end_time);
@@ -346,6 +350,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_user_timestamp BEFORE UPDATE ON mrbs_user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ('db_version', '80');
+  VALUES ('db_version', '81');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ('local_db_version', '1');

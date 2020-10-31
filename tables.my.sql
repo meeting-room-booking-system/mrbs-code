@@ -159,6 +159,8 @@ CREATE TABLE mrbs_entry
   allow_registration      tinyint(1) DEFAULT 0 NOT NULL,
   enable_registrant_limit tinyint(1) DEFAULT 1 NOT NULL,
   registrant_limit        int DEFAULT 0 NOT NULL,
+  registration_opens      int DEFAULT NULL COMMENT 'Seconds before the start time',
+  registration_closes     int DEFAULT NULL COMMENT 'Seconds before the start_time',
 
   PRIMARY KEY (id),
   FOREIGN KEY (room_id)
@@ -362,6 +364,6 @@ CREATE TABLE mrbs_role_room
 
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '80');
+  VALUES ( 'db_version', '81');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
