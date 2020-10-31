@@ -29,27 +29,6 @@ use MRBS\Form\FieldTimeWithUnits;
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
 
-
-// $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
-// can be used to specify the maximum unit to return.
-function get_time_unit_options($max_unit=null)
-{
-  $options = array();
-  $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
-
-  foreach ($units as $unit)
-  {
-    $options[$unit] = get_vocab($unit);
-    if (isset($max_unit) && ($max_unit == $unit))
-    {
-      break;
-    }
-  }
-
-  return $options;
-}
-
-
 function get_timezone_options()
 {
   global $zoneinfo_outlook_compatible;
@@ -511,7 +490,7 @@ function get_fieldset_max_secs()
 
     $max = $max_secs_per_interval_area[$interval_type];
     toTimeString($max, $units, true, $max_unit);
-    $options = get_time_unit_options($max_unit);
+    $options = Form::getTimeUnitOptions($max_unit);
 
     $select = new ElementSelect();
     $select->setAttribute('name', "area_max_secs_per_${interval_type}_units")
@@ -587,7 +566,7 @@ function get_fieldset_max_duration()
   // Times
   $max_duration_value = $max_duration_secs;
   toTimeString($max_duration_value, $max_duration_units);
-  $options = get_time_unit_options();
+  $options = Form::getTimeUnitOptions();
 
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_duration_units')

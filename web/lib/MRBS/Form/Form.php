@@ -99,7 +99,7 @@ class Form extends Element
 
   // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
   // can be used to specify the maximum unit to return.
-  public static function get_time_unit_options($max_unit=null)
+  public static function getTimeUnitOptions($max_unit=null)
   {
     $options = array();
     $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');

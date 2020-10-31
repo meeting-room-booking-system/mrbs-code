@@ -35,7 +35,7 @@ class FieldTimeWithUnits extends FieldDiv
     $this->addControlElement($input);
 
     // The select element for the units
-    $options = Form::get_time_unit_options();
+    $options = Form::getTimeUnitOptions();
     $select = new ElementSelect();
     $select->setAttribute('name', $param_names['units'])
            ->addSelectOptions($options, array_search($units, $options), true);
