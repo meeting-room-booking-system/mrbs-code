@@ -241,6 +241,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '78');
+  VALUES ('db_version', '81');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
