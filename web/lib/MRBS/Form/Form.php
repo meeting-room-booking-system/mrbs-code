@@ -97,6 +97,25 @@ class Form extends Element
   }
 
 
+  // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
+  // can be used to specify the maximum unit to return.
+  public static function get_time_unit_options($max_unit=null)
+  {
+    $options = array();
+    $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
+
+    foreach ($units as $unit)
+    {
+      $options[$unit] = \MRBS\get_vocab($unit);
+      if (isset($max_unit) && ($max_unit == $unit))
+      {
+        break;
+      }
+    }
+    return $options;
+  }
+
+
   private function addCSRFToken()
   {
     $this->addHiddenInput(self::$token_name, self::getToken());

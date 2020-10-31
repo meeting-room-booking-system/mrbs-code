@@ -24,6 +24,7 @@ use MRBS\Form\FieldInputTime;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldSpan;
 use MRBS\Form\FieldTextarea;
+use MRBS\Form\FieldTimeWithUnits;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -336,62 +337,27 @@ function get_fieldset_create_ahead()
   global $min_create_ahead_secs, $max_create_ahead_secs,
          $min_create_ahead_enabled, $max_create_ahead_enabled;
 
-  $min_create_ahead_value = $min_create_ahead_secs;
-  toTimeString($min_create_ahead_value, $min_create_ahead_units);
-  $max_create_ahead_value = $max_create_ahead_secs;
-  toTimeString($max_create_ahead_value, $max_create_ahead_units);
-
-  $options = get_time_unit_options();
-
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('booking_creation'));
 
-
   // Minimum create ahead
-  $field = new FieldDiv();
-
-  $checkbox = new ElementInputCheckbox();
-  $checkbox->setAttributes(array('name'  => 'area_min_create_ahead_enabled',
-                                 'class' => 'enabler'))
-           ->setChecked($min_create_ahead_enabled);
-
-  $input = new ElementInputNumber();
-  $input->setAttributes(array('name'  => 'area_min_create_ahead_value',
-                              'value' => $min_create_ahead_value));
-
-  $select = new ElementSelect();
-  $select->setAttribute('name', 'area_min_create_ahead_units')
-         ->addSelectOptions($options, array_search($min_create_ahead_units, $options), true);
-
-  $field->setLabel(get_vocab('min_book_ahead'))
-        ->addControlElement($checkbox)
-        ->addControlElement($input)
-        ->addControlElement($select);
-
+  $param_names = array(
+      'enabler'  => 'area_min_create_ahead_enabled',
+      'quantity' => 'area_min_create_ahead_value',
+      'units'    => 'area_min_create_ahead_units',
+    );
+  $field = new FieldTimeWithUnits($param_names, $min_create_ahead_enabled, $min_create_ahead_secs);
+  $field->setLabel(get_vocab('min_book_ahead'));
   $fieldset->addElement($field);
 
-
   // Maximum create ahead
-  $field = new FieldDiv();
-
-  $checkbox = new ElementInputCheckbox();
-  $checkbox->setAttributes(array('name'  => 'area_max_create_ahead_enabled',
-                                 'class' => 'enabler'))
-           ->setChecked($max_create_ahead_enabled);
-
-  $input = new ElementInputNumber();
-  $input->setAttributes(array('name'  => 'area_max_create_ahead_value',
-                              'value' => $max_create_ahead_value));
-
-  $select = new ElementSelect();
-  $select->setAttribute('name', 'area_max_create_ahead_units')
-         ->addSelectOptions($options, array_search($max_create_ahead_units, $options), true);
-
-  $field->setLabel(get_vocab('max_book_ahead'))
-        ->addControlElement($checkbox)
-        ->addControlElement($input)
-        ->addControlElement($select);
-
+  $param_names = array(
+      'enabler'  => 'area_max_create_ahead_enabled',
+      'quantity' => 'area_max_create_ahead_value',
+      'units'    => 'area_max_create_ahead_units',
+    );
+  $field = new FieldTimeWithUnits($param_names, $max_create_ahead_enabled, $max_create_ahead_secs);
+  $field->setLabel(get_vocab('max_book_ahead'));
   $fieldset->addElement($field);
 
   return $fieldset;
@@ -403,61 +369,27 @@ function get_fieldset_delete_ahead()
   global $min_delete_ahead_secs, $max_delete_ahead_secs,
          $min_delete_ahead_enabled, $max_delete_ahead_enabled;
 
-  $min_delete_ahead_value = $min_delete_ahead_secs;
-  toTimeString($min_delete_ahead_value, $min_delete_ahead_units);
-  $max_delete_ahead_value = $max_delete_ahead_secs;
-  toTimeString($max_delete_ahead_value, $max_delete_ahead_units);
-
-  $options = get_time_unit_options();
-
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('booking_deletion'));
 
   // Minimum delete ahead
-  $field = new FieldDiv();
-
-  $checkbox = new ElementInputCheckbox();
-  $checkbox->setAttributes(array('name'  => 'area_min_delete_ahead_enabled',
-                                 'class' => 'enabler'))
-           ->setChecked($min_delete_ahead_enabled);
-
-  $input = new ElementInputNumber();
-  $input->setAttributes(array('name'  => 'area_min_delete_ahead_value',
-                              'value' => $min_delete_ahead_value));
-
-  $select = new ElementSelect();
-  $select->setAttribute('name', 'area_min_delete_ahead_units')
-         ->addSelectOptions($options, array_search($min_delete_ahead_units, $options), true);
-
-  $field->setLabel(get_vocab('min_book_ahead'))
-        ->addControlElement($checkbox)
-        ->addControlElement($input)
-        ->addControlElement($select);
-
+  $param_names = array(
+      'enabler'  => 'area_min_delete_ahead_enabled',
+      'quantity' => 'area_min_delete_ahead_value',
+      'units'    => 'area_min_delete_ahead_units',
+    );
+  $field = new FieldTimeWithUnits($param_names, $min_delete_ahead_enabled, $min_delete_ahead_secs);
+  $field->setLabel(get_vocab('min_book_ahead'));
   $fieldset->addElement($field);
 
-
   // Maximum delete ahead
-  $field = new FieldDiv();
-
-  $checkbox = new ElementInputCheckbox();
-  $checkbox->setAttributes(array('name'  => 'area_max_delete_ahead_enabled',
-                                 'class' => 'enabler'))
-           ->setChecked($max_delete_ahead_enabled);
-
-  $input = new ElementInputNumber();
-  $input->setAttributes(array('name'  => 'area_max_delete_ahead_value',
-                              'value' => $max_delete_ahead_value));
-
-  $select = new ElementSelect();
-  $select->setAttribute('name', 'area_max_delete_ahead_units')
-         ->addSelectOptions($options, array_search($max_delete_ahead_units, $options), true);
-
-  $field->setLabel(get_vocab('max_book_ahead'))
-        ->addControlElement($checkbox)
-        ->addControlElement($input)
-        ->addControlElement($select);
-
+  $param_names = array(
+      'enabler'  => 'area_max_delete_ahead_enabled',
+      'quantity' => 'area_max_delete_ahead_value',
+      'units'    => 'area_max_delete_ahead_units',
+    );
+  $field = new FieldTimeWithUnits($param_names, $max_delete_ahead_enabled, $max_delete_ahead_secs);
+  $field->setLabel(get_vocab('max_book_ahead'));
   $fieldset->addElement($field);
 
   return $fieldset;
