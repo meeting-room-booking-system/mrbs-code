@@ -90,10 +90,10 @@ $vocab["periods"]            = "Serien";
 $vocab["all_day"]            = "Ganztägig";
 $vocab["area"]               = "Bereich";
 $vocab["type"]               = "Kategorie";
-$vocab["allow_registration"]      = "Anmeldung erlauben";
-$vocab["enable_registrant_limit"] = "Maximale Teilnehmeranzahl festlegen";
-$vocab["registrant_limit"]        = "Maximale Teilnehmeranzahl";
-$vocab["n_registered"]            = "Momentan angemeldet";
+$vocab["allow_registration"]        = "Anmeldung erlauben";
+$vocab["registrant_limit_enabled"]  = "Maximale Teilnehmeranzahl festlegen";
+$vocab["registrant_limit"]          = "Maximale Teilnehmeranzahl";
+$vocab["n_registered"]              = "Momentan angemeldet";
 $vocab["save"]               = "Speichern";
 $vocab["rep_type"]           = "Serientyp";
 $vocab["rep_type_0"]         = "Keine";
@@ -148,7 +148,7 @@ $vocab["exportseries"]       = "Serie exportieren";
 $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?";
 $vocab["confirm_edit_series"]     = "Für ein oder mehr Ereignisse der Serie haben sich Benutzer angemeldet." .
 									"Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
-									"Sind Sie sicher, dass Sie fortfahren möchten?";															
+									"Sind Sie sicher, dass Sie fortfahren möchten?";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
 $vocab["invalid_series_id"]  = "Ungültige ID der Serie.";

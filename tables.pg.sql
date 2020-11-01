@@ -132,37 +132,39 @@ CREATE TABLE mrbs_repeat
 
 CREATE TABLE mrbs_entry
 (
-  id                      serial primary key,
-  start_time              int DEFAULT 0 NOT NULL,
-  end_time                int DEFAULT 0 NOT NULL,
-  entry_type              int DEFAULT 0 NOT NULL,
-  repeat_id               int DEFAULT NULL
-                            REFERENCES mrbs_repeat(id)
-                            ON UPDATE CASCADE
-                            ON DELETE CASCADE,
-  room_id                 int DEFAULT 1 NOT NULL
-                            REFERENCES mrbs_room(id)
-                            ON UPDATE CASCADE
-                            ON DELETE RESTRICT,
-  timestamp               timestamptz DEFAULT current_timestamp,
-  create_by               varchar(80) NOT NULL,
-  modified_by             varchar(80) NOT NULL,
-  name                    varchar(80) NOT NULL,
-  type                    char DEFAULT 'E' NOT NULL,
-  description             text,
-  status                  smallint DEFAULT 0 NOT NULL,
-  reminded                int,
-  info_time               int,
-  info_user               varchar(80),
-  info_text               text,
-  ical_uid                varchar(255) DEFAULT '' NOT NULL,
-  ical_sequence           smallint DEFAULT 0 NOT NULL,
-  ical_recur_id           varchar(16) DEFAULT NULL,
-  allow_registration      smallint DEFAULT 0 NOT NULL,
-  enable_registrant_limit smallint DEFAULT 1 NOT NULL,
-  registrant_limit        int DEFAULT 0 NOT NULL,
-  registration_opens      int DEFAULT NULL,
-  registration_closes     int DEFAULT NULL
+  id                          serial primary key,
+  start_time                  int DEFAULT 0 NOT NULL,
+  end_time                    int DEFAULT 0 NOT NULL,
+  entry_type                  int DEFAULT 0 NOT NULL,
+  repeat_id                   int DEFAULT NULL
+                                REFERENCES mrbs_repeat(id)
+                                ON UPDATE CASCADE
+                                ON DELETE CASCADE,
+  room_id                     int DEFAULT 1 NOT NULL
+                                REFERENCES mrbs_room(id)
+                                ON UPDATE CASCADE
+                                ON DELETE RESTRICT,
+  timestamp                   timestamptz DEFAULT current_timestamp,
+  create_by                   varchar(80) NOT NULL,
+  modified_by                 varchar(80) NOT NULL,
+  name                        varchar(80) NOT NULL,
+  type                        char DEFAULT 'E' NOT NULL,
+  description                 text,
+  status                      smallint DEFAULT 0 NOT NULL,
+  reminded                    int,
+  info_time                   int,
+  info_user                   varchar(80),
+  info_text                   text,
+  ical_uid                    varchar(255) DEFAULT '' NOT NULL,
+  ical_sequence               smallint DEFAULT 0 NOT NULL,
+  ical_recur_id               varchar(16) DEFAULT NULL,
+  allow_registration          smallint DEFAULT 0 NOT NULL,
+  registrant_limit            int DEFAULT 0 NOT NULL,
+  registrant_limit_enabled    smallint DEFAULT 1 NOT NULL,
+  registration_opens          int DEFAULT 1209600 NOT NULL, -- 2 weeks
+  registration_opens_enabled  smallint DEFAULT 0 NOT NULL,
+  registration_closes         int DEFAULT 0 NOT NULL,
+  registration_closes_enabled smallint DEFAULT 0 NOT NULL
 );
 comment on column mrbs_entry.registration_opens is 'Seconds before the start time';
 comment on column mrbs_entry.registration_closes is 'Seconds before the start time';

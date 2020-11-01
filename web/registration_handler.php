@@ -62,7 +62,7 @@ function register($username, $event_id)
   {
     // ... and that there are spare places
     $n_registered = count($data['registrants']);
-    if (empty($data['enable_registrant_limit']) ||
+    if (empty($data['registrant_limit_enabled']) ||
       ($data['registrant_limit'] > $n_registered))
     {
       // ... and that the user hasn't already been registered

@@ -913,8 +913,9 @@ function get_field_skip_conflicts($disabled=false)
 function get_fieldset_registration()
 {
   global $enable_registration;
-  global $allow_registration, $enable_registrant_limit, $registrant_limit;
-  global $registration_opens, $registration_closes;
+  global $allow_registration, $registrant_limit_enabled, $registrant_limit;
+  global $registration_opens, $registration_opens_enabled;
+  global $registration_closes, $registration_closes_enabled;
 
   if (!$enable_registration || !is_book_admin())
   {
@@ -927,14 +928,14 @@ function get_fieldset_registration()
 
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('allow_registration'))
-    ->setControlAttribute('name', 'allow_registration')
-    ->setChecked($allow_registration);
+        ->setControlAttribute('name', 'allow_registration')
+        ->setChecked($allow_registration);
   $fieldset->addElement($field);
 
   $field = new FieldInputCheckbox();
-  $field->setLabel(get_vocab('enable_registrant_limit'))
-    ->setControlAttribute('name', 'enable_registrant_limit')
-    ->setChecked($enable_registrant_limit);
+  $field->setLabel(get_vocab('registrant_limit_enabled'))
+        ->setControlAttribute('name', 'registrant_limit_enabled')
+        ->setChecked($registrant_limit_enabled);
   $fieldset->addElement($field);
 
   $field = new FieldInputNumber();
@@ -954,8 +955,18 @@ function get_fieldset_registration()
       'quantity' => 'registration_opens_value',
       'units'    => 'registration_opens_units',
     );
-  $field = new FieldTimeWithUnits($param_names, isset($registration_opens), $registration_opens);
+  $field = new FieldTimeWithUnits($param_names, isset($registration_opens_enabled), $registration_opens);
   $field->setLabel(get_vocab('registration_opens'));
+  $fieldset->addElement($field);
+
+  // Registration closes
+  $param_names = array(
+    'enabler'  => 'registration_closes_enabled',
+    'quantity' => 'registration_closes_value',
+    'units'    => 'registration_closes_units',
+  );
+  $field = new FieldTimeWithUnits($param_names, isset($registration_closes_enabled), $registration_closes);
+  $field->setLabel(get_vocab('registration_closes'));
   $fieldset->addElement($field);
 
   return $fieldset;
@@ -1245,8 +1256,12 @@ if (isset($id))
       case 'entry_type':
       case 'tentative':
       case 'allow_registration':
-      case 'enable_registrant_limit':
       case 'registrant_limit':
+      case 'registrant_limit_enabled':
+      case 'registration_opens':
+      case 'registration_opens_enabled':
+      case 'registration_closes':
+      case 'registration_closes_enabled':
         $$column = $entry[$column];
         break;
 
@@ -1374,7 +1389,7 @@ else
   $private       = $private_default;
   $tentative     = !$confirmed_default;
   $allow_registration      = false;
-  $enable_registrant_limit = true;
+  $registrant_limit_enabled = true;
   $registrant_limit        = 1;
 
   // Get the hour and minute, converting a period to its MRBS time

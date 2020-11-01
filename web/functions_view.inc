@@ -139,10 +139,12 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'ical_sequence':
       case 'ical_recur_id':
       case 'allow_registration':
-      case 'enable_registrant_limit':
       case 'registrant_limit':
+      case 'registrant_limit_enabled':
       case 'registration_opens':
+      case 'registration_opens_enabled':
       case 'registration_closes':
+      case 'registration_closes_enabled':
         break;
 
       case 'description':

@@ -204,7 +204,7 @@ function get_entry_classes($entry)
   
   if ($entry['allow_registration'])
   {
-    if ($entry['enable_registrant_limit'] &&
+    if ($entry['registrant_limit_enabled'] &&
         ($entry['n_registered'] >= $entry['registrant_limit']))
     {
       $classes[] = 'full';
