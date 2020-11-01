@@ -2,7 +2,7 @@
 
 ALTER TABLE %DB_TBL_PREFIX%entry 
   ADD COLUMN allow_registration       tinyint(1) DEFAULT 0 NOT NULL,
-  ADD COLUMN enable_registrant_limit  tinyint(1) DEFAULT 1 NOT NULL,
+  ADD COLUMN registrant_limit_enabled  tinyint(1) DEFAULT 1 NOT NULL,
   ADD COLUMN registrant_limit         int DEFAULT 0 NOT NULL;
   
   

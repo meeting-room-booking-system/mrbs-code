@@ -220,7 +220,7 @@ function generate_event_registration($row, $previous_page=null)
   echo "<table class=\"list\">\n";
   echo "<tbody>\n";
 
-  if (!empty($row['enable_registrant_limit']))
+  if (!empty($row['registrant_limit_enabled']))
   {
     echo '<tr>';
     echo '<td>' . htmlspecialchars(get_vocab('registrant_limit')) . '</td>';
@@ -274,7 +274,7 @@ function generate_event_registration($row, $previous_page=null)
   }
   else
   {
-    if (empty($row['enable_registrant_limit']) ||
+    if (empty($row['registrant_limit_enabled']) ||
       ($row['registrant_limit'] > $n_registered))
     {
       generate_register_button($row, $previous_page);

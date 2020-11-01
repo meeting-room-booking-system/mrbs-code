@@ -73,42 +73,48 @@ $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
 
 // Get non-standard form variables
 $form_vars = array(
-  'create_by'               => 'string',
-  'name'                    => 'string',
-  'description'             => 'string',
-  'start_seconds'           => 'int',
-  'start_date'              => 'string',
-  'end_seconds'             => 'int',
-  'end_date'                => 'string',
-  'all_day'                 => 'string',  // bool, actually
-  'type'                    => 'string',
-  'rooms'                   => 'array',
-  'original_room_id'        => 'int',
-  'ical_uid'                => 'string',
-  'ical_sequence'           => 'int',
-  'ical_recur_id'           => 'string',
-  'allow_registration'      => 'string',  // bool, actually
-  'enable_registrant_limit' => 'string',  // bool, actually
-  'registrant_limit'        => 'int',
-  'returl'                  => 'string',
-  'id'                      => 'int',
-  'rep_id'                  => 'int',
-  'edit_type'               => 'string',
-  'rep_type'                => 'int',
-  'rep_end_date'            => 'string',
-  'rep_day'                 => 'array',   // array of bools
-  'rep_interval'            => 'int',
-  'month_type'              => 'int',
-  'month_absolute'          => 'int',
-  'month_relative_ord'      => 'string',
-  'month_relative_day'      => 'string',
-  'skip'                    => 'string',  // bool, actually
-  'no_mail'                 => 'string',  // bool, actually
-  'private'                 => 'string',  // bool, actually
-  'confirmed'               => 'string',
-  'back_button'             => 'string',
-  'timetohighlight'         => 'int',
-  'commit'                  => 'string'
+  'create_by'                   => 'string',
+  'name'                        => 'string',
+  'description'                 => 'string',
+  'start_seconds'               => 'int',
+  'start_date'                  => 'string',
+  'end_seconds'                 => 'int',
+  'end_date'                    => 'string',
+  'all_day'                     => 'string',  // bool, actually
+  'type'                        => 'string',
+  'rooms'                       => 'array',
+  'original_room_id'            => 'int',
+  'ical_uid'                    => 'string',
+  'ical_sequence'               => 'int',
+  'ical_recur_id'               => 'string',
+  'allow_registration'          => 'string',  // bool, actually
+  'registrant_limit'            => 'int',
+  'registrant_limit_enabled'    => 'string',  // bool, actually
+  'registration_opens_value'    => 'int',
+  'registration_opens_units'    => 'string',
+  'registration_opens_enabled'  => 'string',  // bool, actually
+  'registration_closes_value'   => 'int',
+  'registration_closes_units'   => 'string',
+  'registration_closes_enabled' => 'string',  // bool, actually
+  'returl'                      => 'string',
+  'id'                          => 'int',
+  'rep_id'                      => 'int',
+  'edit_type'                   => 'string',
+  'rep_type'                    => 'int',
+  'rep_end_date'                => 'string',
+  'rep_day'                     => 'array',   // array of bools
+  'rep_interval'                => 'int',
+  'month_type'                  => 'int',
+  'month_absolute'              => 'int',
+  'month_relative_ord'          => 'string',
+  'month_relative_day'          => 'string',
+  'skip'                        => 'string',  // bool, actually
+  'no_mail'                     => 'string',  // bool, actually
+  'private'                     => 'string',  // bool, actually
+  'confirmed'                   => 'string',
+  'back_button'                 => 'string',
+  'timetohighlight'             => 'int',
+  'commit'                      => 'string'
 );
 
 foreach($form_vars as $var => $var_type)
@@ -123,6 +129,13 @@ foreach($form_vars as $var => $var_type)
   }
 
 }
+
+// Convert the registration opens and closes times into seconds
+fromTimeString($registration_opens_value, $registration_opens_units);
+$registration_opens = $registration_opens_value;
+fromTimeString($registration_closes_value, $registration_closes_units);
+$registration_closes = $registration_closes_value;
+
 
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
@@ -704,8 +717,13 @@ foreach ($rooms as $room_id)
   $booking['ical_sequence'] = $ical_sequence;
   $booking['ical_recur_id'] = $ical_recur_id;
   $booking['allow_registration'] = $allow_registration;
-  $booking['enable_registrant_limit'] = $enable_registrant_limit;
   $booking['registrant_limit'] = $registrant_limit;
+  $booking['registrant_limit_enabled'] = $registrant_limit_enabled;
+  $booking['registration_opens'] = $registration_opens;
+  $booking['registration_opens_enabled'] = $registration_opens_enabled;
+  $booking['registration_closes'] = $registration_closes;
+  $booking['registration_closes_enabled'] = $registration_closes_enabled;
+
 
   if ($booking['rep_type'] == REP_MONTHLY)
   {

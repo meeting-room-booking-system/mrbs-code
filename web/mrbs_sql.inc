@@ -867,7 +867,9 @@ function mrbsCreateEntry($table, $data)
       {
         // booleans
         case 'allow_registration':
-        case 'enable_registrant_limit':
+        case 'registrant_limit_enabled':
+        case 'registration_opens_enabled':
+        case 'registration_closes_enabled':
           if (isset($data[$key]))
           {
             $sql_col[] = $key;
@@ -894,6 +896,8 @@ function mrbsCreateEntry($table, $data)
 
         // integers NOT NULL
         case 'registrant_limit':
+        case 'registration_opens':
+        case 'registration_closes':
           if (isset($data[$key]))
           {
             $sql_col[] = $key;
@@ -1574,10 +1578,12 @@ function get_booking_info($id, $series, $silent=FALSE)
       case 'repeat_id':
       case 'ical_recur_id':
       case 'allow_registration':
-      case 'enable_registrant_limit':
       case 'registrant_limit':
+      case 'registrant_limit_enabled':
       case 'registration_opens':
+      case 'registration_opens_enabled':
       case 'registration_closes':
+      case 'registration_closes_enabled':
         array_push($terms, $field['name']);
         break;
 
