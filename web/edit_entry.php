@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\FieldTimeWithUnits;
 use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
@@ -913,6 +914,7 @@ function get_fieldset_registration()
 {
   global $enable_registration;
   global $allow_registration, $enable_registrant_limit, $registrant_limit;
+  global $registration_opens, $registration_closes;
 
   if (!$enable_registration || !is_book_admin())
   {
@@ -927,14 +929,12 @@ function get_fieldset_registration()
   $field->setLabel(get_vocab('allow_registration'))
     ->setControlAttribute('name', 'allow_registration')
     ->setChecked($allow_registration);
-
   $fieldset->addElement($field);
 
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('enable_registrant_limit'))
     ->setControlAttribute('name', 'enable_registrant_limit')
     ->setChecked($enable_registrant_limit);
-
   $fieldset->addElement($field);
 
   $field = new FieldInputNumber();
@@ -946,7 +946,16 @@ function get_fieldset_registration()
               'value'    => $registrant_limit
             )
           );
+  $fieldset->addElement($field);
 
+  // Registration opens
+  $param_names = array(
+      'enabler'  => 'registration_opens_enabled',
+      'quantity' => 'registration_opens_value',
+      'units'    => 'registration_opens_units',
+    );
+  $field = new FieldTimeWithUnits($param_names, isset($registration_opens), $registration_opens);
+  $field->setLabel(get_vocab('registration_opens'));
   $fieldset->addElement($field);
 
   return $fieldset;
