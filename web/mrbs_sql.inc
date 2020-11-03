@@ -635,6 +635,14 @@ function get_entry_by_id($id)
 }
 
 
+function entry_registration_is_open(array $entry)
+{
+  // TODO: handle periods
+  return (!$entry['registration_opens_enabled'] || (time() >= ($entry['start_time'] - $entry['registration_opens']))) &&
+         (!$entry['registration_closes_enabled'] || (time() <= ($entry['start_time'] - $entry['registration_closes'])));
+}
+
+
 // Get all the entries for the area with $area_id in the interval that starts at $interval_start
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys

@@ -44,9 +44,16 @@ function cancel($registration_id)
 // Register a user for an event
 function register($username, $event_id)
 {
-  // Check that the user is authorised for this operation
   $entry = get_entry_by_id($event_id);
+
+  // Check that the user is authorised for this operation
   if (!isset($entry) || !getWritable($username, $entry['room_id']))
+  {
+    return;
+  }
+
+  // Check that the user is an an admin or else that the entry is open for registration
+  if (!is_book_admin($entry['room_id']) && !entry_registration_is_open($entry))
   {
     return;
   }
