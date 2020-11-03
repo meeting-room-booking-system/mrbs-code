@@ -620,6 +620,22 @@ $is_mandatory_field['users.display_name'] = true;
 // other people can register.
 $enable_registration = true;
 
+// The default setting for new entries
+$allow_registration_default = false;
+// Whether a limit on the number of registrants is set by default
+$registrant_limit_enabled_default = true;
+// The default maximum number of registrations allowed
+$registrant_limit_default = 1;
+// Whether the registration opens time is enabled by default
+$registration_opens_enabled_default = false;
+// The default time (in seconds) in advance of the start time when registration opens
+$registration_opens_default = 60*60*24*14; // 2 weeks
+// Whether the registration closes time is enabled by default
+$registration_closes_enabled_default = false;
+// The default time (in seconds) in advance of the start time when registration closes
+$registration_closes_default = 0;
+
+
 // Set $skip_default to true if you want the "Skip past conflicts" box
 // on the edit_entry form to be checked by default.  (This will mean that
 // if you make a repeat booking and some of the repeat dates are already
