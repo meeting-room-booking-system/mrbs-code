@@ -220,6 +220,22 @@ function generate_event_registration($row, $previous_page=null)
   echo "<table class=\"list\">\n";
   echo "<tbody>\n";
 
+  if ($row['registration_opens_enabled'])
+  {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars(get_vocab('registration_opens')) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_opens'])) . '</td>';
+    echo "</tr>\n";
+  }
+
+  if ($row['registration_closes_enabled'])
+  {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars(get_vocab('registration_closes')) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_closes'])) . '</td>';
+    echo "</tr>\n";
+  }
+
   if (!empty($row['registrant_limit_enabled']))
   {
     echo '<tr>';
@@ -277,7 +293,16 @@ function generate_event_registration($row, $previous_page=null)
     if (empty($row['registrant_limit_enabled']) ||
       ($row['registrant_limit'] > $n_registered))
     {
-      generate_register_button($row, $previous_page);
+      /*
+      if (is_book_admin($row['room_id']) ||
+          ((!$row['registration_opens_enabled'] || (time() >= ($row['start_time'] - $row['registration_opens']))) &&
+           (!$row['registration_closes_enabled'] || (time() <= ($row['start_time'] - $row['registration_closes'])))))
+      {
+      */
+        generate_register_button($row, $previous_page);
+        /*
+      }
+        */
     }
     else
     {
