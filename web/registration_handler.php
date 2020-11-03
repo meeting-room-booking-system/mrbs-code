@@ -9,7 +9,6 @@ use MRBS\Form\Form;
 // Cancel a user's registration
 function cancel($registration_id)
 {
-  // Check that the user is authorised for this operation
   $registration = get_registration_by_id($registration_id);
 
   if (!isset($registration))
@@ -18,13 +17,15 @@ function cancel($registration_id)
   }
 
   $entry = get_entry_by_id($registration['entry_id']);
+
+  // Check that the user is authorised for this operation
   if (!isset($entry) || !getWritable($registration['username'], $entry['room_id']))
   {
     return;
   }
 
-  // Ordinary users cannot cancel registrations after the event has started
-  if (!is_book_admin($entry['room_id']) && (time() > $entry['start_time']))
+  // Check that it is not too late to cancel a registration
+  if (!is_book_admin($entry['room_id']) && entry_registration_cancellation_has_closed($entry))
   {
     return;
   }

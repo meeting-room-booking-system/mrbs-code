@@ -635,11 +635,27 @@ function get_entry_by_id($id)
 }
 
 
+// Checks whether an entry is open for registration
 function entry_registration_is_open(array $entry)
 {
   // TODO: handle periods
   return (!$entry['registration_opens_enabled'] || (time() >= ($entry['start_time'] - $entry['registration_opens']))) &&
          (!$entry['registration_closes_enabled'] || (time() <= ($entry['start_time'] - $entry['registration_closes'])));
+}
+
+
+// Checks whether it is too late to cancel a registration, which is
+// after the closing time for registration, if there is one, or else
+// after the entry start time.
+function entry_registration_cancellation_has_closed(array $entry)
+{
+  // TODO: handle periods
+  if (isset($entry['registration_closes_enabled']))
+  {
+    return (time() > ($entry['start_time'] - $entry['registration_closes']));
+  }
+
+  return (time() > $entry['start_time']);
 }
 
 

@@ -103,8 +103,8 @@ function get_returl($previous_page=null)
 
 function generate_cancel_registration_button(array $row, array $registrant, $label_text, $previous_page=null, $as_field=false)
 {
-  // Ordinary users cannot cancel registrations after the event has started
-  if (!is_book_admin($row['room_id']) && (time() > $row['start_time']))
+  // Check that it is not too late for ordinary users to cancel
+  if (!is_book_admin($row['room_id']) && entry_registration_cancellation_has_closed($row))
   {
     return;
   }
