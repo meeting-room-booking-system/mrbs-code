@@ -955,7 +955,7 @@ function get_fieldset_registration()
       'quantity' => 'registration_opens_value',
       'units'    => 'registration_opens_units',
     );
-  $field = new FieldTimeWithUnits($param_names, isset($registration_opens_enabled), $registration_opens);
+  $field = new FieldTimeWithUnits($param_names, $registration_opens_enabled, $registration_opens);
   $field->setLabel(get_vocab('registration_opens'));
   $fieldset->addElement($field);
 
@@ -965,7 +965,7 @@ function get_fieldset_registration()
     'quantity' => 'registration_closes_value',
     'units'    => 'registration_closes_units',
   );
-  $field = new FieldTimeWithUnits($param_names, isset($registration_closes_enabled), $registration_closes);
+  $field = new FieldTimeWithUnits($param_names, $registration_closes_enabled, $registration_closes);
   $field->setLabel(get_vocab('registration_closes'));
   $fieldset->addElement($field);
 
@@ -1388,9 +1388,13 @@ else
   $room_id       = $room;
   $private       = $private_default;
   $tentative     = !$confirmed_default;
-  $allow_registration      = false;
-  $registrant_limit_enabled = true;
-  $registrant_limit        = 1;
+  $allow_registration           = (bool) $allow_registration_default;
+  $registrant_limit             = (int) $registrant_limit_default;
+  $registrant_limit_enabled     = (bool) $registrant_limit_enabled_default;
+  $registration_opens           = (int) $registration_opens_default;
+  $registration_opens_enabled   = (bool) $registration_opens_enabled_default;
+  $registration_closes          = (int) $registration_closes_default;
+  $registration_closes_enabled  = (bool) $registration_closes_enabled_default;
 
   // Get the hour and minute, converting a period to its MRBS time
   // Set some sensible defaults

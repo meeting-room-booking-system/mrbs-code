@@ -103,8 +103,8 @@ function get_returl($previous_page=null)
 
 function generate_cancel_registration_button(array $row, array $registrant, $label_text, $previous_page=null, $as_field=false)
 {
-  // Ordinary users cannot cancel registrations after the event has started
-  if (!is_book_admin($row['room_id']) && (time() > $row['start_time']))
+  // Check that it is not too late for ordinary users to cancel
+  if (!is_book_admin($row['room_id']) && entry_registration_cancellation_has_closed($row))
   {
     return;
   }
@@ -154,6 +154,12 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
 
 function generate_register_button($row, $previous_page=null)
 {
+  // Check that the user is an an admin or else that the entry is open for registration
+  if (!is_book_admin($row['room_id']) && !entry_registration_is_open($row))
+  {
+    return;
+  }
+
   $mrbs_user = session()->getCurrentUser();
   $can_register_others = is_book_admin($row['room_id']);
 
@@ -219,6 +225,22 @@ function generate_event_registration($row, $previous_page=null)
   echo "<div id=\"registration\">\n";
   echo "<table class=\"list\">\n";
   echo "<tbody>\n";
+
+  if ($row['registration_opens_enabled'])
+  {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars(get_vocab('registration_opens')) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_opens'])) . '</td>';
+    echo "</tr>\n";
+  }
+
+  if ($row['registration_closes_enabled'])
+  {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars(get_vocab('registration_closes')) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_closes'])) . '</td>';
+    echo "</tr>\n";
+  }
 
   if (!empty($row['registrant_limit_enabled']))
   {
