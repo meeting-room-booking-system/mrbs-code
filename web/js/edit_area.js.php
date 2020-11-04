@@ -22,7 +22,7 @@ function toggleMode(speed)
   {
     speed = 'slow';
   }
-  
+
   if ($('input:radio[name=area_enable_periods]:checked').val() === '0')
   {
     $('#book_ahead_periods_note').hide(speed);
@@ -46,9 +46,9 @@ function getTimeString(time, twentyfourhour_format)
    // Converts a time (in minutes since midnight) into a string
    // of the form hh:mm if twentyfourhour_format is true,
    // otherwise of the form hh:mm am/pm.
-           
+
    // This function doesn't do a great job of replicating the PHP
-   // internationalised format, but is probably sufficient for a 
+   // internationalised format, but is probably sufficient for a
    // rarely used admin page.
    ?>
    var ap,
@@ -102,19 +102,19 @@ function getResolutionMinutes()
 <?php
 // Converts a time string in the format 'hh:mm' to minutes.
 // Returns null if the string is not properly formed.
-?> 
+?>
 function hhmmToMins(hhmm)
 {
   if (hhmm === null)
   {
     return null;
   }
-  
+
   if (!<?php echo REGEX_HHMM ?>.test(hhmm))
   {
     return null;
   }
-  
+
   var array = hhmm.split(':');
   return (parseInt(array[0], 10) * 60) + parseInt(array[1], 10);
 }
@@ -141,24 +141,24 @@ function generateLastSlotSelect()
   // given the first slot and resolution
   ?>
   var resMins, tCorrected,
-      firstSlot, lastSlot, 
+      firstSlot, lastSlot,
       minsPerDay = <?php echo MINUTES_PER_DAY ?>;
-      
+
   resMins = getResolutionMinutes();
   if (isNaN(resMins) || (resMins === null) || (resMins === 0))
   {
     return;  <?php // avoid endless loops and divide by zero errors ?>
   }
-  
+
   firstSlot = getStartFirstSlot();
   lastSlot = getStartLastSlot();
-  
+
   if (firstSlot === null)
   {
     return;
   }
-               
-  <?php 
+
+  <?php
   // Construct the <select> element.
   // We allow the "day" to go all the way past midnight and up to the start of the
   // next first slot.
@@ -166,9 +166,9 @@ function generateLastSlotSelect()
   var lastPossible = minsPerDay + firstSlot - resMins;
   var name = 'area_start_last_slot';
   var element = $('[name="' + name + '"]');
-  
+
   var select = $('<select>').attr('name', name);
-                            
+
   for (var t=firstSlot; t <= lastPossible; t += resMins)
   {
     tCorrected = t % minsPerDay;  <?php // subtract one day if past midnight?>
@@ -181,7 +181,7 @@ function generateLastSlotSelect()
                   .val(getTimeString(tCorrected, true))
                   .text(getTimeString(tCorrected, <?php echo ($twentyfourhour_format ? "true" : "false") ?>)));
   }
-  
+
   <?php // and make the selected option the new last slot value ?>
   select.val(getTimeString(lastSlot, true));
   <?php // finally, replace the element with the new <select> ?>
@@ -209,7 +209,7 @@ function checkForLastPeriodName()
 
 
 $(document).on('page_ready', function() {
-  
+
   <?php
   // We need to hide the sections of the form relating to times
   // slots if the form is loaded with periods enabled.   We hide
@@ -222,7 +222,7 @@ $(document).on('page_ready', function() {
       toggleMode('fast');
     });
   toggleMode(0);
-  
+
   <?php
   // Work out if we can display the delete symbols, and then only
   // after we have done that make them visible.  (This stops the
@@ -239,18 +239,18 @@ $(document).on('page_ready', function() {
   $('#add_period').on('click', function() {
       var lastPeriodName = $('#period_settings .period_name').last(),
           clone = lastPeriodName.clone(true); <?php // duplicate data and events ?>
-          
+
       clone.find('input').val('');
       clone.insertAfter(lastPeriodName).find('input').trigger('focus');
       $('.delete_period').show();
     });
-  
-  <?php // Delete a period name input field ?>  
+
+  <?php // Delete a period name input field ?>
   $('.delete_period').on('click', function() {
       $(this).parent().remove();
       checkForLastPeriodName();
     });
-    
+
   <?php
   // Where we've got enabling checkboxes, apply a change event to them so that
   // when the enabling checkbox is changed the associated inputs are enabled or
@@ -262,7 +262,7 @@ $(document).on('page_ready', function() {
       if ($(this).attr('id') === 'area_max_duration_enabled')
       {
         <?php // This is structured slightly differently ?>
-        $('#area_max_duration_periods, #area_max_duration_value, #area_max_duration_units').prop('disabled', !enablerChecked);
+        $('[name^="area_max_duration"]').not($(this)).prop('disabled', !enablerChecked);
       }
       else
       {
@@ -270,16 +270,16 @@ $(document).on('page_ready', function() {
       }
     })
     .trigger('change');
-  
+
   <?php // Disable the default duration if "All day" is checked. ?>
   $('input[name="area_def_duration_all_day"]').on('change', function() {
       $('#area_def_duration_mins').prop('disabled', $(this).prop('checked'));
     }).trigger('change');
-  
+
   $('input[name="area_start_first_slot"], input[name="area_res_mins"]')
       .on('change', function() {
           generateLastSlotSelect();
         });
   generateLastSlotSelect();
-  
+
 });
