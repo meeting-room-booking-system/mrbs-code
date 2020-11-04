@@ -254,15 +254,21 @@ $(document).on('page_ready', function() {
   ?>
   $('.enabler').on('change', function(){
       var enablerChecked = $(this).is(':checked');
-      if ($(this).attr('id') === 'area_max_duration_enabled')
+      var elements;
+      switch ($(this).attr('id'))
       {
-        <?php // This is structured slightly differently ?>
-        $('[name^="area_max_duration"]').not($(this)).prop('disabled', !enablerChecked);
+        <?php // Some of the groups are structured differently ?>
+        case 'area_max_duration_enabled':
+          elements = $('[name^="area_max_duration"]').not($(this));
+          break;
+        case 'registrant_limit_enabled':
+          elements = $('[name="registrant_limit"]');
+          break;
+        default:
+          elements = $(this).nextAll('input, select')
+          break;
       }
-      else
-      {
-        $(this).nextAll('input, select').prop('disabled', !enablerChecked);
-      }
+      elements.prop('disabled', !enablerChecked);
     })
     .trigger('change');
 

@@ -928,13 +928,16 @@ function get_fieldset_registration()
 
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('allow_registration'))
-        ->setControlAttribute('name', 'allow_registration')
+        ->setControlAttributes(array(
+            'name' => 'allow_registration'))
         ->setChecked($allow_registration);
   $fieldset->addElement($field);
 
   $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('registrant_limit_enabled'))
-        ->setControlAttribute('name', 'registrant_limit_enabled')
+        ->setControlAttributes(array(
+            'name' => 'registrant_limit_enabled',
+            'class' => 'enabler'))
         ->setChecked($registrant_limit_enabled);
   $fieldset->addElement($field);
 
