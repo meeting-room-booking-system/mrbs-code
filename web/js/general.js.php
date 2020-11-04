@@ -246,6 +246,26 @@ $(document).on('page_ready', function() {
         });
     });
 
+  <?php
+  // Where we've got enabling checkboxes, apply a change event to them so that
+  // when the enabling checkbox is changed the associated inputs are enabled or
+  // disabled as appropriate.   Also trigger the change event when the page is loaded
+  // so that the inputs are enabled/disabled correctly initially.
+  ?>
+  $('.enabler').on('change', function(){
+      var enablerChecked = $(this).is(':checked');
+      if ($(this).attr('id') === 'area_max_duration_enabled')
+      {
+        <?php // This is structured slightly differently ?>
+        $('[name^="area_max_duration"]').not($(this)).prop('disabled', !enablerChecked);
+      }
+      else
+      {
+        $(this).nextAll('input, select').prop('disabled', !enablerChecked);
+      }
+    })
+    .trigger('change');
+
   if (supportsDatalist())
   {
     <?php
