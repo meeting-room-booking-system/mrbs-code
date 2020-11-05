@@ -635,12 +635,49 @@ function get_entry_by_id($id)
 }
 
 
+// Returns the Unix timestamp for registration closing.  Takes account of
+// periods, when registration closes relative to midnight (0000) on the day
+// of the booking, because we don't when in the day periods occur.
+function registration_opens_timestamp(array $entry)
+{
+  global $enable_periods;
+
+  $start_time = $entry['start_time'];
+
+  // If we're using periods set the time back to midnight
+  if ($enable_periods)
+  {
+    $start_time = timestamp_set_time($start_time, 0, 0);
+  }
+
+  return $start_time - $entry['registration_opens'];
+}
+
+
+// Returns the Unix timestamp for registration opening.  Takes account of
+// periods, when registration opens relative to midnight (0000) on the day
+// of the booking, because we don't when in the day periods occur.
+function registration_closes_timestamp(array $entry)
+{
+  global $enable_periods;
+
+  $start_time = $entry['start_time'];
+
+  // If we're using periods set the time back to midnight
+  if ($enable_periods)
+  {
+    $start_time = timestamp_set_time($start_time, 0, 0);
+  }
+
+  return $start_time - $entry['registration_closes'];
+}
+
+
 // Checks whether an entry is open for registration
 function entry_registration_is_open(array $entry)
 {
-  // TODO: handle periods
-  return (!$entry['registration_opens_enabled'] || (time() >= ($entry['start_time'] - $entry['registration_opens']))) &&
-         (!$entry['registration_closes_enabled'] || (time() <= ($entry['start_time'] - $entry['registration_closes'])));
+  return (!$entry['registration_opens_enabled'] || (time() >= registration_opens_timestamp($entry))) &&
+         (!$entry['registration_closes_enabled'] || (time() <= registration_closes_timestamp($entry)));
 }
 
 
@@ -649,10 +686,9 @@ function entry_registration_is_open(array $entry)
 // after the entry start time.
 function entry_registration_cancellation_has_closed(array $entry)
 {
-  // TODO: handle periods
   if (isset($entry['registration_closes_enabled']))
   {
-    return (time() > ($entry['start_time'] - $entry['registration_closes']));
+    return (time() > registration_closes_timestamp($entry));
   }
 
   return (time() > $entry['start_time']);
@@ -1012,7 +1048,7 @@ function mrbsCreateEntry($table, $data)
   }
 
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-  
+
   db()->command($sql, $sql_params);
 
   return db()->insert_id($table, "id");

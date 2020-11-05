@@ -916,6 +916,7 @@ function get_fieldset_registration()
   global $allow_registration, $registrant_limit_enabled, $registrant_limit;
   global $registration_opens, $registration_opens_enabled;
   global $registration_closes, $registration_closes_enabled;
+  global $enable_periods;
 
   if (!$enable_registration || !is_book_admin())
   {
@@ -952,13 +953,24 @@ function get_fieldset_registration()
           );
   $fieldset->addElement($field);
 
+  // Registration opens and closes
+  // The suffix text for registration opens and closes depends on whether
+  // periods are being used.  As we don't know when periods occur in the
+  // day they are assumed to start at midnight.
+  $in_advance_vocab = ($enable_periods) ? get_vocab('in_advance_periods') : get_vocab('in_advance');
+
   // Registration opens
   $param_names = array(
       'enabler'  => 'registration_opens_enabled',
       'quantity' => 'registration_opens_value',
       'units'    => 'registration_opens_units',
     );
-  $field = new FieldTimeWithUnits($param_names, $registration_opens_enabled, $registration_opens);
+  $field = new FieldTimeWithUnits(
+      $param_names,
+      $registration_opens_enabled,
+      $registration_opens,
+      get_vocab($in_advance_vocab)
+    );
   $field->setLabel(get_vocab('registration_opens'));
   $fieldset->addElement($field);
 
@@ -968,7 +980,12 @@ function get_fieldset_registration()
     'quantity' => 'registration_closes_value',
     'units'    => 'registration_closes_units',
   );
-  $field = new FieldTimeWithUnits($param_names, $registration_closes_enabled, $registration_closes);
+  $field = new FieldTimeWithUnits(
+      $param_names,
+      $registration_closes_enabled,
+      $registration_closes,
+      get_vocab($in_advance_vocab)
+    );
   $field->setLabel(get_vocab('registration_closes'));
   $fieldset->addElement($field);
 
