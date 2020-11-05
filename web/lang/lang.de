@@ -309,34 +309,65 @@ $vocab["level_2"]            = "Administrator";
 $vocab["level_3"]            = "Benutzeradministrator";
 
 // Authentication database
-$vocab["user_list"]          = "Benutzerliste";
-$vocab["edit_user"]          = "Bearbeite Benutzer";
-$vocab["delete_user"]        = "Lösche diesen Benutzer";
-//$vocab["user.name"]         = Use the same as above, for consistency.
-//$vocab["user.password"]     = Use the same as above, for consistency.
-$vocab["user.email"]        = "Email Addresse";
-$vocab["password_twice"]     = "Falls Sie Ihr Passwort ändern wollen, geben Sie das neue Passwort zwei mal ein.";
-$vocab["passwords_not_eq"]   = "Fehler: Die Passwörter stimmen nicht überein.";
-$vocab["password_invalid"]   = "Fehler: Das Passwort entspricht nicht den Vorgaben.  Es muss folgenden Zeichen beinhalten:";
-$vocab["policy_length"]      = "%d Zeichen";
-$vocab["policy_alpha"]       = "%d Buchstabe(n)";
-$vocab["policy_lower"]       = "%d Kleinbuchstabe(n)";
-$vocab["policy_upper"]       = "%d Großbuchstabe(n)";
-$vocab["policy_numeric"]     = "%d Ziffer(n)";
-$vocab["policy_special"]     = "%d Sonderzeichen";
-$vocab["add_new_user"]       = "Benutzer hinzufügen";
-$vocab["action"]             = "Aktion";
-$vocab["user"]               = "Benutzer";
-$vocab["administrator"]      = "Administrator";
-$vocab["unknown"]            = "Unbekannt";
-$vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "Klicken um alle meine anstehenden Einträge anzuzeigen";
-$vocab["no_users_initial"]   = "Keine Benutzer in der Datenbank, erlaube Erstellung erster Benutzer.";
+$vocab["user_list"]             = "Benutzerliste";
+$vocab["edit_user"]             = "Bearbeite Benutzer";
+$vocab["delete_user"]           = "Lösche diesen Benutzer";
+//$vocab["user.name"]           = Use the same as above, for consistency.
+//$vocab["user.password"]       = Use the same as above, for consistency.
+$vocab["user.email"]            = "Email Addresse";
+$vocab["password_twice"]        = "Falls Sie Ihr Passwort ändern wollen, geben Sie das neue Passwort zwei mal ein.";
+$vocab["passwords_not_eq"]      = "Fehler: Die Passwörter stimmen nicht überein.";
+$vocab["password_invalid"]      = "Fehler: Das Passwort entspricht nicht den Vorgaben.  Es muss folgenden Zeichen beinhalten:";
+$vocab["policy_length"]         = "%d Zeichen";
+$vocab["policy_alpha"]          = "%d Buchstabe(n)";
+$vocab["policy_lower"]          = "%d Kleinbuchstabe(n)";
+$vocab["policy_upper"]          = "%d Großbuchstabe(n)";
+$vocab["policy_numeric"]        = "%d Ziffer(n)";
+$vocab["policy_special"]        = "%d Sonderzeichen";
+$vocab["add_new_user"]          = "Benutzer hinzufügen";
+$vocab["sync"]                  = "Synchronisieren";
+$vocab["sync_delete_no_users"]  = "Sync: es existieren keine Benutzer zum löschen.";
+$vocab["sync_deleting_n_users"] = "Sync: Benutzer %d gelöscht:";
+$vocab["sync_add_no_users"]     = "Sync: es existieren keine Benutzer zum hinzufügen.";
+$vocab["sync_adding_n_users"]   = "Sync: Benutzer %d hinzugefügt:";
+$vocab["sync_update_no_users"]  = "Sync: es existieren keine Benutzer zum aktualisieren.";
+$vocab["sync_updating_n_users"] = "Sync: Benutzer %d aktualisiert:";
+$vocab["action"]                = "Aktion";
+$vocab["user"]                  = "Benutzer";
+$vocab["administrator"]         = "Administrator";
+$vocab["unknown"]               = "Unbekannt";
+$vocab["ok"]                    = "OK";
+$vocab["show_my_entries"]       = "Klicken um alle meine anstehenden Einträge anzuzeigen";
+$vocab["no_users_initial"]      = "Keine Benutzer in der Datenbank, erlaube Erstellung erster Benutzer.";
 $vocab["no_users_create_first_admin"] = "Erstellen Sie ein Administratorkonto und melden sich mit diesem an, um weitere Benutzerkonten anzulegen.";
-
-
-$vocab["warning_last_admin"] = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
+$vocab["warning_last_admin"]    = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
 $vocab["copy_email_addresses"]  = "E-Maildressen kopieren";
+
+// Groups
+$vocab['group']              = "Gruppe";
+$vocab['groups']             = "Gruppen";
+$vocab["group_heading"]      = "Gruppe: %s";
+
+// Roles
+$vocab['role']               = "Rolle";
+$vocab['roles']              = "Rollen";
+$vocab['add_role']           = "Rolle hinzufügen";
+$vocab['role_name']          = "Name";
+$vocab['role_exists']        = "Die Rolle '%s' exisitert bereits.";
+$vocab['role_area_exists']   = 'Berechtigungen existieren bereits für Bereich \'%s\'.'; // area_name
+$vocab['role_room_exists']   = 'Berechtigungen existieren bereits für Raum \'%1$s / %2$s\'.';  // 1: area_name, 2: room_name
+$vocab["confirm_del_role"]   = "Rolle '%s' wirklich löschen?";
+$vocab["role_heading"]       = "Rolle: %s";
+$vocab["add_role_area"]      = "Berechtigung für Bereich hinzufügen";
+$vocab["add_role_room"]      = "Berechtigung für Raum hinzufügen";
+$vocab["permission"]         = "Berechtigung";
+$vocab["permission_read"]    = "lesen";
+$vocab["permission_write"]   = "schreiben";
+$vocab["permission_all"]     = "alle";
+$vocab["state"]              = "Status";
+$vocab["state_neither"]      = "keine";
+$vocab["state_granted"]      = "bewilligt";
+$vocab["state_denied"]       = "abgelehnt";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
