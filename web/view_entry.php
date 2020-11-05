@@ -230,7 +230,7 @@ function generate_event_registration($row, $previous_page=null)
   {
     echo '<tr>';
     echo '<td>' . htmlspecialchars(get_vocab('registration_opens')) . '</td>';
-    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_opens'])) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string(registration_opens_timestamp($row))) . '</td>';
     echo "</tr>\n";
   }
 
@@ -238,7 +238,7 @@ function generate_event_registration($row, $previous_page=null)
   {
     echo '<tr>';
     echo '<td>' . htmlspecialchars(get_vocab('registration_closes')) . '</td>';
-    echo '<td>' . htmlspecialchars(time_date_string($row['start_time'] - $row['registration_closes'])) . '</td>';
+    echo '<td>' . htmlspecialchars(time_date_string(registration_closes_timestamp($row))) . '</td>';
     echo "</tr>\n";
   }
 

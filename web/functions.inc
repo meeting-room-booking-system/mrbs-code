@@ -1185,6 +1185,16 @@ function is_in_booking_day($t)
 }
 
 
+// Takes a Unix timestamp and sets the time, while keeping the day the same
+function timestamp_set_time($timestamp, $hour, $minute, $second=0)
+{
+  $date = new DateTime();
+  $date->setTimestamp($timestamp);
+  $date->setTime($hour, $minute, $second);
+  return $date->getTimestamp();
+}
+
+
 // Force a timestamp $t to be on a booking day, either by moving it back to the end
 // of the previous booking day, or forward to the start of the next.
 function fit_to_booking_day($t, $back=true)
