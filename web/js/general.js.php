@@ -255,7 +255,7 @@ $(document).on('page_ready', function() {
   $('.enabler').on('change', function(){
       var enablerChecked = $(this).is(':checked');
       var elements;
-      switch ($(this).attr('id'))
+      switch ($(this).attr('name'))
       {
         <?php // Some of the groups are structured differently ?>
         case 'area_max_duration_enabled':
@@ -271,6 +271,7 @@ $(document).on('page_ready', function() {
       elements.prop('disabled', !enablerChecked);
     })
     .trigger('change');
+
 
   if (supportsDatalist())
   {
