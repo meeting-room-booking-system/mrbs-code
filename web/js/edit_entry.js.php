@@ -1289,18 +1289,18 @@ $(document).on('page_ready', function() {
   });
 
   form.on('submit', function() {
+      var result = true;
       if ($(this).data('submit') === 'save_button')
       {
         <?php // Only validate the form if the Save button was pressed ?>
-        var result = validate($(this));
+        result = validate($(this));
         if (!result)
         {
           <?php // Clear the data flag if the validation failed ?>
           $(this).removeData('submit');
         }
-        return result;
       }
-      return true;
+      return result;
     });
 
   <?php
@@ -1487,5 +1487,33 @@ $(document).on('page_ready', function() {
   {
     nameInput.trigger('focus');
   }
+
+
+  <?php
+  // If the allow_registration checkbox is changed then we need to toggle the
+  // disabled property of all the controls in the registration fieldset.  However,
+  // because some of them are also enabler groups themselves then if allow_registration
+  // is checked we need to trigger a change event on them so that they set their own
+  // disabled properties appropriately.
+  ?>
+  var allowRegistration = $('#allow_registration');
+  allowRegistration.on('change', function() {
+      var registration = $('#registration');
+      var allowRegistrationChecked = $(this).is(':checked');
+      registration.find('input, select').not($(this)).prop('disabled', !allowRegistrationChecked);
+      if (allowRegistrationChecked)
+      {
+        registration.find('.enabler').trigger('change');
+      }
+    })
+    .trigger('change');
+
+  <?php
+  // Enable the checkboxes which may have been disabled, otherwise their values
+  // will not be posted.
+  ?>
+  form.submit(function() {
+      $('#registration').find('input[type="checkbox"]').prop('disabled', false);
+    });
 
 });

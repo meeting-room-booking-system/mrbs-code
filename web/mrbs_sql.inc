@@ -1012,7 +1012,7 @@ function mrbsCreateEntry($table, $data)
   }
 
   $sql = "INSERT INTO $table (" . implode(', ', $sql_col) . ") VALUES (" . implode(', ',$sql_val) . ")";
-
+  
   db()->command($sql, $sql_params);
 
   return db()->insert_id($table, "id");

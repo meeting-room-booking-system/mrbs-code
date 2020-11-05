@@ -127,7 +127,6 @@ foreach($form_vars as $var => $var_type)
     $$var = trim($$var);
     $$var = truncate($$var, "entry.$var");
   }
-
 }
 
 // Convert the registration opens and closes times into seconds
@@ -136,6 +135,10 @@ $registration_opens = $registration_opens_value;
 fromTimeString($registration_closes_value, $registration_closes_units);
 $registration_closes = $registration_closes_value;
 
+// Convert the booleans (the custom field booleans are done later)
+$registrant_limit_enabled = ($registrant_limit_enabled) ? 1 : 0;
+$registration_opens_enabled = ($registration_opens_enabled) ? 1 : 0;
+$registration_closes_enabled = ($registration_closes_enabled) ? 1 : 0;
 
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
