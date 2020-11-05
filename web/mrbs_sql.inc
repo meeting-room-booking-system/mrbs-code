@@ -637,7 +637,7 @@ function get_entry_by_id($id)
 
 // Returns the Unix timestamp for registration closing.  Takes account of
 // periods, when registration closes relative to midnight (0000) on the day
-// of the booking, because we don't when in the day periods occur.
+// of the booking, because we don't know when in the day periods occur.
 function registration_opens_timestamp(array $entry)
 {
   global $enable_periods;
@@ -656,7 +656,7 @@ function registration_opens_timestamp(array $entry)
 
 // Returns the Unix timestamp for registration opening.  Takes account of
 // periods, when registration opens relative to midnight (0000) on the day
-// of the booking, because we don't when in the day periods occur.
+// of the booking, because we don't know when in the day periods occur.
 function registration_closes_timestamp(array $entry)
 {
   global $enable_periods;
