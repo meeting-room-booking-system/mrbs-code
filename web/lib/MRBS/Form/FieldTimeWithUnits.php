@@ -13,7 +13,8 @@ class FieldTimeWithUnits extends FieldDiv
   //                'enabler', 'quantity' and 'seconds'
   // $enabled       The current value of the enabling checkbox
   // $seconds       The current value of the field, in seconds
-  public function __construct(array $param_names, $enabled, $seconds)
+  // $suffix        Optional text that can appear after the units
+  public function __construct(array $param_names, $enabled, $seconds, $suffix=null)
   {
     parent::__construct();
 
@@ -40,6 +41,14 @@ class FieldTimeWithUnits extends FieldDiv
     $select->setAttribute('name', $param_names['units'])
            ->addSelectOptions($options, array_search($units, $options), true);
     $this->addControlElement($select);
+
+    // The suffix
+    if (isset($suffix))
+    {
+      $span = new ElementSpan();
+      $span->setText($suffix);
+      $this->addControlElement($span);
+    }
   }
 
 }

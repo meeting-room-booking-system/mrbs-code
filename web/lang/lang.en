@@ -95,6 +95,7 @@ $vocab["registrant_limit_enabled"]  = "Set event capacity";
 $vocab["registrant_limit"]          = "Event capacity";
 $vocab["registration_opens"]        = "Registration opens";
 $vocab["registration_closes"]       = "Registration closes";
+$vocab["in_advance"]                = "in advance";
 $vocab["n_registered"]              = "Currently registered";
 $vocab["save"]               = "Save";
 $vocab["rep_type"]           = "Repeat type";

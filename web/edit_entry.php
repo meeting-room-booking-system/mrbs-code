@@ -958,7 +958,12 @@ function get_fieldset_registration()
       'quantity' => 'registration_opens_value',
       'units'    => 'registration_opens_units',
     );
-  $field = new FieldTimeWithUnits($param_names, $registration_opens_enabled, $registration_opens);
+  $field = new FieldTimeWithUnits(
+      $param_names,
+      $registration_opens_enabled,
+      $registration_opens,
+      get_vocab('in_advance')
+    );
   $field->setLabel(get_vocab('registration_opens'));
   $fieldset->addElement($field);
 
@@ -968,7 +973,12 @@ function get_fieldset_registration()
     'quantity' => 'registration_closes_value',
     'units'    => 'registration_closes_units',
   );
-  $field = new FieldTimeWithUnits($param_names, $registration_closes_enabled, $registration_closes);
+  $field = new FieldTimeWithUnits(
+      $param_names,
+      $registration_closes_enabled,
+      $registration_closes,
+      get_vocab('in_advance')
+    );
   $field->setLabel(get_vocab('registration_closes'));
   $fieldset->addElement($field);
 
