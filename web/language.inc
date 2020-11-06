@@ -123,7 +123,6 @@ $rtl_languages = array(
 );
 
 
-
 // Set the default character encoding
 ini_set('default_charset', 'UTF-8');
 
@@ -133,6 +132,19 @@ if (function_exists('mb_internal_encoding'))
   mb_internal_encoding('UTF-8');
 }
 
+// Check and adjust if necessary the format of $override_locale which changed in versions
+// of MRBS > 1.7.1
+if (!empty($override_locale))
+{
+  $new_override_locale = System::getBCPlocale($override_locale);
+  if (utf8_strtolower($override_locale) != utf8_strtolower($new_override_locale))
+  {
+    $message = 'The config variable $override_locale should now be in BCP 47 format. ' .
+      "Please change '$override_locale' to '$new_override_locale'.";
+    trigger_error($message, E_USER_NOTICE);
+    $override_locale = $new_override_locale;
+  }
+}
 
 // Determine locale and language to use.  MRBS's strategy is first to find the locale
 // that best fits the config settings and the user's browser preferences.  Then it
