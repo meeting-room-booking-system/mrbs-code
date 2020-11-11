@@ -9,28 +9,29 @@
 // This file is PHP code. Treat it as such.
 
 // Used in style.inc
-$vocab["mrbs"]               = "会议室预订系统";
+$vocab["mrbs"]               = "会议室预约系统";
 
 // Used in functions.inc
 $vocab["report"]             = "报表";
 $vocab["admin"]              = "系统管理";
 $vocab["help"]               = "帮助";
 $vocab["search"]             = "搜索";
-$vocab["outstanding"]        = "待定的预订";
+$vocab["outstanding"]        = "%d 未完成的预约";
 
 // Used in index.php
-$vocab["bookingsfor"]        = "预订:";
+$vocab["bookingsfor"]        = "预约:";
 $vocab["bookingsforpost"]    = "";
 $vocab["areas"]              = "区域";
+$vocab["today"]              = "今天";
 $vocab["daybefore"]          = "前一天";
 $vocab["dayafter"]           = "后一天";
 $vocab["gototoday"]          = "今天";
 $vocab["goto"]               = "前往";
-$vocab["nav_day"]            = "Day";
-$vocab["nav_week"]           = "Week";
-$vocab["nav_month"]          = "Month";
+$vocab["nav_day"]            = "日";
+$vocab["nav_week"]           = "周";
+$vocab["nav_month"]          = "月";
 $vocab["highlight_line"]     = "高亮显示这一行";
-$vocab["click_to_reserve"]   = "点击单元格进行预订";
+$vocab["click_to_reserve"]   = "点击单元格进行预约";
 $vocab["timezone"]           = "时区";
 $vocab["weekbefore"]         = "前一周";
 $vocab["weekafter"]          = "后一周";
@@ -39,6 +40,13 @@ $vocab["monthbefore"]        = "上个月";
 $vocab["monthafter"]         = "下个月";
 $vocab["gotothismonth"]      = "本月";
 $vocab["no_rooms_for_area"]  = "这个区域没有定义房间";
+$vocab["loading"]            = "载入中";
+$vocab["saving"]             = "保存中";
+$vocab["week_number"]        = "周 %s | ";
+$vocab["create_new_booking"] = "新建一个预约";
+$vocab["select_area"]        = "选择区域";
+$vocab["select_room"]        = "选择会议房间";
+$vocab["all"]                = "<所有>";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "日视图";
@@ -72,6 +80,8 @@ $vocab["day"]                = "天";
 $vocab["days"]               = "天";
 $vocab["week"]               = "星期";
 $vocab["weeks"]              = "星期";
+$vocab["month"]              = "月";
+$vocab["months"]             = "月";
 $vocab["year_lc"]            = "年";
 $vocab["years"]              = "年";
 $vocab["period_lc"]          = "期间";
@@ -79,6 +89,10 @@ $vocab["periods"]            = "期间";
 $vocab["all_day"]            = "整天";
 $vocab["area"]               = "区域";
 $vocab["type"]               = "类型";
+$vocab["allow_registration"]      = "允许注册";
+$vocab["enable_registrant_limit"] = "设置事件限制";
+$vocab["registrant_limit"]        = "事件限制";
+$vocab["n_registered"]            = "当前已注册";
 $vocab["save"]               = "保存";
 $vocab["rep_type"]           = "重复类型";
 $vocab["rep_type_0"]         = "不重复";
@@ -98,10 +112,12 @@ $vocab["ord_-4"]             = "倒数第四";
 $vocab["ord_-5"]             = "倒数第五";
 $vocab["rep_end_date"]       = "结束重复的日期";
 $vocab["rep_rep_day"]        = "重复的星期";
+$vocab["rep_interval"]       = "每...重复";
 $vocab["month_absolute"]     = "于天";
 $vocab["month_relative"]     = "于此日";
 $vocab["skip_conflicts"]     = "跳过以前的冲突";
 $vocab["ctrl_click"]         = "用Ctrl+鼠标点击可以多选房间";
+$vocab["no_mail"]            = "不发送邮件";
 $vocab["entryid"]            = "条目编号 ";
 $vocab["repeat_id"]          = "例会编号 ";
 $vocab["brief_description"]  = "简要说明.";
@@ -110,15 +126,17 @@ $vocab["public"]             = "公开";
 $vocab["private"]            = "私有";
 $vocab["unavailable"]        = "私有";
 $vocab["is_mandatory_field"] = "是一个必填项, 请提供一个值.";
-$vocab["missing_mandatory_field"] = "您没有提供为必填项提供一个值";
+$vocab["missing_mandatory_field"] = "您尚未为必填项提供值";
 $vocab["confirmed"]          = "确定";
 $vocab["start_after_end"]    = "开始日期晚于结束日期";
 $vocab["start_after_end_long"] = "错误: 开始日期不能晚于结束日期.";
+$vocab["invalid_rep_interval"]     = "重复间隔必须大于0";
+$vocab["type_reserved_for_admins"] = "类型 '%s' 是为管理员保留。";
 
 // Used in view_entry.php
 $vocab["description"]         = "说明";
 $vocab["room"]                = "房间";
-$vocab["createdby"]           = "预订人";
+$vocab["createdby"]           = "预约人";
 $vocab["modifiedby"]          = "修改人";
 $vocab["lastupdate"]          = "最后更新";
 $vocab["repeat_on"]           = "重复日";
@@ -127,6 +145,7 @@ $vocab["deleteseries"]        = "删除例会";
 $vocab["exportentry"]         = "导出条目";
 $vocab["exportseries"]        = "导出例会";
 $vocab["confirmdel"]          = "你确定要删除此条目?";
+$vocab["confirm_edit_series"]     = "是否确定继续?";
 $vocab["returnprev"]          = "回前一页";
 $vocab["invalid_entry_id"]    = "条目编号错误.";
 $vocab["invalid_series_id"]   = "序列编号错误.";
@@ -141,91 +160,143 @@ $vocab["more_info"]           = "需要更多信息";
 $vocab["remind_admin"]        = "提醒管理员";
 $vocab["series"]              = "例会";
 $vocab["request_more_info"]   = "请列出你需要的额外信息";
-$vocab["reject_reason"]       = "请给出你拒绝这个预订申请的原因";
+$vocab["reject_reason"]       = "请给出你拒绝这个预约申请的原因";
 $vocab["send"]                = "发送";
-$vocab["approve_failed"]      = "该预订不能被批准.";
+$vocab["approve_failed"]      = "该预约不能被批准.";
 $vocab["no_request_yet"]      = "尚未发出申请"; // Used for the title tooltip on More Info button
 $vocab["last_request"]        = "最后发送的申请";         // Used for the title tooltip on More Info button
 $vocab["by"]                  = "由";                           // Used for the title tooltip on More Info button
 $vocab["sent_at"]             = "发送于 ";
 $vocab["yes"]                 = "是";
 $vocab["no"]                  = "否";
+$vocab["event_registration"]      = "事件注册";
+$vocab["event_details"]           = "事件详情";
+$vocab["already_registered"]      = "已注册过";
+$vocab["register"]                = "注册人";
+$vocab["cancel_registration"]     = "取消注册";
+$vocab["registered_by"]           = "由...注册";
+$vocab["registered_on"]           = "注册于";
+$vocab["event_full"]              = "该事件已满.";
+$vocab["confirm_del_registrant"]  = "请确认是否删除 '%s' 注册?";
 
 // Used in edit_entry_handler.php
 $vocab["error"]              = "错误";
 $vocab["sched_conflict"]     = "时段冲突";
-$vocab["conflict"]           = "该新的预订将会与下列条目冲突";
+$vocab["conflict"]           = "该新的预约将会与下列条目冲突";
 $vocab["no_conflicts"]       = "无计划冲突";
-$vocab["rules_broken"]       = "该新的预订将会与下列策略冲突";
+$vocab["rules_broken"]       = "该新的预约将会与下列策略冲突";
+$vocab["rules_broken_notices"]   = "新预约可以与以下策略冲突:";
 $vocab["no_rules_broken"]    = "无规则冲突";
 $vocab["schedule"]           = "计划";
 $vocab["policy"]             = "策略";
 $vocab["too_many_entries"]   = "这些选项会创建太多的条目.<br>请重新选择!";
 $vocab["returncal"]          = "返回到日历视图";
 $vocab["failed_to_acquire"]  = "获取独占式数据库访问失败";
-$vocab["invalid_booking"]    = "无效预订";
+$vocab["failed_to_acquire"]      = "获取独占数据库访问失败";
+$vocab["invalid_booking"]    = "无效预约";
 $vocab["must_set_description"] = "你必须设置一个简要说明. 请返回重新输入";
 $vocab["no_rooms_selected"]    = "你必须选择一个房间.";
-$vocab["mail_subject_approved"]  = "已为 %s 会议室预订系统批准了条目"; // $mrbs_company
-$vocab["mail_subject_rejected"]  = "已为 %s 会议室预订系统拒绝了条目"; // $mrbs_company
-$vocab["mail_subject_more_info"] = "%s 会议室预订系统: 申请的更多信息"; // $mrbs_company
-$vocab["mail_subject_reminder"]  = "%s 会议室预订系统的提醒"; // $mrbs_company
+$vocab["mail_subject_approved"]  = "已为 %s 会议室预约系统批准了条目"; // $mrbs_company
+$vocab["mail_subject_rejected"]  = "已为 %s 会议室预约系统拒绝了条目"; // $mrbs_company
+$vocab["mail_subject_more_info"] = "%s 会议室预约系统: 申请的更多信息"; // $mrbs_company
+$vocab["mail_subject_reminder"]  = "%s 会议室预约系统的提醒"; // $mrbs_company
 $vocab["mail_body_approved"]     = "管理员批准了一个条目; 详细情况如下:";
 $vocab["mail_body_rej_entry"]    = "管理员拒绝了一个条目; 详细情况如下:";
 $vocab["mail_body_more_info"]    = "管理员需要有关该条目的更多信息; 详细情况如下:";
 $vocab["mail_body_reminder"]     = "提醒 - 有一个条目等待审批; 详细情况如下:";
-$vocab["mail_body_repeats_booked"]   = "下面的日期已被预订:";
-$vocab["mail_body_repeats_deleted"]  = "下面的预订已被删除:";
-$vocab["mail_body_exceptions"]       = "下面的日期因冲突的原因不能被预订:";
-$vocab["mail_subject_new_entry"]     = "已增加新条目 %s 会议室预订系统"; // $mrbs_company
-$vocab["mail_subject_changed_entry"] = "条目已修改 %s 会议室预订系统"; // $mrbs_company
-$vocab["mail_subject_delete"]        = "条目已删除 %s 会议室预订系统"; // $mrbs_company
-$vocab["mail_body_new_entry"]     = "一个新条目被预订, 详细情况如下:";
+$vocab["mail_body_repeats_booked"]   = "下面的日期已被预约:";
+$vocab["mail_body_repeats_deleted"]  = "下面的预约已被删除:";
+$vocab["mail_body_exceptions"]       = "下面的日期因冲突的原因不能被预约:";
+$vocab["mail_subject_new_entry"]     = "已增加新条目 %s 会议室预约系统"; // $mrbs_company
+$vocab["mail_subject_changed_entry"] = "条目已修改 %s 会议室预约系统"; // $mrbs_company
+$vocab["mail_subject_delete"]        = "条目已删除 %s 会议室预约系统"; // $mrbs_company
+$vocab["mail_body_new_entry"]     = "一个新条目被预约, 详细情况如下:";
 $vocab["mail_body_changed_entry"] = "一个条目被修改, 详细情况如下:";
 $vocab["mail_body_del_entry"]     = "一个条目被删除, 详细情况如下:";
 $vocab["new_value"]               = "新";
 $vocab["old_value"]               = "旧";
 $vocab["reason"]                  = "原因";
 $vocab["info_requested"]          = "申请信息";
-$vocab["min_time_before"]         = "现在与预订起始之间的最小时间间隔是";
-$vocab["max_time_before"]         = "现在与预订起始之间的最大小时间间隔是";
-$vocab["earliest_booking_date"]   = "最早的预定日期是 %s";
-$vocab["latest_booking_date"]     = "最近的预定日期是 %s";
-$vocab["max_booking_duration"]    = "预订的最长时间长度是";
-$vocab["max_per_day_global"]      = "全系统内每人每天最大预定数是";
-$vocab["max_per_week_global"]     = "全系统内每人每周最大预定数是";
-$vocab["max_per_month_global"]    = "全系统内每人每月最大预定数是";
-$vocab["max_per_year_global"]     = "全系统内每人每年最大预定数是";
-$vocab["max_per_future_global"]   = "全系统内每人每天最大重要预定数是";
-$vocab["max_per_day_area"]        = "该区域内每人每天最大预定数是";
-$vocab["max_per_week_area"]       = "该区域内每人每周最大预定数是";
-$vocab["max_per_month_area"]      = "该区域内每人每月最大预定数是";
-$vocab["max_per_year_area"]       = "该区域内每人每年最大预定数是";
-$vocab["max_per_future_area"]     = "该区域内每人每天最大重要预定数是";
-$vocab["skip_and_book"]           = "忽略并预订";
-$vocab["skip_and_book_note"]      = "继续预订, 忽略以前的有冲突的条目";
+$vocab["min_time_before"]         = "现在与预约起始之间的最小时间间隔为";
+$vocab["max_time_before"]         = "现在与预约起始之间的最大小时间间隔为";
+$vocab["earliest_booking_date"]   = "最早的预约日期是 %s";
+$vocab["latest_booking_date"]     = "最近的预约日期是 %s";
+$vocab["max_booking_duration"]    = "预约的最长时间长度为";
+$vocab["max_per_day_global"]      = "全系统中每个用户每天最大预约数为";
+$vocab["max_per_week_global"]     = "全系统中每个用户每周最大预约数为";
+$vocab["max_per_month_global"]    = "全系统中每个用户每月最大预约数为";
+$vocab["max_per_year_global"]     = "全系统中每个用户每年最大预约数为";
+$vocab["max_per_future_global"]   = "全系统中每个用户每天最大重要预约数为";
+$vocab["max_per_day_area"]        = "该区域中每个用户每天最大预约数为";
+$vocab["max_per_week_area"]       = "该区域中每个用户每周最大预约数为";
+$vocab["max_per_month_area"]      = "该区域中每个用户每月最大预约数为";
+$vocab["max_per_year_area"]       = "该区域中每个用户每年最大预约数为";
+$vocab["max_per_future_area"]     = "该区域中每个用户每天最大重要预约数为";
+$vocab["max_per_day_area"]        = "该区域中每个用户每天最大预约数为";
+$vocab["max_per_week_area"]       = "该区域中每个用户每周最大预约数为";
+$vocab["max_per_month_area"]      = "该区域中每个用户每月最大预约数为";
+$vocab["max_per_year_area"]       = "该区域中每个用户每年最大预约数为";
+$vocab["max_per_future_area"]     = "该区域中每个用户的最大未完成预订数为";
+$vocab["max_secs_per_day_global"]     = '全系统中每用户每天最大总预约时长为 %1$s %2$s';  // 如2小时
+$vocab["max_secs_per_week_global"]    = '全系统中每用户每周最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_month_global"]   = '全系统中每用户每月最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_year_global"]    = '全系统中每用户每年最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_future_global"]  = '全系统中每用户未完成最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_day_area"]       = '该区域中每用户每天最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_week_area"]      = '该区域中每用户每周最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_month_area"]     = '该区域中每用户每月最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_year_area"]      = '该区域中每用户每年最大总预约时长为 %1$s %2$s';
+$vocab["max_secs_per_future_area"]    = '该区域中每用户未完成最大总预约时长为 %1$s %2$s';
+$vocab["skip_and_book"]           = "忽略并预约";
+$vocab["skip_and_book_note"]      = "继续预约, 忽略以前的有冲突的条目";
 
 // Used in pending.php
-$vocab["pending"]            = "待批准的预订";
-$vocab["none_outstanding"]   = "您没有待批准的预订.";
+$vocab["pending"]            = "待批准的预约";
+$vocab["none_outstanding"]   = "您没有待批准的预约.";
 
 // Authentication stuff
+
 $vocab["accessdenied"]       = "访问被拒绝";
 $vocab["norights"]           = "您无权限访问该页面!";
 $vocab["please_login"]       = "请登录";
-$vocab["users.name"]         = "姓名";
-$vocab["users.password"]     = "密码";
-$vocab["users.level"]        = "权限";
-$vocab["unknown_user"]       = "用户不存在或密码错误";
-$vocab["login"]              = "登录";
-$vocab["logoff"]             = "注销";
-$vocab["username_or_email"]  = "用户名或电子邮件地址";
-
+$vocab["users.name"]         = "用户登录名";
+$vocab["users.display_name"]        = "用户姓名";
+$vocab["users.password"]            = "密码";
+$vocab["users.level"]               = "权限";
+$vocab["users.timestamp"]           = "最近更新日期";
+$vocab["users.last_login"]          = "最近登录";
+$vocab["unknown_user"]              = "用户不存在或密码错误";
+$vocab["login"]                     = "登录";
+$vocab["logoff"]                    = "注销";
+$vocab["username_or_email"]         = "用户名或电子邮件地址";
+$vocab["lost_password"]             = "忘记密码?";
+$vocab["get_new_password"]          = "获取新密码";
+$vocab["password_reset"]            = "密码重置";
+$vocab["password_reset_subject"]    = "密码重置请求";
+$vocab["password_reset_body"]       = "有人为此邮箱发起了一个密码重置请求。 " .
+                                      "如果不是你本人操作请忽略.   " .
+                                      "否则请按照下面的链接指引重置密码。 " .
+                                      '该链接有效期： %1$d %2$s.';
+$vocab["enter_username"]            = "请输入用户登录名.";
+$vocab["enter_username_or_email"]   = "请输入用户登录名或邮件地址.";
+$vocab["will_be_sent_instructions"] = "你将会收到一封邮件指引你如何重置密码。";
+$vocab["reset_password"]            = "重置密码";
+$vocab["pwd_check_email"]           = "谢谢。如果用户账号符合" .
+                                      "你很快会收到一封指引你重置密码的邮件。";
+$vocab["invalid_link"]              = "无效链接";
+$vocab["pwd_request_failed"]        = "邮件无法发送至该用户。";
+$vocab["link_invalid"]              = "密码重置链接无效或过期。";
+$vocab["enter_new_password"]        = "在下面输入两次新密码";
+$vocab["pwd_must_contain"]          = "密码至少包含:";
+$vocab["pwd_reset_success"]         = "密码重置成功。";
 // Database upgrade code
 $vocab["database_login"]           = "登录数据库";
 $vocab["upgrade_required"]         = "数据库需要升级.  在继续之前请先备份您的数据库.";
 $vocab["supply_userpass"]          = "请提供一个有管理员权限的数据库用户名和密码.";
-$vocab["contact_admin"]            = "如果您不是会议室预订系统的管理员, 请联系 %s."; // $mrbs_admin
+$vocab["contact_admin"]            = "如果您不是会议室预约系统的管理员, 请联系 %s."; // $mrbs_admin
+$vocab["upgrade_to_version"]       = "正在升级到数据库版本";
+$vocab["upgrade_to_local_version"] = "正在升级到数据库本地版本";
+$vocab["upgrade_completed"]        = "数据库升级完成.";
 $vocab["upgrade_to_version"]       = "正在升级到数据库版本";
 $vocab["upgrade_to_local_version"] = "正在升级到数据库本地版本";
 $vocab["upgrade_completed"]        = "数据库升级完成.";
@@ -258,10 +329,11 @@ $vocab["user"]               = "用户";
 $vocab["administrator"]      = "管理员";
 $vocab["unknown"]            = "未知的";
 $vocab["ok"]                 = "OK";
-$vocab["show_my_entries"]    = "显示全部我的预订";
-$vocab["no_users_initial"]   = "在数据库中没有用户, 允许初始用户创建";
+$vocab["show_my_entries"]    = "显示全部我的预约";
+$vocab["no_users_initial"]   = "在数据库中没有用户, 允许创建初始用户";
 $vocab["no_users_create_first_admin"] = "创建一个用户配置为管理员, 然后你可以登录并创建其他用户.";
-$vocab["warning_last_admin"] = "警告!  这是最后一个管理员, 所以你不能删除这个用户或者移除其管理权限, 否则你就被锁在系统门外了";
+$vocab["warning_last_admin"]    = "警告!  这是最后一个管理员, 所以你不能删除这个用户或者移除其管理权限, 否则你就被锁在系统门外了";
+$vocab["copy_email_addresses"]  = "复制邮箱地址";
 
 // Used in search.php
 $vocab["invalid_search"]     = "空的或非法的搜索字符.";
@@ -291,18 +363,18 @@ $vocab["output"]                = "输出";
 $vocab["summary"]               = "汇总";
 $vocab["format"]                = "格式";
 $vocab["html"]                  = "HTML";
-$vocab["csv"]                   = "生成 CSV 格式明细报表";
+$vocab["csv"]                   = "CSV";
 $vocab["ical"]                  = "生成 iCalendar (.ics) 格式的报表 - 除去期间";
 $vocab["combination_not_supported"] = "不支持这个格式的输出";
 $vocab["summarize_by"]          = "汇总方式";
 $vocab["sum_by_descrip"]        = "按简要说明汇总";
-$vocab["sum_by_creator"]        = "按预订人汇总";
+$vocab["sum_by_creator"]        = "按预约人汇总";
 $vocab["sum_by_type"]           = "按类型汇总";
-$vocab["entry_found"]           = "个预订被找到";
-$vocab["entries_found"]         = "找到预订";
-$vocab["summary_header"]        = "总共预订(小时)";
-$vocab["summary_header_per"]    = "总共预订(次)";
-$vocab["summary_header_both"]   = "总共预订小时/期间数";
+$vocab["entry_found"]           = "个预约被找到";
+$vocab["entries_found"]         = "找到预约";
+$vocab["summary_header"]        = "总共预约(小时)";
+$vocab["summary_header_per"]    = "总共预约(次)";
+$vocab["summary_header_both"]   = "总共预约小时/期间数";
 $vocab["entries"]               = "条目";
 $vocab["total"]                 = "全部";
 $vocab["submitquery"]           = "生成报表";
@@ -311,6 +383,8 @@ $vocab["sort_rep_time"]         = "起始日期/时间";
 $vocab["sort_room"]             = "房间名";
 $vocab["fulldescription_short"] = "完整描述";
 $vocab["both"]                  = "所有";
+$vocab["with"]                  = "有";
+$vocab["without"]               = "无";
 $vocab["privacy_status"]        = "隐私状态";
 $vocab["search_criteria"]       = "搜索条件";
 $vocab["presentation_options"]  = "输出选项";
@@ -353,37 +427,48 @@ $vocab["area_first_slot_start"]   = "第一时段的起始时间（上班时间�
 $vocab["area_last_slot_start"]    = "最后时段的起始时间（下班时间）";
 $vocab["area_res_mins"]           = "分辨率/时段时长 (分钟)";
 $vocab["area_def_duration_mins"]  = "默认会议时长 (分钟)";
+$vocab["times_along_top"]         = "时间置顶部";
 $vocab["invalid_area"]            = "无效的区域!";
+$vocab["invalid_room"]            = "无效的房间!";
 $vocab["invalid_room_name"]       = "房间名在该区域内已被使用!";
 $vocab["invalid_email"]           = "无效的 Email 地址!";
 $vocab["invalid_resolution"]      = "第一时段、最后时段和分辨率的组合非法!";
+$vocab["invalid_resolution"]      = "无效组合!";
 $vocab["general_settings"]        = "一般设置";
 $vocab["time_settings"]           = "时段设置";
 $vocab["confirmation_settings"]   = "确定设置";
-$vocab["allow_confirmation"]      = "允许暂定预订";
+$vocab["period_settings"]         = "时间区间名称";
+$vocab["add_period"]              = "添加时间区间";
+$vocab["allow_confirmation"]      = "允许暂定预约";
 $vocab["default_settings_conf"]   = "默认设置";
 $vocab["default_confirmed"]       = "确定";
 $vocab["default_tentative"]       = "暂定";
 $vocab["approval_settings"]       = "批准设置";
-$vocab["enable_approval"]         = "预订需要批准";
+$vocab["enable_approval"]         = "预约需要批准";
 $vocab["enable_reminders"]        = "允许用户提醒管理员";
 $vocab["private_settings"]        = "隐私设置";
-$vocab["allow_private"]           = "允许私有预订";
-$vocab["force_private"]           = "强制私有预订";
+$vocab["allow_private"]           = "允许私有预约";
+$vocab["force_private"]           = "强制私有预约";
 $vocab["default_settings"]        = "默认/强制设置";
 $vocab["default_private"]         = "私有";
 $vocab["default_public"]          = "公共";
 $vocab["private_display"]         = "隐私设置 (显示)";
-$vocab["private_display_label"]   = "私有预订该怎样显示?";
+$vocab["private_display_label"]   = "私有预约该怎样显示?";
 $vocab["private_display_caution"] = "注意: 在更改这些设置前, 请认真考虑关于隐私的含义!";
-$vocab["treat_respect"]           = "遵守预订中的隐私设置";
-$vocab["treat_private"]           = "强制为私有预订, 忽略预订中的隐私设置";
-$vocab["treat_public"]            = "强制为公共预订, 忽略预订中的隐私设置";
+$vocab["treat_respect"]           = "遵守预约中的隐私设置";
+$vocab["treat_private"]           = "强制为私有预约, 忽略预约中的隐私设置";
+$vocab["treat_public"]            = "强制为公共预约, 忽略预约中的隐私设置";
 $vocab["sort_key"]                = "排序字段内容";
 $vocab["sort_key_note"]           = "这是用来对房间排序的字段内容";
-$vocab["booking_policies"]        = "预订策略";
-$vocab["min_book_ahead"]          = "高级预订 - 最少";
-$vocab["max_book_ahead"]          = "高级预订 - 最多";
+$vocab["booking_policies"]        = "预约策略";
+$vocab["min_book_ahead"]          = "高级预约 - 最少";
+$vocab["max_book_ahead"]          = "高级预约 - 最多";
+$vocab["booking_creation"]        = "预约创建";
+$vocab["booking_deletion"]        = "预约删除";
+$vocab["booking_limits"]          = "预约数量限制";
+$vocab["booking_limits_secs"]     = "预约总时长限制";
+$vocab["booking_durations"]       = "预约区间限制";
+$vocab["max_duration"]            = "最大区间";
 $vocab["this_area"]               = "本区域";
 $vocab["whole_system"]            = "整个系统";
 $vocab["whole_system_note"]       = "用于整个系统的取值已在配置文件中设置";
@@ -392,6 +477,11 @@ $vocab["max_per_week"]            = "每周最大数";
 $vocab["max_per_month"]           = "每月最大数";
 $vocab["max_per_year"]            = "每年最大数";
 $vocab["max_per_future"]          = "未来最大数";
+$vocab["max_secs_per_day"]        = "每天最长时间";
+$vocab["max_secs_per_week"]       = "每周最长时间";
+$vocab["max_secs_per_month"]      = "每月最长时间";
+$vocab["max_secs_per_year"]       = "每年最长时间";
+$vocab["max_secs_per_future"]     = "未来最长时间";
 $vocab["custom_html"]             = "自定义 HTML";
 $vocab["custom_html_note"]        = "这一项可以用来显示你自己的 HTML, 比如说一个嵌入的 Google 地图";
 $vocab["email_list_note"]         = "输入一个以逗号或者换行分割的 Email 地址列表";
@@ -402,29 +492,39 @@ $vocab["times_only"]              = "仅时段模式";
 $vocab["enabled"]                 = "启用";
 $vocab["disabled"]                = "禁用";
 $vocab["disabled_area_note"]      = "如果这个区域被禁用, 它他就不会在日历视图中显示出来, " .
-                                    "并且将不能预订该区域内的房间.   然而已存在的预订" .
+                                    "并且将不能预约该区域内的房间.   然而已存在的预约" .
                                     "将会保留并且能在搜索和报表结果中显示.";
 $vocab["disabled_room_note"]      = "如果这个房间被禁用, 它他就不会在日历视图中显示出来, " .
-                                    "并且它也不能用来预订.   然而已存在的预订" .
+                                    "并且它也不能用来预约.   然而已存在的预约" .
                                     "将会保留并且能在搜索和报表结果中显示.";
-$vocab["book_ahead_note_periods"] = "当使用期间时, 预订前时间往下舍入到最接近的整天.";
+$vocab["book_ahead_note_periods"] = "当使用期间时, 预约前时间往下舍入到最接近的整天.";
+$vocab["invalid_types"]           = "无效类型";
+$vocab["invalid_types_note"]      = "有些类型不允许在该房间中使用。";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "你必须输入一个名字.";
 $vocab["name_not_unique"]    = "已存在.   请选用另外一个名字.";
 
 // Used in del.php
-$vocab["deletefollowing"]    = "这个操作会删除下列的预订";
+$vocab["deletefollowing"]    = "这个操作会删除下列的预约";
+$vocab["and_n_more"]         = "且多 %s ";  // %s rather than %d because n is the output of number_format()
 $vocab["sure"]               = "确定吗?";
 $vocab["YES"]                = "是";
 $vocab["NO"]                 = "否";
 $vocab["delarea"]            = "在删除这个区域前, 你必须先删除在这个区域里的所有房间<p>";
 
 // Used in help.php
-$vocab["about_mrbs"]         = "关于会议室预订系统";
+$vocab["about_mrbs"]         = "关于会议室预约系统";
+$vocab["mrbs_version"]            = "系统版本";
+$vocab["db_schema_version"]       = "数据库版本";
+$vocab["db_local_schema_version"] = "数据库本地版本";
+$vocab["config_details"]          = "配置详情";
+$vocab["server_details"]          = "服务器详情";
 $vocab["database"]           = "数据库";
 $vocab["system"]             = "操作系统";
 $vocab["servertime"]         = "服务器时间";
+$vocab["server_software"]         = "服务器软件";
+$vocab["extensions"]              = "扩展";
 $vocab["please_contact"]     = "请联系";
 $vocab["for_any_questions"]  = ",关于任何无法在此解决的问题.";
 
@@ -432,23 +532,32 @@ $vocab["for_any_questions"]  = ",关于任何无法在此解决的问题.";
 $vocab["import_icalendar"]            = "导入一个 iCalendar 文件";
 $vocab["area_room_settings"]          = "区域和房间";
 $vocab["other_settings"]              = "其他设置";
-$vocab["import_intro"]                = "这个表单允许你将一个与 RFC 5545 兼容的 " .
-                                        "iCalendar 文件导入到 MRBS.   只有那些" .
-                                        "有重复规则、且重复规则带有与 MRBS 系统等价的重复类型的" .
+$vocab["import_intro"]                = "这个表单允许你将一个与RFC 5545兼容的 " .
+                                        "iCalendar 文件导入到系统. 只有那些" .
+                                        "重复规则带有与MRBS内等价的重复类型的" .
                                         "循环事件才会被导入.";
+$vocab["supported_file_types"]        = "支持以下文件类型:";
+$vocab["import_text_file"]            = "非压缩 iCalendar 文件";
+$vocab["import_zip"]                  = "zip 文档";
+$vocab["import_gzip"]                 = "gzip 文件";
+$vocab["import_bzip2"]                = "bzip2 文件";
 $vocab["file_name"]                   = "文件名";
 $vocab["import"]                      = "导入";
 $vocab["upload_failed"]               = "上传失败";
-$vocab["max_allowed_file_size"]       = "允许的最大文件大小是";
+$vocab["max_allowed_file_size"]       = "允许的最大文件大小";
 $vocab["no_file"]                     = "没有文件被上传";
+$vocab["could_not_process"]           = "导入失败：无法处理文件";
+
 $vocab["badly_formed_ics"]            = "格式错误的 VCALENDAR 文件";
+$vocab["default_room"]                = "默认房间";
+$vocab["default_room_note"]           = "要使用的房间未指定位置属性";
 $vocab["area_room_order"]             = "顺序";
 $vocab["area_room_order_note"]        = "LOCATION 属性里的区域和房间名的顺序";
 $vocab["area_room"]                   = "区域-房间";
 $vocab["room_area"]                   = "房间-区域";
 $vocab["area_room_delimiter"]         = "分隔符";
 $vocab["area_room_delimiter_note"]    = "将 LOCATION 属性内的区域名和房间名分隔的字符串.  " .
-                                        "如果没有找到分隔符, MRBS 将会找一个与 " .
+                                        "如果没有找到分隔符, MRBS将会找一个与 " .
                                         "LOCATION 名称相同的唯一的房间";
 $vocab["area_room_create"]            = "如果需要，则创建房间";
 $vocab["default_type"]                = "默认类型";
@@ -464,16 +573,21 @@ $vocab["could_not_find_room"]         = "找不到房间";
 $vocab["could_not_import"]            = "不能导入";
 $vocab["no_LOCATION"]                 = "VEVENT 没有包含 LOCATION 属性";
 $vocab["invalid_RRULE"]               = "RRULE 无效: 缺少 FREQ 部分";
-$vocab["more_than_one_BYDAY"]         = "当 FREQ= 时, MRBS 不支持多个 BYDAY 值";
-$vocab["BYDAY_equals_5"]              = "MRBS 不支持  BYDAY 数值为 5";
-$vocab["unsupported_FREQ"]            = "MRBS 不支持 FREQ=";
-$vocab["unsupported_COUNT"]           = "MRBS 尚不支持 COUNT";
-$vocab["no_indefinite_repeats"]       = "MRBS 尚不支持无限循环";
+$vocab["more_than_one_BYDAY"]         = "当 FREQ= 时, 不支持多个 BYDAY 值";
+$vocab["BYDAY_equals_5"]              = "MRBS不支持  BYDAY 数值为 5";
+$vocab["unsupported_FREQ"]            = "MRBS不支持 FREQ=";
+$vocab["unsupported_COUNT"]           = "MRBS尚不支持 COUNT";
+$vocab["no_indefinite_repeats"]       = "MRBS尚不支持无限重复";
 $vocab["events_imported"]             = "事件已被导入";
 $vocab["events_not_imported"]         = "事件未被导入";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "显示/隐藏列";
+$vocab["copy"]               = "复制";
+// "csv" already defined above
+$vocab["excel"]              = "Excel";
+$vocab["pdf"]                = "PDF";
+$vocab["print"]              = "Print";
 $vocab["restore_original"]   = "恢复原样";
 
 // Entry types
@@ -481,6 +595,9 @@ $vocab["type.I"]             = "内部使用";
 $vocab["type.E"]             = "外部使用";
 
 // General
+$vocab["fatal_error"]        = "遇到了一个致命的错误。请联系管理员.";
 $vocab["fatal_db_error"]     = "致命错误: 非常不幸, 数据库现在不可用.";
+$vocab["fatal_no_tables"]    = "致命错误：数据库表不存在或无法访问.";
+$vocab["session_expired"]    = "会话已过期.";
+$vocab["browser_not_supported"] = "你的浏览器不支持 %s.  需要升级到最近版本或使用其他浏览器 ";
 $vocab["back"]               = "后退";
-
