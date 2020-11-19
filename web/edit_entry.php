@@ -1213,7 +1213,7 @@ if (isset($id))
   get_area_settings($area);
 
   $private = $entry['private'];
-  if ($private_mandatory)
+  if ($private_mandatory && !is_book_admin($entry['room_id']))
   {
     $private = $private_default;
   }
