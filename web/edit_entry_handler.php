@@ -319,7 +319,7 @@ if (isset($month_relative_ord) && isset($month_relative_day))
 
 // Handle private booking
 // Enforce config file settings if needed
-if ($private_mandatory)
+if ($private_mandatory && !is_book_admin())
 {
   $isprivate = $private_default;
 }
