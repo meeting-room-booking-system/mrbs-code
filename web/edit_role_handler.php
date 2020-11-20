@@ -104,6 +104,18 @@ if (isset($button_save) && isset($action))
       }
       break;
 
+    case 'delete_permission':
+      if (isset($area_id))
+      {
+        $permission = new AreaPermission($role_id, $area_id);
+      }
+      else
+      {
+        $permission = new RoomPermission($role_id, $room_id);
+      }
+      $permission->delete();
+      break;
+
     case 'delete':
       Role::deleteById($role_id);
       break;

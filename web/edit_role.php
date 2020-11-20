@@ -310,10 +310,15 @@ function generate_roles_table()
 function generate_empty_row(Area $area)
 {
   $tr = new Element('tr');
-  $th = new Element('th');
-  $th->setText($area->area_name);
-  $tr->addElement($th)
+  // The delete button column
+  $td = new Element('td');
+  $tr->addElement($td);
+  // The area name
+  $td = new Element('td');
+  $td->setText($area->area_name);
+  $tr->addElement($td)
      ->setAttribute('class', 'area');
+  // The empty cells
   for ($i=0; $i<6; $i++)
   {
     $td = new Element('td');
@@ -323,6 +328,49 @@ function generate_empty_row(Area $area)
   return $tr;
 }
 
+
+function generate_delete_permission_button(AreaRoomPermission $permission)
+{
+  $form = new Form();
+  $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
+                             'method' => 'post'));
+
+  // Hidden inputs
+  $form->addHiddenInputs(array(
+      'action' => 'delete_permission',
+      'role_id' => $permission->role_id,
+    ));
+
+  if (isset($permission->area_id))
+  {
+    $form->addHiddenInput('area_id', $permission->area_id);
+  }
+
+  if (isset($permission->room_id))
+  {
+    $form->addHiddenInput('room_id', $permission->room_id);
+  }
+
+  // Submit button
+  $button = new ElementInputSubmit();
+  if (isset($permission->room_name))
+  {
+    $message = get_vocab("confirm_del_permission_room", $permission->room_name);
+  }
+  else
+  {
+    $message = get_vocab("confirm_del_permission_area", $permission->area_name);
+  }
+  $button->setAttributes(array(
+      'name'    => 'button_save',
+      'value'   => get_vocab('delete'),
+      'onclick' => "return confirm('" . escape_js($message) . "');"
+    ));
+
+  $form->addElement($button);
+  return $form;
+}
+$vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
 
 function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
 {
@@ -341,10 +389,14 @@ function generate_row(AreaRoomPermission $permission, array $permission_options,
 
   $tr = new Element('tr');
   $tr->setAttribute('class', $type);
+  // Delete button
+  $td = new Element('td');
+  $td->addElement(generate_delete_permission_button($permission));
+  $tr->addElement($td);
   // Area/room name
-  $th = new Element('th');
-  $th->setText($text);
-  $tr->addElement($th);
+  $td = new Element('td');
+  $td->setText($text);
+  $tr->addElement($td);
   // Permission
   foreach ($permission_options as $key => $value)
   {
@@ -404,6 +456,9 @@ function generate_area_roles_table(Role $role)
   $thead = new Element('thead');
   $tr = new Element('tr');
   $tr->setAttribute('class', 'area');
+  // Delete buttons
+  $th = new Element('th');
+  $tr->addElement($th);
   // Area name
   $th = new Element('th');
   $th->setText(get_vocab('area'));
@@ -421,6 +476,10 @@ function generate_area_roles_table(Role $role)
   $thead->addElement($tr);
 
   $tr = new Element('tr');
+  // Delete buttons
+  $th = new Element('th');
+  $tr->addElement($th);
+  // Room name
   $tr->setAttribute('class', 'room');
   $th = new Element('th');
   $th->setText(get_vocab('room'));
