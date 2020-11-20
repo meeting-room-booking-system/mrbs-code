@@ -337,7 +337,6 @@ function generate_delete_permission_button(AreaRoomPermission $permission)
 
   // Hidden inputs
   $form->addHiddenInputs(array(
-      'action' => 'delete_permission',
       'role_id' => $permission->role_id,
     ));
 
@@ -362,7 +361,7 @@ function generate_delete_permission_button(AreaRoomPermission $permission)
     $message = get_vocab("confirm_del_permission_area", $permission->area_name);
   }
   $button->setAttributes(array(
-      'name'    => 'button_save',
+      'name'    => 'button_delete',
       'value'   => get_vocab('delete'),
       'onclick' => "return confirm('" . escape_js($message) . "');"
     ));
