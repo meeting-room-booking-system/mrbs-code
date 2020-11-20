@@ -247,7 +247,7 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
 }
 
 
-function generate_delete_button(Role $role)
+function generate_delete_role_button(Role $role)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
@@ -255,9 +255,9 @@ function generate_delete_button(Role $role)
 
   // Hidden inputs
   $form->addHiddenInputs(array(
-    'action' => 'delete',
-    'role_id' => $role->id
-  ));
+      'action' => 'delete_role',
+      'role_id' => $role->id
+    ));
 
   // Submit button
   $button = new ElementInputSubmit();
@@ -292,7 +292,7 @@ function generate_roles_table()
   {
     echo "<tr>";
     echo "<td>";
-    generate_delete_button($role);
+    generate_delete_role_button($role);
     echo "</td>";
 
     echo "<td>";

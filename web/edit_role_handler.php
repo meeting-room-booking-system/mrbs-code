@@ -116,7 +116,7 @@ if (isset($button_save) && isset($action))
       $permission->delete();
       break;
 
-    case 'delete':
+    case 'delete_role':
       Role::deleteById($role_id);
       break;
 
