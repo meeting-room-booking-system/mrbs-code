@@ -1478,9 +1478,12 @@ div#div_custom_html {
 }
 
 .roles_table thead tr:first-child th:not(:last-child),
-.roles_table thead tr:nth-child(2) th:nth-child(4),
-.roles_table th:first-child,
-.roles_table tbody td:nth-of-type(3) {
+.roles_table thead tr:nth-child(2) th:first-child,
+.roles_table thead tr:nth-child(2) th:nth-child(2),
+.roles_table thead tr:nth-child(2) th:nth-child(5),
+.roles_table tbody td:first-child,
+.roles_table tbody td:nth-child(2),
+.roles_table tbody td:nth-child(5) {
   border-right: 1px solid darkgrey;
 }
 

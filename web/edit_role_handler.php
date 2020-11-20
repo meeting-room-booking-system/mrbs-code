@@ -41,11 +41,25 @@ $role_id = get_form_var('role_id', 'int');
 $state = get_form_var('state', 'string');
 $area_permissions = get_form_var('area', 'array');
 $room_permissions = get_form_var('room', 'array');
+$button_delete = get_form_var('button_delete', 'string');
 $button_save = get_form_var('button_save', 'string');
 
 $returl = 'edit_role.php';
 
-if (isset($button_save) && isset($action))
+if (isset($button_delete))
+{
+  if (isset($area_id))
+  {
+    $permission = new AreaPermission($role_id, $area_id);
+  }
+  else
+  {
+    $permission = new RoomPermission($role_id, $room_id);
+  }
+  $permission->delete();
+}
+
+elseif (isset($button_save) && isset($action))
 {
   $query_string_args = array();
   switch ($action)
@@ -104,7 +118,7 @@ if (isset($button_save) && isset($action))
       }
       break;
 
-    case 'delete':
+    case 'delete_role':
       Role::deleteById($role_id);
       break;
 
