@@ -375,7 +375,6 @@ $vocab["permission_read"]    = "Read";
 $vocab["permission_write"]   = "Write";
 $vocab["permission_all"]     = "All";
 $vocab["state"]              = "State";
-$vocab["state_neither"]      = "Neither";
 $vocab["state_granted"]      = "Granted";
 $vocab["state_denied"]       = "Denied";
 

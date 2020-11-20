@@ -10,7 +10,6 @@ abstract class AreaRoomPermission extends Table
   const ALL   = 'a';  // Can make a booking for others in the area
 
   // Possible permission states
-  const NEITHER = 'n';
   const GRANTED = 'g';
   const DENIED  = 'd';
 
@@ -32,7 +31,6 @@ abstract class AreaRoomPermission extends Table
   public static function getStateOptions()
   {
     return array(
-        AreaPermission::NEITHER => get_vocab('state_neither'),
         AreaPermission::GRANTED => get_vocab('state_granted'),
         AreaPermission::DENIED  => get_vocab('state_denied')
       );

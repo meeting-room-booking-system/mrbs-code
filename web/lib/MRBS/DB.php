@@ -8,7 +8,7 @@ use PDOException;
 
 abstract class DB
 {
-  const DB_SCHEMA_VERSION = 82;
+  const DB_SCHEMA_VERSION = 83;
   const DB_SCHEMA_VERSION_LOCAL = 1;
 
   const DB_DEFAULT_PORT = null;
