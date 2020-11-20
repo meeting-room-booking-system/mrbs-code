@@ -536,6 +536,30 @@ function url_base()
 }
 
 
+
+function is_https()
+{
+  global $server;
+
+  if (!empty($server['HTTP_X_FORWARDED_PROTO']))
+  {
+    return ($server['HTTP_X_FORWARDED_PROTO'] === 'https');
+  }
+  elseif (!empty($server['HTTP_X_FORWARDED_PROTOCOL']))
+  {
+    return ($server['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
+  }
+  elseif (!empty($server['HTTP_X_FORWARDED_SSL']))
+  {
+    return (strcasecmp($server['HTTP_X_FORWARDED_SSL'], 'on') === 0);
+  }
+
+  return (isset($server['HTTPS']) &&
+          !empty($server['HTTPS']) &&
+          (strcasecmp($server['HTTPS'], 'off') !== 0));
+}
+
+
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
 function this_page($with_query_string=false, $suffix=null)
