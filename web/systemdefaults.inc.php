@@ -1115,8 +1115,12 @@ $auth['admin_can_only_book_for_self'] = false;
 $auth['admin_only_types'] = array();  // eg array('E');
 
 // If you want to prevent the public (ie un-logged in users) from
-// being able to view bookings, set this variable to true
+// being able to view bookings completely, set this variable to true
 $auth['deny_public_access'] = false;
+
+// Or else you can allow them to see that there is a booking, but the
+// details will be shown as private if you set this to true.
+$auth['force_private_for_guests'] = false;
 
 // Set to true if you want admins to be able to perform bulk deletions
 // on the Report page.  (It also only shows up if JavaScript is enabled)

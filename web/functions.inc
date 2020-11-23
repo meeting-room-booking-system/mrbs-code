@@ -1478,6 +1478,7 @@ function clean_area_row($row)
 // If $area is empty, use the default area
 function get_area_settings($area)
 {
+  global $auth;
   global $resolution, $default_duration, $default_duration_all_day;
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $private_enabled, $private_default, $private_mandatory, $private_override;
@@ -1601,6 +1602,13 @@ function get_area_settings($area)
   {
     // ensure that $morningstarts_minutes defaults to zero if not set
     $morningstarts_minutes = 0;
+  }
+
+  // If it's been set in the config settings then force all bookings to be shown
+  // as private for users who haven't logged in.
+  if ($auth['force_private_for_guests'] && (null === session()->getCurrentUser()))
+  {
+    $private_override = 'private';
   }
 }
 
