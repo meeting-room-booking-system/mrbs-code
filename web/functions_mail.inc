@@ -602,16 +602,15 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
                                     $compare, $as_html);
 
     // Custom fields
-    $fields = db()->field_info(_tbl('entry'));
-    foreach ($fields as $field)
+    $columns = new Columns(_tbl('entry'));
+    foreach ($columns as $column)
     {
-      if (!in_array($field['name'], $standard_fields['entry']))
+      if (!in_array($column->name, $standard_fields['entry']))
       {
-        $key = $field['name'];
+        $key = $column->name;
         $value = (isset($data[$key])) ? $data[$key] : '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
-        if (($field['nature'] == 'boolean') ||
-            (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
+        if ($column->isBooleanLike())
         {
           $value = ($value) ? get_mail_vocab("yes") : get_mail_vocab("no");
           if ($compare)
