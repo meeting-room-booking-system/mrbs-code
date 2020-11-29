@@ -59,6 +59,35 @@ function session()
 }
 
 
+// Checks if a page is open to users, using the config variables
+// $auth['only_admin_can_book'] and $auth['only_admin_can_book_before']
+function is_open_to_users()
+{
+  global $auth;
+
+  if ($auth['only_admin_can_book'])
+  {
+    return false;
+  }
+  elseif ($auth['only_admin_can_book_before'])
+  {
+    $go_live = strtotime($auth['only_admin_can_book_before']);
+    if ($go_live === false)
+    {
+      $message = "Could not calculate time from '" . $auth['only_admin_can_book_before'] . "'.";
+      trigger_error($message);
+      return false;
+    }
+    else
+    {
+      return (time() >= $go_live);
+    }
+  }
+
+  return true;
+}
+
+
 // Gets the minimum user level required to access a page
 function get_page_level($page)
 {
@@ -106,7 +135,7 @@ function get_page_level($page)
     case 'del_entry.php':
     case 'edit_entry.php':
     case 'edit_entry_handler.php':
-      $result = ($auth['only_admin_can_book']) ? 2 : 1;
+      return (is_open_to_users()) ? 1 : 2;
       break;
 
     // These pages only contain admin features
