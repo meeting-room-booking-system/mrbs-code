@@ -223,19 +223,23 @@ class DB_mysql extends DB
   public function field_info($table)
   {
     // Map MySQL types on to a set of generic types
-    $nature_map = array('bigint'    => 'integer',
-                        'char'      => 'character',
-                        'decimal'   => 'decimal',
-                        'double'    => 'real',
-                        'float'     => 'real',
-                        'int'       => 'integer',
-                        'mediumint' => 'integer',
-                        'numeric'   => 'decimal',
-                        'smallint'  => 'integer',
-                        'text'      => 'character',
-                        'tinyint'   => 'integer',
-                        'tinytext'  => 'character',
-                        'varchar'   => 'character');
+    $nature_map = array(
+        'bigint'      => 'integer',
+        'char'        => 'character',
+        'decimal'     => 'decimal',
+        'double'      => 'real',
+        'float'       => 'real',
+        'int'         => 'integer',
+        'longtext'    => 'character',
+        'mediumint'   => 'integer',
+        'mediumtext'  => 'character',
+        'numeric'     => 'decimal',
+        'smallint'    => 'integer',
+        'text'        => 'character',
+        'tinyint'     => 'integer',
+        'tinytext'    => 'character',
+        'varchar'     => 'character'
+      );
 
     // Length in bytes of MySQL integer types
     $int_bytes = array('bigint'    => 8, // bytes
