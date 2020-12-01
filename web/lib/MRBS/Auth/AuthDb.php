@@ -112,7 +112,6 @@ class AuthDb extends Auth
 
     // Email addresses are not unique in the user table, so we need to find all of them.
     $users = self::getUsersByEmail($email);
-             AND auth_type='db'";
 
     // Check all the users that have this email address and password hash.
     foreach($users as $user)
@@ -444,7 +443,7 @@ class AuthDb extends Auth
 
     $sql = "SELECT *
               FROM " . \MRBS\_tbl(UserDb::TABLE_NAME) . "
-             WHERE $condition";
+             WHERE ($condition)
                AND auth_type='db'";
 
     $res = \MRBS\db()->query($sql, $sql_params);
