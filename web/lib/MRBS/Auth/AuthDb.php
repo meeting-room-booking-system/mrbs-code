@@ -130,8 +130,23 @@ class AuthDb extends Auth
     }
     else
     {
-      // Check the complete email address
-      $condition = "LOWER(?)=LOWER(email)";
+      $address = \MRBS\parse_email($email);
+      if ($address === false)
+      {
+        return $valid_usernames;
+      }
+      elseif (in_array(\MRBS\utf8_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
+      {
+        $sql_params = array(str_replace('.', '', $address['local']));
+        $sql_params[] = $sql_params[0];
+        $condition = "(LOWER(?) = REPLACE(TRIM(TRAILING '@gmail.com' FROM LOWER(email)), '.', '')) OR " .
+                     "(LOWER(?) = REPLACE(TRIM(TRAILING '@googlemail.com' FROM LOWER(email)), '.', ''))";
+      }
+      else
+      {
+        // Check the complete email address
+        $condition = "LOWER(?)=LOWER(email)";
+      }
     }
 
     // Email addresses are not unique in the users table, so we need to find all of them.

@@ -1854,6 +1854,24 @@ function validate_email_list($list)
 }
 
 
+// Parses an email address and returns an array indexed by 'local' and 'domain',
+// or FALSE if the email address is not valid.
+function parse_email($email)
+{
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+  {
+    return false;
+  }
+
+  // Note that the local part of an email address can contain the '@' character, so the
+  // domain will be the string following the last '@'.
+  $email_parts = explode('@', $email);
+  $domain = array_pop($email_parts);
+  return array('local' => implode('@', $email_parts),
+               'domain' => $domain);
+}
+
+
 // Round time down to the nearest resolution
 function round_t_down($t, $resolution, $am7)
 {
