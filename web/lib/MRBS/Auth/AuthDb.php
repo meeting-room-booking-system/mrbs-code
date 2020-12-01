@@ -105,8 +105,6 @@ class AuthDb extends Auth
    */
   private function validateEmail($email, $pass)
   {
-    global $auth;
-
     $valid_usernames = array();
 
     // Email addresses are not unique in the users table, so we need to find all of them.
