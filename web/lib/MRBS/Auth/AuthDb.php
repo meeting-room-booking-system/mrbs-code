@@ -109,61 +109,15 @@ class AuthDb extends Auth
 
     $valid_usernames = array();
 
-    $sql_params = array($email);
-
-    // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
-    // on most systems, it isn't always true.  The domain is case insensitive but the local-part can
-    // be case sensitive.   But before we can take account of this, the email addresses in the database
-    // need to be normalised so that all the domain names are stored in lower case.  Then it will be
-    // possible to do a case sensitive comparison.
-    if (\MRBS\utf8_strpos($email, '@') === false)
-    {
-      if (!empty($auth['allow_local_part_email']))
-      {
-        // We're just checking the local-part of the email address
-        $condition = "LOWER(?)=LOWER(" . \MRBS\db()->syntax_simple_split('email', '@', 1, $sql_params) .")";
-      }
-      else
-      {
-        return $valid_usernames;
-      }
-    }
-    else
-    {
-      $address = \MRBS\parse_email($email);
-      if ($address === false)
-      {
-        return $valid_usernames;
-      }
-      elseif (in_array(\MRBS\utf8_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
-      {
-        $sql_params = array(str_replace('.', '', $address['local']));
-        $sql_params[] = $sql_params[0];
-        $condition = "(LOWER(?) = REPLACE(TRIM(TRAILING '@gmail.com' FROM LOWER(email)), '.', '')) OR " .
-                     "(LOWER(?) = REPLACE(TRIM(TRAILING '@googlemail.com' FROM LOWER(email)), '.', ''))";
-      }
-      else
-      {
-        // Check the complete email address
-        $condition = "LOWER(?)=LOWER(email)";
-      }
-    }
-
     // Email addresses are not unique in the users table, so we need to find all of them.
-    $sql = "SELECT password_hash, name
-            FROM " . \MRBS\_tbl('users') . "
-           WHERE $condition";
-
-    $res = \MRBS\db()->query($sql, $sql_params);
-
-    $rows = $res->all_rows_keyed();
+    $users = self::getUsersByEmail($email);
 
     // Check all the users that have this email address and password hash.
-    foreach($rows as $row)
+    foreach($users as $user)
     {
-      if ($this->checkPassword($pass, $row['password_hash'], 'email', $email))
+      if ($this->checkPassword($pass, $user['password_hash'], 'email', $email))
       {
-        $valid_usernames[] = $row['name'];
+        $valid_usernames[] = $user['name'];
       }
     }
 
@@ -484,17 +438,65 @@ class AuthDb extends Auth
   }
 
 
+  // Returns an array of rows for all users with the email address $email.
+  // Assumes that email addresses are case insensitive.
+  // Allows equivalent Gmail addresses, ie ignores dots in the local part and
+  // treats gmail.com and googlemail.com as equivalent domains.
   private function getUsersByEmail($email)
   {
+    global $auth;
+
     $result = array();
+
+    // For the moment we will assume that email addresses are case insensitive.   Whilst it is true
+    // on most systems, it isn't always true.  The domain is case insensitive but the local-part can
+    // be case sensitive.  But before we can take account of this, the email addresses in the database
+    // need to be normalised so that all the domain names are stored in lower case.  Then it will be
+    // possible to do a case sensitive comparison.
+    if (\MRBS\utf8_strpos($email, '@') === false)
+    {
+      if (!empty($auth['allow_local_part_email']))
+      {
+        // We're just checking the local-part of the email address
+        $sql_params = array($email);
+        $condition = "LOWER(?)=LOWER(" . \MRBS\db()->syntax_simple_split('email', '@', 1, $sql_params) .")";
+      }
+      else
+      {
+        return $result;
+      }
+    }
+    else
+    {
+      $address = \MRBS\parse_email($email);
+      // Invalid email address
+      if ($address === false)
+      {
+        return $result;
+      }
+      // Special case for Gmail addresses: ignore dots in the local part and treat gmail.com and
+      // googlemail.com as equivalent domains.
+      elseif (in_array(\MRBS\utf8_strtolower($address['domain']), array('gmail.com', 'googlemail.com')))
+      {
+        $sql_params = array(str_replace('.', '', $address['local']));
+        $sql_params[] = $sql_params[0];
+        $condition = "(LOWER(?) = REPLACE(TRIM(TRAILING '@gmail.com' FROM LOWER(email)), '.', '')) OR " .
+                     "(LOWER(?) = REPLACE(TRIM(TRAILING '@googlemail.com' FROM LOWER(email)), '.', ''))";
+      }
+      // Everything else: check the complete email address
+      else
+      {
+        $sql_params = array($email);
+        $condition = "LOWER(?)=LOWER(email)";
+      }
+    }
 
     $sql = "SELECT *
               FROM " . \MRBS\_tbl('users') . "
-             WHERE email=:email";
+             WHERE $condition";
 
-    $res = \MRBS\db()->query($sql, array(':email' => $email));
+    $res = \MRBS\db()->query($sql, $sql_params);
 
-    // The username doesn't exist - return NULL
     while (false !== ($row = $res->next_row_keyed()))
     {
       $result[] = $row;
