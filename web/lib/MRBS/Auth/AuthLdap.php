@@ -340,8 +340,9 @@ class AuthLdap extends Auth
     }
     $user->level = $this->getLevel($username);
     $user->groups = $this->getGroups($username);
-    // TODO: get roles
-    // TODO: update user table?
+    // Update the user table with the latest user data
+    $user->save();
+
     // TODO: think about other auth types
 
     return $user;
