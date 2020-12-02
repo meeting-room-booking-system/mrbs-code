@@ -177,6 +177,12 @@ function output_row(User $user)
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
+  // Then the email address
+  // we don't want to truncate the email address
+  $escaped_email = htmlspecialchars($user->email);
+  $values[] = "<div class=\"string\">\n" .
+    "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
+    "</div>\n";
   // And add the groups, which aren't one of the table columns
   $group_name_list = implode(', ', $user->group_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($group_name_list) . "\">" .
@@ -213,13 +219,7 @@ function output_row(User $user)
             $values[] = "<span title=\"$col_value\"></span>" .
               "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
             break;
-          case 'email':
-            // we don't want to truncate the email address
-            $escaped_email = htmlspecialchars($col_value);
-            $values[] = "<div class=\"string\">\n" .
-              "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
-              "</div>\n";
-            break;
+
           case 'timestamp':
             // Convert the SQL timestamp into a time value and back into a localised string and
             // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
@@ -232,10 +232,12 @@ function output_row(User $user)
             $values[] = "<span title=\"$unix_timestamp\"></span>" .
               (($unix_timestamp) ? time_date_string($unix_timestamp) : '');
             break;
+
           case 'last_login':
             $values[] = "<span title=\"$col_value\"></span>" .
               (($col_value) ? time_date_string($col_value) : '');
             break;
+
           default:
             // Where there's an associative array of options, display
             // the value rather than the key
@@ -1188,6 +1190,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
       'password_hash',
       'name',
       'display_name',
+      'email',
       'reset_key_hash',
       'reset_key_expiry'
     );
@@ -1201,11 +1204,12 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo "<thead>\n";
     echo "<tr>";
 
-    // First three columns which are the name, display name and roles
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("groups") . "</th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</th>\n";
+    // First three columns which are the name, display name, email address and roles
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</span></th>\n";
+    echo '<th id="col_email">' . get_vocab("user.email") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("groups") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</span></th>\n";
 
     // Other column headers
     if ($auth['type'] == 'db')

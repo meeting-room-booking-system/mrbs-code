@@ -162,7 +162,7 @@ class Users extends TableIterator
       }
 
       // Try and get the user from the database
-      $sql = "SELECT U.name, U.display_name, " .
+      $sql = "SELECT U.name, U.display_name, U.email, " .
                      db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
                 FROM " . _tbl(User::TABLE_NAME) . " U
            LEFT JOIN " . _tbl('user_group') . " G
@@ -184,6 +184,7 @@ class Users extends TableIterator
         // It's a new user: add them to the table
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
+        $user->email = $external_user['email'];
         $user->groups = $external_user['group_ids'];
         // Save the user to the database
         $user->save();
@@ -196,11 +197,13 @@ class Users extends TableIterator
         // TODO: implement local groups and check for changes
         $row = $res->next_row_keyed();
         $this->stringsToArrays($row);
-        if (($external_user['display_name'] != $row['display_name']) ||
+        if (($external_user['display_name'] !== $row['display_name']) ||
+            ($external_user['email'] !== $row['email']) ||
             !array_values_equal($external_user['group_ids'], $row['groups']))
         {
           $user = User::getByName($row['name'], $auth['type']);
           $user->display_name = $external_user['display_name'];
+          $user->email = $external_user['email'];
           $user->groups = $external_user['group_ids'];
           // Save the user to the database
           $user->save();
