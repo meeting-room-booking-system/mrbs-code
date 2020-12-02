@@ -24,7 +24,7 @@ class User extends Table
     $this->setDefaultEmail();
     $this->level = 0; // Play it safe
     $this->groups = array();
-    $this->roles = array();
+    $this->roles = self::getRolesByUsername($username);
   }
 
 
@@ -221,6 +221,23 @@ class User extends Table
               FROM " . _tbl('user_role') . "
              WHERE user_id=:user_id";
     $sql_params = array(':user_id' => $id);
+    return db()->query_array($sql, $sql_params);
+  }
+
+
+  private static function getRolesByUsername($username)
+  {
+    if (!isset($username) || ($username === ''))
+    {
+      return array();
+    }
+
+    $sql = "SELECT role_id
+              FROM " . _tbl('user_role') . " R
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U
+                ON R.user_id=U.id
+             WHERE U.name=:username";
+    $sql_params = array(':username' => $username);
     return db()->query_array($sql, $sql_params);
   }
 

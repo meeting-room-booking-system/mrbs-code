@@ -54,25 +54,7 @@ abstract class Table
   // Checks if this instance already exists in the table
   public function exists()
   {
-    $where_condition_parts = array();
-    $sql_params = array();
-    foreach (static::$unique_columns as $unique_column)
-    {
-      $where_condition_parts[] = $unique_column . '=?';
-      if (!isset($this->{$unique_column}))
-      {
-        throw new \Exception("Column '$unique_column' is not set.");
-      }
-      $sql_params[] = $this->{$unique_column};
-    }
-    $where_condition = implode(' AND ', $where_condition_parts);
-
-    $sql = "SELECT *
-              FROM " . _tbl(static::TABLE_NAME) . "
-             WHERE $where_condition
-             LIMIT 1";
-    $res = db()->query($sql, $sql_params);
-    return ($res->count() > 0);
+    return ($this->getRow() !== null);
   }
 
 
@@ -200,10 +182,29 @@ abstract class Table
 
     db()->command($sql, $sql_params);
 
-    // If this was an insert action and there's an id column, get the new id.
-    if (($action == 'insert') && $cols->hasIdColumn())
+    // If there's an id column, get the id if we don't already know it
+    if ($cols->hasIdColumn())
     {
-      $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
+      if ($action == 'insert')
+      {
+        $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
+      }
+      elseif (!isset($this->id))
+      {
+        // There may be slicker ways of getting the id of an updated row,
+        // but they are tricky to implement as the technique is not the same
+        // for MySQL and PostgreSQL. For example, in MySQL you can include in
+        // the UPDATE statement SET id=LAST_INSERT_ID(id) and then
+        // SELECT LAST_INSERT_ID(); will return the id; in PostgreSQL you can
+        // use RETURNING id.  However it's simpler, though maybe less efficient,
+        // just to get the row again.
+        $row = $this->getRow();
+        if (!isset($row))
+        {
+          throw new \Exception("Could not find id of updated row");
+        }
+        $this->id = $row['id'];
+      }
     }
   }
 
@@ -292,5 +293,32 @@ abstract class Table
     }
 
     return $result;
+  }
+
+
+  // Returns the row in the table corresponding to this instance, or
+  // NULL if it doesn't exist.
+  private function getRow()
+  {
+    $where_condition_parts = array();
+    $sql_params = array();
+    foreach (static::$unique_columns as $unique_column)
+    {
+      $where_condition_parts[] = $unique_column . '=?';
+      if (!isset($this->{$unique_column}))
+      {
+        throw new \Exception("Column '$unique_column' is not set.");
+      }
+      $sql_params[] = $this->{$unique_column};
+    }
+    $where_condition = implode(' AND ', $where_condition_parts);
+
+    $sql = "SELECT *
+              FROM " . _tbl(static::TABLE_NAME) . "
+             WHERE $where_condition
+             LIMIT 1";
+    $res = db()->query($sql, $sql_params);
+
+    return ($res->count() > 0) ? $res->next_row_keyed() : null;
   }
 }

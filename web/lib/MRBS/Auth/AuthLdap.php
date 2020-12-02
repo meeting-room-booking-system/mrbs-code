@@ -323,14 +323,26 @@ class AuthLdap extends Auth
 
   public function getUser($username)
   {
-    $user = new User($username);
+    global $ldap_get_user_email;
 
+    if (!isset($username) || ($username === ''))
+    {
+      return null;
+    }
+
+    $user = parent::getUser($username);
+
+    // Get LDAP specific properties
     $user->display_name = $this->getDisplayName($username);
-    $user->email = $this->getEmail($username);
+    if ($ldap_get_user_email)
+    {
+      $user->email = $this->getEmail($username);
+    }
     $user->level = $this->getLevel($username);
     $user->groups = $this->getGroups($username);
-    // TODO: get roles
-    // TODO: update user table?
+    // Update the user table with the latest user data
+    $user->save();
+
     // TODO: think about other auth types
 
     return $user;
@@ -399,6 +411,8 @@ class AuthLdap extends Auth
   private static function getUsersGenericCallback(&$ldap, $base_dn, $dn, $user_search,
                                                   $user, &$object, $include_groups=false)
   {
+    global $ldap_get_user_email;
+
     self::debug("base_dn '$base_dn'");
 
     if (!$ldap || !$base_dn || !isset($object['config']['ldap_user_attrib']))
@@ -424,9 +438,16 @@ class AuthLdap extends Auth
     // The display name attribute might not have been set in the config file
     if (isset($object['config']['ldap_name_attrib']))
     {
-      // The display name attribute can be a composite attrivute, eg "givenName sn"
+      // The display name attribute can be a composite attribute, eg "givenName sn"
       $display_name_attribs = self::explodeNameAttribute($object['config']['ldap_name_attrib']);
       $attributes = array_merge($attributes, $display_name_attribs);
+    }
+
+    // The email address
+    if ($ldap_get_user_email && isset($object['config']['ldap_email_attrib']))
+    {
+      $email_attrib = \MRBS\utf8_strtolower($object['config']['ldap_email_attrib']);
+      $attributes[] = $email_attrib;
     }
 
     // The group name attribute might not have been set in the config file
@@ -477,6 +498,10 @@ class AuthLdap extends Auth
         elseif (in_array($attribute, $display_name_attribs))
         {
           $display_name_parts[$attribute] = $values[0];
+        }
+        elseif ($attribute == $email_attrib)
+        {
+          $user['email'] = $values[0];
         }
         elseif ($attribute == $group_member_attrib)
         {
@@ -876,21 +901,14 @@ class AuthLdap extends Auth
 
   protected function getEmail($username)
   {
-    global $ldap_get_user_email;
-
-    if (!isset($username) || $username === '')
+    if (!isset($username) || ($username === ''))
     {
       return '';
     }
 
-    if ($ldap_get_user_email)
-    {
-      $object = array();
-      $res = $this->action('getEmailCallback', $username, $object);
-      return ($res) ? $object['email'] : '';
-    }
-
-    return $this->getDefaultEmail($username);
+    $object = array();
+    $res = $this->action('getEmailCallback', $username, $object);
+    return ($res) ? $object['email'] : '';
   }
 
 
