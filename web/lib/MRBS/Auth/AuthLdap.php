@@ -323,10 +323,21 @@ class AuthLdap extends Auth
 
   public function getUser($username)
   {
-    $user = new User($username);
+    global $ldap_get_user_email;
 
+    if (!isset($username) || ($username === ''))
+    {
+      return null;
+    }
+
+    $user = parent::getUser($username);
+
+    // Get LDAP specific properties
     $user->display_name = $this->getDisplayName($username);
-    $user->email = $this->getEmail($username);
+    if ($ldap_get_user_email)
+    {
+      $user->email = $this->getEmail($username);
+    }
     $user->level = $this->getLevel($username);
     $user->groups = $this->getGroups($username);
     // TODO: get roles
@@ -876,21 +887,14 @@ class AuthLdap extends Auth
 
   protected function getEmail($username)
   {
-    global $ldap_get_user_email;
-
-    if (!isset($username) || $username === '')
+    if (!isset($username) || ($username === ''))
     {
       return '';
     }
 
-    if ($ldap_get_user_email)
-    {
-      $object = array();
-      $res = $this->action('getEmailCallback', $username, $object);
-      return ($res) ? $object['email'] : '';
-    }
-
-    return $this->getDefaultEmail($username);
+    $object = array();
+    $res = $this->action('getEmailCallback', $username, $object);
+    return ($res) ? $object['email'] : '';
   }
 
 

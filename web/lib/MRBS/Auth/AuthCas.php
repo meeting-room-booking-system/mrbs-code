@@ -101,7 +101,6 @@ class AuthCas extends Auth
   {
     $user = new User($username);
     $user->level = $this->getLevel($username);
-    $user->email = $this->getDefaultEmail($username);
 
     return $user;
   }
