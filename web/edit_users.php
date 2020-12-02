@@ -1221,8 +1221,8 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
     echo "<tr>";
 
     // First two columns which are the name and display name
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.display_name") . "</th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.display_name") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="title-string">' . get_vocab("users.name") . "</span></th>\n";
 
     // Other column headers
     foreach ($fields as $field)
