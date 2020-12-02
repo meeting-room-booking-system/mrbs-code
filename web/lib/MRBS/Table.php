@@ -191,6 +191,13 @@ abstract class Table
       }
       elseif (!isset($this->id))
       {
+        // There may be slicker ways of getting the id of an updated row,
+        // but they are tricky to implement as the technique is not the same
+        // for MySQL and PostgreSQL. For example, in MySQL you can include in
+        // the UPDATE statement SET id=LAST_INSERT_ID(id) and then
+        // SELECT LAST_INSERT_ID(); will return the id; in PostgreSQL you can
+        // use RETURNING id.  However it's simpler, though maybe less efficient,
+        // just to get the row again.
         $row = $this->getRow();
         if (!isset($row))
         {
@@ -289,7 +296,7 @@ abstract class Table
   }
 
 
-  // Returns the row in the table corresponding ti this instance, or
+  // Returns the row in the table corresponding to this instance, or
   // NULL if it doesn't exist.
   private function getRow()
   {
