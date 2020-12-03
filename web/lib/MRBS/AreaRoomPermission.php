@@ -147,7 +147,7 @@ abstract class AreaRoomPermission extends Table
 
   // Gets the default permission for a user
   // TODO: make this is configurable?  Either in the config file or through the browser
-  private static function getDefaultPermission()
+  public static function getDefaultPermission()
   {
     $result = new static();
     $result->state = self::GRANTED;
