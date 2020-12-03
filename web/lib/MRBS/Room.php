@@ -106,6 +106,11 @@ class Room extends Table
   }
 
 
+  // Returns an array of rules applicable to this user in this
+  // room.  It is a recursive function.  If $for_groups is false
+  // then it gets the rules that are applicable to that user.  If
+  // true then it just gets the rules applicable to any groups
+  // that the user is a member of.
   private function getRules($for_groups = false)
   {
     $user = session()->getCurrentUser();
