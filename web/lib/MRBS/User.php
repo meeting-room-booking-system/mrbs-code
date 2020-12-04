@@ -132,7 +132,8 @@ class User extends Table
     // location is an area - check to see if there any rules for the area.
     if (empty($rules))
     {
-      $rules = $location->getPermissions($roles);
+      $area = ($is_room) ? Area::getById($location->area_id) : $location;
+      $rules = $area->getPermissions($roles);
       if (empty($rules))
       {
         // If there are no rules for the area and we're already checking
@@ -140,7 +141,7 @@ class User extends Table
         // we can do, so return the default rules.
         if ($for_groups)
         {
-          $rule = ($is_room) ? RoomPermission::getDefaultPermission() : AreaPermission::getDefaultPermission();
+          $rule = AreaPermission::getDefaultPermission();
           return array($rule);
         }
         // Otherwise, see if there are some rules for the user's groups.
