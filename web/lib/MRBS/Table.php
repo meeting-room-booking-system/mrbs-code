@@ -217,9 +217,9 @@ abstract class Table
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite($data)
+  protected static function onWrite($row)
   {
-    return $data;
+    return $row;
   }
 
 
