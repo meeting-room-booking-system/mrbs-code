@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-class RoomPermission extends AreaRoomPermission
+class RoomPermission extends LocationPermission
 {
   const TABLE_NAME = 'role_room';
 

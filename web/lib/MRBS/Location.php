@@ -23,7 +23,7 @@ abstract class Location extends Table
 
   public function isVisible()
   {
-    return $this->isAble(AreaRoomPermission::READ);
+    return $this->isAble(LocationPermission::READ);
   }
 
 
@@ -48,7 +48,7 @@ abstract class Location extends Table
           // If there's no logged in user, return the default rules
           $rules = array(AreaPermission::getDefaultPermission());
         }
-        $this->is_able[$operation] = AreaRoomPermission::can($rules, $operation);
+        $this->is_able[$operation] = LocationPermission::can($rules, $operation);
       }
     }
 

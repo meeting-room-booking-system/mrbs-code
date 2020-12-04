@@ -329,7 +329,7 @@ function generate_empty_row(Area $area)
 }
 
 
-function generate_delete_permission_button(AreaRoomPermission $permission)
+function generate_delete_permission_button(LocationPermission $permission)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
@@ -371,7 +371,7 @@ function generate_delete_permission_button(AreaRoomPermission $permission)
 }
 $vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
 
-function generate_row(AreaRoomPermission $permission, array $permission_options, array $state_options, $type='area')
+function generate_row(LocationPermission $permission, array $permission_options, array $state_options, $type='area')
 {
   if ($type == 'area')
   {
