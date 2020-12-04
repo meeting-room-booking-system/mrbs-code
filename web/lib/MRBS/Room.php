@@ -97,7 +97,16 @@ class Room extends Table
       }
       else
       {
-        $rules = $this->getRules();
+        $user = session()->getCurrentUser();
+        if (isset($user))
+        {
+          $rules = $user->getRules($this);
+        }
+        else
+        {
+          // If there's no logged in user, return the default rules
+          $rules = array(RoomPermission::getDefaultPermission());
+        }
         $this->is_able[$operation] = AreaRoomPermission::can($rules, $operation);
       }
     }
@@ -106,66 +115,7 @@ class Room extends Table
   }
 
 
-  // Returns an array of rules applicable to this user in this
-  // room.  It is a recursive function.  If $for_groups is false
-  // then it gets the rules that are applicable to that user.  If
-  // true then it just gets the rules applicable to any groups
-  // that the user is a member of.
-  private function getRules($for_groups = false)
-  {
-    $user = session()->getCurrentUser();
-
-    // If there's no logged in user, return the default rules
-    if (!isset($user))
-    {
-      return array(RoomPermission::getDefaultPermission());
-    }
-
-    // Otherwise, get the roles for this user
-    if ($for_groups)
-    {
-      $roles = Group::getRoles($user->groups);
-      if (empty($roles))
-      {
-        return array(RoomPermission::getDefaultPermission());
-      }
-    }
-    else
-    {
-      // Get the individual roles for this user
-      $roles = $user->roles;
-      if (empty($roles))
-      {
-        return $this->getRules(true);
-      }
-    }
-
-    // Now we've got the roles, get the rules that apply
-    // First see if there are any rules for this room
-    $rules = $this->getPermissions($roles);
-    // If there are none, check to see if there any rules for the area
-    if (empty($rules))
-    {
-      $rules = Area::getById($this->area_id)->getPermissions($roles);
-      if (empty($rules))
-      {
-        // If there are no rules for the area and we're already checking
-        // the rules for the user's groups, then there's nothing more that
-        // we can do, so return the default rules.
-        if ($for_groups)
-        {
-          return array(RoomPermission::getDefaultPermission());
-        }
-        // Otherwise, see if there are some rules for the user's groups.
-        return $this->getRules(true);
-      }
-    }
-
-    return $rules;
-  }
-
-
-  private function getPermissions(array $role_ids)
+  public function getPermissions(array $role_ids)
   {
     return RoomPermission::getPermissionsByRoles($role_ids, $this->id);
   }
