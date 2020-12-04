@@ -8,7 +8,7 @@ class Area extends Table
 
   protected static $unique_columns = array('area_name');
 
-  private $is_visible;
+  private $is_able;
 
 
   public function __construct($area_name=null)
@@ -46,23 +46,36 @@ class Area extends Table
 
   public function isVisible()
   {
-    if (!isset($this->is_visible))
+    return $this->isAble(AreaRoomPermission::READ);
+  }
+
+
+  private function isAble($operation)
+  {
+    if (!isset($this->is_able ) || !isset($this->is_able[$operation]))
     {
-      // Admins can see everything
+      // Admins can do anything
       if (is_admin())
       {
-        $this->is_visible = true;
+        $this->is_able[$operation] = true;
       }
       else
       {
         $user = session()->getCurrentUser();
-        $roles = (isset($user)) ? $user->combinedRoles() : array();
-        $permissions = $this->getPermissions($roles);
-        $this->is_visible = AreaRoomPermission::can($permissions, AreaPermission::READ);
+        if (isset($user))
+        {
+          $rules = $user->getRules($this);
+        }
+        else
+        {
+          // If there's no logged in user, return the default rules
+          $rules = array(AreaPermission::getDefaultPermission());
+        }
+        $this->is_able[$operation] = AreaRoomPermission::can($rules, $operation);
       }
     }
 
-    return $this->is_visible;
+    return $this->is_able[$operation];
   }
 
 

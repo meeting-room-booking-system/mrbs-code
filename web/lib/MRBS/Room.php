@@ -8,9 +8,6 @@ class Room extends Table
 
   protected static $unique_columns = array('room_name', 'area_id');
 
-  private $is_visible;
-  private $is_writable;
-  private $is_book_admin;
   private $is_able;
 
 
