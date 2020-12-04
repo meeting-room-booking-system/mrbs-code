@@ -2,16 +2,11 @@
 namespace MRBS;
 
 
-class Room extends Table
+class Room extends Location
 {
   const TABLE_NAME = 'room';
 
   protected static $unique_columns = array('room_name', 'area_id');
-
-  private $is_visible;
-  private $is_writable;
-  private $is_book_admin;
-  private $is_able;
 
 
   public function __construct($room_name=null, $area_id=null)
@@ -21,18 +16,13 @@ class Room extends Table
     $this->sort_key = $room_name;
     $this->area_id = $area_id;
     $this->disabled = false;
+    $this->area_disabled = false;
   }
 
 
-  public static function getById($id)
+  public static function getByName($name)
   {
-    return self::getByColumn('id', $id);
-  }
-
-
-  public static function getByName($room_name)
-  {
-    return self::getByColumn('room_name', $room_name);
+    return self::getByColumn('room_name', $name);
   }
 
 
@@ -41,12 +31,6 @@ class Room extends Table
   public function isDisabled()
   {
     return ($this->disabled || $this->area_disabled);
-  }
-
-
-  public function isVisible()
-  {
-    return $this->isAble(RoomPermission::READ);
   }
 
 
@@ -86,31 +70,7 @@ class Room extends Table
   }
 
 
-  private function isAble($operation)
-  {
-    if (!isset($this->is_able ) || !isset($this->is_able[$operation]))
-    {
-      // Admins can do anything
-      if (is_admin())
-      {
-        $this->is_able[$operation] = true;
-      }
-      else
-      {
-        $user = session()->getCurrentUser();
-        $roles = (isset($user)) ? $user->combinedRoles() : array();
-        $room_permissions = $this->getPermissions($roles);
-        $area_permissions = Area::getById($this->area_id)->getPermissions($roles);
-        $permissions = array_merge($room_permissions, $area_permissions);
-        $this->is_able[$operation] = AreaRoomPermission::can($permissions, $operation);
-      }
-    }
-
-    return $this->is_able[$operation];
-  }
-
-
-  private function getPermissions(array $role_ids)
+  public function getPermissions(array $role_ids)
   {
     return RoomPermission::getPermissionsByRoles($role_ids, $this->id);
   }

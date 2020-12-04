@@ -18,6 +18,7 @@ abstract class AreaRoomPermission extends Table
 
   private static $permissions = array(self::READ, self::WRITE, self::ALL);  // Must be in order
 
+
   public static function getPermissionOptions()
   {
     return array(
@@ -147,7 +148,7 @@ abstract class AreaRoomPermission extends Table
 
   // Gets the default permission for a user
   // TODO: make this is configurable?  Either in the config file or through the browser
-  private static function getDefaultPermission()
+  public static function getDefaultPermission()
   {
     $result = new static();
     $result->state = self::GRANTED;
@@ -168,7 +169,7 @@ abstract class AreaRoomPermission extends Table
 
   protected static function getPermissions(array $role_ids, $location_id, $location_column)
   {
-    $result = array(self::getDefaultPermission());
+    $result = array();
 
     if (!empty($role_ids))
     {

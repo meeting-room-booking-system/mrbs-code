@@ -81,6 +81,78 @@ class User extends Table
   }
 
 
+  // Returns an array of rules applicable to this user in this
+  // room.  $location can be either a Room or Area object.
+  // It is a recursive function.  If $for_groups is false
+  // then it gets the rules that are applicable to that user.  If
+  // true then it just gets the rules applicable to any groups
+  // that the user is a member of.
+  public function getRules($location, $for_groups = false)
+  {
+    // Work out whether $location is a room or area
+    if ($location instanceof Room)
+    {
+      $is_room = true;
+    }
+    elseif ($location instanceof Area)
+    {
+      $is_room = false;
+    }
+    else
+    {
+      throw new \Exception('$location parameter is not an instance of Room or Area.');
+    }
+
+    if ($for_groups)
+    {
+      $roles = Group::getRoles($this->groups);
+      if (empty($roles))
+      {
+        $rule = ($is_room) ? RoomPermission::getDefaultPermission() : AreaPermission::getDefaultPermission();
+        return array($rule);
+      }
+    }
+    else
+    {
+      // Get the individual roles for this user
+      $roles = $this->roles;
+      if (empty($roles))
+      {
+        return $this->getRules($location,true);
+      }
+    }
+
+    // Now we've got the roles, get the rules that apply.
+    // If this is a room get any rules for the room.
+    if ($is_room)
+    {
+      $rules = $location->getPermissions($roles);
+    }
+    // If there are none - either because there were none, or else because the
+    // location is an area - check to see if there any rules for the area.
+    if (empty($rules))
+    {
+      $area = ($is_room) ? Area::getById($location->area_id) : $location;
+      $rules = $area->getPermissions($roles);
+      if (empty($rules))
+      {
+        // If there are no rules for the area and we're already checking
+        // the rules for the user's groups, then there's nothing more that
+        // we can do, so return the default rules.
+        if ($for_groups)
+        {
+          $rule = AreaPermission::getDefaultPermission();
+          return array($rule);
+        }
+        // Otherwise, see if there are some rules for the user's groups.
+        return $this->getRules($location,true);
+      }
+    }
+
+    return $rules;
+  }
+
+
   private function saveGroups()
   {
     $existing = self::getGroupsByUserId($this->id);
