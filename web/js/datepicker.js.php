@@ -93,7 +93,7 @@ $(document).on('page_ready', function() {
       // locale.  Otherwise, in practice just IE10, they have to make do with ISO
       // (YYYY-MM-DD) dates.
       ?>
-      if (window.Intl && (formatStr == 'custom'))
+      if (window.Intl && (formatStr === 'custom'))
       {
         return (typeof locales === 'undefined') ?
                 new Intl.DateTimeFormat().format(dateObj) :

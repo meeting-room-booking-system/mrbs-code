@@ -387,7 +387,7 @@ var Table = {
 
   size: function() {
       <?php // Don't do anything if this is the all-rooms week view ?>
-      if ((args.view == 'week') && args.view_all)
+      if ((args.view === 'week') && args.view_all)
       {
         return;
       }
@@ -661,7 +661,7 @@ $(document).on('page_ready', function() {
       var table = $(this);
 
       <?php // Don't do anything if this is an empty table or the all-rooms week view ?>
-      if (((args.view == 'week') && args.view_all) ||
+      if (((args.view === 'week') && args.view_all) ||
           table.find('tbody').data('empty'))
       {
         return;
@@ -702,8 +702,8 @@ $(document).on('page_ready', function() {
             // the week view) or select multiple rooms (in the day view) then
             // constrain the box to fit in the current slot width/height
             ?>
-            if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+            if (((args.view === 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                ((args.view === 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
             {
               <?php
               if ($times_along_top)
@@ -1281,8 +1281,8 @@ $(document).on('page_ready', function() {
             }
             if (!args.isBookAdmin)
             {
-              if (((args.view == 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
-                  ((args.view == 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
+              if (((args.view === 'week') && <?php echo ($auth['only_admin_can_book_repeat']) ? 'true' : 'false'?>) ||
+                  ((args.view === 'day') && <?php echo ($auth['only_admin_can_select_multiroom']) ? 'true' : 'false'?>))
               {
                 <?php
                 // If we're in the week view then if non-admins aren't allowed to
