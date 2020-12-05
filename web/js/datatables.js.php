@@ -126,7 +126,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // For all pages except the pending page, which has collapsible rows which don't work well with the
   // buttons, add the Copy/CSV/etc. buttons.
   ?>
-  if (args.page != 'pending')
+  if (args.page !== 'pending')
   {
     defaultOptions.buttons = defaultOptions.buttons.concat(
       {extend: 'copy',

@@ -33,7 +33,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function open($save_path , $session_name)
+  public function open($save_path , $name)
   {
     return true;
   }

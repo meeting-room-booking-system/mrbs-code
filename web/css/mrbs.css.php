@@ -1297,7 +1297,7 @@ tbody th a:hover {
   background-color: <?php echo $row_highlight_color ?>;
 }
 
-.dwm_main.resizing tbody tr:hover t.selected,
+.dwm_main.resizing tbody tr:hover th.selected,
 .dwm_main.resizing tbody tr th.selected a:link,
 .dwm_main.resizing tbody tr th.selected a:visited {
   color: #ffffff;

@@ -37,7 +37,7 @@ var supportsDatalist = function supportsDatalist() {
 ?>
 var adjustLabelWidths = function adjustLabelWidths() {
   var standardFieldset = $('.standard fieldset');
-  if ((standardFieldset.length !== 0) && (standardFieldset.css('display') == 'table'))
+  if ((standardFieldset.length !== 0) && (standardFieldset.css('display') === 'table'))
   {
     var labels = standardFieldset.children('div').children('label').not('.rep_type_details label');
     <?php // Let the labels find their natural widths ?>
@@ -234,7 +234,7 @@ $(document).on('page_ready', function() {
   $('form input.default_action').each(function() {
       var defaultSubmitButton = $(this);
       $(this).parents('form').find('input').on('keypress', function(event) {
-          if (event.which == 13)  // the Enter key
+          if (event.which === 13)  // the Enter key
           {
             defaultSubmitButton.trigger('click');
             return false;
@@ -394,7 +394,7 @@ $(document).on('page_ready', function() {
 
   <?php // Add a fallback for browsers that don't support the time input ?>
   $('[type="time"]').each(function() {
-    if ($(this).prop('type') != 'time')
+    if ($(this).prop('type') !== 'time')
     {
       $(this).attr('placeholder', 'hh:mm')
              .attr('pattern', '<?php echo trim(REGEX_HHMM, '/') ?>')

@@ -82,16 +82,16 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     switch (repType)
     {
       case <?php echo REP_DAILY ?>:
-        text = (repInterval == 1) ? '<?php echo get_vocab('day') ?>' : '<?php echo get_vocab('days') ?>';
+        text = (repInterval === 1) ? '<?php echo get_vocab('day') ?>' : '<?php echo get_vocab('days') ?>';
         break;
       case <?php echo REP_WEEKLY ?>:
-        text = (repInterval == 1) ? '<?php echo get_vocab('week') ?>' : '<?php echo get_vocab('weeks') ?>';
+        text = (repInterval === 1) ? '<?php echo get_vocab('week') ?>' : '<?php echo get_vocab('weeks') ?>';
         break;
       case <?php echo REP_MONTHLY ?>:
-        text = (repInterval == 1) ? '<?php echo get_vocab('month') ?>' : '<?php echo get_vocab('months') ?>';
+        text = (repInterval === 1) ? '<?php echo get_vocab('month') ?>' : '<?php echo get_vocab('months') ?>';
         break;
       case <?php echo REP_YEARLY ?>:
-        text = (repInterval == 1) ? '<?php echo get_vocab('year_lc') ?>' : '<?php echo get_vocab('years') ?>';
+        text = (repInterval === 1) ? '<?php echo get_vocab('year_lc') ?>' : '<?php echo get_vocab('years') ?>';
         break;
       default:
         text = units.text();

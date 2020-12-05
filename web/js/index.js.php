@@ -85,7 +85,7 @@ var replaceBody = function(response, href) {
             ?>
             if(this.specified)
             {
-              if (this.name.substring(0, 5).toLowerCase() == 'data-')
+              if (this.name.substring(0, 5).toLowerCase() === 'data-')
               {
                 <?php
                 // Data attributes have to be updated differently from other attributes because

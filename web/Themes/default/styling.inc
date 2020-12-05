@@ -84,7 +84,7 @@ $help_highlight_color           = "#ffe6f0";        // highlighting text on the 
 $button_color_stops = array('#eeeeee', '#cccccc');  // linear gradient colour stops
 $button_inset_color = 'darkblue';
 
-// These are the colours used for distinguishing between the dfferent types of bookings in the main
+// These are the colours used for distinguishing between the different types of bookings in the main
 // displays in the day, week and month views
 $color_types = array(
     'A' => "#ffff99",
