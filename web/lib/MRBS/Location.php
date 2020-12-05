@@ -14,7 +14,16 @@ abstract class Location extends Table
   }
 
 
-  abstract public static function getByName($name);
+  public static function getByName($name)
+  {
+    // This method should really be declared as an abstract public static function,
+    // but in PHP 5 that throws a strict standards warning.  It's OK in PHP 7 onwards,
+    // but while we are still supporting PHP 5 we need to do something else.
+    // (An alternative solution that might make sense is to rename the room_name and
+    // area_name columns to just 'name', which would have the added benefit of
+    // simplifying the tables).
+    throw new \Exception("getByName() needs to be implemented in the child class.");
+  }
 
   abstract public function isDisabled();
 
