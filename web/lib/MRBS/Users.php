@@ -198,12 +198,12 @@ class Users extends TableIterator
         $row = $res->next_row_keyed();
         $this->stringsToArrays($row);
         if (($external_user['display_name'] !== $row['display_name']) ||
-            ($external_user['email'] !== $row['email']) ||
+            (isset($external_user['email']) && ($external_user['email'] !== $row['email'])) ||
             !array_values_equal($external_user['group_ids'], $row['groups']))
         {
           $user = User::getByName($row['name'], $auth['type']);
           $user->display_name = $external_user['display_name'];
-          $user->email = $external_user['email'];
+          $user->email = (isset($external_user['email'])) ? $external_user['email'] : null;
           $user->groups = $external_user['group_ids'];
           // Save the user to the database
           $user->save();

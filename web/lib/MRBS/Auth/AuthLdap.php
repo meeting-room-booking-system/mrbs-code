@@ -495,15 +495,15 @@ class AuthLdap extends Auth
         {
           $user['username'] = $values[0];
         }
-        elseif (in_array($attribute, $display_name_attribs))
+        elseif (isset($display_name_attribs) && in_array($attribute, $display_name_attribs))
         {
           $display_name_parts[$attribute] = $values[0];
         }
-        elseif ($attribute == $email_attrib)
+        elseif (isset($email_attrib) && ($attribute == $email_attrib))
         {
           $user['email'] = $values[0];
         }
-        elseif ($attribute == $group_member_attrib)
+        elseif (isset($group_member_attrib) && ($attribute == $group_member_attrib))
         {
           for ($i=0; $i<$values['count']; $i++)
           {
