@@ -34,7 +34,7 @@ function generate_registrant_table($row, $previous_page=null)
   {
     echo '<tr>';
     echo '<td>';
-    if (getWritable($registrant['username'], $row['room_id']))
+    if (is_writable($registrant['username'], $row['room_id']))
     {
       generate_cancel_registration_button(
         $row,
@@ -217,7 +217,7 @@ function generate_event_registration($row, $previous_page=null)
   }
 
   $can_register_others = is_book_admin($row['room_id']);
-  $can_see_others = $auth['show_registrant_names'] || getWritable($row['create_by'], $row['room_id']);
+  $can_see_others = $auth['show_registrant_names'] || is_writable($row['create_by'], $row['room_id']);
   $n_registered = count($row['registrants']);
 
 
@@ -574,7 +574,7 @@ $awaiting_approval = $row['awaiting_approval'];
 $private = $row['private'];
 // Get the creator
 $create_by = $row['create_by'];
-$writeable = getWritable($row['create_by'], $row['room_id']);
+$writeable = is_writable($row['create_by'], $row['room_id']);
 $keep_private = (is_private_event($private) && !$writeable);
 
 // Work out when the last reminder was sent
@@ -827,7 +827,7 @@ if (isset($previous_page))
 if (!$room_disabled)
 {
   // Only show the Edit and Delete buttons if the user is allowed to use them
-  if (getWritable($create_by, $room))
+  if (is_writable($create_by, $room))
   {
     // Check whether the entry is deletable (and therefore editable).  Also get the
     // reason.  We only get the first reason because it's easier just to display one

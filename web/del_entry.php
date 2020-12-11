@@ -49,7 +49,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
   }
   else
   {
-    $authorised = getWritable($info['create_by'], $info['room_id']);
+    $authorised = is_writable($info['create_by'], $info['room_id']);
   }
   if ($authorised)
   {

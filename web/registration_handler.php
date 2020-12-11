@@ -19,7 +19,7 @@ function cancel($registration_id)
   $entry = get_entry_by_id($registration['entry_id']);
 
   // Check that the user is authorised for this operation
-  if (!isset($entry) || !getWritable($registration['username'], $entry['room_id']))
+  if (!isset($entry) || !is_writable($registration['username'], $entry['room_id']))
   {
     return;
   }
@@ -48,7 +48,7 @@ function register($username, $event_id)
   $entry = get_entry_by_id($event_id);
 
   // Check that the user is authorised for this operation
-  if (!isset($entry) || !getWritable($username, $entry['room_id']))
+  if (!isset($entry) || !is_writable($username, $entry['room_id']))
   {
     return;
   }

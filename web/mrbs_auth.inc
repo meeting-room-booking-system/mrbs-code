@@ -124,7 +124,7 @@ function get_page_level($page)
     case 'admin.php':
     case 'approve_entry_handler.php':   // Ordinary users are allowed to remind admins
     case 'edit_room.php':               // Ordinary users can view room details
-    case 'edit_user.php':              // Ordinary users can edit their own details
+    case 'edit_users.php':              // Ordinary users can edit their own details
     case 'pending.php':                 // Ordinary users can view their own entries
     case 'registration_handler.php':    // Ordinary users can register for an event
       $result = 1;
@@ -144,10 +144,6 @@ function get_page_level($page)
     case 'del_entries.php':             // Ajax page for bulk deletion of entries
     case 'edit_area.php':
     case 'edit_area_handler.php':
-    case 'edit_group.php':
-    case 'edit_group_handler.php':
-    case 'edit_role.php':
-    case 'edit_role_handler.php':
     case 'edit_room_handler.php':
     case 'import.php':
     case 'report.php':
@@ -255,38 +251,32 @@ function checkAuthorised($page, $just_check=false)
 }
 
 
-/* getWritable($creator, $room)
+/* is_writable($creator, $room)
  *
  * Determines if the current user is able to modify an entry
  *
- * $creator   - The creator of the entry
- * $room_ids  - The id(s) of the room(s) that the entries are in. Can
- *              be a scalar or an array.
- * $all       - Whether to check that the creator has write access
- *              for all ($all=true) or just some ($all=false) of the
- *              rooms.
+ * $creator - The creator of the entry
+ * $rooms   - The id(s) of the room(s) that the entries are in. Can
+ *            be a scalar or an array.
+ * $all     - Whether to check that the creator has write access
+ *            for all ($all=true) or just some ($all=false) of the
+ *            rooms.
  *
  * Returns:
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $room_ids=null, $all=true)
+function is_writable($creator, $rooms=null, $all=true)
 {
-  if (!isset($room_ids))
-  {
-    $rooms = new Rooms();
-    $room_ids = $rooms->getIds();
-  }
-
-  if (is_array($room_ids) && (count($room_ids) > 1))
+  if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
     {
       // We want the user to have write access for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($room_ids as $room_id)
+      foreach ($rooms as $room)
       {
-        if (!getWritable($creator, $room_id))
+        if (!is_writable($creator, $room))
         {
           return false;
         }
@@ -297,9 +287,9 @@ function getWritable($creator, $room_ids=null, $all=true)
     {
       // We want the user to have write access for at least one room,
       // so if there are no rooms for which they do, then return false.
-      foreach ($room_ids as $room_id)
+      foreach ($rooms as $room)
       {
-        if (getWritable($creator, $room_id))
+        if (is_writable($creator, $room))
         {
           return true;
         }
@@ -308,42 +298,34 @@ function getWritable($creator, $room_ids=null, $all=true)
     }
   }
 
-  if (is_null($room_ids) && !$all)
+  if (is_null($rooms) && !$all)
   {
-    // Not yet supported.  Could support it but need to decide what $room_ids=null means.
+    // Not yet supported.  Could support it but need to decide what $rooms=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$room_ids===null and $all===false not yet supported.');
+    throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  // We're down to one room, either as a scalar or an array with no more than one element
-  assert(!is_array($room_ids) || (count($room_ids) < 2), '$rooms invalid');
-  if (is_array($room_ids))
-  {
-    $room_id = (count($room_ids) == 1) ? $room_ids[0] : null;
-  }
-  else
-  {
-    $room_id = $room_ids;
-  }
-
-  $room = Room::getById($room_id);
-  if (!isset($room))
+  // You can't make bookings in rooms which are invisible
+  if (!is_visible($rooms))
   {
     return false;
   }
 
-  // Booking admins have write access
-  if ($room->isBookAdmin())
+  // Always allowed to modify your own stuff
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user) && (strcasecmp($creator, $mrbs_user->username) === 0))
   {
     return true;
   }
 
-  // Otherwise it has to be (a) your own booking and (b) writable
-  $mrbs_user = session()->getCurrentUser();
+  // Otherwise you have to be a (booking) admin for this room
+  if (is_book_admin($rooms))
+  {
+    return true;
+  }
 
-  return (isset($mrbs_user) &&
-          (strcasecmp($creator, $mrbs_user->username) === 0) &&
-          ($room->isWritable()));
+  // Unauthorised access
+  return false;
 }
 
 /* showAccessDenied()
@@ -398,34 +380,29 @@ function is_admin()
 
 
 // Checks whether the current user has booking administration rights
-// for $room_ids - ie is allowed to modify and delete other people's bookings
+// for $rooms - ie is allowed to modify and delete other people's bookings
 // and to approve bookings.
 //
-// $room_ids can be either a single scalar value or an array of room ids.  The default
-// value for $room_ids is all rooms.
+// $rooms can be either a single scalar value or an array of room ids.  The default
+// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
+// so that later MRBS can be enhanced to provide fine-grained permissions.)
 //
-// $all specifies whether the user must be a booking for all $room_ids, or just some of
+// $all specifies whether the user must be a booking for all $rooms, or just some of
 // them, ie at least one.
 //
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room(s); otherwise FALSE
-function is_book_admin($room_ids=null, $all=true)
+function is_book_admin($rooms=null, $all=true)
 {
-  if (!isset($room_ids))
-  {
-    $rooms = new Rooms();
-    $room_ids = $rooms->getIds();
-  }
-
-  if (is_array($room_ids) && (count($room_ids) > 1))
+  if (is_array($rooms) && (count($rooms) > 0))
   {
     if ($all)
     {
       // We want the user to be a booking admin for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($room_ids as $room_id)
+      foreach ($rooms as $room)
       {
-        if (!is_book_admin($room_id))
+        if (!is_book_admin($room))
         {
           return false;
         }
@@ -436,9 +413,9 @@ function is_book_admin($room_ids=null, $all=true)
     {
       // We want the user to be a booking admin for at least one room,
       // so if there are no rooms for which they are, then return false.
-      foreach ($room_ids as $room_id)
+      foreach ($rooms as $room)
       {
-        if (is_book_admin($room_id))
+        if (is_book_admin($room))
         {
           return true;
         }
@@ -447,26 +424,16 @@ function is_book_admin($room_ids=null, $all=true)
     }
   }
 
-  if (is_null($room_ids) && !$all)
+  if (is_null($rooms) && !$all)
   {
     // Not yet supported.  Could support it but need to decide what $rooms=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$room_ids===null and $all===false not yet supported.');
+    throw new \Exception('$rooms===null and $all===false not yet supported.');
   }
 
-  // We're down to one room, either as a scalar or an array with no more than one element
-  assert(!is_array($room_ids) || (count($room_ids) < 2), '$room_ids invalid');
-  if (is_array($room_ids))
-  {
-    $room_id = (count($room_ids) == 1) ? $room_ids[0] : null;
-  }
-  else
-  {
-    $room_id = $room_ids;
-  }
+  $mrbs_user = session()->getCurrentUser();
 
-  $room = Room::getById($room_id);
-  return (isset($room)) ? $room->isBookAdmin() : false;
+  return (isset($mrbs_user) && ($mrbs_user->level >= 2));
 }
 
 
@@ -482,8 +449,8 @@ function is_user_admin()
 
 
 // Checks whether a room is visible to the current user
-function is_visible($room_id)
+// Doesn't do anything at the moment, but allows for customisation or future development
+function is_visible($room)
 {
-  $room = Room::getById($room_id);
-  return (isset($room)) ? $room->isVisible() : false;
+  return true;
 }

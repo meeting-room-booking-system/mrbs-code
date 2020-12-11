@@ -1223,7 +1223,7 @@ if (isset($id))
   {
     // Entry being copied by different user
     // If they don't have rights to view details, clear them
-    $privatewriteable = getWritable($entry['create_by'], $entry['room_id']);
+    $privatewriteable = is_writable($entry['create_by'], $entry['room_id']);
     $keep_private = (is_private_event($private) && !$privatewriteable);
   }
   else
@@ -1550,7 +1550,7 @@ $enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeStri
 
 //now that we know all the data to fill the form with we start drawing it
 
-if (!getWritable($create_by, $room_id))
+if (!is_writable($create_by, $room_id))
 {
   showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
@@ -1581,7 +1581,7 @@ $res = db()->query($sql);
 while (false !== ($row = $res->next_row_keyed()))
 {
   // Only use rooms which are visible and for which the user has write access
-  if (getWritable($create_by, $row['id']) && is_visible($row['id']))
+  if (is_writable($create_by, $row['id']) && is_visible($row['id']))
   {
     $rooms[$row['area_id']][$row['id']] = $row['room_name'];
   }
