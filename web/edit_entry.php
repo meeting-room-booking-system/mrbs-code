@@ -257,7 +257,33 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
 
   $element = new ElementDiv();
 
-  if ($display_none || !$area['show_all_day'])
+  // Get the start and end of the booking day
+  if ($area['enable_periods'])
+  {
+    $first = 12 * SECONDS_PER_HOUR;
+    // If we're using periods we just go to the end of the last slot
+    $last = $first + (count($area['periods']) * $area['resolution']);
+  }
+  else
+  {
+    $first = (($area['morningstarts'] * 60) + $area['morningstarts_minutes']) * 60;
+    $last = ((($area['eveningends'] * 60) + $area['eveningends_minutes']) * 60) + $area['resolution'];
+    // If the end of the day is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += SECONDS_PER_DAY;
+    }
+  }
+
+  // We don't show the all day checkbox if it's going to result in bookings that
+  // contravene the policy - ie if max_duration is enabled and an all day booking
+  // would be longer than the maximum duration allowed.
+  $show_all_day = is_book_admin() ||
+                  !$area['max_duration_enabled'] ||
+                  ( ($area['enable_periods'] && ($area['max_duration_periods'] >= count($area['periods']))) ||
+                    (!$area['enable_periods'] && ($area['max_duration_secs'] >= ($last - $first))) );
+
+  if ($display_none || !$show_all_day)
   {
     $element->addClass('none');
   }
@@ -266,12 +292,12 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
   //     that there is only one select passing through the variable to the handler.
   // (2) If this is an existing booking that we are editing or copying, then we do
   //     not want the default duration applied
-  $disable_field = $disabled || $display_none || !$area['show_all_day'];
+  $disable_field = $disabled || $display_none || !$show_all_day;
 
   $checkbox = new ElementInputCheckbox();
   $checkbox->setAttributes(array('name'      => $input_name,
                                  'id'        => $input_id,
-                                 'data-show' => ($area['show_all_day']) ? '1' : '0',
+                                 'data-show' => ($show_all_day) ? '1' : '0',
                                  'disabled'  => $disable_field))
            ->setChecked($area['default_duration_all_day'] && !isset($id) && !$drag);
 
@@ -1626,14 +1652,6 @@ while (false !== ($row = $res->next_row_keyed()))
   // Generate some derived settings
   $row['max_duration_qty']     = $row['max_duration_secs'];
   toTimeString($row['max_duration_qty'], $row['max_duration_units']);
-
-  // We don't show the all day checkbox if it's going to result in bookings that
-  // contravene the policy - ie if max_duration is enabled and an all day booking
-  // would be longer than the maximum duration allowed.
-  $row['show_all_day'] = is_book_admin() ||
-                         !$row['max_duration_enabled'] ||
-                         ( ($row['enable_periods'] && ($row['max_duration_periods'] >= count($row['periods']))) ||
-                           (!$row['enable_periods'] && ($row['max_duration_secs'] >= ($last - $first))) );
 
   // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
   $row = clean_area_row($row);
