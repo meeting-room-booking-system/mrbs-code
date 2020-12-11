@@ -179,17 +179,30 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
   // Build the options
   $options = array();
 
-  $first = $area['first'];
+  // Get the start and end of the booking day
+  if ($area['enable_periods'])
+  {
+    $first = 12 * SECONDS_PER_HOUR;
+    // If we're using periods we just go to the end of the last slot
+    $last = $first + (count($area['periods']) * $area['resolution']);
+  }
+  else
+  {
+    $first = (($area['morningstarts'] * 60) + $area['morningstarts_minutes']) * 60;
+    $last = ((($area['eveningends'] * 60) + $area['eveningends_minutes']) * 60) + $area['resolution'];
+    // If the end of the day is the same as or before the start time, then it's really on the next day
+    if ($first >= $last)
+    {
+      $last += SECONDS_PER_DAY;
+    }
+  }
+
   // If we're using periods then the last slot is actually the start of the last period,
   // or if we're using times and this is the start selector, then we don't show the last
   // time
   if ($area['enable_periods'] || $is_start)
   {
-    $last = $area['last'] - $area['resolution'];
-  }
-  else
-  {
-    $last = $area['last'];
+    $last = $last - $area['resolution'];
   }
 
   for ($s = $first; $s <= $last; $s += $area['resolution'])
@@ -1613,25 +1626,7 @@ while (false !== ($row = $res->next_row_keyed()))
   // Generate some derived settings
   $row['max_duration_qty']     = $row['max_duration_secs'];
   toTimeString($row['max_duration_qty'], $row['max_duration_units']);
-  // Get the start and end of the booking day
-  if ($row['enable_periods'])
-  {
-    $first = 12*SECONDS_PER_HOUR;
-    // If we're using periods we just go to the end of the last slot
-    $last = $first + (count($row['periods']) * $row['resolution']);
-  }
-  else
-  {
-    $first = (($row['morningstarts'] * 60) + $row['morningstarts_minutes']) * 60;
-    $last = ((($row['eveningends'] * 60) + $row['eveningends_minutes']) * 60) + $row['resolution'];
-    // If the end of the day is the same as or before the start time, then it's really on the next day
-    if ($first >= $last)
-    {
-      $last += SECONDS_PER_DAY;
-    }
-  }
-  $row['first'] = $first;
-  $row['last'] = $last;
+
   // We don't show the all day checkbox if it's going to result in bookings that
   // contravene the policy - ie if max_duration is enabled and an all day booking
   // would be longer than the maximum duration allowed.
