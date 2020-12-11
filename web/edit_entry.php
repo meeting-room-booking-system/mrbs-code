@@ -507,7 +507,11 @@ function get_field_rooms($value, $disabled=false)
                                  'size'     => '5'))
            ->addClass('none')
            ->addSelectOptions($area_rooms, $room_ids[0], true);
+    
     // Put in some data about the area for use by the JavaScript
+    $max_duration_qty     = $area_details[$a]['max_duration_secs'];
+    toTimeString($max_duration_qty, $max_duration_units);
+
     $select->setAttributes(array(
         'data-enable_periods'           => ($area_details[$a]['enable_periods']) ? 1 : 0,
         'data-n_periods'                => count($area_details[$a]['periods']),
@@ -516,8 +520,8 @@ function get_field_rooms($value, $disabled=false)
         'data-max_duration_enabled'     => ($area_details[$a]['max_duration_enabled']) ? 1 : 0,
         'data-max_duration_secs'        => $area_details[$a]['max_duration_secs'],
         'data-max_duration_periods'     => $area_details[$a]['max_duration_periods'],
-        'data-max_duration_qty'         => $area_details[$a]['max_duration_qty'],
-        'data-max_duration_units'       => $area_details[$a]['max_duration_units'],
+        'data-max_duration_qty'         => $max_duration_qty,
+        'data-max_duration_units'       => $max_duration_units,
         'data-timezone'                 => $area_details[$a]['timezone']
       ));
     $field->addElement($select);
@@ -1649,9 +1653,6 @@ while (false !== ($row = $res->next_row_keyed()))
   {
     $row['resolution'] = 60;
   }
-  // Generate some derived settings
-  $row['max_duration_qty']     = $row['max_duration_secs'];
-  toTimeString($row['max_duration_qty'], $row['max_duration_units']);
 
   // Clean up the settings, getting rid of any nulls and casting boolean fields into bools
   $row = clean_area_row($row);
