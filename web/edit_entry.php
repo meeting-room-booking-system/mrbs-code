@@ -402,23 +402,17 @@ function get_field_end_time($value, $disabled=false)
 
 function get_field_areas($value, $disabled=false)
 {
-  global $area_details;
+  $areas = new Areas();
+  $options = $areas->getNames();
 
   // No point in being able to choose an area if there aren't more
   // than one of them.
-  if (count($area_details) < 2)
+  if (count($options) < 2)
   {
     return null;
   }
 
   $field = new FieldSelect();
-
-  $options = array();
-  // go through the areas and create the options
-  foreach ($area_details as $a)
-  {
-    $options[$a['id']] = $a['area_name'];
-  }
 
   // We will set the display to none and then turn it on in the JavaScript.  That's
   // because if there's no JavaScript we don't want to display it because we won't
