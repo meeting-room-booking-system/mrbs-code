@@ -78,6 +78,32 @@ elseif (isset($update_button))
 $is_ajax = is_ajax();
 
 
+function print_effective_permissions(User $user)
+{
+  return;
+  // Under development - not doing anything for the moment.
+  echo "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
+
+  $areas = new Areas();
+
+  echo "<table>\n";
+  foreach ($areas as $area)
+  {
+    echo "<tr>";
+    echo "<td>" . htmlspecialchars($area->area_name) . "</td>";
+    echo "</tr>\n";
+    $rooms = new Rooms($area->id);
+    foreach ($rooms as $room)
+    {
+      echo "<tr>";
+      echo "<td>" . htmlspecialchars($room->room_name) . "</td>";
+      echo "</tr>\n";
+    }
+  }
+  echo "</table>\n";
+}
+
+
 // Checks whether the current user can view the target user
 function can_view_user($target)
 {
@@ -1030,6 +1056,8 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled, $editing_last_admin));
 
   $form->render();
+
+  print_effective_permissions($user);
 
   // Print footer and exit
   print_footer();

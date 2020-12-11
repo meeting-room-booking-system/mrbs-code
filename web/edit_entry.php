@@ -282,7 +282,7 @@ function get_all_day($area, $input_id, $input_name, $display_none=false, $disabl
 
 function get_field_start_time($value, $disabled=false)
 {
-  global $areas, $area_id;
+  global $area_details, $area_id;
 
   $date = getbookingdate($value);
   $start_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
@@ -301,21 +301,21 @@ function get_field_start_time($value, $disabled=false)
   $field->setAttribute('class', 'start_end')
         ->setLabel(get_vocab('start'))
         ->addControlElement($element_date)
-        ->addControlElement(get_slot_selector($areas[$area_id],
+        ->addControlElement(get_slot_selector($area_details[$area_id],
                                               'start_seconds',
                                               'start_seconds',
                                               $current_s,
                                               false,
                                               $disabled,
                                               true))
-        ->addControlElement(get_all_day($areas[$area_id],
+        ->addControlElement(get_all_day($area_details[$area_id],
                                         'all_day',
                                         'all_day',
                                         false,
                                         $disabled));
 
   // Generate the templates for each area
-  foreach ($areas as $a)
+  foreach ($area_details as $a)
   {
     $field->addControlElement(get_slot_selector($a,
                                                 'start_seconds' . $a['id'],
@@ -337,7 +337,7 @@ function get_field_start_time($value, $disabled=false)
 
 function get_field_end_time($value, $disabled=false)
 {
-  global $areas, $area_id;
+  global $area_details, $area_id;
   global $multiday_allowed;
 
   $date = getbookingdate($value, true);
@@ -363,13 +363,13 @@ function get_field_end_time($value, $disabled=false)
                                        'disabled' => true));
   }
 
-  $a = $areas[$area_id];
+  $a = $area_details[$area_id];
   $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
 
   $field->setAttribute('class', 'start_end')
         ->setLabel(get_vocab('end'))
         ->addControlElement($element_date)
-        ->addControlElement(get_slot_selector($areas[$area_id],
+        ->addControlElement(get_slot_selector($area_details[$area_id],
                                               'end_seconds',
                                               'end_seconds',
                                               $this_current_s,
@@ -378,7 +378,7 @@ function get_field_end_time($value, $disabled=false)
                                               false));
 
   // Generate the templates
-  foreach ($areas as $a)
+  foreach ($area_details as $a)
   {
     $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
     $field->addControlElement(get_slot_selector($a,
@@ -402,11 +402,11 @@ function get_field_end_time($value, $disabled=false)
 
 function get_field_areas($value, $disabled=false)
 {
-  global $areas;
+  global $area_details;
 
   // No point in being able to choose an area if there aren't more
   // than one of them.
-  if (count($areas) < 2)
+  if (count($area_details) < 2)
   {
     return null;
   }
@@ -415,7 +415,7 @@ function get_field_areas($value, $disabled=false)
 
   $options = array();
   // go through the areas and create the options
-  foreach ($areas as $a)
+  foreach ($area_details as $a)
   {
     $options[$a['id']] = $a['area_name'];
   }
@@ -436,7 +436,7 @@ function get_field_areas($value, $disabled=false)
 
 function get_field_rooms($value, $disabled=false)
 {
-  global $multiroom_allowed, $area_id, $areas, $rooms;
+  global $multiroom_allowed, $area_id, $area_details, $rooms;
 
   // First of all generate the rooms for this area
   $field = new FieldSelect();
@@ -476,16 +476,16 @@ function get_field_rooms($value, $disabled=false)
            ->addSelectOptions($area_rooms, $room_ids[0], true);
     // Put in some data about the area for use by the JavaScript
     $select->setAttributes(array(
-        'data-enable_periods'           => ($areas[$a]['enable_periods']) ? 1 : 0,
-        'data-n_periods'                => count($areas[$a]['periods']),
-        'data-default_duration'         => (isset($areas[$a]['default_duration']) && ($areas[$a]['default_duration'] != 0)) ? $areas[$a]['default_duration'] : SECONDS_PER_HOUR,
-        'data-default_duration_all_day' => ($areas[$a]['default_duration_all_day']) ? 1 : 0,
-        'data-max_duration_enabled'     => ($areas[$a]['max_duration_enabled']) ? 1 : 0,
-        'data-max_duration_secs'        => $areas[$a]['max_duration_secs'],
-        'data-max_duration_periods'     => $areas[$a]['max_duration_periods'],
-        'data-max_duration_qty'         => $areas[$a]['max_duration_qty'],
-        'data-max_duration_units'       => $areas[$a]['max_duration_units'],
-        'data-timezone'                 => $areas[$a]['timezone']
+        'data-enable_periods'           => ($area_details[$a]['enable_periods']) ? 1 : 0,
+        'data-n_periods'                => count($area_details[$a]['periods']),
+        'data-default_duration'         => (isset($area_details[$a]['default_duration']) && ($area_details[$a]['default_duration'] != 0)) ? $area_details[$a]['default_duration'] : SECONDS_PER_HOUR,
+        'data-default_duration_all_day' => ($area_details[$a]['default_duration_all_day']) ? 1 : 0,
+        'data-max_duration_enabled'     => ($area_details[$a]['max_duration_enabled']) ? 1 : 0,
+        'data-max_duration_secs'        => $area_details[$a]['max_duration_secs'],
+        'data-max_duration_periods'     => $area_details[$a]['max_duration_periods'],
+        'data-max_duration_qty'         => $area_details[$a]['max_duration_qty'],
+        'data-max_duration_units'       => $area_details[$a]['max_duration_units'],
+        'data-timezone'                 => $area_details[$a]['timezone']
       ));
     $field->addElement($select);
 
@@ -1588,7 +1588,7 @@ while (false !== ($row = $res->next_row_keyed()))
 }
 
 // Get the details of all the enabled areas
-$areas = array();
+$area_details = array();
 $sql = "SELECT id, area_name, resolution, default_duration, default_duration_all_day,
                enable_periods, periods, timezone,
                morningstarts, morningstarts_minutes, eveningends , eveningends_minutes,
@@ -1650,7 +1650,7 @@ while (false !== ($row = $res->next_row_keyed()))
   $row = clean_area_row($row);
 
   // Now assign the row to the area
-  $areas[$row['id']] = $row;
+  $area_details[$row['id']] = $row;
 }
 
 
