@@ -1798,17 +1798,18 @@ function get_booking_info($id, $series, $silent=FALSE)
 // Gets the ids of all the invisible rooms in the system
 function get_invisible_room_ids()
 {
-  $sql = "SELECT id FROM " . _tbl('room');
-
-  $res = db()->query($sql);
-
   $result = array();
+  $areas = new Areas();
 
-  while (false !== ($row = $res->next_row_keyed()))
+  foreach ($areas as $area)
   {
-    if (!is_visible($row['id']))
+    $rooms = new Rooms($area->id);
+    foreach ($rooms as $room)
     {
-      $result[] = $row['id'];
+      if (!$room->isVisible())
+      {
+        $result[] = $room->id;
+      }
     }
   }
 
