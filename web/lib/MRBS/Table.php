@@ -82,8 +82,16 @@ abstract class Table
   // Saves to the database
   public function save()
   {
+    // TODO: Sort out locking.  We can't rely on locking just this table because
+    // TODO: we might be in the middle of a transaction, in which case an implicit
+    // TODO: will be triggered, or another table might already be locked, in which
+    // TODO: case this new lock will cause the other table to be unlocked.
+    // TODO: It's probably going to be necessary to move to
+    // TODO: PostgreSQL 9.5 and use INSERT ... ON DUPLICATE KEY UPDATE in MySQL
+    // TODO: and INSERT ... ON CONFLICT () DO UPDATE in PostgreSQL 9.5.
+
     // Obtain a lock (see also Delete)
-    db()->mutex_lock(_tbl(static::TABLE_NAME));
+    //db()->mutex_lock(_tbl(static::TABLE_NAME));
 
     $this->data = static::onWrite($this->data);
 
@@ -99,7 +107,7 @@ abstract class Table
     }
 
     // Release the lock
-    db()->mutex_unlock(_tbl(static::TABLE_NAME));
+    //db()->mutex_unlock(_tbl(static::TABLE_NAME));
   }
 
 
