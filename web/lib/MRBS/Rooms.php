@@ -8,6 +8,8 @@ class Rooms extends TableIterator
   private $area_id;
 
 
+  // Gets the rooms for an area.  If no area_id is specified then it gets all
+  // the rooms in the system.
   public function __construct($area_id=null)
   {
     $this->area_id = $area_id;

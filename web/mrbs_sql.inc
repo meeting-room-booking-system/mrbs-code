@@ -1799,17 +1799,13 @@ function get_booking_info($id, $series, $silent=FALSE)
 function get_invisible_room_ids()
 {
   $result = array();
-  $areas = new Areas();
 
-  foreach ($areas as $area)
+  $rooms = new Rooms();
+  foreach ($rooms as $room)
   {
-    $rooms = new Rooms($area->id);
-    foreach ($rooms as $room)
+    if (!$room->isVisible())
     {
-      if (!$room->isVisible())
-      {
-        $result[] = $room->id;
-      }
+      $result[] = $room->id;
     }
   }
 
