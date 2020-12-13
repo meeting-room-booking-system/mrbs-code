@@ -1707,14 +1707,15 @@ function get_booking_info($id, $series, $silent=FALSE)
   $row = $res->next_row_keyed();
   unset($res);
 
-  if (!is_array($row) || (!is_visible($row['room_id'])))
+  $room = Room::getById($row['room_id']);
+  if (!is_array($row) || (!$room->isVisible()))
   {
     // It's quite possible that the id will have disappeared, eg if somebody
     // else has deleted or edited the entry, or if the back button is pressed
     // after deleting an entry.
     if ($silent)
     {
-      return FALSE;
+      return false;
     }
     else
     {
