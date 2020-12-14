@@ -69,7 +69,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 
   // Check whether the event is private
   if (is_private_event($entry['private']) &&
-      !is_writable($entry['create_by'], $entry['room_id']))
+      !getWritable($entry['create_by'], $entry['room_id']))
   {
     $entry['private'] = true;
 
@@ -319,7 +319,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
 
         // Tell JavaScript to make bookings resizable
         if ((count($cell) == 1) &&
-            is_writable($booking['create_by'], $booking['room_id']))
+            getWritable($booking['create_by'], $booking['room_id']))
         {
           $classes[] = 'writable';
         }
@@ -1806,7 +1806,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
 
         // Handle private events
         if (is_private_event($entry['private']) &&
-            !is_writable($entry['create_by'], $room_id))
+            !getWritable($entry['create_by'], $room_id))
         {
           $entry['private'] = true;
           if ($is_private_field['entry.name'])

@@ -251,7 +251,7 @@ function checkAuthorised($page, $just_check=false)
 }
 
 
-/* is_writable($creator, $room)
+/* getWritable($creator, $room)
  *
  * Determines if the current user is able to modify an entry
  *
@@ -266,7 +266,7 @@ function checkAuthorised($page, $just_check=false)
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function is_writable($creator, $rooms=null, $all=true)
+function getWritable($creator, $rooms=null, $all=true)
 {
   if (is_array($rooms) && (count($rooms) > 0))
   {
@@ -276,7 +276,7 @@ function is_writable($creator, $rooms=null, $all=true)
       // so if for any one room they are not, then return false.
       foreach ($rooms as $room)
       {
-        if (!is_writable($creator, $room))
+        if (!getWritable($creator, $room))
         {
           return false;
         }
@@ -289,7 +289,7 @@ function is_writable($creator, $rooms=null, $all=true)
       // so if there are no rooms for which they do, then return false.
       foreach ($rooms as $room)
       {
-        if (is_writable($creator, $room))
+        if (getWritable($creator, $room))
         {
           return true;
         }

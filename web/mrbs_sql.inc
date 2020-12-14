@@ -113,7 +113,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
     if (is_private_event($row['private']) &&
         $is_private_field['entry.name'] &&
-        !is_writable($row['create_by'], $room_id))
+        !getWritable($row['create_by'], $room_id))
     {
        $row['name'] = get_vocab("unavailable");
     }
@@ -841,7 +841,7 @@ function mrbsDelEntry($id, $series, $all)
   {
     unpack_status($row);
 
-    if(!is_writable($row['create_by'], $room_id))
+    if(!getWritable($row['create_by'], $room_id))
     {
       continue;
     }

@@ -237,7 +237,7 @@ if (isset($id) && ($id == ''))
 // admins to make bookings on behalf of others.
 //
 // Only carry out this check if it's not an Ajax request.  If it is an Ajax request then
-// $create_by isn't set yet, but a is_writable check will be done later,
+// $create_by isn't set yet, but a getWritable check will be done later,
 if (!$is_ajax)
 {
   if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
@@ -491,7 +491,7 @@ if (isset($id))
 }
 
 // Must have write access to at least one of the rooms
-if (!is_writable($create_by, $target_rooms, false))
+if (!getWritable($create_by, $target_rooms, false))
 {
   showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
   exit;
@@ -698,7 +698,7 @@ $bookings = array();
 foreach ($rooms as $room_id)
 {
   // Ignore rooms for which the user doesn't have write access
-  if (!is_writable($create_by, $room_id))
+  if (!getWritable($create_by, $room_id))
   {
     continue;
   }
