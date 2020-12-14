@@ -1312,7 +1312,7 @@ function escape_js($str)
 }
 
 
-// Return a default area; used if no area is already known. This returns the
+// Return a default area id; used if no area is already known. This returns the
 // area that contains the default room (if it is set, valid and enabled) otherwise the
 // first area in alphabetical order in the database (no guarantee there is an area 1).
 // The area must be enabled for it to be considered.
@@ -1321,54 +1321,29 @@ function get_default_area()
 {
   global $default_room;
 
-  // It's possible that this function is being called during an upgrade
-  // process before the disabled column existed.
-  $disabled_field_exists = db()->field_exists(_tbl('room'), 'disabled');
-
   // If the $default_room is set and exists and is enabled and is visible to
   // the current user, then return the corresponding area
-  if (isset($default_room) && is_visible($default_room))
+  if (isset($default_room))
   {
-    $sql = "SELECT area_id
-              FROM " . _tbl('room') . " R, " . _tbl('area') . " A
-             WHERE R.id=:id
-               AND R.area_id = A.id";
-
-    if ($disabled_field_exists)
+    $room = Room::getById($default_room);
+    if (isset($room) &&
+        !$room->isDisabled() &&
+        $room->isVisible())
     {
-      $sql .= " AND R.disabled = 0 AND A.disabled = 0";
-    }
-
-    $sql .= " LIMIT 1";
-    $area = db()->query1($sql, array(':id' => $default_room));
-
-    if ($area >= 0)
-    {
-      return $area;
+      return $room->area_id;
     }
   }
 
   // Otherwise return the first enabled area in the database that has an
   // enabled and visible room
-  $sql = "SELECT R.id, R.area_id
-            FROM " . _tbl('room') . " R, " . _tbl('area') . " A
-           WHERE R.area_id = A.id";
-
-  if ($disabled_field_exists)
+  $rooms = new Rooms();
+  foreach ($rooms as $room)
   {
-    $sql .= " AND R.disabled = 0 AND A.disabled = 0";
-  }
-
-  $order_by_column = (db()->field_exists(_tbl('area'), 'sort_key')) ? 'sort_key' : 'area_name';
-  $sql .= " ORDER BY A.$order_by_column";
-
-  $res = db()->query($sql);
-
-  while (false !== ($row = $res->next_row_keyed()))
-  {
-    if (is_visible($row['id']))
+    if (isset($room) &&
+        !$room->isDisabled() &&
+        $room->isVisible())
     {
-      return $row['area_id'];
+      return $room->area_id;
     }
   }
 
