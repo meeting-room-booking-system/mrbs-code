@@ -79,8 +79,17 @@ class Room extends Location
   // For efficiency we get some information about the area at the same time.
   protected static function getByColumn($column, $value)
   {
-    $sql = "SELECT R.*, A.area_name, A.disabled as area_disabled
-              FROM " . _tbl(static::TABLE_NAME) . " R
+    $sql = "SELECT R.*, A.area_name";
+
+    // The disabled column didn't always exist and it's possible that this
+    // method is being called during an upgrade before the column exists
+    $area_columns = new Columns(_tbl(Area::TABLE_NAME));
+    if (null !== $area_columns->getColumnByName('disabled'))
+    {
+      $sql .= ", A.disabled as area_disabled";
+    }
+
+    $sql .= " FROM " . _tbl(static::TABLE_NAME) . " R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id
              WHERE R.$column=:value

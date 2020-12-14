@@ -1375,7 +1375,7 @@ function get_default_area()
   return 0;
 }
 
-// Return a default room given a valid area; used if no room is already known.
+// Return a default room id given a valid area; used if no room is already known.
 // If the area contains $default_room and $default_room is visible to the current
 // user, then it returns $default_room. Otherwise it returns the first visible room
 // in sort_key order in the database.
@@ -1384,29 +1384,18 @@ function get_default_room($area_id)
 {
   global $default_room;
 
-  // It's possible that this function is being called during
-  // an upgrade process before the disabled columns existed.
-  $disabled_field_exists = db()->field_exists(_tbl('room'), 'disabled');
-
-  // Check to see whether this area contains $default_room
+  // Check to see whether this area contains $default_room and that the room
+  // is enabled and visible.
   if (isset($default_room))
   {
-    $sql = "SELECT id
-              FROM " . _tbl('room') . "
-             WHERE id=:id AND area_id=:area_id";
-
-    if ($disabled_field_exists)
+    $room = Room::getById($default_room);
+    // Test for visibility last as that is the most expensive test
+    if (isset($room) &&
+        ($room->area_id == $area_id) &&
+        !$room->isDisabled() &&
+        $room->isVisible())
     {
-      $sql .= " AND disabled=0";
-    }
-
-    $sql .= " LIMIT 1";
-    $sql_params = array(':id' => $default_room, ':area_id' => $area_id);
-    $room = db()->query1($sql, $sql_params);
-
-    if (($room >= 0) && is_visible($room))
-    {
-      return $room;
+      return $room->id;
     }
   }
 
