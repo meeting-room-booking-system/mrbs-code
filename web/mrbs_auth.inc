@@ -333,7 +333,7 @@ function getWritable($creator, $room_ids=null, $all=true)
   {
     return $room->isWritable();
   }
-  
+
   // Otherwise you have to be a booking admin for this room
   return $room->isBookAdmin();
 }

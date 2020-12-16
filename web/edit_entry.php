@@ -507,7 +507,7 @@ function get_field_rooms($value, $disabled=false)
                                  'size'     => '5'))
            ->addClass('none')
            ->addSelectOptions($area_rooms, $room_ids[0], true);
-    
+
     // Put in some data about the area for use by the JavaScript
     $max_duration_qty     = $area_details[$a]['max_duration_secs'];
     toTimeString($max_duration_qty, $max_duration_units);
@@ -1617,8 +1617,8 @@ $res = db()->query($sql);
 
 while (false !== ($row = $res->next_row_keyed()))
 {
-  // Only use rooms which are visible and for which the user has write access
-  if (getWritable($create_by, $row['id']) && is_visible($row['id']))
+  // Only use rooms for which the user has write access
+  if (getWritable($create_by, $row['id']))
   {
     $rooms[$row['area_id']][$row['id']] = $row['room_name'];
   }
