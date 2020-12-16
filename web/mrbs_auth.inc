@@ -277,9 +277,13 @@ function getWritable($creator, $room_ids=null, $all=true)
 
   // If you are logged in then check whether you are allowed to make a booking
   // for this user in this room/these rooms.
-  if (is_array($room_ids) && (count($room_ids) > 0))
+  if (is_array($room_ids))
   {
-    if ($all)
+    if (count($room_ids) == 0)
+    {
+      return false;
+    }
+    elseif ($all)
     {
       // We want the user to have write access for all the rooms,
       // so if for any one room they are not, then return false.
@@ -329,7 +333,7 @@ function getWritable($creator, $room_ids=null, $all=true)
   {
     return $room->isWritable();
   }
-
+  
   // Otherwise you have to be a booking admin for this room
   return $room->isBookAdmin();
 }
@@ -408,9 +412,13 @@ function is_book_admin($room_ids=null, $all=true)
 
   // If you are logged in then check whether you are a booking admin
   // for this room/these rooms.
-  if (is_array($room_ids) && (count($room_ids) > 0))
+  if (is_array($room_ids))
   {
-    if ($all)
+    if (count($room_ids) == 0)
+    {
+      return false;
+    }
+    elseif ($all)
     {
       // We want the user to be a booking admin for all the rooms,
       // so if for any one room they are not, then return false.
@@ -437,15 +445,25 @@ function is_book_admin($room_ids=null, $all=true)
       return false;
     }
   }
-
-  if (is_null($room_ids) && !$all)
+  elseif (is_null($room_ids))
   {
+    if ($all)
+    {
+      return false;
+    }
     // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
     throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
 
-  return ($mrbs_user->level >= 2);
+  // We're down to a single room
+  $room = Room::getById($room_ids);
+  if (!isset($room))
+  {
+    return false;
+  }
+
+  return $room->isBookAdmin();
 }
 
 
