@@ -476,11 +476,3 @@ function is_user_admin()
 
   return (isset($mrbs_user) && ($mrbs_user->level >= $min_user_editing_level));
 }
-
-
-// Checks whether a room is visible to the current user
-// Doesn't do anything at the moment, but allows for customisation or future development
-function is_visible($room)
-{
-  return true;
-}
