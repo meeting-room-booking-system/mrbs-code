@@ -268,6 +268,15 @@ function checkAuthorised($page, $just_check=false)
  */
 function getWritable($creator, $room_ids=null, $all=true)
 {
+  // You need to be logged in in order toi be able to make a booking
+  $mrbs_user = session()->getCurrentUser();
+  if (!isset($mrbs_user))
+  {
+    return false;
+  }
+
+  // If you are logged in then check whether you are allowed to make a booking
+  // for this user in this room/these rooms.
   if (is_array($room_ids) && (count($room_ids) > 0))
   {
     if ($all)
@@ -297,38 +306,32 @@ function getWritable($creator, $room_ids=null, $all=true)
       return false;
     }
   }
-
-  // We're down to a single room
-  $room_id = $room_ids;
-
-  if (is_null($room_id) && !$all)
+  elseif (is_null($room_ids))
   {
+    if ($all)
+    {
+      return false;
+    }
     // Not yet supported.  Could support it but need to decide what $rooms=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$rooms===null and $all===false not yet supported.');
+    throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
 
-  // You can't make bookings in rooms which are invisible
-  if (!is_visible($room_ids))
+  // We're down to a single room
+  $room = Room::getById($room_ids);
+  if (!isset($room))
   {
     return false;
   }
 
-  // Always allowed to modify your own stuff
-  $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user) && (strcasecmp($creator, $mrbs_user->username) === 0))
+  // If it's your own booking then you need to have write access
+  if ((strcasecmp($creator, $mrbs_user->username) === 0))
   {
-    return true;
+    return $room->isWritable();
   }
 
   // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($room_id))
-  {
-    return true;
-  }
-
-  // Unauthorised access
-  return false;
+  return is_book_admin($room->id);
 }
 
 /* showAccessDenied()
