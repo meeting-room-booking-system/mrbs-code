@@ -266,17 +266,17 @@ function checkAuthorised($page, $just_check=false)
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $rooms=null, $all=true)
+function getWritable($creator, $room_ids=null, $all=true)
 {
-  if (is_array($rooms) && (count($rooms) > 0))
+  if (is_array($room_ids) && (count($room_ids) > 0))
   {
     if ($all)
     {
       // We want the user to have write access for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (!getWritable($creator, $room))
+        if (!getWritable($creator, $room_id))
         {
           return false;
         }
@@ -287,9 +287,9 @@ function getWritable($creator, $rooms=null, $all=true)
     {
       // We want the user to have write access for at least one room,
       // so if there are no rooms for which they do, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (getWritable($creator, $room))
+        if (getWritable($creator, $room_id))
         {
           return true;
         }
@@ -298,7 +298,10 @@ function getWritable($creator, $rooms=null, $all=true)
     }
   }
 
-  if (is_null($rooms) && !$all)
+  // We're down to a single room
+  $room_id = $room_ids;
+
+  if (is_null($room_id) && !$all)
   {
     // Not yet supported.  Could support it but need to decide what $rooms=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
@@ -306,7 +309,7 @@ function getWritable($creator, $rooms=null, $all=true)
   }
 
   // You can't make bookings in rooms which are invisible
-  if (!is_visible($rooms))
+  if (!is_visible($room_ids))
   {
     return false;
   }
@@ -319,7 +322,7 @@ function getWritable($creator, $rooms=null, $all=true)
   }
 
   // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($rooms))
+  if (is_book_admin($room_id))
   {
     return true;
   }
