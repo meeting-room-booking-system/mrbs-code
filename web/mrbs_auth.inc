@@ -268,7 +268,7 @@ function checkAuthorised($page, $just_check=false)
  */
 function getWritable($creator, $room_ids=null, $all=true)
 {
-  // You need to be logged in in order toi be able to make a booking
+  // You need to be logged in in order to be able to make a booking
   $mrbs_user = session()->getCurrentUser();
   if (!isset($mrbs_user))
   {
@@ -312,7 +312,7 @@ function getWritable($creator, $room_ids=null, $all=true)
     {
       return false;
     }
-    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
     throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
@@ -386,29 +386,37 @@ function is_admin()
 
 
 // Checks whether the current user has booking administration rights
-// for $rooms - ie is allowed to modify and delete other people's bookings
+// for $room_ids - ie is allowed to modify and delete other people's bookings
 // and to approve bookings.
 //
-// $rooms can be either a single scalar value or an array of room ids.  The default
-// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
-// so that later MRBS can be enhanced to provide fine-grained permissions.)
+// $room_ids can be either a single scalar value or an array of room ids.  The default
+// value for $room_ids is all rooms.
 //
-// $all specifies whether the user must be a booking for all $rooms, or just some of
+// $all specifies whether the user must be a booking for all $room_ids, or just some of
 // them, ie at least one.
 //
 // Returns:  TRUE if the user is allowed has booking admin rights for
 //           the room(s); otherwise FALSE
-function is_book_admin($rooms=null, $all=true)
+function is_book_admin($room_ids=null, $all=true)
 {
-  if (is_array($rooms) && (count($rooms) > 0))
+  // You need to be logged in in order to be a booking admin
+  $mrbs_user = session()->getCurrentUser();
+  if (!isset($mrbs_user))
+  {
+    return false;
+  }
+
+  // If you are logged in then check whether you are a booking admin
+  // for this room/these rooms.
+  if (is_array($room_ids) && (count($room_ids) > 0))
   {
     if ($all)
     {
       // We want the user to be a booking admin for all the rooms,
       // so if for any one room they are not, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (!is_book_admin($room))
+        if (!is_book_admin($room_id))
         {
           return false;
         }
@@ -419,9 +427,9 @@ function is_book_admin($rooms=null, $all=true)
     {
       // We want the user to be a booking admin for at least one room,
       // so if there are no rooms for which they are, then return false.
-      foreach ($rooms as $room)
+      foreach ($room_ids as $room_id)
       {
-        if (is_book_admin($room))
+        if (is_book_admin($room_id))
         {
           return true;
         }
@@ -430,16 +438,14 @@ function is_book_admin($rooms=null, $all=true)
     }
   }
 
-  if (is_null($rooms) && !$all)
+  if (is_null($room_ids) && !$all)
   {
-    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
-    throw new \Exception('$rooms===null and $all===false not yet supported.');
+    throw new \Exception('$room_ids===null and $all===false not yet supported.');
   }
 
-  $mrbs_user = session()->getCurrentUser();
-
-  return (isset($mrbs_user) && ($mrbs_user->level >= 2));
+  return ($mrbs_user->level >= 2);
 }
 
 
