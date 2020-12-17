@@ -726,8 +726,23 @@ function update_user(array $form)
 {
   global $auth, $initial_user_creation;
 
-  $user = new User();
-  $user->auth_type = $auth['type'];
+  if (isset($form['id']))
+  {
+    $user = User::getById($form['id']);
+    if (!isset($user))
+    {
+      // Probably because someone has deleted the user in the meantime
+      trigger_error("Could not find user with id " . $form['id']);
+    }
+  }
+
+  // If it's a new user, or if for some reason the getById() failed, then
+  // create a new one.
+  if (!isset($user))
+  {
+    $user = new User();
+    $user->auth_type = $auth['type'];
+  }
 
   foreach ($form as $key => $value)
   {
