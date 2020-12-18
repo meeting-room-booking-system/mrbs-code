@@ -279,7 +279,6 @@ foreach ($fields as $field)
 
 $sql_pred .= ") AND (E.end_time > ?)";
 $sql_params[] = $search_start_time;
-$sql_pred .= " AND (E.room_id = R.id) AND (R.area_id = A.id)";
 
 // We only want the bookings for rooms that are visible
 $invisible_room_ids = get_invisible_room_ids();
@@ -323,8 +322,12 @@ if (!is_book_admin())
 if (!isset($total))
 {
   $sql = "SELECT count(*)
-          FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
-          WHERE $sql_pred";
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R
+              ON E.room_id = R.id
+       LEFT JOIN " . _tbl('area') . " A
+              ON R.area_id = A.id
+           WHERE $sql_pred";
   $total = db()->query1($sql, $sql_params);
 }
 
@@ -352,7 +355,11 @@ if (!$ajax_capable || $is_ajax)
   // Now we set up the "real" query
   $sql = "SELECT E.id AS entry_id, E.create_by, E.name, E.description, E.start_time,
                  E.room_id, R.area_id, A.enable_periods
-            FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R
+              ON E.room_id = R.id
+       LEFT JOIN " . _tbl('area') . " A
+              ON R.area_id = A.id
            WHERE $sql_pred
         ORDER BY E.start_time asc";
   // If it's an Ajax query we want everything.  Otherwise we use LIMIT to just get
