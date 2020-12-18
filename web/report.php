@@ -1490,15 +1490,21 @@ if ($phase == 2)
     // information in order to construct the recurrence rule
     $sql .= ", T.rep_type, T.end_date, T.rep_opt, T.rep_interval, T.month_absolute, T.month_relative";
   }
-  $sql .= " FROM " . _tbl('area') . " A, " . _tbl('room') . " R, " . _tbl('entry') . " E";
+  $sql .= " FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R
+              ON E.room_id = R.id
+       LEFT JOIN " . _tbl('area') . " A
+              ON R.area_id = A.id";
+
   if ($output_format == OUTPUT_ICAL)
   {
     // We do a LEFT JOIN because we still want the single entries, ie the ones
     // that won't have a match in the repeat table
-    $sql .= " LEFT JOIN " . _tbl('repeat') . " T ON E.repeat_id=T.id";
+    $sql .= " LEFT JOIN " . _tbl('repeat') . " T
+                     ON E.repeat_id=T.id";
   }
-  $sql .= " WHERE E.room_id=R.id AND R.area_id=A.id"
-        . " AND E.start_time < ? AND E.end_time > ?";
+  
+  $sql .= " WHERE E.start_time < ? AND E.end_time > ?";
   $sql_params[] = $report_end;
   $sql_params[] = $report_start;
   if ($output_format == OUTPUT_ICAL)
