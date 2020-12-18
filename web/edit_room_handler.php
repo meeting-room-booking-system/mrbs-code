@@ -107,7 +107,15 @@ if (!validate_email_list($room_admin_email))
 }
 
 // Make sure the invalid types exist
-$invalid_types = array_intersect($invalid_types, $booking_types);
+if (isset($booking_types))
+{
+  $invalid_types = array_intersect($invalid_types, $booking_types);
+}
+else
+{
+  $invalid_types = array();
+}
+
 
 if (empty($errors))
 {

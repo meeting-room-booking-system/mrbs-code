@@ -218,16 +218,20 @@ function get_fieldset_general($data)
   $fieldset->addElement($field);
 
   // Invalid types
-  $field = new FieldSelect();
-  $field->setAttribute('class', 'multiline')
-        ->setLabel(get_vocab('invalid_types'))
-        ->setLabelAttribute('title', get_vocab('invalid_types_note'))
-        ->setControlAttributes(array(
-            'name'     => 'invalid_types[]',
-            'multiple' => true)
-          )
-        ->addSelectOptions(get_type_options(true), $data['invalid_types'], true);
-  $fieldset->addElement($field);
+  $type_options = get_type_options(true);
+  if (!empty($type_options))
+  {
+    $field = new FieldSelect();
+    $field->setAttribute('class', 'multiline')
+      ->setLabel(get_vocab('invalid_types'))
+      ->setLabelAttribute('title', get_vocab('invalid_types_note'))
+      ->setControlAttributes(array(
+          'name' => 'invalid_types[]',
+          'multiple' => true)
+        )
+      ->addSelectOptions($type_options, $data['invalid_types'], true);
+    $fieldset->addElement($field);
+  }
 
   // The custom HTML
   if (is_admin() && $auth['allow_custom_html'])
