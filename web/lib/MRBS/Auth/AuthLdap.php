@@ -501,7 +501,7 @@ class AuthLdap extends Auth
                                                          $display_name_parts);
     }
 
-    return ($user);
+    return $user;
   }
 
 
