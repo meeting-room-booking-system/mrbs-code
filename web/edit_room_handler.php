@@ -13,7 +13,7 @@ function get_form()
   // Get the special parameters which don't have a corresponding column
   $params['new_area'] = get_form_var('new_area', 'int');
   $params['old_area'] = get_form_var('old_area', 'int');
-  $params['old_room_name'] = get_form_var('old_room_name', 'int');
+  $params['old_room_name'] = get_form_var('old_room_name', 'string');
   // And get the ones that have a different type
   $params['invalid_types'] = get_form_var('invalid_types', 'array');
 
