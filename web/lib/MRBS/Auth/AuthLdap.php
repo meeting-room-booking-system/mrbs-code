@@ -438,6 +438,59 @@ class AuthLdap extends Auth
   }
 
 
+  private static function getResult($ldap, $entry, $attributes)
+  {
+    // Initialise all keys in the user array, in case an attribute isn't present
+    $user = array(
+        'username'      => null,
+        'display_name'  => null,
+        'email'         => null,
+        'groups'        => array()
+      );
+
+    $display_name_parts = array();
+
+    $attribute = ldap_first_attribute($ldap, $entry);
+
+    // Loop through all the attributes for this user
+    while ($attribute)
+    {
+      $values = ldap_get_values($ldap, $entry, $attribute);
+      $attribute = \MRBS\utf8_strtolower($attribute);  // ready for the comparisons
+
+      if ($attribute == $attributes['username'])
+      {
+        $user['username'] = $values[0];
+      }
+      elseif (isset($attributes['display_name']) && in_array($attribute, $attributes['display_name']))
+      {
+        $display_name_parts[$attribute] = $values[0];
+      }
+      elseif (isset($attributes['email']) && ($attribute == $attributes['email']))
+      {
+        $user['email'] = $values[0];
+      }
+      elseif (isset($attributes['groups']) && ($attribute == $attributes['groups']))
+      {
+        for ($i=0; $i<$values['count']; $i++)
+        {
+          $user['groups'][] = $values[$i];
+        }
+      }
+
+      $attribute = ldap_next_attribute($ldap, $entry);
+    }
+
+    // Assemble the display name from its constituent parts
+    if (isset($object['config']['ldap_name_attrib']))
+    {
+      $user['display_name'] = self::implodeNameAttribute($object['config']['ldap_name_attrib'], $display_name_parts);
+    }
+
+    return ($user);
+  }
+
+
   private static function getUsersGenericCallback(&$ldap, $base_dn, $dn, $user_search,
                                                   $user, &$object, $include_groups=false)
   {
@@ -479,51 +532,7 @@ class AuthLdap extends Auth
     // Loop through the entries to get all the users
     while ($entry)
     {
-      // Initialise all keys in the user array to NULL, in case an attribute isn't present
-      $user = array(
-          'username' => null,
-          'display_name' => null,
-          'groups' => array()
-        );
-
-      $display_name_parts = array();
-
-      $attribute = ldap_first_attribute($ldap, $entry);
-
-      // Loop through all the attributes for this user
-      while ($attribute)
-      {
-        $values = ldap_get_values($ldap, $entry, $attribute);
-        $attribute = \MRBS\utf8_strtolower($attribute);  // ready for the comparisons
-
-        if ($attribute == $attributes['username'])
-        {
-          $user['username'] = $values[0];
-        }
-        elseif (isset($attributes['display_name']) && in_array($attribute, $attributes['display_name']))
-        {
-          $display_name_parts[$attribute] = $values[0];
-        }
-        elseif (isset($attributes['email']) && ($attribute == $attributes['email']))
-        {
-          $user['email'] = $values[0];
-        }
-        elseif (isset($attributes['groups']) && ($attribute == $attributes['groups']))
-        {
-          for ($i=0; $i<$values['count']; $i++)
-          {
-            $user['groups'][] = $values[$i];
-          }
-        }
-
-        $attribute = ldap_next_attribute($ldap, $entry);
-      }
-
-      // Assemble the display name from its constituent parts
-      if (isset($object['config']['ldap_name_attrib']))
-      {
-        $user['display_name'] = self::implodeNameAttribute($object['config']['ldap_name_attrib'], $display_name_parts);
-      }
+      $user = self::getResult($ldap, $entry, $attributes);
 
       if (isset($user['username']))
       {
