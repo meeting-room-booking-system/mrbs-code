@@ -408,6 +408,7 @@ class AuthLdap extends Auth
   }
 
 
+  // Returns an array of attributes for use in an LDAP query
   private static function getAttributes($object, $include_email=true, $include_groups=true)
   {
     $result = array();
@@ -438,6 +439,7 @@ class AuthLdap extends Auth
   }
 
 
+  // Returns an associative array from the result of an LDAP search
   private static function getResult($ldap, $entry, $attributes)
   {
     // Initialise all keys in the user array, in case an attribute isn't present
