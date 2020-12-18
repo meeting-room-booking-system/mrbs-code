@@ -449,7 +449,7 @@ function is_book_admin($room_ids=null, $all=true)
   {
     if ($all)
     {
-      return false;
+      return is_admin();
     }
     // Not yet supported.  Could support it but need to decide what $room_ids=null means.
     // Does it mean all rooms in the system or just all rooms in the current area?
