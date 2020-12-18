@@ -25,6 +25,26 @@ function array_values_equal(array $a, array $b)
 }
 
 
+// Returns a simple array consisting of all the leaf nodes of $array
+function array_values_recursive(array $array)
+{
+  $result = array();
+
+  foreach ($array as $value)
+  {
+    if (is_array($value))
+    {
+      $result = array_merge($result, array_values_recursive($value));
+    }
+    else
+    {
+      $result[] = $value;
+    }
+  }
+
+  return $result;
+}
+
 function generate_token($length)
 {
   if (function_exists('random_bytes'))

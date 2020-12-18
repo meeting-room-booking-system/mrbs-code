@@ -408,6 +408,36 @@ class AuthLdap extends Auth
   }
 
 
+  private static function getAttributes($object, $include_email=true, $include_groups=true)
+  {
+    $result = array();
+
+    // Username
+    $result['username'] = \MRBS\utf8_strtolower($object['config']['ldap_user_attrib']);
+
+    // The display name attribute might not have been set in the config file
+    if (isset($object['config']['ldap_name_attrib']))
+    {
+      // The display name attribute can be a composite attribute, eg "givenName sn"
+      $result['display_name'] = self::explodeNameAttribute($object['config']['ldap_name_attrib']);
+    }
+
+    // The email address
+    if ($include_email && isset($object['config']['ldap_email_attrib']))
+    {
+      $result['email'] = \MRBS\utf8_strtolower($object['config']['ldap_email_attrib']);
+    }
+
+    // The group name attribute might not have been set in the config file
+    if ($include_groups && isset($object['config']['ldap_group_member_attrib']))
+    {
+      $result['groups'] = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
+    }
+
+    return $result;
+  }
+
+
   private static function getUsersGenericCallback(&$ldap, $base_dn, $dn, $user_search,
                                                   $user, &$object, $include_groups=false)
   {
@@ -431,35 +461,10 @@ class AuthLdap extends Auth
     }
     $filter = "($filter)";
 
-    // Form the attributes
-    $username_attrib = \MRBS\utf8_strtolower($object['config']['ldap_user_attrib']);
-    $attributes = array($username_attrib);
-
-    // The display name attribute might not have been set in the config file
-    if (isset($object['config']['ldap_name_attrib']))
-    {
-      // The display name attribute can be a composite attribute, eg "givenName sn"
-      $display_name_attribs = self::explodeNameAttribute($object['config']['ldap_name_attrib']);
-      $attributes = array_merge($attributes, $display_name_attribs);
-    }
-
-    // The email address
-    if ($ldap_get_user_email && isset($object['config']['ldap_email_attrib']))
-    {
-      $email_attrib = \MRBS\utf8_strtolower($object['config']['ldap_email_attrib']);
-      $attributes[] = $email_attrib;
-    }
-
-    // The group name attribute might not have been set in the config file
-    if ($include_groups && isset($object['config']['ldap_group_member_attrib']))
-    {
-      $group_member_attrib = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
-      $attributes[] = $group_member_attrib;
-    }
+    $attributes = self::getAttributes($object, $ldap_get_user_email, $include_groups);
 
     self::debug("searching with base_dn '$base_dn' and filter '$filter'");
-
-    $res = ldap_search($ldap, $base_dn, $filter, $attributes);
+    $res = ldap_search($ldap, $base_dn, $filter, \MRBS\array_values_recursive($attributes));
 
     if ($res == false)
     {
@@ -491,19 +496,19 @@ class AuthLdap extends Auth
         $values = ldap_get_values($ldap, $entry, $attribute);
         $attribute = \MRBS\utf8_strtolower($attribute);  // ready for the comparisons
 
-        if ($attribute == $username_attrib)
+        if ($attribute == $attributes['username'])
         {
           $user['username'] = $values[0];
         }
-        elseif (isset($display_name_attribs) && in_array($attribute, $display_name_attribs))
+        elseif (isset($attributes['display_name']) && in_array($attribute, $attributes['display_name']))
         {
           $display_name_parts[$attribute] = $values[0];
         }
-        elseif (isset($email_attrib) && ($attribute == $email_attrib))
+        elseif (isset($attributes['email']) && ($attribute == $attributes['email']))
         {
           $user['email'] = $values[0];
         }
-        elseif (isset($group_member_attrib) && ($attribute == $group_member_attrib))
+        elseif (isset($attributes['groups']) && ($attribute == $attributes['groups']))
         {
           for ($i=0; $i<$values['count']; $i++)
           {
