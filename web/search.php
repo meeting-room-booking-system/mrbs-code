@@ -322,8 +322,12 @@ if (!is_book_admin())
 if (!isset($total))
 {
   $sql = "SELECT count(*)
-          FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
-          WHERE $sql_pred";
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('room') . " R
+              ON E.room_id = R.id
+       LEFT JOIN " . _tbl('area') . " A
+              ON R.area_id = A.id
+           WHERE $sql_pred";
   $total = db()->query1($sql, $sql_params);
 }
 
