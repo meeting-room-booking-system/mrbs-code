@@ -441,14 +441,27 @@ class AuthLdap extends Auth
   private static function getResult($ldap, $entry, $attributes)
   {
     // Initialise all keys in the user array, in case an attribute isn't present
-    $user = array(
-        'username'      => null,
-        'display_name'  => null,
-        'email'         => null,
-        'groups'        => array()
-      );
-
-    $display_name_parts = array();
+    $attributes_keys = array_keys($attributes);
+    $user = array();
+    foreach ($attributes_keys as $key)
+    {
+      switch ($key)
+      {
+        case 'username':
+        case 'email':
+          $user[$key] = null;
+          break;
+        case 'display_name':
+          $display_name_parts = array();
+          $user[$key] = null;
+          break;
+        case 'groups':
+          $user[$key] = array();
+          break;
+        default:
+          throw new \Exception("Unknown key '$key'");
+      }
+    }
 
     $attribute = ldap_first_attribute($ldap, $entry);
 
@@ -482,9 +495,10 @@ class AuthLdap extends Auth
     }
 
     // Assemble the display name from its constituent parts
-    if (isset($object['config']['ldap_name_attrib']))
+    if (isset($attributes['display_name']))
     {
-      $user['display_name'] = self::implodeNameAttribute($object['config']['ldap_name_attrib'], $display_name_parts);
+      $user['display_name'] = self::implodeNameAttribute(implode(' ', $attributes['display_name']),
+                                                         $display_name_parts);
     }
 
     return ($user);
