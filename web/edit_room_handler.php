@@ -76,7 +76,14 @@ function update_room($room_id, array $form)
         break;
       case 'invalid_types':
         // Make sure the invalid types exist
-        $room->invalid_types = array_intersect($value, $booking_types);
+        if (isset($booking_types))
+        {
+          $room->invalid_types = array_intersect($value, $booking_types);
+        }
+        else
+        {
+          $room->invalid_types = array();
+        }
         break;
       default:
         $room->{$key} = $value;
