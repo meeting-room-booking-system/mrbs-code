@@ -321,6 +321,27 @@ class AuthLdap extends Auth
   }
 
 
+  // Converts group names to ids, creating a new id if the group doesn't already exist
+  private static function convertGroupNamesToIds(array $names)
+  {
+    $result = array();
+
+    foreach ($names as $name)
+    {
+      $group = Group::getByName($name);
+      // If the group doesn't exist create it
+      if (!isset($group))
+      {
+        $group = new Group($name);
+        $group->save();
+      }
+      $result[] = $group->id;
+    }
+
+    return $result;
+  }
+
+
   public function getUser($username)
   {
     global $ldap_get_user_email;
@@ -339,22 +360,107 @@ class AuthLdap extends Auth
     }
 
     // Otherwise we'll have to query LDAP.
-    $user = parent::getUser($username);
+    $object = array();
 
-    // Get LDAP specific properties
-    $user->display_name = $this->getDisplayName($username);
-    if ($ldap_get_user_email)
+    $res = $this->action('getUserCallback', $username, $object);
+    if (!$res)
     {
-      $user->email = $this->getEmail($username);
+      return null;
     }
+
+    $user = parent::getUser($username);
+    if (!$user)
+    {
+      return null;
+    }
+
+    $keys = array('display_name', 'email', 'groups');
+    foreach ($keys as $key)
+    {
+      if (isset($object['user'][$key]))
+      {
+        $value = $object['user'][$key];
+        // We have to convert the group names to ids
+        if ($key === 'groups')
+        {
+          $value = self::convertGroupNamesToIds($value);
+        }
+        $user->$key = $value;
+      }
+    }
+
     $user->level = $this->getLevel($username);
-    $user->groups = $this->getGroups($username);
+
     // Update the user table with the latest user data
     $user->save();
 
     // TODO: think about other auth types
 
     return $user;
+  }
+
+
+  /* getUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                     $username, &$object)
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $username    - The user name
+   * &$object     - Reference to the generic object
+   *
+   * Returns:
+   *   false    - Didn't find a user
+   *   true     - Found a user
+   */
+  private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                                           $user, &$object)
+  {
+    global $ldap_get_user_email;
+
+    self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
+
+    if (!$ldap || !$base_dn || !$dn || !$user_search)
+    {
+      self::debug("invalid parameters, could not call ldap_read, returning false");
+      return false;
+    }
+
+    $attributes = self::getAttributes($object, $ldap_get_user_email, true);
+
+    $res = ldap_read(
+        $ldap,
+        $dn,
+        "(objectclass=*)",
+        \MRBS\array_values_recursive($attributes)
+      );
+
+    if ($res === false)
+    {
+      self::debug("ldap_read failed: " . self::ldapError($ldap));
+      return false;
+    }
+
+    if (ldap_count_entries($ldap, $res) === 0)
+    {
+      self::debug("No entries found");
+      return false;
+    }
+
+    $entry = ldap_first_entry($ldap, $res);
+    $user = self::getResult($ldap, $entry, $attributes);
+
+    if (isset($user['username']))
+    {
+      if (!isset($user['display_name']))
+      {
+        $user['display_name'] = $user['username'];
+      }
+      $object['user'] = $user;
+    }
+
+    return true;
   }
 
 
