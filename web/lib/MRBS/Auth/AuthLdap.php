@@ -330,6 +330,15 @@ class AuthLdap extends Auth
       return null;
     }
 
+    // Check to see if this is the current user.  If it is then we
+    // can save ourselves an LDAP query.
+    $mrbs_user = \MRBS\session()->getCurrentUser();
+    if (isset($mrbs_user) && ($mrbs_user->username === $username))
+    {
+      return $mrbs_user;
+    }
+
+    // Otherwise we'll have to query LDAP.
     $user = parent::getUser($username);
 
     // Get LDAP specific properties
