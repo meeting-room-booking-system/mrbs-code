@@ -739,21 +739,7 @@ class AuthLdap extends Auth
     }
 
     // We've got a good result.  Convert the group names into ids
-    $result = array();
-
-    foreach ($object['groups'] as $group_name)
-    {
-      $group = Group::getByName($group_name);
-      // If the group doesn't exist create it
-      if (!isset($group))
-      {
-        $group = new Group($group_name);
-        $group->save();
-      }
-      $result[] = $group->id;
-    }
-
-    return $result;
+    return self::convertGroupNamesToIds($object['groups']);
   }
 
 
