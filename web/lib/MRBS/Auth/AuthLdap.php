@@ -947,7 +947,7 @@ class AuthLdap extends Auth
         $res = ldap_read(
             $ldap,
             $dn,
-           "(objectclass=*)",
+            "(objectclass=*)",
             $display_name_attribs,
             0,
             1
