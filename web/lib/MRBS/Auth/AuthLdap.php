@@ -706,29 +706,6 @@ class AuthLdap extends Auth
   }
 
 
-  // Get the user's groups from LDAP.  Returns an array of group ids, ie
-  // the LDAP group names mapped to MRBS group ids.
-  protected function getGroups($username)
-  {
-    if (!isset($username) || ($username === ''))
-    {
-      return array();
-    }
-
-    $object = array();
-
-    $res = $this->action('getGroupsCallback', $username, $object);
-
-    if ($res === false)
-    {
-      return array();
-    }
-
-    // We've got a good result.  Convert the group names into ids
-    return self::convertGroupNamesToIds($object['groups']);
-  }
-
-
   /* action($callback, $username, &$object)
    *
    * Connects/binds to all configured LDAP servers/base DNs and
@@ -898,66 +875,8 @@ class AuthLdap extends Auth
 
     return ($keep_going) ? true : false;
   }
+
   
-
-  /* getGroupsCallback(&$ldap, $base_dn, $dn, $user_search,
-                         $username, &$object)
-   *
-   * Get the groups of a found user
-   *
-   * &$ldap       - Reference to the LDAP object
-   * $base_dn     - The base DN
-   * $dn          - The user's DN
-   * $user_search - The LDAP filter to find the user
-   * $username    - The user name
-   * &$object     - Reference to the generic object
-   *
-   * Returns:
-   *   false    - Didn't find a user
-   *   true     - Found a user
-   */
-  private static function getGroupsCallback(&$ldap, $base_dn, $dn, $user_search,
-                                            $user, &$object)
-  {
-    if (isset($object['config']['ldap_group_member_attrib']))
-    {
-      $group_member_attrib = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
-
-      self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
-
-      if ($ldap && $base_dn && $dn && $user_search)
-      {
-        $res = ldap_read(
-            $ldap,
-            $dn,
-            "(objectclass=*)",
-            array($group_member_attrib),
-            0,
-            1
-          );
-
-        if ($entry = ldap_first_entry($ldap, $res))
-        {
-          self::debug("search successful");
-          if ($values = ldap_get_values($ldap, $entry, $group_member_attrib))
-          {
-            $object['groups'] = array();
-            for ($i = 0; $i < $values['count']; $i++)
-            {
-              $object['groups'][] = $values[$i];
-            }
-            self::debug("groups are " . json_encode($object['groups']));
-            return true;
-          }
-          self::debug("no values");
-        }
-      }
-    }
-
-    return false;
-  }
-
-
   protected function getEmail($username)
   {
     if (!isset($username) || ($username === ''))
