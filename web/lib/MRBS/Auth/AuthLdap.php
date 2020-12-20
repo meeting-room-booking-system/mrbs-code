@@ -379,14 +379,14 @@ class AuthLdap extends Auth
     {
       if (isset($object['user'][$key]))
       {
-        $value = $object['user'][$key];
-        // We have to convert the group names to ids
-        if ($key === 'groups')
-        {
-          $value = self::convertGroupNamesToIds($value);
-        }
-        $user->$key = $value;
+        $user->$key = $object['user'][$key];
       }
+    }
+
+    // Now convert the group names to ids
+    if (isset($user->groups))
+    {
+      $user->groups = self::convertGroupNamesToIds($user->groups);
     }
 
     $user->level = $this->getLevel($username);
