@@ -344,7 +344,7 @@ class AuthLdap extends Auth
 
   public function getUser($username)
   {
-    global $ldap_get_user_email;
+    global $ldap_admin_group_dn;
 
     if (!isset($username) || ($username === ''))
     {
@@ -363,18 +363,14 @@ class AuthLdap extends Auth
     $object = array();
 
     $res = $this->action('getUserCallback', $username, $object);
-    if (!$res)
+    if (!$res || !isset($object['user']))
     {
       return null;
     }
 
     $user = parent::getUser($username);
-    if (!$user)
-    {
-      return null;
-    }
-
     $keys = array('display_name', 'email', 'groups');
+
     foreach ($keys as $key)
     {
       if (isset($object['user'][$key]))
@@ -383,13 +379,17 @@ class AuthLdap extends Auth
       }
     }
 
-    // Now convert the group names to ids
-    if (isset($user->groups))
+    if (!empty($user->groups))
     {
+      // Before we convert the group names to ids, check, if we can,
+      // whether this user is in the admin group
+      if ($ldap_admin_group_dn)
+      {
+        $user->level = in_array($ldap_admin_group_dn, $user->groups) ? 2 : 1;
+      }
+      // Now convert the group names to ids
       $user->groups = self::convertGroupNamesToIds($user->groups);
     }
-
-    $user->level = $this->getLevel($username);
 
     // Update the user table with the latest user data
     $user->save();

@@ -9,7 +9,6 @@ abstract class Auth
   public function getUser($username)
   {
     $user = new User($username);
-    $user->display_name = $username;
     $user->level = $this->getDefaultLevel($username);
 
     return $user;
