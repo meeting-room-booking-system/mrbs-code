@@ -706,22 +706,6 @@ class AuthLdap extends Auth
   }
 
 
-  // Get the display name of the user from LDAP.  If none, returns the username
-  protected function getDisplayName($username)
-  {
-    if (!isset($username) || ($username === ''))
-    {
-      return $username;
-    }
-
-    $object = array();
-
-    $res = $this->action('getNameCallback', $username, $object);
-
-    return ($res) ? $object['name'] : $username;
-  }
-
-
   // Get the user's groups from LDAP.  Returns an array of group ids, ie
   // the LDAP group names mapped to MRBS group ids.
   protected function getGroups($username)
@@ -914,73 +898,7 @@ class AuthLdap extends Auth
 
     return ($keep_going) ? true : false;
   }
-
-
-  /* getNameCallback(&$ldap, $base_dn, $dn, $user_search,
-                     $username, &$object)
-   *
-   * Get the name of a found user
-   *
-   * &$ldap       - Reference to the LDAP object
-   * $base_dn     - The base DN
-   * $dn          - The user's DN
-   * $user_search - The LDAP filter to find the user
-   * $username    - The user name
-   * &$object     - Reference to the generic object
-   *
-   * Returns:
-   *   false    - Didn't find a user
-   *   true     - Found a user
-   */
-  private static function getNameCallback(&$ldap, $base_dn, $dn, $user_search,
-                                          $username, &$object)
-  {
-    if (isset($object['config']['ldap_name_attrib']))
-    {
-      $display_name_attribs = self::explodeNameAttribute($object['config']['ldap_name_attrib']);
-
-      self::debug("base_dn '$base_dn' dn '$dn' " .
-        "user_search '$user_search' user '$username'");
-
-      if ($ldap && $base_dn && $dn && $user_search)
-      {
-        $res = ldap_read(
-            $ldap,
-            $dn,
-            "(objectclass=*)",
-            $display_name_attribs,
-            0,
-            1
-          );
-
-        $entry = ldap_first_entry($ldap, $res);
-        if ($entry)
-        {
-          self::debug("search successful");
-          $display_name_parts = array();
-          $attribute = ldap_first_attribute($ldap, $entry);
-
-          // Loop through all the attributes for this user
-          while ($attribute)
-          {
-            $values = ldap_get_values($ldap, $entry, $attribute);
-            $attribute = \MRBS\utf8_strtolower($attribute);
-            $display_name_parts[$attribute] = $values[0];
-            $attribute = ldap_next_attribute($ldap, $entry);
-          }
-
-          // Assemble the display name from its constituent parts
-          $object['name'] = self::implodeNameAttribute($object['config']['ldap_name_attrib'], $display_name_parts);
-          self::debug("name is '" . $object['name'] . "'");
-
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
+  
 
   /* getGroupsCallback(&$ldap, $base_dn, $dn, $user_search,
                          $username, &$object)
