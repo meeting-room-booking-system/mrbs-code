@@ -433,7 +433,9 @@ class AuthLdap extends Auth
         $ldap,
         $dn,
         "(objectclass=*)",
-        \MRBS\array_values_recursive($attributes)
+        \MRBS\array_values_recursive($attributes),
+        0,
+        1
       );
 
     if ($res === false)
@@ -942,10 +944,14 @@ class AuthLdap extends Auth
 
       if ($ldap && $base_dn && $dn && $user_search)
       {
-        $res = ldap_read($ldap,
-                         $dn,
-                         "(objectclass=*)",
-                         $display_name_attribs);
+        $res = ldap_read(
+            $ldap,
+            $dn,
+           "(objectclass=*)",
+            $display_name_attribs,
+            0,
+            1
+          );
 
         $entry = ldap_first_entry($ldap, $res);
         if ($entry)
@@ -1003,10 +1009,14 @@ class AuthLdap extends Auth
 
       if ($ldap && $base_dn && $dn && $user_search)
       {
-        $res = ldap_read($ldap,
-                         $dn,
-                         "(objectclass=*)",
-                         array($group_member_attrib));
+        $res = ldap_read(
+            $ldap,
+            $dn,
+            "(objectclass=*)",
+            array($group_member_attrib),
+            0,
+            1
+          );
 
         if ($entry = ldap_first_entry($ldap, $res))
         {
@@ -1068,10 +1078,14 @@ class AuthLdap extends Auth
 
     if ($ldap && $base_dn && $dn && $user_search)
     {
-      $res = ldap_read($ldap,
-                       $dn,
-                       "(objectclass=*)",
-                       array(\MRBS\utf8_strtolower($email_attrib)) );
+      $res = ldap_read(
+          $ldap,
+          $dn,
+          "(objectclass=*)",
+          array(\MRBS\utf8_strtolower($email_attrib)),
+          0,
+          1
+        );
 
       if (ldap_count_entries($ldap, $res) > 0)
       {
@@ -1112,10 +1126,14 @@ class AuthLdap extends Auth
 
     if ($ldap && $base_dn && $dn && $user_search)
     {
-      $res = ldap_read($ldap,
-                       $dn,
-                       "(objectclass=*)",
-                       array(\MRBS\utf8_strtolower($group_member_attrib)) );
+      $res = ldap_read(
+          $ldap,
+          $dn,
+          "(objectclass=*)",
+          array(\MRBS\utf8_strtolower($group_member_attrib)),
+          0,
+          1
+        );
 
       if (ldap_count_entries($ldap, $res) > 0)
       {
