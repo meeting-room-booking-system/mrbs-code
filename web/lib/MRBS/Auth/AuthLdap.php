@@ -876,66 +876,6 @@ class AuthLdap extends Auth
     return ($keep_going) ? true : false;
   }
 
-  
-  protected function getEmail($username)
-  {
-    if (!isset($username) || ($username === ''))
-    {
-      return '';
-    }
-
-    $object = array();
-    $res = $this->action('getEmailCallback', $username, $object);
-    return ($res) ? $object['email'] : '';
-  }
-
-
-  /* getEmailCallback(&$ldap, $base_dn, $dn, $user_search,
-                      $username, &$object)
-   *
-   * Checks if the specified username/password pair are valid
-   *
-   * &$ldap       - Reference to the LDAP object
-   * $base_dn     - The base DN
-   * $dn          - The user's DN
-   * $user_search - The LDAP filter to find the user
-   * $username    - The user name
-   * &$object     - Reference to the generic object
-   *
-   * Returns:
-   *   false    - Didn't find a user
-   *   true     - Found a user
-   */
-  private static function getEmailCallback(&$ldap, $base_dn, $dn, $user_search,
-                                           $user, &$object)
-  {
-    $email_attrib = $object['config']['ldap_email_attrib'];
-
-    self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
-
-    if ($ldap && $base_dn && $dn && $user_search)
-    {
-      $res = ldap_read(
-          $ldap,
-          $dn,
-          "(objectclass=*)",
-          array(\MRBS\utf8_strtolower($email_attrib)),
-          0,
-          1
-        );
-
-      if (ldap_count_entries($ldap, $res) > 0)
-      {
-        self::debug("search successful");
-        $entries = ldap_get_entries($ldap, $res);
-        $object['email'] = $entries[0][\MRBS\utf8_strtolower($email_attrib)][0];
-        self::debug("email is '" . $object['email']. "'");
-        return true;
-      }
-    }
-    return false;
-  }
-
 
   /* checkAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
                              $username, &$object)
