@@ -683,29 +683,6 @@ class AuthLdap extends Auth
   }
 
 
-  protected function getLevel($username)
-  {
-    global $ldap_admin_group_dn;
-
-    if (!isset($username) || ($username === ''))
-    {
-      $level = 0;
-    }
-    elseif ($ldap_admin_group_dn)
-    {
-      $object = array();
-      $res = $this->action('checkAdminGroupCallback', $username, $object);
-      $level = ($res) ? 2 : 1;
-    }
-    else
-    {
-      $level = $this->getDefaultLevel($username);
-    }
-
-    return $level;
-  }
-
-
   /* action($callback, $username, &$object)
    *
    * Connects/binds to all configured LDAP servers/base DNs and
@@ -874,61 +851,6 @@ class AuthLdap extends Auth
     } // foreach
 
     return ($keep_going) ? true : false;
-  }
-
-
-  /* checkAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
-                             $username, &$object)
-   *
-   * Checks if the specified username is in an admin group
-   *
-   * &$ldap       - Reference to the LDAP object
-   * $base_dn     - The base DN
-   * $dn          - The user's DN
-   * $user_search - The LDAP filter to find the user
-   * $username    - The user name
-   * &$object     - Reference to the generic object
-   *
-   * Returns:
-   *   false    - Not in the admin group
-   *   true     - In the admin group
-   */
-  private static function checkAdminGroupCallback(&$ldap, $base_dn, $dn, $user_search,
-                                                  $username, &$object)
-  {
-    $admin_group_dn = $object['config']['ldap_admin_group_dn'];
-    $group_member_attrib = $object['config']['ldap_group_member_attrib'];
-
-    self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$username'");
-
-    if ($ldap && $base_dn && $dn && $user_search)
-    {
-      $res = ldap_read(
-          $ldap,
-          $dn,
-          "(objectclass=*)",
-          array(\MRBS\utf8_strtolower($group_member_attrib)),
-          0,
-          1
-        );
-
-      if (ldap_count_entries($ldap, $res) > 0)
-      {
-        self::debug("search successful '$group_member_attrib'");
-        $entries = ldap_get_entries($ldap, $res);
-        foreach ($entries[0][\MRBS\utf8_strtolower($group_member_attrib)] as $group)
-        {
-          if (strcasecmp($group, $admin_group_dn) == 0)
-          {
-            self::debug("admin group successfully found in user object");
-            return true;
-          }
-        }
-        self::debug("admin group not found in user object");
-      }
-    }
-
-    return false;
   }
 
 
