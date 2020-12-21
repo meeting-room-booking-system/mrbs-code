@@ -1,8 +1,4 @@
 -- Add columns for registration opens and closes
--- Rename the enable_registrant_limit column for consistency
-
-ALTER TABLE %DB_TBL_PREFIX%entry
-  RENAME COLUMN enable_registrant_limit TO registrant_limit_enabled;
 
 ALTER TABLE %DB_TBL_PREFIX%entry
   ADD COLUMN registration_opens int DEFAULT 1209600 NOT NULL, -- 2 weeks
