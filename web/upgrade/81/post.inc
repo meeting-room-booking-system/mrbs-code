@@ -13,11 +13,10 @@ global $admin_handle;
 
 if ($admin_handle->field_exists(_tbl('entry'), 'enable_registrant_limit'))
 {
-  $sql = "ALTER " . _tbl('entry') . " ";
+  $sql = "ALTER TABLE " . _tbl('entry') . " ";
   if ($dbsys == 'pgsql')
   {
     $sql .= "RENAME COLUMN enable_registrant_limit TO registrant_limit_enabled";
-
   }
   else
   {
