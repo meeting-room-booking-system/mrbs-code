@@ -344,8 +344,6 @@ class AuthLdap extends Auth
 
   public function getUser($username)
   {
-    global $ldap_admin_group_dn;
-
     if (!isset($username) || ($username === ''))
     {
       return null;
@@ -369,7 +367,7 @@ class AuthLdap extends Auth
     }
 
     $user = parent::getUser($username);
-    $keys = array('display_name', 'email', 'groups');
+    $keys = array('display_name', 'email', 'groups', 'level');
 
     foreach ($keys as $key)
     {
@@ -377,18 +375,6 @@ class AuthLdap extends Auth
       {
         $user->$key = $object['user'][$key];
       }
-    }
-
-    if (!empty($user->groups))
-    {
-      // Before we convert the group names to ids, check, if we can,
-      // whether this user is in the admin group
-      if ($ldap_admin_group_dn)
-      {
-        $user->level = in_array($ldap_admin_group_dn, $user->groups) ? 2 : 1;
-      }
-      // Now convert the group names to ids
-      $user->groups = self::convertGroupNamesToIds($user->groups);
     }
 
     // Update the user table with the latest user data
@@ -453,15 +439,29 @@ class AuthLdap extends Auth
     $entry = ldap_first_entry($ldap, $res);
     $user = self::getResult($ldap, $entry, $attributes);
 
-    if (isset($user['username']))
+    if (!isset($user['username']))
     {
-      if (!isset($user['display_name']))
-      {
-        $user['display_name'] = $user['username'];
-      }
-      $object['user'] = $user;
+      return false;
     }
 
+    if (!isset($user['display_name']))
+    {
+      $user['display_name'] = $user['username'];
+    }
+
+    if (isset($user['groups']))
+    {
+      // Before we convert the group names to ids, check, if we can,
+      // whether this user is in the admin group
+      if (isset($object['config']['ldap_admin_group_dn']))
+      {
+        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
+      }
+      // Now convert the group names to ids
+      $user['groups'] = self::convertGroupNamesToIds($user['groups']);
+    }
+
+    $object['user'] = $user;
     return true;
   }
 
