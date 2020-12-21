@@ -98,6 +98,7 @@ CREATE TABLE mrbs_room
 
   CONSTRAINT mrbs_uq_room_name UNIQUE (area_id, room_name)
 );
+comment on column mrbs_room.invalid_types is 'JSON encoded';
 create index mrbs_idxSortKey on mrbs_room(sort_key);
 
 CREATE TABLE mrbs_repeat
