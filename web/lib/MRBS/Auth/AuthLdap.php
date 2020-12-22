@@ -2,7 +2,6 @@
 namespace MRBS\Auth;
 
 use MRBS\Group;
-use MRBS\User;
 
 
 class AuthLdap extends Auth
