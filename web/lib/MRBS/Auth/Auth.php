@@ -9,7 +9,6 @@ abstract class Auth
   public function getUser($username)
   {
     $user = new User($username);
-    $user->level = $this->getDefaultLevel($username);
 
     return $user;
   }
@@ -85,7 +84,7 @@ abstract class Auth
 
 
   // Gets the level from the $auth['admin'] array in the config file
-  protected function getDefaultLevel($username)
+  public function getDefaultLevel($username)
   {
     global $auth;
 

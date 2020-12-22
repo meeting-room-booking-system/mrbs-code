@@ -33,10 +33,12 @@ class AuthCas extends Auth
       phpCAS::setVerbose(true);
     }
 
-    phpCAS::client(CAS_VERSION_2_0,
-      $auth['cas']['host'],
-      (int)$auth['cas']['port'],
-      $auth['cas']['context']);
+    phpCAS::client(
+        CAS_VERSION_2_0,
+        $auth['cas']['host'],
+        (int)$auth['cas']['port'],
+        $auth['cas']['context']
+      );
 
     if ($auth['cas']['no_server_validation'])
     {
@@ -100,21 +102,19 @@ class AuthCas extends Auth
   public function getUser($username)
   {
     $user = new User($username);
-    $user->level = $this->getLevel($username);
+
+    if (isset($user) && !$this->hasRequiredAttributes())
+    {
+      $user->level = 0;
+    }
 
     return $user;
   }
 
 
-  private function getLevel($username)
+  private function hasRequiredAttributes()
   {
     global $auth;
-
-    // User not logged in, user level '0'
-    if (!isset($username))
-    {
-      return 0;
-    }
 
     // If the attribute filters are set, check to see whether the user has
     // the required attributes
@@ -136,12 +136,11 @@ class AuthCas extends Auth
       // If the user doesn't have at least one of the required attributes they are level 0
       if (count(array_intersect($actual_values, $required_values)) === 0)
       {
-        return 0;
+        return false;
       }
     }
 
-    // Check the config file to see whether the user is an admin
-    return $this->getDefaultLevel($username);
+    return true;
   }
 
 }

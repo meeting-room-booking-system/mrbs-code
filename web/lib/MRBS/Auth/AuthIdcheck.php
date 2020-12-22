@@ -27,7 +27,6 @@ class AuthIdcheck extends AuthNone
     global $server;
 
     $user = new User($username);
-    $user->level = $this->getDefaultLevel($username);
 
     // We only know the details of the currently logged in user
     if (isset($username) && isset($server['REMOTE_USER']) && ($username == $server['REMOTE_USER']))

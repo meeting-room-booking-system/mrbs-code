@@ -22,7 +22,7 @@ class User extends Table
     $this->auth_type = $auth['type'];
     $this->display_name = $username;
     $this->setDefaultEmail();
-    $this->level = 0; // Play it safe
+    $this->level = auth()->getDefaultLevel($username);
     $this->groups = array();
     $this->roles = self::getRolesByUsername($username);
   }
