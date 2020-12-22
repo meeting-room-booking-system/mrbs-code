@@ -925,7 +925,7 @@ class AuthLdap extends Auth
    * $ldap_debug is true.
    *
    */
-  private static function debug($message)
+  protected static function debug($message)
   {
     global $ldap_debug;
 
