@@ -2,6 +2,7 @@
 namespace MRBS\Auth;
 
 use MRBS\Group;
+use MRBS\User;
 
 
 class AuthLdap extends Auth
@@ -671,6 +672,10 @@ class AuthLdap extends Auth
         if (!isset($user['display_name']))
         {
           $user['display_name'] = $user['username'];
+        }
+        if (!$ldap_get_user_email)
+        {
+          $user['email'] = User::getDefaultEmail($user['username']);
         }
         $object['users'][] = $user;
       }

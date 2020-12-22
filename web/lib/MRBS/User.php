@@ -21,7 +21,7 @@ class User extends Table
     // Set some default properties
     $this->auth_type = $auth['type'];
     $this->display_name = $username;
-    $this->setDefaultEmail();
+    $this->email = self::getDefaultEmail($username);
     $this->level = auth()->getDefaultLevel($username);
     $this->groups = array();
     $this->roles = self::getRolesByUsername($username);
@@ -314,39 +314,39 @@ class User extends Table
   }
 
 
-  // Sets the default email address for the user (null if one can't be found)
-  private function setDefaultEmail()
+  // Gets the default email address for the user (null if one can't be found)
+  public static function getDefaultEmail($username)
   {
     global $mail_settings;
 
-    if (!isset($this->username) || $this->username === '')
+    if (!isset($username) || $username === '')
     {
-      $this->email = null;
+      return null;
     }
-    else
+
+    $email = $username;
+
+    // Remove the suffix, if there is one
+    if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
     {
-      $this->email = $this->username;
-
-      // Remove the suffix, if there is one
-      if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
+      $suffix = $mail_settings['username_suffix'];
+      if (substr($email, -strlen($suffix)) === $suffix)
       {
-        $suffix = $mail_settings['username_suffix'];
-        if (substr($this->email, -strlen($suffix)) === $suffix)
-        {
-          $this->email = substr($this->email, 0, -strlen($suffix));
-        }
-      }
-
-      // Add on the domain, if there is one
-      if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
-      {
-        // Trim any leading '@' character. Older versions of MRBS required the '@' character
-        // to be included in $mail_settings['domain'], and we still allow this for backwards
-        // compatibility.
-        $domain = ltrim($mail_settings['domain'], '@');
-        $this->email .= '@' . $domain;
+        $email = substr($email, 0, -strlen($suffix));
       }
     }
+
+    // Add on the domain, if there is one
+    if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
+    {
+      // Trim any leading '@' character. Older versions of MRBS required the '@' character
+      // to be included in $mail_settings['domain'], and we still allow this for backwards
+      // compatibility.
+      $domain = ltrim($mail_settings['domain'], '@');
+      $email .= '@' . $domain;
+    }
+
+    return $email;
   }
 
 
