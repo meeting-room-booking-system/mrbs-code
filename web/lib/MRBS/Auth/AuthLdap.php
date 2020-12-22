@@ -678,7 +678,7 @@ class AuthLdap extends Auth
 
       if (isset($user['username']))
       {
-        if (!isset($user['display_name']))
+        if (!isset($user['display_name']) || ($user['display_name'] === ''))
         {
           $user['display_name'] = $user['username'];
         }
