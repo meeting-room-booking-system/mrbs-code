@@ -342,47 +342,56 @@ class AuthLdap extends Auth
   }
 
 
+  // TODO: think about other auth types
   public function getUser($username)
   {
+    static $users = array();  // Cache results for performance
+
     if (!isset($username) || ($username === ''))
     {
       return null;
     }
 
-    // Check to see if this is the current user.  If it is then we
-    // can save ourselves an LDAP query.
-    $mrbs_user = \MRBS\session()->getCurrentUser();
-    if (isset($mrbs_user) && ($mrbs_user->username === $username))
+    if (!isset($users[$username]))
     {
-      return $mrbs_user;
-    }
-
-    // Otherwise we'll have to query LDAP.
-    $object = array();
-
-    $res = $this->action('getUserCallback', $username, $object);
-    if (!$res || !isset($object['user']))
-    {
-      return null;
-    }
-
-    $user = parent::getUser($username);
-    $keys = array('display_name', 'email', 'groups', 'level');
-
-    foreach ($keys as $key)
-    {
-      if (isset($object['user'][$key]))
+      // Check to see if this is the current user.  If it is then we
+      // can save ourselves an LDAP query.
+      $mrbs_user = \MRBS\session()->getCurrentUser();
+      if (isset($mrbs_user) && ($mrbs_user->username === $username))
       {
-        $user->$key = $object['user'][$key];
+        $user = $mrbs_user;
       }
+      // Otherwise we'll have to query LDAP.
+      else
+      {
+        $object = array();
+
+        $res = $this->action('getUserCallback', $username, $object);
+        if (!$res || !isset($object['user']))
+        {
+          return null;
+        }
+
+        $user = parent::getUser($username);
+        $keys = array('display_name', 'email', 'groups', 'level');
+
+        foreach ($keys as $key)
+        {
+          if (isset($object['user'][$key]))
+          {
+            $user->$key = $object['user'][$key];
+          }
+        }
+      }
+
+      // Update the user table with the latest user data.
+      $user->save();
+      // Update the cache (we use the static variable as the cache rather than the
+      // database because the database might be out of date).
+      $users[$username] = $user;
     }
 
-    // Update the user table with the latest user data
-    $user->save();
-
-    // TODO: think about other auth types
-
-    return $user;
+    return $users[$username];
   }
 
 
