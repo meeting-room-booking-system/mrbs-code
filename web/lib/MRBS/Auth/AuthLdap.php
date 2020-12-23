@@ -386,6 +386,7 @@ class AuthLdap extends Auth
 
       // Update the user table with the latest user data.
       $user->save();
+      
       // Update the cache (we use the static variable as the cache rather than the
       // database because the database might be out of date).
       $users[$username] = $user;
@@ -880,6 +881,11 @@ class AuthLdap extends Auth
   // This method assembles individual attributes into a composite attribute.
   private static function implodeNameAttribute($attribute, array $parts)
   {
+    if (empty($parts))
+    {
+      return null;
+    }
+
     $result = array();
 
     $name_parts = self::explodeNameAttribute($attribute);
