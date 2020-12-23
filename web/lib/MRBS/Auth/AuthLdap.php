@@ -322,27 +322,35 @@ class AuthLdap extends Auth
 
   public function getUser($username)
   {
+    static $users = array();  // Cache results for performance
+
     if (!isset($username) || ($username === ''))
     {
       return null;
     }
 
-    // Check to see if this is the current user.  If it is then we
-    // can save ourselves an LDAP query.
-    $mrbs_user = \MRBS\session()->getCurrentUser();
-    if (isset($mrbs_user) && ($mrbs_user->username === $username))
+    if (!isset($users[$username]))
     {
-      return $mrbs_user;
+      // Check to see if this is the current user.  If it is then we
+      // can save ourselves an LDAP query.
+      $mrbs_user = \MRBS\session()->getCurrentUser();
+      if (isset($mrbs_user) && ($mrbs_user->username === $username))
+      {
+        $user = $mrbs_user;
+      }
+      // Otherwise we'll have to query LDAP.
+      else
+      {
+        $user = new User($username);
+
+        $user->display_name = $this->getDisplayName($username);
+        $user->email = $this->getEmail($username);
+        $user->level = $this->getLevel($username);
+      }
+      $users[$username] = $user;
     }
 
-    // Otherwise we'll have to query LDAP.
-    $user = new User($username);
-
-    $user->display_name = $this->getDisplayName($username);
-    $user->email = $this->getEmail($username);
-    $user->level = $this->getLevel($username);
-
-    return $user;
+    return $users[$username];
   }
 
 
