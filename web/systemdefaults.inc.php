@@ -860,7 +860,9 @@ $auth['db_ext']['password_format'] = 'md5';
 //
 // $ldap_host = array('localhost', 'otherhost.example.com');
 
-// Where is the LDAP server.
+// Where is the LDAP server.   This should ideally consist of a scheme and
+// a host, eg "ldap://foo.com" or "ldaps://bar.com", but just a hostname
+// is supported for backwards compatibility.
 // This can be an array.
 //$ldap_host = "localhost";
 
