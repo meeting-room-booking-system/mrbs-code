@@ -425,7 +425,11 @@ class AuthLdap extends Auth
 
     $attributes = self::getAttributes($object, $ldap_get_user_email, true);
 
-    $res = ldap_read(
+    // We suppress the errors because it's possible to get a "No such object" error if
+    // the DN doesn't exist - which it won't if (a) we're searching an array of LDAP hosts
+    // or (b) the DN has been deleted since the booking was made.   But check the error
+    // code afterwards and trigger an error if it was any other kind of error.
+    $res = @ldap_read(
         $ldap,
         $dn,
         "(objectclass=*)",
@@ -437,6 +441,10 @@ class AuthLdap extends Auth
     if ($res === false)
     {
       self::debug("ldap_read failed: " . self::ldapError($ldap));
+      if (self::LDAP_NO_SUCH_OBJECT !== ($errno = ldap_errno($ldap)))
+      {
+        trigger_error(ldap_err2str($errno), E_USER_WARNING);
+      }
       return false;
     }
 
