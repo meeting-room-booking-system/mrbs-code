@@ -90,6 +90,7 @@ class AuthLdap extends Auth
 
   private static $all_ldap_opts;
   private static $config_items;
+  private static $profile_clock;
 
 
   public function __construct()
@@ -429,6 +430,7 @@ class AuthLdap extends Auth
 
     $attributes = self::getAttributes($object, $ldap_get_user_email, true);
 
+    self::resetProfileClock();
     // We suppress the errors because it's possible to get a "No such object" error if
     // the DN doesn't exist - which it won't if (a) we're searching an array of LDAP hosts
     // or (b) the DN has been deleted since the booking was made.   But check the error
@@ -441,10 +443,11 @@ class AuthLdap extends Auth
         0,
         1
       );
+    $t = self::getProfileClock();
 
     if ($res === false)
     {
-      self::debug("ldap_read failed: " . self::ldapError($ldap));
+      self::debug("ldap_read() failed: " . self::ldapError($ldap));
       if (self::LDAP_NO_SUCH_OBJECT !== ($errno = ldap_errno($ldap)))
       {
         trigger_error(ldap_err2str($errno), E_USER_WARNING);
@@ -458,6 +461,7 @@ class AuthLdap extends Auth
       return false;
     }
 
+    self::debug("ldap_read() succeeded, taking $t seconds");
     $entry = ldap_first_entry($ldap, $res);
     $user = self::getResult($ldap, $entry, $attributes);
 
@@ -672,7 +676,9 @@ class AuthLdap extends Auth
     $attributes = self::getAttributes($object, $ldap_get_user_email, $include_groups);
 
     self::debug("searching with base_dn '$base_dn' and filter '$filter'");
+    self::resetProfileClock();
     $res = ldap_search($ldap, $base_dn, $filter, \MRBS\array_values_recursive($attributes));
+    $t = self::getProfileClock();
 
     if ($res == false)
     {
@@ -680,7 +686,7 @@ class AuthLdap extends Auth
       return false;
     }
 
-    self::debug(ldap_count_entries($ldap, $res) . " entries found");
+    self::debug(ldap_count_entries($ldap, $res) . " entries found in $t seconds");
 
     $entry = ldap_first_entry($ldap, $res);
 
@@ -989,6 +995,32 @@ class AuthLdap extends Auth
     {
       $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
       error_log("[DEBUG] " . $caller['class'] . $caller['type'] . $caller['function'] . ": $message");
+    }
+  }
+
+
+  private static function getProfileClock()
+  {
+    global $ldap_debug;
+
+    if ($ldap_debug)
+    {
+      return (\MRBS\get_microtime() - self::$profile_clock);
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+
+  private static function resetProfileClock()
+  {
+    global $ldap_debug;
+
+    if ($ldap_debug)
+    {
+      self::$profile_clock = \MRBS\get_microtime();
     }
   }
 
