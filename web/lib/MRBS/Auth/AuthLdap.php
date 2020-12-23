@@ -703,7 +703,7 @@ class AuthLdap extends Auth
   private static function getNameCallback(&$ldap, $base_dn, $dn, $user_search,
                                           $username, &$object)
   {
-    $name_attrib = $object['config']['ldap_name_attrib'];
+    $name_attrib = \MRBS\utf8_strtolower($object['config']['ldap_name_attrib']);
 
     self::debug("base_dn '$base_dn' dn '$dn' " .
                 "user_search '$user_search' user '$username'");
@@ -713,17 +713,22 @@ class AuthLdap extends Auth
       $res = ldap_read($ldap,
                        $dn,
                        "(objectclass=*)",
-                       array(\MRBS\utf8_strtolower($name_attrib)) );
+                       array($name_attrib) );
 
       if (ldap_count_entries($ldap, $res) > 0)
       {
         self::debug("search successful");
         $entries = ldap_get_entries($ldap, $res);
-        $object['name'] = $entries[0][\MRBS\utf8_strtolower($name_attrib)][0];
-
-        self::debug("name is '" . $object['name'] . "'");
-
-        return true;
+        if (isset($entries[0][$name_attrib]))
+        {
+          $object['name'] = $entries[0][$name_attrib][0];
+          self::debug("name is '" . $object['name'] . "'");
+          return true;
+        }
+        else
+        {
+          self::debug("no name attribute returned");
+        }
       }
     }
     return false;
