@@ -386,7 +386,7 @@ class AuthLdap extends Auth
 
       // Update the user table with the latest user data.
       $user->save();
-      
+
       // Update the cache (we use the static variable as the cache rather than the
       // database because the database might be out of date).
       $users[$username] = $user;
@@ -730,7 +730,7 @@ class AuthLdap extends Auth
       // Check that connection was established
       if ($ldap)
       {
-        self::debug("got LDAP connection");
+        self::debug("got LDAP connection at $host");
 
         if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
         {
