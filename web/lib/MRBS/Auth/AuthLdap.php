@@ -83,6 +83,10 @@ class AuthLdap extends Auth
   const LDAP_CLIENT_LOOP =                    0x60;
   const LDAP_REFERRAL_LIMIT_EXCEEDED =        0x61;
 
+  // Default ports
+  const DEFAULT_PORT_LDAP  = 389;
+  const DEFAULT_PORT_LDAPS = 636;
+
   private static $all_ldap_opts;
   private static $config_items;
 
@@ -531,22 +535,16 @@ class AuthLdap extends Auth
    */
   public function action($callback, $username, &$object, $keep_going=false)
   {
-    foreach (self::$all_ldap_opts['ldap_host'] as $idx => $host)
+    for ($idx=0; $idx < count(self::$all_ldap_opts['ldap_host']); $idx++)
     {
-      // establish ldap connection
-      if (isset(self::$all_ldap_opts['ldap_port'][$idx]))
-      {
-        $ldap = ldap_connect($host, self::$all_ldap_opts['ldap_port'][$idx]);
-      }
-      else
-      {
-        $ldap = ldap_connect($host);
-      }
+      // Establish LDAP connection
+      $uri = self::getUri($idx);
+      $ldap = ldap_connect($uri);
 
       // Check that connection was established
       if ($ldap)
       {
-        self::debug("got LDAP connection");
+        self::debug("got LDAP connection using $uri");
 
         if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
         {
@@ -868,6 +866,37 @@ class AuthLdap extends Auth
     }
 
     return $result;
+  }
+
+
+  // Gets the full LDAP URI
+  private static function getUri($idx)
+  {
+    // First get the port
+    if (isset(self::$all_ldap_opts['ldap_port'][$idx]))
+    {
+      $port = self::$all_ldap_opts['ldap_port'][$idx];
+    }
+    else
+    {
+      $port = self::DEFAULT_PORT_LDAP;
+    }
+
+    // Now get the scheme and host
+    $host = self::$all_ldap_opts['ldap_host'][$idx];
+    $parsed_url = parse_url($host);
+    if (isset($parsed_url['scheme']))
+    {
+      $scheme = $parsed_url['scheme'];
+      $host = $parsed_url['host'];
+    }
+    else
+    {
+      // Make an educated guess at the scheme
+      $scheme = ($port == self::DEFAULT_PORT_LDAPS) ? 'ldaps' : 'ldap';
+    }
+
+    return "$scheme://$host:$port";
   }
 
 
