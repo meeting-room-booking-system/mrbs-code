@@ -101,10 +101,10 @@ CREATE TABLE mrbs_room
 CREATE TABLE mrbs_repeat
 (
   id             int NOT NULL auto_increment,
-  start_time     int DEFAULT '0' NOT NULL,
-  end_time       int DEFAULT '0' NOT NULL,
+  start_time     int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
+  end_time       int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
   rep_type       int DEFAULT '0' NOT NULL,
-  end_date       int DEFAULT '0' NOT NULL,
+  end_date       int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
   rep_opt        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   room_id        int DEFAULT '1' NOT NULL,
   timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -134,8 +134,8 @@ CREATE TABLE mrbs_repeat
 CREATE TABLE mrbs_entry
 (
   id                          int NOT NULL auto_increment,
-  start_time                  int DEFAULT '0' NOT NULL,
-  end_time                    int DEFAULT '0' NOT NULL,
+  start_time                  int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
+  end_time                    int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
   entry_type                  int DEFAULT '0' NOT NULL,
   repeat_id                   int DEFAULT NULL,
   room_id                     int DEFAULT '1' NOT NULL,

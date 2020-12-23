@@ -130,6 +130,9 @@ CREATE TABLE mrbs_repeat
   ical_uid        varchar(255) DEFAULT '' NOT NULL,
   ical_sequence   smallint DEFAULT 0 NOT NULL
 );
+comment on column mrbs_repeat.start_time is 'Unix timestamp';
+comment on column mrbs_repeat.end_time is 'Unix timestamp';
+comment on column mrbs_repeat.end_date is 'Unix timestamp';
 
 CREATE TABLE mrbs_entry
 (
@@ -167,6 +170,8 @@ CREATE TABLE mrbs_entry
   registration_closes         int DEFAULT 0 NOT NULL,
   registration_closes_enabled smallint DEFAULT 0 NOT NULL
 );
+comment on column mrbs_entry.start_time is 'Unix timestamp';
+comment on column mrbs_entry.end_time is 'Unix timestamp';
 comment on column mrbs_entry.registration_opens is 'Seconds before the start time';
 comment on column mrbs_entry.registration_closes is 'Seconds before the start time';
 create index mrbs_idxStartTime on mrbs_entry(start_time);
