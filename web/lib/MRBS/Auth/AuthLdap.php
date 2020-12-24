@@ -621,12 +621,6 @@ class AuthLdap extends Auth
         if (empty($dn))
         {
           self::debug("no DN determined, not calling callback");
-          // If we are keeping going we want to be able to search all the LDAP
-          // directories, so we return false if any one of them fails.
-          if ($keep_going)
-          {
-            return false;
-          }
         }
         else
         {
