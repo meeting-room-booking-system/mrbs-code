@@ -534,6 +534,8 @@ class AuthLdap extends Auth
    */
   public function action($callback, $username, &$object, $keep_going=false)
   {
+    $result = false;
+
     for ($idx=0; $idx < count(self::$all_ldap_opts['ldap_host']); $idx++)
     {
       // Establish LDAP connection
@@ -626,18 +628,22 @@ class AuthLdap extends Auth
         {
           $res = self::$callback($ldap, self::$all_ldap_opts['ldap_base_dn'][$idx], $dn,
                                  $user_search, $username, $object);
-          if ($res && !$keep_going)
+          if ($res)
           {
-            return true;
+            $result = true;
           }
         }
 
       } // if ($ldap)
 
       ldap_unbind($ldap);
-    } // foreach
+      if ($result && !$keep_going)
+      {
+        return true;
+      }
+    } // for ()
 
-    return ($keep_going) ? true : false;
+    return $result;
   }
 
 
