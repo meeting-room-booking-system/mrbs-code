@@ -545,42 +545,8 @@ class AuthLdap extends Auth
       {
         self::debug("got LDAP connection using $uri");
 
-        if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
-        {
-          ldap_set_option($ldap, LDAP_OPT_DEREF, self::$all_ldap_opts['ldap_deref'][$idx]);
-        }
-
-        if (isset(self::$all_ldap_opts['ldap_v3'][$idx]) &&
-            self::$all_ldap_opts['ldap_v3'][$idx])
-        {
-          ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-        }
-
-        if (isset(self::$all_ldap_opts['ldap_client_cert'][$idx]) &&
-            self::$all_ldap_opts['ldap_client_cert'][$idx])
-        {
-          // Requires PHP 7.1.0 or later
-          ldap_set_option($ldap, LDAP_OPT_X_TLS_CERTFILE, self::$all_ldap_opts['ldap_client_cert'][$idx]);
-        }
-
-        if (isset(self::$all_ldap_opts['ldap_client_key'][$idx]) &&
-            self::$all_ldap_opts['ldap_client_key'][$idx])
-        {
-          // Requires PHP 7.1.0 or later
-          ldap_set_option($ldap, LDAP_OPT_X_TLS_KEYFILE, self::$all_ldap_opts['ldap_client_key'][$idx]);
-        }
-
-        if (isset(self::$all_ldap_opts['ldap_tls'][$idx]) &&
-            self::$all_ldap_opts['ldap_tls'][$idx])
-        {
-          ldap_start_tls($ldap);
-        }
-
-        if(isset(self::$all_ldap_opts['ldap_disable_referrals'][$idx]) && self::$all_ldap_opts['ldap_disable_referrals'][$idx])
-        {
-          // Required to do a search on Active Directory for Win 2003+
-          ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-        }
+        // Set any applicable LDAP options
+        self::setOptions($ldap, $idx);
 
         if (isset(self::$all_ldap_opts['ldap_dn_search_attrib'][$idx]))
         {
@@ -938,6 +904,48 @@ class AuthLdap extends Auth
     }
 
     return "$scheme://$host:$port";
+  }
+
+
+  private static function setOptions($ldap, $idx)
+  {
+    if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
+    {
+      ldap_set_option($ldap, LDAP_OPT_DEREF, self::$all_ldap_opts['ldap_deref'][$idx]);
+    }
+
+    if (isset(self::$all_ldap_opts['ldap_v3'][$idx]) &&
+        self::$all_ldap_opts['ldap_v3'][$idx])
+    {
+      ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+    }
+
+    if (isset(self::$all_ldap_opts['ldap_client_cert'][$idx]) &&
+        self::$all_ldap_opts['ldap_client_cert'][$idx])
+    {
+      // Requires PHP 7.1.0 or later
+      ldap_set_option($ldap, LDAP_OPT_X_TLS_CERTFILE, self::$all_ldap_opts['ldap_client_cert'][$idx]);
+    }
+
+    if (isset(self::$all_ldap_opts['ldap_client_key'][$idx]) &&
+        self::$all_ldap_opts['ldap_client_key'][$idx])
+    {
+      // Requires PHP 7.1.0 or later
+      ldap_set_option($ldap, LDAP_OPT_X_TLS_KEYFILE, self::$all_ldap_opts['ldap_client_key'][$idx]);
+    }
+
+    if (isset(self::$all_ldap_opts['ldap_tls'][$idx]) &&
+        self::$all_ldap_opts['ldap_tls'][$idx])
+    {
+      ldap_start_tls($ldap);
+    }
+
+    if (isset(self::$all_ldap_opts['ldap_disable_referrals'][$idx]) &&
+        self::$all_ldap_opts['ldap_disable_referrals'][$idx])
+    {
+      // Required to do a search on Active Directory for Win 2003+
+      ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    }
   }
 
 
