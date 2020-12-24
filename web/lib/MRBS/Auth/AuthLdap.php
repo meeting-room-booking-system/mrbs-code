@@ -972,8 +972,12 @@ class AuthLdap extends Auth
 
     if ($ldap_debug)
     {
-      $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-      error_log("[DEBUG] " . $caller['class'] . $caller['type'] . $caller['function'] . ": $message");
+      list($called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+      error_log(
+          "[DEBUG] " .
+          $caller['class'] . $caller['type'] . $caller['function'] . '(' . $called['line'] . ')' .
+          ": $message"
+        );
     }
   }
 
