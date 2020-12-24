@@ -235,8 +235,6 @@ class AuthLdap extends Auth
   private static function validateUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                                $user, &$object)
   {
-    global $ldap_unbind_between_attempts;
-
     self::debug("base_dn '$base_dn' dn '$dn' user '$user'");
 
     $pass = $object['pass'];
@@ -264,10 +262,6 @@ class AuthLdap extends Auth
           if (!self::ldapBind($ldap, $object['config']['ldap_dn_search_dn'], $object['config']['ldap_dn_search_password']))
           {
             self::debug("rebinding failed: " . self::ldapError($ldap));
-            if ($ldap_unbind_between_attempts)
-            {
-              ldap_unbind($ldap);
-            }
             return false;
           }
           self::debug('rebinding successful');
@@ -314,11 +308,6 @@ class AuthLdap extends Auth
     else
     {
       self::debug("bind to '$dn' failed: ". self::ldapError($ldap));
-    }
-
-    if ($ldap_unbind_between_attempts)
-    {
-      ldap_unbind($ldap);
     }
 
     // return failure if no connection is established
@@ -732,6 +721,8 @@ class AuthLdap extends Auth
    */
   public function action($callback, $username, &$object, $keep_going=false)
   {
+    global $ldap_unbind_between_attempts;
+
     $result = false;
 
     for ($idx=0; $idx < count(self::$all_ldap_opts['ldap_host']); $idx++)
@@ -832,9 +823,13 @@ class AuthLdap extends Auth
           }
         }
 
+        if ($ldap_unbind_between_attempts)
+        {
+          ldap_unbind($ldap);
+        }
+
       } // if ($ldap)
 
-      ldap_unbind($ldap);
       if ($result && !$keep_going)
       {
         return true;
