@@ -825,6 +825,7 @@ class AuthLdap extends Auth
 
         if ($ldap_unbind_between_attempts)
         {
+          self::debug("unbinding from $uri");
           ldap_unbind($ldap);
         }
 
