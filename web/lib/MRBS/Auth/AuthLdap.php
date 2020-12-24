@@ -212,7 +212,7 @@ class AuthLdap extends Auth
     $object = array();
     $object['pass'] = $pass;
 
-    return $this->action('validateUserCallback', $user, $object);
+    return ($this->action('validateUserCallback', $user, $object)) ? $user : false;
   }
 
 
@@ -728,8 +728,7 @@ class AuthLdap extends Auth
   *               hosts.  Useful, for example, when you want to get a list of all users.
    *
    * Returns:
-   *   false    - The pair are invalid or do not exist
-   *   string   - The validated username
+   *   boolean   - Whether the action was successful
    */
   public function action($callback, $username, &$object, $keep_going=false)
   {
@@ -867,7 +866,7 @@ class AuthLdap extends Auth
                                  $user_search, $username, $object);
           if ($res && !$keep_going)
           {
-            return $username;
+            return true;
           }
         }
 
