@@ -6,7 +6,7 @@ class Group extends Table
 {
   const TABLE_NAME = 'group';
 
-  protected static $unique_columns = array('name');
+  protected static $unique_columns = array('name', 'auth_type');
 
 
   public function __construct($name=null)

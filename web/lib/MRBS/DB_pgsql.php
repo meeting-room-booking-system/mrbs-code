@@ -401,4 +401,22 @@ class DB_pgsql extends DB
     return "array_to_string(array_agg(DISTINCT $fieldname), '$delimiter')";
   }
 
+
+  // Returns the syntax for an "upsert" query
+  // $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  // $assignments       an array of assignments for the UPDATE clause
+  // $has_id_column     whether the table has an id column
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  {
+    $conflict_keys = array_map(array($this, 'quote'), $conflict_keys);
+    $sql = "ON CONFLICT (" . implode(', ', $conflict_keys) . ")";
+    $sql .= " DO UPDATE SET " . implode(', ', $assignments);
+    if ($has_id_column)
+    {
+      // In order to make lastInsertId() work even after an UPDATE
+      $sql .= " RETURNING id";
+    }
+
+    return $sql;
+  }
 }

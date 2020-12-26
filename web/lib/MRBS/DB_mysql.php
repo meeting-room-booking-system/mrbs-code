@@ -413,4 +413,21 @@ class DB_mysql extends DB
     // or may not be more efficient.
     return "GROUP_CONCAT(DISTINCT $fieldname SEPARATOR '$delimiter')";
   }
+
+
+  // Returns the syntax for an "upsert" query
+  // $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  //                    (ignored in MySQL)
+  // $assignments       an array of assignments for the UPDATE clause
+  // $has_id_column     whether the table has an id column
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  {
+    if ($has_id_column)
+    {
+      // In order to make lastInsertId() work even after an UPDATE
+      $assignments[] = "id=LAST_INSERT_ID(id)";
+    }
+
+    return "ON DUPLICATE KEY UPDATE " . implode(', ', $assignments);
+  }
 }

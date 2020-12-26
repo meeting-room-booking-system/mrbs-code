@@ -82,38 +82,13 @@ abstract class Table
   // Saves to the database
   public function save()
   {
-    // TODO: Sort out locking.  We can't rely on locking just this table because
-    // TODO: we might be in the middle of a transaction, in which case an implicit
-    // TODO: will be triggered, or another table might already be locked, in which
-    // TODO: case this new lock will cause the other table to be unlocked.
-    // TODO: It's probably going to be necessary to move to
-    // TODO: PostgreSQL 9.5 and use INSERT ... ON DUPLICATE KEY UPDATE in MySQL
-    // TODO: and INSERT ... ON CONFLICT () DO UPDATE in PostgreSQL 9.5.
-
-    // Obtain a lock (see also Delete)
-    //db()->mutex_lock(_tbl(static::TABLE_NAME));
-
     $this->data = static::onWrite($this->data);
-
-    // Could do an INSERT ... ON DUPLICATE KEY UPDATE but there's no
-    // easy equivalent in PostgreSQL until PostgreSQL 9.5.
-    if ($this->exists())
-    {
-      $this->upsert('update');
-    }
-    else
-    {
-      $this->upsert('insert');
-    }
-
-    // Release the lock
-    //db()->mutex_unlock(_tbl(static::TABLE_NAME));
+    $this->upsert('update');
   }
 
 
-  // Inserts/updates into the table depending on $action.  Assumes that the
-  // row doesn't already exist for an insert and does for an update.
-  private function upsert($action='update')
+  // Inserts/updates into the table.
+  private function upsert()
   {
     $columns = array();
     $values = array();
@@ -124,11 +99,12 @@ abstract class Table
     $cols = new Columns(_tbl(static::TABLE_NAME));
     $column_names = $cols->getNames();
 
-    // We are only interested in those elements of $table_data that have
-    // a corresponding column in the table - except for 'id' which is
-    // assumed to be auto-increment.
+    // First of all get the column names and values for the INSERT part
     foreach ($column_names as $column_name)
     {
+      // We are only interested in those elements of $table_data that have
+      // a corresponding column in the table - except for 'id' which is
+      // assumed to be auto-increment.
       if (($column_name == 'id') || !array_key_exists($column_name, $table_data))
       {
         continue;
@@ -160,59 +136,33 @@ abstract class Table
       }
     }
 
-    if ($action == 'insert')
+    // Then go through the columns we've just found, leaving out the unique columns,
+    // and turn them into assignments for the update part
+    $assignments = array();
+    for ($i=0; $i<count($columns); $i++)
     {
-      $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
-                          (" . implode(',', $columns) . ")
-                   VALUES (" . implode(',', $values) . ")";
-    }
-    else
-    {
-      $sql = "UPDATE " . _tbl(static::TABLE_NAME) . " SET ";
-      $assignments = array();
-      $conditions = array();
-      for ($i=0; $i<count($columns); $i++)
+      $column = $columns[$i];
+      $value = $values[$i];
+      if (!in_array($column, static::$unique_columns))
       {
-        $column = $columns[$i];
-        $value = $values[$i];
-        if (in_array($column, static::$unique_columns))
-        {
-          $conditions[] = "$column=$value";
-        }
-        else
-        {
-          $assignments[] = "$column=$value";
-        }
+        $assignments[] = db()->quote($column) . "=$value";
       }
-      $sql .= implode(', ', $assignments);
-      $sql .= " WHERE " . implode(' AND ', $conditions);
     }
+
+    $quoted_columns = array_map(array(db(), 'quote'), $columns);
+    $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
+                        (" . implode(', ', $quoted_columns) . ")
+                 VALUES (" . implode(', ', $values) . ") ";
+    $sql .= db()->syntax_on_duplicate_key_update(static::$unique_columns,
+                                                 $assignments,
+                                                 $cols->hasIdColumn());
 
     db()->command($sql, $sql_params);
 
-    // If there's an id column, get the id if we don't already know it
+    // If there's an id column, get the id
     if ($cols->hasIdColumn())
     {
-      if ($action == 'insert')
-      {
-        $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
-      }
-      elseif (!isset($this->id))
-      {
-        // There may be slicker ways of getting the id of an updated row,
-        // but they are tricky to implement as the technique is not the same
-        // for MySQL and PostgreSQL. For example, in MySQL you can include in
-        // the UPDATE statement SET id=LAST_INSERT_ID(id) and then
-        // SELECT LAST_INSERT_ID(); will return the id; in PostgreSQL you can
-        // use RETURNING id.  However it's simpler, though maybe less efficient,
-        // just to get the row again.
-        $row = $this->getRow();
-        if (!isset($row))
-        {
-          throw new \Exception("Could not find id of updated row");
-        }
-        $this->id = $row['id'];
-      }
+      $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
     }
   }
 

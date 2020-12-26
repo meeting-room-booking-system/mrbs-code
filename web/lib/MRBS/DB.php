@@ -351,4 +351,14 @@ abstract class DB
   // Returns the syntax for aggregating a number of rows as a delimited string
   abstract public function syntax_group_array_as_string($fieldname, $delimiter=',');
 
+  // Returns the syntax for an "upsert" query
+  // $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  // $assignments       an array of assignments for the UPDATE clause
+  // $has_id_column     whether the table has an id column
+  abstract public function syntax_on_duplicate_key_update(
+      $conflict_keys,
+      array $assignments,
+      $has_id_column=false_update
+    );
+
 }
