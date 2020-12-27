@@ -402,10 +402,20 @@ class DB_pgsql extends DB
   }
 
 
-  // Returns the syntax for an "upsert" query
-  // $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
-  // $assignments       an array of assignments for the UPDATE clause
-  // $has_id_column     whether the table has an id column
+  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
+  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+  // return a row with the id in the 'id' column.  However there isn't a corresponding
+  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // an insert or update was performed.  In PostgreSQL insert_id() returns the sequence
+  // number and not the id of the row.  Because the sequence number is updated on every
+  // INSERT in Postgres, regardless of whether a row was actually inserted, the value
+  // won't be the id of the row in the case of an update.  Note that one side effect of
+  // this behaviour is that there will be gaps in the sequence numbers of the rows, but
+  // this doesn't matter.
+  //
+  //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  //  $assignments       an array of assignments for the UPDATE clause
+  //  $has_id_column     whether the table has an id column
   public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
   {
     $conflict_keys = array_map(array($this, 'quote'), $conflict_keys);
@@ -413,7 +423,6 @@ class DB_pgsql extends DB
     $sql .= " DO UPDATE SET " . implode(', ', $assignments);
     if ($has_id_column)
     {
-      // In order to make lastInsertId() work even after an UPDATE
       $sql .= " RETURNING id";
     }
 

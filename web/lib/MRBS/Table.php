@@ -90,6 +90,14 @@ abstract class Table
   // Inserts/updates into the table.
   private function upsert()
   {
+    // We use an "upsert" query here because that avoids having to test to
+    // see whether the row exists first - leaving a (very small) chance that
+    // the row might be deleted/created in the meantime.   The upsert query also
+    // returns the id as part of the query, though the mechanism differs between
+    // MySQl and PostgreSQL. This avoids having to do a second query to find the
+    // id of the row which we have just inserted/updated.  The other reason for
+    // doing this is that there's also again a very small chance that the row
+    // could be deleted after we've upserted it and before the second query.
     $columns = array();
     $values = array();
     $sql_params = array();
@@ -136,17 +144,14 @@ abstract class Table
       }
     }
 
-    // Then go through the columns we've just found, leaving out the unique columns,
-    // and turn them into assignments for the update part
+    // Then go through the columns we've just found and turn them into assignments
+    // for the update part
     $assignments = array();
     for ($i=0; $i<count($columns); $i++)
     {
       $column = $columns[$i];
       $value = $values[$i];
-      if (!in_array($column, static::$unique_columns))
-      {
-        $assignments[] = db()->quote($column) . "=$value";
-      }
+      $assignments[] = db()->quote($column) . "=$value";
     }
 
     $quoted_columns = array_map(array(db(), 'quote'), $columns);
@@ -157,12 +162,23 @@ abstract class Table
                                                  $assignments,
                                                  $cols->hasIdColumn());
 
-    db()->command($sql, $sql_params);
+    $res = db()->query($sql, $sql_params);
 
-    // If there's an id column, get the id
+    // If there's an id column, get the id.   First of all we try and see if it
+    // has been returned in the query, which will be the case if we are using
+    // PostgreSQL.  If that doesn't work we can get it using insert_id(), which
+    // will work for MySQL, but not for PostgreSQL.
     if ($cols->hasIdColumn())
     {
-      $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
+      try
+      {
+        $row = $res->next_row_keyed();
+        $this->id = $row['id'];
+      }
+      catch (\PDOException $e)
+      {
+        $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
+      }
     }
   }
 
