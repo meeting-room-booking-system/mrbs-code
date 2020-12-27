@@ -249,9 +249,8 @@ abstract class Table
 
     foreach ($columns as $name => $value)
     {
-      $named_parameter = ":$name";
-      $conditions[] = "$name=$named_parameter";
-      $sql_params[$named_parameter] = $value;
+      $conditions[] = "$name=?";
+      $sql_params[] = $value;
     }
 
     $sql = "SELECT *
