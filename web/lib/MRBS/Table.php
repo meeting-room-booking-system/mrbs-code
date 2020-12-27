@@ -68,7 +68,7 @@ abstract class Table
 
     foreach ($condition_columns as $condition_column)
     {
-      $conditions[] = "$condition_column=?";
+      $conditions[] = db()->quote($condition_column) . "=?";
       $sql_params[] = $this->{$condition_column};
     }
 
@@ -248,7 +248,7 @@ abstract class Table
 
     foreach ($columns as $name => $value)
     {
-      $conditions[] = "$name=?";
+      $conditions[] = db()->quote($name) . "=?";
       $sql_params[] = $value;
     }
 
@@ -282,7 +282,7 @@ abstract class Table
     $sql_params = array();
     foreach (static::$unique_columns as $unique_column)
     {
-      $where_condition_parts[] = $unique_column . '=?';
+      $where_condition_parts[] = db()->quote($unique_column) . '=?';
       if (!isset($this->{$unique_column}))
       {
         throw new \Exception("Column '$unique_column' is not set.");
