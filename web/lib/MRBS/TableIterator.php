@@ -69,7 +69,7 @@ abstract class TableIterator implements \Countable, \Iterator
     $sql = "SELECT * FROM " . _tbl($class_name::TABLE_NAME);
     if (isset($sort_column) && ($sort_column !== ''))
     {
-      $sql .= " ORDER BY $sort_column";
+      $sql .= " ORDER BY " . db()->quote($sort_column);
     }
     $this->res = db()->query($sql);
     $this->cursor = -1;

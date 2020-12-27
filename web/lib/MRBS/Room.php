@@ -92,7 +92,7 @@ class Room extends Location
     $sql .= " FROM " . _tbl(static::TABLE_NAME) . " R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id
-             WHERE R.$column=:value
+             WHERE R." . db()->quote($column) . "=:value
              LIMIT 1";
 
     $sql_params = array(':value' => $value);
