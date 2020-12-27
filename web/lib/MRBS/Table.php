@@ -108,8 +108,9 @@ abstract class Table
     $column_names = $cols->getNames();
 
     // First of all get the column names and values for the INSERT part
-    foreach ($column_names as $column_name)
+    for ($i=0; $i < count($column_names); $i++)
     {
+      $column_name = $column_names[$i];
       // We are only interested in those elements of $table_data that have
       // a corresponding column in the table - except for 'id' which is
       // assumed to be auto-increment.
@@ -130,7 +131,12 @@ abstract class Table
       }
       else
       {
-        $named_parameter = ":$column_name";
+        // Need to make sure the placeholder only uses allowed characters which are
+        // [a-zA-Z0-9_].   We can't use the column name because the column name might
+        // contain characters which are not allowed.   And we can't use '?' because
+        // we want to use the placeholders twice, once for the insert and once for the
+        // update part of the query.
+        $named_parameter = ":p$i";
         $values[] = $named_parameter;
         if (is_bool($value))
         {
