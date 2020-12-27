@@ -224,9 +224,9 @@ abstract class Table
     // Obtain a lock (see also save)
     db()->mutex_lock(_tbl(static::TABLE_NAME));
 
+    // Can't use LIMIT with DELETE in PostgreSQL
     $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
-                  WHERE id=:id
-                  LIMIT 1";
+                  WHERE id=:id";
     $sql_params = array(':id' => $id);
     db()->command($sql, $sql_params);
 
