@@ -68,9 +68,8 @@ abstract class Table
 
     foreach ($condition_columns as $condition_column)
     {
-      $named_parameter = ":$condition_column";
-      $conditions[] = "$condition_column=$named_parameter";
-      $sql_params[$named_parameter] = $this->{$condition_column};
+      $conditions[] = "$condition_column=?";
+      $sql_params[] = $this->{$condition_column};
     }
 
     $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
