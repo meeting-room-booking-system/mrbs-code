@@ -11,7 +11,10 @@ class DB_pgsql extends DB
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER = "pgsql";
 
-  private static $min_version = '8.4';  // Required for array_agg()
+  // 9.5 final release in Feb 2021
+  // 9.5 required for INSERT INTO ... ON CONFLICT () DO UPDATE
+  // 8.4 required for array_agg()
+  private static $min_version = '9.6';
 
   public function __construct($db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
   {
