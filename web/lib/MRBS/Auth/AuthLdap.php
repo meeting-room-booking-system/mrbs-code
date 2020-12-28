@@ -609,6 +609,10 @@ class AuthLdap extends Auth
           {
             $object['config'][$item] = self::$all_ldap_opts[$item][$idx];
           }
+          else
+          {
+            $object['config'][$item] = null;
+          }
         }
 
         if (empty($dn))
