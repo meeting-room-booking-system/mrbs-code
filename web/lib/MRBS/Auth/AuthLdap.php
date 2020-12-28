@@ -799,7 +799,7 @@ class AuthLdap extends Auth
     return $result;
   }
 
-  
+
   // A wrapper for ldap_bind() that optionally suppresses "invalid credentials" errors.
   private static function ldapBind ($link_identifier, $bind_rdn=null, $bind_password=null)
   {
