@@ -89,6 +89,7 @@ class AuthLdap extends Auth
 
   private static $all_ldap_opts;
   private static $config_items;
+  private static $profile_clock;
 
 
   public function __construct()
@@ -334,16 +335,119 @@ class AuthLdap extends Auth
       // Otherwise we'll have to query LDAP.
       else
       {
-        $user = new User($username);
+        $object = array();
 
-        $user->display_name = $this->getDisplayName($username);
-        $user->email = $this->getEmail($username);
-        $user->level = $this->getLevel($username);
+        $res = $this->action('getUserCallback', $username, $object);
+        if (!$res || !isset($object['user']))
+        {
+          return null;
+        }
+
+        $user = parent::getUser($username);
+        $keys = array('display_name', 'email', 'level');
+
+        foreach ($keys as $key)
+        {
+          if (isset($object['user'][$key]))
+          {
+            $user->$key = $object['user'][$key];
+          }
+        }
       }
+
+      // Update the cache (we use the static variable as the cache rather than the
+      // database because the database might be out of date).
       $users[$username] = $user;
     }
 
     return $users[$username];
+  }
+
+
+  /* getUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                     $username, &$object)
+   *
+   * &$ldap       - Reference to the LDAP object
+   * $base_dn     - The base DN
+   * $dn          - The user's DN
+   * $user_search - The LDAP filter to find the user
+   * $username    - The user name
+   * &$object     - Reference to the generic object
+   *
+   * Returns:
+   *   false    - Didn't find a user
+   *   true     - Found a user
+   */
+  private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
+                                          $user, &$object)
+  {
+    global $ldap_get_user_email;
+
+    self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
+
+    if (!$ldap || !$base_dn || !$dn || !$user_search)
+    {
+      self::debug("invalid parameters, could not call ldap_read, returning false");
+      return false;
+    }
+
+    $attributes = self::getAttributes($object, $ldap_get_user_email, true);
+
+    self::resetProfileClock();
+    // We suppress the errors because it's possible to get a "No such object" error if
+    // the DN doesn't exist - which it won't if (a) we're searching an array of LDAP hosts
+    // or (b) the DN has been deleted since the booking was made.   But check the error
+    // code afterwards and trigger an error if it was any other kind of error.
+    $res = @ldap_read(
+        $ldap,
+        $dn,
+        "(objectclass=*)",
+        array_values($attributes),
+        0,
+        1
+      );
+    $t = self::getProfileClock();
+
+    if ($res === false)
+    {
+      self::debug("ldap_read() failed: " . self::ldapError($ldap));
+      if (self::LDAP_NO_SUCH_OBJECT !== ($errno = ldap_errno($ldap)))
+      {
+        trigger_error(ldap_err2str($errno), E_USER_WARNING);
+      }
+      return false;
+    }
+
+    if (ldap_count_entries($ldap, $res) === 0)
+    {
+      self::debug("No entries found");
+      return false;
+    }
+
+    self::debug("ldap_read() succeeded, taking $t seconds");
+    $entry = ldap_first_entry($ldap, $res);
+    $user = self::getResult($ldap, $entry, $attributes);
+
+    if (!isset($user['username']))
+    {
+      return false;
+    }
+
+    if (!isset($user['display_name']))
+    {
+      $user['display_name'] = $user['username'];
+    }
+
+    if (isset($user['groups']))
+    {
+      if (isset($object['config']['ldap_admin_group_dn']))
+      {
+        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
+      }
+    }
+
+    $object['user'] = $user;
+    return true;
   }
 
 
@@ -464,6 +568,94 @@ class AuthLdap extends Auth
     }
 
     return true;
+  }
+
+
+  // Returns an array of attributes for use in an LDAP query
+  private static function getAttributes($object, $include_email=true, $include_groups=true)
+  {
+    $result = array();
+
+    // Username
+    $result['username'] = \MRBS\utf8_strtolower($object['config']['ldap_user_attrib']);
+
+    // The display name attribute might not have been set in the config file
+    if (isset($object['config']['ldap_name_attrib']))
+    {
+      $result['display_name'] = \MRBS\utf8_strtolower($object['config']['ldap_name_attrib']);
+    }
+
+    // The email address
+    if ($include_email && isset($object['config']['ldap_email_attrib']))
+    {
+      $result['email'] = \MRBS\utf8_strtolower($object['config']['ldap_email_attrib']);
+    }
+
+    // The group name attribute might not have been set in the config file
+    if ($include_groups && isset($object['config']['ldap_group_member_attrib']))
+    {
+      $result['groups'] = \MRBS\utf8_strtolower($object['config']['ldap_group_member_attrib']);
+    }
+
+    return $result;
+  }
+
+
+  // Returns an associative array from the result of an LDAP search
+  private static function getResult($ldap, $entry, $attributes)
+  {
+    // Initialise all keys in the user array, in case an attribute isn't present
+    $attributes_keys = array_keys($attributes);
+    $user = array();
+    foreach ($attributes_keys as $key)
+    {
+      switch ($key)
+      {
+        case 'username':
+        case 'display_name':
+        case 'email':
+          $user[$key] = null;
+          break;
+        case 'groups':
+          $user[$key] = array();
+          break;
+        default:
+          throw new \Exception("Unknown key '$key'");
+      }
+    }
+
+    $attribute = ldap_first_attribute($ldap, $entry);
+
+    // Loop through all the attributes for this user
+    while ($attribute)
+    {
+      $values = ldap_get_values($ldap, $entry, $attribute);
+      $attribute = \MRBS\utf8_strtolower($attribute);  // ready for the comparisons
+
+      if ($attribute == $attributes['username'])
+      {
+        $user['username'] = $values[0];
+      }
+      elseif (isset($attributes['display_name']) && ($attribute == $attributes['display_name']))
+      {
+        $user['display_name'] = $values[0];
+      }
+      elseif (isset($attributes['email']) && ($attribute == $attributes['email']))
+      {
+        $user['email'] = $values[0];
+      }
+      elseif (isset($attributes['groups']) && ($attribute == $attributes['groups']))
+      {
+        for ($i=0; $i<$values['count']; $i++)
+        {
+          $user['groups'][] = $values[$i];
+        }
+      }
+
+      $attribute = ldap_next_attribute($ldap, $entry);
+    }
+
+    return $user;
   }
 
 
@@ -984,5 +1176,32 @@ class AuthLdap extends Auth
         );
     }
   }
+
+
+  private static function getProfileClock()
+  {
+    global $ldap_debug;
+
+    if ($ldap_debug)
+    {
+      return (\MRBS\get_microtime() - self::$profile_clock);
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+
+  private static function resetProfileClock()
+  {
+    global $ldap_debug;
+
+    if ($ldap_debug)
+    {
+      self::$profile_clock = \MRBS\get_microtime();
+    }
+  }
+
 
 }
