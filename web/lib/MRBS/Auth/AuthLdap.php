@@ -821,7 +821,7 @@ class AuthLdap extends Auth
     return $result;
   }
 
-
+  
   // Gets the full LDAP URI
   private static function getUri($idx)
   {
