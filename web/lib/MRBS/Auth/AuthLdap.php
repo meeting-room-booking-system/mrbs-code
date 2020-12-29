@@ -528,8 +528,9 @@ class AuthLdap extends Auth
     }
 
     self::debug("searching with base_dn '$base_dn' and filter '$filter'");
-
+    self::resetProfileClock();
     $res = ldap_search($ldap, $base_dn, $filter, $attributes);
+    $t = self::getProfileClock();
 
     if ($res == false)
     {
@@ -537,7 +538,7 @@ class AuthLdap extends Auth
       return false;
     }
 
-    self::debug(ldap_count_entries($ldap, $res) . " entries found");
+    self::debug(ldap_count_entries($ldap, $res) . " entries found in $t seconds");
 
     $entry = ldap_first_entry($ldap, $res);
 
