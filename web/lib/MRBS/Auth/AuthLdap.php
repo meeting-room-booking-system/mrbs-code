@@ -413,7 +413,20 @@ class AuthLdap extends Auth
       self::debug("ldap_read() failed: " . self::ldapError($ldap));
       if (self::LDAP_NO_SUCH_OBJECT !== ($errno = ldap_errno($ldap)))
       {
-        trigger_error(ldap_err2str($errno), E_USER_WARNING);
+        if ($errno === 0)
+        {
+          // The errno is reporting zero ("Success"), but that's just the ldap errno.  If
+          // ldap_read() doesn't get as far as interrogating the directory, it will return
+          // false, but ldap_errno() will return success. To get more details try temporarily
+          // removing the error suppression operator ('@').
+          $message = "ldap_read() failed, not due to an LDAP error but probably due " .
+                     "to an initialization error such as 'Array initialization wrong'";
+        }
+        else
+        {
+          $message = ldap_err2str($errno);
+        }
+        trigger_error($message, E_USER_WARNING);
       }
       return false;
     }
@@ -821,7 +834,7 @@ class AuthLdap extends Auth
     return $result;
   }
 
-  
+
   // Gets the full LDAP URI
   private static function getUri($idx)
   {
