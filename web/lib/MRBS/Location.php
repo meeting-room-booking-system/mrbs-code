@@ -4,9 +4,9 @@ namespace MRBS;
 
 abstract class Location extends Table
 {
-
-  protected $is_able;
-
+  protected $is_visible;
+  protected $is_writable;
+  protected $is_book_admin;
 
   public static function getById($id)
   {
@@ -30,38 +30,44 @@ abstract class Location extends Table
   abstract public function getPermissions(array $role_ids);
 
 
+  // Determines whether the location is visible to the currently logged in user
   public function isVisible()
   {
-    return $this->isAble(LocationPermission::READ);
+    if (!isset($this->is_visible))
+    {
+      $this->is_visible = $this->isAble(LocationPermission::READ,
+                                        session()->getCurrentUser());
+    }
+
+    return $this->is_visible;
   }
 
 
-  protected function isAble($operation)
+  // Determines whether $user, which is either a \MRBS\User object or null, can perform
+  // $operation in this location
+  public function isAble($operation, $user)
   {
-    if (!isset($this->is_able ) || !isset($this->is_able[$operation]))
+    // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
+    // we can use a nullable type
+    assert(is_null($user) || ($user instanceof User),
+           '$user must be null or of class ' . __NAMESPACE__ . '\User');
+
+    if (isset($user))
     {
       // Admins can do anything
-      if (is_admin())
+      if ($user->isAdmin())
       {
-        $this->is_able[$operation] = true;
+        return true;
       }
-      else
-      {
-        $user = session()->getCurrentUser();
-        if (isset($user))
-        {
-          $rules = $user->getRules($this);
-        }
-        else
-        {
-          // If there's no logged in user, return the default rules
-          $rules = array(AreaPermission::getDefaultPermission());
-        }
-        $this->is_able[$operation] = LocationPermission::can($rules, $operation);
-      }
+      $rules = $user->getRules($this);
+    }
+    else
+    {
+      // If there's no logged in user, use the default rules
+      $rules = array(AreaPermission::getDefaultPermission());
     }
 
-    return $this->is_able[$operation];
+    return LocationPermission::can($rules, $operation);
   }
 
 }

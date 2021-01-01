@@ -116,6 +116,7 @@ function print_effective_permissions(User $user)
       foreach ($permission_options as $key => $value)
       {
         echo "<td>";
+        echo ($room->isAble($key, $user)) ? 'Y' : 'N';
         echo "</td>";
       }
       echo "</tr>\n";

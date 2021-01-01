@@ -34,15 +34,29 @@ class Room extends Location
   }
 
 
+  // Determines whether the room is writable by the currently logged in user
   public function isWritable()
   {
-    return $this->isAble(RoomPermission::WRITE);
+    if (!isset($this->is_writable))
+    {
+      $this->is_writable = $this->isAble(RoomPermission::WRITE,
+                                         session()->getCurrentUser());
+    }
+
+    return $this->is_writable;
   }
 
 
+  // Determines whether the currently logged in user is a booking admin for this room
   public function isBookAdmin()
   {
-    return $this->isAble(RoomPermission::ALL);
+    if (!isset($this->is_book_admin))
+    {
+      $this->is_book_admin = $this->isAble(RoomPermission::ALL,
+                                           session()->getCurrentUser());
+    }
+
+    return $this->is_book_admin;
   }
 
 

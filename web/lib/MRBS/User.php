@@ -73,6 +73,15 @@ class User extends Table
   }
 
 
+  public function isAdmin()
+  {
+    global $max_level;
+
+    $required_level = (isset($max_level) ? $max_level : 2);
+    return ($this->level >= $required_level);
+  }
+
+
   // Gets the combined individual and group roles for the user
   public function combinedRoles()
   {

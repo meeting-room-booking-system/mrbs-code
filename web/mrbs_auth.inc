@@ -380,12 +380,8 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
 // Checks whether the current user has admin rights
 function is_admin()
 {
-  global $max_level;
-
   $mrbs_user = session()->getCurrentUser();
-  $required_level = (isset($max_level) ? $max_level : 2);
-
-  return (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
+  return (isset($mrbs_user) && ($mrbs_user->isAdmin()));
 }
 
 
