@@ -546,8 +546,9 @@ $vocab["invalid_types_note"]      = "These are types that are not allowed to be 
 
 
 // Used in edit_user.php
-$vocab["name_empty"]         = "You must enter a name.";
-$vocab["name_not_unique"]    = "already exists.   Please choose another name.";
+$vocab["name_empty"]              = "You must enter a name.";
+$vocab["name_not_unique"]         = "already exists.   Please choose another name.";
+$vocab["effective_permissions"]   = "Effective permissions";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "This will delete the following bookings";
