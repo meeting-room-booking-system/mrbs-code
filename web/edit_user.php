@@ -80,26 +80,48 @@ $is_ajax = is_ajax();
 
 function print_effective_permissions(User $user)
 {
-  return;
-  // Under development - not doing anything for the moment.
   echo "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
 
   $areas = new Areas();
+  $permission_options = AreaPermission::getPermissionOptions();
 
   echo "<table>\n";
+
+  echo "<thead>\n";
+  echo "<tr>";
+  echo "<th></th>";
+  foreach ($permission_options as $key => $value)
+  {
+    echo "<th>" . htmlspecialchars($value) . "</th>";
+  }
+  echo "</tr>\n";
+  echo "</thead>\n";
+
+  echo "<tbody>\n";
   foreach ($areas as $area)
   {
     echo "<tr>";
     echo "<td>" . htmlspecialchars($area->area_name) . "</td>";
+    foreach ($permission_options as $key => $value)
+    {
+      echo "<td>";
+      echo "</td>";
+    }
     echo "</tr>\n";
     $rooms = new Rooms($area->id);
     foreach ($rooms as $room)
     {
       echo "<tr>";
       echo "<td>" . htmlspecialchars($room->room_name) . "</td>";
+      foreach ($permission_options as $key => $value)
+      {
+        echo "<td>";
+        echo "</td>";
+      }
       echo "</tr>\n";
     }
   }
+  echo "</tbody>\n";
   echo "</table>\n";
 }
 
