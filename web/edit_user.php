@@ -105,6 +105,13 @@ function print_effective_permissions(User $user)
     foreach ($permission_options as $key => $value)
     {
       echo "<td>";
+      // READ is the only permission which can be applied to an area itself
+      // as opposed to the rooms within the area.
+      if ($key == AreaPermission::READ)
+      {
+        $class = ($area->isAble($key, $user)) ? 'yes' : 'no';
+        echo '<span class="' . $class . '"></span>';
+      }
       echo "</td>";
     }
     echo "</tr>\n";
@@ -116,7 +123,8 @@ function print_effective_permissions(User $user)
       foreach ($permission_options as $key => $value)
       {
         echo "<td>";
-        echo ($room->isAble($key, $user)) ? 'Y' : 'N';
+        $class = ($room->isAble($key, $user)) ? 'yes' : 'no';
+        echo '<span class="' . $class . '"></span>';
         echo "</td>";
       }
       echo "</tr>\n";
@@ -1095,7 +1103,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
   $form->render();
 
-  print_effective_permissions($user);
+  if (is_admin())
+  {
+    print_effective_permissions($user);
+  }
 
   // Print footer and exit
   print_footer();

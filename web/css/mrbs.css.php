@@ -1747,6 +1747,7 @@ div#checks span {
   cursor: pointer;
 }
 
+.yes::after,
 .good::after {
   content: '\002714';  <?php // heavy checkmark ?>
   color: green;
@@ -1758,6 +1759,7 @@ div#checks span {
   color: #ff5722;
 }
 
+.no::after,
 .bad::after {
   content: '\002718';  <?php // cross ?>
   color: red;
