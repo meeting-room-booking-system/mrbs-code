@@ -2376,7 +2376,7 @@ table#roles {
 }
 
 #effective_permissions h2 {
-  margin: 0;
+  margin-top: 0;
   font-size: inherit;
   font-style: italic;
   font-weight: normal;
@@ -2405,7 +2405,7 @@ table#roles {
   padding-left: 1.5em;
 }
 
-#effective_permissions tr.area td {
+#effective_permissions tr.area:not(:first-child) td {
   padding-top: 1em;
 }
 
