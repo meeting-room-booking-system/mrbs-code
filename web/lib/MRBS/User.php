@@ -167,12 +167,10 @@ class User extends Table
   {
     $html = '';
 
-    $html .= "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
-
     $areas = new Areas();
     $permission_options = AreaPermission::getPermissionOptions();
 
-    $html .= '<table data-id="' . htmlspecialchars($this->id) . "\">\n";
+    $html .= '<table id="effective_permissions" data-id="' . htmlspecialchars($this->id) . "\">\n";
 
     $html .= "<thead>\n";
     $html .= "<tr>";

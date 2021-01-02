@@ -1048,6 +1048,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
   if (is_admin())
   {
+    echo "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
     echo $user->effectivePermissionsHTML();
   }
 
