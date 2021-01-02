@@ -1440,6 +1440,14 @@ div#div_custom_html {
   padding: 0.4em 0.7em;
 }
 
+.roles_table tbody td:nth-child(2) {
+  text-align: left;
+}
+
+.roles_table tr.room td:nth-child(2) {
+  padding-left: 1.5em;
+}
+
 .roles_table thead th {
   background-color: #ffffff;
 }
