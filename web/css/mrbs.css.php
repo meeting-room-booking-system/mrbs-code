@@ -2358,7 +2358,27 @@ table#roles {
   padding: 0.4em 0.8em;
 }
 
-table#effective_permissions.fetching {
+#form_edit_user {
+  margin-right: 2em;
+}
+
+#effective_permissions {
+  float: left;
+  margin-top: 2em;
+}
+
+#effective_permissions h2 {
+  margin: 0;
+  font-size: inherit;
+  font-style: italic;
+  font-weight: normal;
+}
+
+#effective_permissions table {
+  margin-left: 1em;
+}
+
+#effective_permissions table.fetching {
   opacity: 0.5;
 }
 

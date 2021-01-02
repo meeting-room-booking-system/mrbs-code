@@ -1048,8 +1048,10 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
   if (is_admin())
   {
+    echo "<div id=\"effective_permissions\">\n";
     echo "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
     echo $user->effectivePermissionsHTML();
+    echo "</div>\n";
   }
 
   // Print footer and exit

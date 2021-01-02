@@ -53,7 +53,7 @@ $(document).on('page_ready', function() {
   $('[name="roles[]"').on('change', function() {
       var data = {};
       var roles = [];
-      var table = $('#effective_permissions');
+      var table = $('#effective_permissions').find('table');
       $('[name="roles[]"').each(function() {
           if ($(this).is(':checked'))
           {
