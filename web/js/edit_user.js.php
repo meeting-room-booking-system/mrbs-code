@@ -53,6 +53,7 @@ $(document).on('page_ready', function() {
   $('[name="roles[]"').on('change', function() {
       var data = {};
       var roles = [];
+      var table = $('#effective_permissions');
       $('[name="roles[]"').each(function() {
           if ($(this).is(':checked'))
           {
@@ -60,10 +61,10 @@ $(document).on('page_ready', function() {
           }
         });
       data.csrf_token = getCSRFToken();
-      data.id = $('#effective_permissions').data('id');
+      data.id = table.data('id');
       data.roles = roles;
       $.post('ajax/effective_permissions.php', data, function(result) {
-        $('#effective_permissions').replaceWith(result);
+        table.replaceWith(result);
       });
     });
 
