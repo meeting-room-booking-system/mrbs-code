@@ -2387,7 +2387,10 @@ table#roles {
 }
 
 #effective_permissions table.fetching {
-  opacity: 0.5;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+  transition-delay: 0.5s;
 }
 
 #effective_permissions th,
