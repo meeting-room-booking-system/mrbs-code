@@ -2390,6 +2390,28 @@ table#roles {
   opacity: 0.5;
 }
 
+#effective_permissions th,
+#effective_permissions td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.2em;
+}
+
+#effective_permissions tbody td:first-child {
+  text-align: left;
+}
+
+#effective_permissions tr.room td:first-child {
+  padding-left: 1.5em;
+}
+
+#effective_permissions tr.area td {
+  padding-top: 1em;
+}
+
+#effective_permissions tr.area td:first-child {
+  font-weight: bold;
+}
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 

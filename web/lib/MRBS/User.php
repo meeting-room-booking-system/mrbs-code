@@ -185,7 +185,7 @@ class User extends Table
     $html .= "<tbody>\n";
     foreach ($areas as $area)
     {
-      $html .= "<tr>";
+      $html .= '<tr class="area">';
       $html .= "<td>" . htmlspecialchars($area->area_name) . "</td>";
       foreach ($permission_options as $key => $value)
       {
@@ -203,7 +203,7 @@ class User extends Table
       $rooms = new Rooms($area->id);
       foreach ($rooms as $room)
       {
-        $html .= "<tr>";
+        $html .= '<tr class="room">';
         $html .= "<td>" . htmlspecialchars($room->room_name) . "</td>";
         unset($class);
         foreach ($permission_options as $key => $value)
