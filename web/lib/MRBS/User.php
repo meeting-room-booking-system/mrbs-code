@@ -205,10 +205,17 @@ class User extends Table
       {
         $html .= "<tr>";
         $html .= "<td>" . htmlspecialchars($room->room_name) . "</td>";
+        unset($class);
         foreach ($permission_options as $key => $value)
         {
           $html .= "<td>";
-          $class = ($room->isAble($key, $this)) ? 'yes' : 'no';
+          // If the previous class was 'no' then we don't need to do
+          // the isAble() test, thus saving some time.  Note that this
+          // depends on the permissions being in increasing order.
+          if (!isset($class) || ($class == 'yes'))
+          {
+            $class = ($room->isAble($key, $this)) ? 'yes' : 'no';
+          }
           $html .= '<span class="' . $class . '"></span>';
           $html .= "</td>";
         }

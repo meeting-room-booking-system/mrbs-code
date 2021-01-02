@@ -19,6 +19,8 @@ abstract class LocationPermission extends Table
   private static $permissions = array(self::READ, self::WRITE, self::ALL);  // Must be in order
 
 
+  // Returns an array of permissions in ascending order, with key the permission
+  // and value the descriptive text.
   public static function getPermissionOptions()
   {
     return array(
