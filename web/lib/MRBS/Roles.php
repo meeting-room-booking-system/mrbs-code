@@ -43,7 +43,8 @@ class Roles extends TableIterator
       $role = $this->current();
       $field = new FieldInputCheckbox();
       $field->setLabel($role->name)
-            ->setControlAttributes(array('name' => 'roles[]',
+            ->setControlAttributes(array('id' => 'roles' . $this->cursor,
+                                         'name' => 'roles[]',
                                          'value' => $role->id,
                                          'disabled' => $disabled))
             ->setChecked(in_array($role->id, $selected));
