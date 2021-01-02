@@ -78,63 +78,6 @@ elseif (isset($update_button))
 $is_ajax = is_ajax();
 
 
-function print_effective_permissions(User $user)
-{
-  echo "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
-
-  $areas = new Areas();
-  $permission_options = AreaPermission::getPermissionOptions();
-
-  echo "<table>\n";
-
-  echo "<thead>\n";
-  echo "<tr>";
-  echo "<th></th>";
-  foreach ($permission_options as $key => $value)
-  {
-    echo "<th>" . htmlspecialchars($value) . "</th>";
-  }
-  echo "</tr>\n";
-  echo "</thead>\n";
-
-  echo "<tbody>\n";
-  foreach ($areas as $area)
-  {
-    echo "<tr>";
-    echo "<td>" . htmlspecialchars($area->area_name) . "</td>";
-    foreach ($permission_options as $key => $value)
-    {
-      echo "<td>";
-      // READ is the only permission which can be applied to an area itself
-      // as opposed to the rooms within the area.
-      if ($key == AreaPermission::READ)
-      {
-        $class = ($area->isAble($key, $user)) ? 'yes' : 'no';
-        echo '<span class="' . $class . '"></span>';
-      }
-      echo "</td>";
-    }
-    echo "</tr>\n";
-    $rooms = new Rooms($area->id);
-    foreach ($rooms as $room)
-    {
-      echo "<tr>";
-      echo "<td>" . htmlspecialchars($room->room_name) . "</td>";
-      foreach ($permission_options as $key => $value)
-      {
-        echo "<td>";
-        $class = ($room->isAble($key, $user)) ? 'yes' : 'no';
-        echo '<span class="' . $class . '"></span>';
-        echo "</td>";
-      }
-      echo "</tr>\n";
-    }
-  }
-  echo "</tbody>\n";
-  echo "</table>\n";
-}
-
-
 // Checks whether the current user can view the target user
 function can_view_user($target)
 {
@@ -1105,7 +1048,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
 
   if (is_admin())
   {
-    print_effective_permissions($user);
+    echo $user->effectivePermissionsHTML();
   }
 
   // Print footer and exit

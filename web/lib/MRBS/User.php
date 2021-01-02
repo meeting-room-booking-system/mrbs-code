@@ -162,6 +162,68 @@ class User extends Table
   }
 
 
+  // Returns the HTML for a table of effective permissions for this user
+  public function effectivePermissionsHTML()
+  {
+    $html = '';
+
+    $html .= "<h2>" . get_vocab('effective_permissions') . "</h2>\n";
+
+    $areas = new Areas();
+    $permission_options = AreaPermission::getPermissionOptions();
+
+    $html .= "<table>\n";
+
+    $html .= "<thead>\n";
+    $html .= "<tr>";
+    $html .= "<th></th>";
+    foreach ($permission_options as $key => $value)
+    {
+      $html .= "<th>" . htmlspecialchars($value) . "</th>";
+    }
+    $html .= "</tr>\n";
+    $html .= "</thead>\n";
+
+    $html .= "<tbody>\n";
+    foreach ($areas as $area)
+    {
+      $html .= "<tr>";
+      $html .= "<td>" . htmlspecialchars($area->area_name) . "</td>";
+      foreach ($permission_options as $key => $value)
+      {
+        $html .= "<td>";
+        // READ is the only permission which can be applied to an area itself
+        // as opposed to the rooms within the area.
+        if ($key == AreaPermission::READ)
+        {
+          $class = ($area->isAble($key, $this)) ? 'yes' : 'no';
+          $html .= '<span class="' . $class . '"></span>';
+        }
+        $html .= "</td>";
+      }
+      $html .= "</tr>\n";
+      $rooms = new Rooms($area->id);
+      foreach ($rooms as $room)
+      {
+        $html .= "<tr>";
+        $html .= "<td>" . htmlspecialchars($room->room_name) . "</td>";
+        foreach ($permission_options as $key => $value)
+        {
+          $html .= "<td>";
+          $class = ($room->isAble($key, $this)) ? 'yes' : 'no';
+          $html .= '<span class="' . $class . '"></span>';
+          $html .= "</td>";
+        }
+        $html .= "</tr>\n";
+      }
+    }
+    $html .= "</tbody>\n";
+    $html .= "</table>\n";
+
+    return $html;
+  }
+
+
   private function saveGroups()
   {
     $existing = self::getGroupsByUserId($this->id);
