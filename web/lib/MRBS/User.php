@@ -170,7 +170,7 @@ class User extends Table
     $areas = new Areas();
     $permission_options = AreaPermission::getPermissionOptions();
 
-    $html .= '<table id="effective_permissions" data-id="' . htmlspecialchars($this->id) . "\">\n";
+    $html .= '<table data-id="' . htmlspecialchars($this->id) . "\">\n";
 
     $html .= "<thead>\n";
     $html .= "<tr>";
