@@ -63,6 +63,7 @@ $(document).on('page_ready', function() {
       data.csrf_token = getCSRFToken();
       data.id = table.data('id');
       data.roles = roles;
+      table.addClass('fetching');
       $.post('ajax/effective_permissions.php', data, function(result) {
         table.replaceWith(result);
       });

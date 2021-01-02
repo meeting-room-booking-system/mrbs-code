@@ -2358,6 +2358,10 @@ table#roles {
   padding: 0.4em 0.8em;
 }
 
+table#effective_permissions.fetching {
+  opacity: 0.5;
+}
+
 
 /* ------------ VIEW_ENTRY.PHP ------------------*/
 
