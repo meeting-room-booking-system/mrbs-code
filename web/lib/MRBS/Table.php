@@ -175,15 +175,14 @@ abstract class Table
     // will work for MySQL, but not for PostgreSQL.
     if ($cols->hasIdColumn())
     {
-      if ($res->count() > 0)
+      // We can't rely on $res->count() because MySQL will just return the number of
+      // rows affected, not the number of rows in the result.
+      try
       {
         $row = $res->next_row_keyed();
-      }
-      if (isset($row) && isset($row['id']))
-      {
         $this->id = $row['id'];
       }
-      else
+      catch (\PDOException $e)
       {
         $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
       }
