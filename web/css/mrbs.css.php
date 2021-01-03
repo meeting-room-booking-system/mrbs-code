@@ -1988,7 +1988,7 @@ form#show_my_entries input.link[type="submit"] {
     align-items: flex-start;
   }
 
-  .banner #more_info {
+  .banner .company_more_info {
     display: none;
   }
 
