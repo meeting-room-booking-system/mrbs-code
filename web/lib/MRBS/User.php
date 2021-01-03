@@ -158,6 +158,17 @@ class User extends Table
       }
     }
 
+    // Merge in the default permissions
+    if ($is_room)
+    {
+      $default_rules = RoomPermission::getDefaultPermission($this);
+    }
+    else
+    {
+      $default_rules = AreaPermission::getDefaultPermission($this);
+    }
+    $rules[] = $default_rules;
+
     return $rules;
   }
 
