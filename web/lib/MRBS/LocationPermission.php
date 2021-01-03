@@ -164,7 +164,7 @@ abstract class LocationPermission extends Table
     {
       $result->permission = self::READ;
     }
-    elseif (is_admin())
+    elseif ($user->isAdmin())
     {
       $result->permission = self::ALL;
     }
