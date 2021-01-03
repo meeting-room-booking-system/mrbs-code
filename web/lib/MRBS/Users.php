@@ -144,25 +144,8 @@ class Users extends TableIterator
     // Loop through the external users and add them or update them as necessary
     foreach ($external_users as $external_user)
     {
-      // Get the user's group ids
-      $external_user['group_ids'] = array();
-      foreach ($external_user['groups'] as $group_name)
-      {
-        $group_id = array_search($group_name, $this->names['groups']);
-        // If the group doesn't exist then create it
-        if ($group_id === false)
-        {
-          $group = new Group($group_name);
-          $group->save();
-          $group_id = $group->id;
-          // and update the group names
-          $this->names['groups'][$group_id] = $group_name;
-        }
-        $external_user['group_ids'][] = $group_id;
-      }
-
       // Try and get the user from the database
-      $sql = "SELECT U.name, U.display_name, U.email, " .
+      $sql = "SELECT U.name, U.display_name, U.email, U.level, " .
                      db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
                 FROM " . _tbl(User::TABLE_NAME) . " U
            LEFT JOIN " . _tbl('user_group') . " G
@@ -185,26 +168,29 @@ class Users extends TableIterator
         $user = new User($external_user['username']);
         $user->display_name = $external_user['display_name'];
         $user->email = (isset($external_user['email'])) ? $external_user['email'] : null;
-        $user->groups = $external_user['group_ids'];
+        $user->groups = $external_user['groups'];
+        $user->level = $external_user['level'];
         // Save the user to the database
         $user->save();
         $added[] = $external_user['display_name'];
       }
       else
       {
-        // It's an existing user: check to see whether there's been any
+        // It's an existing user: check to see whether there have been any
         // change and, if so, update the database.
         // TODO: implement local groups and check for changes
         $row = $res->next_row_keyed();
         $this->stringsToArrays($row);
         if (($external_user['display_name'] !== $row['display_name']) ||
+            ($external_user['level'] !== $row['level']) ||
             (isset($external_user['email']) && ($external_user['email'] !== $row['email'])) ||
-            !array_values_equal($external_user['group_ids'], $row['groups']))
+            !array_values_equal($external_user['groups'], $row['groups']))
         {
           $user = User::getByName($row['name'], $auth['type']);
           $user->display_name = $external_user['display_name'];
           $user->email = (isset($external_user['email'])) ? $external_user['email'] : null;
-          $user->groups = $external_user['group_ids'];
+          $user->groups = $external_user['groups'];
+          $user->level = $external_user['level'];
           // Save the user to the database
           $user->save();
           $updated[] = $external_user['display_name'];

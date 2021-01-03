@@ -84,7 +84,7 @@ abstract class Auth
 
 
   // Gets the level from the $auth['admin'] array in the config file
-  public function getDefaultLevel($username)
+  public static function getDefaultLevel($username)
   {
     global $auth;
 

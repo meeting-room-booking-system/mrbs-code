@@ -172,7 +172,7 @@ abstract class LocationPermission extends Table
     {
       $result->permission = self::WRITE;
     }
-    
+
     return $result;
   }
 

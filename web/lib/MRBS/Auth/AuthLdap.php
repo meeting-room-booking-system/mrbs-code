@@ -707,6 +707,21 @@ class AuthLdap extends Auth
         {
           $user['email'] = User::getDefaultEmail($user['username']);
         }
+        if (isset($user['groups']))
+        {
+          // Before we convert the group names to ids, check, if we can,
+          // whether this user is in the admin group
+          if (isset($object['config']['ldap_admin_group_dn']))
+          {
+            $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
+          }
+          else
+          {
+            $user['level'] = self::getDefaultLevel($user['username']);
+          }
+          // Now convert the group names to ids
+          $user['groups'] = self::convertGroupNamesToIds($user['groups']);
+        }
         $object['users'][] = $user;
       }
 
