@@ -109,7 +109,7 @@ function print_header_site_info()
   }
   if (!empty($mrbs_company_more_info))
   {
-    echo '<span id="more_info">' . htmlspecialchars($mrbs_company_more_info) . "</span>\n";
+    echo '<span class="company_more_info">' . htmlspecialchars($mrbs_company_more_info) . "</span>\n";
   }
   echo '<a href="' . htmlspecialchars(multisite('index.php')) . '">' . get_vocab('mrbs') . "</a>\n";
   echo "</div>\n";
