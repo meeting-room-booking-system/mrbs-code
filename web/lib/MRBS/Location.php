@@ -64,7 +64,7 @@ abstract class Location extends Table
     else
     {
       // If there's no logged in user, use the default rules
-      $rules = array(AreaPermission::getDefaultPermission());
+      $rules = array(AreaPermission::getDefaultPermission($user));
     }
 
     return LocationPermission::can($rules, $operation);

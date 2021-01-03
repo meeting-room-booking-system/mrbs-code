@@ -117,7 +117,7 @@ class User extends Table
       $roles = Group::getRoles($this->groups);
       if (empty($roles))
       {
-        $rule = ($is_room) ? RoomPermission::getDefaultPermission() : AreaPermission::getDefaultPermission();
+        $rule = ($is_room) ? RoomPermission::getDefaultPermission($this) : AreaPermission::getDefaultPermission($this);
         return array($rule);
       }
     }
@@ -150,7 +150,7 @@ class User extends Table
         // we can do, so return the default rules.
         if ($for_groups)
         {
-          $rule = AreaPermission::getDefaultPermission();
+          $rule = AreaPermission::getDefaultPermission($this);
           return array($rule);
         }
         // Otherwise, see if there are some rules for the user's groups.

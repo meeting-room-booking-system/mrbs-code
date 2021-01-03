@@ -148,23 +148,31 @@ abstract class LocationPermission extends Table
   }
 
 
-  // Gets the default permission for a user
+  // Gets the default permission for a user, which is either a \MRBS\User object or null
   // TODO: make this is configurable?  Either in the config file or through the browser
-  public static function getDefaultPermission()
+  public static function getDefaultPermission($user)
   {
+    // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
+    // we can use a nullable type
+    assert(is_null($user) || ($user instanceof User),
+           '$user must be null or of class ' . __NAMESPACE__ . '\User');
+
     $result = new static();
     $result->state = self::GRANTED;
 
-    if (is_admin())
+    if (!isset($user))
+    {
+      $result->permission = self::READ;
+    }
+    elseif (is_admin())
     {
       $result->permission = self::ALL;
     }
     else
     {
-      $current_user = session()->getCurrentUser();
-      $result->permission = isset($current_user) ? self::WRITE : self::READ;
+      $result->permission = self::WRITE;
     }
-
+    
     return $result;
   }
 
