@@ -22,7 +22,6 @@ class Users extends TableIterator
 
     if (false !== ($row = $this->res->next_row_keyed()))
     {
-      $this->stringsToArrays($row);
       $this->item = new $this->base_class();
       $this->item->load($row);
     }

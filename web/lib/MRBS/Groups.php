@@ -38,6 +38,35 @@ class Groups extends TableIterator
   }
 
 
+  public static function idsToNames(array $ids)
+  {
+    static $names;
+
+    if (!isset($names))
+    {
+      $groups = new self();
+      $names = $groups->getNames();
+    }
+
+    $result = array();
+
+    foreach ($ids as $id)
+    {
+      if (isset($names[$id]))
+      {
+        $result[] = $names[$id];
+      }
+      else
+      {
+        trigger_error("Id $id does not exist");
+      }
+    }
+
+    sort($result, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+
+    return $result;
+  }
+
   protected function getRes($sort_column = null)
   {
     global $auth;

@@ -426,6 +426,18 @@ class User extends Table
   {
     $row['username'] = $row['name'];
 
+    if (array_key_exists('groups', $row))
+    {
+      $row['groups'] = db()->convert_string_to_array($row['groups']);
+      $row['group_names'] = Groups::idsToNames($row['groups']);
+    }
+
+    if (array_key_exists('roles', $row))
+    {
+      $row['roles'] = db()->convert_string_to_array($row['roles']);
+      $row['role_names'] = Roles::idsToNames($row['roles']);
+    }
+
     return $row;
   }
 
