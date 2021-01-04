@@ -99,25 +99,17 @@ class User extends Table
   public function getRules($location, $for_groups = false)
   {
     // Work out whether $location is a room or area
-    if ($location instanceof Room)
-    {
-      $is_room = true;
-    }
-    elseif ($location instanceof Area)
-    {
-      $is_room = false;
-    }
-    else
-    {
-      throw new \Exception('$location parameter is not an instance of Room or Area.');
-    }
+    $is_room = ($location instanceof Room);
+
+    assert($is_room || ($location instanceof Area),
+           '$location is neither an instance of Room nor Area');
 
     if ($for_groups)
     {
       $roles = Group::getRoles($this->groups);
       if (empty($roles))
       {
-        $rule = ($is_room) ? RoomPermission::getDefaultPermission($this) : AreaPermission::getDefaultPermission($this);
+        $rule = $location->getDefaultPermission($this);
         return array($rule);
       }
     }
@@ -150,7 +142,7 @@ class User extends Table
         // we can do, so return the default rules.
         if ($for_groups)
         {
-          $rule = AreaPermission::getDefaultPermission($this);
+          $rule = $location->getDefaultPermission($this);
           return array($rule);
         }
         // Otherwise, see if there are some rules for the user's groups.
@@ -159,15 +151,7 @@ class User extends Table
     }
 
     // Merge in the default permissions
-    if ($is_room)
-    {
-      $default_rules = RoomPermission::getDefaultPermission($this);
-    }
-    else
-    {
-      $default_rules = AreaPermission::getDefaultPermission($this);
-    }
-    $rules[] = $default_rules;
+    $rules[] = $location->getDefaultPermission($this);
 
     return $rules;
   }

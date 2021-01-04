@@ -148,35 +148,6 @@ abstract class LocationPermission extends Table
   }
 
 
-  // Gets the default permission for a user, which is either a \MRBS\User object or null
-  // TODO: make this is configurable?  Either in the config file or through the browser
-  public static function getDefaultPermission($user)
-  {
-    // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
-    // we can use a nullable type
-    assert(is_null($user) || ($user instanceof User),
-           '$user must be null or of class ' . __NAMESPACE__ . '\User');
-
-    $result = new static();
-    $result->state = self::GRANTED;
-
-    if (!isset($user))
-    {
-      $result->permission = self::READ;
-    }
-    elseif ($user->isAdmin())
-    {
-      $result->permission = self::ALL;
-    }
-    else
-    {
-      $result->permission = self::WRITE;
-    }
-
-    return $result;
-  }
-
-
   protected static function getPermissions(array $role_ids, $location_id, $location_column)
   {
     $result = array();
