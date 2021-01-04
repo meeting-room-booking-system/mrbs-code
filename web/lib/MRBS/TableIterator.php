@@ -63,6 +63,39 @@ abstract class TableIterator implements \Countable, \Iterator
   }
 
 
+  public static function idsToNames(array $ids)
+  {
+    static $names;
+
+    if (!isset($names))
+    {
+      $instance = new static();
+      $names = $instance->getNames();
+      //error_log(get_class($instance));
+      //error_log(print_r(debug_backtrace(), true));
+      //error_log ("Getting names");
+    }
+
+    $result = array();
+
+    foreach ($ids as $id)
+    {
+      if (isset($names[$id]))
+      {
+        $result[] = $names[$id];
+      }
+      else
+      {
+        trigger_error("Id $id does not exist");
+      }
+    }
+
+    sort($result, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+
+    return $result;
+  }
+
+
   protected function getRes($sort_column=null)
   {
     $class_name = $this->base_class;
