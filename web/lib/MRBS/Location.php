@@ -93,19 +93,19 @@ abstract class Location extends Table
       throw new \Exception("Unknown child class");
     }
 
-    $result->state = LocationPermission::GRANTED;
+    $result->state = $result::GRANTED;
 
     if (!isset($user))
     {
-      $result->permission = LocationPermission::READ;
+      $result->permission = $result::READ;
     }
     elseif ($user->isAdmin())
     {
-      $result->permission = LocationPermission::ALL;
+      $result->permission = $result::ALL;
     }
     else
     {
-      $result->permission = LocationPermission::WRITE;
+      $result->permission = $result::WRITE;
     }
 
     return $result;
