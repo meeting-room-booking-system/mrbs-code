@@ -66,6 +66,18 @@ class Group extends Table
   }
 
 
+  protected static function onRead($row)
+  {
+    if (array_key_exists('roles', $row))
+    {
+      $row['roles'] = db()->convert_string_to_array($row['roles']);
+      $row['role_names'] = Roles::idsToNames($row['roles']);
+    }
+
+    return $row;
+  }
+
+
   private static function getRolesByGroupId($id)
   {
     if (!isset($id))

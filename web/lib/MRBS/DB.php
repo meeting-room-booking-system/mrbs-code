@@ -351,6 +351,13 @@ abstract class DB
   // Returns the syntax for aggregating a number of rows as a delimited string
   abstract public function syntax_group_array_as_string($fieldname, $delimiter=',');
 
+  // Converts the result of syntax_group_array_as_string() into an array
+  public function convert_string_to_array($string, $delimiter=',')
+  {
+    // If there were no rows MySQL will return NULL and PostgreSQL ''
+    return (isset($string) && ($string !== '')) ? explode($delimiter, $string) : array();
+  }
+
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
   // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
   // return a row with the id in the 'id' column.  However there isn't a corresponding
