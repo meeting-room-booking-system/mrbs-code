@@ -206,6 +206,35 @@ abstract class Table
 
   public function load(array $row)
   {
+    global $dbsys;
+
+    // MySQL returns everything as a string, so convert the values to
+    // their proper types first. (It's easier to test for the db not
+    // being pgsql, because both 'mysql' and 'mysqli' cover MySQL, for
+    // backwards compatibility of config files.)
+    if ($dbsys != 'pgsql')
+    {
+      $columns = new Columns(_tbl(static::TABLE_NAME));
+
+      foreach ($columns as $column)
+      {
+        if (isset($row[$column->name]))
+        {
+          switch ($column->getNature())
+          {
+            case $column::NATURE_INTEGER:
+              $row[$column->name] = (int)$row[$column->name];
+              break;
+            case $column::NATURE_REAL:
+              $row[$column->name] = (float)$row[$column->name];
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
+
     $row = static::onRead($row);
 
     foreach ($row as $key => $value)
