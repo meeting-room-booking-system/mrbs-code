@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-class Groups extends TableIterator
+class Groups extends Attributes
 {
 
   public function __construct()

@@ -5,7 +5,7 @@ namespace MRBS;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputCheckbox;
 
-class Roles extends TableIterator
+class Roles extends Attributes
 {
 
   public function __construct()
