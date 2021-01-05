@@ -82,7 +82,7 @@ abstract class Table
   public function save()
   {
     $this->data = static::onWrite($this->data);
-    $this->upsert('update');
+    $this->upsert();
   }
 
 
