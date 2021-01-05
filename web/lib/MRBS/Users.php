@@ -133,7 +133,7 @@ class Users extends TableIterator
   private function upsertUsers(array $external_users, $verbose=false)
   {
     global $auth;
-
+    
     if ($verbose)
     {
       $added = array();
@@ -143,57 +143,37 @@ class Users extends TableIterator
     // Loop through the external users and add them or update them as necessary
     foreach ($external_users as $external_user)
     {
-      // Try and get the user from the database
-      $sql = "SELECT U.name, U.display_name, U.email, U.level, " .
-                     db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
-                FROM " . _tbl(User::TABLE_NAME) . " U
-           LEFT JOIN " . _tbl('user_group') . " G
-                  ON G.user_id=U.id
-               WHERE U.name=:name
-                 AND auth_type=:auth_type
-            GROUP BY U.id
-               LIMIT 1";
+      $user = User::getByName($external_user['username'], $auth['type']);
 
-      $sql_params = array(
-          ':name' => $external_user['username'],
-          ':auth_type' => $auth['type']
-        );
-
-      $res = db()->query($sql, $sql_params);
-
-      if ($res->count() == 0)
+      if (!isset($user))
       {
-        // It's a new user: add them to the table
+        // It's a new user: create one
         $user = new User($external_user['username']);
+      }
+
+      // TODO: implement local groups and check for changes
+      if (!isset($user->id) || $user->hasChanged($external_user))
+      {
+        // Update the new/changed user
         $user->display_name = $external_user['display_name'];
         $user->email = (isset($external_user['email'])) ? $external_user['email'] : null;
         $user->groups = $external_user['groups'];
         $user->level = $external_user['level'];
+        // Update the statistics.  Do this before saving the user because a save() will
+        // give the user anb id.
+        if ($verbose)
+        {
+          if (!isset($user->id))
+          {
+            $added[] = $user->display_name;
+          }
+          else
+          {
+            $updated[] = $user->display_name;
+          }
+        }
         // Save the user to the database
         $user->save();
-        $added[] = $external_user['display_name'];
-      }
-      else
-      {
-        // It's an existing user: check to see whether there have been any
-        // change and, if so, update the database.
-        // TODO: implement local groups and check for changes
-        $row = $res->next_row_keyed();
-        $this->stringsToArrays($row);
-        if (($external_user['display_name'] !== $row['display_name']) ||
-            ($external_user['level'] !== $row['level']) ||
-            (isset($external_user['email']) && ($external_user['email'] !== $row['email'])) ||
-            !array_values_equal($external_user['groups'], $row['groups']))
-        {
-          $user = User::getByName($row['name'], $auth['type']);
-          $user->display_name = $external_user['display_name'];
-          $user->email = (isset($external_user['email'])) ? $external_user['email'] : null;
-          $user->groups = $external_user['groups'];
-          $user->level = $external_user['level'];
-          // Save the user to the database
-          $user->save();
-          $updated[] = $external_user['display_name'];
-        }
       }
     }
 

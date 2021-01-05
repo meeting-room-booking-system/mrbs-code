@@ -38,21 +38,10 @@ class User extends Table
 
   public static function getByName($username, $auth_type)
   {
-    // TODO: there's no doubt a faster way of doing this using a single SQL
-    // TODO: query, though it needs to work for both MySQL and PostgreSQL.
-    $user = self::getByColumns(array(
+    return self::getByColumns(array(
         'name'      => $username,
         'auth_type' => $auth_type
       ));
-
-    if (isset($user))
-    {
-      $user->username = $user->name;
-      $user->groups = self::getGroupsByUserId($user->id);
-      $user->roles = self::getRolesByUserId($user->id);
-    }
-
-    return $user;
   }
 
 
@@ -204,6 +193,17 @@ class User extends Table
     $html .= "</table>\n";
 
     return $html;
+  }
+
+
+  // Determines whether the key properties for the user $new are different.
+  // Note that $new is an array rather than an object.
+  public function hasChanged(array $new)
+  {
+    return (($new['display_name'] !== $this->display_name) ||
+            ($new['level'] !== $this->level) ||
+            (isset($new['email']) && ($new['email'] !== $this->email)) ||
+            !array_values_equal($new['groups'], $this->groups));
   }
 
 
