@@ -8,11 +8,6 @@ class Users extends TableIterator
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\User');
-    $this->names = array();
-    $groups = new Groups();
-    $this->names['groups'] = $groups->getNames();
-    $roles = new Roles();
-    $this->names['roles'] = $roles->getNames();
   }
 
 
@@ -133,7 +128,7 @@ class Users extends TableIterator
   private function upsertUsers(array $external_users, $verbose=false)
   {
     global $auth;
-    
+
     if ($verbose)
     {
       $added = array();

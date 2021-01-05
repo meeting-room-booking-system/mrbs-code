@@ -8,9 +8,6 @@ class Groups extends Attributes
   public function __construct()
   {
     parent::__construct(__NAMESPACE__ . '\\Group');
-    $this->names = array();
-    $roles = new Roles();
-    $this->names['roles'] = $roles->getNames();
   }
 
 
