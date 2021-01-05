@@ -36,23 +36,6 @@ class User extends Table
   }
 
 
-  public static function getById($id)
-  {
-    // TODO: there's no doubt a faster way of doing this using a single SQL
-    // TODO: query, though it needs to work for both MySQL and PostgreSQL.
-    $user = parent::getById($id);
-
-    if (isset($user))
-    {
-      $user->username = $user->name;
-      $user->groups = self::getGroupsByUserId($user->id);
-      $user->roles = self::getRolesByUserId($id);
-    }
-
-    return $user;
-  }
-
-
   public static function getByName($username, $auth_type)
   {
     // TODO: there's no doubt a faster way of doing this using a single SQL
@@ -450,6 +433,44 @@ class User extends Table
     }
 
     return $row;
+  }
+
+
+  protected static function getByColumns(array $columns)
+  {
+    $conditions = array();
+    $sql_params = array();
+
+    foreach ($columns as $name => $value)
+    {
+      $conditions[] = db()->quote($name) . "=?";
+      $sql_params[] = $value;
+    }
+
+    $sql = "SELECT U.*, " . db()->syntax_group_array_as_string('R.role_id') . " AS roles,
+                        " . db()->syntax_group_array_as_string('G.group_id') . " AS " . db()->quote('groups') . "
+              FROM " . _tbl(self::TABLE_NAME) . " U
+         LEFT JOIN " . _tbl('user_role') . " R
+                ON R.user_id=U.id
+         LEFT JOIN " . _tbl('user_group') . " G
+                ON G.user_id=U.id
+             WHERE " . implode(' AND ', $conditions) . "
+          GROUP BY U.id
+             LIMIT 1";
+
+    $res = db()->query($sql, $sql_params);
+
+    if ($res->count() == 0)
+    {
+      $result = null;
+    }
+    else
+    {
+      $result = new self();
+      $result->load($res->next_row_keyed());
+    }
+
+    return $result;
   }
 
 }
