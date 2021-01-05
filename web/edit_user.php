@@ -587,7 +587,7 @@ function get_form()
   $params['roles'] = array_map('intval', $params['roles']);
 
   // Get all the others
-  $columns = new Columns(_tbl(User::TABLE_NAME));
+  $columns = Columns::getInstance(_tbl(User::TABLE_NAME));
 
   foreach ($columns as $column)
   {

@@ -18,7 +18,7 @@ function get_form()
   $params['invalid_types'] = get_form_var('invalid_types', 'array');
 
   // Get all the others
-  $columns = new Columns(_tbl(Room::TABLE_NAME));
+  $columns = Columns::getInstance(_tbl(Room::TABLE_NAME));
 
   foreach ($columns as $column)
   {

@@ -63,7 +63,7 @@ abstract class Table
   {
     $conditions = array();
     $sql_params = array();
-    $cols = new Columns(_tbl(static::TABLE_NAME));
+    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
     $condition_columns = $cols->hasIdColumn() ? array('id') : static::$unique_columns;
 
     foreach ($condition_columns as $condition_column)
@@ -103,7 +103,7 @@ abstract class Table
 
     $table_data = $this->data;
 
-    $cols = new Columns(_tbl(static::TABLE_NAME));
+    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
     $column_names = $cols->getNames();
 
     // First of all get the column names and values for the INSERT part
@@ -214,7 +214,7 @@ abstract class Table
     // backwards compatibility of config files.)
     if ($dbsys != 'pgsql')
     {
-      $columns = new Columns(_tbl(static::TABLE_NAME));
+      $columns = Columns::getInstance(_tbl(static::TABLE_NAME));
 
       foreach ($columns as $column)
       {

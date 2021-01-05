@@ -97,7 +97,7 @@ class Room extends Location
 
     // The disabled column didn't always exist and it's possible that this
     // method is being called during an upgrade before the column exists
-    $area_columns = new Columns(_tbl(Area::TABLE_NAME));
+    $area_columns = Columns::getInstance(_tbl(Area::TABLE_NAME));
     if (null !== $area_columns->getColumnByName('disabled'))
     {
       $sql .= ", A.disabled as area_disabled";

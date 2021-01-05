@@ -6,18 +6,29 @@ namespace MRBS;
 class Columns implements \Countable, \Iterator
 {
 
+  private static $instances = array();
   private $data;
   private $index = 0;
   private $table_name;
 
 
-  public function __construct($table_name)
+  private function __construct($table_name)
   {
     $this->$table_name = $table_name;
     // Get the column info
     $this->data = db()->field_info($table_name);
   }
 
+
+  public static function getInstance($table_name)
+  {
+    if (!isset(self::$instances[$table_name]))
+    {
+      self::$instances[$table_name] = new self($table_name);
+    }
+
+    return self::$instances[$table_name];
+  }
 
   public function getNames()
   {
