@@ -99,14 +99,14 @@ class User extends Table
     // If this is a room get any rules for the room.
     if ($is_room)
     {
-      $rules = $location->getPermissions($roles);
+      $rules = $location->getRules($roles);
     }
     // If there are none - either because there were none, or else because the
     // location is an area - check to see if there any rules for the area.
     if (empty($rules))
     {
       $area = ($is_room) ? Area::getById($location->area_id) : $location;
-      $rules = $area->getPermissions($roles);
+      $rules = $area->getRules($roles);
       if (empty($rules))
       {
         // If there are no rules for the area and we're already checking

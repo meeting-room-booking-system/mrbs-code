@@ -54,7 +54,7 @@ class AreaRule extends LocationRule
 
   public static function getPermissionsByRoles(array $role_ids, $area_id)
   {
-    return parent::getPermissions($role_ids, $area_id, 'area_id');
+    return parent::getRules($role_ids, $area_id, 'area_id');
   }
 
 }

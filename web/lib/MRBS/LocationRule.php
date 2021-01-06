@@ -148,7 +148,7 @@ abstract class LocationRule extends Table
   }
 
 
-  protected static function getPermissions(array $role_ids, $location_id, $location_column)
+  protected static function getRules(array $role_ids, $location_id, $location_column)
   {
     $result = array();
 
@@ -173,9 +173,9 @@ abstract class LocationRule extends Table
 
       while (false !== ($row = $res->next_row_keyed()))
       {
-        $permission = new static();
-        $permission->load($row);
-        $result[] = $permission;
+        $rule = new static();
+        $rule->load($row);
+        $result[] = $rule;
       }
     }
 

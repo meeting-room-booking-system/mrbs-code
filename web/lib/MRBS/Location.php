@@ -27,7 +27,7 @@ abstract class Location extends Table
 
   abstract public function isDisabled();
 
-  abstract public function getPermissions(array $role_ids);
+  abstract public function getRules(array $role_ids);
 
 
   // Determines whether the location is visible to the currently logged in user
