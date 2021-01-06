@@ -507,7 +507,7 @@ function generate_area_roles_table(Role $role)
   foreach ($areas as $area)
   {
     $area_rule = AreaRule::getByRoleArea($role->id, $area->id);
-    $room_permissions = new RoomPermissions($role, $area->id);
+    $room_rules = new RoomRules($role, $area->id);
 
     if (isset($area_rule))
     {
@@ -516,15 +516,15 @@ function generate_area_roles_table(Role $role)
                                       $state_options,
                                       'area'));
     }
-    elseif (count($room_permissions) > 0)
+    elseif (count($room_rules) > 0)
     {
       // We need a "header" row for the row permissions
       $tbody->addElement(generate_empty_row($area));
     }
 
-    foreach ($room_permissions as $room_permission)
+    foreach ($room_rules as $room_rule)
     {
-      $tbody->addElement(generate_row($room_permission,
+      $tbody->addElement(generate_row($room_rule,
                                       $permission_options,
                                       $state_options,
                                       'room'));

@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-class RoomPermissions extends TableIterator
+class RoomRules extends TableIterator
 {
 
   private $role;
@@ -19,13 +19,13 @@ class RoomPermissions extends TableIterator
   {
     $sql_params = array(':role_id' => $this->role->id);
 
-    $sql = "SELECT P.*, R.room_name
-              FROM " . _tbl(RoomRule::TABLE_NAME) . " P
+    $sql = "SELECT L.*, R.room_name
+              FROM " . _tbl(RoomRule::TABLE_NAME) . " L
          LEFT JOIN " . _tbl(Room::TABLE_NAME) . " R
-                ON P.room_id=R.id
+                ON L.room_id=R.id
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id
-             WHERE P.role_id=:role_id";
+             WHERE L.role_id=:role_id";
     if (isset($this->area_id))
     {
       $sql .= " AND R.area_id=:area_id

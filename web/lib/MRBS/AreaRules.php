@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-class AreaPermissions extends TableIterator
+class AreaRules extends TableIterator
 {
 
   private $role;
@@ -15,11 +15,11 @@ class AreaPermissions extends TableIterator
 
   protected function getRes($sort_column = null)
   {
-    $sql = "SELECT P.*, A.area_name
-              FROM " . _tbl(AreaRule::TABLE_NAME) . " P
+    $sql = "SELECT L.*, A.area_name
+              FROM " . _tbl(AreaRule::TABLE_NAME) . " L
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
-                ON P.area_id=A.id
-             WHERE P.role_id=:role_id
+                ON L.area_id=A.id
+             WHERE L.role_id=:role_id
           ORDER BY A.sort_key";
 
     $sql_params = array(':role_id' => $this->role->id);
