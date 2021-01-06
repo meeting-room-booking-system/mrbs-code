@@ -155,16 +155,17 @@ class Users extends TableIterator
         $user->groups = $external_user['groups'];
         $user->level = $external_user['level'];
         // Update the statistics.  Do this before saving the user because a save() will
-        // give the user anb id.
+        // give the user an id.
         if ($verbose)
         {
+          $user_details = $user->username . ' (' . $user->display_name . ')';
           if (!isset($user->id))
           {
-            $added[] = $user->display_name;
+            $added[] = $user_details;
           }
           else
           {
-            $updated[] = $user->display_name;
+            $updated[] = $user_details;
           }
         }
         // Save the user to the database
