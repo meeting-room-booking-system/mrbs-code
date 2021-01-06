@@ -64,16 +64,16 @@ abstract class Location extends Table
     else
     {
       // If there's no logged in user, use the default rules
-      $rules = array($this->getDefaultPermission($user));
+      $rules = array($this->getDefaultRule($user));
     }
 
     return LocationRule::can($rules, $operation);
   }
 
 
-  // Gets the default permission for a user, which is either a \MRBS\User object or null
+  // Gets the default rule for a user, which is either a \MRBS\User object or null
   // TODO: make this is configurable?  Either in the config file or through the browser
-  public function getDefaultPermission($user)
+  public function getDefaultRule($user)
   {
     // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
     // we can use a nullable type

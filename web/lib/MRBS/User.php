@@ -81,7 +81,7 @@ class User extends Table
       $roles = Group::getRoles($this->groups);
       if (empty($roles))
       {
-        $rule = $location->getDefaultPermission($this);
+        $rule = $location->getDefaultRule($this);
         return array($rule);
       }
     }
@@ -114,7 +114,7 @@ class User extends Table
         // we can do, so return the default rules.
         if ($for_groups)
         {
-          $rule = $location->getDefaultPermission($this);
+          $rule = $location->getDefaultRule($this);
           return array($rule);
         }
         // Otherwise, see if there are some rules for the user's groups.
@@ -123,7 +123,7 @@ class User extends Table
     }
 
     // Merge in the default permissions
-    $rules[] = $location->getDefaultPermission($this);
+    $rules[] = $location->getDefaultRule($this);
 
     return $rules;
   }
