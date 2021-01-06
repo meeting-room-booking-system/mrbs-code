@@ -370,7 +370,7 @@ abstract class DB
   abstract public function syntax_on_duplicate_key_update(
       $conflict_keys,
       array $assignments,
-      $has_id_column=false_update
+      $has_id_column=false
     );
 
 }
