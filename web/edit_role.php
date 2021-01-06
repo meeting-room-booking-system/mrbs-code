@@ -197,7 +197,7 @@ function generate_add_room_rule_form(Role $role, $error, $room_id)
     $room = Room::getById($room_id);
     $field = new FieldDiv();
     $p = new ElementP();
-    $p->setText(get_vocab($error, $room->area_name, $room->room_name))
+    $p->setText(get_vocab($error, $room->room_name))
       ->setAttribute('class', 'error');
     $field->addControlElement($p);
     $fieldset->addElement($field);
