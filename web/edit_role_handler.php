@@ -6,9 +6,9 @@ use MRBS\Form\Form;
 require "defaultincludes.inc";
 
 
-function update_permissions($role_id, array $area_permissions, array $room_permissions)
+function update_rules($role_id, array $area_rules, array $room_rules)
 {
-  foreach ($area_permissions as $area_id => $settings)
+  foreach ($area_rules as $area_id => $settings)
   {
     $rule = new AreaRule($role_id, $area_id);
     $rule->permission = $settings['permission'];
@@ -16,7 +16,7 @@ function update_permissions($role_id, array $area_permissions, array $room_permi
     $rule->save();
   }
 
-  foreach ($room_permissions as $room_id => $settings)
+  foreach ($room_rules as $room_id => $settings)
   {
     $rule = new RoomRule($role_id, $room_id);
     $rule->permission = $settings['permission'];
@@ -123,7 +123,7 @@ elseif (isset($button_save) && isset($action))
       break;
 
     case 'edit_role_area_room':
-      update_permissions($role_id, $area_permissions, $room_permissions);
+      update_rules($role_id, $area_permissions, $room_permissions);
       break;
 
     default:
