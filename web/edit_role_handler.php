@@ -80,7 +80,7 @@ elseif (isset($button_save) && isset($action))
       }
       break;
 
-    case 'add_role_area':
+    case 'add_area_rule':
       $area_rule = new AreaRule($role_id, $area_id);
       if ($area_rule->exists())
       {
@@ -99,7 +99,7 @@ elseif (isset($button_save) && isset($action))
       }
       break;
 
-    case 'add_role_room':
+    case 'add_room_rule':
       $room_rule = new RoomRule($role_id, $room_id);
       if ($room_rule->exists())
       {

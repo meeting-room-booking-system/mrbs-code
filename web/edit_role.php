@@ -65,10 +65,10 @@ function generate_add_role_form($error=null, $name=null)
 }
 
 
-function generate_add_role_area_button(Role $role)
+function generate_add_area_rule_button(Role $role)
 {
   $form = new Form();
-  $form->addHiddenInputs(array('action' => 'add_role_area',
+  $form->addHiddenInputs(array('action' => 'add_area_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite(this_page()),
                              'class'  => 'standard',
@@ -80,7 +80,7 @@ function generate_add_role_area_button(Role $role)
   $element = new ElementInputSubmit();
   $element->setAttributes(array(
     'name'  => 'button_save',
-    'value' => get_vocab('add_role_area'))
+    'value' => get_vocab('add_area_rule'))
   );
   $field->addControl($element);
   $fieldset->addElement($field);
@@ -90,10 +90,10 @@ function generate_add_role_area_button(Role $role)
 }
 
 
-function generate_add_role_room_button(Role $role)
+function generate_add_room_rule_button(Role $role)
 {
   $form = new Form();
-  $form->addHiddenInputs(array('action' => 'add_role_room',
+  $form->addHiddenInputs(array('action' => 'add_room_rule',
                                'role_id' => $role->id))
     ->setAttributes(array('action' => multisite(this_page()),
                          'class'  => 'standard',
@@ -105,7 +105,7 @@ function generate_add_role_room_button(Role $role)
   $element = new ElementInputSubmit();
   $element->setAttributes(array(
       'name'  => 'button_save',
-      'value' => get_vocab('add_role_room'))
+      'value' => get_vocab('add_room_rule'))
     );
   $field->addControl($element);
   $fieldset->addElement($field);
@@ -115,10 +115,10 @@ function generate_add_role_room_button(Role $role)
 }
 
 
-function generate_add_role_area_form(Role $role, $error, $area_id)
+function generate_add_area_rule_form(Role $role, $error, $area_id)
 {
   $form = new Form();
-  $form->addHiddenInputs(array('action' => 'add_role_area',
+  $form->addHiddenInputs(array('action' => 'add_area_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite('edit_role_handler.php'),
                              'class'  => 'standard',
@@ -171,7 +171,7 @@ function generate_add_role_area_form(Role $role, $error, $area_id)
   $element = new ElementInputSubmit();
   $element->setAttributes(array(
       'name'  => 'button_save',
-      'value' => get_vocab('add_role_area'))
+      'value' => get_vocab('add_area_rule'))
     );
   $field->addControl($element);
   $fieldset->addElement($field);
@@ -181,10 +181,10 @@ function generate_add_role_area_form(Role $role, $error, $area_id)
 }
 
 
-function generate_add_role_room_form(Role $role, $error, $room_id)
+function generate_add_room_rule_form(Role $role, $error, $room_id)
 {
   $form = new Form();
-  $form->addHiddenInputs(array('action' => 'add_role_room',
+  $form->addHiddenInputs(array('action' => 'add_room_rule',
                                'role_id' => $role->id))
        ->setAttributes(array('action' => multisite('edit_role_handler.php'),
                              'class'  => 'standard',
@@ -237,7 +237,7 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
   $element = new ElementInputSubmit();
   $element->setAttributes(array(
       'name'  => 'button_save',
-      'value' => get_vocab('add_role_room'))
+      'value' => get_vocab('add_room_rule'))
     );
   $field->addControl($element);
   $fieldset->addElement($field);
@@ -595,11 +595,11 @@ if (isset($role))
   {
     switch($action)
     {
-      case 'add_role_area':
-        generate_add_role_area_form($role, $error, $area_id);
+      case 'add_area_rule':
+        generate_add_area_rule_form($role, $error, $area_id);
         break;
-      case 'add_role_room':
-        generate_add_role_room_form($role, $error, $room_id);
+      case 'add_room_rule':
+        generate_add_room_rule_form($role, $error, $room_id);
         break;
       default:
         throw new \Exception("Unknown action'$action'");
@@ -608,8 +608,8 @@ if (isset($role))
   }
   else
   {
-    generate_add_role_area_button($role);
-    generate_add_role_room_button($role);
+    generate_add_area_rule_button($role);
+    generate_add_room_rule_button($role);
     generate_area_roles_table($role);
   }
 }
