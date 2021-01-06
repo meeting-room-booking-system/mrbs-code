@@ -40,19 +40,19 @@ abstract class LocationRule extends Table
   }
 
 
-  // Checks whether $permissions allow $operation (READ | WRITE | ALL)
-  public static function can(array $permissions, $operation)
+  // Checks whether $rules allow $operation (READ | WRITE | ALL)
+  public static function can(array $rules, $operation)
   {
     switch ($operation)
     {
       case self::READ:
-        return self::canRead($permissions);
+        return self::canRead($rules);
         break;
       case self::WRITE:
-        return self::canWrite($permissions);
+        return self::canWrite($rules);
         break;
       case self::ALL:
-        return self::canAll($permissions);
+        return self::canAll($rules);
         break;
       default:
         throw new \Exception("Unknown operation '$operation'");
@@ -61,22 +61,22 @@ abstract class LocationRule extends Table
   }
 
 
-  // Check whether the given permissions allow reading
-  private static function canRead(array $permissions)
+  // Check whether the given rules allow reading
+  private static function canRead(array $rules)
   {
-    foreach ($permissions as $permission)
+    foreach ($rules as $rule)
     {
-      switch ($permission->state)
+      switch ($rule->state)
       {
         case self::GRANTED:
           $highest_granted = (isset($highest_granted)) ?
-            self::max($highest_granted, $permission->permission) :
-            $permission->permission;
+            self::max($highest_granted, $rule->permission) :
+            $rule->permission;
           break;
         case self::DENIED:
           $lowest_denied = (isset($lowest_denied)) ?
-            self::max($lowest_denied, $permission->permission) :
-            $permission->permission;
+            self::max($lowest_denied, $rule->permission) :
+            $rule->permission;
           break;
         default:
           break;
@@ -92,22 +92,22 @@ abstract class LocationRule extends Table
   }
 
 
-  // Check whether the given permissions allow writing
-  private static function canWrite(array $permissions)
+  // Check whether the given rules allow writing
+  private static function canWrite(array $rules)
   {
-    foreach ($permissions as $permission)
+    foreach ($rules as $rule)
     {
-      switch ($permission->state)
+      switch ($rule->state)
       {
         case self::GRANTED:
           $highest_granted = (isset($highest_granted)) ?
-            self::max($highest_granted, $permission->permission) :
-            $permission->permission;
+            self::max($highest_granted, $rule->permission) :
+            $rule->permission;
           break;
         case self::DENIED:
           $lowest_denied = (isset($lowest_denied)) ?
-            self::max($lowest_denied, $permission->permission) :
-            $permission->permission;
+            self::max($lowest_denied, $rule->permission) :
+            $rule->permission;
           break;
         default:
           break;
@@ -123,17 +123,17 @@ abstract class LocationRule extends Table
   }
 
 
-  // Checks whether the given permissions allow all access
-  private static function canAll(array $permissions)
+  // Checks whether the given rules allow all access
+  private static function canAll(array $rules)
   {
-    foreach ($permissions as $permission)
+    foreach ($rules as $rule)
     {
-      switch ($permission->state)
+      switch ($rule->state)
       {
         case self::GRANTED:
           $highest_granted = (isset($highest_granted)) ?
-                              self::max($highest_granted, $permission->permission) :
-                              $permission->permission;
+                              self::max($highest_granted, $rule->permission) :
+                              $rule->permission;
           break;
         case self::DENIED:
           // If any permissions are denied then immediately return false
