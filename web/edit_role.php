@@ -371,26 +371,26 @@ function generate_delete_permission_button(LocationRule $permission)
 }
 $vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
 
-function generate_row(LocationRule $permission, array $permission_options, array $state_options, $type='area')
+function generate_row(LocationRule $rule, array $permission_options, array $state_options, $type='area')
 {
   if ($type == 'area')
   {
-    $text = $permission->area_name;
-    $name_permission = $type. '[' . $permission->area_id . '][permission]';
-    $name_state      = $type. '[' . $permission->area_id . '][state]';
+    $text = $rule->area_name;
+    $name_permission = $type. '[' . $rule->area_id . '][permission]';
+    $name_state      = $type. '[' . $rule->area_id . '][state]';
   }
   else
   {
-    $text = $permission->room_name;
-    $name_permission = $type. '[' . $permission->room_id . '][permission]';
-    $name_state      = $type. '[' . $permission->room_id . '][state]';
+    $text = $rule->room_name;
+    $name_permission = $type. '[' . $rule->room_id . '][permission]';
+    $name_state      = $type. '[' . $rule->room_id . '][state]';
   }
 
   $tr = new Element('tr');
   $tr->setAttribute('class', $type);
   // Delete button
   $td = new Element('td');
-  $td->addElement(generate_delete_permission_button($permission));
+  $td->addElement(generate_delete_permission_button($rule));
   $tr->addElement($td);
   // Area/room name
   $td = new Element('td');
@@ -405,7 +405,7 @@ function generate_row(LocationRule $permission, array $permission_options, array
         'name' => $name_permission,
         'value' => $key
       ));
-    if ($permission->permission === $key)
+    if ($rule->permission === $key)
     {
       $radio->setAttribute('checked');
     }
@@ -421,7 +421,7 @@ function generate_row(LocationRule $permission, array $permission_options, array
         'name' => $name_state,
         'value' => $key
       ));
-    if ($permission->state === $key)
+    if ($rule->state === $key)
     {
       $radio->setAttribute('checked');
     }
