@@ -371,11 +371,12 @@ function generate_delete_rule_button(LocationRule $rule)
 }
 $vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
 
-function generate_row(LocationRule $rule, array $permission_options, array $state_options, $type='area_rules')
+function generate_row(LocationRule $rule, array $permission_options, array $state_options)
 {
-  if ($type == 'area_rules')
+  if ($rule instanceof AreaRule)
   {
     $text = $rule->area_name;
+    $type = 'area_rules';
     $name_permission = $type. '[' . $rule->area_id . '][permission]';
     $name_state      = $type. '[' . $rule->area_id . '][state]';
     $class = 'area';
@@ -383,6 +384,7 @@ function generate_row(LocationRule $rule, array $permission_options, array $stat
   else
   {
     $text = $rule->room_name;
+    $type = 'room_rules';
     $name_permission = $type. '[' . $rule->room_id . '][permission]';
     $name_state      = $type. '[' . $rule->room_id . '][state]';
     $class = 'room';
@@ -515,8 +517,7 @@ function generate_area_roles_table(Role $role)
     {
       $tbody->addElement(generate_row($area_rule,
                                       $permission_options,
-                                      $state_options,
-                                      'area_rules'));
+                                      $state_options));
     }
     elseif (count($room_rules) > 0)
     {
@@ -528,8 +529,7 @@ function generate_area_roles_table(Role $role)
     {
       $tbody->addElement(generate_row($room_rule,
                                       $permission_options,
-                                      $state_options,
-                                      'room_rules'));
+                                      $state_options));
     }
   }
 
