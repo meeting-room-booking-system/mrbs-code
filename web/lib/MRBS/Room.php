@@ -39,7 +39,7 @@ class Room extends Location
   {
     if (!isset($this->is_writable))
     {
-      $this->is_writable = $this->isAble(RoomPermission::WRITE,
+      $this->is_writable = $this->isAble(RoomRule::WRITE,
                                          session()->getCurrentUser());
     }
 
@@ -52,7 +52,7 @@ class Room extends Location
   {
     if (!isset($this->is_book_admin))
     {
-      $this->is_book_admin = $this->isAble(RoomPermission::ALL,
+      $this->is_book_admin = $this->isAble(RoomRule::ALL,
                                            session()->getCurrentUser());
     }
 
@@ -86,7 +86,7 @@ class Room extends Location
 
   public function getPermissions(array $role_ids)
   {
-    return RoomPermission::getPermissionsByRoles($role_ids, $this->id);
+    return RoomRule::getPermissionsByRoles($role_ids, $this->id);
   }
 
 

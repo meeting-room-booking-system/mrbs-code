@@ -135,7 +135,7 @@ class User extends Table
     $html = '';
 
     $areas = new Areas();
-    $permission_options = AreaPermission::getPermissionOptions();
+    $permission_options = AreaRule::getPermissionOptions();
 
     $html .= '<table data-id="' . htmlspecialchars($this->id) . "\">\n";
 
@@ -159,7 +159,7 @@ class User extends Table
         $html .= "<td>";
         // READ is the only permission which can be applied to an area itself
         // as opposed to the rooms within the area.
-        if ($key == AreaPermission::READ)
+        if ($key == AreaRule::READ)
         {
           $class = ($area->isAble($key, $this)) ? 'yes' : 'no';
           $html .= '<span class="' . $class . '"></span>';

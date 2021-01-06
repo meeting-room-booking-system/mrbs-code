@@ -24,9 +24,9 @@ abstract class LocationPermission extends Table
   public static function getPermissionOptions()
   {
     return array(
-        AreaPermission::READ  => get_vocab('permission_read'),
-        AreaPermission::WRITE => get_vocab('permission_write'),
-        AreaPermission::ALL   => get_vocab('permission_all')
+        self::READ  => get_vocab('permission_read'),
+        self::WRITE => get_vocab('permission_write'),
+        self::ALL   => get_vocab('permission_all')
       );
   }
 
@@ -34,8 +34,8 @@ abstract class LocationPermission extends Table
   public static function getStateOptions()
   {
     return array(
-        AreaPermission::GRANTED => get_vocab('state_granted'),
-        AreaPermission::DENIED  => get_vocab('state_denied')
+        self::GRANTED => get_vocab('state_granted'),
+        self::DENIED  => get_vocab('state_denied')
       );
   }
 

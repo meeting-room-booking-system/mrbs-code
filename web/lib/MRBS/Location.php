@@ -82,11 +82,11 @@ abstract class Location extends Table
 
     if ($this instanceof Room)
     {
-      $result = new RoomPermission();
+      $result = new RoomRule();
     }
     elseif ($this instanceof Area)
     {
-      $result = new AreaPermission();
+      $result = new AreaRule();
     }
     else
     {

@@ -10,13 +10,13 @@ class AreaPermissions extends TableIterator
   public function __construct(Role $role)
   {
     $this->role = $role;
-    parent::__construct(__NAMESPACE__ . '\\AreaPermission');
+    parent::__construct(__NAMESPACE__ . '\\AreaRule');
   }
 
   protected function getRes($sort_column = null)
   {
     $sql = "SELECT P.*, A.area_name
-              FROM " . _tbl(AreaPermission::TABLE_NAME) . " P
+              FROM " . _tbl(AreaRule::TABLE_NAME) . " P
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON P.area_id=A.id
              WHERE P.role_id=:role_id
