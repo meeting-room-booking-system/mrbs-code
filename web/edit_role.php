@@ -329,7 +329,7 @@ function generate_empty_row(Area $area)
 }
 
 
-function generate_delete_permission_button(LocationRule $rule)
+function generate_delete_rule_button(LocationRule $rule)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
@@ -390,7 +390,7 @@ function generate_row(LocationRule $rule, array $permission_options, array $stat
   $tr->setAttribute('class', $type);
   // Delete button
   $td = new Element('td');
-  $td->addElement(generate_delete_permission_button($rule));
+  $td->addElement(generate_delete_rule_button($rule));
   $tr->addElement($td);
   // Area/room name
   $td = new Element('td');
