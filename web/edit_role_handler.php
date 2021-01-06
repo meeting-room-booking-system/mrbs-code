@@ -86,7 +86,7 @@ elseif (isset($button_save) && isset($action))
       {
         $query_string_args = array(
             'action'  => $action,
-            'error'   => 'role_area_exists',
+            'error'   => 'area_rule_exists',
             'role_id' => $role_id,
             'area_id' => $area_id
           );
@@ -105,7 +105,7 @@ elseif (isset($button_save) && isset($action))
       {
         $query_string_args = array(
           'action'  => $action,
-          'error'   => 'role_room_exists',
+          'error'   => 'room_rule_exists',
           'role_id' => $role_id,
           'room_id' => $room_id
         );
