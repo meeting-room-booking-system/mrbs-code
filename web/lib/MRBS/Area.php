@@ -40,7 +40,7 @@ class Area extends Location
 
   public function getRules(array $role_ids)
   {
-    return AreaRule::getPermissionsByRoles($role_ids, $this->id);
+    return AreaRule::getRulesByRoles($role_ids, $this->id);
   }
 
 }

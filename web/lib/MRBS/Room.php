@@ -86,7 +86,7 @@ class Room extends Location
 
   public function getRules(array $role_ids)
   {
-    return RoomRule::getPermissionsByRoles($role_ids, $this->id);
+    return RoomRule::getRulesByRoles($role_ids, $this->id);
   }
 
 
