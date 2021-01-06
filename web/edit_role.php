@@ -329,7 +329,7 @@ function generate_empty_row(Area $area)
 }
 
 
-function generate_delete_permission_button(LocationRule $permission)
+function generate_delete_permission_button(LocationRule $rule)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
@@ -337,28 +337,28 @@ function generate_delete_permission_button(LocationRule $permission)
 
   // Hidden inputs
   $form->addHiddenInputs(array(
-      'role_id' => $permission->role_id,
+      'role_id' => $rule->role_id,
     ));
 
-  if (isset($permission->area_id))
+  if (isset($rule->area_id))
   {
-    $form->addHiddenInput('area_id', $permission->area_id);
+    $form->addHiddenInput('area_id', $rule->area_id);
   }
 
-  if (isset($permission->room_id))
+  if (isset($rule->room_id))
   {
-    $form->addHiddenInput('room_id', $permission->room_id);
+    $form->addHiddenInput('room_id', $rule->room_id);
   }
 
   // Submit button
   $button = new ElementInputSubmit();
-  if (isset($permission->room_name))
+  if (isset($rule->room_name))
   {
-    $message = get_vocab("confirm_del_permission_room", $permission->room_name);
+    $message = get_vocab("confirm_del_permission_room", $rule->room_name);
   }
   else
   {
-    $message = get_vocab("confirm_del_permission_area", $permission->area_name);
+    $message = get_vocab("confirm_del_permission_area", $rule->area_name);
   }
   $button->setAttributes(array(
       'name'    => 'button_delete',
