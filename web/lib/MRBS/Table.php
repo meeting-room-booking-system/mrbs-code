@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use PDOException;
+
 // A generic class for reading and writing data from tables.  It assumes that:
 //    - if an auto increment column exists then it is called 'id'
 //    - the table has one or more unique columns
@@ -182,7 +184,7 @@ abstract class Table
         $row = $res->next_row_keyed();
         $this->id = $row['id'];
       }
-      catch (\PDOException $e)
+      catch (PDOException $e)
       {
         $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
       }

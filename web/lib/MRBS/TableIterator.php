@@ -1,8 +1,10 @@
 <?php
 namespace MRBS;
 
+use Countable;
+use Iterator;
 
-abstract class TableIterator implements \Countable, \Iterator
+abstract class TableIterator implements Countable, Iterator
 {
   protected $res;
   protected $cursor;

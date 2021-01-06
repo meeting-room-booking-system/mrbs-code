@@ -1,11 +1,13 @@
 <?php
 namespace MRBS;
 
+use Countable;
+use Iterator;
 
 // Holds information about table columns
 // Implemented as a singleton class for performance reasons: it is
 // expensive getting the field info in the constructor.
-class Columns implements \Countable, \Iterator
+class Columns implements Countable, Iterator
 {
 
   private static $instances = array();

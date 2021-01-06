@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use ReflectionClass;
+
 
 class Column
 {
@@ -46,7 +48,7 @@ class Column
 
   public function setNature($nature)
   {
-    $reflectionClass = new \ReflectionClass($this);
+    $reflectionClass = new ReflectionClass($this);
     $constants = $reflectionClass->getConstants();
     if (!in_array($nature, array_values($constants), true))
     {
