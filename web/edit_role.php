@@ -521,7 +521,7 @@ function generate_area_roles_table(Role $role)
     }
     elseif (count($room_rules) > 0)
     {
-      // We need a "header" row for the row permissions
+      // We need a "header" row for the row rules
       $tbody->addElement(generate_empty_row($area));
     }
 
