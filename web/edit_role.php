@@ -354,11 +354,11 @@ function generate_delete_rule_button(LocationRule $rule)
   $button = new ElementInputSubmit();
   if (isset($rule->room_name))
   {
-    $message = get_vocab("confirm_del_permission_room", $rule->room_name);
+    $message = get_vocab("confirm_del_room_rule", $rule->room_name);
   }
   else
   {
-    $message = get_vocab("confirm_del_permission_area", $rule->area_name);
+    $message = get_vocab("confirm_del_area_rule", $rule->area_name);
   }
   $button->setAttributes(array(
       'name'    => 'button_delete',
@@ -369,7 +369,7 @@ function generate_delete_rule_button(LocationRule $rule)
   $form->addElement($button);
   return $form;
 }
-$vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
+
 
 function generate_row(LocationRule $rule, array $permission_options, array $state_options)
 {
