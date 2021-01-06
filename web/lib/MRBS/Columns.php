@@ -3,6 +3,8 @@ namespace MRBS;
 
 
 // Holds information about table columns
+// Implemented as a singleton class for performance reasons: it is
+// expensive getting the field info in the constructor.
 class Columns implements \Countable, \Iterator
 {
 
@@ -19,6 +21,15 @@ class Columns implements \Countable, \Iterator
     $this->data = db()->field_info($table_name);
   }
 
+  private function __clone()
+  {
+  }
+
+  public function __wakeup()
+  {
+    // __wakeup() must have public visibility
+    throw new \Exception("Cannot unserialize a singleton.");
+  }
 
   public static function getInstance($table_name)
   {
