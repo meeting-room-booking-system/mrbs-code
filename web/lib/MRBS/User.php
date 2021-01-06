@@ -122,7 +122,7 @@ class User extends Table
       }
     }
 
-    // Merge in the default permissions
+    // Merge in the default rule
     $rules[] = $location->getDefaultRule($this);
 
     return $rules;
