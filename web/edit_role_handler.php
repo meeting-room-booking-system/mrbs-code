@@ -39,8 +39,8 @@ $name = get_form_var('name', 'string');
 $permission = get_form_var('permission', 'string');
 $role_id = get_form_var('role_id', 'int');
 $state = get_form_var('state', 'string');
-$area_permissions = get_form_var('area', 'array');
-$room_permissions = get_form_var('room', 'array');
+$area_rules = get_form_var('area', 'array');
+$room_rules = get_form_var('room', 'array');
 $button_delete = get_form_var('button_delete', 'string');
 $button_save = get_form_var('button_save', 'string');
 
@@ -123,7 +123,7 @@ elseif (isset($button_save) && isset($action))
       break;
 
     case 'edit_role_area_room':
-      update_rules($role_id, $area_permissions, $room_permissions);
+      update_rules($role_id, $area_rules, $room_rules);
       break;
 
     default:
