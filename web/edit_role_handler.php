@@ -10,18 +10,18 @@ function update_permissions($role_id, array $area_permissions, array $room_permi
 {
   foreach ($area_permissions as $area_id => $settings)
   {
-    $p = new AreaPermission($role_id, $area_id);
-    $p->permission = $settings['permission'];
-    $p->state = $settings['state'];
-    $p->save();
+    $rule = new AreaRule($role_id, $area_id);
+    $rule->permission = $settings['permission'];
+    $rule->state = $settings['state'];
+    $rule->save();
   }
 
   foreach ($room_permissions as $room_id => $settings)
   {
-    $p = new RoomPermission($role_id, $room_id);
-    $p->permission = $settings['permission'];
-    $p->state = $settings['state'];
-    $p->save();
+    $rule = new RoomRule($role_id, $room_id);
+    $rule->permission = $settings['permission'];
+    $rule->state = $settings['state'];
+    $rule->save();
   }
 }
 
@@ -50,13 +50,13 @@ if (isset($button_delete))
 {
   if (isset($area_id))
   {
-    $permission = new AreaPermission($role_id, $area_id);
+    $rule = new AreaRule($role_id, $area_id);
   }
   else
   {
-    $permission = new RoomPermission($role_id, $room_id);
+    $rule = new RoomRule($role_id, $room_id);
   }
-  $permission->delete();
+  $rule->delete();
 }
 
 elseif (isset($button_save) && isset($action))
@@ -81,8 +81,8 @@ elseif (isset($button_save) && isset($action))
       break;
 
     case 'add_role_area':
-      $area_permission = new AreaPermission($role_id, $area_id);
-      if ($area_permission->exists())
+      $area_rule = new AreaRule($role_id, $area_id);
+      if ($area_rule->exists())
       {
         $query_string_args = array(
             'action'  => $action,
@@ -93,15 +93,15 @@ elseif (isset($button_save) && isset($action))
       }
       else
       {
-        $area_permission->permission = $permission;
-        $area_permission->state = $state;
-        $area_permission->save();
+        $area_rule->permission = $permission;
+        $area_rule->state = $state;
+        $area_rule->save();
       }
       break;
 
     case 'add_role_room':
-      $room_permission = new RoomPermission($role_id, $room_id);
-      if ($room_permission->exists())
+      $room_rule = new RoomRule($role_id, $room_id);
+      if ($room_rule->exists())
       {
         $query_string_args = array(
           'action'  => $action,
@@ -112,9 +112,9 @@ elseif (isset($button_save) && isset($action))
       }
       else
       {
-        $room_permission->permission = $permission;
-        $room_permission->state = $state;
-        $room_permission->save();
+        $room_rule->permission = $permission;
+        $room_rule->state = $state;
+        $room_rule->save();
       }
       break;
 

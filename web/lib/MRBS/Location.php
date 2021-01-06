@@ -35,7 +35,7 @@ abstract class Location extends Table
   {
     if (!isset($this->is_visible))
     {
-      $this->is_visible = $this->isAble(LocationPermission::READ,
+      $this->is_visible = $this->isAble(LocationRule::READ,
                                         session()->getCurrentUser());
     }
 
@@ -67,7 +67,7 @@ abstract class Location extends Table
       $rules = array($this->getDefaultPermission($user));
     }
 
-    return LocationPermission::can($rules, $operation);
+    return LocationRule::can($rules, $operation);
   }
 
 

@@ -12,7 +12,7 @@ class RoomPermissions extends TableIterator
   {
     $this->role = $role;
     $this->area_id = $area_id;
-    parent::__construct(__NAMESPACE__ . '\\RoomPermission');
+    parent::__construct(__NAMESPACE__ . '\\RoomRule');
   }
 
   protected function getRes($sort_column = null)
@@ -20,7 +20,7 @@ class RoomPermissions extends TableIterator
     $sql_params = array(':role_id' => $this->role->id);
 
     $sql = "SELECT P.*, R.room_name
-              FROM " . _tbl(RoomPermission::TABLE_NAME) . " P
+              FROM " . _tbl(RoomRule::TABLE_NAME) . " P
          LEFT JOIN " . _tbl(Room::TABLE_NAME) . " R
                 ON P.room_id=R.id
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A

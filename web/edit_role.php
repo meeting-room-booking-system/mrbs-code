@@ -148,18 +148,18 @@ function generate_add_role_area_form(Role $role, $error, $area_id)
   // Permission
   $field = new FieldInputRadioGroup();
   $field->setLabel(get_vocab('permission'))
-        ->addRadioOptions(AreaPermission::getPermissionOptions(),
+        ->addRadioOptions(AreaRule::getPermissionOptions(),
                           'permission',
-                          AreaPermission::$permission_default,
+                          AreaRule::$permission_default,
                           true);
   $fieldset->addElement($field);
 
   // State
   $field = new FieldInputRadioGroup();
   $field->setLabel(get_vocab('state'))
-        ->addRadioOptions(AreaPermission::getStateOptions(),
+        ->addRadioOptions(AreaRule::getStateOptions(),
                           'state',
-                          AreaPermission::$state_default,
+                          AreaRule::$state_default,
                           true);
   $fieldset->addElement($field);
 
@@ -214,18 +214,18 @@ function generate_add_role_room_form(Role $role, $error, $room_id)
   // Permission
   $field = new FieldInputRadioGroup();
   $field->setLabel(get_vocab('permission'))
-        ->addRadioOptions(AreaPermission::getPermissionOptions(),
+        ->addRadioOptions(AreaRule::getPermissionOptions(),
                           'permission',
-                          AreaPermission::$permission_default,
+                          AreaRule::$permission_default,
                           true);
   $fieldset->addElement($field);
 
   // State
   $field = new FieldInputRadioGroup();
   $field->setLabel(get_vocab('state'))
-        ->addRadioOptions(AreaPermission::getStateOptions(),
+        ->addRadioOptions(AreaRule::getStateOptions(),
                           'state',
-                          AreaPermission::$state_default,
+                          AreaRule::$state_default,
                           true);
   $fieldset->addElement($field);
 
@@ -329,7 +329,7 @@ function generate_empty_row(Area $area)
 }
 
 
-function generate_delete_permission_button(LocationPermission $permission)
+function generate_delete_permission_button(LocationRule $permission)
 {
   $form = new Form();
   $form->setAttributes(array('action' => multisite('edit_role_handler.php'),
@@ -371,7 +371,7 @@ function generate_delete_permission_button(LocationPermission $permission)
 }
 $vocab["confirm_del_permission_area"] = "Are you sure you want to delete the permissions for area '%s'?";
 
-function generate_row(LocationPermission $permission, array $permission_options, array $state_options, $type='area')
+function generate_row(LocationRule $permission, array $permission_options, array $state_options, $type='area')
 {
   if ($type == 'area')
   {
@@ -435,8 +435,8 @@ function generate_row(LocationPermission $permission, array $permission_options,
 
 function generate_area_roles_table(Role $role)
 {
-  $permission_options = AreaPermission::getPermissionOptions();
-  $state_options = AreaPermission::getStateOptions();
+  $permission_options = AreaRule::getPermissionOptions();
+  $state_options = AreaRule::getStateOptions();
 
   $form = new Form();
   $form->setAttributes(array(
@@ -506,15 +506,15 @@ function generate_area_roles_table(Role $role)
 
   foreach ($areas as $area)
   {
-    $area_permission = AreaPermission::getByRoleArea($role->id, $area->id);
+    $area_rule = AreaRule::getByRoleArea($role->id, $area->id);
     $room_permissions = new RoomPermissions($role, $area->id);
 
-    if (isset($area_permission))
+    if (isset($area_rule))
     {
-      $tbody->addElement(generate_row($area_permission,
-                         $permission_options,
-                         $state_options,
-                         'area'));
+      $tbody->addElement(generate_row($area_rule,
+                                      $permission_options,
+                                      $state_options,
+                                      'area'));
     }
     elseif (count($room_permissions) > 0)
     {

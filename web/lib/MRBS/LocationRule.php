@@ -2,7 +2,7 @@
 namespace MRBS;
 
 
-abstract class LocationPermission extends Table
+abstract class LocationRule extends Table
 {
   // Possible permissions
   const READ  = 'r';  // Can view the area
