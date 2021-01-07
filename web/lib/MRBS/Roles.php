@@ -29,7 +29,7 @@ class Roles extends Attributes
 
 
   // Gets a form field for a standard form for selecting roles
-  public function getFieldset(array $selected_own, $disabled=false, $selected_inherited=null)
+  public function getFieldset(array $selected_own, $disabled=false, $selected_groups=null)
   {
     if ($this->count() == 0)
     {
@@ -61,10 +61,10 @@ class Roles extends Attributes
                                          'value' => $role->id,
                                          'disabled' => $disabled))
             ->setChecked(in_array($role->id, $selected_own));
-      if (isset($selected_inherited))
+      if (isset($selected_groups))
       {
         $checkbox = new ElementInputCheckbox();
-        $checkbox->setChecked(in_array($role->id, $selected_inherited))
+        $checkbox->setChecked(in_array($role->id, $selected_groups))
                  ->setAttribute('disabled');
         $field->addElement($checkbox);
       }
