@@ -75,7 +75,7 @@ abstract class LocationRule extends Table
           break;
         case self::DENIED:
           $lowest_denied = (isset($lowest_denied)) ?
-            self::max($lowest_denied, $rule->permission) :
+            self::min($lowest_denied, $rule->permission) :
             $rule->permission;
           break;
         default:
@@ -106,7 +106,7 @@ abstract class LocationRule extends Table
           break;
         case self::DENIED:
           $lowest_denied = (isset($lowest_denied)) ?
-            self::max($lowest_denied, $rule->permission) :
+            self::min($lowest_denied, $rule->permission) :
             $rule->permission;
           break;
         default:
