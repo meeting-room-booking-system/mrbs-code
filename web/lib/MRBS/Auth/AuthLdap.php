@@ -569,7 +569,7 @@ class AuthLdap extends Auth
 
   // Returns a user as an associative array from the result of an LDAP read/search
   // Returns NULL if no valid user is found
-  private static function getResult($ldap, $entry, $attributes, $object)
+  private static function getResult($ldap, $entry, array $attributes, $object)
   {
     global $ldap_get_user_email, $max_level;
 
