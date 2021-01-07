@@ -320,7 +320,7 @@ function get_fieldset_roles($user)
 
   $roles = new Roles();
   $disabled = !$initial_user_creation && !is_user_admin();
-  return $roles->getFieldset($user->roles, $disabled);
+  return $roles->getFieldset($user->roles, $disabled, Group::getRoles($user->groups));
 }
 
 

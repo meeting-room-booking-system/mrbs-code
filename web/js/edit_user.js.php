@@ -69,5 +69,16 @@ $(document).on('page_ready', function() {
       });
     });
 
+  <?php
+  // TODO: this is only necessary because a fieldset doesn't work properly with
+  // TODO: display-table.  We really need to redo the forms so that either we
+  // TODO: don't use fieldsets or else we have a container div within the fieldset.
+  // TODO: In the meantime we fix it with JavaScript
+  ?>
+  $('#fieldset_roles').each(function () {
+      var lastColumnLeft = $(this).find('div').first().find('span').last().offset().left;
+      $(this).find('input:last-child').offset({left: lastColumnLeft});
+    })
+
 });
 

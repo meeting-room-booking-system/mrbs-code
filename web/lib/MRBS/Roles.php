@@ -3,7 +3,10 @@ namespace MRBS;
 
 
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputCheckbox;
+use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldInputCheckbox;
+use MRBS\Form\FieldSpan;
 
 class Roles extends Attributes
 {
@@ -26,7 +29,7 @@ class Roles extends Attributes
 
 
   // Gets a form field for a standard form for selecting roles
-  public function getFieldset(array $selected, $disabled=false)
+  public function getFieldset(array $selected_own, $disabled=false, $selected_inherited=null)
   {
     if ($this->count() == 0)
     {
@@ -34,8 +37,18 @@ class Roles extends Attributes
     }
 
     $fieldset = new ElementFieldset();
-    $fieldset->addLegend(get_vocab('roles'));
+    $fieldset->setAttribute('id', 'fieldset_roles')
+             ->addLegend(get_vocab('roles'));
 
+    // Add a "header" row
+    $field = new FieldSpan();
+    $field->setControlText(get_vocab('user'));
+    $span = new ElementSpan();
+    $span->setText(get_vocab('groups'));
+    $field->addElement($span);
+    $fieldset->addElement($field);
+
+    // Now add the "body"
     $this->rewind();
 
     while ($this->valid())
@@ -47,7 +60,14 @@ class Roles extends Attributes
                                          'name' => 'roles[]',
                                          'value' => $role->id,
                                          'disabled' => $disabled))
-            ->setChecked(in_array($role->id, $selected));
+            ->setChecked(in_array($role->id, $selected_own));
+      if (isset($selected_inherited))
+      {
+        $checkbox = new ElementInputCheckbox();
+        $checkbox->setChecked(in_array($role->id, $selected_inherited))
+                 ->setAttribute('disabled');
+        $field->addElement($checkbox);
+      }
       $fieldset->addElement($field);
       $this->next();
     }
