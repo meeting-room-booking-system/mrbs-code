@@ -233,7 +233,7 @@ class AuthLdap extends Auth
    *   true       - Found a user
    */
   private static function validateUserCallback(&$ldap, $base_dn, $dn, $user_search,
-                                               $user, &$object)
+                                               $user, array &$object)
   {
     self::debug("base_dn '$base_dn' dn '$dn' user '$user'");
 
@@ -405,7 +405,7 @@ class AuthLdap extends Auth
    *   true     - Found a user
    */
   private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
-                                           $user, &$object)
+                                           $user, array &$object)
   {
     self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
 
@@ -519,7 +519,7 @@ class AuthLdap extends Auth
 
 
   private static function getUsersCallback(&$ldap, $base_dn, $dn, $user_search,
-                                           $user, &$object)
+                                           $user, array &$object)
   {
     return self::getUsersGenericCallback($ldap, $base_dn, $dn, $user_search,
                                           $user, $object, true);
@@ -527,7 +527,7 @@ class AuthLdap extends Auth
 
 
   private static function getUsernamesCallback(&$ldap, $base_dn, $dn, $user_search,
-                                               $user, &$object)
+                                               $user, array &$object)
   {
     return self::getUsersGenericCallback($ldap, $base_dn, $dn, $user_search,
                                           $user, $object, false);
@@ -535,7 +535,7 @@ class AuthLdap extends Auth
 
 
   // Returns an array of attributes for use in an LDAP query
-  private static function getAttributes($object, $include_groups=true)
+  private static function getAttributes(array $object, $include_groups=true)
   {
     global $ldap_get_user_email;
 
@@ -569,7 +569,7 @@ class AuthLdap extends Auth
 
   // Returns a user as an associative array from the result of an LDAP read/search
   // Returns NULL if no valid user is found
-  private static function getResult($ldap, $entry, array $attributes, $object)
+  private static function getResult($ldap, $entry, array $attributes, array $object)
   {
     global $ldap_get_user_email, $max_level;
 
@@ -673,7 +673,7 @@ class AuthLdap extends Auth
 
 
   private static function getUsersGenericCallback(&$ldap, $base_dn, $dn, $user_search,
-                                                  $user, &$object, $include_groups=false)
+                                                  $user, array &$object, $include_groups=false)
   {
     self::debug("base_dn '$base_dn'");
 
@@ -740,7 +740,7 @@ class AuthLdap extends Auth
    * Returns:
    *   boolean   - Whether the action was successful
    */
-  public function action($callback, $username, &$object, $keep_going=false)
+  public function action($callback, $username, array &$object, $keep_going=false)
   {
     global $ldap_unbind_between_attempts;
 
