@@ -407,8 +407,6 @@ class AuthLdap extends Auth
   private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                            $user, &$object)
   {
-    global $ldap_get_user_email;
-
     self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
 
     if (!$ldap || !$base_dn || !$dn || !$user_search)
@@ -417,7 +415,7 @@ class AuthLdap extends Auth
       return false;
     }
 
-    $attributes = self::getAttributes($object, $ldap_get_user_email, true);
+    $attributes = self::getAttributes($object, true);
 
     self::resetProfileClock();
     // We suppress the errors because it's possible to get a "No such object" error if
@@ -471,7 +469,7 @@ class AuthLdap extends Auth
     {
       return false;
     }
-    
+
     $object['user'] = $user;
     return true;
   }
@@ -537,8 +535,10 @@ class AuthLdap extends Auth
 
 
   // Returns an array of attributes for use in an LDAP query
-  private static function getAttributes($object, $include_email=true, $include_groups=true)
+  private static function getAttributes($object, $include_groups=true)
   {
+    global $ldap_get_user_email;
+
     $result = array();
 
     // Username
@@ -552,7 +552,7 @@ class AuthLdap extends Auth
     }
 
     // The email address
-    if ($include_email && isset($object['config']['ldap_email_attrib']))
+    if ($ldap_get_user_email && isset($object['config']['ldap_email_attrib']))
     {
       $result['email'] = \MRBS\utf8_strtolower($object['config']['ldap_email_attrib']);
     }
@@ -675,8 +675,6 @@ class AuthLdap extends Auth
   private static function getUsersGenericCallback(&$ldap, $base_dn, $dn, $user_search,
                                                   $user, &$object, $include_groups=false)
   {
-    global $ldap_get_user_email;
-
     self::debug("base_dn '$base_dn'");
 
     if (!$ldap || !$base_dn || !isset($object['config']['ldap_user_attrib']))
@@ -695,7 +693,7 @@ class AuthLdap extends Auth
     }
     $filter = "($filter)";
 
-    $attributes = self::getAttributes($object, $ldap_get_user_email, $include_groups);
+    $attributes = self::getAttributes($object, $include_groups);
 
     self::debug("searching with base_dn '$base_dn' and filter '$filter'");
     self::resetProfileClock();
