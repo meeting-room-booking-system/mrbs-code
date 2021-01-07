@@ -465,30 +465,13 @@ class AuthLdap extends Auth
 
     self::debug("ldap_read() succeeded, taking $t seconds");
     $entry = ldap_first_entry($ldap, $res);
-    $user = self::getResult($ldap, $entry, $attributes);
+    $user = self::getResult($ldap, $entry, $attributes, $object);
 
-    if (!isset($user['username']))
+    if (!isset($user))
     {
       return false;
     }
-
-    if (!isset($user['display_name']))
-    {
-      $user['display_name'] = $user['username'];
-    }
-
-    if (isset($user['groups']))
-    {
-      // Before we convert the group names to ids, check, if we can,
-      // whether this user is in the admin group
-      if (isset($object['config']['ldap_admin_group_dn']))
-      {
-        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
-      }
-      // Now convert the group names to ids
-      $user['groups'] = self::convertGroupNamesToIds($user['groups']);
-    }
-
+    
     $object['user'] = $user;
     return true;
   }
@@ -584,9 +567,12 @@ class AuthLdap extends Auth
   }
 
 
-  // Returns an associative array from the result of an LDAP search
-  private static function getResult($ldap, $entry, $attributes)
+  // Returns a user as an associative array from the result of an LDAP read/search
+  // Returns NULL if no valid user is found
+  private static function getResult($ldap, $entry, $attributes, $object)
   {
+    global $ldap_get_user_email, $max_level;
+
     // Initialise all keys in the user array, in case an attribute isn't present
     $attributes_keys = array_keys($attributes);
     $user = array();
@@ -648,6 +634,40 @@ class AuthLdap extends Auth
                                                          $display_name_parts);
     }
 
+    // The username can sometimes be NULL
+    if (!isset($user['username']))
+    {
+      return null;
+    }
+
+    // Now tidy up a few of the properties.
+    // Set a default display name if there isn't an LDAP one
+    if (!isset($user['display_name']) || ($user['display_name'] === ''))
+    {
+      $user['display_name'] = $user['username'];
+    }
+    // Set a default email address if there isn't an LDAP one
+    if (!$ldap_get_user_email)
+    {
+      $user['email'] = User::getDefaultEmail($user['username']);
+    }
+    // Get the level and convert group names to ids
+    if (isset($user['groups']))
+    {
+      // Before we convert the group names to ids, check, if we can,
+      // whether this user is in the admin group
+      if (isset($object['config']['ldap_admin_group_dn']))
+      {
+        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? $max_level : 1;
+      }
+      else
+      {
+        $user['level'] = self::getDefaultLevel($user['username']);
+      }
+      // Now convert the group names to ids
+      $user['groups'] = self::convertGroupNamesToIds($user['groups']);
+    }
+
     return $user;
   }
 
@@ -695,36 +715,11 @@ class AuthLdap extends Auth
     // Loop through the entries to get all the users
     while ($entry)
     {
-      $user = self::getResult($ldap, $entry, $attributes);
-
-      if (isset($user['username']))
+      $user = self::getResult($ldap, $entry, $attributes, $object);
+      if (isset($user))
       {
-        if (!isset($user['display_name']) || ($user['display_name'] === ''))
-        {
-          $user['display_name'] = $user['username'];
-        }
-        if (!$ldap_get_user_email)
-        {
-          $user['email'] = User::getDefaultEmail($user['username']);
-        }
-        if (isset($user['groups']))
-        {
-          // Before we convert the group names to ids, check, if we can,
-          // whether this user is in the admin group
-          if (isset($object['config']['ldap_admin_group_dn']))
-          {
-            $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
-          }
-          else
-          {
-            $user['level'] = self::getDefaultLevel($user['username']);
-          }
-          // Now convert the group names to ids
-          $user['groups'] = self::convertGroupNamesToIds($user['groups']);
-        }
         $object['users'][] = $user;
       }
-
       $entry = ldap_next_entry($ldap, $entry);
     }
 
