@@ -914,7 +914,9 @@ class AuthLdap extends Auth
   {
     $result = ldap_error($link_identifier);
 
-    if (ldap_get_option($link_identifier, LDAP_OPT_DIAGNOSTIC_MESSAGE, $err) &&
+    // LDAP_OPT_DIAGNOSTIC_MESSAGE is not supported by all LDAP libraries
+    if (defined('LDAP_OPT_DIAGNOSTIC_MESSAGE') &&
+        ldap_get_option($link_identifier, LDAP_OPT_DIAGNOSTIC_MESSAGE, $err) &&
         isset($err) && ($err !== ''))
     {
       $result .= " [$err]";
