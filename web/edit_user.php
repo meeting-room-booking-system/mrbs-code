@@ -883,7 +883,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   // or admin rights are removed!
   if ($action == "edit")
   {
-    $editing_last_admin = (UserDb::getNAdmins() <= 1) && ($user->level == $max_level);
+    $editing_last_admin = ($auth['type'] == 'db') && ($user->level == $max_level) && (Users::getNAdmins() <= 1);
   }
   else
   {

@@ -77,6 +77,25 @@ class Users extends TableIterator
   }
 
 
+  // Gets the number of admins in the system
+  public static function getNAdmins()
+  {
+    global $auth, $max_level;
+
+    $sql = "SELECT COUNT(*)
+              FROM " . _tbl(User::TABLE_NAME) . "
+             WHERE level=:level
+               AND auth_type=:auth_type";
+
+    $sql_params = array(
+        ':level' => $max_level,
+        ':auth_type' => $auth['type']
+      );
+
+    return db()->query1($sql, $sql_params);
+  }
+
+
   private function getUsernames()
   {
     $result = array();

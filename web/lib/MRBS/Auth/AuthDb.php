@@ -3,7 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\MailQueue;
 use MRBS\User;
-use MRBS\UserDb;
+
 
 class AuthDb extends Auth
 {
@@ -171,6 +171,8 @@ class AuthDb extends Auth
 
   public function requestPassword($login)
   {
+    global $auth;
+
     if (!isset($login) || ($login === ''))
     {
       return false;
@@ -181,7 +183,7 @@ class AuthDb extends Auth
     // addresses at the same time.
     $possible_users = array();
 
-    $user = UserDb::getUserByUsername($login);
+    $user = User::getByName($login, $auth['type']);
 
     // Users must have an email address otherwise we won't be able to mail a reset link
     if (isset($user) && isset($user->email) && ($user->email !== ''))
