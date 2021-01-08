@@ -177,16 +177,24 @@ function output_row(User $user)
   // Then the username
   $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
   $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
+
   // Then the email address
   // we don't want to truncate the email address
   $escaped_email = htmlspecialchars($user->email);
   $values[] = "<div class=\"string\">\n" .
     "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
     "</div>\n";
+
+  // Then the level field.  This contains a code and we want to display a string
+  // (but we put the code in a span for sorting)
+  $values[] = '<span title="' . htmlspecialchars($user->level) . '"></span>' .
+    '<div class="string">' . htmlspecialchars(get_vocab('level_' . $user->level)) . '</div>';
+
   // And add the groups, which aren't one of the table columns
   $group_name_list = implode(', ', $user->group_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($group_name_list) . "\">" .
     htmlspecialchars($group_name_list) . "</div>";
+
   // And add the roles, which aren't one of the table columns either
   $role_name_list = implode(', ', $user->role_names);
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
@@ -212,14 +220,6 @@ function output_row(User $user)
 
         switch ($key)
         {
-          // special treatment for some fields
-          case 'level':
-            // the level field contains a code and we want to display a string
-            // (but we put the code in a span for sorting)
-            $values[] = "<span title=\"$col_value\"></span>" .
-              "<div class=\"string\">" . get_vocab("level_$col_value") . "</div>";
-            break;
-
           case 'timestamp':
             // Convert the SQL timestamp into a time value and back into a localised string and
             // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
@@ -1214,6 +1214,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
       'name',
       'display_name',
       'email',
+      'level',
       'reset_key_hash',
       'reset_key_expiry'
     );
@@ -1231,6 +1232,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</span></th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</span></th>\n";
     echo '<th id="col_email">' . get_vocab("user.email") . "</th>\n";
+    echo '<th><span class="normal" data-type="title-numeric">' . get_vocab("user.level") . "</span></th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("groups") . "</span></th>\n";
     echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</span></th>\n";
 
@@ -1247,7 +1249,6 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
           // We give some columns a type data value so that the JavaScript knows how to sort them
           switch ($fieldname)
           {
-            case 'level':
             case 'timestamp':
             case 'last_login':
               $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
