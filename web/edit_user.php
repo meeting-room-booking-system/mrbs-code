@@ -752,12 +752,6 @@ function update_user(array $form)
     }
   }
 
-  // TODO: do something more elegant
-  if ($auth['type'] != 'db')
-  {
-    $user->level = 0;
-  }
-
   $user->save();
 }
 
@@ -951,7 +945,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   {
     $key = $field['name'];
 
-    if (($auth['type'] != 'db') && !in_array($key, array('name', 'display_name')))
+    if (($auth['type'] != 'db') && !in_array($key, array('name', 'display_name', 'level')))
     {
       continue;
     }
@@ -988,7 +982,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
         // We don't want the user to be able to change the level if (a) it's the first user being created or
         // (b) it's the last admin left or (c) they don't have admin rights
-        $level_disabled = $initial_user_creation || $editing_last_admin || $disabled;
+        $level_disabled = ($auth['type'] != 'db') || $initial_user_creation || $editing_last_admin || $disabled;
         $fieldset->addElement(get_field_level($params, $level_disabled));
         // Add a hidden input if the field is disabled
         if ($level_disabled)
