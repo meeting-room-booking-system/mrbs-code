@@ -2573,6 +2573,15 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
           $mail_previous = array();
         }
         // Send the email
+        // TODO: The email notifications really need to be moved to a later point in edit_entry_handler.php
+        // TODO: so that they are outside the transaction block.  There are two reasons for this.  The first is
+        // TODO: that if one of the bookings fails for some reason the transaction will be rolled back, but
+        // TODO: the email notifications will already have been sent.  The second is that they are inside a
+        // TODO: lock and so if the email notifications take a while, it will keep the lock longer than
+        // TODO: necessary.  (This isn't as much of a problem as it used to be now that notifyAdminOnBooking()
+        // TODO: only adds a message to a queue, and the actual sending of the email is performed on shutdown,
+        // TODO: but can still be a problem if, for example, email addresses have to be looked up on a remote
+        // TODO: server, eg an LDAP server, and the query takes a while.
         notifyAdminOnBooking($booking, $mail_previous, !isset($id), $is_repeat_table, $result['start_times']);
       }
     }
