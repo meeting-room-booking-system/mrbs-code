@@ -117,7 +117,7 @@ class AuthLdap extends Auth
     if (!function_exists('ldap_connect'))
     {
       die("<hr><p><b>ERROR: PHP's 'ldap' extension is not installed/enabled. ".
-          "Please check your MRBS and web server configuration.</b></p><hr>\n");
+          "Please check your web server configuration.</b></p><hr>\n");
     }
 
     // Transfer the values from the config variables into a local
