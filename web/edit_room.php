@@ -185,7 +185,7 @@ function get_fieldset_general(Room $room)
     $field = new FieldInputRadioGroup();
     $field->setLabel(get_vocab('status'))
           ->setLabelAttributes(array('title' => get_vocab('disabled_room_note')))
-          ->addRadioOptions($options, 'room_disabled', $value, true, $disabled);
+          ->addRadioOptions($options, 'disabled', $value, true, $disabled);
     $fieldset->addElement($field);
   }
 
