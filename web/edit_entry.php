@@ -1528,21 +1528,6 @@ list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 $start_hour  = strftime('%H', $start_time);
 $start_min   = strftime('%M', $start_time);
 
-// These next 4 if statements handle the situation where
-// this page has been accessed directly and no arguments have
-// been passed to it.
-// If we have not been provided with a room_id
-if (empty( $room_id ) )
-{
-  $sql = "SELECT id
-            FROM " . _tbl('room') . "
-           WHERE disabled=0
-           LIMIT 1";
-  $res = db()->query($sql);
-  $row = $res->next_row_keyed();
-  $room_id = $row['id'];
-}
-
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
 
