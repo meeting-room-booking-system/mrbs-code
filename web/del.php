@@ -201,7 +201,9 @@ if ($type == "area")
     print_header($context);
     echo "<p>\n";
     echo get_vocab("delarea");
-    echo '<a href="' . htmlspecialchars(multisite('admin.php')) . '">' . get_vocab('backadmin') . '</a>';
+    $query_vars = array('area' => $area);
+    $query = http_build_query($query_vars, '', '&');
+    echo '<a href="' . htmlspecialchars(multisite("admin.php?$query")) . '">' . get_vocab('backadmin') . '</a>';
     echo "</p>\n";
     print_footer();
     exit;
