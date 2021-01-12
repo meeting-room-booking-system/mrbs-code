@@ -177,13 +177,10 @@ if ($type == "room")
 if ($type == "area")
 {
   // We are only going to let them delete an area if there are
-  // no rooms. its easier
-  $sql = "SELECT COUNT(*)
-            FROM " . _tbl('room') . "
-           WHERE area_id=?";
+  // no rooms, as it's easier.
+  $rooms = new Rooms($area);
 
-  $n = db()->query1($sql, array($area));
-  if ($n == 0)
+  if ($rooms->count() == 0)
   {
     // OK, nothing there, let's blast it away
     $sql = "DELETE FROM " . _tbl('area') . "
