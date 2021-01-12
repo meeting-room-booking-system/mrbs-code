@@ -181,8 +181,10 @@ abstract class Table
       // rows affected, not the number of rows in the result.
       try
       {
-        $row = $res->next_row_keyed();
-        $this->id = $row['id'];
+        if (false !== ($row = $res->next_row_keyed()))
+        {
+          $this->id = $row['id'];
+        }
       }
       catch (PDOException $e)
       {
