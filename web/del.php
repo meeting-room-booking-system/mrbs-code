@@ -94,8 +94,7 @@ if ($type == "room")
       db()->command($sql, array($room));
 
       // Now take out the room itself
-      $sql = "DELETE FROM " . _tbl('room') . " WHERE id=?";
-      db()->command($sql, array($room));
+      Room::deleteById($room);
     }
     catch (DBException $e)
     {
