@@ -243,7 +243,7 @@ function display_rooms($area_id)
   else
   {
     // Get the information about the columns in the room table
-    $columns = Columns::getInstance(_tbl('room'));
+    $columns = Columns::getInstance(_tbl(Room::TABLE_NAME));
 
     // See if there are going to be any rooms to display (in other words rooms if
     // you are not an admin whether any rooms are enabled)
