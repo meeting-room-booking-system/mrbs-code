@@ -183,11 +183,7 @@ if ($type == "area")
   if ($rooms->count() == 0)
   {
     // OK, nothing there, let's blast it away
-    $sql = "DELETE FROM " . _tbl('area') . "
-             WHERE id=?";
-
-    db()->command($sql, array($area));
-
+    Area::deleteById($area);
     // Redirect back to the admin page
     location_header('admin.php');
   }
