@@ -337,7 +337,7 @@ $vocab["no_users_create_first_admin"] = "Erstellen Sie ein Administratorkonto un
 
 
 $vocab["warning_last_admin"] = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
-$vocab["copy_email_addresses"]  = "E-Maildressen kopieren";
+$vocab["copy_email_addresses"]  = "E-Mailadressen kopieren";
 
 // Used in search.php
 $vocab["invalid_search"]     = "Leerer oder ungültiger Suchbegriff.";
