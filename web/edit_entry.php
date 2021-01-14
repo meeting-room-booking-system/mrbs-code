@@ -1592,20 +1592,14 @@ print_header($context);
 
 // Get the details of all the enabled rooms
 $room_options = array();
-$sql = "SELECT R.id, R.room_name, R.area_id
-          FROM " . _tbl('room') . " R, " . _tbl('area') . " A
-         WHERE R.area_id = A.id
-           AND R.disabled=0
-           AND A.disabled=0
-      ORDER BY R.area_id, R.sort_key";
-$res = db()->query($sql);
-
-while (false !== ($row = $res->next_row_keyed()))
+$rooms = new Rooms();
+foreach ($rooms as $r)
 {
-  // Only use rooms for which the user has write access
-  if (getWritable($create_by, $row['id']))
+  // We only want the rooms which are (a) enabled and (b) for which the user
+  // has write access
+  if (!$r->isDisabled() && getWritable($create_by, $r->id))
   {
-    $room_options[$row['area_id']][$row['id']] = $row['room_name'];
+    $room_options[$r->area_id][$r->id] = $r->room_name;
   }
 }
 
