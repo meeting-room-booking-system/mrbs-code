@@ -341,7 +341,7 @@ $vocab["show_my_entries"]       = "Klicken um alle meine anstehenden Einträge a
 $vocab["no_users_initial"]      = "Keine Benutzer in der Datenbank, erlaube Erstellung erster Benutzer.";
 $vocab["no_users_create_first_admin"] = "Erstellen Sie ein Administratorkonto und melden sich mit diesem an, um weitere Benutzerkonten anzulegen.";
 $vocab["warning_last_admin"]    = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
-$vocab["copy_email_addresses"]  = "E-Maildressen kopieren";
+$vocab["copy_email_addresses"]  = "E-Mailadressen kopieren";
 
 // Groups
 $vocab['group']              = "Gruppe";
