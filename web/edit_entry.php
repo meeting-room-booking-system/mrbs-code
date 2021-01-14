@@ -469,7 +469,7 @@ function get_field_areas($value, $disabled=false)
 
 function get_field_rooms($value, $disabled=false)
 {
-  global $multiroom_allowed, $area_id, $area_details, $rooms;
+  global $multiroom_allowed, $area_id, $area_details, $room_options;
 
   // First of all generate the rooms for this area
   $field = new FieldSelect();
@@ -491,10 +491,10 @@ function get_field_rooms($value, $disabled=false)
                                      'required' => $multiroom_allowed, // and also causes an HTML5 validation error
                                      'disabled' => $disabled,
                                      'size'     => '5'))
-        ->addSelectOptions($rooms[$area_id], $value, true);
+        ->addSelectOptions($room_options[$area_id], $value, true);
 
   // Then generate templates for all the rooms
-  foreach ($rooms as $a => $area_rooms)
+  foreach ($room_options as $a => $area_rooms)
   {
     $room_ids = array_keys($area_rooms);
 
@@ -1591,7 +1591,7 @@ $context = array(
 print_header($context);
 
 // Get the details of all the enabled rooms
-$rooms = array();
+$room_options = array();
 $sql = "SELECT R.id, R.room_name, R.area_id
           FROM " . _tbl('room') . " R, " . _tbl('area') . " A
          WHERE R.area_id = A.id
@@ -1605,7 +1605,7 @@ while (false !== ($row = $res->next_row_keyed()))
   // Only use rooms for which the user has write access
   if (getWritable($create_by, $row['id']))
   {
-    $rooms[$row['area_id']][$row['id']] = $row['room_name'];
+    $room_options[$row['area_id']][$row['id']] = $row['room_name'];
   }
 }
 
@@ -1624,7 +1624,7 @@ while (false !== ($row = $res->next_row_keyed()))
 {
   // We don't want areas that have no enabled rooms because it doesn't make sense
   // to try and select them for a booking.
-  if (empty($rooms[$row['id']]))
+  if (empty($room_options[$row['id']]))
   {
     continue;
   }
