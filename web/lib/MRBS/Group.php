@@ -66,7 +66,7 @@ class Group extends Table
   }
 
 
-  protected static function onRead($row)
+  protected static function onRead(array $row)
   {
     if (array_key_exists('roles', $row))
     {

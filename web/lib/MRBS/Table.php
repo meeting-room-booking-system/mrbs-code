@@ -195,14 +195,14 @@ abstract class Table
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead($row)
+  protected static function onRead(array $row)
   {
     return $row;
   }
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite($row)
+  protected static function onWrite(array $row)
   {
     return $row;
   }

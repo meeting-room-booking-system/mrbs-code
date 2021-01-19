@@ -45,7 +45,7 @@ class Area extends Location
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead($row)
+  protected static function onRead(array $row)
   {
     // We cannot assume that any array keys exist as this may be called during an upgrade
     // process before the columns existed.
@@ -69,7 +69,7 @@ class Area extends Location
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite($row)
+  protected static function onWrite(array $row)
   {
     // We cannot assume that any array keys exist as this may be called during an upgrade
     // process before the columns existed.

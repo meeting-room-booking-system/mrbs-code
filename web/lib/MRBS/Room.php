@@ -61,7 +61,7 @@ class Room extends Location
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead($row)
+  protected static function onRead(array $row)
   {
     if (isset($row['invalid_types']))
     {
@@ -73,7 +73,7 @@ class Room extends Location
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite($row)
+  protected static function onWrite(array $row)
   {
     if (isset($row['invalid_types']))
     {
