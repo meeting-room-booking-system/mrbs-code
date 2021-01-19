@@ -43,4 +43,43 @@ class Area extends Location
     return AreaRule::getRulesByRoles($role_ids, $this->id);
   }
 
+
+  // Function to decode any columns that are stored encoded in the database
+  protected static function onRead($row)
+  {
+    // We cannot assume that any array keys exist as this may be called during an upgrade
+    // process before the columns existed.
+
+    // Decode the periods
+    if (isset($row['periods']))
+    {
+      $row['periods'] = json_decode($row['periods']);
+    }
+
+    // Make sure the resolution is correct if we're using periods
+    // TODO: Should this be necessary?  Shouldn't we just make sure the table
+    // TODO: contains the correct value in the first place?
+    if (!empty($row['enable_periods']))
+    {
+      $row['resolution'] = 60;
+    }
+
+    return $row;
+  }
+
+
+  // Function to encode any columns that are stored encoded in the database
+  protected static function onWrite($row)
+  {
+    // We cannot assume that any array keys exist as this may be called during an upgrade
+    // process before the columns existed.
+
+    // Encode the periods
+    if (isset($row['periods']))
+    {
+      $row['periods'] = json_encode($row['periods']);
+    }
+
+    return $row;
+  }
 }
