@@ -166,7 +166,6 @@ function get_slot_selector(Area $area, $id, $name, $current_s, $display_none=fal
 {
   // Check that $resolution is positive to avoid an infinite loop below.
   // (Shouldn't be possible, but just in case ...)
-  // TODO: Check this in onRead() or else make sure the table column has a valid value?
   if (empty($area->resolution) || ($area->resolution < 0))
   {
     throw new \Exception("Internal error - resolution is NULL or <= 0");
