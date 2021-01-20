@@ -1451,7 +1451,7 @@ function clean_area_row($row)
       }
     }
   }
-  
+
   // Do some sanity checking in case the area table is somehow messed up
   // (1) 'private_override' must be a valid value
   if (array_key_exists('private_override', $row) &&
@@ -1477,7 +1477,7 @@ function clean_area_row($row)
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
-function get_area_settings($area)
+function get_area_settings($area_id)
 {
   global $auth;
   global $resolution, $default_duration, $default_duration_all_day;
@@ -1496,9 +1496,9 @@ function get_area_settings($area)
   // This code can get called during the upgrade process and so must
   // not make any assumptions about the existence of extra columns in
   // the area table.
-  if (empty($area))
+  if (empty($area_id))
   {
-    $area = get_default_area();
+    $area_id = get_default_area();
   }
 
   // Get all the "per area" config settings
@@ -1530,7 +1530,7 @@ function get_area_settings($area)
            WHERE id=?
            LIMIT 1";
 
-  $res = db()->query($sql, array($area));
+  $res = db()->query($sql, array($area_id));
   if ($res->count() == 0)
   {
     // We still need to set the timezone even if the query didn't
