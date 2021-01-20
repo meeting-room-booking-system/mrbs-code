@@ -1477,6 +1477,7 @@ function clean_area_row($row)
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
+// TODO: Rewrite all of this so that the global variables aren't overwritten
 function get_area_settings($area_id)
 {
   global $auth;
@@ -1525,38 +1526,22 @@ function get_area_settings($area_id)
                    'confirmation_enabled', 'confirmed_default',
                    'times_along_top', 'default_type');
 
-  $sql = "SELECT *
-            FROM " . _tbl('area') . "
-           WHERE id=?
-           LIMIT 1";
+  $area = Area::getById($area_id);
 
-  $res = db()->query($sql, array($area_id));
-  if ($res->count() == 0)
+  if (!isset($area))
   {
     // We still need to set the timezone even if the query didn't
     // return any results
     mrbs_default_timezone_set($timezone);
     return;
   }
-  else
+
+  // Set the global variables
+  foreach ($columns as $column)
   {
-    $row = $res->next_row_keyed();
-
-    // Periods are stored as a JSON encoded string in the database
-    if (isset($row['periods']))
-    {
-      $row['periods'] = json_decode($row['periods']);
-    }
-
-    $row = clean_area_row($row);
-    foreach ($columns as $column)
-    {
-      if (array_key_exists($column, $row))
-      {
-        $$column = $row[$column];
-      }
-    }
+    $$column = $area->$column;
   }
+
   // Set the timezone
   mrbs_default_timezone_set($timezone);
 
@@ -1588,28 +1573,6 @@ function get_area_settings($area_id)
     {
       $max_secs_per_interval_area[$interval_type] = $$var;
     }
-  }
-
-  // Sanitise the settings
-  if ($enable_periods)
-  {
-    $resolution = 60;
-    $morningstarts = 12;
-    $morningstarts_minutes = 0;
-    $eveningends = 12;
-    $eveningends_minutes = count($periods) - 1;
-  }
-  elseif (!isset($morningstarts_minutes))
-  {
-    // ensure that $morningstarts_minutes defaults to zero if not set
-    $morningstarts_minutes = 0;
-  }
-
-  // If it's been set in the config settings then force all bookings to be shown
-  // as private for users who haven't logged in.
-  if ($auth['force_private_for_guests'] && (null === session()->getCurrentUser()))
-  {
-    $private_override = 'private';
   }
 }
 
