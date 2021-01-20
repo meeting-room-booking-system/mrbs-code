@@ -44,6 +44,18 @@ class Area extends Location
   }
 
 
+  private static function sanitize(array $row)
+  {
+    // Make sure the resolution is correct if we're using periods
+    if (!empty($row['enable_periods']))
+    {
+      $row['resolution'] = 60;
+    }
+
+    return $row;
+  }
+
+
   // Function to decode any columns that are stored encoded in the database
   protected static function onRead(array $row)
   {
@@ -56,13 +68,9 @@ class Area extends Location
       $row['periods'] = json_decode($row['periods']);
     }
 
-    // Make sure the resolution is correct if we're using periods
     // TODO: Should this be necessary?  Shouldn't we just make sure the table
     // TODO: contains the correct value in the first place?
-    if (!empty($row['enable_periods']))
-    {
-      $row['resolution'] = 60;
-    }
+    $row = self::sanitize($row);
 
     return $row;
   }
