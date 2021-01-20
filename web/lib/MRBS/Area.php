@@ -59,6 +59,8 @@ class Area extends Location
   // Function to decode any columns that are stored encoded in the database
   protected static function onRead(array $row)
   {
+    global $force_resolution, $area_defaults;
+
     // We cannot assume that any array keys exist as this may be called during an upgrade
     // process before the columns existed.
 
@@ -71,6 +73,17 @@ class Area extends Location
     // TODO: Should this be necessary?  Shouldn't we just make sure the table
     // TODO: contains the correct value in the first place?
     $row = self::sanitize($row);
+
+    // Some special config settings ...
+
+    // If $force_resolution is set then use the default value of $resolution
+    // instead of the area setting.
+    if ($force_resolution &&
+        array_key_exists('enable_periods', $row) &&
+        !$row['enable_periods'])
+    {
+      $row['resolution'] = $area_defaults['resolution'];
+    }
 
     return $row;
   }
