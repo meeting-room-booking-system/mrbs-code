@@ -1423,57 +1423,6 @@ function get_area($room)
 }
 
 
-// Clean up a row from the area table, making sure there are no nulls, casting
-// boolean fields into bools and doing some sanity checking
-function clean_area_row($row)
-{
-  global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
-
-  // This code can get called during the upgrade process and so must
-  // not make any assumptions about the existence of extra columns in
-  // the area table.
-  foreach ($row as $key => $value)
-  {
-    if (array_key_exists($key, $area_defaults))
-    {
-      // If the "per area" setting is in the database, then use that.   Otherwise
-      // just stick with the default setting from the config file.
-      // (don't use the database setting if $force_resolution is TRUE
-      // and we're looking at the resolution field)
-      if (!isset($row[$key]) || (($key == 'resolution') && !empty($force_resolution)))
-      {
-        $row[$key] = $area_defaults[$key];
-      }
-      // Cast those fields which are booleans into booleans
-      if (in_array($key, $boolean_fields['area']))
-      {
-        $row[$key] = (bool) $row[$key];
-      }
-    }
-  }
-
-  // Do some sanity checking in case the area table is somehow messed up
-  // (1) 'private_override' must be a valid value
-  if (array_key_exists('private_override', $row) &&
-      !in_array($row['private_override'], $private_override_options))
-  {
-    $row['private_override'] = 'private';  // the safest default
-    $message = "Invalid value for 'private_override' in the area table.  Using '${row['private_override']}'.";
-    trigger_error($message, E_USER_WARNING);
-  }
-  // (2) 'resolution' must be positive
-  if (array_key_exists('resolution', $row) &&
-      (empty($row['resolution']) || ($row['resolution'] < 0)))
-  {
-    $row['resolution'] = 30*60;  // 30 minutes, a reasonable fallback
-    $message = "Invalid value for 'resolution' in the area table.   Using ${row['resolution']} seconds.";
-    trigger_error($message, E_USER_WARNING);
-  }
-
-  return $row;
-}
-
-
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
