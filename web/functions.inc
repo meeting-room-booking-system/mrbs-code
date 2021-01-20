@@ -1440,9 +1440,9 @@ function clean_area_row($row)
       // just stick with the default setting from the config file.
       // (don't use the database setting if $force_resolution is TRUE
       // and we're looking at the resolution field)
-      if (($key != 'resolution') || empty($force_resolution))
+      if (!isset($row[$key]) || (($key == 'resolution') && !empty($force_resolution)))
       {
-        $row[$key] = (isset($row[$key])) ? $value : $area_defaults[$key];
+        $row[$key] = $area_defaults[$key];
       }
       // Cast those fields which are booleans into booleans
       if (in_array($key, $boolean_fields['area']))
@@ -1451,6 +1451,7 @@ function clean_area_row($row)
       }
     }
   }
+  
   // Do some sanity checking in case the area table is somehow messed up
   // (1) 'private_override' must be a valid value
   if (array_key_exists('private_override', $row) &&
