@@ -5,7 +5,7 @@
 REQUIREMENTS
 ---------------------------------------------------------------------------
 MRBS works with both MySQL (Version 5.5.3 and above) and PostgreSQL
-(Version 8.2 and above) systems. You must have at least PHP 5.4.0, with support
+(Version 8.2 and above) systems. You must have at least PHP 5.5.0, with support
 for your chosen database system installed and working for this application.
 See the PHP (www.php.net), MySQL (www.mysql.com), and PostgreSQL
 (www.postgresql.org) sites for more info on setting these up.   You need
