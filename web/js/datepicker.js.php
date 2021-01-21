@@ -236,36 +236,39 @@ $(document).on('page_ready', function() {
     if (!isMobile())
     {
       var div = $('.minicalendars');
-      for (var i=0; i<2; i++)
+      if (div.length > 0)
       {
-        div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
+        for (var i = 0; i < 2; i++)
+        {
+          div.append($('<span class="minicalendar" id="cal' + i + '"></span>'));
+        }
+        config.inline = true;
+        config.onMonthChange = onMonthChange;
+        config.onYearChange = onYearChange;
+        config.onChange = onMinicalChange;
+
+        var minicalendars = flatpickr('span.minicalendar', config);
+
+        $.each(minicalendars, function (key, value) {
+            value.setDate(args.pageDate);
+            value.changeMonth(key);
+          });
+
+        <?php
+        // Align the top of the mini-calendars with the top of the navigation bar
+        ?>
+        div.css('margin-top', $('.view_container h2').outerHeight(true) + 'px');
+
+        <?php
+        // Once the calendars are formed thern we add the class 'formed' which will
+        // bring into play CSS media queries.    We need to do this because if we
+        // form them when the media queries are operational then they won't get
+        // formed if the result of the query is 'display: none', which means that if
+        // the window is later widened, for example, they still won't appear when they
+        // should do.
+        ?>
+        div.addClass('formed');
       }
-      config.inline = true;
-      config.onMonthChange = onMonthChange;
-      config.onYearChange = onYearChange;
-      config.onChange = onMinicalChange;
-
-      var minicalendars = flatpickr('span.minicalendar', config);
-
-      $.each(minicalendars, function(key, value) {
-          value.setDate(args.pageDate);
-          value.changeMonth(key);
-        });
-
-      <?php
-      // Align the top of the mini-calendars with the top of the navigation bar
-      ?>
-      div.css('margin-top', $('.view_container h2').outerHeight(true) + 'px');
-
-      <?php
-      // Once the calendars are formed thern we add the class 'formed' which will
-      // bring into play CSS media queries.    We need to do this because if we
-      // form them when the media queries are operational then they won't get
-      // formed if the result of the query is 'display: none', which means that if
-      // the window is later widened, for example, they still won't appear when they
-      // should do.
-      ?>
-      div.addClass('formed');
     }
     <?php
   }
