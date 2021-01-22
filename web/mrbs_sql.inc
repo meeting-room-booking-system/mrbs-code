@@ -15,7 +15,7 @@ function pack_status(array &$data)
 
   foreach ($statuses as $key => $value)
   {
-    if ($data[$key])
+    if (!empty($data[$key]))
     {
       $data['status'] |= $value;
     }
