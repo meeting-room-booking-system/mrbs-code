@@ -110,32 +110,30 @@ function get_room_id($location, &$error)
   else
   {
     // First of all get the area id
-    $sql = "SELECT id
-              FROM " . _tbl('area') . "
-             WHERE area_name=?
-             LIMIT 1";
-    $area_id = db()->query1($sql, array($location_area));
-    if ($area_id < 0)
+    $area_object = Area::getByName($location_area);
+    if (!isset($area_object))
     {
       // The area does not exist - create it if we are allowed to
       if (!$area_room_create)
       {
-        $error = get_vocab("area_does_not_exist") . " '$location_area'";
-        return FALSE;
+        $error = get_vocab('area_does_not_exist') . " '$location_area'";
+        return false;
       }
-      else
+      echo get_vocab('creating_new_area') . " '$location_area'<br>\n";
+      $area_object = new Area($location_area);
+      try
       {
-        echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
-        $error_add_area = '';
-        $area_id = mrbsAddArea($location_area, $error_add_area);
-        if ($area_id === FALSE)
-        {
-          $error = get_vocab("could_not_create_area") . " '$location_area'";
-          return FALSE;
-        }
+        $area_object->save();
+      }
+      catch (\Exception $e)
+      {
+        $error = get_vocab('could_not_create_area') . " '$location_area'";
+        return false;
       }
     }
+    $area_id = $area_object->id;
   }
+
   // Now we've got the area_id get the room_id
   $sql = "SELECT id
             FROM " . _tbl('room') . "
