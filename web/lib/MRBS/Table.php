@@ -138,15 +138,7 @@ abstract class Table
         // update part of the query.
         $named_parameter = ":p$i";
         $values[] = $named_parameter;
-        if (is_bool($value))
-        {
-          // Need to convert booleans
-          $sql_params[$named_parameter] = ($value) ? 1 : 0;
-        }
-        else
-        {
-          $sql_params[$named_parameter] = $value;
-        }
+        $sql_params[$named_parameter] = $col->sanitizeValue($value);
       }
 
       $i++;
