@@ -255,6 +255,8 @@ function process_event($vevent)
   // Set up the booking with some defaults
   $booking = array();
   $booking['awaiting_approval'] = false;
+  $booking['private'] = false;
+  $booking['tentative'] = false;
   $booking['rep_type'] = REP_NONE;
   $booking['type'] = $import_default_type;
   $booking['room_id'] = $import_default_room;
