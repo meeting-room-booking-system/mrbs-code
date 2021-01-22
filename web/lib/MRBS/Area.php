@@ -11,10 +11,18 @@ class Area extends Location
 
   public function __construct($area_name=null)
   {
+    global $area_defaults;
+
     parent::__construct();
     $this->area_name = $area_name;
     $this->sort_key = $area_name;
     $this->disabled = false;
+
+    // TODO: Handle defaults differently: get rid of $area_defaults
+    foreach ($area_defaults as $key => $value)
+    {
+      $this->$key = $value;
+    }
   }
 
 

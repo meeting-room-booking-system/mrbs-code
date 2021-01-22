@@ -31,12 +31,26 @@ if (!isset($name) || ($name === ''))
 
 // we need to do different things depending on if it's a room
 // or an area
-elseif ($type == "area")
+elseif ($type === 'area')
 {
-  $area = mrbsAddArea($name, $error);
+  $area_object = new Area($name);
+  if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
+  {
+    fatal_error(get_vocab('failed_to_acquire'));
+  }
+  if ($area_object->exists())
+  {
+    $error = 'invalid_area_name';
+  }
+  else
+  {
+    $area_object->save();
+    $area = $area_object->id;
+  }
+  db()->mutex_unlock(_tbl(Area::TABLE_NAME));
 }
 
-elseif ($type == "room")
+elseif ($type === 'room')
 {
   $room = mrbsAddRoom($name, $area, $error, $description, $capacity, $room_admin_email);
 }
