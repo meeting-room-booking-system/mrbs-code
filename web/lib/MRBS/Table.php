@@ -106,27 +106,26 @@ abstract class Table
     $table_data = $this->data;
 
     $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
-    $column_names = $cols->getNames();
 
     // First of all get the column names and values for the INSERT part
-    for ($i=0; $i < count($column_names); $i++)
+    $i = 0;
+    foreach ($cols as $col)
     {
-      $column_name = $column_names[$i];
       // We are only interested in those elements of $table_data that have
       // a corresponding column in the table - except for 'id' which is
       // assumed to be auto-increment.
-      if (($column_name == 'id') || !array_key_exists($column_name, $table_data))
+      if (($col->name == 'id') || !array_key_exists($col->name, $table_data))
       {
         continue;
       }
 
-      $columns[] = $column_name;
-      $value = $table_data[$column_name];
+      $columns[] = $col->name;
+      $value = $table_data[$col->name];
       if (is_null($value))
       {
-        if (in_array($column_name, static::$unique_columns))
+        if (in_array($col->name, static::$unique_columns))
         {
-          throw new \Exception("Unique column '$column_name' is null");
+          throw new \Exception("Unique column '$col->name' is null");
         }
         $values[] = 'NULL';
       }
@@ -149,6 +148,8 @@ abstract class Table
           $sql_params[$named_parameter] = $value;
         }
       }
+
+      $i++;
     }
 
     // Then go through the columns we've just found and turn them into assignments
