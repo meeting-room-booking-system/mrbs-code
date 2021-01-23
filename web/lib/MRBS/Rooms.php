@@ -81,8 +81,14 @@ class Rooms extends TableIterator
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);
     $sql_params = array();
-    $sql = "SELECT R.*, A.area_name, A.disabled as area_disabled
-              FROM $table_name R
+    $sql = "SELECT R.*, A.area_name";
+    // In early versions of MRBS the disabled field didn't exist and this method
+    // may be called before the database can be upgraded
+    if (db()->field_exists(_tbl(Area::TABLE_NAME), 'disabled'))
+    {
+      $sql .= ", A.disabled as area_disabled";
+    }
+    $sql .= " FROM $table_name R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id ";
     if (isset($this->area_id))
