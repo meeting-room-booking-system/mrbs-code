@@ -6,7 +6,7 @@ namespace MRBS;
 
 require_once "standard_vars.inc.php";  // won't have been included yet and we need it for $area_defaults
 
-global $area_defaults, $boolean_fields, $admin_handle;
+global $area_defaults, $admin_handle;
 
 $fields = $admin_handle->field_info(_tbl('area'));
 foreach ($fields as $field)
@@ -14,7 +14,7 @@ foreach ($fields as $field)
   $key = $field['name'];
   if (array_key_exists($key, $area_defaults))
   {
-    if (in_array($key, $boolean_fields['area']))
+    if (is_bool($area_defaults[$key]))
     {
       $sql_val = ($area_defaults[$key]) ? 1 : 0;
     }

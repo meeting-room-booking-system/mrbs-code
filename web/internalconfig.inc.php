@@ -425,34 +425,6 @@ $standard_fields['room'] = array('id',
                                  'invalid_types',
                                  'custom_html');
 
-// Boolean fields.    These are fields which are treated as booleans
-$boolean_fields['area'] = array('area_disabled',
-                                'default_duration_all_day',
-                                'private_enabled',
-                                'private_default',
-                                'private_mandatory',
-                                'min_create_ahead_enabled',
-                                'max_create_ahead_enabled',
-                                'min_delete_ahead_enabled',
-                                'max_delete_ahead_enabled',
-                                'max_per_day_enabled',
-                                'max_per_week_enabled',
-                                'max_per_month_enabled',
-                                'max_per_year_enabled',
-                                'max_per_future_enabled',
-                                'max_secs_per_day_enabled',
-                                'max_secs_per_week_enabled',
-                                'max_secs_per_month_enabled',
-                                'max_secs_per_year_enabled',
-                                'max_secs_per_future_enabled',
-                                'max_duration_enabled',
-                                'approval_enabled',
-                                'reminders_enabled',
-                                'enable_periods',
-                                'confirmation_enabled',
-                                'confirmed_default',
-                                'times_along_top');
-
 // Permitted values for 'private_override'
 $private_override_options = array('none', 'public', 'private');
 
