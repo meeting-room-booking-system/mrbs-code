@@ -969,7 +969,8 @@ function get_fieldset_registration()
       $param_names,
       $registration_opens_enabled,
       $registration_opens,
-      get_vocab($in_advance_vocab)
+      get_vocab($in_advance_vocab),
+      array('min' => 0)  // no point in opening registration after the event starts
     );
   $field->setLabel(get_vocab('registration_opens'));
   $fieldset->addElement($field);
