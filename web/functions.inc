@@ -1488,7 +1488,10 @@ function get_area_settings($area_id)
   // Set the global variables
   foreach ($columns as $column)
   {
-    $$column = $area->$column;
+    if ($area->hasProperty($column))
+    {
+      $$column = $area->$column;
+    }
   }
 
   // Set the timezone

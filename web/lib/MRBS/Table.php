@@ -53,6 +53,13 @@ abstract class Table
   }
 
 
+  // Checks whether an instance has the property $property.
+  // (We cannot use property_exists() because we're using magic getters and setters.)
+  public function hasProperty($property)
+  {
+    return array_key_exists($property, $this->data);
+  }
+
   // Checks if this instance already exists in the table
   public function exists()
   {
