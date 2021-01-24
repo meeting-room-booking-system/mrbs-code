@@ -8,6 +8,25 @@ use PHPMailer\PHPMailer\PHPMailer;
 require_once "mrbs_sql.inc";
 
 
+// Constrain an integer to fit a certain type.  Useful for making sure
+// that integers will fit within the range for a database type.
+// Only 4 byte unsigned integers supported at the moment.
+function constrain_int($n, $bytes, $unsigned=false)
+{
+  if (!$unsigned && ($bytes == 4))
+  {
+    $max_limit = 0x7fffffff;
+    $min_limit = -$max_limit;
+  }
+  else
+  {
+    throw new \Exception("Other combinations not yet supported");
+  }
+
+  return max(min($n, $max_limit), $min_limit);
+}
+
+
 // Case-insensitive in_array
 // See https://www.php.net/manual/en/function.in-array.php#Hcom89256
 function in_arrayi($needle, $haystack)
@@ -1451,7 +1470,7 @@ function clean_area_row($row)
       }
     }
   }
-  
+
   // Do some sanity checking in case the area table is somehow messed up
   // (1) 'private_override' must be a valid value
   if (array_key_exists('private_override', $row) &&
