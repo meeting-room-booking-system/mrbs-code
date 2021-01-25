@@ -449,23 +449,23 @@ if (!empty($error))
 // TOP SECTION:  THE FORM FOR SELECTING AN AREA
 echo "<div id=\"area_form\">\n";
 
-$sql = "SELECT id, area_name, disabled
-          FROM " . _tbl('area') . "
-      ORDER BY disabled, sort_key";
-$res = db()->query($sql);
+$areas = new Areas();
 
 $enabled_areas = array();
 $disabled_areas = array();
 
-while (false !== ($row = $res->next_row_keyed()))
+foreach ($areas as $a)
 {
-  if ($row['disabled'])
+  if ($a->isVisible())
   {
-    $disabled_areas[$row['id']] = $row['area_name'];
-  }
-  else
-  {
-    $enabled_areas[$row['id']] = $row['area_name'];
+    if ($a->isDisabled())
+    {
+      $disabled_areas[$a->id] = $a->area_name;
+    }
+    else
+    {
+      $enabled_areas[$a->id] = $a->area_name;
+    }
   }
 }
 
