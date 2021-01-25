@@ -438,11 +438,6 @@ print_header($context);
 if (isset($area))
 {
   $area_object = Area::getById($area);
-  if (isset($area_object))
-  {
-    $area_name = $area_object->area_name;
-    $custom_html = $area_object->custom_html;
-  }
 }
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
@@ -502,11 +497,14 @@ echo "</div>";  // area_form
 
 
 // Now the custom HTML
-if ($auth['allow_custom_html'])
+if ($auth['allow_custom_html'] &&
+    isset($area_object) &&
+    isset($area_object->custom_html) &&
+    ($area_object->custom_html !== ''))
 {
   echo "<div id=\"div_custom_html\">\n";
   // no htmlspecialchars() because we want the HTML!
-  echo (isset($custom_html)) ? "$custom_html\n" : "";
+  echo $area_object->custom_html . "\n";
   echo "</div>\n";
 }
 
@@ -518,9 +516,9 @@ if (is_admin() || !empty($enabled_areas))
 {
   echo "<h2>\n";
   echo get_vocab("rooms");
-  if(isset($area_name))
+  if(isset($area_object))
   {
-    echo " " . get_vocab("in") . " " . htmlspecialchars($area_name);
+    echo " " . get_vocab("in") . " " . htmlspecialchars($area_object->area_name);
   }
   echo "</h2>\n";
 
