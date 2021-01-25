@@ -437,21 +437,13 @@ print_header($context);
 // Get the details we need for this area
 if (isset($area))
 {
-  $sql = "SELECT area_name, custom_html
-            FROM " . _tbl('area') . "
-           WHERE id=?
-           LIMIT 1";
-
-  $res = db()->query($sql, array($area));
-
-  if ($res->count() == 1)
+  $area_object = Area::getById($area);
+  if (isset($area_object))
   {
-    $row = $res->next_row_keyed();
-    $area_name = $row['area_name'];
-    $custom_html = $row['custom_html'];
+    $area_name = $area_object->area_name;
+    $custom_html = $area_object->custom_html;
   }
 }
-
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
