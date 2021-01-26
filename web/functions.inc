@@ -1428,20 +1428,6 @@ function get_default_room($area_id)
 }
 
 
-// Return an area id for a given room
-function get_area($room)
-{
-  $sql = "SELECT area_id
-            FROM " . _tbl('room') . "
-           WHERE id=?
-           LIMIT 1";
-
-  $area = db()->query1($sql, array($room));
-
-  return ($area < 0 ? 0 : $area);
-}
-
-
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area

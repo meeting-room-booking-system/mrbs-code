@@ -424,7 +424,7 @@ function process_event($vevent)
     // Get the area settings for this room, if we haven't got them already
     if (!isset($room_settings[$booking['room_id']]))
     {
-      get_area_settings(get_area($booking['room_id']));
+      get_area_settings(Room::getAreaId($booking['room_id']));
       $room_settings[$booking['room_id']]['morningstarts'] = $morningstarts;
       $room_settings[$booking['room_id']]['morningstarts_minutes'] = $morningstarts_minutes;
       $room_settings[$booking['room_id']]['resolution'] = $resolution;

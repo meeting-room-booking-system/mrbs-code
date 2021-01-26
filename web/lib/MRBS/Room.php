@@ -90,6 +90,20 @@ class Room extends Location
   }
 
 
+  // Gets the area_id for a room with id $id
+  public static function getAreaId($id)
+  {
+    $sql = "SELECT area_id
+              FROM " . _tbl(self::TABLE_NAME) . "
+             WHERE id=?
+             LIMIT 1";
+
+    $area_id = (int) db()->query1($sql, array($id));
+
+    return ($area_id < 0) ? null : $area_id;
+  }
+
+
   // For efficiency we get some information about the area at the same time.
   protected static function getByColumn($column, $value)
   {

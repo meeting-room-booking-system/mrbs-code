@@ -1247,7 +1247,7 @@ if (isset($id))
 
   // We've possibly got a new room and area, so we need to update the settings
   // for this area.
-  $area = get_area($entry['room_id']);
+  $area = Room::getAreaId($entry['room_id']);
   get_area_settings($area);
 
   $private = $entry['private'];

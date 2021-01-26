@@ -96,7 +96,7 @@ function display_buttons($row, $is_series)
   else
   {
     // get the area settings for this room
-    get_area_settings(get_area($row['room_id']));
+    get_area_settings(Room::getAreaId($row['room_id']));
     // if enough time has passed since the last reminder
     // output a "Remind Admin" button, otherwise nothing
     if ($reminders_enabled  &&

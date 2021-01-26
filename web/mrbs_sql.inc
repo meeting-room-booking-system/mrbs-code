@@ -56,7 +56,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
   $room_id = $booking['room_id'];
 
-  get_area_settings(get_area($room_id));
+  get_area_settings(Room::getAreaId($room_id));
 
   // Select any meetings which overlap for this room:
   $sql = "SELECT E.id, name, start_time, create_by, status, room_name
@@ -152,10 +152,16 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
 
   // Get the area id.   We only need to do this once as all bookings will be
   // in the same area.
+  // TODO: Make the area_id part of the booking so that we don't have to do this
   static $area_id = null;
   if (!isset($area_id))
   {
-    $area_id = get_area($booking['room_id']);
+    $area_id = Room::getAreaId($booking['room_id']);
+    if (!isset($area_id))
+    {
+      $message = "Room with id " . $booking['room_id'] . " no longer exists.";
+      throw new \Exception($message);
+    }
   }
 
   // Get the location for indexing the $existing and $proposed arrays.   If it's a
