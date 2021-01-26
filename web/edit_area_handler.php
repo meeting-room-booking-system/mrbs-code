@@ -107,7 +107,7 @@ if (!validate_email_list($area_admin_email))
 // (for example if we are relying on a polyfill and JavaScript is disabled)
 
 if (!preg_match(REGEX_HHMM, $area_start_first_slot) ||
-    !preg_match(REGEX_HHMM, $area_start_first_slot))
+    !preg_match(REGEX_HHMM, $area_start_last_slot))
 {
   $errors[] = 'invalid_time_format';
 }
