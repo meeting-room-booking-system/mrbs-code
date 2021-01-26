@@ -11,8 +11,19 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
+if (empty($area))
+{
+  throw new \Exception('$area is empty');
+}
 
-// Get non-standard form variables
+// Get the existing area
+$area_object = Area::getById($area);
+if (!isset($area_object))
+{
+  throw new \Exception("The area with id $id no longer exists");
+}
+var_dump($area_object);
+// The non-standard form variables
 $form_vars = array(
   'sort_key'                      => 'string',
   'area_name'                     => 'string',
@@ -55,49 +66,67 @@ $form_vars = array(
   'custom_html'                   => 'string'
 );
 
-foreach($form_vars as $var => $var_type)
-{
-  $$var = get_form_var($var, $var_type);
-
-  // Trim the strings and truncate them to the maximum field length
-  if (is_string($$var))
-  {
-    $$var = trim($$var);
-    $$var = truncate($$var, "area.$var");
-  }
-
-}
-
-// Get the max_per_interval form variables
+// Add in the max_per_interval form variables
 foreach ($interval_types as $interval_type)
 {
-  $var = "area_max_per_${interval_type}";
-  $$var = get_form_var($var, 'int');
-  $var = "area_max_per_${interval_type}_enabled";
-  $$var = get_form_var($var, 'string');
-  $var = "area_max_secs_per_${interval_type}";
-  $$var = get_form_var($var, 'int');
-  $var = "area_max_secs_per_${interval_type}_units";
-  $$var = get_form_var($var, 'string');
-  $var = "area_max_secs_per_${interval_type}_enabled";
-  $$var = get_form_var($var, 'string');
+  $form_vars["area_max_per_${interval_type}"] =               'int';
+  $form_vars["area_max_per_${interval_type}_enabled"] =       'string';
+  $form_vars["area_max_secs_per_${interval_type}"] =          'int';
+  $form_vars["area_max_secs_per_${interval_type}_units"] =    'string';
+  $form_vars["area_max_secs_per_${interval_type}_enabled"] =  'string';
 }
 
-// UPDATE THE DATABASE
-// -------------------
+// TODO: get rid of the need for a prefix and the rather messy processing below
+$prefix = 'area_';
 
-if (empty($area))
+
+// GET THE FORM DATA
+foreach($form_vars as $var => $var_type)
 {
-  throw new \Exception('$area is empty');
+  $value = get_form_var($var, $var_type);
+
+  // Ignore any null values - the field might have been disabled by JavaScript
+  if (is_null($value))
+  {
+    continue;
+  }
+
+  // Trim any strings
+  if (is_string($value))
+  {
+    $value = trim($value);
+  }
+
+  // Strip any prefix off the beginning of the variable name to get the corresponding property,
+  // except in a few special cases
+  switch ($var)
+  {
+    case 'area_def_duration_all_day':
+      $property = 'default_duration_all_day';
+      break;
+    case 'area_name':
+    case 'area_admin_email':
+      $property = $var;
+      break;
+    default:
+      $property = preg_replace('/^' . preg_quote($prefix) . '/', '', $var);
+      break;
+  }
+
+  $area_object->$property = $value;
 }
+
+
+// VALIDATE AND PROCESS THE DATA
 
 // Initialise the error array
 $errors = array();
 
 // Clean up the address list replacing newlines by commas and removing duplicates
-$area_admin_email = clean_address_list($area_admin_email);
+$area_object->area_admin_email = clean_address_list($area_object->area_admin_email);
+
 // Validate email addresses
-if (!validate_email_list($area_admin_email))
+if (!validate_email_list($area_object->area_admin_email))
 {
   $errors[] = 'invalid_email';
 }
@@ -106,62 +135,91 @@ if (!validate_email_list($area_admin_email))
 // the HTML5 element or polyfill will force them to be, but just in case ...
 // (for example if we are relying on a polyfill and JavaScript is disabled)
 
-if (!preg_match(REGEX_HHMM, $area_start_first_slot) ||
-    !preg_match(REGEX_HHMM, $area_start_first_slot))
+if (!preg_match(REGEX_HHMM, $area_object->start_first_slot) ||
+    !preg_match(REGEX_HHMM, $area_object->start_last_slot))
 {
   $errors[] = 'invalid_time_format';
 }
 else
 {
   // Get morningstarts and eveningends
-  list($area_morningstarts, $area_morningstarts_minutes) = explode(':', $area_start_first_slot);
-  list($area_eveningends, $area_eveningends_minutes) = explode(':', $area_start_last_slot);
+  list($area_object->morningstarts, $area_object->morningstarts_minutes) = explode(':', $area_object->start_first_slot);
+  list($area_object->eveningends, $area_object->eveningends_minutes) = explode(':', $area_object->start_last_slot);
 
   // Convert the book ahead times into seconds
-  fromTimeString($area_min_create_ahead_value, $area_min_create_ahead_units);
-  fromTimeString($area_max_create_ahead_value, $area_max_create_ahead_units);
-  fromTimeString($area_min_delete_ahead_value, $area_min_delete_ahead_units);
-  fromTimeString($area_max_delete_ahead_value, $area_max_delete_ahead_units);
-
-  fromTimeString($area_max_duration_value, $area_max_duration_units);
-
-  // If we are using periods, round these down to the nearest whole day
-  // (anything less than a day is meaningless when using periods)
-  if ($area_enable_periods)
+  if (isset($area_object->min_create_ahead_units))
   {
-    $vars = array('area_min_create_ahead_value',
-                  'area_max_create_ahead_value',
-                  'area_min_delete_ahead_value',
-                  'area_max_delete_ahead_value');
+    fromTimeString($area_object->min_create_ahead_secs, $area_object->min_create_ahead_units);
+  }
+  if (isset($area_object->max_create_ahead_units))
+  {
+    fromTimeString($area_object->max_create_ahead_secs, $area_object->max_create_ahead_units);
+  }
+  if (isset($area_object->min_delete_ahead_units))
+  {
+    fromTimeString($area_object->min_delete_ahead_secs, $area_object->min_delete_ahead_units);
+  }
+  if (isset($area_object->max_delete_ahead_units))
+  {
+    fromTimeString($area_object->max_delete_ahead_secs, $area_object->max_delete_ahead_units);
+  }
 
-    foreach ($vars as $var)
+  // Convert the max_duration into seconds
+  if (isset($area_object->max_duration_units))
+  {
+    fromTimeString($max_duration_secs, $area_object->max_duration_units);
+  }
+
+  // Now do the max_secs variables (limits on the total length of bookings)
+  foreach($interval_types as $interval_type)
+  {
+    $units_property = "max_secs_per_${interval_type}_units";
+    if (isset($area_object->$units_property))
     {
-      if (isset($$var))
-      {
-        $$var -= $$var % SECONDS_PER_DAY;
-      }
+      $secs_property = "max_secs_per_${interval_type}";
+      fromTimeString($area_object->$secs_property, $area_object->$units_property);
     }
   }
 
+  // If we are using periods, round these down to the nearest whole day
+  // (anything less than a day is meaningless when using periods)
+  if ($area_object->enable_periods)
+  {
+    $properties = array(
+        'min_create_ahead_secs',
+        'max_create_ahead_secs',
+        'min_delete_ahead_secs',
+        'max_delete_ahead_secs'
+      );
+
+    foreach ($properties as $property)
+    {
+      if (isset($area_object->$property))
+      {
+        $area_object->$property -= $area_object->$property % SECONDS_PER_DAY;
+      }
+    }
+  }
+/*
   // Convert booleans into 0/1 (necessary for PostgreSQL)
   $vars = array(
-      'area_disabled',
-      'area_def_duration_all_day',
-      'area_min_create_ahead_enabled',
-      'area_max_create_ahead_enabled',
-      'area_min_delete_ahead_enabled',
-      'area_max_delete_ahead_enabled',
-      'area_max_duration_enabled',
-      'area_private_enabled',
-      'area_private_default',
-      'area_private_mandatory',
-      'area_approval_enabled',
-      'area_reminders_enabled',
-      'area_enable_periods',
-      'area_confirmation_enabled',
-      'area_confirmed_default',
-      'area_times_along_top'
-    );
+    'area_disabled',
+    'area_def_duration_all_day',
+    'area_min_create_ahead_enabled',
+    'area_max_create_ahead_enabled',
+    'area_min_delete_ahead_enabled',
+    'area_max_delete_ahead_enabled',
+    'area_max_duration_enabled',
+    'area_private_enabled',
+    'area_private_default',
+    'area_private_mandatory',
+    'area_approval_enabled',
+    'area_reminders_enabled',
+    'area_enable_periods',
+    'area_confirmation_enabled',
+    'area_confirmed_default',
+    'area_times_along_top'
+  );
 
   foreach ($interval_types as $interval_type)
   {
@@ -173,37 +231,48 @@ else
   {
     $$var = (!empty($$var)) ? 1 : 0;
   }
+*/
 
-
-  if (!$area_enable_periods)
+  if (!$area_object->enable_periods)
   {
     // Avoid divide by zero errors
-    if ($area_res_mins == 0)
+    if ($area_object->res_mins == 0)
     {
       $errors[] = 'invalid_resolution';
     }
     else
     {
+      // Get the resolution
+      $area_object->resolution = $area_object->res_mins * 60;
+
       // Check morningstarts, eveningends, and resolution for consistency
-      $start_first_slot = ($area_morningstarts*60) + $area_morningstarts_minutes;   // minutes
-      $start_last_slot  = ($area_eveningends*60) + $area_eveningends_minutes;       // minutes
+      $start_first_slot = ($area_object->morningstarts*60) + $area_object->morningstarts_minutes;   // minutes
+      $start_last_slot  = ($area_object->eveningends*60) + $area_object->eveningends_minutes;       // minutes
 
       // If eveningends is before morningstarts then it's really on the next day
-      if (hm_before(array('hours' => $area_eveningends, 'minutes' => $area_eveningends_minutes),
-                    array('hours' => $area_morningstarts, 'minutes' => $area_morningstarts_minutes)))
+      if (hm_before(array('hours' => $area_object->eveningends, 'minutes' => $area_object->eveningends_minutes),
+                    array('hours' => $area_object->morningstarts, 'minutes' => $area_object->morningstarts_minutes)))
       {
         $start_last_slot += MINUTES_PER_DAY;
       }
 
       $start_difference = ($start_last_slot - $start_first_slot);         // minutes
 
-      if ($start_difference%$area_res_mins != 0)
+      if ($start_difference%$area_object->res_mins != 0)
       {
         $errors[] = 'invalid_resolution';
+      }
+
+      if (!$area_object->default_duration_all_day)
+      {
+        // If the default duration is all day, then this value will have
+        // been disabled on the form, so don't change it.
+        $area_object->default_duration = $area_object->def_duration_mins * 60;
       }
     }
   }
 }
+
 
 // Errors in the form data - go back to the form
 if (!empty($errors))
@@ -215,161 +284,14 @@ if (!empty($errors))
   }
   location_header("edit_area.php?$query_string");
 }
-
-// Everything is OK, update the database
-
-$sql = "UPDATE " . _tbl('area') . " SET ";
-$sql_params = array();
-$assign_array = array();
-$assign_array[] = "area_name=?";
-$sql_params[] = $area_name;
-$assign_array[] = "sort_key=?";
-$sql_params[] = $sort_key;
-$assign_array[] = "disabled=?";
-$sql_params[] = $area_disabled;
-$assign_array[] = "timezone=?";
-$sql_params[] = $area_timezone;
-$assign_array[] = "area_admin_email=?";
-$sql_params[] = $area_admin_email;
-
-if (isset($custom_html))
-{
-  // The custom HTML field won't be present if it has been
-  // disabled in the config file
-  $assign_array[] = "custom_html=?";
-  $sql_params[] = $custom_html;
-}
-
-if (!$area_enable_periods)
-{
-  $assign_array[] = "resolution=?";
-  $sql_params[] = $area_res_mins * 60;
-  if (!$area_def_duration_all_day)
-  {
-    // If the default duration is all day, then this value will have
-    // been disabled on the form, so don't change it.
-    $assign_array[] = "default_duration=?";
-    $sql_params[] = $area_def_duration_mins * 60;
-  }
-  $assign_array[] = "default_duration_all_day=?";
-  $sql_params[] = $area_def_duration_all_day;
-  $assign_array[] = "morningstarts=?";
-  $sql_params[] = $area_morningstarts;
-  $assign_array[] = "morningstarts_minutes=?";
-  $sql_params[] = $area_morningstarts_minutes;
-  $assign_array[] = "eveningends=?";
-  $sql_params[] = $area_eveningends;
-  $assign_array[] = "eveningends_minutes=?";
-  $sql_params[] = $area_eveningends_minutes;
-}
-
-// only update the min and max *_ahead_secs fields if the form values
-// are set;  they might be NULL because they've been disabled by JavaScript
-$assign_array[] = "min_create_ahead_enabled=?";
-$sql_params[] = $area_min_create_ahead_enabled;
-$assign_array[] = "max_create_ahead_enabled=?";
-$sql_params[] = $area_max_create_ahead_enabled;
-$assign_array[] = "min_delete_ahead_enabled=?";
-$sql_params[] = $area_min_delete_ahead_enabled;
-$assign_array[] = "max_delete_ahead_enabled=?";
-$sql_params[] = $area_max_delete_ahead_enabled;
-$assign_array[] = "max_duration_enabled=?";
-$sql_params[] = $area_max_duration_enabled;
-
-if (isset($area_min_create_ahead_value))
-{
-  $assign_array[] = "min_create_ahead_secs=?";
-  $sql_params[] = $area_min_create_ahead_value;
-}
-if (isset($area_max_create_ahead_value))
-{
-  $assign_array[] = "max_create_ahead_secs=?";
-  $sql_params[] = $area_max_create_ahead_value;
-}
-if (isset($area_min_delete_ahead_value))
-{
-  $assign_array[] = "min_delete_ahead_secs=?";
-  $sql_params[] = $area_min_delete_ahead_value;
-}
-if (isset($area_max_delete_ahead_value))
-{
-  $assign_array[] = "max_delete_ahead_secs=?";
-  $sql_params[] = $area_max_delete_ahead_value;
-}
-if (isset($area_max_duration_value))
-{
-  $assign_array[] = "max_duration_secs=?";
-  $sql_params[] = $area_max_duration_value;
-  $assign_array[] = "max_duration_periods=?";
-  $sql_params[] = $area_max_duration_periods;
-}
-
-foreach($interval_types as $interval_type)
-{
-  $var = "max_per_${interval_type}_enabled";
-  $area_var = "area_" . $var;
-  $assign_array[] = "$var=" . $$area_var;
-
-  $var = "max_per_${interval_type}";
-  $area_var = "area_" . $var;
-  if (isset($$area_var))
-  {
-    // only update these fields if they are set;  they might be NULL because
-    // they have been disabled by JavaScript
-    $assign_array[] = "$var=?";
-    $sql_params[] = $$area_var;
-  }
-
-  // Now do the max_secs variables (limits on the total length of bookings)
-  $var = "max_secs_per_${interval_type}_enabled";
-  $area_var = "area_" . $var;
-  $assign_array[] = "$var=" . $$area_var;
-
-  $var = "max_secs_per_${interval_type}";
-  $area_var = "area_" . $var;
-
-  if (isset($$area_var))
-  {
-    // only update these fields if they are set;  they might be NULL because
-    // they have been disabled by JavaScript
-    // Need to convert back into seconds
-    $units_var = "area_max_secs_per_${interval_type}_units";
-    fromTimeString($$area_var, $$units_var);
-    $assign_array[] = "$var=?";
-    $sql_params[] = $$area_var;
-  }
-}
-
-$assign_array[] = "private_enabled=?";
-$sql_params[] = $area_private_enabled;
-$assign_array[] = "private_default=?";
-$sql_params[] = $area_private_default;
-$assign_array[] = "private_mandatory=?";
-$sql_params[] = $area_private_mandatory;
-$assign_array[] = "private_override=?";
-$sql_params[] = $area_private_override;
-$assign_array[] = "approval_enabled=?";
-$sql_params[] = $area_approval_enabled;
-$assign_array[] = "reminders_enabled=?";
-$sql_params[] = $area_reminders_enabled;
-$assign_array[] = "enable_periods=?";
-$sql_params[] = $area_enable_periods;
-$assign_array[] = "periods=?";
-$sql_params[] = json_encode($area_periods);
-$assign_array[] = "confirmation_enabled=?";
-$sql_params[] = $area_confirmation_enabled;
-$assign_array[] = "confirmed_default=?";
-$sql_params[] = $area_confirmed_default;
-$assign_array[] = "default_type=?";
-$sql_params[] = $area_default_type;
-$assign_array[] = "times_along_top=?";
-$sql_params[] = $area_times_along_top;
-
-$sql .= implode(",", $assign_array) . " WHERE id=?";
-$sql_params[] = $area;
-
-db()->command($sql, $sql_params);
-
+var_dump($area_object);
+exit;
+// Otherwise everything is OK and update the database.
+$area_object->save();
 
 // Go back to the admin page
 location_header("admin.php?day=$day&month=$month&year=$year&area=$area");
+
+
+
+
