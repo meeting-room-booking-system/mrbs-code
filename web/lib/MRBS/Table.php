@@ -185,6 +185,10 @@ abstract class Table
         {
           $this->id = $row['id'];
         }
+        else
+        {
+          throw new PDOException("No id returned");
+        }
       }
       catch (PDOException $e)
       {
