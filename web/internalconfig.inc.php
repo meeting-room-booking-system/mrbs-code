@@ -493,7 +493,7 @@ $area_defaults_keys = array('timezone',
                             'confirmation_enabled',
                             'confirmed_default',
                             'times_along_top',
-                            'default_area');
+                            'default_type');
 
 $area_defaults = array();
 
