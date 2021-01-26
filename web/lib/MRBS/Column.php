@@ -113,7 +113,7 @@ class Column
   // Sanitize a value ready for insertion in the database
   public function sanitizeValue($value)
   {
-    // Turn the booleans into 0/1 values
+    // Turn the booleans into 0/1 values (necessary for PostgreSQL)
     if (is_bool($value))
     {
       $value = ($value) ? 1 : 0;
