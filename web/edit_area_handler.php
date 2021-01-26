@@ -22,7 +22,7 @@ if (!isset($area_object))
 {
   throw new \Exception("The area with id $id no longer exists");
 }
-var_dump($area_object);
+
 // The non-standard form variables
 $form_vars = array(
   'sort_key'                      => 'string',
@@ -284,8 +284,7 @@ if (!empty($errors))
   }
   location_header("edit_area.php?$query_string");
 }
-var_dump($area_object);
-exit;
+
 // Otherwise everything is OK and update the database.
 $area_object->save();
 
