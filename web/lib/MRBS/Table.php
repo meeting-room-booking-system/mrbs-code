@@ -91,7 +91,56 @@ abstract class Table
   public function save()
   {
     $this->data = static::onWrite($this->data);
-    $this->upsert();
+
+    // If there is an id column and we have an id then we know we
+    // are doing an update of that row
+    if (isset($this->data['id']))
+    {
+      $this->update();
+    }
+    // Otherwise it could be an update or an insert
+    else
+    {
+      $this->upsert();
+    }
+  }
+
+
+  // To be used when updating a table which has an id column and when
+  // the id is already known, ie we are updating an existing row.
+  private function update()
+  {
+    $assignments = array();
+    $sql_params = array();
+    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
+    $i = 0;
+    foreach ($cols as $col)
+    {
+      if ($col->name === 'id')
+      {
+        continue;
+      }
+      if (!isset($this->data[$col->name]))
+      {
+        $value = 'NULL';
+      }
+      else
+      {
+        $named_parameter = ":p$i";
+        $value = $named_parameter;
+        $sql_params[$named_parameter] = $col->sanitizeValue($this->data[$col->name]);
+        $i++;
+      }
+      $assignments[] = db()->quote($col->name) . "=$value";
+    }
+
+    $sql_params[':id'] = $this->id;
+
+    $sql = "UPDATE " . _tbl(static::TABLE_NAME) . "
+               SET " . implode(', ', $assignments) . "
+             WHERE id=:id";
+
+    db()->command($sql, $sql_params);
   }
 
 
