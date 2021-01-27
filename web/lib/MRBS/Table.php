@@ -199,9 +199,9 @@ abstract class Table
         $named_parameter = ":p$i";
         $values[] = $named_parameter;
         $sql_params[$named_parameter] = $col->sanitizeValue($value);
+        $i++;
       }
 
-      $i++;
     }
 
     // Then go through the columns we've just found and turn them into assignments
