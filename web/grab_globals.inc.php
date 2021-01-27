@@ -20,7 +20,7 @@ namespace MRBS;
 
 // Gets a form variable.
 //    $var        The variable name
-//    $var_type   The type of the variable ('int', 'string' or 'array')
+//    $var_type   The type of the variable ('bool', 'decimal', 'int', 'string' or 'array')
 //    $default    The default value for the variable
 //    $source     If set, then restrict the search to this source.  Can be
 //                INPUT_GET or INPUT_POST.
@@ -32,59 +32,55 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   global $cli_params, $allow_cli, $get, $post;
 
   // Set the default value, and make sure it's the right type
-  if ($var_type == 'array')
-  {
-    $value = isset($default) ? (array) $default : array();
-  }
-  else
-  {
+  if ($var_type == 'array') {
+    $value = isset($default) ? (array)$default : array();
+  } else {
     $value = $default;
   }
 
-   // Get the command line arguments if any (and we're allowed to),
-   // otherwise get the POST variables
-  if ($allow_cli && (!empty($cli_params) && isset($cli_params[$var])))
-  {
+  // Get the command line arguments if any (and we're allowed to),
+  // otherwise get the POST variables
+  if ($allow_cli && (!empty($cli_params) && isset($cli_params[$var]))) {
     $value = $cli_params[$var];
-  }
-  else if ((!isset($source) || ($source === INPUT_POST)) &&
-           (!empty($post) && isset($post[$var])))
-  {
+  } else if ((!isset($source) || ($source === INPUT_POST)) &&
+    (!empty($post) && isset($post[$var]))) {
     $value = $post[$var];
   }
 
   // Then get the GET variables
   if ((!isset($source) || ($source === INPUT_GET)) &&
-      (!empty($get) && isset($get[$var])))
-  {
+    (!empty($get) && isset($get[$var]))) {
     $value = $get[$var];
-  }
-
-  // Cast to an array if necessary
-  if ($var_type == 'array')
-  {
-    $value = (array) $value;
   }
 
   // Clean up the variable
   if ($value !== null)
   {
-    if ($var_type == 'int')
+    switch ($var_type)
     {
-      $value = ($value === '') ? null : intval($value);
-    }
-    elseif ($var_type == 'decimal')
-    {
-      // This isn't a very good sanitisation as it will let through thousands separators and
-      // also multiple decimal points.  It needs to be improved, but care needs to be taken
-      // over, for example, whether a comma should be allowed for a decimal point.  So for
-      // the moment it errs on the side of letting through too much.
-      $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
-                          FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
-      if ($value === '')
-      {
-        $value = null;
-      }
+      case 'array':
+        $value = (array) $value;
+        break;
+      case 'bool':
+        $value = (bool) $value;
+        break;
+      case 'decimal':
+        // This isn't a very good sanitisation as it will let through thousands separators and
+        // also multiple decimal points.  It needs to be improved, but care needs to be taken
+        // over, for example, whether a comma should be allowed for a decimal point.  So for
+        // the moment it errs on the side of letting through too much.
+        $value = filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
+                            FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND);
+        if ($value === '')
+        {
+          $value = null;
+        }
+        break;
+      case 'int':
+        $value = ($value === '') ? null : intval($value);
+        break;
+      default:
+        break;
     }
   }
 

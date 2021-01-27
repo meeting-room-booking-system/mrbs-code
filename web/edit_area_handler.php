@@ -27,42 +27,42 @@ if (!isset($area_object))
 $form_vars = array(
   'sort_key'                      => 'string',
   'area_name'                     => 'string',
-  'area_disabled'                 => 'string',
+  'area_disabled'                 => 'bool',
   'area_timezone'                 => 'string',
   'area_admin_email'              => 'string',
   'area_start_first_slot'         => 'string',
   'area_start_last_slot'          => 'string',
   'area_res_mins'                 => 'int',
   'area_def_duration_mins'        => 'int',
-  'area_def_duration_all_day'     => 'string',
-  'area_min_create_ahead_enabled' => 'string',
+  'area_def_duration_all_day'     => 'bool',
+  'area_min_create_ahead_enabled' => 'bool',
   'area_min_create_ahead_value'   => 'int',
   'area_min_create_ahead_units'   => 'string',
-  'area_max_create_ahead_enabled' => 'string',
+  'area_max_create_ahead_enabled' => 'bool',
   'area_max_create_ahead_value'   => 'int',
   'area_max_create_ahead_units'   => 'string',
-  'area_min_delete_ahead_enabled' => 'string',
+  'area_min_delete_ahead_enabled' => 'bool',
   'area_min_delete_ahead_value'   => 'int',
   'area_min_delete_ahead_units'   => 'string',
-  'area_max_delete_ahead_enabled' => 'string',
+  'area_max_delete_ahead_enabled' => 'bool',
   'area_max_delete_ahead_value'   => 'int',
   'area_max_delete_ahead_units'   => 'string',
-  'area_max_duration_enabled'     => 'string',
+  'area_max_duration_enabled'     => 'bool',
   'area_max_duration_periods'     => 'int',
   'area_max_duration_value'       => 'int',
   'area_max_duration_units'       => 'string',
-  'area_private_enabled'          => 'string',
-  'area_private_default'          => 'int',
-  'area_private_mandatory'        => 'string',
+  'area_private_enabled'          => 'bool',
+  'area_private_default'          => 'bool',
+  'area_private_mandatory'        => 'bool',
   'area_private_override'         => 'string',
-  'area_approval_enabled'         => 'string',
-  'area_reminders_enabled'        => 'string',
-  'area_enable_periods'           => 'string',
+  'area_approval_enabled'         => 'bool',
+  'area_reminders_enabled'        => 'bool',
+  'area_enable_periods'           => 'bool',
   'area_periods'                  => 'array',
-  'area_confirmation_enabled'     => 'string',
-  'area_confirmed_default'        => 'string',
+  'area_confirmation_enabled'     => 'bool',
+  'area_confirmed_default'        => 'bool',
   'area_default_type'             => 'string',
-  'area_times_along_top'          => 'string',
+  'area_times_along_top'          => 'bool',
   'custom_html'                   => 'string'
 );
 
@@ -70,10 +70,10 @@ $form_vars = array(
 foreach ($interval_types as $interval_type)
 {
   $form_vars["area_max_per_${interval_type}"] =               'int';
-  $form_vars["area_max_per_${interval_type}_enabled"] =       'string';
+  $form_vars["area_max_per_${interval_type}_enabled"] =       'bool';
   $form_vars["area_max_secs_per_${interval_type}"] =          'int';
   $form_vars["area_max_secs_per_${interval_type}_units"] =    'string';
-  $form_vars["area_max_secs_per_${interval_type}_enabled"] =  'string';
+  $form_vars["area_max_secs_per_${interval_type}_enabled"] =  'bool';
 }
 
 // TODO: get rid of the need for a prefix and the rather messy processing below
@@ -200,38 +200,6 @@ else
       }
     }
   }
-/*
-  // Convert booleans into 0/1 (necessary for PostgreSQL)
-  $vars = array(
-    'area_disabled',
-    'area_def_duration_all_day',
-    'area_min_create_ahead_enabled',
-    'area_max_create_ahead_enabled',
-    'area_min_delete_ahead_enabled',
-    'area_max_delete_ahead_enabled',
-    'area_max_duration_enabled',
-    'area_private_enabled',
-    'area_private_default',
-    'area_private_mandatory',
-    'area_approval_enabled',
-    'area_reminders_enabled',
-    'area_enable_periods',
-    'area_confirmation_enabled',
-    'area_confirmed_default',
-    'area_times_along_top'
-  );
-
-  foreach ($interval_types as $interval_type)
-  {
-    $vars[] = "area_max_per_${interval_type}_enabled";
-    $vars[] = "area_max_secs_per_${interval_type}_enabled";
-  }
-
-  foreach ($vars as $var)
-  {
-    $$var = (!empty($$var)) ? 1 : 0;
-  }
-*/
 
   if (!$area_object->enable_periods)
   {
@@ -290,7 +258,3 @@ $area_object->save();
 
 // Go back to the admin page
 location_header("admin.php?day=$day&month=$month&year=$year&area=$area");
-
-
-
-
