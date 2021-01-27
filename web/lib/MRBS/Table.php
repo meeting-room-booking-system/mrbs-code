@@ -126,6 +126,10 @@ abstract class Table
       }
       else
       {
+        // Need to make sure the placeholder only uses allowed characters which are
+        // [a-zA-Z0-9_].   We can't use the column name because the column name might
+        // contain characters which are not allowed.  We could use ?, but debugging
+        // is easier with named parameters, especially when there are a lot of them.
         $named_parameter = ":p$i";
         $value = $named_parameter;
         $sql_params[$named_parameter] = $col->sanitizeValue($this->data[$col->name]);
