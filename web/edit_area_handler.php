@@ -123,8 +123,8 @@ foreach($form_vars as $var => $var_type)
 $errors = array();
 
 // Check the name hasn't been used in another area
-$id = get_area_id($area_name);
-if (isset($id) && ($id != $area))
+$tmp_area = Area::getByName($area_object->area_name);
+if (isset($tmp_area) && ($tmp_area->id != $area_object->id))
 {
   $errors[] = 'invalid_area_name';
 }
