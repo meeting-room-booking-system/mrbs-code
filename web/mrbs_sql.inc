@@ -1802,6 +1802,20 @@ function get_booking_info($id, $series, $silent=FALSE)
 }
 
 
+// Gets the id of an area with a given name.
+// Returns NULL or the id.
+function get_area_id($area_name)
+{
+  $sql = "SELECT id
+            FROM " . _tbl('area') . "
+           WHERE area_name=?
+           LIMIT 1";
+
+  $res = db()->query($sql, array($area_name));
+
+  return ($res->count() == 0) ? null : $res->next_row()[0];
+}
+
 // Gets the ids of all the invisible rooms in the system
 function get_invisible_room_ids()
 {

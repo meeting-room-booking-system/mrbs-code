@@ -122,6 +122,13 @@ foreach($form_vars as $var => $var_type)
 // Initialise the error array
 $errors = array();
 
+// Check the name hasn't been used in another area
+$id = get_area_id($area_name);
+if (isset($id) && ($id != $area))
+{
+  $errors[] = 'invalid_area_name';
+}
+
 // Clean up the address list replacing newlines by commas and removing duplicates
 $area_object->area_admin_email = clean_address_list($area_object->area_admin_email);
 
