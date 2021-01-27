@@ -5,7 +5,12 @@ use PDOException;
 
 // A generic class for reading and writing data from tables.  It assumes that:
 //    - if an auto increment column exists then it is called 'id'
-//    - the table has one or more unique columns
+//    - the table has just one unique key, excluding any id column, but that
+//      unique key can cover multiple columns
+//
+// The class handles any processing of columns before they are written or read
+// (eg json_encoding) and sanitisation of values, eg truncating strings to fit
+// the column and turning booleans into 0/1.
 abstract class Table
 {
   // All sub-classes must declare the following:
