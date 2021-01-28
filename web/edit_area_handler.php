@@ -156,30 +156,40 @@ else
   // Convert the book ahead times into seconds
   if (isset($area_object->min_create_ahead_units))
   {
-    $area_object->min_create_ahead_secs = from_time_string($area_object->min_create_ahead_value,
-                                                           $area_object->min_create_ahead_units);
+    $area_object->min_create_ahead_secs = from_time_string(array(
+        'value' => $area_object->min_create_ahead_value,
+        'units' => $area_object->min_create_ahead_units
+      ));
   }
   if (isset($area_object->max_create_ahead_units))
   {
-    $area_object->max_create_ahead_secs = from_time_string($area_object->max_create_ahead_value,
-                                                           $area_object->max_create_ahead_units);
+    $area_object->max_create_ahead_secs = from_time_string(array(
+        'value' => $area_object->max_create_ahead_value,
+        'units' => $area_object->max_create_ahead_units
+      ));
   }
   if (isset($area_object->min_delete_ahead_units))
   {
-    $area_object->min_delete_ahead_secs = from_time_string($area_object->min_delete_ahead_value,
-                                                           $area_object->min_delete_ahead_units);
+    $area_object->min_delete_ahead_secs = from_time_string(array(
+        'value' => $area_object->min_delete_ahead_value,
+        'units' => $area_object->min_delete_ahead_units
+      ));
   }
   if (isset($area_object->max_delete_ahead_units))
   {
-    $area_object->max_delete_ahead_secs = from_time_string($area_object->max_delete_ahead_value,
-                                                           $area_object->max_delete_ahead_units);
+    $area_object->max_delete_ahead_secs = from_time_string(array(
+        'value' => $area_object->max_delete_ahead_value,
+        'units' => $area_object->max_delete_ahead_units
+      ));
   }
 
   // Convert the max_duration into seconds
   if (isset($area_object->max_duration_units))
   {
-    $area_object->max_duration_secs = from_time_string($area_object->max_duration_value,
-                                                       $area_object->max_duration_units);
+    $area_object->max_duration_secs = from_time_string(array(
+        'value' => $area_object->max_duration_value,
+        'units' => $area_object->max_duration_units
+      ));
   }
 
   // Now do the max_secs variables (limits on the total length of bookings)
@@ -189,8 +199,10 @@ else
     if (isset($area_object->$units_property))
     {
       $secs_property = "max_secs_per_${interval_type}";
-      $area_object->$secs_property = from_time_string($area_object->$secs_property,
-                                                      $area_object->$units_property);
+      $area_object->$secs_property = from_time_string(array(
+          'value' => $area_object->$secs_property,
+          'units' => $area_object->$units_property
+        ));
     }
   }
 

@@ -924,19 +924,19 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 }
 
 
-// Converts a time period of $units into seconds, when it is originally
-// expressed in $dur_units.   (Almost the inverse of toTimeString(),
-// but note that toTimeString() can do language translation)
-function from_time_string($units, $dur_units)
+// Converts a time period, expressed as an array indexed by 'value' and
+// 'units' into seconds.  (Almost the inverse of toTimeString(), but
+// note that toTimeString() can do language translation)
+function from_time_string(array $duration)
 {
-  if (!isset($units) || !isset($dur_units))
+  if (!isset($duration['value']) || !isset($duration['units']))
   {
     return null;
   }
 
-  $result = (int) $units;
+  $result = (int) $duration['value'];
 
-  switch($dur_units)
+  switch($duration['units'])
   {
     case "years":
       $result *= 52;
