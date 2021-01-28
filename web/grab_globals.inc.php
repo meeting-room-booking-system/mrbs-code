@@ -54,7 +54,8 @@ function get_form_var($var, $var_type='string', $default=null, $source=null)
   }
 
   // Clean up the variable
-  if ($value !== null)
+  // (Checkboxes return null if not set, so we want them to be converted to false)
+  if (($var_type == 'bool') || ($value !== null))
   {
     switch ($var_type)
     {
