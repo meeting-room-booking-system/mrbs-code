@@ -1044,43 +1044,51 @@ function to_period_string($start_period, $seconds, $translate=true)
   return array('value' => $dur, 'units' => $units);
 }
 
-// Converts a period of $units starting at $start_period into seconds, when it is
-// originally expressed in $dur_units (periods or days).   (Almost the inverse of
+// Converts a time period, expressed as an array indexed by 'value' and
+// 'units' ('days' or 'periods') into seconds.  (Almost the inverse of
 // to_period_string(), but note that to_period_string() can do language translation)
-function fromPeriodString($start_period, &$units, $dur_units)
+function from_period_string($start_period, array $duration)
 {
   global $periods;
 
-  if (!isset($units) || !isset($dur_units))
+  if (!isset($duration['value']) || !isset($duration['units']))
   {
-    return;
+    return null;
   }
+
+  $result = (int) $duration['value'];
 
   // First get the duration in minutes
   $max_periods = count($periods);
-  if ($dur_units == "periods")
+  if ($duration['units'] == "periods")
   {
-    $end_period = $start_period + $units;
+    $end_period = $start_period + $result;
     if ($end_period > $max_periods)
     {
-      $units = (MINUTES_PER_DAY * floor($end_period/$max_periods)) + ($end_period%$max_periods) - $start_period;
+      $result = (MINUTES_PER_DAY * floor($end_period/$max_periods)) + ($end_period%$max_periods) - $start_period;
     }
   }
-  if ($dur_units == "days")
+  elseif ($duration['units'] == "days")
   {
     if ($start_period == 0)
     {
-      $units = $max_periods + ($units-1)*MINUTES_PER_DAY;
+      $result = $max_periods + ($result - 1)*MINUTES_PER_DAY;
     }
     else
     {
-      $units = $units * MINUTES_PER_DAY;
+      $result = $result * MINUTES_PER_DAY;
     }
+  }
+  else
+  {
+    throw new \Exception("Unknown units '" . $duration['units'] . "'");
   }
 
   // Then convert into seconds
-  $units = (int) $units;
-  $units = 60 * $units;
+  $result = (int) $result;
+  $result = 60 * $result;
+
+  return $result;
 }
 
 

@@ -1926,7 +1926,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   // (We do this before we adjust for DST so that the user sees what they expect to see)
   $duration = $duration_seconds;
   $date = getdate($common['start_time']);
-  
+
   if ($enable_periods)
   {
     $period = (($date['hours'] - 12) * 60) + $date['minutes'];
