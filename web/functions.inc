@@ -927,30 +927,33 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
 // Converts a time period of $units into seconds, when it is originally
 // expressed in $dur_units.   (Almost the inverse of toTimeString(),
 // but note that toTimeString() can do language translation)
-function fromTimeString(&$units, $dur_units)
+function from_time_string($units, $dur_units)
 {
   if (!isset($units) || !isset($dur_units))
   {
-    return;
+    return null;
   }
+
+  $result = (int) $units;
 
   switch($dur_units)
   {
     case "years":
-      $units *= 52;
+      $result *= 52;
     case "weeks":
-      $units *= DAYS_PER_WEEK;
+      $result *= DAYS_PER_WEEK;
     case "days":
-      $units *= 24;
+      $result *= 24;
     case "hours":
-      $units *= 60;
+      $result *= 60;
     case "periods":
     case "minutes":
-      $units *= 60;
+      $result *= 60;
     case "seconds":
       break;
   }
-  $units = (int) $units;
+
+  return $result;
 }
 
 
