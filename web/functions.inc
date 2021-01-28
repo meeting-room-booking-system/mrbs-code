@@ -1321,7 +1321,7 @@ function fit_to_booking_day($t, $back=true)
 // DST changes so that the duration is what the user would expect to see.  For
 // example 12 noon to 12 noon crossing a DST boundary is 24 hours.
 //
-// Returns an array indexed by 'duration' and 'dur_units'
+// Returns an array indexed by 'value' and 'units'
 //
 //    $start_time     int     start time as a Unix timestamp
 //    $end_time       int     end time as a Unix timestamp
@@ -1339,13 +1339,13 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
     $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
-      $result['duration'] =  intval($n_periods/$periods_per_day);
-      $result['dur_units'] = ($translate) ? get_vocab('days') : 'days';
+      $result['value'] =  intval($n_periods/$periods_per_day);
+      $result['units'] = ($translate) ? get_vocab('days') : 'days';
     }
     else
     {
-      $result['duration'] = $n_periods;
-      $result['dur_units'] = ($translate) ? get_vocab('periods') : 'periods';
+      $result['value'] = $n_periods;
+      $result['units'] = ($translate) ? get_vocab('periods') : 'periods';
     }
   }
   else
@@ -1354,12 +1354,9 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
     // Need to make DST correct in opposite direction to entry creation
     // so that users see what they expect to see
     $seconds -= cross_dst($start_time, $end_time);
-    $duration = to_time_string($seconds, $translate);
-    $result = array(
-        'duration' => $duration['value'],
-        'dur_units' => $duration['units']
-      );
+    $result = to_time_string($seconds, $translate);
   }
+
   return $result;
 }
 

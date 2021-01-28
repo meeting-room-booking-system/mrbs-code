@@ -850,7 +850,7 @@ function report_row(&$rows, $data)
         $duration_seconds = $data['end_time'] - $data['start_time'];
         $duration_seconds -= cross_dst($data['start_time'], $data['end_time']);
         $d = get_duration($data['start_time'], $data['end_time'], $data['enable_periods'], $data['area_id']);
-        $d_string = $d['duration'] . ' ' . $d['dur_units'];
+        $d_string = $d['value'] . ' ' . $d['units'];
         $d_string = escape($d_string);
       case 'start_time':
         $mod_time = ($field == 'start_time') ? 0 : -1;
@@ -1503,7 +1503,7 @@ if ($phase == 2)
     $sql .= " LEFT JOIN " . _tbl('repeat') . " T
                      ON E.repeat_id=T.id";
   }
-  
+
   $sql .= " WHERE E.start_time < ? AND E.end_time > ?";
   $sql_params[] = $report_end;
   $sql_params[] = $report_start;

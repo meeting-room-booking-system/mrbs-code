@@ -1727,8 +1727,8 @@ function get_booking_info($id, $series, $silent=FALSE)
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
   $d = get_duration($row['start_time'], $row['end_time'], $row['enable_periods'], $row['area_id'], false);
-  $row['duration'] = $d['duration'];
-  $row['dur_units'] = $d['dur_units'];
+  $row['duration'] = $d['value'];
+  $row['dur_units'] = $d['units'];
 
   // Translate the status field into a set of booleans
   unpack_status($row);

@@ -46,8 +46,8 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
   {
     // We will translate the units later
     $d = get_duration($data['start_time'], $data['end_time'], $enable_periods, $data['area_id'], false);
-    $data['duration'] = $d['duration'];
-    $data['dur_units'] = $d['dur_units'];
+    $data['duration'] = $d['value'];
+    $data['dur_units'] = $d['units'];
   }
 
   // Set a rep_type if it hasn't been
