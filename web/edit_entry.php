@@ -1568,16 +1568,17 @@ $start_min   = strftime('%M', $start_time);
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
 
+// TODO: is this still used??
 if ($enable_periods)
 {
-  toPeriodString($start_min, $duration, $dur_units);
+  $tmp = to_period_string($start_min, $duration);
 }
 else
 {
   $tmp = to_time_string($duration);
-  $duration = $tmp['value'];
-  $dur_units = $tmp['units'];
 }
+$duration = $tmp['value'];
+$dur_units = $tmp['units'];
 
 // Now that we know all the data to fill the form with we start drawing it
 

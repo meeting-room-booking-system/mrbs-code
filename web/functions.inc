@@ -1008,12 +1008,14 @@ function get_period_interval($start_time, $end_time)
 }
 
 
-function toPeriodString($start_period, &$dur, &$units, $translate=true)
+// Converts a time of $seconds into a duration expressed as an array
+// indexed by 'value' and 'units'.
+function to_period_string($start_period, $seconds, $translate=true)
 {
   global $periods;
 
   $max_periods = count($periods);
-  $dur /= 60;  // duration now in minutes
+  $dur = $seconds/60;  // duration now in minutes
   $days = $dur / MINUTES_PER_DAY;
   $remainder = $dur % MINUTES_PER_DAY;
   // strip out any gap between the end of the last period on one day
@@ -1038,11 +1040,13 @@ function toPeriodString($start_period, &$dur, &$units, $translate=true)
     $dur = (intval($days) * $max_periods) + $remainder;
     $units = $translate ? get_vocab("periods") : "periods";
   }
+
+  return array('value' => $dur, 'units' => $units);
 }
 
 // Converts a period of $units starting at $start_period into seconds, when it is
 // originally expressed in $dur_units (periods or days).   (Almost the inverse of
-// toPeriodString(), but note that toPeriodString() can do language translation)
+// to_period_string(), but note that to_period_string() can do language translation)
 function fromPeriodString($start_period, &$units, $dur_units)
 {
   global $periods;

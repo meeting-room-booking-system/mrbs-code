@@ -1926,17 +1926,18 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   // (We do this before we adjust for DST so that the user sees what they expect to see)
   $duration = $duration_seconds;
   $date = getdate($common['start_time']);
+  
   if ($enable_periods)
   {
     $period = (($date['hours'] - 12) * 60) + $date['minutes'];
-    toPeriodString($period, $duration, $dur_units, false);
+    $tmp = to_period_string($period, $duration, false);
   }
   else
   {
     $tmp = to_time_string($duration, false);
-    $duration = $tmp['value'];
-    $dur_units = $tmp['units'];
   }
+  $duration = $tmp['value'];
+  $dur_units = $tmp['units'];
 
   // Expand a series into a list of start times:
   if ($bookings[0]['rep_type'] != REP_NONE)
