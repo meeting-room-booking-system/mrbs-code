@@ -300,15 +300,13 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
       {
         if ($only_area)
         {
-          $max = $max_secs_per_interval_area[$interval_type];
-          toTimeString($max, $units);
-          return get_vocab("max_secs_per_${interval_type}_area", $max, $units);
+          $max = to_time_string($max_secs_per_interval_area[$interval_type]);
+          return get_vocab("max_secs_per_${interval_type}_area", $max['value'], $max['units']);
         }
         else
         {
-          $max = $max_secs_per_interval_global[$interval_type];
-          toTimeString($max, $units);
-          return get_vocab("max_secs_per_${interval_type}_global", $max, $units);
+          $max = to_time_string($max_secs_per_interval_global[$interval_type]);
+          return get_vocab("max_secs_per_${interval_type}_global", $max['value'], $max['units']);
         }
       }
     }
@@ -395,11 +393,10 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       {
         $min_delete_ahead_secs -=  $min_delete_ahead_secs % SECONDS_PER_DAY;
       }
-      $min_delete_ahead = $min_delete_ahead_secs;
-      if (($booking['start_time'] - $now) < $min_delete_ahead)
+      if (($booking['start_time'] - $now) < $min_delete_ahead_secs)
       {
-        toTimeString($min_delete_ahead, $units);
-        $violations[] = get_vocab('min_delete_time_before', $min_delete_ahead, $units);
+        $min_delete_ahead = to_time_string($min_delete_ahead_secs);
+        $violations[] = get_vocab('min_delete_time_before', $min_delete_ahead['value'], $min_delete_ahead['units']);
       }
     }
 
@@ -409,11 +406,10 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       {
         $max_delete_ahead_secs -=  $max_delete_ahead_secs % SECONDS_PER_DAY;
       }
-      $max_delete_ahead = $max_delete_ahead_secs;
-      if (($booking['end_time'] - $now) > $max_delete_ahead)
+      if (($booking['end_time'] - $now) > $max_delete_ahead_secs)
       {
-        toTimeString($max_delete_ahead, $units);
-        $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead, $units);
+        $max_delete_ahead = to_time_string($max_delete_ahead_secs);
+        $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead['value'], $max_delete_ahead['units']);
       }
     }
   }
@@ -469,11 +465,10 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       {
         $min_create_ahead_secs -=  $min_create_ahead_secs % SECONDS_PER_DAY;
       }
-      $min_create_ahead = $min_create_ahead_secs;
-      if (($booking['start_time'] - $now) < $min_create_ahead)
+      if (($booking['start_time'] - $now) < $min_create_ahead_secs)
       {
-        toTimeString($min_create_ahead, $units);
-        $violations[] = get_vocab('min_create_time_before', $min_create_ahead, $units);
+        $min_create_ahead = to_time_string($min_create_ahead_secs);
+        $violations[] = get_vocab('min_create_time_before', $min_create_ahead['value'], $min_create_ahead['units']);
       }
     }
 
@@ -486,11 +481,10 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       {
         $max_create_ahead_secs -=  $max_create_ahead_secs % SECONDS_PER_DAY;
       }
-      $max_create_ahead = $max_create_ahead_secs;
-      if (($booking['end_time'] - $now) > $max_create_ahead)
+      if (($booking['end_time'] - $now) > $max_create_ahead_secs)
       {
-        toTimeString($max_create_ahead, $units);
-        $violations[] = get_vocab('max_create_time_before', $max_create_ahead, $units);
+        $max_create_ahead = to_time_string($max_create_ahead_secs);
+        $violations[] = get_vocab('max_create_time_before', $max_create_ahead['value'], $max_create_ahead['units']);
       }
     }
   }
@@ -556,9 +550,8 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     }
     elseif ($booking['end_time'] - $booking['start_time'] > $max_duration_secs)
     {
-      $max_duration = $max_duration_secs;
-      toTimeString($max_duration, $units);
-      $violations[] = get_vocab("max_booking_duration") . " $max_duration $units";
+      $max_duration = to_time_string($max_duration_secs);
+      $violations[] = get_vocab("max_booking_duration") . ' ' . $max_duration['value'] . ' ' . $max_duration['units'];
     }
   }
 
@@ -1936,11 +1929,13 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   if ($enable_periods)
   {
     $period = (($date['hours'] - 12) * 60) + $date['minutes'];
-    toPeriodString($period, $duration, $dur_units, FALSE);
+    toPeriodString($period, $duration, $dur_units, false);
   }
   else
   {
-    toTimeString($duration, $dur_units, FALSE);
+    $tmp = to_time_string($duration, false);
+    $duration = $tmp['value'];
+    $dur_units = $tmp['units'];
   }
 
   // Expand a series into a list of start times:

@@ -850,38 +850,40 @@ function print_footer($and_exit=false)
 }
 
 
-// Converts a duration of $dur seconds into a duration of
-// $dur $units
+// Converts a time of $seconds into a duration expressed as an array
+// indexed by 'value' and 'units'.
 // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
 // is used to specify a maximum size of unit to use.  For example if
 // it is set to 'minutes', 3600 seconds will give 60 minutes rather
 // than 1 hour.
-function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
+function to_time_string($seconds, $translate=true, $max_unit=null)
 {
+  $value = $seconds;
+
   if (!isset($max_unit))
   {
     $max_unit = 'years';
   }
 
-  if (($max_unit != 'seconds') && (abs($dur) >= 60))
+  if (($max_unit != 'seconds') && (abs($value) >= 60))
   {
-    $dur /= 60;
+    $value /= 60;
 
-    if (($max_unit != 'minutes') && (abs($dur) >= 60))
+    if (($max_unit != 'minutes') && (abs($value) >= 60))
     {
-      $dur /= 60;
+      $value /= 60;
 
-      if(($max_unit != 'hours') && ((abs($dur) >= 24) && ($dur % 24 == 0)))
+      if(($max_unit != 'hours') && ((abs($value) >= 24) && ($value % 24 == 0)))
       {
-        $dur /= 24;
+        $value /= 24;
 
-        if(($max_unit != 'days') && ((abs($dur) >= DAYS_PER_WEEK) && ($dur % DAYS_PER_WEEK == 0)))
+        if(($max_unit != 'days') && ((abs($value) >= DAYS_PER_WEEK) && ($value % DAYS_PER_WEEK == 0)))
         {
-          $dur /= DAYS_PER_WEEK;
+          $value /= DAYS_PER_WEEK;
 
-          if (($max_unit != 'weeks') && ((abs($dur) >= 52) && ($dur % 52 == 0)))
+          if (($max_unit != 'weeks') && ((abs($value) >= 52) && ($value % 52 == 0)))
           {
-            $dur  /= 52;
+            $value  /= 52;
             $units = 'years';
           }
           else
@@ -910,10 +912,10 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
   }
 
   // Limit any floating point values to three decimal places
-  if (is_float($dur))
+  if (is_float($value))
   {
-    $dur = sprintf('%.3f', $dur);
-    $dur = rtrim($dur, '0');  // removes trailing zeros
+    $value = sprintf('%.3f', $value);
+    $value = rtrim($value, '0');  // removes trailing zeros
   }
 
   // Translate into local language if required
@@ -921,12 +923,14 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
   {
     $units = get_vocab($units);
   }
+
+  return (array('value' => $value, 'units' => $units));
 }
 
 
 // Converts a time period, expressed as an array indexed by 'value' and
-// 'units' into seconds.  (Almost the inverse of toTimeString(), but
-// note that toTimeString() can do language translation)
+// 'units' into seconds.  (Almost the inverse of to_time_string(), but
+// note that to_time_string() can do language translation)
 function from_time_string(array $duration)
 {
   if (!isset($duration['value']) || !isset($duration['units']))
@@ -1334,11 +1338,15 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
   }
   else
   {
-    $result['duration'] = $end_time - $start_time;
+    $seconds = $end_time - $start_time;
     // Need to make DST correct in opposite direction to entry creation
-    // so that user see what he expects to see
-    $result['duration'] -= cross_dst($start_time, $end_time);
-    toTimeString($result['duration'], $result['dur_units'], $translate);
+    // so that users see what they expect to see
+    $seconds -= cross_dst($start_time, $end_time);
+    $duration = to_time_string($seconds, $translate);
+    $result = array(
+        'duration' => $duration['value'],
+        'dur_units' => $duration['units']
+      );
   }
   return $result;
 }

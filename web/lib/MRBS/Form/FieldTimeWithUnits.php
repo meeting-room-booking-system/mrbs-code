@@ -25,8 +25,7 @@ class FieldTimeWithUnits extends FieldDiv
     parent::__construct();
 
     // Convert the raw seconds into as large a unit as possible
-    $duration = $seconds;
-    \MRBS\toTimeString($duration, $units);
+    $duration = \MRBS\to_time_string($seconds);
 
     // The checkbox, which enables or disables the field
     $checkbox = new ElementInputCheckbox();
@@ -38,7 +37,7 @@ class FieldTimeWithUnits extends FieldDiv
     // The quantity element
     $input = new ElementInputNumber();
     $attributes = array('name'  => $param_names['quantity'],
-                        'value' => $duration);
+                        'value' => $duration['value']);
     if (isset($input_attributes))
     {
       $attributes = array_merge($attributes, $input_attributes);
@@ -50,7 +49,7 @@ class FieldTimeWithUnits extends FieldDiv
     $options = Form::getTimeUnitOptions();
     $select = new ElementSelect();
     $select->setAttribute('name', $param_names['units'])
-           ->addSelectOptions($options, array_search($units, $options), true);
+           ->addSelectOptions($options, array_search($duration['units'], $options), true);
     $this->addControlElement($select);
 
     // The suffix

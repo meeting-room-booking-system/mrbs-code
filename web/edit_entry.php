@@ -509,8 +509,7 @@ function get_field_rooms($value, $disabled=false)
            ->addSelectOptions($area_rooms, $room_ids[0], true);
 
     // Put in some data about the area for use by the JavaScript
-    $max_duration_qty     = $area_details[$a]->max_duration_secs;
-    toTimeString($max_duration_qty, $max_duration_units);
+    $max_duration = to_time_string($area_details[$a]->max_duration_secs);
 
     $select->setAttributes(array(
         'data-enable_periods'           => ($area_details[$a]->enable_periods) ? 1 : 0,
@@ -520,8 +519,8 @@ function get_field_rooms($value, $disabled=false)
         'data-max_duration_enabled'     => ($area_details[$a]->max_duration_enabled) ? 1 : 0,
         'data-max_duration_secs'        => $area_details[$a]->max_duration_secs,
         'data-max_duration_periods'     => $area_details[$a]->max_duration_periods,
-        'data-max_duration_qty'         => $max_duration_qty,
-        'data-max_duration_units'       => $max_duration_units,
+        'data-max_duration_qty'         => $max_duration['value'],
+        'data-max_duration_units'       => $max_duration['units'],
         'data-timezone'                 => $area_details[$a]->timezone
       ));
     $field->addElement($select);
@@ -1569,9 +1568,18 @@ $start_min   = strftime('%M', $start_time);
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
 
-$enable_periods ? toPeriodString($start_min, $duration, $dur_units) : toTimeString($duration, $dur_units);
+if ($enable_periods)
+{
+  toPeriodString($start_min, $duration, $dur_units);
+}
+else
+{
+  $tmp = to_time_string($duration);
+  $duration = $tmp['value'];
+  $dur_units = $tmp['units'];
+}
 
-//now that we know all the data to fill the form with we start drawing it
+// Now that we know all the data to fill the form with we start drawing it
 
 if (!getWritable($create_by, $room_id))
 {

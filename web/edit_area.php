@@ -488,18 +488,17 @@ function get_fieldset_max_secs()
                                         'class' => 'enabler'))
                   ->setChecked($max_secs_per_interval_area_enabled[$interval_type]);
 
-    $max = $max_secs_per_interval_area[$interval_type];
-    toTimeString($max, $units, true, $max_unit);
+    $duration = to_time_string($max_secs_per_interval_area[$interval_type],true, $max_unit);
     $options = Form::getTimeUnitOptions($max_unit);
 
     $select = new ElementSelect();
     $select->setAttribute('name', "area_max_secs_per_${interval_type}_units")
-           ->addSelectOptions($options, array_search($units, $options), true);
+           ->addSelectOptions($options, array_search($duration['units'], $options), true);
 
     $time_area = new ElementInputNumber();
     $time_area->setAttributes(array('min'   => '0',
                                     'name'  => "area_max_secs_per_${interval_type}",
-                                    'value' => $max));
+                                    'value' => $duration['value']));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
     $div_area = new ElementDiv();
@@ -513,16 +512,15 @@ function get_fieldset_max_secs()
     $checkbox_global->setAttributes(array('disabled' => true))
                     ->setChecked($max_secs_per_interval_global_enabled[$interval_type]);
 
-    $max = $max_secs_per_interval_global[$interval_type];
-    toTimeString($max, $units, true, $max_unit);
+    $duration = to_time_string($max_secs_per_interval_global[$interval_type], true, $max_unit);
 
     $time_global = new ElementInputNumber();
-    $time_global->setAttributes(array('value' => $max,
+    $time_global->setAttributes(array('value' => $duration['value'],
                                       'disabled' => true));
 
     $select = new ElementSelect();
     $select->setAttribute('disabled', true)
-           ->addSelectOptions($options, array_search($units, $options), true);
+           ->addSelectOptions($options, array_search($duration['units'], $options), true);
 
     $div_global = new ElementDiv();
     $div_global->addElement($checkbox_global)
@@ -564,18 +562,17 @@ function get_fieldset_max_duration()
   $fieldset->addElement($field);
 
   // Times
-  $max_duration_value = $max_duration_secs;
-  toTimeString($max_duration_value, $max_duration_units);
+  $duration = to_time_string($max_duration_secs);
   $options = Form::getTimeUnitOptions();
 
   $select = new ElementSelect();
   $select->setAttribute('name', 'area_max_duration_units')
-         ->addSelectOptions($options, array_search($max_duration_units, $options), true);
+         ->addSelectOptions($options, array_search($duration['units'], $options), true);
 
   $field = new FieldInputNumber();
   $field->setLabel(get_vocab('mode_times'))
         ->setControlAttributes(array('name'  => 'area_max_duration_value',
-                                     'value' => $max_duration_value,
+                                     'value' => $duration['value'],
                                      'min'   => '0'))
         ->addElement($select);
   $fieldset->addElement($field);

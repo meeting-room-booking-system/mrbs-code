@@ -297,15 +297,14 @@ class AuthDb extends Auth
       return false;
     }
 
-    $expiry_time = $auth['db']['reset_key_expiry'];
-    \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
+    $expiry = \MRBS\to_time_string($auth['db']['reset_key_expiry'], true, 'hours');
     $addresses = array(
         'from'  => $mail_settings['from'],
         'to'    => $users[0]->email
       );
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
-    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry_time), $expiry_units);
+    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry['value']), $expiry['units']);
     $body .= "</p>\n";
 
     // Construct and add in the link
