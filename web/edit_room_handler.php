@@ -24,8 +24,7 @@ function get_form()
   {
     $name = $column->name;
 
-    if ((!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET))) ||
-        ($name == 'invalid_types'))
+    if (array_key_exists($name, $params))
     {
       continue;
     }
@@ -33,7 +32,6 @@ function get_form()
     $var_type = $column->getFormVarType();
 
     $params[$name] = get_form_var($name, $var_type);
-    $params[$name] = $column->sanitizeFormVar($params[$name]);
   }
 
   return $params;
@@ -51,6 +49,10 @@ function update_room($room_id, array $form)
   {
     switch ($key)
     {
+      case 'id':
+      case 'area_id':
+        continue;
+        break;
       case 'capacity':
         $room->capacity = (empty($value)) ? 0 : $value;
         break;

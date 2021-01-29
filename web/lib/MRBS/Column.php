@@ -58,7 +58,7 @@ class Column
   }
 
 
-  // Gets the type ('int' or 'string') to be used with get_form_var().
+  // Gets the type ('bool', 'int' or 'string') to be used with get_form_var().
   // TODO: this method maybe doesn't belong here.
   public function getFormVarType()
   {
@@ -68,7 +68,7 @@ class Column
         $var_type = 'string';
         break;
       case self::NATURE_INTEGER:
-        $var_type = ($this->isBooleanLike()) ? 'string' : 'int';
+        $var_type = ($this->isBooleanLike()) ? 'bool' : 'int';
         break;
       // We can only really deal with the types above at the moment
       default:
