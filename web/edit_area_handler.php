@@ -6,7 +6,7 @@ require "defaultincludes.inc";
 use MRBS\Form\Form;
 
 
-function get_form_data(Area &$area_object)
+function get_form_data(Area &$area)
 {
   global $interval_types;
 
@@ -66,7 +66,6 @@ function get_form_data(Area &$area_object)
   // TODO: get rid of the need for a prefix and the rather messy processing below
   $prefix = 'area_';
 
-
   // GET THE FORM DATA
   foreach($form_vars as $var => $var_type)
   {
@@ -100,13 +99,12 @@ function get_form_data(Area &$area_object)
         break;
     }
 
-    $area_object->$property = $value;
+    $area->$property = $value;
   }
-
 }
 
 
-function validate_form_data(Area &$area_object)
+function validate_form_data(Area &$area)
 {
   global $interval_types;
 
@@ -116,17 +114,17 @@ function validate_form_data(Area &$area_object)
   $errors = array();
 
   // Check the name hasn't been used in another area
-  $tmp_area = Area::getByName($area_object->area_name);
-  if (isset($tmp_area) && ($tmp_area->id != $area_object->id))
+  $tmp_area = Area::getByName($area->area_name);
+  if (isset($tmp_area) && ($tmp_area->id != $area->id))
   {
     $errors[] = 'invalid_area_name';
   }
 
   // Clean up the address list replacing newlines by commas and removing duplicates
-  $area_object->area_admin_email = clean_address_list($area_object->area_admin_email);
+  $area->area_admin_email = clean_address_list($area->area_admin_email);
 
   // Validate email addresses
-  if (!validate_email_list($area_object->area_admin_email))
+  if (!validate_email_list($area->area_admin_email))
   {
     $errors[] = 'invalid_email';
   }
@@ -135,53 +133,53 @@ function validate_form_data(Area &$area_object)
   // the HTML5 element or polyfill will force them to be, but just in case ...
   // (for example if we are relying on a polyfill and JavaScript is disabled)
 
-  if (!preg_match(REGEX_HHMM, $area_object->start_first_slot) ||
-    !preg_match(REGEX_HHMM, $area_object->start_last_slot))
+  if (!preg_match(REGEX_HHMM, $area->start_first_slot) ||
+      !preg_match(REGEX_HHMM, $area->start_last_slot))
   {
     $errors[] = 'invalid_time_format';
   }
   else
   {
     // Get morningstarts and eveningends
-    list($area_object->morningstarts, $area_object->morningstarts_minutes) = explode(':', $area_object->start_first_slot);
-    list($area_object->eveningends, $area_object->eveningends_minutes) = explode(':', $area_object->start_last_slot);
+    list($area->morningstarts, $area->morningstarts_minutes) = explode(':', $area->start_first_slot);
+    list($area->eveningends, $area->eveningends_minutes) = explode(':', $area->start_last_slot);
 
     // Convert the book ahead times into seconds
-    if (isset($area_object->min_create_ahead_units))
+    if (isset($area->min_create_ahead_units))
     {
-      $area_object->min_create_ahead_secs = from_time_string(array(
-        'value' => $area_object->min_create_ahead_value,
-        'units' => $area_object->min_create_ahead_units
+      $area->min_create_ahead_secs = from_time_string(array(
+        'value' => $area->min_create_ahead_value,
+        'units' => $area->min_create_ahead_units
       ));
     }
-    if (isset($area_object->max_create_ahead_units))
+    if (isset($area->max_create_ahead_units))
     {
-      $area_object->max_create_ahead_secs = from_time_string(array(
-        'value' => $area_object->max_create_ahead_value,
-        'units' => $area_object->max_create_ahead_units
+      $area->max_create_ahead_secs = from_time_string(array(
+        'value' => $area->max_create_ahead_value,
+        'units' => $area->max_create_ahead_units
       ));
     }
-    if (isset($area_object->min_delete_ahead_units))
+    if (isset($area->min_delete_ahead_units))
     {
-      $area_object->min_delete_ahead_secs = from_time_string(array(
-        'value' => $area_object->min_delete_ahead_value,
-        'units' => $area_object->min_delete_ahead_units
+      $area->min_delete_ahead_secs = from_time_string(array(
+        'value' => $area->min_delete_ahead_value,
+        'units' => $area->min_delete_ahead_units
       ));
     }
-    if (isset($area_object->max_delete_ahead_units))
+    if (isset($area->max_delete_ahead_units))
     {
-      $area_object->max_delete_ahead_secs = from_time_string(array(
-        'value' => $area_object->max_delete_ahead_value,
-        'units' => $area_object->max_delete_ahead_units
+      $area->max_delete_ahead_secs = from_time_string(array(
+        'value' => $area->max_delete_ahead_value,
+        'units' => $area->max_delete_ahead_units
       ));
     }
 
     // Convert the max_duration into seconds
-    if (isset($area_object->max_duration_units))
+    if (isset($area->max_duration_units))
     {
-      $area_object->max_duration_secs = from_time_string(array(
-        'value' => $area_object->max_duration_value,
-        'units' => $area_object->max_duration_units
+      $area->max_duration_secs = from_time_string(array(
+        'value' => $area->max_duration_value,
+        'units' => $area->max_duration_units
       ));
     }
 
@@ -189,19 +187,19 @@ function validate_form_data(Area &$area_object)
     foreach($interval_types as $interval_type)
     {
       $units_property = "max_secs_per_${interval_type}_units";
-      if (isset($area_object->$units_property))
+      if (isset($area->$units_property))
       {
         $secs_property = "max_secs_per_${interval_type}";
-        $area_object->$secs_property = from_time_string(array(
-          'value' => $area_object->$secs_property,
-          'units' => $area_object->$units_property
+        $area->$secs_property = from_time_string(array(
+          'value' => $area->$secs_property,
+          'units' => $area->$units_property
         ));
       }
     }
 
     // If we are using periods, round these down to the nearest whole day
     // (anything less than a day is meaningless when using periods)
-    if ($area_object->enable_periods)
+    if ($area->enable_periods)
     {
       $properties = array(
         'min_create_ahead_secs',
@@ -212,48 +210,48 @@ function validate_form_data(Area &$area_object)
 
       foreach ($properties as $property)
       {
-        if (isset($area_object->$property))
+        if (isset($area->$property))
         {
-          $area_object->$property -= $area_object->$property % SECONDS_PER_DAY;
+          $area->$property -= $area->$property % SECONDS_PER_DAY;
         }
       }
     }
 
-    if (!$area_object->enable_periods)
+    if (!$area->enable_periods)
     {
       // Avoid divide by zero errors
-      if ($area_object->res_mins == 0)
+      if ($area->res_mins == 0)
       {
         $errors[] = 'invalid_resolution';
       }
       else
       {
         // Get the resolution
-        $area_object->resolution = $area_object->res_mins * 60;
+        $area->resolution = $area->res_mins * 60;
 
         // Check morningstarts, eveningends, and resolution for consistency
-        $start_first_slot = ($area_object->morningstarts*60) + $area_object->morningstarts_minutes;   // minutes
-        $start_last_slot  = ($area_object->eveningends*60) + $area_object->eveningends_minutes;       // minutes
+        $start_first_slot = ($area->morningstarts*60) + $area->morningstarts_minutes;   // minutes
+        $start_last_slot  = ($area->eveningends*60) + $area->eveningends_minutes;       // minutes
 
         // If eveningends is before morningstarts then it's really on the next day
-        if (hm_before(array('hours' => $area_object->eveningends, 'minutes' => $area_object->eveningends_minutes),
-          array('hours' => $area_object->morningstarts, 'minutes' => $area_object->morningstarts_minutes)))
+        if (hm_before(array('hours' => $area->eveningends, 'minutes' => $area->eveningends_minutes),
+                      array('hours' => $area->morningstarts, 'minutes' => $area->morningstarts_minutes)))
         {
           $start_last_slot += MINUTES_PER_DAY;
         }
 
         $start_difference = ($start_last_slot - $start_first_slot);         // minutes
 
-        if ($start_difference%$area_object->res_mins != 0)
+        if ($start_difference%$area->res_mins != 0)
         {
           $errors[] = 'invalid_resolution';
         }
 
-        if (!$area_object->default_duration_all_day)
+        if (!$area->default_duration_all_day)
         {
           // If the default duration is all day, then this value will have
           // been disabled on the form, so don't change it.
-          $area_object->default_duration = $area_object->def_duration_mins * 60;
+          $area->default_duration = $area->def_duration_mins * 60;
         }
       }
     }
@@ -311,5 +309,5 @@ else
 // Unlock the table
 db()->mutex_unlock(_tbl(Area::TABLE_NAME));
 
-// Go back to wherever. 
+// Go back to wherever.
 location_header($location);
