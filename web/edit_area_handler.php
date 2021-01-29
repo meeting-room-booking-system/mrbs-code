@@ -104,11 +104,10 @@ function get_form_data(Area &$area)
 }
 
 
+// Tidies up and validates the form data
 function validate_form_data(Area &$area)
 {
   global $interval_types;
-
-  // VALIDATE AND PROCESS THE DATA
 
   // Initialise the error array
   $errors = array();
