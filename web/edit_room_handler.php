@@ -52,7 +52,7 @@ function update_room($room_id, array $form)
     {
       case 'id':
       case 'area_id':
-        continue;
+        // We don't want to use these because they don't appear in the form
         break;
       case 'capacity':
         $room->capacity = (empty($value)) ? 0 : $value;
