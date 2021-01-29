@@ -362,7 +362,7 @@ function display_rooms($area_id)
                   {
                     // booleans: represent by a checkmark
                     echo "<td class=\"boolean\"><div>";
-                    echo (!empty($room->{$field['name']})) ? MRBS_HEAVY_CHECK_MARK : '';
+                    echo (!empty($room->{$column->name})) ? MRBS_HEAVY_CHECK_MARK : '';
                     echo "</div></td>\n";
                   }
                   elseif ($column->getNature() == Column::NATURE_INTEGER)
