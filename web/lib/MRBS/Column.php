@@ -79,37 +79,7 @@ class Column
     return $var_type;
   }
 
-
-  // Sanitizes a form variable
-  // TODO: this method maybe doesn't belong here?
-  // TODO: Amalgamate it with sanitizeValue()??
-  // TODO: Look at the difference between isBooleanLike() and is_bool().
-  // TODO: Note that there are some fields which are genuine small ints, eg
-  // TODO: the level column in the user table.
-  // TODO: Also, should get_form_var() accept a boolean type?
-  public function sanitizeFormVar($value)
-  {
-    // Turn the "booleans" into 0/1 values
-    if ($this->isBooleanLike())
-    {
-      $value = (empty($value)) ? 0 : 1;
-    }
-    // Trim the strings and truncate them to the maximum field length
-    elseif (is_string($value))
-    {
-      // Some variables, eg decimals, will also be PHP strings, so only
-      // trim columns with a database nature of 'character'.
-      if ($this->nature === Column::NATURE_CHARACTER)
-      {
-        $value = trim($value);
-        $value = $this->truncate($value);
-      }
-    }
-
-    return $value;
-  }
-
-
+  
   // Sanitize a value ready for insertion in the database
   public function sanitizeValue($value)
   {
