@@ -835,11 +835,11 @@ function toTimeString(&$dur, &$units, $translate=true, $max_unit=null)
     $max_unit = 'years';
   }
 
-  if (($max_unit != 'seconds') && (abs($dur) >= 60))
+  if (($max_unit != 'seconds') && (abs($dur) >= 60) && ($dur % 60 == 0))
   {
     $dur /= 60;
 
-    if (($max_unit != 'minutes') && (abs($dur) >= 60))
+    if (($max_unit != 'minutes') && (abs($dur) >= 60) && ($dur % 60 == 0))
     {
       $dur /= 60;
 
