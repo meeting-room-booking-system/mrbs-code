@@ -124,7 +124,7 @@ function get_form_var_type($field)
       break;
     case 'integer':
       // Smallints and tinyints are considered to be booleans
-      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'string' : 'int';
+      $type = (isset($field['length']) && ($field['length'] <= 2)) ? 'bool' : 'int';
       break;
     // We can only really deal with the types above at the moment
     default:
@@ -600,28 +600,16 @@ function get_form()
       continue;
     }
 
-    if (!array_key_exists($name, $_POST) && !(array_key_exists($name, $_GET)))
-    {
-      continue;
-    }
-
-    // "Level" is an exception because we've forced the value to be a string
-    // so that it can be used in an associative array.
-    // TODO: revisit why level has to be a string.
-    $var_type = ($name == 'level') ? 'string' : $column->getFormVarType();
+    // "Level" is an exception because it's a smallint and would normally
+    // be treated as a boolean
+    $var_type = ($name == 'level') ? 'int' : $column->getFormVarType();
 
     $params[$name] = get_form_var($name, $var_type);
 
-    // Don't sanitize level because it's a smallint and will thus be treated as
-    // a boolean.
-    // TODO: implement proper boolean data types in the database tables.
-    if ($name == 'level')
+    // Trim the strings
+    if (is_string($params[$name]))
     {
       $params[$name] = trim($params[$name]);
-    }
-    else
-    {
-      $params[$name] = $column->sanitizeFormVar($params[$name]);
     }
   }
 
