@@ -865,11 +865,11 @@ function to_time_string($seconds, $translate=true, $max_unit=null)
     $max_unit = 'years';
   }
 
-  if (($max_unit != 'seconds') && (abs($value) >= 60))
+  if (($max_unit != 'seconds') && (abs($value) >= 60)  && ($value % 60 == 0))
   {
     $value /= 60;
 
-    if (($max_unit != 'minutes') && (abs($value) >= 60))
+    if (($max_unit != 'minutes') && (abs($value) >= 60) && ($value % 60 == 0))
     {
       $value /= 60;
 
