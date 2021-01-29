@@ -5,6 +5,7 @@ require "defaultincludes.inc";
 
 use MRBS\Form\Form;
 
+// TODO:  Rewrite this along the lines of edit_area_handler.php
 
 function get_form()
 {
