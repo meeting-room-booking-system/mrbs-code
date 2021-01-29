@@ -274,6 +274,12 @@ if (empty($area))
   throw new \Exception('$area is empty');
 }
 
+// Lock the table while we update the area
+if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
+{
+  fatal_error(get_vocab('failed_to_acquire'));
+}
+
 // Get the existing area
 $area_object = Area::getById($area);
 if (!isset($area_object))
@@ -285,19 +291,25 @@ get_form_data($area_object);
 
 $errors = validate_form_data($area_object);
 
-// Errors in the form data - go back to the form
-if (!empty($errors))
+if (empty($errors))
 {
+  // Everything is OK, update the database and go back to the admin page.
+  $area_object->save();
+  $location = "admin.php?day=$day&month=$month&year=$year&area=$area";
+}
+else
+{
+  // Errors in the form data - go back to the form
   $query_string = "area=$area";
   foreach ($errors as $error)
   {
     $query_string .= "&errors[]=$error";
   }
-  location_header("edit_area.php?$query_string");
+  $location = "edit_area.php?$query_string";
 }
 
-// Otherwise everything is OK and update the database.
-$area_object->save();
+// Unlock the table
+db()->mutex_unlock(_tbl(Area::TABLE_NAME));
 
-// Go back to the admin page
-location_header("admin.php?day=$day&month=$month&year=$year&area=$area");
+// Go back to wherever. 
+location_header($location);
