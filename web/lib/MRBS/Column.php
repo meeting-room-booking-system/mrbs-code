@@ -79,7 +79,7 @@ class Column
     return $var_type;
   }
 
-  
+
   // Sanitize a value ready for insertion in the database
   public function sanitizeValue($value)
   {

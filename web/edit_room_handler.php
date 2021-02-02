@@ -5,104 +5,92 @@ require "defaultincludes.inc";
 
 use MRBS\Form\Form;
 
-// TODO:  Rewrite this along the lines of edit_area_handler.php
 
-function get_form()
+function get_form_data(Room &$room)
 {
-  $params = array();
+  // The non-standard form variables
+  $form_vars = array(
+    'new_area'      => 'int',
+    'old_area'      => 'int',
+    'old_room_name' => 'string',
+    'invalid_types' => 'array'
+  );
 
-  // Get the special parameters which don't have a corresponding column
-  $params['new_area'] = get_form_var('new_area', 'int');
-  $params['old_area'] = get_form_var('old_area', 'int');
-  $params['old_room_name'] = get_form_var('old_room_name', 'string');
-  // And get the ones that have a different type
-  $params['invalid_types'] = get_form_var('invalid_types', 'array');
-
-  // Get all the others
+  // The rest
   $columns = Columns::getInstance(_tbl(Room::TABLE_NAME));
 
   foreach ($columns as $column)
   {
     $name = $column->name;
 
-    if (array_key_exists($name, $params))
+    // Ignore the ones we've already got.
+    // Also ignore 'id' and 'area_id' because they're not in the form data.
+    if (array_key_exists($name, $form_vars) ||
+        in_array($name, array('id', 'area_id')))
     {
       continue;
     }
 
-    $var_type = $column->getFormVarType();
-
-    $params[$name] = get_form_var($name, $var_type);
+    $form_vars[$name] = $column->getFormVarType();
   }
 
-  return $params;
+  // GET THE FORM DATA
+  foreach($form_vars as $var => $var_type)
+  {
+    $value = get_form_var($var, $var_type);
+
+    // Ignore any null values - the field might have been disabled by JavaScript
+    if (is_null($value))
+    {
+      continue;
+    }
+
+    // Trim any strings
+    if (is_string($value))
+    {
+      $value = trim($value);
+    }
+
+    $room->$var = $value;
+  }
 }
 
 
-function update_room($room_id, array $form)
+// Tidies up and validates the form data
+function validate_form_data(Room &$room)
 {
   global $booking_types;
 
+  // Initialise the error array
   $errors = array();
-  $room = Room::getById($room_id);
 
-  foreach($form as $key => $value)
+  // Capacity
+  if (empty($room->capacity))
   {
-    switch ($key)
-    {
-      case 'id':
-      case 'area_id':
-        // We don't want to use these because they don't appear in the form
-        break;
-      case 'capacity':
-        $room->capacity = (empty($value)) ? 0 : $value;
-        break;
-      case 'new_area':
-        $room->area_id = $value;
-        break;
-      case 'old_area':
-      case 'old_room_name':
-        // Don't do anything with these
-        break;
-      case 'room_admin_email':
-        // Clean up the address list replacing newlines by commas and removing duplicates
-        $value = clean_address_list($value);
-        // Validate email addresses
-        if (!validate_email_list($value))
-        {
-          $errors[] = 'invalid_email';
-        }
-        $room->room_admin_email = $value;
-        break;
-      case 'room_disabled':
-        $room->disabled = $value;
-        break;
-      case 'invalid_types':
-        // Make sure the invalid types exist
-        if (isset($booking_types))
-        {
-          $room->invalid_types = array_intersect($value, $booking_types);
-        }
-        else
-        {
-          $room->invalid_types = array();
-        }
-        break;
-      default:
-        $room->{$key} = $value;
-        break;
-    }
+    $room->capacity = 0;
   }
 
-  /* TODO
-  // Acquire a mutex to lock out others who might be deleting the new area
-  if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
+  // Clean up the address list replacing newlines by commas and removing duplicates
+  $room->room_admin_email = clean_address_list($room->room_admin_email);
+
+  // Validate email addresses
+  if (!validate_email_list($room->room_admin_email))
   {
-    fatal_error(get_vocab("failed_to_acquire"));
+    $errors[] = 'invalid_email';
   }
-  */
+
+  // Make sure the invalid types exist
+  if (isset($booking_types))
+  {
+    $room->invalid_types = array_intersect($room->invalid_types, $booking_types);
+  }
+  else
+  {
+    $room->invalid_types = array();
+  }
 
   // Check that the area still exists
+  $room->area_id = $room->new_area;
   $area = Area::getById($room->area_id);
   if (!isset($area))
   {
@@ -112,21 +100,12 @@ function update_room($room_id, array $form)
   // (only do this if you're changing the room name or the area - if you're
   // just editing the other details for an existing room we don't want to reject
   // the edit because the room already exists!)
-  elseif ( (($form['new_area'] != $form['old_area']) || ($room->room_name != $form['old_room_name'])) &&
-           $room->exists())
+  elseif ((($room->new_area != $room->old_area) || ($room->room_name != $room->old_room_name)) &&
+          $room->exists())
   {
     $errors[] = 'invalid_room_name';
   }
-  // If everything is still OK, update the database
-  else
-  {
-    $room->save();
-  }
 
-  /* TODO
-  // Release the lock
-  db()->mutex_unlock(_tbl(Area::TABLE_NAME));
-  */
   return $errors;
 }
 
@@ -137,14 +116,33 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-$form = get_form();
-$errors = update_room($room, $form);
-
-if (count($errors) == 0)
+if (empty($room))
 {
-  // Go back to the admin page (for the new area)
+  throw new \Exception('$room is empty');
+}
+
+// Acquire a mutex to lock out others who might be deleting the new area
+if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
+{
+  fatal_error(get_vocab('failed_to_acquire'));
+}
+
+// Get the existing room
+$room_object = Room::getById($room);
+if (!isset($room_object))
+{
+  throw new \Exception("The area with id $room no longer exists");
+}
+
+get_form_data($room_object);
+$errors = validate_form_data($room_object);
+
+if (empty($errors))
+{
+  // Everything is OK, update the database and go back to the admin page (for the new area)
+  $room_object->save();
   $returl = 'admin.php';
-  $query_string = "day=$day&month=$month&year=$year&area=${form['new_area']}&room=$room";
+  $query_string = "day=$day&month=$month&year=$year&area=$room_object->new_area&room=$room";
 }
 else
 {
@@ -156,5 +154,8 @@ else
     $query_string .= "&errors[]=$error";
   }
 }
+
+// Release the lock
+db()->mutex_unlock(_tbl(Area::TABLE_NAME));
 
 location_header("$returl?$query_string");

@@ -285,7 +285,6 @@ if (!isset($area_object))
 }
 
 get_form_data($area_object);
-
 $errors = validate_form_data($area_object);
 
 if (empty($errors))
