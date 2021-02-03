@@ -182,14 +182,17 @@ abstract class Table
     {
       // We are only interested in those elements of $table_data that have
       // a corresponding column in the table - except for 'id' which is
-      // assumed to be auto-increment.
-      if (($col->name == 'id') || !array_key_exists($col->name, $table_data))
+      // assumed to be auto-increment, and 'timestamp' which is assumed to
+      // auto-update.
+      if (in_array($col->name, array('id', 'timestamp')) ||
+          !array_key_exists($col->name, $table_data))
       {
         continue;
       }
 
       $columns[] = $col->name;
       $value = $table_data[$col->name];
+
       if (is_null($value))
       {
         if (in_array($col->name, static::$unique_columns))
