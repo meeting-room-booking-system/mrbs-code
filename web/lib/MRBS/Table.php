@@ -7,6 +7,7 @@ use PDOException;
 //    - if an auto increment column exists then it is called 'id'
 //    - the table has just one unique key, excluding any id column, but that
 //      unique key can cover multiple columns
+//    - any columns called 'timestamp' auto-update
 //
 // The class handles any processing of columns before they are written or read
 // (eg json_encoding) and sanitisation of values, eg truncating strings to fit
@@ -121,7 +122,10 @@ abstract class Table
     $i = 0;
     foreach ($cols as $col)
     {
-      if ($col->name === 'id')
+      // We don't want to use the 'id' column because that's going to
+      // appear in the WHERE clause.  And we don't want to use the 'timestamp'
+      // column because that's assumed to auto-update.
+      if (in_array($col->name, array('id', 'timestamp')))
       {
         continue;
       }
