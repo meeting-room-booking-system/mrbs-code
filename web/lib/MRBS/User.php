@@ -407,6 +407,7 @@ class User extends Table
   // Function to decode any columns that are stored encoded in the database
   protected static function onRead(array $row)
   {
+    // TODO:  Simplify things by renaming the 'name' column to 'username'
     $row['username'] = $row['name'];
 
     if (array_key_exists('groups', $row))
