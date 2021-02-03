@@ -818,7 +818,7 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 // user level (ie admin/user) and the username.   Custom fields can be added
 // as required.  To protect the password field use 'password_hash' - useful
 // for public demo sites.
-$auth['db']['protected_fields'] = array('level', 'name', 'display_name');
+$auth['db']['protected_fields'] = array('level', 'name', 'display_name', 'roles');
 // Expiry time for a password reset key
 $auth['db']['reset_key_expiry'] = 60*60*24; // seconds
 

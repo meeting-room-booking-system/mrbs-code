@@ -311,10 +311,12 @@ function get_field_level($params, $disabled=false)
 
 function get_fieldset_roles($user)
 {
-  global $initial_user_creation;
+  global $auth, $initial_user_creation;
 
   $roles = new Roles();
-  $disabled = !$initial_user_creation && !is_user_admin();
+  $disabled = !$initial_user_creation &&
+              !is_user_admin() &&
+              in_array('roles', $auth['db']['protected_fields']);
   return $roles->getFieldset($user->roles, $disabled, Group::getRoles($user->groups));
 }
 
