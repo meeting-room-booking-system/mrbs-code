@@ -56,7 +56,6 @@ $datatable = get_form_var('datatable', 'int');  // Will only be set if we're usi
 $back_button = get_form_var('back_button', 'string');
 $delete_button = get_form_var('delete_button', 'string');
 $edit_button = get_form_var('edit_button', 'string');
-$update_button = get_form_var('update_button', 'string');
 
 if (isset($back_button))
 {
@@ -69,10 +68,6 @@ elseif (isset($delete_button))
 elseif (isset($edit_button))
 {
   $action = 'edit';
-}
-elseif (isset($update_button))
-{
-  $action = 'update';
 }
 
 $is_ajax = is_ajax();
@@ -574,175 +569,6 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
 }
 
 
-function get_form()
-{
-  $params = array();
-
-  // Get the special parameters which don't have a corresponding column
-  $params['password0'] = get_form_var('password0', 'string', null, INPUT_POST);
-  $params['password1'] = get_form_var('password1', 'string', null, INPUT_POST);
-  $params['roles'] = get_form_var('roles', 'array');
-
-  // Clean up the roles
-  $params['roles'] = array_map('intval', $params['roles']);
-
-  // Get all the others
-  $columns = Columns::getInstance(_tbl(User::TABLE_NAME));
-
-  foreach ($columns as $column)
-  {
-    $name = $column->name;
-
-    $ignore = array('password_hash', 'timestamp', 'last_login', 'reset_key_hash', 'reset_key_expiry', 'auth_type');
-
-    if (in_array($name, $ignore))
-    {
-      continue;
-    }
-
-    // "Level" is an exception because it's a smallint and would normally
-    // be treated as a boolean
-    $var_type = ($name == 'level') ? 'int' : $column->getFormVarType();
-
-    $params[$name] = get_form_var($name, $var_type);
-
-    // Trim the strings
-    if (is_string($params[$name]))
-    {
-      $params[$name] = trim($params[$name]);
-    }
-  }
-
-  return $params;
-}
-
-
-function validate_form(array $form)
-{
-  global $auth, $level;
-
-  $errors = array();
-
-  // NAME
-  // Check that the name is not empty.
-  if ($form['name'] === '')
-  {
-    $errors['name_empty'] = 1;
-  }
-
-  if ($auth['type'] == 'db')
-  {
-    // EMAIL ADDRESS
-    // check that the email address is valid
-    if (isset($form['email']) &&
-      ($form['email'] !== '') &&
-      !validate_email_list($form['email']))
-    {
-      $errors['invalid_email'] = 1;
-    }
-
-    // LEVEL
-    // Check that we are not trying to upgrade our level.    This shouldn't be
-    // possible but someone might have spoofed the input in the edit form
-    if (isset($form['level']) && ($form['level'] > $level))
-    {
-      $message = "Attempt to edit or create a user with a higher level than the current user's.";
-      throw new \Exception($message);
-    }
-
-    // Check that the name is unique.
-    // If there's already a user with this name then it can only be this user.
-    $user = User::getByName($form['name'], $auth['type']);
-    if (isset($user) && (!isset($form['id']) || ($form['id'] != $user->id)))
-    {
-      $errors['name_not_unique'] = 1;
-      $errors['taken_name'] = $form['name'];
-    }
-
-    // PASSWORD
-    // Check that the two passwords match
-    if ($form['password0'] !== $form['password1'])
-    {
-      $errors['pwd_not_match'] = 1;
-    }
-    // Check that the password conforms to the password policy
-    // if it's a new user, or else if it's an existing user
-    // trying to change their password
-    if (!isset($form['id']) ||
-      (isset($form['password0']) && ($form['password0'] !== '')))
-    {
-      if (!auth()->validatePassword($form['password0']))
-      {
-        $errors['pwd_invalid'] = 1;
-      }
-    }
-  }
-
-  return $errors;
-}
-
-
-// Adds/updates the user specified by the $form parameters.
-// $form is assumed to have been validated already.
-function update_user(array $form)
-{
-  global $auth, $initial_user_creation;
-
-  if (isset($form['id']))
-  {
-    $user = User::getById($form['id']);
-    if (!isset($user))
-    {
-      // Probably because someone has deleted the user in the meantime
-      trigger_error("Could not find user with id " . $form['id']);
-    }
-  }
-
-  // If it's a new user, or if for some reason the getById() failed, then
-  // create a new one.
-  if (!isset($user))
-  {
-    $user = new User();
-    $user->auth_type = $auth['type'];
-  }
-
-  foreach ($form as $key => $value)
-  {
-    // Stop ordinary users trying to change fields they are not allowed to
-    if (($auth['type'] == 'db') &&
-        !$initial_user_creation &&
-        !is_user_admin() &&
-        in_array($key, $auth['db']['protected_fields']))
-    {
-      continue;
-    }
-
-    // Some of the fields get special treatment
-    switch ($key)
-    {
-      case 'level':
-        $user->level = (isset($value)) ? $value : 0;
-        break;
-      case 'name':
-        // Convert the name to lowercase for the 'db' scheme, otherwise respect the case.
-        $user->name = ($auth['type'] == 'db') ? utf8_strtolower($value) : $value;
-        break;
-      case 'password0':
-        // If the password field is blank then we are not changing it
-        if (isset($value) && ($value !== ''))
-        {
-          $user->password_hash = password_hash($value, PASSWORD_DEFAULT);
-        }
-        break;
-      default:
-        $user->{$key} = $value;
-        break;
-    }
-  }
-
-  $user->save();
-}
-
 // Set up for Ajax.   We need to know whether we're capable of dealing with Ajax
 // requests, which will only be if the browser is using DataTables.    We also need
 // to initialise the JSON data array.
@@ -919,7 +745,7 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   $form->setAttributes(array('id'     => 'form_edit_user',
                              'class'  => 'standard',
                              'method' => 'post',
-                             'action' => multisite(this_page())));
+                             'action' => multisite('edit_user_handler.php')));
 
   if (isset($id))
   {
@@ -1051,55 +877,6 @@ if (isset($action) && ($action == "sync"))
   $users->sync();
 }
 
-
-/*---------------------------------------------------------------------------*\
-|             Edit a given entry - 2nd phase: Update the database.            |
-\*---------------------------------------------------------------------------*/
-
-if (isset($action) && ($action == "update"))
-{
-  $returl = this_page();
-
-  // If you haven't got the rights to do this, then exit
-  // You are only allowed to do this if (a) you're creating the first user or
-  // (b) you are a user admin or (c) you are editing your own details
-  if (!$initial_user_creation &&
-      !is_user_admin() &&
-      (!isset($mrbs_user) || ($id != $mrbs_user->id )))
-  {
-    // It shouldn't normally be possible to get here.
-    trigger_error("Attempt made to update a user without sufficient rights.", E_USER_NOTICE);
-    location_header(this_page());
-  }
-
-  // otherwise go ahead and update the database
-  $form_params = get_form();
-  $errors = validate_form($form_params);
-  if (empty($errors))
-  {
-    update_user($form_params);
-  }
-  else
-  {
-    $query_string_parts = $errors;
-    $query_string_parts['action'] = (isset($form_params['id'])) ? 'edit' : 'add';
-    // Add the form parameters to the query string so that the user doesn't have to
-    // retype them.  (We could use session variables, but we can't assume the use of
-    // sessions.)
-    foreach ($form_params as $key => $value)
-    {
-      if (!in_array($key, array('password0', 'password1')))
-      {
-        $query_string_parts[$key] = $value;
-      }
-    }
-  }
-  if (!empty($query_string_parts))
-  {
-    $returl .= '?' . http_build_query($query_string_parts, '', '&');
-  }
-  location_header($returl);
-}
 
 /*---------------------------------------------------------------------------*\
 |                                Delete a user                                |
