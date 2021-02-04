@@ -216,7 +216,12 @@ if (isset($delete_button))
     // Even if you're a user admin you can't delete someone at a higher level than you
     if ($mrbs_user->level >= $user->level)
     {
-      $user->delete();
+      // And if this is the 'db' scheme then you can't delete the last admin, to stop you
+      // getting locked out of the system.
+      if (($auth['type'] != 'db') || ($user->level < $max_level) || (Users::getNAdmins() > 1))
+      {
+        $user->delete();
+      }
     }
   }
 }
