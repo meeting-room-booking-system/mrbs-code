@@ -586,10 +586,9 @@ $users = new Users();
 |                         Authenticate the current user                         |
 \*---------------------------------------------------------------------------*/
 
-$initial_user_creation = false;
-
 if (($auth['type'] != 'db') || (count($users) > 0))
 {
+  $initial_user_creation = false;
   $mrbs_user = session()->getCurrentUser();
   $level = (isset($mrbs_user)) ? $mrbs_user->level : 0;
   // Check the user is authorised for this page
