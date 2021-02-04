@@ -13,6 +13,7 @@ checkAuthorised(this_page());
 
 // Get the non-standard form variables
 $id = get_form_var('id', 'int');
+$level = get_form_var('level', 'int');
 $roles = get_form_var('roles', 'array');
 
 $user = User::getById($id);
@@ -23,6 +24,7 @@ if (!isset($user))
   $user = new User();
 }
 
+$user->level = $level;
 $user->roles = $roles;
 
 echo $user->effectivePermissionsHTML();

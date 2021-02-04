@@ -50,7 +50,7 @@ $(document).on('page_ready', function() {
   ]
   makeDataTable('#users_table', tableOptions, {leftColumns: 1});
 
-  $('[name="roles[]"').on('change', function() {
+  $('[name="roles[]"], [name="level"]').on('change', function() {
       var data = {};
       var roles = [];
       var table = $('#effective_permissions').find('table');
@@ -62,6 +62,7 @@ $(document).on('page_ready', function() {
         });
       data.csrf_token = getCSRFToken();
       data.id = table.data('id');
+      data.level = $('[name="level"]').val();
       data.roles = roles;
       table.addClass('fetching');
       $.post('ajax/effective_permissions.php', data, function(result) {
