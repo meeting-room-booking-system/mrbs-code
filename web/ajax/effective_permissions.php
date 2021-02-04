@@ -16,6 +16,13 @@ $id = get_form_var('id', 'int');
 $roles = get_form_var('roles', 'array');
 
 $user = User::getById($id);
+
+// It's possible that we're adding a new user
+if (!isset($user))
+{
+  $user = new User();
+}
+
 $user->roles = $roles;
 
 echo $user->effectivePermissionsHTML();
