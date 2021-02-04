@@ -325,17 +325,11 @@ abstract class Table
 
   public static function deleteById($id)
   {
-    // Obtain a lock (see also save)
-    db()->mutex_lock(_tbl(static::TABLE_NAME));
-
     // Can't use LIMIT with DELETE in PostgreSQL
     $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
                   WHERE id=:id";
     $sql_params = array(':id' => $id);
     db()->command($sql, $sql_params);
-
-    // Release the lock
-    db()->mutex_unlock(_tbl(static::TABLE_NAME));
   }
 
 
