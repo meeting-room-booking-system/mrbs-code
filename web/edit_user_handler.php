@@ -133,7 +133,7 @@ function validate_form_data(User &$user)
   {
     $user->level = 0;
   }
-  
+
   if (!$initial_user_creation)
   {
     $mrbs_user = session()->getCurrentUser();
@@ -177,6 +177,7 @@ function validate_form_data(User &$user)
 Form::checkToken();
 
 $id = get_form_var('id', 'int');
+$delete_button = get_form_var('delete_button', 'string');
 $update_button = get_form_var('update_button', 'string');
 
 $initial_user_creation = ($auth['type'] == 'db') && (count($users = new Users) === 0);
@@ -189,7 +190,7 @@ if (!(isset($update_button) && $initial_user_creation))
   checkAuthorised(this_page());
 }
 
-// Lock the table while we update the user
+// Lock the table while we alter it
 if (!db()->mutex_lock(_tbl(User::TABLE_NAME)))
 {
   fatal_error(get_vocab('failed_to_acquire'));
@@ -206,41 +207,59 @@ if (isset($id))
   }
 }
 
-// If it's a new user, or if for some reason the getById() failed, then
-// create a new one.
-if (!isset($user))
+// DELETE
+if (isset($delete_button))
 {
-  $user = new User();
-}
-
-// Get the form data
-get_form_data($user);
-
-// Validate the data
-$errors = validate_form_data($user);
-
-if (empty($errors))
-{
-  $user->save();
-}
-else
-{
-  $query_string_parts = $errors;
-  $query_string_parts['action'] = (isset($user->id)) ? 'edit' : 'add';
-  // Add the form parameters to the query string so that the user doesn't have to
-  // retype them.  (We could use session variables, but we can't assume the use of
-  // sessions.)
-  foreach ($_REQUEST as $key => $value)
+  if (isset($user) && is_user_admin())
   {
-    if (!in_array($key, array('password0', 'password1')) && isset($user->$key))
+    $mrbs_user = session()->getCurrentUser();
+    // Even if you're a user admin you can't delete someone at a higher level than you
+    if ($mrbs_user->level >= $user->level)
     {
-      if (is_bool($user->$key))
+      $user->delete();
+    }
+  }
+}
+
+// UPDATE
+elseif (isset($update_button))
+{
+  // If it's a new user, or if for some reason the getById() failed, then
+  // create a new one.
+  if (!isset($user))
+  {
+    $user = new User();
+  }
+
+  // Get the form data
+  get_form_data($user);
+
+  // Validate the data
+  $errors = validate_form_data($user);
+
+  if (empty($errors))
+  {
+    $user->save();
+  }
+  else
+    {
+    $query_string_parts = $errors;
+    $query_string_parts['action'] = (isset($user->id)) ? 'edit' : 'add';
+    // Add the form parameters to the query string so that the user doesn't have to
+    // retype them.  (We could use session variables, but we can't assume the use of
+    // sessions.)
+    foreach ($_REQUEST as $key => $value)
+    {
+      if (!in_array($key, array('password0', 'password1')) && isset($user->$key))
       {
-        $query_string_parts[$key] = ($user->$key) ? 1 : 0;
-      }
-      else
-      {
-        $query_string_parts[$key] = $user->$key;
+        if (is_bool($user->$key))
+        {
+          $query_string_parts[$key] = ($user->$key) ? 1 : 0;
+        }
+        else
+        {
+          $query_string_parts[$key] = $user->$key;
+        }
       }
     }
   }

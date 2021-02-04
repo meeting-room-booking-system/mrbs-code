@@ -54,16 +54,11 @@ $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 $back_button = get_form_var('back_button', 'string');
-$delete_button = get_form_var('delete_button', 'string');
 $edit_button = get_form_var('edit_button', 'string');
 
 if (isset($back_button))
 {
   unset($action);
-}
-elseif (isset($delete_button))
-{
-  $action = 'delete';
 }
 elseif (isset($edit_button))
 {
@@ -591,12 +586,6 @@ $users = new Users();
 |                         Authenticate the current user                         |
 \*---------------------------------------------------------------------------*/
 
-// Check the CSRF token if we're going to be altering the database
-if (isset($action) && in_array($action, array('delete', 'update')))
-{
-  Form::checkToken();
-}
-
 $initial_user_creation = false;
 
 if (($auth['type'] != 'db') || (count($users) > 0))
@@ -882,30 +871,6 @@ if (isset($action) && ($action == "sync"))
   $users->sync();
 }
 
-
-/*---------------------------------------------------------------------------*\
-|                                Delete a user                                |
-\*---------------------------------------------------------------------------*/
-
-if (isset($action) && ($action == "delete"))
-{
-  $target_user = User::getById($id);
-
-  if (!isset($target_user))
-  {
-    fatal_error("Fatal error while deleting a user");
-  }
-  // You can't delete a user if you're not some kind of admin, and then you can't
-  // delete someone higher than you
-  if (!is_user_admin() || (isset($target_user->level) && ($level < $target_user->level)))
-  {
-    showAccessDenied();
-    exit();
-  }
-
-  $target_user->delete();
-  // Success. Do not display a message. Simply fall through into the list display.
-}
 
 /*---------------------------------------------------------------------------*\
 |                          Display the list of users                          |
