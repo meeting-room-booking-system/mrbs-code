@@ -657,6 +657,9 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
       $value = get_form_var($field['name'], $type);
       $user->{$field['name']} = (isset($value)) ? $value : '';
     }
+    // Add in the roles
+    $user->roles = get_form_var('roles', 'array');
+    // TODO: rename the name column so that we don't have to do this
     $user->username = $user->name;
   }
 
