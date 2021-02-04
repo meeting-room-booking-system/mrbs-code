@@ -129,39 +129,42 @@ function validate_form_data(User &$user)
   }
 
   // AUTHORISATION CHECKS
-  $mrbs_user = session()->getCurrentUser();
-  if (!$initial_user_creation && !isset($mrbs_user))
-  {
-    throw new \Exception("Attempt to edit a user by an un-logged in user");
-  }
-
   if (!isset($user->level))
   {
     $user->level = 0;
   }
-
-  // Check that we are not trying to upgrade our level.    This shouldn't be
-  // possible but someone might have spoofed the input in the edit form
-  if ($user->level > $mrbs_user->level)
+  
+  if (!$initial_user_creation)
   {
-    $message = "Attempt to edit or create a user with a higher level than the current user's.";
-    throw new \Exception($message);
-  }
-
-  if (!is_user_admin())
-  {
-    if (!$initial_user_creation && !isset($user->id))
+    $mrbs_user = session()->getCurrentUser();
+    if (!isset($mrbs_user))
     {
-      $message = "Attempt by a non-admin to create a new user";
+      throw new \Exception("Attempt to edit a user by an un-logged in user");
+    }
+
+    // Check that we are not trying to upgrade our level.    This shouldn't be
+    // possible but someone might have spoofed the input in the edit form
+    if ($user->level > $mrbs_user->level)
+    {
+      $message = "Attempt to edit or create a user with a higher level than the current user's.";
       throw new \Exception($message);
     }
-    else
+
+    if (!is_user_admin())
     {
-      $this_user = User::getByName($mrbs_user->username, $auth['type']);
-      if ($this_user->id !== $user->id)
+      if (!isset($user->id))
       {
-        $message = "Attempt by a non-admin to edit another user";
+        $message = "Attempt by a non-admin to create a new user";
         throw new \Exception($message);
+      }
+      else
+      {
+        $this_user = User::getByName($mrbs_user->username, $auth['type']);
+        if ($this_user->id !== $user->id)
+        {
+          $message = "Attempt by a non-admin to edit another user";
+          throw new \Exception($message);
+        }
       }
     }
   }
