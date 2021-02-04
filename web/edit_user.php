@@ -642,7 +642,16 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         continue;
       }
       $type = get_form_var_type($field);
-      $value = get_form_var($field['name'], $type);
+      // Level's a special case that needs a default
+      if ($field['name'] == 'level')
+      {
+        $default = ($initial_user_creation) ? $max_level : 1;
+      }
+      else
+      {
+        $default = null;
+      }
+      $value = get_form_var($field['name'], $type, $default);
       $user->{$field['name']} = (isset($value)) ? $value : '';
     }
     // Add in the roles
@@ -780,12 +789,6 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
         break;
 
       case 'level':
-        if ($action == 'add')
-        {
-          // If we're creating a new user and it's the very first user, then they
-          // should have maximum rights.  Otherwise make them an ordinary user.
-          $params['value'] = ($initial_user_creation) ? $max_level : 1;
-        }
         // Work out whether the level select input should be disabled (NB you can't make a <select> readonly)
         // We don't want the user to be able to change the level if (a) it's the first user being created or
         // (b) it's the last admin left or (c) they don't have admin rights
