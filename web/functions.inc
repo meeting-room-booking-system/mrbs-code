@@ -1699,22 +1699,10 @@ function period_date_string($t, $area_id, $mod_time=0)
 {
   global $strftime_format;
 
-  static $periods = array();
-
-  if (!isset($periods[$area_id]))
-  {
-    $periods[$area_id] = Area::getById($area_id)->periods;
-  }
-
-  $time = getdate($t);
-  $p = $time['minutes'] + $mod_time;
-  // Make sure the period is valid
-  $p = max($p, 0);
-  $p = min($p, count($periods[$area_id]) - 1);
-
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return $periods[$area_id][$p] . utf8_strftime(', ' . $strftime_format['date'], $t);
+  return period_time_string($t, $area_id, $mod_time) .
+         utf8_strftime(', ' . $strftime_format['date'], $t);
 }
 
 
