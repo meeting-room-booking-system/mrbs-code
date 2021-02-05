@@ -52,7 +52,12 @@ abstract class Location extends Table
     assert(is_null($user) || ($user instanceof User),
            '$user must be null or of class ' . __NAMESPACE__ . '\User');
 
-    if (isset($user))
+    if (!isset($user) || empty($user->level))
+    {
+      // If there's no logged in user or the user has level 0, use the default rules
+      $rules = array($this->getDefaultRule($user));
+    }
+    else
     {
       // Admins can do anything
       if ($user->isAdmin())
@@ -60,11 +65,6 @@ abstract class Location extends Table
         return true;
       }
       $rules = $user->getRules($this);
-    }
-    else
-    {
-      // If there's no logged in user, use the default rules
-      $rules = array($this->getDefaultRule($user));
     }
 
     return LocationRule::can($rules, $operation);
@@ -95,7 +95,7 @@ abstract class Location extends Table
 
     $result->state = $result::GRANTED;
 
-    if (!isset($user))
+    if (!isset($user) || empty($user->level))
     {
       $result->permission = $result::READ;
     }
