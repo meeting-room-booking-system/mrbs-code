@@ -1331,11 +1331,11 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
 {
   $result = array();
 
-  $period_names = get_period_names();
+  $area = Area::getById($area_id);
 
   if ($enable_periods)
   {
-    $periods_per_day = count($period_names[$area_id]);
+    $periods_per_day = count($area->periods);
     $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
