@@ -231,7 +231,7 @@ function display_entry_row(array $row)
   }
   else
   {
-    list(,$link_str) = period_date_string($row['start_time'], $row['area_id']);
+    $link_str = period_date_string($row['start_time'], $row['area_id']);
   }
 
   echo htmlspecialchars($link_str) . "</a></td>";

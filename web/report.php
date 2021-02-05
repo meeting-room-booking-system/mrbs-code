@@ -856,7 +856,7 @@ function report_row(&$rows, $data)
         $mod_time = ($field == 'start_time') ? 0 : -1;
         if ($data['enable_periods'])
         {
-          list( , $date) =  period_date_string($value, $data['area_id'], $mod_time);
+          $date = period_date_string($value, $data['area_id'], $mod_time);
         }
         else
         {
