@@ -1710,20 +1710,17 @@ function period_date_string($t, $area_id, $mod_time=0)
 
 function period_time_string($t, $area_id, $mod_time=0)
 {
-  $period_names = get_period_names();
+  $area = Area::getById($area_id);
 
   $time = getdate($t);
-  $p_num = $time["minutes"] + $mod_time;
-  if ( $p_num < 0 )
-  {
-    $p_num = 0;
-  }
-  if ( $p_num >= count($period_names[$area_id]) - 1 )
-  {
-    $p_num = count($period_names[$area_id]) - 1;
-  }
-  return $period_names[$area_id][$p_num];
+  $p = $time['minutes'] + $mod_time;
+  // Make sure the period is valid
+  $p = max($p, 0);
+  $p = min($p, count($area->periods) - 1);
+
+  return $area->periods[$p];
 }
+
 
 function time_date_string($t)
 {
