@@ -1331,11 +1331,16 @@ function get_duration($start_time, $end_time, $enable_periods, $area_id, $transl
 {
   $result = array();
 
-  $area = Area::getById($area_id);
+  static $periods = array();
+
+  if (!isset($periods[$area_id]))
+  {
+    $periods[$area_id] = Area::getById($area_id)->periods;
+  }
 
   if ($enable_periods)
   {
-    $periods_per_day = count($area->periods);
+    $periods_per_day = count($periods[$area_id]);
     $n_periods = get_period_interval($start_time, $end_time);  // this handles DST
     if (($n_periods % $periods_per_day) == 0)
     {
@@ -1694,31 +1699,41 @@ function period_date_string($t, $area_id, $mod_time=0)
 {
   global $strftime_format;
 
-  $area = Area::getById($area_id);
+  static $periods = array();
+
+  if (!isset($periods[$area_id]))
+  {
+    $periods[$area_id] = Area::getById($area_id)->periods;
+  }
 
   $time = getdate($t);
   $p = $time['minutes'] + $mod_time;
   // Make sure the period is valid
   $p = max($p, 0);
-  $p = min($p, count($area->periods) - 1);
+  $p = min($p, count($periods[$area_id]) - 1);
 
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return array($p, $area->periods[$p] . utf8_strftime(', ' . $strftime_format['date'], $t));
+  return array($p, $periods[$area_id][$p] . utf8_strftime(', ' . $strftime_format['date'], $t));
 }
 
 
 function period_time_string($t, $area_id, $mod_time=0)
 {
-  $area = Area::getById($area_id);
+  static $periods = array();
+
+  if (!isset($periods[$area_id]))
+  {
+    $periods[$area_id] = Area::getById($area_id)->periods;
+  }
 
   $time = getdate($t);
   $p = $time['minutes'] + $mod_time;
   // Make sure the period is valid
   $p = max($p, 0);
-  $p = min($p, count($area->periods) - 1);
+  $p = min($p, count($periods[$area_id]) - 1);
 
-  return $area->periods[$p];
+  return $periods[$area_id][$p];
 }
 
 
