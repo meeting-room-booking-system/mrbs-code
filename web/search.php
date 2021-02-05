@@ -94,17 +94,9 @@ function output_row($row, $returl)
   $query = http_build_query($vars, '', '&');
 
   $link = '<a href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
-
-  if(empty($row['enable_periods']))
-  {
-    $link_str = time_date_string($row['start_time']);
-  }
-  else
-  {
-    $link_str = period_date_string($row['start_time'], $row['area_id']);
-  }
+  $link_str = date_string($row['enable_periods'], $row['start_time'], $row['area_id']);
   $link .= htmlspecialchars($link_str) ."</a>";
-  //    add a span with the numeric start time in the title for sorting
+  // add a span with the numeric start time in the title for sorting
   $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . $link;
   // description
   $values[] = htmlspecialchars($row['description']);

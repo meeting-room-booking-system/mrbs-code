@@ -225,15 +225,7 @@ function display_entry_row(array $row)
 
   echo '<a href="index.php?' .htmlspecialchars($query) . '">';
 
-  if(empty($row['enable_periods']))
-  {
-    $link_str = time_date_string($row['start_time']);
-  }
-  else
-  {
-    $link_str = period_date_string($row['start_time'], $row['area_id']);
-  }
-
+  $link_str = date_string($row['enable_periods'], $row['start_time'], $row['area_id']);
   echo htmlspecialchars($link_str) . "</a></td>";
 
   // action buttons

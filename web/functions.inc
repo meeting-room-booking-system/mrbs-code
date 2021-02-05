@@ -1694,18 +1694,6 @@ function hour_min($s)
   return $result;
 }
 
-
-function period_date_string($t, $area_id, $mod_time=0)
-{
-  global $strftime_format;
-
-  // The separator is a ',' as a '-' leads to an ambiguous
-  // display in report.php when showing end times.
-  return period_time_string($t, $area_id, $mod_time) .
-         utf8_strftime(', ' . $strftime_format['date'], $t);
-}
-
-
 function period_time_string($t, $area_id, $mod_time=0)
 {
   static $periods = array();
@@ -1725,6 +1713,17 @@ function period_time_string($t, $area_id, $mod_time=0)
 }
 
 
+function period_date_string($t, $area_id, $mod_time=0)
+{
+  global $strftime_format;
+
+  // The separator is a ',' as a '-' leads to an ambiguous
+  // display in report.php when showing end times.
+  return period_time_string($t, $area_id, $mod_time) .
+         utf8_strftime(', ' . $strftime_format['date'], $t);
+}
+
+
 function time_date_string($t)
 {
   global $twentyfourhour_format, $strftime_format;
@@ -1738,6 +1737,13 @@ function time_date_string($t)
     return utf8_strftime($strftime_format['datetime12'], $t);
   }
 }
+
+
+function date_string($use_periods, $t, $area_id, $mod_time=0)
+{
+  return ($use_periods) ? period_date_string($t, $area_id, $mod_time=0) : time_date_string($t);
+}
+
 
 // version of the standard PHP function nl2br() that takes account of the fact
 // that the optional second parameter is only available from PHP 5.3.0 onwards.
