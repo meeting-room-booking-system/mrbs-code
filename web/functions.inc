@@ -8,6 +8,60 @@ use PHPMailer\PHPMailer\PHPMailer;
 require_once "mrbs_sql.inc";
 
 
+// Emulates the PHP 8 function str_contains()
+if (!function_exists('str_contains'))
+{
+  function str_contains($haystack, $needle)
+  {
+    if (!isset($needle) || ($needle === ''))
+    {
+      // This is the way the PHP function behaves
+      return true;
+    }
+    else
+    {
+      return (utf8_strpos($haystack, $needle) !== false);
+    }
+  }
+}
+
+
+// Emulates the PHP 8 function str_starts_with()
+if (!function_exists('str_starts_with'))
+{
+  function str_starts_with($haystack, $needle)
+  {
+    if (!isset($needle) || ($needle === ''))
+    {
+      // This is the way the PHP function behaves
+      return true;
+    }
+    else
+    {
+      return (strpos($haystack, $needle) === 0);
+    }
+  }
+}
+
+
+// Emulates the PHP 8 function str_ends_with()
+if (!function_exists('str_ends_with'))
+{
+  function str_ends_with($haystack, $needle)
+  {
+    if (!isset($needle) || ($needle === ''))
+    {
+      // This is the way the PHP function behaves
+      return true;
+    }
+    else
+    {
+      return (strpos($haystack, $needle) === strlen($haystack) - strlen($needle));
+    }
+  }
+}
+
+
 // Constrain an integer to fit a certain type.  Useful for making sure
 // that integers will fit within the range for a database type.
 // Only 4 byte unsigned integers supported at the moment.
