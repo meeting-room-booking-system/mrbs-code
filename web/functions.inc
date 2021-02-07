@@ -20,7 +20,9 @@ if (!function_exists('str_contains'))
     }
     else
     {
-      return (utf8_strpos($haystack, $needle) !== false);
+      // This works with multibyte characters because
+      // we are not worried about the actual position.
+      return (strpos($haystack, $needle) !== false);
     }
   }
 }
@@ -38,6 +40,8 @@ if (!function_exists('str_starts_with'))
     }
     else
     {
+      // This works with multibyte characters because
+      // we are looking for position zero.
       return (strpos($haystack, $needle) === 0);
     }
   }
@@ -56,6 +60,8 @@ if (!function_exists('str_ends_with'))
     }
     else
     {
+      // This works with multibyte characters because strpos() and strlen()
+      // will either be both overloaded with the mb_ versions or both not.
       return (strpos($haystack, $needle) === strlen($haystack) - strlen($needle));
     }
   }
