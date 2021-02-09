@@ -65,18 +65,29 @@ elseif (isset($button_save) && isset($action))
   switch ($action)
   {
     case 'add':
-      $role = new Role($name);
-      if ($role->exists())
+      if (!isset($name) || ($name === ''))
       {
-        $query_string_args = array(
-            'action' => $action,
-            'error'  => 'role_exists',
-            'name'   => $name
-          );
+        $error = 'empty_name';
       }
       else
       {
-        $role->save();
+        $role = new Role($name);
+        if ($role->exists())
+        {
+          $error = 'role_exists';
+        }
+        else
+        {
+          $role->save();
+        }
+      }
+      if (isset($error))
+      {
+        $query_string_args = array(
+            'action' => $action,
+            'error'  => $error,
+            'name'   => $name
+          );
       }
       break;
 
