@@ -12,13 +12,20 @@ Form::checkToken();
 checkAuthorised(this_page());
 
 $action = get_form_var('action', 'string');
-$name = get_form_var('name', 'string');
 $button_save = get_form_var('button_save', 'string');
 
 if (isset($button_save))
 {
+  // Lock the table while we update it
+  if (!db()->mutex_lock(_tbl(Group::TABLE_NAME)))
+  {
+    fatal_error(get_vocab('failed_to_acquire'));
+  }
+
+  // Add a new group
   if (isset($action) && ($action == 'add'))
   {
+    $name = get_form_var('name', 'string');
     if (!isset($name) || ($name === ''))
     {
       $error = 'empty_name';
@@ -36,6 +43,7 @@ if (isset($button_save))
       }
     }
   }
+  // Edit an existing group
   else
   {
     $group_id = get_form_var('group_id', 'int');
@@ -49,6 +57,9 @@ if (isset($button_save))
       $group->save();
     }
   }
+
+  // Unlock the table
+  db()->mutex_unlock(_tbl(Group::TABLE_NAME));
 }
 
 $return_url = 'edit_group.php';
