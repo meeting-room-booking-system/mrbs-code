@@ -26,6 +26,31 @@ function update_rules($role_id, array $area_rules, array $room_rules)
 }
 
 
+function add_role($name)
+{
+  $error = null;
+
+  if (!isset($name) || ($name === ''))
+  {
+    $error = 'empty_name';
+  }
+  else
+  {
+    $role = new Role($name);
+    if ($role->exists())
+    {
+      $error = 'role_exists';
+    }
+    else
+    {
+      $role->save();
+    }
+  }
+
+  return $error;
+}
+
+
 // Check the CSRF token.
 Form::checkToken();
 
@@ -65,22 +90,7 @@ elseif (isset($button_save) && isset($action))
   switch ($action)
   {
     case 'add':
-      if (!isset($name) || ($name === ''))
-      {
-        $error = 'empty_name';
-      }
-      else
-      {
-        $role = new Role($name);
-        if ($role->exists())
-        {
-          $error = 'role_exists';
-        }
-        else
-        {
-          $role->save();
-        }
-      }
+      $error = add_role($name);
       if (isset($error))
       {
         $query_string_args = array(
