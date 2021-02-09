@@ -3,10 +3,64 @@ namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementP;
+use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
 use MRBS\Form\Form;
 
 require "defaultincludes.inc";
+
+
+function generate_add_group_form($error=null, $name=null)
+{
+  $form = new Form();
+  $form->addHiddenInput('action', 'add')
+    ->setAttributes(array('action' => multisite('edit_group_handler.php'),
+                          'class'  => 'standard',
+                          'method' => 'post'));
+
+  // Name field
+  $fieldset = new ElementFieldset();
+
+  if (isset($error))
+  {
+    $field = new FieldDiv();
+    $p = new ElementP();
+    $p->setText(get_vocab($error, $name))
+      ->setAttribute('class', 'error');
+    $field->addControlElement($p);
+    $fieldset->addElement($field);
+  }
+
+  $field = new FieldInputText();
+  // Set a pattern as well as required to prevent a string of whitespace
+  $field->setLabel(get_vocab('role_name'))
+        ->setControlAttributes(array('name'     => 'name',
+                                     'required' => true,
+                                     'pattern'  => REGEX_TEXT_POS));
+  if (null !== ($maxlength = maxlength('group.name')))
+  {
+    $field->setControlAttribute('maxlength', $maxlength);
+  }
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  // Submit button
+  $fieldset = new ElementFieldset();
+  $field = new FieldDiv();
+  $element = new ElementInputSubmit();
+  $element->setAttributes(array(
+      'name'  => 'button_save',
+      'value' => get_vocab('add_group'))
+  );
+  $field->addControl($element);
+  $fieldset->addElement($field);
+  $form->addElement($fieldset);
+
+  $form->render();
+}
+
 
 function generate_groups_table()
 {
@@ -110,6 +164,8 @@ $context = array(
 );
 
 $group_id = get_form_var('group_id', 'int');
+$error = get_form_var('error', 'string');
+$name = get_form_var('name', 'string');
 
 print_header($context);
 
@@ -126,6 +182,10 @@ if (isset($group))
 else
 {
   echo "<h2>" . htmlspecialchars(get_vocab('groups')) . "</h2>";
+  if ($auth['type'] == 'db')
+  {
+    generate_add_group_form($error, $name);
+  }
   generate_groups_table();
 }
 

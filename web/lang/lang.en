@@ -354,7 +354,9 @@ $vocab["copy_email_addresses"]  = "Copy email addresses";
 // Groups
 $vocab['group']              = "Group";
 $vocab['groups']             = "Groups";
-$vocab["group_heading"]      = "Group: %s";
+$vocab['add_group']          = "Add group";
+$vocab['group_heading']      = "Group: %s";
+$vocab['group_exists']       = "The group '%s' already exists.";
 
 // Roles
 $vocab['role']               = "Role";
