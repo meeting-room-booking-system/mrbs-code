@@ -103,8 +103,13 @@ function generate_groups_table()
     echo "</td>";
 
     echo "<td>";
-    $role_name_list = implode(', ', $group->role_names);
-    echo htmlspecialchars($role_name_list);
+    $links = array();
+    foreach ($group->role_names as $id => $name)
+    {
+      $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$id")) . '">' .
+                 htmlspecialchars($name) . '</a>';
+    }
+    echo implode(', ', $links);
     echo "</td>";
 
     echo "</tr>\n";
