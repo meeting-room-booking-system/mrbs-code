@@ -9,7 +9,7 @@ abstract class Attributes extends TableIterator
   abstract public function getNames();
 
 
-  // Converts an array of ids to an array of names
+  // Converts an array of ids to an array of names indexed by id
   public static function idsToNames(array $ids)
   {
     static $names;
@@ -26,7 +26,7 @@ abstract class Attributes extends TableIterator
     {
       if (isset($names[$id]))
       {
-        $result[] = $names[$id];
+        $result[$id] = $names[$id];
       }
       else
       {
@@ -34,7 +34,7 @@ abstract class Attributes extends TableIterator
       }
     }
 
-    sort($result, SORT_LOCALE_STRING | SORT_FLAG_CASE);
+    asort($result, SORT_LOCALE_STRING | SORT_FLAG_CASE);
 
     return $result;
   }
