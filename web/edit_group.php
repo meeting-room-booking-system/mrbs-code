@@ -104,10 +104,10 @@ function generate_groups_table()
 
     echo "<td>";
     $links = array();
-    foreach ($group->role_names as $id => $name)
+    foreach ($group->role_names as $role_id => $role_name)
     {
-      $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$id")) . '">' .
-                 htmlspecialchars($name) . '</a>';
+      $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$role_id")) . '">' .
+                 htmlspecialchars($role_name) . '</a>';
     }
     echo implode(', ', $links);
     echo "</td>";

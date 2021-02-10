@@ -187,8 +187,14 @@ function output_row(User $user)
 
   // And add the roles, which aren't one of the table columns either
   $role_name_list = implode(', ', $user->role_names);
+  $links = array();
+  foreach ($user->role_names as $role_id => $role_name)
+  {
+    $links[] = '<a href="' . multisite(htmlspecialchars("edit_role.php?role_id=$role_id")) . '">' .
+               htmlspecialchars($role_name) . '</a>';
+  }
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($role_name_list) . "\">" .
-    htmlspecialchars($role_name_list) . "</div>";
+              implode(', ', $links) . "</div>";
 
   if ($auth['type'] == 'db')
   {
