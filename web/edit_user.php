@@ -182,8 +182,14 @@ function output_row(User $user)
 
   // And add the groups, which aren't one of the table columns
   $group_name_list = implode(', ', $user->group_names);
+  $links = array();
+  foreach ($user->group_names as $group_id => $group_name)
+  {
+    $links[] = '<a href="' . multisite(htmlspecialchars("edit_group.php?group_id=$group_id")) . '">' .
+               htmlspecialchars($group_name) . '</a>';
+  }
   $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($group_name_list) . "\">" .
-    htmlspecialchars($group_name_list) . "</div>";
+              implode(', ', $links) . "</div>";
 
   // And add the roles, which aren't one of the table columns either
   $role_name_list = implode(', ', $user->role_names);
