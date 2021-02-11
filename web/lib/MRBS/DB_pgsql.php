@@ -243,8 +243,8 @@ class DB_pgsql extends DB
     $sql_params = array();
 
     // $table_name and $table_schema should be trusted but escape them anyway for good measure
-    $sql = "SELECT column_name, data_type, numeric_precision, numeric_scale, character_maximum_length,
-                   character_octet_length, is_nullable
+    $sql = "SELECT column_name, column_default, data_type, numeric_precision, numeric_scale,
+                   character_maximum_length, character_octet_length, is_nullable
             FROM information_schema.columns
             WHERE table_name = ?";
     $sql_params[] = $table_parts['table_name'];
@@ -261,8 +261,15 @@ class DB_pgsql extends DB
     {
       $name = $row['column_name'];
       $type = $row['data_type'];
+      $default = $row['column_default'];
       // map the type onto one of the generic natures, if a mapping exists
       $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
+      // Convert the default to be of the correct type
+      if (isset($default) && ($nature == 'integer'))
+      {
+        $default = (int) $default;
+      }
+
       // Get a length value;  one of these values should be set
       if (isset($row['numeric_precision']))
       {
@@ -291,7 +298,8 @@ class DB_pgsql extends DB
           'type' => $type,
           'nature' => $nature,
           'length' => $length,
-          'is_nullable' => $is_nullable
+          'is_nullable' => $is_nullable,
+          'default' => $default
         );
     }
 
