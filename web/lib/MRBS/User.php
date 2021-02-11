@@ -36,6 +36,35 @@ class User extends Table
   }
 
 
+  // Set the last_login time, where $time is a Unix timestamp (default now)
+  public function updateLastLogin($time=null)
+  {
+    global $auth;
+
+    if (!isset($time))
+    {
+      $time = time();
+    }
+
+    $this->last_login = $time;
+
+    // We use a special UPDATE rather than a save() because we want
+    // to preserve the timestamp
+    $sql = "UPDATE " . \MRBS\_tbl(User::TABLE_NAME) . "
+               SET last_login=:last_login, timestamp=timestamp
+             WHERE name=:name
+               AND auth_type=:auth_type";
+
+    $sql_params = array(
+        ':last_login' => $time,
+        ':name'       => $this->username,
+        ':auth_type'  => $auth['type']
+      );
+
+    \MRBS\db()->command($sql, $sql_params);
+  }
+
+
   public static function getByName($username, $auth_type)
   {
     return self::getByColumns(array(

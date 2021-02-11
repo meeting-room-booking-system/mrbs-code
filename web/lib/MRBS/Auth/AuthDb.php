@@ -36,23 +36,6 @@ class AuthDb extends Auth
     $valid_usernames = array_unique($valid_usernames);
 
     return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
-    if (count($valid_usernames) == 1)
-    {
-      $result = $valid_usernames[0];
-      // Update the database with this login, but don't change the timestamp
-      $now = time();
-      $sql = "UPDATE " . \MRBS\_tbl(User::TABLE_NAME) . "
-                 SET last_login=?, timestamp=timestamp
-               WHERE name=?
-                 AND auth_type='db'";
-      $sql_params = array($now, $result);
-      \MRBS\db()->command($sql, $sql_params);
-      return $result;
-    }
-    else
-    {
-      return false;
-    }
   }
 
 
