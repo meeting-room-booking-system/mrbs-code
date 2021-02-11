@@ -131,7 +131,7 @@ abstract class Table
       }
       if (!isset($this->data[$col->name]))
       {
-        $value = 'NULL';
+        $value = ($col->getIsNullable()) ? 'NULL' : $col->getDefault();
       }
       else
       {

@@ -259,6 +259,7 @@ class DB_mysql extends DB
     {
       $name = $row['Field'];
       $type = $row['Type'];
+      $default = $row['Default'];
       // split the type (eg 'varchar(25)') around the opening '('
       $parts = explode('(', $type);
       // map the type onto one of the generic natures, if a mapping exists
@@ -266,6 +267,11 @@ class DB_mysql extends DB
       // now work out the length
       if ($nature == 'integer')
       {
+        // Convert the default to an int (unless it's NULL)
+        if (isset($default))
+        {
+          $default = (int) $default;
+        }
         // if it's one of the ints, then look up the length in bytes
         $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
       }
@@ -295,7 +301,8 @@ class DB_mysql extends DB
           'type' => $type,
           'nature' => $nature,
           'length' => $length,
-          'is_nullable' => $is_nullable
+          'is_nullable' => $is_nullable,
+          'default' => $default
         );
     }
 

@@ -17,14 +17,40 @@ class Column
   public $table;
   public $name;
 
-  private $nature;
+  private $default;
+  private $is_nullable;
   private $length;
+  private $nature;
 
 
   public function __construct($table, $name)
   {
     $this->table = $table;
     $this->name = $name;
+  }
+
+
+  public function getDefault()
+  {
+    return $this->default;
+  }
+
+
+  public function setDefault($default)
+  {
+    $this->default = $default;
+  }
+
+
+  public function getisNullable()
+  {
+    return $this->is_nullable;
+  }
+
+
+  public function setisNullable($is_nullable)
+  {
+    $this->is_nullable = $is_nullable;
   }
 
 

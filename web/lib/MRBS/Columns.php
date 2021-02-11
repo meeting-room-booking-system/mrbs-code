@@ -82,6 +82,8 @@ class Columns implements Countable, Iterator
     $info = $this->data[$this->index];
     $column = new Column($this->table_name, $info['name']);
     $column->setLength($info['length']);
+    $column->setDefault($info['default']);
+    $column->setIsNullable($info['is_nullable']);
 
     switch ($info['nature'])
     {
