@@ -35,6 +35,7 @@ class AuthDb extends Auth
     $valid_usernames = array_merge($valid_usernames, $this->validateEmail($user, $pass));
     $valid_usernames = array_unique($valid_usernames);
 
+    return (count($valid_usernames) == 1) ? $valid_usernames[0] : false;
     if (count($valid_usernames) == 1)
     {
       $result = $valid_usernames[0];

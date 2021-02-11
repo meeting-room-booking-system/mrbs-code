@@ -43,9 +43,7 @@ class SessionPhp extends SessionWithLogin
   {
     $user = \MRBS\auth()->getUser($username);
 
-    // Update the last login time
-    $user->last_login = time();
-    $user->save();
+    $user->updateLastLogin();
 
     // As a defence against session fixation, regenerate
     // the session id and delete the old session.
