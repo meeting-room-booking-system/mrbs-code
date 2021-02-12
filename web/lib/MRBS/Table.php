@@ -93,7 +93,11 @@ abstract class Table
   }
 
 
-  // Saves to the database
+  // Saves to the database.  Note that this saves all columns, even if they
+  // are not set in the object properties (when NULL will be saved if allowed,
+  // otherwise the default column value).  You therefore need to make sure that
+  // all pre-existing properties are present to stop them from being accidentally
+  // overwritten.
   public function save()
   {
     $this->data = static::onWrite($this->data);
