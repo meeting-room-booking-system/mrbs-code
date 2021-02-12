@@ -129,9 +129,9 @@ abstract class Table
       {
         continue;
       }
-      if (!isset($this->data[$col->name]))
+      if (!isset($this->data[$col->name]) && $col->getIsNullable())
       {
-        $value = ($col->getIsNullable()) ? 'NULL' : $col->getDefault();
+        $value = 'NULL';
       }
       else
       {
@@ -141,7 +141,16 @@ abstract class Table
         // is easier with named parameters, especially when there are a lot of them.
         $named_parameter = ":p$i";
         $value = $named_parameter;
-        $sql_params[$named_parameter] = $col->sanitizeValue($this->data[$col->name]);
+        if (isset($this->data[$col->name]))
+        {
+          $sql_param = $col->sanitizeValue($this->data[$col->name]);
+        }
+        else
+        {
+          // The column is not nullable if we got here
+          $sql_param = $col->getDefault();
+        }
+        $sql_params[$named_parameter]  = $col->sanitizeValue($sql_param);
         $i++;
       }
       $assignments[] = db()->quote($col->name) . "=$value";
@@ -193,7 +202,7 @@ abstract class Table
       $columns[] = $col->name;
       $value = $table_data[$col->name];
 
-      if (is_null($value))
+      if (is_null($value) && $col->getIsNullable())
       {
         if (in_array($col->name, static::$unique_columns))
         {
@@ -210,7 +219,16 @@ abstract class Table
         // update part of the query.
         $named_parameter = ":p$i";
         $values[] = $named_parameter;
-        $sql_params[$named_parameter] = $col->sanitizeValue($value);
+        if (!is_null($value))
+        {
+          $sql_param = $col->sanitizeValue($value);
+        }
+        else
+        {
+          // The column is not nullable if we got here
+          $sql_param = $col->getDefault();
+        }
+        $sql_params[$named_parameter] = $col->sanitizeValue($sql_param);
         $i++;
       }
 
