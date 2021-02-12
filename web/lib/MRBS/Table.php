@@ -129,6 +129,7 @@ abstract class Table
       {
         continue;
       }
+      // TODO: Eliminate the almost duplicate code below in update() and upsert()
       if (!isset($this->data[$col->name]) && $col->getIsNullable())
       {
         $value = 'NULL';
@@ -202,6 +203,7 @@ abstract class Table
       $columns[] = $col->name;
       $value = $table_data[$col->name];
 
+      // TODO: Eliminate the almost duplicate code below in update() and upsert()
       if (is_null($value) && $col->getIsNullable())
       {
         if (in_array($col->name, static::$unique_columns))
