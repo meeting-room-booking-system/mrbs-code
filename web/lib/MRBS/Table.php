@@ -116,45 +116,19 @@ abstract class Table
   // the id is already known, ie we are updating an existing row.
   private function update()
   {
-    $assignments = array();
+    $columns = array();
+    $values = array();
     $sql_params = array();
-    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
-    $i = 0;
-    foreach ($cols as $col)
+    $this->getQueryComponents($columns, $values, $sql_params);
+
+    // Then go through the columns we've just found and turn them into assignments
+    // for the update part
+    $assignments = array();
+    for ($i=0; $i<count($columns); $i++)
     {
-      // We don't want to use the 'id' column because that's going to
-      // appear in the WHERE clause.  And we don't want to use the 'timestamp'
-      // column because that's assumed to auto-update.
-      if (in_array($col->name, array('id', 'timestamp')))
-      {
-        continue;
-      }
-      // TODO: Eliminate the almost duplicate code below in update() and upsert()
-      if (!isset($this->data[$col->name]) && $col->getIsNullable())
-      {
-        $value = 'NULL';
-      }
-      else
-      {
-        // Need to make sure the placeholder only uses allowed characters which are
-        // [a-zA-Z0-9_].   We can't use the column name because the column name might
-        // contain characters which are not allowed.  We could use ?, but debugging
-        // is easier with named parameters, especially when there are a lot of them.
-        $named_parameter = ":p$i";
-        $value = $named_parameter;
-        if (isset($this->data[$col->name]))
-        {
-          $sql_param = $col->sanitizeValue($this->data[$col->name]);
-        }
-        else
-        {
-          // The column is not nullable if we got here
-          $sql_param = $col->getDefault();
-        }
-        $sql_params[$named_parameter]  = $col->sanitizeValue($sql_param);
-        $i++;
-      }
-      $assignments[] = db()->quote($col->name) . "=$value";
+      $column = $columns[$i];
+      $value = $values[$i];
+      $assignments[] = db()->quote($column) . "=$value";
     }
 
     $sql_params[':id'] = $this->id;
@@ -181,60 +155,7 @@ abstract class Table
     $columns = array();
     $values = array();
     $sql_params = array();
-
-    $table_data = $this->data;
-
-    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
-
-    // First of all get the column names and values for the INSERT part
-    $i = 0;
-    foreach ($cols as $col)
-    {
-      // We are only interested in those elements of $table_data that have
-      // a corresponding column in the table - except for 'id' which is
-      // assumed to be auto-increment, and 'timestamp' which is assumed to
-      // auto-update.
-      if (in_array($col->name, array('id', 'timestamp')) ||
-          !array_key_exists($col->name, $table_data))
-      {
-        continue;
-      }
-
-      $columns[] = $col->name;
-      $value = $table_data[$col->name];
-
-      // TODO: Eliminate the almost duplicate code below in update() and upsert()
-      if (is_null($value) && $col->getIsNullable())
-      {
-        if (in_array($col->name, static::$unique_columns))
-        {
-          throw new \Exception("Unique column '$col->name' is null");
-        }
-        $values[] = 'NULL';
-      }
-      else
-      {
-        // Need to make sure the placeholder only uses allowed characters which are
-        // [a-zA-Z0-9_].   We can't use the column name because the column name might
-        // contain characters which are not allowed.   And we can't use '?' because
-        // we want to use the placeholders twice, once for the insert and once for the
-        // update part of the query.
-        $named_parameter = ":p$i";
-        $values[] = $named_parameter;
-        if (!is_null($value))
-        {
-          $sql_param = $col->sanitizeValue($value);
-        }
-        else
-        {
-          // The column is not nullable if we got here
-          $sql_param = $col->getDefault();
-        }
-        $sql_params[$named_parameter] = $col->sanitizeValue($sql_param);
-        $i++;
-      }
-
-    }
+    $this->getQueryComponents($columns, $values, $sql_params);
 
     // Then go through the columns we've just found and turn them into assignments
     // for the update part
@@ -246,6 +167,7 @@ abstract class Table
       $assignments[] = db()->quote($column) . "=$value";
     }
 
+    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
     $quoted_columns = array_map(array(db(), 'quote'), $columns);
     $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
                         (" . implode(', ', $quoted_columns) . ")
@@ -278,6 +200,59 @@ abstract class Table
       catch (PDOException $e)
       {
         $this->id = db()->insert_id(_tbl(static::TABLE_NAME), 'id');
+      }
+    }
+  }
+
+
+  private function getQueryComponents(array &$columns, array &$values, array &$sql_params)
+  {
+    $data = $this->data;
+    $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
+
+    // First of all get the column names and values for the INSERT part
+    $i = 0;
+    foreach ($cols as $col)
+    {
+      // We are only interested in those elements of $table_data that have
+      // a corresponding column in the table - except for 'id' which is
+      // assumed to be auto-increment, and 'timestamp' which is assumed to
+      // auto-update.
+      if (in_array($col->name, array('id', 'timestamp')))
+      {
+        continue;
+      }
+
+      $columns[] = $col->name;
+
+      if (!isset($data[$col->name]) && $col->getIsNullable())
+      {
+        if (in_array($col->name, static::$unique_columns))
+        {
+          throw new \Exception("Unique column '$col->name' is null");
+        }
+        $values[] = 'NULL';
+      }
+      else
+      {
+        // Need to make sure the placeholder only uses allowed characters which are
+        // [a-zA-Z0-9_].   We can't use the column name because the column name might
+        // contain characters which are not allowed.   And we can't use '?' because
+        // we may want to use the placeholders twice, once for an insert and once for an
+        // update.  Besides, debugging is easier with named parameters.
+        $named_parameter = ":p$i";
+        $values[] = $named_parameter;
+        if (isset($data[$col->name]))
+        {
+          $sql_param = $col->sanitizeValue($data[$col->name]);
+        }
+        else
+        {
+          // The column is not nullable if we got here
+          $sql_param = $col->getDefault();
+        }
+        $sql_params[$named_parameter] = $col->sanitizeValue($sql_param);
+        $i++;
       }
     }
   }
