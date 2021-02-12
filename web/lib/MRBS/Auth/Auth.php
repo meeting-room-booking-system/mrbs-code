@@ -8,7 +8,15 @@ abstract class Auth
 {
   public function getUser($username)
   {
-    $user = new User($username);
+    global $auth;
+
+    // Check the DB first.  If the user isn't there then create a new one
+    $user = User::getByName($username, $auth['type']);
+
+    if (!isset($user))
+    {
+      $user = new User($username);
+    }
 
     return $user;
   }
