@@ -289,6 +289,12 @@ $prevent_simultaneous_bookings = false;
 // Set this to true if you want to prevent bookings of a type that is invalid for a room
 $prevent_invalid_types = true;
 
+// The start of the booking day when using periods.  Because MRBS has
+// no notion of when periods actually occur they are assumed to start
+// at the time below when we are enforcing book ahead policies.
+// This should be a in the format hh:mm using the 24 hour clock.
+$periods_booking_day_starts = '00:00';
+
 /******************
  * Display settings
  ******************/

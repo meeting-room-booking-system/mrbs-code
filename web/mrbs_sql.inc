@@ -334,15 +334,19 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
 
 // Adjusts a book ahead time when using periods.  Because we don't
 // know when periods are in the day we adjust the book ahead time
-// down to the nearest whole day.
+// down to the nearest whole day.  Then we adjust again to account
+// for the booking day start.
 function adjust_ahead_seconds($seconds)
 {
-  global $enable_periods;
+  global $enable_periods, $periods_booking_day_starts;
 
   if ($enable_periods)
   {
     // Round down to the nearest whole day
     $seconds -=  $seconds % SECONDS_PER_DAY;
+    // And now add on the difference between the internal start of periods (12:00)
+    // and the booking day start for periods
+    $seconds += strtotime('12:00') - strtotime($periods_booking_day_starts);
   }
 
   return $seconds;
@@ -386,11 +390,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   // violations, but they are for information only and are classed as 'notices'
   $violation_status = (is_book_admin($booking['room_id'])) ? 'notices' : 'errors';
 
-
-  // Because MRBS has no notion of where we are in the day if we're using periods,
-  // we'll just assume that we're at the beginning of the day.
-  $now = ($enable_periods) ? mktime(0, 0, 0) : time();
-  // We'll also round $min_*_ahead_secs and $max_*_ahead_secs down to the nearest whole day
+  $now = time();
 
   // Check deletion policies
   if ($delete)
@@ -482,6 +482,9 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($max_create_ahead_enabled)
     {
       $max_create_ahead = adjust_ahead_seconds($max_create_ahead_secs);
+      //var_dump($booking['end_time']);
+      //var_dump($booking['end_time'] - $now);
+      //var_dump($max_create_ahead);
       if (($booking['end_time'] - $now) > $max_create_ahead)
       {
         toTimeString($max_create_ahead, $units);
