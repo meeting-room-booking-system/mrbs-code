@@ -380,6 +380,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
+  global $periods_booking_opens;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -390,11 +391,13 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   // violations, but they are for information only and are classed as 'notices'
   $violation_status = (is_book_admin($booking['room_id'])) ? 'notices' : 'errors';
 
-
-  // Because MRBS has no notion of where we are in the day if we're using periods,
-  // we'll just assume that we're at the beginning of the day.
-  $now = ($enable_periods) ? mktime(0, 0, 0) : time();
-  // We'll also round $min_*_ahead_secs and $max_*_ahead_secs down to the nearest whole day
+  $now = time();
+  if ($enable_periods)
+  {
+    // And now add on the difference between the internal start of periods (12:00)
+    // and the booking day start for periods
+    $now += strtotime('12:00') - strtotime($periods_booking_opens);
+  }
 
   // Check deletion policies
   if ($delete)
