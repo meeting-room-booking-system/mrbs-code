@@ -332,6 +332,23 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
 }
 
 
+// Adjusts a book ahead time when using periods.  Because we don't
+// know when periods are in the day we adjust the book ahead time
+// down to the nearest whole day.
+function adjust_ahead_seconds($seconds)
+{
+  global $enable_periods;
+
+  if ($enable_periods)
+  {
+    // Round down to the nearest whole day
+    $seconds -=  $seconds % SECONDS_PER_DAY;
+  }
+
+  return $seconds;
+}
+
+
 /** mrbsCheckPolicy()
  *
  * Check to see if a proposed booking conforms to any booking policies in force.
@@ -385,11 +402,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
 
     if ($min_delete_ahead_enabled)
     {
-      if ($enable_periods)
-      {
-        $min_delete_ahead_secs -=  $min_delete_ahead_secs % SECONDS_PER_DAY;
-      }
-      $min_delete_ahead = $min_delete_ahead_secs;
+      $min_delete_ahead = adjust_ahead_seconds($min_delete_ahead_secs);
       if (($booking['start_time'] - $now) < $min_delete_ahead)
       {
         toTimeString($min_delete_ahead, $units);
@@ -399,11 +412,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
 
     if ($max_delete_ahead_enabled)
     {
-      if ($enable_periods)
-      {
-        $max_delete_ahead_secs -=  $max_delete_ahead_secs % SECONDS_PER_DAY;
-      }
-      $max_delete_ahead = $max_delete_ahead_secs;
+      $max_delete_ahead = adjust_ahead_seconds($max_delete_ahead_secs);
       if (($booking['end_time'] - $now) > $max_delete_ahead)
       {
         toTimeString($max_delete_ahead, $units);
@@ -459,11 +468,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
 
     if ($min_create_ahead_enabled)
     {
-      if ($enable_periods)
-      {
-        $min_create_ahead_secs -=  $min_create_ahead_secs % SECONDS_PER_DAY;
-      }
-      $min_create_ahead = $min_create_ahead_secs;
+      $min_create_ahead = adjust_ahead_seconds($min_create_ahead_secs);
       if (($booking['start_time'] - $now) < $min_create_ahead)
       {
         toTimeString($min_create_ahead, $units);
@@ -476,11 +481,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     // and then using a very long duration.
     if ($max_create_ahead_enabled)
     {
-      if ($enable_periods)
-      {
-        $max_create_ahead_secs -=  $max_create_ahead_secs % SECONDS_PER_DAY;
-      }
-      $max_create_ahead = $max_create_ahead_secs;
+      $max_create_ahead = adjust_ahead_seconds($max_create_ahead_secs);
       if (($booking['end_time'] - $now) > $max_create_ahead)
       {
         toTimeString($max_create_ahead, $units);
