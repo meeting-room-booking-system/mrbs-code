@@ -1519,7 +1519,8 @@ function clean_area_row($row)
       // just stick with the default setting from the config file.
       // (don't use the database setting if $force_resolution is TRUE
       // and we're looking at the resolution field)
-      if (!isset($row[$key]) || (($key == 'resolution') && !empty($force_resolution)))
+      if (!isset($row[$key]) ||
+          (($key == 'resolution') && !empty($force_resolution) && empty($row['enable_periods'])) )
       {
         $row[$key] = $area_defaults[$key];
       }
