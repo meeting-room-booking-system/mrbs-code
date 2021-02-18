@@ -334,19 +334,15 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
 
 // Adjusts a book ahead time when using periods.  Because we don't
 // know when periods are in the day we adjust the book ahead time
-// down to the nearest whole day.  Then we adjust again to account
-// for the booking day start.
+// down to the nearest whole day.
 function adjust_ahead_seconds($seconds)
 {
-  global $enable_periods, $periods_booking_day_starts;
+  global $enable_periods;
 
   if ($enable_periods)
   {
     // Round down to the nearest whole day
     $seconds -=  $seconds % SECONDS_PER_DAY;
-    // And now add on the difference between the internal start of periods (12:00)
-    // and the booking day start for periods
-    $seconds += strtotime('12:00') - strtotime($periods_booking_day_starts);
   }
 
   return $seconds;
@@ -380,6 +376,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
+  global $periods_booking_opens;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -391,6 +388,12 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   $violation_status = (is_book_admin($booking['room_id'])) ? 'notices' : 'errors';
 
   $now = time();
+  if ($enable_periods)
+  {
+    // And now add on the difference between the internal start of periods (12:00)
+    // and the booking day start for periods
+    $now += strtotime('12:00') - strtotime($periods_booking_opens);
+  }
 
   // Check deletion policies
   if ($delete)

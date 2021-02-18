@@ -292,8 +292,9 @@ $prevent_invalid_types = true;
 // The start of the booking day when using periods.  Because MRBS has
 // no notion of when periods actually occur they are assumed to start
 // at the time below when we are enforcing book ahead policies.
+// The setting defines the time of day when bookings open.
 // This should be a in the format hh:mm using the 24 hour clock.
-$periods_booking_day_starts = '00:00';
+$periods_booking_opens = '00:00';
 
 /******************
  * Display settings
