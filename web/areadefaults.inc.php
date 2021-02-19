@@ -233,6 +233,13 @@ $max_secs_per_interval_area['year'] = 60*60*100;   // max 100 hours per year in 
 $max_secs_per_interval_area_enabled['future'] = false;
 $max_secs_per_interval_area['future'] = 60*60*100; // max 100 hours in the future in total
 
+// The start of the booking day when using periods.  Because MRBS has
+// no notion of when periods actually occur they are assumed to start
+// at the time below when we are enforcing book ahead policies.
+// The setting defines the time of day when bookings open.
+// This should be a in the format hh:mm using the 24 hour clock.
+$periods_booking_opens = '00:00';
+
 
 /******************
  * Display settings
