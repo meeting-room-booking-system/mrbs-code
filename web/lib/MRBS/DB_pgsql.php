@@ -233,6 +233,7 @@ class DB_pgsql extends DB
         'real'                      => 'real',
         'smallint'                  => 'integer',
         'text'                      => 'character',
+        'time without time zone'    => 'time',
         'timestamp with time zone'  => 'timestamp'
       );
 

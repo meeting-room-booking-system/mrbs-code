@@ -76,6 +76,7 @@ CREATE TABLE mrbs_area
   confirmed_default           smallint,
   times_along_top             smallint DEFAULT 0 NOT NULL,
   default_type                char DEFAULT 'E' NOT NULL,
+  periods_booking_opens       time DEFAULT '00:00:00' NOT NULL,
 
   CONSTRAINT mrbs_uq_area_name UNIQUE (area_name)
 );
@@ -358,6 +359,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_user_timestamp BEFORE UPDATE ON mrbs_user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ('db_version', '83');
+  VALUES ('db_version', '84');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ('local_db_version', '1');

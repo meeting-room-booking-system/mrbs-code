@@ -71,6 +71,7 @@ CREATE TABLE mrbs_area
   confirmed_default           tinyint(1),
   times_along_top             tinyint(1) NOT NULL DEFAULT 0,
   default_type                char DEFAULT 'E' NOT NULL,
+  periods_booking_opens       time DEFAULT '00:00:00' NOT NULL,
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_area_name (area_name)
@@ -366,6 +367,6 @@ CREATE TABLE mrbs_role_room
 
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '83');
+  VALUES ( 'db_version', '84');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
