@@ -467,7 +467,8 @@ $area_defaults_keys = array('timezone',
                             'confirmation_enabled',
                             'confirmed_default',
                             'times_along_top',
-                            'default_type');
+                            'default_type',
+                            'periods_booking_opens');
 
 $area_defaults = array();
 

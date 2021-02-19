@@ -25,14 +25,14 @@ function toggleMode(speed)
 
   if ($('input:radio[name=area_enable_periods]:checked').val() === '0')
   {
-    $('#book_ahead_periods_note').hide(speed);
+    $('#periods_policies').hide(speed);
     $('#time_settings').show(speed);
     $('#period_settings').hide(speed);
     $('input[name="area_periods[]"]').prop('required', false);
   }
   else
   {
-    $('#book_ahead_periods_note').show(speed);
+    $('#periods_policies').show(speed);
     $('#time_settings').hide(speed);
     $('#period_settings').show(speed);
     $('input[name="area_periods[]"]').prop('required', true);

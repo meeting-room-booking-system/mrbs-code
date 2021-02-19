@@ -581,24 +581,43 @@ function get_fieldset_max_duration()
 }
 
 
-function get_fieldset_booking_policies()
+function get_fieldset_periods_policies()
 {
-  global $enable_periods;
+  global $enable_periods, $periods_booking_opens;
 
   $fieldset = new ElementFieldset();
-  $fieldset->setAttribute('id', 'booking_policies')
-           ->addLegend(get_vocab('booking_policies'));
+  $fieldset->addLegend(get_vocab('mode_periods'))
+           ->setAttribute('id', 'periods_policies');
+  if (!$enable_periods)
+  {
+    $fieldset->setAttribute('class', 'js_none');
+  }
 
   // Note when using periods
   $field = new FieldSpan();
-  if (!$enable_periods)
-  {
-    $field->setAttribute('class', 'js_none');
-  }
   $field->setAttribute('id', 'book_ahead_periods_note')
         ->setControlText(get_vocab('book_ahead_note_periods'));
+  $fieldset->addElement($field);
 
-  $fieldset->addElement($field)
+  // periods_booking_opens
+  $field = new FieldInputTime();
+  $field->setLabel(get_vocab('booking_opens'))
+        ->setControlAttributes(array('id'       => 'periods_booking_opens',
+                                     'name'     => 'area_periods_booking_opens',
+                                     'value'    => $periods_booking_opens));
+
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
+function get_fieldset_booking_policies()
+{
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'booking_policies')
+           ->addLegend(get_vocab('booking_policies'))
+           ->addElement(get_fieldset_periods_policies())
            ->addElement(get_fieldset_create_ahead())
            ->addElement(get_fieldset_delete_ahead())
            ->addElement(get_fieldset_max_number())

@@ -12,7 +12,8 @@ class Column
   const NATURE_DECIMAL = 3;
   const NATURE_INTEGER = 4;
   const NATURE_REAL = 5;
-  const NATURE_TIMESTAMP = 6;
+  const NATURE_TIME = 6;
+  const NATURE_TIMESTAMP = 7;
 
   public $table;
   public $name;

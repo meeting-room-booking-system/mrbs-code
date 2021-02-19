@@ -50,6 +50,7 @@ function get_form_data(Area &$area)
     'area_confirmed_default'        => 'bool',
     'area_default_type'             => 'string',
     'area_times_along_top'          => 'bool',
+    'area_periods_booking_opens'    => 'string',
     'custom_html'                   => 'string'
   );
 

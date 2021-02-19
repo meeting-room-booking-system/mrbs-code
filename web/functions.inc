@@ -1532,6 +1532,7 @@ function get_area_settings($area_id)
   global $max_secs_per_interval_area_enabled, $max_secs_per_interval_area;
   global $interval_types;
   global $times_along_top, $default_type;
+  global $periods_booking_opens;
 
   // This code can get called during the upgrade process and so must
   // not make any assumptions about the existence of extra columns in
@@ -1563,7 +1564,7 @@ function get_area_settings($area_id)
                    'max_secs_per_future_enabled', 'max_secs_per_future',
                    'approval_enabled', 'reminders_enabled', 'enable_periods', 'periods',
                    'confirmation_enabled', 'confirmed_default',
-                   'times_along_top', 'default_type');
+                   'times_along_top', 'default_type', 'periods_booking_opens');
 
   $area = Area::getById($area_id);
 

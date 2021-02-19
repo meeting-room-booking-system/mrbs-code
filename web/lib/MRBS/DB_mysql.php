@@ -237,6 +237,7 @@ class DB_mysql extends DB
         'numeric'     => 'decimal',
         'smallint'    => 'integer',
         'text'        => 'character',
+        'time'        => 'time',
         'tinyint'     => 'integer',
         'tinytext'    => 'character',
         'varchar'     => 'character'
