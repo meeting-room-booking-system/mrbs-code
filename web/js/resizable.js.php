@@ -874,7 +874,6 @@ $(document).on('page_ready', function() {
             queryString += '&site=' + encodeURIComponent(args.site);
           }
           window.location = 'edit_entry.php?' + queryString;
-          return;
         };
 
 
