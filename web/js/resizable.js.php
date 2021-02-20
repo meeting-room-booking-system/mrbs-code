@@ -74,21 +74,14 @@ function rectanglesIdentical(r1, r2)
 function rectanglesOverlap(r1, r2)
 {
   <?php
-  // If any of the sides of r1 is clear of the opposite side of r2, then the two
-  // rectangles don't overlap.   Otherwise they must do.   We allow the sides to
-  // be on top of each other (ie we use >= and <=).
+  // If none of the sides of r1 is clear of the opposite side of r2, then the two
+  // rectangles overlap. We allow the sides to be on top of each other (ie we use
+  // < and > instead of <= and >=).
   ?>
-  if ((Math.round(r1.n - r2.s) >= 0) ||
-      (Math.round(r1.s - r2.n) <= 0) ||
-      (Math.round(r1.w - r2.e) >= 0) ||
-      (Math.round(r1.e - r2.w) <= 0))
-  {
-    return false;
-  }
-  else
-  {
-    return true;
-  }
+  return ((Math.round(r1.n - r2.s) < 0) &&
+          (Math.round(r1.s - r2.n) > 0) &&
+          (Math.round(r1.w - r2.e) < 0) &&
+          (Math.round(r1.e - r2.w) > 0));
 }
 
 
