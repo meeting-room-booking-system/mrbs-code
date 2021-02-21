@@ -82,7 +82,8 @@ function get_vtimezone($tz)
           }
         }
 
-        $vcalendar = url_get_contents($tz_url);
+        $contents = url_get_contents($tz_url);
+        $vcalendar = $contents['body'];
 
         if ($vcalendar === false)
         {

@@ -170,10 +170,17 @@ function is_ajax()
           (utf8_strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
 }
 
-// Returns the contents of the URL, or else FALSE on failure
-function url_get_contents($url)
+// Returns the contents of the URL. If $if_modified_since is set it will send that
+// an 'If-Modified-Since' header in the request.  The result is an associative array,
+// indexed by
+//    'body'      The body of the response (FALSE on failure)
+//    'code'      The HTTP response code, eg 200 (NULL if none found)
+//    'headers'   An associative array of headers with the keys converted to lower case
+function url_get_contents($url, $if_modified_since=null)
 {
   global $server;
+
+  $result = array('code' => null, 'headers' => array());
 
   $connect_timeout  = 2;  // seconds
   $transfer_timeout = 2;  // seconds
@@ -197,6 +204,7 @@ function url_get_contents($url)
   // where direct access to the internet is not allowed.
   if (function_exists('curl_init'))
   {
+    $headers = array();
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $connect_timeout);
@@ -204,11 +212,27 @@ function url_get_contents($url)
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    if (isset($if_modified_since))
+    {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+          "If-Modified-Since: $if_modified_since"
+        ));
+    }
+    curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+      function($curl, $header) use (&$headers)
+      {
+        // This function is called by curl for each header received
+        $headers[] = $header;
+        return strlen($header);
+      }
+    );
     $contents = curl_exec($ch);
     if ($contents === false)
     {
       trigger_error(curl_error($ch), E_USER_WARNING);
     }
+    $result['body'] = $contents;
+
     curl_close($ch);
   }
 
@@ -220,14 +244,19 @@ function url_get_contents($url)
     // have been sent, but when the connection is closed, (b) set a timeout in case
     // the transfer is slow and (c) add a User-Agent header to prevent possible 403 errors
     // from some sites.
+    $request_header =  array(
+        "Connection: close",
+        "User-Agent: $user_agent"
+      );
+    if (isset($if_modified_since))
+    {
+      $request_header[] = "If-Modified-Since: $if_modified_since";
+    }
     $context = stream_context_create(
         array(
             'http' => array(
-              'header'  => array(
-                  'Connection: close',
-                  'User-Agent: ' . $user_agent
-                ),
-            'timeout' => $transfer_timeout)
+                'header' => $request_header,
+                'timeout' => $transfer_timeout)
           )
       );
     // Suppress any timeout warnings
@@ -236,9 +265,29 @@ function url_get_contents($url)
     {
       trigger_error("MRBS: could not get contents of $url", E_USER_WARNING);
     }
+    $result['body'] = $contents;
+    $headers = $http_response_header;
   }
 
-  return $contents;
+  // Tidy up the headers
+  if (is_array($headers) && !empty($headers))
+  {
+    // Get the response code from the first line
+    $status = array_shift($headers);
+    $parts = explode(' ', $status);
+    $result['response_code'] = (isset($parts[1])) ? intval($parts[1]) : null;
+    // Process the remainder into an associative array
+    foreach ($headers as $header)
+    {
+      $header = explode(':', $header, 2);
+      if (count($header) == 2)
+      {
+        $result['headers'][strtolower(trim($header[0]))] = trim($header[1]);
+      }
+    }
+  }
+
+  return $result;
 }
 
 
