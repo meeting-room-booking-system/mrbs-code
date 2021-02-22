@@ -275,7 +275,7 @@ function url_get_contents($url, $if_modified_since=null)
     // Get the response code from the first line
     $status = array_shift($headers);
     $parts = explode(' ', $status);
-    $result['response_code'] = (isset($parts[1])) ? intval($parts[1]) : null;
+    $result['code'] = (isset($parts[1])) ? intval($parts[1]) : null;
     // Process the remainder into an associative array
     foreach ($headers as $header)
     {
