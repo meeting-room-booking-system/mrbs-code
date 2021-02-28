@@ -570,6 +570,7 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
     $classes[] = 'logged_in';
   }
 
+  // To help styling
   if ($view_week_number)
   {
     $classes[] = 'view_week_number';

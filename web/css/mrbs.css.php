@@ -1109,6 +1109,10 @@ div.cell_header {
   padding: 2px 4px 0 4px;
 }
 
+<?php
+// If we're showing the week number then put that in the top left hand corner and move
+// the day number to the centre.
+ ?>
 .view_week_number #month_main div.cell_header a.monthday {
   text-align: center;
 }
