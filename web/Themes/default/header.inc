@@ -10,7 +10,7 @@ use MRBS\Form\ElementInputSubmit;
 function print_head($simple=false)
 {
   global $refresh_rate;
-  
+
   echo "<head>\n";
 
   echo "<meta charset=\"" . get_charset() . "\">\n";
@@ -459,7 +459,7 @@ function print_unsupported_message($context)
 // When $omit_login is true the Login link is omitted.
 function print_theme_header($context=null, $simple=false, $omit_login=false)
 {
-  global $multisite, $site, $default_view, $default_view_all;
+  global $multisite, $site, $default_view, $default_view_all, $view_week_number;
 
   // Set the context values if they haven't been given
   if (!isset($context))
@@ -568,6 +568,11 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
   if (isset($mrbs_user))
   {
     $classes[] = 'logged_in';
+  }
+
+  if ($view_week_number)
+  {
+    $classes[] = 'view_week_number';
   }
 
   echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . '"';

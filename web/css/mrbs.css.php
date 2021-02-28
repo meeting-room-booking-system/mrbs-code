@@ -1109,6 +1109,14 @@ div.cell_header {
   padding: 2px 4px 0 4px;
 }
 
+.view_week_number #month_main div.cell_header a.monthday {
+  text-align: center;
+}
+
+.view_week_number #month_main div.cell_header a.week_number {
+  position: absolute;
+}
+
 <?php // contains the list of bookings ?>
 div.booking_list {
   position: relative;
