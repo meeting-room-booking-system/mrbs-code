@@ -1337,12 +1337,16 @@ function is_in_booking_day($t)
 }
 
 
-// Takes a Unix timestamp and sets the time, while keeping the day the same
-function timestamp_set_time($timestamp, $hour, $minute, $second=0)
+// Takes a Unix timestamp and sets the time, while keeping the day the same.
+// $time is a string in hh:mm format (24 hour clock)
+function timestamp_set_time($timestamp, $time)
 {
+  list($hour, $minute) = explode(':', $time);
+  $hour = intval($hour);
+  $minute = intval($minute);
   $date = new DateTime();
   $date->setTimestamp($timestamp);
-  $date->setTime($hour, $minute, $second);
+  $date->setTime($hour, $minute, 0);
   return $date->getTimestamp();
 }
 
