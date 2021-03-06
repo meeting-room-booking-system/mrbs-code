@@ -104,10 +104,10 @@ CREATE TABLE mrbs_room
 CREATE TABLE mrbs_repeat
 (
   id             int NOT NULL auto_increment,
-  start_time     int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
-  end_time       int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
+  start_time     bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
+  end_time       bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   rep_type       int DEFAULT '0' NOT NULL,
-  end_date       int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
+  end_date       bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   rep_opt        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   room_id        int DEFAULT '1' NOT NULL,
   timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -120,8 +120,8 @@ CREATE TABLE mrbs_repeat
   month_absolute smallint DEFAULT NULL,
   month_relative varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   status         tinyint unsigned NOT NULL DEFAULT 0,
-  reminded       int,
-  info_time      int,
+  reminded       bigint COMMENT 'Unix timestamp',
+  info_time      bigint COMMENT 'Unix timestamp',
   info_user      varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   info_text      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   ical_uid       varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
@@ -138,8 +138,8 @@ CREATE TABLE mrbs_repeat
 CREATE TABLE mrbs_entry
 (
   id                          int NOT NULL auto_increment,
-  start_time                  int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
-  end_time                    int DEFAULT '0' NOT NULL COMMENT 'Unix timestamp',
+  start_time                  bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
+  end_time                    bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   entry_type                  int DEFAULT '0' NOT NULL,
   repeat_id                   int DEFAULT NULL,
   room_id                     int DEFAULT '1' NOT NULL,
@@ -150,8 +150,8 @@ CREATE TABLE mrbs_entry
   type                        char DEFAULT 'E' NOT NULL,
   description                 text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   status                      tinyint unsigned NOT NULL DEFAULT 0,
-  reminded                    int,
-  info_time                   int,
+  reminded                    bigint COMMENT 'Unix timestamp',
+  info_time                   bigint COMMENT 'Unix timestamp',
   info_user                   varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   info_text                   text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   ical_uid                    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
@@ -186,7 +186,7 @@ CREATE TABLE mrbs_participant
   entry_id    int NOT NULL,
   username    varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   create_by   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  registered  int,
+  registered  bigint COMMENT 'Unix timestamp',
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_entryid_username (entry_id, username),
@@ -214,7 +214,7 @@ CREATE TABLE mrbs_zoneinfo
   timezone           varchar(127) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   outlook_compatible tinyint unsigned NOT NULL DEFAULT 0,
   vtimezone          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  last_updated       int NOT NULL DEFAULT 0,
+  last_updated       bigint NOT NULL DEFAULT 0 COMMENT 'Unix timestamp',
 
   /* Note that there is a limit on the length of keys which imposes a constraint
      on the size of VARCHAR that can be keyed */
@@ -226,7 +226,7 @@ CREATE TABLE mrbs_zoneinfo
 CREATE TABLE mrbs_session
 (
   id      varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  access  int unsigned DEFAULT NULL,
+  access  bigint unsigned DEFAULT NULL COMMENT 'Unix timestamp',
   data    text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 
   /* Note that there is a limit on the length of keys which imposes a constraint
@@ -247,9 +247,9 @@ CREATE TABLE mrbs_user
   password_hash     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   email             varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   timestamp         timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  last_login        int DEFAULT 0 NOT NULL,
+  last_login        bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   reset_key_hash    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  reset_key_expiry  int DEFAULT 0 NOT NULL,
+  reset_key_expiry  bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
 
   PRIMARY KEY (id),
   UNIQUE KEY uq_name_auth_type (name, auth_type)
@@ -367,6 +367,6 @@ CREATE TABLE mrbs_role_room
 
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '84');
+  VALUES ( 'db_version', '85');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ( 'local_db_version', '1');
