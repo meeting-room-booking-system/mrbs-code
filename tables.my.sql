@@ -82,11 +82,11 @@ CREATE TABLE mrbs_room
 (
   id               int NOT NULL auto_increment,
   disabled         tinyint(1) DEFAULT 0 NOT NULL,
-  area_id          int DEFAULT '0' NOT NULL,
+  area_id          int DEFAULT 0 NOT NULL,
   room_name        varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   sort_key         varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   description      varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  capacity         int DEFAULT '0' NOT NULL,
+  capacity         int DEFAULT 0 NOT NULL,
   room_admin_email text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   invalid_types    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'JSON encoded',
   custom_html      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -106,10 +106,10 @@ CREATE TABLE mrbs_repeat
   id             int NOT NULL auto_increment,
   start_time     bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   end_time       bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
-  rep_type       int DEFAULT '0' NOT NULL,
+  rep_type       int DEFAULT 0 NOT NULL,
   end_date       bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   rep_opt        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
-  room_id        int DEFAULT '1' NOT NULL,
+  room_id        int DEFAULT 1 NOT NULL,
   timestamp      timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   create_by      varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   modified_by    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
@@ -140,9 +140,9 @@ CREATE TABLE mrbs_entry
   id                          int NOT NULL auto_increment,
   start_time                  bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
   end_time                    bigint DEFAULT 0 NOT NULL COMMENT 'Unix timestamp',
-  entry_type                  int DEFAULT '0' NOT NULL,
+  entry_type                  int DEFAULT 0 NOT NULL,
   repeat_id                   int DEFAULT NULL,
-  room_id                     int DEFAULT '1' NOT NULL,
+  room_id                     int DEFAULT 1 NOT NULL,
   timestamp                   timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   create_by                   varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
   modified_by                 varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' NOT NULL,
@@ -367,6 +367,6 @@ CREATE TABLE mrbs_role_room
 
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'db_version', '85');
+  VALUES ('db_version', '85');
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ( 'local_db_version', '1');
+  VALUES ('local_db_version', '1');
