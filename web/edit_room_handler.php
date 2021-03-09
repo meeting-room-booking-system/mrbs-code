@@ -148,7 +148,7 @@ else
 {
   // Go back to the room form with errors
   $returl = 'edit_room.php';
-  $query_string = "room=$room";
+  $query_string = "area=$room_object->old_area&room=$room";
   foreach ($errors as $error)
   {
     $query_string .= "&errors[]=$error";
