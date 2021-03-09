@@ -90,11 +90,6 @@ if (empty($capacity))
 // UPDATE THE DATABASE
 // -------------------
 
-if (empty($area))
-{
-  throw new \Exception('$area is empty');
-}
-
 // Initialise the error array
 $errors = array();
 
@@ -244,7 +239,7 @@ if (empty($errors))
 
 
 // Go back to the room form with errors
-$query_string = "room=$room";
+$query_string = "area=$old_area&room=$room";
 foreach ($errors as $error)
 {
   $query_string .= "&errors[]=$error";
