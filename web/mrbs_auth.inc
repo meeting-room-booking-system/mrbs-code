@@ -124,14 +124,18 @@ function get_page_level($page)
     case 'admin.php':
     case 'approve_entry_handler.php':   // Ordinary users are allowed to remind admins
     case 'edit_room.php':               // Ordinary users can view room details
-    case 'edit_user.php':               // Ordinary users can edit their own details
-    case 'edit_user_handler.php':       // Ordinary users can edit their own details
     case 'pending.php':                 // Ordinary users can view their own entries
     case 'registration_handler.php':    // Ordinary users can register for an event
       $result = 1;
       break;
 
-    // These pages allow users to create and delete entries
+    // Ordinary users can only see and edit their own details under the 'db' auth scheme
+    case 'edit_user.php':
+    case 'edit_user_handler.php':
+      $result = ($auth['type'] == 'db') ? 1 : 2;
+      break;
+
+      // These pages allow users to create and delete entries
     case 'check_slot.php':              // Ajax page used by edit_entry.php
     case 'del_entry.php':
     case 'edit_entry.php':
