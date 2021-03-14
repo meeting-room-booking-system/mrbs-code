@@ -97,10 +97,13 @@ function fillUsernameFields()
               <?php
               // Get the current option (there will only be one) so we know
               // which one should be selected in the new list
+              // Convert usernames to strings before being converted to upper case
+              // in case the usernames look like ints, for example if ids are being
+              // used for usernames.
               ?>
               var currentOption = el.find('option').first();
               var currentValue = currentOption.val();
-              var currentValueUpper = currentValue.toUpperCase();
+              var currentValueUpper = currentValue.toString().toUpperCase();
               var currentText = currentOption.text();
               <?php
               // Remove the existing option, because it will be in the new dataset in
@@ -115,7 +118,7 @@ function fillUsernameFields()
                   if (option.username !== null)
                   {
                     // Make it a case-insensitive comparison as usernames are case-insensitive
-                    var selected = (option.username.toUpperCase() === currentValueUpper);
+                    var selected = (option.username.toString().toUpperCase() === currentValueUpper);
                     foundCurrent = foundCurrent || selected;
                     var newOption = new Option(option.display_name, option.username, selected, selected);
                     el.append(newOption);
