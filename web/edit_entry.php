@@ -1647,6 +1647,8 @@ while (false !== ($row = $res->next_row_keyed()))
   $areas[$row['id']] = $row;
 }
 
+// Check that the area for this room actually exists.  This will happen if the room id in the query
+// string is invalid, usually as a result of using an out of date bookmark.
 if (!isset($areas[$area_id]))
 {
   echo "<h1>" . get_vocab('error') . "</h1>\n";
