@@ -137,6 +137,13 @@ $vocab["start_after_end"]    = "Start day after end day";
 $vocab["start_after_end_long"]     = "Error: the start day cannot be after the end day.";
 $vocab["invalid_rep_interval"]     = "The repeat interval must be greater than zero.";
 $vocab["type_reserved_for_admins"] = "The type '%s' is reserved for administrators";
+$vocab["edit_entry_nonexistent_room"] = "You are trying to create or edit an entry for a room " .
+                                        "that doesn't exist.  This might be because you are using " .
+                                        "a bookmark that is no longer valid. It is not generally " .
+                                        "recommended to use bookmarks that take you straight to " .
+                                        "the booking form.  Instead it is better to get to the " .
+                                        "booking form from the calendar view.";
+$vocab["home"]                        = "Home";
 
 // Used in view_entry.php
 $vocab["description"]             = "Description";
