@@ -1633,9 +1633,10 @@ foreach ($areas as $a)
     $area_details[$a->id] = $a;
   }
 }
+
 // Check that the area for this room actually exists.  This will happen if the room id in the query
 // string is invalid, usually as a result of using an out of date bookmark.
-if (!isset($areas[$area_id]))
+if (!isset($area_details[$area_id]))
 {
   echo "<h1>" . get_vocab('error') . "</h1>\n";
   echo "<p>" . get_vocab('edit_entry_nonexistent_room') . "</p>\n";
