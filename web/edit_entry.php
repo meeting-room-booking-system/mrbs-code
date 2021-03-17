@@ -1647,6 +1647,14 @@ while (false !== ($row = $res->next_row_keyed()))
   $areas[$row['id']] = $row;
 }
 
+if (!isset($areas[$area_id]))
+{
+  echo "<h1>" . get_vocab('error') . "</h1>\n";
+  echo "<p>" . get_vocab('edit_entry_nonexistent_room') . "</p>\n";
+  echo '<p><a href="' . multisite('index.php') . '">' . get_vocab('home') . "</a></p>\n";
+  // Print footer and exit
+  print_footer(true);
+}
 
 if (isset($id) && !isset($copy))
 {
