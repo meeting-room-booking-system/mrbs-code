@@ -1469,8 +1469,13 @@ $booking_types[] = "I";
 // still have a type associated with it in the database, which will be the default type.)
 // unset($booking_types);
 
-// Default short description for new bookings
+// Default brief description for new bookings
 $default_name = "";
+
+// Set this to true if you want the booking name (brief description) to
+// default to the current user's display name.  If set, this setting overrides
+// $default_name.
+$default_name_display_name = false;
 
 // Default long description for new bookings
 $default_description = "";

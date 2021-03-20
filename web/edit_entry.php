@@ -1410,7 +1410,14 @@ else
 {
   // It is a new booking. The data comes from whichever button the user clicked
   $edit_type     = "series";
-  $name          = $default_name;
+  if ($default_name_display_name)
+  {
+    $name = (isset($mrbs_user)) ? $mrbs_user->display_name : '';
+  }
+  else
+  {
+    $name = $default_name;
+  }
   $create_by     = $mrbs_username;
   $description   = $default_description;
   $type          = (empty($is_mandatory_field['entry.type'])) ? $default_type : '';
