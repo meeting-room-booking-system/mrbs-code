@@ -479,15 +479,12 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       }
     }
 
-    // For the max_create_ahead case we check the endtime of the booking rather than the starttime.
-    // This prevents somebody booking the slot they want by booking a starttime within the period
+    // For the max_create_ahead case we check the end time of the booking rather than the start time.
+    // This prevents somebody booking the slot they want by booking a start time within the period
     // and then using a very long duration.
     if ($max_create_ahead_enabled)
     {
       $max_create_ahead = adjust_ahead_seconds($max_create_ahead_secs);
-      //var_dump($booking['end_time']);
-      //var_dump($booking['end_time'] - $now);
-      //var_dump($max_create_ahead);
       if (($booking['end_time'] - $now) > $max_create_ahead)
       {
         toTimeString($max_create_ahead, $units);
