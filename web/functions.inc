@@ -2247,6 +2247,7 @@ function cross_dst($start, $end)
   return $modification;
 }
 
+
 // If $time falls on a non-working day, shift it back to the end of the last
 // working day before that
 function shift_to_workday($time)

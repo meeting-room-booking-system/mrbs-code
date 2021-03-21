@@ -406,7 +406,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($min_delete_ahead_enabled)
     {
       $min_delete_ahead = adjust_ahead_seconds($min_delete_ahead_secs);
-      if (($booking['start_time'] - $now) < $min_delete_ahead)
+      if ($booking['start_time'] - $now < $min_delete_ahead + cross_dst($now, $booking['start_time']))
       {
         toTimeString($min_delete_ahead, $units);
         $violations[] = get_vocab('min_delete_time_before', $min_delete_ahead, $units);
@@ -416,7 +416,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($max_delete_ahead_enabled)
     {
       $max_delete_ahead = adjust_ahead_seconds($max_delete_ahead_secs);
-      if (($booking['end_time'] - $now) > $max_delete_ahead)
+      if ($booking['end_time'] - $now > $max_delete_ahead + cross_dst($now, $booking['end_time']))
       {
         toTimeString($max_delete_ahead, $units);
         $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead, $units);
@@ -472,7 +472,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($min_create_ahead_enabled)
     {
       $min_create_ahead = adjust_ahead_seconds($min_create_ahead_secs);
-      if (($booking['start_time'] - $now) < $min_create_ahead)
+      if ($booking['start_time'] - $now < $min_create_ahead + cross_dst($now, $booking['start_time']))
       {
         toTimeString($min_create_ahead, $units);
         $violations[] = get_vocab('min_create_time_before', $min_create_ahead, $units);
@@ -485,7 +485,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($max_create_ahead_enabled)
     {
       $max_create_ahead = adjust_ahead_seconds($max_create_ahead_secs);
-      if (($booking['end_time'] - $now) > $max_create_ahead)
+      if ($booking['end_time'] - $now > $max_create_ahead + cross_dst($now, $booking['end_time']))
       {
         toTimeString($max_create_ahead, $units);
         $violations[] = get_vocab('max_create_time_before', $max_create_ahead, $units);
