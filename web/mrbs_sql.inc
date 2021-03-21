@@ -410,7 +410,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($min_delete_ahead_enabled)
     {
       $min_delete_ahead_secs = adjust_ahead_seconds($min_delete_ahead_secs);
-      if (($booking['start_time'] - $now) < $min_delete_ahead_secs)
+      if ($booking['start_time'] - $now < $min_delete_ahead_secs + cross_dst($now, $booking['start_time']))
       {
         $min_delete_ahead = to_time_string($min_delete_ahead_secs);
         $violations[] = get_vocab('min_delete_time_before', $min_delete_ahead['value'], $min_delete_ahead['units']);
@@ -420,7 +420,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($max_delete_ahead_enabled)
     {
       $max_delete_ahead_secs = adjust_ahead_seconds($max_delete_ahead_secs);
-      if (($booking['end_time'] - $now) > $max_delete_ahead_secs)
+      if ($booking['end_time'] - $now > $max_delete_ahead_secs + cross_dst($now, $booking['end_time']))
       {
         $max_delete_ahead = to_time_string($max_delete_ahead_secs);
         $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead['value'], $max_delete_ahead['units']);
@@ -476,20 +476,20 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($min_create_ahead_enabled)
     {
       $min_create_ahead_secs = adjust_ahead_seconds($min_create_ahead_secs);
-      if (($booking['start_time'] - $now) < $min_create_ahead_secs)
+      if ($booking['start_time'] - $now < $min_create_ahead_secs + cross_dst($now, $booking['start_time']))
       {
         $min_create_ahead = to_time_string($min_create_ahead_secs);
         $violations[] = get_vocab('min_create_time_before', $min_create_ahead['value'], $min_create_ahead['units']);
       }
     }
 
-    // For the max_create_ahead case we check the endtime of the booking rather than the starttime.
-    // This prevents somebody booking the slot they want by booking a starttime within the period
+    // For the max_create_ahead case we check the end time of the booking rather than the start time.
+    // This prevents somebody booking the slot they want by booking a start time within the period
     // and then using a very long duration.
     if ($max_create_ahead_enabled)
     {
       $max_create_ahead_secs = adjust_ahead_seconds($max_create_ahead_secs);
-      if (($booking['end_time'] - $now) > $max_create_ahead_secs)
+      if ($booking['end_time'] - $now > $max_create_ahead_secs + cross_dst($now, $booking['end_time']))
       {
         $max_create_ahead = to_time_string($max_create_ahead_secs);
         $violations[] = get_vocab('max_create_time_before', $max_create_ahead['value'], $max_create_ahead['units']);
