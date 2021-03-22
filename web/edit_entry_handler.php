@@ -130,11 +130,17 @@ foreach($form_vars as $var => $var_type)
 }
 
 // Convert the registration opens and closes times into seconds
-fromTimeString($registration_opens_value, $registration_opens_units);
-$registration_opens = constrain_int($registration_opens_value, 4);
+if (isset($registration_opens_value) && isset($registration_opens_units))
+{
+  fromTimeString($registration_opens_value, $registration_opens_units);
+  $registration_opens = constrain_int($registration_opens_value, 4);
+}
 
-fromTimeString($registration_closes_value, $registration_closes_units);
-$registration_closes = constrain_int($registration_closes_value, 4);
+if (isset($registration_closes_value) && isset($registration_closes_units))
+{
+  fromTimeString($registration_closes_value, $registration_closes_units);
+  $registration_closes = constrain_int($registration_closes_value, 4);
+}
 
 // Convert the booleans (the custom field booleans are done later)
 $registrant_limit_enabled = ($registrant_limit_enabled) ? 1 : 0;
@@ -231,6 +237,22 @@ foreach($fields as $field)
 if (isset($id) && ($id == ''))
 {
   unset($id);
+}
+
+if (isset($id))
+{
+  $old_booking = get_booking_info($id, false);
+
+  // Get the old values of registration_opens and _closes if they're not set, otherwise
+  // writing null to the database will cause the column defaults to be used.
+  if (!isset($registration_opens))
+  {
+    $registration_opens = $old_booking['registration_opens'];
+  }
+  if (!isset($registration_closes))
+  {
+    $registration_closes = $old_booking['registration_closes'];
+  }
 }
 
 // Validate the create_by variable, checking that it's the current user, unless the
@@ -351,13 +373,12 @@ if ($no_mail)
 
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
-// the rest from the existing boking information.
+// the rest from the existing booking information.
 // Note: we assume that
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($is_ajax && $commit)
 {
-  $old_booking = get_booking_info($id, false);
   foreach ($form_vars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
