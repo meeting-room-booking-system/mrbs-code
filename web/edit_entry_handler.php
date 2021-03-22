@@ -231,14 +231,6 @@ foreach($fields as $field)
 
 // Form validation checks.   Normally checked for client side.
 
-// The id must be either an integer or NULL, so that subsequent code that tests whether
-// isset($id) works.  (I suppose one could use !empty instead, but there's always the
-// possibility that sites have allowed 0 in their auto-increment/serial columns.)
-if (isset($id) && ($id == ''))
-{
-  unset($id);
-}
-
 if (isset($id))
 {
   $old_booking = get_booking_info($id, false);
