@@ -380,7 +380,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
-  global $periods_booking_opens;
+  global $periods_booking_opens, $measure_max_to_start_time;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -420,10 +420,12 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     if ($max_delete_ahead_enabled)
     {
       $max_delete_ahead_secs = adjust_ahead_seconds($max_delete_ahead_secs);
-      if ($booking['end_time'] - $now > $max_delete_ahead_secs + cross_dst($now, $booking['end_time']))
+      $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
+      if ($edge - $now > $max_delete_ahead + cross_dst($now, $edge))
       {
         $max_delete_ahead = to_time_string($max_delete_ahead_secs);
-        $violations[] = get_vocab('max_delete_time_before', $max_delete_ahead['value'], $max_delete_ahead['units']);
+        $tag = ($measure_max_to_start_time) ? 'max_delete_time_before_start' : 'max_delete_time_before';
+        $violations[] = get_vocab($tag, $max_delete_ahead, $units);
       }
     }
   }
@@ -483,16 +485,15 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
       }
     }
 
-    // For the max_create_ahead case we check the end time of the booking rather than the start time.
-    // This prevents somebody booking the slot they want by booking a start time within the period
-    // and then using a very long duration.
     if ($max_create_ahead_enabled)
     {
       $max_create_ahead_secs = adjust_ahead_seconds($max_create_ahead_secs);
-      if ($booking['end_time'] - $now > $max_create_ahead_secs + cross_dst($now, $booking['end_time']))
+      $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
+      if ($edge - $now > $max_create_ahead + cross_dst($now, $edge))
       {
         $max_create_ahead = to_time_string($max_create_ahead_secs);
-        $violations[] = get_vocab('max_create_time_before', $max_create_ahead['value'], $max_create_ahead['units']);
+        $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start' : 'max_create_time_before';
+        $violations[] = get_vocab($tag, $max_create_ahead, $units);
       }
     }
   }
