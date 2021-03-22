@@ -239,6 +239,22 @@ if (isset($id) && ($id == ''))
   unset($id);
 }
 
+if (isset($id))
+{
+  $old_booking = get_booking_info($id, false);
+
+  // Get the old values of registration_opens and _closes if they're not set, otherwise
+  // writing null to the database will cause the column defaults to be used.
+  if (!isset($registration_opens))
+  {
+    $registration_opens = $old_booking['registration_opens'];
+  }
+  if (!isset($registration_closes))
+  {
+    $registration_closes = $old_booking['registration_closes'];
+  }
+}
+
 // Validate the create_by variable, checking that it's the current user, unless the
 // user is an admin and the booking is being edited or it's a new booking and we allow
 // admins to make bookings on behalf of others.
@@ -362,13 +378,12 @@ if ($no_mail)
 
 // If this is an Ajax request and we're being asked to commit the booking, then
 // we'll only have been supplied with parameters that need to be changed.  Fill in
-// the rest from the existing boking information.
+// the rest from the existing booking information.
 // Note: we assume that
 // (1) this is not a series (we can't cope with them yet)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($is_ajax && $commit)
 {
-  $old_booking = get_booking_info($id, false);
   foreach ($form_vars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
