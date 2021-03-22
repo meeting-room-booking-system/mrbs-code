@@ -645,6 +645,9 @@ function get_entry_by_id($id)
 // Returns the Unix timestamp for registration closing.  Takes account of
 // periods, when registration closes at $periods_booking_opens on the day
 // of the booking, because we don't know when in the day periods occur.
+// This function compensates for DST changes, so that, for example, 1 week
+// before occurs at the same time of day as the start time, even if there's
+// a DST transition in between.
 function registration_opens_timestamp(array $entry)
 {
   global $enable_periods, $periods_booking_opens;
@@ -657,13 +660,18 @@ function registration_opens_timestamp(array $entry)
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
   }
 
-  return $start_time - $entry['registration_opens'];
+  $cross_dst = cross_dst(time(), $entry['start_time']);
+
+  return $start_time - $entry['registration_opens'] - $cross_dst;
 }
 
 
 // Returns the Unix timestamp for registration opening.  Takes account of
 // periods, when registration closes at $periods_booking_opens on the day
 // of the booking, because we don't know when in the day periods occur.
+// This function compensates for DST changes, so that, for example, 1 week
+// before occurs at the same time of day as the start time, even if there's
+// a DST transition in between.
 function registration_closes_timestamp(array $entry)
 {
   global $enable_periods, $periods_booking_opens;
@@ -676,7 +684,9 @@ function registration_closes_timestamp(array $entry)
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
   }
 
-  return $start_time - $entry['registration_closes'];
+  $cross_dst = cross_dst(time(), $entry['start_time']);
+
+  return $start_time - $entry['registration_closes'] - $cross_dst;
 }
 
 
