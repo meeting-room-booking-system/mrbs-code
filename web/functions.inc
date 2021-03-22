@@ -2209,40 +2209,19 @@ function is_invalid_datetime($hour, $minute, $second, $month, $day, $year, $tz=n
 }
 
 
-// returns the modification (in seconds) necessary on account of any DST
+// Returns the modification (in seconds) necessary on account of any DST
 // transitions when going from $start to $end
 function cross_dst($start, $end)
 {
   global $timezone;
 
-  // Ideally we calculate the modification using the DateTimeZone information
-  // in PHP, because not all DST transitions are 1 hour.  For example, Lord Howe
-  // Island in Australia has a 30 minute transition
-  if (class_exists('DateTimeZone'))
-  {
-    $thisDateTimeZone = new DateTimeZone($timezone);
-    $startDateTime = new DateTime(date('c', $start), $thisDateTimeZone);
-    $endDateTime = new DateTime(date('c', $end), $thisDateTimeZone);
-    $modification = $startDateTime->getOffset() - $endDateTime->getOffset();
-  }
-  // Otherwise we have to assume that the transition is 1 hour.
-  else
-  {
-    // entering DST
-    if (!date( "I", $start) &&  date( "I", $end))
-    {
-      $modification = -SECONDS_PER_HOUR;
-    }
-    // leaving DST
-    else if (date( "I", $start) && !date( "I", $end))
-    {
-      $modification = SECONDS_PER_HOUR;
-    }
-    else
-    {
-      $modification = 0;
-    }
-  }
+  // Calculate the modification using the DateTimeZone information rather than date('I', $time),
+  // because not all DST transitions are 1 hour.  For example, Lord Howe Island in Australia
+  // has a 30 minute transition.
+  $thisDateTimeZone = new DateTimeZone($timezone);
+  $startDateTime = new DateTime(date('c', $start), $thisDateTimeZone);
+  $endDateTime = new DateTime(date('c', $end), $thisDateTimeZone);
+  $modification = $startDateTime->getOffset() - $endDateTime->getOffset();
 
   return $modification;
 }
