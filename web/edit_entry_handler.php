@@ -736,9 +736,9 @@ foreach ($rooms as $room_id)
   $booking['allow_registration'] = $allow_registration;
   $booking['registrant_limit'] = $registrant_limit;
   $booking['registrant_limit_enabled'] = $registrant_limit_enabled;
-  $booking['registration_opens'] = $registration_opens;
+  $booking['registration_opens'] = (isset($registration_opens)) ? $registration_opens : null;
   $booking['registration_opens_enabled'] = $registration_opens_enabled;
-  $booking['registration_closes'] = $registration_closes;
+  $booking['registration_closes'] = (isset($registration_closes)) ? $registration_closes : null;
   $booking['registration_closes_enabled'] = $registration_closes_enabled;
 
 
