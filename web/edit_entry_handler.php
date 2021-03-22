@@ -235,15 +235,15 @@ if (isset($id))
 {
   $old_booking = get_booking_info($id, false);
 
-  // Get the old values of registration_opens and _closes if they're not set, otherwise
-  // writing null to the database will cause the column defaults to be used.
-  if (!isset($registration_opens))
+  // Get the old values of registration_opens, registration_closes and registrant_limit
+  // if they're not set, otherwise writing null to the database will cause the column
+  // defaults to be used.
+  foreach (['registration_opens', 'registration_closes', 'registrant_limit'] as $var)
   {
-    $registration_opens = $old_booking['registration_opens'];
-  }
-  if (!isset($registration_closes))
-  {
-    $registration_closes = $old_booking['registration_closes'];
+    if (!isset($$var))
+    {
+      $$var = $old_booking[$var];
+    }
   }
 }
 
