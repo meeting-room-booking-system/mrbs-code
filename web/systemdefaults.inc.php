@@ -296,6 +296,14 @@ $prevent_invalid_types = true;
 // This should be a in the format hh:mm using the 24 hour clock.
 $periods_booking_opens = '00:00';
 
+// When setting max_create_ahead and max_delete_ahead policies, the time interval is normally
+// measured to the end time of the booking.  This is to prevent users cheating the system by
+// booking a very long slot with the start time just inside the limit and then either not using
+// the early part of the booking, or else editing it down to what they actually need later.
+// However this is not very intuitive for users who might expect the measurement to be relative
+// to the start time, in which case this can be achieved by changing this setting to true.
+$measure_max_to_start_time = false;
+
 /******************
  * Display settings
  ******************/
