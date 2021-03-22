@@ -421,11 +421,11 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     {
       $max_delete_ahead_secs = adjust_ahead_seconds($max_delete_ahead_secs);
       $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
-      if ($edge - $now > $max_delete_ahead + cross_dst($now, $edge))
+      if ($edge - $now > $max_delete_ahead_secs + cross_dst($now, $edge))
       {
         $max_delete_ahead = to_time_string($max_delete_ahead_secs);
         $tag = ($measure_max_to_start_time) ? 'max_delete_time_before_start' : 'max_delete_time_before';
-        $violations[] = get_vocab($tag, $max_delete_ahead, $units);
+        $violations[] = get_vocab($tag, $max_delete_ahead['value'], $max_delete_ahead['units']);
       }
     }
   }
@@ -489,11 +489,11 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
     {
       $max_create_ahead_secs = adjust_ahead_seconds($max_create_ahead_secs);
       $edge = ($measure_max_to_start_time) ? $booking['start_time'] : $booking['end_time'];
-      if ($edge - $now > $max_create_ahead + cross_dst($now, $edge))
+      if ($edge - $now > $max_create_ahead_secs + cross_dst($now, $edge))
       {
         $max_create_ahead = to_time_string($max_create_ahead_secs);
         $tag = ($measure_max_to_start_time) ? 'max_create_time_before_start' : 'max_create_time_before';
-        $violations[] = get_vocab($tag, $max_create_ahead, $units);
+        $violations[] = get_vocab($tag, $max_create_ahead['value'], $max_create_ahead['units']);
       }
     }
   }
