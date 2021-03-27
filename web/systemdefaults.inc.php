@@ -1107,10 +1107,10 @@ $auth['only_admin_can_book'] = false;
 // bookings.  This is useful if you want to set a "go live" date and time for MRBS.
 // The variable should be set to a valid date/time format as described in
 // https://www.php.net/manual/en/datetime.formats.php.   For example set
-// $auth['only_admin_can_book_before'] = "2020-12-31 18:00" if you want booking
-// to go live at 6pm on 31 Dec 2020.
+// $auth['only_admin_can_book_before'] = "2020-12-31 18:00";
+// if you want booking to go live at 6pm on 31 Dec 2020.
 // Note that $auth['only_admin_can_book_before'] will only be considered if
-// $auth['only_admin_can_book_before'] is false.
+// $auth['only_admin_can_book'] is false.
 $auth['only_admin_can_book_before'] = false;
 
 // If you want only administrators to be able to make repeat bookings,
