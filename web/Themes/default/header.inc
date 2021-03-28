@@ -552,6 +552,12 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
     $data['site'] = $site;
   }
 
+  $mrbs_user = session()->getCurrentUser();
+  if (isset($mrbs_user))
+  {
+    $data['username'] = $mrbs_user->username;
+  }
+
   // We need $timetohighlight for the day and week views
   $timetohighlight = get_form_var('timetohighlight', 'int');
   if (isset($timetohighlight))
@@ -562,7 +568,6 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
   // Put the filename in as a class to aid styling.
   $classes = array($page);
   // And if the user is logged in, add another class to aid styling
-  $mrbs_user = session()->getCurrentUser();
   if (isset($mrbs_user))
   {
     $classes[] = 'logged_in';
