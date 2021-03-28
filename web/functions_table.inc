@@ -269,7 +269,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
     // If there's no booking or if there are multiple bookings then make the slot one unit long
     $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
 
-    $html .= tdcell(impode(' ', $classes), $slots);
+    $html .= tdcell(implode(' ', $classes), $slots);
 
     // If the room isn't booked then allow it to be booked
     if (empty($cell))
