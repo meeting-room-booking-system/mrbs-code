@@ -26,10 +26,8 @@ var intervalId;
 // know how many columns there are.  So we have to use JavaScript.
 ?>
 var sizeColumns = function() {
-
-    var mainCols = $('.dwm_main thead tr:first-child th').not('th.first_last, th.hidden_day');
+    var mainCols = $('.dwm_main thead tr:first-child th:visible').not('th.first_last, th.hidden_day');
     mainCols.css('width', 100/mainCols.length + '%');
-
   };
 
 
