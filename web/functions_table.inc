@@ -58,7 +58,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 
   global $resolution;
   global $is_private_field;
-  
+
   // We're only interested in entries which occur on this day (it's possible
   // for $entry to contain entries for other days)
   if (($entry['start_time'] >= $start_last_slot + $resolution) ||
@@ -201,7 +201,7 @@ function get_entry_classes($entry)
   {
     $classes[] = 'series';
   }
-  
+
   if ($entry['allow_registration'])
   {
     if ($entry['registrant_limit_enabled'] &&
@@ -240,6 +240,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
   global $enable_periods, $show_plus_link;
 
   $html = '';
+  $classes = array();
 
   // Don't put in a <td> cell if the slot is contains a single booking whose n_slots is NULL.
   // This would mean that it's the second or subsequent slot of a booking and so the
@@ -250,25 +251,25 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
   {
     if (!empty($cell))
     {
-      $class = 'booked';
+      $classes[] = 'booked';
       if (count($cell) > 1)
       {
-        $class .= ' multiply';
+        $classes[] = 'multiply';
       }
     }
     elseif ($is_invalid)
     {
-      $class = 'invalid';
+      $classes[] = 'invalid';
     }
     else
     {
-      $class = 'new';
+      $classes[] = 'new';
     }
 
     // If there's no booking or if there are multiple bookings then make the slot one unit long
     $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
 
-    $html .= tdcell($class, $slots);
+    $html .= tdcell(impode(' ', $classes), $slots);
 
     // If the room isn't booked then allow it to be booked
     if (empty($cell))
