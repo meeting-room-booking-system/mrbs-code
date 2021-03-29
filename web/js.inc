@@ -97,11 +97,11 @@ if (in_array($page, array('admin', 'edit_users', 'pending', 'report', 'search', 
 // Get any page specific JavaScript
 if (is_readable("js/$page.js"))
 {
-  script("js/$page.js", true);
+  script("js/$page.js?$query_string", true);
 }
 if (is_readable("js/$page.js.php"))
 {
-  script("js/$page.js.php", true);
+  script("js/$page.js.php?$query_string", true);
 }
 
 // The day, week and month views do refresh by Ajax.
