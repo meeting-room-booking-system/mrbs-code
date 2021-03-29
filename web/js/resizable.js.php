@@ -655,7 +655,8 @@ $(document).on('page_ready', function() {
 
       <?php
       // Don't do anything if this is an empty table, or the all-rooms week view,
-      // or the month view ?>
+      // or the month view
+      ?>
 
       if ((args.view === 'month') ||
           ((args.view === 'week') && args.view_all) ||
