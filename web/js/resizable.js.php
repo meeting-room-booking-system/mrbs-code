@@ -130,7 +130,7 @@ function getDataName(jqObject)
 
 
 var Table = {
-  selector: ".dwm_main:not('#month_main')",
+  selector: ".dwm_main",
   borderLeftWidth: undefined,
   borderTopWidth: undefined,
   bookedMap: [],
@@ -653,8 +653,12 @@ $(document).on('page_ready', function() {
   $(Table.selector).on('tableload', function() {
       var table = $(this);
 
-      <?php // Don't do anything if this is an empty table or the all-rooms week view ?>
-      if (((args.view === 'week') && args.view_all) ||
+      <?php
+      // Don't do anything if this is an empty table, or the all-rooms week view,
+      // or the month view ?>
+
+      if ((args.view === 'month') ||
+          ((args.view === 'week') && args.view_all) ||
           table.find('tbody').data('empty'))
       {
         return;
