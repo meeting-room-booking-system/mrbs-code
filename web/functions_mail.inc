@@ -16,6 +16,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 // +---------------------------------------------------------------------------+
 //
 
+define('MAIL_EOL', "\r\n");  // See RFC 5322 2.1
+
 global $mail_settings;
 
 if ($mail_settings['icalendar'])
@@ -283,28 +285,28 @@ function get_room_admin_email($id, $series=FALSE)
 
 
 // Create a row of a table in either plain text or HTML format.
-// Plain text:  returns "$label: $new\n"
-// HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>\n"
+// Plain text:  returns "$label: $new" . MAIL_EOL
+// HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>" . MAIL_EOL
 // If $compare is TRUE then a third column is output with $old in parentheses
 function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=FALSE)
 {
-  $result  = ($as_html) ? "<tr>\n" : "";
+  $result  = ($as_html) ? '<tr>' . MAIL_EOL : '';
 
   // The label
-  $result .= ($as_html) ? "<td>" : "";
+  $result .= ($as_html) ? '<td>' : '';
   $result .= ($as_html) ? htmlspecialchars("$label: ") : "$label: ";
-  $result .= ($as_html) ? "</td>\n" : "";
+  $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   // The new value
-  $result .= ($as_html) ? "<td>" : "";
+  $result .= ($as_html) ? '<td>' : '';
   $result .= ($as_html) ? htmlspecialchars($new) : "$new";
-  $result .= ($as_html) ? "</td>\n" : "";
+  $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   // The old value (if we're doing a comparison)
   if ($compare)
   {
-    $result .= ($as_html) ? "<td>" : "";
+    $result .= ($as_html) ? '<td>' : '';
     if ($new == $old)
     {
-      $result .= ($as_html) ? "&nbsp;" : "";
+      $result .= ($as_html) ? "&nbsp;" : '';
     }
     else
     {
@@ -313,10 +315,11 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
       // parentheses will make the old value stand out.
       $result .= ($as_html) ? htmlspecialchars(" ($old)") : " ($old)";
     }
-    $result .= ($as_html) ? "</td>\n" : "";
+    $result .= ($as_html) ? '</td>' . MAIL_EOL : '';
   }
 
-  $result .= ($as_html) ? "</tr>\n" : "\n";
+  $result .= ($as_html) ? '</tr>' : '';
+  $result .= MAIL_EOL;
   return $result;
 }
 
@@ -327,17 +330,18 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
 //   $as_html    (boolean) whether the list should be HTML or plain text
 function create_date_list($dates, $as_html)
 {
-  $result = ($as_html) ? "<ul>\n" : "";
+  $result = ($as_html) ? '<ul>' . MAIL_EOL : '';
   foreach ($dates as $date)
   {
-    $result .= ($as_html) ? "<li>" : "";
+    $result .= ($as_html) ? '<li>' : '';
     $date_string = getMailDateString($date);
     $result .= ($as_html) ? htmlspecialchars($date_string) : $date_string;
+    $result .= ($as_html) ? '</li>' : '';
     // The newline is important to stop the line length exceeding 998 characters,
     // which will happen if there are a lot of dates.  See RFC 5322 2.1.1.
-    $result .= ($as_html) ? "</li>\n" : "\n";
+    $result .= MAIL_EOL;
   }
-  $result .= ($as_html) ? "</ul>\n" : "";
+  $result .= ($as_html) ? '</ul>' . MAIL_EOL : '';
   return $result;
 }
 
@@ -354,7 +358,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
   }
 
   // The introductory text
-  $result = ($as_html) ? "<p>" : "\n\n";
+  $result = ($as_html) ? '<p>' : MAIL_EOL . MAIL_EOL;
   if (($action == "delete") || ($action == "reject"))
   {
     $result .= get_vocab("mail_body_repeats_deleted");
@@ -363,7 +367,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
   {
     $result .= get_vocab("mail_body_repeats_booked");
   }
-  $result .= ($as_html) ? "</p>\n" : "\n\n";
+  $result .= ($as_html) ? '</p>' . MAIL_EOL : MAIL_EOL . MAIL_EOL;
 
   $rep_details = array();
   foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
@@ -380,9 +384,9 @@ function create_repeat_list($data, $action, $as_html, $reps)
   if (!empty($data['skip_list']))
   {
     // The introductory text
-    $result .= ($as_html) ? "<p>" : "\n\n";
+    $result .= ($as_html) ? '<p>' : MAIL_EOL . MAIL_EOL;
     $result .= get_vocab("mail_body_exceptions");
-    $result .= ($as_html) ? "</p>\n" : "\n\n";
+    $result .= ($as_html) ? '</p>' . MAIL_EOL : MAIL_EOL . MAIL_EOL;
     // Now the list of conflicts
     $result .= create_date_list($data['skip_list'], $as_html);
   }
@@ -412,12 +416,12 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
   if ($as_html)
   {
-    $body .= DOCTYPE . "\n";
-    $body .= '<html lang="' . convert_to_BCP47($mail_settings['admin_lang']) . "\">\n";
-    $body .= "<head>\n";
-    $body .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" . get_mail_charset() . "\">\n";
-    $body .= "<title>$mrbs_company</title>\n";
-    $body .= "<style type=\"text/css\">\n";
+    $body .= DOCTYPE . MAIL_EOL;
+    $body .= '<html lang="' . convert_to_BCP47($mail_settings['admin_lang']) . '">' . MAIL_EOL;
+    $body .= '<head>' . MAIL_EOL;
+    $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . get_mail_charset() . '">' . MAIL_EOL;
+    $body .= '<title>' . htmlspecialchars($mrbs_company) . '</title>' . MAIL_EOL;
+    $body .= '<style type="text/css">' . MAIL_EOL;
     $css_file = 'css/mrbs-mail.css.php';
     if (is_file($css_file) && is_readable($css_file))
     {
@@ -425,14 +429,14 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       include $css_file;
       $css = ob_get_clean();
       $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
-      $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $css);  // Remove blank lines
+      $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", MAIL_EOL, $css);  // Remove blank lines
       $body .= $css;
     }
-    $body .= "</style>\n";
-    $body .= "</head>\n";
-    $body .= "<body id=\"mrbs\">\n";
-    $body .= "<div id=\"header\">" . $mrbs_company . " - " . get_mail_vocab("mrbs") . "</div>\n";
-    $body .= "<div id=\"contents\">\n";
+    $body .= '</style>' . MAIL_EOL;
+    $body .= '</head>' . MAIL_EOL;
+    $body .= '<body id="mrbs">' . MAIL_EOL;
+    $body .= '<div id="header">' . htmlspecialchars($mrbs_company . ' - ' . get_mail_vocab('mrbs')) . '</div>' . MAIL_EOL;
+    $body .= '<div id="contents">' . MAIL_EOL;
   }
 
   $body .= ($as_html) ? "<p>" : "";
@@ -454,7 +458,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       break;
     case "more_info":
       $body .= get_mail_vocab("mail_body_more_info", $user_escaped);
-      $body .= ($as_html) ? "</p><p>" : "\n\n";
+      $body .= ($as_html) ? '</p><p>' : MAIL_EOL . MAIL_EOL;
       $body .= get_mail_vocab("info_requested") . ": ";
       $body .= $note;
       break;
@@ -463,7 +467,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       break;
     case "reject":
       $body .= get_mail_vocab("mail_body_rej_entry", $user_escaped);
-      $body .= ($as_html) ? "</p><p>" : "\n\n";
+      $body .= ($as_html) ? '</p><p>' : MAIL_EOL . MAIL_EOL;
       $body .= get_mail_vocab("reason") . ': ';
       $body .= $note;
       break;
@@ -486,31 +490,33 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
   // because then there won't be one.
   if (($action != "delete") && ($action != "reject"))
   {
-    $body .= ($as_html) ? "</p><p>" : "\n\n";
-    $body .= ($as_html) ? "<a target=\"_blank\" href=\"" : "";
+    $body .= ($as_html) ? '</p><p>' : MAIL_EOL . MAIL_EOL;
+    $body .= ($as_html) ? '<a target="_blank" href="' : '';
     // Set the link to view entry page
     $body .= url_base() . multisite('view_entry.php?id=' . $data['id']);
     if ($series)
     {
-      $body .= "&series=1";
+      $body .= '&series=1';
     }
-    $body .= ($as_html) ? "\">" . $data['name'] . "</a>" : "";
+    $body .= ($as_html) ? '">' . htmlspecialchars($data['name']) . '</a>' : '';
   }
-  $body .= ($as_html) ? "</p>\n" : "\n\n";
+  $body .= ($as_html) ? '</p>' . MAIL_EOL : MAIL_EOL . MAIL_EOL;
 
-  $body .= ($as_html) ? "<table>\n" : "\n";
+  $body .= ($as_html) ? '<table>' : '';
+  $body .= MAIL_EOL;
+
   if ($compare && $as_html)
   {
-    $body .= "<thead>\n";
-    $body .= "<tr>\n";
-    $body .= "<th>&nbsp;</th>\n";
-    $body .= "<th>" . get_vocab("new_value") . "</th>\n";
-    $body .= "<th>(" . get_vocab("old_value") . ")</th>\n";
-    $body .= "</tr>\n";
-    $body .= "</thead>\n";
+    $body .= '<thead>' . MAIL_EOL;
+    $body .= '<tr>' . MAIL_EOL;
+    $body .= '<th>&nbsp;</th>' . MAIL_EOL;
+    $body .= '<th>' . get_vocab("new_value") . '</th>' . MAIL_EOL;
+    $body .= '<th>(' . get_vocab("old_value") . ')</th>' . MAIL_EOL;
+    $body .= '</tr>' . MAIL_EOL;
+    $body .= '</thead>' . MAIL_EOL;
   }
 
-  $body .= ($as_html) ? "<tbody>\n" : "";
+  $body .= ($as_html) ? '<tbody>' . MAIL_EOL : '';
 
 
   // Always display the brief description
@@ -741,8 +747,8 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
   if ($as_html)
   {
-    $body .= "</tbody>\n";
-    $body .= "</table>\n";
+    $body .= '</tbody>' . MAIL_EOL;
+    $body .= '</table>' . MAIL_EOL;
   }
 
   // Add in a list of repeat dates.  Although we've given them the repeat characteristics
@@ -756,9 +762,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
   if ($as_html)
   {
-    $body .= "</div>\n";
-    $body .= "</body>\n";
-    $body .= "</html>\n";
+    $body .= '</div>' . MAIL_EOL;
+    $body .= '</body>' . MAIL_EOL;
+    $body .= '</html>' . MAIL_EOL;
   }
 
   return $body;
