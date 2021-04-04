@@ -429,7 +429,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       include $css_file;
       $css = ob_get_clean();
       $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
-      $css = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", MAIL_EOL, $css);  // Remove blank lines
+      $css = preg_replace("/(?:\R\h*){2,}/", MAIL_EOL, $css);  // Remove blank lines
       $body .= $css;
     }
     $body .= '</style>' . MAIL_EOL;
