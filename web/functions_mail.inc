@@ -333,7 +333,9 @@ function create_date_list($dates, $as_html)
     $result .= ($as_html) ? "<li>" : "";
     $date_string = getMailDateString($date);
     $result .= ($as_html) ? htmlspecialchars($date_string) : $date_string;
-    $result .= ($as_html) ? "</li>" : "\n";
+    // The newline is important to stop the line length exceeding 998 characters,
+    // which will happen if there are a lot of dates.  See RFC 5322 2.1.1.
+    $result .= ($as_html) ? "</li>\n" : "\n";
   }
   $result .= ($as_html) ? "</ul>\n" : "";
   return $result;
