@@ -428,8 +428,12 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       ob_start();
       include $css_file;
       $css = ob_get_clean();
-      $css = preg_replace('!/\*.*?\*/!s', '', $css);  // Remove comments
-      $css = preg_replace("/(?:\R\h*){2,}/", MAIL_EOL, $css);  // Remove blank lines
+      // Remove comments
+      $css = preg_replace('!/\*.*?\*/!s', '', $css);
+      // Remove blank lines and also replace all new line sequences with the preferred
+      // EOL sequence - hence the '+'.  Note that the CSS file will probably have Unix LF
+      // endings, so these will need to be converted.
+      $css = preg_replace("/(?:\R\h*)+/", MAIL_EOL, $css);
       $body .= $css;
     }
     $body .= '</style>' . MAIL_EOL;
