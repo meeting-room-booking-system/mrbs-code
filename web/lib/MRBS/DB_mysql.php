@@ -13,7 +13,7 @@ class DB_mysql extends DB
   const DB_CHARSET = "utf8mb4";
 
 
-  public function __construct($db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
+  public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
   {
     parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
     // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
