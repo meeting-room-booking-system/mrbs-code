@@ -429,7 +429,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       include $css_file;
       $css = ob_get_clean();
       //  Remove any whitespace from the beginning
-      $css = preg_replace('/^\s*/', '', $css);
+      $css = preg_replace('/^\s+/', '', $css);
       // Remove comments
       $css = preg_replace('!/\*.*?\*/!s', '', $css);
       // Remove blank lines and also replace all new line sequences with the preferred
