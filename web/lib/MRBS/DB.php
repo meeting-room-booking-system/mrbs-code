@@ -20,7 +20,7 @@ class DB
 
 
   public function __construct($db_host, $db_username, $db_password,
-                              $db_name, $persist = 0, $db_port = null)
+                              $db_name, $persist=false, $db_port=null)
   {
 
     // Early error handling, could be in constructor instead?
@@ -51,7 +51,7 @@ class DB
       $this->dbh = new PDO(static::DB_DBO_DRIVER.":${hostpart}port=$db_port;dbname=$db_name",
                            $db_username,
                            $db_password,
-                           array(PDO::ATTR_PERSISTENT => ($persist ? true : false),
+                           array(PDO::ATTR_PERSISTENT => (bool) $persist,
                                  PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
       $this->command("SET NAMES '".static::DB_CHARSET."'");
     }

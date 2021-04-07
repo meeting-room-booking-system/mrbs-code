@@ -7,7 +7,7 @@ namespace MRBS;
 class DBFactory
 {
   //
-  public static function create($db_system, $db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
+  public static function create($db_system, $db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
   {
     switch ($db_system)
     {
