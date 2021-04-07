@@ -13,6 +13,16 @@ class DB_mysql extends DB
   const DB_CHARSET = "utf8mb4";
 
 
+  public function __construct($db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
+  {
+    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+    // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
+    // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
+    // TODO: However the proper solution is probably to rewrite the offending queries.
+    $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+  }
+
+
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
   public function quote($identifier)
   {
