@@ -190,18 +190,21 @@ class DB_pgsql extends DB
     $fields = array();
 
     // Map PostgreSQL types on to a set of generic types
-    $nature_map = array('bigint'            => 'integer',
-                        'boolean'           => 'boolean',
-                        'bytea'             => 'binary',
-                        'character'         => 'character',
-                        'character varying' => 'character',
-                        'decimal'           => 'decimal',
-                        'double precision'  => 'real',
-                        'integer'           => 'integer',
-                        'numeric'           => 'decimal',
-                        'real'              => 'real',
-                        'smallint'          => 'integer',
-                        'text'              => 'character');
+    $nature_map = array(
+        'bigint'                    => 'integer',
+        'boolean'                   => 'boolean',
+        'bytea'                     => 'binary',
+        'character'                 => 'character',
+        'character varying'         => 'character',
+        'decimal'                   => 'decimal',
+        'double precision'          => 'real',
+        'integer'                   => 'integer',
+        'numeric'                   => 'decimal',
+        'real'                      => 'real',
+        'smallint'                  => 'integer',
+        'text'                      => 'character',
+        'timestamp with time zone'  => 'timezone'
+      );
 
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
