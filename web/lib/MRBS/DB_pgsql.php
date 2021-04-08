@@ -196,6 +196,7 @@ class DB_pgsql extends DB
         'bytea'                     => 'binary',
         'character'                 => 'character',
         'character varying'         => 'character',
+        'date'                      => 'timestamp',
         'decimal'                   => 'decimal',
         'double precision'          => 'real',
         'integer'                   => 'integer',
@@ -203,7 +204,8 @@ class DB_pgsql extends DB
         'real'                      => 'real',
         'smallint'                  => 'integer',
         'text'                      => 'character',
-        'timestamp with time zone'  => 'timezone'
+        'time with time zone'       => 'timestamp',
+        'timestamp with time zone'  => 'timestamp'
       );
 
     // $table can be a qualified name.  We need to resolve it if necessary into its component
