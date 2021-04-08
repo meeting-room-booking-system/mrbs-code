@@ -701,12 +701,27 @@ function entry_registration_is_open(array $entry)
 // after the entry start time.
 function entry_registration_cancellation_has_closed(array $entry)
 {
-  if (isset($entry['registration_closes_enabled']))
+  global $enable_periods;
+
+  if (!empty($entry['registration_closes_enabled']))
   {
     return (time() > registration_closes_timestamp($entry));
   }
 
-  return (time() > $entry['start_time']);
+  if ($enable_periods)
+  {
+    // Allow registration to be cancelled all the way up to the end of the
+    // the current day, because we don't know when in the day the period starts.
+    $date = new DateTime();
+    $date->setTimestamp($entry['start_time']);
+    $date->setTime(0, 0);
+    $date->modify('+1 day');
+    return (time() > $date->getTimestamp());
+  }
+  else
+  {
+    return (time() > $entry['start_time']);
+  }
 }
 
 
