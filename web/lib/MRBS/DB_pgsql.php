@@ -226,6 +226,7 @@ class DB_pgsql extends DB
         'bytea'                     => 'binary',
         'character'                 => 'character',
         'character varying'         => 'character',
+        'date'                      => 'timestamp',
         'decimal'                   => 'decimal',
         'double precision'          => 'real',
         'integer'                   => 'integer',
@@ -233,7 +234,8 @@ class DB_pgsql extends DB
         'real'                      => 'real',
         'smallint'                  => 'integer',
         'text'                      => 'character',
-        'time without time zone'    => 'time',
+        'time with time zone'       => 'timestamp',
+        'time without time zone'    => 'timestamp',
         'timestamp with time zone'  => 'timestamp'
       );
 

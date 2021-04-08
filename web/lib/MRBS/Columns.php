@@ -105,9 +105,6 @@ class Columns implements Countable, Iterator
       case 'real':
         $column->setNature(Column::NATURE_REAL);
         break;
-      case 'time':
-        $column->setNature(Column::NATURE_TIME);
-        break;
       case 'timestamp':
         $column->setNature(Column::NATURE_TIMESTAMP);
         break;

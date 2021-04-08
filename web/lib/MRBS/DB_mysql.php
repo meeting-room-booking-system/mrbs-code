@@ -237,6 +237,8 @@ class DB_mysql extends DB
     $nature_map = array(
         'bigint'      => 'integer',
         'char'        => 'character',
+        'date'        => 'timestamp',
+        'datetime'    => 'timestamp',
         'decimal'     => 'decimal',
         'double'      => 'real',
         'float'       => 'real',
@@ -247,10 +249,12 @@ class DB_mysql extends DB
         'numeric'     => 'decimal',
         'smallint'    => 'integer',
         'text'        => 'character',
-        'time'        => 'time',
+        'time'        => 'timestamp',
+        'timestamp'   => 'timestamp',
         'tinyint'     => 'integer',
         'tinytext'    => 'character',
-        'varchar'     => 'character'
+        'varchar'     => 'character',
+        'year'        => 'timestamp'
       );
 
     // Length in bytes of MySQL integer types
