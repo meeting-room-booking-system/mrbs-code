@@ -127,7 +127,8 @@ $mrbs_company = "Your Company";   // This line must always be uncommented ($mrbs
 // Uncomment this next line to use a logo instead of text for your organisation in the header
 //$mrbs_company_logo = "your_logo.gif";    // name of your logo file.   This example assumes it is in the MRBS directory
 
-// Uncomment this next line for supplementary information after your company name or logo
+// Uncomment this next line for supplementary information after your company name or logo.
+// This can contain HTML, for example if you want to include a link.
 //$mrbs_company_more_info = "You can put additional information here";  // e.g. "XYZ Department"
 
 // Uncomment this next line to have a link to your organisation in the header
