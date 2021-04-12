@@ -43,6 +43,12 @@ use MRBS\Form\FieldSelect;
 
 require "defaultincludes.inc";
 
+if ($auth['type'] != 'db')
+{
+  // You shouldn't be here unless you're using 'db' authentication
+  location_header('index.php');
+}
+
 // Get non-standard form variables
 $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
