@@ -3,6 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\MailQueue;
 use MRBS\User;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class AuthDb extends Auth
 {
@@ -330,6 +331,12 @@ class AuthDb extends Auth
         'from'  => $mail_settings['from'],
         'to'    => $users[0]['email']
       );
+    // Add the display name, if there is one, to the To address
+    if (isset($users[0]['display_name']) && ($users[0]['display_name'] !== ''))
+    {
+      $mailer = new PHPMailer();
+      $addresses['to'] = $mailer->addrFormat(array($addresses['to'], $users[0]['display_name']));
+    }
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
     $body .= \MRBS\get_vocab('password_reset_body', intval($expiry_time), $expiry_units);
