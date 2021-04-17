@@ -328,18 +328,24 @@ class AuthDb extends Auth
     $expiry_time = $auth['db']['reset_key_expiry'];
     \MRBS\toTimeString($expiry_time, $expiry_units, true, 'hours');
     $addresses = array(
-        'from'  => $mail_settings['from'],
-        'to'    => $users[0]['email']
+        'from'  => $mail_settings['from']
       );
-    // Add the display name, if there is one, to the To address
+    // Add the To address, using the display name if possible
+    // and get a name to use in the message body
     if (isset($users[0]['display_name']) && ($users[0]['display_name'] !== ''))
     {
       $mailer = new PHPMailer();
-      $addresses['to'] = $mailer->addrFormat(array($addresses['to'], $users[0]['display_name']));
+      $addresses['to'] = $mailer->addrFormat(array($users[0]['email'], $users[0]['display_name']));
+      $name = $users[0]['display_name'];
+    }
+    else
+    {
+      $addresses['to'] = $users[0]['email'];
+      $name = $users[0]['name'];
     }
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
-    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry_time), $expiry_units);
+    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry_time), $expiry_units, $name);
     $body .= "</p>\n";
 
     // Construct and add in the link
