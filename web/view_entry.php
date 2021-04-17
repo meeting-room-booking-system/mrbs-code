@@ -514,11 +514,14 @@ if (!isset($returl))
   if (isset($server['HTTP_REFERER']) && (substr($server['HTTP_REFERER'], -1) != '/'))
   {
     $parsed_url = parse_url($server['HTTP_REFERER']);
-    $returl = basename($parsed_url['path']);
+    if (isset($parsed_url['path']))
+    {
+      $returl = basename($parsed_url['path']);
+    }
   }
-  // If we haven't got a referer (eg we've come here from an email) then construct
+  // If we still haven't got a referer (eg if we've come here from an email) then construct
   // a sensible place to go to afterwards
-  else
+  if (!isset($returl))
   {
     $returl = 'index.php';
   }
