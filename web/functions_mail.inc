@@ -805,11 +805,11 @@ function create_addresses($data, $action)
   {
     if ($mail_settings['use_from_for_all_mail'])
     {
-      $cc[] = $mrbs_user->email;
+      $cc[] = $mrbs_user->mailbox();
     }
     else
     {
-      $from = $mrbs_user->email;
+      $from = $mrbs_user->mailbox();
     }
   }
 
@@ -878,7 +878,7 @@ function create_addresses($data, $action)
     $booker = auth()->getUser($data['create_by']);
     if (!empty($booker->email))
     {
-      $to[] = $booker->email;
+      $to[] = $booker->mailbox();
     }
   }
   // In case $to and $cc are empty, no need to go further
