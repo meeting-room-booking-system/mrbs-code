@@ -3,6 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\MailQueue;
 use MRBS\User;
+use PHPMailer\PHPMailer\PHPMailer;
 
 
 class AuthDb extends Auth
@@ -286,9 +287,22 @@ class AuthDb extends Auth
         'from'  => $mail_settings['from'],
         'to'    => $users[0]->email
       );
+    // Add the To address, using the display name if possible
+    // and get a name to use in the message body
+    if (isset($users[0]->display_name) && ($users[0]->display_name !== ''))
+    {
+      $mailer = new PHPMailer();
+      $addresses['to'] = $mailer->addrFormat(array($users[0]->email, $users[0]->display_name));
+      $name = $users[0]->display_name;
+    }
+    else
+    {
+      $addresses['to'] = $users[0]->email;
+      $name = $users[0]->username;
+    }
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
-    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry['value']), $expiry['units']);
+    $body .= \MRBS\get_vocab('password_reset_body', intval($expiry['value']), $expiry['units'], $name);
     $body .= "</p>\n";
 
     // Construct and add in the link
