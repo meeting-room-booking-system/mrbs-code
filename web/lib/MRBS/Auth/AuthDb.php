@@ -330,9 +330,12 @@ class AuthDb extends Auth
     $addresses = array(
         'from'  => $mail_settings['from']
       );
-    // Add the To address, using the display name if possible
-    // and get a name to use in the message body
-    if (isset($users[0]['display_name']) && ($users[0]['display_name'] !== ''))
+    // Add the To address, using the display name if possible (ie if it exists and there's
+    // only one user).
+    // Also get a name to use in the message body
+    if ((count($users) == 1) &&
+        isset($users[0]['display_name']) &&
+        ($users[0]['display_name'] !== ''))
     {
       $mailer = new PHPMailer();
       $addresses['to'] = $mailer->addrFormat(array($users[0]['email'], $users[0]['display_name']));
@@ -341,7 +344,9 @@ class AuthDb extends Auth
     else
     {
       $addresses['to'] = $users[0]['email'];
-      $name = $users[0]['name'];
+      // If there's only one user we can use the username, otherwise we have to use the
+      // email address which is the same for all users.
+      $name = (count($users) == 1) ? $users[0]['name'] : $users[0]['email'];
     }
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
