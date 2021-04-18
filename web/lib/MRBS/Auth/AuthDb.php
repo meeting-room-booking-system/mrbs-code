@@ -3,7 +3,6 @@ namespace MRBS\Auth;
 
 use MRBS\MailQueue;
 use MRBS\User;
-use PHPMailer\PHPMailer\PHPMailer;
 
 
 class AuthDb extends Auth
@@ -287,24 +286,27 @@ class AuthDb extends Auth
         'from'  => $mail_settings['from'],
         'to'    => $users[0]->email
       );
-    // Add the To address, using the display name if possible (ie if it exists and there's
-    // only one user).
-    // Also get a name to use in the message body
-    if ((count($users) == 1) &&
-        isset($users[0]->display_name) &&
-        ($users[0]->display_name !== ''))
+    // Add the To address.  Also get a name to use in the message body.
+    // If there's only one user we can use the username and display name, otherwise
+    // we have to use the email address which is the same for all users.
+    if ((count($users) == 1))
     {
-      $mailer = new PHPMailer();
-      $addresses['to'] = $mailer->addrFormat(array($users[0]->email, $users[0]->display_name));
-      $name = $users[0]->display_name;
+      $addresses['to'] = $users[0]->mailbox();
+      if (isset($users[0]->display_name) && ($users[0]->display_name !== ''))
+      {
+        $name = $users[0]->display_name;
+      }
+      else
+      {
+        $name = $users[0]->username;
+      }
     }
     else
     {
       $addresses['to'] = $users[0]->email;
-      // If there's only one user we can use the username, otherwise we have to use the
-      // email address which is the same for all users.
-      $name = (count($users) == 1) ? $users[0]->username : $users[0]->email;
+      $name = $users[0]->email;
     }
+
     $subject = \MRBS\get_vocab('password_reset_subject');
     $body = '<p>';
     $body .= \MRBS\get_vocab('password_reset_body', intval($expiry['value']), $expiry['units'], $name);
