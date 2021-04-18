@@ -151,7 +151,8 @@ function display_subtable_head($row)
   // We give some columns a type data value so that the JavaScript knows how to sort them
   echo "<th class=\"control\">&nbsp;</th>\n";
   // reservation name, with a link to the view_entry page
-  echo "<th><a href=\"view_entry.php?id=".$row['repeat_id']."&amp;series=1\">" . htmlspecialchars($row['name']) ."</a></th>\n";
+  echo '<th><a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
+       htmlspecialchars($row['name']) ."</a></th>\n";
 
   // create_by, area and room names
   echo "<th>" . htmlspecialchars($row['create_by']) . "</th>\n";
@@ -172,7 +173,8 @@ function display_series_title_row($row)
   echo "<tr id=\"row_" . $row['repeat_id'] . "\">\n";
   echo "<td class=\"control\">&nbsp;</td>\n";
   // reservation name, with a link to the view_entry page
-  echo "<td><a href=\"view_entry.php?id=".$row['repeat_id']."&amp;series=1\">" . htmlspecialchars($row['name']) ."</a></td>\n";
+  echo '<td><a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['repeat_id'] . '&series=1')) . '">' .
+        htmlspecialchars($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
   echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
@@ -201,7 +203,8 @@ function display_entry_row(array $row)
 
   // reservation name, with a link to the view_entry page
   echo "<td>";
-  echo "<a href=\"view_entry.php?id=".$row['id']."\">" . htmlspecialchars($row['name']) ."</a></td>\n";
+  echo '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+        htmlspecialchars($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
   echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
@@ -223,7 +226,7 @@ function display_entry_row(array $row)
 
   $query = http_build_query($vars, '', '&');
 
-  echo '<a href="index.php?' .htmlspecialchars($query) . '">';
+  echo '<a href="' . htmlspecialchars(multisite("index.php?$query")) . '">';
 
   if(empty($row['enable_periods']))
   {
