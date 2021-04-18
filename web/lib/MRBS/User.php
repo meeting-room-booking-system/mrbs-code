@@ -4,6 +4,8 @@ namespace MRBS;
 
 // This is a class for a general MRBS user, regardless of the authentication type.  Once authenticated each
 // user is converted into a standard MRBS User object with defined properties.
+use PHPMailer\PHPMailer\PHPMailer;
+
 class User extends Table
 {
   const TABLE_NAME = 'user';
@@ -33,6 +35,25 @@ class User extends Table
     parent::save();
     $this->saveGroups();
     $this->saveRoles();
+  }
+
+
+  // Returns an RFC 5322 mailbox address, ie an address in the format
+  // "Display name <email address>"
+  public function mailbox()
+  {
+    if (!isset($this->email))
+    {
+      return null;
+    }
+
+    if (!isset($this->display_name) || ($this->display_name === ''))
+    {
+      return $this->email;
+    }
+
+    $mailer = new PHPMailer();
+    return $mailer->addrFormat(array($this->email, $this->display_name));
   }
 
 
