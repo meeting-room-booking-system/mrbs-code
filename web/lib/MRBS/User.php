@@ -50,6 +50,7 @@ class User
     }
 
     $mailer = new PHPMailer();
+    $mailer->CharSet = get_mail_charset();
     return $mailer->addrFormat(array($this->email, $this->display_name));
   }
 

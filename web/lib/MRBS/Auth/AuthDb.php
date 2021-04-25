@@ -338,6 +338,7 @@ class AuthDb extends Auth
         ($users[0]['display_name'] !== ''))
     {
       $mailer = new PHPMailer();
+      $mailer->CharSet = \MRBS\get_mail_charset();
       $addresses['to'] = $mailer->addrFormat(array($users[0]['email'], $users[0]['display_name']));
       $name = $users[0]['display_name'];
     }
