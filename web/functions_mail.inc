@@ -176,7 +176,7 @@ function parse_address($email_address)
   {
     $result['common_name'] = '';
   }
-  
+
   return $result;
 }
 

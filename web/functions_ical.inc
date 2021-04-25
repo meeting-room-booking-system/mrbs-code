@@ -876,7 +876,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
   }
 
   // Put the people on the "to" list as required participants and those on the cc
-  // list as non particpants.   In theory the email client can then decide whether
+  // list as non participants.   In theory the email client can then decide whether
   // to enter the booking automatically on the user's calendar - although at the
   // time of writing (Dec 2010) there don't seem to be any that do so!
   if (!empty($addresses))
