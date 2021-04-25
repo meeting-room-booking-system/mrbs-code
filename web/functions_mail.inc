@@ -161,27 +161,22 @@ function getMailDateString($time)
 // Returns the result as an array index by 'common_name' and 'address'.
 function parse_address($email_address)
 {
-  if (utf8_strpos($email_address, '<') === false)
+  $result = array();
+
+  $mailer = new PHPMailer();
+  $mailer->CharSet = get_mail_charset();
+  $parsed_addresses = $mailer->parseAddresses($email_address);
+  $result['address'] = $parsed_addresses[0]['address'];
+
+  if (isset($parsed_addresses[0]['name']) && function_exists('mb_decode_mimeheader'))
   {
-    $cn = '';
-    $addr = $email_address;
+    $result['common_name'] = mb_decode_mimeheader($parsed_addresses[0]['name']);
   }
   else
   {
-    list($cn, $addr) = explode('<', $email_address, 2);
-
-    $cn = trim($cn);
-    $cn = trim($cn, '"');
-    $cn = trim($cn);
-
-    $addr = trim($addr);
-    $addr = rtrim($addr, '>');
-    $addr = trim($addr);
+    $result['common_name'] = '';
   }
-
-  $result = array();
-  $result['common_name'] = $cn;
-  $result['address'] = $addr;
+  
   return $result;
 }
 
