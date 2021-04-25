@@ -118,7 +118,7 @@ class MailQueue
     static $last_mail_sent = null;
     static $last_n_addresses = null;
 
-    $mail = new PHPMailer;
+    $mail = new PHPMailer();
 
     mail_debug("Preparing to send email ...");
     if ($mail_settings['debug'])
