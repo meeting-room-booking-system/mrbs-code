@@ -535,6 +535,12 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
                                'disabled'       => $disabled,
                                'formnovalidate' => true));
 
+  if ($delete)
+  {
+    $message = get_vocab("confirm_delete_user");
+    $button->setAttribute('onclick', "return confirm('" . escape_js($message) . "');");
+  }
+
   $field->setAttribute('class', 'submit_buttons')
         ->setLabelAttribute('class', 'no_suffix')
         ->addLabelElement($button)
