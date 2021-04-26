@@ -339,6 +339,7 @@ class AuthDb extends Auth
     {
       $mailer = new PHPMailer();
       $mailer->CharSet = \MRBS\get_mail_charset();
+      // Note that addrFormat() returns a MIME-encoded address
       $addresses['to'] = $mailer->addrFormat(array($users[0]['email'], $users[0]['display_name']));
       $name = $users[0]['display_name'];
     }

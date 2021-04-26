@@ -158,6 +158,7 @@ function getMailDateString($time)
 
 // Splits an email address of the form 'common_name <address>',
 // '"common_name" <address>' or just 'address' into a common name and an address.
+// Note that the common_name may have been MIME-encoded.
 // Returns the result as an array index by 'common_name' and 'address'.
 function parse_address($email_address)
 {
@@ -178,9 +179,20 @@ function parse_address($email_address)
       $result['address'] = $parsed_address['address'];
     }
 
-    if (isset($parsed_address['name']) && function_exists('mb_decode_mimeheader'))
+    if (isset($parsed_address['name']))
     {
-      $result['common_name'] = mb_decode_mimeheader($parsed_address['name']);
+      if (function_exists('mb_decode_mimeheader'))
+      {
+        $result['common_name'] = mb_decode_mimeheader($parsed_address['name']);
+      }
+      elseif (function_exists('iconv_mime_decode'))
+      {
+        $result['common_name'] = iconv_mime_decode($parsed_address['name'], 0, get_charset());
+      }
+      elseif (function_exists('imap_utf8'))
+      {
+        $result['common_name'] = imap_utf8($parsed_address['name']);
+      }
     }
   }
 
@@ -996,7 +1008,7 @@ function notifyAdminOnBooking($data, $mail_previous, $new_entry, $series, $start
   {
     $attachment['method']   = "REQUEST";
     $ical_components = array();
-    // TODO: the addresses have by this stage been mime_encoded.  It would probably be better to
+    // TODO: the addresses have by this stage been MIME-encoded.  It would probably be better to
     // TODO: pass unencoded addresses to create_ical_event() so that we don't have to decode them,
     // TODO: as mb_decode_mimeheader() isn't guaranteed to exist.
     $ical_components[] = create_ical_event($attachment['method'], $data, $addresses, $series);
