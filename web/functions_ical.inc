@@ -865,7 +865,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
   // they assume that the recipient already knows about the event.
 
   $organizer = parse_address($mail_settings['organizer']);
-  if (empty($organizer['common_name']))
+  if (!isset($organizer['common_name']) || ($organizer['common_name'] === ''))
   {
     $organizer['common_name'] = get_mail_vocab('mrbs');
   }
@@ -914,7 +914,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
           // Use the common name if there is one
           $attendee = parse_address($attendee);
           $results[] = "ATTENDEE;" .
-                       ((!empty($attendee['common_name'])) ? "CN=\"" . ical_escape_quoted_string($attendee['common_name']) . "\";" : "") .
+                       ((isset($attendee['common_name']) && ($attendee['common_name'] !== '')) ? "CN=\"" . ical_escape_quoted_string($attendee['common_name']) . "\";" : "") .
                        "PARTSTAT=NEEDS-ACTION;ROLE=$role:mailto:" . $attendee['address'];
         }
       }
