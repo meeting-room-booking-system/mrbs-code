@@ -870,7 +870,7 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
     $organizer['common_name'] = get_mail_vocab('mrbs');
   }
 
-  if (!empty($organizer['address']))
+  if (isset($organizer['address']) && ($organizer['address'] !== ''))
   {
     $results[] = "ORGANIZER;CN=\"" . ical_escape_quoted_string($organizer['common_name']) . "\":mailto:" . $organizer['address'];
   }
