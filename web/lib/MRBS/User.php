@@ -54,6 +54,8 @@ class User extends Table
 
     $mailer = new PHPMailer();
     $mailer->CharSet = get_mail_charset();
+    
+    // Note that addrFormat() returns a MIME-encoded address
     return $mailer->addrFormat(array($this->email, $this->display_name));
   }
 
