@@ -189,7 +189,11 @@ function parse_address($email_address)
       {
         $result['common_name'] = iconv_mime_decode($parsed_address['name'], 0, get_charset());
       }
-      elseif (function_exists('imap_utf8'))
+      // imap_utf8() produces utf-8 output, so we'll only use it if our charset is utf-8.  For
+      // other charsets we could in theory convert the output into our desired charset using iconv,
+      // but if we are able to do that then we wouldn't be here anyway because iconv_mime_decode()
+      // above would have worked.
+      elseif (function_exists('imap_utf8') && ('utf-8' == strtolower(get_charset())))
       {
         $result['common_name'] = imap_utf8($parsed_address['name']);
       }
