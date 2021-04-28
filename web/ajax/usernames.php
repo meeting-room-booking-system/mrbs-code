@@ -14,6 +14,12 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
+// And that they are a booking admin
+if (!is_book_admin())
+{
+  exit;
+}
+
 $result = array();
 
 if (method_exists(auth(), 'getUsernames'))

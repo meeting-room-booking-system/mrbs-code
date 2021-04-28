@@ -126,6 +126,7 @@ function get_page_level($page)
     case 'edit_room.php':               // Ordinary users can view room details
     case 'pending.php':                 // Ordinary users can view their own entries
     case 'registration_handler.php':    // Ordinary users can register for an event
+    case 'usernames.php':               // Ajax page for getting a list of users (booking admins can use this)
       $result = 1;
       break;
 
@@ -153,7 +154,6 @@ function get_page_level($page)
     case 'effective_permissions.php':   // Ajax page for getting effective permissions
     case 'import.php':
     case 'report.php':
-    case 'usernames.php':               // Ajax page for getting a list of users
       $result = 2;
       break;
 
