@@ -375,21 +375,27 @@ function print_logoff()
   }
 }
 
-// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
-// all of which have to be set.
+// $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room'.
 // When $omit_login is true the Login link is omitted.
 function print_banner($context, $simple=false, $omit_login=false)
 {
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
 
-  $vars = array('view'  => $context['view'],
-                'page_date' => format_iso_date($context['year'], $context['month'], $context['day']));
+  $vars = array();
 
-  if (!empty($context['area']))
+  if (isset($context['view']))
+  {
+    $vars['view'] = $context['view'];
+  }
+  if (isset($context['year']) && isset($context['month']) && isset($context['day']))
+  {
+    $vars['page_date'] = format_iso_date($context['year'], $context['month'], $context['day']);
+  }
+  if (isset($context['area']))
   {
     $vars['area'] = $context['area'];
   }
-  if (!empty($context['room']))
+  if (isset($context['room']))
   {
     $vars['room'] = $context['room'];
   }
@@ -463,61 +469,111 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
 {
   global $multisite, $site, $default_view, $default_view_all, $view_week_number;
 
-  // Set the context values if they haven't been given
-  if (!isset($context))
-  {
-    $context = array();
-  }
-
-  if (empty($context['area']))
-  {
-    $context['area'] = get_default_area();
-  }
-
-  if (empty($context['room']))
-  {
-    $context['room'] = get_default_room($context['area']);
-  }
-
-  if (!isset($context['view']))
-  {
-    $context['view'] = (isset($default_view)) ? $default_view : 'day';
-  }
-
-  if (!isset($context['view_all']))
-  {
-    $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
-  }
-
-  // Need to set the timezone before we can use date()
   if ($simple)
   {
-    // We don't really care what timezone is being used
-    mrbs_default_timezone_set();
+    $data = array();
+    $classes = array();
   }
   else
   {
+    // Set the context values if they haven't been given
+    if (!isset($context))
+    {
+      $context = array();
+    }
+
+    if (empty($context['area']))
+    {
+      $context['area'] = get_default_area();
+    }
+
+    if (empty($context['room']))
+    {
+      $context['room'] = get_default_room($context['area']);
+    }
+
+    if (!isset($context['view']))
+    {
+      $context['view'] = (isset($default_view)) ? $default_view : 'day';
+    }
+
+    if (!isset($context['view_all']))
+    {
+      $context['view_all'] = (isset($default_view_all)) ? $default_view_all : true;
+    }
+
+    // Need to set the timezone before we can use date()
     // This will set the correct timezone for the area
     get_area_settings($context['area']);
-  }
 
-  // If we dont know the right date then use today's
-  if (!isset($context['year']))
-  {
-    $context['year'] = date('Y');
-  }
-  if (!isset($context['month']))
-  {
-    $context['month'] = date('m');
-  }
-  if (!isset($context['day']))
-  {
-    $context['day'] = date('d');
-  }
+    // If we dont know the right date then use today's
+    if (!isset($context['year']))
+    {
+      $context['year'] = date('Y');
+    }
 
-  // Get the form token now, before any headers are sent, in case we are using the 'cookie'
-  // session scheme.  Otherwise we won't be able to store the Form token.
-  Form::getToken();
+    if (!isset($context['month']))
+    {
+      $context['month'] = date('m');
+    }
+
+    if (!isset($context['day']))
+    {
+      $context['day'] = date('d');
+    }
+
+    // Get the form token now, before any headers are sent, in case we are using the 'cookie'
+    // session scheme.  Otherwise we won't be able to store the Form token.
+    Form::getToken();
+
+    $page = this_page(false, '.php');
+
+    // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
+    // cannot use these PHP variables directly in the JavaScript files as those files are cached.
+    $data = array(
+      'view'          => $context['view'],
+      'view_all'      => $context['view_all'],
+      'area'          => $context['area'],
+      'room'          => $context['room'],
+      'page'          => $page,
+      'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
+      'is-admin'      => (is_admin()) ? 'true' : 'false',
+      'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
+      'lang-prefs'    => json_encode(get_lang_preferences())
+    );
+
+    if ($multisite && isset($site) && ($site !== ''))
+    {
+      $data['site'] = $site;
+    }
+
+    $mrbs_user = session()->getCurrentUser();
+    if (isset($mrbs_user))
+    {
+      $data['username'] = $mrbs_user->username;
+    }
+
+    // We need $timetohighlight for the day and week views
+    $timetohighlight = get_form_var('timetohighlight', 'int');
+    if (isset($timetohighlight))
+    {
+      $data['timetohighlight'] = $timetohighlight;
+    }
+
+    // Put the filename in as a class to aid styling.
+    $classes[] = $page;
+    // And if the user is logged in, add another class to aid styling
+    if (isset($mrbs_user))
+    {
+      $classes[] = 'logged_in';
+    }
+
+    // To help styling
+    if ($view_week_number)
+    {
+      $classes[] = 'view_week_number';
+    }
+  }
 
   $headers = array("Content-Type: text/html; charset=" . get_charset());
   http_headers($headers);
@@ -534,54 +590,6 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
   echo "<!--<![endif]-->\n";
 
   print_head($simple);
-
-  $page = this_page(false, '.php');
-
-  // Put some data attributes in the body element for the benefit of JavaScript.  Note that we
-  // cannot use these PHP variables directly in the JavaScript files as those files are cached.
-  $data = array(
-      'view'          => $context['view'],
-      'view_all'      => $context['view_all'],
-      'area'          => $context['area'],
-      'room'          => $context['room'],
-      'page'          => $page,
-      'page-date'     => format_iso_date($context['year'], $context['month'], $context['day']),
-      'is-admin'      => (is_admin()) ? 'true' : 'false',
-      'is-book-admin' => (is_book_admin()) ? 'true' : 'false',
-      'lang-prefs'    => json_encode(get_lang_preferences())
-    );
-
-  if ($multisite && isset($site) && ($site !== ''))
-  {
-    $data['site'] = $site;
-  }
-
-  $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user))
-  {
-    $data['username'] = $mrbs_user->username;
-  }
-
-  // We need $timetohighlight for the day and week views
-  $timetohighlight = get_form_var('timetohighlight', 'int');
-  if (isset($timetohighlight))
-  {
-    $data['timetohighlight'] = $timetohighlight;
-  }
-
-  // Put the filename in as a class to aid styling.
-  $classes = array($page);
-  // And if the user is logged in, add another class to aid styling
-  if (isset($mrbs_user))
-  {
-    $classes[] = 'logged_in';
-  }
-
-  // To help styling
-  if ($view_week_number)
-  {
-    $classes[] = 'view_week_number';
-  }
 
   echo '<body class="' . htmlspecialchars(implode(' ', $classes)) . '"';
   foreach ($data as $key => $value)
