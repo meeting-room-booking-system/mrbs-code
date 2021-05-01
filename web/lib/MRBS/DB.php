@@ -75,7 +75,9 @@ class DB
                     "deleting the MySQL user and recreating it with the same password.";
       }
 
-      throw new DBException($message, 0, $e);
+      // Output our own message to avoid giving away the database credentials
+      trigger_error($message, E_USER_WARNING);
+      fatal_error(get_vocab('fatal_db_error'));
     }
   }
 
