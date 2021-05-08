@@ -461,18 +461,30 @@ function validate(form)
     return false;
   }
 
-  <?php
-  // Check that there's a sensible value for rep_interval.   Only necessary
-  // if the browser doesn't support the HTML5 min and step attributes
-  ?>
-  if (!("min" in testInput) || !(("step" in testInput)))
+  <?php // Repeat checks ?>
+  var repType = form.find('input:radio[name=rep_type]:checked').val();
+  if ((repType !== undefined) && (parseInt(repType, 10) !== <?php echo REP_NONE ?>))
   {
-    var repType = form.find('input:radio[name=rep_type]:checked').val();
-
-    if ((repType !== <?php echo REP_NONE ?>) && (form.find('#rep_interval').val() < 1))
+    <?php
+    // Check that there's a sensible value for rep_interval.   Only necessary
+    // if the browser doesn't support the HTML5 min and step attributes
+    ?>
+    if ((!("min" in testInput) || !(("step" in testInput))) &&
+        (form.find('#rep_interval').val() < 1))
     {
       window.alert("<?php echo escape_js(get_vocab('invalid_rep_interval')) ?>");
       return false;
+    }
+    <?php
+    // Check that the repeat end date has been set (people often forget to do so).  If it's the
+    // same as the entry end date then it probably hasn't.
+    ?>
+    if ($('input[name="rep_end_date"]').val() === $('input[name="end_date"]').val())
+    {
+      if (!window.confirm("<?php echo escape_js(get_vocab('confirm_rep_end_date')) ?>"))
+      {
+        return false;
+      }
     }
   }
 
