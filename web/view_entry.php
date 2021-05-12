@@ -927,33 +927,34 @@ if (!$room_disabled)
 }
 
 // Copy and Copy Series
-echo "<div>\n";
-if (!$series)
+if (!$auth['only_admin_can_copy_others_entries'] || $writeable)
 {
   echo "<div>\n";
-  $params = array('action' => multisite('edit_entry.php'),
-                  'value'  => get_vocab('copyentry'),
-                  'inputs' => array('id' => $id,
-                                    'copy' => 1,
-                                    'returl' => $returl)
-                 );
-  generate_button($params);
+  if (!$series) {
+    echo "<div>\n";
+    $params = array('action' => multisite('edit_entry.php'),
+      'value' => get_vocab('copyentry'),
+      'inputs' => array('id' => $id,
+        'copy' => 1,
+        'returl' => $returl)
+    );
+    generate_button($params);
+    echo "</div>\n";
+  }
+  if ((!empty($repeat_id) || $series) && $repeats_allowed) {
+    echo "<div>\n";
+    $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+      'value' => get_vocab('copyseries'),
+      'inputs' => array('id' => $id,
+        'edit_type' => 'series',
+        'copy' => 1,
+        'returl' => $returl)
+    );
+    generate_button($params);
+    echo "</div>\n";
+  }
   echo "</div>\n";
 }
-if ((!empty($repeat_id) || $series) && $repeats_allowed)
-{
-  echo "<div>\n";
-  $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-                  'value'  => get_vocab('copyseries'),
-                  'inputs' => array('id' => $id,
-                                    'edit_type' => 'series',
-                                    'copy' => 1,
-                                    'returl' => $returl)
-                 );
-  generate_button($params);
-  echo "</div>\n";
-}
-echo "</div>\n";
 
 // Export and Export Series
 if (!$keep_private && !$enable_periods)

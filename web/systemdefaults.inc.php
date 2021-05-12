@@ -1127,6 +1127,10 @@ $auth['only_admin_can_book_multiday'] = false;
 // making separate bookings for the same time slot, but it does slow them down).
 $auth['only_admin_can_select_multiroom'] = false;
 
+// Set this to true if you want to restrict the ability to use the "Copy" button on
+// the view_entry page to ordinary users viewing their own entries and to admins.
+$auth['only_admin_can_copy_others_entries'] = false;
+
 // If you don't want ordinary users to be able to see the other users'
 // details then set this to true.  (Only relevant when using 'db' authentication]
 $auth['only_admin_can_see_other_users'] = false;
