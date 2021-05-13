@@ -203,7 +203,7 @@ function exception_handler($exception)
   $body = $exception->getMessage() . "\n" .
           $exception->getTraceAsString() . "\n";
 
-  output_error($heading, $body, $show_data=true);
+  output_error($heading, $body, true);
 
   switch ($class)
   {
