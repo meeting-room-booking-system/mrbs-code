@@ -63,8 +63,17 @@ function get_arg_string($args)
 // than debug_print_backtrace(), for example by replacing newlines with <br> tags.
 function generate_backtrace()
 {
+  global $debug;
+
   $backtrace = '';
-  $calls = debug_backtrace();
+  $options = DEBUG_BACKTRACE_PROVIDE_OBJECT;
+  // Unless we are debugging ignore arguments as these can give away
+  // database credentials
+  if (!$debug)
+  {
+    $options = $options | DEBUG_BACKTRACE_IGNORE_ARGS;
+  }
+  $calls = debug_backtrace($options);
 
   foreach ($calls as $i => $call)
   {
