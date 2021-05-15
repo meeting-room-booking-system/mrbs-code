@@ -419,6 +419,27 @@ $(document).on('page_ready', function() {
         adjustLabelWidths();
       }, 100));
 
+  <?php // Add the eye icons for toggling password visibility ?>
+  $('input[type="password"]').each(function() {
+      $(this).after($('<div class="eye"><?php
+          echo(preg_replace('/[\r\n]/', ' ', file_get_contents(MRBS_ROOT . '/images/eye.svg')))
+        ?></div>'))
+             .after($('<div class="eye off"><?php
+          echo(preg_replace('/[\r\n]/', ' ', file_get_contents(MRBS_ROOT . '/images/eye_off.svg')))
+        ?></div>'));
+    });
+
+  <?php // And add the password visibility toggling mechanism ?>
+  $('.eye svg').on('mousedown', function(e) {
+      e.preventDefault();
+      var parent = $(this).parent();
+      var grandparent = parent.parent();
+      var input = grandparent.find('input');
+      var newType = (parent.hasClass('off')) ? 'password' : 'text';
+      grandparent.find('.eye svg').toggle();
+      input.attr('type', newType);
+    });
+
 });
 
 <?php // We define our own page ready event so that we can trigger it after an Ajax load ?>
