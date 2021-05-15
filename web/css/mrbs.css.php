@@ -1574,12 +1574,13 @@ div#div_custom_html {
     margin-bottom: 1em;
   }
 
-  .standard fieldset > div > *:not(.none) {
-    display: block;
+  .standard fieldset > div > *:not(label):not(.none) {
+    display: inline-block;
     vertical-align: middle;
   }
 
   .standard fieldset > div > label {
+    display: block;
     text-align: left;
     padding-left: 0;
     padding-right: 0;
@@ -2580,3 +2581,16 @@ h2.date.loading::after {
   background-repeat: no-repeat;
 }
 
+div.eye {
+  height: 1em;
+}
+
+.eye svg {
+  position: relative;
+  height: 1em;
+  margin-left: -3em;
+}
+
+.eye.off svg {
+  display: none;
+}
