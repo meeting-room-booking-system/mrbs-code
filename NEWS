@@ -7,6 +7,204 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.9.3 (Sat 22nd May 2021):
+
+[-] Fixed problem when an LDAP search returns an entry with a null
+ username. See SF Support Requests #2200.
+
+[-] Fixed incorrect links in search results when using multisite.
+
+[*] Improved resilience of code to Ajax results from usernames.php. See
+ SF Bugs #491.
+
+[-] Fixed bug in getting column labels when using PostreSQL with a
+ schema.
+
+[*] For reminder and more_info emails, put the user's address on the cc
+ line if it can't be put on the from line, in order that the
+ recipient can use it in replies.
+
+[*] Changed email notifications so that if the email is a reminder or a
+ request for more information, an iCalendar attachment is not
+ included. Otherwise the recipient may not be able to reply to it.
+
+[-] Fixed a bug preventing email being sent in some circumstances on
+ Apache servers when an open_basedir restriction is in effect. See SF
+ Bugs #489.
+
+[*] Updated German translations. See SF Support Requests #2205.
+
+[-] Fixed bug causing the version parameter not to be added to a
+ filename if there's already another parameter in the query string.
+
+[*] Upgraded to latest version of DataTables
+
+[-] Fixed "DevTools failed to load SourceMap" 404 error. See SF Bugs
+ #493.
+
+[-] Fixed bug causing error when editing an entry immediately after
+ registering for an event. See SF Bugs #490.
+
+[*] Fixed note about backwards compatibility. See SF Support Requests
+ #2219.
+
+[*] Added "[DEBUG] " prefix to LDAP debug messages for consistency with
+ mail debug.
+
+[*] Updated zh-cn translations. See SF Patches #106.
+
+[-] Fixed bug preventing admins from making public bookings when
+ bookings are forced to be private.
+
+[+] Added new config variable $auth['force_private_for_guests'] which
+ will display all bookings as private to unlogged in users. See SF
+ Support Requests #2213.
+
+[+] Introduced a new config setting $auth['only_admin_can_book_before']
+ allowing site admins to set a 'go live' date for bookings.
+
+[*] Made logging in by email address under the 'db' auth scheme accept
+ equivalent Gmail addresses, ie ignoring dots in the local part of
+ the address and accepting either 'gmail.com' or 'googlemail.com' for
+ the domain.
+
+[*] Made the "Lost your password" feature in the 'db' auth scheme accept
+ equivalent Gmail addresses.
+
+[-] Fixed invalid HTML
+
+[-] Fixed bug when editing a room and $booking_types is not set. See SF
+ Support Requests #2264.
+
+[*] Improved performance when making a booking and using LDAP
+ authentication
+
+[*] Eliminated use of deprecated parameter signature for ldap_connect().
+
+[-] Fixed bug when an LDAP entry doesn't have a name attribute
+
+[-] [auth_ldap] Suppressed legitimate "no such object" LDAP errors
+
+[-] [auth_ldap] Fixed bug occurring when $ldap_unbind_between_attempts is set
+
+[-] Fixed bug causing admins not to be recognised in some circumstances
+ when using an array of LDAP hosts. At the same time improved
+ performance.
+
+[-] Fixed potential bug when working with an array of LDAP hosts
+
+[-] [auth_ldap] Fixed bug when using an LDAP library that doesn't suport
+ LDAP_OPT_DIAGNOSTIC_MESSAGE
+
+[*] Improved usability by returning to admin.php with the correct area
+ set when trying to delete an area that still contains rooms.
+
+[-] [German translation] Fixed spelling mistake. See SF Bugs #499.
+
+[-] Fixed bug causing the $force_resolution config setting to be ignored
+
+[*] Updated minimum PHP version. See SF Bugs #500.
+
+[-] Fixed bug when importing bookings that are not private or
+ confidential
+
+[-] Fixed bug preventing the default_type being set correctly when the
+ area is changed
+
+[-] Fixed bug when trying to rename an area to a name that has already
+ been used
+
+[-] Fixed bug causing times not to be converted to an integral number of
+ units
+
+[-] Fixed misleading error message and changed name of config variable
+ to $periods_booking_opens
+
+[+] Added a new config variable $periods_booking_day_starts to set the
+ time of day when bookings open when using periods
+
+[-] Fixed bug when $force_resolution is set stopping periods working
+ properly (bug introduced in the recent commit to fix
+ $force_resolution)
+
+[-] Fixed SF Bugs #502 (day number obscured by week number in month
+ view)
+
+[-] Fixed bug when usernames are all numeric
+
+[*] Provided a more helpful error message than a fatal error if somebody
+ accesses edit_entry.php with an invalid room id (usually because
+ they've been using a bookmark that is no longer valid).
+
+[+] Added a new config variable, $default_name_display_name, to allow
+ the brief description to default to the user's display name.
+
+[-] Fixed bug when advance booking policies cross a DST boundary. The
+ assumed correct behaviour is that a policy of, for example, "2 weeks
+ ahead" means 2 nominal weeks rather than 2*7*24*60*60 seconds.
+
+[+] Added a new config setting, $measure_max_to_start_time, to allow max
+ book ahead times to be measured to the start rather than end time.
+ [The time interval is normally measured to the end time of the
+ booking. This is to prevent users cheating the system by booking a
+ very long slot with the start time just inside the limit and then
+ either not using the early part of the booking, or else editing it
+ down to what they actually need later. However this is not very
+ intuitive for users who might expect the measurement to be relative
+ to the start time.]
+
+[-] Fixed bug resulting in email not being delivered: "550 Maximum line
+  length exceeded (see RFC 5322 2.1.1)".
+
+[-] Replaced \n with \r\n for EOL in mail messages. See RFC 5322 2.1.
+
+[*] Temporary fix for SQL errors of the type "Syntax error or access
+ violation: 1055 'mrbs.E.start_time' isn't in GROUP BY". See SF
+ Support Requests #2333.
+
+[*] Added support for more data types for custom fields - see SF Support
+ Requests #2333
+
+[*]  Allowed $mrbs_company_more_info to contain HTML. See SF Support
+ Requests #2067.
+
+[*] Fixed problem when users try to go directly to edit_users.php when
+ the authentication scheme is other than 'db'.
+
+[*] Added the display name, if there is one, to the To address for a
+ password reset email
+
+[*] Used the user's display name in the body of the password reset
+ email.
+
+[-] Fixed broken links when in multisite mode
+
+[*] Renamed room_admin_email and area_admin_email fields to make it less
+ confusing, as they don't have any admin powers
+
+[*] Added a confirmation step for deleting a user. See SF Support
+ Requests #2341.
+
+[-] Fixed bug preventing booking admins from getting a list of users in
+ the Created By drop-down on the edit_entry form.
+
+[*] Prevented the database credentials being given away when there's an
+ error
+
+[*] Prevented multiple uncaught exceptions when there's a database
+ connection error
+
+[*] Added a check that the repeat end date has been set.
+
+[+] Added a configuration option to limit the appearance of the Copy
+ button to bookings for which you have write permission.
+
+[*] Added password visibility toggling
+
+[*] Upgraded to PHPMailer Release 6.4.1
+
+
+-------------------------------------------------------------------------------
 Version 1.9.2 (Wed 14th October 2020):
 
 [-] Fixed bug when upgrading to or installing MRBS 1.9.1 and using MySQL
