@@ -1,8 +1,1227 @@
+2021-05-22  John Beranek  <jberanek@users.sourceforge.net>
+
+	* web/version_num.inc:
+	* Updated version number for release.
+	[251606644a4c] [tip]
+
+2021-05-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/images/eye.svg, web/images/eye_off.svg:
+	Reformatted
+	[6b940cf3f17b]
+
+	* web/lib/PHPMailer/README.md, web/lib/PHPMailer/SECURITY.md,
+	web/lib/PHPMailer/VERSION, web/lib/PHPMailer/composer.json,
+	web/lib/PHPMailer/get_oauth_token.php,
+	web/lib/PHPMailer/language/phpmailer.lang-af.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ar.php,
+	web/lib/PHPMailer/language/phpmailer.lang-az.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ba.php,
+	web/lib/PHPMailer/language/phpmailer.lang-be.php,
+	web/lib/PHPMailer/language/phpmailer.lang-bg.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ca.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ch.php,
+	web/lib/PHPMailer/language/phpmailer.lang-cs.php,
+	web/lib/PHPMailer/language/phpmailer.lang-da.php,
+	web/lib/PHPMailer/language/phpmailer.lang-de.php,
+	web/lib/PHPMailer/language/phpmailer.lang-el.php,
+	web/lib/PHPMailer/language/phpmailer.lang-eo.php,
+	web/lib/PHPMailer/language/phpmailer.lang-es.php,
+	web/lib/PHPMailer/language/phpmailer.lang-et.php,
+	web/lib/PHPMailer/language/phpmailer.lang-fa.php,
+	web/lib/PHPMailer/language/phpmailer.lang-fi.php,
+	web/lib/PHPMailer/language/phpmailer.lang-fo.php,
+	web/lib/PHPMailer/language/phpmailer.lang-fr.php,
+	web/lib/PHPMailer/language/phpmailer.lang-gl.php,
+	web/lib/PHPMailer/language/phpmailer.lang-he.php,
+	web/lib/PHPMailer/language/phpmailer.lang-hi.php,
+	web/lib/PHPMailer/language/phpmailer.lang-hr.php,
+	web/lib/PHPMailer/language/phpmailer.lang-hu.php,
+	web/lib/PHPMailer/language/phpmailer.lang-hy.php,
+	web/lib/PHPMailer/language/phpmailer.lang-id.php,
+	web/lib/PHPMailer/language/phpmailer.lang-it.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ja.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ka.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ko.php,
+	web/lib/PHPMailer/language/phpmailer.lang-lt.php,
+	web/lib/PHPMailer/language/phpmailer.lang-lv.php,
+	web/lib/PHPMailer/language/phpmailer.lang-mg.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ms.php,
+	web/lib/PHPMailer/language/phpmailer.lang-nb.php,
+	web/lib/PHPMailer/language/phpmailer.lang-nl.php,
+	web/lib/PHPMailer/language/phpmailer.lang-pl.php,
+	web/lib/PHPMailer/language/phpmailer.lang-pt.php,
+	web/lib/PHPMailer/language/phpmailer.lang-pt_br.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ro.php,
+	web/lib/PHPMailer/language/phpmailer.lang-ru.php,
+	web/lib/PHPMailer/language/phpmailer.lang-sk.php,
+	web/lib/PHPMailer/language/phpmailer.lang-sl.php,
+	web/lib/PHPMailer/language/phpmailer.lang-sr.php,
+	web/lib/PHPMailer/language/phpmailer.lang-sr_latn.php,
+	web/lib/PHPMailer/language/phpmailer.lang-sv.php,
+	web/lib/PHPMailer/language/phpmailer.lang-tl.php,
+	web/lib/PHPMailer/language/phpmailer.lang-tr.php,
+	web/lib/PHPMailer/language/phpmailer.lang-uk.php,
+	web/lib/PHPMailer/language/phpmailer.lang-vi.php,
+	web/lib/PHPMailer/language/phpmailer.lang-zh.php,
+	web/lib/PHPMailer/language/phpmailer.lang-zh_cn.php,
+	web/lib/PHPMailer/phpunit.xml.dist,
+	web/lib/PHPMailer/src/Exception.php,
+	web/lib/PHPMailer/src/OAuth.php,
+	web/lib/PHPMailer/src/PHPMailer.php, web/lib/PHPMailer/src/POP3.php,
+	web/lib/PHPMailer/src/SMTP.php:
+	Upgraded to PHPMailer Release 6.4.1
+	[7a7b8962dde6]
+
+2021-05-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/css/mrbs.css.php, web/images/eye.svg, web/images/eye_off.svg,
+	web/js/general.js.php:
+	Added password visibility toggling
+	[040d8cf1d572]
+
+2021-05-13  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en:
+	Improved error message.
+	[3c7c345282eb]
+
+	* web/functions_error.inc:
+	Removed unused local variable
+	[c510e6bf6ac4]
+
+	* web/functions_error.inc:
+	Hid arguments in debug backtrace, unless $debug is set, in order to
+	avoid giving away database credentials.
+	[747376bc01ca]
+
+2021-05-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php, web/view_entry.php:
+	Added a configuration option to limit the appearance of the Copy
+	button to bookings for which you have write permission.
+	[c14d62c356c4]
+
+2021-05-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/edit_entry.js.php, web/lang/lang.en:
+	Added a check that the repeat end date has been set.
+	[06513ccfe6b7]
+
+2021-05-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB.php:
+	Prevented the database credentials being given away when there's an
+	error
+	[304c56919cb2]
+
+	* web/Themes/default/header.inc:
+	Prevented multiple uncaught exceptions when there's a database
+	connection error
+	[669f18758fb4]
+
+2021-04-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/ajax/usernames.php, web/mrbs_auth.inc:
+	Fixed bug preventing booking admins from getting a list of users in
+	the Created By drop-down on the edit_entry form.
+	[5b4ac2cc5012]
+
+2021-04-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Tweaked parse_address()
+	[4610e2e95740]
+
+2021-04-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php, web/lang/lang.en:
+	Added a confirmation step for deleting a user. See SF Support
+	Requests #2341.
+	[7d78128b57a4]
+
+	* web/functions_mail.inc, web/lib/MRBS/Auth/AuthDb.php,
+	web/lib/MRBS/User.php:
+	Improved parse_address() by adding alternatives to
+	mb_decode_mimeheader()
+	[67520a0e970b]
+
+	* web/functions_ical.inc, web/functions_mail.inc:
+	Restructured
+	[7f9a644284e2]
+
+	* web/functions_ical.inc, web/functions_mail.inc:
+	Restructured
+	[f7f55943100b]
+
+2021-04-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Tweaked comment
+	[249af44b0905]
+
+	* web/functions_mail.inc:
+	Added comment
+	[58224b927faf]
+
+	* web/functions_ical.inc, web/functions_mail.inc:
+	Fixed typo in comment
+	[c27cb3155d36]
+
+	* web/functions_mail.inc:
+	Fixed problem with multibyte common names in ical events
+	[990fca1e30ec]
+
+	* web/lib/MRBS/Auth/AuthDb.php, web/lib/MRBS/MailQueue.php,
+	web/lib/MRBS/User.php:
+	Fixed problem with multibyte display names in email addresses
+	[2d2d7af11ec9]
+
+2021-04-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en:
+	Renamed room_admin_email and area_admin_email fields to make it less
+	confusing, as they don't have any admin powers
+	[58c65af1fa38]
+
+2021-04-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/pending.php:
+	Fixed broken links when in multisite mode
+	[725365d6a5e5]
+
+	* web/functions_mail.inc, web/lib/MRBS/User.php:
+	Added the display name to email notifications
+	[2ab9ffebf347]
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Fixed bug in previous commit when there's more than one user with
+	the same email address
+	[04e3557b34f0]
+
+2021-04-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en, web/lib/MRBS/Auth/AuthDb.php:
+	Used the user's display name in the body of the password reset
+	email.
+	[c9ae99fe23cc]
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Added the display name, if there is one, to the To address for a
+	password reset email
+	[435f252fb4fb]
+
+	* web/view_entry.php:
+	Fixed occasional undefined index: path error.
+	[35718d11def6]
+
+2021-04-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed problem when users try to go directly to edit_users.php when
+	the authentication scheme is other than 'db'.
+	[2262614cefb3]
+
+2021-04-10  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/systemdefaults.inc.php:
+	Allowed $mrbs_company_more_info to contain HTML. See SF Support
+	Requests #2067.
+	[86933a2bb071]
+
+2021-04-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php, web/lib/MRBS/DB_pgsql.php:
+	Added support for more data types for custom fields - see SF Support
+	Requests #2333
+	[175262f916b6]
+
+	* web/lib/MRBS/DB_pgsql.php:
+	Fixed fatal error.
+	[4a4feb77a76d]
+
+	* web/mrbs_sql.inc:
+	Fixed bug causing "Cancel registration" button sometimes not to
+	appear when it should do.
+	[41d5c05e491c]
+
+2021-04-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB.php, web/lib/MRBS/DBFactory.php,
+	web/lib/MRBS/DB_mysql.php:
+	Minor tweak
+	[0d245842e146]
+
+	* web/lib/MRBS/DB_mysql.php:
+	Temporary fix for SQL errors of the type "Syntax error or access
+	violation: 1055 'mrbs.E.start_time' isn't in GROUP BY". See SF
+	Support Requests #2333.
+	[f5bf2c18bc62]
+
+2021-04-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Minor tweak
+	[32bb1872aded]
+
+	* web/functions_mail.inc:
+	Removed whitespace from the beginning of the file
+	[a79f66327414]
+
+	* web/functions_mail.inc:
+	Converted CSS LF endings to CRLF
+	[066525211e8f]
+
+2021-04-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Simplified regex
+	[78a7f2d86e2c]
+
+	* web/functions_mail.inc:
+	Replaced \n with \r\n for EOL in mail messages. See RFC 5322 2.1.
+	[e6c626112bb8]
+
+	* web/functions_mail.inc:
+	Fixed bug resulting in email not being delivered: "550 Maximum line
+	length exceeded (see RFC 5322 2.1.1)".
+	[03e3730ee457]
+
+2021-03-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js.inc:
+	Fixed bug when working in multisite mode
+	[376a2cd59aaf]
+
+	* web/js/resizable.js.php:
+	Reformatted
+	[4fe07750308a]
+
+	* web/js/resizable.js.php:
+	Restructured
+	[bdc348011095]
+
+2021-03-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc:
+	Removed redundant code
+	[d114a7c6d1ff]
+
+	* web/Themes/default/header.inc:
+	Added a username data attribute
+	[7f0e8a036d31]
+
+	* web/js/refresh.js.php:
+	Only included visible columns in sizing, in case some have been
+	hidden
+	[d29a68c4d6b5]
+
+	* web/functions_table.inc:
+	Fixed bug in previous commit
+	[5172b72de384]
+
+	* web/functions_table.inc:
+	Restructured
+	[48e058cb2275]
+
+2021-03-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Corrected comment
+	[8589c723d4be]
+
+2021-03-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.en, web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	Added a new config setting, $measure_max_to_start_time, to allow max
+	book ahead times to be measured to the start rather than end time.
+	[The time interval is normally measured to the end time of the
+	booking. This is to prevent users cheating the system by booking a
+	very long slot with the start time just inside the limit and then
+	either not using the early part of the booking, or else editing it
+	down to what they actually need later. However this is not very
+	intuitive for users who might expect the measurement to be relative
+	to the start time.]
+	[5ba192554a94]
+
+	* web/mrbs_sql.inc:
+	Fixed registration opens and closes so that they compensate for DST
+	changes and the user sees what they expect to see.
+	[171b17eb745c]
+
+	* web/edit_entry_handler.php:
+	Fixed bug introduced in recent commits
+	[da6ae8d7c7a9]
+
+	* web/edit_entry_handler.php:
+	Fixed bug causing the registration limit value to be overwritten if
+	registration is disabled
+	[b55f1f73dcb4]
+
+	* web/edit_entry_handler.php:
+	Removed redundant code
+	[27aeb2c977a9]
+
+	* web/edit_entry_handler.php:
+	Fixed bug causing the registration opens and closes values to be
+	overwritten if registration is disabled
+	[0ec096f4c5ec]
+
+	* web/functions.inc:
+	Removed redundant code now that the minimum version of PHP includes
+	the DateTimeZone class in the core.
+	[1b87cbda2e21]
+
+2021-03-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/mrbs_sql.inc:
+	Fixed bug when advance booking policies cross a DST boundary. The
+	assumed correct behaviour is that a policy of, for example, "2 weeks
+	ahead" means 2 nominal weeks rather than 2*7*24*60*60 seconds.
+	[86031305e074]
+
+	* web/mrbs_sql.inc:
+	Removed commented out debugging lines
+	[186586882240]
+
+2021-03-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/systemdefaults.inc.php:
+	Added a new config variable, $default_name_display_name, to allow
+	the brief description to default to the user's display name.
+	[6aafd5a68b9b]
+
+2021-03-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Added comment
+	[b8c96c19d8ff]
+
+	* web/edit_entry.php, web/lang/lang.en:
+	Provided a more helpful error message than a fatal error if somebody
+	accesses edit_entry.php with an invalid room id (usually because
+	they've been using a bookmark that is no longer valid).
+	[80e9e4e872e7]
+
+2021-03-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/general.js.php:
+	Fixed bug when usernames are all numeric
+	[19dac9845cda]
+
+2021-03-09  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_room_handler.php:
+	Removed unnecessary exception throw.
+	[f13e0b8eec10]
+
+2021-03-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/functions.inc, web/lang/lang.en,
+	web/mrbs_sql.inc:
+	Made $periods_booking_opens apply to registrations
+	[f75bb135b46e]
+
+2021-02-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php:
+	Added comments
+	[57d149cb9d03]
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php:
+	Fixed SF Bugs #502 (day number obscured by week number in month
+	view)
+	[5c4369a17860]
+
+2021-02-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug in recent commit
+	[d44c57f31531]
+
+2021-02-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/functions_ical.inc:
+	Retrieve the headers as well as the body in url_get_contents
+	[4ba7ac6061d9]
+
+2021-02-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/resizable.js.php:
+	Removed unnecessary return statement
+	[1e2eb5d70f73]
+
+	* web/js/resizable.js.php:
+	Simplified code
+	[0aefba3f8a16]
+
+2021-02-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	Fixed misleading error message and changed name of config variable
+	to $periods_booking_opens
+	[d0034ea39660]
+
+	* web/mrbs_sql.inc, web/systemdefaults.inc.php:
+	Added a new config variable $periods_booking_day_starts to set the
+	time of day when bookings open when using periods
+	[4d1377c42a09]
+
+	* web/functions.inc:
+	Fixed bug when $force_resolution is set stopping periods working
+	properly (bug introduced in the recent commit to fix
+	$force_resolution)
+	[ff51226292c1]
+
+	* web/mrbs_sql.inc:
+	Restructured
+	[4d9c6ac97c8e]
+
+2021-02-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Tweaked code and added comments
+	[e1a47c1d99a9]
+
+	* web/functions.inc:
+	Added emulations of the new PHP 8 string functions
+	[b027968c5ce8]
+
+2021-01-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug causing times not to be converted to an integral number of
+	units
+	[35a8e6a128e9]
+
+2021-01-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area_handler.php, web/lang/lang.en, web/mrbs_sql.inc:
+	Fixed bug when trying to rename an area to a name that has already
+	been used
+	[545b13c9e188]
+
+2021-01-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area_handler.php:
+	Fixed potential minor bug
+	[9e792b6ee47b]
+
+	* web/internalconfig.inc.php:
+	Fixed bug preventing the default_type being set correctly when the
+	area is changed
+	[d0fa20a2156e]
+
+2021-01-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/lib/MRBS/Form/FieldTimeWithUnits.php:
+	Imposed a minimum value of 0 for registration opens
+	[ae8f2a4ece20]
+
+	* web/edit_entry_handler.php, web/functions.inc:
+	Fixed uncaught exception if you try and set a registration
+	opens/closes time outside the range for its database type (4 byte
+	signed int).
+	[10d874fa1bdb]
+
+2021-01-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/import.php, web/mrbs_sql.inc:
+	Fixed bug when importing bookings that are not private or
+	confidential
+	[88d102e84018]
+
+2021-01-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* INSTALL:
+	Updated minimum PHP version. See SF Bugs #500.
+	[28cb80d62ce0]
+
+2021-01-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/datepicker.js.php:
+	Slightly improved performance
+	[9c2c4c6499ff]
+
+	* web/functions.inc:
+	Fixed bug causing the $force_resolution config setting to be ignored
+	[4ea903fb2ba0]
+
+2021-01-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.de:
+	Fixed spelling mistake. See SF Bugs #499
+	[9eae0961b4dc]
+
+2021-01-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Removed redundant code (the room id will have been set if necessary
+	in standard_vars.inc.php
+	[9ea160943174]
+
+	* web/del.php:
+	Improved usability by returning to admin.php with the correct area
+	set when trying to dfelete an area that still contains rooms.
+	[eba00754a659]
+
+2021-01-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Changed error message for the case when the PHP 'ldap' extension is
+	not available.
+	[f7112dbf4c9b]
+
+2021-01-08  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Added comment
+	[7b87232b0c7d]
+
+2021-01-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed bug when using an LDAP library that doesn't suport
+	LDAP_OPT_DIAGNOSTIC_MESSAGE
+	[c9534b9211f6]
+
+2021-01-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/Themes/default/header.inc, web/css/mrbs.css.php:
+	Eliminated duplicate ID
+	[979418b9bf29]
+
+2020-12-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added more profiling information
+	[a5d329d001cc]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Replaced value with constant
+	[f14e461af8eb]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Improved error reporting
+	[18ba4d96da46]
+
+2020-12-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Trivial change
+	[4211c0ad77d3]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Trivial change
+	[646b84461d59]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Removed redundant code
+	[f4cc5804d84d]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed bug causing admins not to be recognised in some circumstances
+	when using an array of LDAP hosts. At the same time improved
+	performance.
+	[9ef4b2ab40dc]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed potential bug when working with an array of LDAP hosts
+	[af93afe4ae4b]
+
+2020-12-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added line number to debug information
+	[5a756427b9fa]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added debugging information
+	[58675ebc55da]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed bug occurring when $ldap_unbind_between_attempts is set
+	[783d21b5a5dd]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Restructured
+	[a287f32cfc0d]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed bug
+	[dc755188ff84]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Restructured
+	[d12a268e2378]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Suppressed legitimate "no such object" LDAP errors
+	[e1ec20f3bb52]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Restructured
+	[921ea7617eed]
+
+2020-12-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql:
+	Added comments
+	[78faf9aa41cc]
+
+	* web/systemdefaults.inc.php:
+	Added comment
+	[99eedbda27b4]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Eliminated use of deprecated parameter signature for ldap_connect().
+	[f003df65b90c]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed bug when an entry doesn't have a name attribute
+	[ce44f0d4db29]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Improved performance
+	[df463cc98688]
+
+2020-12-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql:
+	Added comments
+	[2af4f22cdcad]
+
+	* web/upgrade/81/post.inc:
+	Fixed problem in last commit
+	[cdd46e5328a1]
+
+	* web/upgrade/67/mysql.sql, web/upgrade/67/pgsql.sql,
+	web/upgrade/81/mysql.sql, web/upgrade/81/pgsql.sql,
+	web/upgrade/81/post.inc:
+	Fixed problem in upgrade procedure
+	[df9f94c36c00]
+
+2020-12-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Improved performance when making a booking and using LDAP
+	authentication
+	[3c3433a531d5]
+
+2020-12-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/report.php:
+	Restructured
+	[d744b3b5440b]
+
+	* web/search.php:
+	Fixed bug in last commit
+	[d2188fe96933]
+
+	* web/search.php:
+	Restructured
+	[ed2ac2c34beb]
+
+	* web/edit_room.php, web/edit_room_handler.php:
+	Fixed bug when editing a room and $booking_types is not set. See SF
+	Support Requests #2264.
+	[a97b05331f02]
+
+2020-12-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/datatables.js.php, web/js/datepicker.js.php,
+	web/js/index.js.php, web/js/resizable.js.php:
+	Replaced == with ===
+	[c5ceafe7a956]
+
+	* web/js/edit_entry.js.php:
+	Replaced == with ===
+	[56015cdc185d]
+
+	* web/js/general.js.php:
+	Replaced == with ===
+	[923a6c963007]
+
+	* web/css/mrbs.css.php:
+	Fixed invalid CSS selector
+	[cac02021bc32]
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Changed parameter name to match interface
+	[9e3487dfb831]
+
+	* web/Themes/classic126/styling.inc, web/Themes/default/styling.inc:
+	Corrected typo in comment
+	[aad9e48b8652]
+
+	* web/Themes/classic126/styling.inc, web/Themes/default/styling.inc:
+	Added comments. See SF Bugs #497.
+	[20a09cb4f169]
+
+2020-12-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_users.php:
+	Fixed invalid HTML
+	[eabada290044]
+
+2020-12-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Removed redundant global declaration
+	[eea37ff0376c]
+
+	* web/lib/MRBS/Auth/AuthDb.php:
+	Made the "Lost your password" feature in the 'db' auth scheme accept
+	equivalent Gmail addresses.
+	[a29b4f07c1ae]
+
+	* web/functions.inc, web/lib/MRBS/Auth/AuthDb.php:
+	Made logging in by email address under the 'db' auth scheme accept
+	equivalent Gmail addresses, ie ignoring dots in the local part of
+	the address and accepting either 'gmail.com' or 'googlemail.com' for
+	the domain.
+	[994942d03f53]
+
+2020-11-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php:
+	Fixed bug "Unknown nature 'mediumtext'" introduced in recent commit
+	[152ac6a0bb9c]
+
+2020-11-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_auth.inc, web/systemdefaults.inc.php:
+	Introduced a new config setting $auth['only_admin_can_book_before']
+	allowing site admins to set a 'go live' date for bookings.
+	[b1fd6939c3b9]
+
+2020-11-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_mail.inc:
+	Restructured
+	[7459ce75b7b1]
+
+	* web/lib/MRBS/Column.php, web/lib/MRBS/Columns.php:
+	Added Column and Columns classes
+	[29f04d517cb2]
+
+2020-11-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/systemdefaults.inc.php:
+	Added new config variable $auth['force_private_for_guests'] which
+	will display all bookings as private to unlogged in users. See SF
+	Support Requests #2213.
+	[3ab426c35637]
+
+2020-11-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc, web/lib/MRBS/Auth/AuthDb.php:
+	Fixed bug causing the x-msg scheme to be used sometimes in the reset
+	password link.
+	[a286c213867b]
+
+2020-11-19  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/edit_entry_handler.php:
+	Fixed bug preventing admins from making public bookings when
+	bookings are forced to be private.
+	[7d48435f40ca]
+
+2020-11-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.zh-cn:
+	Updated zh-cn translations. See SF Patches #106.
+	[bb6e445c8d1c]
+
+2020-11-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/internalconfig.inc.php, web/language.inc,
+	web/lib/MRBS/System.php:
+	Slightly better fix for the recent $override_locale fatal error
+	problem
+	[425a48189fe9]
+
+	* web/lib/MRBS/System.php:
+	Fixed bug introduced since 1.9.2 causing a fatal error when using
+	$override_locale.
+	[c2e4a16bf368]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added "[DEBUG] " prefix to LDAP debug messages for consistency with
+	mail debug.
+	[6183f6cc8425]
+
+2020-11-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Updated comments
+	[4872ff78465a]
+
+	* web/edit_entry.php, web/functions.inc, web/lang/lang.en,
+	web/mrbs_sql.inc, web/view_entry.php:
+	Added support for periods when using registration opens and closes
+	[00eb2f5e2286]
+
+	* web/edit_entry.php, web/lang/lang.en,
+	web/lib/MRBS/Form/FieldTimeWithUnits.php:
+	Added some text at the end of the registration_opens and _closes
+	fields
+	[bdb67876cdd0]
+
+	* web/edit_entry_handler.php, web/js/edit_entry.js.php,
+	web/js/general.js.php, web/mrbs_sql.inc:
+	Made the enablers toggle the disabled checkboxes. Fixed a bug
+	causing the registrant_limit_enabled checkbox to be ignored.
+	[3ac6f264742c]
+
+2020-11-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/js/general.js.php:
+	Made the registrant_limit_enabled checkbox into an enabler.
+	[4e131341db13]
+
+	* web/js/edit_area.js.php, web/js/general.js.php:
+	Made the registration opens and closes enabler checkboxes toggle the
+	disabled state of their corresponding times.
+	[2a8cf4180370]
+
+	* web/js/edit_area.js.php:
+	Fixed minor bug causing the maximum duration units select element
+	not to be disabled when the enabler checkbox is not checked.
+	[68b113f53672]
+
+2020-11-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php, web/systemdefaults.inc.php:
+	Added default settings for registration
+	[ecd58fb8eaa4]
+
+	* web/mrbs_sql.inc, web/registration_handler.php, web/view_entry.php:
+	Enforced registration_closes
+	[1c88f98144cd]
+
+	* web/mrbs_sql.inc, web/registration_handler.php, web/view_entry.php:
+	Enforced registration_opens
+	[d0ca6f797789]
+
+	* web/view_entry.php:
+	Added registration opens and closes dates
+	[9df0f1a1b5ea]
+
+2020-11-01  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/edit_entry.php,
+	web/edit_entry_handler.php, web/functions_table.inc,
+	web/functions_view.inc, web/internalconfig.inc.php,
+	web/lang/lang.de, web/lang/lang.en, web/mrbs_sql.inc,
+	web/registration_handler.php, web/upgrade/67/mysql.sql,
+	web/upgrade/67/pgsql.sql, web/upgrade/81/mysql.sql,
+	web/upgrade/81/pgsql.sql, web/view_entry.php:
+	Registration opens and closes now saved when making a booking, but
+	not yet used in registration.
+	[d37b425e5086]
+
+	* web/edit_entry.php:
+	Added stub for registration opens field
+	[96fb6edc6300]
+
+2020-10-31  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_area.php, web/lib/MRBS/Form/FieldTimeWithUnits.php,
+	web/lib/MRBS/Form/Form.php:
+	Restructured
+	[e729140592f5]
+
+	* web/edit_area.php, web/lib/MRBS/Form/FieldTimeWithUnits.php,
+	web/lib/MRBS/Form/Form.php:
+	Restructured
+	[c6ff5e965889]
+
+	* web/upgrade/78/mysql.sql, web/upgrade/78/pgsql.sql:
+	Fixed problem in recent commit
+	[1450198ec345]
+
+	* tables.my.sql, tables.pg.sql, web/lib/MRBS/DB.php,
+	web/upgrade/79/mysql.sql, web/upgrade/79/pgsql.sql,
+	web/upgrade/80/mysql.sql, web/upgrade/80/pgsql.sql,
+	web/upgrade/81/mysql.sql, web/upgrade/81/pgsql.sql:
+	Changed schema version to facilitate merge into the roles branch and
+	back again.
+	[4e59a5aa0cfa]
+
+2020-10-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* tables.my.sql, tables.pg.sql, web/functions_view.inc,
+	web/internalconfig.inc.php, web/lib/MRBS/DB.php, web/mrbs_sql.inc,
+	web/upgrade/78/mysql.sql, web/upgrade/78/pgsql.sql:
+	Added registration_opens and registration_closes columns. Not used
+	yet.
+	[c6e8042927c5]
+
+	* UPGRADE:
+	Fixed note about backwards compatibility. See SF Support Requests
+	#2219.
+	[b6f4580cfe6e]
+
+2020-10-29  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Fixed bug causing error when editing an entry immediately after
+	registering for an event. See SF Bugs #490.
+	[e14681c310ce]
+
+	* web/registration_handler.php:
+	Fixed typo in comment
+	[5f73ca1946c1]
+
+	* web/jquery/datatables/pdfmake.min.js.map:
+	Fixed "DevTools failed to load SourceMap" 404 error. See SF Bugs
+	#493.
+	[d427ba55bce1]
+
+	* web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.6.3/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.6.3/css/common.scss,
+	web/jquery/datatables/Buttons-1.6.3/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.flash.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.flash.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.6.3/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.6.3/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.6.3/js/dataTables.buttons.min.js,
+	web/jquery/datatables/Buttons-1.6.3/swf/flashExport.swf,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/common.scss,
+	web/jquery/datatables/Buttons-1.6.5/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.flash.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.flash.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.6.5/js/dataTables.buttons.min.js,
+	web/jquery/datatables/Buttons-1.6.5/swf/flashExport.swf, web/jquery/
+	datatables/DataTables-1.10.21/css/dataTables.bootstrap.css, web/jque
+	ry/datatables/DataTables-1.10.21/css/dataTables.bootstrap.min.css, w
+	eb/jquery/datatables/DataTables-1.10.21/css/dataTables.bootstrap4.cs
+	s, web/jquery/datatables/DataTables-1.10.21/css/dataTables.bootstrap
+	4.min.css, web/jquery/datatables/DataTables-1.10.21/css/dataTables.f
+	oundation.css, web/jquery/datatables/DataTables-1.10.21/css/dataTabl
+	es.foundation.min.css, web/jquery/datatables/DataTables-1.10.21/css/
+	dataTables.jqueryui.css, web/jquery/datatables/DataTables-1.10.21/cs
+	s/dataTables.jqueryui.min.css, web/jquery/datatables/DataTables-1.10
+	.21/css/dataTables.semanticui.css, web/jquery/datatables/DataTables-
+	1.10.21/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.21/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.21/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.21/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.21/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.21/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.21/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.21/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.
+	foundation.js, web/jquery/datatables/DataTables-1.10.21/js/dataTable
+	s.foundation.min.js,
+	web/jquery/datatables/DataTables-1.10.21/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.21/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.21/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.21/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.21/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.21/js/jquery.dataTables.min.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.22/css/dataTables.bootstrap.css
+	, web/jquery/datatables/DataTables-1.10.22/css/dataTables.bootstrap.
+	min.css, web/jquery/datatables/DataTables-1.10.22/css/dataTables.boo
+	tstrap4.css, web/jquery/datatables/DataTables-1.10.22/css/dataTables
+	.bootstrap4.min.css, web/jquery/datatables/DataTables-1.10.22/css/da
+	taTables.foundation.css, web/jquery/datatables/DataTables-1.10.22/cs
+	s/dataTables.foundation.min.css, web/jquery/datatables/DataTables-1.
+	10.22/css/dataTables.jqueryui.css, web/jquery/datatables/DataTables-
+	1.10.22/css/dataTables.jqueryui.min.css, web/jquery/datatables/DataT
+	ables-1.10.22/css/dataTables.semanticui.css, web/jquery/datatables/D
+	ataTables-1.10.22/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.22/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.22/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.22/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.22/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.22/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.22/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.22/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.
+	foundation.js, web/jquery/datatables/DataTables-1.10.22/js/dataTable
+	s.foundation.min.js,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.22/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.22/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.22/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.22/js/jquery.dataTables.min.js,
+	web/jquery/datatables/datatables.css,
+	web/jquery/datatables/datatables.js,
+	web/jquery/datatables/datatables.min.css,
+	web/jquery/datatables/datatables.min.js:
+	Upgraded to latest version of DataTables
+	[71d161bc1bba]
+
+2020-10-28  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions.inc:
+	Fixed bug causing the version parameter not to be added to a
+	filename if there's already another parameter in the query string.
+	[8f1515912767]
+
+2020-10-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lang/lang.de:
+	Updated German translations. See SF Support Requests #2205.
+	[e17a48608f4d]
+
+	* web/lang/lang.de:
+	Updated German translations. See SF Support Requests #2205.
+	[04d6dbb0e746]
+
+2020-10-22  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/approve_entry_handler.php, web/dbsys.inc, web/edit_area.php,
+	web/functions.inc, web/functions_error.inc, web/functions_ical.inc,
+	web/functions_mail.inc, web/import.php, web/init.inc,
+	web/lib/MRBS/Auth/AuthDb.php, web/lib/MRBS/DB_pgsql.php,
+	web/lib/MRBS/MailQueue.php,
+	web/lib/MRBS/Session/SessionWithLogin.php, web/lib/MRBS/System.php,
+	web/mrbs_sql.inc, web/report.php, web/search.php,
+	web/upgrade/24/post.inc, web/upgrade/47/post.inc:
+	Replaced calls to strpos() with utf8_strpos(0
+	[c26442c190e0]
+
+	* web/language.inc:
+	Fixed bug introduced in last commit
+	[008e1eeb3754]
+
+	* web/language.inc:
+	Added utf8_strpos()
+	[3b202e631607]
+
+	* web/language.inc:
+	Fixed bug in getting column labels when using PostreSQL with a
+	schema.
+	[57de65a69f26]
+
+	* web/functions_mail.inc:
+	For reminder and more_info emails, put the user's address on the cc
+	line if it can't be put on the from line, in order that the
+	recipient can use it in replies.
+	[0bc3b8ea2b75]
+
+	* web/functions_mail.inc:
+	Changed email notifications so that if the email is a reminder or a
+	request for more information, an iCalendar attachment is not
+	included. Otherwise the recipient may not be able to reply to it.
+	[d63fd607083c]
+
+	* web/lib/MRBS/MailQueue.php:
+	Fixed a bug preventing email being sent in some circumstances on
+	Apache servers when an open_basedir restriction is in effect. See SF
+	Bugs #489.
+	[ab05af3c6b4c]
+
+2020-10-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/general.js.php:
+	Improved resilience of code to Ajax results from usernames.php. See
+	SF Bugs #491.
+	[bc5b638cc92f]
+
+2020-10-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/search.php:
+	Fixed incorrect links in search results when using multisite.
+	[026afb1ff6d3]
+
+2020-10-15  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* Merge
+	[b6956ae9424f]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Fixed problem when an LDAP search returns an entry with a null
+	username. See SF Support Requests #2200.
+	[e724fdc17a6c]
+
 2020-10-14  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_9_2 for changeset 5e0361b9fbfa
+	[cb4de8074433]
+
+	* ChangeLog, NEWS:
+	Updated NEWS and ChangeLog for release of 1.9.2
+	[5e0361b9fbfa] [mrbs-1_9_2]
 
 	* web/version_num.inc:
 	Updated version number for release.
-	[4aa28b4675ad] [tip]
+	[4aa28b4675ad]
 
 2020-10-14  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
