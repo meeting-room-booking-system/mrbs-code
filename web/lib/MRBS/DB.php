@@ -222,7 +222,7 @@ class DB
   // Roll back a transaction, aborting it. See begin().
   public function rollback()
   {
-    if ($this->dbh->inTransaction())
+    if ($this->dbh && $this->dbh->inTransaction())
     {
       $this->dbh->rollBack();
     }
