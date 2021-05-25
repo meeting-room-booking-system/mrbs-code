@@ -34,7 +34,10 @@ function generate_registrant_table($row, $previous_page=null)
   {
     echo '<tr>';
     echo '<td>';
-    if (getWritable($registrant['username'], $row['room_id']))
+    // A registration can be cancelled by the registrant or by
+    // the person who registered them or by a booking admin
+    if (getWritable($registrant['username'], $row['room_id']) ||
+        getWritable($registrant['create_by'], $row['room_id']))
     {
       generate_cancel_registration_button(
         $row,
