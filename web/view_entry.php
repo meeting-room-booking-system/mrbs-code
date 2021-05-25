@@ -157,8 +157,6 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
 
 function generate_register_button($row, $previous_page=null)
 {
-  global $auth;
-
   // Check that the user is an an admin or else that the entry is open for registration
   if (!is_book_admin($row['room_id']) && !entry_registration_is_open($row))
   {
@@ -214,7 +212,7 @@ function generate_register_button($row, $previous_page=null)
 
 function generate_event_registration($row, $previous_page=null)
 {
-  global $auth, $server;
+  global $auth;
 
   if (empty($row['allow_registration']))
   {
