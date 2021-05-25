@@ -48,7 +48,7 @@ function register($username, $event_id)
   $entry = get_entry_by_id($event_id);
 
   // Check that the user is authorised for this operation
-  if (!isset($entry) || !getWritable($username, $entry['room_id']))
+  if (!isset($entry) || !(can_register_others($entry['room_id']) || getWritable($username, $entry['room_id'])))
   {
     return;
   }
