@@ -454,3 +454,19 @@ function is_visible($room)
 {
   return true;
 }
+
+
+// Checks whether a user is allowed to register other users for events
+function can_register_others($room_id=null)
+{
+  global $auth;
+
+  $mrbs_user = session()->getCurrentUser();
+
+  if (!isset($mrbs_user))
+  {
+    return false;
+  }
+
+  return $auth['users_can_register_others'] || is_book_admin($room_id);
+}

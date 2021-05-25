@@ -14,8 +14,8 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// And that they are a booking admin
-if (!is_book_admin())
+// Check that the user has a legitimate reason for accessing this page
+if (!can_register_others() && !is_book_admin())
 {
   exit;
 }
