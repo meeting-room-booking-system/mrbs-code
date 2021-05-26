@@ -2589,6 +2589,7 @@ div.eye {
   position: relative;
   height: 1em;
   margin-left: -3em;
+  cursor: pointer;
 }
 
 .eye.off svg {
