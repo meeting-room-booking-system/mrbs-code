@@ -19,7 +19,9 @@ function cancel($registration_id)
   $entry = get_entry_by_id($registration['entry_id']);
 
   // Check that the user is authorised for this operation
-  if (!isset($entry) || !getWritable($registration['username'], $entry['room_id']))
+  if (!isset($entry) ||
+      (!getWritable($registration['username'], $entry['room_id']) &&
+       !getWritable($registration['create_by'], $entry['room_id'])))
   {
     return;
   }
