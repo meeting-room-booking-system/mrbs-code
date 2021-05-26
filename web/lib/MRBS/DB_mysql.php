@@ -273,13 +273,15 @@ class DB_mysql extends DB
       $type = $row['Type'];
       // split the type (eg 'varchar(25)') around the opening '('
       $parts = explode('(', $type);
+      // remove any attributes, eg 'unsigned'
+      list($short_type, ) = explode(' ', $parts[0], 2);
       // map the type onto one of the generic natures, if a mapping exists
-      $nature = (array_key_exists($parts[0], $nature_map)) ? $nature_map[$parts[0]] : $parts[0];
+      $nature = (array_key_exists($short_type, $nature_map)) ? $nature_map[$short_type] : $short_type;
       // now work out the length
       if ($nature == 'integer')
       {
         // if it's one of the ints, then look up the length in bytes
-        $length = (array_key_exists($parts[0], $int_bytes)) ? $int_bytes[$parts[0]] : 0;
+        $length = (array_key_exists($short_type, $int_bytes)) ? $int_bytes[$short_type] : 0;
       }
       elseif (($nature == 'character') || ($nature == 'decimal'))
       {
