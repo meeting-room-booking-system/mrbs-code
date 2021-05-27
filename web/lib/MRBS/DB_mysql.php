@@ -271,10 +271,16 @@ class DB_mysql extends DB
     {
       $name = $row['Field'];
       $type = $row['Type'];
-      // split the type (eg 'varchar(25)') around the opening '('
-      $parts = explode('(', $type);
-      // remove any attributes, eg 'unsigned'
-      list($short_type, ) = explode(' ', $parts[0], 2);
+      // Get the type and optionally length in parentheses, ignoring any attributes.  Note that the
+      // length could be of the form (6,2) for a decimal.  Examples that we have to cope with:
+      //    tinyint
+      //    tinyint unsigned
+      //    decimal(6,2)
+      //    varchar(255)
+      //    mediumint(4) unsigned zerofill
+      // The type will be in the first group and the length in the optional second group
+      preg_match('/(\w+)[\s(]?([\d,]+)?/', $type, $matches);
+      $short_type = $matches[1];
       // map the type onto one of the generic natures, if a mapping exists
       $nature = (array_key_exists($short_type, $nature_map)) ? $nature_map[$short_type] : $short_type;
       // now work out the length
@@ -287,9 +293,9 @@ class DB_mysql extends DB
       {
         // if it's a character or decimal type then use the length that was in parentheses
         // eg if it was a varchar(25), we want the 25 and if a decimal(6,2) we want the 6,2
-        if (isset($parts[1]))
+        if (isset($matches[2]))
         {
-          $length = preg_replace('/\)/', '', $parts[1]);  // strip off the closing ')'
+          $length = $matches[2];
         }
         // otherwise it could be any length (eg if it was a 'text')
         else
