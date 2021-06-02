@@ -443,6 +443,7 @@ class AuthLdap extends Auth
 
     if (!isset($user['username']))
     {
+      self::debug("No username found");
       return false;
     }
 
