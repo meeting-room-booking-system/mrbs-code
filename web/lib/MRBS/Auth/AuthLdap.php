@@ -467,10 +467,11 @@ class AuthLdap extends Auth
 
     if (!isset($user))
     {
-      self::debug("No username found");
+      self::debug("No user found");
       return false;
     }
 
+    self::debug("User '" . $user['username'] . "' found");
     $object['user'] = $user;
     return true;
   }
