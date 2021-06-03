@@ -460,6 +460,7 @@ class AuthLdap extends Auth
       }
     }
 
+    self::debug("User '" . $user['username'] . "' found");
     $object['user'] = $user;
     return true;
   }
