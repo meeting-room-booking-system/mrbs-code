@@ -12,27 +12,66 @@ class DB_mysql extends DB
   const DB_DBO_DRIVER = "mysql";
   const DB_CHARSET = "utf8mb4";
 
+  // For a full list of error codes see https://mariadb.com/kb/en/mariadb-error-codes/
+  // (That page doesn't list codes only used by MySQL)
+  const ER_CON_COUNT_ERROR            = 1040; // Too many connections
+  const ER_TOO_MANY_USER_CONNECTIONS  = 1203; // User %s already has more than 'max_user_connections' active connections
+  const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
+
 
   public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
   {
-    try
+    global $db_retries, $db_delay;
+
+    $attempts_left = max(1, $db_retries + 1);
+
+    while ($attempts_left > 0)
     {
-      $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-      // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
-      // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
-      // TODO: However the proper solution is probably to rewrite the offending queries.
-      $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
-    }
-    catch (PDOException $e)
-    {
-      $message = $e->getMessage();
-      if ($e->getCode() == 2054)
+      try
       {
-        $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
-                    "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
-                    "deleting the MySQL user and recreating it with the same password.";
+        $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+        // Set $attempts_left to zero as we won't have got here if an exception has been thrown
+        $attempts_left = 0;
+        // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
+        // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
+        // TODO: However the proper solution is probably to rewrite the offending queries.
+        $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
       }
-      $this->connectError($message);
+      catch (PDOException $e)
+      {
+        $code = $e->getCode();
+        $message = $e->getMessage();
+
+        if (in_array($code, array(
+                self::ER_CON_COUNT_ERROR,
+                self::ER_TOO_MANY_USER_CONNECTIONS,
+                self::ER_USER_LIMIT_REACHED
+              )))
+        {
+          $attempts_left--;
+        }
+        else
+        {
+          // It's some kind of error other than a resource error, so retrying won't help
+          $attempts_left = 0;
+          if ($code == 2054) // The server requested authentication method unknown to the client [MySQL specific]
+          {
+            $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
+                        "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
+                        "deleting the MySQL user and recreating it with the same password.";
+          }
+        }
+
+        if ($attempts_left > 0)
+        {
+          trigger_error($message . ". Retrying ...", E_USER_NOTICE);
+          usleep($db_delay * 1000);
+        }
+        else
+        {
+          $this->connectError($message);
+        }
+      }
     }
   }
 

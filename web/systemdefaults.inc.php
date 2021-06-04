@@ -98,6 +98,11 @@ $db_tbl_prefix = "mrbs_";
 // MRBS tries to avoid those problems, it is generally better not to use persistent
 // connections if you can.
 $db_persist = false;
+// The number of times to retry getting a database connection in the event that there are
+// too many connections.  [MySQL only at the moment]
+$db_retries = 2;
+// The number of milliseconds to wait before retrying.  [MySQL only at the moment]
+$db_delay = 500; // milliseconds
 
 
 /*********************************
