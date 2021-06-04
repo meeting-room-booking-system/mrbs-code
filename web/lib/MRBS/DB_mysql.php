@@ -15,11 +15,25 @@ class DB_mysql extends DB
 
   public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
   {
-    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-    // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
-    // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
-    // TODO: However the proper solution is probably to rewrite the offending queries.
-    $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+    try
+    {
+      $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+      // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
+      // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
+      // TODO: However the proper solution is probably to rewrite the offending queries.
+      $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+    }
+    catch (PDOException $e)
+    {
+      $message = $e->getMessage();
+      if ($e->getCode() == 2054)
+      {
+        $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
+                    "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
+                    "deleting the MySQL user and recreating it with the same password.";
+      }
+      $this->connectError($message);
+    }
   }
 
 
