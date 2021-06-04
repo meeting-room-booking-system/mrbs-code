@@ -102,7 +102,7 @@ $db_persist = false;
 // too many connections.  [MySQL only at the moment]
 $db_retries = 2;
 // The number of milliseconds to wait before retrying.  [MySQL only at the moment]
-$db_delay = 500; // milliseconds
+$db_delay = 750; // milliseconds
 
 
 /*********************************
