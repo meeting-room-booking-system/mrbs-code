@@ -6,7 +6,7 @@ use PDO;
 use PDOException;
 
 
-class DB
+abstract class DB
 {
   const DB_SCHEMA_VERSION = 81;
   const DB_SCHEMA_VERSION_LOCAL = 1;
@@ -19,11 +19,14 @@ class DB
   protected $mutex_lock_name;
 
 
-  public function __construct($db_host, $db_username, $db_password,
-                              $db_name, $persist=false, $db_port=null)
-  {
+  abstract public function __construct($db_host, $db_username, $db_password,
+                                       $db_name, $persist=false, $db_port=null);
 
-    // Early error handling, could be in constructor instead?
+
+  protected function connect($db_host, $db_username, $db_password,
+                             $db_name, $persist=false, $db_port=null)
+  {
+    // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
         is_null(static::DB_DEFAULT_PORT))
     {
@@ -34,53 +37,32 @@ class DB
     if (empty($db_port))
     {
       $db_port = static::DB_DEFAULT_PORT;
-      //print "Setting default port to $db_port\n";
     }
 
     // Establish a database connection.
-    try
+    if (!isset($db_host) || ($db_host == ""))
     {
-      if (!isset($db_host) || ($db_host == ""))
-      {
-        $hostpart = "";
-      }
-      else
-      {
-        $hostpart = "host=$db_host;";
-      }
-      $this->dbh = new PDO(static::DB_DBO_DRIVER.":${hostpart}port=$db_port;dbname=$db_name",
-                           $db_username,
-                           $db_password,
-                           array(PDO::ATTR_PERSISTENT => (bool) $persist,
-                                 PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
-      $this->command("SET NAMES '".static::DB_CHARSET."'");
+      $hostpart = "";
     }
-    catch (PDOException $e)
+    else
     {
-      $message = $e->getMessage();
-
-      // Add in some possible solutions for common problems when migrating to the PDO version of MRBS
-      // from an earlier version.
-      if ($e->getCode() == 7)
-      {
-        if (($db_host === '') && (static::DB_DBO_DRIVER === DB_pgsql::DB_DBO_DRIVER))
-        {
-          $message .= ".\n[MRBS note] Try setting " . '$db_host' . " to '127.0.0.1'.";
-        }
-      }
-      elseif ($e->getCode() == 2054)
-      {
-        $message .= ".\n[MRBS note] It looks like you may have an old style MySQL password stored, which cannot be " .
-                    "used with PDO (though it is possible that mysqli may have accepted it).  Try " .
-                    "deleting the MySQL user and recreating it with the same password.";
-      }
-
-      // Output our own message to avoid giving away the database credentials
-      trigger_error($message, E_USER_WARNING);
-      fatal_error(get_vocab('fatal_db_error'));
+      $hostpart = "host=$db_host;";
     }
+    $this->dbh = new PDO(static::DB_DBO_DRIVER.":${hostpart}port=$db_port;dbname=$db_name",
+                         $db_username,
+                         $db_password,
+                         array(PDO::ATTR_PERSISTENT => (bool) $persist,
+                               PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
+    $this->command("SET NAMES '".static::DB_CHARSET."'");
   }
 
+
+  // Output our own message to avoid giving away the database credentials
+  protected function connectError($message)
+  {
+    trigger_error($message, E_USER_WARNING);
+    fatal_error(get_vocab('fatal_db_error'));
+  }
 
   //
   public function error()

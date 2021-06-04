@@ -12,6 +12,29 @@ class DB_pgsql extends DB
   const DB_DBO_DRIVER = "pgsql";
 
 
+  public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
+  {
+    try
+    {
+      $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+      // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
+      // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
+      // TODO: However the proper solution is probably to rewrite the offending queries.
+      $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+    }
+    catch (PDOException $e)
+    {
+      $message = $e->getMessage();
+      // This can be a problem when migrating to the PDO version of MRBS from an earlier version.
+      if (($e->getCode() == 7) && ($db_host === ''))
+      {
+        $message .= ".\n[MRBS note] Try setting " . '$db_host' . " to '127.0.0.1'.";
+      }
+      $this->connectError($message);
+    }
+  }
+
+
   // A small utility function (not part of the DB abstraction API) to
   // resolve a qualified table name into its schema and table components.
   // Returns an an array indexed by 'table_schema' and 'table_name'.
