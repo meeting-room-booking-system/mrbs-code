@@ -17,10 +17,6 @@ class DB_pgsql extends DB
     try
     {
       $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-      // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
-      // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
-      // TODO: However the proper solution is probably to rewrite the offending queries.
-      $this->command("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
     }
     catch (PDOException $e)
     {
