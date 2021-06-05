@@ -23,6 +23,10 @@ class DB_mysql extends DB
   {
     global $db_retries, $db_delay;
 
+    // We allow retries if the connection fails due to a resource constraint, possibly because
+    // this database user already has max_user_connections open (through other instances of users
+    // accessing MRBS) or other database users on the same server have reached the maximum number of
+    // connections for the database.
     $attempts_left = max(1, $db_retries + 1);
 
     while ($attempts_left > 0)
