@@ -1,5 +1,5 @@
 /*!
- * jQuery Migrate - v3.3.0 - 2020-05-05T01:57Z
+ * jQuery Migrate - v3.3.2 - 2020-11-17T23:22Z
  * Copyright OpenJS Foundation and other contributors
  */
 ( function( factory ) {
@@ -24,7 +24,7 @@
 } )( function( jQuery, window ) {
 "use strict";
 
-jQuery.migrateVersion = "3.3.0";
+jQuery.migrateVersion = "3.3.2";
 
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
@@ -238,6 +238,10 @@ if ( jQueryVersionSince( "3.2.0" ) ) {
 		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 	},
 	"jQuery.nodeName is deprecated" );
+
+	migrateWarnFunc( jQuery, "isArray", Array.isArray,
+		"jQuery.isArray is deprecated; use Array.isArray"
+	);
 }
 
 if ( jQueryVersionSince( "3.3.0" ) ) {
@@ -289,16 +293,13 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 		},
 		"jQuery.isWindow() is deprecated"
 	);
-
-	migrateWarnFunc( jQuery, "isArray", Array.isArray,
-		"jQuery.isArray is deprecated; use Array.isArray"
-	);
 }
 
 // Support jQuery slim which excludes the ajax module
 if ( jQuery.ajax ) {
 
-var oldAjax = jQuery.ajax;
+var oldAjax = jQuery.ajax,
+	rjsonp = /(=)\?(?=&|$)|\?\?/;
 
 jQuery.ajax = function( ) {
 	var jQXHR = oldAjax.apply( this, arguments );
@@ -315,6 +316,28 @@ jQuery.ajax = function( ) {
 
 	return jQXHR;
 };
+
+// Only trigger the logic in jQuery <4 as the JSON-to-JSONP auto-promotion
+// behavior is gone in jQuery 4.0 and as it has security implications, we don't
+// want to restore the legacy behavior.
+if ( !jQueryVersionSince( "4.0.0" ) ) {
+
+	// Register this prefilter before the jQuery one. Otherwise, a promoted
+	// request is transformed into one with the script dataType and we can't
+	// catch it anymore.
+	jQuery.ajaxPrefilter( "+json", function( s ) {
+
+		// Warn if JSON-to-JSONP auto-promotion happens.
+		if ( s.jsonp !== false && ( rjsonp.test( s.url ) ||
+				typeof s.data === "string" &&
+				( s.contentType || "" )
+					.indexOf( "application/x-www-form-urlencoded" ) === 0 &&
+				rjsonp.test( s.data )
+		) ) {
+			migrateWarn( "JSON-to-JSONP auto-promotion is deprecated" );
+		}
+	} );
+}
 
 }
 
@@ -469,14 +492,20 @@ function isAutoPx( prop ) {
 oldFnCss = jQuery.fn.css;
 
 jQuery.fn.css = function( name, value ) {
-	var origThis = this;
-	if ( typeof name !== "string" ) {
+	var camelName,
+		origThis = this;
+	if ( name && typeof name === "object" && !Array.isArray( name ) ) {
 		jQuery.each( name, function( n, v ) {
 			jQuery.fn.css.call( origThis, n, v );
 		} );
+		return this;
 	}
-	if ( typeof value === "number" && !isAutoPx( camelCase( name ) ) ) {
-		migrateWarn( "Use of number-typed values is deprecated in jQuery.fn.css" );
+	if ( typeof value === "number" ) {
+		camelName = camelCase( name );
+		if ( !isAutoPx( camelName ) && !jQuery.cssNumber[ camelName ] ) {
+			migrateWarn( "Number-typed values are deprecated for jQuery.fn.css( \"" +
+				name + "\", value )" );
+		}
 	}
 
 	return oldFnCss.apply( this, arguments );
@@ -725,19 +754,11 @@ jQuery.htmlPrefilter = function( html ) {
 var oldOffset = jQuery.fn.offset;
 
 jQuery.fn.offset = function() {
-	var docElem,
-		elem = this[ 0 ],
-		bogus = { top: 0, left: 0 };
+	var elem = this[ 0 ];
 
-	if ( !elem || !elem.nodeType ) {
+	if ( elem && ( !elem.nodeType || !elem.getBoundingClientRect ) ) {
 		migrateWarn( "jQuery.fn.offset() requires a valid DOM element" );
-		return undefined;
-	}
-
-	docElem = ( elem.ownerDocument || window.document ).documentElement;
-	if ( !jQuery.contains( docElem, elem ) ) {
-		migrateWarn( "jQuery.fn.offset() requires an element connected to a document" );
-		return bogus;
+		return arguments.length ? this : undefined;
 	}
 
 	return oldOffset.apply( this, arguments );
