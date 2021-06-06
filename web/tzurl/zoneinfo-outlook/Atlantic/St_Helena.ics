@@ -1,14 +1,15 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2018c//EN
+PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:Atlantic/St_Helena
-TZURL:http://tzurl.org/zoneinfo-outlook/Atlantic/St_Helena
-X-LIC-LOCATION:Atlantic/St_Helena
+TZID:Africa/Abidjan
+LAST-MODIFIED:20201011T015911Z
+TZURL:http://tzurl.org/zoneinfo-outlook/Africa/Abidjan
+X-LIC-LOCATION:Africa/Abidjan
 BEGIN:STANDARD
+TZNAME:GMT
 TZOFFSETFROM:+0000
 TZOFFSETTO:+0000
-TZNAME:GMT
 DTSTART:19700101T000000
 END:STANDARD
 END:VTIMEZONE
