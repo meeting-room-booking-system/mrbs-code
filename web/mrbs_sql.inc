@@ -127,8 +127,8 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
     $query = http_build_query($vars, '', '&');
 
-    $err[] = "<a href=\"view_entry.php?id=" .$row['id'] . '">' . $row['name'] . '</a>' .
-             ' (' . $startstr . ', ' . $row['room_name'] . ') ' .
+    $err[] = "<a href=\"view_entry.php?id=" . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</a>' .
+             ' (' . $startstr . ', ' . htmlspecialchars($row['room_name']) . ') ' .
              '<span>(' .
              '<a href="index.php?view=day&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewday') . '</a> | ' .
              '<a href="index.php?view=week&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewweek') . '</a> | ' .
