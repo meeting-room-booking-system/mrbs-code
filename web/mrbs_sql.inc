@@ -127,12 +127,13 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
     $query = http_build_query($vars, '', '&');
 
-    $err[] = "<a href=\"view_entry.php?id=" . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</a>' .
+    $err[] = '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
+             htmlspecialchars($row['name']) . '</a>' .
              ' (' . $startstr . ', ' . htmlspecialchars($row['room_name']) . ') ' .
              '<span>(' .
-             '<a href="index.php?view=day&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewday') . '</a> | ' .
-             '<a href="index.php?view=week&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewweek') . '</a> | ' .
-             '<a href="index.php?view=month&amp;' . htmlspecialchars($query) . '">' . get_vocab('viewmonth') . '</a>' .
+             '<a href="' . htmlspecialchars(multisite("index.php?view=day&$query")) . '">' . get_vocab('viewday') . '</a> | ' .
+             '<a href="' . htmlspecialchars(multisite("index.php?view=week&$query")) . '">' . get_vocab('viewweek') . '</a> | ' .
+             '<a href="' . htmlspecialchars(multisite("index.php?view=month&$query")) . '">' . get_vocab('viewmonth') . '</a>' .
              ')</span>';
   }
 
