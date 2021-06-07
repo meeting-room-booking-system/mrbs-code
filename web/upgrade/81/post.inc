@@ -20,7 +20,7 @@ if ($admin_handle->field_exists(_tbl('entry'), 'enable_registrant_limit'))
   }
   else
   {
-    $sql .= "CHANGE enable_registrant_limit registrant_limit_enabled tinyint(1) DEFAULT 1 NOT NULL";
+    $sql .= "CHANGE enable_registrant_limit registrant_limit_enabled tinyint DEFAULT 1 NOT NULL";
   }
 
   $admin_handle->command($sql);
