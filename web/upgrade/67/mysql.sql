@@ -1,8 +1,8 @@
 -- Add columns to allow registration and a participants table
 
 ALTER TABLE %DB_TBL_PREFIX%entry
-  ADD COLUMN allow_registration       tinyint(1) DEFAULT 0 NOT NULL,
-  ADD COLUMN enable_registrant_limit  tinyint(1) DEFAULT 1 NOT NULL,
+  ADD COLUMN allow_registration       tinyint DEFAULT 0 NOT NULL,
+  ADD COLUMN enable_registrant_limit  tinyint DEFAULT 1 NOT NULL,
   ADD COLUMN registrant_limit         int DEFAULT 0 NOT NULL;
 
 

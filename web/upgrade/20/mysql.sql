@@ -18,5 +18,5 @@ CHANGE status status tinyint unsigned NOT NULL DEFAULT 0;
 # not seem worth doing).
 
 ALTER TABLE %DB_TBL_PREFIX%area 
-ADD COLUMN confirmation_enabled    tinyint(1),
-ADD COLUMN confirmed_default       tinyint(1);
+ADD COLUMN confirmation_enabled    tinyint,
+ADD COLUMN confirmed_default       tinyint;

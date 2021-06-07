@@ -4,6 +4,6 @@
 -- for private bookings handling
 
 ALTER TABLE %DB_TBL_PREFIX%repeat 
- ADD private TINYINT(1) NOT NULL DEFAULT 0;
+ ADD private TINYINT NOT NULL DEFAULT 0;
 ALTER TABLE %DB_TBL_PREFIX%entry 
- ADD private TINYINT(1) NOT NULL DEFAULT 0;
+ ADD private TINYINT NOT NULL DEFAULT 0;

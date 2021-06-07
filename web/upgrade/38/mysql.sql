@@ -3,13 +3,13 @@
 # allowed which is why max_delete_ahead_enabled is set to FALSE.
 
 ALTER TABLE %DB_TBL_PREFIX%area
-  ADD COLUMN min_create_ahead_enabled tinyint(1) AFTER max_book_ahead_secs,
+  ADD COLUMN min_create_ahead_enabled tinyint AFTER max_book_ahead_secs,
   ADD COLUMN min_create_ahead_secs int AFTER min_create_ahead_enabled,
-  ADD COLUMN max_create_ahead_enabled tinyint(1) AFTER min_create_ahead_secs,
+  ADD COLUMN max_create_ahead_enabled tinyint AFTER min_create_ahead_secs,
   ADD COLUMN max_create_ahead_secs int AFTER max_create_ahead_enabled,
-  ADD COLUMN min_delete_ahead_enabled tinyint(1) AFTER max_create_ahead_secs,
+  ADD COLUMN min_delete_ahead_enabled tinyint AFTER max_create_ahead_secs,
   ADD COLUMN min_delete_ahead_secs int AFTER min_delete_ahead_enabled,
-  ADD COLUMN max_delete_ahead_enabled tinyint(1) AFTER min_delete_ahead_secs,
+  ADD COLUMN max_delete_ahead_enabled tinyint AFTER min_delete_ahead_secs,
   ADD COLUMN max_delete_ahead_secs int AFTER max_delete_ahead_enabled;
 
 UPDATE %DB_TBL_PREFIX%area SET
