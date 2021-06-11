@@ -70,6 +70,31 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       dataTable,
       fixedColumns;
 
+  var buttonCommon = {
+      exportOptions: {
+        columns: ':visible',
+        format: {
+          body: function ( data, row, column, node ) {
+            <?php // First of all get the default export data ?>
+            var result = $.fn.dataTable.Buttons.stripData(data);
+            <?php
+            // If that is the empty string then it may be that the data is actually a form
+            // and the text we want is the text in the submit button.
+            ?>
+            if (result === '')
+            {
+              var value = $('<div>' + data + '</div>').find('input[type="submit"]').attr('value');
+              if (value !== undefined)
+              {
+                result = value;
+              }
+            }
+            return result;
+          }
+        }
+      }
+    };
+
   table = $(id);
   if (table.length === 0)
   {
@@ -129,33 +154,28 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   if (args.page !== 'pending')
   {
     defaultOptions.buttons = defaultOptions.buttons.concat(
-      {extend: 'copy',
-        text: '<?php echo escape_js(get_vocab('copy')) ?>',
-        exportOptions: {
-          columns: ':visible'
-        }},
-      {extend: 'csv',
-        text: '<?php echo escape_js(get_vocab('csv')) ?>',
-        exportOptions: {
-          columns: ':visible'
-        }},
-      {extend: 'excel',
-        text: '<?php echo escape_js(get_vocab('excel')) ?>',
-        exportOptions: {
-          columns: ':visible'
-        }},
-      {extend: 'pdf',
+      $.extend(true, {}, buttonCommon, {
+        extend: 'copy',
+        text: '<?php echo escape_js(get_vocab('copy')) ?>'
+      }),
+      $.extend(true, {}, buttonCommon, {
+        extend: 'csv',
+        text: '<?php echo escape_js(get_vocab('csv')) ?>'
+      }),
+      $.extend(true, {}, buttonCommon, {
+        extend: 'excel',
+        text: '<?php echo escape_js(get_vocab('excel')) ?>'
+      }),
+      $.extend(true, {}, buttonCommon, {
+        extend: 'pdf',
         text: '<?php echo escape_js(get_vocab('pdf')) ?>',
         orientation: '<?php echo $pdf_default_orientation ?>',
-        pageSize: '<?php echo $pdf_default_paper ?>',
-        exportOptions: {
-          columns: ':visible'
-        }},
-      {extend: 'print',
-        text: '<?php echo escape_js(get_vocab('print')) ?>',
-        exportOptions: {
-          columns: ':visible'
-        }}
+        pageSize: '<?php echo $pdf_default_paper ?>'
+      }),
+      $.extend(true, {}, buttonCommon, {
+        extend: 'print',
+        text: '<?php echo escape_js(get_vocab('print')) ?>'
+      })
     );
   }
 
