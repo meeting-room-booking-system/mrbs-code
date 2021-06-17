@@ -908,7 +908,8 @@ $ldap_tls = false;
 // This can be an array.
 //$ldap_base_dn = "ou=organizationalunit,dc=example,dc=com";
 
-// Attribute within the base dn that contains the username
+// Attribute within the base dn that contains the username.
+// In Microsoft AD directories this is "sAMAccountName".
 // This can be an array.
 //$ldap_user_attrib = "uid";
 
