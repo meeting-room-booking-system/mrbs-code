@@ -431,9 +431,18 @@ class AuthLdap extends Auth
       return false;
     }
 
-    if (ldap_count_entries($ldap, $res) === 0)
+    $n_entries = ldap_count_entries($ldap, $res);
+
+    if ($n_entries === false)
     {
-      self::debug("No entries found");
+      self::debug("No entries found - ldap_count_entries() error");
+      return false;
+    }
+
+    self::debug("$n_entries entries found");
+
+    if ($n_entries === 0)
+    {
       return false;
     }
 
