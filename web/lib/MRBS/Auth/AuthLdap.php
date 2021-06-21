@@ -381,7 +381,7 @@ class AuthLdap extends Auth
   private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                           $user, &$object)
   {
-    global $ldap_get_user_email;
+    global $ldap_get_user_email, $ldap_debug_attributes;
 
     self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
 
@@ -447,6 +447,24 @@ class AuthLdap extends Auth
     }
 
     self::debug("ldap_read() succeeded, taking $t seconds");
+
+    if ($ldap_debug_attributes)
+    {
+      // Repeat the read, this time fetching all the attributes and then write
+      // the attributes and their values to the debug log.  Useful for discovering
+      // attribute names.
+      $res2 = @ldap_read($ldap, $dn, "(objectclass=*)", [], 0, 1);
+      $entry = ldap_first_entry($ldap, $res2);
+      $attribute = ldap_first_attribute($ldap, $entry);
+      while ($attribute)
+      {
+        $values = ldap_get_values($ldap, $entry, $attribute);
+        unset($values['count']);  // We don't need this element
+        self::debug("Attribute: \"$attribute\"; Value(s): \"" . implode('", "', $values) . '"');
+        $attribute = ldap_next_attribute($ldap, $entry);
+      }
+    }
+
     $entry = ldap_first_entry($ldap, $res);
     $user = self::getResult($ldap, $entry, $attributes);
 
@@ -939,15 +957,15 @@ class AuthLdap extends Auth
 
   /* debug($message)
    *
-   * Output LDAP debugging, if the configuration variable
-   * $ldap_debug is true.
+   * Output LDAP debugging, if either of the configuration variables
+   * $ldap_debug or $ldap_debug_attributes is true.
    *
    */
   private static function debug($message)
   {
-    global $ldap_debug;
+    global $ldap_debug, $ldap_debug_attributes;
 
-    if ($ldap_debug)
+    if ($ldap_debug || $ldap_debug_attributes)
     {
       list($called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
       error_log(

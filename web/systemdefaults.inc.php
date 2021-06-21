@@ -990,6 +990,10 @@ $ldap_suppress_invalid_credentials = true;
 // Output debugging information for LDAP actions
 $ldap_debug = false;
 
+// Output debugging information for LDAP actions and also attribute names and values.
+// A higher level of debugging, useful for discovering attribute names.
+$ldap_debug_attributes = false;
+
 // 'auth_imap' configuration settings
 // See AUTHENTICATION for details of how check against multiple servers
 // Where is the IMAP server
