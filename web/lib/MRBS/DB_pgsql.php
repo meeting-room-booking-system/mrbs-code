@@ -16,24 +16,19 @@ class DB_pgsql extends DB
   // 8.4 required for array_agg()
   private static $min_version = '9.6';
 
-  public function __construct($db_host, $db_username, $db_password, $db_name, $persist = 0, $db_port = null)
-  {
-    parent::__construct($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-    $this_version = $this->server_version();
-    if (version_compare($this_version, self::$min_version) < 0)
-    {
-      $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
-                 " This server is running version $this_version.";
-      die($message);
-    }
-  }
-
 
   public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
   {
     try
     {
       $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+      $this_version = $this->server_version();
+      if (version_compare($this_version, self::$min_version) < 0)
+      {
+        $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
+          " This server is running version $this_version.";
+        die($message);
+      }
     }
     catch (PDOException $e)
     {
