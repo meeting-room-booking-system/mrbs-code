@@ -470,7 +470,7 @@ class AuthLdap extends Auth
 
     if (!isset($user['username']))
     {
-      self::debug("No username found");
+      self::debug('No username found.  Check the value of $ldap_user_attrib in the MRBS config file.');
       return false;
     }
 
