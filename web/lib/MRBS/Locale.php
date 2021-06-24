@@ -45,7 +45,7 @@ class Locale
 
 
   // Returns a correctly ordered and delimited locale ID
-  public static function composeLocale($subtags)
+  public static function composeLocale(array $subtags)
   {
     if (isset($subtags[self::GRANDFATHERED_LANG_TAG]))
     {
