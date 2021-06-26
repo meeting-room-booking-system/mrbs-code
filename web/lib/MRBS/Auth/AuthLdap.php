@@ -969,7 +969,7 @@ class AuthLdap extends Auth
     {
       list($called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
       error_log(
-          "[DEBUG] " .
+          "[MRBS DEBUG] " .
           $caller['class'] . $caller['type'] . $caller['function'] . '(' . $called['line'] . ')' .
           ": $message"
         );

@@ -1268,6 +1268,6 @@ function language_debug($message)
 
   if ($language_debug)
   {
-    error_log("[DEBUG] $message");
+    error_log("[MRBS DEBUG] $message");
   }
 }
