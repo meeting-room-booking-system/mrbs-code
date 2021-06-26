@@ -1412,6 +1412,10 @@ $faqfilelang = "";
 // Language selection when run from the command line
 $cli_language = "en";
 
+// Set to true to get debug information on languages and locales written to the
+// error log.
+$language_debug = false;
+
 // Vocab overrides
 // ---------------
 

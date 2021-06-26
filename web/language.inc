@@ -132,6 +132,11 @@ if (function_exists('mb_internal_encoding'))
   mb_internal_encoding('UTF-8');
 }
 
+language_debug('$disable_automatic_language_changing: ' . (($disable_automatic_language_changing) ? 'true' : 'false'));
+language_debug('$default_language_tokens: ' . $default_language_tokens);
+language_debug('$cli_language: ' . $cli_language);
+language_debug('$override_locale: ' . $override_locale);
+
 // Check and adjust if necessary the format of $override_locale which changed in versions
 // of MRBS > 1.7.1
 if (!empty($override_locale))
@@ -143,6 +148,7 @@ if (!empty($override_locale))
       "Please change '$override_locale' to '$new_override_locale'.";
     trigger_error($message, E_USER_NOTICE);
     $override_locale = $new_override_locale;
+    language_debug('Adjusted $override_locale: ' . $override_locale);
   }
 }
 
@@ -157,7 +163,7 @@ if (!empty($override_locale))
 // trying to find a locale that is available on the server and has a translation available
 // in MRBS and has localisations available in all the third party libraries.
 
-
+language_debug('HTTP_ACCEPT_LANGUAGE: ' . $server['HTTP_ACCEPT_LANGUAGE']);
 // Translate languages in the header string to their aliases
 if (isset($server['HTTP_ACCEPT_LANGUAGE']))
 {
@@ -167,15 +173,34 @@ else
 {
   $aliased_header = null;
 }
+language_debug('$aliased_header: ' . $aliased_header);
 
 // Get the locale that we should be using
 $locale = get_mrbs_locale($aliased_header);
+
+if (isset($locale))
+{
+  language_debug('$locale: ' . $locale);
+}
+else
+{
+  language_debug('None of the requested locales are available on this server');
+}
 
 // Then set the locale
 set_mrbs_locale($locale);
 
 // Find the best fit for the language that we should be using
 $lang = get_mrbs_lang($locale);
+
+if (isset($lang))
+{
+  language_debug('$lang: ' . $lang);
+}
+else
+{
+  language_debug('No suitable language file found');
+}
 
 // And then set that vocab
 set_vocab($lang);
@@ -1234,4 +1259,15 @@ function utf8_strpos($haystack, $needle, $offset=0)
     return mb_strpos($haystack, $needle, $offset);
   }
   return strpos($haystack, $needle, $offset);
+}
+
+
+function language_debug($message)
+{
+  global $language_debug;
+
+  if ($language_debug)
+  {
+    error_log("[DEBUG] $message");
+  }
 }
