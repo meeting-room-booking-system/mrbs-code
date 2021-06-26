@@ -178,12 +178,7 @@ set_mrbs_locale($locale);
 $lang = get_mrbs_lang($locale);
 
 // And then set that vocab
-if (false === set_vocab($lang))
-{
-  throw new \Exception("MRBS: could not set language to '$lang'");
-}
-
-
+set_vocab($lang);
 
 
 // Determines whether we are using a RTL language
@@ -199,6 +194,11 @@ function using_rtl_lang()
 // Converts a locale to standard BCP 47 format
 function convert_to_BCP47($locale)
 {
+  if (!isset($locale))
+  {
+    return null;
+  }
+
   // Parse it and then recompose it.  This will get the capitalisation correct, eg
   // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
   // the capitalisation is just a convention.
@@ -211,6 +211,11 @@ function convert_to_BCP47($locale)
 
 function set_mrbs_locale($locale)
 {
+  if (!isset($locale))
+  {
+    return;
+  }
+
   $os_locale = System::getOSlocale($locale);
 
   if (false === setlocale(LC_ALL, $os_locale))
@@ -238,8 +243,9 @@ function get_mrbs_locale($header=null)
   global $cli_language;
 
   static $locale = null;
+  static $have_locale = false;   // $locale could be null, even when we've got it
 
-  if (!isset($locale))
+  if (!$have_locale)
   {
     // If we're running from the CLI, use the config setting
     if (is_cli() && !empty($cli_language))
@@ -638,28 +644,27 @@ function get_select2_lang_path()
 }
 
 
-// Set $vocab to $lang.  As some translations are incomplete, 'en' is set as a
-// fallback language.   Returns TRUE if a lang file is found, otherwise FALSE.
-function set_vocab($lang)
+function load_vocab($lang)
 {
   global $vocab, $vocab_override;
 
-  // Set English as a fallback language as some of the translations are
-  // incomplete.
-  if ($lang != 'en')
+  if (!isset($lang))
   {
-    set_vocab('en');
+    return;
   }
 
   $lang = utf8_strtolower($lang);
-
   $lang_file = MRBS_ROOT . "/lang/lang.$lang";
 
-  if (is_readable($lang_file))
+  if (!is_readable($lang_file))
   {
-    // Get the standard language tokens
+    trigger_error("MRBS: could not set language to '$lang'", E_USER_WARNING);
+  }
+  else
+  {
+    // Load the language tokens
     include "$lang_file";
-    // Apply any site overrides
+    // And apply any site overrides for this language
     if (isset($vocab_override[$lang]))
     {
       foreach ($vocab_override[$lang] as $tag => $str)
@@ -667,10 +672,30 @@ function set_vocab($lang)
         $vocab[$tag] = $str;
       }
     }
-    return true;
+  }
+}
+
+
+// Set $vocab to $lang.  As some translations are incomplete, 'en' is set as a final
+// fallback language, with $default_language_tokens as a fallback before that.
+function set_vocab($lang)
+{
+  global $default_language_tokens;
+
+  // Set English as a final fallback language as some of the translations are incomplete.
+  load_vocab('en');
+
+  // Then set the default language as the fallback before that.
+  if (isset($default_language_tokens) && ($default_language_tokens !== 'en'))
+  {
+    load_vocab($default_language_tokens);
   }
 
-  return false;
+  // Finally set the language we want
+  if (isset($lang) && !in_array($lang, array('en', $default_language_tokens)))
+  {
+    load_vocab($lang);
+  }
 }
 
 
