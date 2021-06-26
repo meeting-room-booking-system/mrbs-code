@@ -275,10 +275,10 @@ function get_mrbs_locale($header=null)
     // If we're running from the CLI, use the config setting
     if (!empty($cli_language) && is_cli())
     {
-      $lang = $cli_language;
+      $locale = $cli_language;
     }
     // Otherwise use the override locale if we've been given one
-    if (!empty($override_locale))
+    elseif (!empty($override_locale))
     {
       $locale = $override_locale;
     }
