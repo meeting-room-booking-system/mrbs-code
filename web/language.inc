@@ -273,7 +273,7 @@ function get_mrbs_locale($header=null)
   if (!$have_locale)
   {
     // If we're running from the CLI, use the config setting
-    if (is_cli() && !empty($cli_language))
+    if (!empty($cli_language) && is_cli())
     {
       $lang = $cli_language;
     }
@@ -364,7 +364,7 @@ function get_lang_preferences()
 
 
 // Note: the first time this function is called, it should be called with a $locale.
-// Subsequent calls will just return the static $locale variable which was calculated on
+// Subsequent calls will just return the static $lang variable which was calculated on
 // the first call
 function get_mrbs_lang($locale=null)
 {
@@ -377,7 +377,7 @@ function get_mrbs_lang($locale=null)
   if (!isset($lang))
   {
     // If we're running from the CLI, use the config setting
-    if (is_cli() && !empty($cli_language))
+    if (!empty($cli_language) && is_cli())
     {
       $lang = $cli_language;
     }
