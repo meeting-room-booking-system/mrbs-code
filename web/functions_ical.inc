@@ -176,7 +176,7 @@ function get_time($value)
     $this_timezone = "UTC";
   }
 
-  $value_type = "DATE_TIME";  // the default
+  $value_type = "DATE-TIME";  // the default
 
 
   // Work out which, if any, parameters have been set
@@ -201,7 +201,7 @@ function get_time($value)
     $value = str_replace('Z', '', $value);
     $this_timezone = 'UTC';
   }
-  if ($value_type == "DATE_TIME")
+  if ($value_type == "DATE-TIME")
   {
     list($date, $time) = explode('T', $value, 2);
   }
@@ -233,7 +233,7 @@ function get_time($value)
   }
   else
   {
-    if ($value_type == "DATE_TIME")
+    if ($value_type == "DATE-TIME")
     {
       trigger_error("Floating times not supported", E_USER_WARNING);
     }
