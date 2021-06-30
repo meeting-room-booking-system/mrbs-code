@@ -235,7 +235,7 @@ function get_time($value)
   {
     if ($value_type == "DATE-TIME")
     {
-      trigger_error("Floating times not supported", E_USER_WARNING);
+      trigger_error("Floating times not supported", E_USER_NOTICE);
     }
     $result = mktime($hour, $minute, $second, $month, $day, $year);
   }
