@@ -163,12 +163,8 @@ function get_vtimezone($tz)
 
 // Returns a UNIX timestamp given an RFC5545 date or date-time
 // $params is an optional second argument and is an array of property parameters
-function get_time($value)
+function get_time($value, $params=null)
 {
-  if (func_num_args() > 1)
-  {
-    $params = func_get_arg(1);
-  }
   // If we haven't got any parameters default to "UTC".   Not strictly correct,
   // but in most cases it will be true.  Need to do something better.
   if (empty($params))

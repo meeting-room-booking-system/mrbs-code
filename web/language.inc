@@ -1019,7 +1019,7 @@ function utf8_substr($str, $start, $length=null)
       $ret[$j++] = $str[$i];
     }
   }
-  
+
   return $ret;
 }
 
