@@ -932,16 +932,11 @@ function utf8_strftime($format, $time, $temp_locale=null)
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr_old($str,$start)
+function utf8_substr_old($str, $start, $length=null)
 {
   preg_match_all("/./su", $str, $ar);
 
-  if(func_num_args() >= 3) {
-    $length = func_get_arg(2);
-    return join("", array_slice($ar[0], $start, $length));
-  } else {
-    return join("", array_slice($ar[0], $start));
-  }
+  return join("", array_slice($ar[0], $start, $length));
 }
 
 
@@ -996,7 +991,7 @@ function utf8_substr($str, $start, $length=null)
     return '';
   }
 
-  if (func_num_args() >= 3)
+  if (isset($length))
   {
     $end_index = $index;
 
@@ -1014,7 +1009,6 @@ function utf8_substr($str, $start, $length=null)
     {
       $ret[$j++] = $str[$i];
     }
-    return $ret;
   }
   else
   {
@@ -1024,8 +1018,9 @@ function utf8_substr($str, $start, $length=null)
     {
       $ret[$j++] = $str[$i];
     }
-    return $ret;
   }
+
+  return $ret;
 }
 
 
