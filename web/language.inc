@@ -991,7 +991,7 @@ function utf8_substr($str, $start, $length=null)
     return '';
   }
 
-  if (func_num_args() >= 3)
+  if (isset($length))
   {
     $end_index = $index;
 
@@ -1009,7 +1009,6 @@ function utf8_substr($str, $start, $length=null)
     {
       $ret[$j++] = $str[$i];
     }
-    return $ret;
   }
   else
   {
@@ -1019,8 +1018,9 @@ function utf8_substr($str, $start, $length=null)
     {
       $ret[$j++] = $str[$i];
     }
-    return $ret;
   }
+  
+  return $ret;
 }
 
 
