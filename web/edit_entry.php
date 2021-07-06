@@ -578,6 +578,7 @@ function get_field_custom($key, $disabled=false)
 {
   global $custom_fields, $custom_fields_map;
   global $is_mandatory_field, $text_input_max;
+  global $datalist_options;
 
   // First check that the custom field exists.  It normally will, but won't if
   // $edit_entry_field_order contains a value for which a field doesn't exist.
@@ -604,9 +605,10 @@ function get_field_custom($key, $disabled=false)
     // HTML5 does not allow a pattern attribute for the textarea element
     $class = 'FieldTextarea';
   }
-  // Otherwise check if it's an integer field
-  elseif ((($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2)) ||
-          ($custom_field['nature'] == 'decimal'))
+  // Otherwise check if it's an integer field (and not a datalist)
+  elseif (empty($datalist_options["entry.$key"]) &&
+          ((($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2)) ||
+          ($custom_field['nature'] == 'decimal')))
   {
     $class = 'FieldInputNumber';
   }
