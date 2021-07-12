@@ -166,10 +166,8 @@ function parse_address($email_address)
     'address' => null,
     'common_name' => null
   );
-
-  $mailer = new PHPMailer();
-  $mailer->CharSet = get_mail_charset();
-  $parsed_addresses = $mailer->parseAddresses($email_address);
+  
+  $parsed_addresses = PHPMailer::parseAddresses($email_address);
 
   if (!empty($parsed_addresses))
   {
