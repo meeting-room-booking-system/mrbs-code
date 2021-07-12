@@ -112,7 +112,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   public function destroy($id)
   {
     $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
-    $rows = $rows = db()->command($sql, array(':id' => $id));
+    $rows = db()->command($sql, array(':id' => $id));
     return ($rows === 1);
   }
 
