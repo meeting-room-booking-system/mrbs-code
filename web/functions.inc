@@ -545,43 +545,6 @@ function get_compound_name($username)
 }
 
 
-// Gets the default email address for $user.   Returns an empty
-// string if one can't be found
-function get_default_email($user)
-{
-  global $mail_settings;
-
-  if (!isset($user) || $user === '')
-  {
-    return '';
-  }
-
-  $email = $user;
-
-  // Remove the suffix, if there is one
-  if (isset($mail_settings['username_suffix']) && ($mail_settings['username_suffix'] !== ''))
-  {
-    $suffix = $mail_settings['username_suffix'];
-    if (substr($email, -strlen($suffix)) === $suffix)
-    {
-      $email = substr($email, 0, -strlen($suffix));
-    }
-  }
-
-  // Add on the domain, if there is one
-  if (isset($mail_settings['domain']) && ($mail_settings['domain'] !== ''))
-  {
-    // Trim any leading '@' character. Older versions of MRBS required the '@' character
-    // to be included in $mail_settings['domain'], and we still allow this for backwards
-    // compatibility.
-    $domain = ltrim($mail_settings['domain'], '@');
-    $email .= '@' . $domain;
-  }
-
-  return $email;
-}
-
-
 function get_cookie_path()
 {
   global $cookie_path_override, $server;
