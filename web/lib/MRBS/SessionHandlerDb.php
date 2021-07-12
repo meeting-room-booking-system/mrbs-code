@@ -30,7 +30,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function open($save_path , $name)
+  public function open($path, $name)
   {
     return true;
   }
@@ -47,7 +47,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // Returns an encoded string of the read data. If nothing was read, it must
   // return an empty string. Note this value is returned internally to PHP for
   // processing.
-  public function read($session_id)
+  public function read($id)
   {
     try
     {
@@ -56,7 +56,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
                WHERE id=:id
                LIMIT 1";
 
-      $result = db()->query1($sql, array(':id' => $session_id));
+      $result = db()->query1($sql, array(':id' => $id));
     }
     catch (DBException $e)
     {
@@ -77,10 +77,10 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function write($session_id , $session_data)
+  public function write($id, $data)
   {
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
-    $rows = db()->query1($sql, array(':id' => $session_id));
+    $rows = db()->query1($sql, array(':id' => $id));
 
     if ($rows > 0)
     {
@@ -97,8 +97,8 @@ class SessionHandlerDb implements \SessionHandlerInterface
                    VALUES (:id, :data, :access)";
     }
 
-    $sql_params = array(':id' => $session_id,
-                        ':data' => $session_data,
+    $sql_params = array(':id' => $id,
+                        ':data' => $data,
                         ':access' => time());
 
     db()->command($sql, $sql_params);
@@ -109,20 +109,20 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function destroy($session_id)
+  public function destroy($id)
   {
     $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
-    $rows = $rows = db()->command($sql, array(':id' => $session_id));
+    $rows = $rows = db()->command($sql, array(':id' => $id));
     return ($rows === 1);
   }
 
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function gc($maxlifetime)
+  public function gc($max_lifetime)
   {
     $sql = "DELETE FROM " . self::$table . " WHERE access<:old";
-    db()->command($sql, array(':old' => time() - $maxlifetime));
+    db()->command($sql, array(':old' => time() - $max_lifetime));
     return true;  // An exception will be thrown on error
   }
 }
