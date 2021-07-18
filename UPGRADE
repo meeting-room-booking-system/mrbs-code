@@ -96,24 +96,24 @@ Upgrading from prior MRBS 1.4.6
 
 If you were previously using MRBS with $unicode_encoding set to 0, when
 you upgrade to 1.4.6 you _MUST_ upgrade the MySQL database from the
-previously used character set to Unicode :
+previously used character set to Unicode.  Note that it is extremely
+unlikely that you will need to do this as the default setting of
+$unicode_encoding is 1.
 
-          You need to use the convert_db_to_utf8.php script to convert text
-          in the database to UTF8. The administrator should copy the file
-          into the web directory, run it (choosing the encoding to convert
-          from) ONCE, and then move it back out of the web directory. We
-          recommend you backup your database before running this script if
-          you are at all worried.
-          Running it more than once will make a right mess of any non-ASCII
-          text in the database.
+If you do need to convert text in the database you should run the
+convert_db_to_utf8.php script _BEFORE_ upgrading to the latest version
+of MRBS. The administrator should copy the file into the web directory,
+run it (choosing the encoding to convert from) ONCE, and then move it back
+out of the web directory. We recommend you backup your database before
+running this script if you are at all worried.  Running it more than once
+will make a right mess of any non-ASCII text in the database.
 
-          Additionally, this script can correct an MRBS database that used
-          to run on an old version of MySQL (earlier than 4.1), but that
-          now run on a newer version of MySQL. In this case, the database
-          contains UTF-8 text, but the tables are considered to be in some
-          other encoding by MySQL, generally Latin-1. The
-          convert_db_to_utf8.php detects this condition, and offers
-          the administrator the chance to correct the database 'collation'.
+Additionally, this script can correct an MRBS database that used to run on
+an old version of MySQL (earlier than 4.1), but that now runs on a newer
+version of MySQL. In this case, the database contains UTF-8 text, but the
+tables are considered to be in some other encoding by MySQL, generally
+Latin-1. The convert_db_to_utf8.php detects this condition, and offers
+the administrator the chance to correct the database 'collation'.
 
 ===
 
@@ -146,21 +146,6 @@ mrbs 1.2-pre3 introduced area and room administrator email fields.
 
 Please apply the upgrade3.my.sql to add these fields. This file should work
 both with mysql and pgsql.
-
-
-Upgrading from prior MRBS 1.2-pre2
-==================================
-
-Upgrading mysql database from previous charsets to Unicode :
-
-          You can use convert_db_to_utf8.php script to convert text in the
-          database to UTF8. The administrator should copy the file into
-          the web directory, run it (choosing the encoding to convert from)
-          ONCE, and then move it back out of the web directory. We recommend
-          you backup your database before running this script if you are at
-          all worried.
-          Running it more than once will make a right mess of any non-ASCII
-          text in the database.
 
 
 Upgrading from prior to MRBS 1.0 final

@@ -449,14 +449,6 @@ For MRBS to use Unicode, PHP must be built with 'iconv' support
 ('--with-iconv' directive), or have the iconv extension installed
 and enabled. On Windows, if you are using PHP 5, iconv support is built-in.
 
-Note: Upgrading MySQL database from previous charsets to Unicode :
-
-  You can use convert_db_to_utf8.php script to convert text in the
-  database to UTF8. The administrator should copy this file into the web
-  directory, run it (choosing the encoding to convert from) ONCE, and then
-  move it back out of the web directory. We recommend you backup your
-  database before running this script if you are at all worried.
-
 
 PERIODS
 ---------------------------------------------------------------------------
