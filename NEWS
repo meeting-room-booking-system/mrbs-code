@@ -7,6 +7,62 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.9.4 (Tue 20th July 2021):
+
+[-] Fixed problem when incorrect credentials are supplied on database
+ upgrade.
+
+[+] Added new config setting, $auth['users_can_register_others'],
+ allowing ordinary users to register others for events.
+
+[+] Added the ability for users to cancel registrations made on their
+ behalf by someone else.
+
+[*] Added a pointer cursor to password show/hide icons.
+
+[*] MRBS now retries opening a MySQL connection if the attempt failed
+ because there were already too many connections.
+
+[*] Upgraded to jQuery Release 3.6.0.
+
+[*] Updated timezone definitions.
+
+[-] Added HTML escaping. See SF Bugs #505.
+
+[*] (DB schemas) Removed deprecated integer display width.
+
+[-] Fixed bug when working in multisite mode.
+
+[*] Upgraded to latest release of DataTables.
+
+[-] Fixed bug causing the user's display name not to be exported when
+ the user is editable.
+
+[*] Introduced a higher level of LDAP debugging that will additionally
+ output an entry's attribute names and values. See SF Support
+ Requests #2363.
+
+[*] Improved handling of locales and locale setting. See SF Support
+ Requests #2372.
+
+[*] Added language debugging capability controlled by a new config
+ variable $language_debug.
+
+[-] (ical) Fixed bug. See SF Support Requests #2375.
+
+[-] Fixed problem with $datalist_options not being recognised when the
+ column is an integer. See SF Support Requests #2379.
+
+[*] Removed convert_db_to_utf8.php as it is (a) rarely necessary now and
+ (b) would need work to get it to work with the latest code. Updated
+ UPGRADE to include advice to run the script _BEFORE_ upgrading to
+ the latest version of MRBS.
+
+[*] Added additional information about the change in config file
+ structure from MRBS 1.4.7 and earlier. See SF Support Requests
+ #2380.
+
+-------------------------------------------------------------------------------
 Version 1.9.3 (Sat 22nd May 2021):
 
 [-] Fixed problem when an LDAP search returns an entry with a null
