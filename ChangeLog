@@ -1,8 +1,1526 @@
-2021-05-22  John Beranek  <jberanek@users.sourceforge.net>
+2021-07-20  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* UPGRADE:
+	Added additional information about the change in config file
+	structure from MRBS 1.4.7 and earlier. See SF Support Requests
+	#2380.
+	[bc9c746b0988]
+
+2021-07-18  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* convert_db_to_utf8.php:
+	Merge
+	[c4ed037c995a]
+
+	* README:
+	Updated README
+	[343b6281e543]
+
+	* INSTALL, UPGRADE, convert_db_to_utf8.php:
+	Removed convert_db_to_utf8.php as it is (a) rarely necessary now and
+	(b) would need work to get it to work with the latest code. Updated
+	UPGRADE to include advice to run the script _BEFORE_ upgrading to
+	the latest version of MRBS.
+	[7d2200508e3f]
+
+2021-07-14  John Beranek  <jberanek@users.sourceforge.net>
+
+	* Merged with default
+	[3c1da903fe31]
+
+2021-07-12  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Removed redundant code
+	[6f3f87195afc]
+
+	* web/lib/MRBS/SessionHandlerDb.php:
+	Made parameter names correspond to the interface.
+	[3d3a68be4b6a]
+
+	* web/functions_mail.inc:
+	Fixed dynamic call of a static method
+	[1f75741aaf74]
+
+	* web/functions.inc:
+	Removed redundant function (now a method in Auth.php)
+	[43bca96ed4b3]
+
+2021-07-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/edit_entry.php:
+	Reverted last change
+	[7484b027ee4a]
+
+	* web/edit_entry.php:
+	Fixed problem with $datalist_options not being recognised when the
+	column is an integer. See SF Support Requests #2379.
+	[8c59c61d7bf5]
+
+2021-07-05  John Beranek  <jberanek@users.sourceforge.net>
 
 	* web/version_num.inc:
 	* Updated version number for release.
-	[251606644a4c] [tip]
+	[e50eb5be44a9]
+
+2021-07-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_ical.inc, web/language.inc:
+	Simplified code
+	[1dc9c93dda8f]
+
+	* web/language.inc:
+	Simplified code
+	[54d34e39d890]
+
+	* web/language.inc:
+	Simplified code
+	[4a6cc8333b2c]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added more LDAP debugging
+	[782c7e64d890]
+
+2021-06-30  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/functions_ical.inc:
+	Downgraded error message level from WARNING to NOTICE
+	[eac765046b42]
+
+	* web/functions_ical.inc:
+	Fixed bug. See SF Support Requests #2375
+	[93da94b9cf7f]
+
+2021-06-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/language.inc, web/lib/MRBS/Auth/AuthLdap.php:
+	Added "MRBS" to debug strings
+	[add478c4dbef]
+
+	* web/language.inc:
+	Fixed bug when running from the CLI
+	[d9dcebb619ba]
+
+	* web/language.inc:
+	Restructured
+	[b6eec14e8c12]
+
+	* web/language.inc, web/systemdefaults.inc.php:
+	Added language debugging capability controlled by a new config
+	variable $language_debug
+	[30919af4d6f4]
+
+	* web/language.inc:
+	Improved handling of locales and locale setting. See SF Support
+	Requests #2372
+	[7d070867aa04]
+
+2021-06-24  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Locale.php:
+	Added type hinting
+	[55abf119cde6]
+
+2021-06-21  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Expanded debugging information. See SF Support Requests #2363.
+	[0739570ab80f]
+
+	* web/lib/MRBS/Auth/AuthLdap.php, web/systemdefaults.inc.php:
+	Introduced a higher level of LDAP debugging that will additionally
+	output an entry's attribute names and values. See SF Support
+	Requests #2363.
+	[6d4da1b54f4d]
+
+2021-06-17  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Added comment.
+	[61ef18971d7d]
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added more debug info
+	[8038d97bba01]
+
+2021-06-11  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/js/datatables.js.php:
+	Fixed bug causing the user's display name not to be exported when
+	the user is editable.
+	[890b004952f9]
+
+	* web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.6.5/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.6.5/css/common.scss,
+	web/jquery/datatables/Buttons-1.6.5/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.flash.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.flash.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.6.5/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.6.5/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.6.5/js/dataTables.buttons.min.js,
+	web/jquery/datatables/Buttons-1.6.5/swf/flashExport.swf,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap4.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap4.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap5.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bootstrap5.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bulma.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.bulma.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.dataTables.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.dataTables.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.foundation.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.foundation.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.jqueryui.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.jqueryui.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.semanticui.css,
+	web/jquery/datatables/Buttons-1.7.1/css/buttons.semanticui.min.css,
+	web/jquery/datatables/Buttons-1.7.1/css/common.scss,
+	web/jquery/datatables/Buttons-1.7.1/css/mixins.scss,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap4.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap4.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap5.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bootstrap5.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bulma.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.bulma.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.colVis.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.colVis.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.dataTables.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.dataTables.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.foundation.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.foundation.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.html5.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.html5.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.jqueryui.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.jqueryui.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.print.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.print.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.semanticui.js,
+	web/jquery/datatables/Buttons-1.7.1/js/buttons.semanticui.min.js,
+	web/jquery/datatables/Buttons-1.7.1/js/dataTables.buttons.js,
+	web/jquery/datatables/Buttons-1.7.1/js/dataTables.buttons.min.js,
+	web/jquery/datatables/ColReorder-1.5.2/css/colReorder.bootstrap.css,
+	web/jquery/datatables/ColReorder-1.5.2/css/colReorder.bootstrap.min.
+	css, web/jquery/datatables/ColReorder-1.5.2/css/colReorder.bootstrap
+	4.css, web/jquery/datatables/ColReorder-1.5.2/css/colReorder.bootstr
+	ap4.min.css, web/jquery/datatables/ColReorder-1.5.2/css/colReorder.d
+	ataTables.css, web/jquery/datatables/ColReorder-1.5.2/css/colReorder
+	.dataTables.min.css, web/jquery/datatables/ColReorder-1.5.2/css/colR
+	eorder.foundation.css, web/jquery/datatables/ColReorder-1.5.2/css/co
+	lReorder.foundation.min.css,
+	web/jquery/datatables/ColReorder-1.5.2/css/colReorder.jqueryui.css,
+	w
+	eb/jquery/datatables/ColReorder-1.5.2/css/colReorder.jqueryui.min.cs
+	s, web/jquery/datatables/ColReorder-1.5.2/css/colReorder.semanticui.
+	css, web/jquery/datatables/ColReorder-1.5.2/css/colReorder.semanticu
+	i.min.css,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.bootstrap.js, w
+	eb/jquery/datatables/ColReorder-1.5.2/js/colReorder.bootstrap.min.js
+	,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.bootstrap4.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.2/js/colReorder.bootstrap4.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.dataTables.js,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.foundation.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.2/js/colReorder.foundation.min.j
+	s, web/jquery/datatables/ColReorder-1.5.2/js/colReorder.jqueryui.js,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.jqueryui.min.js
+	, web/jquery/datatables/ColReorder-1.5.2/js/colReorder.semanicui.js,
+	web/jquery/datatables/ColReorder-1.5.2/js/colReorder.semanticui.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.2/js/colReorder.semanticui.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.2/js/dataTables.colReorder.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.2/js/dataTables.colReorder.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bootstrap.css,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bootstrap.min.
+	css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bootstrap
+	4.css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bootstr
+	ap4.min.css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.b
+	ootstrap5.css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder
+	.bootstrap5.min.css,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bulma.css,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.bulma.min.css,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.dataTables.css
+	, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.dataTables.m
+	in.css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.founda
+	tion.css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.foun
+	dation.min.css,
+	web/jquery/datatables/ColReorder-1.5.4/css/colReorder.jqueryui.css,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/css/colReorder.jqueryui.min.cs
+	s, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.semanticui.
+	css, web/jquery/datatables/ColReorder-1.5.4/css/colReorder.semanticu
+	i.min.css,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap.js, w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap.min.js
+	,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap4.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap4.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap5.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.bootstrap5.min.j
+	s, web/jquery/datatables/ColReorder-1.5.4/js/colReorder.bulma.js,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.bulma.min.js,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.dataTables.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.dataTables.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.foundation.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.foundation.min.j
+	s, web/jquery/datatables/ColReorder-1.5.4/js/colReorder.jqueryui.js,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.jqueryui.min.js
+	,
+	web/jquery/datatables/ColReorder-1.5.4/js/colReorder.semanticui.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/colReorder.semanticui.min.j
+	s,
+	web/jquery/datatables/ColReorder-1.5.4/js/dataTables.colReorder.js,
+	w
+	eb/jquery/datatables/ColReorder-1.5.4/js/dataTables.colReorder.min.j
+	s, web/jquery/datatables/DataTables-1.10.22/css/dataTables.bootstrap
+	.css, web/jquery/datatables/DataTables-1.10.22/css/dataTables.bootst
+	rap.min.css, web/jquery/datatables/DataTables-1.10.22/css/dataTables
+	.bootstrap4.css, web/jquery/datatables/DataTables-1.10.22/css/dataTa
+	bles.bootstrap4.min.css, web/jquery/datatables/DataTables-1.10.22/cs
+	s/dataTables.foundation.css, web/jquery/datatables/DataTables-1.10.2
+	2/css/dataTables.foundation.min.css, web/jquery/datatables/DataTable
+	s-1.10.22/css/dataTables.jqueryui.css, web/jquery/datatables/DataTab
+	les-1.10.22/css/dataTables.jqueryui.min.css, web/jquery/datatables/D
+	ataTables-1.10.22/css/dataTables.semanticui.css, web/jquery/datatabl
+	es/DataTables-1.10.22/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.22/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.22/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.22/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.22/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.22/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.22/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.22/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.
+	foundation.js, web/jquery/datatables/DataTables-1.10.22/js/dataTable
+	s.foundation.min.js,
+	web/jquery/datatables/DataTables-1.10.22/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.22/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.22/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.22/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.22/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.22/js/jquery.dataTables.min.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.25/css/dataTables.bootstrap.css
+	, web/jquery/datatables/DataTables-1.10.25/css/dataTables.bootstrap.
+	min.css, web/jquery/datatables/DataTables-1.10.25/css/dataTables.boo
+	tstrap4.css, web/jquery/datatables/DataTables-1.10.25/css/dataTables
+	.bootstrap4.min.css, web/jquery/datatables/DataTables-1.10.25/css/da
+	taTables.bootstrap5.css, web/jquery/datatables/DataTables-1.10.25/cs
+	s/dataTables.bootstrap5.min.css,
+	web/jquery/datatables/DataTables-1.10.25/css/dataTables.bulma.css, w
+	eb/jquery/datatables/DataTables-1.10.25/css/dataTables.bulma.min.css
+	, web/jquery/datatables/DataTables-1.10.25/css/dataTables.dataTables
+	.css, web/jquery/datatables/DataTables-1.10.25/css/dataTables.dataTa
+	bles.min.css, web/jquery/datatables/DataTables-1.10.25/css/dataTable
+	s.foundation.css, web/jquery/datatables/DataTables-1.10.25/css/dataT
+	ables.foundation.min.css, web/jquery/datatables/DataTables-1.10.25/c
+	ss/dataTables.jqueryui.css, web/jquery/datatables/DataTables-1.10.25
+	/css/dataTables.jqueryui.min.css, web/jquery/datatables/DataTables-1
+	.10.25/css/dataTables.semanticui.css, web/jquery/datatables/DataTabl
+	es-1.10.25/css/dataTables.semanticui.min.css,
+	web/jquery/datatables/DataTables-1.10.25/css/jquery.dataTables.css,
+	w
+	eb/jquery/datatables/DataTables-1.10.25/css/jquery.dataTables.min.cs
+	s, web/jquery/datatables/DataTables-1.10.25/images/sort_asc.png, web
+	/jquery/datatables/DataTables-1.10.25/images/sort_asc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.25/images/sort_both.png,
+	web/jquery/datatables/DataTables-1.10.25/images/sort_desc.png, web/j
+	query/datatables/DataTables-1.10.25/images/sort_desc_disabled.png,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.bootstrap.js,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.bootstrap.min
+	.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.bootstra
+	p4.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.bootst
+	rap4.min.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.
+	bootstrap5.js, web/jquery/datatables/DataTables-1.10.25/js/dataTable
+	s.bootstrap5.min.js,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.bulma.js,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.bulma.min.js,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.dataTables.js
+	, web/jquery/datatables/DataTables-1.10.25/js/dataTables.dataTables.
+	min.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.found
+	ation.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.fou
+	ndation.min.js,
+	web/jquery/datatables/DataTables-1.10.25/js/dataTables.jqueryui.js,
+	w
+	eb/jquery/datatables/DataTables-1.10.25/js/dataTables.jqueryui.min.j
+	s, web/jquery/datatables/DataTables-1.10.25/js/dataTables.semanticui
+	.js, web/jquery/datatables/DataTables-1.10.25/js/dataTables.semantic
+	ui.min.js,
+	web/jquery/datatables/DataTables-1.10.25/js/jquery.dataTables.js, we
+	b/jquery/datatables/DataTables-1.10.25/js/jquery.dataTables.min.js,
+	w
+	eb/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.bootstrap.c
+	ss, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.bootst
+	rap.min.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColum
+	ns.bootstrap4.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixe
+	dColumns.bootstrap4.min.css, web/jquery/datatables/FixedColumns-3.3.
+	1/css/fixedColumns.dataTables.css, web/jquery/datatables/FixedColumn
+	s-3.3.1/css/fixedColumns.dataTables.min.css, web/jquery/datatables/F
+	ixedColumns-3.3.1/css/fixedColumns.foundation.css, web/jquery/datata
+	bles/FixedColumns-3.3.1/css/fixedColumns.foundation.min.css, web/jqu
+	ery/datatables/FixedColumns-3.3.1/css/fixedColumns.jqueryui.css, web
+	/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.jqueryui.min.
+	css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns.seman
+	ticui.css, web/jquery/datatables/FixedColumns-3.3.1/css/fixedColumns
+	.semanticui.min.css, web/jquery/datatables/FixedColumns-3.3.1/js/dat
+	aTables.fixedColumns.js, web/jquery/datatables/FixedColumns-3.3.1/js
+	/dataTables.fixedColumns.min.js, web/jquery/datatables/FixedColumns-
+	3.3.1/js/fixedColumns.bootstrap.js, web/jquery/datatables/FixedColum
+	ns-3.3.1/js/fixedColumns.bootstrap.min.js, web/jquery/datatables/Fix
+	edColumns-3.3.1/js/fixedColumns.bootstrap4.js, web/jquery/datatables
+	/FixedColumns-3.3.1/js/fixedColumns.bootstrap4.min.js, web/jquery/da
+	tatables/FixedColumns-3.3.1/js/fixedColumns.dataTables.js, web/jquer
+	y/datatables/FixedColumns-3.3.1/js/fixedColumns.foundation.js, web/j
+	query/datatables/FixedColumns-3.3.1/js/fixedColumns.foundation.min.j
+	s, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.jqueryui
+	.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.jquery
+	ui.min.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColumns.
+	semanicui.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedColum
+	ns.semanticui.js, web/jquery/datatables/FixedColumns-3.3.1/js/fixedC
+	olumns.semanticui.min.js, web/jquery/datatables/FixedColumns-3.3.3/c
+	ss/fixedColumns.bootstrap.css, web/jquery/datatables/FixedColumns-3.
+	3.3/css/fixedColumns.bootstrap.min.css, web/jquery/datatables/FixedC
+	olumns-3.3.3/css/fixedColumns.bootstrap4.css, web/jquery/datatables/
+	FixedColumns-3.3.3/css/fixedColumns.bootstrap4.min.css, web/jquery/d
+	atatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.css, web/jq
+	uery/datatables/FixedColumns-3.3.3/css/fixedColumns.bootstrap5.min.c
+	ss,
+	web/jquery/datatables/FixedColumns-3.3.3/css/fixedColumns.bulma.css,
+	web/jquery/datatables/FixedColumns-3.3.3/css/fixedColumns.bulma.min.
+	css, web/jquery/datatables/FixedColumns-3.3.3/css/fixedColumns.dataT
+	ables.css, web/jquery/datatables/FixedColumns-3.3.3/css/fixedColumns
+	.dataTables.min.css, web/jquery/datatables/FixedColumns-3.3.3/css/fi
+	xedColumns.foundation.css, web/jquery/datatables/FixedColumns-3.3.3/
+	css/fixedColumns.foundation.min.css, web/jquery/datatables/FixedColu
+	mns-3.3.3/css/fixedColumns.jqueryui.css, web/jquery/datatables/Fixed
+	Columns-3.3.3/css/fixedColumns.jqueryui.min.css, web/jquery/datatabl
+	es/FixedColumns-3.3.3/css/fixedColumns.semanticui.css, web/jquery/da
+	tatables/FixedColumns-3.3.3/css/fixedColumns.semanticui.min.css, web
+	/jquery/datatables/FixedColumns-3.3.3/js/dataTables.fixedColumns.js,
+	web/jquery/datatables/FixedColumns-3.3.3/js/dataTables.fixedColumns.
+	min.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.boo
+	tstrap.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.
+	bootstrap.min.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedC
+	olumns.bootstrap4.js, web/jquery/datatables/FixedColumns-3.3.3/js/fi
+	xedColumns.bootstrap4.min.js, web/jquery/datatables/FixedColumns-3.3
+	.3/js/fixedColumns.bootstrap5.js, web/jquery/datatables/FixedColumns
+	-3.3.3/js/fixedColumns.bootstrap5.min.js,
+	web/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.bulma.js, w
+	eb/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.bulma.min.js
+	, web/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.dataTable
+	s.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedColumns.dataT
+	ables.min.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedColum
+	ns.foundation.js, web/jquery/datatables/FixedColumns-3.3.3/js/fixedC
+	olumns.foundation.min.js, web/jquery/datatables/FixedColumns-3.3.3/j
+	s/fixedColumns.jqueryui.js, web/jquery/datatables/FixedColumns-3.3.3
+	/js/fixedColumns.jqueryui.min.js, web/jquery/datatables/FixedColumns
+	-3.3.3/js/fixedColumns.semanticui.js, web/jquery/datatables/FixedCol
+	umns-3.3.3/js/fixedColumns.semanticui.min.js,
+	web/jquery/datatables/datatables.css,
+	web/jquery/datatables/datatables.js,
+	web/jquery/datatables/datatables.min.css,
+	web/jquery/datatables/datatables.min.js,
+	web/jquery/datatables/language/Afrikaans.lang,
+	web/jquery/datatables/language/Albanian.lang,
+	web/jquery/datatables/language/Amharic.lang,
+	web/jquery/datatables/language/Arabic.lang,
+	web/jquery/datatables/language/Armenian.lang,
+	web/jquery/datatables/language/Azerbaijan.lang,
+	web/jquery/datatables/language/Bangla.lang,
+	web/jquery/datatables/language/Basque.lang,
+	web/jquery/datatables/language/Belarusian.lang,
+	web/jquery/datatables/language/Bulgarian.lang,
+	web/jquery/datatables/language/Catalan.lang,
+	web/jquery/datatables/language/Chinese-traditional.lang,
+	web/jquery/datatables/language/Chinese.lang,
+	web/jquery/datatables/language/Croatian.lang,
+	web/jquery/datatables/language/Czech.lang,
+	web/jquery/datatables/language/Danish.lang,
+	web/jquery/datatables/language/Dutch.lang,
+	web/jquery/datatables/language/English.lang,
+	web/jquery/datatables/language/Esperanto.lang,
+	web/jquery/datatables/language/Estonian.lang,
+	web/jquery/datatables/language/Filipino.lang,
+	web/jquery/datatables/language/Finnish.lang,
+	web/jquery/datatables/language/French.lang,
+	web/jquery/datatables/language/Galician.lang,
+	web/jquery/datatables/language/Georgian.lang,
+	web/jquery/datatables/language/German.lang,
+	web/jquery/datatables/language/Greek.lang,
+	web/jquery/datatables/language/Gujarati.lang,
+	web/jquery/datatables/language/Hebrew.lang,
+	web/jquery/datatables/language/Hindi.lang,
+	web/jquery/datatables/language/Hungarian.lang,
+	web/jquery/datatables/language/Icelandic.lang,
+	web/jquery/datatables/language/Indonesian-Alternative.lang,
+	web/jquery/datatables/language/Indonesian.lang,
+	web/jquery/datatables/language/Irish.lang,
+	web/jquery/datatables/language/Italian.lang,
+	web/jquery/datatables/language/Japanese.lang,
+	web/jquery/datatables/language/Kannada.lang,
+	web/jquery/datatables/language/Kazakh.lang,
+	web/jquery/datatables/language/Khmer.lang,
+	web/jquery/datatables/language/Korean.lang,
+	web/jquery/datatables/language/Kurdish.lang,
+	web/jquery/datatables/language/Kyrgyz.lang,
+	web/jquery/datatables/language/Lao.lang,
+	web/jquery/datatables/language/Latvian.lang,
+	web/jquery/datatables/language/Lithuanian.lang,
+	web/jquery/datatables/language/Macedonian.lang,
+	web/jquery/datatables/language/Malay.lang,
+	web/jquery/datatables/language/Mongolian.lang,
+	web/jquery/datatables/language/Nepali.lang,
+	web/jquery/datatables/language/Norwegian-Bokmal.lang,
+	web/jquery/datatables/language/Norwegian-Nynorsk.lang,
+	web/jquery/datatables/language/Pashto.lang,
+	web/jquery/datatables/language/Persian.lang,
+	web/jquery/datatables/language/Polish.lang,
+	web/jquery/datatables/language/Portuguese-Brasil.lang,
+	web/jquery/datatables/language/Portuguese.lang,
+	web/jquery/datatables/language/Punjabi.lang,
+	web/jquery/datatables/language/Romanian.lang,
+	web/jquery/datatables/language/Rumantsch.lang,
+	web/jquery/datatables/language/Russian.lang,
+	web/jquery/datatables/language/Serbian.lang,
+	web/jquery/datatables/language/Serbian_latin.lang,
+	web/jquery/datatables/language/Sinhala.lang,
+	web/jquery/datatables/language/Slovak.lang,
+	web/jquery/datatables/language/Slovenian.lang,
+	web/jquery/datatables/language/Spanish.lang,
+	web/jquery/datatables/language/Swahili.lang,
+	web/jquery/datatables/language/Swedish.lang,
+	web/jquery/datatables/language/Tajik.lang,
+	web/jquery/datatables/language/Tamil.lang,
+	web/jquery/datatables/language/Thai.lang,
+	web/jquery/datatables/language/Turkish.lang,
+	web/jquery/datatables/language/Ukrainian.lang,
+	web/jquery/datatables/language/Urdu.lang,
+	web/jquery/datatables/language/Uzbek.lang,
+	web/jquery/datatables/language/Vietnamese.lang,
+	web/jquery/datatables/language/Welsh.lang,
+	web/jquery/datatables/language/telugu.lang:
+	Upgradsed to latest release of DataTables
+	[c625c49414d7]
+
+2021-06-07  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/mrbs_sql.inc:
+	Fixed bug when working in multisite mode
+	[a369124fab75]
+
+	* tables.my.sql, web/upgrade/11/mysql.sql, web/upgrade/13/mysql.sql,
+	web/upgrade/16/mysql.sql, web/upgrade/19/mysql.sql,
+	web/upgrade/20/mysql.sql, web/upgrade/22/mysql.sql,
+	web/upgrade/27/mysql.sql, web/upgrade/3/mysql.sql,
+	web/upgrade/30/mysql.sql, web/upgrade/38/mysql.sql,
+	web/upgrade/4/mysql.sql, web/upgrade/43/mysql.sql,
+	web/upgrade/65/mysql.sql, web/upgrade/66/mysql.sql,
+	web/upgrade/67/mysql.sql, web/upgrade/81/mysql.sql,
+	web/upgrade/81/post.inc:
+	Removed deprecated integer display width
+	[aea31c7a306e]
+
+	* web/css/mrbs.css.php:
+	Tweak to code formatting
+	[836e64b64edd]
+
+	* web/mrbs_sql.inc:
+	Added HTML escaping. See SF Bugs #505.
+	[07c323739f93]
+
+2021-06-06  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/tzurl/zoneinfo-outlook/Africa/Abidjan.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Accra.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Addis_Ababa.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Algiers.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Asmara.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bamako.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bangui.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Banjul.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bissau.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Blantyre.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Brazzaville.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Bujumbura.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Cairo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Casablanca.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ceuta.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Conakry.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Dakar.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Dar_es_Salaam.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Djibouti.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Douala.ics, web/tzurl/zoneinfo-
+	outlook/Africa/El_Aaiun.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Freetown.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Gaborone.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Harare.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Johannesburg.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Juba.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kampala.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Khartoum.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kigali.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Kinshasa.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lagos.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Libreville.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lome.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Luanda.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lubumbashi.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Lusaka.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Malabo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Maputo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Maseru.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Mbabane.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Mogadishu.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Monrovia.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Nairobi.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ndjamena.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Niamey.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Nouakchott.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Ouagadougou.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Porto-Novo.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Sao_Tome.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Tripoli.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Tunis.ics, web/tzurl/zoneinfo-
+	outlook/Africa/Windhoek.ics, web/tzurl/zoneinfo-
+	outlook/America/Adak.ics, web/tzurl/zoneinfo-
+	outlook/America/Anchorage.ics, web/tzurl/zoneinfo-
+	outlook/America/Anguilla.ics, web/tzurl/zoneinfo-
+	outlook/America/Antigua.ics, web/tzurl/zoneinfo-
+	outlook/America/Araguaina.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Buenos_Aires.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Catamarca.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Cordoba.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Jujuy.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/La_Rioja.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Mendoza.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Rio_Gallegos.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Salta.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/San_Juan.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/San_Luis.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Tucuman.ics, web/tzurl/zoneinfo-
+	outlook/America/Argentina/Ushuaia.ics, web/tzurl/zoneinfo-
+	outlook/America/Aruba.ics, web/tzurl/zoneinfo-
+	outlook/America/Asuncion.ics, web/tzurl/zoneinfo-
+	outlook/America/Atikokan.ics, web/tzurl/zoneinfo-
+	outlook/America/Bahia.ics, web/tzurl/zoneinfo-
+	outlook/America/Bahia_Banderas.ics, web/tzurl/zoneinfo-
+	outlook/America/Barbados.ics, web/tzurl/zoneinfo-
+	outlook/America/Belem.ics, web/tzurl/zoneinfo-
+	outlook/America/Belize.ics, web/tzurl/zoneinfo-
+	outlook/America/Blanc-Sablon.ics, web/tzurl/zoneinfo-
+	outlook/America/Boa_Vista.ics, web/tzurl/zoneinfo-
+	outlook/America/Bogota.ics, web/tzurl/zoneinfo-
+	outlook/America/Boise.ics, web/tzurl/zoneinfo-
+	outlook/America/Cambridge_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Campo_Grande.ics, web/tzurl/zoneinfo-
+	outlook/America/Cancun.ics, web/tzurl/zoneinfo-
+	outlook/America/Caracas.ics, web/tzurl/zoneinfo-
+	outlook/America/Cayenne.ics, web/tzurl/zoneinfo-
+	outlook/America/Cayman.ics, web/tzurl/zoneinfo-
+	outlook/America/Chicago.ics, web/tzurl/zoneinfo-
+	outlook/America/Chihuahua.ics, web/tzurl/zoneinfo-
+	outlook/America/Costa_Rica.ics, web/tzurl/zoneinfo-
+	outlook/America/Creston.ics, web/tzurl/zoneinfo-
+	outlook/America/Cuiaba.ics, web/tzurl/zoneinfo-
+	outlook/America/Curacao.ics, web/tzurl/zoneinfo-
+	outlook/America/Danmarkshavn.ics, web/tzurl/zoneinfo-
+	outlook/America/Dawson.ics, web/tzurl/zoneinfo-
+	outlook/America/Dawson_Creek.ics, web/tzurl/zoneinfo-
+	outlook/America/Denver.ics, web/tzurl/zoneinfo-
+	outlook/America/Detroit.ics, web/tzurl/zoneinfo-
+	outlook/America/Dominica.ics, web/tzurl/zoneinfo-
+	outlook/America/Edmonton.ics, web/tzurl/zoneinfo-
+	outlook/America/Eirunepe.ics, web/tzurl/zoneinfo-
+	outlook/America/Fort_Nelson.ics, web/tzurl/zoneinfo-
+	outlook/America/Fortaleza.ics, web/tzurl/zoneinfo-
+	outlook/America/Glace_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Godthab.ics, web/tzurl/zoneinfo-
+	outlook/America/Goose_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Grand_Turk.ics, web/tzurl/zoneinfo-
+	outlook/America/Grenada.ics, web/tzurl/zoneinfo-
+	outlook/America/Guadeloupe.ics, web/tzurl/zoneinfo-
+	outlook/America/Guatemala.ics, web/tzurl/zoneinfo-
+	outlook/America/Guayaquil.ics, web/tzurl/zoneinfo-
+	outlook/America/Guyana.ics, web/tzurl/zoneinfo-
+	outlook/America/Halifax.ics, web/tzurl/zoneinfo-
+	outlook/America/Havana.ics, web/tzurl/zoneinfo-
+	outlook/America/Hermosillo.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Indianapolis.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Knox.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Marengo.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Petersburg.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Tell_City.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Vevay.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Vincennes.ics, web/tzurl/zoneinfo-
+	outlook/America/Indiana/Winamac.ics, web/tzurl/zoneinfo-
+	outlook/America/Inuvik.ics, web/tzurl/zoneinfo-
+	outlook/America/Iqaluit.ics, web/tzurl/zoneinfo-
+	outlook/America/Jamaica.ics, web/tzurl/zoneinfo-
+	outlook/America/Juneau.ics, web/tzurl/zoneinfo-
+	outlook/America/Kentucky/Louisville.ics, web/tzurl/zoneinfo-
+	outlook/America/Kentucky/Monticello.ics, web/tzurl/zoneinfo-
+	outlook/America/Kralendijk.ics, web/tzurl/zoneinfo-
+	outlook/America/La_Paz.ics, web/tzurl/zoneinfo-
+	outlook/America/Lima.ics, web/tzurl/zoneinfo-
+	outlook/America/Los_Angeles.ics, web/tzurl/zoneinfo-
+	outlook/America/Lower_Princes.ics, web/tzurl/zoneinfo-
+	outlook/America/Maceio.ics, web/tzurl/zoneinfo-
+	outlook/America/Managua.ics, web/tzurl/zoneinfo-
+	outlook/America/Manaus.ics, web/tzurl/zoneinfo-
+	outlook/America/Marigot.ics, web/tzurl/zoneinfo-
+	outlook/America/Martinique.ics, web/tzurl/zoneinfo-
+	outlook/America/Matamoros.ics, web/tzurl/zoneinfo-
+	outlook/America/Mazatlan.ics, web/tzurl/zoneinfo-
+	outlook/America/Menominee.ics, web/tzurl/zoneinfo-
+	outlook/America/Merida.ics, web/tzurl/zoneinfo-
+	outlook/America/Metlakatla.ics, web/tzurl/zoneinfo-
+	outlook/America/Mexico_City.ics, web/tzurl/zoneinfo-
+	outlook/America/Miquelon.ics, web/tzurl/zoneinfo-
+	outlook/America/Moncton.ics, web/tzurl/zoneinfo-
+	outlook/America/Monterrey.ics, web/tzurl/zoneinfo-
+	outlook/America/Montevideo.ics, web/tzurl/zoneinfo-
+	outlook/America/Montserrat.ics, web/tzurl/zoneinfo-
+	outlook/America/Nassau.ics, web/tzurl/zoneinfo-
+	outlook/America/New_York.ics, web/tzurl/zoneinfo-
+	outlook/America/Nipigon.ics, web/tzurl/zoneinfo-
+	outlook/America/Nome.ics, web/tzurl/zoneinfo-
+	outlook/America/Noronha.ics, web/tzurl/zoneinfo-
+	outlook/America/North_Dakota/Beulah.ics, web/tzurl/zoneinfo-
+	outlook/America/North_Dakota/Center.ics, web/tzurl/zoneinfo-
+	outlook/America/North_Dakota/New_Salem.ics, web/tzurl/zoneinfo-
+	outlook/America/Ojinaga.ics, web/tzurl/zoneinfo-
+	outlook/America/Panama.ics, web/tzurl/zoneinfo-
+	outlook/America/Pangnirtung.ics, web/tzurl/zoneinfo-
+	outlook/America/Paramaribo.ics, web/tzurl/zoneinfo-
+	outlook/America/Phoenix.ics, web/tzurl/zoneinfo-
+	outlook/America/Port-au-Prince.ics, web/tzurl/zoneinfo-
+	outlook/America/Port_of_Spain.ics, web/tzurl/zoneinfo-
+	outlook/America/Porto_Velho.ics, web/tzurl/zoneinfo-
+	outlook/America/Puerto_Rico.ics, web/tzurl/zoneinfo-
+	outlook/America/Punta_Arenas.ics, web/tzurl/zoneinfo-
+	outlook/America/Rainy_River.ics, web/tzurl/zoneinfo-
+	outlook/America/Rankin_Inlet.ics, web/tzurl/zoneinfo-
+	outlook/America/Recife.ics, web/tzurl/zoneinfo-
+	outlook/America/Regina.ics, web/tzurl/zoneinfo-
+	outlook/America/Resolute.ics, web/tzurl/zoneinfo-
+	outlook/America/Rio_Branco.ics, web/tzurl/zoneinfo-
+	outlook/America/Santarem.ics, web/tzurl/zoneinfo-
+	outlook/America/Santiago.ics, web/tzurl/zoneinfo-
+	outlook/America/Santo_Domingo.ics, web/tzurl/zoneinfo-
+	outlook/America/Sao_Paulo.ics, web/tzurl/zoneinfo-
+	outlook/America/Scoresbysund.ics, web/tzurl/zoneinfo-
+	outlook/America/Sitka.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Barthelemy.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Johns.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Kitts.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Lucia.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Thomas.ics, web/tzurl/zoneinfo-
+	outlook/America/St_Vincent.ics, web/tzurl/zoneinfo-
+	outlook/America/Swift_Current.ics, web/tzurl/zoneinfo-
+	outlook/America/Tegucigalpa.ics, web/tzurl/zoneinfo-
+	outlook/America/Thule.ics, web/tzurl/zoneinfo-
+	outlook/America/Thunder_Bay.ics, web/tzurl/zoneinfo-
+	outlook/America/Tijuana.ics, web/tzurl/zoneinfo-
+	outlook/America/Toronto.ics, web/tzurl/zoneinfo-
+	outlook/America/Tortola.ics, web/tzurl/zoneinfo-
+	outlook/America/Vancouver.ics, web/tzurl/zoneinfo-
+	outlook/America/Whitehorse.ics, web/tzurl/zoneinfo-
+	outlook/America/Winnipeg.ics, web/tzurl/zoneinfo-
+	outlook/America/Yakutat.ics, web/tzurl/zoneinfo-
+	outlook/America/Yellowknife.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Casey.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Davis.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/DumontDUrville.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Macquarie.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Mawson.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/McMurdo.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Palmer.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Rothera.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Syowa.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Troll.ics, web/tzurl/zoneinfo-
+	outlook/Antarctica/Vostok.ics, web/tzurl/zoneinfo-
+	outlook/Arctic/Longyearbyen.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Aden.ics, web/tzurl/zoneinfo-outlook/Asia/Almaty.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Amman.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Anadyr.ics, web/tzurl/zoneinfo-outlook/Asia/Aqtau.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Aqtobe.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Ashgabat.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Atyrau.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Baghdad.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Bahrain.ics, web/tzurl/zoneinfo-outlook/Asia/Baku.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Bangkok.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Barnaul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Beirut.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Bishkek.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Brunei.ics, web/tzurl/zoneinfo-outlook/Asia/Chita.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Choibalsan.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Colombo.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Damascus.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Dhaka.ics, web/tzurl/zoneinfo-outlook/Asia/Dili.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Dubai.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Dushanbe.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Famagusta.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Gaza.ics, web/tzurl/zoneinfo-outlook/Asia/Hebron.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Ho_Chi_Minh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Hong_Kong.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Hovd.ics, web/tzurl/zoneinfo-outlook/Asia/Irkutsk.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Istanbul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jakarta.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jayapura.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Jerusalem.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kabul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kamchatka.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Karachi.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kathmandu.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Khandyga.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kolkata.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Krasnoyarsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuala_Lumpur.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuching.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Kuwait.ics, web/tzurl/zoneinfo-outlook/Asia/Macau.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Magadan.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Makassar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Manila.ics, web/tzurl/zoneinfo-outlook/Asia/Muscat.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Nicosia.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Novokuznetsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Novosibirsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Omsk.ics, web/tzurl/zoneinfo-outlook/Asia/Oral.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Phnom_Penh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Pontianak.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Pyongyang.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Qatar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Qyzylorda.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Riyadh.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Sakhalin.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Samarkand.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Seoul.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Shanghai.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Singapore.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Srednekolymsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Taipei.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tashkent.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tbilisi.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Tehran.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Thimphu.ics, web/tzurl/zoneinfo-outlook/Asia/Tokyo.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Tomsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Ulaanbaatar.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Urumqi.ics, web/tzurl/zoneinfo-outlook/Asia/Ust-
+	Nera.ics, web/tzurl/zoneinfo-outlook/Asia/Vientiane.ics,
+	web/tzurl/zoneinfo-outlook/Asia/Vladivostok.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yakutsk.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yangon.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yekaterinburg.ics, web/tzurl/zoneinfo-
+	outlook/Asia/Yerevan.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Azores.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Bermuda.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Canary.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Cape_Verde.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Faroe.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Madeira.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Reykjavik.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/South_Georgia.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/St_Helena.ics, web/tzurl/zoneinfo-
+	outlook/Atlantic/Stanley.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Adelaide.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Brisbane.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Broken_Hill.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Currie.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Darwin.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Eucla.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Hobart.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Lindeman.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Lord_Howe.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Melbourne.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Perth.ics, web/tzurl/zoneinfo-
+	outlook/Australia/Sydney.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Amsterdam.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Andorra.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Astrakhan.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Athens.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Belgrade.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Berlin.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Bratislava.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Brussels.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Bucharest.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Budapest.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Busingen.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Chisinau.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Copenhagen.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Dublin.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Gibraltar.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Guernsey.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Helsinki.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Isle_of_Man.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Istanbul.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Jersey.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kaliningrad.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kiev.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Kirov.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Lisbon.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Ljubljana.ics, web/tzurl/zoneinfo-
+	outlook/Europe/London.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Luxembourg.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Madrid.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Malta.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Mariehamn.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Minsk.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Monaco.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Moscow.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Nicosia.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Oslo.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Paris.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Podgorica.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Prague.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Riga.ics, web/tzurl/zoneinfo-outlook/Europe/Rome.ics,
+	web/tzurl/zoneinfo-outlook/Europe/Samara.ics, web/tzurl/zoneinfo-
+	outlook/Europe/San_Marino.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Sarajevo.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Saratov.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Simferopol.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Skopje.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Sofia.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Stockholm.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Tallinn.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Tirane.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Ulyanovsk.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Uzhgorod.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vaduz.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vatican.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vienna.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Vilnius.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Volgograd.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Warsaw.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zagreb.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zaporozhye.ics, web/tzurl/zoneinfo-
+	outlook/Europe/Zurich.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Antananarivo.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Chagos.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Christmas.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Cocos.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Comoro.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Kerguelen.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mahe.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Maldives.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mauritius.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Mayotte.ics, web/tzurl/zoneinfo-
+	outlook/Indian/Reunion.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Apia.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Auckland.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Bougainville.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Chatham.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Chuuk.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Easter.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Efate.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Enderbury.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Fakaofo.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Fiji.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Funafuti.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Galapagos.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Gambier.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Guadalcanal.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Guam.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Honolulu.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kiritimati.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kosrae.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Kwajalein.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Majuro.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Marquesas.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Midway.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Nauru.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Niue.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Norfolk.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Noumea.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pago_Pago.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Palau.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pitcairn.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Pohnpei.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Port_Moresby.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Rarotonga.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Saipan.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tahiti.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tarawa.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Tongatapu.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Wake.ics, web/tzurl/zoneinfo-
+	outlook/Pacific/Wallis.ics, web/tzurl/zoneinfo/Africa/Abidjan.ics,
+	web/tzurl/zoneinfo/Africa/Accra.ics,
+	web/tzurl/zoneinfo/Africa/Addis_Ababa.ics,
+	web/tzurl/zoneinfo/Africa/Algiers.ics,
+	web/tzurl/zoneinfo/Africa/Asmara.ics,
+	web/tzurl/zoneinfo/Africa/Bamako.ics,
+	web/tzurl/zoneinfo/Africa/Bangui.ics,
+	web/tzurl/zoneinfo/Africa/Banjul.ics,
+	web/tzurl/zoneinfo/Africa/Bissau.ics,
+	web/tzurl/zoneinfo/Africa/Blantyre.ics,
+	web/tzurl/zoneinfo/Africa/Brazzaville.ics,
+	web/tzurl/zoneinfo/Africa/Bujumbura.ics,
+	web/tzurl/zoneinfo/Africa/Cairo.ics,
+	web/tzurl/zoneinfo/Africa/Casablanca.ics,
+	web/tzurl/zoneinfo/Africa/Ceuta.ics,
+	web/tzurl/zoneinfo/Africa/Conakry.ics,
+	web/tzurl/zoneinfo/Africa/Dakar.ics,
+	web/tzurl/zoneinfo/Africa/Dar_es_Salaam.ics,
+	web/tzurl/zoneinfo/Africa/Djibouti.ics,
+	web/tzurl/zoneinfo/Africa/Douala.ics,
+	web/tzurl/zoneinfo/Africa/El_Aaiun.ics,
+	web/tzurl/zoneinfo/Africa/Freetown.ics,
+	web/tzurl/zoneinfo/Africa/Gaborone.ics,
+	web/tzurl/zoneinfo/Africa/Harare.ics,
+	web/tzurl/zoneinfo/Africa/Johannesburg.ics,
+	web/tzurl/zoneinfo/Africa/Juba.ics,
+	web/tzurl/zoneinfo/Africa/Kampala.ics,
+	web/tzurl/zoneinfo/Africa/Khartoum.ics,
+	web/tzurl/zoneinfo/Africa/Kigali.ics,
+	web/tzurl/zoneinfo/Africa/Kinshasa.ics,
+	web/tzurl/zoneinfo/Africa/Lagos.ics,
+	web/tzurl/zoneinfo/Africa/Libreville.ics,
+	web/tzurl/zoneinfo/Africa/Lome.ics,
+	web/tzurl/zoneinfo/Africa/Luanda.ics,
+	web/tzurl/zoneinfo/Africa/Lubumbashi.ics,
+	web/tzurl/zoneinfo/Africa/Lusaka.ics,
+	web/tzurl/zoneinfo/Africa/Malabo.ics,
+	web/tzurl/zoneinfo/Africa/Maputo.ics,
+	web/tzurl/zoneinfo/Africa/Maseru.ics,
+	web/tzurl/zoneinfo/Africa/Mbabane.ics,
+	web/tzurl/zoneinfo/Africa/Mogadishu.ics,
+	web/tzurl/zoneinfo/Africa/Monrovia.ics,
+	web/tzurl/zoneinfo/Africa/Nairobi.ics,
+	web/tzurl/zoneinfo/Africa/Ndjamena.ics,
+	web/tzurl/zoneinfo/Africa/Niamey.ics,
+	web/tzurl/zoneinfo/Africa/Nouakchott.ics,
+	web/tzurl/zoneinfo/Africa/Ouagadougou.ics,
+	web/tzurl/zoneinfo/Africa/Porto-Novo.ics,
+	web/tzurl/zoneinfo/Africa/Sao_Tome.ics,
+	web/tzurl/zoneinfo/Africa/Tripoli.ics,
+	web/tzurl/zoneinfo/Africa/Tunis.ics,
+	web/tzurl/zoneinfo/Africa/Windhoek.ics,
+	web/tzurl/zoneinfo/America/Adak.ics,
+	web/tzurl/zoneinfo/America/Anchorage.ics,
+	web/tzurl/zoneinfo/America/Anguilla.ics,
+	web/tzurl/zoneinfo/America/Antigua.ics,
+	web/tzurl/zoneinfo/America/Araguaina.ics,
+	web/tzurl/zoneinfo/America/Argentina/Buenos_Aires.ics,
+	web/tzurl/zoneinfo/America/Argentina/Catamarca.ics,
+	web/tzurl/zoneinfo/America/Argentina/Cordoba.ics,
+	web/tzurl/zoneinfo/America/Argentina/Jujuy.ics,
+	web/tzurl/zoneinfo/America/Argentina/La_Rioja.ics,
+	web/tzurl/zoneinfo/America/Argentina/Mendoza.ics,
+	web/tzurl/zoneinfo/America/Argentina/Rio_Gallegos.ics,
+	web/tzurl/zoneinfo/America/Argentina/Salta.ics,
+	web/tzurl/zoneinfo/America/Argentina/San_Juan.ics,
+	web/tzurl/zoneinfo/America/Argentina/San_Luis.ics,
+	web/tzurl/zoneinfo/America/Argentina/Tucuman.ics,
+	web/tzurl/zoneinfo/America/Argentina/Ushuaia.ics,
+	web/tzurl/zoneinfo/America/Aruba.ics,
+	web/tzurl/zoneinfo/America/Asuncion.ics,
+	web/tzurl/zoneinfo/America/Atikokan.ics,
+	web/tzurl/zoneinfo/America/Bahia.ics,
+	web/tzurl/zoneinfo/America/Bahia_Banderas.ics,
+	web/tzurl/zoneinfo/America/Barbados.ics,
+	web/tzurl/zoneinfo/America/Belem.ics,
+	web/tzurl/zoneinfo/America/Belize.ics,
+	web/tzurl/zoneinfo/America/Blanc-Sablon.ics,
+	web/tzurl/zoneinfo/America/Boa_Vista.ics,
+	web/tzurl/zoneinfo/America/Bogota.ics,
+	web/tzurl/zoneinfo/America/Boise.ics,
+	web/tzurl/zoneinfo/America/Cambridge_Bay.ics,
+	web/tzurl/zoneinfo/America/Campo_Grande.ics,
+	web/tzurl/zoneinfo/America/Cancun.ics,
+	web/tzurl/zoneinfo/America/Caracas.ics,
+	web/tzurl/zoneinfo/America/Cayenne.ics,
+	web/tzurl/zoneinfo/America/Cayman.ics,
+	web/tzurl/zoneinfo/America/Chicago.ics,
+	web/tzurl/zoneinfo/America/Chihuahua.ics,
+	web/tzurl/zoneinfo/America/Costa_Rica.ics,
+	web/tzurl/zoneinfo/America/Creston.ics,
+	web/tzurl/zoneinfo/America/Cuiaba.ics,
+	web/tzurl/zoneinfo/America/Curacao.ics,
+	web/tzurl/zoneinfo/America/Danmarkshavn.ics,
+	web/tzurl/zoneinfo/America/Dawson.ics,
+	web/tzurl/zoneinfo/America/Dawson_Creek.ics,
+	web/tzurl/zoneinfo/America/Denver.ics,
+	web/tzurl/zoneinfo/America/Detroit.ics,
+	web/tzurl/zoneinfo/America/Dominica.ics,
+	web/tzurl/zoneinfo/America/Edmonton.ics,
+	web/tzurl/zoneinfo/America/Eirunepe.ics,
+	web/tzurl/zoneinfo/America/El_Salvador.ics,
+	web/tzurl/zoneinfo/America/Fort_Nelson.ics,
+	web/tzurl/zoneinfo/America/Fortaleza.ics,
+	web/tzurl/zoneinfo/America/Glace_Bay.ics,
+	web/tzurl/zoneinfo/America/Godthab.ics,
+	web/tzurl/zoneinfo/America/Goose_Bay.ics,
+	web/tzurl/zoneinfo/America/Grand_Turk.ics,
+	web/tzurl/zoneinfo/America/Grenada.ics,
+	web/tzurl/zoneinfo/America/Guadeloupe.ics,
+	web/tzurl/zoneinfo/America/Guatemala.ics,
+	web/tzurl/zoneinfo/America/Guayaquil.ics,
+	web/tzurl/zoneinfo/America/Guyana.ics,
+	web/tzurl/zoneinfo/America/Halifax.ics,
+	web/tzurl/zoneinfo/America/Havana.ics,
+	web/tzurl/zoneinfo/America/Hermosillo.ics,
+	web/tzurl/zoneinfo/America/Indiana/Indianapolis.ics,
+	web/tzurl/zoneinfo/America/Indiana/Knox.ics,
+	web/tzurl/zoneinfo/America/Indiana/Marengo.ics,
+	web/tzurl/zoneinfo/America/Indiana/Petersburg.ics,
+	web/tzurl/zoneinfo/America/Indiana/Tell_City.ics,
+	web/tzurl/zoneinfo/America/Indiana/Vevay.ics,
+	web/tzurl/zoneinfo/America/Indiana/Vincennes.ics,
+	web/tzurl/zoneinfo/America/Indiana/Winamac.ics,
+	web/tzurl/zoneinfo/America/Inuvik.ics,
+	web/tzurl/zoneinfo/America/Iqaluit.ics,
+	web/tzurl/zoneinfo/America/Jamaica.ics,
+	web/tzurl/zoneinfo/America/Juneau.ics,
+	web/tzurl/zoneinfo/America/Kentucky/Louisville.ics,
+	web/tzurl/zoneinfo/America/Kentucky/Monticello.ics,
+	web/tzurl/zoneinfo/America/Kralendijk.ics,
+	web/tzurl/zoneinfo/America/La_Paz.ics,
+	web/tzurl/zoneinfo/America/Lima.ics,
+	web/tzurl/zoneinfo/America/Los_Angeles.ics,
+	web/tzurl/zoneinfo/America/Lower_Princes.ics,
+	web/tzurl/zoneinfo/America/Maceio.ics,
+	web/tzurl/zoneinfo/America/Managua.ics,
+	web/tzurl/zoneinfo/America/Manaus.ics,
+	web/tzurl/zoneinfo/America/Marigot.ics,
+	web/tzurl/zoneinfo/America/Martinique.ics,
+	web/tzurl/zoneinfo/America/Matamoros.ics,
+	web/tzurl/zoneinfo/America/Mazatlan.ics,
+	web/tzurl/zoneinfo/America/Menominee.ics,
+	web/tzurl/zoneinfo/America/Merida.ics,
+	web/tzurl/zoneinfo/America/Metlakatla.ics,
+	web/tzurl/zoneinfo/America/Mexico_City.ics,
+	web/tzurl/zoneinfo/America/Miquelon.ics,
+	web/tzurl/zoneinfo/America/Moncton.ics,
+	web/tzurl/zoneinfo/America/Monterrey.ics,
+	web/tzurl/zoneinfo/America/Montevideo.ics,
+	web/tzurl/zoneinfo/America/Montserrat.ics,
+	web/tzurl/zoneinfo/America/Nassau.ics,
+	web/tzurl/zoneinfo/America/New_York.ics,
+	web/tzurl/zoneinfo/America/Nipigon.ics,
+	web/tzurl/zoneinfo/America/Nome.ics,
+	web/tzurl/zoneinfo/America/Noronha.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/Beulah.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/Center.ics,
+	web/tzurl/zoneinfo/America/North_Dakota/New_Salem.ics,
+	web/tzurl/zoneinfo/America/Ojinaga.ics,
+	web/tzurl/zoneinfo/America/Panama.ics,
+	web/tzurl/zoneinfo/America/Pangnirtung.ics,
+	web/tzurl/zoneinfo/America/Paramaribo.ics,
+	web/tzurl/zoneinfo/America/Phoenix.ics,
+	web/tzurl/zoneinfo/America/Port-au-Prince.ics,
+	web/tzurl/zoneinfo/America/Port_of_Spain.ics,
+	web/tzurl/zoneinfo/America/Porto_Velho.ics,
+	web/tzurl/zoneinfo/America/Puerto_Rico.ics,
+	web/tzurl/zoneinfo/America/Punta_Arenas.ics,
+	web/tzurl/zoneinfo/America/Rainy_River.ics,
+	web/tzurl/zoneinfo/America/Rankin_Inlet.ics,
+	web/tzurl/zoneinfo/America/Recife.ics,
+	web/tzurl/zoneinfo/America/Regina.ics,
+	web/tzurl/zoneinfo/America/Resolute.ics,
+	web/tzurl/zoneinfo/America/Rio_Branco.ics,
+	web/tzurl/zoneinfo/America/Santarem.ics,
+	web/tzurl/zoneinfo/America/Santiago.ics,
+	web/tzurl/zoneinfo/America/Santo_Domingo.ics,
+	web/tzurl/zoneinfo/America/Sao_Paulo.ics,
+	web/tzurl/zoneinfo/America/Scoresbysund.ics,
+	web/tzurl/zoneinfo/America/Sitka.ics,
+	web/tzurl/zoneinfo/America/St_Barthelemy.ics,
+	web/tzurl/zoneinfo/America/St_Johns.ics,
+	web/tzurl/zoneinfo/America/St_Kitts.ics,
+	web/tzurl/zoneinfo/America/St_Lucia.ics,
+	web/tzurl/zoneinfo/America/St_Thomas.ics,
+	web/tzurl/zoneinfo/America/St_Vincent.ics,
+	web/tzurl/zoneinfo/America/Swift_Current.ics,
+	web/tzurl/zoneinfo/America/Tegucigalpa.ics,
+	web/tzurl/zoneinfo/America/Thule.ics,
+	web/tzurl/zoneinfo/America/Thunder_Bay.ics,
+	web/tzurl/zoneinfo/America/Tijuana.ics,
+	web/tzurl/zoneinfo/America/Toronto.ics,
+	web/tzurl/zoneinfo/America/Tortola.ics,
+	web/tzurl/zoneinfo/America/Vancouver.ics,
+	web/tzurl/zoneinfo/America/Whitehorse.ics,
+	web/tzurl/zoneinfo/America/Winnipeg.ics,
+	web/tzurl/zoneinfo/America/Yakutat.ics,
+	web/tzurl/zoneinfo/America/Yellowknife.ics,
+	web/tzurl/zoneinfo/Antarctica/Casey.ics,
+	web/tzurl/zoneinfo/Antarctica/Davis.ics,
+	web/tzurl/zoneinfo/Antarctica/DumontDUrville.ics,
+	web/tzurl/zoneinfo/Antarctica/Macquarie.ics,
+	web/tzurl/zoneinfo/Antarctica/Mawson.ics,
+	web/tzurl/zoneinfo/Antarctica/McMurdo.ics,
+	web/tzurl/zoneinfo/Antarctica/Palmer.ics,
+	web/tzurl/zoneinfo/Antarctica/Rothera.ics,
+	web/tzurl/zoneinfo/Antarctica/Syowa.ics,
+	web/tzurl/zoneinfo/Antarctica/Troll.ics,
+	web/tzurl/zoneinfo/Antarctica/Vostok.ics,
+	web/tzurl/zoneinfo/Arctic/Longyearbyen.ics,
+	web/tzurl/zoneinfo/Asia/Aden.ics,
+	web/tzurl/zoneinfo/Asia/Almaty.ics,
+	web/tzurl/zoneinfo/Asia/Amman.ics,
+	web/tzurl/zoneinfo/Asia/Anadyr.ics,
+	web/tzurl/zoneinfo/Asia/Aqtau.ics,
+	web/tzurl/zoneinfo/Asia/Aqtobe.ics,
+	web/tzurl/zoneinfo/Asia/Ashgabat.ics,
+	web/tzurl/zoneinfo/Asia/Atyrau.ics,
+	web/tzurl/zoneinfo/Asia/Baghdad.ics,
+	web/tzurl/zoneinfo/Asia/Bahrain.ics,
+	web/tzurl/zoneinfo/Asia/Baku.ics,
+	web/tzurl/zoneinfo/Asia/Bangkok.ics,
+	web/tzurl/zoneinfo/Asia/Barnaul.ics,
+	web/tzurl/zoneinfo/Asia/Beirut.ics,
+	web/tzurl/zoneinfo/Asia/Bishkek.ics,
+	web/tzurl/zoneinfo/Asia/Brunei.ics,
+	web/tzurl/zoneinfo/Asia/Chita.ics,
+	web/tzurl/zoneinfo/Asia/Choibalsan.ics,
+	web/tzurl/zoneinfo/Asia/Colombo.ics,
+	web/tzurl/zoneinfo/Asia/Damascus.ics,
+	web/tzurl/zoneinfo/Asia/Dhaka.ics, web/tzurl/zoneinfo/Asia/Dili.ics,
+	web/tzurl/zoneinfo/Asia/Dubai.ics,
+	web/tzurl/zoneinfo/Asia/Dushanbe.ics,
+	web/tzurl/zoneinfo/Asia/Famagusta.ics,
+	web/tzurl/zoneinfo/Asia/Gaza.ics,
+	web/tzurl/zoneinfo/Asia/Hebron.ics,
+	web/tzurl/zoneinfo/Asia/Ho_Chi_Minh.ics,
+	web/tzurl/zoneinfo/Asia/Hong_Kong.ics,
+	web/tzurl/zoneinfo/Asia/Hovd.ics,
+	web/tzurl/zoneinfo/Asia/Irkutsk.ics,
+	web/tzurl/zoneinfo/Asia/Istanbul.ics,
+	web/tzurl/zoneinfo/Asia/Jakarta.ics,
+	web/tzurl/zoneinfo/Asia/Jayapura.ics,
+	web/tzurl/zoneinfo/Asia/Jerusalem.ics,
+	web/tzurl/zoneinfo/Asia/Kabul.ics,
+	web/tzurl/zoneinfo/Asia/Kamchatka.ics,
+	web/tzurl/zoneinfo/Asia/Karachi.ics,
+	web/tzurl/zoneinfo/Asia/Kathmandu.ics,
+	web/tzurl/zoneinfo/Asia/Khandyga.ics,
+	web/tzurl/zoneinfo/Asia/Kolkata.ics,
+	web/tzurl/zoneinfo/Asia/Krasnoyarsk.ics,
+	web/tzurl/zoneinfo/Asia/Kuala_Lumpur.ics,
+	web/tzurl/zoneinfo/Asia/Kuching.ics,
+	web/tzurl/zoneinfo/Asia/Kuwait.ics,
+	web/tzurl/zoneinfo/Asia/Macau.ics,
+	web/tzurl/zoneinfo/Asia/Magadan.ics,
+	web/tzurl/zoneinfo/Asia/Makassar.ics,
+	web/tzurl/zoneinfo/Asia/Manila.ics,
+	web/tzurl/zoneinfo/Asia/Muscat.ics,
+	web/tzurl/zoneinfo/Asia/Nicosia.ics,
+	web/tzurl/zoneinfo/Asia/Novokuznetsk.ics,
+	web/tzurl/zoneinfo/Asia/Novosibirsk.ics,
+	web/tzurl/zoneinfo/Asia/Omsk.ics, web/tzurl/zoneinfo/Asia/Oral.ics,
+	web/tzurl/zoneinfo/Asia/Phnom_Penh.ics,
+	web/tzurl/zoneinfo/Asia/Pontianak.ics,
+	web/tzurl/zoneinfo/Asia/Pyongyang.ics,
+	web/tzurl/zoneinfo/Asia/Qatar.ics,
+	web/tzurl/zoneinfo/Asia/Qyzylorda.ics,
+	web/tzurl/zoneinfo/Asia/Riyadh.ics,
+	web/tzurl/zoneinfo/Asia/Sakhalin.ics,
+	web/tzurl/zoneinfo/Asia/Samarkand.ics,
+	web/tzurl/zoneinfo/Asia/Seoul.ics,
+	web/tzurl/zoneinfo/Asia/Shanghai.ics,
+	web/tzurl/zoneinfo/Asia/Singapore.ics,
+	web/tzurl/zoneinfo/Asia/Srednekolymsk.ics,
+	web/tzurl/zoneinfo/Asia/Taipei.ics,
+	web/tzurl/zoneinfo/Asia/Tashkent.ics,
+	web/tzurl/zoneinfo/Asia/Tbilisi.ics,
+	web/tzurl/zoneinfo/Asia/Tehran.ics,
+	web/tzurl/zoneinfo/Asia/Thimphu.ics,
+	web/tzurl/zoneinfo/Asia/Tokyo.ics,
+	web/tzurl/zoneinfo/Asia/Tomsk.ics,
+	web/tzurl/zoneinfo/Asia/Ulaanbaatar.ics,
+	web/tzurl/zoneinfo/Asia/Urumqi.ics, web/tzurl/zoneinfo/Asia/Ust-
+	Nera.ics, web/tzurl/zoneinfo/Asia/Vientiane.ics,
+	web/tzurl/zoneinfo/Asia/Vladivostok.ics,
+	web/tzurl/zoneinfo/Asia/Yakutsk.ics,
+	web/tzurl/zoneinfo/Asia/Yangon.ics,
+	web/tzurl/zoneinfo/Asia/Yekaterinburg.ics,
+	web/tzurl/zoneinfo/Asia/Yerevan.ics,
+	web/tzurl/zoneinfo/Atlantic/Azores.ics,
+	web/tzurl/zoneinfo/Atlantic/Bermuda.ics,
+	web/tzurl/zoneinfo/Atlantic/Canary.ics,
+	web/tzurl/zoneinfo/Atlantic/Cape_Verde.ics,
+	web/tzurl/zoneinfo/Atlantic/Faroe.ics,
+	web/tzurl/zoneinfo/Atlantic/Madeira.ics,
+	web/tzurl/zoneinfo/Atlantic/Reykjavik.ics,
+	web/tzurl/zoneinfo/Atlantic/South_Georgia.ics,
+	web/tzurl/zoneinfo/Atlantic/St_Helena.ics,
+	web/tzurl/zoneinfo/Atlantic/Stanley.ics,
+	web/tzurl/zoneinfo/Australia/Adelaide.ics,
+	web/tzurl/zoneinfo/Australia/Brisbane.ics,
+	web/tzurl/zoneinfo/Australia/Broken_Hill.ics,
+	web/tzurl/zoneinfo/Australia/Currie.ics,
+	web/tzurl/zoneinfo/Australia/Darwin.ics,
+	web/tzurl/zoneinfo/Australia/Eucla.ics,
+	web/tzurl/zoneinfo/Australia/Hobart.ics,
+	web/tzurl/zoneinfo/Australia/Lindeman.ics,
+	web/tzurl/zoneinfo/Australia/Lord_Howe.ics,
+	web/tzurl/zoneinfo/Australia/Melbourne.ics,
+	web/tzurl/zoneinfo/Australia/Perth.ics,
+	web/tzurl/zoneinfo/Australia/Sydney.ics,
+	web/tzurl/zoneinfo/Europe/Amsterdam.ics,
+	web/tzurl/zoneinfo/Europe/Andorra.ics,
+	web/tzurl/zoneinfo/Europe/Astrakhan.ics,
+	web/tzurl/zoneinfo/Europe/Athens.ics,
+	web/tzurl/zoneinfo/Europe/Belgrade.ics,
+	web/tzurl/zoneinfo/Europe/Berlin.ics,
+	web/tzurl/zoneinfo/Europe/Bratislava.ics,
+	web/tzurl/zoneinfo/Europe/Brussels.ics,
+	web/tzurl/zoneinfo/Europe/Bucharest.ics,
+	web/tzurl/zoneinfo/Europe/Budapest.ics,
+	web/tzurl/zoneinfo/Europe/Busingen.ics,
+	web/tzurl/zoneinfo/Europe/Chisinau.ics,
+	web/tzurl/zoneinfo/Europe/Copenhagen.ics,
+	web/tzurl/zoneinfo/Europe/Dublin.ics,
+	web/tzurl/zoneinfo/Europe/Gibraltar.ics,
+	web/tzurl/zoneinfo/Europe/Guernsey.ics,
+	web/tzurl/zoneinfo/Europe/Helsinki.ics,
+	web/tzurl/zoneinfo/Europe/Isle_of_Man.ics,
+	web/tzurl/zoneinfo/Europe/Istanbul.ics,
+	web/tzurl/zoneinfo/Europe/Jersey.ics,
+	web/tzurl/zoneinfo/Europe/Kaliningrad.ics,
+	web/tzurl/zoneinfo/Europe/Kiev.ics,
+	web/tzurl/zoneinfo/Europe/Kirov.ics,
+	web/tzurl/zoneinfo/Europe/Lisbon.ics,
+	web/tzurl/zoneinfo/Europe/Ljubljana.ics,
+	web/tzurl/zoneinfo/Europe/London.ics,
+	web/tzurl/zoneinfo/Europe/Luxembourg.ics,
+	web/tzurl/zoneinfo/Europe/Madrid.ics,
+	web/tzurl/zoneinfo/Europe/Malta.ics,
+	web/tzurl/zoneinfo/Europe/Mariehamn.ics,
+	web/tzurl/zoneinfo/Europe/Minsk.ics,
+	web/tzurl/zoneinfo/Europe/Monaco.ics,
+	web/tzurl/zoneinfo/Europe/Moscow.ics,
+	web/tzurl/zoneinfo/Europe/Nicosia.ics,
+	web/tzurl/zoneinfo/Europe/Oslo.ics,
+	web/tzurl/zoneinfo/Europe/Paris.ics,
+	web/tzurl/zoneinfo/Europe/Podgorica.ics,
+	web/tzurl/zoneinfo/Europe/Prague.ics,
+	web/tzurl/zoneinfo/Europe/Riga.ics,
+	web/tzurl/zoneinfo/Europe/Rome.ics,
+	web/tzurl/zoneinfo/Europe/Samara.ics,
+	web/tzurl/zoneinfo/Europe/San_Marino.ics,
+	web/tzurl/zoneinfo/Europe/Sarajevo.ics,
+	web/tzurl/zoneinfo/Europe/Saratov.ics,
+	web/tzurl/zoneinfo/Europe/Simferopol.ics,
+	web/tzurl/zoneinfo/Europe/Skopje.ics,
+	web/tzurl/zoneinfo/Europe/Sofia.ics,
+	web/tzurl/zoneinfo/Europe/Stockholm.ics,
+	web/tzurl/zoneinfo/Europe/Tallinn.ics,
+	web/tzurl/zoneinfo/Europe/Tirane.ics,
+	web/tzurl/zoneinfo/Europe/Ulyanovsk.ics,
+	web/tzurl/zoneinfo/Europe/Uzhgorod.ics,
+	web/tzurl/zoneinfo/Europe/Vaduz.ics,
+	web/tzurl/zoneinfo/Europe/Vatican.ics,
+	web/tzurl/zoneinfo/Europe/Vienna.ics,
+	web/tzurl/zoneinfo/Europe/Vilnius.ics,
+	web/tzurl/zoneinfo/Europe/Volgograd.ics,
+	web/tzurl/zoneinfo/Europe/Warsaw.ics,
+	web/tzurl/zoneinfo/Europe/Zagreb.ics,
+	web/tzurl/zoneinfo/Europe/Zaporozhye.ics,
+	web/tzurl/zoneinfo/Europe/Zurich.ics,
+	web/tzurl/zoneinfo/Indian/Antananarivo.ics,
+	web/tzurl/zoneinfo/Indian/Chagos.ics,
+	web/tzurl/zoneinfo/Indian/Christmas.ics,
+	web/tzurl/zoneinfo/Indian/Cocos.ics,
+	web/tzurl/zoneinfo/Indian/Comoro.ics,
+	web/tzurl/zoneinfo/Indian/Kerguelen.ics,
+	web/tzurl/zoneinfo/Indian/Mahe.ics,
+	web/tzurl/zoneinfo/Indian/Maldives.ics,
+	web/tzurl/zoneinfo/Indian/Mauritius.ics,
+	web/tzurl/zoneinfo/Indian/Mayotte.ics,
+	web/tzurl/zoneinfo/Indian/Reunion.ics,
+	web/tzurl/zoneinfo/Pacific/Apia.ics,
+	web/tzurl/zoneinfo/Pacific/Auckland.ics,
+	web/tzurl/zoneinfo/Pacific/Bougainville.ics,
+	web/tzurl/zoneinfo/Pacific/Chatham.ics,
+	web/tzurl/zoneinfo/Pacific/Chuuk.ics,
+	web/tzurl/zoneinfo/Pacific/Easter.ics,
+	web/tzurl/zoneinfo/Pacific/Efate.ics,
+	web/tzurl/zoneinfo/Pacific/Enderbury.ics,
+	web/tzurl/zoneinfo/Pacific/Fakaofo.ics,
+	web/tzurl/zoneinfo/Pacific/Fiji.ics,
+	web/tzurl/zoneinfo/Pacific/Funafuti.ics,
+	web/tzurl/zoneinfo/Pacific/Galapagos.ics,
+	web/tzurl/zoneinfo/Pacific/Gambier.ics,
+	web/tzurl/zoneinfo/Pacific/Guadalcanal.ics,
+	web/tzurl/zoneinfo/Pacific/Guam.ics,
+	web/tzurl/zoneinfo/Pacific/Honolulu.ics,
+	web/tzurl/zoneinfo/Pacific/Kiritimati.ics,
+	web/tzurl/zoneinfo/Pacific/Kosrae.ics,
+	web/tzurl/zoneinfo/Pacific/Kwajalein.ics,
+	web/tzurl/zoneinfo/Pacific/Majuro.ics,
+	web/tzurl/zoneinfo/Pacific/Marquesas.ics,
+	web/tzurl/zoneinfo/Pacific/Midway.ics,
+	web/tzurl/zoneinfo/Pacific/Nauru.ics,
+	web/tzurl/zoneinfo/Pacific/Niue.ics,
+	web/tzurl/zoneinfo/Pacific/Norfolk.ics,
+	web/tzurl/zoneinfo/Pacific/Noumea.ics,
+	web/tzurl/zoneinfo/Pacific/Pago_Pago.ics,
+	web/tzurl/zoneinfo/Pacific/Palau.ics,
+	web/tzurl/zoneinfo/Pacific/Pitcairn.ics,
+	web/tzurl/zoneinfo/Pacific/Pohnpei.ics,
+	web/tzurl/zoneinfo/Pacific/Port_Moresby.ics,
+	web/tzurl/zoneinfo/Pacific/Rarotonga.ics,
+	web/tzurl/zoneinfo/Pacific/Saipan.ics,
+	web/tzurl/zoneinfo/Pacific/Tahiti.ics,
+	web/tzurl/zoneinfo/Pacific/Tarawa.ics,
+	web/tzurl/zoneinfo/Pacific/Tongatapu.ics,
+	web/tzurl/zoneinfo/Pacific/Wake.ics,
+	web/tzurl/zoneinfo/Pacific/Wallis.ics:
+	Updated timezone definitions
+	[0b4a61d20f2a]
+
+2021-06-05  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/jquery/jquery-3.5.1.js, web/jquery/jquery-3.5.1.min.js,
+	web/jquery/jquery-3.6.0.js, web/jquery/jquery-3.6.0.min.js,
+	web/jquery/jquery-migrate-3.3.0.js, web/jquery/jquery-
+	migrate-3.3.0.min.js, web/jquery/jquery-migrate-3.3.2.js,
+	web/jquery/jquery-migrate-3.3.2.min.js, web/js.inc:
+	Upgraded to jQuery Release 3.6.0
+	[576a6ca61efe]
+
+	* web/lib/MRBS/DB_mysql.php:
+	Added comment
+	[a47c4b569999]
+
+2021-06-04  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/systemdefaults.inc.php:
+	Changed default retry delay
+	[6e6679de8357]
+
+	* web/lib/MRBS/DB_mysql.php, web/systemdefaults.inc.php:
+	MRBS now retries opening a MySQL connection if the attempt failed
+	because there were already too many connections.
+	[12d481460f78]
+
+	* web/lib/MRBS/DB_pgsql.php:
+	Fixed bug introduced in last commit
+	[bab82093b438]
+
+	* web/lib/MRBS/DB.php, web/lib/MRBS/DB_mysql.php,
+	web/lib/MRBS/DB_pgsql.php:
+	Restructured
+	[858019d63f1f]
+
+2021-06-03  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added more debug output
+	[35c4011bb29b]
+
+2021-06-02  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/Auth/AuthLdap.php:
+	Added more debug output
+	[7713152d271b]
+
+2021-05-27  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php:
+	Simplified code
+	[c79f04edb835]
+
+2021-05-26  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB_mysql.php:
+	Fixed problem when running on MySQL 8 (?). See SF Support Requests
+	#2357
+	[2076f12fcbfb]
+
+	* web/css/mrbs.css.php:
+	Added a pointer cursor to password show/hide icons
+	[d89046215841]
+
+	* web/registration_handler.php:
+	Fixed bug preventing ordinary users cancelling registrattions they
+	have made
+	[ac8dac8250ef]
+
+2021-05-25  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/view_entry.php:
+	Removed redundant global declarations
+	[42feadb2102a]
+
+	* web/view_entry.php:
+	Added the ability for users to cancel registrations made on their
+	behalf by someone else.
+	[6afeea2aeb87]
+
+	* web/ajax/usernames.php, web/mrbs_auth.inc,
+	web/registration_handler.php, web/systemdefaults.inc.php,
+	web/view_entry.php:
+	Added new config setting, $auth['users_can_register_others'],
+	allowing ordinary users to register others for events.
+	[1d94aa097703]
+
+2021-05-23  Campbell Morrison  <cimorrison@hg.code.sf.net>
+
+	* web/lib/MRBS/DB.php:
+	Fixed problem when incorrect credentials are supplied on database
+	upgrade.
+	[1158cb95e645]
+
+2021-05-22  John Beranek  <jberanek@users.sourceforge.net>
+
+	* .hgtags:
+	Added tag mrbs-1_9_3 for changeset 63a72a1ce343
+	[a6d45b32bde7]
+
+	* ChangeLog, NEWS:
+	* Updated ChangeLog and NEWS for release.
+	[63a72a1ce343] [mrbs-1_9_3]
+
+	* web/version_num.inc:
+	* Updated version number for release.
+	[251606644a4c]
 
 2021-05-16  Campbell Morrison  <cimorrison@hg.code.sf.net>
 
