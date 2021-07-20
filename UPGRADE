@@ -13,6 +13,9 @@ the upgrade.
 2. Take a backup copy of your existing mrbs directory on your web server
 3. Upload all the files and directories, except the config file, in the web
    directory of the release to your server, overwriting your existing files.
+   Note that if you are upgrading from MRBS 1.4.7 or earlier, the structure
+   of the config file has changed and you should create a new config file
+   based on config.inc.php-sample.
 4. Go to MRBS in your browser. If a database upgrade is required, you'll be
    prompted for a database (note database, not MRBS) username and password.
 
