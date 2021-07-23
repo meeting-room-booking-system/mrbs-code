@@ -653,12 +653,12 @@ function is_https()
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
-function this_page($with_query_string=false, $suffix=null)
+function this_page($with_query_string=false, $suffix='')
 {
   global $server;
 
   assert(is_bool($with_query_string), '$with_query_string should be a boolean');
-  assert(is_null($suffix) || is_string($suffix), '$suffix should be null or a string');
+  assert(is_string($suffix), '$suffix should be a string');
 
   if ((!isset($server['SCRIPT_NAME']) || ($server['SCRIPT_NAME'] === '') && !is_cli()))
   {
@@ -671,7 +671,7 @@ function this_page($with_query_string=false, $suffix=null)
   // Get the query string if required
   if ($with_query_string &&
       isset($server['QUERY_STRING']) &&
-     ($server['QUERY_STRING'] !== ''))
+      ($server['QUERY_STRING'] !== ''))
   {
     $query_string = $server['QUERY_STRING'];
   }
