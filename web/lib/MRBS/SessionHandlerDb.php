@@ -30,7 +30,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function open($path, $name)
+  public function open($path, $name): bool
   {
     return true;
   }
@@ -38,7 +38,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function close()
+  public function close(): bool
   {
     return true;
   }
@@ -77,7 +77,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function write($id, $data)
+  public function write($id, $data): bool
   {
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $id));
@@ -109,7 +109,7 @@ class SessionHandlerDb implements \SessionHandlerInterface
 
   // The return value (usually TRUE on success, FALSE on failure). Note this value is
   // returned internally to PHP for processing.
-  public function destroy($id)
+  public function destroy($id): bool
   {
     $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
     $rows = db()->command($sql, array(':id' => $id));
