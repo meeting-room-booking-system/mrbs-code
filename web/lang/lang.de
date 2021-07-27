@@ -93,6 +93,10 @@ $vocab["type"]               = "Kategorie";
 $vocab["allow_registration"]        = "Anmeldung erlauben";
 $vocab["registrant_limit_enabled"]  = "Maximale Teilnehmeranzahl festlegen";
 $vocab["registrant_limit"]          = "Maximale Teilnehmeranzahl";
+$vocab["registration_opens"]        = "Anmeldezeitfenster beginnt";
+$vocab["registration_closes"]       = "Anmeldezeitfenster endet";
+$vocab["in_advance"]                = "im Vorhinein";
+$vocab["in_advance_periods"]        = "vor %s";  // a time, eg 09:00 or 9.00am
 $vocab["n_registered"]              = "Momentan angemeldet";
 $vocab["save"]               = "Speichern";
 $vocab["rep_type"]           = "Serientyp";
@@ -132,7 +136,16 @@ $vocab["confirmed"]          = "Bestätigt";
 $vocab["start_after_end"]    = "Anfangsdatum nach Enddatum";
 $vocab["start_after_end_long"] = "Fehler: Das Anfangsdatum liegt nach dem Enddatum";
 $vocab["invalid_rep_interval"]     = "Das Wiederholungsintervall muss größer Null sein.";
+$vocab["confirm_rep_end_date"]     = "Es sieht so aus, als hätten Sie vergessen, das Enddatum der " .
+                                     "Wiederholung festzulegen. Möchten Sie trotzdem fortfahren?";
 $vocab["type_reserved_for_admins"] = "Die Kategorie '%s' ist Administratoren vorbehalten.";
+$vocab["edit_entry_nonexistent_room"] = "Sie versuchen einen Eintrag für einen Raum zu erstellen, welcher " .
+                                        "nicht existiert.  Das kann daran liegen, dass Sie ein Lesezeichen verwenden, " .
+                                        "welches nicht mehr gültig ist. Es ist grundsätzlich nicht empfohlen " .
+                                        "Lesezeichen zu verwenden, welche direkt zu einem Buchungsformular  " .
+                                        "führen.  Anstelle dessen sollten Sie das Buchungsformular aus " .
+                                        "der Kalenderansicht heraus öffnen.";
+$vocab["home"]                        = "Home";
 
 // Used in view_entry.php
 $vocab["description"]        = "Beschreibung";
@@ -181,6 +194,7 @@ $vocab["registered_by"]           = "Angemeldet durch";
 $vocab["registered_on"]           = "Angemeldet am";
 $vocab["event_full"]              = "Die Veranstaltung ist ausgebucht.";
 $vocab["confirm_del_registrant"]  = "Möchten Sie '%s' wirklich abmelden?";
+
 // Used in edit_entry_handler.php
 $vocab["error"]              = "Fehler";
 $vocab["sched_conflict"]     = "Konflikt in der Planung";
@@ -193,6 +207,7 @@ $vocab["schedule"]           = "Zeitplan";
 $vocab["policy"]             = "Regel";
 $vocab["conflicts_with_self"]= "Diese Wiederholung enthält Einträge, die sich gegenseitig überschneiden";
 $vocab["too_many_entries"]   = "Die gewählten Optionen würden zu viele Einträge erzeugen.<br>Ändern Sie bitte die Optionen!";
+
 $vocab["returncal"]          = "Zurück zur Kalenderansicht";
 $vocab["failed_to_acquire"]  = "Konnte nicht exklusiv auf die Datenbank zugreifen";
 $vocab["invalid_booking"]    = "Ungültiger Eintrag";
@@ -224,8 +239,10 @@ $vocab["no_simultaneous_bookings"]        = "Buchungen dürfen sich zeitlich nic
 $vocab["type_not_allowed"]        = 'Buchungen der Kategorie %1$s sind in %2$s nicht erlaubt';
 $vocab["min_create_time_before"]  = 'Sie können keine Buchung erstellen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_create_time_before"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s endet';
+$vocab["max_create_time_before_start"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s beginnt';
 $vocab["min_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_delete_time_before"]  = 'Sie können keine Buchung editieren oder löschen, die in mehr als %1$d %2$s endet';
+$vocab["max_delete_time_before_start"]  = 'Sie können keine Buchung editieren oder löschen, die in mehr als %1$d %2$s beginnt';
 $vocab["earliest_booking_date"]   = "Der frühest mögliche Buchungstermin ist %s";
 $vocab["latest_booking_date"]     = "Der spätest mögliche Buchungstermin ist %s";
 $vocab["max_booking_duration"]    = "Die maximale Dauer einer Buchung beträgt";
@@ -504,9 +521,12 @@ $vocab["disabled_room_note"]      = "Wird dieser Raum deaktiviert, wird er nicht
 $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Serien werden Buchungszeiten in die Zukunft auf den nächsten ganzen Tag gerundet.";
 $vocab["invalid_types"]           = "Ungültige Kategorie";
 $vocab["invalid_types_note"]      = "Dies sind Kategorien, die in diesem Raum nicht verwendet werden dürfen.";
+
+
 // Used in edit_users.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
+$vocab["confirm_delete_user"] = "Möchten Sie diesen Benutzer wirklich löschen?";
 
 // Used in del.php
 $vocab["deletefollowing"]    = "Dadurch werden die folgenden Einträge gelöscht";
