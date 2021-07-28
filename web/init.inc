@@ -5,7 +5,7 @@ use MRBS\Form\Form;
 use SessionHandler;
 
 
-function init_errors()
+function init_errors() : void
 {
   global $debug;
 
@@ -58,14 +58,14 @@ function init_errors()
 }
 
 
-function init_joomla()
+function init_joomla() : void
 {
   $mainframe = JFactory::getApplication('site');
   $mainframe->initialise();
 }
 
 
-function init_sessions()
+function init_sessions() : void
 {
   global $auth;
 
