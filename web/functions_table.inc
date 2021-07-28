@@ -1368,9 +1368,9 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
-                    'year'     => strftime("%Y", $t),
-                    'month'    => strftime("%m", $t),
-                    'day'      => strftime('%d', $t),
+                    'year'     => utf8_strftime("%Y", $t),
+                    'month'    => utf8_strftime("%m", $t),
+                    'day'      => utf8_strftime('%d', $t),
                     'area'     => $area_id,
                     'room'     => $room_id);
 
@@ -1423,9 +1423,9 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
-                    'year'     => strftime("%Y", $wt),
-                    'month'    => strftime("%m", $wt),
-                    'day'      => strftime("%d", $wt),
+                    'year'     => utf8_strftime("%Y", $wt),
+                    'month'    => utf8_strftime("%m", $wt),
+                    'day'      => utf8_strftime("%d", $wt),
                     'area'     => $area_id,
                     'room'     => $room_id);
 

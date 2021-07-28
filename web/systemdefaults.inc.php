@@ -333,6 +333,10 @@ $twentyfourhour_format = true;
 // Formats used for dates and times.   For formatting options
 // see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically
 // convert the following formats which are not supported on Windows: %e, %l, %P and %R.
+// MRBS will use IntlDateFormatter if it exists in preference to strftime() and try and convert
+// the strftime formats into an equivalent pattern for use with IntlDateFormatter.  The following
+// strftime formats do not have an equivalent and are not supported: %u, %w, %U, %V, %W, %C,
+// %g, $G, %l and %s.
 $strftime_format['date']               = "%A %d %B %Y";  // Used in Day view
 $strftime_format['date_short']         = "%x";           // Used in Search results
 $strftime_format['dayname']            = "%A";           // Used in Month view
