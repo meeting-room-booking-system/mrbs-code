@@ -160,8 +160,8 @@ $vocab["exportentry"]        = "Eintrag exportieren";
 $vocab["exportseries"]       = "Serie exportieren";
 $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?";
 $vocab["confirm_edit_series"]     = "Für ein oder mehr Ereignisse der Serie haben sich Benutzer angemeldet." .
-									"Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
-									"Sind Sie sicher, dass Sie fortfahren möchten?";
+                                    "Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
+                                    "Sind Sie sicher, dass Sie fortfahren möchten?";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
 $vocab["invalid_series_id"]  = "Ungültige ID der Serie.";
@@ -186,7 +186,7 @@ $vocab["sent_at"]            = "Verschickt am ";
 $vocab["yes"]                = "Ja";
 $vocab["no"]                 = "Nein";
 $vocab["event_registration"]      = "Anmeldung";
-$vocab["event_details"]		 = "Details";
+$vocab["event_details"]           = "Details";
 $vocab["already_registered"]      = "Sie haben sich für diese Veranstaltung angemeldet.";
 $vocab["register"]                = "Anmelden";
 $vocab["cancel_registration"]     = "Abmelden";
@@ -298,7 +298,7 @@ $vocab["enter_username_or_email"]   = "Bitte geben Sie Ihren Benutzernamen oder 
 $vocab["will_be_sent_instructions"] = "Sie erhalten eine E-Mail Nachricht mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können.";
 $vocab["reset_password"]            = "Passwort zurücksetzen";
 $vocab["pwd_check_email"]           = "Wenn es ein Benutzerkonto gibt welches diesen Angaben entspricht, " .
-										"erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
+                                      "erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
 $vocab["invalid_link"]              = "Ungültiger Link";
 $vocab["pwd_request_failed"]        = "Zu diesem Benutzer konnte keine E-Mail zugestellt werden.";
 $vocab["link_invalid"]              = "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.";
@@ -653,4 +653,3 @@ $vocab["session_expired"]    = "Ihre Sitzung ist abgelaufen.";
 $vocab["browser_not_supported"] = "Leider wird Ihr Browser nicht von %s unterstützt. Sie benötigen eine " .
                                   "aktuellere Version oder einen anderen Browser.";
 $vocab["back"]               = "Zurück";
-
