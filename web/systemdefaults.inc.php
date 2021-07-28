@@ -1056,6 +1056,9 @@ $auth['saml']['authsource'] = 'default-sp';
 $auth['saml']['attr']['username'] = 'sAMAccountName';
 $auth['saml']['attr']['mail'] = 'mail';
 $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
+// MRBS session initialisation can interfere with session handling in some
+// SAML libraries.  If so, set this to true.
+$auth['saml']['disable_mrbs_session_init'] = false;
 
 // This scheme assumes that you've already configured SimpleSamlPhp,
 // and that you have set up aliases in your webserver so that SimpleSamlPhp
