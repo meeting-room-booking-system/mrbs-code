@@ -959,7 +959,7 @@ function get_fieldset_registration()
   if ($enable_periods)
   {
     $time = strtotime($periods_booking_opens);
-    $time = strftime(hour_min_format(), $time);
+    $time = utf8_strftime(hour_min_format(), $time);
     $in_advance_vocab = get_vocab('in_advance_periods', $time);
   }
   else
@@ -1366,9 +1366,9 @@ if (isset($id))
         $end_time = $row['end_time'];
       }
 
-      $rep_end_day   = (int)strftime('%d', $row['end_date']);
-      $rep_end_month = (int)strftime('%m', $row['end_date']);
-      $rep_end_year  = (int)strftime('%Y', $row['end_date']);
+      $rep_end_day   = (int)utf8_strftime('%d', $row['end_date']);
+      $rep_end_month = (int)utf8_strftime('%m', $row['end_date']);
+      $rep_end_year  = (int)utf8_strftime('%Y', $row['end_date']);
       // Get the end date in string format as well, for use when
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
@@ -1541,8 +1541,8 @@ if (!isset($month_absolute))
 }
 list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 
-$start_hour  = strftime('%H', $start_time);
-$start_min   = strftime('%M', $start_time);
+$start_hour  = utf8_strftime('%H', $start_time);
+$start_min   = utf8_strftime('%M', $start_time);
 
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
