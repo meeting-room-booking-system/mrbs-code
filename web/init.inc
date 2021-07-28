@@ -81,6 +81,13 @@ function init_sessions()
     return;
   }
 
+  // If we're using SAML then initialising sessions here can interfere with
+  // session handling in some SAML libraries
+  if (($auth['session'] == 'saml') && $auth['saml']['disable_mrbs_session_init'])
+  {
+    return;
+  }
+
   // Set some session settings, as a defence against session fixation.
   ini_set('session.use_only_cookies', '1');
   ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
