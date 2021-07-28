@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use SessionHandler;
 
 
 function init_errors()
@@ -139,7 +140,7 @@ function init_sessions()
       trigger_error($message, E_USER_WARNING);
     }
 
-    $handler = new \SessionHandler();
+    $handler = new SessionHandler();
     session_set_save_handler($handler, true);
 
     if (false === session_start())
