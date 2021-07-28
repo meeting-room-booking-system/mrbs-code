@@ -259,6 +259,10 @@ function output_row($row)
           else
           {
              // strings
+            if (!isset($col_value))
+            {
+              $col_value = '';
+            }
             $values[] = "<div class=\"string\" title=\"" . htmlspecialchars($col_value) . "\">" .
                         htmlspecialchars($col_value) . "</div>";
           }
