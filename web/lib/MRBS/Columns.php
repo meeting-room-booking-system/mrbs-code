@@ -1,9 +1,11 @@
 <?php
 namespace MRBS;
 
+use Countable;
+use Iterator;
 
 // Holds information about table columns
-class Columns implements \Countable, \Iterator
+class Columns implements Countable, Iterator
 {
 
   private $data;
@@ -19,7 +21,7 @@ class Columns implements \Countable, \Iterator
   }
 
 
-  public function getNames()
+  public function getNames() : array
   {
     $result = array();
 
@@ -32,14 +34,14 @@ class Columns implements \Countable, \Iterator
   }
 
 
-  public function hasIdColumn()
+  public function hasIdColumn() : bool
   {
     $column = $this->getColumnByName('id');
     return isset($column);
   }
 
 
-  public function getColumnByName($name)
+  public function getColumnByName($name) : ?Column
   {
     foreach ($this as $column)
     {
@@ -53,7 +55,7 @@ class Columns implements \Countable, \Iterator
   }
 
 
-  public function current()
+  public function current() : Column
   {
     $info = $this->data[$this->index];
     $column = new Column($this->table_name, $info['name']);
@@ -91,30 +93,30 @@ class Columns implements \Countable, \Iterator
   }
 
 
-  public function next()
+  public function next() : void
   {
     $this->index++;
   }
 
-  public function key()
+  public function key() : int
   {
     return $this->index;
   }
 
 
-  public function valid()
+  public function valid() : bool
   {
     return isset($this->data[$this->key()]);
   }
 
 
-  public function rewind()
+  public function rewind() : void
   {
     $this->index = 0;
   }
 
 
-  public function count()
+  public function count(): int
   {
     return count($this->data);
   }
