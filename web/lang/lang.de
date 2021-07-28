@@ -160,8 +160,8 @@ $vocab["exportentry"]        = "Eintrag exportieren";
 $vocab["exportseries"]       = "Serie exportieren";
 $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?";
 $vocab["confirm_edit_series"]     = "Für ein oder mehr Ereignisse der Serie haben sich Benutzer angemeldet." .
-									"Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
-									"Sind Sie sicher, dass Sie fortfahren möchten?";
+                                    "Wenn die Serie bearbeitet wird, gehen die Anmeldungen verloren. " .
+                                    "Sind Sie sicher, dass Sie fortfahren möchten?";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
 $vocab["invalid_series_id"]  = "Ungültige ID der Serie.";
@@ -186,7 +186,7 @@ $vocab["sent_at"]            = "Verschickt am ";
 $vocab["yes"]                = "Ja";
 $vocab["no"]                 = "Nein";
 $vocab["event_registration"]      = "Anmeldung";
-$vocab["event_details"]		 = "Details";
+$vocab["event_details"]           = "Details";
 $vocab["already_registered"]      = "Sie haben sich für diese Veranstaltung angemeldet.";
 $vocab["register"]                = "Anmelden";
 $vocab["cancel_registration"]     = "Abmelden";
@@ -207,7 +207,6 @@ $vocab["schedule"]           = "Zeitplan";
 $vocab["policy"]             = "Regel";
 $vocab["conflicts_with_self"]= "Diese Wiederholung enthält Einträge, die sich gegenseitig überschneiden";
 $vocab["too_many_entries"]   = "Die gewählten Optionen würden zu viele Einträge erzeugen.<br>Ändern Sie bitte die Optionen!";
-
 $vocab["returncal"]          = "Zurück zur Kalenderansicht";
 $vocab["failed_to_acquire"]  = "Konnte nicht exklusiv auf die Datenbank zugreifen";
 $vocab["invalid_booking"]    = "Ungültiger Eintrag";
@@ -300,7 +299,7 @@ $vocab["enter_username_or_email"]   = "Bitte geben Sie Ihren Benutzernamen oder 
 $vocab["will_be_sent_instructions"] = "Sie erhalten eine E-Mail Nachricht mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können.";
 $vocab["reset_password"]            = "Passwort zurücksetzen";
 $vocab["pwd_check_email"]           = "Wenn es ein Benutzerkonto gibt welches diesen Angaben entspricht, " .
-										"erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
+                                      "erhalten Sie in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.";
 $vocab["invalid_link"]              = "Ungültiger Link";
 $vocab["pwd_request_failed"]        = "Zu diesem Benutzer konnte keine E-Mail zugestellt werden.";
 $vocab["link_invalid"]              = "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.";
@@ -351,8 +350,6 @@ $vocab["ok"]                 = "OK";
 $vocab["show_my_entries"]    = "Klicken um alle meine anstehenden Einträge anzuzeigen";
 $vocab["no_users_initial"]   = "Keine Benutzer in der Datenbank, erlaube Erstellung erster Benutzer.";
 $vocab["no_users_create_first_admin"] = "Erstellen Sie ein Administratorkonto und melden sich mit diesem an, um weitere Benutzerkonten anzulegen.";
-
-
 $vocab["warning_last_admin"] = "Warnung!  Dies ist das letzte Administratorkonto. Dieses Konto kann nicht entfernt und ihm können auch nicht die Administrationsberechtigungen entzogen werden.  Anderenfalls würden Sie sich vom Zugang zu diesem System aussperren.";
 $vocab["copy_email_addresses"]  = "E-Mailadressen kopieren";
 
@@ -522,7 +519,6 @@ $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Serien werden Buchung
 $vocab["invalid_types"]           = "Ungültige Kategorie";
 $vocab["invalid_types_note"]      = "Dies sind Kategorien, die in diesem Raum nicht verwendet werden dürfen.";
 
-
 // Used in edit_users.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
@@ -626,4 +622,3 @@ $vocab["session_expired"]    = "Ihre Sitzung ist abgelaufen.";
 $vocab["browser_not_supported"] = "Leider wird Ihr Browser nicht von %s unterstützt. Sie benötigen eine " .
                                   "aktuellere Version oder einen anderen Browser.";
 $vocab["back"]               = "Zurück";
-
