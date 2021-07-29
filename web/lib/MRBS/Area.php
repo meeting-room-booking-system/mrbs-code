@@ -26,34 +26,34 @@ class Area extends Location
   }
 
 
-  public static function getByName($name)
+  public static function getByName($name) : ?object
   {
     return self::getByColumn('area_name', $name);
   }
 
 
   // Returns an array of room names for the area indexed by area id.
-  public function getRoomNames($include_disabled=false)
+  public function getRoomNames($include_disabled=false) : array
   {
     $rooms = new Rooms($this->id);
     return $rooms->getNames($include_disabled);
   }
 
 
-  public function isDisabled()
+  public function isDisabled() : bool
   {
     return (bool) $this->disabled;
   }
 
 
-  public function getRules(array $role_ids)
+  public function getRules(array $role_ids) : array
   {
     return AreaRule::getRulesByRoles($role_ids, $this->id);
   }
 
 
   // TODO: is this necessary?
-  private static function sanitize(array $row)
+  private static function sanitize(array $row) : array
   {
     global $periods, $private_override_options;
     global $area_defaults;
@@ -107,7 +107,7 @@ class Area extends Location
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead(array $row)
+  protected static function onRead(array $row) : array
   {
     global $force_resolution, $area_defaults, $auth;
 
@@ -147,7 +147,7 @@ class Area extends Location
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite(array $row)
+  protected static function onWrite(array $row) : array
   {
     // We cannot assume that any array keys exist as this may be called during an upgrade
     // process before the columns existed.

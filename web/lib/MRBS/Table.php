@@ -61,20 +61,20 @@ abstract class Table
 
   // Checks whether an instance has the property $property.
   // (We cannot use property_exists() because we're using magic getters and setters.)
-  public function hasProperty($property)
+  public function hasProperty($property) : bool
   {
     return array_key_exists($property, $this->data);
   }
 
   // Checks if this instance already exists in the table
-  public function exists()
+  public function exists() : bool
   {
     return ($this->getRow() !== null);
   }
 
 
   // Delete from the database
-  public function delete()
+  public function delete() : void
   {
     $conditions = array();
     $sql_params = array();
@@ -98,7 +98,7 @@ abstract class Table
   // otherwise the default column value).  You therefore need to make sure that
   // all pre-existing properties are present to stop them from being accidentally
   // overwritten.
-  public function save()
+  public function save() : void
   {
     $this->data = static::onWrite($this->data);
 
@@ -118,7 +118,7 @@ abstract class Table
 
   // To be used when updating a table which has an id column and when
   // the id is already known, ie we are updating an existing row.
-  private function update()
+  private function update() : void
   {
     $columns = array();
     $values = array();
@@ -146,7 +146,7 @@ abstract class Table
 
 
   // Inserts/updates into the table.
-  private function upsert()
+  private function upsert() : void
   {
     // We use an "upsert" query here because that avoids having to test to
     // see whether the row exists first - leaving a (very small) chance that
@@ -209,7 +209,7 @@ abstract class Table
   }
 
 
-  private function getQueryComponents(array &$columns, array &$values, array &$sql_params)
+  private function getQueryComponents(array &$columns, array &$values, array &$sql_params) : void
   {
     $data = $this->data;
     $cols = Columns::getInstance(_tbl(static::TABLE_NAME));
@@ -263,20 +263,20 @@ abstract class Table
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead(array $row)
+  protected static function onRead(array $row) : array
   {
     return $row;
   }
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite(array $row)
+  protected static function onWrite(array $row) : array
   {
     return $row;
   }
 
 
-  public function load(array $row)
+  public function load(array $row) : void
   {
     global $dbsys;
 
@@ -316,13 +316,13 @@ abstract class Table
   }
 
 
-  public static function getById($id)
+  public static function getById($id) : ?object
   {
     return static::getByColumn('id', $id);
   }
 
 
-  public static function deleteById($id)
+  public static function deleteById($id) : void
   {
     // Can't use LIMIT with DELETE in PostgreSQL
     $sql = "DELETE FROM " . _tbl(static::TABLE_NAME) . "
@@ -332,13 +332,13 @@ abstract class Table
   }
 
 
-  protected static function getByColumn($column, $value)
+  protected static function getByColumn($column, $value) : ?object
   {
     return static::getByColumns(array($column => $value));
   }
 
 
-  protected static function getByColumns(array $columns)
+  protected static function getByColumns(array $columns) : ?object
   {
     $conditions = array();
     $sql_params = array();
@@ -373,7 +373,7 @@ abstract class Table
 
   // Returns the row in the table corresponding to this instance, or
   // NULL if it doesn't exist.
-  private function getRow()
+  private function getRow() : ?array
   {
     $where_condition_parts = array();
     $sql_params = array();

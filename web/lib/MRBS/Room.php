@@ -20,7 +20,7 @@ class Room extends Location
   }
 
 
-  public static function getByName($name)
+  public static function getByName($name) : ?object
   {
     return self::getByColumn('room_name', $name);
   }
@@ -28,14 +28,14 @@ class Room extends Location
 
   // Checks if the room is disabled.  A room is disabled if either it or
   // its area has been disabled.
-  public function isDisabled()
+  public function isDisabled() : bool
   {
     return ($this->disabled || $this->area_disabled);
   }
 
 
   // Determines whether the room is writable by the currently logged in user
-  public function isWritable()
+  public function isWritable() : bool
   {
     if (!isset($this->is_writable))
     {
@@ -48,7 +48,7 @@ class Room extends Location
 
 
   // Determines whether the currently logged in user is a booking admin for this room
-  public function isBookAdmin()
+  public function isBookAdmin() : bool
   {
     if (!isset($this->is_book_admin))
     {
@@ -61,7 +61,7 @@ class Room extends Location
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead(array $row)
+  protected static function onRead(array $row) : array
   {
     if (isset($row['invalid_types']))
     {
@@ -73,7 +73,7 @@ class Room extends Location
 
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite(array $row)
+  protected static function onWrite(array $row) : array
   {
     if (isset($row['invalid_types']))
     {
@@ -84,14 +84,14 @@ class Room extends Location
   }
 
 
-  public function getRules(array $role_ids)
+  public function getRules(array $role_ids) : array
   {
     return RoomRule::getRulesByRoles($role_ids, $this->id);
   }
 
 
   // Gets the area_id for a room with id $id
-  public static function getAreaId($id)
+  public static function getAreaId($id) : ?int
   {
     $sql = "SELECT area_id
               FROM " . _tbl(self::TABLE_NAME) . "
@@ -105,7 +105,7 @@ class Room extends Location
 
 
   // For efficiency we get some information about the area at the same time.
-  protected static function getByColumn($column, $value)
+  protected static function getByColumn($column, $value) : ?object
   {
     $sql = "SELECT R.*, A.area_name";
 

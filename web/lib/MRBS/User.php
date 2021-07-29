@@ -30,7 +30,7 @@ class User extends Table
   }
 
 
-  public function save()
+  public function save() : void
   {
     parent::save();
     $this->saveGroups();
@@ -54,14 +54,14 @@ class User extends Table
 
     $mailer = new PHPMailer();
     $mailer->CharSet = get_mail_charset();
-    
+
     // Note that addrFormat() returns a MIME-encoded address
     return $mailer->addrFormat(array($this->email, $this->display_name));
   }
 
 
   // Set the last_login time, where $time is a Unix timestamp (default now)
-  public function updateLastLogin($time=null)
+  public function updateLastLogin($time=null) : void
   {
     global $auth;
 
@@ -89,7 +89,7 @@ class User extends Table
   }
 
 
-  public static function getByName($username, $auth_type)
+  public static function getByName($username, $auth_type) : ?User
   {
     return self::getByColumns(array(
         'name'      => $username,
@@ -98,7 +98,7 @@ class User extends Table
   }
 
 
-  public function isAdmin()
+  public function isAdmin() : bool
   {
     global $max_level;
 
@@ -108,7 +108,7 @@ class User extends Table
 
 
   // Gets the combined individual and group roles for the user
-  public function combinedRoles()
+  public function combinedRoles() : array
   {
     $group_roles = Group::getRoles($this->groups);
     return array_unique(array_merge($this->roles, $group_roles));
@@ -121,7 +121,7 @@ class User extends Table
   // then it gets the rules that are applicable to that user.  If
   // true then it just gets the rules applicable to any groups
   // that the user is a member of.
-  public function getRules($location, $for_groups = false)
+  public function getRules($location, $for_groups = false) : array
   {
     // Work out whether $location is a room or area
     $is_room = ($location instanceof Room);
@@ -183,7 +183,7 @@ class User extends Table
 
 
   // Returns the HTML for a table of effective permissions for this user
-  public function effectivePermissionsHTML()
+  public function effectivePermissionsHTML() : string
   {
     $html = '';
 
@@ -251,7 +251,7 @@ class User extends Table
 
   // Determines whether the key properties for the user $new are different.
   // Note that $new is an array rather than an object.
-  public function hasChanged(array $new)
+  public function hasChanged(array $new) : bool
   {
     return (($new['display_name'] !== $this->display_name) ||
             ($new['level'] !== $this->level) ||
@@ -260,7 +260,7 @@ class User extends Table
   }
 
 
-  private function saveGroups()
+  private function saveGroups() : void
   {
     $existing = self::getGroupsByUserId($this->id);
 
@@ -277,7 +277,7 @@ class User extends Table
   }
 
 
-  private function saveRoles()
+  private function saveRoles() : void
   {
     $existing = self::getRolesByUserId($this->id);
 
@@ -294,7 +294,7 @@ class User extends Table
   }
 
 
-  private function deleteGroups()
+  private function deleteGroups() : void
   {
     $sql = "DELETE FROM " . _tbl('user_group') . "
                   WHERE user_id=:user_id";
@@ -302,7 +302,7 @@ class User extends Table
   }
 
 
-  private function deleteRoles()
+  private function deleteRoles() : void
   {
     $sql = "DELETE FROM " . _tbl('user_role') . "
                   WHERE user_id=:user_id";
@@ -310,7 +310,7 @@ class User extends Table
   }
 
 
-  private function insertGroups()
+  private function insertGroups() : void
   {
     // If there aren't any groups then there's no need to do anything
     if (empty($this->groups))
@@ -333,7 +333,7 @@ class User extends Table
   }
 
 
-  private function insertRoles()
+  private function insertRoles() : void
   {
     // If there aren't any roles then there's no need to do anything
     if (empty($this->roles))
@@ -356,7 +356,7 @@ class User extends Table
   }
 
 
-  private static function getIdByName($username, $auth_type)
+  private static function getIdByName($username, $auth_type) : ?int
   {
     $sql = "SELECT id FROM " . _tbl(self::TABLE_NAME) ."
              WHERE name=:name
@@ -368,13 +368,13 @@ class User extends Table
         ':auth_type' => $auth_type
       );
 
-    $id = db()->query1($sql, $sql_params);
+    $id = (int) db()->query1($sql, $sql_params);
 
     return ($id < 0) ? null : $id;
   }
 
 
-  private static function getGroupsByUserId($id)
+  private static function getGroupsByUserId($id) : array
   {
     if (!isset($id))
     {
@@ -389,7 +389,7 @@ class User extends Table
   }
 
 
-  private static function getRolesByUserId($id)
+  private static function getRolesByUserId($id) : array
   {
     if (!isset($id))
     {
@@ -404,7 +404,7 @@ class User extends Table
   }
 
 
-  private static function getRolesByUsername($username)
+  private static function getRolesByUsername($username) : array
   {
     if (!isset($username) || ($username === ''))
     {
@@ -422,7 +422,7 @@ class User extends Table
 
 
   // Gets the default email address for the user (null if one can't be found)
-  public static function getDefaultEmail($username)
+  public static function getDefaultEmail($username) : ?string
   {
     global $mail_settings;
 
@@ -458,7 +458,7 @@ class User extends Table
 
 
   // Function to decode any columns that are stored encoded in the database
-  protected static function onRead(array $row)
+  protected static function onRead(array $row) : array
   {
     // TODO:  Simplify things by renaming the 'name' column to 'username'
     $row['username'] = $row['name'];
@@ -479,7 +479,7 @@ class User extends Table
   }
 
   // Function to encode any columns that are stored encoded in the database
-  protected static function onWrite(array $row)
+  protected static function onWrite(array $row) : array
   {
     if (!isset($row['name']))
     {
@@ -490,7 +490,7 @@ class User extends Table
   }
 
 
-  protected static function getByColumns(array $columns)
+  protected static function getByColumns(array $columns) : ?object
   {
     $conditions = array();
     $sql_params = array();

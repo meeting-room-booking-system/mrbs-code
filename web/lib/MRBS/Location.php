@@ -8,13 +8,13 @@ abstract class Location extends Table
   protected $is_writable;
   protected $is_book_admin;
 
-  public static function getById($id)
+  public static function getById($id) : ?object
   {
     return self::getByColumn('id', $id);
   }
 
 
-  public static function getByName($name)
+  public static function getByName($name) : ?object
   {
     // This method should really be declared as an abstract public static function,
     // but in PHP 5 that throws a strict standards warning.  It's OK in PHP 7 onwards,
@@ -25,13 +25,13 @@ abstract class Location extends Table
     throw new \Exception("getByName() needs to be implemented in the child class.");
   }
 
-  abstract public function isDisabled();
+  abstract public function isDisabled() : bool;
 
-  abstract public function getRules(array $role_ids);
+  abstract public function getRules(array $role_ids) : array;
 
 
   // Determines whether the location is visible to the currently logged in user
-  public function isVisible()
+  public function isVisible() : bool
   {
     if (!isset($this->is_visible))
     {
@@ -45,7 +45,7 @@ abstract class Location extends Table
 
   // Determines whether $user, which is either a \MRBS\User object or null, can perform
   // $operation in this location
-  public function isAble($operation, $user)
+  public function isAble($operation, $user) : bool
   {
     // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
     // we can use a nullable type
@@ -73,7 +73,7 @@ abstract class Location extends Table
 
   // Gets the default rule for a user, which is either a \MRBS\User object or null
   // TODO: make this is configurable?  Either in the config file or through the browser
-  public function getDefaultRule($user)
+  public function getDefaultRule($user) : object
   {
     // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
     // we can use a nullable type
