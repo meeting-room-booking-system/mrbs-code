@@ -373,7 +373,7 @@ function display_rooms($area_id)
                   else
                   {
                     // strings
-                    $value = $room->{$column->name};
+                    $value = (isset($room->{$column->name})) ? $room->{$column->name} : '';
                     $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
                     // Truncate before conversion, otherwise you could chop off in the middle of an entity
                     $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));
