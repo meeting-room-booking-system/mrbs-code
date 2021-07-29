@@ -11,7 +11,7 @@ class Groups extends Attributes
   }
 
 
-  public function next()
+  public function next() : void
   {
     $this->cursor++;
 
@@ -24,7 +24,7 @@ class Groups extends Attributes
 
 
   // Returns an array of group names indexed by id.
-  public function getNames()
+  public function getNames() : array
   {
     $result = array();
     foreach ($this as $group)
@@ -35,7 +35,7 @@ class Groups extends Attributes
   }
 
 
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     global $auth;
 

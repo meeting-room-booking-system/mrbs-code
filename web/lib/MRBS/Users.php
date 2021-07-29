@@ -11,7 +11,7 @@ class Users extends TableIterator
   }
 
 
-  public function next()
+  public function next() : void
   {
     $this->cursor++;
 
@@ -23,7 +23,7 @@ class Users extends TableIterator
   }
 
 
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     global $auth;
 
@@ -47,7 +47,7 @@ class Users extends TableIterator
 
 
   // Sync users from an external source.
-  public function sync($verbose=false)
+  public function sync($verbose=false) : void
   {
     global $auth;
 
@@ -78,7 +78,7 @@ class Users extends TableIterator
 
 
   // Gets the number of admins in the system
-  public static function getNAdmins()
+  public static function getNAdmins() : int
   {
     global $auth, $max_level;
 
@@ -96,7 +96,7 @@ class Users extends TableIterator
   }
 
 
-  private function getUsernames()
+  private function getUsernames() : array
   {
     $result = array();
     $this->rewind();
@@ -111,7 +111,7 @@ class Users extends TableIterator
   }
 
 
-  private function deleteUsers(array $usernames, $verbose=false)
+  private function deleteUsers(array $usernames, $verbose=false) : void
   {
     global $auth;
 
@@ -144,7 +144,7 @@ class Users extends TableIterator
   }
 
 
-  private function upsertUsers(array $external_users, $verbose=false)
+  private function upsertUsers(array $external_users, $verbose=false) : void
   {
     global $auth;
 
