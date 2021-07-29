@@ -21,14 +21,14 @@ class Group extends Table
   }
 
 
-  public function save()
+  public function save() : void
   {
     parent::save();
     $this->saveRoles();
   }
 
 
-  public static function getById($id)
+  public static function getById($id) : ?object
   {
     // TODO: there's no doubt a faster way of doing this using a single SQL
     // TODO: query, though it needs to work for both MySQL and PostgreSQL.
@@ -43,7 +43,7 @@ class Group extends Table
   }
 
 
-  public static function getByName($name)
+  public static function getByName($name) : ?object
   {
     // TODO: add in roles
     return self::getByColumn('name', $name);
@@ -51,7 +51,7 @@ class Group extends Table
 
 
   // Gets the roles assigned to a set of groups
-  public static function getRoles(array $groups)
+  public static function getRoles(array $groups) : array
   {
     if (empty($groups))
     {
@@ -66,7 +66,7 @@ class Group extends Table
   }
 
 
-  protected static function onRead(array $row)
+  protected static function onRead(array $row) : array
   {
     if (array_key_exists('roles', $row))
     {
@@ -78,7 +78,7 @@ class Group extends Table
   }
 
 
-  private static function getRolesByGroupId($id)
+  private static function getRolesByGroupId($id) : array
   {
     if (!isset($id))
     {
@@ -93,7 +93,7 @@ class Group extends Table
   }
 
 
-  private function saveRoles()
+  private function saveRoles() : void
   {
     $existing = self::getRolesByGroupId($this->id);
 
@@ -110,7 +110,7 @@ class Group extends Table
   }
 
 
-  private function deleteRoles()
+  private function deleteRoles() : void
   {
     $sql = "DELETE FROM " . _tbl('group_role') . "
                   WHERE group_id=:group_id";
@@ -118,7 +118,7 @@ class Group extends Table
   }
 
 
-  private function insertRoles()
+  private function insertRoles() : void
   {
     // If there aren't any roles then there's no need to do anything
     if (empty($this->roles))
