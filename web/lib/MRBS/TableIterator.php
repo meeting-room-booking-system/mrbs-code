@@ -19,13 +19,13 @@ abstract class TableIterator implements Countable, Iterator
   }
 
 
-  public function current()
+  public function current() : object
   {
     return $this->item;
   }
 
 
-  public function next()
+  public function next() : void
   {
     $this->cursor++;
     if (false !== ($row = $this->res->next_row_keyed()))
@@ -36,19 +36,19 @@ abstract class TableIterator implements Countable, Iterator
   }
 
 
-  public function key()
+  public function key() : int
   {
     return $this->cursor;
   }
 
 
-  public function valid()
+  public function valid() : bool
   {
     return ($this->cursor < $this->count());
   }
 
 
-  public function rewind()
+  public function rewind() : void
   {
     if ($this->cursor >= 0)
     {
@@ -58,7 +58,7 @@ abstract class TableIterator implements Countable, Iterator
   }
 
 
-  public function count()
+  public function count() : int
   {
     return $this->res->count();
   }
