@@ -2,9 +2,13 @@
 
 namespace MRBS\Form;
 
+use MRBS\Exception;
 use MRBS\JFactory;
 use MRBS\Session\SessionCookie;
 use function MRBS\fatal_error;
+use function MRBS\generate_token;
+use function MRBS\get_form_var;
+use function MRBS\get_vocab;
 use function MRBS\session;
 
 
@@ -76,7 +80,7 @@ class Form extends Element
       return;
     }
 
-    $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
+    $token = get_form_var(self::$token_name, 'string', null, INPUT_POST);
     $stored_token = self::getStoredToken();
 
     if (!self::compareTokens($stored_token, $token))
@@ -94,7 +98,7 @@ class Form extends Element
         session()->logoffUser();
       }
 
-      fatal_error(\MRBS\get_vocab("session_expired"));
+      fatal_error(get_vocab("session_expired"));
     }
   }
 
@@ -108,7 +112,7 @@ class Form extends Element
 
     foreach ($units as $unit)
     {
-      $options[$unit] = \MRBS\get_vocab($unit);
+      $options[$unit] = get_vocab($unit);
       if (isset($max_unit) && ($max_unit == $unit))
       {
         break;
@@ -149,7 +153,7 @@ class Form extends Element
                      "Generating a new token.";
           trigger_error($message,E_USER_WARNING);
         }
-        self::$token = \MRBS\generate_token($token_length);
+        self::$token = generate_token($token_length);
         self::storeToken(self::$token);
       }
     }
@@ -205,7 +209,7 @@ class Form extends Element
       {
         if (false === session_start())
         {
-          throw new \Exception("Could not start session");
+          throw new Exception("Could not start session");
         }
       }
       $_SESSION[self::$token_name] = $token;
@@ -245,7 +249,7 @@ class Form extends Element
       {
         if (false === session_start())
         {
-          throw new \Exception("Could not start session");
+          throw new Exception("Could not start session");
         }
       }
       return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
