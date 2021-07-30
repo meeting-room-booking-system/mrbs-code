@@ -21,7 +21,7 @@ class RoomRule extends LocationRule
   }
 
 
-  public static function getRulesByRoles(array $role_ids, $room_id)
+  public static function getRulesByRoles(array $role_ids, $room_id) : array
   {
     return parent::getRules($role_ids, $room_id, 'room_id');
   }

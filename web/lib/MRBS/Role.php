@@ -16,7 +16,7 @@ class Role extends Table
   }
 
 
-  public static function getByName($name)
+  public static function getByName($name) : ?object
   {
     return self::getByColumn('name', $name);
   }

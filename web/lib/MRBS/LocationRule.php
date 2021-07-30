@@ -21,7 +21,7 @@ abstract class LocationRule extends Table
 
   // Returns an array of permissions in ascending order, with key the permission
   // and value the descriptive text.
-  public static function getPermissionOptions()
+  public static function getPermissionOptions() : array
   {
     return array(
         self::READ  => get_vocab('permission_read'),
@@ -31,7 +31,7 @@ abstract class LocationRule extends Table
   }
 
 
-  public static function getStateOptions()
+  public static function getStateOptions() : array
   {
     return array(
         self::GRANTED => get_vocab('state_granted'),
@@ -41,7 +41,7 @@ abstract class LocationRule extends Table
 
 
   // Checks whether $rules allow $operation (READ | WRITE | ALL)
-  public static function can(array $rules, $operation)
+  public static function can(array $rules, $operation) : bool
   {
     switch ($operation)
     {
@@ -62,7 +62,7 @@ abstract class LocationRule extends Table
 
 
   // Check whether the given rules allow reading
-  private static function canRead(array $rules)
+  private static function canRead(array $rules) : bool
   {
     foreach ($rules as $rule)
     {
@@ -93,7 +93,7 @@ abstract class LocationRule extends Table
 
 
   // Check whether the given rules allow writing
-  private static function canWrite(array $rules)
+  private static function canWrite(array $rules) : bool
   {
     foreach ($rules as $rule)
     {
@@ -124,7 +124,7 @@ abstract class LocationRule extends Table
 
 
   // Checks whether the given rules allow all access
-  private static function canAll(array $rules)
+  private static function canAll(array $rules) : bool
   {
     foreach ($rules as $rule)
     {
@@ -148,7 +148,7 @@ abstract class LocationRule extends Table
   }
 
 
-  protected static function getRules(array $role_ids, $location_id, $location_column)
+  protected static function getRules(array $role_ids, $location_id, $location_column) : array
   {
     $result = array();
 
@@ -183,7 +183,7 @@ abstract class LocationRule extends Table
   }
 
 
-  private static function max($a, $b)
+  private static function max($a, $b) : string
   {
     // Check we've got valid parameters
     if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))
@@ -202,7 +202,7 @@ abstract class LocationRule extends Table
   }
 
 
-  private static function min($a, $b)
+  private static function min($a, $b) : string
   {
     // Check we've got valid parameters
     if (!in_array($a, self::$permissions) || !in_array($b, self::$permissions))

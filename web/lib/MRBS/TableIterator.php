@@ -64,7 +64,7 @@ abstract class TableIterator implements Countable, Iterator
   }
 
 
-  protected function getRes($sort_column=null)
+  protected function getRes($sort_column=null) : void
   {
     $class_name = $this->base_class;
     $sql = "SELECT * FROM " . _tbl($class_name::TABLE_NAME);

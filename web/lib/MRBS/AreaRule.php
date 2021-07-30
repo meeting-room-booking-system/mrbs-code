@@ -21,7 +21,7 @@ class AreaRule extends LocationRule
   }
 
 
-  public static function getByRoleArea($role_id, $area_id)
+  public static function getByRoleArea($role_id, $area_id) : ?object
   {
     $sql = "SELECT P.*, A.area_name
               FROM " . _tbl(self::TABLE_NAME) . " P
@@ -52,7 +52,7 @@ class AreaRule extends LocationRule
   }
 
 
-  public static function getRulesByRoles(array $role_ids, $area_id)
+  public static function getRulesByRoles(array $role_ids, $area_id) : array
   {
     return parent::getRules($role_ids, $area_id, 'area_id');
   }

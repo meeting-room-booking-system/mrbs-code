@@ -27,7 +27,7 @@ class Areas extends TableIterator
   }
 
 
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     parent::getRes('sort_key');
   }

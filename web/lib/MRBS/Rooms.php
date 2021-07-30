@@ -18,7 +18,7 @@ class Rooms extends TableIterator
 
 
   // Returns the number of visible rooms
-  public function countVisible($include_disabled=false)
+  public function countVisible($include_disabled=false) : int
   {
     $result = 0;
 
@@ -36,7 +36,7 @@ class Rooms extends TableIterator
 
   // Returns an array of room names indexed by room id. Only visible rooms are included.
   // Useful for passing to the addSelectOptions() method.
-  public function getNames($include_disabled=false)
+  public function getNames($include_disabled=false) : array
   {
     $result = array();
     foreach ($this as $room)
@@ -51,7 +51,7 @@ class Rooms extends TableIterator
 
 
   // Returns an array of room ids
-  public function getIds($include_disabled=false)
+  public function getIds($include_disabled=false) : array
   {
     return array_keys($this->getNames($include_disabled));
   }
@@ -61,7 +61,7 @@ class Rooms extends TableIterator
   // then by room id.  Only visible rooms are included.
   // Useful for passing to the addSelectOptions() method to get <select> options
   // with option groups.
-  public function getGroupedNames($include_disabled=false)
+  public function getGroupedNames($include_disabled=false) : array
   {
     $result = array();
     foreach ($this as $room)
@@ -76,7 +76,7 @@ class Rooms extends TableIterator
 
 
   // For efficiency we get some information about the area at the same time.
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     $class_name = $this->base_class;
     $table_name = _tbl($class_name::TABLE_NAME);

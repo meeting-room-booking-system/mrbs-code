@@ -13,7 +13,7 @@ class AreaRules extends TableIterator
     parent::__construct(__NAMESPACE__ . '\\AreaRule');
   }
 
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     $sql = "SELECT L.*, A.area_name
               FROM " . _tbl(AreaRule::TABLE_NAME) . " L

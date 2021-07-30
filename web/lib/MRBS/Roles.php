@@ -17,7 +17,7 @@ class Roles extends Attributes
   }
 
   // Returns an array of role names indexed by id.
-  public function getNames()
+  public function getNames() : array
   {
     $result = array();
     foreach ($this as $role)
@@ -29,7 +29,7 @@ class Roles extends Attributes
 
 
   // Gets a form field for a standard form for selecting roles
-  public function getFieldset(array $selected_own, $disabled=false, $selected_groups=null)
+  public function getFieldset(array $selected_own, $disabled=false, $selected_groups=null) : ?object
   {
     if ($this->count() == 0)
     {
@@ -76,7 +76,7 @@ class Roles extends Attributes
   }
 
 
-  protected function getRes($sort_column = null)
+  protected function getRes($sort_column = null) : void
   {
     parent::getRes('name');
   }

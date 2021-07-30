@@ -6,11 +6,11 @@ abstract class Attributes extends TableIterator
 {
 
   // Returns an array of role names indexed by id.
-  abstract public function getNames();
+  abstract public function getNames() : array;
 
 
   // Converts an array of ids to an array of names indexed by id
-  public static function idsToNames(array $ids)
+  public static function idsToNames(array $ids) : array
   {
     static $names;
 
