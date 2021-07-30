@@ -2,8 +2,14 @@
 
 namespace MRBS\Form;
 
+use MRBS\Exception;
 use MRBS\JFactory;
 use MRBS\Session\SessionCookie;
+use function MRBS\fatal_error;
+use function MRBS\generate_token;
+use function MRBS\get_form_var;
+use function MRBS\get_vocab;
+use function MRBS\session;
 
 
 class Form extends Element
@@ -20,7 +26,7 @@ class Form extends Element
 
 
   // Adds a hidden input to the form
-  public function addHiddenInput($name, $value)
+  public function addHiddenInput($name, $value) : Form
   {
     $element = new ElementInputHidden();
     $element->setAttributes(array('name'  => $name,
@@ -31,7 +37,7 @@ class Form extends Element
 
 
   // Adds an array of hidden inputs to the form
-  public function addHiddenInputs(array $hidden_inputs)
+  public function addHiddenInputs(array $hidden_inputs) : Form
   {
     foreach ($hidden_inputs as $key => $value)
     {
@@ -42,7 +48,7 @@ class Form extends Element
 
 
   // Returns the HTML for a hidden field containing a CSRF token
-  public static function getTokenHTML()
+  public static function getTokenHTML() : string
   {
     $element = new ElementInputHidden();
     $element->setAttributes(array('name'  => self::$token_name,
@@ -65,7 +71,7 @@ class Form extends Element
   //        or via a POST request.   These pages should not take any action, but as a matter of
   //        good practice should check the token anyway if they have been requested by a POST.
   //        To cater for these pages the $post_only parameter should be set to TRUE.
-  public static function checkToken($post_only=false)
+  public static function checkToken($post_only=false) : void
   {
     global $server;
 
@@ -74,7 +80,7 @@ class Form extends Element
       return;
     }
 
-    $token = \MRBS\get_form_var(self::$token_name, 'string', null, INPUT_POST);
+    $token = get_form_var(self::$token_name, 'string', null, INPUT_POST);
     $stored_token = self::getStoredToken();
 
     if (!self::compareTokens($stored_token, $token))
@@ -87,26 +93,26 @@ class Form extends Element
         trigger_error('Possible CSRF attack from IP address ' . $server['REMOTE_ADDR'], E_USER_NOTICE);
       }
 
-      if (method_exists(\MRBS\session(), 'logoffUser'))
+      if (method_exists(session(), 'logoffUser'))
       {
-        \MRBS\session()->logoffUser();
+        session()->logoffUser();
       }
 
-      \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
+      fatal_error(get_vocab("session_expired"));
     }
   }
 
 
   // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
   // can be used to specify the maximum unit to return.
-  public static function getTimeUnitOptions($max_unit=null)
+  public static function getTimeUnitOptions($max_unit=null) : array
   {
     $options = array();
     $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
 
     foreach ($units as $unit)
     {
-      $options[$unit] = \MRBS\get_vocab($unit);
+      $options[$unit] = get_vocab($unit);
       if (isset($max_unit) && ($max_unit == $unit))
       {
         break;
@@ -116,7 +122,7 @@ class Form extends Element
   }
 
 
-  private function addCSRFToken()
+  private function addCSRFToken() : Form
   {
     $this->addHiddenInput(self::$token_name, self::getToken());
     return $this;
@@ -124,20 +130,30 @@ class Form extends Element
 
 
   // Get a CSRF token
-  public static function getToken()
+  public static function getToken() : string
   {
     $token_length = 32;
 
     if (!isset(self::$token))
     {
       $stored_token = self::getStoredToken();
-      if (isset($stored_token))
+      // The test below should really be isset() rather than !empty().  However occasionally MRBS has the
+      // value 0 stored in the session variable.  It's not clear how or why this is happening.  Until the
+      // root cause is found we test for empty() and if the token is set but empty we generate a new token.
+      if (!empty($stored_token))
       {
         self::$token = $stored_token;
       }
       else
       {
-        self::$token = \MRBS\generate_token($token_length);
+        if (isset($stored_token))
+        {
+          // The token is set but empty
+          $message = "Stored token is '$stored_token'.  This should not be possible. " .
+                     "Generating a new token.";
+          trigger_error($message,E_USER_WARNING);
+        }
+        self::$token = generate_token($token_length);
         self::storeToken(self::$token);
       }
     }
@@ -150,7 +166,7 @@ class Form extends Element
   // Returns true if they are equal, otherwise false.
   // Note: it is important to provide the user-supplied string as the
   // second parameter, rather than the first.
-  private static function compareTokens($known_token, $user_token)
+  private static function compareTokens($known_token, $user_token) : bool
   {
     if (is_null($known_token) || is_null($user_token))
     {
@@ -168,7 +184,7 @@ class Form extends Element
   }
 
 
-  private static function storeToken($token)
+  private static function storeToken($token) : void
   {
     global $auth, $csrf_cookie;
 
@@ -193,7 +209,7 @@ class Form extends Element
       {
         if (false === session_start())
         {
-          throw new \Exception("Could not start session");
+          throw new Exception("Could not start session");
         }
       }
       $_SESSION[self::$token_name] = $token;
@@ -214,7 +230,7 @@ class Form extends Element
   }
 
 
-  private static function getStoredToken()
+  private static function getStoredToken() : ?string
   {
     global $auth, $csrf_cookie;
 
@@ -233,7 +249,7 @@ class Form extends Element
       {
         if (false === session_start())
         {
-          throw new \Exception("Could not start session");
+          throw new Exception("Could not start session");
         }
       }
       return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
