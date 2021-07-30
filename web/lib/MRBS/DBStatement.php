@@ -3,6 +3,7 @@
 namespace MRBS;
 
 use PDO;
+use PDOStatement;
 
 
 //
@@ -12,7 +13,7 @@ class DBStatement
   protected $statement = null;
 
   //
-  public function __construct(DB $db_obj, \PDOStatement $sth)
+  public function __construct(DB $db_obj, PDOStatement $sth)
   {
     $this->db_object = $db_obj;
     $this->statement = $sth;
@@ -34,7 +35,7 @@ class DBStatement
   {
     return $this->statement->fetch(PDO::FETCH_ASSOC);
   }
-  
+
 
   // Return all the rows from a statement object, as an array of arrays
   // keyed on the column name
