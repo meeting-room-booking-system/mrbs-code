@@ -4,6 +4,8 @@ namespace MRBS\Form;
 
 use MRBS\JFactory;
 use MRBS\Session\SessionCookie;
+use function MRBS\fatal_error;
+use function MRBS\session;
 
 
 class Form extends Element
@@ -87,12 +89,12 @@ class Form extends Element
         trigger_error('Possible CSRF attack from IP address ' . $server['REMOTE_ADDR'], E_USER_NOTICE);
       }
 
-      if (method_exists(\MRBS\session(), 'logoffUser'))
+      if (method_exists(session(), 'logoffUser'))
       {
-        \MRBS\session()->logoffUser();
+        session()->logoffUser();
       }
 
-      \MRBS\fatal_error(\MRBS\get_vocab("session_expired"));
+      fatal_error(\MRBS\get_vocab("session_expired"));
     }
   }
 
