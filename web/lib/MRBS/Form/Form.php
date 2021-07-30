@@ -133,12 +133,22 @@ class Form extends Element
     if (!isset(self::$token))
     {
       $stored_token = self::getStoredToken();
-      if (isset($stored_token))
+      // The test below should really be isset() rather than !empty().  However occasionally MRBS has the
+      // value 0 stored in the session variable.  It's not clear how or why this is happening.  Until the
+      // root cause is found we test for empty() and if the token is set but empty we generate a new token.
+      if (!empty($stored_token))
       {
         self::$token = $stored_token;
       }
       else
       {
+        if (isset($stored_token))
+        {
+          // The token is set but empty
+          $message = "Stored token is '$stored_token'.  This should not be possible. " .
+                     "Generating a new token.";
+          trigger_error($message,E_USER_WARNING);
+        }
         self::$token = \MRBS\generate_token($token_length);
         self::storeToken(self::$token);
       }
