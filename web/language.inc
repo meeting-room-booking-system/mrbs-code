@@ -867,10 +867,15 @@ function get_loc_field_name($table, $name)
 
 // Format a local time/date according to locale settings, returning the
 // result as a UTF-8 string.  This function is based on strftime()
+// $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales.  If $locale
 // is not set then the current locale is used.
-function date_formatter_strftime($format, $time, $locale)
+function date_formatter_strftime(string $format, $time, $locale)
 {
+  // Cast $time to an integer because we're going to use it in strftime() and date(), both
+  // of which expect integers and will otherwise throw an E_DEPRECATED error in PHP 8.1
+  $time = (int) $time;
+
   $server_os = System::getServerOS();
 
   // Set the temporary locale.  Note that $temp_locale could be an array of locales,
@@ -1103,10 +1108,11 @@ function format_convert(string $format, string $locale) : string
 
 // Format a local time/date according to locale settings, returning the
 // result as a UTF-8 string.  This function is based on IntlDateFormatter.
+// $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales, but if an array
 // then only the first is used.
 // If $locale is not set then the current locale is used.
-function date_formatter_intl(string $format, int $time, $locale=null) : string
+function date_formatter_intl(string $format, $time, $locale=null) : string
 {
   if (!isset($locale))
   {
@@ -1135,9 +1141,10 @@ function date_formatter_intl(string $format, int $time, $locale=null) : string
 
 // Format a local time/date according to locale settings, returning the
 // result as a UTF-8 string.
+// $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales.  If $locale
 // is not set then the current locale is used.
-function utf8_strftime(string $format, int $time, $locale=null) : string
+function utf8_strftime(string $format, $time, $locale=null) : string
 {
   // strftime() is deprecated from PHP 8.1, so we use IntlDateFormatter
   // if we can.
