@@ -22,7 +22,7 @@ class Form extends Element
 
 
   // Adds a hidden input to the form
-  public function addHiddenInput($name, $value)
+  public function addHiddenInput($name, $value) : Form
   {
     $element = new ElementInputHidden();
     $element->setAttributes(array('name'  => $name,
@@ -33,7 +33,7 @@ class Form extends Element
 
 
   // Adds an array of hidden inputs to the form
-  public function addHiddenInputs(array $hidden_inputs)
+  public function addHiddenInputs(array $hidden_inputs) : Form
   {
     foreach ($hidden_inputs as $key => $value)
     {
@@ -44,7 +44,7 @@ class Form extends Element
 
 
   // Returns the HTML for a hidden field containing a CSRF token
-  public static function getTokenHTML()
+  public static function getTokenHTML() : string
   {
     $element = new ElementInputHidden();
     $element->setAttributes(array('name'  => self::$token_name,
@@ -67,7 +67,7 @@ class Form extends Element
   //        or via a POST request.   These pages should not take any action, but as a matter of
   //        good practice should check the token anyway if they have been requested by a POST.
   //        To cater for these pages the $post_only parameter should be set to TRUE.
-  public static function checkToken($post_only=false)
+  public static function checkToken($post_only=false) : void
   {
     global $server;
 
@@ -101,7 +101,7 @@ class Form extends Element
 
   // $max_unit can be set to 'seconds', 'minutes', 'hours', etc. and
   // can be used to specify the maximum unit to return.
-  public static function getTimeUnitOptions($max_unit=null)
+  public static function getTimeUnitOptions($max_unit=null) : array
   {
     $options = array();
     $units = array('seconds', 'minutes', 'hours', 'days', 'weeks');
@@ -118,7 +118,7 @@ class Form extends Element
   }
 
 
-  private function addCSRFToken()
+  private function addCSRFToken() : Form
   {
     $this->addHiddenInput(self::$token_name, self::getToken());
     return $this;
@@ -126,7 +126,7 @@ class Form extends Element
 
 
   // Get a CSRF token
-  public static function getToken()
+  public static function getToken() : string
   {
     $token_length = 32;
 
@@ -162,7 +162,7 @@ class Form extends Element
   // Returns true if they are equal, otherwise false.
   // Note: it is important to provide the user-supplied string as the
   // second parameter, rather than the first.
-  private static function compareTokens($known_token, $user_token)
+  private static function compareTokens($known_token, $user_token) : bool
   {
     if (is_null($known_token) || is_null($user_token))
     {
@@ -180,7 +180,7 @@ class Form extends Element
   }
 
 
-  private static function storeToken($token)
+  private static function storeToken($token) : void
   {
     global $auth, $csrf_cookie;
 
@@ -226,7 +226,7 @@ class Form extends Element
   }
 
 
-  private static function getStoredToken()
+  private static function getStoredToken() : ?string
   {
     global $auth, $csrf_cookie;
 
