@@ -904,12 +904,16 @@ if (isset($action) && ($action == "update"))
       {
         $values[$fieldname] = (empty($values[$fieldname])) ? 0 : 1;
       }
-      // Trim the field to remove accidental whitespace
-      $values[$fieldname] = trim($values[$fieldname]);
-      // Truncate the field to the maximum length as a precaution.
-      if (null !== ($maxlength = maxlength("users.$fieldname")))
+
+      if (isset($values[$fieldname]))
       {
-        $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
+        // Trim the field to remove accidental whitespace
+        $values[$fieldname] = trim($values[$fieldname]);
+        // Truncate the field to the maximum length as a precaution.
+        if (null !== ($maxlength = maxlength("users.$fieldname")))
+        {
+          $values[$fieldname] = utf8_substr($values[$fieldname], 0, $maxlength);
+        }
       }
     }
 

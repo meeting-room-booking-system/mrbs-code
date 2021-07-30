@@ -1174,7 +1174,7 @@ function utf8_substr_old($str, $start, $length=null)
 
 
 // UTF-8 compatible substr function
-function utf8_substr($str, $start, $length=null)
+function utf8_substr(string $str, int $start, ?int $length=null)
 {
   if (!isset($length))
   {
