@@ -3,7 +3,7 @@ namespace MRBS;
 
 use \IntlDateFormatter;
 
-function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot)
+function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot) : void
 {
   // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
@@ -121,7 +121,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
 } // end function map_add_booking()
 
 
-function map_coalesce_bookings(&$column)
+function map_coalesce_bookings(&$column) : void
 {
   // Coalesces map entries for a room that span consecutive time slots.
   //
@@ -176,7 +176,7 @@ function map_coalesce_bookings(&$column)
 
 
 // Returns an array of classes to be used for the entry
-function get_entry_classes($entry)
+function get_entry_classes($entry) : array
 {
   global $approval_enabled, $confirmation_enabled;
 
@@ -219,7 +219,7 @@ function get_entry_classes($entry)
 }
 
 
-function cell_html(array $cell, array $query_vars, $is_invalid = false)
+function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -343,7 +343,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false)
 }  // end function draw_cell
 
 
-function get_timeslot_text($s, $resolution)
+function get_timeslot_text($s, $resolution) : string
 {
   global $show_slot_endtime;
 
@@ -360,7 +360,7 @@ function get_timeslot_text($s, $resolution)
 // Draw a time cell to be used in the first and last columns of the day and week views
 //    $s                 the number of seconds since the start of the day (nominal - not adjusted for DST)
 //    $url               the url to form the basis of the link in the time cell
-function time_cell_html($s, $url)
+function time_cell_html($s, $url) : string
 {
   global $enable_periods, $resolution;
 
@@ -386,7 +386,7 @@ function time_cell_html($s, $url)
 // Draw a room cell to be used in the header rows/columns of the calendar views
 //    $room    contains the room details
 //    $vars    an associative array containing the variables to be used to build the link
-function room_cell_html(array $room, array $vars)
+function room_cell_html(array $room, array $vars) : string
 {
   $link = 'index.php?' . http_build_query($vars, '', '&');
   $link = multisite($link);
@@ -431,7 +431,7 @@ function room_cell_html(array $room, array $vars)
 //    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
 //    $link     the href to be used for the link
 //    $date     the date in yyyy-mm-dd format
-function day_cell_html($text, $link, $date)
+function day_cell_html($text, $link, $date) : string
 {
   $html = '';
   // Put the date into a data attribute so that it can be picked up by JavaScript
@@ -452,7 +452,7 @@ function day_cell_html($text, $link, $date)
 //
 // $data is an optional third parameter which if set passes an
 // associative array of name-value pairs to be used in data attributes
-function tdcell($classes, $slots, array $data=null)
+function tdcell($classes, $slots, ?array $data=null) : string
 {
   global $times_along_top;
 
@@ -492,7 +492,7 @@ function tdcell($classes, $slots, array $data=null)
 
 // Gets the number of time slots between the beginning and end of the booking
 // day.   (This is the normal number on a non-DST transition day)
-function get_n_time_slots()
+function get_n_time_slots() : int
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes;
   global $resolution;
@@ -509,7 +509,7 @@ function get_n_time_slots()
 
 
 // $s is nominal seconds
-function get_query_vars($view, $area, $room, $month, $day, $year, $s)
+function get_query_vars($view, $area, $room, $month, $day, $year, $s) : array
 {
   global $morningstarts, $morningstarts_minutes;
 
@@ -540,7 +540,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s)
 }
 
 
-function get_times_header_cells($start, $end, $increment)
+function get_times_header_cells($start, $end, $increment) : string
 {
   global $enable_periods;
 
@@ -570,7 +570,7 @@ function get_times_header_cells($start, $end, $increment)
 }
 
 
-function get_rooms_header_cells($rooms, $vars)
+function get_rooms_header_cells($rooms, $vars) : string
 {
   $html = '';
 
@@ -584,7 +584,7 @@ function get_rooms_header_cells($rooms, $vars)
 }
 
 
-function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null) : string
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
@@ -831,7 +831,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 //    $classes  A scalar or array giving the class or classes to be used in the class attribute
 //    $title    The value of the title attribute
 //    $text     The value of the text to be used in the div
-function get_flex_div($slots, $classes, $title=null, $text=null)
+function get_flex_div($slots, $classes, $title=null, $text=null) : string
 {
   $result = "<div style=\"flex: $slots\"";
 
@@ -859,7 +859,7 @@ function get_flex_div($slots, $classes, $title=null, $text=null)
 }
 
 
-function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight)
+function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight) : string
 {
   if ($view_all)
   {
@@ -872,7 +872,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 }
 
 
-function get_date($t, $view)
+function get_date($t, $view) : string
 {
   global $strftime_format;
 
