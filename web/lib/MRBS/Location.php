@@ -45,13 +45,8 @@ abstract class Location extends Table
 
   // Determines whether $user, which is either a \MRBS\User object or null, can perform
   // $operation in this location
-  public function isAble($operation, $user) : bool
+  public function isAble($operation, ?User $user) : bool
   {
-    // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
-    // we can use a nullable type
-    assert(is_null($user) || ($user instanceof User),
-           '$user must be null or of class ' . __NAMESPACE__ . '\User');
-
     if (!isset($user) || empty($user->level))
     {
       // If there's no logged in user or the user has level 0, use the default rules
@@ -73,13 +68,8 @@ abstract class Location extends Table
 
   // Gets the default rule for a user, which is either a \MRBS\User object or null
   // TODO: make this is configurable?  Either in the config file or through the browser
-  public function getDefaultRule($user) : object
+  public function getDefaultRule(?User $user) : object
   {
-    // We can get rid of the assert when the minimum PHP version is 7.1 or greater and
-    // we can use a nullable type
-    assert(is_null($user) || ($user instanceof User),
-           '$user must be null or of class ' . __NAMESPACE__ . '\User');
-
     if ($this instanceof Room)
     {
       $result = new RoomRule();
