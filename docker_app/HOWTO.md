@@ -48,7 +48,7 @@ However, when configuration of php and database is change, you have to reset the
   ~~~
   docker-compose down
   ~~~
-* Delete persited volumes:
+* Delete persisted volumes:
   ~~~
   docker volume prune
   ~~~
