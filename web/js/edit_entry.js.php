@@ -73,6 +73,7 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
 
 <?php
 // Function to change the units for the repeat interval to match the repeat type.
+// Additionally, the lines for repetition and skipping are shown/hidden.
 ?>
 var changeRepIntervalUnits = function changeRepIntervalUnits() {
     var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
@@ -100,6 +101,9 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     units.text(text);
 
     units.parent().toggle(repType !== <?php echo REP_NONE ?>);
+
+    $('#rep_end_date').parent().toggle(repType !== <?php echo REP_NONE ?>);
+    $('#skip').parent().toggle(repType !== <?php echo REP_NONE ?>);
   };
 
 
