@@ -3,6 +3,8 @@
 namespace MRBS\Form;
 
 
+use function MRBS\toTimeString;
+
 class FieldTimeWithUnits extends FieldDiv
 {
 
@@ -21,7 +23,7 @@ class FieldTimeWithUnits extends FieldDiv
 
     // Convert the raw seconds into as large a unit as possible
     $duration = $seconds;
-    \MRBS\toTimeString($duration, $units);
+    toTimeString($duration, $units);
 
     // The checkbox, which enables or disables the field
     $checkbox = new ElementInputCheckbox();
