@@ -102,7 +102,19 @@ class User extends Table
   {
     global $max_level;
 
-    $required_level = (isset($max_level) ? $max_level : 2);
+    $required_level = (isset($max_level)) ? $max_level : 2;
+    return ($this->level >= $required_level);
+  }
+
+
+  // Checks whether the user is a booking admin, regardless of location.
+  // (Note that users below this level may still be granted booking admin
+  // rights for particular rooms and areas by using specific rules.)
+  public function isBookingAdmin() : bool
+  {
+    global $min_booking_admin_level;
+
+    $required_level = (isset($min_booking_admin_level)) ? $min_booking_admin_level : 2;
     return ($this->level >= $required_level);
   }
 

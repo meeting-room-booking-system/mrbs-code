@@ -59,8 +59,8 @@ abstract class Location extends Table
     }
     else
     {
-      // Admins can do anything
-      if ($user->isAdmin())
+      // Booking admins can do anything with bookings
+      if ($user->isBookingAdmin())
       {
         return true;
       }
