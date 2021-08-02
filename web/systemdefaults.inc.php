@@ -797,6 +797,9 @@ $max_level = 2;
 $min_user_viewing_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
+// The lowest level of admin allowed to edit other bookings
+$min_booking_admin_level = 2;
+
 
 // Password policy.  Uncomment the variables and set them to the
 // required values as appropriate.
