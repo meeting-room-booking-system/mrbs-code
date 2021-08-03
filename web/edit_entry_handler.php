@@ -898,11 +898,10 @@ echo "<div id=\"submit_buttons\">\n";
 // Back button
 $form = new Form();
 
-$form->setAttributes(array('method' => 'post',
-                           'action' => multisite($returl)));
-
 $submit = new ElementInputSubmit();
 $submit->setAttribute('value', get_vocab('back'));
+// We ignore the returl here, as it points to the wrong page
+$submit->setAttribute('onclick', 'window.history.back();');
 $form->addElement($submit);
 
 $form->render();
