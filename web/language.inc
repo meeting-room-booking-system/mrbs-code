@@ -784,7 +784,7 @@ function get_bom($charset)
 // [Maybe in the future we should switch to using the MessageFormatter
 //  class as it is more powerful.   However the Intl extension isn't present
 //  in all PHP installations and so the class would have to be emulated]
-function get_vocab($tag)
+function get_vocab(string $tag) : string
 {
   global $vocab;
 
@@ -802,7 +802,7 @@ function get_vocab($tag)
 
 
 // Same as get_vocab(), but uses the mailing language
-function get_mail_vocab($tag)
+function get_mail_vocab(string $tag) : string
 {
   global $vocab, $mail_settings;
 
@@ -831,7 +831,7 @@ function get_mail_vocab($tag)
 
 
 // Get localised booking type name
-function get_type_vocab($type)
+function get_type_vocab(string $type) : string
 {
   return get_vocab("type.$type");
 }
