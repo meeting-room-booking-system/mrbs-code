@@ -1193,26 +1193,39 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
-  var form_data = JSON.parse(sessionStorage.getItem('form_data'));
-  console.dir(form_data);
-  $.each(form_data, function(index, field){
-    console.log("Each");
-    console.log(field.name);
-    console.log(field.value);
-    var el = $('[name="' + field.name + '"]'),
-        type = el.attr('type');
+  var storedData = sessionStorage.getItem('form_data');
+  if (storedData)
+  {
+    var form_data = JSON.parse(sessionStorage.getItem('form_data'));
 
-    switch(type){
-      case 'checkbox':
-        el.attr('checked', 'checked');
-        break;
-      case 'radio':
-        el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-        break;
-      default:
-        el.val(field.value);
-    }
-  });
+    $.each(form_data, function (index, field) {
+      console.log("Each");
+      console.log(field.name);
+      console.log(field.value);
+      var el = $('[name="' + field.name + '"]'),
+          type = el.attr('type');
+      console.log(type);
+      switch (type)
+      {
+        case 'checkbox':
+          if (field.name.match(/\[]$/))
+          {
+            el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+          }
+          else
+          {
+            el.attr('checked', 'checked');
+          }
+          break;
+        case 'radio':
+          el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+          break;
+        default:
+          el.val(field.value);
+          break;
+      }
+    });
+  }
 
   <?php
   // If there's only one enabled area in the database there won't be an area
