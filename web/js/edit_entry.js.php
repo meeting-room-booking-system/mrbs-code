@@ -1193,6 +1193,27 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
+  var form_data = JSON.parse(sessionStorage.getItem('form_data'));
+  console.dir(form_data);
+  $.each(form_data, function(index, field){
+    console.log("Each");
+    console.log(field.name);
+    console.log(field.value);
+    var el = $('[name="' + field.name + '"]'),
+        type = el.attr('type');
+
+    switch(type){
+      case 'checkbox':
+        el.attr('checked', 'checked');
+        break;
+      case 'radio':
+        el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+        break;
+      default:
+        el.val(field.value);
+    }
+  });
+
   <?php
   // If there's only one enabled area in the database there won't be an area
   // select input, so we'll have to create a dummy input because the code
@@ -1305,6 +1326,7 @@ $(document).on('page_ready', function() {
   });
 
   form.on('submit', function() {
+      console.log("Submit");
       var result = true;
       if ($(this).data('submit') === 'save_button')
       {
@@ -1315,6 +1337,12 @@ $(document).on('page_ready', function() {
           <?php // Clear the data flag if the validation failed ?>
           $(this).removeData('submit');
         }
+      }
+      if (result)
+      {
+        sessionStorage.setItem('form_data', JSON.stringify($(this).serializeArray()));
+        console.log("Storing");
+        console.log($(this).serializeArray());
       }
       return result;
     });
