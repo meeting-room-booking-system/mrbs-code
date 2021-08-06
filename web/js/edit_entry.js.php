@@ -1269,13 +1269,21 @@ $(document).on('page_ready', function() {
       form.find('datalist').each(function() {
         <?php
         // Datalists in MRBS have the structure
-        //   <input type="text">
+        //   <input type="text" list="yyy">
         //   <input type="hidden" name="xxx">
-        //   <datalist>
+        //   <datalist id="yyy">
         // and we want to copy the value from the hidden input to the visible one
         ?>
-        var prev = $(this).prev();
-        prev.prev().val(prev.val());
+        var prev1 = $(this).prev();
+        var prev2 = prev1.prev();
+        if ($(this).attr('id') === prev2.attr('list'))
+        {
+          prev2.val(prev1.val());
+        }
+        else
+        {
+          console.warn("Something has gone wrong - maybe the MRBS datalist structure has changed.")
+        }
       });
     }
   }
