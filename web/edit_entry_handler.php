@@ -353,14 +353,6 @@ if (get_area($room) != $area)
   $room = get_default_room($area);
 }
 
-// Check that they're not trying to book multiple rooms when not allowed to
-if ((count($rooms) > 0) &&
-    $auth['only_admin_can_select_multiroom'] &&
-    !is_book_admin($rooms))
-{
-  invalid_booking(get_vocab('multiroom_not_allowed'));
-}
-
 // Check that they really are allowed to set $no_mail;
 if ($no_mail)
 {
@@ -878,7 +870,7 @@ else
   if (!empty($result['violations']['errors']))
   {
     echo "<p>\n";
-    echo get_vocab("rules_broken") . ":\n";
+    echo get_vocab("rules_broken") . "\n";
     echo "</p>\n";
     echo "<ul>\n";
     foreach ($result['violations']['errors'] as $rule)
