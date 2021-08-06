@@ -10,7 +10,7 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
 
-function invalid_booking($message)
+function invalid_booking(string $message) : void
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
 
