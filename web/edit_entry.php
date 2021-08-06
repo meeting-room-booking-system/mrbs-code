@@ -1134,6 +1134,8 @@ $end_seconds = get_form_var('end_seconds', 'int');
 $selected_rooms = get_form_var('rooms', 'array');
 $start_date = get_form_var('start_date', 'string');
 $end_date = get_form_var('end_date', 'string');
+// And this comes from edit_entry_handler.php
+$back_button = get_form_var('back_button', 'string');
 
 
 // Check the CSRF token.
@@ -1702,6 +1704,12 @@ $form->setAttributes(array('class'  => 'standard js_hidden',
                            'id'     => 'main',
                            'action' => multisite('edit_entry_handler.php'),
                            'method' => 'post'));
+
+if (!empty($back_button))
+{
+  // Add a data attribute so that the JavaScript can tell where we've come from
+  $form->setAttribute('data-back', 1);
+}
 
 $hidden_inputs = array('returl'    => $returl,
                        'rep_id'    => $rep_id,

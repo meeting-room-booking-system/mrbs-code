@@ -1193,45 +1193,51 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
-  var storedData = sessionStorage.getItem('form_data');
-  if (storedData)
-  {
-    var form_data = JSON.parse(sessionStorage.getItem('form_data'));
+  var form = $('#main');
 
-    $.each(form_data, function (index, field) {
-      <?php // Don't change the CSRF token - the form will have its own one. ?>
-      if (field.name == 'csrf_token')
+  if (form.data('back'))
+  {
+    var storedData = sessionStorage.getItem('form_data');
+    if (storedData)
+    {
+      var form_data = JSON.parse(sessionStorage.getItem('form_data'));
+
+      $.each(form_data, function (index, field)
       {
-        return;
-      }
-      console.log("Each");
-      console.log(field.name);
-      console.log(field.value);
-      var el = $('[name="' + field.name + '"]'),
-      //    tagName = el.prop('tagName'),
+        <?php // Don't change the CSRF token - the form will have its own one. ?>
+        if (field.name === 'csrf_token')
+        {
+          return;
+        }
+        console.log("Each");
+        console.log(field.name);
+        console.log(field.value);
+        var el = $('[name="' + field.name + '"]'),
+          //    tagName = el.prop('tagName'),
           type = el.attr('type');
-      //console.log(tagName);
-      console.log(type);
-      switch (type)
-      {
-        case 'checkbox':
-          if (field.name.match(/\[]$/))
-          {
+        //console.log(tagName);
+        console.log(type);
+        switch (type)
+        {
+          case 'checkbox':
+            if (field.name.match(/\[]$/))
+            {
+              el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+            }
+            else
+            {
+              el.attr('checked', 'checked');
+            }
+            break;
+          case 'radio':
             el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-          }
-          else
-          {
-            el.attr('checked', 'checked');
-          }
-          break;
-        case 'radio':
-          el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-          break;
-        default:
-          el.val(field.value);
-          break;
-      }
-    });
+            break;
+          default:
+            el.val(field.value);
+            break;
+        }
+      });
+    }
   }
 
   <?php
@@ -1299,7 +1305,6 @@ $(document).on('page_ready', function() {
   //  a booking parameter is changed MRBS checks to see whether there would
   //  be any conflicts
   ?>
-  var form = $('#main');
 
   adjustSlotSelectors();
 

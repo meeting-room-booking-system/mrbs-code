@@ -906,6 +906,7 @@ $form->setAttributes(array(
 $submit = new ElementInputSubmit();
 $submit->setAttributes(array(
     'formaction' => multisite('edit_entry.php'),
+    'name' => 'back_button',
     'value' => get_vocab('back')
   ));
 $form->addElement($submit);
