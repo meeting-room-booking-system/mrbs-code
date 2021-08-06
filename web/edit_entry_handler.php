@@ -354,7 +354,7 @@ if (get_area($room) != $area)
 }
 
 // Check that they're not trying to book multiple rooms when not allowed to
-if ((count($rooms) > 0) &&
+if ((count($rooms) > 1) &&
     $auth['only_admin_can_select_multiroom'] &&
     !is_book_admin($rooms))
 {
