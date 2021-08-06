@@ -10,7 +10,7 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
 
-function invalid_booking($message)
+function invalid_booking(string $message) : void
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
 
@@ -351,6 +351,14 @@ get_area_settings($area);  // Update the area settings
 if (get_area($room) != $area)
 {
   $room = get_default_room($area);
+}
+
+// Check that they're not trying to book multiple rooms when not allowed to
+if ((count($rooms) > 0) &&
+    $auth['only_admin_can_select_multiroom'] &&
+    !is_book_admin($rooms))
+{
+  invalid_booking(get_vocab('multiroom_not_allowed'));
 }
 
 // Check that they really are allowed to set $no_mail;
