@@ -1199,11 +1199,18 @@ $(document).on('page_ready', function() {
     var form_data = JSON.parse(sessionStorage.getItem('form_data'));
 
     $.each(form_data, function (index, field) {
+      <?php // Don't change the CSRF token - the form will have its own one. ?>
+      if (field.name == 'csrf_token')
+      {
+        return;
+      }
       console.log("Each");
       console.log(field.name);
       console.log(field.value);
       var el = $('[name="' + field.name + '"]'),
+      //    tagName = el.prop('tagName'),
           type = el.attr('type');
+      //console.log(tagName);
       console.log(type);
       switch (type)
       {
