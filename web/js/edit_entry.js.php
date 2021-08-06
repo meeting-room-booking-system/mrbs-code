@@ -1195,13 +1195,19 @@ $(document).on('page_ready', function() {
 
   var form = $('#main');
 
+  <?php
+  // If we've got back here from edit_entry_handler.php then repopulate the form
+  // with the original data.
+  ?>
   if (form.data('back'))
   {
     var storedData = sessionStorage.getItem('form_data');
     if (storedData)
     {
-      var form_data = JSON.parse(sessionStorage.getItem('form_data'));
+      var form_data = JSON.parse(storedData);
+      var selects = {};
 
+      <?php // Iterate through the form data ?>
       $.each(form_data, function (index, field)
       {
         <?php // Don't change the CSRF token - the form will have its own one. ?>
@@ -1209,34 +1215,56 @@ $(document).on('page_ready', function() {
         {
           return;
         }
-        console.log("Each");
-        console.log(field.name);
-        console.log(field.value);
+
         var el = $('[name="' + field.name + '"]'),
-          //    tagName = el.prop('tagName'),
-          type = el.attr('type');
-        //console.log(tagName);
-        console.log(type);
-        switch (type)
+            tagName = el.prop('tagName'),
+            type;
+
+        <?php
+        // If it's a select element then these can be multi-valued.  If we just do
+        // el.val() for each one it will change the value each time, rather than adding
+        // another one.  So instead we need to assemble an array of values and do a single
+        // el.val() at the end.
+        ?>
+        if (tagName.toLowerCase() === 'select')
         {
-          case 'checkbox':
-            if (field.name.match(/\[]$/))
-            {
+          if (!selects[field.name])
+          {
+            selects[field.name] = []
+          }
+          selects[field.name].push(field.value);
+        }
+        <?php // Otherwise we can just process them as they come ?>
+        else
+        {
+          type = el.attr('type');
+          switch (type)
+          {
+            case 'checkbox':
+              <?php // If the name ends in '[]' it's an array and needs to be handled differently ?>
+              if (field.name.match(/\[]$/))
+              {
+                el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+              }
+              else
+              {
+                el.attr('checked', 'checked');
+              }
+              break;
+            case 'radio':
               el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-            }
-            else
-            {
-              el.attr('checked', 'checked');
-            }
-            break;
-          case 'radio':
-            el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-            break;
-          default:
-            el.val(field.value);
-            break;
+              break;
+            default:
+              el.val(field.value);
+              break;
+          }
         }
       });
+      <?php // Now assign values to the selects ?>
+      for (const property in selects)
+      {
+        $('[name="' + property + '"]').val(selects[property]);
+      }
     }
   }
 
@@ -1350,27 +1378,30 @@ $(document).on('page_ready', function() {
     $(this).closest('form').data('submit', trigger);
   });
 
-  form.on('submit', function() {
-      console.log("Submit");
-      var result = true;
-      if ($(this).data('submit') === 'save_button')
+  form.on('submit', function()
+  {
+    var result = true;
+    if ($(this).data('submit') === 'save_button')
+    {
+      <?php // Only validate the form if the Save button was pressed ?>
+      result = validate($(this));
+      if (!result)
       {
-        <?php // Only validate the form if the Save button was pressed ?>
-        result = validate($(this));
-        if (!result)
-        {
-          <?php // Clear the data flag if the validation failed ?>
-          $(this).removeData('submit');
-        }
+        <?php // Clear the data flag if the validation failed ?>
+        $(this).removeData('submit');
       }
-      if (result)
-      {
-        sessionStorage.setItem('form_data', JSON.stringify($(this).serializeArray()));
-        console.log("Storing");
-        console.log($(this).serializeArray());
-      }
-      return result;
-    });
+    }
+    <?php
+    // If we're OK to submit then store the form data in session storage so that
+    // we can repopulate the form if there's an error and we need to come back to
+    // the form from edit_entry_handler.php.
+    ?>
+    if (result)
+    {
+      sessionStorage.setItem('form_data', JSON.stringify($(this).serializeArray()));
+    }
+    return result;
+  });
 
   <?php
   // Add a change event handler to each of the form fields - except for those that
