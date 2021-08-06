@@ -1265,6 +1265,18 @@ $(document).on('page_ready', function() {
       {
         $('[name="' + property + '"]').val(selects[property]);
       }
+      <?php // Fix up the datalists so that the correct value is displayed ?>
+      form.find('datalist').each(function() {
+        <?php
+        // Datalists in MRBS have the structure
+        //   <input type="text">
+        //   <input type="hidden" name="xxx">
+        //   <datalist>
+        // and we want to copy the value from the hidden input to the visible one
+        ?>
+        var prev = $(this).prev();
+        prev.prev().val(prev.val());
+      });
     }
   }
 
