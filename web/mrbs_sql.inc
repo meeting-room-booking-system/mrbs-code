@@ -59,7 +59,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
   get_area_settings(get_area($room_id));
 
   // Select any meetings which overlap for this room:
-  $sql = "SELECT E.id, name, start_time, create_by, status, room_name
+  $sql = "SELECT E.id, name, start_time, end_time, create_by, status, room_name
             FROM " . _tbl('entry') . " E, " . _tbl('room') . " R
            WHERE E.room_id=R.id
              AND start_time < ?
@@ -97,18 +97,34 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
   while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
-    $starts = getdate($row['start_time']);
+    $start_date = getdate($row['start_time']);
+    $end_date = getdate($row['end_time']);
+    $different_dates = ( $start_date['year'] != $end_date['year'] ||
+                         $start_date['yday'] != $end_date['yday']);
 
     if ($enable_periods)
     {
-      $p_num =$starts['minutes'];
-      $startstr = utf8_strftime($strftime_format['date'] . ", ",
-                                $row['start_time']) . htmlspecialchars($periods[$p_num]);
-    }
-    else
-    {
-      $startstr = utf8_strftime(($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'],
-                                $row['start_time']);
+      $p_num = $start_date['minutes'];
+      $p_end_num = $end_date['minutes'] - 1;
+      if ($different_dates) {
+        $timestr = utf8_strftime($strftime_format['date'] . ", ", $row['start_time']) .
+                   htmlspecialchars($periods[$p_num]) . " - " .
+                   utf8_strftime($strftime_format['date'] . ", ", $row['end_time']) .
+                   htmlspecialchars($periods[$p_end_num]);
+      } else {
+        $timestr = htmlspecialchars($periods[$p_num]);
+        if ($p_num != $p_end_num) {
+            $timestr .= " - " . htmlspecialchars($periods[$p_end_num]);
+        }
+      }
+    } else {
+      if ($different_dates) {
+        $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
+      } else {
+        $date_format = ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
+      }
+      $timestr = utf8_strftime($date_format, $row['start_time']) . " - " .
+                 utf8_strftime($date_format, $row['end_time']);
     }
 
     if (is_private_event($row['private']) &&
@@ -129,7 +145,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
     $err[] = '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
              htmlspecialchars($row['name']) . '</a>' .
-             ' (' . $startstr . ', ' . htmlspecialchars($row['room_name']) . ') ' .
+             ' (' . $timestr . ', ' . htmlspecialchars($row['room_name']) . ') ' .
              '<span>(' .
              '<a href="' . htmlspecialchars(multisite("index.php?view=day&$query")) . '">' . get_vocab('viewday') . '</a> | ' .
              '<a href="' . htmlspecialchars(multisite("index.php?view=week&$query")) . '">' . get_vocab('viewweek') . '</a> | ' .
