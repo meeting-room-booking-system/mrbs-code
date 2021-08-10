@@ -107,15 +107,16 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
       $p_num = $start_date['minutes'];
       $p_end_num = $end_date['minutes'] - 1;
       if ($different_dates) {
-        $timestr = utf8_strftime($strftime_format['date'] . ", ", $row['start_time']) .
-                   htmlspecialchars($periods[$p_num]) . " - " .
-                   utf8_strftime($strftime_format['date'] . ", ", $row['end_time']) .
-                   htmlspecialchars($periods[$p_end_num]);
+        $timestr = htmlspecialchars($periods[$p_num]) . ", " .
+                   utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
+                   htmlspecialchars($periods[$p_end_num]) . ", " .
+                   utf8_strftime($strftime_format['date'], $row['end_time']);
       } else {
         $timestr = htmlspecialchars($periods[$p_num]);
         if ($p_num != $p_end_num) {
             $timestr .= " - " . htmlspecialchars($periods[$p_end_num]);
         }
+        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
       }
     } else {
       if ($different_dates) {
@@ -125,6 +126,9 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
       }
       $timestr = utf8_strftime($date_format, $row['start_time']) . " - " .
                  utf8_strftime($date_format, $row['end_time']);
+      if (!$different_dates) {
+        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
+      }
     }
 
     if (is_private_event($row['private']) &&
