@@ -1285,15 +1285,6 @@ $(document).on('page_ready', function() {
   var form = $('#main');
 
   <?php
-  // If we've got back here from edit_entry_handler.php then repopulate the form
-  // with the original data.
-  ?>
-  if (form.data('back'))
-  {
-    populateFromSessionStorage(form);
-  }
-
-  <?php
   // If there's only one enabled area in the database there won't be an area
   // select input, so we'll have to create a dummy input because the code
   // relies on it.
@@ -1351,6 +1342,17 @@ $(document).on('page_ready', function() {
   $('input[name="all_day"]').on('click', function() {
       onAllDayClick();
     });
+
+  <?php
+  // If we've got back here from edit_entry_handler.php then repopulate the form
+  // with the original data.
+  ?>
+  if (form.data('back'))
+  {
+    populateFromSessionStorage(form);
+    // We now need to get the right rooms displayed for the area
+    areaSelect.trigger('change');
+  }
 
   <?php
   // (1) Adjust the slot selectors
