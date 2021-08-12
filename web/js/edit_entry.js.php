@@ -1188,6 +1188,95 @@ var editEntryVisChanged = function editEntryVisChanged() {
   };
 
 
+function populateFromSessionStorage(form)
+{
+  var storedData = sessionStorage.getItem('form_data');
+  if (storedData)
+  {
+    var form_data = JSON.parse(storedData);
+    var selects = {};
+
+    <?php // Iterate through the form data ?>
+    $.each(form_data, function (index, field)
+    {
+      <?php // Don't change the CSRF token - the form will have its own one. ?>
+      if (field.name === 'csrf_token')
+      {
+        return;
+      }
+
+      var el = $('[name="' + field.name + '"]'),
+        tagName = el.prop('tagName'),
+        type;
+
+      <?php
+      // If it's a select element then these can be multi-valued.  If we just do
+      // el.val() for each one it will change the value each time, rather than adding
+      // another one.  So instead we need to assemble an array of values and do a single
+      // el.val() at the end.
+      ?>
+      if (tagName.toLowerCase() === 'select')
+      {
+        if (!selects[field.name])
+        {
+          selects[field.name] = []
+        }
+        selects[field.name].push(field.value);
+      }
+      <?php // Otherwise we can just process them as they come ?>
+      else
+      {
+        type = el.attr('type');
+        switch (type)
+        {
+          case 'checkbox':
+          <?php // If the name ends in '[]' it's an array and needs to be handled differently ?>
+            if (field.name.match(/\[]$/))
+            {
+              el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+            }
+            else
+            {
+              el.attr('checked', 'checked');
+            }
+            break;
+          case 'radio':
+            el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+            break;
+          default:
+            el.val(field.value);
+            break;
+        }
+      }
+    });
+    <?php // Now assign values to the selects ?>
+    for (const property in selects)
+    {
+      $('[name="' + property + '"]').val(selects[property]);
+    }
+    <?php // Fix up the datalists so that the correct value is displayed ?>
+    form.find('datalist').each(function() {
+      <?php
+      // Datalists in MRBS have the structure
+      //   <input type="text" list="yyy">
+      //   <input type="hidden" name="xxx">
+      //   <datalist id="yyy">
+      // and we want to copy the value from the hidden input to the visible one
+      ?>
+      var prev1 = $(this).prev();
+      var prev2 = prev1.prev();
+      if ($(this).attr('id') === prev2.attr('list'))
+      {
+        prev2.val(prev1.val());
+      }
+      else
+      {
+        console.warn("Something has gone wrong - maybe the MRBS datalist structure has changed.")
+      }
+    });
+  }
+}
+
 
 $(document).on('page_ready', function() {
 
@@ -1201,91 +1290,7 @@ $(document).on('page_ready', function() {
   ?>
   if (form.data('back'))
   {
-    var storedData = sessionStorage.getItem('form_data');
-    if (storedData)
-    {
-      var form_data = JSON.parse(storedData);
-      var selects = {};
-
-      <?php // Iterate through the form data ?>
-      $.each(form_data, function (index, field)
-      {
-        <?php // Don't change the CSRF token - the form will have its own one. ?>
-        if (field.name === 'csrf_token')
-        {
-          return;
-        }
-
-        var el = $('[name="' + field.name + '"]'),
-            tagName = el.prop('tagName'),
-            type;
-
-        <?php
-        // If it's a select element then these can be multi-valued.  If we just do
-        // el.val() for each one it will change the value each time, rather than adding
-        // another one.  So instead we need to assemble an array of values and do a single
-        // el.val() at the end.
-        ?>
-        if (tagName.toLowerCase() === 'select')
-        {
-          if (!selects[field.name])
-          {
-            selects[field.name] = []
-          }
-          selects[field.name].push(field.value);
-        }
-        <?php // Otherwise we can just process them as they come ?>
-        else
-        {
-          type = el.attr('type');
-          switch (type)
-          {
-            case 'checkbox':
-              <?php // If the name ends in '[]' it's an array and needs to be handled differently ?>
-              if (field.name.match(/\[]$/))
-              {
-                el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-              }
-              else
-              {
-                el.attr('checked', 'checked');
-              }
-              break;
-            case 'radio':
-              el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
-              break;
-            default:
-              el.val(field.value);
-              break;
-          }
-        }
-      });
-      <?php // Now assign values to the selects ?>
-      for (const property in selects)
-      {
-        $('[name="' + property + '"]').val(selects[property]);
-      }
-      <?php // Fix up the datalists so that the correct value is displayed ?>
-      form.find('datalist').each(function() {
-        <?php
-        // Datalists in MRBS have the structure
-        //   <input type="text" list="yyy">
-        //   <input type="hidden" name="xxx">
-        //   <datalist id="yyy">
-        // and we want to copy the value from the hidden input to the visible one
-        ?>
-        var prev1 = $(this).prev();
-        var prev2 = prev1.prev();
-        if ($(this).attr('id') === prev2.attr('list'))
-        {
-          prev2.val(prev1.val());
-        }
-        else
-        {
-          console.warn("Something has gone wrong - maybe the MRBS datalist structure has changed.")
-        }
-      });
-    }
+    populateFromSessionStorage(form);
   }
 
   <?php
