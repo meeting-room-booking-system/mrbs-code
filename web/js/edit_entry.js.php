@@ -1194,9 +1194,23 @@ function populateFromSessionStorage(form)
   if (storedData)
   {
     var form_data = JSON.parse(storedData);
+
+    <?php
+    // Before we populate the form we have to set the area select to the correct
+    // area and then change selects that depend on it, eg the room selects.
+    ?>
+    $.each(form_data, function (index, field)
+    {
+      if (field.name === 'area')
+      {
+        $('#area').val(field.value).trigger('change');
+        return false;  // We've found the area field so we can stop.
+      }
+    });
+
+    <?php // Now iterate through the data again and populate the form ?>
     var selects = {};
 
-    <?php // Iterate through the form data ?>
     $.each(form_data, function (index, field)
     {
       <?php // Don't change the CSRF token - the form will have its own one. ?>
@@ -1350,8 +1364,6 @@ $(document).on('page_ready', function() {
   if (form.data('back'))
   {
     populateFromSessionStorage(form);
-    // We now need to get the right rooms displayed for the area
-    areaSelect.trigger('change');
   }
 
   <?php
