@@ -504,7 +504,10 @@ function get_n_time_slots() : int
   {
     $end_last += SECONDS_PER_DAY;
   }
-  return ($end_last - $start_first)/$resolution;
+
+  // Force the result to be an int.  It normally will be, but might not be if, say,
+  // $force_resolution is set.
+  return intval(($end_last - $start_first)/$resolution);
 }
 
 
