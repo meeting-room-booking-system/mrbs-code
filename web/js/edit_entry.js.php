@@ -1266,7 +1266,7 @@ function populateFromSessionStorage(form)
     <?php // Now assign values to the selects ?>
     for (const property in selects)
     {
-      $('[name="' + property + '"]').val(selects[property]);
+      $('[name="' + property + '"]').val(selects[property]).change();
     }
     <?php // Fix up the datalists so that the correct value is displayed ?>
     form.find('datalist').each(function() {
