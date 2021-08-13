@@ -10,7 +10,7 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
 
-function invalid_booking($message)
+function invalid_booking(string $message) : void
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
 
@@ -881,7 +881,7 @@ else
   if (!empty($result['violations']['errors']))
   {
     echo "<p>\n";
-    echo get_vocab("rules_broken") . ":\n";
+    echo get_vocab("rules_broken") . "\n";
     echo "</p>\n";
     echo "<ul>\n";
     foreach ($result['violations']['errors'] as $rule)

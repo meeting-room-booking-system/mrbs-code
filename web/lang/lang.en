@@ -139,6 +139,7 @@ $vocab["invalid_rep_interval"]     = "The repeat interval must be greater than z
 $vocab["confirm_rep_end_date"]     = "It looks like you may have forgotten to set the repeat " .
                                      "end date. Do you want to continue anyway?";
 $vocab["type_reserved_for_admins"] = "The type '%s' is reserved for administrators";
+$vocab["multiroom_not_allowed"]    = "You are not allowed to make a booking for multiple rooms.";
 $vocab["edit_entry_nonexistent_room"] = "You are trying to create or edit an entry for a room " .
                                         "that doesn't exist.  This might be because you are using " .
                                         "a bookmark that is no longer valid. It is not generally " .

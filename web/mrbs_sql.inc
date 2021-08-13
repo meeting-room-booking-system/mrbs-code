@@ -1922,7 +1922,7 @@ function update_participants($old_id, $new_id)
 function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
-  global $prevent_simultaneous_bookings;
+  global $prevent_simultaneous_bookings, $auth;
 
   // All the data, except for the status and room id, will be common
   // across the bookings
@@ -1990,13 +1990,14 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
   $skip_lists = array();    // Holds a 2D array of bookings to skip past.  Indexed
                             // by room id and start time
 
-  // Do the simple check for simultaneous bookings: if there is more than one booking
-  // then this is going to result in a simultaneous booking.  The only question is whether
-  // this a notice or an error.  If the user is an ordinary user in more than one of
-  // the rooms, then it's an error, otherwise a notice.
+  // Do the simple check for simultaneous bookings and or selection of multiple rooms: if
+  // there is more than one booking then this is going to result in a simultaneous booking.
+  // The only question is whether this a notice or an error.  If the user is an ordinary user
+  // in more than one of the rooms, then it's an error, otherwise a notice.
   // The policy check later on will check whether the booking is at the same time as
   // any other bookings made by this user.
-  if ($prevent_simultaneous_bookings && (count($bookings) > 1))
+  if (($prevent_simultaneous_bookings || $auth['only_admin_can_select_multiroom'])
+      && (count($bookings) > 1))
   {
     $violation_status = 'notices';
     $non_admin_rooms = 0;
@@ -2013,7 +2014,14 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
         }
       }
     }
-    $violations[$violation_status][] = get_vocab('no_simultaneous_bookings');
+    if ($prevent_simultaneous_bookings)
+    {
+      $violations[$violation_status][] = get_vocab('no_simultaneous_bookings');
+    }
+    if ($auth['only_admin_can_select_multiroom'])
+    {
+      $violations[$violation_status][] = get_vocab('multiroom_not_allowed');
+    }
   }
 
   // Check for any schedule conflicts in each room we're going to try and

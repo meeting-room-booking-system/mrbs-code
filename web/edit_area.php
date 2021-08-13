@@ -89,7 +89,7 @@ function get_fieldset_errors(array $errors)
 
 function get_fieldset_general(Area $area)
 {
-  global $timezone, $auth;
+  global $timezone, $auth, $booking_types;
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('general_settings'));
@@ -144,11 +144,14 @@ function get_fieldset_general(Area $area)
   $fieldset->addElement($field);
 
   // Default type
-  $field = new FieldSelect();
-  $field->setLabel(get_vocab('default_type'))
-        ->setControlAttribute('name', 'area_default_type')
-        ->addSelectOptions(get_type_options(), $area->default_type, true);
-  $fieldset->addElement($field);
+  if (isset($booking_types) && (count($booking_types) > 1))
+  {
+    $field = new FieldSelect();
+    $field->setLabel(get_vocab('default_type'))
+      ->setControlAttribute('name', 'area_default_type')
+      ->addSelectOptions(get_type_options(), $area->default_type, true);
+    $fieldset->addElement($field);
+  }
 
   // Status - Enabled or Disabled
   $options = array('0' => get_vocab('enabled'),
