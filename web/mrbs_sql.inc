@@ -139,9 +139,9 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
     }
 
     // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $vars = array('year'  => $starts['year'],
-                  'month' => $starts['mon'],
-                  'day'   => $starts['mday'],
+    $vars = array('year'  => $start_date['year'],
+                  'month' => $start_date['mon'],
+                  'day'   => $start_date['mday'],
                   'area'  => $area,
                   'room'  => $room_id);
 
@@ -149,7 +149,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
     $err[] = '<a href="' . htmlspecialchars(multisite('view_entry.php?id=' . $row['id'])) . '">' .
              htmlspecialchars($row['name']) . '</a>' .
-             ' (' . $timestr . ', ' . htmlspecialchars($row['room_name']) . ') ' .
+             ' (' . htmlspecialchars($timestr) . ', ' . htmlspecialchars($row['room_name']) . ') ' .
              '<span>(' .
              '<a href="' . htmlspecialchars(multisite("index.php?view=day&$query")) . '">' . get_vocab('viewday') . '</a> | ' .
              '<a href="' . htmlspecialchars(multisite("index.php?view=week&$query")) . '">' . get_vocab('viewweek') . '</a> | ' .
