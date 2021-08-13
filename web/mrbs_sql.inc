@@ -107,14 +107,14 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
       $p_num = $start_date['minutes'];
       $p_end_num = $end_date['minutes'] - 1;
       if ($different_dates) {
-        $timestr = htmlspecialchars($periods[$p_num]) . ", " .
+        $timestr = $periods[$p_num] . ", " .
                    utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
-                   htmlspecialchars($periods[$p_end_num]) . ", " .
+                   $periods[$p_end_num] . ", " .
                    utf8_strftime($strftime_format['date'], $row['end_time']);
       } else {
-        $timestr = htmlspecialchars($periods[$p_num]);
+        $timestr = $periods[$p_num];
         if ($p_num != $p_end_num) {
-            $timestr .= " - " . htmlspecialchars($periods[$p_end_num]);
+            $timestr .= " - " . $periods[$p_end_num];
         }
         $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
       }
