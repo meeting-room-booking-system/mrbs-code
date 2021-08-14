@@ -200,19 +200,11 @@ External authentication programs
 +------------------+------------------+-----------------+-------------------+
 |Program           |Description       |Pros             |Cons               |
 +------------------+------------------+-----------------+-------------------+
-|badpw.pl          |Perl script with  |                 |                   |
+|crypt_passwd.pl   |Perl script which | - Easy to setup | - Relies upon a   |
+|                  |reads a 'shadow'  |                 | special users     |
+|                  |style file with   |                 | file.             |
 |                  |usernames and     |                 |                   |
-|                  |passwords hard    |  - Very simple  |  - No security at |
-|                  |coded in.         |  to setup.      |  all.             |
-|                  |Not for use this  |                 |                   |
-|                  |in a production   |                 |                   |
-|                  |environment - it's|                 |                   |
-|                  |just to           |                 |                   |
-|                  |demonstrate.      |                 |                   |
-+------------------+------------------+-----------------+-------------------+
-|crypt_passwd.pl   |Idem, but with    |                 |                   |
-|                  |passwords         |                 |                   |
-|                  |encrypted.        |                 |                   |
+|                  |crypted passwords.|                 |                   |
 +------------------+------------------+-----------------+-------------------+
 |auth_pam.pl       |Uses PAM          |                 |                   |
 |                  |                  |                 |                   |
@@ -891,44 +883,13 @@ External Authentication Programs Configuration
 ==============================================
 
 
-Perl password list
-------------------
-
-"badpw.pl" is a short piece of Perl, which can quickly be used to demonstrate
-how the "ext" authentication provider works.
-
-It has usernames and passwords hard coded. I don't expect anyone to use this in
-a production environment - it's just to demonstrate.
-
-In the config.inc.php file authentication section, set:
-
-# Authentication settings - read AUTHENTICATION
-
-$auth["type"] = "ext";
-$auth["prog"] = "./badpw.pl";
-$auth["params"] = "#USERNAME# #PASSWORD#";
-
-NOTE: The last line are parameters that will get passed to the 'badpw.pl'
-script. At runtime "#USERNAME#" and "#PASSWORD" will get replaced with the
-username and password that the user entered to login.
-
-NOTE: Under Unix, make sure badpw.pl has execution rights: 'chmod +x badpw.pl'
-
-Once you have changed this then look at the /mrbs/ page through your browser.
-When you click one of the (+) buttons, you will be asked for a username and
-password. Check badpw.pl for the valid combinations.
-
-To try out an "admin" user, add an appropriate username to the section that
-says:
-
-$auth["admin"][] = "....";
-
-
 Encrypted password authentication
 -------------------------------
 
-crypt_passwd.pl is like the badpw.pl method above but uses a file containing
-usernames and their encrypted passwords
+crypt_passwd.pl is is a short Perl script, which can be used to demonstrate
+how the "ext" authentication provider works.
+
+It utilises uses a file containing usernames and their encrypted passwords.
 
 config.inc.php should be changed to have a section that reads something like:
 
