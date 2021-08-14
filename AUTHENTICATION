@@ -886,7 +886,7 @@ External Authentication Programs Configuration
 Encrypted password authentication
 -------------------------------
 
-crypt_passwd.pl is is a short Perl script, which can be used to demonstrate
+crypt_passwd.pl is a short Perl script, which can be used to demonstrate
 how the "ext" authentication provider works.
 
 It utilises uses a file containing usernames and their encrypted passwords.
