@@ -1351,6 +1351,18 @@ $smtp_settings['secure'] = '';         // Encryption method: '', 'tls' or 'ssl' 
                                        // set to true.
 $smtp_settings['username'] = '';       // Username (if using authentication)
 $smtp_settings['password'] = '';       // Password (if using authentication)
+
+// The hostname to use in the Message-ID header and as default HELO string.
+// If empty, PHPMailer attempts to find one with, in order,
+// $_SERVER['SERVER_NAME'], gethostname(), php_uname('n'), or the value
+// 'localhost.localdomain'.
+$smtp_settings['hostname'] = '';
+
+// The SMTP HELO/EHLO name used for the SMTP connection.
+// Default is $smtp_settings['hostname']. If $smtp_settings['hostname'] is empty, PHPMailer attempts to find
+// one with the same method described above for $smtp_settings['hostname'].
+$smtp_settings['helo'] = '';
+
 $smtp_settings['disable_opportunistic_tls'] = false; // Set this to true to disable
                                                      // opportunistic TLS
                                                      // https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting#opportunistic-tls
