@@ -593,7 +593,7 @@ $vocab["type.I"]            = "Internt";
 $vocab["type.E"]            = "Externt";
 
 // General
-$vocab["fatal_db_error"]        = "Allvarligt fel: MRBS har råkat ut för ett allvarligt fel!";
+$vocab["fatal_error"]           = "Allvarligt fel: MRBS har råkat ut för ett allvarligt fel!";
 $vocab["fatal_db_error"]        = "Allvarligt fel: Tyvärr är databasen inte tillgänglig för tillfället.";
 $vocab["fatal_no_tables"]       = "Allvarligt fel: MRBS databastabeller saknas eller går inte att nå.";
 $vocab["session_expired"]       = "Your session has expired.";
