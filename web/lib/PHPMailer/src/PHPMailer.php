@@ -103,14 +103,14 @@ class PHPMailer
      *
      * @var string
      */
-    public $From = 'root@localhost';
+    public $From = '';
 
     /**
      * The From name of the message.
      *
      * @var string
      */
-    public $FromName = 'Root User';
+    public $FromName = '';
 
     /**
      * The envelope sender of the message.
@@ -750,7 +750,7 @@ class PHPMailer
      *
      * @var string
      */
-    const VERSION = '6.5.0';
+    const VERSION = '6.5.1';
 
     /**
      * Error severity: message only, continue processing.
@@ -1194,23 +1194,25 @@ class PHPMailer
         if ($useimap && function_exists('imap_rfc822_parse_adrlist')) {
             //Use this built-in parser if it's available
             $list = imap_rfc822_parse_adrlist($addrstr, '');
-            // Clear any potential IMAP errors to get rid of notices begin thrown at end of script.
+            // Clear any potential IMAP errors to get rid of notices being thrown at end of script.
             imap_errors();
             foreach ($list as $address) {
                 if (
-                    ('.SYNTAX-ERROR.' !== $address->host) && static::validateAddress(
-                        $address->mailbox . '@' . $address->host
-                    )
+                    '.SYNTAX-ERROR.' !== $address->host &&
+                    static::validateAddress($address->mailbox . '@' . $address->host)
                 ) {
                     //Decode the name part if it's present and encoded
                     if (
                         property_exists($address, 'personal') &&
                         //Check for a Mbstring constant rather than using extension_loaded, which is sometimes disabled
                         defined('MB_CASE_UPPER') &&
-                        preg_match('/^=\?.*\?=$/', $address->personal)
+                        preg_match('/^=\?.*\?=$/s', $address->personal)
                     ) {
                         $origCharset = mb_internal_encoding();
                         mb_internal_encoding($charset);
+                        //Undo any RFC2047-encoded spaces-as-underscores
+                        $address->personal = str_replace('_', '=20', $address->personal);
+                        //Decode the name
                         $address->personal = mb_decode_mimeheader($address->personal);
                         mb_internal_encoding($origCharset);
                     }
@@ -1242,9 +1244,12 @@ class PHPMailer
                     if (static::validateAddress($email)) {
                         //Check for a Mbstring constant rather than using extension_loaded, which is sometimes disabled
                         //If this name is encoded, decode it
-                        if (defined('MB_CASE_UPPER') && preg_match('/^=\?.*\?=$/', $name)) {
+                        if (defined('MB_CASE_UPPER') && preg_match('/^=\?.*\?=$/s', $name)) {
                             $origCharset = mb_internal_encoding();
                             mb_internal_encoding($charset);
+                            //Undo any RFC2047-encoded spaces-as-underscores
+                            $name = str_replace('_', '=20', $name);
+                            //Decode the name
                             $name = mb_decode_mimeheader($name);
                             mb_internal_encoding($origCharset);
                         }
