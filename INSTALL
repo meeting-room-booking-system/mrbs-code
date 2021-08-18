@@ -190,7 +190,7 @@ entry.column_name tags:  you don't need to add a repeat.column_name tag.
 As an example, to add a field to the room table recording whether or not
 there is a coffee machine you would, in MySQL, add the column
 
-coffee_machine     tinyint(1)
+coffee_machine     tinyint
 
 to the room table and add the line
 

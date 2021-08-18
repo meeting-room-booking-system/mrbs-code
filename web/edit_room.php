@@ -53,7 +53,7 @@ require_once "mrbs_sql.inc";
 //
 // For example if you want to add a column specifying whether or not a room
 // has a coffee machine you could add a column to the room table called
-// 'coffee_machine' of type tinyint(1), in MySQL, or smallint in PostgreSQL.
+// 'coffee_machine' of type tinyint, in MySQL, or smallint in PostgreSQL.
 // Then in the config file you would add the line
 //
 // $vocab_override['en']['room.coffee_machine'] = "Coffee machine";  // or appropriate translation
