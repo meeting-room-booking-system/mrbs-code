@@ -124,7 +124,7 @@ $vocab["skip_conflicts"]     = "Hoppa över tidigare konflikter";
 $vocab["no_mail"]            = "Skicka inte ut e-post";
 $vocab["ctrl_click"]         = "Håll ner tangenten <I>Ctrl</I> och klicka för att välja mer än ett rum";
 $vocab["entryid"]            = "Boknings-ID ";
-$vocab["repeat_id"]          = "Repetions-ID "; 
+$vocab["repeat_id"]          = "Repetions-ID ";
 $vocab["brief_description"]  = "Kort beskrivning";
 $vocab["status"]             = "Status";
 $vocab["public"]             = "Offentlig";
@@ -206,7 +206,7 @@ $vocab["schedule"]           = "Schema";
 $vocab["policy"]             = "Regel";
 $vocab["too_many_entries"]   = "De valda inställningarna skapar för många bokningar.<br>V.g. använd andra inställningar!";
 $vocab["returncal"]          = "Återgå till kalendervy";
-$vocab["failed_to_acquire"]  = "Kunde ej få exklusiv databasåtkomst"; 
+$vocab["failed_to_acquire"]  = "Kunde ej få exklusiv databasåtkomst";
 $vocab["invalid_booking"]    = "Ogiltig bokning";
 $vocab["must_set_description"] = "Du måste ange en beskrivning för bokningen. Vänligen gå tillbaka och korrigera detta.";
 $vocab["no_rooms_selected"]      = "Du måste välja ett objekt";
@@ -594,7 +594,7 @@ $vocab["type.I"]            = "Internt";
 $vocab["type.E"]            = "Externt";
 
 // General
-$vocab["fatal_db_error"]        = "Allvarligt fel: MRBS har råkat ut för ett allvarligt fel!";
+$vocab["fatal_error"]           = "Allvarligt fel: MRBS har råkat ut för ett allvarligt fel!";
 $vocab["fatal_db_error"]        = "Allvarligt fel: Tyvärr är databasen inte tillgänglig för tillfället.";
 $vocab["fatal_no_tables"]       = "Allvarligt fel: MRBS databastabeller saknas eller går inte att nå.";
 $vocab["session_expired"]       = "Your session has expired.";
