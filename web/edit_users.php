@@ -216,7 +216,7 @@ function output_row($row)
         case 'timestamp':
           // Convert the SQL timestamp into a time value and back into a localised string and
           // put the UNIX timestamp in a span so that the JavaScript can sort it properly.
-          $unix_timestamp = strtotime($col_value);
+          $unix_timestamp = (isset($col_value)) ? strtotime($col_value) : 0;
           if (($unix_timestamp === false) || ($unix_timestamp < 0))
           {
             // To cater for timestamps before the start of the Unix Epoch

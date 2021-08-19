@@ -2522,6 +2522,10 @@ function get_field_entry_input($params)
         // Set a pattern as well as required to prevent a string of whitespace
         $field->setControlAttribute('pattern', REGEX_TEXT_POS);
       }
+      if ($params['field'] == 'entry.name')
+      {
+        $field->setControlAttribute('placeholder', 'Placeholder text');
+      }
     // Drop through
 
     case 'FieldTextarea':
