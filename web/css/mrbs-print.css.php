@@ -33,24 +33,17 @@ td.new a, a.new_booking img { display: none; }
 // redefine table and cell border colours so that they are visible in the print view
 // (in the screen view the boundaries are visible due to the different background colours)
 ?>
-table.dwm_main {
-  border-width: 1px;
-  border-color: <?php echo $main_table_border_color_print ?>;
-}
 
-.dwm_main :not(tbody) th {
-  border-left-color: <?php echo $main_table_header_border_color_print ?>;
+table.dwm_main {
+  border-width: 1px 0 1px 1px;
+  border-color: <?php echo $main_table_border_color_print ?>;
 }
 
 .dwm_main td,
 .dwm_main tbody th {
-  border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
-  border-left-color: <?php echo $main_table_body_v_border_color_print ?>;
+  box-shadow: 0 -1px 0 <?php echo $main_table_body_h_border_color_print ?>;
 }
 
-.dwm_main#month_main td {
-  border-top-color:  <?php echo $main_table_body_h_border_color_print ?>;
-}
 
 
 <?php
@@ -85,7 +78,7 @@ div.booking_list div {
 // and the colour key
 foreach ($color_types as $type => $col)
 {
-  echo "td.$type, div.$type {border: 2px solid $col}\n";
+  echo "div.$type a, div.$type {outline: 2px solid $col; outline-offset: -2px}\n";
 }
 
 // hide DataTable buttons in print

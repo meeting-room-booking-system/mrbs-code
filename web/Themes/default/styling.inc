@@ -40,10 +40,10 @@ $main_table_labels_back_color   = $header_back_color;     // background colour f
 $timeline_color                 = $header_back_color;
 
 // border colours for the main table when it is printed.     These are used by mrbs-print.css.php
-$main_table_border_color_print        = "#879AA8";    // border colour for the main table (print view)
-$main_table_header_border_color_print = "#879AA8";    // border colour for day/week/month tables - header (print view)
-$main_table_body_h_border_color_print = "#879AA8";    // border colour for day/week/month tables - body, horizontal (print view)
-$main_table_body_v_border_color_print = "#879AA8";    // border colour for day/week/month tables - body, vertical (print view)
+$main_table_border_color_print        = "#dddddd";    // border colour for the main table (print view)
+$main_table_header_border_color_print = "#dddddd";    // border colour for day/week/month tables - header (print view)
+$main_table_body_h_border_color_print = "#dddddd";    // border colour for day/week/month tables - body, horizontal (print view)
+$main_table_body_v_border_color_print = "#dddddd";    // border colour for day/week/month tables - body, vertical (print view)
 
 // font colours for the main table when it is printed
 $header_font_color_print        = "#0B263B";
