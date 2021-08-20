@@ -1188,10 +1188,115 @@ var editEntryVisChanged = function editEntryVisChanged() {
   };
 
 
+function populateFromSessionStorage(form)
+{
+  var storedData = sessionStorage.getItem('form_data');
+  if (storedData)
+  {
+    var form_data = JSON.parse(storedData);
+
+    <?php
+    // Before we populate the form we have to set the area select to the correct
+    // area and then change selects that depend on it, eg the room selects.
+    ?>
+    $.each(form_data, function (index, field)
+    {
+      if (field.name === 'area')
+      {
+        $('#area').val(field.value).trigger('change');
+        return false;  // We've found the area field so we can stop.
+      }
+    });
+
+    <?php // Now iterate through the data again and populate the form ?>
+    var selects = {};
+
+    $.each(form_data, function (index, field)
+    {
+      <?php // Don't change the CSRF token - the form will have its own one. ?>
+      if (field.name === 'csrf_token')
+      {
+        return;
+      }
+
+      var el = $('[name="' + field.name + '"]'),
+        tagName = el.prop('tagName'),
+        type;
+
+      <?php
+      // If it's a select element then these can be multi-valued.  If we just do
+      // el.val() for each one it will change the value each time, rather than adding
+      // another one.  So instead we need to assemble an array of values and do a single
+      // el.val() at the end.
+      ?>
+      if (tagName.toLowerCase() === 'select')
+      {
+        if (!selects[field.name])
+        {
+          selects[field.name] = []
+        }
+        selects[field.name].push(field.value);
+      }
+      <?php // Otherwise we can just process them as they come ?>
+      else
+      {
+        type = el.attr('type');
+        switch (type)
+        {
+          case 'checkbox':
+          <?php // If the name ends in '[]' it's an array and needs to be handled differently ?>
+            if (field.name.match(/\[]$/))
+            {
+              el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+            }
+            else
+            {
+              el.attr('checked', 'checked');
+            }
+            break;
+          case 'radio':
+            el.filter('[value="' + field.value + '"]').attr('checked', 'checked');
+            break;
+          default:
+            el.val(field.value);
+            break;
+        }
+      }
+    });
+    <?php // Now assign values to the selects ?>
+    for (const property in selects)
+    {
+      $('[name="' + property + '"]').val(selects[property]).change();
+    }
+    <?php // Fix up the datalists so that the correct value is displayed ?>
+    form.find('datalist').each(function() {
+      <?php
+      // Datalists in MRBS have the structure
+      //   <input type="text" list="yyy">
+      //   <input type="hidden" name="xxx">
+      //   <datalist id="yyy">
+      // and we want to copy the value from the hidden input to the visible one
+      ?>
+      var prev1 = $(this).prev();
+      var prev2 = prev1.prev();
+      if ($(this).attr('id') === prev2.attr('list'))
+      {
+        prev2.val(prev1.val());
+      }
+      else
+      {
+        console.warn("MRBS: something has gone wrong - maybe the MRBS datalist structure has changed.")
+      }
+    });
+  }
+}
+
 
 $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
+
+  var form = $('#main');
 
   <?php
   // If there's only one enabled area in the database there won't be an area
@@ -1253,12 +1358,20 @@ $(document).on('page_ready', function() {
     });
 
   <?php
+  // If we've got back here from edit_entry_handler.php then repopulate the form
+  // with the original data.
+  ?>
+  if (form.data('back'))
+  {
+    populateFromSessionStorage(form);
+  }
+
+  <?php
   // (1) Adjust the slot selectors
   // (2) Add some Ajax capabilities to the form (if we can) so that when
   //  a booking parameter is changed MRBS checks to see whether there would
   //  be any conflicts
   ?>
-  var form = $('#main');
 
   adjustSlotSelectors();
 
@@ -1304,20 +1417,30 @@ $(document).on('page_ready', function() {
     $(this).closest('form').data('submit', trigger);
   });
 
-  form.on('submit', function() {
-      var result = true;
-      if ($(this).data('submit') === 'save_button')
+  form.on('submit', function()
+  {
+    var result = true;
+    if ($(this).data('submit') === 'save_button')
+    {
+      <?php // Only validate the form if the Save button was pressed ?>
+      result = validate($(this));
+      if (!result)
       {
-        <?php // Only validate the form if the Save button was pressed ?>
-        result = validate($(this));
-        if (!result)
-        {
-          <?php // Clear the data flag if the validation failed ?>
-          $(this).removeData('submit');
-        }
+        <?php // Clear the data flag if the validation failed ?>
+        $(this).removeData('submit');
       }
-      return result;
-    });
+    }
+    <?php
+    // If we're OK to submit then store the form data in session storage so that
+    // we can repopulate the form if there's an error and we need to come back to
+    // the form from edit_entry_handler.php.
+    ?>
+    if (result)
+    {
+      sessionStorage.setItem('form_data', JSON.stringify($(this).serializeArray()));
+    }
+    return result;
+  });
 
   <?php
   // Add a change event handler to each of the form fields - except for those that
