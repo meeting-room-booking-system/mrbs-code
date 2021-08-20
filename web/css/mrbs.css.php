@@ -1793,7 +1793,7 @@ div#checks span {
   float: left;
 }
 
-.edit_entry_handler #submit_buttons form {
+.edit_entry_handler #submit_buttons form input {
   float: left;
   margin: 1em 2em 1em 0;
 }
