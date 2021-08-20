@@ -319,7 +319,7 @@ function url_get_contents($url, $if_modified_since=null)
 }
 
 
-function get_type_options($include_admin_types=false)
+function get_type_options(bool $include_admin_types) : array
 {
   global $booking_types, $auth;
 
