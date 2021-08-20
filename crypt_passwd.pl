@@ -49,7 +49,7 @@ while (<PASSWD>)
       if (crypt($password, $crypt) eq $crypt)
       {
         $retcode = 0;
-	last;
+        last;
       }
       else
       {

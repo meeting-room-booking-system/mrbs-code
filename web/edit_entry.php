@@ -497,16 +497,18 @@ function get_field_rooms($value, $disabled=false)
 
 function get_field_type($value, $disabled=false)
 {
-  global $booking_types, $is_mandatory_field;
-
-  // Don't bother with types if there's only one of them (or even none)
-  if (!isset($booking_types) || (count($booking_types) < 2))
-  {
-    return null;
-  }
+  global $is_mandatory_field;
 
   // Get the options
   $options = get_type_options(is_book_admin());
+
+  // Don't bother with types if there's only one of them (or even none)
+  // for the current user.
+  if (count($options) < 2)
+  {
+    return null;
+  }
+  
   // If it's a mandatory field add a blank option to force a selection
   if (!empty($is_mandatory_field['entry.type']))
   {

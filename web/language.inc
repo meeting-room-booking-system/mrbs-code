@@ -304,6 +304,7 @@ function get_mrbs_locale($header=null)
 
     // Convert it to BCP 47 format (eg convert 'en_US' to 'en-US')
     $locale = convert_to_BCP47($locale);
+    $have_locale = true;
   }
 
   return $locale;

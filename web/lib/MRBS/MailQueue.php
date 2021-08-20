@@ -179,6 +179,8 @@ class MailQueue
         $mail->SMTPSecure = $smtp_settings['secure'];
         $mail->Username = $smtp_settings['username'];
         $mail->Password = $smtp_settings['password'];
+        $mail->Hostname = $smtp_settings['hostname'];
+        $mail->Helo = $smtp_settings['helo'];
         if ($smtp_settings['disable_opportunistic_tls'])
         {
           $mail->SMTPAutoTLS = false;
