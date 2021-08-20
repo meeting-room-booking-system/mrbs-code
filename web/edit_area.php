@@ -144,12 +144,13 @@ function get_fieldset_general(Area $area)
   $fieldset->addElement($field);
 
   // Default type
-  if (isset($booking_types) && (count($booking_types) > 1))
+  $options = get_type_options();
+  if (count($options) > 0)
   {
     $field = new FieldSelect();
     $field->setLabel(get_vocab('default_type'))
-      ->setControlAttribute('name', 'area_default_type')
-      ->addSelectOptions(get_type_options(), $area->default_type, true);
+          ->setControlAttribute('name', 'area_default_type')
+          ->addSelectOptions($options, $area->default_type, true);
     $fieldset->addElement($field);
   }
 
