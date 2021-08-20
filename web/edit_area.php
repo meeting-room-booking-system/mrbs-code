@@ -144,7 +144,7 @@ function get_fieldset_general(Area $area)
   $fieldset->addElement($field);
 
   // Default type
-  $options = get_type_options();
+  $options = get_type_options(false);
   if (count($options) > 0)
   {
     $field = new FieldSelect();
