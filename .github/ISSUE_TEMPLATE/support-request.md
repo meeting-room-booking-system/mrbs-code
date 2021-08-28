@@ -16,6 +16,7 @@ A clear and concise description of the problem you're facing, or the question yo
  - Version [e.g. 22]
 
 **Server details (please complete the following information):**
+ - MRBS version [e.g. 1.9.4]
  - Web server: [e.g. Apache 2.4.48]
  - OS: [e.g. CentOS 7.9]
  - PHP version: [e.g. 7.4.23]
