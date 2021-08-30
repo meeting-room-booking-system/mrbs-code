@@ -6,6 +6,20 @@ use \MRBS\User;
 
 abstract class Auth
 {
+  /* validateUser($user, $pass)
+   *
+   * Checks if the specified username/password pair are valid
+   *
+   * $user  - The user name
+   * $pass  - The password
+   *
+   * Returns:
+   *   false    - The pair are invalid or do not exist
+   *   string   - The validated username
+   */
+  abstract public function validateUser($user, $pass);
+
+
   public function getUser($username)
   {
     $user = new User($username);
