@@ -6,7 +6,21 @@ use \MRBS\User;
 
 abstract class Auth
 {
-  public function getUser(string $username) : ?User
+  /* validateUser($user, $pass)
+   *
+   * Checks if the specified username/password pair are valid
+   *
+   * $user  - The user name
+   * $pass  - The password
+   *
+   * Returns:
+   *   false    - The pair are invalid or do not exist
+   *   string   - The validated username
+   */
+  abstract public function validateUser($user, $pass);
+
+
+  public function getUser($username)
   {
     $user = new User($username);
     $user->display_name = $username;
@@ -18,21 +32,21 @@ abstract class Auth
 
 
   // Checks whether validation of a user by email address is possible and allowed.
-  public function canValidateByEmail() : bool
+  public function canValidateByEmail()
   {
     return false;
   }
 
 
   // Checks whether the method has a password reset facility
-  public function canResetPassword() : bool
+  public function canResetPassword()
   {
     return false;
   }
 
 
   // Checks whether the password by reset by supplying an email address
-  public function canResetByEmail() : bool
+  public function canResetByEmail()
   {
     return false;
   }
@@ -43,7 +57,7 @@ abstract class Auth
   // validation, but unfortunately JavaScript's native support for Unicode
   // pattern matching is very limited.   Would need to be implemented using
   // an add-in library).
-  public function validatePassword(string $password) : bool
+  public function validatePassword($password)
   {
     global $pwd_policy;
 
@@ -87,7 +101,7 @@ abstract class Auth
 
 
   // Gets the level from the $auth['admin'] array in the config file
-  protected function getDefaultLevel(string $username) : int
+  protected function getDefaultLevel($username)
   {
     global $auth;
 
@@ -115,7 +129,7 @@ abstract class Auth
 
 
   // Gets the default email address using config file settings
-  protected function getDefaultEmail(string $username) : string
+  protected function getDefaultEmail($username)
   {
     global $mail_settings;
 
@@ -152,7 +166,7 @@ abstract class Auth
 
   // Sorts an array of users indexed by 'username' and 'display_name', eg the
   // output of getUsernames().   Sorts by display_name then username.
-  protected static function sortUsers(array &$users) : void
+  protected static function sortUsers(array &$users)
   {
     // Obtain a list of columns
     $username     = array_column($users, 'username');
@@ -169,7 +183,7 @@ abstract class Auth
   // Check we've got the right session scheme for the type.
   // To be called for those authentication types which require the same
   // session scheme.
-  protected function checkSessionMatchesType() : void
+  protected function checkSessionMatchesType()
   {
     global $auth;
 
