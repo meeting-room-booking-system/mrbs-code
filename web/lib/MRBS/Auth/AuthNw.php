@@ -4,7 +4,7 @@ namespace MRBS\Auth;
 
 class AuthNw extends Auth
 {
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
@@ -15,7 +15,7 @@ class AuthNw extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     global $auth;
 

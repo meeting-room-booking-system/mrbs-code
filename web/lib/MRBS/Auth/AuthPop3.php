@@ -19,7 +19,7 @@ namespace MRBS\Auth;
 
 class AuthPop3 extends Auth
 {
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
@@ -30,7 +30,7 @@ class AuthPop3 extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     global $pop3_host, $pop3_port;
 
@@ -152,7 +152,7 @@ class AuthPop3 extends Auth
 
 
   // Checks whether validation of a user by email address is possible and allowed.
-  public function canValidateByEmail()
+  public function canValidateByEmail() : bool
   {
     return true;
   }

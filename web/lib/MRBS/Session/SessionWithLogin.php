@@ -9,6 +9,7 @@ use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
+use MRBS\User;
 
 
 // An abstract class for those session schemes that implement a login form
@@ -37,7 +38,7 @@ abstract class SessionWithLogin implements SessionInterface
   //
   //    $target_url   The URL to go to after successful login
   //    $returl       The URL to return to eventually
-  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
+  public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
     if (!isset($target_url))
     {
@@ -52,12 +53,12 @@ abstract class SessionWithLogin implements SessionInterface
   }
 
 
-  abstract public function getCurrentUser();
+  abstract public function getCurrentUser() : ?User;
 
 
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
   // Logon form.  Returns an array.
-  public function getLogonFormParams()
+  public function getLogonFormParams() : ?array
   {
     return array(
         'action' => \MRBS\multisite('admin.php'),
@@ -69,8 +70,9 @@ abstract class SessionWithLogin implements SessionInterface
 
 
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
-  // Logoff form.  Returns an array.
-  public function getLogoffFormParams()
+  // logoff form.  Returns an array of parameters, or null if no form is to be
+  // shown.
+  public function getLogoffFormParams() : ?array
   {
     return array(
         'action' => \MRBS\multisite('admin.php'),
@@ -83,7 +85,7 @@ abstract class SessionWithLogin implements SessionInterface
   }
 
 
-  public function processForm()
+  public function processForm() : void
   {
     if (isset($this->form['action']))
     {
@@ -134,7 +136,7 @@ abstract class SessionWithLogin implements SessionInterface
 
 
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
-  protected function getValidUser($username, $password)
+  protected function getValidUser(?string $username, ?string $password) : string
   {
     if (($valid_username = \MRBS\auth()->validateUser($this->form['username'], $this->form['password'])) === false)
     {
@@ -146,12 +148,12 @@ abstract class SessionWithLogin implements SessionInterface
   }
 
 
-  protected function logonUser($username)
+  protected function logonUser(string $username) : void
   {
   }
 
 
-  public function logoffUser()
+  public function logoffUser() : void
   {
   }
 
@@ -160,7 +162,7 @@ abstract class SessionWithLogin implements SessionInterface
   // Will eventually return to $target_url with query string returl=$returl
   // If $error is set then an $error is printed.
   // If $raw is true then the message is not HTML escaped
-  private function printLoginForm($action, $target_url, $returl, $error=null, $raw=false)
+  private function printLoginForm(string $action, ?string $target_url, ?string $returl, ?string $error=null, bool $raw=false) : void
   {
     $form = new Form();
     $form->setAttributes(array('class'  => 'standard',
@@ -242,7 +244,7 @@ abstract class SessionWithLogin implements SessionInterface
   // Check we've got the right authentication type for the session scheme.
   // To be called for those session schemes which require the same
   // authentication type
-  protected function checkTypeMatchesSession()
+  protected function checkTypeMatchesSession() : void
   {
     global $auth;
 

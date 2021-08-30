@@ -38,7 +38,7 @@ namespace MRBS\Auth;
 
 class AuthImapPhp extends Auth
 {
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
@@ -49,7 +49,7 @@ class AuthImapPhp extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     global $auth;
 
@@ -108,7 +108,7 @@ class AuthImapPhp extends Auth
 
 
   // Checks whether validation of a user by email address is possible and allowed.
-  public function canValidateByEmail()
+  public function canValidateByEmail() : bool
   {
     return true;
   }

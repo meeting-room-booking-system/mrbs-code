@@ -26,7 +26,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     global $auth;
 
@@ -47,7 +47,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  protected function logonUser($username)
+  protected function logonUser(string $username) : void
   {
     global $auth;
 
@@ -71,7 +71,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  public function logoffUser()
+  public function logoffUser() : void
   {
     // Delete cookie
     setcookie('SessionToken', '', time()-42000, self::$cookie_path);
@@ -79,7 +79,7 @@ class SessionCookie extends SessionWithLogin
 
 
   // Wrapper for setting cookies
-  public static function setCookie($name, $hash_algorithm, $secret, array $data, $expiry=0)
+  public static function setCookie(string $name, string $hash_algorithm, string $secret, array $data, int $expiry=0) : void
   {
     global $auth, $server;
 
@@ -104,7 +104,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  public static function getCookie($name, $hash_algorithm, $secret)
+  public static function getCookie(string $name, string $hash_algorithm, string $secret) : array
   {
     global $auth, $server;
 
@@ -175,7 +175,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  private static function getHash($algo, $data, $key)
+  private static function getHash(string $algo, string $data, string $key)
   {
     if (!function_exists('hash_hmac'))
     {
