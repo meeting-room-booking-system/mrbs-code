@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\User;
 use \phpCAS;
 use MRBS\Form\Form;
 
@@ -16,19 +17,19 @@ class SessionCas extends SessionWithLogin
   }
 
 
-  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
+  public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
     // Useless Method - CAS does it all
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     return (phpCAS::isAuthenticated()) ? \MRBS\auth()->getUser(phpCAS::getUser()) : null;
   }
 
 
-  public function getLogonFormParams()
+  public function getLogonFormParams() : ?array
   {
     $target_url = \MRBS\this_page(true);
 
@@ -41,7 +42,7 @@ class SessionCas extends SessionWithLogin
   }
 
 
-  public function processForm()
+  public function processForm() : void
   {
     if (isset($this->form['action']))
     {
@@ -68,7 +69,7 @@ class SessionCas extends SessionWithLogin
   }
 
 
-  public function logoffUser()
+  public function logoffUser() : void
   {
     phpCAS::logout();
   }
