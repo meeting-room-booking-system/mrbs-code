@@ -1,6 +1,7 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\User;
 
 // Uses PHP's built-in session handling
 
@@ -33,13 +34,13 @@ class SessionPhp extends SessionWithLogin
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     return (isset($_SESSION['user'])) ? $_SESSION['user'] : null;
   }
 
 
-  protected function logonUser($username)
+  protected function logonUser(string $username) : void
   {
     $user = \MRBS\auth()->getUser($username);
 
@@ -56,7 +57,7 @@ class SessionPhp extends SessionWithLogin
   }
 
 
-  public function logoffUser()
+  public function logoffUser() : void
   {
     // Unset the session variables
     session_unset();

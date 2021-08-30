@@ -16,7 +16,7 @@ class AuthCas extends Auth
 
 
   // Initialise CAS
-  public function init()
+  public function init() : void
   {
     global $auth;
 
@@ -93,13 +93,13 @@ class AuthCas extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     return (phpCAS::isAuthenticated()) ? $user : false;
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     $user = new User($username);
 
@@ -112,7 +112,7 @@ class AuthCas extends Auth
   }
 
 
-  private function hasRequiredAttributes()
+  private function hasRequiredAttributes() : bool
   {
     global $auth;
 

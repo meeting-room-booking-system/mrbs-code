@@ -434,7 +434,7 @@ class User extends Table
 
 
   // Gets the default email address for the user (null if one can't be found)
-  public static function getDefaultEmail($username) : ?string
+  public static function getDefaultEmail(?string $username) : ?string
   {
     global $mail_settings;
 
