@@ -17,10 +17,10 @@ abstract class Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  abstract public function validateUser($user, $pass);
+  abstract public function validateUser(?string $user, ?string $pass);
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     $user = new User($username);
     $user->display_name = $username;
@@ -32,21 +32,21 @@ abstract class Auth
 
 
   // Checks whether validation of a user by email address is possible and allowed.
-  public function canValidateByEmail()
+  public function canValidateByEmail() : bool
   {
     return false;
   }
 
 
   // Checks whether the method has a password reset facility
-  public function canResetPassword()
+  public function canResetPassword() : bool
   {
     return false;
   }
 
 
   // Checks whether the password by reset by supplying an email address
-  public function canResetByEmail()
+  public function canResetByEmail() : bool
   {
     return false;
   }
@@ -57,7 +57,7 @@ abstract class Auth
   // validation, but unfortunately JavaScript's native support for Unicode
   // pattern matching is very limited.   Would need to be implemented using
   // an add-in library).
-  public function validatePassword($password)
+  public function validatePassword(string $password) : bool
   {
     global $pwd_policy;
 
@@ -101,7 +101,7 @@ abstract class Auth
 
 
   // Gets the level from the $auth['admin'] array in the config file
-  protected function getDefaultLevel($username)
+  protected function getDefaultLevel(?string $username) : int
   {
     global $auth;
 
@@ -129,7 +129,7 @@ abstract class Auth
 
 
   // Gets the default email address using config file settings
-  protected function getDefaultEmail($username)
+  protected function getDefaultEmail(?string $username) : string
   {
     global $mail_settings;
 
@@ -166,7 +166,7 @@ abstract class Auth
 
   // Sorts an array of users indexed by 'username' and 'display_name', eg the
   // output of getUsernames().   Sorts by display_name then username.
-  protected static function sortUsers(array &$users)
+  protected static function sortUsers(array &$users) : void
   {
     // Obtain a list of columns
     $username     = array_column($users, 'username');
