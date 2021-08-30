@@ -64,7 +64,7 @@ class AuthDbExt extends Auth
   }
 
 
-  /* authValidateUser($user, $pass)
+  /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
