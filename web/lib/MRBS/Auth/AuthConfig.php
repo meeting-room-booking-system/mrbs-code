@@ -15,7 +15,7 @@ class AuthConfig extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(string $user, string $pass)
   {
     global $auth;
 
@@ -40,7 +40,7 @@ class AuthConfig extends Auth
 
 
   // Return an array of users, indexed by 'username' and 'display_name'
-  public function getUsernames()
+  public function getUsernames() : array
   {
     global $auth;
 

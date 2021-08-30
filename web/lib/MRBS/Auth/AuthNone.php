@@ -13,7 +13,7 @@ class AuthNone extends Auth
    * @param   string  $pass   The password
    * @return  string  $user   Always valid
    */
-  public function authValidateUser($user, $pass)
+  public function authValidateUser(string $user, string $pass)
   {
     return $user;
   }

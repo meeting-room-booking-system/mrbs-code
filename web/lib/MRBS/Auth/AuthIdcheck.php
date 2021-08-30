@@ -22,7 +22,7 @@ class AuthIdcheck extends AuthNone
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     global $server;
 
