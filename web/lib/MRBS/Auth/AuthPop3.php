@@ -30,7 +30,7 @@ class AuthPop3 extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser(string $user, string $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     global $pop3_host, $pop3_port;
 

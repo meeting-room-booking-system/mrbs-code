@@ -26,7 +26,7 @@ class AuthJoomla extends Auth
    *   false    - The pair are invalid or do not exist
    *   true     - The user has been validated and logged in
    */
-  public function validateUser(string $user, string $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     $mainframe = JFactory::getApplication('site');
 

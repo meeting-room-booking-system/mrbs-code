@@ -33,7 +33,7 @@ class AuthSaml extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser(string $user, string $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     $current_username = \MRBS\session()->getUsername();
 
