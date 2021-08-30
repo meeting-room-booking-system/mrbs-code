@@ -24,13 +24,13 @@ class AuthWordpress extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     return (is_wp_error(wp_authenticate($user, $pass))) ? false : $user;
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     $wp_user = get_user_by('login', $username);
 
@@ -51,14 +51,14 @@ class AuthWordpress extends Auth
   // Checks whether validation of a user by email address is possible and
   // allowed.  In the case of WordPress, wp_authenticate() accepts either
   // a username or email address and so this function always returns true.
-  public function canValidateByEmail()
+  public function canValidateByEmail() : bool
   {
     return true;
   }
 
 
   // Return an array of MRBS users, indexed by 'username' and 'display_name'
-  public function getUsernames()
+  public function getUsernames() : array
   {
     global $auth;
 
@@ -112,7 +112,7 @@ class AuthWordpress extends Auth
   }
 
 
-  private static function getUserLevel(\WP_User $wp_user)
+  private static function getUserLevel(\WP_User $wp_user) : int
   {
     global $auth;
 
@@ -160,7 +160,7 @@ class AuthWordpress extends Auth
 
   // Checks to see whether any of the user's roles are contained in $mrbs_roles, which can be a
   // string or an array of strings.
-  private static function check_roles(\WP_User $wp_user, $mrbs_roles)
+  private static function check_roles(\WP_User $wp_user, $mrbs_roles) : bool
   {
     if (!isset($mrbs_roles))
     {
@@ -179,7 +179,7 @@ class AuthWordpress extends Auth
 
   // Convert a WordPress role name to lowercase and replace spaces by underscores.
   // Example "MRBS Admin" -> "mrbs_admin"
-  private static function standardise_role_name($role)
+  private static function standardise_role_name(string $role) : string
   {
     return str_replace(' ', '_', \MRBS\utf8_strtolower($role));
   }

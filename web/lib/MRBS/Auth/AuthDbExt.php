@@ -75,7 +75,7 @@ class AuthDbExt extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     $retval = false;
 
@@ -150,7 +150,7 @@ class AuthDbExt extends Auth
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     global $auth;
 
@@ -232,7 +232,7 @@ class AuthDbExt extends Auth
 
 
   // Return an array of users, indexed by 'username' and 'display_name'
-  public function getUsernames()
+  public function getUsernames() : array
   {
     if (isset($this->column_name_display_name) && ($this->column_name_display_name !== ''))
     {

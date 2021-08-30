@@ -459,7 +459,7 @@ DB Authentication
 Authentication method, usable on the Internet.
 
 It works by storing the list of users in a new table called mrbs_users in
-the mrbs database.  The authentication is done by the module auth_db.inc.
+the mrbs database.  The authentication is done by the class \MRBS\Auth\AuthDb.
 Enable it by setting $auth["type"]="db" in config.inc.php.
 
 The list of users is displayed by clicking on the "Users" menu item in the
@@ -951,59 +951,47 @@ works on other systems ( eg. Solaris) is appreciated.
 Creating a new authentication scheme
 ====================================
 
-Authentication programs are responsible for validating user/password pairs.
+Authentication classes are responsible for validating user/password pairs.
 They must not attempt to communicate with the user.
 
 Adding support for a new authentication service not yet supported by MRBS can
 be done using one of the two following techniques:
 
-Using a PHP module
+Adding a PHP class
 ------------------
 
-You must create a new module called "auth_xxx.inc".
+You must create a new filed called "web/lib/MRBS/Auth/AuthXxx.php".
 
 It will be configured by setting in config.inc.php:
 
 $auth["type"] = "xxx";
 
-The "auth_xxx.inc" file needs to define the following functions:
+Underscores in the config variable need a CamelCase name.  For example
 
-+-------------------------+----------------------------+---------------------+
-|Function Name            |Description                 |Returns              |
-+-------------------------+----------------------------+---------------------+
-|authValidateUser($user,  |Checks if the specified     |0 = The pair is      |
-|$pass)                   |username/password pair are  |invalid or does not  |
-|                         |valid.                      |exist.               |
-|                         |                            |Non 0 = The pair is  |
-|                         |                            |valid                |
-+-------------------------+----------------------------+---------------------+
-|authGetUserLevel($user)  |Determines the users access |0 = Unknown          |
-|                         |level.                      |1 = User             |
-|                         |                            |2 = Administrator    |
-+-------------------------+----------------------------+---------------------+
-Store any configuration parameters specific to your module in a dedicated
-section in config.inc.php.
+$auth["type"] = "xxx_yyy";
 
-Finally update this document with a description of your module.
+requires a file called AuthXxxYyy.php
+
+The class should extend \MRBS\Auth\Auth
 
 Using an external program
 -------------------------
 
 External authentication programs are invoked via the internal PHP configuration
-proxy module called "auth_ext.inc".
+proxy class called "AuthExt".
 
 The external program must take the username, password, and possibly other
 values as parameters. Its exit code must be a zero for "OK", and anything else
 for "not OK".
 
-"auth_ext.inc" takes the following parameters in config.inc.php:
+AuthExt takes the following parameters in config.inc.php:
 
 $auth["type"] = "ext";
 
 $auth["prog"] = "the_pathname_of_your_program";
 $auth["params"] = "the arguments your program needs";
 
-"auth_ext.inc" constructs a command line to execute like:
+AuthExt constructs a command line to execute like:
 
 $cmd = $auth["prog"] . ' ' . $auth["params"];
 
@@ -1015,36 +1003,29 @@ This should allow a lot of flexibility with different authenticators.
 Creating a new session scheme
 ==============================
 
-Session modules manage the user interface for obtaining the user name and
+Session classes manage the user interface for obtaining the user name and
 password. They also manage the way the name and password are recorded
 throughout a session.
 
-To create a new scheme, you must create a new PHP module called
-"session_xxx.inc".
+To create a new scheme, you must create a new PHP class called
+"web/lib/MRBS/Session/SessionXxx.php".
 
 It will be configured by setting in config.inc.php:
 
 $auth["session"] = "xxx";
 
-The "session_xxx.inc" file needs to define certain functions:
+Underscores in the config variable need a CamelCase name.  For example
 
-+-----------------+---------------------------------------------+------------+
-|Function Name    |Description                                  |Returns     |
-+-----------------+---------------------------------------------+------------+
-|authGet()        |Prompt the user for username/password.       |Nothing     |
-+-----------------+---------------------------------------------+------------+
-|getUserName()    |Returns the current user name.               |The user    |
-|                 |                                             |name,       |
-|                 |                                             |or null if  |
-|                 |                                             |not known.  |
-+-----------------+---------------------------------------------+------------+
-|PrintLogonBox()  |Optional. If defined, it will be used to draw|Nothing     |
-|                 |the contents of the logon/logoff box in MRBS |            |
-|                 |top banner.                                  |            |
-+-----------------+---------------------------------------------+------------+
+$auth["session"] = "xxx_yyy";
+
+requires a file called SessionXxxYyy.php
+
+The session class should extend either \MRBS\Session\SessionWithLogin or
+\MRBS\Session\SessionWithoutLogin.
+
 Note: Session schemes are also useful in the case where a web server enforces
-its own session and authentication management. See the session_nt.inc and
-session session_omni.inc files as examples. In this case, use in combination
+its own session and authentication management. See the SessionNt.php and
+session SessionOmni.php files as examples. In this case, use in combination
 with authentication "none", as the real authentication is already done during
 the session initiation, and needs not be done again inside MRBS.
 
@@ -1109,12 +1090,13 @@ The main change was to separate the user/password acquisition (Also called
 session initiation), from its validation (called authentication).
 
 The existing routines for querying the user identity were moved to module
-session_http.inc. This module is left in for backwards compatibility, but
-deprecated. A new session management module was introduced, based on PHP's
-built-in session management. This is the one recommended now on. It includes
-the ability to log off.
+session_http.inc (now SessionHttp.php). This module is left in for backwards
+compatibility, but deprecated. A new session management module was introduced,
+based on PHP's built-in session management. This is the one recommended now on.
+It includes the ability to log off.
 
 On the authentication side, most existing modules were carried on, with the
-session code removed. A simple module (auth_config.inc) was added, managing a
-simple list of users in config.inc.php. Eventually there will also be another
-authentication module, using a table of users in the MRBS database.
+session code removed. A simple module, auth_config.inc (now AuthConfig.php) was
+added, managing a simple list of users in config.inc.php. Eventually there will
+also be another authentication module, using a table of users in the MRBS
+database.

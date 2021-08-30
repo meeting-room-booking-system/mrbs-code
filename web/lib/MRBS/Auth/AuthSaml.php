@@ -33,7 +33,7 @@ class AuthSaml extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     $current_username = \MRBS\session()->getUsername();
 
@@ -46,7 +46,7 @@ class AuthSaml extends Auth
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     $user = new User($username);
     $user->level = $this->getLevel($username);
@@ -73,7 +73,7 @@ class AuthSaml extends Auth
    * Returns:
    *   The user's access level
    */
-  private function getLevel($username)
+  private function getLevel(string $username) : int
   {
     global $auth;
 
@@ -105,7 +105,7 @@ class AuthSaml extends Auth
 
   // Gets the users e-mail from the SAML attributes.
   // Returns an empty string if no e-mail address was found
-  private function getEmail($username)
+  private function getEmail(string $username) : string
   {
     global $auth;
 

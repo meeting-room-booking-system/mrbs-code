@@ -197,7 +197,7 @@ class AuthLdap extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     // Check if we do not have a username/password
     // User can always bind to LDAP anonymously with empty password,
@@ -314,7 +314,7 @@ class AuthLdap extends Auth
   }
 
 
-  public function getUser($username)
+  public function getUser(string $username) : ?User
   {
     static $users = array();  // Cache results for performance
 
@@ -617,7 +617,7 @@ class AuthLdap extends Auth
 
 
   // Returns an array of attributes for use in an LDAP query
-  private static function getAttributes($object, $include_email=true, $include_groups=true)
+  private static function getAttributes(array $object, bool $include_email=true, bool $include_groups=true) : array
   {
     $result = array();
 
@@ -647,7 +647,7 @@ class AuthLdap extends Auth
 
 
   // Returns an associative array from the result of an LDAP search
-  private static function getResult($ldap, $entry, $attributes)
+  private static function getResult($ldap, $entry, array $attributes) : array
   {
     // Initialise all keys in the user array, in case an attribute isn't present
     $attributes_keys = array_keys($attributes);
@@ -719,7 +719,7 @@ class AuthLdap extends Auth
    * Returns:
    *   boolean   - Whether the action was successful
    */
-  public function action($callback, $username, &$object, $keep_going=false)
+  public function action(string $callback, string $username, &$object, bool $keep_going=false) : bool
   {
     global $ldap_unbind_between_attempts;
 
@@ -846,7 +846,7 @@ class AuthLdap extends Auth
 
 
   // A wrapper for ldap_bind() that optionally suppresses "invalid credentials" errors.
-  private static function ldapBind ($link_identifier, $bind_rdn=null, $bind_password=null)
+  private static function ldapBind ($link_identifier, ?string $bind_rdn=null, ?string $bind_password=null) : bool
   {
     global $ldap_suppress_invalid_credentials;
 
@@ -868,7 +868,7 @@ class AuthLdap extends Auth
 
 
   // Gets the full LDAP URI
-  private static function getUri($idx)
+  private static function getUri(int $idx) : string
   {
     // First get the port
     if (isset(self::$all_ldap_opts['ldap_port'][$idx]))
@@ -898,7 +898,7 @@ class AuthLdap extends Auth
   }
 
 
-  private static function setOptions($ldap, $idx)
+  private static function setOptions($ldap, int $idx) : void
   {
     if (isset(self::$all_ldap_opts['ldap_deref'][$idx]))
     {
@@ -941,7 +941,7 @@ class AuthLdap extends Auth
 
 
   // Adds extra diagnostic information to ldap_error()
-  private static function ldapError ($link_identifier)
+  private static function ldapError ($link_identifier) : string
   {
     $result = ldap_error($link_identifier);
 
@@ -963,7 +963,7 @@ class AuthLdap extends Auth
    * $ldap_debug or $ldap_debug_attributes is true.
    *
    */
-  private static function debug($message)
+  private static function debug(string $message) : void
   {
     global $ldap_debug, $ldap_debug_attributes;
 
@@ -994,7 +994,7 @@ class AuthLdap extends Auth
   }
 
 
-  private static function resetProfileClock()
+  private static function resetProfileClock() : void
   {
     global $ldap_debug;
 

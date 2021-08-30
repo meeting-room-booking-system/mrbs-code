@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use \SimpleSAML_Auth_Simple;
+use MRBS\User;
 
 
 /*
@@ -70,13 +71,13 @@ class SessionSaml extends SessionWithLogin
 
 
   // No need to prompt for a name - this is done by SimpleSamlPhp
-  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
+  public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
     $this->ssp->requireAuth();
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     $current_username = $this->getUsername();
 
@@ -84,7 +85,7 @@ class SessionSaml extends SessionWithLogin
   }
 
 
-  public function getUsername()
+  public function getUsername() : ?string
   {
     global $auth;
 
@@ -100,7 +101,7 @@ class SessionSaml extends SessionWithLogin
   }
 
 
-  public function getLogonFormParams()
+  public function getLogonFormParams() : ?array
   {
     $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLoginURL($target_url);
@@ -121,7 +122,7 @@ class SessionSaml extends SessionWithLogin
   }
 
 
-  public function getLogoffFormParams()
+  public function getLogoffFormParams() : ?array
   {
     $target_url = \MRBS\url_base() . \MRBS\this_page(true);
     $url = $this->ssp->getLogoutURL($target_url);
@@ -142,7 +143,7 @@ class SessionSaml extends SessionWithLogin
   }
 
 
-  public function processForm()
+  public function processForm() : void
   {
     // No need to do anything - all handled by SAML
   }

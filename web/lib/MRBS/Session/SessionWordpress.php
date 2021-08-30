@@ -1,6 +1,8 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\User;
+
 require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
 
@@ -14,7 +16,7 @@ class SessionWordpress extends SessionWithLogin
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     if (!is_user_logged_in())
     {
@@ -28,7 +30,7 @@ class SessionWordpress extends SessionWithLogin
 
 
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
-  protected function getValidUser($username, $password)
+  protected function getValidUser(?string $username, ?string $password) : string
   {
     global $errors; // $errors is a WordPress global
 
@@ -51,14 +53,14 @@ class SessionWordpress extends SessionWithLogin
   }
 
 
-  protected function logonUser($username)
+  protected function logonUser(string $username) : void
   {
     // Don't need to do anything: the user will have been logged on when the
     // username and password were validated.
   }
 
 
-  public function logoffUser()
+  public function logoffUser() : void
   {
     wp_logout();
   }

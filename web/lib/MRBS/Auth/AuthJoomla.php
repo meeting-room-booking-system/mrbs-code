@@ -26,7 +26,7 @@ class AuthJoomla extends Auth
    *   false    - The pair are invalid or do not exist
    *   true     - The user has been validated and logged in
    */
-  public function validateUser($user, $pass)
+  public function validateUser(?string $user, ?string $pass)
   {
     $mainframe = JFactory::getApplication('site');
 
@@ -35,7 +35,7 @@ class AuthJoomla extends Auth
   }
 
 
-  public function getUser($username=null)
+  public function getUser($username=null) : ?User
   {
     if ($username === '')
     {
@@ -64,7 +64,7 @@ class AuthJoomla extends Auth
 
 
   // Return an array of MRBS users, indexed by 'username' and 'display_name'
-  public function getUsernames()
+  public function getUsernames() : array
   {
     $result = array();
 
@@ -99,7 +99,7 @@ class AuthJoomla extends Auth
 
 
   // Get an array of Joomla groups that have MRBS user or admin rights
-  private static function getMRBSGroups()
+  private static function getMRBSGroups() : array
   {
     global $auth;
 
@@ -140,7 +140,7 @@ class AuthJoomla extends Auth
   }
 
 
-  private static function getUserLevel(\MRBS\JUser $joomla_user)
+  private static function getUserLevel(\MRBS\JUser $joomla_user) : int
   {
     global $auth;
 

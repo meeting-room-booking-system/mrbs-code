@@ -1,13 +1,15 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\User;
+
 // Get user identity using the HTTP basic authentication
 
 
 class SessionHttp extends SessionWithLogin
 {
 
-  public function authGet($target_url=null, $returl=null, $error=null, $raw=false)
+  public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
     global $auth;
 
@@ -16,7 +18,7 @@ class SessionHttp extends SessionWithLogin
   }
 
 
-  public function getCurrentUser()
+  public function getCurrentUser() : ?User
   {
     global $server;
 
@@ -42,14 +44,15 @@ class SessionHttp extends SessionWithLogin
   }
 
 
-  public function getLogoffFormParams()
+  public function getLogoffFormParams() : ?array
   {
-    // Just return NULL - you can't logoff
+    // Just return null - you can't logoff
     // (well, there are ways of achieving a logoff but we haven't implemented them)
+    return null;
   }
 
 
-  private static function getAuthPassword()
+  private static function getAuthPassword() : ?string
   {
     global $server;
 
