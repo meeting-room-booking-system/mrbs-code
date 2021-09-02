@@ -29,6 +29,26 @@ function _tbl($short_name, $include_schema=true)
 }
 
 
+function get_table_short_name(string $table) : string
+{
+  global $db_tbl_prefix;
+
+  // Get everything after the last '.', ie strip off any database
+  // and schema names
+  if (false !== ($pos = strrpos($table, '.')))
+  {
+    $result = substr($table, $pos + 1);
+  }
+  else
+  {
+    $result = $table;
+  }
+
+  // Strip the prefix off the table name
+  return utf8_substr($result, utf8_strlen($db_tbl_prefix));
+}
+
+
 // Convenience wrapper function to provide access to a DB object for
 // default MRBS database
 function db()
