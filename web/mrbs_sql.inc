@@ -956,12 +956,12 @@ function mrbsDelEntry($id, $series, $all)
  */
 function mrbsCreateEntry($table, $data)
 {
-  global $standard_fields, $db_tbl_prefix;
+  global $standard_fields;
 
   $sql_col = array();
   $sql_val = array();
-  $table_no_prefix = utf8_substr($table, utf8_strlen($db_tbl_prefix));  // strip the prefix off the table name
 
+  $table_short_name = get_table_short_name($table);
   $fields = db()->field_info($table);
 
   $sql_params = array();
@@ -1064,7 +1064,7 @@ function mrbsCreateEntry($table, $data)
 
         default:
           // custom fields
-          if (!in_array($key, $standard_fields[$table_no_prefix]))
+          if (!in_array($key, $standard_fields[$table_short_name]))
           {
             $sql_col[] = $key;
 
