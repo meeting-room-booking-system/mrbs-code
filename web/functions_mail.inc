@@ -61,7 +61,7 @@ function get_mail_locale()
 
 // Get localized (for email) field name for a user defined table column
 // Looks for a tag of the format tablename.columnname (where tablename is
-// stripped of the table prefix) and if can't find a string for that tag will
+// stripped of the table prefix) and if it can't find a string for that tag will
 // return the column name
 function get_mail_field_name(string $table, string $name) : string
 {
