@@ -63,6 +63,9 @@ function get_mail_locale()
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if it can't find a string for that tag will
 // return the column name
+// TODO: It's actually returning tablename.columnname at the moment if it
+// TODO: can't find a tag, rather than just the columnname.  Probably need
+// TODO: to restructure the way get_vocab() etc work.
 function get_mail_field_name(string $table, string $name) : string
 {
   return get_mail_vocab(get_table_short_name($table) . ".$name");
