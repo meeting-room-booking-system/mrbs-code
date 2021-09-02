@@ -842,25 +842,13 @@ function get_type_vocab(string $type) : string
 // Looks for a tag of the format tablename.columnname (where tablename is
 // stripped of the table prefix) and if can't find a string for that tag will
 // return the column name
-function get_loc_field_name($table, $name)
+function get_loc_field_name(string $table, string $name) : string
 {
   global $vocab;
 
-  // Get the qualified prefix
-  $full_prefix = _tbl('');
-  // Strip the prefix, if any, off the table name
-  if (utf8_strpos($table, $full_prefix) === 0)
-  {
-    $tag = utf8_substr($table, utf8_strlen($full_prefix));
-  }
-  else
-  {
-    $tag = $table;
-  }
-  // Add on the field name
-  $tag .= "." . $name;
+  $tag = get_table_short_name($table) . ".$name";
 
-  // Then if there's a string in the vocab array for $tag use that,
+  // If there's a string in the vocab array for $tag use that,
   // otherwise just use the fieldname
   return (isset($vocab[$tag])) ? get_vocab($tag) : $name;
 }
