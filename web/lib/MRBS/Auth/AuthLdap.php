@@ -3,6 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\Group;
 use MRBS\User;
+use function MRBS\in_arrayi;
 
 
 class AuthLdap extends Auth
@@ -691,7 +692,7 @@ class AuthLdap extends Auth
       // whether this user is in the admin group
       if (isset($object['config']['ldap_admin_group_dn']))
       {
-        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? $max_level : 1;
+        $user['level'] = in_arrayi($object['config']['ldap_admin_group_dn'], $user['groups']) ? $max_level : 1;
       }
       else
       {
