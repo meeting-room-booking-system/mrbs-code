@@ -2,6 +2,7 @@
 namespace MRBS\Auth;
 
 use MRBS\User;
+use function MRBS\in_arrayi;
 
 
 class AuthLdap extends Auth
@@ -485,7 +486,7 @@ class AuthLdap extends Auth
     {
       if (isset($object['config']['ldap_admin_group_dn']))
       {
-        $user['level'] = in_array($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
+        $user['level'] = in_arrayi($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
       }
     }
 
