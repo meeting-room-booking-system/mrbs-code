@@ -165,7 +165,9 @@ if (!empty($override_locale))
 // trying to find a locale that is available on the server and has a translation available
 // in MRBS and has localisations available in all the third party libraries.
 
-language_debug('HTTP_ACCEPT_LANGUAGE: ' . $server['HTTP_ACCEPT_LANGUAGE']);
+$http_accept_language = $server['HTTP_ACCEPT_LANGUAGE'] ?? '';
+language_debug("HTTP_ACCEPT_LANGUAGE: $http_accept_language");
+
 // Translate languages in the header string to their aliases
 if (isset($server['HTTP_ACCEPT_LANGUAGE']))
 {
