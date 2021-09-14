@@ -958,17 +958,7 @@ class AuthLdap extends Auth
   // Gets the full LDAP URI
   private static function getUri(int $idx) : string
   {
-    // First get the port
-    if (isset(self::$all_ldap_opts['ldap_port'][$idx]))
-    {
-      $port = self::$all_ldap_opts['ldap_port'][$idx];
-    }
-    else
-    {
-      $port = self::DEFAULT_PORT_LDAP;
-    }
-
-    // Now get the scheme and host
+    // First get the scheme and host
     $host = self::$all_ldap_opts['ldap_host'][$idx];
     $parsed_url = parse_url($host);
     if (isset($parsed_url['scheme']))
@@ -976,10 +966,26 @@ class AuthLdap extends Auth
       $scheme = $parsed_url['scheme'];
       $host = $parsed_url['host'];
     }
+
+    // If we haven't got a scheme then make an educated guess based on the port.
+    if (!isset($scheme))
+    {
+      // And if there isn't a port defined either then use a sensible default
+      $port = self::$all_ldap_opts['ldap_port'][$idx] ?? self::DEFAULT_PORT_LDAP;
+      $scheme = ($port == self::DEFAULT_PORT_LDAPS) ? 'ldaps' : 'ldap';
+    }
+    // If we have got a scheme then get the port.  If it has been defined explicitly in the
+    // config file, then use that. Otherwise make an educated guess based on the scheme.
     else
     {
-      // Make an educated guess at the scheme
-      $scheme = ($port == self::DEFAULT_PORT_LDAPS) ? 'ldaps' : 'ldap';
+      if (isset(self::$all_ldap_opts['ldap_port'][$idx]))
+      {
+        $port = self::$all_ldap_opts['ldap_port'][$idx];
+      }
+      else
+      {
+        $port = ($scheme == 'ldaps') ? self::DEFAULT_PORT_LDAPS : self::DEFAULT_PORT_LDAP;
+      }
     }
 
     return "$scheme://$host:$port";
