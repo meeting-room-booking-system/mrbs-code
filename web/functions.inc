@@ -629,7 +629,7 @@ function url_path()
 // Returns the base URL for MRBS.  If the config variable $url_base is set then that
 // overrides the automatic calculation.  A '/' will be appended to the end of the string,
 // unless it is empty or already ends in a '/'.
-function url_base()
+function url_base() : string
 {
   global $url_base, $server;
 
@@ -646,6 +646,13 @@ function url_base()
     $result = '';
   }
 
+  // Add a scheme if we haven't got one
+  if (null === parse_url($result, PHP_URL_SCHEME))
+  {
+    $result = ((is_https()) ? 'https' : 'http') . '://' . $result;
+  }
+
+  // Add a trailing '/' if there isn't one
   if (($result !== '') && (substr($result, -1) !== '/'))
   {
     $result .= '/';
