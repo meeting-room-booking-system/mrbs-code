@@ -383,8 +383,7 @@ class AuthDb extends Auth
         'key'       => $key
       );
     $query = http_build_query($vars, '', '&');
-    $href = (is_https()) ? 'https' : 'http';
-    $href .= '://' . url_base() . multisite("reset_password.php?$query");
+    $href = url_base() . multisite("reset_password.php?$query");
     $body .= "<p><a href=\"$href\">" . get_vocab('reset_password') . "</a>.</p>";
 
     MailQueue::add(
