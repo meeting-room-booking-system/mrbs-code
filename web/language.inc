@@ -407,7 +407,7 @@ function get_mrbs_lang($locale=null)
 
 // Returns a version of the Accept-Language request HTTP header with language
 // strings substituted for their aliases
-function alias_header($header, array $aliases)
+function alias_header(string $header, array $aliases) : string
 {
   if (!empty($aliases))
   {
@@ -431,7 +431,7 @@ function alias_header($header, array $aliases)
 // by language, given an Accept-Language header string.
 // If $translate_wildcard is set then the wildcard language identifier ('*') is
 // translated to a standard language - we use 'en'.
-function get_qualifiers($header, $translate_wildcard=false)
+function get_qualifiers(?string $header, bool $translate_wildcard=false) : array
 {
   $result = array();
 
@@ -487,7 +487,7 @@ function get_qualifiers($header, $translate_wildcard=false)
 // Returns a string of acceptable languages, sorted in decreasing order of preference
 // If $translate_wildcard is set then the wildcard language identifier ('*') is
 // translated to a standard language - we use 'en'.
-function get_browser_langs($header, $translate_wildcard=false)
+function get_browser_langs(?string $header, bool $translate_wildcard=false) : array
 {
   return array_keys(get_qualifiers($header, $translate_wildcard));
 }
