@@ -5,6 +5,7 @@ namespace MRBS;
 // isn't always installed).
 
 use IntlDateFormatter;
+use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";
 
@@ -737,7 +738,7 @@ function get_charset()
 
 function get_mail_charset()
 {
-  return 'utf-8';
+  return PHPMailer::CHARSET_UTF8;
 }
 
 
