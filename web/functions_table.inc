@@ -3,6 +3,41 @@ namespace MRBS;
 
 use \IntlDateFormatter;
 
+
+// Prepares an entry for display by replacing the text in private fields
+// if necessary.
+function prepare_entry(array $entry) : array
+{
+  global $is_private_field;
+
+  // Check whether the event is private
+  if (is_private_event($entry['private']) &&
+    !getWritable($entry['create_by'], $entry['room_id']))
+  {
+    $entry['private'] = true;
+
+    foreach (array('name', 'description') as $key)
+    {
+      if ($is_private_field["entry.$key"])
+      {
+        $entry[$key] = '[' . get_vocab('unavailable') . ']';
+      }
+    }
+
+    if (!empty($is_private_field['entry.type']))
+    {
+      $entry['type'] = 'private_type';
+    }
+  }
+  else
+  {
+    $entry['private'] = false;
+  }
+
+  return $entry;
+}
+
+
 function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot) : void
 {
   // Enters the contents of the booking found in $entry into $column, which is
@@ -55,9 +90,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
   // or at the last slot in the day, whichever is earlier.
   // Time is of the format HHMM without leading zeros.
 
-
   global $resolution;
-  global $is_private_field;
 
   // We're only interested in entries which occur on this day (it's possible
   // for $entry to contain entries for other days)
@@ -67,29 +100,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
     return;
   }
 
-  // Check whether the event is private
-  if (is_private_event($entry['private']) &&
-      !getWritable($entry['create_by'], $entry['room_id']))
-  {
-    $entry['private'] = true;
-
-    foreach (array('name', 'description') as $key)
-    {
-      if ($is_private_field["entry.$key"])
-      {
-        $entry[$key] = '[' . get_vocab('unavailable') . ']';
-      }
-    }
-
-    if (!empty($is_private_field['entry.type']))
-    {
-      $entry['type'] = 'private_type';
-    }
-  }
-  else
-  {
-    $entry['private'] = false;
-  }
+  $entry = prepare_entry($entry);
 
   // Adjust the starting and ending times so that bookings which don't
   // start or end at a recognized time still appear.
@@ -1793,24 +1804,7 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
           continue;
         }
 
-        // Handle private events
-        if (is_private_event($entry['private']) &&
-            !getWritable($entry['create_by'], $room))
-        {
-          $entry['private'] = true;
-          if ($is_private_field['entry.name'])
-          {
-            $entry['name'] = "[".get_vocab('unavailable')."]";
-          }
-          if (!empty($is_private_field['entry.type']))
-          {
-            $entry['type'] = 'private_type';
-          }
-        }
-        else
-        {
-          $entry['private'] = false;
-        }
+        $entry = prepare_entry($entry);
 
         $classes = get_entry_classes($entry);
         $classes[] = $monthly_view_entries_details;
