@@ -4,11 +4,24 @@ namespace MRBS;
 use \IntlDateFormatter;
 
 
-// Prepares an entry for display by replacing the text in private fields
-// if necessary.
+// Prepares an entry for display by (a) adding in registration level information
+// and (b) replacing the text in private fields if necessary.
 function prepare_entry(array $entry) : array
 {
-  global $is_private_field;
+  global $is_private_field, $show_registration_level;
+
+  // Add in the registration level details
+  if ($show_registration_level && $entry['allow_registration'])
+  {
+    if ($entry['registrant_limit_enabled'])
+    {
+      $entry['name'] .= get_vocab('registration_level_limited', $entry['n_registered'], $entry['registrant_limit']);
+    }
+    else
+    {
+      $entry['name'] .= get_vocab('registration_level_unlimited', $entry['n_registered']);
+    }
+  }
 
   // Check whether the event is private
   if (is_private_event($entry['private']) &&

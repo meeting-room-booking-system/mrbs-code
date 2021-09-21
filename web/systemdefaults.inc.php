@@ -438,6 +438,13 @@ $column_labels_both_ends = false;
 // Show a line in the day and week views corresponding to the current time
 $show_timeline = true;
 
+// For bookings that allow registration, show the number of people that have
+// registered and, if there is one, the registration limit.  This will typically
+// be appended to the description in the calendar view, eg "Lecture [12/40]".
+// The way the registration level is presented can be changed with a
+// $vocab_override config setting.
+$show_registration_level = true;
+
 // Define default starting view (month, week or day)
 // Default is day
 $default_view = "day";

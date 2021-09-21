@@ -48,6 +48,8 @@ $vocab["create_new_booking"] = "Create a new booking";
 $vocab["select_area"]        = "Select area";
 $vocab["select_room"]        = "Select room";
 $vocab["all"]                = "<all>";
+$vocab["registration_level_limited"]    = ' [%1$d/%2$d]';
+$vocab["registration_level_unlimited"]  = ' [%1$d]';
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
