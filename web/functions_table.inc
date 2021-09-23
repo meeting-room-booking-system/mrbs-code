@@ -1688,7 +1688,6 @@ function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
-  global $is_private_field;
 
   // Check that we've got a valid, enabled room
   if (is_null(get_room_name($room)) || !is_visible($room))
