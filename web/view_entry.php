@@ -891,40 +891,44 @@ if (!$room_disabled)
 
     // For the delete buttons, either the button is disabled and we show the reason why, or else
     // we add a click event to confirm the deletion
-    if (empty($button_attributes['disabled']))
-    {
-      $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab("confirmdel")) . "');";
-    }
-    else
-    {
-      unset($button_attributes['onclick']);
-    }
+    unset($button_attributes['onclick']);
+    
     if (!$series)
     {
       echo "<div>\n";
-      $params = array('action' => multisite('del_entry.php'),
-                      'value'  => get_vocab('deleteentry'),
-                      'inputs' => array('id' => $id,
-                      'series' => 0,
-                      'returl' => $returl)
-      );
-
+      if (empty($button_attributes['disabled']))
+      {
+        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab('confirmdel')) . "');";
+      }
+      $params = array(
+          'action' => multisite('del_entry.php'),
+          'value'  => get_vocab('deleteentry'),
+          'inputs' => array('id' => $id,
+                            'series' => 0,
+                            'returl' => $returl)
+        );
       generate_button($params, $button_attributes);
       echo "</div>\n";
     }
+
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<div>\n";
-      $params = array('action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
-                      'value'  => get_vocab('deleteseries'),
-                      'inputs' => array('id' => $id,
-                      'series' => 1,
-                      'returl' => $returl)
-      );
-
+      if (empty($button_attributes['disabled']))
+      {
+        $button_attributes['onclick'] = "return confirm('" . escape_js(get_vocab('confirmdel_series')) . "');";
+      }
+      $params = array(
+          'action' => multisite("del_entry.php?day=$day&month=$month&year=$year"),
+          'value'  => get_vocab('deleteseries'),
+          'inputs' => array('id' => $id,
+                            'series' => 1,
+                            'returl' => $returl)
+        );
       generate_button($params, $button_attributes);
       echo "</div>\n";
     }
+
     echo "</div>\n";
   }
 }
