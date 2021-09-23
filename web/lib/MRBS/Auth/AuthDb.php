@@ -128,7 +128,8 @@ class AuthDb extends Auth
     // Check all the users that have this email address and password hash.
     foreach($users as $user)
     {
-      if ($this->checkPassword($pass, $user['password_hash'], 'email', $email))
+      if (isset($user['password_hash']) &&
+          $this->checkPassword($pass, $user['password_hash'], 'email', $email))
       {
         $valid_usernames[] = $user['name'];
       }
