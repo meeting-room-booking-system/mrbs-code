@@ -295,7 +295,6 @@ $prevent_simultaneous_bookings = false;
 // Set this to true if you want to prevent bookings of a type that is invalid for a room
 $prevent_invalid_types = true;
 
-
 // When setting max_create_ahead and max_delete_ahead policies, the time interval is normally
 // measured to the end time of the booking.  This is to prevent users cheating the system by
 // booking a very long slot with the start time just inside the limit and then either not using
