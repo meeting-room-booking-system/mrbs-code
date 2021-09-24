@@ -1784,6 +1784,8 @@ function get_booking_info($id, $series, $silent=FALSE)
   }
 
 
+  // Turn the last_updated column into an int (PostgreSQL will return a float)
+  $row['last_updated'] = intval($row['last_updated']);
 
   // Now get the duration.
   // Don't translate the units at this stage.   We'll translate them later.
