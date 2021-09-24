@@ -803,7 +803,7 @@ $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_ro
 // we were editing an existing booking, then delete the old booking
 if (!$just_check && $result['valid_booking'] && isset($id))
 {
-  $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), 1);
+  $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), true);
 }
 
 if ($transaction_ok)
