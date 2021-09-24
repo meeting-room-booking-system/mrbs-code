@@ -75,7 +75,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       }
     }
 
-    $start_times = mrbsDelEntry($id, $series, 1);
+    $start_times = mrbsDelEntry($id, $series, true);
 
     // [At the moment MRBS does not inform the user if it was not able to delete
     // an entry, or, for a series, some entries in a series.  This could happen for

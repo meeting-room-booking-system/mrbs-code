@@ -866,7 +866,7 @@ function get_entries_n_outstanding(User $user)
  * have been deleted.
  *
  */
-function mrbsDelEntry($id, $series, $all)
+function mrbsDelEntry($id, $series, bool $all)
 {
   $start_times = array();
 
