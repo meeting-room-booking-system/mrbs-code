@@ -645,7 +645,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
 }
 
 
-function get_entry_by_id($id)
+function get_entry_by_id(int $id) : ?array
 {
   if (!isset($id))
   {
@@ -2170,7 +2170,11 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
     else
     {
       $old_bookings = array();
-      $old_bookings[] = get_entry_by_id($id);
+      $old_booking = get_entry_by_id($id);
+      if (isset($old_booking))
+      {
+        $old_bookings[] = $old_booking;
+      }
     }
 
     foreach ($old_bookings as $old_booking)
@@ -2351,7 +2355,7 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
 }
 
 
-function get_bookings_in_series($repeat_id)
+function get_bookings_in_series(int $repeat_id) : array
 {
   $bookings = array();
 
@@ -2362,7 +2366,11 @@ function get_bookings_in_series($repeat_id)
 
   foreach ($res as $id)
   {
-    $bookings[] = get_entry_by_id($id);
+    $booking = get_entry_by_id($id);
+    if (isset($booking))
+    {
+      $bookings[] = $booking;
+    }
   }
 
   return $bookings;
