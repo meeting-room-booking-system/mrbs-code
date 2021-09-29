@@ -399,6 +399,10 @@ function get_field_custom($custom_field, $params, $disabled=false)
   {
     $class = 'FieldTextarea';
   }
+  elseif ($custom_field['type'] == 'date')
+  {
+    $class = 'FieldInputDate';
+  }
   elseif (!empty($select_options[$params['field']]))
   {
     $class = 'FieldSelect';
@@ -436,6 +440,10 @@ function get_field_custom($custom_field, $params, $disabled=false)
     case 'FieldSelect':
       $options = $select_options[$params['field']];
       $field->addSelectOptions($options, $params['value']);
+      break;
+
+    case 'FieldInputDate':
+      $field->setControlAttribute('value', $params['value']);
       break;
 
     case 'FieldInputDatalist':
