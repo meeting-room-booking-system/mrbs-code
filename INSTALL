@@ -168,12 +168,13 @@ as long as it is in the permitted set, ie a letter, number or underscore.
 restrictions on the characters allowed in order to simplify the code. For
 a technical explanation see below).
 
-At the moment only text, varchar, decimal/numeric, int, smallint and tinyint
-columns are  supported, displayed as textarea, text, number or checkbox fields
-as appropriate.  Whether a varchar is displayed as a text or textarea input
-depends on its maximum length, with the breakpoint determined by a configuration
-variable. Ints are treated as integer types, as you would expect.   However
-smallints and tinyints are assumed to be booleans and are displayed as checkboxes.
+At the moment only text, varchar, date (user table only), decimal/numeric,
+int, smallint and tinyint columns are  supported, displayed as textarea, text,
+date, number or checkbox fields as appropriate.  Whether a varchar is displayed
+as a text or textarea input depends on its maximum length, with the breakpoint
+determined by a configuration variable. Ints are treated as integer types, as
+you would expect.   However smallints and tinyints are assumed to be booleans
+and are displayed as checkboxes.
 
 [Note:  smallints are assumed to be booleans because the boolean type in
 PostgreSQL presents some problems in PHP when trying to process the results
