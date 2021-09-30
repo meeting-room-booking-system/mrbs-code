@@ -988,7 +988,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
       if ($is_private)
       {
         list($table, $column) = explode('.', $fieldname, 2);
-        if ($table == 'users')
+        if ($table == User::TABLE_NAME)
         {
           $ignore_columns[] = $column;
         }

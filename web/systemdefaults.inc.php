@@ -527,7 +527,7 @@ $show_plus_link = false;   // Change to true to always show the (+) link as in
 
 // Choose which fields should be private by setting
 // $is_private_field['tablename.columnname'] = true
-// At the moment only fields in the entry and users table can be marked as private,
+// At the moment only fields in the entry and user tables can be marked as private,
 // including custom fields, but with the exception of the following entry table fields:
 // start_time, end_time, entry_type, repeat_id, room_id, timestamp, type, status,
 // reminded, info_time, info_user, info_text.

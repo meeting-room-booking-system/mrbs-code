@@ -252,12 +252,12 @@ You can also specify that a field is private, ensuring that the contents
 are only visible to yourself and the administrators.   For example:
 
 $is_private_field['entry.refreshments'] = true;
-$is_private_field['users.tel'] = true;
+$is_private_field['user.tel'] = true;
 
 would prevent the details of your refreshments being visible to other
 users - provided that private bookings are enabled.   See the section
 on private bookings in systemdefaults.inc.php for more information.
-Note that private fields are only supported in the entry and users tables.
+Note that private fields are only supported in the entry and user tables.
 
 
 Technical explanation of the restriction on column names for custom fields
