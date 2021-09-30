@@ -980,6 +980,22 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
       'reset_key_expiry'
     );
 
+  // Add in the private fields to the list of columns to be ignored
+  if (!is_user_admin())
+  {
+    foreach ($is_private_field as $fieldname => $is_private)
+    {
+      if ($is_private)
+      {
+        list($table, $column) = explode('.', $fieldname, 2);
+        if ($table == 'users')
+        {
+          $ignore_columns[] = $column;
+        }
+      }
+    }
+  }
+
   if (!$is_ajax)
   {
     echo "<div id=\"user_list\" class=\"datatable_container\">\n";
