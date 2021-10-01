@@ -167,6 +167,30 @@ function validate_form_data(User &$user)
         }
       }
     }
+
+    // Validate some particular database types
+    $columns = Columns::getInstance(_tbl(User::TABLE_NAME));
+    foreach ($columns as $column)
+    {
+      // If this a Date type check that we've got a valid date format before
+      // we get an SQL error.  If it's not valid then just ignore the field,
+      // unless the field is nullable and the string is empty, in which case
+      // we assume that the user is trying to nullify the value.
+      if ($column->getType() == 'date')
+      {
+        if (!validate_iso_date($user->{$column->name}))
+        {
+          if ($column->getisNullable() && ($user->{$column->name} === ''))
+          {
+            $user->{$column->name} = null;
+          }
+          else
+          {
+            unset($user->{$column->name});
+          }
+        }
+      }
+    }
   }
 
   return $errors;

@@ -22,6 +22,7 @@ class Column
   private $is_nullable;
   private $length;
   private $nature;
+  private $type;
 
 
   public function __construct($table, $name)
@@ -84,6 +85,17 @@ class Column
     $this->nature = $nature;
   }
 
+
+  public function getType() : ?string
+  {
+    return $this->type;
+  }
+
+
+  public function setType(string $type) : void
+  {
+    $this->type = $type;
+  }
 
   // Gets the type ('bool', 'int' or 'string') to be used with get_form_var().
   // TODO: this method maybe doesn't belong here.

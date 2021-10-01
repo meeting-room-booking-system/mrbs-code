@@ -84,6 +84,7 @@ class Columns implements Countable, Iterator
     $column->setLength($info['length']);
     $column->setDefault($info['default']);
     $column->setIsNullable($info['is_nullable']);
+    $column->setType($info['type']);
 
     switch ($info['nature'])
     {
