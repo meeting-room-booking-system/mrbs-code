@@ -1083,11 +1083,23 @@ if (isset($action) && ($action == "update"))
     {
       $value = $values[$fieldname];
 
-      // If this a Date type check that we've got a valid date format before
-      // we get an SQL error.  If it's not valid then just ignore the field.
-      if (($field['type'] == 'date') && !validate_iso_date($value))
+      if ($field['type'] == 'date')
       {
-        continue;
+        // If this a Date type check that we've got a valid date format before
+        // we get an SQL error.  If it's not valid then just ignore the field,
+        // unless the field is nullable and the string is empty, in which case
+        // we assume that the user is trying to nullify the value.
+        if (!validate_iso_date($value))
+        {
+          if ($field['is_nullable'] && ($value === ''))
+          {
+            $value = null;
+          }
+          else
+          {
+            continue;
+          }
+        }
       }
 
       // pre-process the field value for SQL
