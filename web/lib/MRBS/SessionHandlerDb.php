@@ -2,10 +2,13 @@
 
 namespace MRBS;
 
+use SessionHandlerInterface;
+
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are
 // not supported in PHP 7.
 global $min_PHP_version;
+
 if (version_compare($min_PHP_version, '8.0.0') < 0)
 {
   $old_level = error_reporting();
@@ -22,7 +25,7 @@ else
 //        directory is not writable
 //    (c) it's more resilient in clustered environments
 
-class SessionHandlerDb implements \SessionHandlerInterface
+class SessionHandlerDb implements SessionHandlerInterface
 {
   private static $table;
 
