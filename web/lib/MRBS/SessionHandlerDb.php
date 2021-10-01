@@ -125,9 +125,16 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function destroy($id): bool
   {
-    $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
-    $rows = db()->command($sql, array(':id' => $id));
-    return ($rows === 1);
+    try
+    {
+      $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
+      db()->command($sql, array(':id' => $id));
+      return true;
+    }
+    catch (\Exception $e)
+    {
+      return false;
+    }
   }
 
 
