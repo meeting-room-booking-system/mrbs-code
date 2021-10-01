@@ -6,7 +6,7 @@ require "defaultincludes.inc";
 use MRBS\Form\Form;
 
 
-function get_form_data(User &$user)
+function get_form_data(User &$user) : void
 {
   global $auth, $initial_user_creation;
 
