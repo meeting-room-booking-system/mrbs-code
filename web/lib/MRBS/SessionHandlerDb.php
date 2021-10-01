@@ -2,10 +2,13 @@
 
 namespace MRBS;
 
+use SessionHandlerInterface;
+
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are
 // not supported in PHP 7.
 global $min_PHP_version;
+
 if (version_compare($min_PHP_version, '8.0.0') < 0)
 {
   $old_level = error_reporting();
@@ -22,7 +25,7 @@ else
 //        directory is not writable
 //    (c) it's more resilient in clustered environments
 
-class SessionHandlerDb implements \SessionHandlerInterface
+class SessionHandlerDb implements SessionHandlerInterface
 {
   private static $table;
 
@@ -131,9 +134,16 @@ class SessionHandlerDb implements \SessionHandlerInterface
   // returned internally to PHP for processing.
   public function destroy($id): bool
   {
-    $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
-    $rows = db()->command($sql, array(':id' => $id));
-    return ($rows === 1);
+    try
+    {
+      $sql = "DELETE FROM " . self::$table . " WHERE id=:id";
+      db()->command($sql, array(':id' => $id));
+      return true;
+    }
+    catch (\Exception $e)
+    {
+      return false;
+    }
   }
 
 
