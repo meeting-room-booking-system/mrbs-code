@@ -1081,8 +1081,16 @@ if (isset($action) && ($action == "update"))
 
     if ($fieldname != 'id')
     {
-      // pre-process the field value for SQL
       $value = $values[$fieldname];
+
+      // If this a Date type check that we've got a valid date format before
+      // we get an SQL error.  If it's not valid then just ignore the field.
+      if (($field['type'] == 'date') && !validate_iso_date($value))
+      {
+        continue;
+      }
+
+      // pre-process the field value for SQL
       switch ($field['nature'])
       {
         case 'integer':
