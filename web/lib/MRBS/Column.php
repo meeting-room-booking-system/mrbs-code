@@ -44,13 +44,13 @@ class Column
   }
 
 
-  public function getisNullable()
+  public function getIsNullable()
   {
     return $this->is_nullable;
   }
 
 
-  public function setisNullable($is_nullable)
+  public function setIsNullable($is_nullable)
   {
     $this->is_nullable = $is_nullable;
   }

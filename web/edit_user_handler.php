@@ -180,7 +180,7 @@ function validate_form_data(User &$user)
       {
         if (!validate_iso_date($user->{$column->name}))
         {
-          if ($column->getisNullable() && ($user->{$column->name} === ''))
+          if ($column->getIsNullable() && ($user->{$column->name} === ''))
           {
             $user->{$column->name} = null;
           }
