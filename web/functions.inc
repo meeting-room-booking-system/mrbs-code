@@ -1711,6 +1711,25 @@ function split_iso_date($date)
 }
 
 
+// Validates that a string is a valid ISO date in yyyy-mm-dd format
+function validate_iso_date($date) : bool
+{
+  if (!is_string($date))
+  {
+    return false;
+  }
+
+  // Try creating a DateTime object.  If that is successful and
+  // the inverse operation gives the original string then it is
+  // valid.  (This is to check that, for example, 2021-09-31 hasn't
+  // been converted into 2021-10-01).
+  $format = 'Y-m-d';
+  $datetime = DateTime::createFromFormat($format, $date);
+
+  return ($datetime && ($datetime->format($format) === $date));
+}
+
+
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
 function day_name($daynumber, $format=null)
 {
