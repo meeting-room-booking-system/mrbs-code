@@ -170,11 +170,10 @@ function validate_form_data(User &$user)
 
     // Validate some particular database types
     $columns = Columns::getInstance(_tbl(User::TABLE_NAME));
-    foreach ($columns as $column)
+    foreach ($columns as $index => $column)
     {
       // If this a Date type check that we've got a valid date format before
-      // we get an SQL error.  If it's not valid then just ignore the field,
-      // unless the field is nullable and the string is empty, in which case
+      // we get an SQL error.  If the field is nullable and the string is empty
       // we assume that the user is trying to nullify the value.
       if ($column->getType() == 'date')
       {
@@ -186,7 +185,8 @@ function validate_form_data(User &$user)
           }
           else
           {
-            unset($user->{$column->name});
+            // Need to add an index otherwise previous elements will be overwritten
+            $errors["invalid_dates[$index]"] = $column->name;
           }
         }
       }

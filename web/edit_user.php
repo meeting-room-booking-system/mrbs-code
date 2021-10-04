@@ -52,6 +52,7 @@ $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
+$invalid_dates = get_form_var('invalid_dates', 'array');
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 $back_button = get_form_var('back_button', 'string');
 $edit_button = get_form_var('edit_button', 'string');
@@ -748,6 +749,13 @@ if (isset($action) && ( ($action == 'edit') or ($action == 'add') ))
   if (!empty($name_empty))
   {
     echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
+  }
+  if (!empty($invalid_dates))
+  {
+    foreach ($invalid_dates as $field)
+    {
+      echo "<p class=\"error\">" . get_vocab('invalid_date', get_loc_field_name(_tbl(User::TABLE_NAME), $field)) . "<p>\n";
+    }
   }
 
   // Now do any password error messages
