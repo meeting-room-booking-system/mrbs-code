@@ -60,6 +60,7 @@ $name_not_unique = get_form_var('name_not_unique', 'int');
 $taken_name = get_form_var('taken_name', 'string');
 $pwd_not_match = get_form_var('pwd_not_match', 'string');
 $pwd_invalid = get_form_var('pwd_invalid', 'string');
+$invalid_dates = get_form_var('invalid_dates', 'array');
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
 $back_button = get_form_var('back_button', 'string');
 $delete_button = get_form_var('delete_button', 'string');
@@ -724,6 +725,13 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   {
     echo "<p class=\"error\">" . get_vocab('name_empty') . "<p>\n";
   }
+  if (!empty($invalid_dates))
+  {
+    foreach ($invalid_dates as $field)
+    {
+      echo "<p class=\"error\">" . get_vocab('invalid_date', get_loc_field_name(_tbl('users'), $field)) . "<p>\n";
+    }
+  }
 
   // Now do any password error messages
   if (!empty($pwd_not_match))
@@ -1045,6 +1053,30 @@ if (isset($action) && ($action == "update"))
     }
   }
 
+  // Now check some specific data types
+  foreach ($fields as $field)
+  {
+    // If this a Date type check that we've got a valid date format before
+    // we get an SQL error.  If the field is nullable and the string is empty
+    // we assume that the user is trying to nullify the value.
+    if ($field['type'] == 'date')
+    {
+      if (!validate_iso_date($values[$field['name']]))
+      {
+        if ($field['is_nullable'] && ($values[$field['name']] === ''))
+        {
+          $values[$field['name']] = null;
+        }
+        else
+        {
+          $valid_data = false;
+          $q_string .= "&invalid_dates[]=" . urlencode($field['name']);
+        }
+      }
+    }
+  }
+
+
   // if validation failed, go back to this page with the query
   // string, which by now has both the error codes and the original
   // form values
@@ -1082,25 +1114,6 @@ if (isset($action) && ($action == "update"))
     if ($fieldname != 'id')
     {
       $value = $values[$fieldname];
-
-      if ($field['type'] == 'date')
-      {
-        // If this a Date type check that we've got a valid date format before
-        // we get an SQL error.  If it's not valid then just ignore the field,
-        // unless the field is nullable and the string is empty, in which case
-        // we assume that the user is trying to nullify the value.
-        if (!validate_iso_date($value))
-        {
-          if ($field['is_nullable'] && ($value === ''))
-          {
-            $value = null;
-          }
-          else
-          {
-            continue;
-          }
-        }
-      }
 
       // pre-process the field value for SQL
       switch ($field['nature'])
