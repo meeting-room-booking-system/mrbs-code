@@ -67,7 +67,7 @@ function get_form_data(User &$user) : void
 
 
 // Tidies up and validates the form data
-function validate_form_data(User &$user)
+function validate_form_data(User &$user) : array
 {
   global $auth, $initial_user_creation;
 
