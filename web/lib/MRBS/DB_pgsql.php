@@ -335,7 +335,9 @@ class DB_pgsql extends DB
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   public function syntax_timestamp_to_unix($fieldname)
   {
-    return " DATE_PART('epoch', $fieldname) ";
+    // A PostgreSQL timestamp can be a float.  We need to round it
+    // to the nearest integer.
+    return " ROUND(DATE_PART('epoch', $fieldname)) ";
   }
 
 
