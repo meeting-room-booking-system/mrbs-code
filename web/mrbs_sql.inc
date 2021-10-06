@@ -1674,6 +1674,7 @@ function get_registrants_display_names($id, $series) : ?array
     }
   }
 
+  sort($display_names);
   return $display_names;
 }
 
