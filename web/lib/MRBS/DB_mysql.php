@@ -479,4 +479,16 @@ class DB_mysql extends DB
     $params[] = $delimiter;
     return "SUBSTRING_INDEX($fieldname, ?, $count)";
   }
+
+
+  // Returns the syntax for aggregating a number of rows as a delimited string
+  public function syntax_group_array_as_string($fieldname, $delimiter=',')
+  {
+    // Use DISTINCT to eliminate duplicates which can arise when the query
+    // has joins on two or more junction tables.  Maybe a different query
+    // would eliminate the duplicates and the need for DISTINCT, and it may
+    // or may not be more efficient.
+    return "GROUP_CONCAT(DISTINCT $fieldname SEPARATOR '$delimiter')";
+  }
+
 }
