@@ -456,6 +456,8 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
                                    "you sure you want to continue?\n\n" .
                                    "Total number of entries that will be deleted: ";
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
+$vocab["registered"]            = "Registered";
+$vocab["na"]                    = "[N/A]";
 
 // Used in admin.php
 $vocab["edit"]               = "Edit";
