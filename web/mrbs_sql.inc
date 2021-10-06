@@ -1629,6 +1629,30 @@ function get_registrants($id, $series)
 }
 
 
+function get_registrants_display_names($id, $series) : ?array
+{
+  global $auth;
+
+  // You can't register for a series (yet)
+  if ($series)
+  {
+    return null;
+  }
+
+  $display_names = array();
+
+  $registrants = get_registrants($id, $series);
+  foreach ($registrants as $registrant)
+  {
+    $registrant_user = auth()->getUser($registrant['username']);
+    $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+    $display_names[] = $display_name;
+  }
+
+  return $display_names;
+}
+
+
 // Check whether any entries in a series have users registered
 function series_has_registrants($repeat_id)
 {

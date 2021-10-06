@@ -563,7 +563,7 @@ function report_header()
 {
   global $output_format, $is_ajax;
   global $custom_fields;
-  global $approval_somewhere, $confirmation_somewhere;
+  global $approval_somewhere, $confirmation_somewhere, $registration_somewhere;
   global $field_order_list, $booking_types;
 
   // Don't do anything if this is an Ajax request: we only want to send the data
@@ -603,6 +603,12 @@ function report_header()
         if (isset($booking_types) && (count($booking_types) > 1))
         {
           $values[] = get_vocab("type");
+        }
+        break;
+      case 'allow_registration':
+        if ($registration_somewhere)
+        {
+          $values[] = get_vocab("registered");
         }
         break;
       case 'create_by':
@@ -818,7 +824,7 @@ function report_row(&$rows, $data)
 {
   global $output_format, $is_ajax, $ajax_capable;
   global $custom_fields, $field_natures, $field_lengths;
-  global $approval_somewhere, $confirmation_somewhere;
+  global $approval_somewhere, $confirmation_somewhere, $registration_somewhere;
   global $select_options, $booking_types;
   global $field_order_list;
 
@@ -891,6 +897,16 @@ function report_row(&$rows, $data)
         break;
       case 'last_updated':
         $value = time_date_string($value);
+        break;
+      case 'allow_registration':
+        if ($data['allow_registration'])
+        {
+          $value = implode(', ', get_registrants_display_names($data['id'], false));
+        }
+        else
+        {
+          $value = get_vocab('na');
+        }
         break;
       default:
         // Custom fields
@@ -1390,6 +1406,7 @@ if ($is_ajax)
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
+$registration_somewhere = true;
 $times_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods=0") > 0);
 $periods_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods!=0") > 0);
 
@@ -1461,7 +1478,7 @@ foreach ($custom_fields as $key => $value)
 
 // Set the field order list
 $field_order_list = array('name', 'area_name', 'room_name', 'start_time', 'end_time',
-                          'description', 'type', 'create_by', 'confirmation_enabled',
+                          'description', 'type', 'allow_registration', 'create_by', 'confirmation_enabled',
                           'approval_enabled');
 foreach ($custom_fields as $key => $value)
 {
@@ -1503,7 +1520,7 @@ if ($phase == 2)
     $sql .= " LEFT JOIN " . _tbl('repeat') . " T
                      ON E.repeat_id=T.id";
   }
-  
+
   $sql .= " WHERE E.start_time < ? AND E.end_time > ?";
   $sql_params[] = $report_end;
   $sql_params[] = $report_start;
