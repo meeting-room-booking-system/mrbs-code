@@ -1406,7 +1406,7 @@ if ($is_ajax)
 $private_somewhere = some_area('private_enabled') || some_area('private_mandatory');
 $approval_somewhere = some_area('approval_enabled');
 $confirmation_somewhere = some_area('confirmation_enabled');
-$registration_somewhere = true;
+$registration_somewhere = registration_somewhere();
 $times_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods=0") > 0);
 $periods_somewhere = (db()->query1("SELECT COUNT(*) FROM " . _tbl('area') . " WHERE enable_periods!=0") > 0);
 

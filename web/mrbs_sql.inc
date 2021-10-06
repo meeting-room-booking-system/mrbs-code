@@ -1629,6 +1629,7 @@ function get_registrants($id, $series)
 }
 
 
+// Returns an array of registrants' display names
 function get_registrants_display_names($id, $series) : ?array
 {
   global $auth;
@@ -1665,6 +1666,17 @@ function series_has_registrants($repeat_id)
   $sql_params = array(':repeat_id' => $repeat_id);
 
   return (db()->query1($sql, $sql_params) > 0);
+}
+
+
+// Determines whether any entries allow registration
+function registration_somewhere() : bool
+{
+  $sql = "SELECT COUNT(*)
+            FROM " . _tbl('entry') . "
+           WHERE allow_registration=1
+           LIMIT 1";
+  return (db()->query1($sql) > 0);
 }
 
 
