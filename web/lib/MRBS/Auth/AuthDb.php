@@ -136,11 +136,11 @@ class AuthDb extends Auth
   {
     $sql = "SELECT name AS username, display_name AS display_name
               FROM " . _tbl(User::TABLE_NAME) . "
-             WHERE auth_type='db';
+             WHERE auth_type='db'
           ORDER BY display_name";
 
     $res = db()->query($sql);
-
+    
     return $res->all_rows_keyed();
   }
 
