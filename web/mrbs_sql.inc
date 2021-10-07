@@ -1629,56 +1629,6 @@ function get_registrants($id, $series)
 }
 
 
-// Returns an array of registrants' display names
-function get_registrants_display_names($id, $series) : ?array
-{
-  global $auth;
-
-  // You can't register for a series (yet)
-  if ($series)
-  {
-    return null;
-  }
-
-  $display_names = array();
-
-  if ($auth['type'] == 'db')
-  {
-    // For the 'db' auth type we can improve performance by doing a single query
-    // on the participants table joined with the users table.  (Actually it's two
-    // queries in a UNION: one getting the rows where there isn't an entry in the
-    // users table and another the rows where there is.)
-    $sql = "SELECT P.username as display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U
-                ON P.username=U.name
-             WHERE P.entry_id=:entry_id
-               AND U.name IS NULL
-             UNION
-            SELECT U.display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U
-                ON P.username=U.name
-             WHERE P.entry_id=:entry_id
-               AND U.name IS NOT NULL";
-    $display_names = db()->query_array($sql, array(':entry_id' => $id));
-  }
-  else
-  {
-    $registrants = get_registrants($id, $series);
-    foreach ($registrants as $registrant)
-    {
-      $registrant_user = auth()->getUser($registrant['username']);
-      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
-      $display_names[] = $display_name;
-    }
-  }
-
-  sort($display_names);
-  return $display_names;
-}
-
-
 // Check whether any entries in a series have users registered
 function series_has_registrants($repeat_id)
 {

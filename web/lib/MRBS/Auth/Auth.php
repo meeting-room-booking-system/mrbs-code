@@ -2,6 +2,7 @@
 namespace MRBS\Auth;
 
 use \MRBS\User;
+use function MRBS\get_registrants;
 
 
 abstract class Auth
@@ -97,6 +98,38 @@ abstract class Auth
 
     // Everything is OK
     return true;
+  }
+
+
+  // Returns an array of registrants' display names
+  public function getRegistrantsDisplayNames (int $id, bool $series) : ?array
+  {
+    // You can't register for a series (yet)
+    if ($series)
+    {
+      return null;
+    }
+
+    $display_names = $this->getRegistrantsDisplayNamesUnsorted($id);
+    sort($display_names);
+
+    return $display_names;
+  }
+
+
+  protected function getRegistrantsDisplayNamesUnsorted(int $id) : array
+  {
+    $display_names = array();
+    $registrants = get_registrants($id, false);
+
+    foreach ($registrants as $registrant)
+    {
+      $registrant_user = $this->getUser($registrant['username']);
+      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+      $display_names[] = $display_name;
+    }
+
+    return $display_names;
   }
 
 
