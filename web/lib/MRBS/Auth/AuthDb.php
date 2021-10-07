@@ -294,15 +294,15 @@ class AuthDb extends Auth
     // queries in a UNION: one getting the rows where there isn't an entry in the
     // users table and another the rows where there is.)
     $sql = "SELECT P.username as display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
                AND U.name IS NULL
              UNION
             SELECT U.display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
                AND U.name IS NOT NULL";
