@@ -287,6 +287,29 @@ class AuthDb extends Auth
   }
 
 
+  protected function getRegistrantsDisplayNamesUnsorted(int $id) : array
+  {
+    // For the 'db' auth type we can improve performance by doing a single query
+    // on the participants table joined with the users table.  (Actually it's two
+    // queries in a UNION: one getting the rows where there isn't an entry in the
+    // users table and another the rows where there is.)
+    $sql = "SELECT P.username as display_name
+              FROM " . _tbl('participants') . " P
+         LEFT JOIN " . _tbl('users') . " U
+                ON P.username=U.name
+             WHERE P.entry_id=:entry_id
+               AND U.name IS NULL
+             UNION
+            SELECT U.display_name
+              FROM " . _tbl('participants') . " P
+         LEFT JOIN " . _tbl('users') . " U
+                ON P.username=U.name
+             WHERE P.entry_id=:entry_id
+               AND U.name IS NOT NULL";
+
+    return db()->query_array($sql, array(':entry_id' => $id));
+  }
+
   private function notifyUser(array $users, string $key) : bool
   {
     global $auth, $mail_settings;

@@ -894,7 +894,7 @@ function report_row(&$rows, $data)
       case 'allow_registration':
         if ($data['allow_registration'])
         {
-          $value = implode(', ', get_registrants_display_names($data['id'], false));
+          $value = implode(', ', auth()->getRegistrantsDisplayNames($data['id'], false));
         }
         else
         {
