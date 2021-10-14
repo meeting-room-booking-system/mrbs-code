@@ -2368,21 +2368,24 @@ function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FA
 }
 
 
-function get_bookings_in_series(int $repeat_id) : array
+function get_bookings_in_series(?int $repeat_id) : array
 {
   $bookings = array();
 
-  $sql = "SELECT id
+  if (isset($repeat_id))
+  {
+    $sql = "SELECT id
            FROM " . _tbl('entry') . "
           WHERE repeat_id = ?";
-  $res = db()->query_array($sql, array($repeat_id));
+    $res = db()->query_array($sql, array($repeat_id));
 
-  foreach ($res as $id)
-  {
-    $booking = get_entry_by_id($id);
-    if (isset($booking))
+    foreach ($res as $id)
     {
-      $bookings[] = $booking;
+      $booking = get_entry_by_id($id);
+      if (isset($booking))
+      {
+        $bookings[] = $booking;
+      }
     }
   }
 
