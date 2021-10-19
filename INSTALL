@@ -259,6 +259,21 @@ users - provided that private bookings are enabled.   See the section
 on private bookings in systemdefaults.inc.php for more information.
 Note that private fields are only supported in the entry and users tables.
 
+4)
+
+You can also enter regular expressions for validating text field input using
+the pattern attribute.  At the moment this is limited to custom fields in the
+users table.  For example the following could be used to ensure a valid US ZIP
+code (you might want to have a better regex - this is just for illustration):
+
+$pattern['users.zip_code'] = "^[0-9]{5}(?:-[0-9]{4})?$";
+
+You would probably also want to enter a custom error message by using
+$vocab_override, with the tag consisting of "table.field.oninvalid" eg
+
+$vocab_override['users.zip_code.oninvalid']['en'] = "Please enter a valid " .
+  "ZIP code, eg '12345' or '12345-6789'";
+
 
 Technical explanation of the restriction on column names for custom fields
 --------------------------------------------------------------------------

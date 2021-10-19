@@ -384,7 +384,7 @@ function get_field_email($params, $disabled=false)
 
 function get_field_custom($custom_field, $params, $disabled=false)
 {
-  global $select_options, $datalist_options, $is_mandatory_field;
+  global $select_options, $datalist_options, $is_mandatory_field, $pattern;
   global $text_input_max;
 
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
@@ -426,10 +426,26 @@ function get_field_custom($custom_field, $params, $disabled=false)
   {
     $field->setControlAttribute('required', true);
   }
+
   if ($disabled)
   {
     $field->setControlAttribute('disabled', true);
     $field->addHiddenInput($params['name'], $params['value']);
+  }
+
+  // Pattern attribute, if any
+  if (!empty($pattern[$params['field']]))
+  {
+    $field->setControlAttribute('pattern', $pattern[$params['field']]);
+    // And any custom error messages
+    $tag = $params['field'] . '.oninvalid';
+    $oninvalid_text = get_vocab($tag);
+    if (isset($oninvalid_text) && ($oninvalid_text !== $tag))
+    {
+      $field->setControlAttribute('oninvalid', "this.setCustomValidity('$oninvalid_text')");
+      // Need to clear the invalid message
+      $field->setControlAttribute('onchange', "this.setCustomValidity('')");
+    }
   }
 
   switch ($class)
