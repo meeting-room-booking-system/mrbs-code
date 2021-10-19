@@ -641,6 +641,19 @@ $is_mandatory_field = array();
 
 $is_mandatory_field['user.display_name'] = true;
 
+// You can also enter regular expressions for validating text field input using
+// the pattern attribute.  At the moment this is limited to custom fields in the
+// users table.  For example the following could be used to ensure a valid US ZIP
+// code (you might want to have a better regex - this is just for illustration):
+
+// $pattern['users.zip_code'] = "^[0-9]{5}(?:-[0-9]{4})?$";
+
+// You would probably also want to enter a custom error message by using
+// $vocab_override, with the tag consisting of "table.field.oninvalid" eg
+
+// $vocab_override['users.zip_code.oninvalid']['en'] = "Please enter a valid ZIP code, eg '12345' or '12345-6789'";
+
+
 // Set this to false if you do not want to have the ability to create events for which
 // other people can register.
 $enable_registration = true;
