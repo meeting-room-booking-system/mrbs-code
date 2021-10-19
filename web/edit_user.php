@@ -466,7 +466,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
     $oninvalid_text = get_vocab($tag);
     if (isset($oninvalid_text) && ($oninvalid_text !== $tag))
     {
-      $field->setControlAttribute('oninvalid', "this.setCustomValidity('$oninvalid_text')");
+      $field->setControlAttribute('oninvalid', "this.setCustomValidity('". escape_js($oninvalid_text) . "')");
       // Need to clear the invalid message
       $field->setControlAttribute('onchange', "this.setCustomValidity('')");
     }
