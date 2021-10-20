@@ -107,16 +107,17 @@ abstract class Auth
 
 
   // Returns an array of registrants' display names
-  public function getRegistrantsDisplayNames (int $id, bool $series) : ?array
+  public function getRegistrantsDisplayNames (array $entry) : array
   {
-    // You can't register for a series (yet)
-    if ($series)
-    {
-      return null;
-    }
+    $display_names = array();
 
-    $display_names = $this->getRegistrantsDisplayNamesUnsorted($id);
-    sort($display_names);
+    // Only bother getting the names if we don't already know how many there are,
+    // or if we know there are definitely some
+    if (!isset($entry['n_registered']) || ($entry['n_registered'] > 0))
+    {
+      $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id']);
+      sort($display_names);
+    }
 
     return $display_names;
   }
