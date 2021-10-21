@@ -8,18 +8,22 @@ use \IntlDateFormatter;
 // and (b) replacing the text in private fields if necessary.
 function prepare_entry(array $entry) : array
 {
-  global $is_private_field, $show_registration_level;
+  global $is_private_field, $show_registration_level, $auth;
 
   // Add in the registration level details
   if ($show_registration_level && $entry['allow_registration'])
   {
+    $show_names = ($auth['show_registrant_names_in_calendar'] && ($entry['n_registered'] > 0));
+    $names = ($show_names) ? implode(', ', auth()->getRegistrantsDisplayNames($entry)) : '';
     if ($entry['registrant_limit_enabled'])
     {
-      $entry['name'] .= get_vocab('registration_level_limited', $entry['n_registered'], $entry['registrant_limit']);
+      $tag = ($show_names) ? 'registration_level_limited_with_names' : 'registration_level_limited';
+      $entry['name'] .= get_vocab($tag, $entry['n_registered'], $entry['registrant_limit'], $names);
     }
     else
     {
-      $entry['name'] .= get_vocab('registration_level_unlimited', $entry['n_registered']);
+      $tag = ($show_names) ? 'registration_level_unlimited_with_names' : 'registration_level_unlimited';
+      $entry['name'] .= get_vocab($tag, $entry['n_registered'], $names);
     }
   }
 
