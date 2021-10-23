@@ -304,9 +304,12 @@ $attributes = array('id'     => 'edit_room',
 $legend = (is_admin()) ? get_vocab('editroom') : get_vocab('viewroom');
 
 $form->setAttributes($attributes)
-     ->addHiddenInput('room', $data['id'])
-     ->addHiddenInput('old_area', $data['area_id'])
-     ->addHiddenInput('old_room_name', $data['room_name']);
+     ->addHiddenInputs(array(
+         'room' => $data['id'],
+         'area' => $data['area_id'],
+         'old_area' => $data['area_id'],
+         'old_room_name' => $data['room_name']
+       ));
 
 $outer_fieldset = new ElementFieldset();
 
