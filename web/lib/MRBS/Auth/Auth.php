@@ -118,7 +118,7 @@ abstract class Auth
     if (!isset($entry['n_registered']) || ($entry['n_registered'] > 0))
     {
       $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id']);
-      sort($display_names);
+      usort($display_names, 'MRBS\compare_display_names');
     }
 
     return $display_names;
