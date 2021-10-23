@@ -140,8 +140,11 @@ class AuthDb extends Auth
           ORDER BY display_name";
 
     $res = db()->query($sql);
-    
-    return $res->all_rows_keyed();
+
+    $users =  $res->all_rows_keyed();
+    self::sortUsers($users);
+
+    return $users;
   }
 
 
