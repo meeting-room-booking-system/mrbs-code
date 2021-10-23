@@ -222,16 +222,6 @@ abstract class Auth
   protected static function sortUsers(array &$users) : void
   {
     usort($users, [__CLASS__, 'compareUsers']);
-    return;
-    // Obtain a list of columns
-    $username     = array_column($users, 'username');
-    $display_name = array_column($users, 'display_name');
-
-    // Sort the data with volume descending, edition ascending
-    // Add $data as the last parameter, to sort by the common key
-    array_multisort($display_name, SORT_ASC, SORT_LOCALE_STRING | SORT_FLAG_CASE,
-                    $username, SORT_ASC, SORT_LOCALE_STRING | SORT_FLAG_CASE,
-                    $users);
   }
 
 
