@@ -125,6 +125,30 @@ function generate_token($length)
 }
 
 
+// A locale aware version of strcasecmp()
+function strcasecmp_locale(string $string1, string $string2) : int
+{
+  // Sort the array.  If the order is reversed then $string1 > $string2
+  $original_array = array($string1, $string2);
+  $array = $original_array;
+  asort($array,SORT_LOCALE_STRING | SORT_FLAG_CASE);
+  if ($array !== $original_array)
+  {
+    return 1;
+  }
+  // Otherwise, flip the array and try again.  If the order is reversed then $string2 > $string1
+  $original_array = array($string2, $string1);
+  $array = $original_array;
+  asort($array,SORT_LOCALE_STRING | SORT_FLAG_CASE);
+  if ($array !== $original_array)
+  {
+    return -1;
+  }
+  // Otherwise they must be equal
+  return 0;
+}
+
+
 // Returns a name in the format last_name first_name for sorting
 function get_sortable_name($name)
 {
@@ -158,6 +182,12 @@ function get_sortable_name($name)
   }
 
   return $result;
+}
+
+
+function compare_display_names(string $name1, string $name2) : int
+{
+  return strcasecmp_locale(get_sortable_name($name1), get_sortable_name($name2));
 }
 
 

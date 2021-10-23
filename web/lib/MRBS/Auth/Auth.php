@@ -3,6 +3,8 @@ namespace MRBS\Auth;
 
 use \MRBS\User;
 use function MRBS\get_registrants;
+use function MRBS\get_sortable_name;
+use function MRBS\strcasecmp_locale;
 
 
 abstract class Auth
@@ -111,7 +113,7 @@ abstract class Auth
     if (!isset($entry['n_registered']) || ($entry['n_registered'] > 0))
     {
       $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id']);
-      sort($display_names);
+      usort($display_names, 'MRBS\compare_display_names');
     }
 
     return $display_names;
@@ -198,10 +200,29 @@ abstract class Auth
   }
 
 
+  // Callback function for comparing two users, indexed by 'username' and 'display_name'.
+  // Compares first by 'display_name' and then by 'username'
+  private static function compareUsers(array $user1, array $user2) : int
+  {
+    $display_name1 = get_sortable_name($user1['display_name']);
+    $display_name2 = get_sortable_name($user2['display_name']);
+    $display_name_comparison = strcasecmp_locale($display_name1, $display_name2);
+
+    if ($display_name_comparison === 0)
+    {
+      return strcasecmp_locale($user1['username'], $user2['username']);
+    }
+
+    return $display_name_comparison;
+  }
+
+
   // Sorts an array of users indexed by 'username' and 'display_name', eg the
   // output of getUsernames().   Sorts by display_name then username.
   protected static function sortUsers(array &$users) : void
   {
+    usort($users, [__CLASS__, 'compareUsers']);
+    return;
     // Obtain a list of columns
     $username     = array_column($users, 'username');
     $display_name = array_column($users, 'display_name');
