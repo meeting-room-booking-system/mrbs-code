@@ -295,9 +295,12 @@ function generate_room_form($room_id, $errors=null)
   $legend = (is_admin()) ? get_vocab('editroom') : get_vocab('viewroom');
 
   $form->setAttributes($attributes)
-       ->addHiddenInput('room', $room->id)
-       ->addHiddenInput('old_area', $room->area_id)
-       ->addHiddenInput('old_room_name', $room->room_name);
+       ->addHiddenInputs(array(
+           'room' => $room->id,
+           'area' => $room->area_id,
+           'old_area' => $room->area_id,
+           'old_room_name' => $room->room_name
+         ));
 
   $outer_fieldset = new ElementFieldset();
 
