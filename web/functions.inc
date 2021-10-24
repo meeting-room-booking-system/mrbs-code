@@ -129,6 +129,10 @@ function generate_token($length)
 function strcasecmp_locale(string $string1, string $string2) : int
 {
   // Sort the array.  If the order is reversed then $string1 > $string2
+  // (When this function is being used as a callback for usort, and if the original array
+  // is sorted in ascending order, which it well might be if it's the result of
+  // an SQL query with an ORDER BY, then it's fastest to test for $string1 > $string2
+  // first, as below.)
   $original_array = array($string1, $string2);
   $array = $original_array;
   asort($array,SORT_LOCALE_STRING | SORT_FLAG_CASE);
