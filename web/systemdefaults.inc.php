@@ -1179,10 +1179,15 @@ $auth['only_admin_can_see_other_users'] = false;
 // not shown unless you have write access to the booking.
 $auth['show_registrant_names'] = false;
 
-// For events that allow registration you can also show the registrants names in
+// For events that allow registration you can also show the registrants' names in
 // the calendar view, whether or not you have write access to the booking.
 // NOTE: you also need $show_registration_level = true; for this to work.
 $auth['show_registrant_names_in_calendar'] = false;
+
+// You can additionally choose whether to show the registrants' names in the calendar
+// if the calendar is open to the public and the user is not logged in or has level 0 access.
+// NOTE: you also need $auth['show_registrant_names_in_calendar'] = true; for this to work
+$auth['show_registrant_names_in_public_calendar'] = false;
 
 // Set this to true if you want ordinary users to be able to register others.
 $auth['users_can_register_others'] = false;

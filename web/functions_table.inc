@@ -13,7 +13,15 @@ function prepare_entry(array $entry) : array
   // Add in the registration level details
   if ($show_registration_level && $entry['allow_registration'])
   {
+    // Check whether we should be showing the registrants' names
     $show_names = ($auth['show_registrant_names_in_calendar'] && ($entry['n_registered'] > 0));
+    if ($show_names && !$auth['show_registrant_names_in_public_calendar'])
+    {
+      // If we're not allowed to show names in the public calendar, check that the user is logged in
+      // and has an access level of at least 1
+      $mrbs_user = session()->getCurrentUser();
+      $show_names = isset($mrbs_user) && ($mrbs_user->level > 0);
+    }
     $names = ($show_names) ? implode(', ', auth()->getRegistrantsDisplayNames($entry)) : '';
     if ($entry['registrant_limit_enabled'])
     {
