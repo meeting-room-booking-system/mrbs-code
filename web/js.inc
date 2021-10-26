@@ -14,6 +14,7 @@ function script($src, $add_version=false)
 global $view, $year, $month, $day, $area, $room;
 global $multisite, $site;
 global $debug;
+global $custom_js_url;
 
 $page = this_page(false, '.php');
 
@@ -112,7 +113,12 @@ if ($page == 'index')
   script("js/resizable.js.php?$query_string", true);
 }
 
-// Include the HTML5 Shiv so that elements such as <header> etc can be styled in IE8 and below.
+if (isset($custom_js_url))
+{
+  script($custom_js_url, true);
+}
+
+// Include the HTML5 Shiv so that elements such as <header> etc. can be styled in IE8 and below.
 // (Even though we don't support IE8 and below, we still need the HTML5 Shiv for styling the
 // page which says we don't support them!).
 echo "<!--[if lte IE 8]>\n";
