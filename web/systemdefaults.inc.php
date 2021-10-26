@@ -174,6 +174,9 @@ $theme = "default";
 // Use the $custom_css_url to override the standard MRBS CSS.
 //$custom_css_url = 'css/custom.css';
 
+// Use the $custom_js_url to add your own JavaScript.
+//$custom_js_url = 'js/custom.js';
+
 
 /*******************
  * Calendar settings
