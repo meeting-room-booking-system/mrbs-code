@@ -105,7 +105,8 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
     if ($enable_periods)
     {
       $p_num = $start_date['minutes'];
-      $p_end_num = $end_date['minutes'] - 1;
+      // The number of periods might have been reduced since the booking was made
+      $p_end_num = min(count($periods), $end_date['minutes']) - 1;
       if ($different_dates)
       {
         $timestr = $periods[$p_num] . ", " .
