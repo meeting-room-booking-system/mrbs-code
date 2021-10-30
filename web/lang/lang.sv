@@ -417,7 +417,6 @@ $vocab["empty_name"]         = "Du har inte angett ett namn!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Ändra område";
 $vocab["change"]                  = "Ändra";
-$vocab["backadmin"]               = "Tillbaka till administration";
 $vocab["editroom"]                = "Ändra rum";
 $vocab["viewroom"]                = "Visa rum";
 $vocab["not_found"]               = "hittades ej";

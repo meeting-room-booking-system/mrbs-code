@@ -344,7 +344,6 @@ $vocab["empty_name"]         = "Anda belum memasukkan anam!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Ubah Area";
 $vocab["change"]                  = "Ubah";
-$vocab["backadmin"]               = "Kembali ke ruangan";
 $vocab["editroom"]                = "Ubah Ruangan";
 $vocab["viewroom"]                = "Lihat Ruangan";
 $vocab["not_found"]               = " tidak ditemukan";

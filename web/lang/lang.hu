@@ -318,7 +318,6 @@ $vocab["empty_name"]         = "Nem adtál meg nevet!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Helyszín szerkesztése";
 $vocab["change"]                  = "Módosítás";
-$vocab["backadmin"]               = "Vissza a tárgyalókhoz";
 $vocab["editroom"]                = "Tárgyaló szerkesztése";
 $vocab["viewroom"]                = "Tárgyaló megtekintése";
 $vocab["not_found"]               = " nem található.";

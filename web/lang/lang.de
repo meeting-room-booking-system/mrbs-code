@@ -466,7 +466,6 @@ $vocab["empty_name"]         = "Sie haben keinen Namen angegeben!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Bereich bearbeiten";
 $vocab["change"]             = "Ändern";
-$vocab["backadmin"]          = "Zurück zu Admin";
 $vocab["editroom"]           = "Raum bearbeiten";
 $vocab["viewroom"]           = "Raum ansehen";
 $vocab["not_found"]          = " nicht gefunden";

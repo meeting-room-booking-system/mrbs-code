@@ -417,7 +417,6 @@ $vocab["empty_name"]         = "你还没有输入一个名称!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "修改区域";
 $vocab["change"]                  = "修改";
-$vocab["backadmin"]               = "回到房间首页";
 $vocab["editroom"]                = "修改房间";
 $vocab["viewroom"]                = "查看房间";
 $vocab["not_found"]               = "找不到";

@@ -307,7 +307,6 @@ $vocab["empty_name"]         = "คุณยังไม่ได้ป้อน
 
 $vocab["editarea"]                = "แก้ไขพื้นที่";
 $vocab["change"]                  = "เปลี่ยน";
-$vocab["backadmin"]               = "กลับไปยังห้อง";
 $vocab["editroom"]                = "แก้ไขห้อง";
 $vocab["viewroom"]                = "ดูห้อง";
 $vocab["not_found"]               = "ไม่พบ";

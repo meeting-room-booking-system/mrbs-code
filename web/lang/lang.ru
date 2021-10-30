@@ -298,7 +298,6 @@ $vocab["empty_name"]         = "Вы не ввели имя!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Изменить корпус";
 $vocab["change"]                  = "Изменить";
-$vocab["backadmin"]               = "Вернуться к помещениям";
 $vocab["editroom"]                = "Изменить помещение";
 $vocab["viewroom"]                = "Просмотр помещение";
 $vocab["not_found"]               = " не найдено";

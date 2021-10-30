@@ -183,7 +183,6 @@ $vocab["administration"]     = "Kudeaketa";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Baliabidea editatu";
 $vocab["change"]             = "Aldatu";
-$vocab["backadmin"]          = "Kudeaketara itzuli";
 $vocab["editroom"]           = "Elementua editatu";
 $vocab["not_found"]          = " ez da aurkitu";
 $vocab["room_admin_email"]   = "Elementuaren kudeatzailearen emaila";

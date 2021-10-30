@@ -352,7 +352,6 @@ $vocab["empty_name"]         = "Nu ai introdus un nume!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Modifica Zona";
 $vocab["change"]                  = "Modificare";
-$vocab["backadmin"]               = "Inapoi La Sali";
 $vocab["editroom"]                = "Modifica Sala";
 $vocab["viewroom"]                = "Vizualizeaza Sala";
 $vocab["not_found"]               = " nu a fost gasita";
