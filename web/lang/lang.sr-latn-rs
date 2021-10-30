@@ -330,7 +330,6 @@ $vocab["empty_name"]         = "Niste uneli ime!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Izmeni oblast";
 $vocab["change"]                  = "Promeni";
-$vocab["backadmin"]               = "Povratak na prostorije";
 $vocab["editroom"]                = "Izmeni prostoriju";
 $vocab["viewroom"]                = "Pogledaj prostoriju";
 $vocab["not_found"]               = " nije pronađena";

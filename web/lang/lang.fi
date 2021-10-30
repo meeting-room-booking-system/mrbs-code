@@ -328,7 +328,6 @@ $vocab["empty_name"]         = "Nimi puuttuu!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Muokkaa alueen tietoja";
 $vocab["change"]                  = "Tallenna";
-$vocab["backadmin"]               = "Takaisin ylläpitoon";
 $vocab["editroom"]                = "Muokkaa huoneen tietoja";
 $vocab["viewroom"]                = "Näytä huoneen tiedot";
 $vocab["not_found"]               = " ei löytynyt";

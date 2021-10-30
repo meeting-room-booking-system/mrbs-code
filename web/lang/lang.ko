@@ -185,7 +185,6 @@ $vocab["administration"]     = "지역 및 회의실 관리";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "지역 수정";
 $vocab["change"]             = "수정";
-$vocab["backadmin"]          = "돌아가기";
 $vocab["editroom"]           = "회의실 수정";
 $vocab["not_found"]          = "이(가) 발견되지 않음";
 $vocab["room_admin_email"]   = "회의실 관리자 메일주소";

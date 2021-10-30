@@ -183,7 +183,6 @@ $vocab["administration"]     = "管理者";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "新增種類";
 $vocab["change"]             = "改變";
-$vocab["backadmin"]          = "回到管理首頁";
 $vocab["editroom"]           = "修改會議室/設備";
 $vocab["not_found"]          = "找不到";
 $vocab["room_admin_email"]   = "會議室管理者email";

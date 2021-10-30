@@ -329,7 +329,6 @@ $vocab["empty_name"]         = "名前が入力されていません!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "部署を編集";
 $vocab["change"]                  = "変更";
-$vocab["backadmin"]               = "部屋に戻る";
 $vocab["editroom"]                = "部屋を編集";
 $vocab["viewroom"]                = "部屋を見る";
 $vocab["not_found"]               = "は見つかりませんでした";

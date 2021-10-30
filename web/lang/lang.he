@@ -307,7 +307,6 @@ $vocab["empty_name"]         = "לא הכנסת שם";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "עדכן אזור";
 $vocab["change"]                  = "עדכן";
-$vocab["backadmin"]               = "חזור לחדרים";
 $vocab["editroom"]                = "עדכן חדר";
 $vocab["viewroom"]                = "הצג חדר";
 $vocab["not_found"]               = "לא נמצא";

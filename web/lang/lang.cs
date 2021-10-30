@@ -343,7 +343,6 @@ $vocab["empty_name"]         = "Nevložili jste jméno!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Upravit oblast";
 $vocab["change"]                  = "Změnit";
-$vocab["backadmin"]               = "Zpět do místností/zdrojů";
 $vocab["editroom"]                = "Upravit místnost/zdroj";
 $vocab["viewroom"]                = "Zobrazit místnost/zdroj";
 $vocab["not_found"]               = " nenalezeno";

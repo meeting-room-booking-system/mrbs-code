@@ -184,7 +184,6 @@ $vocab["administration"]     = "Administració";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Editar familia";
 $vocab["change"]             = "Canviar";
-$vocab["backadmin"]          = "Tornar a admintració";
 $vocab["editroom"]           = "Editar recurs";
 $vocab["not_found"]          = " no trobat";
 $vocab["room_admin_email"]   = "Recuros admin email";

@@ -185,7 +185,6 @@ $vocab["administration"]     = "Administration";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Ændre område";
 $vocab["change"]             = "Ændre";
-$vocab["backadmin"]          = "Tilbage til admin";
 $vocab["editroom"]           = "Ændre rum";
 $vocab["not_found"]          = " ikke fundet";
 $vocab["room_admin_email"]   = "Rum administrators email";

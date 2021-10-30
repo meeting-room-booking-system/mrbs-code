@@ -447,7 +447,6 @@ $vocab["empty_name"]         = "You have not entered a name!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]                = "Edit Area";
 $vocab["change"]                  = "Change";
-$vocab["backadmin"]               = "Back to Rooms";
 $vocab["editroom"]                = "Edit Room";
 $vocab["viewroom"]                = "View Room";
 $vocab["not_found"]               = " not found";

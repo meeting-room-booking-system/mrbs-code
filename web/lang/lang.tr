@@ -319,7 +319,6 @@ $vocab["empty_name"]         = "Ad girmediniz!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Bölge düzenle";
 $vocab["change"]             = "Değiştir";
-$vocab["backadmin"]          = "Yönetim'e git";
 $vocab["editroom"]           = "Toplantı Salonu Düzenle";
 $vocab["viewroom"]                = "Toplantı odasını gör";
 $vocab["not_found"]          = " bulunamadı";

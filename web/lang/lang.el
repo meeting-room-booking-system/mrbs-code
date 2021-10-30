@@ -183,7 +183,6 @@ $vocab["administration"]     = "Διαχείριση";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Τροποποίηση περιοχής";
 $vocab["change"]             = "Αλλαγή";
-$vocab["backadmin"]          = "Επιστροφή στην διαχείριση";
 $vocab["editroom"]           = "Τροποποίηση αίθουσας";
 $vocab["not_found"]          = " δεν βρέθηκε";
 $vocab["room_admin_email"]   = "Room admin email";

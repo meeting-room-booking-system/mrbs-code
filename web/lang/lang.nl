@@ -284,7 +284,6 @@ $vocab["empty_name"]         = "Er is geen naam ingevoerd!";
 // Used in edit_area.php and/or edit_room.php
 $vocab["editarea"]           = "Gebouw Wijzigen";
 $vocab["change"]             = "Wijzig";
-$vocab["backadmin"]          = "Terug naar Beheer";
 $vocab["editroom"]           = "Kamer wijzigen";
 $vocab["viewroom"]           = "Bekijk Kamer";
 $vocab["not_found"]          = " niet gevonden";
