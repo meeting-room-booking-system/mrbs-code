@@ -753,7 +753,7 @@ function get_fieldset_submit_buttons()
                              'formaction' => multisite('admin.php')));
   $field->addLabelClass('no_suffix')
         ->addLabelElement($back)
-        ->setControlAttribute('value', get_vocab('change'));
+        ->setControlAttribute('value', get_vocab('save'));
   $fieldset->addElement($field);
 
   return $fieldset;
