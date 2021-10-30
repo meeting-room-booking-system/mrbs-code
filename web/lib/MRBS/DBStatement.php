@@ -39,7 +39,7 @@ class DBStatement
 
   // Return all the rows from a statement object, as an array of arrays
   // keyed on the column name
-  public function all_rows_keyed()
+  public function all_rows_keyed() : array
   {
     $result = array();
 
