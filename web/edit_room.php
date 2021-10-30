@@ -253,7 +253,7 @@ function get_fieldset_general($data)
   $field = new FieldInputSubmit();
 
   $back = new ElementInputSubmit();
-  $back->setAttributes(array('value'      => get_vocab('backadmin'),
+  $back->setAttributes(array('value'      => get_vocab('back'),
                              'formaction' => multisite('admin.php')));
   $field->setAttribute('class', 'buttons')
         ->addLabelClass('no_suffix')

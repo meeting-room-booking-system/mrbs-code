@@ -733,7 +733,7 @@ function get_fieldset_submit_buttons()
   $field = new FieldInputSubmit();
 
   $back = new ElementInputSubmit();
-  $back->setAttributes(array('value'      => get_vocab('backadmin'),
+  $back->setAttributes(array('value'      => get_vocab('back'),
                              'formaction' => multisite('admin.php')));
   $field->addLabelClass('no_suffix')
         ->addLabelElement($back)
