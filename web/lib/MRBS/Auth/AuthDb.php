@@ -11,7 +11,6 @@ use function MRBS\generate_global_uid;
 use function MRBS\generate_token;
 use function MRBS\get_mail_charset;
 use function MRBS\get_vocab;
-use function MRBS\is_https;
 use function MRBS\multisite;
 use function MRBS\parse_email;
 use function MRBS\toTimeString;
