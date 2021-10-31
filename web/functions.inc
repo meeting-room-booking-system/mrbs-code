@@ -182,7 +182,7 @@ function strcasecmp_locale(string $string1, string $string2) : int
 
 
 // Returns a name in the format last_name first_name for sorting
-function get_sortable_name($name)
+function get_sortable_name(?string $name) : ?string
 {
   global $sort_users_by_last_name;
 
@@ -195,6 +195,18 @@ function get_sortable_name($name)
   {
     return $name;
   }
+
+  // Look for anything in brackets (ordinary or square) at the
+  // end of the name and treat it as a suffix.  For example if
+  // the display name is "Joe Bloggs (visitor)" then the last name
+  // is really "Bloggs".
+  $pattern = '/\s*\(.*\)$|[.*]$/';
+  if (preg_match($pattern, $name, $matches))
+  {
+    $suffix = $matches[0];
+    $name = preg_replace($pattern, '', $name);
+  }
+
 
   $tokens = explode(' ', $name);
 
@@ -211,6 +223,12 @@ function get_sortable_name($name)
     {
       $result .= ' ' . $token;
     }
+  }
+
+  // Add back in any suffix
+  if (isset($suffix))
+  {
+    $result .= $suffix;
   }
 
   return $result;
