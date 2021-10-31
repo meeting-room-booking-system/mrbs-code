@@ -168,6 +168,18 @@ function get_sortable_name($name)
     return $name;
   }
 
+  // Look for anything in brackets (ordinary or square) at the
+  // end of the name and treat it as a suffix.  For example if
+  // the display name is "Joe Bloggs (visitor)" then the last name
+  // is really "Bloggs".
+  $pattern = '/\s*\(.*\)$|[.*]$/';
+  if (preg_match($pattern, $name, $matches))
+  {
+    $suffix = $matches[0];
+    $name = preg_replace($pattern, '', $name);
+  }
+
+
   $tokens = explode(' ', $name);
 
   // Get rid of other whitespace (eg tabs)
@@ -183,6 +195,12 @@ function get_sortable_name($name)
     {
       $result .= ' ' . $token;
     }
+  }
+
+  // Add back in any suffix
+  if (isset($suffix))
+  {
+    $result .= $suffix;
   }
 
   return $result;
