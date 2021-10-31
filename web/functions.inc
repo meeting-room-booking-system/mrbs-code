@@ -154,7 +154,7 @@ function strcasecmp_locale(string $string1, string $string2) : int
 
 
 // Returns a name in the format last_name first_name for sorting
-function get_sortable_name($name)
+function get_sortable_name(?string $name) : ?string
 {
   global $sort_users_by_last_name;
 
