@@ -42,9 +42,15 @@ var refreshPage = function refreshPage() {
                   page_date: args.pageDate,
                   area: args.area,
                   room: args.room};
+
       if (args.timetohighlight !== undefined)
       {
         data.timetohighlight = args.timetohighlight;
+      }
+
+      if (args.kiosk !== undefined)
+      {
+        data.kiosk = args.kiosk;
       }
 
       <?php
