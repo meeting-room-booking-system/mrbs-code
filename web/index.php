@@ -455,7 +455,8 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null,
+    'kiosk'     => $kiosk ?? null
   );
 
 print_header($context);
