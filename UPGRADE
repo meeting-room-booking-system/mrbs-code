@@ -144,37 +144,5 @@ Please also see the note about database compatibility above.
 
 Upgrading from prior MRBS 1.2-pre3
 ==================================
-
-mrbs 1.2-pre3 introduced area and room administrator email fields.
-
-Please apply the upgrade3.my.sql to add these fields. This file should work
-both with mysql and pgsql.
-
-
-Upgrading from prior to MRBS 1.0 final
-======================================
-
-Please apply the upgrade2.my.sql (if using MySQL) or the
-the upgrade2.pg.sql (if using PostgreSQL) script, which
-adds a new column to the 'mrbs_repeat' table to support
-"n-weekly" repeats.
-
-
-Upgrading from prior to MRBS 1.0-pre1
-======================================
-
-A change in version 1.0-pre1 might affect the appearance of entries in your
-existing database. Prior versions of MRBS did an extra and unnecessary
-level of backslash-escaping on room, area, and entry names and
-descriptions. This applied to certain characters such as single quote
-mark(') and backslash(\). As of version 1.0-pre1, these characters are
-handled correctly. If you see extra backslashes when MRBS displays names or
-descriptions, it is because these are in actually your database.  You can
-edit the entries in MRBS or directly with your database SQL tool, or just
-ignore them.
-
-
-Upgrading from prior to MRBS 0.7
-================================
-There was a change to the database schema at version 0.7. See the
-information in INSTALL on using the upgrade.my.sql script.
+Upgrade to MRBS 1.2-pre3 first by following the upgrade instructions in that
+release.
