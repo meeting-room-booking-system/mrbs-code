@@ -206,6 +206,11 @@ function get_time($value, $params=null)
     $date = $value;
     $time = '000000';
   }
+  if (empty($time))
+  {
+    // defensive programming, fix, if time is not given
+    $time = '000000';
+  }
   $year = substr($date, 0, 4);
   $month = substr($date, 4, 2);
   $day = substr($date, 6, 2);

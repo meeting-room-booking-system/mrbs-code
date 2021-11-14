@@ -47,12 +47,32 @@ function get_compression_wrappers()
 }
 
 
+// Delete room entries to fill them again
+function perform_delete_room_bookings($room)
+{
+  db()->begin();
+  try
+  {
+    $sql = "DELETE FROM " . _tbl('entry') . " WHERE room_id=?";
+    db()->command($sql, array($room));
+
+    $sql = "DELETE FROM " . _tbl('repeat') . " WHERE room_id=?";
+    db()->command($sql, array($room));
+  }
+  catch (DBException $e)
+  {
+    db()->rollback();
+    throw $e;
+  }
+  db()->commit();
+}
+
 // Gets the id of the area/room with the LOCATION property value of $location,
 // creating an area and room if allowed.
 // Returns FALSE if it can't find an id or create an id, with an error message in $error
 function get_room_id($location, &$error)
 {
-  global $area_room_order, $area_room_delimiter, $area_room_create;
+  global $area_room_order, $area_room_delimiter, $area_room_create, $area_room_parsing;
 
   // If there's no delimiter we assume we've just been given a room name (that will
   // have to be unique).   Otherwise we split the location into its area and room parts
@@ -241,10 +261,10 @@ function get_event($handle)
 }
 
 
-// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
+// Add a VEVENT to MRBS.   Returns 1 on success, 0 on failure, 2 on skipped because in the past
 function process_event($vevent)
 {
-  global $import_default_room, $import_default_type, $skip;
+  global $import_default_room, $import_default_type, $skip, $area_room_parsing, $import_past;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
 
@@ -301,6 +321,7 @@ function process_event($vevent)
                                       $properties['DTSTART']['params']);
   }
   // Now go through the rest of the properties
+  $location = '';
   foreach($properties as $name => $details)
   {
     switch ($name)
@@ -319,11 +340,21 @@ function process_event($vevent)
         break;
 
       case 'LOCATION':
-        $error = '';
-        $booking['room_id'] = get_room_id($details['value'], $error);
-        if ($booking['room_id'] === FALSE)
+        // Parse location for rooms, if this is requested
+        if ($area_room_parsing)
         {
-          $problems[] = $error;
+          // Only care if the location is given
+          if (!empty($details['value']))
+          {
+            $error = '';
+            $booking['room_id'] = get_room_id($details['value'], $error);
+            if ($booking['room_id'] === FALSE)
+            {
+              $problems[] = $error;
+            }
+          }
+        } else {
+          $location = $details['value'];
         }
         break;
 
@@ -388,6 +419,20 @@ function process_event($vevent)
     }
   }
 
+  if (!$import_past && $booking['end_time']<time())
+  {
+    return 2;
+  }
+
+  if (!empty($location))
+  {
+    if (!empty($booking['description']))
+    {
+      $booking['description'] .= " / ";
+    }
+    $booking['description'] .= $location;
+  }
+
   // If we didn't manage to work out a username then just put the booking
   // under the name of the current user
   if (!isset($booking['create_by']))
@@ -450,12 +495,13 @@ function process_event($vevent)
     $result = mrbsMakeBookings($bookings, NULL, FALSE, $skip);
     if ($result['valid_booking'])
     {
-      return TRUE;
+      return 1;
     }
   }
   // There were problems - list them
   echo "<div class=\"problem_report\">\n";
-  echo get_vocab("could_not_import") . " UID:" . htmlspecialchars($booking['ical_uid']);
+  echo get_vocab("could_not_import") . ", UID: " . htmlspecialchars($booking['ical_uid']);
+  echo ", " . htmlspecialchars($booking['name']);
   echo "<ul>\n";
   foreach ($problems as $problem)
   {
@@ -484,7 +530,7 @@ function process_event($vevent)
   echo "</ul>\n";
   echo "</div>\n";
 
-  return FALSE;
+  return 0;
 }
 
 
@@ -675,6 +721,13 @@ function get_fieldset_location_settings()
     }
   }
 
+  // Area/room parsing
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('area_room_parsing'))
+        ->setControlAttribute('name', 'area_room_parsing')
+        ->setChecked($area_room_parsing);
+  $fieldset->addElement($field);
+
   // Area-room order
   $field = new FieldInputRadioGroup();
   $options = array('area_room' => get_vocab('area_room'),
@@ -718,21 +771,38 @@ function get_fieldset_other_settings()
   $field = new FieldSelect();
 
   $options = array();
-  foreach ($booking_types as $type)
+  if (isset($booking_types))
   {
-    $options[$type] = get_type_vocab($type);
-  }
+    foreach ($booking_types as $type)
+    {
+      $options[$type] = get_type_vocab($type);
+    }
 
-  $field->setLabel(get_vocab('default_type'))
-        ->setControlAttribute('name', 'import_default_type')
-        ->addSelectOptions($options, $import_default_type, true);
-  $fieldset->addElement($field);
+    $field->setLabel(get_vocab('default_type'))
+          ->setControlAttribute('name', 'import_default_type')
+          ->addSelectOptions($options, $import_default_type, true);
+    $fieldset->addElement($field);
+  }
 
   // Skip conflicts
   $field =new FieldInputCheckbox();
   $field->setLabel(get_vocab('skip_conflicts'))
         ->setControlAttribute('name', 'skip')
         ->setChecked($skip);
+  $fieldset->addElement($field);
+
+  // Delete room bookings
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('delete_room_bookings'))
+        ->setControlAttribute('name', 'delete_room_bookings')
+        ->setChecked($delete_room_bookings);
+  $fieldset->addElement($field);
+
+  // Import past
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('import_past'))
+        ->setControlAttribute('name', 'import_past')
+        ->setChecked($import_past);
   $fieldset->addElement($field);
 
   return $fieldset;
@@ -754,12 +824,16 @@ function get_fieldset_submit_button()
 
 
 $import = get_form_var('import', 'string');
+$url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
+$area_room_parsing = get_form_var('area_room_parsing', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
 $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
+$delete_room_bookings = get_form_var('delete_room_bookings', 'string', '0');
+$import_past = get_form_var('import_past', 'string', '0');
 
 // Check the CSRF token if we're being asked to import data
 if (!empty($import))
@@ -787,8 +861,8 @@ print_header($context);
 // ---------------------------
 
 if (!empty($import))
-{
-  if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
+{  
+  if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK && empty($url))
   {
     echo "<p>\n";
     echo get_vocab("upload_failed");
@@ -809,7 +883,7 @@ if (!empty($import))
     }
     echo "</p>\n";
   }
-  elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
+  elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']) && empty($url))
   {
     // This should not happen and if it does may mean that somebody is messing about
     echo "<p>\n";
@@ -817,10 +891,27 @@ if (!empty($import))
     echo "</p>\n";
     trigger_error("Attempt to import a file that has not been uploaded", E_USER_WARNING);
   }
-  // We've got a file
+  // We've got a file or an url
   else
   {
-    $archive = get_archive_details($_FILES['upload_file']);
+    if ($delete_room_bookings && !$area_room_parsing)
+    {
+      perform_delete_room_bookings($import_default_room);
+    }
+
+    if (empty($url))
+    {
+        $archive = get_archive_details($_FILES['upload_file']);
+    }
+    else
+    {
+        $url_split = explode("://", $url);
+        $archive = array();
+        $archive['files'][] = array('name'     => 'download: ' . $url,
+                                    'tmp_name' => $url_split[1],
+                                    'size'     => NULL);
+        $archive['wrapper'] = $url_split[0];
+    }
 
     if ($archive === FALSE)
     {
@@ -832,8 +923,7 @@ if (!empty($import))
       {
         echo "<h3>" . $file['name'] . "</h3>";
 
-        $n_success = 0;
-        $n_failure = 0;
+        $results = array( 0, 0, 0 );
 
         $handle = fopen($archive['wrapper'] . '://' . $file['tmp_name'], 'rb');
 
@@ -845,16 +935,20 @@ if (!empty($import))
         {
           while (FALSE !== ($vevent = get_event($handle)))
           {
-            (process_event($vevent)) ? $n_success++ : $n_failure++;
+            $results[ process_event($vevent) ]++;
           }
 
           fclose($handle);
 
           echo "<p>\n";
-          echo "$n_success " . get_vocab("events_imported");
-          if ($n_failure > 0)
+          echo $results[1] . " " . get_vocab("events_imported");
+          if ($results[0] > 0)
           {
-            echo "<br>\n$n_failure " . get_vocab("events_not_imported");
+            echo "<br>\n" . $results[0] . " " . get_vocab("events_not_imported");
+          }
+          if ($results[2] > 0)
+          {
+            echo "<br>\n" . $results[2] . " " . get_vocab("events_skipped");
           }
           echo "</p>\n";
         }
@@ -904,6 +998,13 @@ $field->setLabel(get_vocab('file_name'))
       ->setControlAttributes(array('accept' => implode(',', $accept_mime_types),
                                    'name'   => 'upload_file',
                                    'id'     => 'upload_file'));
+
+$fieldset->addElement($field);
+
+$field = new FieldInputText();
+$field->setLabel(get_vocab('url'))
+        ->setControlAttributes(array('name'     => 'url',
+                                     'class'    => 'short'));
 
 $fieldset->addElement($field)
          ->addElement(get_fieldset_location_settings())
