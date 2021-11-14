@@ -318,8 +318,8 @@ function getWritable($creator, $rooms=null, $all=true)
     return true;
   }
 
-  // Otherwise you have to be a (booking) admin for this room
-  if (is_book_admin($rooms))
+  // Otherwise you have to be allowed to other peoples editing
+  if (may_edit_and_view_all_bookings($rooms))
   {
     return true;
   }
@@ -378,10 +378,68 @@ function is_admin()
   return (isset($mrbs_user) && ($mrbs_user->level >= $required_level));
 }
 
+// Checks whether the current user is allowed to modify and delete other 
+// people's bookings and to approve bookings.
+//
+// $rooms can be either a single scalar value or an array of room ids.  The default
+// value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here
+// so that later MRBS can be enhanced to provide fine-grained permissions.)
+//
+// $all specifies whether the user must be a booking for all $rooms, or just some of
+// them, ie at least one.
+//
+// Returns:  TRUE if the user is allowed has booking admin rights for
+//           the room(s); otherwise FALSE
+function may_edit_and_view_all_bookings($rooms=null, $all=true)
+{
+  global $min_edit_other_bookings_level;
+  global $min_booking_admin_level;
+
+  if (is_array($rooms) && (count($rooms) > 0))
+  {
+    if ($all)
+    {
+      // We want the user to be a booking admin for all the rooms,
+      // so if for any one room they are not, then return false.
+      foreach ($rooms as $room)
+      {
+        if (!may_edit_and_view_all_bookings($room))
+        {
+          return false;
+        }
+      }
+      return true;
+    }
+    else
+    {
+      // We want the user to be a booking admin for at least one room,
+      // so if there are no rooms for which they are, then return false.
+      foreach ($rooms as $room)
+      {
+        if (may_edit_and_view_all_bookings($room))
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+  if (is_null($rooms) && !$all)
+  {
+    // Not yet supported.  Could support it but need to decide what $rooms=null means.
+    // Does it mean all rooms in the system or just all rooms in the current area?
+    throw new \Exception('$rooms===null and $all===false not yet supported.');
+  }
+
+  $mrbs_user = session()->getCurrentUser();
+  #echo ( "<hr>may_edit_and_view_all_bookings: " . $mbrs_user->level . ", $min_edit_other_bookings_level,$min_booking_admin_level<hr>");
+
+  return (isset($mrbs_user) && ($mrbs_user->level >= min($min_edit_other_bookings_level,$min_booking_admin_level)));
+}
 
 // Checks whether the current user has booking administration rights
-// for $rooms - ie is allowed to modify and delete other people's bookings
-// and to approve bookings.
+// for $rooms.
 //
 // $rooms can be either a single scalar value or an array of room ids.  The default
 // value for $rooms is all rooms.  (At the moment $room is ignored, but is passed here

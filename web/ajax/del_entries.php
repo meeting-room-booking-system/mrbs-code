@@ -33,8 +33,8 @@ Form::checkToken();
 // Check the user is authorised for this page
 checkAuthorised(this_page());
 
-// Check that the user is a booking admin
-if (!is_book_admin())
+// Check that the user may edit other bookings
+if (!may_edit_and_view_all_bookings())
 {
   exit;
 }

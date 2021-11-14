@@ -1601,7 +1601,7 @@ if ($phase == 2)
   // to make sure we respect the privacy settings.  (We rely on the privacy fields
   // in the area table being not NULL.   If they are by some chance NULL, then no
   // entries will be found, which is at least safe from the privacy viewpoint)
-  if (!$cli_mode && !is_book_admin())
+  if (!$cli_mode && !may_edit_and_view_all_bookings())
   {
     if (isset($mrbs_user))
     {

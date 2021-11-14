@@ -292,7 +292,7 @@ if (count($invisible_room_ids) > 0)
 // to make sure we respect the privacy settings.  (We rely on the privacy fields
 // in the area table being not NULL.   If they are by some chance NULL, then no
 // entries will be found, which is at least safe from the privacy viewpoint)
-if (!is_book_admin())
+if (!may_edit_and_view_all_bookings())
 {
   if (isset($mrbs_user))
   {

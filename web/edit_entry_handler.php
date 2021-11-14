@@ -255,7 +255,7 @@ if (isset($id))
 // $create_by isn't set yet, but a getWritable check will be done later,
 if (!$is_ajax)
 {
-  if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
+  if (!may_edit_and_view_all_bookings($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
   {
     if ($create_by !== $mrbs_username)
     {

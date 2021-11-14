@@ -45,7 +45,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
   // check that the user is allowed to delete this entry
   if (isset($action) && ($action == "reject"))
   {
-    $authorised = is_book_admin($info['room_id']);
+    $authorised = may_edit_and_view_all_bookings($info['room_id']);
   }
   else
   {
