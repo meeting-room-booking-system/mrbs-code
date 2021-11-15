@@ -28,7 +28,7 @@ $wrapper_descriptions = array('file'            => get_vocab('import_text_file')
 
 // Get the available compression wrappers that we can use.
 // Returns an array
-function get_compression_wrappers()
+function get_compression_wrappers() : array
 {
   $result = array();
   if (function_exists('stream_get_wrappers'))
@@ -634,6 +634,38 @@ function get_archive_details($file)
 }
 
 
+function get_fieldset_source(array $compression_wrappers) : ElementFieldset
+{
+  global $wrapper_mime_types;
+
+  $fieldset = new ElementFieldset();
+
+  $fieldset->addLegend(get_vocab('source'));
+
+  // The file
+  $field = new FieldInputFile();
+
+  $accept_mime_types = array();
+  foreach ($compression_wrappers as $compression_wrapper)
+  {
+    $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
+  }
+  // 'file' will always be available.  Put it at the beginning of the array.
+  array_unshift($accept_mime_types, $wrapper_mime_types['file']);
+
+  $field->setLabel(get_vocab('file_name'))
+    ->setControlAttributes(array(
+          'accept' => implode(',', $accept_mime_types),
+          'name'   => 'upload_file',
+          'id'     => 'upload_file')
+        );
+
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
 function get_fieldset_location_settings()
 {
   global $default_room;
@@ -889,23 +921,7 @@ $form->setAttributes(array('class'   => 'standard',
 
 $fieldset = new ElementFieldset();
 
-// The file
-$field = new FieldInputFile();
-
-$accept_mime_types = array();
-foreach ($compression_wrappers as $compression_wrapper)
-{
-  $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
-}
-// 'file' will always be available.  Put it at the beginning of the array.
-array_unshift($accept_mime_types, $wrapper_mime_types['file']);
-
-$field->setLabel(get_vocab('file_name'))
-      ->setControlAttributes(array('accept' => implode(',', $accept_mime_types),
-                                   'name'   => 'upload_file',
-                                   'id'     => 'upload_file'));
-
-$fieldset->addElement($field)
+$fieldset->addElement(get_fieldset_source($compression_wrappers))
          ->addElement(get_fieldset_location_settings())
          ->addElement(get_fieldset_other_settings())
          ->addElement(get_fieldset_submit_button());
