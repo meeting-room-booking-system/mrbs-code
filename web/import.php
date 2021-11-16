@@ -243,7 +243,7 @@ function get_event($handle)
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
-function process_event($vevent)
+function process_event(array $vevent)
 {
   global $import_default_room, $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
@@ -521,7 +521,7 @@ function get_file_details_bzip2($file) : array
   return $files;
 }
 
-function get_file_details_gzip($file)
+function get_file_details_gzip($file) : array
 {
   // Get the uncompressed size of the gzip file which is stored in the last four
   // bytes of the file, little-endian
@@ -545,7 +545,7 @@ function get_file_details_gzip($file)
 }
 
 
-function get_file_details_zip($file)
+function get_file_details_zip($file) : array
 {
   $files = array();
 
