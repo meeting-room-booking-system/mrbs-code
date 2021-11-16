@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputCheckbox;
@@ -790,14 +791,31 @@ function get_fieldset_other_settings() : ElementFieldset
   $fieldset->addElement($field);
 
   // Import past bookings
-  $field =new FieldInputCheckbox();
+  // Add a hidden element so that if the checkbox is not checked we
+  // get 0 instead of NULL passed to the server and so the default
+  // can be used.
+  // TODO: need a better way of doing this
+  $hidden = new ElementInputHidden();
+  $hidden->setAttributes(array(
+      'name' => 'import_past',
+      'value' => 0
+    ));
+  $fieldset->addElement($hidden);
+  $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('import_past'))
-        ->setControlAttribute('name', 'skip')
+        ->setControlAttribute('name', 'import_past')
         ->setChecked($import_past);
   $fieldset->addElement($field);
 
   // Skip conflicts
-  $field =new FieldInputCheckbox();
+  // Add a hidden element (see comment above)
+  $hidden = new ElementInputHidden();
+  $hidden->setAttributes(array(
+      'name' => 'skip',
+      'value' => 0
+    ));
+  $fieldset->addElement($hidden);
+  $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('skip_conflicts'))
         ->setControlAttribute('name', 'skip')
         ->setChecked($skip);
