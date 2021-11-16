@@ -456,7 +456,7 @@ function process_event($vevent)
   }
   // There were problems - list them
   echo "<div class=\"problem_report\">\n";
-  echo get_vocab("could_not_import") . " UID:" . htmlspecialchars($booking['ical_uid']);
+  echo htmlspecialchars(get_vocab("could_not_import", $booking['name'], $booking['ical_uid']));
   echo "<ul>\n";
   foreach ($problems as $problem)
   {
