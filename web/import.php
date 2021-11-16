@@ -710,7 +710,7 @@ function get_fieldset_source(array $compression_wrappers) : ElementFieldset
 }
 
 
-function get_fieldset_location_settings()
+function get_fieldset_location_settings() : ElementFieldset
 {
   global $default_room;
   global $area_room_order, $area_room_delimiter, $area_room_create;
@@ -781,7 +781,7 @@ function get_fieldset_location_settings()
 }
 
 
-function get_fieldset_other_settings()
+function get_fieldset_other_settings() : ElementFieldset
 {
   global $booking_types;
   global $import_default_type, $skip;
@@ -815,7 +815,7 @@ function get_fieldset_other_settings()
 }
 
 
-function get_fieldset_submit_button()
+function get_fieldset_submit_button() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
