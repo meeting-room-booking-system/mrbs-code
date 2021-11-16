@@ -1529,6 +1529,9 @@ $default_area_room_delimiter = '/';
 // Set the default source type for imports.  Can be 'file' or 'url'
 $default_import_source = 'file';
 
+// Default setting for importing past events
+$default_import_past = true;
+
 
 /*************
  * Entry Types

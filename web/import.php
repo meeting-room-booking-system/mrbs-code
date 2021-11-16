@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputCheckbox;
@@ -242,10 +243,10 @@ function get_event($handle)
 }
 
 
-// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
+// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
 function process_event(array $vevent)
 {
-  global $import_default_room, $import_default_type, $skip;
+  global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
 
@@ -387,6 +388,11 @@ function process_event(array $vevent)
       default:
         break;
     }
+  }
+
+  if (!$import_past && ($booking['end_time'] < time()))
+  {
+    return false;
   }
 
   // If we didn't manage to work out a username then just put the booking
@@ -784,7 +790,7 @@ function get_fieldset_location_settings() : ElementFieldset
 function get_fieldset_other_settings() : ElementFieldset
 {
   global $booking_types;
-  global $import_default_type, $skip;
+  global $import_default_type, $import_past, $skip;
 
   $fieldset = new ElementFieldset();
 
@@ -804,8 +810,32 @@ function get_fieldset_other_settings() : ElementFieldset
         ->addSelectOptions($options, $import_default_type, true);
   $fieldset->addElement($field);
 
+  // Import past bookings
+  // Add a hidden element so that if the checkbox is not checked we
+  // get 0 instead of NULL passed to the server and so the default
+  // can be used.
+  // TODO: need a better way of doing this
+  $hidden = new ElementInputHidden();
+  $hidden->setAttributes(array(
+      'name' => 'import_past',
+      'value' => 0
+    ));
+  $fieldset->addElement($hidden);
+  $field = new FieldInputCheckbox();
+  $field->setLabel(get_vocab('import_past'))
+        ->setControlAttribute('name', 'import_past')
+        ->setChecked($import_past);
+  $fieldset->addElement($field);
+
   // Skip conflicts
-  $field =new FieldInputCheckbox();
+  // Add a hidden element (see comment above)
+  $hidden = new ElementInputHidden();
+  $hidden->setAttributes(array(
+      'name' => 'skip',
+      'value' => 0
+    ));
+  $fieldset->addElement($hidden);
+  $field = new FieldInputCheckbox();
   $field->setLabel(get_vocab('skip_conflicts'))
         ->setControlAttribute('name', 'skip')
         ->setChecked($skip);
@@ -837,6 +867,7 @@ $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
+$import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
 $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
 
 // Check the CSRF token if we're being asked to import data
