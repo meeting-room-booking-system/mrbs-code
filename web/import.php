@@ -242,10 +242,10 @@ function get_event($handle)
 }
 
 
-// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
+// Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
 function process_event(array $vevent)
 {
-  global $import_default_room, $import_default_type, $skip;
+  global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
 
@@ -387,6 +387,11 @@ function process_event(array $vevent)
       default:
         break;
     }
+  }
+
+  if (!$import_past && ($booking['end_time'] < time()))
+  {
+    return false;
   }
 
   // If we didn't manage to work out a username then just put the booking
@@ -784,7 +789,7 @@ function get_fieldset_location_settings() : ElementFieldset
 function get_fieldset_other_settings() : ElementFieldset
 {
   global $booking_types;
-  global $import_default_type, $skip;
+  global $import_default_type, $import_past, $skip;
 
   $fieldset = new ElementFieldset();
 
@@ -802,6 +807,13 @@ function get_fieldset_other_settings() : ElementFieldset
   $field->setLabel(get_vocab('default_type'))
         ->setControlAttribute('name', 'import_default_type')
         ->addSelectOptions($options, $import_default_type, true);
+  $fieldset->addElement($field);
+
+  // Import past bookings
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('import_past'))
+        ->setControlAttribute('name', 'skip')
+        ->setChecked($import_past);
   $fieldset->addElement($field);
 
   // Skip conflicts
@@ -837,6 +849,7 @@ $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
 $import_default_type = get_form_var('import_default_type', 'string', $default_type);
+$import_past = get_form_var('import_past', 'string', ((empty($default_import_past)) ? '0' : '1'));
 $skip = get_form_var('skip', 'string', ((empty($skip_default)) ? '0' : '1'));
 
 // Check the CSRF token if we're being asked to import data
