@@ -40,7 +40,7 @@
     <li><a href="#authenticate">Wie melde ich mich an?</a></li>
     <li><a href="#meeting_delete">Warum kann ich eine Buchung nicht ändern/löschen?</a></li>
   </ul>
-  
+
   <h4>Anlegen / ändern von Besprechungen</h4>
   <ul>
     <li><a href="#create">Wie kann ich eine (periodisch) wiederkehrende Buchung anlegen?</a></li>
@@ -56,7 +56,7 @@
     <li><a href="#report">Bericht</a></li>
     <li><a href="#internal_external">Was ist der Unterschied zwischen <q>Intern</q> und <q>Extern</q>?</a></li>
   </ul>
-  
+
   <h4>Etwas über das <q>Meeting Room Booking System</q></h4>
   <ul>
     <li><a href="#how_much">Wie viel hat das System gekostet?</a></li>
@@ -69,16 +69,16 @@
   <div id="authenticate">
     <h4>Wie melde ich mich an?</h4>
     <p>
-      Das System kann mit verschiedenen Authentifizierungsmethoden konfiguriert werden, dazu 
+      Das System kann mit verschiedenen Authentifizierungsmethoden konfiguriert werden, dazu
       gehören LDAP, Netware und SMB. Wenden Sie sich bitte an ihren Systemadministrator, wenn Sie
       Schwierigkeiten bei der Anmeldung haben.
-      
+
       Einige Systemfunktionen können auf bestimmte Benutzer beschränkt sein, und
-      daher werden die übrigen Benutzer die Meldung: <q>Sie haben keine Berechtigung, diesen 
+      daher werden die übrigen Benutzer die Meldung: <q>Sie haben keine Berechtigung, diesen
       Eintrag zu ändern</q> erhalten. Wenden Sie sich bitte an ihren
       Systemadministratoren, wenn ihre Benutzerberechtigungen nicht korrekt
       für sie eingestellt sind.
-      
+
       Wenn das System auf der Grundlage der Authentifizierungsmethode LDAP
       eingerichtet ist, dann bedeutet dies, dass sie Zugang zu dem System mit
       dem gleichen Benutzernamen und Passwort z.B. <q>Mark Belanger</q> <q>MyPassword</q>
@@ -97,15 +97,15 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="create">
     <h4>Wie kann ich eine (periodisch) wiederkehrende Buchung anlegen?</h4>
     <p>
       Wenn sie auf die gewünschte Besprechungszeit klicken, kommen Sie auf den
       Bildschirm zum Anlegen einer Besprechung.
-      Nach Eingabe einer <dfn>Kurzbeschreibung</dfn> und evtl. einer optionalen 
-      <dfn>Vollständigen Beschreibung</dfn>, sowie von <dfn>Tag</dfn>, <dfn>Dauer</dfn>, 
-      <dfn>Bereiche</dfn>, <dfn>Räume</dfn> (halten Sie die STRG-Taste beim Klicken 
+      Nach Eingabe einer <dfn>Kurzbeschreibung</dfn> und evtl. einer optionalen
+      <dfn>Vollständigen Beschreibung</dfn>, sowie von <dfn>Tag</dfn>, <dfn>Dauer</dfn>,
+      <dfn>Bereiche</dfn>, <dfn>Räume</dfn> (halten Sie die STRG-Taste beim Klicken
       gedrückt um mehrere zu selektieren), wählen Sie die geeignete Art der
       Wiederholung aus. Der Raum wird für die gleiche Uhrzeit an den Tagen,
       die durch Ihren Wiederholungsschlüssel (Art der Wiederholung)
@@ -125,7 +125,7 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="multiple_sites">
     <h4>Wie kann ich Räume an verschiedenen Standorten einplanen?</h4>
     <p>
@@ -136,7 +136,7 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="too_many">
     <h4>Meine Besprechung konnte nicht angelegt werden, da es <q>zu viele Einträge</q> gab!</h4>
     <p>
@@ -146,23 +146,23 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="multiple_users">
     <h4>Was passiert, wenn mehrere Benutzer die gleiche Besprechung einplanen?</h4>
     <p>
       Die einfache Antwort ist: der erste, der den Button <dfn>Speichern</dfn> drückt,
       macht das Rennen. Hinter den Kulissen benutzt das System eine einwandfrei
-      arbeitende für mehrere Benutzer und gleichzeitige Verarbeitung mehrerer Anforderungen 
+      arbeitende für mehrere Benutzer und gleichzeitige Verarbeitung mehrerer Anforderungen
       ausgerichtete relationale Datenbank, die viele Tausende von gleichzeitigen Benutzern bedienen kann.
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="search">
     <h4>Suchen</h4>
     <p>
       Mit Hilfe des Such-Feldes wird in allen Buchungs-Einträgen
-      gesucht. Gesucht wird in folgenden Kategorien: 
+      gesucht. Gesucht wird in folgenden Kategorien:
       <q>Erstellt von</q>, <q>Kurzbeschreibung</q>, <q>Beschreibung</q>.<br>
     </p>
     <p>
@@ -177,7 +177,7 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="report">
     <a></a><h4>Bericht</h4>
     <p>
@@ -185,14 +185,14 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="internal_external">
     <h4>Was ist Unterschied zwischen <q>Intern</q> und <q>Extern</q>?</h4>
     <p>
       Standardmäßig gibt es im System MRBS zwei Besprechungsarten. <dfn>Intern</dfn>
       bedeutet, dass an der Besprechung nur Firmenangestellte teilnehmen. <dfn>Extern</dfn> heisst,
       dass als Teilnehmer auch Kunden, Lieferanten, Geldanleger, usw. vorgesehen
-      sind. Sie können für ihren Standort bis zu 10 Besprechungsarten nach ihren eigenen 
+      sind. Sie können für ihren Standort bis zu 10 Besprechungsarten nach ihren eigenen
       Bedürfnissen definieren. Jeder Besprechungsart ist eine Farbe zugeordnet und die Besprechung
       werden in der Kalenderübersicht entsprechend farblich unterlegt. Eine übersicht
       über die Besprechungsarten und ihre farbliche Darstellung befindet sich am Fuss
@@ -200,7 +200,7 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="how_much">
     <h4>Wieviel hat das System gekostet?</h4>
     <p>
@@ -208,28 +208,28 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
   <div id="about">
     <h4>Wie arbeitet das System und wer hat es geschrieben?</h4>
     <p>
-      <a href="http://sourceforge.net/project/?group_id=5113">Meeting Room Booking System</a> ist eine Open Source
+      <a href="https://sourceforge.net/projects/mrbs/">Meeting Room Booking System</a> ist eine Open Source
       Software, die unter Gnu Public License (GPL) vertrieben wird. Das bedeutet, die
       Software kann unentgeltlich benutzt, vertrieben und geändert werden.
-    </p> 
+    </p>
     <p>
-      Der größte Teil des Systems ist in <a href="http://www.php.net">PHP</a>, geschrieben, dies ist eine
+      Der größte Teil des Systems ist in <a href="https://www.php.net/">PHP</a>, geschrieben, dies ist eine
       Open Source Programmiersprache, die in Webseiten eingebettet werden kann, vergleichbar den
       Microsoft active server pages. PHP eignet sich besonders gut für den Zugriff auf Datenbanken.
     </p>
-    <p>  
-      Das Datenbanksystem, das dem Anwendungssystem zugrunde liegt, ist entweder <a href="http://www.mysql.com">MySQL</a>
-      oder <a href="http://www.postgresql.org">PostgreSQL</a>. MySQL ist ein sehr schneller, für mehrere
+    <p>
+      Das Datenbanksystem, das dem Anwendungssystem zugrunde liegt, ist entweder <a href="https://www.mysql.com/">MySQL</a>
+      oder <a href="https://www.postgresql.org/">PostgreSQL</a>. MySQL ist ein sehr schneller, für mehrere
       Benutzer und parallele Verarbeitung verschiedener Benutzeranforderungen ausgerichteter,
-      leistungsfähiger SQL (Structured Query Language) Datenbankserver, dies trifft auch für GPL zu. 
-      PostgreSQL ist ein Multi User, Open Source und objektorientierter SQL Datenbankserver mit allen 
-      Leistungsmerkmalen. 
+      leistungsfähiger SQL (Structured Query Language) Datenbankserver, dies trifft auch für GPL zu.
+      PostgreSQL ist ein Multi User, Open Source und objektorientierter SQL Datenbankserver mit allen
+      Leistungsmerkmalen.
     </p>
-    <p> 
+    <p>
       Das System läuft auf vielen Plattformen, auch auf einer PC-Architektur mit einem <a href="http://www.linux.com">Linux</a>
       -Betriebssystem. Linux ist ein kostenloses, Open Source und unix-ähnliches Betriebssystem.
     </p>
@@ -243,7 +243,7 @@
     </p>
     <a href="#top">Top</a>
   </div>
-  
+
 </div>
 
 </div>
