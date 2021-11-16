@@ -830,7 +830,7 @@ function get_fieldset_submit_button()
 
 
 $import = get_form_var('import', 'string');
-$source_type = get_form_var('source_type', 'string', 'file');
+$source_type = get_form_var('source_type', 'string', $default_import_source);
 $url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');

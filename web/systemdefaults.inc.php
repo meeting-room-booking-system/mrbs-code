@@ -1523,6 +1523,9 @@ $csv_bom = false;
 // it must not occur in room or area names.
 $default_area_room_delimiter = '/';
 
+// Set the default source type for imports.  Can be 'file' or 'url'
+$default_import_source = 'file';
+
 
 /*************
  * Entry Types
