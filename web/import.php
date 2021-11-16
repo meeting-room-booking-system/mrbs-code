@@ -8,6 +8,7 @@ use MRBS\Form\FieldInputFile;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
 use \ZipArchive;
 
@@ -28,7 +29,7 @@ $wrapper_descriptions = array('file'            => get_vocab('import_text_file')
 
 // Get the available compression wrappers that we can use.
 // Returns an array
-function get_compression_wrappers()
+function get_compression_wrappers() : array
 {
   $result = array();
   if (function_exists('stream_get_wrappers'))
@@ -240,7 +241,7 @@ function get_event($handle)
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE on failure
-function process_event($vevent)
+function process_event(array $vevent)
 {
   global $import_default_room, $import_default_type, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
@@ -453,7 +454,7 @@ function process_event($vevent)
   }
   // There were problems - list them
   echo "<div class=\"problem_report\">\n";
-  echo get_vocab("could_not_import") . " UID:" . htmlspecialchars($booking['ical_uid']);
+  echo htmlspecialchars(get_vocab("could_not_import", $booking['name'], $booking['ical_uid']));
   echo "<ul>\n";
   foreach ($problems as $problem)
   {
@@ -486,7 +487,18 @@ function process_event($vevent)
 }
 
 
-function get_file_details_calendar($file)
+function get_file_details_url($file) : array
+{
+  $files = array();
+  list( , $tmp_name) = explode('://', $file, 2);
+  $files[] = array('name'     => $file,
+                   'tmp_name' => $tmp_name,
+                   'size'     => null);
+  return $files;
+}
+
+
+function get_file_details_calendar($file) : array
 {
   $files = array();
   $files[] = array('name'     => $file['name'],
@@ -496,7 +508,7 @@ function get_file_details_calendar($file)
 }
 
 
-function get_file_details_bzip2($file)
+function get_file_details_bzip2($file) : array
 {
   // It's not possible to get the uncompressed size of a bzip2 file without first
   // decompressing the whole file
@@ -507,7 +519,7 @@ function get_file_details_bzip2($file)
   return $files;
 }
 
-function get_file_details_gzip($file)
+function get_file_details_gzip($file) : array
 {
   // Get the uncompressed size of the gzip file which is stored in the last four
   // bytes of the file, little-endian
@@ -531,7 +543,7 @@ function get_file_details_gzip($file)
 }
 
 
-function get_file_details_zip($file)
+function get_file_details_zip($file) : array
 {
   $files = array();
 
@@ -599,40 +611,104 @@ function get_file_details_zip($file)
 }
 
 
-function get_archive_details($file)
+function get_details($file)
 {
   $result = array();
-  switch ($file['type'])
+
+  if (is_string($file))
   {
-    case 'text/calendar':
-    case 'text/html':
-    case 'text/plain':
-    case 'application/x-download':
-      $result['wrapper'] = 'file';
-      $result['files'] = get_file_details_calendar($file);
-      break;
-    case 'application/x-bzip2':
-      $result['wrapper'] = 'compress.bzip2';
-      $result['files'] = get_file_details_bzip2($file);
-      break;
-    case 'application/x-gzip':
-      $result['wrapper'] = 'compress.zlib';
-      $result['files'] = get_file_details_gzip($file);
-      break;
-    case 'application/zip':
-      $result['wrapper'] = 'zip';
-      $result['files'] = get_file_details_zip($file);
-      break;
-    default:
-      $result = FALSE;
-      trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
-      break;
+    list($result['wrapper']) = explode('://', $file, 2);
+    $result['files'] = get_file_details_url($file);
   }
+  else
+  {
+    switch ($file['type'])
+    {
+      case 'text/calendar':
+      case 'text/html':
+      case 'text/plain':
+      case 'application/x-download':
+        $result['wrapper'] = 'file';
+        $result['files'] = get_file_details_calendar($file);
+        break;
+      case 'application/x-bzip2':
+        $result['wrapper'] = 'compress.bzip2';
+        $result['files'] = get_file_details_bzip2($file);
+        break;
+      case 'application/x-gzip':
+        $result['wrapper'] = 'compress.zlib';
+        $result['files'] = get_file_details_gzip($file);
+        break;
+      case 'application/zip':
+        $result['wrapper'] = 'zip';
+        $result['files'] = get_file_details_zip($file);
+        break;
+      default:
+        $result = FALSE;
+        trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
+        break;
+    }
+  }
+
   return $result;
 }
 
 
-function get_fieldset_location_settings()
+function get_fieldset_source(array $compression_wrappers) : ElementFieldset
+{
+  global $wrapper_mime_types;
+  global $source_type, $url;
+
+  $fieldset = new ElementFieldset();
+
+  $fieldset->addLegend(get_vocab('source'));
+
+  // Source type
+  $field = new FieldInputRadioGroup();
+  $options = array('file' => get_vocab('file'),
+                   'url' => get_vocab('url'));
+  $field->setLabel(get_vocab('source_type'))
+        ->addRadioOptions($options, 'source_type', $source_type, true);
+  $fieldset->addElement($field);
+
+  // File
+  $field = new FieldInputFile();
+
+  $accept_mime_types = array();
+  foreach ($compression_wrappers as $compression_wrapper)
+  {
+    $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
+  }
+  // 'file' will always be available.  Put it at the beginning of the array.
+  array_unshift($accept_mime_types, $wrapper_mime_types['file']);
+
+  $field->setLabel(get_vocab('file_name'))
+        ->setAttribute('id', 'field_file')
+        ->setControlAttributes(array(
+              'accept' => implode(',', $accept_mime_types),
+              'name'   => 'upload_file',
+              'id'     => 'upload_file')
+            );
+
+  $fieldset->addElement($field);
+
+  // URL
+  $field = new FieldInputUrl();
+  $field->setLabel(get_vocab('url'))
+        ->setAttribute('id', 'field_url')
+        ->setControlAttributes(array(
+            'name'      => 'url',
+            'id'        => 'url',
+            'required'  => true,
+            'value'     => $url)
+          );
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
+function get_fieldset_location_settings() : ElementFieldset
 {
   global $default_room;
   global $area_room_order, $area_room_delimiter, $area_room_create;
@@ -685,7 +761,7 @@ function get_fieldset_location_settings()
 }
 
 
-function get_fieldset_other_settings()
+function get_fieldset_other_settings() : ElementFieldset
 {
   global $booking_types;
   global $import_default_type, $skip;
@@ -719,7 +795,7 @@ function get_fieldset_other_settings()
 }
 
 
-function get_fieldset_submit_button()
+function get_fieldset_submit_button() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
@@ -734,6 +810,8 @@ function get_fieldset_submit_button()
 
 
 $import = get_form_var('import', 'string');
+$source_type = get_form_var('source_type', 'string', $default_import_source);
+$url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
@@ -768,54 +846,73 @@ print_header($context);
 
 if (!empty($import))
 {
-  if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
+  if ($source_type == 'url')
   {
-    echo "<p>\n";
-    echo get_vocab("upload_failed");
-    switch($_FILES['upload_file']['error'])
+    if (!isset($url) || !filter_var($url, FILTER_VALIDATE_URL))
     {
-      case UPLOAD_ERR_INI_SIZE:
-        echo "<br>\n";
-        echo get_vocab("max_allowed_file_size") . " " . ini_get('upload_max_filesize');
-        break;
-      case UPLOAD_ERR_NO_FILE:
-        echo "<br>\n";
-        echo get_vocab("no_file");
-        break;
-      default:
-        // None of the other possible errors would make much sense to the user, but should be reported
-        trigger_error($_FILES['upload_file']['error'], E_USER_NOTICE);
-        break;
+      echo "<p>\n";
+      echo get_vocab("invalid_url");
+      echo "</p>\n";
     }
-    echo "</p>\n";
+    else
+    {
+      $details = get_details($url);
+    }
   }
-  elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
-  {
-    // This should not happen and if it does may mean that somebody is messing about
-    echo "<p>\n";
-    echo get_vocab("upload_failed");
-    echo "</p>\n";
-    trigger_error("Attempt to import a file that has not been uploaded", E_USER_WARNING);
-  }
-  // We've got a file
   else
   {
-    $archive = get_archive_details($_FILES['upload_file']);
+    if ($_FILES['upload_file']['error'] !== UPLOAD_ERR_OK)
+      {
+      echo "<p>\n";
+      echo get_vocab("upload_failed");
+      switch ($_FILES['upload_file']['error'])
+      {
+        case UPLOAD_ERR_INI_SIZE:
+          echo "<br>\n";
+          echo get_vocab("max_allowed_file_size") . " " . ini_get('upload_max_filesize');
+          break;
+        case UPLOAD_ERR_NO_FILE:
+          echo "<br>\n";
+          echo get_vocab("no_file");
+          break;
+        default:
+          // None of the other possible errors would make much sense to the user, but should be reported
+          trigger_error($_FILES['upload_file']['error'], E_USER_NOTICE);
+          break;
+      }
+      echo "</p>\n";
+    }
+    elseif (!is_uploaded_file($_FILES['upload_file']['tmp_name']))
+    {
+      // This should not happen and if it does may mean that somebody is messing about
+      echo "<p>\n";
+      echo get_vocab("upload_failed");
+      echo "</p>\n";
+      trigger_error("Attempt to import a file that has not been uploaded", E_USER_WARNING);
+    }
+    else
+    {
+      // We've got a file
+      $details = get_details($_FILES['upload_file']);
+    }
+  }
 
-    if ($archive === FALSE)
+  if (isset($details))
+  {
+    if ($details === FALSE)
     {
       echo "<p>" . get_vocab("could_not_process") . "</p>\n";
     }
     else
     {
-      foreach ($archive['files'] as $file)
+      foreach ($details['files'] as $file)
       {
         echo "<h3>" . $file['name'] . "</h3>";
 
         $n_success = 0;
         $n_failure = 0;
 
-        $handle = fopen($archive['wrapper'] . '://' . $file['tmp_name'], 'rb');
+        $handle = fopen($details['wrapper'] . '://' . $file['tmp_name'], 'rb');
 
         if ($handle === FALSE)
         {
@@ -869,23 +966,7 @@ $form->setAttributes(array('class'   => 'standard',
 
 $fieldset = new ElementFieldset();
 
-// The file
-$field = new FieldInputFile();
-
-$accept_mime_types = array();
-foreach ($compression_wrappers as $compression_wrapper)
-{
-  $accept_mime_types[] = $wrapper_mime_types[$compression_wrapper];
-}
-// 'file' will always be available.  Put it at the beginning of the array.
-array_unshift($accept_mime_types, $wrapper_mime_types['file']);
-
-$field->setLabel(get_vocab('file_name'))
-      ->setControlAttributes(array('accept' => implode(',', $accept_mime_types),
-                                   'name'   => 'upload_file',
-                                   'id'     => 'upload_file'));
-
-$fieldset->addElement($field)
+$fieldset->addElement(get_fieldset_source($compression_wrappers))
          ->addElement(get_fieldset_location_settings())
          ->addElement(get_fieldset_other_settings())
          ->addElement(get_fieldset_submit_button());

@@ -591,6 +591,7 @@ $vocab["import_zip"]                = "Zip-Archiv, einschließlich mehrerer Date
 $vocab["import_gzip"]               = "gzip Dateien";
 $vocab["import_bzip2"]              = "bzip2 Dateien";
 $vocab["file_name"]                 = "Dateiname";
+$vocab["url"]                       = "URL";
 $vocab["import"]                    = "Importieren";
 $vocab["upload_failed"]             = "Hochladen mit Fehler abgebrochen";
 $vocab["max_allowed_file_size"]     = "Die naximale Dateigröße beträgt";

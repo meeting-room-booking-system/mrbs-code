@@ -1602,6 +1602,7 @@ div#div_custom_html {
 .standard input[type="email"],
 .standard input[type="password"],
 .standard input[type="search"],
+.standard input[type="url"],
 .standard textarea {
   width: 17rem;  <?php // Use rem not em because fonts may be different ?>
 }
