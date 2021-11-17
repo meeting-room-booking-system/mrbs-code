@@ -154,80 +154,89 @@ class AuthDbExt extends Auth
   {
     global $auth;
 
-    $sql_params = array();
+    static $users = array();  // Cache results for performance
 
-    $sql = "SELECT *
-            FROM " . $this->db_ext_conn->quote($this->db_table) . "
-            WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
-                                                                      $username,
-                                                                      $sql_params) . "
-            LIMIT 1";
-
-    $stmt = $this->db_ext_conn->query($sql, $sql_params);
-
-    // The username doesn't exist - return NULL
-    if ($stmt->count() === 0)
+    if (!array_key_exists($username, $users))
     {
-      return null;
-    }
+      $sql_params = array();
 
-    // The username does exist - return a User object
-    $data = $stmt->next_row_keyed();
+      $sql = "SELECT *
+                FROM " . $this->db_ext_conn->quote($this->db_table) . "
+               WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
+                                                                         $username,
+                                                                         $sql_params) . "
+               LIMIT 1";
 
-    $user = new User($username);
+      $stmt = $this->db_ext_conn->query($sql, $sql_params);
 
-    // Set the email address
-    if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
-    {
-      $user->email = $data[$this->column_name_email];
-    }
-
-    // Set the display name
-    if (isset($this->column_name_display_name) && isset($data[$this->column_name_display_name]))
-    {
-      $user->display_name = $data[$this->column_name_display_name];
-    }
-
-    // Set the level
-    // First check whether the user is an admin from the config file
-    foreach ($auth['admin'] as $admin)
-    {
-      if(strcasecmp($username, $admin) === 0)
+      // The username doesn't exist - return NULL
+      if ($stmt->count() === 0)
       {
-        $user->level = 2;
-        break;
+        $users[$username] = null;
       }
-    }
-
-    // If not, check the data from the external db
-    if ($user->level != 2)
-    {
-      // If there's can entry in the db, then use that
-      if (isset($this->column_name_level) &&
-          ($this->column_name_level !== '') &&
-          isset($data[$this->column_name_level]))
-      {
-        $user->level = $data[$this->column_name_level];
-      }
-      // Otherwise they're level 1
       else
       {
-        $user->level = 1;
+        // The username does exist - return a User object
+        $data = $stmt->next_row_keyed();
+
+        $user = new User($username);
+
+        // Set the email address
+        if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
+        {
+          $user->email = $data[$this->column_name_email];
+        }
+
+        // Set the display name
+        if (isset($this->column_name_display_name) && isset($data[$this->column_name_display_name]))
+        {
+          $user->display_name = $data[$this->column_name_display_name];
+        }
+
+        // Set the level
+        // First check whether the user is an admin from the config file
+        foreach ($auth['admin'] as $admin)
+        {
+          if (strcasecmp($username, $admin) === 0)
+          {
+            $user->level = 2;
+            break;
+          }
+        }
+
+        // If not, check the data from the external db
+        if ($user->level != 2)
+        {
+          // If there's can entry in the db, then use that
+          if (isset($this->column_name_level) &&
+            ($this->column_name_level !== '') &&
+            isset($data[$this->column_name_level]))
+          {
+            $user->level = $data[$this->column_name_level];
+          }
+          // Otherwise they're level 1
+          else
+          {
+            $user->level = 1;
+          }
+        }
+
+        // Then set the remaining properties. (We don't set all the properties from
+        // $data initially because we want to preserve the default values if we don't
+        // have data for the four important properties.)
+        foreach ($data as $key => $value)
+        {
+          if (!property_exists($user, $key))
+          {
+            $user->$key = $value;
+          }
+        }
+
+        $users[$username] = $user;
       }
     }
 
-    // Then set the remaining properties. (We don't set all the properties from
-    // $data initially because we want to preserve the default values if we don't
-    // have data for the four important properties.)
-    foreach ($data as $key => $value)
-    {
-      if (!property_exists($user, $key))
-      {
-        $user->$key = $value;
-      }
-    }
-
-    return $user;
+    return $users[$username];
   }
 
 
