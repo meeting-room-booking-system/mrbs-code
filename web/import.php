@@ -249,6 +249,7 @@ function process_event(array $vevent)
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
+  global $ignore_location;
 
   // We are going to cache the settings ($resolution etc.) for the rooms
   // in order to avoid lots of database lookups
@@ -321,11 +322,18 @@ function process_event(array $vevent)
         break;
 
       case 'LOCATION':
-        $error = '';
-        $booking['room_id'] = get_room_id($details['value'], $error);
-        if ($booking['room_id'] === FALSE)
+        if ($ignore_location)
         {
-          $problems[] = $error;
+          $booking['room_id'] = $import_default_room;
+        }
+        else
+        {
+          $error = '';
+          $booking['room_id'] = get_room_id($details['value'], $error);
+          if ($booking['room_id'] === FALSE)
+          {
+            $problems[] = $error;
+          }
         }
         break;
 
@@ -716,10 +724,47 @@ function get_fieldset_source(array $compression_wrappers) : ElementFieldset
 }
 
 
+function get_fieldset_location_parsing() : ElementFieldset
+{
+  global $area_room_order, $area_room_delimiter, $area_room_create;
+
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'location_parsing');
+
+  // Area-room order
+  $field = new FieldInputRadioGroup();
+  $options = array('area_room' => get_vocab('area_room'),
+    'room_area' => get_vocab('room_area'));
+  $field->setLabel(get_vocab('area_room_order'))
+    ->setLabelAttribute('title', get_vocab('area_room_order_note'))
+    ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
+  $fieldset->addElement($field);
+
+  // Area-room delimiter
+  $field = new FieldInputText();
+  $field->setLabel(get_vocab('area_room_delimiter'))
+    ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
+    ->setControlAttributes(array('name'     => 'area_room_delimiter',
+      'value'    => $area_room_delimiter,
+      'class'    => 'short',
+      'required' => true));
+  $fieldset->addElement($field);
+
+  // Area/room create
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('area_room_create'))
+    ->setControlAttribute('name', 'area_room_create')
+    ->setChecked($area_room_create);
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
 function get_fieldset_location_settings() : ElementFieldset
 {
   global $default_room;
-  global $area_room_order, $area_room_delimiter, $area_room_create;
+  global $ignore_location;
 
   $fieldset = new ElementFieldset();
 
@@ -757,31 +802,15 @@ function get_fieldset_location_settings() : ElementFieldset
     }
   }
 
-  // Area-room order
-  $field = new FieldInputRadioGroup();
-  $options = array('area_room' => get_vocab('area_room'),
-                   'room_area' => get_vocab('room_area'));
-  $field->setLabel(get_vocab('area_room_order'))
-        ->setLabelAttribute('title', get_vocab('area_room_order_note'))
-        ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
-  $fieldset->addElement($field);
-
-  // Area-room delimiter
-  $field = new FieldInputText();
-  $field->setLabel(get_vocab('area_room_delimiter'))
-        ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
-        ->setControlAttributes(array('name'     => 'area_room_delimiter',
-                                     'value'    => $area_room_delimiter,
-                                     'class'    => 'short',
-                                     'required' => true));
-  $fieldset->addElement($field);
-
-  // Area/room create
+  // Ignore location
   $field =new FieldInputCheckbox();
-  $field->setLabel(get_vocab('area_room_create'))
-        ->setControlAttribute('name', 'area_room_create')
-        ->setChecked($area_room_create);
+  $field->setLabel(get_vocab('ignore_location'))
+        ->setControlAttribute('name', 'ignore_location')
+        ->setChecked($ignore_location);
   $fieldset->addElement($field);
+
+  // Location parsing fieldset
+  $fieldset->addElement(get_fieldset_location_parsing());
 
   return $fieldset;
 }
@@ -863,6 +892,7 @@ $import = get_form_var('import', 'string');
 $source_type = get_form_var('source_type', 'string', $default_import_source);
 $url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
+$ignore_location = get_form_var('ignore_location', 'string', '0');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');

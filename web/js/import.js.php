@@ -25,8 +25,20 @@ function checkSourceType(object) {
 
 $(document).on('page_ready', function() {
 
+  <?php
+  // Show/hide the file or URL input fields as the source type
+  // field changes.
+  ?>
   $('input[name="source_type"]').on('change', function() {
       checkSourceType($(this));
     }).filter(':checked').trigger('change');
+
+  <?php
+  // Show/hide the location parsing fieldset as the ignore_location
+  // checkbox changes.
+  ?>
+  $('input[name="ignore_location"]').on('change', function() {
+      $('#location_parsing').toggle(!$(this).is(':checked'));
+    }).trigger('change');
 
 });
