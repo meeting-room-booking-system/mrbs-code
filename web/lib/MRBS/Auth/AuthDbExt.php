@@ -194,11 +194,12 @@ class AuthDbExt extends Auth
         }
 
         // Set the level
-        // First get the default level
+        // First get the default level.  Any admins defined in the config
+        // file override settings in the external database
         $user->level = $this->getDefaultLevel($username);
 
-        // Then see if they're defined as an admin in the external db
-        if ($user->level != 2)
+        // Then if they are not an admin get their level from the external db
+        if ($user->level < 2)
         {
           // If there's can entry in the db, then use that
           if (isset($this->column_name_level) &&
