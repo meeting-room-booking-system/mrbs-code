@@ -194,30 +194,19 @@ class AuthDbExt extends Auth
         }
 
         // Set the level
-        // First check whether the user is an admin from the config file
-        foreach ($auth['admin'] as $admin)
-        {
-          if (strcasecmp($username, $admin) === 0)
-          {
-            $user->level = 2;
-            break;
-          }
-        }
+        // First get the default level.  Any admins defined in the config
+        // file override settings in the external database.
+        $user->level = $this->getDefaultLevel($username);
 
-        // If not, check the data from the external db
-        if ($user->level != 2)
+        // Then if they are not an admin get their level from the external db
+        if ($user->level < 2)
         {
           // If there's can entry in the db, then use that
           if (isset($this->column_name_level) &&
-            ($this->column_name_level !== '') &&
-            isset($data[$this->column_name_level]))
+              ($this->column_name_level !== '') &&
+              isset($data[$this->column_name_level]))
           {
             $user->level = $data[$this->column_name_level];
-          }
-          // Otherwise they're level 1
-          else
-          {
-            $user->level = 1;
           }
         }
 
@@ -256,8 +245,11 @@ class AuthDbExt extends Auth
                        $this->db_ext_conn->quote($display_name_column) . " AS display_name
             FROM " . $this->db_ext_conn->quote($this->db_table) . " ORDER BY display_name";
 
-    $stmt = $this->db_ext_conn->query($sql);
+    $res = $this->db_ext_conn->query($sql);
 
-    return $stmt->all_rows_keyed();
+    $users =  $res->all_rows_keyed();
+    self::sortUsers($users);
+
+    return $users;
   }
 }
