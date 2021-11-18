@@ -90,12 +90,12 @@ function get_room_id($location, &$error)
     if ($count == 0)
     {
       $error = "'$location_room': " . get_vocab("room_does_not_exist_no_area");
-      return FALSE;
+      return false;
     }
     elseif ($count > 1)
     {
       $error = "'$location_room': " . get_vocab("room_not_unique_no_area");
-      return FALSE;
+      return false;
     }
     else // we've got a unique room name
     {
@@ -123,17 +123,17 @@ function get_room_id($location, &$error)
       if (!$area_room_create)
       {
         $error = get_vocab("area_does_not_exist") . " '$location_area'";
-        return FALSE;
+        return false;
       }
       else
       {
         echo get_vocab("creating_new_area") . " '$location_area'<br>\n";
         $error_add_area = '';
         $area_id = mrbsAddArea($location_area, $error_add_area);
-        if ($area_id === FALSE)
+        if ($area_id === false)
         {
           $error = get_vocab("could_not_create_area") . " '$location_area'";
-          return FALSE;
+          return false;
         }
       }
     }
@@ -151,17 +151,17 @@ function get_room_id($location, &$error)
     if (!$area_room_create)
     {
       $error = get_vocab("room_does_not_exist") . " '$location_room'";
-      return FALSE;
+      return false;
     }
     else
     {
       echo get_vocab("creating_new_room") . " '$location_room'<br>\n";
       $error_add_room = '';
       $room_id = mrbsAddRoom($location_room, $area_id, $error_add_room);
-      if ($room_id === FALSE)
+      if ($room_id === false)
       {
         $error = get_vocab("could_not_create_room") . " '$location_room'";
-        return FALSE;
+        return false;
       }
     }
   }
@@ -180,14 +180,14 @@ function get_unfolded_line($handle)
   if (isset($buffer_line))
   {
     $unfolded_line = $buffer_line;
-    $buffer_line = NULL;
+    $buffer_line = null;
   }
 
   // Theoretically the line should be folded if it's longer than 75 octets
   // but just in case the file has been created without using folding we
   // will read a large number (4096) of bytes to make sure that we get as
   // far as the CRLF.
-  while (FALSE !== ($line = stream_get_line($handle, 4096, "\r\n")))
+  while (false !== ($line = stream_get_line($handle, 4096, "\r\n")))
   {
     if (!isset($unfolded_line))
     {
@@ -212,7 +212,7 @@ function get_unfolded_line($handle)
     }
   }
 
-  return (isset($unfolded_line)) ? $unfolded_line : FALSE;
+  return (isset($unfolded_line)) ? $unfolded_line : false;
 }
 
 
@@ -223,18 +223,18 @@ function get_unfolded_line($handle)
 function get_event($handle)
 {
   // Advance to the beginning of the event
-  while ((FALSE !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
+  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'BEGIN:VEVENT'))
   {
   }
 
   // No more events
-  if ($ical_line === FALSE)
+  if ($ical_line === false)
   {
-    return FALSE;
+    return false;
   }
   // Get the event
   $vevent = array();
-  while ((FALSE !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'END:VEVENT'))
+  while ((false !== ($ical_line = get_unfolded_line($handle))) && ($ical_line != 'END:VEVENT'))
   {
     $vevent[] = $ical_line;
   }
@@ -270,7 +270,7 @@ function process_event(array $vevent)
   $problems = array();
 
   $line = current($vevent);
-  while ($line !== FALSE)
+  while ($line !== false)
   {
     $property = parse_ical_property($line);
     // Ignore any sub-components (eg a VALARM inside a VEVENT) as MRBS does not
@@ -330,7 +330,7 @@ function process_event(array $vevent)
         {
           $error = '';
           $booking['room_id'] = get_room_id($details['value'], $error);
-          if ($booking['room_id'] === FALSE)
+          if ($booking['room_id'] === false)
           {
             $problems[] = $error;
           }
@@ -348,7 +348,7 @@ function process_event(array $vevent)
       case 'RRULE':
         $rrule_errors = array();
         $repeat_details = get_repeat_details($details['value'], $booking['start_time'], $rrule_errors);
-        if ($repeat_details === FALSE)
+        if ($repeat_details === false)
         {
           $problems = array_merge($problems, $rrule_errors);
         }
@@ -462,10 +462,10 @@ function process_event(array $vevent)
                                       $am7);
     // Make the bookings
     $bookings = array($booking);
-    $result = mrbsMakeBookings($bookings, NULL, FALSE, $skip);
+    $result = mrbsMakeBookings($bookings, null, false, $skip);
     if ($result['valid_booking'])
     {
-      return TRUE;
+      return true;
     }
   }
   // There were problems - list them
@@ -499,7 +499,7 @@ function process_event(array $vevent)
   echo "</ul>\n";
   echo "</div>\n";
 
-  return FALSE;
+  return false;
 }
 
 
@@ -531,7 +531,7 @@ function get_file_details_bzip2($file) : array
   $files = array();
   $files[] = array('name'     => $file['name'],
                    'tmp_name' => $file['tmp_name'],
-                   'size'     => NULL);
+                   'size'     => null);
   return $files;
 }
 
@@ -539,7 +539,7 @@ function get_file_details_gzip($file) : array
 {
   // Get the uncompressed size of the gzip file which is stored in the last four
   // bytes of the file, little-endian
-  if (FALSE !== ($handle = fopen($file['tmp_name'], 'rb')))
+  if (false !== ($handle = fopen($file['tmp_name'], 'rb')))
   {
     fseek($handle, -4, SEEK_END);
     $buffer = fread($handle, 4);
@@ -549,7 +549,7 @@ function get_file_details_gzip($file) : array
   }
   else
   {
-    $size = NULL;
+    $size = null;
   }
   $files = array();
   $files[] = array('name'     => $file['name'],
@@ -567,7 +567,7 @@ function get_file_details_zip($file) : array
   {
     $zip = new ZipArchive();
 
-    if (TRUE === ($result = $zip->open($file['tmp_name'])))
+    if (true === ($result = $zip->open($file['tmp_name'])))
     {
       for ($i=0; $i<$zip->numFiles; $i++)
       {
@@ -660,7 +660,7 @@ function get_details($file)
         $result['files'] = get_file_details_zip($file);
         break;
       default:
-        $result = FALSE;
+        $result = false;
         trigger_error("Unknown file type '" . $file['type'] . "'", E_USER_NOTICE);
         break;
     }
@@ -980,7 +980,7 @@ if (!empty($import))
 
   if (isset($details))
   {
-    if ($details === FALSE)
+    if ($details === false)
     {
       echo "<p>" . get_vocab("could_not_process") . "</p>\n";
     }
@@ -995,13 +995,13 @@ if (!empty($import))
 
         $handle = fopen($details['wrapper'] . '://' . $file['tmp_name'], 'rb');
 
-        if ($handle === FALSE)
+        if ($handle === false)
         {
           echo "<p>" . get_vocab("could_not_process") . "</p>\n";
         }
         else
         {
-          while (FALSE !== ($vevent = get_event($handle)))
+          while (false !== ($vevent = get_event($handle)))
           {
             (process_event($vevent)) ? $n_success++ : $n_failure++;
           }
