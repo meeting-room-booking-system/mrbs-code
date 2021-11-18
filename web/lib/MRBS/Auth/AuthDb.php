@@ -141,6 +141,9 @@ class AuthDb extends Auth
     $res = db()->query($sql);
 
     $users =  $res->all_rows_keyed();
+
+    // Although the users are probably already sorted, we sort them again because MRBS
+    // offers an option for sorting by first or last name.
     self::sortUsers($users);
 
     return $users;

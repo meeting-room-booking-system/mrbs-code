@@ -101,12 +101,9 @@ class AuthWordpress extends Auth
                         'display_name' => $user->display_name);
     }
 
-    if (!$can_use_role__in)
-    {
-      // We need to sort the users in this case as we've only got an array of merged
-      // sorted arrays.  So the small arrays are sorted but the merged array is not.
-      self::sortUsers($result);
-    }
+    // Although the users are probably already sorted, we sort them again because MRBS
+    // offers an option for sorting by first or last name.
+    self::sortUsers($result);
 
     return $result;
   }
