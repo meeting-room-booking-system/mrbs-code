@@ -194,30 +194,18 @@ class AuthDbExt extends Auth
         }
 
         // Set the level
-        // First check whether the user is an admin from the config file
-        foreach ($auth['admin'] as $admin)
-        {
-          if (strcasecmp($username, $admin) === 0)
-          {
-            $user->level = 2;
-            break;
-          }
-        }
+        // First get the default level
+        $user->level = $this->getDefaultLevel($username);
 
-        // If not, check the data from the external db
+        // Then see if they're defined as an admin in the external db
         if ($user->level != 2)
         {
           // If there's can entry in the db, then use that
           if (isset($this->column_name_level) &&
-            ($this->column_name_level !== '') &&
-            isset($data[$this->column_name_level]))
+              ($this->column_name_level !== '') &&
+              isset($data[$this->column_name_level]))
           {
             $user->level = $data[$this->column_name_level];
-          }
-          // Otherwise they're level 1
-          else
-          {
-            $user->level = 1;
           }
         }
 
