@@ -249,7 +249,7 @@ function process_event(array $vevent)
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
   global $booking_types;
-  global $ignore_location;
+  global $ignore_location, $add_location;
 
   // We are going to cache the settings ($resolution etc.) for the rooms
   // in order to avoid lots of database lookups
@@ -322,6 +322,7 @@ function process_event(array $vevent)
         break;
 
       case 'LOCATION':
+        $location = $details['value']; // We may need the original LOCATION later
         if ($ignore_location)
         {
           $booking['room_id'] = $import_default_room;
@@ -329,7 +330,7 @@ function process_event(array $vevent)
         else
         {
           $error = '';
-          $booking['room_id'] = get_room_id($details['value'], $error);
+          $booking['room_id'] = get_room_id($location, $error);
           if ($booking['room_id'] === false)
           {
             $problems[] = $error;
@@ -425,6 +426,21 @@ function process_event(array $vevent)
   {
     $booking['ical_uid'] = generate_global_uid($booking['name']);
     $booking['sequence'] = 0;  // and we'll start the sequence from 0
+  }
+
+  // Modify the description
+  if ($add_location && isset($location) && ($location !== ''))
+  {
+    if (isset($booking['description']) && ($booking['description'] !== ''))
+    {
+      $booking['description'] = get_vocab('expanded_description',
+                                          $booking['description'],
+                                          $location);
+    }
+    else
+    {
+      $booking['description'] = get_vocab('expanded_empty_description', $location);
+    }
   }
 
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
@@ -736,25 +752,43 @@ function get_fieldset_location_parsing() : ElementFieldset
   $options = array('area_room' => get_vocab('area_room'),
     'room_area' => get_vocab('room_area'));
   $field->setLabel(get_vocab('area_room_order'))
-    ->setLabelAttribute('title', get_vocab('area_room_order_note'))
-    ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
+        ->setLabelAttribute('title', get_vocab('area_room_order_note'))
+        ->addRadioOptions($options, 'area_room_order', $area_room_order, true);
   $fieldset->addElement($field);
 
   // Area-room delimiter
   $field = new FieldInputText();
   $field->setLabel(get_vocab('area_room_delimiter'))
-    ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
-    ->setControlAttributes(array('name'     => 'area_room_delimiter',
-      'value'    => $area_room_delimiter,
-      'class'    => 'short',
-      'required' => true));
+        ->setLabelAttribute('title', get_vocab('area_room_delimiter_note'))
+        ->setControlAttributes(array('name'     => 'area_room_delimiter',
+          'value'    => $area_room_delimiter,
+          'class'    => 'short',
+          'required' => true));
   $fieldset->addElement($field);
 
   // Area/room create
   $field =new FieldInputCheckbox();
   $field->setLabel(get_vocab('area_room_create'))
-    ->setControlAttribute('name', 'area_room_create')
-    ->setChecked($area_room_create);
+        ->setControlAttribute('name', 'area_room_create')
+        ->setChecked($area_room_create);
+  $fieldset->addElement($field);
+
+  return $fieldset;
+}
+
+
+function get_fieldset_ignore_location_settings() : ElementFieldset
+{
+  global $add_location;
+
+  $fieldset = new ElementFieldset();
+  $fieldset->setAttribute('id', 'ignore_location_settings');
+
+  // Add the location to the description
+  $field =new FieldInputCheckbox();
+  $field->setLabel(get_vocab('add_location'))
+        ->setControlAttribute('name', 'add_location')
+        ->setChecked($add_location);
   $fieldset->addElement($field);
 
   return $fieldset;
@@ -811,6 +845,9 @@ function get_fieldset_location_settings() : ElementFieldset
 
   // Location parsing fieldset
   $fieldset->addElement(get_fieldset_location_parsing());
+
+  // Settings when we are ignoring the location
+  $fieldset->addElement(get_fieldset_ignore_location_settings());
 
   return $fieldset;
 }
@@ -893,6 +930,7 @@ $source_type = get_form_var('source_type', 'string', $default_import_source);
 $url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $ignore_location = get_form_var('ignore_location', 'string', '0');
+$add_location = get_form_var('add_location', 'string', '0');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');

@@ -34,11 +34,13 @@ $(document).on('page_ready', function() {
     }).filter(':checked').trigger('change');
 
   <?php
-  // Show/hide the location parsing fieldset as the ignore_location
+  // Show/hide the location handling fieldsets as the ignore_location
   // checkbox changes.
   ?>
   $('input[name="ignore_location"]').on('change', function() {
-      $('#location_parsing').toggle(!$(this).is(':checked'));
+      var ignoreLocation = $(this).is(':checked');
+      $('#location_parsing').toggle(!ignoreLocation);
+      $('#ignore_location_settings').toggle(ignoreLocation);
     }).trigger('change');
 
 });
