@@ -245,8 +245,11 @@ class AuthDbExt extends Auth
                        $this->db_ext_conn->quote($display_name_column) . " AS display_name
             FROM " . $this->db_ext_conn->quote($this->db_table) . " ORDER BY display_name";
 
-    $stmt = $this->db_ext_conn->query($sql);
+    $res = $this->db_ext_conn->query($sql);
 
-    return $stmt->all_rows_keyed();
+    $users =  $res->all_rows_keyed();
+    self::sortUsers($users);
+
+    return $users;
   }
 }
