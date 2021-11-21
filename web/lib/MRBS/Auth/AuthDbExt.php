@@ -222,7 +222,7 @@ class AuthDbExt extends Auth
         // Then set the remaining properties. (We don't set all the properties from
         // $data initially because we want to preserve the default values if we don't
         // have data for the four important properties.)
-        // (Note that normally their won't be any extra properties because we have
+        // (Note that normally there won't be any extra properties because we have
         // specified above the columns that we want, but this code is here so that extra
         // columns can be added if required.)
         foreach ($data as $key => $value)
