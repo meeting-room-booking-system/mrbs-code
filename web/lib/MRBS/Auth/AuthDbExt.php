@@ -160,7 +160,16 @@ class AuthDbExt extends Auth
     {
       $sql_params = array();
 
-      $sql = "SELECT *
+      // Only retrieve the columns we need (a) to minimise the query and (b) to avoid
+      // sending unnecessary information unencrypted over the internet (Remote SQL is
+      // usually unencrypted).
+      $columns = array(
+          $this->column_name_display_name,
+          $this->column_name_email,
+          $this->column_name_level
+        );
+
+      $sql = "SELECT " . implode(', ', array_map(array($this->db_ext_conn, 'quote'), $columns)) . "
                 FROM " . $this->db_ext_conn->quote($this->db_table) . "
                WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
                                                                          $username,
@@ -213,6 +222,9 @@ class AuthDbExt extends Auth
         // Then set the remaining properties. (We don't set all the properties from
         // $data initially because we want to preserve the default values if we don't
         // have data for the four important properties.)
+        // (Note that normally their won't be any extra properties because we have
+        // specified above the columns that we want, but this code is here so that extra
+        // columns can be added if required.)
         foreach ($data as $key => $value)
         {
           if (!property_exists($user, $key))
