@@ -108,15 +108,15 @@ CREATE TABLE mrbs_repeat
   end_time        int DEFAULT 0 NOT NULL,
   rep_type        int DEFAULT 0 NOT NULL,
   end_date        int DEFAULT 0 NOT NULL,
-  rep_opt         varchar(32) NOT NULL,
+  rep_opt         varchar(32) DEFAULT '' NOT NULL,
   room_id         int DEFAULT 1 NOT NULL
                     REFERENCES mrbs_room(id)
                     ON UPDATE CASCADE
                     ON DELETE RESTRICT,
   timestamp       timestamptz DEFAULT current_timestamp,
-  create_by       varchar(80) NOT NULL,
-  modified_by     varchar(80) NOT NULL,
-  name            varchar(80) NOT NULL,
+  create_by       varchar(80) DEFAULT '' NOT NULL,
+  modified_by     varchar(80) DEFAULT '' NOT NULL,
+  name            varchar(80) DEFAULT '' NOT NULL,
   type            char DEFAULT 'E' NOT NULL,
   description     text,
   rep_interval    smallint DEFAULT 1 NOT NULL,
@@ -149,9 +149,9 @@ CREATE TABLE mrbs_entry
                                 ON UPDATE CASCADE
                                 ON DELETE RESTRICT,
   timestamp                   timestamptz DEFAULT current_timestamp,
-  create_by                   varchar(80) NOT NULL,
-  modified_by                 varchar(80) NOT NULL,
-  name                        varchar(80) NOT NULL,
+  create_by                   varchar(80) DEFAULT '' NOT NULL,
+  modified_by                 varchar(80) DEFAULT '' NOT NULL,
+  name                        varchar(80) DEFAULT '' NOT NULL,
   type                        char DEFAULT 'E' NOT NULL,
   description                 text,
   status                      smallint DEFAULT 0 NOT NULL,
@@ -223,7 +223,7 @@ create index mrbs_idxAccess on mrbs_sessions(access);
 CREATE TABLE mrbs_users
 (
   id            serial primary key,
-  level         smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
+  level         smallint DEFAULT 0 NOT NULL,  /* play safe and give no rights */
   name          varchar(30),
   display_name  varchar(191),
   password_hash varchar(255),
@@ -249,6 +249,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_users_timestamp BEFORE UPDATE ON mrbs_users FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variables (variable_name, variable_content)
-  VALUES ('db_version', '81');
+  VALUES ('db_version', '82');
 INSERT INTO mrbs_variables (variable_name, variable_content)
   VALUES ('local_db_version', '1');
