@@ -111,7 +111,7 @@ CREATE TABLE mrbs_repeat
   end_time        bigint DEFAULT 0 NOT NULL,
   rep_type        int DEFAULT 0 NOT NULL,
   end_date        bigint DEFAULT 0 NOT NULL,
-  rep_opt         varchar(32) NOT NULL,
+  rep_opt         varchar(32) DEFAULT '' NOT NULL,
   room_id         int DEFAULT 1 NOT NULL
                     REFERENCES mrbs_room(id)
                     ON UPDATE CASCADE
