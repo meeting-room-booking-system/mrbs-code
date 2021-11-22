@@ -117,9 +117,9 @@ CREATE TABLE mrbs_repeat
                     ON UPDATE CASCADE
                     ON DELETE RESTRICT,
   timestamp       timestamptz DEFAULT current_timestamp,
-  create_by       varchar(80) NOT NULL,
-  modified_by     varchar(80) NOT NULL,
-  name            varchar(80) NOT NULL,
+  create_by       varchar(80) DEFAULT '' NOT NULL,
+  modified_by     varchar(80) DEFAULT '' NOT NULL,
+  name            varchar(80) DEFAULT '' NOT NULL,
   type            char DEFAULT 'E' NOT NULL,
   description     text,
   rep_interval    smallint DEFAULT 1 NOT NULL,
@@ -155,9 +155,9 @@ CREATE TABLE mrbs_entry
                                 ON UPDATE CASCADE
                                 ON DELETE RESTRICT,
   timestamp                   timestamptz DEFAULT current_timestamp,
-  create_by                   varchar(80) NOT NULL,
-  modified_by                 varchar(80) NOT NULL,
-  name                        varchar(80) NOT NULL,
+  create_by                   varchar(80) DEFAULT '' NOT NULL,
+  modified_by                 varchar(80) DEFAULT '' NOT NULL,
+  name                        varchar(80) DEFAULT '' NOT NULL,
   type                        char DEFAULT 'E' NOT NULL,
   description                 text,
   status                      smallint DEFAULT 0 NOT NULL,
@@ -368,6 +368,6 @@ CREATE TRIGGER update_mrbs_repeat_timestamp BEFORE UPDATE ON mrbs_repeat FOR EAC
 CREATE TRIGGER update_mrbs_user_timestamp BEFORE UPDATE ON mrbs_user FOR EACH ROW EXECUTE PROCEDURE update_timestamp_column();
 
 INSERT INTO mrbs_variable (variable_name, variable_content)
-  VALUES ('db_version', '85');
+  VALUES ('db_version', '86');
 INSERT INTO mrbs_variable (variable_name, variable_content)
   VALUES ('local_db_version', '1');
