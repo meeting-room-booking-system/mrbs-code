@@ -223,7 +223,7 @@ create index mrbs_idxAccess on mrbs_sessions(access);
 CREATE TABLE mrbs_users
 (
   id            serial primary key,
-  level         smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
+  level         smallint DEFAULT 0 NOT NULL,  /* play safe and give no rights */
   name          varchar(30),
   display_name  varchar(191),
   password_hash varchar(255),
