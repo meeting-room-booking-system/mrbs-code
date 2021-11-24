@@ -459,7 +459,14 @@ function process_event(array $vevent)
   // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
   if (!isset($booking['name']) || ($booking['name']) === '')
   {
-    $booking['name'] = "Imported event - no SUMMARY name";
+    $tag = 'import_no_SUMMARY';
+    $booking['name'] = get_vocab($tag);
+    // Throw an exception if it is still empty - probably because the vocab string has
+    // been overridden in the config file by an empty string.
+    if (!isset($booking['name']) || ($booking['name']) === '')
+    {
+      throw new Exception("Vocab string for '$tag' is empty");
+    }
   }
 
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
