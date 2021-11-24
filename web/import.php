@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\Form\ElementInputHidden;
+use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\FieldInputCheckbox;
@@ -413,13 +414,6 @@ function process_event(array $vevent)
     $booking['create_by'] = $mrbs_username;
   }
 
-  // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
-  // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
-  if (!isset($booking['name']))
-  {
-    $booking['name'] = "Imported event - no SUMMARY name";
-  }
-
   // On the other hand a UID is mandatory in RFC 5545.   We'll be lenient and
   // provide one if it is missing
   if (!isset($booking['ical_uid']))
@@ -428,19 +422,44 @@ function process_event(array $vevent)
     $booking['sequence'] = 0;  // and we'll start the sequence from 0
   }
 
-  // Modify the description
-  if ($add_location && isset($location) && ($location !== ''))
+  // Modify the brief and/or full descriptions
+  if (!empty($add_location) && isset($location) && ($location !== ''))
   {
-    if (isset($booking['description']) && ($booking['description'] !== ''))
+    // Brief description (SUMMARY)
+    if (in_array('summary', $add_location))
     {
-      $booking['description'] = get_vocab('expanded_description',
-                                          $booking['description'],
-                                          $location);
+      if (isset($booking['name']) && ($booking['name'] !== ''))
+      {
+        $booking['name'] = get_vocab('expanded_name',
+                                     $booking['name'],
+                                     $location);
+      }
+      else
+      {
+        $booking['name'] = get_vocab('expanded_empty_name', $location);
+      }
     }
-    else
+    // Full description (DESCRIPTION)
+    if (in_array('description', $add_location))
     {
-      $booking['description'] = get_vocab('expanded_empty_description', $location);
+      if (isset($booking['description']) && ($booking['description'] !== ''))
+      {
+        $booking['description'] = get_vocab('expanded_description',
+                                            $booking['description'],
+                                            $location);
+      }
+      else
+      {
+        $booking['description'] = get_vocab('expanded_empty_description', $location);
+      }
     }
+  }
+
+  // A SUMMARY is optional in RFC 5545, however a brief description is mandatory
+  // in MRBS.   So if the VEVENT didn't include a name, we'll give it one
+  if (!isset($booking['name']) || ($booking['name']) === '')
+  {
+    $booking['name'] = "Imported event - no SUMMARY name";
   }
 
   // LOCATION is optional in RFC 5545 but is obviously mandatory in MRBS.
@@ -784,11 +803,15 @@ function get_fieldset_ignore_location_settings() : ElementFieldset
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'ignore_location_settings');
 
-  // Add the location to the description
-  $field =new FieldInputCheckbox();
+  // Add the location to the brief and/or full description
+  $field =new FieldInputCheckboxGroup();
+  $options = array(
+      'summary' => get_vocab('namebooker'),
+      'description' => get_vocab('fulldescription_short')
+    );
   $field->setLabel(get_vocab('add_location'))
         ->setControlAttribute('name', 'add_location')
-        ->setChecked($add_location);
+        ->addCheckboxOptions($options, 'add_location', $add_location);
   $fieldset->addElement($field);
 
   return $fieldset;
@@ -930,7 +953,7 @@ $source_type = get_form_var('source_type', 'string', $default_import_source);
 $url = get_form_var('url', 'string');
 $import_default_room = get_form_var('import_default_room', 'int');
 $ignore_location = get_form_var('ignore_location', 'string', '0');
-$add_location = get_form_var('add_location', 'string', '0');
+$add_location = get_form_var('add_location', 'array');
 $area_room_order = get_form_var('area_room_order', 'string', 'area_room');
 $area_room_delimiter = get_form_var('area_room_delimiter', 'string', $default_area_room_delimiter);
 $area_room_create = get_form_var('area_room_create', 'string', '0');
