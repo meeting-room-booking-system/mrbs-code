@@ -816,7 +816,7 @@ function get_fieldset_ignore_location_settings() : ElementFieldset
     );
   $field->setLabel(get_vocab('add_location'))
         ->setControlAttribute('name', 'add_location')
-        ->addCheckboxOptions($options, 'add_location', $add_location);
+        ->addCheckboxOptions($options, 'add_location[]', $add_location);
   $fieldset->addElement($field);
 
   return $fieldset;
