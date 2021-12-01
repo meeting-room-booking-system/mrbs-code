@@ -7,6 +7,144 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.10.0 (Mon 29th November 2021):
+
+[*] Updated minimum PHP version to 7.2.
+
+[*] Fixed deprecated notices when running under PHP 8.1.  Note that the return types for gc() and
+ read() cannot be specified because union types are not available until PHP 8.
+
+[*] Fixed various PHP 8.x deprecation/compatibility issues.
+
+[*] Updated german translation (Stachelritter).
+
+[*] Avoided using strftime() if IntlDateFormatter is available as strftime() is deprecated in PHP 8.1.
+
+[+] Added configuration variable $auth['saml']['disable_mrbs_session_init'] to allow MRBS session
+initialisation to be disabled when using SAML.  See SF Support Requests #2390.
+
+[-] Fixed occasional problem with CSRF tokens.
+
+[+] Added Docker container build configuration. (Tobias Polzin)
+
+[+] New option $min_booking_admin_level, e.g. to allow all users to edit all bookings for some settings
+ (Tobias Polzin).
+
+[*] edit_entry shows repetition and skipping only if necessary (Tobias Polzin).
+
+[*] Improved clarity of German translation around use of periods/series.
+
+[-] Fixed problem with display of type when the field is private.  See SF Support Requests #2394.
+
+[-] Fixed problem allowing a booking for multiple rooms to be made when it shouldn't be.  See SF
+ Support Requests #2396.
+
+[-] Better fix for preventing selection of multiple rooms.  This fix does not destroy the Ajax policy
+ feedback. See SF Support Requests #2396.
+
+[*] Added support from going back from the edit entry submission page.
+
+[-] Fixed bug when no $booking_types is unset.  See
+ https://github.com/meeting-room-booking-system/mrbs-code/issues/11.
+
+[*] crypt_passwd.pl - Replaced an errant TAB with spaces.
+
+[*] Removed all mentions of badpw.pl - it's too bad even for explanation purposes.
+
+[*] Added configuration variables for setting hostname and HELO strings when sending email.  See
+ SF Bugs #508.
+
+[*] Updated Swedish translation.  Thanks to Niclas Nilsson.
+
+[-] Fixed bug causing English days of the week to be shown.  See SF Support Requests #2374.
+
+[*] Improved print layout.
+
+[*]  Improved fix if no booking types are set. 
+ See https://github.com/meeting-room-booking-system/mrbs-code/issues/11#issuecomment-90
+
+[*] Improved documentation on auth/session classes.
+
+[-] Fixed bug saving an entry with custom fields when using PostgreSQL and an explicit $db_schema.
+ See SF Support Requests #2408.
+
+[-] Fixed undefined index notice problem.  See SF Support Requests #2406
+
+[-] Fixed problem with LDAP admin groups being case sensitive when they shouldn't be.  See SF
+ Support Requests #2406.
+
+[-] Fixed bug causing an incompatibility with LDAP config settings from earlier versions of MRBS.
+ See SF Support Requests #2419.
+
+[-] Fixed bug causing the reset link URL to contain the scheme twice when $url_base is set.   See
+ SF Support Requests #2421.
+
+[*] Added display on the calendar view of how many people have registered for an event.
+
+[-] Fixed problem with misleading "Are you sure you want to delete this entry?" message being shown
+ when deleting a series.
+
+[-] Fixed uncaught exception error if someone tries to login under the 'db' scheme by email address
+ when their password hash is null.
+
+[*] Expanded message on password reset to remind users to check their spam/junk folder for a
+ password reset email.
+
+[*] Added support for date custom fields in the user table.
+
+[-] Fixed occasional problem with "Session object destruction failed" warning when the session has
+ already been destroyed.
+
+[*] Added server side checking of date field values.
+
+[*] Added registrants' names to report output.
+
+[+] Added option of showing registrants on the calendar page.
+
+[-] Fixed bug causing the "Back to Rooms" button on the edit_room page to go to the wrong area.
+
+[*] Made display names sort order consistent everywhere with $sort_users_by_last_name.
+
+[+] Added new config setting $auth['show_registrant_names_in_public_calendar'] allowing the choice
+ of whether or not to show registrants' names if the calendar is open to the public.
+
+[+] Added the ability to add custom JavaScript.
+
+[-] Fixed problem when a conflict is reported with a booking that was made when there were more
+ periods defined.
+
+[*] Improved consistency of button labelling.
+
+[*] Updated update instructions to remove references to old upgrade files.
+
+[*] Updated FAQ links to MRBS project, PHP, MySQL and PostgreSQL.
+
+[+] Added the ability to import an iCalendar from a URL.
+
+[+] Added option not to import past bookings.
+
+[*] db_ext auth: Added caching of results in getUser() to improve performance as the query will
+ normally be of a remote database.
+
+[*] Added sorting of users for the db_ext authentication type.
+
+[*] Added sorting of users for the WordPress authentication type.
+
+[+] Added an ignore_location option for importing events.
+
+[+] Added an option for adding the location to the description when importing iCalendar files.
+
+[*] Only retrieved those columns that we need in AuthDbExt->getUser() to avoid sending
+ unencrypted data over the internet unnecessarily.
+
+[-] Fixed bug affecting import when using PostgreSQL.
+
+[*] Made the default SUMMARY configurable when importing events.
+
+[*] Upgraded to PHPMailer Version 6.5.3.
+
+
+-------------------------------------------------------------------------------
 Version 1.9.4 (Tue 20th July 2021):
 
 [-] Fixed problem when incorrect credentials are supplied on database
@@ -61,6 +199,7 @@ Version 1.9.4 (Tue 20th July 2021):
 [*] Added additional information about the change in config file
  structure from MRBS 1.4.7 and earlier. See SF Support Requests
  #2380.
+
 
 -------------------------------------------------------------------------------
 Version 1.9.3 (Sat 22nd May 2021):
