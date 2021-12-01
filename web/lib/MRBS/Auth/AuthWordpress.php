@@ -30,7 +30,7 @@ class AuthWordpress extends Auth
   }
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
     $wp_user = get_user_by('login', $username);
 

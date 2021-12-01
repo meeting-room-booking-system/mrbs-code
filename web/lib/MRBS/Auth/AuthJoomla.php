@@ -35,7 +35,7 @@ class AuthJoomla extends Auth
   }
 
 
-  public function getUser($username=null) : ?User
+  protected function getUserFresh(?string $username=null) : ?User
   {
     if ($username === '')
     {
