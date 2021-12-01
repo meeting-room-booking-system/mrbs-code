@@ -23,7 +23,7 @@ abstract class Auth
   abstract public function validateUser(?string $user, ?string $pass);
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
     $user = new User($username);
     $user->display_name = $username;
@@ -31,6 +31,21 @@ abstract class Auth
     $user->email = $this->getDefaultEmail($username);
 
     return $user;
+  }
+
+
+  public function getUser(string $username) : ?User
+  {
+    // Cache results for performance as getting user details in
+    // most authentication types is expensive.
+    static $users = array();
+
+    if (!isset($users[$username]))
+    {
+      $users[$username] = $this->getUserFresh($username);
+    }
+
+    return $users[$username];
   }
 
 

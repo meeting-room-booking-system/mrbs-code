@@ -315,53 +315,44 @@ class AuthLdap extends Auth
   }
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
-    static $users = array();  // Cache results for performance
-
     if (!isset($username) || ($username === ''))
     {
       return null;
     }
 
-    if (!isset($users[$username]))
+    // Check to see if this is the current user.  If it is then we
+    // can save ourselves an LDAP query.
+    $mrbs_user = \MRBS\session()->getCurrentUser();
+    if (isset($mrbs_user) && ($mrbs_user->username === $username))
     {
-      // Check to see if this is the current user.  If it is then we
-      // can save ourselves an LDAP query.
-      $mrbs_user = \MRBS\session()->getCurrentUser();
-      if (isset($mrbs_user) && ($mrbs_user->username === $username))
+      $user = $mrbs_user;
+    }
+    // Otherwise we'll have to query LDAP.
+    else
+    {
+      $object = array();
+
+      $res = $this->action('getUserCallback', $username, $object);
+      if (!$res || !isset($object['user']))
       {
-        $user = $mrbs_user;
-      }
-      // Otherwise we'll have to query LDAP.
-      else
-      {
-        $object = array();
-
-        $res = $this->action('getUserCallback', $username, $object);
-        if (!$res || !isset($object['user']))
-        {
-          return null;
-        }
-
-        $user = parent::getUser($username);
-        $keys = array('display_name', 'email', 'level');
-
-        foreach ($keys as $key)
-        {
-          if (isset($object['user'][$key]))
-          {
-            $user->$key = $object['user'][$key];
-          }
-        }
+        return null;
       }
 
-      // Update the cache (we use the static variable as the cache rather than the
-      // database because the database might be out of date).
-      $users[$username] = $user;
+      $user = parent::getUserFresh($username);
+      $keys = array('display_name', 'email', 'level');
+
+      foreach ($keys as $key)
+      {
+        if (isset($object['user'][$key]))
+        {
+          $user->$key = $object['user'][$key];
+        }
+      }
     }
 
-    return $users[$username];
+    return $user;
   }
 
 
