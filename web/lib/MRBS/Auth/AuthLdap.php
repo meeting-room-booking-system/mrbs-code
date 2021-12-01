@@ -340,7 +340,7 @@ class AuthLdap extends Auth
         return null;
       }
 
-      $user = parent::getUser($username);
+      $user = parent::getUserFresh($username);
       $keys = array('display_name', 'email', 'level');
 
       foreach ($keys as $key)
