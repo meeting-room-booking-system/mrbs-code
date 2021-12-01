@@ -149,104 +149,95 @@ class AuthDbExt extends Auth
   }
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
     global $auth;
 
-    static $users = array();  // Cache results for performance
+    $sql_params = array();
 
-    if (!array_key_exists($username, $users))
+    // Only retrieve the columns we need (a) to minimise the query and (b) to avoid
+    // sending unnecessary information unencrypted over the internet (Remote SQL is
+    // usually unencrypted).
+    $columns = array();
+
+    $properties = array(
+        'column_name_display_name',
+        'column_name_email',
+        'column_name_level'
+      );
+
+    foreach ($properties as $property)
     {
-      $sql_params = array();
-
-      // Only retrieve the columns we need (a) to minimise the query and (b) to avoid
-      // sending unnecessary information unencrypted over the internet (Remote SQL is
-      // usually unencrypted).
-      $columns = array();
-
-      $properties = array(
-          'column_name_display_name',
-          'column_name_email',
-          'column_name_level'
-        );
-
-      foreach ($properties as $property)
+      if (isset($this->$property))
       {
-        if (isset($this->$property))
-        {
-          $columns[] = $this->$property;
-        }
-      }
-
-      $sql = "SELECT " . implode(', ', array_map(array($this->db_ext_conn, 'quote'), $columns)) . "
-                FROM " . $this->db_ext_conn->quote($this->db_table) . "
-               WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
-                                                                         $username,
-                                                                         $sql_params) . "
-               LIMIT 1";
-
-      $stmt = $this->db_ext_conn->query($sql, $sql_params);
-
-      // The username doesn't exist - return NULL
-      if ($stmt->count() === 0)
-      {
-        $users[$username] = null;
-      }
-      else
-      {
-        // The username does exist - return a User object
-        $data = $stmt->next_row_keyed();
-
-        $user = new User($username);
-
-        // Set the email address
-        if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
-        {
-          $user->email = $data[$this->column_name_email];
-        }
-
-        // Set the display name
-        if (isset($this->column_name_display_name) && isset($data[$this->column_name_display_name]))
-        {
-          $user->display_name = $data[$this->column_name_display_name];
-        }
-
-        // Set the level
-        // First get the default level.  Any admins defined in the config
-        // file override settings in the external database.
-        $user->level = $this->getDefaultLevel($username);
-
-        // Then if they are not an admin get their level from the external db
-        if ($user->level < 2)
-        {
-          // If there's can entry in the db, then use that
-          if (isset($this->column_name_level) &&
-              ($this->column_name_level !== '') &&
-              isset($data[$this->column_name_level]))
-          {
-            $user->level = $data[$this->column_name_level];
-          }
-        }
-
-        // Then set the remaining properties. (We don't set all the properties from
-        // $data initially because we want to preserve the default values if we don't
-        // have data for the four important properties.)
-        // (Note that normally there won't be any extra properties because we have
-        // specified above the columns that we want, but this code is here so that extra
-        // columns can be added if required.)
-        foreach ($data as $key => $value)
-        {
-          if (!property_exists($user, $key))
-          {
-            $user->$key = $value;
-          }
-        }
-
-        $users[$username] = $user;
+        $columns[] = $this->$property;
       }
     }
 
-    return $users[$username];
+    $sql = "SELECT " . implode(', ', array_map(array($this->db_ext_conn, 'quote'), $columns)) . "
+              FROM " . $this->db_ext_conn->quote($this->db_table) . "
+             WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
+                                                                       $username,
+                                                                       $sql_params) . "
+             LIMIT 1";
+
+    $stmt = $this->db_ext_conn->query($sql, $sql_params);
+
+    // The username doesn't exist - return NULL
+    if ($stmt->count() === 0)
+    {
+      return null;
+    }
+
+    // The username does exist - return a User object
+    $data = $stmt->next_row_keyed();
+
+    $user = new User($username);
+
+    // Set the email address
+    if (isset($this->column_name_email) && isset($data[$this->column_name_email]))
+    {
+      $user->email = $data[$this->column_name_email];
+    }
+
+    // Set the display name
+    if (isset($this->column_name_display_name) && isset($data[$this->column_name_display_name]))
+    {
+      $user->display_name = $data[$this->column_name_display_name];
+    }
+
+    // Set the level
+    // First get the default level.  Any admins defined in the config
+    // file override settings in the external database.
+    $user->level = $this->getDefaultLevel($username);
+
+    // Then if they are not an admin get their level from the external db
+    if ($user->level < 2)
+    {
+      // If there's can entry in the db, then use that
+      if (isset($this->column_name_level) &&
+          ($this->column_name_level !== '') &&
+          isset($data[$this->column_name_level]))
+      {
+        $user->level = $data[$this->column_name_level];
+      }
+    }
+
+    // Then set the remaining properties. (We don't set all the properties from
+    // $data initially because we want to preserve the default values if we don't
+    // have data for the four important properties.)
+    // (Note that normally there won't be any extra properties because we have
+    // specified above the columns that we want, but this code is here so that extra
+    // columns can be added if required.)
+    foreach ($data as $key => $value)
+    {
+      if (!property_exists($user, $key))
+      {
+        $user->$key = $value;
+      }
+    }
+
+    return $user;
   }
 
 

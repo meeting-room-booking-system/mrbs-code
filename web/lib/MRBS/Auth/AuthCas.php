@@ -99,7 +99,7 @@ class AuthCas extends Auth
   }
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
     $user = new User($username);
 

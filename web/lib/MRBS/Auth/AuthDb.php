@@ -124,7 +124,7 @@ class AuthDb extends Auth
   }
 
 
-  public function getUser(string $username) : ?User
+  protected function getUserFresh(string $username) : ?User
   {
     return User::getByName($username, 'db');
   }
