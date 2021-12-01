@@ -47,13 +47,12 @@ class AuthDbExt extends Auth
         'column_name_display_name',
         'column_name_password',
         'column_name_email',
-        'column_name_level',
-        'use_md5_passwords'
+        'column_name_level'
       );
 
     foreach ($vars as $var)
     {
-      $this->$var = (isset($auth['db_ext'][$var])) ? $auth['db_ext'][$var] : null;
+      $this->$var = $auth['db_ext'][$var] ?? null;
     }
 
     // Backwards compatibility setting
