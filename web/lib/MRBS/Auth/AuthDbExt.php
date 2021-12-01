@@ -52,7 +52,7 @@ class AuthDbExt extends Auth
 
     foreach ($vars as $var)
     {
-      $this->$var = (isset($auth['db_ext'][$var])) ? $auth['db_ext'][$var] : null;
+      $this->$var = $auth['db_ext'][$var] ?? null;
     }
 
     // Backwards compatibility setting
