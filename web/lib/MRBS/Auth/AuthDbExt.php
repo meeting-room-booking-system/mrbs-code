@@ -163,11 +163,21 @@ class AuthDbExt extends Auth
       // Only retrieve the columns we need (a) to minimise the query and (b) to avoid
       // sending unnecessary information unencrypted over the internet (Remote SQL is
       // usually unencrypted).
-      $columns = array(
-          $this->column_name_display_name,
-          $this->column_name_email,
-          $this->column_name_level
+      $columns = array();
+
+      $properties = array(
+          'column_name_display_name',
+          'column_name_email',
+          'column_name_level'
         );
+
+      foreach ($properties as $property)
+      {
+        if (isset($this->$property))
+        {
+          $columns[] = $this->$property;
+        }
+      }
 
       $sql = "SELECT " . implode(', ', array_map(array($this->db_ext_conn, 'quote'), $columns)) . "
                 FROM " . $this->db_ext_conn->quote($this->db_table) . "
