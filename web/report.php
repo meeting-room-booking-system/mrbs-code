@@ -974,10 +974,12 @@ function report_row(&$rows, $data)
     // they are going to be irrelevant
     if (($confirmation_somewhere || ($field != 'confirmation_enabled')) &&
         ($approval_somewhere || ($field != 'approval_enabled')) &&
+        ($registration_somewhere || ($field != 'allow_registration')) &&
         ((isset($booking_types) && (count($booking_types) > 1)) || ($field != 'type')))
     {
       $values[] = $value;
     }
+
     // Special action for the duration
     if ($field == 'end_time')
     {
