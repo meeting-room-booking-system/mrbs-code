@@ -45,7 +45,8 @@ abstract class Auth
     // most authentication types is expensive.
     static $users = array();
 
-    if (!isset($users[$username]))
+    // Use array_key_exists() rather than isset() in case the value is NULL
+    if (!array_key_exists($username, $users))
     {
       $users[$username] = $this->getUserFresh($username);
     }
