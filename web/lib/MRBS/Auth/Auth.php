@@ -4,6 +4,7 @@ namespace MRBS\Auth;
 use \MRBS\User;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
+use function MRBS\get_vocab;
 use function MRBS\strcasecmp_locale;
 
 
@@ -125,7 +126,7 @@ abstract class Auth
 
 
   // Returns an array of registrants' display names
-  public function getRegistrantsDisplayNames (array $entry) : array
+  public function getRegistrantsDisplayNames (array $entry, bool $with_registered_by=false) : array
   {
     $display_names = array();
 
@@ -133,7 +134,7 @@ abstract class Auth
     // or if we know there are definitely some
     if (!isset($entry['n_registered']) || ($entry['n_registered'] > 0))
     {
-      $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id']);
+      $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id'], $with_registered_by);
       usort($display_names, 'MRBS\compare_display_names');
     }
 
@@ -141,7 +142,7 @@ abstract class Auth
   }
 
 
-  protected function getRegistrantsDisplayNamesUnsorted(int $id) : array
+  protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by) : array
   {
     $display_names = array();
     $registrants = get_registrants($id, false);
@@ -150,6 +151,14 @@ abstract class Auth
     {
       $registrant_user = $this->getUser($registrant['username']);
       $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+      // Add in the name of the person who registered this user, if required and if different.
+      if ($with_registered_by &&
+          isset($registrant['create_by']) &&
+          ($registrant['create_by'] !== $registrant['username']))
+      {
+        $registered_by = $this->getUser($registrant['create_by']);
+        $display_name = get_vocab("registrant_registered_by", $display_name, $registered_by->display_name);
+      }
       $display_names[] = $display_name;
     }
 
