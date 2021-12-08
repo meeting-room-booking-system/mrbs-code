@@ -49,7 +49,14 @@ abstract class Auth
     // Use array_key_exists() rather than isset() in case the value is NULL
     if (!array_key_exists($username, $users))
     {
-      $users[$username] = $this->getUserFresh($username);
+      $user = $this->getUserFresh($username);
+      // Make sure we've got a sensible display name
+      if (isset($user) &&
+          (!isset($user->display_name) || ($user->display_name === '')))
+      {
+        $user->display_name = $user->username;
+      }
+      $users[$username] = $user;
     }
 
     return $users[$username];
