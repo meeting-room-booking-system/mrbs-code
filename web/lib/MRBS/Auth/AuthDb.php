@@ -348,14 +348,14 @@ class AuthDb extends Auth
          LEFT JOIN " . _tbl('users') . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
-               AND U.name IS NULL
+               AND (U.display_name IS NULL OR U.display_name='')
              UNION
             SELECT U.display_name
               FROM " . _tbl('participants') . " P
          LEFT JOIN " . _tbl('users') . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
-               AND U.name IS NOT NULL";
+               AND U.display_name IS NOT NULL AND U.display_name!=''";
 
     return db()->query_array($sql, array(':entry_id' => $id));
   }
@@ -380,8 +380,8 @@ class AuthDb extends Auth
          LEFT JOIN " . _tbl('users') . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
-               AND U1.name IS NULL
-               AND U2.name IS NULL
+               AND (U1.display_name IS NULL OR U1.display_name='')
+               AND (U2.display_name IS NULL OR U2.display_name='')
 
              UNION
 
@@ -395,8 +395,8 @@ class AuthDb extends Auth
          LEFT JOIN " . _tbl('users') . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
-               AND U1.name IS NULL
-               AND U2.name IS NOT NULL
+               AND (U1.display_name IS NULL OR U1.display_name='')
+               AND U2.display_name IS NOT NULL AND U2.display_name!=''
 
              UNION
 
@@ -410,8 +410,8 @@ class AuthDb extends Auth
          LEFT JOIN " . _tbl('users') . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
-               AND U1.name IS NOT NULL
-               AND U2.name IS NULL
+               AND U1.display_name IS NOT NULL AND U1.display_name!=''
+               AND (U2.display_name IS NULL OR U2.display_name='')
 
              UNION
 
@@ -425,8 +425,8 @@ class AuthDb extends Auth
          LEFT JOIN " . _tbl('users') . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
-               AND U1.name IS NOT NULL
-               AND U2.name IS NOT NULL";
+               AND U1.display_name IS NOT NULL AND U1.display_name!=''
+               AND U2.display_name IS NOT NULL AND U2.display_name!=''";
 
     $result = array();
 
