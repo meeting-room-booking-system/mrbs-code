@@ -169,7 +169,12 @@ class AuthDb extends Auth
   // Return an array of users, indexed by 'username' and 'display_name'
   public function getUsernames() : array
   {
-    $sql = "SELECT name AS username, display_name AS display_name
+    $sql = "SELECT name AS username,
+                   CASE
+                       WHEN display_name IS NOT NULL AND display_name!='' THEN display_name
+                       ELSE name
+                   END
+                   AS display_name
               FROM " . _tbl('users') . "
           ORDER BY display_name";
 
