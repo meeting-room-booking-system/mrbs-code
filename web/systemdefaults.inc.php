@@ -529,6 +529,10 @@ $max_rep_entrys = 365 + 1;
 // Default report span in days:
 $default_report_days = 60;
 
+// Whether to include the name of the person who made the registration, if different, in
+// the list of registrants in reports
+$include_registered_by = true;
+
 $show_plus_link = false;   // Change to true to always show the (+) link as in
                            // MRBS 1.1.
 

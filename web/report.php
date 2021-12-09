@@ -827,6 +827,7 @@ function report_row(&$rows, $data)
   global $approval_somewhere, $confirmation_somewhere, $registration_somewhere;
   global $select_options, $booking_types;
   global $field_order_list;
+  global $include_registered_by;
 
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
@@ -901,7 +902,7 @@ function report_row(&$rows, $data)
       case 'allow_registration':
         if ($data['allow_registration'])
         {
-          $value = implode(', ', auth()->getRegistrantsDisplayNames($data));
+          $value = implode(', ', auth()->getRegistrantsDisplayNames($data, $include_registered_by));
         }
         else
         {
