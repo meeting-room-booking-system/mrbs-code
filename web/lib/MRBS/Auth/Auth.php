@@ -5,6 +5,7 @@ use \MRBS\User;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
 use function MRBS\get_vocab;
+use function MRBS\session;
 use function MRBS\strcasecmp_locale;
 
 
@@ -44,12 +45,22 @@ abstract class Auth
     // Use array_key_exists() rather than isset() in case the value is NULL
     if (!array_key_exists($username, $users))
     {
-      $user = $this->getUserFresh($username);
-      // Make sure we've got a sensible display name
-      if (isset($user) &&
-          (!isset($user->display_name) || ($user->display_name === '')))
+      // Check to see if this is the current user.  If it is then we
+      // can save ourselves a potentially expensive operation.
+      $mrbs_user = session()->getCurrentUser();
+      if (isset($mrbs_user) && ($mrbs_user->username === $username))
       {
-        $user->display_name = $user->username;
+        $user = $mrbs_user;
+      }
+      else
+      {
+        $user = $this->getUserFresh($username);
+        // Make sure we've got a sensible display name
+        if (isset($user) &&
+            (!isset($user->display_name) || ($user->display_name === '')))
+        {
+          $user->display_name = $user->username;
+        }
       }
       $users[$username] = $user;
     }
