@@ -45,9 +45,18 @@ abstract class Auth
     // Use array_key_exists() rather than isset() in case the value is NULL
     if (!array_key_exists($username, $users))
     {
-      // Check to see if this is the current user.  If it is then we
+      // Check to see if this is the current user.  If it is, then we
       // can save ourselves a potentially expensive operation.
-      $mrbs_user = session()->getCurrentUser();
+      // But we can only do this if we are not being called by getCurrentUser(), which
+      // some session schemes do, as otherwise we'll end up with an infinite recursion.
+      // TODO: is there a better way of handling this??
+      $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+      $backtrace_functions = array_column($backtrace, 'function');
+      if (!in_array('getCurrentUser', $backtrace_functions))
+      {
+        $mrbs_user = session()->getCurrentUser();
+      }
+
       if (isset($mrbs_user) && ($mrbs_user->username === $username))
       {
         $user = $mrbs_user;
