@@ -327,33 +327,22 @@ class AuthLdap extends Auth
       return null;
     }
 
-    // Check to see if this is the current user.  If it is then we
-    // can save ourselves an LDAP query.
-    $mrbs_user = session()->getCurrentUser();
-    if (isset($mrbs_user) && ($mrbs_user->username === $username))
+    $object = array();
+
+    $res = $this->action('getUserCallback', $username, $object);
+    if (!$res || !isset($object['user']))
     {
-      $user = $mrbs_user;
+      return null;
     }
-    // Otherwise we'll have to query LDAP.
-    else
+
+    $user = parent::getUserFresh($username);
+    $keys = array('display_name', 'email', 'level');
+
+    foreach ($keys as $key)
     {
-      $object = array();
-
-      $res = $this->action('getUserCallback', $username, $object);
-      if (!$res || !isset($object['user']))
+      if (isset($object['user'][$key]))
       {
-        return null;
-      }
-
-      $user = parent::getUserFresh($username);
-      $keys = array('display_name', 'email', 'level');
-
-      foreach ($keys as $key)
-      {
-        if (isset($object['user'][$key]))
-        {
-          $user->$key = $object['user'][$key];
-        }
+        $user->$key = $object['user'][$key];
       }
     }
 

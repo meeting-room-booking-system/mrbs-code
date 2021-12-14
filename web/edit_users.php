@@ -394,6 +394,12 @@ function get_field_custom($custom_field, $params, $disabled=false)
   {
     $class = 'FieldInputCheckbox';
   }
+  // Otherwise check if it's an integer field
+  elseif ((($custom_field['nature'] == 'integer') && ($custom_field['length'] > 2)) ||
+          ($custom_field['nature'] == 'decimal'))
+  {
+    $class = 'FieldInputNumber';
+  }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($custom_field['nature'] == 'character') && isset($custom_field['length']) && ($custom_field['length'] > $text_input_max))
@@ -420,7 +426,15 @@ function get_field_custom($custom_field, $params, $disabled=false)
   $full_class = __NAMESPACE__ . "\\Form\\$class";
   $field = new $full_class();
   $field->setLabel($params['label'])
-          ->setControlAttribute('name', $params['name']);
+        ->setControlAttribute('name', $params['name']);
+
+  if ($custom_field['nature'] == 'decimal')
+  {
+    list( , $decimal_places) = explode(',', $custom_field['length']);
+    $step = pow(10, -$decimal_places);
+    $step = number_format($step, $decimal_places);
+    $field->setControlAttribute('step', $step);
+  }
 
   if (!empty($is_mandatory_field[$params['field']]))
   {
@@ -460,6 +474,7 @@ function get_field_custom($custom_field, $params, $disabled=false)
       break;
 
     case 'FieldInputDate':
+    case 'FieldInputNumber':
       $field->setControlAttribute('value', $params['value']);
       break;
 
