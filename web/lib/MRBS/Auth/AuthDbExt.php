@@ -6,8 +6,6 @@ use MRBS\User;
 
 class AuthDbExt extends Auth
 {
-  protected $db_ext_conn;
-
   protected $db_table;
   protected $password_format;
   protected $column_name_username;
@@ -19,25 +17,6 @@ class AuthDbExt extends Auth
   public function __construct()
   {
     global $auth;
-
-    if (empty($auth['db_ext']['db_system']))
-    {
-      $auth['db_ext']['db_system'] = 'mysql';
-    }
-
-    // Establish a connection
-    $persist = 0;
-    $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : null;
-
-    $this->db_ext_conn = DBFactory::create(
-        $auth['db_ext']['db_system'],
-        $auth['db_ext']['db_host'],
-        $auth['db_ext']['db_username'],
-        $auth['db_ext']['db_password'],
-        $auth['db_ext']['db_name'],
-        $persist,
-        $port
-      );
 
     // Take our own copies of the settings
     $vars = array(
@@ -83,13 +62,13 @@ class AuthDbExt extends Auth
 
     $sql_params = array();
 
-    $query = "SELECT " . $this->db_ext_conn->quote($this->column_name_password) .
-             "FROM " . $this->db_ext_conn->quote($this->db_table) .
-             "WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
+    $query = "SELECT " . $this->connection()->quote($this->column_name_password) .
+             "FROM " . $this->connection()->quote($this->db_table) .
+             "WHERE " . $this->connection()->syntax_casesensitive_equals($this->column_name_username,
                                                                         $user,
                                                                         $sql_params);
 
-    $stmt = $this->db_ext_conn->query($query, $sql_params);
+    $stmt = $this->connection()->query($query, $sql_params);
 
     if ($stmt->count() == 1) // force a unique match
     {
@@ -174,14 +153,14 @@ class AuthDbExt extends Auth
       }
     }
 
-    $sql = "SELECT " . implode(', ', array_map(array($this->db_ext_conn, 'quote'), $columns)) . "
-              FROM " . $this->db_ext_conn->quote($this->db_table) . "
-             WHERE " . $this->db_ext_conn->syntax_casesensitive_equals($this->column_name_username,
+    $sql = "SELECT " . implode(', ', array_map(array($this->connection(), 'quote'), $columns)) . "
+              FROM " . $this->connection()->quote($this->db_table) . "
+             WHERE " . $this->connection()->syntax_casesensitive_equals($this->column_name_username,
                                                                        $username,
                                                                        $sql_params) . "
              LIMIT 1";
 
-    $stmt = $this->db_ext_conn->query($sql, $sql_params);
+    $stmt = $this->connection()->query($sql, $sql_params);
 
     // The username doesn't exist - return NULL
     if ($stmt->count() === 0)
@@ -253,15 +232,52 @@ class AuthDbExt extends Auth
       $display_name_column = $this->column_name_username;
     }
 
-    $sql = "SELECT " . $this->db_ext_conn->quote($this->column_name_username) . " AS username, ".
-                       $this->db_ext_conn->quote($display_name_column) . " AS display_name
-            FROM " . $this->db_ext_conn->quote($this->db_table) . " ORDER BY display_name";
+    $sql = "SELECT " . $this->connection()->quote($this->column_name_username) . " AS username, ".
+                       $this->connection()->quote($display_name_column) . " AS display_name
+              FROM " . $this->connection()->quote($this->db_table) . " ORDER BY display_name";
 
-    $res = $this->db_ext_conn->query($sql);
+    $res = $this->connection()->query($sql);
 
     $users =  $res->all_rows_keyed();
     self::sortUsers($users);
 
     return $users;
+  }
+
+
+  // Returns a database connection
+  // The connection isn't established in the constructor, but here only when it's really
+  // needed as it can be expensive establishing a remote connection.  For example
+  // method_exists(auth(), 'method') will end up calling the constructor, but a connection
+  // isn't needed just for method_exists().
+  protected function connection()
+  {
+    global $auth;
+
+    static $connection = null;
+
+    if (!isset($connection))
+    {
+      if (empty($auth['db_ext']['db_system']))
+      {
+        $auth['db_ext']['db_system'] = 'mysql';
+      }
+
+      // Establish a connection
+      $persist = 0;
+      $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : null;
+
+      $connection = DBFactory::create(
+          $auth['db_ext']['db_system'],
+          $auth['db_ext']['db_host'],
+          $auth['db_ext']['db_username'],
+          $auth['db_ext']['db_password'],
+          $auth['db_ext']['db_name'],
+          $persist,
+          $port
+        );
+    }
+
+    return $connection;
   }
 }
