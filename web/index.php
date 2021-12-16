@@ -10,7 +10,7 @@ require_once "functions_table.inc";
 
 
 // Display the entry-type color key.
-function get_color_key()
+function get_color_key() : string
 {
   global $booking_types;
 
@@ -36,7 +36,7 @@ function get_color_key()
 
 // generates some html that can be used to select which area should be
 // displayed.
-function make_area_select_html($view, $year, $month, $day, $current)
+function make_area_select_html($view, $year, $month, $day, $current) : string
 {
   global $multisite, $site;
 
@@ -86,7 +86,7 @@ function make_area_select_html($view, $year, $month, $day, $current)
 } // end make_area_select_html
 
 
-function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current)
+function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current) : string
 {
   global $multisite, $site;
 
@@ -154,7 +154,7 @@ function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $c
 
 
 // Gets the link to the next/previous day/week/month
-function get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, $next=false)
+function get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, $next=false) : string
 {
   switch ($view)
   {
@@ -195,7 +195,7 @@ function get_adjacent_link($view, $view_all, $year, $month, $day, $area, $room, 
 
 
 // Gets the link for today
-function get_today_link($view, $view_all, $area, $room)
+function get_today_link($view, $view_all, $area, $room) : string
 {
   $date = getdate();
 
@@ -209,7 +209,7 @@ function get_today_link($view, $view_all, $area, $room)
 }
 
 
-function get_location_nav($view, $view_all, $year, $month, $day, $area, $room)
+function get_location_nav($view, $view_all, $year, $month, $day, $area, $room) : string
 {
   $html = '';
 
@@ -227,7 +227,7 @@ function get_location_nav($view, $view_all, $year, $month, $day, $area, $room)
 }
 
 
-function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $room)
+function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $room) : string
 {
   $html = '';
 
@@ -262,7 +262,7 @@ function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $roo
 }
 
 
-function get_arrow_nav($view, $view_all, $year, $month, $day, $area, $room)
+function get_arrow_nav($view, $view_all, $year, $month, $day, $area, $room) : string
 {
   $html = '';
 
@@ -309,7 +309,7 @@ function get_arrow_nav($view, $view_all, $year, $month, $day, $area, $room)
 }
 
 
-function get_calendar_nav($view, $view_all, $year, $month, $day, $area, $room, $hidden=false)
+function get_calendar_nav($view, $view_all, $year, $month, $day, $area, $room, $hidden=false) : string
 {
   $html = '';
 
@@ -327,7 +327,7 @@ function get_calendar_nav($view, $view_all, $year, $month, $day, $area, $room, $
 }
 
 
-function get_date_heading($view, $year, $month, $day)
+function get_date_heading($view, $year, $month, $day) : string
 {
   global $strftime_format, $display_timezone,
          $weekstarts, $mincals_week_numbers;
