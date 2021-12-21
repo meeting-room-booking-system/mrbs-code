@@ -690,9 +690,10 @@ function registration_opens_timestamp(array $entry)
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
   }
 
-  $cross_dst = cross_dst(time(), $entry['start_time']);
 
-  return $start_time - $entry['registration_opens'] - $cross_dst;
+  $opening_time = $start_time - $entry['registration_opens'];
+
+  return $opening_time - cross_dst($opening_time, $start_time);
 }
 
 
@@ -714,9 +715,9 @@ function registration_closes_timestamp(array $entry)
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
   }
 
-  $cross_dst = cross_dst(time(), $entry['start_time']);
+  $closing_time = $start_time - $entry['registration_closes'];
 
-  return $start_time - $entry['registration_closes'] - $cross_dst;
+  return $closing_time - cross_dst($closing_time, $start_time);
 }
 
 
