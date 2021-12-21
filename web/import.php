@@ -827,7 +827,7 @@ function get_fieldset_ignore_location_settings() : ElementFieldset
 
 function get_fieldset_location_settings() : ElementFieldset
 {
-  global $default_room;
+  global $import_default_room;
   global $ignore_location;
 
   $fieldset = new ElementFieldset();
@@ -860,7 +860,7 @@ function get_fieldset_location_settings() : ElementFieldset
       $field->setLabel(get_vocab('default_room'))
             ->setLabelAttribute('title', get_vocab('default_room_note'))
             ->setControlAttribute('name', 'import_default_room')
-            ->addSelectOptions($options, $default_room, true);
+            ->addSelectOptions($options, $import_default_room, true);
 
       $fieldset->addElement($field);
     }
