@@ -672,17 +672,15 @@ function get_entry_by_id(int $id) : ?array
 }
 
 
-// Returns the Unix timestamp for registration closing.  Takes account of
-// periods, when registration closes at $periods_booking_opens on the day
-// of the booking, because we don't know when in the day periods occur.
-// This function compensates for DST changes, so that, for example, 1 week
-// before occurs at the same time of day as the start time, even if there's
-// a DST transition in between.
-function registration_opens_timestamp(array $entry)
+// Returns the timestamp for a registration opening/closing boundary.
+// Takes account of periods, when registration closes at $periods_booking_opens
+// on the day of the booking, because we don't know when in the day periods occur.
+// This function compensates for DST changes, so that, for example, 1 week before
+// occurs at the same time of day as the start time, even if there's a DST
+// transition in between.
+function registration_boundary_timestamp(int $start_time, int $in_advance) : int
 {
   global $enable_periods, $periods_booking_opens;
-
-  $start_time = $entry['start_time'];
 
   // If we're using periods set the time back to midnight
   if ($enable_periods)
@@ -690,33 +688,23 @@ function registration_opens_timestamp(array $entry)
     $start_time = timestamp_set_time($start_time, $periods_booking_opens);
   }
 
-  $cross_dst = cross_dst(time(), $entry['start_time']);
+  $boundary_time = $start_time - $in_advance;
 
-  return $start_time - $entry['registration_opens'] - $cross_dst;
+  return $boundary_time - cross_dst($boundary_time, $start_time);
 }
 
 
-// Returns the Unix timestamp for registration opening.  Takes account of
-// periods, when registration closes at $periods_booking_opens on the day
-// of the booking, because we don't know when in the day periods occur.
-// This function compensates for DST changes, so that, for example, 1 week
-// before occurs at the same time of day as the start time, even if there's
-// a DST transition in between.
-function registration_closes_timestamp(array $entry)
+// Returns the Unix timestamp for registration opening.
+function registration_opens_timestamp(array $entry) : int
 {
-  global $enable_periods, $periods_booking_opens;
+  return registration_boundary_timestamp($entry['start_time'], $entry['registration_opens']);
+}
 
-  $start_time = $entry['start_time'];
 
-  // If we're using periods set the time back to midnight
-  if ($enable_periods)
-  {
-    $start_time = timestamp_set_time($start_time, $periods_booking_opens);
-  }
-
-  $cross_dst = cross_dst(time(), $entry['start_time']);
-
-  return $start_time - $entry['registration_closes'] - $cross_dst;
+// Returns the Unix timestamp for registration closing.
+function registration_closes_timestamp(array $entry) : int
+{
+  return registration_boundary_timestamp($entry['start_time'], $entry['registration_closes']);
 }
 
 
