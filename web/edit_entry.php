@@ -508,7 +508,7 @@ function get_field_type($value, $disabled=false)
   {
     return null;
   }
-  
+
   // If it's a mandatory field add a blank option to force a selection
   if (!empty($is_mandatory_field['entry.type']))
   {
@@ -1195,6 +1195,10 @@ if (isset($start_date))
     list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
   }
 }
+else
+{
+  $start_date = format_iso_date($year, $month, $day);
+}
 
 
 // This page will either add or modify a booking
@@ -1471,13 +1475,18 @@ else
   {
     $start_time = $start_first_slot + intval(($start_time - $start_first_slot)/$resolution);  // rounds down
   }
-
+  
   if (isset($end_seconds))
   {
     $end_minutes = intval($end_seconds/60);
     $end_hour = intval($end_minutes/60);
     $end_minute = $end_minutes%60;
-    $end_time = mktime($end_hour, $end_minute, 0, $month, $day, $year);
+    if (!isset($end_date))
+    {
+      $end_date = $start_date;
+    }
+    list($end_year, $end_month, $end_day) = explode('-', $end_date);
+    $end_time = mktime($end_hour, $end_minute, 0, $end_month, $end_day, $end_year);
     $duration = $end_time - $start_time - cross_dst($start_time, $end_time);
   }
   else
