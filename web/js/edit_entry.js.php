@@ -1263,6 +1263,7 @@ function populateFromSessionStorage(form)
         }
       }
     });
+
     <?php // Now assign values to the selects ?>
     for (const property in selects)
     {
@@ -1288,6 +1289,16 @@ function populateFromSessionStorage(form)
         console.warn("MRBS: something has gone wrong - maybe the MRBS datalist structure has changed.")
       }
     });
+
+    <?php
+    // Fix up the flatpickr inputs.  Although the dates in the hidden inputs will have been set to
+    // the correct values, we need to force the dates in the visible fields to be set, not just
+    // to the correct value, but also in the correct format.
+    ?>
+    form.find('.flatpickr-input').each(function() {
+        document.querySelector('#' + $(this).attr('id'))._flatpickr.setDate($(this).val(), true);
+      });
+
   }
 }
 
