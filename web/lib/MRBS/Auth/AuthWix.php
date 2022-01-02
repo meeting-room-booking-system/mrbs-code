@@ -58,7 +58,7 @@ class AuthWix extends Auth
     $result = $this->http_functions('getMemberByEmail', $params);
 
     // The username doesn't exist - return NULL
-    if (!isset($result) || ($result === false))
+    if (($result === false) || ($result = json_encode(null)))
     {
       return null;
     }
