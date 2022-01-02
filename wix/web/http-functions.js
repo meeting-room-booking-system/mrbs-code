@@ -122,16 +122,16 @@ export async function post_getMemberByEmail(request) {
           })
           .catch((error) => {
             console.error(error);
-            return JSON.stringify(null);
+            return null;
           });
       }
       else {
-        return JSON.stringify(null);
+        return null;
       }
     })
     .catch((error) => {
       console.error(error);
-      return JSON.stringify(null);
+      return null;
     });
 
   return Promise.allSettled([validateRequestPromise, getMemberPromise])
