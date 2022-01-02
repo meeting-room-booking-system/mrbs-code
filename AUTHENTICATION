@@ -154,7 +154,7 @@ PHP authentication modules
 |imap_php |A more up to date       |                   |                        |
 |         |version of imap         |                   |                        |
 +---------+------------------------+-------------------+------------------------+
-|nw       |Users validated by      |                   |  - TThis is only going |
+|nw       |Users validated by      |                   |  - This is only going |
 |         |Netware server          |                   |   to work on Linux.    |
 |         |(user contrib.)         |  - ?              |                        |
 |         |                        |                   |                        |
@@ -170,6 +170,16 @@ PHP authentication modules
 |         |against a Joomla!       |                   |                        |
 |         |installation running on |                   |                        |
 |         |the same server         |                   |                        |
+|         |                        |                   |                        |
++---------+------------------------+-------------------+------------------------+
+|wix      |Users are validated     |  - Users don't    |  - Not a single signon/|
+|         |against members         |    need to have   |    signoff solution    |
+|         |registered on a Wix     |    two sets of    |  - Can be slight delays|
+|         |website.                |    login details  |    in retrieving user  |
+|         |                        |  - Administrators |    details from a      |
+|         |                        |    only have to   |    remote Wix site     |
+|         |                        |    manage users in|                        |
+|         |                        |    one place (Wix)|                        |
 |         |                        |                   |                        |
 +---------+------------------------+-------------------+------------------------+
 |wordpress|Users are validated     |                   |                        |
@@ -877,6 +887,11 @@ for more information on how to do that.
 https://simplesamlphp.org/docs/stable/simplesamlphp-install
 https://simplesamlphp.org/docs/stable/simplesamlphp-sp
 
+
+Wix Authentication
+-------------------
+
+See wix/README
 
 
 External Authentication Programs Configuration

@@ -1,0 +1,51 @@
+MRBS provides an authentication type that allows the authentication of users
+against Wix websites.  To install and configure this, you need to make changes
+on both the Wix and MRBS servers.
+
+On the Wix site
+===============
+
+1. Create a http-functions.js file in your Wix backend (see the Wix YouTube
+video at https://www.youtube.com/watch?v=4yCBplV3MPQ for how to do it) and copy
+and paste the contents of the file wix/web/http-functions.js into it.  You will
+need to open the file with a suitable text editor such as Notepad++.  If you
+already have a http-functions.js file you will need to merge the contents with
+your existing file.
+
+2. Publish the file by clicking the "Publish" button.
+
+3. In the Wix Secrets Manager (found under Developer Tools in your Wix
+dashboard) create a new secret called "MRBS_API_key".  (You can choose your own
+name, but if so you will need to change the MRBS configuration - see below.)
+Generate an API key (search the web for "API key generator" or "GUID generator".
+Copy and paste this key into the secret and store it.
+
+4. In your Wix dashboard, go to Contacts then Site Members.  Under More Actions
+click Manage Member Info.  Add a custom field of type "Number" called "MRBS
+Admin" and use this to assign a non-zero value to those members that you want
+to be admins for MRBS.  (You can call the field something else, in which case
+you should change the relevant MRBS config setting - see below.)
+
+
+On the MRBS site
+================
+
+Set the following configuration variables in your config.inc.php file:
+
+$auth['type'] = "wix";
+
+// The URL of your WIX site
+$auth['wix']['site_url'] = "https://example.com/";
+
+// The API key that you generated and saved in your Wix secrets manager.
+$auth['wix']['mrbs_api_key'] = "";
+
+// The name of the secret in your Wix secrets manager
+$auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
+
+// The name of the custom field that determines whether a member is an
+// MRBS admin.  The field name should be entered in lower case below and
+// spaces converted to "-" symbols.  Note that you can also configure admins
+// in the config file by using
+// $auth['admin'][] = "someone@example.com";
+$auth['wix']['admin_property'] = "custom.mrbs-admin";

@@ -730,7 +730,7 @@ $report_presentation_field_order = array();
 $auth["type"] = "db"; // How to validate the user/password. One of
                       // "auth_basic", "cas", "config", "crypt", "db", "db_ext", "idcheck",
                       // "imap", "imap_php", "joomla", "ldap", "none", "nw", "pop3",
-                      // "saml" or "wordpress".
+                      // "saml", "wix" or "wordpress".
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
@@ -1101,6 +1101,23 @@ $auth['saml']['disable_mrbs_session_init'] = false;
 //
 // https://simplesamlphp.org/docs/stable/simplesamlphp-install
 // https://simplesamlphp.org/docs/stable/simplesamlphp-sp
+
+
+// 'auth_wix' configuration settings
+$auth['wix']['site_url'] = "https://example.com/";  // The URL of your WIX site
+
+// The API key that you generated and saved in your Wix secrets manager.
+$auth['wix']['mrbs_api_key'] = "";
+
+// The name of the secret in your Wix secrets manager
+$auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
+
+// The name of the custom field that determines whether a member is an
+// MRBS admin.  The field name should be entered in lower case below and
+// spaces converted to "-" symbols.  Note that you can also configure admins
+// in the config file by using
+// $auth['admin'][] = "someone@example.com";
+$auth['wix']['admin_property'] = "custom.mrbs-admin";
 
 
 // 'auth_wordpress' configuration settings
