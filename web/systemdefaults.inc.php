@@ -1119,6 +1119,12 @@ $auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
 // $auth['admin'][] = "someone@example.com";
 $auth['wix']['admin_property'] = "custom.mrbs-admin";
 
+// The number of results to be found at a time in the Wix backend when getting
+// a list of all members.  This is a configuration setting that is passed to
+// the Wix backend code as part of the request.  It is just used internally in
+// the backend and doesn't affect the size of the list returned to MRBS.
+$auth['wix']['limit'] = 500;
+
 
 // 'auth_wordpress' configuration settings
 $auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation relative to MRBS.
