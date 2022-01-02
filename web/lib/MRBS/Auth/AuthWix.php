@@ -19,7 +19,7 @@ class AuthWix extends Auth
    *
    * Checks if the specified username/password pair are valid
    *
-   * $user  - The user name
+   * $user  - The username
    * $pass  - The password
    *
    * Returns:
@@ -137,6 +137,12 @@ class AuthWix extends Auth
     $params['key'] = $auth['wix']['mrbs_api_key'];
     // And the API key secret name in Wix
     $params['secret_name'] = $auth['wix']['mrbs_api_key_secret_name'];
+
+    // And the limit, for internal use by the Wix backend code
+    if (isset($auth['wix']['limit']))
+    {
+      $params['limit'] = $auth['wix']['limit'];
+    }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $auth['wix']['site_url'] . "_functions/$function");
