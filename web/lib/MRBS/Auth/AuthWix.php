@@ -144,8 +144,11 @@ class AuthWix extends Auth
       $params['limit'] = $auth['wix']['limit'];
     }
 
+    $url = $auth['wix']['site_url'] . "_functions/$function";
+    self::debug("URL=\"$url\"");
+
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $auth['wix']['site_url'] . "_functions/$function");
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // Necessary to prevent "HTTP/2 stream 0 was not closed cleanly: INTERNAL_ERROR (err 2)" error;
     curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -171,6 +174,17 @@ class AuthWix extends Auth
 
     curl_close($ch);
     return $result;
+  }
+
+
+  private static function debug(string $message) : void
+  {
+    global $auth;
+
+    if ($auth['wix']['debug'])
+    {
+      self::logDebugMessage($message);
+    }
   }
 
 }
