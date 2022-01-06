@@ -145,7 +145,7 @@ class AuthWix extends Auth
     }
 
     $url = $auth['wix']['site_url'] . "_functions/$function";
-    $this->debug("URL=\"$url\"");
+    self::debug("URL=\"$url\"");
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -180,15 +180,10 @@ class AuthWix extends Auth
   private static function debug(string $message) : void
   {
     global $auth;
-    
+
     if ($auth['wix']['debug'])
     {
-      list($called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-      error_log(
-          "[MRBS DEBUG] " .
-          $caller['class'] . $caller['type'] . $caller['function'] . '(' . $called['line'] . ')' .
-          ": $message"
-        );
+      self::logDebugMessage($message);
     }
   }
 
