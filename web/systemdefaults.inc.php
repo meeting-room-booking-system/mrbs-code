@@ -1120,6 +1120,9 @@ $auth['wix']['admin_property'] = "custom.mrbs-admin";
 // the backend and doesn't affect the size of the list returned to MRBS.
 $auth['wix']['limit'] = 500;
 
+// Setting this to true will cause debug information to be written to the PHP
+// error log.
+$auth['wix']['debug'] = false;
 
 // 'auth_wordpress' configuration settings
 $auth['wordpress']['rel_path'] = '..';   // Path to the WordPress installation relative to MRBS.

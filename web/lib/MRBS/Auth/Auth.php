@@ -260,4 +260,18 @@ abstract class Auth
       die($message);
     }
   }
+
+
+  // Writes the debug message to the error log together with the calling method and line number.
+  // It assumes that it has been called by a debug method.
+  protected static function logDebugMessage(string $message) : void
+  {
+    // Need to go three levels back to get the real calling method.
+    list( , $called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+    error_log(
+        "[MRBS DEBUG] " .
+        $caller['class'] . $caller['type'] . $caller['function'] . '(' . $called['line'] . ')' .
+        ": $message"
+      );
+  }
 }

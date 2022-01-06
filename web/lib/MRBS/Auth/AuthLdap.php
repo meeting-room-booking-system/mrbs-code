@@ -1049,12 +1049,7 @@ class AuthLdap extends Auth
 
     if ($ldap_debug || $ldap_debug_attributes)
     {
-      list($called, $caller) = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-      error_log(
-          "[MRBS DEBUG] " .
-          $caller['class'] . $caller['type'] . $caller['function'] . '(' . $called['line'] . ')' .
-          ": $message"
-        );
+      self::logDebugMessage($message);
     }
   }
 
