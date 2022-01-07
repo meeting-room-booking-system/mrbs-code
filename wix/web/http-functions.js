@@ -171,7 +171,7 @@ export async function post_getMemberNames(request) {
     items.forEach(function(item) {
       result.push({
         username: item.loginEmail,
-        display_name: item.name
+        display_name: ((item.name === undefined) || (item.name === null) || (item.name === '')) ? item.loginEmail : item.name
       });
     });
 
