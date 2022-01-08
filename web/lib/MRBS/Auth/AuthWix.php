@@ -71,9 +71,10 @@ class AuthWix extends Auth
     $user->email = $result->member->loginEmail;
 
     // Set the display name
-    if (isset($result->member->name) && ($result->member->name !== ''))
+    $property = $auth['wix']['display_name_property'] ?? 'name';
+    if (isset($result->member->$property) && ($result->member->$property !== ''))
     {
-      $user->display_name = $result->member->name;
+      $user->display_name = $result->member->$property;
     }
     else
     {
@@ -98,7 +99,15 @@ class AuthWix extends Auth
   // Return an array of users, indexed by 'username' and 'display_name'
   public function getUsernames() : array
   {
+    global $auth;
+
     $params = array();
+
+    if (isset($auth['wix']['display_name_property']))
+    {
+      $params['display_name_property'] = $auth['wix']['display_name_property'];
+    }
+
     $result = $this->http_functions('getMemberNames', $params);
 
     if ($result === false)
@@ -107,6 +116,7 @@ class AuthWix extends Auth
     }
 
     $users =  json_decode($result, true);
+
     self::sortUsers($users);
 
     return $users;
