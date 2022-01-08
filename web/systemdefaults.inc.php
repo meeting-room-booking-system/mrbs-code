@@ -1114,6 +1114,10 @@ $auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
 // $auth['admin'][] = "someone@example.com";
 $auth['wix']['admin_property'] = "custom.mrbs-admin";
 
+// The name of the member property to be used for the display name.
+// Typically either 'name' or 'nickname'.
+$auth['wix']['display_name_property'] = 'name';
+
 // The number of results to be found at a time in the Wix backend when getting
 // a list of all members.  This is a configuration setting that is passed to
 // the Wix backend code as part of the request.  It is just used internally in

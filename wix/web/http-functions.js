@@ -143,10 +143,14 @@ export async function post_getMemberByEmail(request) {
 
 // Returns an array of members indexed by 'username' and 'display_name'
 // Request data parameters:
-//      limit       (optional) the limit to be used in each query.  Defaults to 50.
+//      limit                   (optional)  the limit to be used in each query.  Defaults to 50.
+//      display_name_property   (optional)  the member property to be used for the display name.
+//                              Typically either 'name' (the default) or 'nickname'.
 export async function post_getMemberNames(request) {
 
   const data = await request.body.json();
+
+  const displayNameProperty = data.display_name_property ?? 'name';
 
   const options = {
     "suppressAuth": true,
@@ -171,7 +175,9 @@ export async function post_getMemberNames(request) {
     items.forEach(function(item) {
       result.push({
         username: item.loginEmail,
-        display_name: ((item.name === undefined) || (item.name === null) || (item.name === '')) ? item.loginEmail : item.name
+        display_name: ((item[displayNameProperty] === undefined) ||
+                       (item[displayNameProperty] === null) ||
+                       (item[displayNameProperty] === '')) ? item.loginEmail : item[displayNameProperty]
       });
     });
 
