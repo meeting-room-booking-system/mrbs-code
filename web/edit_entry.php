@@ -582,6 +582,8 @@ function get_field_custom($key, $disabled=false)
   global $is_mandatory_field, $text_input_max;
   global $select_options, $datalist_options;
 
+  // TODO: have a common way of generating custom fields for all tables
+
   // First check that the custom field exists.  It normally will, but won't if
   // $edit_entry_field_order contains a value for which a field doesn't exist.
   if (!isset($custom_fields_map[$key]))
