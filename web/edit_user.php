@@ -411,6 +411,8 @@ function get_field_custom($custom_field, $params, $disabled=false)
   global $select_options, $datalist_options, $is_mandatory_field, $pattern;
   global $text_input_max;
 
+  // TODO: have a common way of generating custom fields for all tables
+
   // Output a checkbox if it's a boolean or integer <= 2 bytes (which we will
   // assume are intended to be booleans)
   if (($custom_field['nature'] == 'boolean') ||
@@ -424,6 +426,14 @@ function get_field_custom($custom_field, $params, $disabled=false)
   {
     $class = 'FieldInputNumber';
   }
+  elseif (!empty($select_options[$params['field']]))
+  {
+    $class = 'FieldSelect';
+  }
+  elseif (!empty($datalist_options[$params['field']]))
+  {
+    $class = 'FieldInputDatalist';
+  }
   // Output a textarea if it's a character string longer than the limit for a
   // text input
   elseif (($custom_field['nature'] == 'character') && isset($custom_field['length']) && ($custom_field['length'] > $text_input_max))
@@ -433,14 +443,6 @@ function get_field_custom($custom_field, $params, $disabled=false)
   elseif ($custom_field['type'] == 'date')
   {
     $class = 'FieldInputDate';
-  }
-  elseif (!empty($select_options[$params['field']]))
-  {
-    $class = 'FieldSelect';
-  }
-  elseif (!empty($datalist_options[$params['field']]))
-  {
-    $class = 'FieldInputDatalist';
   }
   else
   {

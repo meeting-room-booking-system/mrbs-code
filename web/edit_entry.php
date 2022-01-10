@@ -616,6 +616,9 @@ function get_field_custom($key, $disabled=false)
 {
   global $custom_fields, $custom_fields_map;
   global $is_mandatory_field, $text_input_max;
+  global $select_options, $datalist_options;
+
+  // TODO: have a common way of generating custom fields for all tables
 
   // First check that the custom field exists.  It normally will, but won't if
   // $edit_entry_field_order contains a value for which a field doesn't exist.
@@ -634,10 +637,12 @@ function get_field_custom($key, $disabled=false)
     $class = 'FieldInputCheckbox';
   }
   // Output a textarea if it's a character string longer than the limit for a
-  // text input
+  // text input and it's not a select or datalist element
   elseif (($custom_field['nature'] == 'character') &&
            isset($custom_field['length']) &&
-           ($custom_field['length'] > $text_input_max))
+           ($custom_field['length'] > $text_input_max) &&
+           empty($select_options["entry.$key"]) &&
+           empty($datalist_options["entry.$key"]))
   {
     // HTML5 does not allow a pattern attribute for the textarea element
     $class = 'FieldTextarea';
@@ -1511,7 +1516,7 @@ else
   {
     $start_time = $start_first_slot + intval(($start_time - $start_first_slot)/$resolution);  // rounds down
   }
-  
+
   if (isset($end_seconds))
   {
     $end_minutes = intval($end_seconds/60);
