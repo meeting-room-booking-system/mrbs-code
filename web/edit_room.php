@@ -66,6 +66,8 @@ function get_custom_fields($data)
 {
   global $standard_fields, $text_input_max;
 
+  // TODO: have a common way of generating custom fields for all tables
+  
   $result = array();
   $disabled = !is_admin();
 
