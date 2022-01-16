@@ -2584,6 +2584,7 @@ h2.date.loading::after {
 
 div.eye {
   height: 1em;
+  display: inline-block !important;
 }
 
 .eye svg {
