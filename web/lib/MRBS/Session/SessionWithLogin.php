@@ -10,6 +10,8 @@ use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\User;
+use function MRBS\auth;
+use function MRBS\get_vocab;
 
 
 // An abstract class for those session schemes that implement a login form
@@ -188,8 +190,20 @@ abstract class SessionWithLogin implements SessionInterface
     $fieldset->addLegend(\MRBS\get_vocab('please_login'));
 
     // The username field
-    $tag = (\MRBS\auth()->canValidateByEmail()) ? 'username_or_email' : 'user.name';
-    $placeholder = \MRBS\get_vocab($tag);
+    if (auth()->canValidateByEmail() && auth()->canValidateByUsername())
+    {
+      $tag = 'username_or_email';
+    }
+    elseif (auth()->canValidateByUsername())
+    {
+      $tag = 'users.name';
+    }
+    else
+    {
+      $tag = 'users.email';
+    }
+
+    $placeholder = get_vocab($tag);
 
     $field = new FieldInputText();
     $field->setLabel(\MRBS\get_vocab('user'))
@@ -204,7 +218,7 @@ abstract class SessionWithLogin implements SessionInterface
 
     // The password field
     $field = new FieldInputPassword();
-    $field->setLabel(\MRBS\get_vocab('user.password'))
+    $field->setLabel(get_vocab('users.password'))
           ->setControlAttributes(array('id'           => 'password',
                                        'name'         => 'password',
                                        'autocomplete' => 'current-password'));

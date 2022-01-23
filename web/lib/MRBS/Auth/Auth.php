@@ -88,6 +88,13 @@ abstract class Auth
   {
     return false;
   }
+  
+  
+  // Checks whether validation of a user by username is possible and allowed.
+  public function canValidateByUsername() : bool
+  {
+    return true;
+  }
 
 
   // Checks whether the method has a password reset facility
