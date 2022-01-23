@@ -140,9 +140,9 @@ abstract class SessionWithLogin implements SessionInterface
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
   protected function getValidUser(?string $username, ?string $password) : string
   {
-    if (($valid_username = \MRBS\auth()->validateUser($this->form['username'], $this->form['password'])) === false)
+    if (($valid_username = auth()->validateUser($this->form['username'], $this->form['password'])) === false)
     {
-      $this->authGet($this->form['target_url'], $this->form['returl'], \MRBS\get_vocab('unknown_user'));
+      $this->authGet($this->form['target_url'], $this->form['returl'], get_vocab('unknown_user'));
       exit(); // unnecessary because authGet() exits, but just included for clarity
     }
 
@@ -187,7 +187,7 @@ abstract class SessionWithLogin implements SessionInterface
     }
 
     $fieldset = new ElementFieldset();
-    $fieldset->addLegend(\MRBS\get_vocab('please_login'));
+    $fieldset->addLegend(get_vocab('please_login'));
 
     // The username field
     if (auth()->canValidateByEmail() && auth()->canValidateByUsername())
@@ -206,7 +206,7 @@ abstract class SessionWithLogin implements SessionInterface
     $placeholder = get_vocab($tag);
 
     $field = new FieldInputText();
-    $field->setLabel(\MRBS\get_vocab('user'))
+    $field->setLabel(get_vocab('user'))
           ->setLabelAttributes(array('title' => $placeholder))
           ->setControlAttributes(array('id'           => 'username',
                                        'name'         => 'username',
@@ -229,18 +229,18 @@ abstract class SessionWithLogin implements SessionInterface
     // The submit button
     $fieldset = new ElementFieldset();
     $field = new FieldInputSubmit();
-    $field->setControlAttributes(array('value' => \MRBS\get_vocab('login')));
+    $field->setControlAttributes(array('value' => get_vocab('login')));
     $fieldset->addElement($field);
 
     $form->addElement($fieldset);
 
-    if (\MRBS\auth()->canResetPassword())
+    if (auth()->canResetPassword())
     {
       $fieldset = new ElementFieldset();
       $field = new FieldDiv();
       $a = new ElementA();
       $a->setAttribute('href', \MRBS\multisite('reset_password.php'))
-        ->setText(\MRBS\get_vocab('lost_password'));
+        ->setText(get_vocab('lost_password'));
       $field->addControl($a);
       $fieldset->addElement($field);
       $form->addElement($fieldset);
