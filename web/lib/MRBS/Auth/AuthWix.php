@@ -50,6 +50,20 @@ class AuthWix extends Auth
   }
 
 
+  // Checks whether validation of a user by email address is possible and allowed.
+  public function canValidateByEmail() : bool
+  {
+    return true;
+  }
+
+
+  // Checks whether validation of a user by username is possible and allowed.
+  public function canValidateByUsername() : bool
+  {
+    return false;
+  }
+
+
   protected function getUserFresh(string $username) : ?User
   {
     global $auth;
