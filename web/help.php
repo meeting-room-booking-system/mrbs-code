@@ -77,7 +77,7 @@ echo get_vocab("please_contact") . '<a href="mailto:' . rawurlencode($mrbs_admin
   . "</a> " . get_vocab("for_any_questions") . "\n";
 echo "</p>\n";
 
-$faqfile = $faqfilelang;
+$faqfile = $faqfilelang ?? '';
 
 // Older versions of MRBS required an underscore in front of the language
 // in the config setting.  In order to maintain backwards compatibility we
