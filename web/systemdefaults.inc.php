@@ -1496,10 +1496,11 @@ $default_language_tokens = "en";
 // a format suitable for your OS, eg by adding '.utf-8' or changing it to 'eng'.
 $override_locale = "";
 
-// faq file language selection. IF not set, use the default english file.
-// IF your language faq file is available, set $faqfilelang to match the
-// end of the file name, including the underscore (ie. for site_faq_fr.html
-// use "_fr"
+// FAQ file language selection. If not set, use the default English file.
+// If your language faq file is available, set $faqfilelang to match the
+// end of the file name, excluding the underscore (eg for site_faq_fr.html
+// use "fr").  For compatibility with older versions of MRBS settings with
+// the underscore, eg "_fr" are supported, but deprecated.
 $faqfilelang = "";
 
 // Language selection when run from the command line
