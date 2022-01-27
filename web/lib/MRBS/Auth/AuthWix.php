@@ -101,7 +101,7 @@ class AuthWix extends Auth
     $user->level = $this->getDefaultLevel($username);
 
     // Then if they are not an admin get their admin status from Wix
-    if (($user->level < 2) && !empty($result->contact->info->extendedFields->{$auth['wix']['admin_property']}))
+    if (($user->level < 2) && in_array($auth['wix']['admin_badge'], $result->badges))
     {
       $user->level = 2;
     }

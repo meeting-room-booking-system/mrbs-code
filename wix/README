@@ -20,11 +20,20 @@ name, but if so you will need to change the MRBS configuration - see below.)
 Generate an API key (search the web for "API key generator" or "GUID generator".
 Copy and paste this key into the secret and store it.
 
-4. In your Wix dashboard, go to Contacts then Site Members.  Under More Actions
-click Manage Member Info.  Add a custom field of type "Number" called "MRBS
-Admin" and use this to assign a non-zero value to those members that you want
-to be admins for MRBS.  (You can call the field something else, in which case
-you should change the relevant MRBS config setting - see below.)
+4. In your Wix dashboard, go to Contacts then Site Members.  Under "Manage
+Badges" create a new badge called "MRBS Admin" and assign this badge to those
+members that should be admins.  You can call the badge something else, in which
+case you should change the relevant MRBS config setting - see below.
+
+[Using badges is not ideal for this purpose.  The best solution would be to use
+Wix roles, but as of Jan 2022 there doesn't seem to be a way of getting the
+roles of a member given a memberId.  Custom fields in members could be another
+solution, but there doesn't seem to be a way of stopping a member from editing
+their own custom field value in their profile.  Therefore badges seem to be the
+only solution.  Note though that badge titles don't have to be unique, so care
+should be taken.  It might be better to use badge ids, but there doesn't seem
+to be a way for a Wix administrator to discover the id of a badge from the
+dashboard.]
 
 
 On the MRBS site
@@ -43,9 +52,8 @@ $auth['wix']['mrbs_api_key'] = "";
 // The name of the secret in your Wix secrets manager
 $auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
 
-// The name of the custom field that determines whether a member is an
-// MRBS admin.  The field name should be entered in lower case below and
-// spaces converted to "-" symbols.  Note that you can also configure admins
-// in the config file by using
+// The name (title) of the badge that determines whether a member is an
+// MRBS admin.  Note that badge names are case-sensitive.  You can also
+// configure admins in the config file by using
 // $auth['admin'][] = "someone@example.com";
-$auth['wix']['admin_property'] = "custom.mrbs-admin";
+$auth['wix']['admin_badge'] = "MRBS Admin";
