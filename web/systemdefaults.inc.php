@@ -1115,12 +1115,11 @@ $auth['wix']['mrbs_api_key'] = "";
 // The name of the secret in your Wix secrets manager
 $auth['wix']['mrbs_api_key_secret_name'] = "MRBS_API_key";
 
-// The name of the custom field that determines whether a member is an
-// MRBS admin.  The field name should be entered in lower case below and
-// spaces converted to "-" symbols.  Note that you can also configure admins
-// in the config file by using
+// The name (title) of the badge that determines whether a member is an
+// MRBS admin.  Note that badge names are case-sensitive.  You can also
+// configure admins in the config file by using
 // $auth['admin'][] = "someone@example.com";
-$auth['wix']['admin_property'] = "custom.mrbs-admin";
+$auth['wix']['admin_badge'] = "MRBS Admin";
 
 // The name of the member property to be used for the display name.
 // Typically either 'name' or 'nickname'.

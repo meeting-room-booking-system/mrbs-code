@@ -1,5 +1,5 @@
 import {ok, forbidden, serverError} from 'wix-http-functions';
-import {authentication} from 'wix-members-backend';
+import {authentication, badges} from 'wix-members-backend';
 import wixData from 'wix-data';
 import {contacts} from 'wix-crm-backend';
 import wixSecretsBackend from 'wix-secrets-backend';
@@ -110,10 +110,11 @@ export async function post_getMemberByEmail(request) {
     .then((members) => {
       if(members.items.length > 0) {
         let member = members.items[0];
-        // Now we've got the member we have to get their full details (including
+        // Now we've got the member we have to get (a) their full details (including
         // custom fields, which aren't in PrivateMembersData) from Contacts using
-        // the contactId.
-        return contacts.getContact(member.contactId, {suppressAuth: true})
+        // the contactId and (b) their badges from Members/Badges.  Get these two
+        // sets of data in parallel using promises.
+        const getContactPromise = contacts.getContact(member.contactId, {suppressAuth: true})
           .then((contact) => {
             return {
               member: member,
@@ -124,6 +125,32 @@ export async function post_getMemberByEmail(request) {
             console.error(error);
             return null;
           });
+
+        const getBadgesPromise = wixData.query("Members/Badges")
+          .find()
+          .then((results) => {
+            return results.items;
+          } );
+
+        return Promise.allSettled([getContactPromise, getBadgesPromise])
+          .then((promiseResults) => {
+            if ((promiseResults[0].status === 'fulfilled') && (promiseResults[1].status ==='fulfilled')) {
+              let result = promiseResults[0].value;
+              result.badges = [];
+              // Iterate through the badges checking if this member has the badge
+              if (promiseResults[1].value) {
+                promiseResults[1].value.forEach(badge => {
+                  if (badge.members.includes(member.contactId)) {
+                    result.badges.push(badge.title);
+                  }
+                });
+              }
+              return result;
+            }
+            else {
+              return null;
+            }
+          })
       }
       else {
         return null;
