@@ -239,7 +239,7 @@ function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $roo
 
   foreach ($views as $view => $token)
   {
-    $this_view_all = (isset($view_all)) ? $view_all : 1;
+    $this_view_all = $view_all ?? 1;
 
     $vars = array('view'      => $view,
                   'view_all'  => $this_view_all,
@@ -427,9 +427,6 @@ if (!checkAuthorised(this_page(), $refresh))
 
 switch ($view)
 {
-  case 'day':
-    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
-    break;
   case 'week':
     $inner_html = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
     break;
@@ -437,7 +434,11 @@ switch ($view)
     $inner_html = month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room);
     break;
   default:
-    throw new \Exception("Unknown view '$view'");
+    if ($view !== 'day')
+    {
+      trigger_error("Unknown view '$view'", E_USER_WARNING);
+    }
+    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
     break;
 }
 
@@ -455,8 +456,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => $room ?? null,
-    'kiosk'     => $kiosk ?? null
+    'room'      => $room ?? null
   );
 
 print_header($context);
