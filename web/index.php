@@ -239,7 +239,7 @@ function get_view_nav($current_view, $view_all, $year, $month, $day, $area, $roo
 
   foreach ($views as $view => $token)
   {
-    $this_view_all = (isset($view_all)) ? $view_all : 1;
+    $this_view_all = $view_all ?? 1;
 
     $vars = array('view'      => $view,
                   'view_all'  => $this_view_all,
@@ -455,7 +455,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
 print_header($context);
