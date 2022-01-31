@@ -508,13 +508,6 @@ function mrbs_default_timezone_get()
 }
 
 
-function get_display_name($username)
-{
-  $user = auth()->getUser($username);
-  return (isset($user)) ? $user->display_name : $username;
-}
-
-
 // Gets the username and display name, if different.  Useful in places such as search and
 // report results, where you have to search by username - because that's what's stored in
 // the entry - but you are interested in the display name.
@@ -525,7 +518,7 @@ function get_compound_name($username)
   if (isset($username))
   {
     $result = $username;
-    $display_name = get_display_name($username);
+    $display_name = auth()->getDisplayName($username);
     if ($username !== $display_name)
     {
       $result .= " ($display_name)";
