@@ -88,7 +88,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
 
       case 'create_by':
       case 'modified_by':
-        $data[$key] = $hide_this_field ? $private_text : get_display_name($data[$key]);
+        $data[$key] = $hide_this_field ? $private_text : auth()->getDisplayName($data[$key]);
         break;
 
       default:
