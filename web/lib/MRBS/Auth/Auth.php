@@ -11,6 +11,11 @@ use function MRBS\strcasecmp_locale;
 
 abstract class Auth
 {
+  // Determines whether we should get all the display names at once when
+  // asked to get a single display name.  (There may be some authentication
+  // types where we don't want to do this.)
+  protected $getDisplayNamesAtOnce = true;
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
@@ -83,13 +88,58 @@ abstract class Auth
   }
 
 
+  public function getDisplayName(?string $username) : ?string
+  {
+    static $display_names = null;  // Cache for performance
+
+    // Easy case 1: $username is null
+    if (!isset($username))
+    {
+      return null;
+    }
+
+    // Easy case 2: it's the current user
+    $mrbs_user = session()->getCurrentUser();
+    if (isset($mrbs_user) && ($mrbs_user->username === $username))
+    {
+      return $mrbs_user->display_name;
+    }
+
+    // If we can (and want to) then get all the usernames at the same time.  It's
+    // much faster than getting them one at a time when they are stored externally.
+    if ($this->getDisplayNamesAtOnce && method_exists($this, 'getUsernames'))
+    {
+      if (!isset($display_names))
+      {
+        $display_names = array_column($this->getUsernames(), 'display_name', 'username');
+      }
+    }
+    // Otherwise just get them one at a time
+    else
+    {
+      if (!isset($display_names[$username]))
+      {
+        $user = $this->getUser($username);
+        $display_names[$username] = (isset($user)) ? $user->display_name : $username;
+      }
+    }
+
+    if (isset($display_names[$username]) && ($display_names[$username] !== ''))
+    {
+      return $display_names[$username];
+    }
+
+    return $username;
+  }
+
+
   // Checks whether validation of a user by email address is possible and allowed.
   public function canValidateByEmail() : bool
   {
     return false;
   }
-  
-  
+
+
   // Checks whether validation of a user by username is possible and allowed.
   public function canValidateByUsername() : bool
   {

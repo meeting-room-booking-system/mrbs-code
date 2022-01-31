@@ -177,7 +177,7 @@ function display_series_title_row($row)
         htmlspecialchars($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
+  echo "<td>" . htmlspecialchars(auth()->getDisplayName($row['create_by'])) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
 
@@ -207,7 +207,7 @@ function display_entry_row(array $row)
         htmlspecialchars($row['name']) ."</a></td>\n";
 
   // create_by, area and room names
-  echo "<td>" . htmlspecialchars(get_display_name($row['create_by'])) . "</td>\n";
+  echo "<td>" . htmlspecialchars(auth()->getDisplayName($row['create_by'])) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['area_name']) . "</td>\n";
   echo "<td>" . htmlspecialchars($row['room_name']) . "</td>\n";
 

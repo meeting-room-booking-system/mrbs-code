@@ -624,8 +624,8 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
     // Created by
     $body .= create_body_table_row (get_mail_vocab("createdby"),
-                                    get_display_name($data['create_by']),
-                                    get_display_name($mail_previous['create_by']),
+                                    auth()->getDisplayName($data['create_by']),
+                                    auth()->getDisplayName($mail_previous['create_by']),
                                     $compare, $as_html);
 
     // Custom fields

@@ -1,5 +1,5 @@
 import {ok, forbidden, serverError} from 'wix-http-functions';
-import {authentication, badges} from 'wix-members-backend';
+import {authentication} from 'wix-members-backend';
 import wixData from 'wix-data';
 import {contacts} from 'wix-crm-backend';
 import wixSecretsBackend from 'wix-secrets-backend';
@@ -203,8 +203,8 @@ export async function post_getMemberNames(request) {
       result.push({
         username: item.loginEmail,
         display_name: ((item[displayNameProperty] === undefined) ||
-                       (item[displayNameProperty] === null) ||
-                       (item[displayNameProperty] === '')) ? item.loginEmail : item[displayNameProperty]
+          (item[displayNameProperty] === null) ||
+          (item[displayNameProperty] === '')) ? item.loginEmail : item[displayNameProperty]
       });
     });
 
