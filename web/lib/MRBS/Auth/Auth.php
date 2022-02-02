@@ -11,9 +11,7 @@ use function MRBS\strcasecmp_locale;
 
 abstract class Auth
 {
-  // Determines whether we should get all the display names at once when
-  // asked to get a single display name.  (There may be some authentication
-  // types where we don't want to do this.)
+
   protected $getDisplayNamesAtOnce = true;
 
   /* validateUser($user, $pass)
@@ -85,6 +83,8 @@ abstract class Auth
 
   public function getDisplayName(?string $username) : ?string
   {
+    global $get_display_names_all_at_once;
+
     static $display_names = null;  // Cache for performance
 
     // Easy case 1: $username is null
@@ -102,7 +102,7 @@ abstract class Auth
 
     // If we can (and want to) then get all the usernames at the same time.  It's
     // much faster than getting them one at a time when they are stored externally.
-    if ($this->getDisplayNamesAtOnce && method_exists($this, 'getUsernames'))
+    if ($get_display_names_all_at_once && method_exists($this, 'getUsernames'))
     {
       if (!isset($display_names))
       {
