@@ -126,11 +126,6 @@ class AuthLdap extends Auth
           "Please check your web server configuration.</b></p><hr>\n");
     }
 
-    // Some LDAP directories are huge and slow and we don't want to get all
-    // the display names at once.  They may also be paged, so we wouldn't get
-    // all the names anyway given the current implementation.
-    $this->getDisplayNamesAtOnce = false;
-
     // Transfer the values from the config variables into a local
     // associative array, turning them all into arrays
     self::$config_items = array('ldap_host',

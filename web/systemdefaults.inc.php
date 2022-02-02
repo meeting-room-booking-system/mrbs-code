@@ -533,6 +533,16 @@ $include_registered_by = true;
 $show_plus_link = false;   // Change to true to always show the (+) link as in
                            // MRBS 1.1.
 
+// Determines whether MRBS should get all the display names at once when
+// asked to get a single display name.  MRBS converts usernames to display
+// names when displaying bookings and in reports.  This can be an expensive
+// operation when using an external authentication type, eg 'db_ext', 'ldap'
+// or 'wix', and it is usually much faster to retrieve all the names at once
+// when getting the first name, especially when producing large reports.  However
+// sometimes retrieving all the names can take a very long time, eg when
+// working with a very large LDAP directory, and it can be better just to retrieve
+// each name when needed.
+$get_display_names_all_at_once = true;
 
 // PRIVATE BOOKINGS SETTINGS
 
