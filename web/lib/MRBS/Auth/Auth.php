@@ -84,7 +84,7 @@ abstract class Auth
   public function getDisplayName(?string $username) : ?string
   {
     global $get_display_names_all_at_once;
-    
+
     static $display_names = null;  // Cache for performance
 
     // Easy case 1: $username is null
