@@ -410,6 +410,12 @@ if ($room < 0)
   $view_all = 1;
 }
 
+// We only support the day view in kiosk mode at the moment
+if (isset($kiosk))
+{
+  $view = 'day';
+}
+
 $is_ajax = is_ajax();
 
 // If we're using the 'db' authentication type, check to see if MRBS has just been installed
@@ -438,7 +444,7 @@ switch ($view)
     {
       trigger_error("Unknown view '$view'", E_USER_WARNING);
     }
-    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
+    $inner_html = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight, $kiosk);
     break;
 }
 
@@ -456,7 +462,8 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => $room ?? null
+    'room'      => $room ?? null,
+    'kiosk'     => $kiosk ?? null
   );
 
 print_header($context);

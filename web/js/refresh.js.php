@@ -42,9 +42,15 @@ var refreshPage = function refreshPage() {
                   page_date: args.pageDate,
                   area: args.area,
                   room: args.room};
+
       if (args.timetohighlight !== undefined)
       {
         data.timetohighlight = args.timetohighlight;
+      }
+
+      if (args.kiosk !== undefined)
+      {
+        data.kiosk = args.kiosk;
       }
 
       <?php
@@ -447,20 +453,32 @@ $(document).on('page_ready', function() {
   ?>
   $('table.dwm_main').on('tableload', function() {
 
+      var refreshRate;
+
       sizeColumns();
 
-      <?php
-      if (!empty($refresh_rate))
+      if (args.kiosk)
       {
+        refreshRate = <?php echo $kiosk_refresh_rate ?? 0; ?>;
+      }
+      else
+      {
+        refreshRate = <?php echo $refresh_rate ?? 0; ?>;
+      }
+
+      if (refreshRate !== 0)
+      {
+
+        <?php
         // Set an interval timer to refresh the page, unless there's already one in place
         ?>
         if (typeof intervalId === 'undefined')
         {
-          intervalId = setInterval(refreshPage, <?php echo $refresh_rate * 1000 ?>);
+          intervalId = setInterval(refreshPage, refreshRate * 1000);
         }
-        <?php
       }
 
+      <?php
       // Add an event listener to detect a change in the visibility
       // state.  We can then suspend Ajax refreshing when the page is
       // hidden to save on server, client and network load.
