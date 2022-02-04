@@ -545,6 +545,11 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
       $data['site'] = $site;
     }
 
+    if (isset($context['kiosk']))
+    {
+      $data['kiosk'] = $context['kiosk'];
+    }
+
     $mrbs_user = session()->getCurrentUser();
     if (isset($mrbs_user))
     {

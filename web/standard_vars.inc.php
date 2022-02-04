@@ -13,6 +13,7 @@ $month = get_form_var('month', 'int');
 $day = get_form_var('day', 'int');
 $area = get_form_var('area', 'int');
 $room = get_form_var('room', 'int');
+$kiosk = get_form_var('kiosk', 'string');
 
 if (empty($area))
 {
@@ -43,8 +44,8 @@ if (isset($page_date))
   list($year, $month, $day) = split_iso_date($page_date);
 }
 
-// If we don't know the right date then use today's date
-if (empty($day) or empty($month) or empty($year))
+// If we're in kiosk mode or we don't know the right date then use today's date
+if (!isset($kiosk) or empty($day) or empty($month) or empty($year))
 {
   $day   = date("d");
   $month = date("m");

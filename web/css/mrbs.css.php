@@ -2756,3 +2756,9 @@ div.eye {
 .eye.off svg {
   display: none;
 }
+
+[data-kiosk] .minicalendars,
+[data-kiosk] nav.arrow,
+[data-kiosk] nav.view {
+  display: none;
+}

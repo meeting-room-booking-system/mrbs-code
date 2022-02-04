@@ -395,6 +395,9 @@ $ajax_refresh_rate = 10;
 // refreshed in order to keep them from getting out of date.  Set to 0 to disable.
 $prefetch_refresh_rate = 30;
 
+// Refresh rate (in seconds) when in kiosk mode
+$kiosk_refresh_rate = 300; // 5 minutes
+
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
 // "both" for both. Default is "both", but 6 entries per day are shown instead
