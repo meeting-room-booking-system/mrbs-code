@@ -623,7 +623,7 @@ function get_rooms_header_cells($rooms, $vars) : string
 }
 
 
-function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null) : string
+function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null, ?string $kiosk=null) : string
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
