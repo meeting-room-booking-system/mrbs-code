@@ -6,13 +6,16 @@ class Rooms extends TableIterator
 {
 
   private $area_id;
+  private $room_id;
 
-
-  // Gets the rooms for an area.  If no area_id is specified then it gets all
-  // the rooms in the system.
-  public function __construct($area_id=null)
+  // Gets a set of rooms.  If $room_id is specified the set consists of that
+  // single room.  Otherwise, if $area_id is specified the set consists of all
+  // the rooms for that area.  Otherwise, the set consists of all the rooms in
+  // the system.
+  public function __construct($area_id=null, $room_id=null)
   {
     $this->area_id = $area_id;
+    $this->room_id = $room_id;
     parent::__construct(__NAMESPACE__ . '\\Room');
   }
 
@@ -91,7 +94,12 @@ class Rooms extends TableIterator
     $sql .= " FROM $table_name R
          LEFT JOIN " . _tbl(Area::TABLE_NAME) . " A
                 ON R.area_id=A.id ";
-    if (isset($this->area_id))
+    if (isset($this->room_id))
+    {
+      $sql .= " WHERE R.id=:room_id";
+      $sql_params[':room_id'] = $this->room_id;
+    }
+    elseif (isset($this->area_id))
     {
       $sql .= " WHERE R.area_id=:area_id";
       $sql_params[':area_id'] = $this->area_id;
@@ -104,6 +112,7 @@ class Rooms extends TableIterator
     {
       $sql .= " ORDER BY A.sort_key, R.sort_key";
     }
+
     $this->res = db()->query($sql, $sql_params);
     $this->cursor = -1;
     $this->item = null;

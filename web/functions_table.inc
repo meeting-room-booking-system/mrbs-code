@@ -634,7 +634,14 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes;
 
-  $rooms = new Rooms($area_id);
+  if ($kiosk === 'room')
+  {
+    $rooms = new Rooms(null, $room_id);
+  }
+  else
+  {
+    $rooms = new Rooms($area_id);
+  }
 
   if ($rooms->countVisible() == 0)
   {
