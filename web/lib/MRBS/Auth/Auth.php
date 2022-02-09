@@ -228,15 +228,13 @@ abstract class Auth
 
     foreach ($registrants as $registrant)
     {
-      $registrant_user = $this->getUser($registrant['username']);
-      $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+      $display_name = $this->getDisplayName($registrant['username']);
       // Add in the name of the person who registered this user, if required and if different.
       if ($with_registered_by &&
-          isset($registrant['create_by']) &&
-          ($registrant['create_by'] !== $registrant['username']))
+        isset($registrant['create_by']) &&
+        ($registrant['create_by'] !== $registrant['username']))
       {
-        $registered_by = $this->getUser($registrant['create_by']);
-        $display_name = get_vocab("registrant_registered_by", $display_name, $registered_by->display_name);
+        $display_name = get_vocab("registrant_registered_by", $display_name, $this->getDisplayName($registrant['create_by']));
       }
       $display_names[] = $display_name;
     }
