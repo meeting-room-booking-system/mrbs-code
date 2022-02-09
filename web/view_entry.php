@@ -48,20 +48,17 @@ function generate_registrant_table($row, $previous_page=null)
     }
     echo '</td>';
     // Registrant
-    $registrant_user = auth()->getUser($registrant['username']);
-    $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+    $display_name = auth()->getDisplayName($registrant['username']);
     $sortname = get_sortable_name($display_name);
     echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
     // Registered by - only show if it's someone other than the registrant
-    $registrant_creator = auth()->getUser($registrant['create_by']);
-    if (isset($registrant_creator) && isset($registrant_user) &&
-        ($registrant_creator->username === $registrant_user->username))
+    if ($registrant['create_by'] === $registrant['username'])
     {
       $display_name = '';
     }
     else
     {
-      $display_name = (isset($registrant_creator)) ? $registrant_creator->display_name : $registrant['create_by'];
+      $display_name = auth()->getDisplayName($registrant['create_by']);
     }
     $sortname = get_sortable_name($display_name);
     echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
@@ -130,8 +127,7 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
 
   // Submit button
   $button = new ElementInputSubmit();
-  $registrant_user = auth()->getUser($registrant['username']);
-  $display_name = (isset($registrant_user)) ? $registrant_user->display_name : $registrant['username'];
+  $display_name = auth()->getDisplayName($registrant['username']);
   $message = get_vocab("confirm_del_registrant", $display_name);
   $button->setAttributes(array(
       'value' => $label_text,
@@ -892,7 +888,7 @@ if (!$room_disabled)
     // For the delete buttons, either the button is disabled and we show the reason why, or else
     // we add a click event to confirm the deletion
     unset($button_attributes['onclick']);
-    
+
     if (!$series)
     {
       echo "<div>\n";
