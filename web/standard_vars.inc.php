@@ -45,7 +45,7 @@ if (isset($page_date))
 }
 
 // If we're in kiosk mode or we don't know the right date then use today's date
-if (!isset($kiosk) or empty($day) or empty($month) or empty($year))
+if (isset($kiosk) or empty($day) or empty($month) or empty($year))
 {
   $day   = date("d");
   $month = date("m");
