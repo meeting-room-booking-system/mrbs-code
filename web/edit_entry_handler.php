@@ -132,14 +132,16 @@ foreach($form_vars as $var => $var_type)
 // Convert the registration opens and closes times into seconds
 if (isset($registration_opens_value) && isset($registration_opens_units))
 {
-  fromTimeString($registration_opens_value, $registration_opens_units);
-  $registration_opens = constrain_int($registration_opens_value, 4);
+  $registration_opens = $registration_opens_value;
+  fromTimeString($registration_opens, $registration_opens_units);
+  $registration_opens = constrain_int($registration_opens, 4);
 }
 
 if (isset($registration_closes_value) && isset($registration_closes_units))
 {
-  fromTimeString($registration_closes_value, $registration_closes_units);
-  $registration_closes = constrain_int($registration_closes_value, 4);
+  $registration_closes = $registration_closes_value;
+  fromTimeString($registration_closes, $registration_closes_units);
+  $registration_closes = constrain_int($registration_closes, 4);
 }
 
 // Convert the booleans (the custom field booleans are done later)
