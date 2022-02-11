@@ -14,7 +14,7 @@ if ($use_strict)
 ?>
 
 $(document).on('page_ready', function() {
-  
+
   <?php
   // Tidy up the presentation of the first header row by merging the cells.
   // The div is hidden while we are manipulating it so that it doesn't flicker;
@@ -23,14 +23,14 @@ $(document).on('page_ready', function() {
   var summaryDiv = $('#div_summary'),
       summaryHead = summaryDiv.find('thead'),
       tableOptions;
-      
+
   summaryHead.find('tr:first th:odd').attr('colspan', '2');
   summaryHead.find('tr:first th:even').not(':first').remove();
   summaryHead.find('tr:first th:first').attr('rowspan', '2');
   summaryHead.find('tr:eq(1) th:first').remove();
   summaryDiv.css('visibility', 'visible');
-  
-  
+
+
   <?php
   // We don't support iCal output for the Summary.   So if the Summary button is pressed
   // disable the iCal button and, if iCal output is checked, check another format.  If the
@@ -40,7 +40,7 @@ $(document).on('page_ready', function() {
       var output = $(this).filter(':checked').val(),
           formatButtons = $('input[name="output_format"]'),
           icalButton = formatButtons.filter('[value="' + <?php echo OUTPUT_ICAL ?> + '"]');
-          
+
       if (output === '<?php echo SUMMARY ?>')
       {
         icalButton.prop('disabled', true);
@@ -54,8 +54,8 @@ $(document).on('page_ready', function() {
         icalButton.prop('disabled', false);
       }
     }).trigger('change');
-  
-  
+
+
   <?php
   // Turn the list of users into a dataTable
   ?>
@@ -67,7 +67,7 @@ $(document).on('page_ready', function() {
   // for older browsers
   ?>
   tableOptions.ajax = {url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
-                       method: 'POST', 
+                       method: 'POST',
                        processData: false,
                        contentType: false,
                        data: function() {
@@ -76,7 +76,7 @@ $(document).on('page_ready', function() {
                          } };
   <?php
   // Add in a hidden input to the form so that we can tell if we are using DataTables
-  // (which will be if JavaScript is enabled).   We need to know this because when we're using an 
+  // (which will be if JavaScript is enabled).   We need to know this because when we're using an
   // Ajax data source we don't want to send the HTML version of the table data.
   ?>
 
@@ -88,13 +88,13 @@ $(document).on('page_ready', function() {
 
   var table = $('#report_table'),
       reportTable;
-  
-  <?php 
+
+  <?php
   // Get the types and feed those into dataTables
   ?>
   tableOptions.columnDefs = getTypes(table);
 
-  <?php 
+  <?php
   // Add a "Delete entries button", provided that (a) the user is an
   // admin and (b) the configuration allows it
   if ($auth['show_bulk_delete'])
@@ -103,12 +103,12 @@ $(document).on('page_ready', function() {
     if (args.isAdmin)
     {
       tableOptions.initComplete = function(){
-        
+
             $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
                   .on('click', function() {
                       var data = reportTable.rows({filter: 'applied'}).data().toArray(),
                           nEntries = data.length;
-                          
+
                       if (window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
                                   nEntries.toLocaleString()))
                       {
@@ -126,7 +126,7 @@ $(document).on('page_ready', function() {
                             results,
                             i,
                             j;
-                            
+
                         for (i=0; i<nEntries; i++)
                         {
                           batch.push($(data[i][0]).data('id'));
@@ -162,7 +162,7 @@ $(document).on('page_ready', function() {
                                           i,
                                           oSettings,
                                           span;
-                                          
+
                                       results.push(result);
                                       <?php // Check whether everything has finished ?>
                                       if (results.length >= nBatches)
@@ -182,14 +182,14 @@ $(document).on('page_ready', function() {
                                           }
                                           nDeleted += parseInt(results[i], 10);
                                         }
-                                        <?php 
+                                        <?php
                                         // Reload the page to get the new dataset.   If we're using
                                         // an Ajax data source (for true Ajax data sources, not server
                                         // side processing) and there's no summary table we can be
                                         // slightly more elegant and just reload the Ajax data source.
                                         ?>
 
-                                        if (reportTable.ajax.url() && 
+                                        if (reportTable.ajax.url() &&
                                             !reportTable.page.info().serverSide &&
                                             ($('#div_summary').length === 0))
                                         {
@@ -221,7 +221,19 @@ $(document).on('page_ready', function() {
   }
   ?>
 
+  <?php
+  // If the sort column is specified then tell DataTables to sort by that column on
+  // initialisation, otherwise it will sort by the default column.  We also need to
+  // tell DataTables not to use the saved state, otherwise it will confuse the user
+  // who has just changed the "Sort by" option on the report form.
+  ?>
+  var sortColumn = table.data('sortColumn');
+  if (sortColumn !== undefined)
+  {
+    tableOptions.order = [[sortColumn, 'asc']];
+    tableOptions.stateSave = false;
+  }
 
   reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
-  
+
 });

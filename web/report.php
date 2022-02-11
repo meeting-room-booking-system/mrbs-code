@@ -558,6 +558,33 @@ function type_wrap($string, $data_type)
 }
 
 
+// Gets the index of the column that should be sorted
+function get_sort_column($sortby) : ?int
+{
+  global $field_order_list;
+
+  $column = 0;
+
+  foreach ($field_order_list as $field)
+  {
+    if ((($sortby == 'r') && ($field == 'room_name')) ||
+        (($sortby == 's') && ($field == 'start_time')))
+    {
+      return $column;
+    }
+    $column++;
+    // End_time is a special case because it uses up two columns: one for
+    // the end time, and another for the duration.
+    if ($field == 'end_time')
+    {
+      $column++;
+    }
+  }
+
+  return null;
+}
+
+
 // Output the first row (header row) for CSV reports
 function report_header()
 {
@@ -668,12 +695,20 @@ function report_header()
 
 function open_report()
 {
-  global $output_format, $is_ajax;
+  global $output_format, $is_ajax, $sortby;
 
   if ($output_format == OUTPUT_HTML && !$is_ajax)
   {
     echo "<div id=\"report_output\" class=\"datatable_container\">\n";
-    echo "<table class=\"admin_table display\" id=\"report_table\">\n";
+    echo '<table class="admin_table display" id="report_table"';
+    // Add the index number of the column that has to be sorted as a data
+    // attribute in order to help the JavaScript.
+    $sort_column = get_sort_column($sortby);
+    if (isset($sort_column))
+    {
+      echo ' data-sort-column="' . $sort_column . '"';
+    }
+    echo ">\n";
   }
 }
 
