@@ -611,10 +611,10 @@ function report_header()
         $values[] = get_vocab("namebooker");
         break;
       case 'area_name':
-        $values[] = get_vocab("area");
+        $values[] = type_wrap(get_vocab("area"), 'title-string');
         break;
       case 'room_name':
-        $values[] = get_vocab("room");
+        $values[] = type_wrap(get_vocab("room"), 'title-string');
         break;
       case 'start_time':
         $values[] = type_wrap(get_vocab("start_date"), 'title-numeric');
@@ -993,6 +993,12 @@ function report_row(&$rows, $data)
           // Include the numeric time as a title in an empty span so
           // that the column can be sorted and filtered properly
           $value = "<span title=\"${data[$field]}\"></span>$value";
+          break;
+        case 'area_name':
+          $value = "<span title=\"${data['area_sort_key']}\"></span></span>$value";
+          break;
+        case 'room_name':
+          $value = "<span title=\"${data['room_sort_key']}\"></span></span>$value";
           break;
         default:
           break;
@@ -1530,7 +1536,7 @@ if ($phase == 2)
   $sql_params = array();
   $sql = "SELECT E.*, "
        .  db()->syntax_timestamp_to_unix("E.timestamp") . " AS last_updated, "
-       . "A.area_name, R.room_name, R.area_id, "
+       . "A.area_name, A.sort_key AS area_sort_key, R.room_name, R.sort_key AS room_sort_key, R.area_id, "
        . "A.approval_enabled, A.confirmation_enabled, A.enable_periods";
   if ($output_format == OUTPUT_ICAL)
   {
