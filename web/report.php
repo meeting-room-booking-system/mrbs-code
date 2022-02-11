@@ -1003,18 +1003,18 @@ function report_row(&$rows, $data)
           // Process the duration and then fall through to the end_time
           // Include the duration in a seconds as a title in an empty span so
           // that the column can be sorted and filtered properly
-          $d_string = "<span title=\"$duration_seconds\"></span>$d_string";
+          $d_string = '<span title="' . htmlspecialchars($duration_seconds) . '"></span>' . $d_string;
         case 'start_time':
         case 'last_updated':
           // Include the numeric time as a title in an empty span so
           // that the column can be sorted and filtered properly
-          $value = "<span title=\"${data[$field]}\"></span>$value";
+          $value = '<span title="' . htmlspecialchars($data[$field]) . '"></span>' . $value;
           break;
         case 'area_name':
-          $value = "<span title=\"${data['area_sort_key']}\"></span></span>$value";
+          $value = '<span title="' . htmlspecialchars($data['area_sort_key']) . '"></span></span>' . $value;
           break;
         case 'room_name':
-          $value = "<span title=\"${data['room_sort_key']}\"></span></span>$value";
+          $value = '<span title="' . htmlspecialchars($data['room_sort_key']) . '"></span></span>' . $value;
           break;
         default:
           break;
