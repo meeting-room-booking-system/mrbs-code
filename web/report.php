@@ -620,6 +620,7 @@ function report_header()
   foreach ($field_order_list as $field)
   {
     // We give some columns a type data value so that the JavaScript knows how to sort them
+    // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
     switch ($field)
     {
       case 'name':
