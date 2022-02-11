@@ -222,15 +222,18 @@ $(document).on('page_ready', function() {
   ?>
 
   <?php
-  // If the sort column is specified then tell DataTables to sort by that column on
+  // If the sort columns are specified then tell DataTables to sort by those columns on
   // initialisation, otherwise it will sort by the default column.  We also need to
   // tell DataTables not to use the saved state, otherwise it will confuse the user
   // who has just changed the "Sort by" option on the report form.
   ?>
-  var sortColumn = table.data('sortColumn');
-  if (sortColumn !== undefined)
+  var sortColumns = table.data('sortColumns');
+  if ((sortColumns !== undefined) && (sortColumns.length))
   {
-    tableOptions.order = [[sortColumn, 'asc']];
+    tableOptions.order = [];
+    sortColumns.forEach(function(column) {
+      tableOptions.order.push([column, 'asc']);
+    });
     tableOptions.stateSave = false;
   }
 
