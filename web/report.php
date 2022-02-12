@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use MRBS\Form\Element;
+use MRBS\Form\Field;
 use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputHidden;
@@ -15,7 +17,7 @@ use MRBS\Form\FieldSelect;
 require "defaultincludes.inc";
 
 
-function get_field_from_date($data)
+function get_field_from_date(array $data) : FieldInputDate
 {
   $value = format_iso_date($data['from_year'], $data['from_month'], $data['from_day']);
   $field = new FieldInputDate();
@@ -28,7 +30,7 @@ function get_field_from_date($data)
 }
 
 
-function get_field_to_date($data)
+function get_field_to_date(array $data) : FieldInputDate
 {
   $value = format_iso_date($data['to_year'], $data['to_month'], $data['to_day']);
   $field = new FieldInputDate();
@@ -41,7 +43,7 @@ function get_field_to_date($data)
 }
 
 
-function get_field_areamatch($data)
+function get_field_areamatch(array $data) : FieldInputDatalist
 {
   $field = new FieldInputDatalist();
   $options = get_area_names($all=true);
@@ -55,7 +57,7 @@ function get_field_areamatch($data)
 }
 
 
-function get_field_roommatch($data)
+function get_field_roommatch(array $data) : FieldInputDatalist
 {
   $field = new FieldInputDatalist();
 
@@ -84,7 +86,7 @@ function get_field_roommatch($data)
 }
 
 
-function get_field_typematch($data)
+function get_field_typematch(array $data) : ?FieldSelect
 {
   $options = get_type_options(true);
 
@@ -108,7 +110,7 @@ function get_field_typematch($data)
 }
 
 
-function get_field_match_private($data)
+function get_field_match_private(array $data) : ?Element
 {
   global $mrbs_user, $private_somewhere;
 
@@ -142,7 +144,7 @@ function get_field_match_private($data)
 }
 
 
-function get_field_match_confirmed($data)
+function get_field_match_confirmed(array $data) : ?FieldInputRadioGroup
 {
   global $confirmation_somewhere;
 
@@ -164,7 +166,7 @@ function get_field_match_confirmed($data)
 }
 
 
-function get_field_match_approved($data)
+function get_field_match_approved(array $data) : ?FieldInputRadioGroup
 {
   global $approval_somewhere;
 
@@ -186,7 +188,7 @@ function get_field_match_approved($data)
 }
 
 
-function get_field_custom($data, $key)
+function get_field_custom(array $data, string $key) : Field
 {
   $var = "match_$key";
   global $$var;
@@ -226,7 +228,7 @@ function get_field_custom($data, $key)
 // Generates a text input field of some kind.   If $select_options or $datalist_options
 // is set then it will be a datalist, otherwise it will be a simple input field
 //   $params  an array indexed by 'label', 'name', 'value' and 'field'
-function get_field_report_input($params)
+function get_field_report_input(array $params) : Field
 {
   global $select_options, $datalist_options;
 
@@ -272,7 +274,7 @@ function get_field_report_input($params)
 }
 
 
-function get_fieldset_search_criteria($data)
+function get_fieldset_search_criteria(array $data) : ElementFieldset
 {
   global $report_search_field_order;
 
@@ -350,7 +352,7 @@ function get_fieldset_search_criteria($data)
 }
 
 
-function get_field_output($data)
+function get_field_output(array $data) : FieldInputRadioGroup
 {
   $options = array(REPORT  => get_vocab('report'),
                    SUMMARY => get_vocab('summary'));
@@ -361,7 +363,7 @@ function get_field_output($data)
 }
 
 
-function get_field_output_format($data)
+function get_field_output_format(array $data) : FieldInputRadioGroup
 {
   global $times_somewhere;
 
@@ -383,7 +385,7 @@ function get_field_output_format($data)
 }
 
 
-function get_field_sortby($data)
+function get_field_sortby(array $data) : FieldInputRadioGroup
 {
   $options = array('r' => get_vocab('sort_room'),
                    's' => get_vocab('sort_rep_time'));
@@ -394,7 +396,7 @@ function get_field_sortby($data)
 }
 
 
-function get_field_sumby($data)
+function get_field_sumby(array $data) : FieldInputRadioGroup
 {
   $options = array('d' => get_vocab('sum_by_descrip'),
                    'c' => get_vocab('sum_by_creator'),
@@ -406,7 +408,7 @@ function get_field_sumby($data)
 }
 
 
-function get_fieldset_presentation_options($data)
+function get_fieldset_presentation_options(array $data) : ElementFieldset
 {
   global $report_presentation_field_order;
 
@@ -442,7 +444,7 @@ function get_fieldset_presentation_options($data)
 }
 
 
-function get_fieldset_submit_buttons()
+function get_fieldset_submit_buttons() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
@@ -456,7 +458,7 @@ function get_fieldset_submit_buttons()
 
 
 // Works out whether the machine architecture is little-endian
-function is_little_endian()
+function is_little_endian() : bool
 {
   static $result;
 
@@ -473,7 +475,7 @@ function is_little_endian()
 
 // Converts a string from the standard MRBS character set to the character set
 // to be used for CSV files
-function csv_conv($string)
+function csv_conv(string $string)
 {
   $in_charset = utf8_strtoupper(get_charset());
   $out_charset = utf8_strtoupper(get_csv_charset());
@@ -521,7 +523,7 @@ function csv_conv($string)
 
 
 // Escape a string for output
-function escape($string)
+function escape(string $string) : string
 {
   global $output_format;
 
@@ -542,7 +544,7 @@ function escape($string)
 
 
 // Wraps $string in a span with a data-type value of $data_type - but only for HTML output
-function type_wrap($string, $data_type)
+function type_wrap(string $string, string $data_type) : string
 {
   global $output_format;
 
@@ -558,7 +560,7 @@ function type_wrap($string, $data_type)
 
 
 // Gets the indices of the columns that should be sorted
-function get_sort_columns($sortby) : array
+function get_sort_columns(string $sortby) : array
 {
   global $field_order_list;
 
