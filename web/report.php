@@ -1100,7 +1100,6 @@ function accumulate($row, &$count, &$hours, $report_start, $report_end,
 
   $periods_per_day = count($periods);
 
-  $row['enable_periods']; ////////////////////////
   // Use brief description, created by or type as the name:
   $name = get_sumby_name_from_row($row);
   // Area and room separated by break (if HTML):
