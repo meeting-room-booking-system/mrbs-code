@@ -558,33 +558,25 @@ function type_wrap($string, $data_type)
 }
 
 
-// Gets the indices of the column that should be sorted
+// Gets the indices of the columns that should be sorted
 function get_sort_columns($sortby) : array
 {
   global $field_order_list;
 
-  $columns = array();
+  $indices = [];
   $i = 0;
+  $keys = ['area_name', 'room_name', 'start_time'];
 
   foreach ($field_order_list as $field)
   {
-    if (($sortby == 's') && ($field == 'start_time'))
+    if (in_array($field, $keys))
     {
-      array_unshift($columns, $i);
-      break;  // We've got all we need
-    }
-    elseif (($sortby == 'r') && ($field == 'area_name'))
-    {
-      array_unshift($columns, $i);
-    }
-    elseif (($sortby == 'r') && ($field == 'room_name'))
-    {
-      array_push($columns, $i);
+      $indices[$field] = $i;
     }
 
-    if (count($columns) == 2)
+    if (count($indices) == 3)
     {
-      break;  // We've got all we need
+      break;  // We've got all of them
     }
 
     $i++;
@@ -596,7 +588,19 @@ function get_sort_columns($sortby) : array
     }
   }
 
-  return $columns;
+  switch($sortby)
+  {
+    case 'r':
+      return [$indices['area_name'], $indices['room_name'], $indices['start_time']];
+      break;
+    default:
+      if ($sortby != 's')
+      {
+        trigger_error("Unknown sort code '$sortby'", E_USER_WARNING);
+      }
+      return [$indices['start_time'], $indices['area_name'], $indices['room_name']];
+      break;
+  }
 }
 
 
