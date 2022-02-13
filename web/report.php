@@ -595,10 +595,6 @@ function get_sort_columns(string $sortby) : array
       return [$indices['area_name'], $indices['room_name'], $indices['start_time']];
       break;
     default:
-      if ($sortby != 's')
-      {
-        trigger_error("Unknown sort code '$sortby'", E_USER_WARNING);
-      }
       return [$indices['start_time'], $indices['area_name'], $indices['room_name']];
       break;
   }
@@ -1061,7 +1057,6 @@ function get_sumby_name_from_row($row)
     case 't':
       $name = get_type_vocab($row['type']);
       break;
-    case 'c':
     default:
       $name = $row['create_by'];
       break;
@@ -1418,13 +1413,26 @@ $descrmatch = get_form_var('descrmatch', 'string');
 $output = get_form_var('output', 'int', REPORT);
 $output_format = get_form_var('output_format', 'int', (($cli_mode) ? OUTPUT_CSV : OUTPUT_HTML));
 $typematch = get_form_var('typematch', 'array');
-$sortby = get_form_var('sortby', 'string', 'r');  // $sortby: r=room, s=start date/time.
-$sumby = get_form_var('sumby', 'string', 'd');  // $sumby: d=by brief description, c=by creator, t=by type.
+$sortby = get_form_var('sortby', 'string', $default_sortby ?? FALLBACK_SORTBY);  // $sortby: r=room, s=start date/time.
+$sumby = get_form_var('sumby', 'string', $default_sumby ?? FALLBACK_SUMBY);  // $sumby: d=by brief description, c=by creator, t=by type.
 $match_approved = get_form_var('match_approved', 'int', BOOLEAN_MATCH_BOTH);
 $match_confirmed = get_form_var('match_confirmed', 'int', BOOLEAN_MATCH_BOTH);
 $match_private = get_form_var('match_private', 'int', BOOLEAN_MATCH_BOTH);
 $phase = get_form_var('phase', 'int', 1);
 $datatable = get_form_var('datatable', 'int');  // Will only be set if we're using DataTables
+
+// Validate form variables
+if (!in_array($sortby, ['r', 's']))
+{
+  trigger_error("Unknown sort code '$sortby'; using '" . FALLBACK_SORTBY . "'.", E_USER_NOTICE);
+  $sortby = FALLBACK_SORTBY;
+}
+
+if (!in_array($sumby, ['c', 'd', 't']))
+{
+  trigger_error("Unknown sumby code '$sumby'; using '" . FALLBACK_SUMBY ."'.", E_USER_NOTICE);
+  $sumby = FALLBACK_SUMBY;
+}
 
 list($from_year, $from_month, $from_day) = split_iso_date($from_date);
 list($to_year, $to_month, $to_day) = split_iso_date($to_date);

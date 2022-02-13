@@ -254,6 +254,10 @@ define('OUTPUT_HTML',  0);
 define('OUTPUT_CSV',   1);
 define('OUTPUT_ICAL',  2);
 
+// Fallback values
+define('FALLBACK_SORTBY', 'r');
+define('FALLBACK_SUMBY',  'c');
+
 // Constants for matching boolean fields
 define('BOOLEAN_MATCH_FALSE', 0);
 define('BOOLEAN_MATCH_TRUE',  1);

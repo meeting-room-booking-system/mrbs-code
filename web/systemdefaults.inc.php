@@ -1535,6 +1535,14 @@ $language_debug = false;
  * Reports
  *************/
 
+// Default form options
+
+// Sort report by 'r' for room, 's' for start time.
+$default_sortby = 'r';
+
+// Summary: sum by 'd' for brief description, 'c' for creator, 't' for type
+$default_sumby = 'd';
+
 // Default file names
 $report_filename  = "report";
 $summary_filename = "summary";
