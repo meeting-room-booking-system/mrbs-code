@@ -1579,6 +1579,12 @@ $default_import_source = 'file';
 // Default setting for importing past events
 $default_import_past = true;
 
+// By default iCalendar notifications will be sent with the PARTSTAT property set to
+// "NEEDS-ACTION".  If you set this variable to true then it will be set to "ACCEPTED".
+// This will change how the notification is treated by your email/calendar client.
+// See RFC 5545 for more details.
+$partstat_accepted = false;
+
 
 /*************
  * Entry Types
