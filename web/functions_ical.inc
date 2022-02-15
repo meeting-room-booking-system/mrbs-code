@@ -770,8 +770,8 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
 {
   require_once "functions_mail.inc";
 
-  global $mail_settings, $timezone,
-         $default_area_room_delimiter;
+  global $mail_settings, $timezone, $default_area_room_delimiter;
+  global $partstat_accepted;
 
   $vtimezone = get_vtimezone($timezone);
 
@@ -909,9 +909,10 @@ function create_ical_event($method, $data, $addresses=null, $series=false)
           }
           // Use the common name if there is one
           $attendee = parse_address($attendee);
+          $partstat = ($partstat_accepted) ? "ACCEPTED" : "NEEDS-ACTION";
           $results[] = "ATTENDEE;" .
                        ((isset($attendee['common_name']) && ($attendee['common_name'] !== '')) ? "CN=\"" . ical_escape_quoted_string($attendee['common_name']) . "\";" : "") .
-                       "PARTSTAT=NEEDS-ACTION;ROLE=$role:mailto:" . $attendee['address'];
+                       "PARTSTAT=$partstat;ROLE=$role:mailto:" . $attendee['address'];
         }
       }
     }
