@@ -468,11 +468,16 @@ function room_cell_html(Room $room, array $vars) : string
 //    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
 //    $link     the href to be used for the link
 //    $date     the date in yyyy-mm-dd format
-function day_cell_html($text, $link, $date) : string
+function day_cell_html(string $text, string $link, string $date) : string
 {
   $html = '';
   // Put the date into a data attribute so that it can be picked up by JavaScript
-  $html .= '<th data-date="' . htmlspecialchars($date) . '">';
+  $html .= '<th data-date="' . htmlspecialchars($date) . '"';
+  if (is_weekend(date('w', strtotime($date))))
+  {
+    $html .= ' class="weekend"';
+  }
+  $html .= '>';
   $html .= '<a href="' . htmlspecialchars($link) . '"' .
            ' title="' . htmlspecialchars(get_vocab("viewday")) . '">';
   $html .= $text;  // allowed to contain HTML tags - do not escape
@@ -1103,7 +1108,9 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
         $link = multisite($link);
         $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
         $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
-        $header_inner_rows[$i] .= '<th><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
+        $header_inner_rows[$i] .= '<th' .
+          ((is_weekend(date('w', $t))) ? ' class="weekend"' : '') .
+          '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
       }
 
       // next line to display rooms on right side
@@ -1601,7 +1608,8 @@ function cmp3($a, $b)
 }
 
 
-function get_table_head()
+// Gets the table header row for the single room month view
+function get_table_head() : string
 {
   global $weekstarts;
 
@@ -1612,16 +1620,22 @@ function get_table_head()
   $html .= "<tr>\n";
   for ($i = 0; $i< DAYS_PER_WEEK; $i++)
   {
-    if (is_hidden_day(($i + $weekstarts) % DAYS_PER_WEEK))
+    $classes = [];
+    $dow = ($i + $weekstarts) % DAYS_PER_WEEK;
+    if (is_hidden_day($dow))
     {
-      // These days are to be hidden in the display (as they are hidden, just give the
-      // day of the week in the header row
-      $html .= "<th class=\"hidden_day\">" . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . "</th>";
+      $classes[] = 'hidden_day';
     }
-    else
+    if (is_weekend($dow))
     {
-      $html .= "<th>" . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . "</th>";
+      $classes[] = 'weekend';
     }
+    $html .= '<th';
+    if (!empty($classes))
+    {
+      $html .= ' class="' . implode(' ', $classes) . '"';
+    }
+    $html .= '>' . day_name(($i + $weekstarts)%DAYS_PER_WEEK) . '</th>';
   }
   $html .= "\n</tr>\n";
   $html .= "</thead>\n";
