@@ -496,15 +496,19 @@ $(document).on('page_ready', function() {
       }
 
       <?php
-      if ($show_timeline && !$enable_periods)
+      if (!$enable_periods)
       {
-        // Add a timeline showing the current time. Also need to recalculate the timeline if
-        // the window is resized.
+        // If required, add a timeline showing the current time. Also need to recalculate
+        //the timeline if the window is resized.
         ?>
-        Timeline.show();
-        $(window).on('resize', function () {
+        if ((args.kiosk && <?php echo ($show_timeline_kiosk) ? 'true' : 'false'?>) ||
+            (!args.kiosk && <?php echo($show_timeline) ? 'true' : 'false'?>))
+        {
+          Timeline.show();
+          $(window).on('resize', function () {
             Timeline.show();
           });
+        }
         <?php
       }
       ?>

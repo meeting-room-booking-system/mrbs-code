@@ -434,8 +434,9 @@ $row_labels_both_sides = false;
 // well as the top in the day and week views, set to true;
 $column_labels_both_ends = false;
 
-// Show a line in the day and week views corresponding to the current time
-$show_timeline = true;
+// Show a line in the day and week views corresponding to the current time(
+$show_timeline = true;  // normal mode
+$show_timeline_kiosk = false;  // kiosk mode
 
 // For bookings that allow registration, show the number of people that have
 // registered and, if there is one, the registration limit.  This will typically
