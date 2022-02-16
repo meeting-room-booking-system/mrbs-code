@@ -5,6 +5,8 @@ namespace MRBS;
 // Checks that they are valid and assigns sensible defaults if not
 
 // Get the standard form variables
+use DateInterval;
+
 $page_date = get_form_var('page_date', 'string');
 $view = get_form_var('view', 'string', $default_view ?? 'day');
 $view_all = get_form_var('view_all', 'int', empty($default_view_all) ? 0 : 1);  // Whether to view all rooms
@@ -44,40 +46,33 @@ if (isset($page_date))
   list($year, $month, $day) = split_iso_date($page_date);
 }
 
-// If we're in kiosk mode or we don't know the right date then use today's date
-if (isset($kiosk) or empty($day) or empty($month) or empty($year))
+$date = new DateTime();
+
+// If we're in kiosk mode and the current time is after the end of the last slot
+// then advance to tomorrow.
+if (isset($kiosk))
 {
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-else
-{
-  // Make the date valid if day is more than number of days in month:
-  while (!checkdate($month, $day, $year))
+  if ($date->getTimestamp() > get_end_last_slot($date->getMonth(), $date->getDay(), $date->getYear()))
   {
-    $day--;
-    if ($day <= 0)
-    {
-      $day   = date("d");
-      $month = date("m");
-      $year  = date("Y");
-      break;
-    }
+    $date->add(new DateInterval('P1D'));
   }
+}
+// If we are not in kiosk mode and have been given a date then use that
+elseif (!empty($day) && !empty($month) && !empty($year))
+{
+  $date->setDate($year, $month, $day);
 }
 
 // Advance to the next non-hidden day
 if (!empty($hidden_days) &&     // Use !empty in case $hidden_days is not set
     (count($hidden_days) < 7))  // Avoid an infinite loop
 {
-  $date = new DateTime();
-  $date->setDate($year, $month, $day);
   while (in_array($date->format('w'), $hidden_days))
   {
-    $date->add(new \DateInterval('P1D'));
+    $date->add(new DateInterval('P1D'));
   }
-  $day = $date->getDay();
-  $month = $date->getMonth();
-  $year = $date->getYear();
 }
+
+$day = $date->getDay();
+$month = $date->getMonth();
+$year = $date->getYear();
