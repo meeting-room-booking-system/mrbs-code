@@ -653,6 +653,22 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
   $start_first_slot = get_start_first_slot($month, $day, $year);
   $start_last_slot = get_start_last_slot($month, $day, $year);
+  // Keep a count of the number of slots at the start of the day that we're
+  // not showing (will only be relevant in kiosk mode).
+  $skipped_slots = 0;
+
+  // If we are in kiosk mode we are not interested in what has already happened
+  if (isset($kiosk))
+  {
+    $now = time();
+    $start_next_slot = $start_first_slot + $resolution;
+    while (($now > $start_next_slot) && ($start_next_slot < $start_last_slot))
+    {
+      $start_first_slot = $start_next_slot;
+      $skipped_slots++;
+      $start_next_slot = $start_first_slot + $resolution;
+    }
+  }
 
   // Work out whether there's a possibility that a time slot is invalid,
   // in other words whether the booking day includes a transition into DST.
@@ -680,8 +696,8 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     }
   }
 
-  $n_time_slots = get_n_time_slots();
-  $morning_slot_seconds = (($morningstarts * 60) + $morningstarts_minutes) * 60;
+  $n_time_slots = get_n_time_slots() - $skipped_slots;
+  $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);
   $evening_slot_seconds = $morning_slot_seconds + (($n_time_slots - 1) * $resolution);
 
 
@@ -691,6 +707,11 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   $slots = get_slots($month, $day, $year);
   if (isset($slots))
   {
+    // Remove the skipped slots from the start of the first day's array
+    for ($i=0; $i<$skipped_slots; $i++)
+    {
+      array_shift($slots[0]);
+    }
     // Add some data to enable the JavaScript to draw the timeline
     $thead .= ' data-slots="' . htmlspecialchars(json_encode($slots)) . '"';
     $thead .= ' data-timeline-vertical="' . (($times_along_top) ? 'true' : 'false') . '"';
@@ -1241,7 +1262,7 @@ function get_slots($month, $day, $year, $n_days=1, $day_cells=false)
       $d = $day + $j;
 
       // If there's more than one day in the interval then don't include the hidden days in the array, because
-      // they don't appear in the DOM.  If there's only one day then we've managed to display the hiden day.
+      // they don't appear in the DOM.  If there's only one day then we've managed to display the hidden day.
       if (($n_days > 1) &&
           is_hidden_day(date('w', mktime($morningstarts, $morningstarts_minutes, 0, $month, $d, $year))))
       {
