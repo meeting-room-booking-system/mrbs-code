@@ -261,7 +261,7 @@ function output_row(User $user)
               (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)))
             {
               // booleans: represent by a checkmark
-              $values[] = (!empty($col_value)) ? MRBS_HEAVY_CHECK_MARK : '';
+              $values[] = (!empty($col_value)) ? "&check;" : '';
             }
             elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
             {
