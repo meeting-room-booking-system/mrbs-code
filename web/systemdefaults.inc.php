@@ -396,7 +396,7 @@ $ajax_refresh_rate = 10;
 $prefetch_refresh_rate = 30;
 
 // Refresh rate (in seconds) when in kiosk mode
-$kiosk_refresh_rate = 300; // 5 minutes
+$kiosk_refresh_rate = 0; // Temporarily disabled
 
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
