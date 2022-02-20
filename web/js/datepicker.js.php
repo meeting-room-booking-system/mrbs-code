@@ -122,6 +122,12 @@ $(document).on('page_ready', function() {
         <?php
       }
       ?>
+
+      <?php // And add a class if it's a weekend day ?>
+      var weekDays = [<?php echo implode(',', $weekdays)?>];
+      if (weekDays.indexOf(dayElem.dateObj.getDay()) < 0) {
+        dayElem.classList.add('mrbs-weekend');
+      }
     };
 
 
