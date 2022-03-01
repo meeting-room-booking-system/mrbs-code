@@ -69,13 +69,13 @@ function db()
 
 // Returns the db schema version as recorded in the database.   If there is no version
 // recorded then returns 0.
-function db_schema_version()
+function db_schema_version() : int
 {
   if (db()->table_exists(_tbl('variables')))
   {
-    $result = db()->query1("SELECT variable_content
-                              FROM " . _tbl('variables') . "
-                             WHERE variable_name = 'db_version'");
+    $result = (int) db()->query1("SELECT variable_content
+                                 FROM " . _tbl('variables') . "
+                                 WHERE variable_name = 'db_version'");
   }
   else
   {
@@ -89,13 +89,13 @@ function db_schema_version()
 
 // Returns the local db schema version as recorded in the database.   If there is no version
 // recorded then returns 0.
-function db_schema_version_local()
+function db_schema_version_local() : int
 {
   if (db()->table_exists(_tbl('variables')))
   {
-    $result = db()->query1("SELECT variable_content
-                              FROM " . _tbl('variables') . "
-                             WHERE variable_name = 'local_db_version'");
+    $result = (int) db()->query1("SELECT variable_content
+                                 FROM " . _tbl('variables') . "
+                                 WHERE variable_name = 'local_db_version'");
   }
   else
   {
