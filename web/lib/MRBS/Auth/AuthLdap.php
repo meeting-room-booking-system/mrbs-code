@@ -335,7 +335,9 @@ class AuthLdap extends Auth
       return null;
     }
 
-    $user = parent::getUserFresh($username);
+    // Use $object['user']['username'] rather than $username because they won't necessarily be
+    // the same.  See https://sourceforge.net/p/mrbs/bugs/518/
+    $user = parent::getUserFresh($object['user']['username']);
     $keys = array('display_name', 'email', 'level');
 
     foreach ($keys as $key)
