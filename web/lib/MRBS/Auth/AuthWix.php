@@ -189,8 +189,7 @@ class AuthWix extends Auth
     {
       trigger_error(curl_error($ch), E_USER_WARNING);
     }
-
-    if ($http_code != 200)
+    elseif ($http_code != 200)
     {
       trigger_error("Curl received HTTP response code $http_code: $result", E_USER_WARNING);
       $result = false;
