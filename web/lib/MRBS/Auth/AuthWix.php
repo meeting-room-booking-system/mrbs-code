@@ -34,9 +34,9 @@ class AuthWix extends Auth
     }
 
     $params = array(
-        'email' => $user,
-        'password' => $pass
-      );
+      'email' => $user,
+      'password' => $pass
+    );
 
     $result = $this->http_functions('validateMember', $params);
 
@@ -181,13 +181,20 @@ class AuthWix extends Auth
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+    // Get some debug info in case there's an error
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    $stream = fopen('php://temp', 'w+');
+    curl_setopt($ch, CURLOPT_STDERR, $stream);
 
     $result = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     if ($result === false)
     {
-      trigger_error(curl_error($ch), E_USER_WARNING);
+      rewind($stream);
+      $message = curl_error($ch);
+      $message .= "\n\nCurl verbose log:\n\n" . stream_get_contents($stream);
+      trigger_error($message, E_USER_WARNING);
     }
     elseif ($http_code != 200)
     {
@@ -195,6 +202,7 @@ class AuthWix extends Auth
       $result = false;
     }
 
+    fclose($stream);
     curl_close($ch);
     return $result;
   }
