@@ -1582,19 +1582,39 @@ $(document).on('page_ready', function() {
     }
 
     <?php
-    // (2) Go and adjust the start and end time/period select options, because
+    // (2) If the start date is after the end date, then change the end date to match the
+    //     start date if the start date was changed, or change the start date to match the
+    //     end date if the end date was changed.
+    ?>
+    if (getDateDifference() < 0)
+    {
+      var fp;
+      if ($(this).attr('id') === 'start_date')
+      {
+        fp = document.querySelector("#end_date")._flatpickr;
+        fp.setDate($('#start_date').val());
+      }
+      else
+      {
+        fp = document.querySelector("#start_date")._flatpickr;
+        fp.setDate($('#end_date').val());
+      }
+    }
+
+    <?php
+    // (3) Go and adjust the start and end time/period select options, because
     //     they are dependent on the start and end dates
     ?>
     adjustSlotSelectors();
 
     <?php
-    // (3) If we're doing Ajax checking of the form then we have to check
+    // (4) If we're doing Ajax checking of the form then we have to check
     //     for conflicts when the datepicker is closed
     ?>
     checkConflicts();
 
     <?php
-    // (4) Check to see whether any time slots should be removed from the time
+    // (5) Check to see whether any time slots should be removed from the time
     //     select on the grounds that they don't exist due to a transition into DST.
     ?>
     checkTimeSlots($(this));
