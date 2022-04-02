@@ -106,6 +106,9 @@ class Column
       case self::NATURE_CHARACTER:
         $var_type = 'string';
         break;
+      case self::NATURE_DECIMAL:
+        $var_type = 'decimal';
+        break;
       case self::NATURE_INTEGER:
         $var_type = ($this->isBooleanLike()) ? 'bool' : 'int';
         break;
