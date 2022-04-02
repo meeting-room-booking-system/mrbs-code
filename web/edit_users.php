@@ -1147,10 +1147,11 @@ if (isset($action) && ($action == "update"))
     if ($fieldname != 'id')
     {
       $value = $values[$fieldname];
-
+      
       // pre-process the field value for SQL
       switch ($field['nature'])
       {
+        case 'decimal':
         case 'integer':
           if (!isset($value) || ($value === ''))
           {
