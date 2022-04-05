@@ -231,6 +231,11 @@ function url_get_contents($url, $if_modified_since=null)
     curl_setopt($ch, CURLOPT_TIMEOUT, $curlopt_timeout);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    // Use compression if we can
+    if (defined('CURLOPT_ENCODING'))
+    {
+      curl_setopt($ch, CURLOPT_ENCODING, '');
+    }
     if (isset($if_modified_since))
     {
       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
