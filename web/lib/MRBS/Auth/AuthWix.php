@@ -181,6 +181,11 @@ class AuthWix extends Auth
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+    // Use compression if we can
+    if (defined('CURLOPT_ENCODING'))
+    {
+      curl_setopt($ch, CURLOPT_ENCODING, '');
+    }
     // Get some debug info in case there's an error
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     $stream = fopen('php://temp', 'w+');
