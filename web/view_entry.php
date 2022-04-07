@@ -103,6 +103,8 @@ function get_returl($previous_page=null)
 
 function generate_cancel_registration_button(array $row, array $registrant, $label_text, $previous_page=null, $as_field=false)
 {
+  global $area, $room;
+
   // Check that it is not too late for ordinary users to cancel
   if (!is_book_admin($row['room_id']) && entry_registration_cancellation_has_closed($row))
   {
@@ -122,7 +124,9 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
   $form->addHiddenInputs(array(
     'action' => 'cancel',
     'registration_id' => $registrant['id'],
-    'returl' => get_returl($previous_page)
+    'returl' => get_returl($previous_page),
+    'area' => $area,
+    'room' => $room
   ));
 
   // Submit button
@@ -153,6 +157,8 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
 
 function generate_register_button($row, $previous_page=null)
 {
+  global $area, $room;
+
   // Check that the user is an an admin or else that the entry is open for registration
   if (!is_book_admin($row['room_id']) && !entry_registration_is_open($row))
   {
@@ -171,7 +177,9 @@ function generate_register_button($row, $previous_page=null)
   $form->addHiddenInputs(array(
       'action' => 'register',
       'event_id' => $row['id'],
-      'returl' => get_returl($previous_page)
+      'returl' => get_returl($previous_page),
+      'area' => $area,
+      'room' => $room
     ));
 
   if (!$can_register_others)
