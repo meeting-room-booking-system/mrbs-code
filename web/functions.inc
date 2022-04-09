@@ -161,13 +161,16 @@ function is_ajax()
           (utf8_strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
 }
 
-// Returns the contents of the URL. If $if_modified_since is set it will send that
-// an 'If-Modified-Since' header in the request.  The result is an associative array,
-// indexed by
+// Returns the contents of the URL. If $if_modified_since is set it will send that in
+// an 'If-Modified-Since' header in the request.  A user agent to be used in the header
+// can be specified by $user_agent, otherwise it defaults to the browser's user agent
+// if available, otherwise the string 'PHP'.
+//
+// The result is an associative array, indexed by
 //    'body'      The body of the response (FALSE on failure)
 //    'code'      The HTTP response code, eg 200 (NULL if none found)
 //    'headers'   An associative array of headers with the keys converted to lower case
-function url_get_contents($url, $if_modified_since=null)
+function url_get_contents(string $url, ?string $if_modified_since=null, ?string $user_agent=null) : array
 {
   global $server;
 
@@ -177,15 +180,16 @@ function url_get_contents($url, $if_modified_since=null)
   $transfer_timeout = 2;  // seconds
   $curlopt_timeout  = 3;  // seconds
 
-  // If we can, set the User Agent string to be that of the browser, otherwise some sites
-  // fail with 403 errors.
-  if (isset($server['HTTP_USER_AGENT']) && ($server['HTTP_USER_AGENT'] !== ''))
+  if (!isset($user_agent))
   {
-    $user_agent = $server['HTTP_USER_AGENT'];
-  }
-  else
-  {
-    $user_agent = 'PHP';
+    // If we can, set the User Agent string to be that of the browser, otherwise some sites
+    // fail with 403 errors.
+    if (isset($server['HTTP_USER_AGENT']) && ($server['HTTP_USER_AGENT'] !== '')) {
+      $user_agent = $server['HTTP_USER_AGENT'];
+    }
+    else {
+      $user_agent = 'PHP';
+    }
   }
 
   // If we can we use cURL to download the page because it allows us to
