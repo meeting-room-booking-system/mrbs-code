@@ -425,8 +425,7 @@ $vocab["about_mrbs"]         = "Tentang Sistem";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "Sistem";
 $vocab["servertime"]         = "Waktu server";
-$vocab["please_contact"]     = "Silahkan hubungi ";
-$vocab["for_any_questions"]  = "Untuk setiap pertanyaan yg belum terjawab disini.";
+$vocab["please_contact"]     = "Silahkan hubungi %s Untuk setiap pertanyaan yg belum terjawab disini.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Import berkas kalender iCal";

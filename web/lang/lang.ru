@@ -371,8 +371,7 @@ $vocab["about_mrbs"]         = "О системе";
 $vocab["database"]           = "База данных";
 $vocab["system"]             = "Система";
 $vocab["servertime"]         = "Время сервера";
-$vocab["please_contact"]     = "Пожалуйста, свяжитесь с ";
-$vocab["for_any_questions"]  = "по любым вопросам, на которые здесь нет ответа.";
+$vocab["please_contact"]     = "Пожалуйста, свяжитесь с %s по любым вопросам, на которые здесь нет ответа.";
 
 // Entry types
 $vocab["type.I"]             = "Внутренний";

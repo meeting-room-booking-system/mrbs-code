@@ -521,8 +521,7 @@ $vocab["database"]                = "Databas";
 $vocab["system"]                  = "System";
 $vocab["servertime"]              = "Servertid";
 $vocab["server_software"]         = "Serverns mjukvara";
-$vocab["please_contact"]          = "Var vänlig kontakta ";
-$vocab["for_any_questions"]       = "för eventuella frågor som ej besvaras här.";
+$vocab["please_contact"]          = "Var vänlig kontakta %s för eventuella frågor som ej besvaras här.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Importera iCalender-fil";

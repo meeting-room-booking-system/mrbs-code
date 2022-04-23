@@ -434,8 +434,7 @@ $vocab["about_mrbs"]         = "Circa MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "Sistema operativo";
 $vocab["servertime"]         = "Ora del Server";
-$vocab["please_contact"]     = "Contatta ";
-$vocab["for_any_questions"]  = "per qualsiasi altra domanda.";
+$vocab["please_contact"]     = "Contatta %s per qualsiasi altra domanda.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Importa un file iCalendar";

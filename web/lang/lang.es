@@ -549,8 +549,7 @@ $vocab["system"]                  = "Sistema";
 $vocab["servertime"]              = "Hora del servidor";
 $vocab["server_software"]         = "Software de servidor";
 $vocab["extensions"]              = "Extensiones";
-$vocab["please_contact"]          = "Contacte con ";
-$vocab["for_any_questions"]       = "para cualquier duda no contestada aquí.";
+$vocab["please_contact"]          = "Contacte con %s para cualquier duda no contestada aquí.";
 
 // Used in import.php
 $vocab["import_icalendar"]        = "Importar un archivo iCalendar";

@@ -201,8 +201,7 @@ $vocab["delarea"]            = "S'han d'esborrar tots els recursos d'aquesta fam
 $vocab["about_mrbs"]         = "Sobre l'MRBS";
 $vocab["database"]           = "Base de dades";
 $vocab["system"]             = "Sistema";
-$vocab["please_contact"]     = "Si us plau contacta ";
-$vocab["for_any_questions"]  = "per a altres consultes.";
+$vocab["please_contact"]     = "Si us plau contacta %s per a altres consultes.";
 
 // Entry types
 $vocab["type.I"]             = "Intern";

@@ -524,8 +524,7 @@ $vocab["system"]             = "操作系统";
 $vocab["servertime"]         = "服务器时间";
 $vocab["server_software"]         = "服务器软件";
 $vocab["extensions"]              = "扩展";
-$vocab["please_contact"]     = "请联系";
-$vocab["for_any_questions"]  = ",关于任何无法在此解决的问题.";
+$vocab["please_contact"]     = "请联系%s,关于任何无法在此解决的问题.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "导入一个 iCalendar 文件";

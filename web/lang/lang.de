@@ -572,10 +572,9 @@ $vocab["server_details"]          = "Serverdetails";
 $vocab["database"]           = "Datenbank";
 $vocab["system"]             = "System";
 $vocab["servertime"]         = "Serverzeit";
-$vocab["server_software"]         = "Serversoftware";
-$vocab["extensions"]              = "Erweiterungen";
-$vocab["please_contact"]     = "Bitte kontaktieren Sie ";
-$vocab["for_any_questions"]  = "für Fragen die hier nicht beantwortet sind.";
+$vocab["server_software"]    = "Serversoftware";
+$vocab["extensions"]         = "Erweiterungen";
+$vocab["please_contact"]     = "Bitte kontaktieren Sie %s für Fragen die hier nicht beantwortet sind.";
 
 // Used in import.php
 $vocab["import_icalendar"]          = "iCalendar-Datei importieren";

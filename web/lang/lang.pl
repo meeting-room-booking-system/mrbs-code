@@ -410,8 +410,7 @@ $vocab["about_mrbs"]         = "Informacje o MRBS";
 $vocab["database"]           = "Baza Danch";
 $vocab["system"]             = "System";
 $vocab["servertime"]         = "Czas Serwera";
-$vocab["please_contact"]     = "Prosze o kontakt ";
-$vocab["for_any_questions"]  = "W sprawie pytań na które brak tu odpowiedzi.";
+$vocab["please_contact"]     = "Prosze o kontakt %s w sprawie pytań na które brak tu odpowiedzi.";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Pokaż / schowaj kolumny";

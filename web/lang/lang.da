@@ -202,8 +202,7 @@ $vocab["delarea"]            = "Du skal fjerne alle rum i dette område før du 
 $vocab["about_mrbs"]         = "Om MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
-$vocab["please_contact"]     = "Kontakt ";
-$vocab["for_any_questions"]  = "for spørgsmål der ikke er besvaret her.";
+$vocab["please_contact"]     = "Kontakt %s for spørgsmål der ikke er besvaret her.";
 
 // Entry types
 $vocab["type.I"]             = "Internt";

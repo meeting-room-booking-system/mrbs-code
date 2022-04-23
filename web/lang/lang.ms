@@ -456,8 +456,7 @@ $vocab["database"]           = "Pangkalan Data";
 $vocab["system"]             = "Sistem";
 $vocab["servertime"]         = "Masa pelayan";
 $vocab["server_software"]    = "perisian pelayan";
-$vocab["please_contact"]     = "Sila hubungi ";
-$vocab["for_any_questions"]  = "untuk sebarang pertanyaan yang tidak ada disini.";
+$vocab["please_contact"]     = "Sila hubungi %s untuk sebarang pertanyaan yang tidak ada disini.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Import an iCalendar file";

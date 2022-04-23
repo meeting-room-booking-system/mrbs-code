@@ -410,8 +410,7 @@ $vocab["about_mrbs"]         = "MRBSについて";
 $vocab["database"]           = "データベース";
 $vocab["system"]             = "システム";
 $vocab["servertime"]         = "サーバ時間";
-$vocab["please_contact"]     = "ここに答えがない質問は、";
-$vocab["for_any_questions"]  = "にお尋ねください。";
+$vocab["please_contact"]     = "ここに答えがない質問は、%s にお尋ねください。";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "iCalendarファイルをインポートする";

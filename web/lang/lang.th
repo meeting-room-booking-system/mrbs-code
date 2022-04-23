@@ -376,8 +376,7 @@ $vocab["about_mrbs"]         = "เกี่ยวกับระบบจอง
 $vocab["database"]           = "ฐานข้อมูล";
 $vocab["system"]             = "ระบบ";
 $vocab["servertime"]         = "เวลา เซิร์ฟเวอร์";
-$vocab["please_contact"]     = "กรุณาติดต่อ ";
-$vocab["for_any_questions"]  = "สำหรับคำถามใด ๆ ที่ไม่ถูกตอบคำถามที่นี่.";
+$vocab["please_contact"]     = "กรุณาติดต่อ %s สำหรับคำถามใด ๆ ที่ไม่ถูกตอบคำถามที่นี่.";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "แสดง / ซ่อน คอลัมน์";
