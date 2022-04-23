@@ -345,8 +345,7 @@ $vocab["about_mrbs"]         = "Sobre o MRBS";
 $vocab["database"]           = "Base de Dados";
 $vocab["system"]             = "Sistema operativo";
 $vocab["servertime"]         = "Data/Horas no servido";
-$vocab["please_contact"]     = "Contacte por favor ";
-$vocab["for_any_questions"]  = "para qualquer informação adicional.";
+$vocab["please_contact"]     = "Contacte por favor %s para qualquer informação adicional.";
 
 // Entry types
 $vocab["type.I"]             = "Interno";

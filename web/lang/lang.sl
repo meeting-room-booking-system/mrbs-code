@@ -213,8 +213,7 @@ $vocab["about_mrbs"]         = "O MRBS";
 $vocab["database"]           = "Podatkovna zbirka";
 $vocab["system"]             = "Sistem";
 $vocab["servertime"]         = "Čas strežnika";
-$vocab["please_contact"]     = "Na dodatna vprašanja vam bo odgovoril ";
-$vocab["for_any_questions"]  = ".";
+$vocab["please_contact"]     = "Na dodatna vprašanja vam bo odgovoril %s.";
 
 // Entry types
 $vocab["type.I"]             = "Interno";

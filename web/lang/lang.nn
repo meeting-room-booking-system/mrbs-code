@@ -470,10 +470,9 @@ $vocab["server_details"]          = "Detaljer om tjener";
 $vocab["database"]           = "Database: ";
 $vocab["system"]             = "System: ";
 $vocab["servertime"]         = "Tjenertid";
-$vocab["server_software"]         = "Tjener-OS";
-$vocab["extensions"]              = "Utvidelser";
-$vocab["please_contact"]     = "Vennligst ta kontakt med ";
-$vocab["for_any_questions"]  = "for spørsmål som ikke er besvart her.";
+$vocab["server_software"]    = "Tjener-OS";
+$vocab["extensions"]         = "Utvidelser";
+$vocab["please_contact"]     = "Vennligst ta kontakt med %s for spørsmål som ikke er besvart her.";
 
 // Used in DataTables
 $vocab["import_icalendar"]            = "Importer en iCal-fil";

@@ -200,8 +200,7 @@ $vocab["delarea"]            = "Hau ezabatu aurretik baliabide honetako gela guz
 $vocab["about_mrbs"]         = "MRBSri buruz";
 $vocab["database"]           = "Datubasea";
 $vocab["system"]             = "Sistema";
-$vocab["please_contact"]     = "Mesedez, harremanetan jarri: ";
-$vocab["for_any_questions"]  = "hemen erantzuten ez den edozein galdera egiteko.";
+$vocab["please_contact"]     = "Mesedez, harremanetan jarri: %s hemen erantzuten ez den edozein galdera egiteko.";
 
 // Entry types
 $vocab["type.I"]            = "Arrunta";

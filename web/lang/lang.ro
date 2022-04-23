@@ -444,8 +444,7 @@ $vocab["database"]           = "Baza de date";
 $vocab["system"]             = "System";
 $vocab["servertime"]         = "Timp server";
 $vocab["server_software"]    = "Software server";
-$vocab["please_contact"]     = "Contacteaza ";
-$vocab["for_any_questions"]  = "pentru orice intrebare fara raspuns aici.";
+$vocab["please_contact"]     = "Contacteaza %s pentru orice intrebare fara raspuns aici.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Importa un fisier iCalendar";

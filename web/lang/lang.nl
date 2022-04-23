@@ -348,8 +348,7 @@ $vocab["about_mrbs"]         = "Over MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "Systeem";
 $vocab["servertime"]         = "Datum en tijd op de Server";
-$vocab["please_contact"]     = "Neem contact op met ";
-$vocab["for_any_questions"]  = "Voor alle vragen die hier niet worden beantwoord.";
+$vocab["please_contact"]     = "Neem contact op met %s voor alle vragen die hier niet worden beantwoord.";
 
 // Entry types
 $vocab["type.I"]             = "Intern";

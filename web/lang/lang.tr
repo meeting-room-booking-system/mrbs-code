@@ -393,8 +393,7 @@ $vocab["about_mrbs"]         = "MRBS hakkında";
 $vocab["database"]           = "VeriTabanı";
 $vocab["system"]             = "Sistem";
 $vocab["servertime"]         = "Sunucu zamanı";
-$vocab["please_contact"]     = "Lütfen bağlantıya geçiniz ";
-$vocab["for_any_questions"]  = "henüz cevaplanmamış her bir soru için.";
+$vocab["please_contact"]     = "Lütfen bağlantıya geçiniz %s henüz cevaplanmamış her bir soru için.";
 
 // General
 $vocab["fatal_db_error"]     = "Ciddi Hata: malesef VeriTabanı şu an ayakta değil.";

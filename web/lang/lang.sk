@@ -425,8 +425,7 @@ $vocab["about_mrbs"]         = "O rezervačnom systéme";
 $vocab["database"]           = "Databáza";
 $vocab["system"]             = "Systém";
 $vocab["servertime"]         = "Čas servera";
-$vocab["please_contact"]     = "Prosím kontaktujte ";
-$vocab["for_any_questions"]  = "pre všetky otázky, ktoré tu nie sú zodpovedané.";
+$vocab["please_contact"]     = "Prosím kontaktujte %s pre všetky otázky, ktoré tu nie sú zodpovedané.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Import iCalendar súboru";

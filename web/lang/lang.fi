@@ -409,8 +409,7 @@ $vocab["about_mrbs"]         = "Tietoja varausjärjestelmästä";
 $vocab["database"]           = "Tietokanta";
 $vocab["system"]             = "Käyttöjärjestelmä";
 $vocab["servertime"]         = "Palvelimen aika";
-$vocab["please_contact"]     = "Järjestelmän yhteyshenkilö ";
-$vocab["for_any_questions"]  = "antaa lisätietoja mikäli et löydä vastausta kysymykseesi näistä ohjeista.";
+$vocab["please_contact"]     = "Järjestelmän yhteyshenkilö %s antaa lisätietoja mikäli et löydä vastausta kysymykseesi näistä ohjeista.";
 
 // Used in import.php
 $vocab["import_icalendar"]            = "Tuo iCalendar-tiedosto";

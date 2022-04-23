@@ -200,8 +200,7 @@ $vocab["delarea"]            = "你必須先刪除所屬的會議室<p>";
 $vocab["about_mrbs"]         = "關於MRBS";
 $vocab["database"]           = "資料庫";
 $vocab["system"]             = "系統";
-$vocab["please_contact"]     = "請聯絡";
-$vocab["for_any_questions"]  = ",關於任何在這裡找不到答案的問題.";
+$vocab["please_contact"]     = "請聯絡%s,關於任何在這裡找不到答案的問題.";
 
 // Entry types
 $vocab["type.I"]             = "內部使用";

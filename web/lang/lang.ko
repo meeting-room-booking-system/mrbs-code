@@ -202,8 +202,7 @@ $vocab["delarea"]            = "지우기 전에 이 지역안에 있는 모든 
 $vocab["about_mrbs"]         = "About MRBS";
 $vocab["database"]           = "Database";
 $vocab["system"]             = "System";
-$vocab["please_contact"]     = "자세한 사항은 다음 관리자에게 연락주십시오: ";
-$vocab["for_any_questions"]  = " ";
+$vocab["please_contact"]     = "자세한 사항은 다음 관리자에게 연락주십시오: $s.";
 
 // Entry types
 $vocab["type.I"]            = "내부회의";

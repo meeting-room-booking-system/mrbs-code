@@ -392,8 +392,7 @@ $vocab["about_mrbs"]         = "Az MRBS-ről";
 $vocab["database"]           = "Adatbázis";
 $vocab["system"]             = "Rendszer";
 $vocab["servertime"]         = "Rendszeridő";
-$vocab["please_contact"]     = "Kérlek, vedd fel a kapcsolatot az adminisztrátorral (";
-$vocab["for_any_questions"]  = "), ha kérdésed van a rendszer működésével kapcsolatban.";
+$vocab["please_contact"]     = "Kérlek, vedd fel a kapcsolatot az adminisztrátorral (%s), ha kérdésed van a rendszer működésével kapcsolatban.";
 
 // Used in DataTables
 $vocab["show_hide_columns"]  = "Oszlopok megjelenítése / elrejtése";
