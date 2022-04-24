@@ -72,7 +72,9 @@ echo "\n</p>\n";
 
 echo "<h3>" . get_vocab("help") . "</h3>\n";
 echo "<p>\n";
-$contact = '<a href="mailto:' . rawurlencode($mrbs_admin_email) . '">' . htmlspecialchars($mrbs_admin) . '</a>';
+// Obfuscate the email address
+$html = '<a href="mailto:' . rawurlencode($mrbs_admin_email) . '">' . htmlspecialchars($mrbs_admin) . '</a>';
+$contact = '<span class="contact" data-html="' . base64_encode($html) . '">' . htmlspecialchars($mrbs_admin) . '</span>';
 echo get_vocab("please_contact", $contact) . "\n";
 echo "</p>\n";
 

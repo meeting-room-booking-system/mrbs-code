@@ -13,6 +13,28 @@ if ($use_strict)
 
 ?>
 
+// Decodes a base64 encoded string.  Returns false if it can't be decoded.
+// See https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
+function base64Decode(string)
+{
+  if (typeof TextDecoder === "undefined")
+  {
+    return false;
+  }
+  <?php
+  // We can use const and let here because it's only IE and Opera Mini that
+  // don't support them and neither of them support TextDecoder.
+  ?>
+  const text = atob(string);
+  const length = text.length;
+  const bytes = new Uint8Array(length);
+  for (let i = 0; i < length; i++) {
+    bytes[i] = text.charCodeAt(i);
+  }
+  const decoder = new TextDecoder(); // default is utf-8
+  return decoder.decode(bytes);
+}
+
 // Fix for iOS 13 where the User Agent string has been changed.
 // See https://github.com/flatpickr/flatpickr/issues/1992
 function isIos()
