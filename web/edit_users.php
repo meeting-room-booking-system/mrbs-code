@@ -209,10 +209,17 @@ function output_row($row)
           break;
         case 'email':
           // we don't want to truncate the email address
-          $escaped_email = htmlspecialchars($col_value);
-          $values[] = "<div class=\"string\">\n" .
-                      "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
-                      "</div>\n";
+          if (isset($col_value) && ($col_value !== ''))
+          {
+            $escaped_email = htmlspecialchars($col_value);
+            $values[] = "<div class=\"string\">\n" .
+                        "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
+                        "</div>\n";
+          }
+          else
+          {
+            $values[] = '';
+          }
           break;
         case 'timestamp':
           // Convert the SQL timestamp into a time value and back into a localised string and
@@ -1147,7 +1154,7 @@ if (isset($action) && ($action == "update"))
     if ($fieldname != 'id')
     {
       $value = $values[$fieldname];
-      
+
       // pre-process the field value for SQL
       switch ($field['nature'])
       {
