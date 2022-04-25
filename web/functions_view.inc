@@ -4,17 +4,28 @@ namespace MRBS;
 // Returns a string containing a single line of data details, or if $as_html is set
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the
-// second column.
-function create_details_row($label, $value, $as_html=false, $class='')
+// second column.  If $email is set then the $value will be turned into a mailto: link.
+function create_details_row(string $label, string $value, bool $as_html=false, string $class='', ?string $email=null) : string
 {
   $result = '';
   if ($as_html)
   {
+    $escaped_value = mrbs_nl2br(htmlspecialchars($value));
     $result .= "<tr>\n";
     $result .= "<td>$label</td>\n";
-    $result .= "<td" .
-               ((!empty($class)) ? " class=\"$class\"" : "") .
-               ">" . mrbs_nl2br(htmlspecialchars($value)) . "</td>\n";
+    $result .= "<td" . ((!empty($class)) ? " class=\"$class\"" : '') . '>';
+    if (isset($email))
+    {
+      // Obfuscate the email address
+      $html = '<a href="mailto:' . rawurlencode($email) . '">' . $escaped_value . '</a>';
+      $result .= '<span class="contact" data-html="' . base64_encode($html) . '">';
+    }
+    $result .= $escaped_value;
+    if (isset($email))
+    {
+      $result .= '</span>';
+    }
+    $result .= "</td>\n";
     $result .= "</tr>\n";
   }
   else
@@ -40,6 +51,7 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
   global $strftime_format;
   global $select_options, $booking_types;
   global $edit_entry_field_order;
+  global $auth;
 
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
@@ -88,7 +100,31 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
 
       case 'create_by':
       case 'modified_by':
-        $data[$key] = $hide_this_field ? $private_text : auth()->getDisplayName($data[$key]);
+        if ($hide_this_field)
+        {
+          $data[$key] = $private_text;
+        }
+        else
+        {
+          $user = auth()->getUser($data[$key]);
+          $data[$key] = (isset($user)) ? $user->display_name : '';
+        }
+        // Add in the email address if there is one and we are allowed to
+        if (!isset($user) ||
+            ($user->email === '') ||
+            // The field must not be private
+            $hide_this_field ||
+            // The user must be logged in, so that we don't expose email addresses to the public
+            (null === session()->getCurrentUser()) ||
+            // MRBS must be configured to allow ordinary users to see others' details
+            ($auth['only_admin_can_see_other_users'] && !is_admin()))
+        {
+          $email[$key] = null;
+        }
+        else
+        {
+          $email[$key] = $user->email;
+        }
         break;
 
       default:
@@ -210,13 +246,13 @@ function create_details_body($data, $as_html=false, $keep_private=false, $room_d
       case 'create_by':
         // Created by
         $class = ($keep_private && !empty($is_private_field['entry.create_by'])) ? "private" : "";
-        $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class);
+        $tbody .= create_details_row(get_vocab("createdby"), $data['create_by'], $as_html, $class, $email[$key]);
         break;
 
       case 'modified_by':
         // Modified by
         $class = ($keep_private && !empty($is_private_field['entry.modified_by'])) ? "private" : "";
-        $tbody .= create_details_row(get_vocab("modifiedby"), $data['modified_by'], $as_html, $class);
+        $tbody .= create_details_row(get_vocab("modifiedby"), $data['modified_by'], $as_html, $class, $email[$key]);
         break;
 
       case 'timestamp':

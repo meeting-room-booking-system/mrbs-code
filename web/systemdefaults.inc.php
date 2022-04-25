@@ -1217,7 +1217,9 @@ $auth['only_admin_can_select_multiroom'] = false;
 $auth['only_admin_can_copy_others_entries'] = false;
 
 // If you don't want ordinary users to be able to see the other users'
-// details then set this to true.  (Only relevant when using 'db' authentication]
+// details then set this to true.  Used by the 'db' authentication scheme to determine
+// whether to show other users to non-admins, and also generally to determine whether
+// to create mailto: links, eg when viewing booking details.
 $auth['only_admin_can_see_other_users'] = false;
 
 // For events that allow registration, the other registrants' names are by default
