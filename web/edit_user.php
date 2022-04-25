@@ -182,7 +182,7 @@ function output_row(User $user)
   {
     $values[] = '';
   }
-  
+
   // Then the level field.  This contains a code and we want to display a string
   // (but we put the code in a span for sorting)
   $values[] = '<span title="' . htmlspecialchars($user->level) . '"></span>' .
