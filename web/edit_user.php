@@ -171,11 +171,18 @@ function output_row(User $user)
 
   // Then the email address
   // we don't want to truncate the email address
-  $escaped_email = htmlspecialchars($user->email);
-  $values[] = "<div class=\"string\">\n" .
-    "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
-    "</div>\n";
-
+  if (isset($user->email) && ($user->email !== ''))
+  {
+    $escaped_email = htmlspecialchars($user->email);
+    $values[] = "<div class=\"string\">\n" .
+                "<a href=\"mailto:$escaped_email\">$escaped_email</a>\n" .
+                "</div>\n";
+  }
+  else
+  {
+    $values[] = '';
+  }
+  
   // Then the level field.  This contains a code and we want to display a string
   // (but we put the code in a span for sorting)
   $values[] = '<span title="' . htmlspecialchars($user->level) . '"></span>' .
