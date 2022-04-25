@@ -5,7 +5,7 @@ namespace MRBS;
 // a table row of details.   The first column is the $label and the second column
 // the $value.   $class is an optional class name which can be applied to the
 // second column.
-function create_details_row($label, $value, $as_html=false, $class='')
+function create_details_row(string $label, string $value, bool $as_html=false, string $class='') : string
 {
   $result = '';
   if ($as_html)
