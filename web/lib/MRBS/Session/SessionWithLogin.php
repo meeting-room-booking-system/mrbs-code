@@ -10,6 +10,7 @@ use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\User;
+use MRBS\Users;
 use function MRBS\auth;
 use function MRBS\get_vocab;
 
@@ -89,6 +90,8 @@ abstract class SessionWithLogin implements SessionInterface
 
   public function processForm() : void
   {
+    global $auth;
+
     if (isset($this->form['action']))
     {
       // Target of the form with sets the URL argument "action=QueryName".
@@ -122,6 +125,10 @@ abstract class SessionWithLogin implements SessionInterface
 
           // Successful login.   You can't get out of getValidUser() without a valid username and password
           $this->logonUser($valid_username);
+
+          // Sync the user list
+          $users = new Users();
+          $users->sync();
 
           if (!empty($this->form['returl']))
           {
