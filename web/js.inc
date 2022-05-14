@@ -44,7 +44,7 @@ script(($debug) ? 'jquery/jquery-migrate-3.3.2.js' : 'jquery/jquery-migrate-3.3.
 // We are using the jQuery UI library, which has been custom built to include the following components:
 //   - Core
 //      - as defined by dependencies in order to support the required interactions and widgets
-//      - no need for jQuery 1.7 support
+//      - no need for jQuery 1.8 support
 //
 //   - Interactions
 //      - Draggable
