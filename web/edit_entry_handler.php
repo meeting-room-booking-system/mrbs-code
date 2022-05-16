@@ -653,7 +653,8 @@ if (isset($returl) && ($returl !== ''))
     {
       parse_str($returl['query'], $query_vars);
     }
-    $view = (isset($query_vars['view'])) ? $query_vars['view'] : $default_view;
+    $view = $query_vars['view'] ?? $default_view;
+    $view_all = $query_vars['view_all'] ?? (($default_view_all) ? 1 : 0);
     $returl = explode('/', $returl['path']);
     $returl = end($returl);
   }
@@ -683,12 +684,13 @@ if (!in_array($room, $rooms))
 $area = mrbsGetRoomArea($room);
 
 // Now construct the new query string
-$vars = array('view'  => (isset($view)) ? $view : $default_view,
-              'year'  => $year,
-              'month' => $month,
-              'day'   => $day,
-              'area'  => $area,
-              'room'  => $room);
+$vars = array('view'      => $view ?? $default_view,
+              'view_all'  => $view_all ?? $default_view_all,
+              'year'      => $year,
+              'month'     => $month,
+              'day'       => $day,
+              'area'      => $area,
+              'room'      => $room);
 
 $returl .= '?' . http_build_query($vars, '', '&');
 
