@@ -21,7 +21,7 @@ function invalid_booking(string $message) : void
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
   print_header($context);
@@ -509,7 +509,7 @@ if (isset($id))
 // Must have write access to at least one of the rooms
 if (!getWritable($create_by, $target_rooms, false))
 {
-  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, $room ?? null);
   exit;
 }
 
@@ -703,7 +703,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, $room ?? null);
   exit;
 }
 
@@ -865,7 +865,7 @@ else
       'month'     => $month,
       'day'       => $day,
       'area'      => $area,
-      'room'      => isset($room) ? $room : null
+      'room'      => $room ?? null
     );
 
   print_header($context);
