@@ -21,7 +21,7 @@ function invalid_booking(string $message) : void
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
   print_header($context);
@@ -518,7 +518,7 @@ if (isset($id))
 // Must have write access to at least one of the rooms
 if (!getWritable($create_by, $target_rooms, false))
 {
-  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, $room ?? null);
   exit;
 }
 
@@ -662,7 +662,8 @@ if (isset($returl) && ($returl !== ''))
     {
       parse_str($returl['query'], $query_vars);
     }
-    $view = (isset($query_vars['view'])) ? $query_vars['view'] : $default_view;
+    $view = $query_vars['view'] ?? $default_view;
+    $view_all = $query_vars['view_all'] ?? (($default_view_all) ? 1 : 0);
     $returl = explode('/', $returl['path']);
     $returl = end($returl);
   }
@@ -692,12 +693,13 @@ if (!in_array($room, $rooms))
 $area = mrbsGetRoomArea($room);
 
 // Now construct the new query string
-$vars = array('view'  => (isset($view)) ? $view : $default_view,
-              'year'  => $year,
-              'month' => $month,
-              'day'   => $day,
-              'area'  => $area,
-              'room'  => $room);
+$vars = array('view'      => $view ?? $default_view,
+              'view_all'  => $view_all ?? $default_view_all,
+              'year'      => $year,
+              'month'     => $month,
+              'day'       => $day,
+              'area'      => $area,
+              'room'      => $room);
 
 $returl .= '?' . http_build_query($vars, '', '&');
 
@@ -710,7 +712,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($view, $view_all, $year, $month, $day, $area, isset($room) ? $room : null);
+  showAccessDenied($view, $view_all, $year, $month, $day, $area, $room ?? null);
   exit;
 }
 
@@ -872,7 +874,7 @@ else
       'month'     => $month,
       'day'       => $day,
       'area'      => $area,
-      'room'      => isset($room) ? $room : null
+      'room'      => $room ?? null
     );
 
   print_header($context);
