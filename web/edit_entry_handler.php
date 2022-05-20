@@ -241,22 +241,6 @@ foreach($fields as $field)
 
 // Form validation checks.   Normally checked for client side.
 
-if (isset($id))
-{
-  $old_booking = get_booking_info($id, false);
-
-  // Get the old values of registration_opens, registration_closes and registrant_limit
-  // if they're not set, otherwise writing null to the database will cause the column
-  // defaults to be used.
-  foreach (['registration_opens', 'registration_closes', 'registrant_limit'] as $var)
-  {
-    if (!isset($$var))
-    {
-      $$var = $old_booking[$var];
-    }
-  }
-}
-
 // Validate the create_by variable, checking that it's the current user, unless the
 // user is an admin and the booking is being edited or it's a new booking and we allow
 // admins to make bookings on behalf of others.
@@ -386,6 +370,8 @@ if ($no_mail)
 // (2) we always get passed start_seconds and end_seconds in the Ajax data
 if ($is_ajax && $commit)
 {
+  $old_booking = get_booking_info($id, false);
+
   foreach ($form_vars as $var => $var_type)
   {
     if (!isset($$var) || (($var_type == 'array') && empty($$var)))
