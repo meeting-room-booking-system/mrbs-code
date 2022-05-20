@@ -148,11 +148,6 @@ if (isset($registration_closes_value) && isset($registration_closes_units))
   $registration_closes = constrain_int($registration_closes, 4);
 }
 
-// Convert the booleans (the custom field booleans are done later)
-$registrant_limit_enabled = ($registrant_limit_enabled) ? 1 : 0;
-$registration_opens_enabled = ($registration_opens_enabled) ? 1 : 0;
-$registration_closes_enabled = ($registration_closes_enabled) ? 1 : 0;
-
 // If they're not an admin and multi-day bookings are not allowed, then
 // set the end date to the start date
 if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
