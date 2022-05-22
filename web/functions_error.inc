@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use Throwable;
 
 // Translate an error constant value into the name of the constant
 function get_error_name($errno)
@@ -193,7 +194,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
 
 // Logs an exception (or sends it to the browser if $debug)
-function output_exception_error(\Throwable $exception) : void
+function output_exception_error(Throwable $exception) : void
 {
   $class = get_class($exception);
 
@@ -207,7 +208,7 @@ function output_exception_error(\Throwable $exception) : void
 
 // Custom exception handler.  Logs the error and then outputs
 // a fatal error message
-function exception_handler(\Throwable $exception) : void
+function exception_handler(Throwable $exception) : void
 {
   output_exception_error($exception);
 
