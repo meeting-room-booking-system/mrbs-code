@@ -194,11 +194,11 @@ function error_handler($errno, $errstr, $errfile, $errline)
 
 
 // Logs an exception (or sends it to the browser if $debug)
-function output_exception_error(Throwable $exception) : void
+function output_exception_error(Throwable $exception, bool $caught=false) : void
 {
   $class = get_class($exception);
 
-  $heading = "Uncaught exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine() . "\n";
+  $heading = (($caught) ? "Caught" : "Uncaught") . " exception '$class' in " . $exception->getFile() . " at line " . $exception->getLine() . "\n";
   $body = $exception->getMessage() . "\n" .
           $exception->getTraceAsString() . "\n";
 

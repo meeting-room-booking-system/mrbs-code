@@ -846,7 +846,7 @@ catch (\Exception $e)
 {
   if ($is_ajax)
   {
-    output_exception_error($e);
+    output_exception_error($e, true);
     http_response_code(500);
     exit;
   }
