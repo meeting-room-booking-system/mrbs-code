@@ -1232,15 +1232,17 @@ $(document).on('page_ready', function() {
                'json')
           .fail(function() {
             <?php
-            // The Ajax request failed for some reason, so remove the "Saving" message,
-            // restore the element to its original position and size and alert the user.
+            // The Ajax request failed for some reason, so remove the "Saving ..." message
+            // and restore the element to its original position and size.
             ?>
             booking.removeClass('saving')
                    .next().remove();
             ui.element.offset(resizeStart.originalOffset)
                       .width(ui.originalSize.width)
                       .height(ui.originalSize.height);
-            <?php // Allow some time for the changes above to complete ?>
+            <?php // Re-initialise the table ?>
+            $('table.dwm_main').trigger('tableload');
+            <?php // Allow some time for the changes above to complete and then alert the user ?>
             setTimeout(function() {
                 alert("<?php echo escape_js(get_vocab('resize_error'))?>");
               }, 250
