@@ -786,67 +786,81 @@ $just_check = $is_ajax && !$commit;
 $this_id = (isset($id)) ? $id : null;
 $send_mail = ($no_mail) ? FALSE : need_to_send_mail();
 
-// Wrap the editing process in a transaction, because if deleting the old booking should fail for
-// some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
-// if, for example, the database user hasn't been granted DELETE rights.
-
-// Acquire mutex to lock out others trying to book the same slot(s).
-if (!db()->mutex_lock(_tbl('entry')))
+try
 {
-  fatal_error(get_vocab("failed_to_acquire"));
-}
+  // Wrap the editing process in a transaction, because if deleting the old booking should fail for
+  // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
+  // if, for example, the database user hasn't been granted DELETE rights.
 
-db()->begin();
+  // Acquire mutex to lock out others trying to book the same slot(s).
+  if (!db()->mutex_lock(_tbl('entry')))
+  {
+    fatal_error(get_vocab("failed_to_acquire"));
+  }
 
-$transaction_ok = true;
+  db()->begin();
 
-$result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
+  $transaction_ok = true;
+
+  $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
 // If we weren't just checking and this was a successful booking and
 // we were editing an existing booking, then delete the old booking
-if (!$just_check && $result['valid_booking'] && isset($id))
-{
-  $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), true);
-}
+  if (!$just_check && $result['valid_booking'] && isset($id))
+  {
+    $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), true);
+  }
 
-if ($transaction_ok)
-{
-  db()->commit();
-}
-else
-{
-  db()->rollback();
-  trigger_error('Edit failed.', E_USER_WARNING);
-}
+  if ($transaction_ok)
+  {
+    db()->commit();
+  }
+  else
+  {
+    db()->rollback();
+    trigger_error('Edit failed.', E_USER_WARNING);
+  }
 
-db()->mutex_unlock(_tbl('entry'));
+  db()->mutex_unlock(_tbl('entry'));
 
 
 // If this is an Ajax request, output the result and finish
-if ($is_ajax)
-{
-  // Generate the new HTML
-  if ($commit)
+  if ($is_ajax)
   {
     // Generate the new HTML
-    require_once "functions_table.inc";
-
-    switch ($view)
+    if ($commit)
     {
-      case 'day':
-        $result['table_innerhtml'] = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
-        break;
-      case 'week':
-        $result['table_innerhtml'] = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
-        break;
-      default:
-        throw new \Exception("Unsupported view '$view'");
-        break;
+      // Generate the new HTML
+      require_once "functions_table.inc";
+
+      switch ($view)
+      {
+        case 'day':
+          $result['table_innerhtml'] = day_table_innerhtml($view, $year, $month, $day, $area, $room, $timetohighlight);
+          break;
+        case 'week':
+          $result['table_innerhtml'] = week_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room, $timetohighlight);
+          break;
+        default:
+          throw new \Exception("Unsupported view '$view'");
+          break;
+      }
     }
+    http_headers(array("Content-Type: application/json"));
+    echo json_encode($result);
+    exit;
   }
-  http_headers(array("Content-Type: application/json"));
-  echo json_encode($result);
-  exit;
+}
+catch (\Exception $e)
+{
+  if ($is_ajax)
+  {
+    output_exception_error($e);
+    http_response_code(500);
+    exit;
+  }
+
+  exception_handler($e);
 }
 
 // Everything was OK.   Go back to where we came from

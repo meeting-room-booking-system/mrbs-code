@@ -1061,6 +1061,8 @@ $(document).on('page_ready', function() {
       ?>
       var resizeStart = function(event, ui)
       {
+        resizeStart.originalOffset = ui.element.offset();
+
         resizeStart.oldParams = Table.getBookingParams(ui.originalElement.find('a'));
 
         resizeStart.originalRectangle = {
@@ -1227,7 +1229,24 @@ $(document).on('page_ready', function() {
                     window.alert(alertMessage);
                   }
                 },
-               'json');
+               'json')
+          .fail(function() {
+            <?php
+            // The Ajax request failed for some reason, so remove the "Saving" message,
+            // restore the element to its original position and size and alert the user.
+            ?>
+            booking.removeClass('saving')
+                   .next().remove();
+            ui.element.offset(resizeStart.originalOffset)
+                      .width(ui.originalSize.width)
+                      .height(ui.originalSize.height);
+            <?php // Allow some time for the changes above to complete ?>
+            setTimeout(function() {
+                alert("<?php echo escape_js(get_vocab('resize_error'))?>");
+              }, 250
+            );
+
+          });
 
       };  <?php // resizeStop ?>
 

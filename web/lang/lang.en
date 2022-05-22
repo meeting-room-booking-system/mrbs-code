@@ -682,7 +682,9 @@ $vocab["type.I"]            = "Internal";
 $vocab["type.E"]            = "External";
 
 // General
-$vocab["fatal_error"]        = "Whoops!  Unfortunately MRBS has encountered a fatal error.  Please consult your system administrator.";
+$vocab["fatal_error"]        = "Whoops! Unfortunately MRBS has encountered a fatal error.  Please consult your system administrator.";
+$vocab["resize_error"]       = "Whoops! Unfortunately MRBS encountered an error while trying to modify this booking. If this " .
+                               "continues to happen please consult your system administrator.";
 $vocab["fatal_db_error"]     = "Fatal error: unfortunately the database is not available at the moment.";
 $vocab["fatal_no_tables"]    = "Fatal error: the MRBS tables do not exist or cannot be accessed.";
 $vocab["session_expired"]    = "Your session has expired.";

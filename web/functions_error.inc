@@ -192,10 +192,8 @@ function error_handler($errno, $errstr, $errfile, $errline)
 }
 
 
-// As long as we are supporting PHP5 we cannot have a type declaration for $exception.
-// In PHP5 we could use \Exception and in PHP7 \Throwable, but if we are supporting
-// both then no type declaration is the only option.
-function exception_handler($exception)
+// Logs an exception (or sends it to the browser if $debug)
+function output_exception_error(\Throwable $exception) : void
 {
   $class = get_class($exception);
 
@@ -204,6 +202,16 @@ function exception_handler($exception)
           $exception->getTraceAsString() . "\n";
 
   output_error($heading, $body, true);
+}
+
+
+// Custom exception handler.  Logs the error and then outputs
+// a fatal error message
+function exception_handler(\Throwable $exception) : void
+{
+  output_exception_error($exception);
+
+  $class = get_class($exception);
 
   switch ($class)
   {
