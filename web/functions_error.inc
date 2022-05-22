@@ -1,10 +1,9 @@
 <?php
 namespace MRBS;
 
-
-// Translate an error constant value into the name of the constant
 use Throwable;
 
+// Translate an error constant value into the name of the constant
 function get_error_name($errno)
 {
   $constants = get_defined_constants(true);
