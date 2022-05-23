@@ -137,14 +137,12 @@ if (empty($errors))
   // (only do this if you're changing the room name or the area - if you're
   // just editing the other details for an existing room we don't want to reject
   // the edit because the room already exists!)
-  // [syntax_casesensitive_equals() modifies our SQL params for us, but we do it ourselves to
-  //  keep the flow of this elseif block]
   elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
           && db()->query1("SELECT COUNT(*)
                              FROM " . _tbl('room') . "
-                            WHERE" . db()->syntax_casesensitive_equals("room_name", $room_name, $sql_params) . "
-                              AND area_id=?
-                            LIMIT 1", array($room_name, $new_area)) > 0)
+                            WHERE room_name=:room_name
+                              AND area_id=:area_id
+                            LIMIT 1", array(":room_name" => $room_name, ":area_id" => $new_area)) > 0)
   {
     $errors[] = 'invalid_room_name';
   }
