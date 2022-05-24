@@ -778,7 +778,7 @@ foreach ($rooms as $room_id)
 
 $just_check = $is_ajax && !$commit;
 $this_id = (isset($id)) ? $id : null;
-$send_mail = ($no_mail) ? FALSE : need_to_send_mail();
+$send_mail = ($no_mail) ? false : need_to_send_mail();
 
 try
 {
