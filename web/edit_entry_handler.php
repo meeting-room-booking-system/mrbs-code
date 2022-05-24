@@ -144,9 +144,12 @@ if (isset($registration_closes_value) && isset($registration_closes_units))
   $registration_closes = constrain_int($registration_closes, 4);
 }
 
+// Convert the form booleans
+$skip = (bool) $skip;
+
 if (!$is_ajax)
 {
-  // Convert the booleans (the custom field booleans are done later)
+  // Convert the database booleans (the custom field booleans are done later)
   foreach (['allow_registration', 'registrant_limit_enabled', 'registration_opens_enabled', 'registration_closes_enabled'] as $var)
   {
     $$var = ($$var) ? 1 : 0;
