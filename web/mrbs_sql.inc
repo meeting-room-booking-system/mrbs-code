@@ -1951,7 +1951,7 @@ function update_participants(int $old_id, $new_id)
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
-function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, $original_room_id=null, $send_mail=false, $edit_type='')
+function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, ?int $original_room_id=null, $send_mail=false, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $prevent_simultaneous_bookings, $auth;
