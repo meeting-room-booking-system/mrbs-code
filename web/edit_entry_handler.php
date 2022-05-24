@@ -940,7 +940,7 @@ if (empty($result['violations']['errors'])  &&
     ));
   $form->addElement($submit);
   // Force a skip next time round
-  $skip = 1;
+  $skip = true;
 }
 
 // Put the booking data in as hidden inputs
