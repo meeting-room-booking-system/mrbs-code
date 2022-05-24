@@ -27,7 +27,7 @@ if ($mail_settings['icalendar'])
 
 
 // Determines whether an email might need to be sent
-function need_to_send_mail()
+function need_to_send_mail() : bool
 {
   global $mail_settings;
 
