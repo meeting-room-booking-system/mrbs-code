@@ -1925,7 +1925,7 @@ function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $r
 }
 
 
-function update_participants($old_id, $new_id)
+function update_participants(int $old_id, $new_id)
 {
   $sql = "UPDATE " . _tbl('participant') . "
              SET entry_id=:new_id
@@ -1951,7 +1951,7 @@ function update_participants($old_id, $new_id)
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
-function mrbsMakeBookings(array $bookings, $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
+function mrbsMakeBookings(array $bookings, ?int $id=NULL, $just_check=FALSE, $skip=FALSE, $original_room_id=NULL, $send_mail=FALSE, $edit_type='')
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $prevent_simultaneous_bookings, $auth;
