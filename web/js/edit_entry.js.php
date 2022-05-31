@@ -1265,7 +1265,7 @@ function populateFromSessionStorage(form)
     });
 
     <?php // Now assign values to the selects ?>
-    for (const property in selects)
+    for (var property in selects)
     {
       $('[name="' + property + '"]').val(selects[property]).change();
     }
