@@ -346,10 +346,10 @@ class AuthDb extends Auth
                    P.username as registrant_display_name,
                    P.create_by as create_by_username,
                    P.create_by as create_by_display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U1
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U1
                 ON P.username=U1.name
-         LEFT JOIN " . _tbl('users') . " U2
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
                AND (U1.display_name IS NULL OR U1.display_name='')
@@ -361,10 +361,10 @@ class AuthDb extends Auth
                    P.username as registrant_display_name,
                    P.create_by as create_by_username,
                    U2.display_name as registrant_display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U1
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U1
                 ON P.username=U1.name
-         LEFT JOIN " . _tbl('users') . " U2
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
                AND (U1.display_name IS NULL OR U1.display_name='')
@@ -376,10 +376,10 @@ class AuthDb extends Auth
                    U1.display_name as registrant_display_name,
                    P.create_by as create_by_username,
                    P.create_by as registrant_display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U1
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U1
                 ON P.username=U1.name
-         LEFT JOIN " . _tbl('users') . " U2
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
                AND U1.display_name IS NOT NULL AND U1.display_name!=''
@@ -391,10 +391,10 @@ class AuthDb extends Auth
                    U1.display_name as registrant_display_name,
                    P.create_by as create_by_username,
                    U2.display_name as registrant_display_name
-              FROM " . _tbl('participants') . " P
-         LEFT JOIN " . _tbl('users') . " U1
+              FROM " . _tbl('participant') . " P
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U1
                 ON P.username=U1.name
-         LEFT JOIN " . _tbl('users') . " U2
+         LEFT JOIN " . _tbl(User::TABLE_NAME) . " U2
                 ON P.create_by=U2.name
              WHERE P.entry_id=:entry_id
                AND U1.display_name IS NOT NULL AND U1.display_name!=''
