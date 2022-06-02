@@ -425,7 +425,9 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
 $vocab["registered"]            = "Registered";
 $vocab["na"]                    = "[N/A]";
+$vocab["compound_name"]            = '%1$s (%2$s)';  // 1: username, 2: display name
 $vocab["registrant_registered_by"] = '%1$s (by %2$s)';  // 1: Registrant, 2: Registered by
+$vocab["registrant_username_and_registered_by"] = '%1$s (%2$s) (by %3$s)';  // 2: Registrant username, 2: Registrant display name, 3: Registered by
 
 // Used in admin.php
 $vocab["edit"]               = "Edit";

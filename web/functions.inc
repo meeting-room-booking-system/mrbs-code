@@ -517,24 +517,24 @@ function mrbs_default_timezone_get()
 }
 
 
+function format_compound_name(string $username, string $display_name) : string
+{
+  return ($username === $display_name) ? $username : get_vocab('compound_name', $username, $display_name);
+}
+
+
 // Gets the username and display name, if different.  Useful in places such as search and
 // report results, where you have to search by username - because that's what's stored in
 // the entry - but you are interested in the display name.
-function get_compound_name($username)
+function get_compound_name(?string $username) : string
 {
-  $result = '';
-
   if (isset($username))
   {
-    $result = $username;
     $display_name = auth()->getDisplayName($username);
-    if ($username !== $display_name)
-    {
-      $result .= " ($display_name)";
-    }
+    return (isset($display_name) && ($display_name !== '')) ? format_compound_name($username, $display_name) : $username;
   }
 
-  return $result;
+  return '';
 }
 
 
