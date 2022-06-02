@@ -6,6 +6,7 @@ use MRBS\User;
 use function MRBS\_tbl;
 use function MRBS\auth;
 use function MRBS\db;
+use function MRBS\format_compound_name;
 use function MRBS\generate_global_uid;
 use function MRBS\generate_token;
 use function MRBS\get_mail_charset;
@@ -298,33 +299,43 @@ class AuthDb extends Auth
 
 
   // Returns an unsorted array of registrants display names
-  protected function getRegistrantsDisplayNamesUnsortedWithout(int $id) : array
+  protected function getRegistrantsDisplayNamesUnsortedWithout(int $id, bool $with_registrant_username) : array
   {
     // For the 'db' auth type we can improve performance by doing a single query
     // on the participants table joined with the users table.  (Actually it's two
     // queries in a UNION: one getting the rows where there isn't an entry in the
     // users table and another the rows where there is.)
-    $sql = "SELECT P.username as display_name
+    $sql = "SELECT P.username as username,
+                   P.username as display_name
               FROM " . _tbl('participant') . " P
          LEFT JOIN " . _tbl(User::TABLE_NAME) . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
                AND (U.display_name IS NULL OR U.display_name='')
              UNION
-            SELECT U.display_name
+            SELECT U.name as username,
+                   U.display_name as display_name
               FROM " . _tbl('participant') . " P
          LEFT JOIN " . _tbl(User::TABLE_NAME) . " U
                 ON P.username=U.name
              WHERE P.entry_id=:entry_id
                AND U.display_name IS NOT NULL AND U.display_name!=''";
 
-    return db()->query_array($sql, array(':entry_id' => $id));
+    $result = array();
+    $res = db()->query($sql, array(':entry_id' => $id));
+
+    while (false !== ($row = $res->next_row_keyed()))
+    {
+      $result[] = ($with_registrant_username) ? format_compound_name($row['username'], $row['display_name']) : $row['display_name'];
+    }
+
+    return $result;
   }
 
 
   // Returns an unsorted array of registrants display names, including, if
   // different, the display name of the person that registered them.
-  protected function getRegistrantsDisplayNamesUnsortedWith(int $id) : array
+  protected function getRegistrantsDisplayNamesUnsortedWith(int $id, bool $with_registrant_username) : array
   {
     // For the 'db' auth type we can improve performance by doing a single query
     // on the participants table joined with the users table.  (Actually it's four
@@ -397,13 +408,30 @@ class AuthDb extends Auth
     {
       if ($row['registrant_username'] === $row['create_by_username'])
       {
-        $result[] = $row['registrant_display_name'];
+        if ($with_registrant_username)
+        {
+          $result[] = format_compound_name($row['registrant_username'], $row['registrant_display_name']);
+        }
+        else
+        {
+          $result[] = $row['registrant_display_name'];
+        }
       }
       else
       {
-        $result[] = get_vocab('registrant_registered_by',
-                              $row['registrant_display_name'],
-                              $row['create_by_display_name']);
+        if ($with_registrant_username && ($row['registrant_username'] !== $row['registrant_display_name']))
+        {
+          $result[] = get_vocab('registrant_username_and_registered_by',
+                                $row['registrant_username'],
+                                $row['registrant_display_name'],
+                                $row['create_by_display_name']);
+        }
+        else
+        {
+          $result[] = get_vocab('registrant_registered_by',
+                                $row['registrant_display_name'],
+                                $row['create_by_display_name']);
+        }
       }
     }
 
@@ -411,15 +439,15 @@ class AuthDb extends Auth
   }
 
 
-  protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by) : array
+  protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by, $with_registrant_username) : array
   {
     if ($with_registered_by)
     {
-      return $this->getRegistrantsDisplayNamesUnsortedWith($id);
+      return $this->getRegistrantsDisplayNamesUnsortedWith($id, $with_registrant_username);
     }
     else
     {
-      return $this->getRegistrantsDisplayNamesUnsortedWithout($id);
+      return $this->getRegistrantsDisplayNamesUnsortedWithout($id, $with_registrant_username);
     }
   }
 

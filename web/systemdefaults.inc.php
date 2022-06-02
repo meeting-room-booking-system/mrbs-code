@@ -526,6 +526,9 @@ $default_report_days = 60;
 // Whether to include the name of the person who made the registration, if different, in
 // the list of registrants in reports
 $include_registered_by = true;
+// Whether to include the registrant's username as well as displayname in the list of
+// registrants in reports.
+$include_registrant_username = false;
 
 $show_plus_link = false;   // Change to true to always show the (+) link as in
                            // MRBS 1.1.

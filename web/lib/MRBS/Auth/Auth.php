@@ -2,6 +2,7 @@
 namespace MRBS\Auth;
 
 use \MRBS\User;
+use function MRBS\format_compound_name;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
 use function MRBS\get_vocab;
@@ -210,7 +211,7 @@ abstract class Auth
 
 
   // Returns an array of registrants' display names
-  public function getRegistrantsDisplayNames (array $entry, bool $with_registered_by=false) : array
+  public function getRegistrantsDisplayNames (array $entry, bool $with_registered_by=false, bool $with_registrant_username=false) : array
   {
     $display_names = array();
 
@@ -218,7 +219,7 @@ abstract class Auth
     // or if we know there are definitely some
     if (!isset($entry['n_registered']) || ($entry['n_registered'] > 0))
     {
-      $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id'], $with_registered_by);
+      $display_names = $this->getRegistrantsDisplayNamesUnsorted($entry['id'], $with_registered_by, $with_registrant_username);
       usort($display_names, 'MRBS\compare_display_names');
     }
 
@@ -226,7 +227,7 @@ abstract class Auth
   }
 
 
-  protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by) : array
+  protected function getRegistrantsDisplayNamesUnsorted(int $id, bool $with_registered_by, bool $with_registrant_username) : array
   {
     $display_names = array();
     $registrants = get_registrants($id, false);
@@ -239,9 +240,24 @@ abstract class Auth
         isset($registrant['create_by']) &&
         ($registrant['create_by'] !== $registrant['username']))
       {
-        $display_name = get_vocab("registrant_registered_by", $display_name, $this->getDisplayName($registrant['create_by']));
+        if ($with_registrant_username)
+        {
+          $display_names[] = get_vocab("registrant_username_and_registered_by",
+                                       $registrant['username'],
+                                       $display_name,
+                                       $this->getDisplayName($registrant['create_by']));
+        }
+        else
+        {
+          $display_names[] = get_vocab("registrant_registered_by",
+                                       $display_name,
+                                       $this->getDisplayName($registrant['create_by']));
+        }
       }
-      $display_names[] = $display_name;
+      else
+      {
+        $display_names[] = ($with_registrant_username) ? format_compound_name($registrant['username'], $display_name) : $display_name;
+      }
     }
 
     return $display_names;
