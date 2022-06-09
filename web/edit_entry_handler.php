@@ -948,7 +948,7 @@ foreach ($form_vars as $var => $var_type)
     {
       if (isset($value))
       {
-        $form->addHiddenInput("${var}[]", $value);
+        $form->addHiddenInput("{$var}[]", $value);
       }
     }
   }
