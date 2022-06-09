@@ -98,7 +98,7 @@ class SessionCookie extends SessionWithLogin
     $hash = self::getHash($hash_algorithm, $json_data, $secret);
 
     setcookie($name,
-              "${hash}_" . base64_encode($json_data),
+              "{$hash}_" . base64_encode($json_data),
               $expiry,
               self::$cookie_path);
   }
