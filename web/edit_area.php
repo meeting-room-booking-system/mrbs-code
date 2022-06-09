@@ -410,14 +410,14 @@ function get_fieldset_max_number()
     $field = new FieldDiv;
 
     $checkbox_area = new ElementInputCheckbox();
-    $checkbox_area->setAttributes(array('name'  => "area_max_per_${interval_type}_enabled",
-                                        'id'    => "area_max_per_${interval_type}_enabled",
+    $checkbox_area->setAttributes(array('name'  => "area_max_per_{$interval_type}_enabled",
+                                        'id'    => "area_max_per_{$interval_type}_enabled",
                                         'class' => 'enabler'))
                   ->setChecked($max_per_interval_area_enabled[$interval_type]);
 
     $number_area = new ElementInputNumber();
     $number_area->setAttributes(array('min'   => '0',
-                                      'name'  => "area_max_per_${interval_type}",
+                                      'name'  => "area_max_per_{$interval_type}",
                                       'value' => $max_per_interval_area[$interval_type]));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -439,7 +439,7 @@ function get_fieldset_max_number()
     $div_global->addElement($checkbox_global)
                ->addElement($number_global);
 
-    $field->setLabel(get_vocab("max_per_${interval_type}"))
+    $field->setLabel(get_vocab("max_per_{$interval_type}"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
@@ -487,8 +487,8 @@ function get_fieldset_max_secs()
     $field = new FieldDiv;
 
     $checkbox_area = new ElementInputCheckbox();
-    $checkbox_area->setAttributes(array('name'  => "area_max_secs_per_${interval_type}_enabled",
-                                        'id'    => "area_max_secs_per_${interval_type}_enabled",
+    $checkbox_area->setAttributes(array('name'  => "area_max_secs_per_{$interval_type}_enabled",
+                                        'id'    => "area_max_secs_per_{$interval_type}_enabled",
                                         'class' => 'enabler'))
                   ->setChecked($max_secs_per_interval_area_enabled[$interval_type]);
 
@@ -497,12 +497,12 @@ function get_fieldset_max_secs()
     $options = Form::getTimeUnitOptions($max_unit);
 
     $select = new ElementSelect();
-    $select->setAttribute('name', "area_max_secs_per_${interval_type}_units")
+    $select->setAttribute('name', "area_max_secs_per_{$interval_type}_units")
            ->addSelectOptions($options, array_search($units, $options), true);
 
     $time_area = new ElementInputNumber();
     $time_area->setAttributes(array('min'   => '0',
-                                    'name'  => "area_max_secs_per_${interval_type}",
+                                    'name'  => "area_max_secs_per_{$interval_type}",
                                     'value' => $max));
 
     // Wrap the area and global controls in <div>s.  It'll make the CSS easier.
@@ -533,7 +533,7 @@ function get_fieldset_max_secs()
                ->addElement($time_global)
                ->addElement($select);
 
-    $field->setLabel(get_vocab("max_secs_per_${interval_type}"))
+    $field->setLabel(get_vocab("max_secs_per_{$interval_type}"))
           ->addControlElement($div_area)
           ->addControlElement($div_global);
 
