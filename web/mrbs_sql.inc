@@ -328,13 +328,13 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
         {
           $max = $max_secs_per_interval_area[$interval_type];
           toTimeString($max, $units);
-          return get_vocab("max_secs_per_${interval_type}_area", $max, $units);
+          return get_vocab("max_secs_per_{$interval_type}_area", $max, $units);
         }
         else
         {
           $max = $max_secs_per_interval_global[$interval_type];
           toTimeString($max, $units);
-          return get_vocab("max_secs_per_${interval_type}_global", $max, $units);
+          return get_vocab("max_secs_per_{$interval_type}_global", $max, $units);
         }
       }
     }
@@ -347,11 +347,11 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
       {
         if ($only_area)
         {
-          return get_vocab("max_per_${interval_type}_area") . " $max_per_interval_area[$interval_type]";
+          return get_vocab("max_per_{$interval_type}_area") . " $max_per_interval_area[$interval_type]";
         }
         else
         {
-          return get_vocab("max_per_${interval_type}_global") . " $max_per_interval_global[$interval_type]";
+          return get_vocab("max_per_{$interval_type}_global") . " $max_per_interval_global[$interval_type]";
         }
       }
     }

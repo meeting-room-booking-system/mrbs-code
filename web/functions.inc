@@ -1554,7 +1554,7 @@ function clean_area_row($row)
       !in_array($row['private_override'], $private_override_options))
   {
     $row['private_override'] = 'private';  // the safest default
-    $message = "Invalid value for 'private_override' in the area table.  Using '${row['private_override']}'.";
+    $message = "Invalid value for 'private_override' in the area table.  Using '{$row['private_override']}'.";
     trigger_error($message, E_USER_WARNING);
   }
   // (2) 'resolution' must be positive
@@ -1562,7 +1562,7 @@ function clean_area_row($row)
       (empty($row['resolution']) || ($row['resolution'] < 0)))
   {
     $row['resolution'] = 30*60;  // 30 minutes, a reasonable fallback
-    $message = "Invalid value for 'resolution' in the area table.   Using ${row['resolution']} seconds.";
+    $message = "Invalid value for 'resolution' in the area table.   Using {$row['resolution']} seconds.";
     trigger_error($message, E_USER_WARNING);
   }
 
@@ -1661,25 +1661,25 @@ function get_area_settings($area)
   // arrays, which are handled slightly differently
   foreach ($interval_types as $interval_type)
   {
-    $var = "max_per_${interval_type}_enabled";
+    $var = "max_per_{$interval_type}_enabled";
     if (isset($$var))
     {
       $max_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_per_${interval_type}";
+    $var = "max_per_{$interval_type}";
     if (isset($$var))
     {
       $max_per_interval_area[$interval_type] = $$var;
     }
 
-    $var = "max_secs_per_${interval_type}_enabled";
+    $var = "max_secs_per_{$interval_type}_enabled";
     if (isset($$var))
     {
       $max_secs_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_secs_per_${interval_type}";
+    $var = "max_secs_per_{$interval_type}";
     if (isset($$var))
     {
       $max_secs_per_interval_area[$interval_type] = $$var;

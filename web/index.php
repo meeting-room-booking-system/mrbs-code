@@ -486,7 +486,7 @@ if ($view_all && ($view !== 'day'))
 }
 
 echo "<div class=\"table_container\">\n";
-echo '<table class="' . implode(' ', $classes) . "\" id=\"${view}_main\" data-resolution=\"$resolution\">\n";
+echo '<table class="' . implode(' ', $classes) . "\" id=\"{$view}_main\" data-resolution=\"$resolution\">\n";
 echo $inner_html;
 echo "</table>\n";
 echo "</div>\n";
