@@ -1609,25 +1609,25 @@ function get_area_settings($area_id)
   // arrays, which are handled slightly differently
   foreach ($interval_types as $interval_type)
   {
-    $var = "max_per_${interval_type}_enabled";
+    $var = "max_per_{$interval_type}_enabled";
     if (isset($$var))
     {
       $max_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_per_${interval_type}";
+    $var = "max_per_{$interval_type}";
     if (isset($$var))
     {
       $max_per_interval_area[$interval_type] = $$var;
     }
 
-    $var = "max_secs_per_${interval_type}_enabled";
+    $var = "max_secs_per_{$interval_type}_enabled";
     if (isset($$var))
     {
       $max_secs_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_secs_per_${interval_type}";
+    $var = "max_secs_per_{$interval_type}";
     if (isset($$var))
     {
       $max_secs_per_interval_area[$interval_type] = $$var;
