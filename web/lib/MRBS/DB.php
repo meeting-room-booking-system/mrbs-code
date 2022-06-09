@@ -48,7 +48,7 @@ abstract class DB
     {
       $hostpart = "host=$db_host;";
     }
-    $this->dbh = new PDO(static::DB_DBO_DRIVER.":${hostpart}port=$db_port;dbname=$db_name",
+    $this->dbh = new PDO(static::DB_DBO_DRIVER.":{$hostpart}port=$db_port;dbname=$db_name",
                          $db_username,
                          $db_password,
                          array(PDO::ATTR_PERSISTENT => (bool) $persist,
