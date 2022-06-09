@@ -57,11 +57,11 @@ function get_form_data(Area &$area)
   // Add in the max_per_interval form variables
   foreach ($interval_types as $interval_type)
   {
-    $form_vars["area_max_per_${interval_type}"] =               'int';
-    $form_vars["area_max_per_${interval_type}_enabled"] =       'bool';
-    $form_vars["area_max_secs_per_${interval_type}"] =          'int';
-    $form_vars["area_max_secs_per_${interval_type}_units"] =    'string';
-    $form_vars["area_max_secs_per_${interval_type}_enabled"] =  'bool';
+    $form_vars["area_max_per_{$interval_type}"] =               'int';
+    $form_vars["area_max_per_{$interval_type}_enabled"] =       'bool';
+    $form_vars["area_max_secs_per_{$interval_type}"] =          'int';
+    $form_vars["area_max_secs_per_{$interval_type}_units"] =    'string';
+    $form_vars["area_max_secs_per_{$interval_type}_enabled"] =  'bool';
   }
 
   // TODO: get rid of the need for a prefix and the rather messy processing below
@@ -186,10 +186,10 @@ function validate_form_data(Area &$area)
     // Now do the max_secs variables (limits on the total length of bookings)
     foreach($interval_types as $interval_type)
     {
-      $units_property = "max_secs_per_${interval_type}_units";
+      $units_property = "max_secs_per_{$interval_type}_units";
       if (isset($area->$units_property))
       {
-        $secs_property = "max_secs_per_${interval_type}";
+        $secs_property = "max_secs_per_{$interval_type}";
         $area->$secs_property = from_time_string(array(
           'value' => $area->$secs_property,
           'units' => $area->$units_property
