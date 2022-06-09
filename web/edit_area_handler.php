@@ -76,15 +76,15 @@ if (!isset($area_default_type))
 // Get the max_per_interval form variables
 foreach ($interval_types as $interval_type)
 {
-  $var = "area_max_per_${interval_type}";
+  $var = "area_max_per_{$interval_type}";
   $$var = get_form_var($var, 'int');
-  $var = "area_max_per_${interval_type}_enabled";
+  $var = "area_max_per_{$interval_type}_enabled";
   $$var = get_form_var($var, 'string');
-  $var = "area_max_secs_per_${interval_type}";
+  $var = "area_max_secs_per_{$interval_type}";
   $$var = get_form_var($var, 'int');
-  $var = "area_max_secs_per_${interval_type}_units";
+  $var = "area_max_secs_per_{$interval_type}_units";
   $$var = get_form_var($var, 'string');
-  $var = "area_max_secs_per_${interval_type}_enabled";
+  $var = "area_max_secs_per_{$interval_type}_enabled";
   $$var = get_form_var($var, 'string');
 }
 
@@ -177,8 +177,8 @@ else
 
   foreach ($interval_types as $interval_type)
   {
-    $vars[] = "area_max_per_${interval_type}_enabled";
-    $vars[] = "area_max_secs_per_${interval_type}_enabled";
+    $vars[] = "area_max_per_{$interval_type}_enabled";
+    $vars[] = "area_max_secs_per_{$interval_type}_enabled";
   }
 
   foreach ($vars as $var)
@@ -318,11 +318,11 @@ if (isset($area_max_duration_value))
 
 foreach($interval_types as $interval_type)
 {
-  $var = "max_per_${interval_type}_enabled";
+  $var = "max_per_{$interval_type}_enabled";
   $area_var = "area_" . $var;
   $assign_array[] = "$var=" . $$area_var;
 
-  $var = "max_per_${interval_type}";
+  $var = "max_per_{$interval_type}";
   $area_var = "area_" . $var;
   if (isset($$area_var))
   {
@@ -333,11 +333,11 @@ foreach($interval_types as $interval_type)
   }
 
   // Now do the max_secs variables (limits on the total length of bookings)
-  $var = "max_secs_per_${interval_type}_enabled";
+  $var = "max_secs_per_{$interval_type}_enabled";
   $area_var = "area_" . $var;
   $assign_array[] = "$var=" . $$area_var;
 
-  $var = "max_secs_per_${interval_type}";
+  $var = "max_secs_per_{$interval_type}";
   $area_var = "area_" . $var;
 
   if (isset($$area_var))
@@ -345,7 +345,7 @@ foreach($interval_types as $interval_type)
     // only update these fields if they are set;  they might be NULL because
     // they have been disabled by JavaScript
     // Need to convert back into seconds
-    $units_var = "area_max_secs_per_${interval_type}_units";
+    $units_var = "area_max_secs_per_{$interval_type}_units";
     fromTimeString($$area_var, $$units_var);
     $assign_array[] = "$var=?";
     $sql_params[] = $$area_var;
