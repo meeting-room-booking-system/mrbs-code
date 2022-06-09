@@ -1018,7 +1018,7 @@ class System
     $locales = self::getLocaleAlternatives($langtag);
 
     // Add on a codeset [is this still necessary??]
-    $locales = array_map('self::addCodeset', $locales);
+    $locales = array_map(self::class . '::addCodeset', $locales);
 
     return $locales;
   }
