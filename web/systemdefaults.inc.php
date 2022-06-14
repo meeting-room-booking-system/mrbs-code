@@ -682,7 +682,7 @@ $is_mandatory_field['users.display_name'] = true;
 // You would probably also want to enter a custom error message by using
 // $vocab_override, with the tag consisting of "table.field.oninvalid" eg
 
-// $vocab_override['users.zip_code.oninvalid']['en'] = "Please enter a valid ZIP code, eg '12345' or '12345-6789'";
+// $vocab_override['en']['users.zip_code.oninvalid'] = "Please enter a valid ZIP code, eg '12345' or '12345-6789'";
 
 
 // Set this to false if you do not want to have the ability to create events for which
