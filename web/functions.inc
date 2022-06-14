@@ -2557,6 +2557,13 @@ function get_field_entry_input($params)
       {
         $field->setControlAttribute('maxlength', $maxlength);
       }
+      // Add a placeholder if necessary
+      $tag = $params['field'] . '.placeholder';
+      $placeholder = get_vocab($tag);
+      if (isset($placeholder) && ($placeholder !== $tag))
+      {
+        $field->setControlAttribute('placeholder', $placeholder);
+      }
       break;
 
     default:

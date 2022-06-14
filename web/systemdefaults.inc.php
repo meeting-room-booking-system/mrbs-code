@@ -684,6 +684,11 @@ $is_mandatory_field['users.display_name'] = true;
 
 // $vocab_override['en']['users.zip_code.oninvalid'] = "Please enter a valid ZIP code, eg '12345' or '12345-6789'";
 
+// You can add a placeholder to text input fields in the entry form by using
+// $vocab_override, with the tag consisting of "table.field.placeholder" eg
+
+// $vocab_override['en']['entry.description.placeholder'] = "This is the placeholder text";
+
 
 // Set this to false if you do not want to have the ability to create events for which
 // other people can register.
