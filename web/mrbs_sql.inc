@@ -46,10 +46,9 @@ function unpack_status(array &$data)
  * $repignore - A repeat ID to ignore everything in the series, 0 to ignore no series
  *
  * Returns:
- *   nothing   - The area is free
- *   something - An error occurred, the return value is an array of conflicts
+ *   an array of conflicts, empty if there are none
  */
-function mrbsCheckFree(array $booking, $ignore, $repignore)
+function mrbsCheckFree(array $booking, $ignore, $repignore) : array
 {
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format, $is_private_field;
@@ -86,12 +85,12 @@ function mrbsCheckFree(array $booking, $ignore, $repignore)
 
   if ($res->count() == 0)
   {
-    return "";
+    return array();
   }
   // Get the room's area ID for linking to day, week, and month views:
   $area = mrbsGetRoomArea($room_id);
 
-  // Build an listing all the conflicts:
+  // Build a listing all the conflicts:
   $err = array();
 
   while (false !== ($row = $res->next_row_keyed()))
