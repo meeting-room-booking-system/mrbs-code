@@ -42,13 +42,13 @@ function unpack_status(array &$data)
  * Check to see if the time period specified is free
  *
  * $booking   - The booking in question - an associative array
- * $ignore    - An entry ID to ignore, 0 to ignore no entries
- * $repignore - A repeat ID to ignore everything in the series, 0 to ignore no series
+ * $ignore    - An entry ID to ignore, null to ignore no entries
+ * $repignore - A repeat ID to ignore everything in the series, null to ignore no series
  *
  * Returns:
  *   an array of conflicts, empty if there are none
  */
-function mrbsCheckFree(array $booking, $ignore, $repignore) : array
+function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) : array
 {
   global $enable_periods, $periods, $twentyfourhour_format;
   global $strftime_format, $is_private_field;
@@ -69,12 +69,12 @@ function mrbsCheckFree(array $booking, $ignore, $repignore) : array
                       $booking['start_time'],
                       $room_id);
 
-  if ($ignore > 0)
+  if (isset($ignore))
   {
     $sql .= " AND E.id <> ?";
     $sql_params[] = $ignore;
   }
-  if ($repignore > 0)
+  if (isset($repignore))
   {
     $sql .= " AND (repeat_id IS NULL OR repeat_id <> ?)";
     $sql_params[] = $repignore;
@@ -176,7 +176,7 @@ function mrbsCheckFree(array $booking, $ignore, $repignore) : array
 // 'future').  If $only_area is set then only the bookings in the same area are considered.
 // If $check_seconds is set then the total length of bookings is checked, otherwise the number.
 // Returns NULL if OK, otherwise an error string.
-function check_interval(array $booking, $ignore, $repignore, $interval_type='day', $only_area=false, $check_seconds=false)
+function check_interval(array $booking, ?int $ignore, ?int $repignore, $interval_type='day', $only_area=false, $check_seconds=false)
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $max_secs_per_interval_global, $max_secs_per_interval_area;
@@ -273,12 +273,12 @@ function check_interval(array $booking, $ignore, $repignore, $interval_type='day
         $sql .= " AND R.area_id=?";
         $sql_params[] = $area_id;
       }
-      if ($ignore > 0)
+      if (isset($ignore))
       {
         $sql .= " AND E.id <> ?";
         $sql_params[] = $ignore;
       }
-      if ($repignore > 0)
+      if (isset($repignore))
       {
         $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> ?)";
         $sql_params[] = $repignore;
@@ -393,7 +393,7 @@ function adjust_ahead_seconds($seconds)
  *            - An array of human readable errors, index by 'notices' or 'errors'.
  *              If there are no policy violations the array has length 0.
  */
-function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
+function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null, $delete=false)
 {
   global $periods, $enable_periods;
   global $min_create_ahead_enabled, $min_create_ahead_secs;
@@ -475,7 +475,7 @@ function mrbsCheckPolicy(array $booking, $ignore, $repignore, $delete=FALSE)
                  AND end_time > :start_time
                  AND create_by = :create_by";
 
-      if ($ignore > 0)
+      if (isset($ignore))
       {
         $sql .= " AND id <> :ignore";
         $sql_params[':ignore'] = $ignore;
@@ -901,7 +901,7 @@ function mrbsDelEntry($id, $series, bool $all)
     }
 
     // check that the booking policies allow us to delete this entry
-    $tmp = mrbsCheckPolicy($row, 0, 0, TRUE);
+    $tmp = mrbsCheckPolicy($row, null, null, true);
 
     if (empty($tmp['errors']))
     {
@@ -1420,7 +1420,7 @@ function mrbsCreateRepeatingEntrys(array $data)
 
 // Gets the repeat_id for an entry in the entry table with id $entry_id
 // Returns the repeat_id or NULL
-function get_repeat_id($entry_id)
+function get_repeat_id($entry_id) : ?int
 {
   $sql = "SELECT repeat_id
             FROM " . _tbl('entry') . "
@@ -1433,10 +1433,10 @@ function get_repeat_id($entry_id)
   {
     // This should not happen
     trigger_error('$entry_id=' . "$entry_id does not exist.", E_USER_NOTICE);
-    return NULL;
+    return null;
   }
 
-  return $res->next_row_keyed()['repeat_id'];
+  return (int) $res->next_row_keyed()['repeat_id'];
 }
 
 
@@ -2335,7 +2335,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   }
   else
   {
-    $ignore_id = 0;
+    $ignore_id = null;
     $repeat_id = null;
   }
 
@@ -2465,7 +2465,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
     }
     else
     {
-      $tmp = mrbsCheckFree($booking, $ignore_id, 0);
+      $tmp = mrbsCheckFree($booking, $ignore_id);
       if (!empty($tmp))
       {
         $valid_booking = FALSE;
@@ -2506,7 +2506,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
 
     foreach ($old_bookings as $old_booking)
     {
-      $violations_this_booking = mrbsCheckPolicy($old_booking, FALSE, FALSE, TRUE);
+      $violations_this_booking = mrbsCheckPolicy($old_booking, null, null, true);
       foreach (array('notices', 'errors') as $key)
       {
         $violations[$key] = array_merge($violations[$key], $violations_this_booking[$key]);
