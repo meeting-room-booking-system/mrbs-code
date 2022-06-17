@@ -297,7 +297,7 @@ $rows = array();
 
 while (false !== ($row = $res->next_row_keyed()))
 {
-  if ((strcasecmp($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
+  if ((strcasecmp_locale($row['create_by'], $mrbs_username) === 0) || is_book_admin($row['room_id']))
   {
     $rows[] = $row;
   }
