@@ -282,7 +282,7 @@ function generate_event_registration($row, $previous_page=null)
     echo '<p>' . htmlspecialchars(get_vocab('already_registered')) . "</p>\n";
     foreach ($row['registrants'] as $registrant)
     {
-      if (strcasecmp($mrbs_user->username, $registrant['username']) === 0)
+      if (strcasecmp_locale($mrbs_user->username, $registrant['username']) === 0)
       {
         $this_registrant = $registrant;
         break;
@@ -425,7 +425,7 @@ function generateOwnerButtons($id, $series)
   // approval AND sufficient time has passed since the last reminder
   // AND we want reminders in the first place
   if (($reminders_enabled) &&
-      (strcasecmp($mrbs_username, $create_by) === 0) &&
+      (strcasecmp_locale($mrbs_username, $create_by) === 0) &&
       ($awaiting_approval) &&
       (working_time_diff(time(), $last_reminded) >= $reminder_interval))
   {
@@ -805,7 +805,7 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       }
     }
     // Buttons for the owner of this booking
-    elseif (strcasecmp($mrbs_username, $create_by) === 0)
+    elseif (strcasecmp_locale($mrbs_username, $create_by) === 0)
     {
       generateOwnerButtons($id, $series);
     }
