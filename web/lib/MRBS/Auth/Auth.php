@@ -6,6 +6,7 @@ use function MRBS\format_compound_name;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
 use function MRBS\get_vocab;
+use function MRBS\in_arrayi;
 use function MRBS\session;
 use function MRBS\strcasecmp_locale;
 
@@ -275,20 +276,8 @@ abstract class Auth
       return 0;
     }
 
-    // Check whether the user is an admin
-    if (isset($auth['admin']))
-    {
-      foreach ($auth['admin'] as $admin)
-      {
-        if (strcasecmp($username, $admin) === 0)
-        {
-          return 2;
-        }
-      }
-    }
-
-    // Everybody else is access level '1'
-    return 1;
+    // Check whether the user is an admin; if not they are level 1.
+    return (isset($auth['admin']) && in_arrayi($username, $auth['admin'])) ? 2 : 1;
   }
 
 
