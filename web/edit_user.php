@@ -85,7 +85,7 @@ function can_view_user($target)
 
   return (!$auth['only_admin_can_see_other_users']  ||
           ($mrbs_user->level >= $min_user_viewing_level) ||
-          (strcasecmp($mrbs_user->username, $target) === 0));
+          (strcasecmp_locale($mrbs_user->username, $target) === 0));
 }
 
 
@@ -94,7 +94,7 @@ function can_edit_user($target)
 {
   $mrbs_user = session()->getCurrentUser();
 
-  return (is_user_admin() || (isset($mrbs_user) && strcasecmp($mrbs_user->username, $target) === 0));
+  return (is_user_admin() || (isset($mrbs_user) && strcasecmp_locale($mrbs_user->username, $target) === 0));
 }
 
 
