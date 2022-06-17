@@ -335,7 +335,7 @@ function getWritable($creator, $room_ids=null, $all=true)
   }
 
   // If it's your own booking then you need to have write access
-  if ((strcasecmp($creator, $mrbs_user->username) === 0))
+  if (strcasecmp_locale($creator, $mrbs_user->username) === 0)
   {
     return $room->isWritable();
   }
