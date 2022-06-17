@@ -322,7 +322,10 @@ Technical explanation of the restriction on column names for custom fields
 
 CONFIGURING MRBS
 ---------------------------------------------------------------------------
-Next, you will need to customize the file "config.inc.php"...
+Next, you will need to create and customize the file "config.inc.php"...
+
+First of all copy the file config.inc.php-sample to config.inc.php.  Then you
+need to edit the settings in that file and add other settings as required.
 
 As a minimum you will need to set the timezone and the database variables.
 Other settings can be changed by copying lines from systemdefaults.inc.php and
