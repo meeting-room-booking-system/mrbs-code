@@ -1436,7 +1436,7 @@ function get_repeat_id($entry_id) : ?int
     return null;
   }
 
-  return (int) $res->next_row_keyed()['repeat_id'];
+  return (isset($res->next_row_keyed()['repeat_id'])) ? (int) $res->next_row_keyed()['repeat_id'] : null;
 }
 
 
