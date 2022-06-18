@@ -69,6 +69,9 @@ class SessionHandlerDb implements SessionHandlerInterface
   // processing.  Note that the data is base64_encoded in the database (otherwise
   // there were problems with PostgreSQL in storing some objects - needs further
   // investigation).
+  // TODO  Objects with private or protected properties contain NULL bytes when encoded
+  // TODO  by PHP and can't be written to a PostgreSQL text data type.  The column needs
+  // TODO  to be converted to bytea.
   public function read($id)
   {
     try
