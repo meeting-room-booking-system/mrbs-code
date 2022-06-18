@@ -88,7 +88,7 @@ class Area extends Location
             (empty($row['resolution']) || ($row['resolution'] < 0)))
     {
       $row['resolution'] = 30*60;  // 30 minutes, a reasonable fallback
-      $message = "Invalid value for 'resolution' in the area table.   Using ${row['resolution']} seconds.";
+      $message = "Invalid value for 'resolution' in the area table.   Using {$row['resolution']} seconds.";
       trigger_error($message, E_USER_WARNING);
     }
 
@@ -98,7 +98,7 @@ class Area extends Location
         !in_array($row['private_override'], $private_override_options))
     {
       $row['private_override'] = 'private';  // the safest default
-      $message = "Invalid value for 'private_override' in the area table.  Using '${row['private_override']}'.";
+      $message = "Invalid value for 'private_override' in the area table.  Using '{$row['private_override']}'.";
       trigger_error($message, E_USER_WARNING);
     }
 
