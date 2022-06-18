@@ -15,7 +15,7 @@ class Columns implements Countable, Iterator
 
   public function __construct($table_name)
   {
-    $this->$table_name = $table_name;
+    $this->table_name = $table_name;
     // Get the column info
     $this->data = db()->field_info($table_name);
   }
