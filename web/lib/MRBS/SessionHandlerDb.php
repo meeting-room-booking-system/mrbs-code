@@ -66,6 +66,8 @@ class SessionHandlerDb implements SessionHandlerInterface
   // processing.
   public function read($id)
   {
+    global $dbsys;
+
     try
     {
       $sql = "SELECT data
@@ -88,7 +90,29 @@ class SessionHandlerDb implements SessionHandlerInterface
       throw $e;
     }
 
-    return ($result === -1) ? '' : $result;
+    if ($result === -1)
+    {
+      return '';
+    }
+
+    // TODO: fix this properly
+    // In PostgreSQL we store the session base64 encoded.  That's because the session data string (encoded by PHP)
+    // can contain NULL bytes when the User object has protected properties.  The solution is probably to convert
+    // the data column in PostgreSQL to be bytea rather than text.  However this doesn't seem to work for some reason -
+    // no doubt soluble - and also upgrading the database is complicated while the roles branch is still under
+    // development and there are two sets of upgrades to be merged.  So for the moment we have this rather inelegant
+    // workaround.
+    if ($dbsys == 'pgsql')
+    {
+      $decoded = base64_decode($result, true);
+      // Test to see if the data is base64 encoded so that we can handle session data written before this change.
+      if (($decoded !== false) && (base64_encode($decoded) === $result))
+      {
+        return $decoded;
+      }
+    }
+
+    return $result;
   }
 
 
@@ -96,6 +120,14 @@ class SessionHandlerDb implements SessionHandlerInterface
   // returned internally to PHP for processing.
   public function write($id, $data): bool
   {
+    global $dbsys;
+
+    // See comment in read()
+    if ($dbsys == 'pgsql')
+    {
+      $data = base64_encode($data);
+    }
+
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $id));
 
@@ -149,6 +181,7 @@ class SessionHandlerDb implements SessionHandlerInterface
     db()->command($sql, array(':old' => time() - $max_lifetime));
     return true;  // An exception will be thrown on error
   }
+
 }
 
 // Restore the original error reporting level
