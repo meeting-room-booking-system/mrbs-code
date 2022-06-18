@@ -42,7 +42,7 @@ class SessionHandlerDb implements SessionHandlerInterface
       // the exception can't be thrown on open() because a try/catch round session_start() won't
       // catch the exception - maybe because open() is a callback function??]
       //
-      // This exception will also be thrown on the upgrade to database schema version 76, when the
+      // This exception will also be thrown on the upgrade to database schema version 83, when the
       // table was renamed.
       throw new \Exception("MRBS: session table does not exist");
     }
