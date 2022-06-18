@@ -203,11 +203,11 @@ abstract class SessionWithLogin implements SessionInterface
     }
     elseif (auth()->canValidateByUsername())
     {
-      $tag = 'users.name';
+      $tag = 'user.name';
     }
     else
     {
-      $tag = 'users.email';
+      $tag = 'user.email';
     }
 
     $placeholder = get_vocab($tag);
@@ -225,7 +225,7 @@ abstract class SessionWithLogin implements SessionInterface
 
     // The password field
     $field = new FieldInputPassword();
-    $field->setLabel(get_vocab('users.password'))
+    $field->setLabel(get_vocab('user.password'))
           ->setControlAttributes(array('id'           => 'password',
                                        'name'         => 'password',
                                        'autocomplete' => 'current-password'));
