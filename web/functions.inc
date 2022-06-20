@@ -748,12 +748,11 @@ function add_query_parameter(string $location, string $name, $value) : string
   {
     $parts['query'] = '';
   }
+  
   parse_str($parts['query'], $result);
   $result[$name] = $value;
   $parts['query'] = http_build_query($result, '', '&');
-  $location = build_url($parts);
-
-  return $location;
+  return build_url($parts);
 }
 
 
@@ -833,7 +832,7 @@ function http_headers(array $headers, $expiry_seconds=0)
 // header uses are not yet available.
 function print_simple_header()
 {
-  print_header($context=null, $simple=true);
+  print_header(null, true);
 }
 
 
