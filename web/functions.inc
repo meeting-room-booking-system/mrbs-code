@@ -36,7 +36,7 @@ function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 }
 
 
-function generate_token($length)
+function generate_token(int $length) : string
 {
   if (function_exists('random_bytes'))
   {
