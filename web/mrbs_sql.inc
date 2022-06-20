@@ -708,7 +708,7 @@ function registration_closes_timestamp(array $entry) : int
 
 
 // Checks whether an entry is open for registration
-function entry_registration_is_open(array $entry)
+function entry_registration_is_open(array $entry) : bool
 {
   return (!$entry['registration_opens_enabled'] || (time() >= registration_opens_timestamp($entry))) &&
          (!$entry['registration_closes_enabled'] || (time() <= registration_closes_timestamp($entry)));
@@ -718,7 +718,7 @@ function entry_registration_is_open(array $entry)
 // Checks whether it is too late to cancel a registration, which is
 // after the closing time for registration, if there is one, or else
 // after the entry start time.
-function entry_registration_cancellation_has_closed(array $entry)
+function entry_registration_cancellation_has_closed(array $entry) : bool
 {
   global $enable_periods;
 
