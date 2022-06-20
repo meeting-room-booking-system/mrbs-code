@@ -738,6 +738,12 @@ function location_header($location)
 function add_query_parameter(string $location, string $name, $value) : string
 {
   $parts = parse_url($location);
+
+  if ($parts === false)
+  {
+    throw new \Exception("Could not parse the URL '$location'");
+  }
+
   if (!isset($parts['query']))
   {
     $parts['query'] = '';
