@@ -1276,11 +1276,11 @@ function get_start_last_slot($month, $day, $year) : int
 }
 
 
-function get_end_last_slot($month, $day, $year)
+function get_end_last_slot($month, $day, $year) : int
 {
   global $resolution;
 
-  return get_start_last_slot($month, $day, $year) + $resolution;
+  return intval(get_start_last_slot($month, $day, $year) + $resolution);
 }
 
 
