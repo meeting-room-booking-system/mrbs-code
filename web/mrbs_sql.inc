@@ -751,7 +751,7 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
 // corresponding to the entry table columns
-function get_entries_by_area($area_id, $interval_start, $interval_end) : array
+function get_entries_by_area($area_id, int $interval_start, int $interval_end) : array
 {
   // The GROUP BY is necessary to get n_registered to work
   $sql = "SELECT E.*, COUNT(P.entry_id) AS n_registered
