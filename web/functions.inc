@@ -545,7 +545,7 @@ function get_cookie_path()
   else
   {
     // REQUEST_URI isn't set on all PHP systems, so fall back to PHP_SELF
-    $cookie_path = isset($server['REQUEST_URI']) ? $server['REQUEST_URI'] : $server['PHP_SELF'];
+    $cookie_path = $server['REQUEST_URI'] ?? $server['PHP_SELF'];
     // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
   }
