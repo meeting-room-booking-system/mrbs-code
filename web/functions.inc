@@ -177,7 +177,7 @@ function compare_display_names(string $name1, string $name2) : int
 
 
 // Tests whether the request has come via an Ajax call or not.
-function is_ajax()
+function is_ajax() : bool
 {
   global $server;
 
@@ -340,7 +340,7 @@ function get_type_options(bool $include_admin_types) : array
 
 
 // Converts an array of types into a string
-function get_type_names($types, $glue=', ')
+function get_type_names(?array $types, string $glue=', ') : string
 {
   if (empty($types))
   {
@@ -358,7 +358,7 @@ function get_type_names($types, $glue=', ')
 }
 
 
-function get_rep_interval_units($rep_type, $rep_interval)
+function get_rep_interval_units($rep_type, $rep_interval) : string
 {
   switch ($rep_type)
   {
@@ -381,7 +381,7 @@ function get_rep_interval_units($rep_type, $rep_interval)
 }
 
 
-function get_rep_interval_units_mail($rep_type, $rep_interval)
+function get_rep_interval_units_mail($rep_type, $rep_interval) : string
 {
   switch ($rep_type)
   {
@@ -469,7 +469,7 @@ function truncate($value, $column)
 
 // Formats a number taking into account the current locale.  (Could use
 // the NumberFormatter class, but the intl extension isn't always installed.)
-function number_format_locale($number, $decimals=0)
+function number_format_locale($number, int $decimals=0) : string
 {
   $locale_info = localeconv();
   return number_format($number, $decimals, $locale_info['decimal_point'], $locale_info['thousands_sep']);
@@ -490,7 +490,7 @@ function get_microtime()
 }
 
 
-function function_disabled($name)
+function function_disabled(string $name) : bool
 {
   $disabled = explode(', ', ini_get('disable_functions'));
   return in_array($name, $disabled);
@@ -652,7 +652,7 @@ function url_base() : string
 
 
 
-function is_https()
+function is_https() : bool
 {
   global $server;
 
@@ -727,7 +727,7 @@ function rfc1123_date($timestamp)
 
 // Rebuilds a url that has been decompomosed into parts by parse_url().
 // See https://www.php.net/manual/en/function.parse-url.php#106731
-function build_url(array $parts)
+function build_url(array $parts) : string
 {
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
           ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
@@ -763,7 +763,7 @@ function location_header($location)
 }
 
 
-function add_query_parameter($location, $name, $value)
+function add_query_parameter(string $location, string $name, $value) : string
 {
   $parts = parse_url($location);
   if (!isset($parts['query']))
