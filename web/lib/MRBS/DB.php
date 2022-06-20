@@ -125,7 +125,8 @@ abstract class DB
       throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
     }
 
-    if (($row = $sth->fetch(PDO::FETCH_NUM)) == NULL)
+    $row = $sth->fetch(PDO::FETCH_NUM);
+    if (($row === null) || ($row === false))
     {
       $result = -1;
     }
