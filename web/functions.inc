@@ -28,10 +28,11 @@ function constrain_int($n, $bytes, $unsigned=false)
 
 // Case-insensitive in_array
 // See https://www.php.net/manual/en/function.in-array.php#Hcom89256
-function in_arrayi($needle, $haystack)
+function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 {
   return in_array(utf8_strtolower($needle),
-                  array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack));
+                  array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack),
+                  $strict);
 }
 
 
