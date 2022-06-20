@@ -64,7 +64,7 @@ function array_values_recursive(array $array)
   return $result;
 }
 
-function generate_token($length)
+function generate_token(int $length) : string
 {
   if (function_exists('random_bytes'))
   {
@@ -77,11 +77,6 @@ function generate_token($length)
       // random_bytes() will throw an Exception if an appropriate source of randomness cannot be found.
       // If that happens, just fall through and use one of the other methods.
     }
-  }
-
-  if (function_exists('mcrypt_create_iv'))
-  {
-    return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
   }
 
   if (function_exists('openssl_random_pseudo_bytes'))
