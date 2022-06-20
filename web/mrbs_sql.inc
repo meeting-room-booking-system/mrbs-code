@@ -805,7 +805,7 @@ function get_entries_by_room(int $room_id, int $interval_start, int $interval_en
 
 
 // Get the number of outstanding (ie waiting to be approved) for a user
-function get_entries_n_outstanding(User $user)
+function get_entries_n_outstanding(User $user) : int
 {
   $sql_approval_enabled = some_area_predicate('approval_enabled');
 
@@ -939,7 +939,7 @@ function mrbsDelEntry($id, $series, bool $all)
  *   0        - An error occurred while inserting the entry
  *   non-zero - The entry's ID
  */
-function mrbsCreateEntry($table, $data)
+function mrbsCreateEntry(string $table, array $data)
 {
   global $standard_fields;
 
