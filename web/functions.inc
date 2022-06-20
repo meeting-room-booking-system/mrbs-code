@@ -1269,39 +1269,57 @@ function day_past_midnight()
 
 
 // Gets the UNIX timestamp for the start of the first slot on the given day
-function get_start_first_slot($month, $day, $year)
+function get_start_first_slot($month, $day, $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $enable_periods;
 
   if ($enable_periods)
   {
-    return mktime(12, 0, 0, $month, $day, $year);
+    $result = mktime(12, 0, 0, $month, $day, $year);
+  }
+  else
+  {
+    $result = mktime($morningstarts, $morningstarts_minutes, 0,
+                     $month, $day, $year);
   }
 
-  return mktime($morningstarts, $morningstarts_minutes, 0,
-                $month, $day, $year);
+  if ($result === false)
+  {
+    throw new \Exception("Invalid arguments to mktime()");
+  }
+
+  return $result;
 }
 
 
 // Gets the UNIX timestamp for the start of the last slot on the given day
-function get_start_last_slot($month, $day, $year)
+function get_start_last_slot($month, $day, $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $enable_periods, $periods;
 
   if ($enable_periods)
   {
-    return mktime(12, count($periods) -1, 0, $month, $day, $year);
+    $result = mktime(12, count($periods) -1, 0, $month, $day, $year);
   }
-
-  // Work out if $evening_ends is really on the next day
-  if (hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
-                array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
+  else
   {
-    $day++;
+    // Work out if $evening_ends is really on the next day
+    if (hm_before(array('hours' => $eveningends, 'minutes' => $eveningends_minutes),
+        array('hours' => $morningstarts, 'minutes' => $morningstarts_minutes)))
+    {
+      $day++;
+    }
+
+    $result = mktime($eveningends, $eveningends_minutes, 0,
+                     $month, $day, $year);
   }
 
-  return mktime($eveningends, $eveningends_minutes, 0,
-                $month, $day, $year);
+  if ($result === false)
+  {
+    throw new \Exception("Invalid arguments to mktime()");
+  }
+
+  return $result;
 }
 
 
@@ -1315,7 +1333,7 @@ function get_end_last_slot($month, $day, $year)
 
 // Determines with a given timestamp is within a booking day, ie between the start of
 // the first slot and end of the last slot.   Returns a boolean.
-function is_in_booking_day($t)
+function is_in_booking_day($t) : bool
 {
   global $morningstarts, $morningstarts_minutes,
          $eveningends, $eveningends_minutes,
