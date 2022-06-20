@@ -176,7 +176,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
 // 'future').  If $only_area is set then only the bookings in the same area are considered.
 // If $check_seconds is set then the total length of bookings is checked, otherwise the number.
 // Returns NULL if OK, otherwise an error string.
-function check_interval(array $booking, ?int $ignore, ?int $repignore, $interval_type='day', $only_area=false, $check_seconds=false)
+function check_interval(string $interval_type, array $booking, ?int $ignore, ?int $repignore, bool $only_area=false, bool $check_seconds=false) : ?string
 {
   global $max_per_interval_global, $max_per_interval_area;
   global $max_secs_per_interval_global, $max_secs_per_interval_area;
@@ -603,7 +603,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     // number of bookings
     if (!empty($max_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, false);
+      $tmp = check_interval($interval_type, $booking, $ignore, $repignore, false);
       if (isset($tmp))
       {
         $violations[] = $tmp;
@@ -612,7 +612,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     // length of bookings
     if (!empty($max_secs_per_interval_global_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, false, true);
+      $tmp = check_interval($interval_type, $booking, $ignore, $repignore, false, true);
       if (isset($tmp))
       {
         $violations[] = $tmp;
@@ -622,7 +622,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     // number of bookings
     if (!empty($max_per_interval_area_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, true);
+      $tmp = check_interval($interval_type, $booking, $ignore, $repignore, true);
       if (isset($tmp))
       {
         $violations[] = $tmp;
@@ -631,7 +631,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     // length of bookings
     if (!empty($max_secs_per_interval_area_enabled[$interval_type]) && !$delete)
     {
-      $tmp = check_interval($booking, $ignore, $repignore, $interval_type, true, true);
+      $tmp = check_interval($interval_type, $booking, $ignore, $repignore, true, true);
       if (isset($tmp))
       {
         $violations[] = $tmp;
