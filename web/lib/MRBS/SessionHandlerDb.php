@@ -90,7 +90,7 @@ class SessionHandlerDb implements SessionHandlerInterface
       throw $e;
     }
 
-    if ($result === -1)
+    if (!isset($result) || ($result === -1))
     {
       return '';
     }
@@ -102,7 +102,7 @@ class SessionHandlerDb implements SessionHandlerInterface
     // no doubt soluble - and also upgrading the database is complicated while the roles branch is still under
     // development and there are two sets of upgrades to be merged.  So for the moment we have this rather inelegant
     // workaround.
-    if (($dbsys == 'pgsql') && isset($result))
+    if ($dbsys == 'pgsql')
     {
       $decoded = base64_decode($result, true);
       // Test to see if the data is base64 encoded so that we can handle session data written before this change.
