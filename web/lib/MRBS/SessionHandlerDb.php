@@ -96,7 +96,7 @@ class SessionHandlerDb implements SessionHandlerInterface
       throw $e;
     }
 
-    return ($result === -1) ? '' : base64_decode($result);
+    return (!isset($result) || ($result === -1)) ? '' : base64_decode($result);
   }
 
 
