@@ -250,7 +250,7 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
         $interval_end = mktime(0, 0, 0, 1, 1, $start_date['year'] + $i);
         break;
       case 'future':
-        $interval_end = PHP_INT_MAX;
+        $interval_end = null;
         break;
     }
 
@@ -258,16 +258,22 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
     {
       $sql = "SELECT E.start_time, E.end_time
                 FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
-               WHERE E.start_time < ?
-                 AND E.end_time > ?
-                 AND E.create_by = ?
+               WHERE E.end_time > :interval_start
+                 AND E.create_by = :create_by
                  AND E.room_id = R.id
                  AND R.area_id = A.id
                  AND R.disabled = 0";
 
-      $sql_params = array($interval_end,
-                          $interval_start,
-                          $booking['create_by']);
+      $sql_params = array(
+        ':interval_start' => $interval_start,
+        ':create_by' => $booking['create_by']
+      );
+
+      if (isset($interval_end))
+      {
+        $sql .= " AND E.start_time < :interval_end";
+        $sql_params[':interval_end'] = $interval_end;
+      }
 
       if ($check_seconds)
       {
@@ -276,18 +282,18 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
       }
       if ($only_area)
       {
-        $sql .= " AND R.area_id=?";
-        $sql_params[] = $area_id;
+        $sql .= " AND R.area_id = :area_id";
+        $sql_params[':area_id'] = $area_id;
       }
       if (isset($ignore))
       {
-        $sql .= " AND E.id <> ?";
-        $sql_params[] = $ignore;
+        $sql .= " AND E.id <> :ignore";
+        $sql_params[':ignore'] = $ignore;
       }
       if (isset($repignore))
       {
-        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> ?)";
-        $sql_params[] = $repignore;
+        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> :repignore)";
+        $sql_params[':repignore'] = $repignore;
       }
 
       $existing[$location][$check_type][$interval_type][$interval_start] = 0;
