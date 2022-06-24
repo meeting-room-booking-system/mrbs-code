@@ -921,9 +921,9 @@ function get_flex_div($slots, $classes, $title=null, $text=null) : string
 
   $result .= '>';
 
-  if (isset($text) && ($text != ''))
+  if (isset($text) && ($text !== ''))
   {
-    $result .= htmlspecialchars($title);
+    $result .= htmlspecialchars($text);
   }
 
   $result .= '</div>';
