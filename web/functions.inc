@@ -91,6 +91,12 @@ function generate_token(int $length) : string
 // A locale aware version of strcasecmp()
 function strcasecmp_locale(string $string1, string $string2) : int
 {
+  // Trivial case
+  if ($string1 === $string2)
+  {
+    return 0;
+  }
+  
   // Sort the array.  If the order is reversed then $string1 > $string2
   // (When this function is being used as a callback for usort, and if the original array
   // is sorted in ascending order, which it well might be if it's the result of
@@ -776,7 +782,7 @@ function add_query_parameter(string $location, string $name, $value) : string
   {
     $parts['query'] = '';
   }
-  
+
   parse_str($parts['query'], $result);
   $result[$name] = $value;
   $parts['query'] = http_build_query($result, '', '&');
