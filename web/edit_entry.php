@@ -1241,17 +1241,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  if (isset($copy) && ($mrbs_username != $entry['create_by']))
-  {
-    // Entry being copied by different user
-    // If they don't have rights to view details, clear them
-    $privatewriteable = getWritable($entry['create_by'], $entry['room_id']);
-    $keep_private = (is_private_event($private) && !$privatewriteable);
-  }
-  else
-  {
-    $keep_private = FALSE;
-  }
+  $keep_private = isset($copy) && is_private_event($private) && !getWritable($entry['create_by'], $entry['room_id']);
 
   // default settings
   $rep_day = array();
