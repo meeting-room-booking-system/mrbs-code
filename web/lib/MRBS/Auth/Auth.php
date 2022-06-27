@@ -104,12 +104,15 @@ abstract class Auth
 
     // If we can (and want to) then get all the usernames at the same time.  It's
     // much faster than getting them one at a time when they are stored externally.
-    if ($get_display_names_all_at_once && method_exists($this, 'getUsernames'))
+    // Check to see if $display_names is set before getting the usernames, so that
+    // if getUsernames returns false we don't keep on trying it for every username
+    // (the else block will set $display_names).
+    if ($get_display_names_all_at_once &&
+        method_exists($this, 'getUsernames') &&
+        !isset($display_names) &&
+        (false !== ($usernames = $this->getUsernames())))
     {
-      if (!isset($display_names))
-      {
-        $display_names = array_column($this->getUsernames(), 'display_name', 'username');
-      }
+      $display_names = array_column($usernames, 'display_name', 'username');
     }
     // Otherwise just get them one at a time
     else
