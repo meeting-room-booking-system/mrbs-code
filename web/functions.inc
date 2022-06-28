@@ -1349,7 +1349,7 @@ function timestamp_set_time(int $timestamp, string $time) : int
 
 // Force a timestamp $t to be on a booking day, either by moving it back to the end
 // of the previous booking day, or forward to the start of the next.
-function fit_to_booking_day(int $t, bool $back=true) : int
+function fit_to_booking_day(int $t, ?bool $back=true) : int
 {
   if (is_in_booking_day($t))
   {
