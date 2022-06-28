@@ -1132,12 +1132,14 @@ function fromPeriodString($start_period, &$units, $dur_units)
 
 // Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
 // For example "-1SU" is returned as array("-1", "SU");
-function byday_split($byday)
+function byday_split(string $byday) : array
 {
   $result = array();
+
   $split_pos = strlen($byday) -2;
   $result[] = substr($byday, 0, $split_pos);
   $result[] = substr($byday, $split_pos, 2);
+  
   return $result;
 }
 
