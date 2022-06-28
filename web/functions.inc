@@ -694,9 +694,9 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
 // Format a timestamp in RFC 1123 format, for HTTP headers
 //
 // e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date($timestamp)
+function rfc1123_date(int $timestamp) : string
 {
-  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
+  return gmdate("D, d M Y G:i:s \\G\\M\\T", $timestamp);
 }
 
 
