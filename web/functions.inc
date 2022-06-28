@@ -1215,7 +1215,7 @@ function byday_to_day(int $year, int $month, string $byday)
 // $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
 // The indices are chosen to allow the result of the PHP getdate() function
 // to be passed as parameters
-function hm_before($hm1, $hm2)
+function hm_before(array $hm1, array $hm2) : bool
 {
   return ($hm1['hours'] < $hm2['hours']) ||
          (($hm1['hours'] == $hm2['hours']) && ($hm1['minutes'] < $hm2['minutes']));
@@ -1224,7 +1224,7 @@ function hm_before($hm1, $hm2)
 
 // Returns TRUE if the end of the last slot is on the day after the beginning
 // of the first slot
-function day_past_midnight()
+function day_past_midnight() : bool
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution;
 
