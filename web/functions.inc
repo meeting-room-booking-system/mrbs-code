@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use \DateTimeZone;
+use DateTimeZone;
 use MRBS\Form\FieldSelect;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -96,7 +96,7 @@ function strcasecmp_locale(string $string1, string $string2) : int
   {
     return 0;
   }
-  
+
   // Sort the array.  If the order is reversed then $string1 > $string2
   // (When this function is being used as a callback for usort, and if the original array
   // is sorted in ascending order, which it well might be if it's the result of
@@ -541,7 +541,7 @@ function mrbs_default_timezone_set($tz=null)
 // The MRBS wrapper round date_default_timezone_get() is redundant now.  It used to
 // cater for PHP servers that don't have date_default_timezone_get(), but now that
 // the minimum PHP version is >= 5.1.0, there are none.
-function mrbs_default_timezone_get()
+function mrbs_default_timezone_get() : string
 {
   return date_default_timezone_get();
 }
