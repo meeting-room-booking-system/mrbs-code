@@ -719,8 +719,15 @@ function build_url(array $parts) : string
 
 // A wrapper for sending a Location header.  This function will urlencode and add
 // the site parameter as necessary
-function location_header($location)
+function location_header(string $location) : void
 {
+  global $debug, $min_PHP_version;
+
+  if ($debug && (version_compare($min_PHP_version, 8.1) >= 0))
+  {
+    trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
+  }
+  
   // Add the site parameter if necessary
   $location = multisite($location);
 
