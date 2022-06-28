@@ -883,7 +883,7 @@ function print_header(?array $context=null, bool $simple=false, bool $omit_login
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer($and_exit=false)
+function print_footer(bool $and_exit=false) : void
 {
   global $theme;
 
