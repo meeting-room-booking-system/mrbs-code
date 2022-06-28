@@ -1554,7 +1554,7 @@ else
     // allowed multi-day bookings then make sure it is on the first booking day.
     if (is_book_admin() || !$auth['only_admin_can_book_multiday'])
     {
-      $end_time = fit_to_booking_day($end_time, $back=true);
+      $end_time = fit_to_booking_day($end_time);
     }
     else
     {
