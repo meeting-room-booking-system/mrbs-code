@@ -13,6 +13,8 @@ use MRBS\User;
 use MRBS\Users;
 use function MRBS\auth;
 use function MRBS\get_vocab;
+use function MRBS\multisite;
+use function MRBS\print_header;
 
 
 // An abstract class for those session schemes that implement a login form
@@ -49,8 +51,8 @@ abstract class SessionWithLogin implements SessionInterface
     }
 
     // Omit the Login link in the header when we're on the login page itself
-    \MRBS\print_header(null, null, true);
-    $action = \MRBS\multisite(\MRBS\this_page());
+    print_header(null, false, true);
+    $action = multisite(\MRBS\this_page());
     $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
   }
@@ -64,7 +66,7 @@ abstract class SessionWithLogin implements SessionInterface
   public function getLogonFormParams() : ?array
   {
     return array(
-        'action' => \MRBS\multisite('admin.php'),
+        'action' => multisite('admin.php'),
         'method' => 'post',
         'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
                                   'action'     => 'QueryName')
@@ -78,7 +80,7 @@ abstract class SessionWithLogin implements SessionInterface
   public function getLogoffFormParams() : ?array
   {
     return array(
-        'action' => \MRBS\multisite('admin.php'),
+        'action' => multisite('admin.php'),
         'method' => 'post',
         'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
                                   'action'     => 'SetName',
@@ -246,7 +248,7 @@ abstract class SessionWithLogin implements SessionInterface
       $fieldset = new ElementFieldset();
       $field = new FieldDiv();
       $a = new ElementA();
-      $a->setAttribute('href', \MRBS\multisite('reset_password.php'))
+      $a->setAttribute('href', multisite('reset_password.php'))
         ->setText(get_vocab('lost_password'));
       $field->addControl($a);
       $fieldset->addElement($field);
