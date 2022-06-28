@@ -1013,7 +1013,7 @@ function fromTimeString(&$units, $dur_units)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function get_period_interval($start_time, $end_time)
+function get_period_interval(int $start_time, int $end_time) : int
 {
   global $periods;
 
@@ -1054,7 +1054,7 @@ function get_period_interval($start_time, $end_time)
     $result += get_period_interval($endDate->getTimestamp(), $end_time);
   }
 
-  return (int)$result;
+  return (int) $result;
 }
 
 
