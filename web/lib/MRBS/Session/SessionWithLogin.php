@@ -48,7 +48,7 @@ abstract class SessionWithLogin implements SessionInterface
     }
 
     // Omit the Login link in the header when we're on the login page itself
-    \MRBS\print_header(null, null, true);
+    \MRBS\print_header(null, false, true);
     $action = \MRBS\multisite(\MRBS\this_page());
     $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
