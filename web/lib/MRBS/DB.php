@@ -81,7 +81,7 @@ abstract class DB
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Throws a DBException on error.
-  public function command($sql, ?array $params = array())
+  public function command($sql, array $params = array())
   {
     try
     {
