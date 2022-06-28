@@ -755,7 +755,7 @@ function location_header(string $location) : void
   {
     trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
   }
-  
+
   // Add the site parameter if necessary
   $location = multisite($location);
 
@@ -829,7 +829,7 @@ function add_version($filename)
 // A little helper function to send an "Expires" header. Just one
 // parameter, the number of seconds in the future to set the expiry.
 // If $seconds is <= 0, then caching is disabled.
-function expires_header($seconds)
+function expires_header(int $seconds) : void
 {
   global $debug;
 
@@ -854,7 +854,7 @@ function expires_header($seconds)
 // Outputs the HTTP headers, passed in the array $headers, followed by
 // a set of headers to set the cache expiry date.  If $expiry_seconds <= 0
 // then caching is disabled.
-function http_headers(array $headers, $expiry_seconds=0)
+function http_headers(array $headers, int $expiry_seconds=0) : void
 {
   foreach ($headers as $header)
   {
