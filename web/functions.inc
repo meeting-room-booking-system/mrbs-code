@@ -909,7 +909,7 @@ function print_header(?array $context=null, bool $simple=false, bool $omit_login
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer($and_exit=false)
+function print_footer(bool $and_exit=false) : void
 {
   global $theme;
 
@@ -1046,7 +1046,7 @@ function from_time_string(array $duration)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function get_period_interval($start_time, $end_time)
+function get_period_interval(int $start_time, int $end_time) : int
 {
   global $periods;
 
@@ -1087,7 +1087,7 @@ function get_period_interval($start_time, $end_time)
     $result += get_period_interval($endDate->getTimestamp(), $end_time);
   }
 
-  return (int)$result;
+  return (int) $result;
 }
 
 
@@ -1177,12 +1177,14 @@ function from_period_string($start_period, array $duration)
 
 // Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
 // For example "-1SU" is returned as array("-1", "SU");
-function byday_split($byday)
+function byday_split(string $byday) : array
 {
   $result = array();
+
   $split_pos = strlen($byday) -2;
   $result[] = substr($byday, 0, $split_pos);
   $result[] = substr($byday, $split_pos, 2);
+  
   return $result;
 }
 
