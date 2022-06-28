@@ -1163,7 +1163,7 @@ function date_byday(int $timestamp) : string
 
 // Convert an RFC 5545 day to an ordinal number representing the day of the week,
 // eg "MO" returns "1"
-function RFC_5545_day_to_ord($day)
+function RFC_5545_day_to_ord(string $day) : int
 {
   global $RFC_5545_days;
 
