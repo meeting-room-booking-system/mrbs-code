@@ -513,7 +513,7 @@ function mrbs_default_timezone_set($tz=null)
 // The MRBS wrapper round date_default_timezone_get() is redundant now.  It used to
 // cater for PHP servers that don't have date_default_timezone_get(), but now that
 // the minimum PHP version is >= 5.1.0, there are none.
-function mrbs_default_timezone_get()
+function mrbs_default_timezone_get() : string
 {
   return date_default_timezone_get();
 }
