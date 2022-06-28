@@ -505,7 +505,7 @@ function function_disabled(string $name) : bool
 
 // Set the default timezone.   If $tz is not set, then the default MRBS
 // timezone from the config file is used.
-function mrbs_default_timezone_set($tz=null)
+function mrbs_default_timezone_set(?string $tz=null) : void
 {
   global $area_defaults;
 
@@ -683,12 +683,9 @@ function is_https() : bool
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
-function this_page($with_query_string=false, $suffix='')
+function this_page(bool $with_query_string=false, string $suffix='') : string
 {
   global $server;
-
-  assert(is_bool($with_query_string), '$with_query_string should be a boolean');
-  assert(is_string($suffix), '$suffix should be a string');
 
   if ((!isset($server['SCRIPT_NAME']) || ($server['SCRIPT_NAME'] === '') && !is_cli()))
   {
