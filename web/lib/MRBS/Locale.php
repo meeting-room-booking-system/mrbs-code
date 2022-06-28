@@ -25,7 +25,7 @@ class Locale
 
   // Tries to find out best available locale based on HTTP "Accept-Language" header
   // Returns locale in normalised form, or NULL if none found
-  public static function acceptFromHttp($header)
+  public static function acceptFromHttp(string $header)
   {
     if (isset($header))
     {
@@ -92,7 +92,7 @@ class Locale
   // Returns a key-value array of locale ID subtag elements.
   // Parses a language tag according to BCP 47
   // See http://tools.ietf.org/html/bcp47
-  public static function parseLocale($locale)
+  public static function parseLocale(string $locale) : ?array
   {
     static $regex = array('extlang' => '/^[[:alpha:]]{3}$/',  // 3ALPHA
                           'script'  => '/^[[:alpha:]]{4}$/',  // 4ALPHA
@@ -282,7 +282,7 @@ class Locale
   // array of acceptable languages with the language as the key and
   // the quality value as the value, sorted in decreasing order of
   // quality value.  A wildcard in the header is translated.
-  private static function toSortedArray($header)
+  private static function toSortedArray(string $header) : array
   {
     return get_qualifiers($header, true);
   }
