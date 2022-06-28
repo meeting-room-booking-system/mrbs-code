@@ -1175,7 +1175,7 @@ function RFC_5545_day_to_ord(string $day) : int
 // Converts a BYDAY (eg "2SU") value for a given year and month into a
 // day of the month.   Returns FALSE if the day does not exist (eg for "5SU"
 // when there are only four Sundays in the month)
-function byday_to_day($year, $month, $byday)
+function byday_to_day(int $year, int $month, string $byday)
 {
   // First of all normalise the month and year, as we allow $month > 12
   while ($month > 12)
