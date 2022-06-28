@@ -477,7 +477,7 @@ function function_disabled(string $name) : bool
 
 // Set the default timezone.   If $tz is not set, then the default MRBS
 // timezone from the config file is used.
-function mrbs_default_timezone_set($tz=null)
+function mrbs_default_timezone_set(?string $tz=null) : void
 {
   global $area_defaults;
 
