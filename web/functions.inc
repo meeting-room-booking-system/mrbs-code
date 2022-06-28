@@ -28,7 +28,7 @@ function constrain_int($n, $bytes, $unsigned=false)
 
 // Case-insensitive in_array
 // See https://www.php.net/manual/en/function.in-array.php#Hcom89256
-function in_arrayi($needle, array $haystack, bool $strict=false) : bool
+function in_arrayi($needle, array $haystack, ?bool $strict=false) : bool
 {
   return in_array(utf8_strtolower($needle),
                   array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack),
@@ -655,7 +655,7 @@ function is_https() : bool
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
-function this_page(bool $with_query_string=false, string $suffix='') : string
+function this_page(?bool $with_query_string=false, ?string $suffix='') : string
 {
   global $server;
 
@@ -852,7 +852,7 @@ function print_simple_header() : void
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
 // any of which can be NULL.
 // When $omit_login is true the Login link is omitted.
-function print_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
+function print_header(?array $context=null, ?bool $simple=false, ?bool $omit_login=false) : void
 {
   global $theme;
 
@@ -883,7 +883,7 @@ function print_header(?array $context=null, bool $simple=false, bool $omit_login
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer(bool $and_exit=false) : void
+function print_footer(?bool $and_exit=false) : void
 {
   global $theme;
 
