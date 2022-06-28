@@ -1389,7 +1389,7 @@ function fit_to_booking_day(int $t, bool $back=true) : int
 //    $end_time       int     end time as a Unix timestamp
 //    $enable_periods boolean whether we are using periods
 //    $translate      boolean whether to translate into the browser language
-function get_duration($start_time, $end_time, $enable_periods, $area_id, $translate=true)
+function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, ?bool $translate=true) : array
 {
   $result = array();
 
