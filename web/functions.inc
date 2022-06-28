@@ -1139,14 +1139,14 @@ function byday_split(string $byday) : array
   $split_pos = strlen($byday) -2;
   $result[] = substr($byday, 0, $split_pos);
   $result[] = substr($byday, $split_pos, 2);
-  
+
   return $result;
 }
 
 
 // Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
 // the month, or -1MO for the last Monday.
-function date_byday($timestamp)
+function date_byday(int $timestamp) : string
 {
   global $RFC_5545_days;
 
