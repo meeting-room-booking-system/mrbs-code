@@ -783,9 +783,10 @@ function multisite(string $location) : string
 
 // Add a version parameter to a filename in order to force the use of the new
 // file instead of the cached version
-function add_version($filename)
+function add_version(string $filename) : string
 {
   $url_path = parse_url($filename, PHP_URL_PATH);
+
   if (is_readable($url_path))
   {
     $mtime = filemtime($url_path);
@@ -794,6 +795,7 @@ function add_version($filename)
       return add_query_parameter($filename, 'v', $mtime);
     }
   }
+
   return $filename;
 }
 
