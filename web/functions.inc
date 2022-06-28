@@ -722,9 +722,9 @@ function this_page(bool $with_query_string=false, string $suffix='') : string
 // Format a timestamp in RFC 1123 format, for HTTP headers
 //
 // e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date($timestamp)
+function rfc1123_date(int $timestamp) : string
 {
-  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
+  return gmdate("D, d M Y G:i:s \\G\\M\\T", $timestamp);
 }
 
 
@@ -747,8 +747,15 @@ function build_url(array $parts) : string
 
 // A wrapper for sending a Location header.  This function will urlencode and add
 // the site parameter as necessary
-function location_header($location)
+function location_header(string $location) : void
 {
+  global $debug, $min_PHP_version;
+
+  if ($debug && (version_compare($min_PHP_version, 8.1) >= 0))
+  {
+    trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
+  }
+  
   // Add the site parameter if necessary
   $location = multisite($location);
 
