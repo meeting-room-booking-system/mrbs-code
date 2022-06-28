@@ -28,7 +28,7 @@ function constrain_int($n, $bytes, $unsigned=false)
 
 // Case-insensitive in_array
 // See https://www.php.net/manual/en/function.in-array.php#Hcom89256
-function in_arrayi($needle, array $haystack, ?bool $strict=false) : bool
+function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 {
   return in_array(utf8_strtolower($needle),
                   array_map(__NAMESPACE__ . "\\utf8_strtolower", $haystack),
@@ -655,7 +655,7 @@ function is_https() : bool
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
-function this_page(?bool $with_query_string=false, ?string $suffix='') : string
+function this_page(bool $with_query_string=false, string $suffix='') : string
 {
   global $server;
 
@@ -852,7 +852,7 @@ function print_simple_header() : void
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
 // any of which can be NULL.
 // When $omit_login is true the Login link is omitted.
-function print_header(?array $context=null, ?bool $simple=false, ?bool $omit_login=false) : void
+function print_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $theme;
 
@@ -883,7 +883,7 @@ function print_header(?array $context=null, ?bool $simple=false, ?bool $omit_log
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer(?bool $and_exit=false) : void
+function print_footer(bool $and_exit=false) : void
 {
   global $theme;
 
@@ -1349,7 +1349,7 @@ function timestamp_set_time(int $timestamp, string $time) : int
 
 // Force a timestamp $t to be on a booking day, either by moving it back to the end
 // of the previous booking day, or forward to the start of the next.
-function fit_to_booking_day(int $t, ?bool $back=true) : int
+function fit_to_booking_day(int $t, bool $back=true) : int
 {
   if (is_in_booking_day($t))
   {
@@ -1389,7 +1389,7 @@ function fit_to_booking_day(int $t, ?bool $back=true) : int
 //    $end_time       int     end time as a Unix timestamp
 //    $enable_periods boolean whether we are using periods
 //    $translate      boolean whether to translate into the browser language
-function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, ?bool $translate=true) : array
+function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, bool $translate=true) : array
 {
   $result = array();
 
