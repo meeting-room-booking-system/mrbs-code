@@ -727,7 +727,7 @@ function location_header(string $location) : void
   {
     trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
   }
-  
+
   // Add the site parameter if necessary
   $location = multisite($location);
 
@@ -767,7 +767,7 @@ function add_query_parameter(string $location, string $name, $value) : string
 
 
 // Adds the site parameter in the query string if necessary
-function multisite($location)
+function multisite(string $location) : string
 {
   global $multisite, $site;
 
