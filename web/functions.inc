@@ -842,7 +842,7 @@ function http_headers(array $headers, int $expiry_seconds=0) : void
 // Prints a very simple header.  This may be necessary on occasions, such as
 // during a database upgrade, when some of the features that the normal
 // header uses are not yet available.
-function print_simple_header()
+function print_simple_header() : void
 {
   print_header(null, true);
 }
