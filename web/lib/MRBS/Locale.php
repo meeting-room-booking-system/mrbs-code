@@ -238,7 +238,7 @@ class Locale
   // Charsets (eg '.UTF-8') are stripped off $locale
   //
   // Returns the best match, or else an empty string if no match
-  public static function lookup(array $langtag, $locale, $canonicalize=false, $default=null)
+  public static function lookup(array $langtag, string $locale, bool $canonicalize=false, ?string $default=null) : ?string
   {
     if ($canonicalize)
     {
