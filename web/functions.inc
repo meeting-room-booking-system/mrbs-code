@@ -1260,7 +1260,7 @@ function byday_to_day(int $year, int $month, string $byday)
 // $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
 // The indices are chosen to allow the result of the PHP getdate() function
 // to be passed as parameters
-function hm_before($hm1, $hm2)
+function hm_before(array $hm1, array $hm2) : bool
 {
   return ($hm1['hours'] < $hm2['hours']) ||
          (($hm1['hours'] == $hm2['hours']) && ($hm1['minutes'] < $hm2['minutes']));
@@ -1269,7 +1269,7 @@ function hm_before($hm1, $hm2)
 
 // Returns TRUE if the end of the last slot is on the day after the beginning
 // of the first slot
-function day_past_midnight()
+function day_past_midnight() : bool
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution;
 
@@ -1282,7 +1282,7 @@ function day_past_midnight()
 
 
 // Gets the UNIX timestamp for the start of the first slot on the given day
-function get_start_first_slot($month, $day, $year) : int
+function get_start_first_slot(int $month, int $day, int $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $enable_periods;
 
@@ -1306,7 +1306,7 @@ function get_start_first_slot($month, $day, $year) : int
 
 
 // Gets the UNIX timestamp for the start of the last slot on the given day
-function get_start_last_slot($month, $day, $year) : int
+function get_start_last_slot(int $month, int $day, int $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $enable_periods, $periods;
 
@@ -1336,7 +1336,7 @@ function get_start_last_slot($month, $day, $year) : int
 }
 
 
-function get_end_last_slot($month, $day, $year) : int
+function get_end_last_slot(int $month, int $day, int $year) : int
 {
   global $resolution;
 
@@ -1346,7 +1346,7 @@ function get_end_last_slot($month, $day, $year) : int
 
 // Determines with a given timestamp is within a booking day, ie between the start of
 // the first slot and end of the last slot.   Returns a boolean.
-function is_in_booking_day($t) : bool
+function is_in_booking_day(int $t) : bool
 {
   global $morningstarts, $morningstarts_minutes,
          $eveningends, $eveningends_minutes,
