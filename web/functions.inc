@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use \DateTimeZone;
+use DateTimeZone;
 use MRBS\Form\FieldSelect;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -68,7 +68,7 @@ function strcasecmp_locale(string $string1, string $string2) : int
   {
     return 0;
   }
-  
+
   // Sort the array.  If the order is reversed then $string1 > $string2
   // (When this function is being used as a callback for usort, and if the original array
   // is sorted in ascending order, which it well might be if it's the result of
@@ -477,7 +477,7 @@ function function_disabled(string $name) : bool
 
 // Set the default timezone.   If $tz is not set, then the default MRBS
 // timezone from the config file is used.
-function mrbs_default_timezone_set($tz=null)
+function mrbs_default_timezone_set(?string $tz=null) : void
 {
   global $area_defaults;
 
@@ -513,7 +513,7 @@ function mrbs_default_timezone_set($tz=null)
 // The MRBS wrapper round date_default_timezone_get() is redundant now.  It used to
 // cater for PHP servers that don't have date_default_timezone_get(), but now that
 // the minimum PHP version is >= 5.1.0, there are none.
-function mrbs_default_timezone_get()
+function mrbs_default_timezone_get() : string
 {
   return date_default_timezone_get();
 }
@@ -655,12 +655,9 @@ function is_https() : bool
 
 // Returns the current page.   If the page ends in $suffix this will be cut off.
 // The existing query string is optionally added.
-function this_page($with_query_string=false, $suffix='')
+function this_page(bool $with_query_string=false, string $suffix='') : string
 {
   global $server;
-
-  assert(is_bool($with_query_string), '$with_query_string should be a boolean');
-  assert(is_string($suffix), '$suffix should be a string');
 
   if ((!isset($server['SCRIPT_NAME']) || ($server['SCRIPT_NAME'] === '') && !is_cli()))
   {
@@ -697,9 +694,9 @@ function this_page($with_query_string=false, $suffix='')
 // Format a timestamp in RFC 1123 format, for HTTP headers
 //
 // e.g. Wed, 28 Jul 2010 12:43:58 GMT
-function rfc1123_date($timestamp)
+function rfc1123_date(int $timestamp) : string
 {
-  return gmdate("D, d M Y G:i:s \\G\\M\\T",$timestamp);
+  return gmdate("D, d M Y G:i:s \\G\\M\\T", $timestamp);
 }
 
 
@@ -722,8 +719,15 @@ function build_url(array $parts) : string
 
 // A wrapper for sending a Location header.  This function will urlencode and add
 // the site parameter as necessary
-function location_header($location)
+function location_header(string $location) : void
 {
+  global $debug, $min_PHP_version;
+
+  if ($debug && (version_compare($min_PHP_version, 8.1) >= 0))
+  {
+    trigger_error("The return type can be changed to 'never'.", E_USER_NOTICE);
+  }
+
   // Add the site parameter if necessary
   $location = multisite($location);
 
@@ -763,7 +767,7 @@ function add_query_parameter(string $location, string $name, $value) : string
 
 
 // Adds the site parameter in the query string if necessary
-function multisite($location)
+function multisite(string $location) : string
 {
   global $multisite, $site;
 
@@ -779,9 +783,10 @@ function multisite($location)
 
 // Add a version parameter to a filename in order to force the use of the new
 // file instead of the cached version
-function add_version($filename)
+function add_version(string $filename) : string
 {
   $url_path = parse_url($filename, PHP_URL_PATH);
+
   if (is_readable($url_path))
   {
     $mtime = filemtime($url_path);
@@ -790,6 +795,7 @@ function add_version($filename)
       return add_query_parameter($filename, 'v', $mtime);
     }
   }
+
   return $filename;
 }
 
@@ -797,7 +803,7 @@ function add_version($filename)
 // A little helper function to send an "Expires" header. Just one
 // parameter, the number of seconds in the future to set the expiry.
 // If $seconds is <= 0, then caching is disabled.
-function expires_header($seconds)
+function expires_header(int $seconds) : void
 {
   global $debug;
 
@@ -822,7 +828,7 @@ function expires_header($seconds)
 // Outputs the HTTP headers, passed in the array $headers, followed by
 // a set of headers to set the cache expiry date.  If $expiry_seconds <= 0
 // then caching is disabled.
-function http_headers(array $headers, $expiry_seconds=0)
+function http_headers(array $headers, int $expiry_seconds=0) : void
 {
   foreach ($headers as $header)
   {
@@ -836,7 +842,7 @@ function http_headers(array $headers, $expiry_seconds=0)
 // Prints a very simple header.  This may be necessary on occasions, such as
 // during a database upgrade, when some of the features that the normal
 // header uses are not yet available.
-function print_simple_header()
+function print_simple_header() : void
 {
   print_header(null, true);
 }
@@ -846,7 +852,7 @@ function print_simple_header()
 // $context is an associative array indexed by 'view', 'view_all', 'year', 'month', 'day', 'area' and 'room',
 // any of which can be NULL.
 // When $omit_login is true the Login link is omitted.
-function print_header($context=null, $simple=false, $omit_login=false)
+function print_header(?array $context=null, bool $simple=false, bool $omit_login=false) : void
 {
   global $theme;
 
@@ -877,7 +883,7 @@ function print_header($context=null, $simple=false, $omit_login=false)
 
 // Print the standard footer, currently very simple.  Pass $and_exit as
 // TRUE to exit afterwards
-function print_footer($and_exit=false)
+function print_footer(bool $and_exit=false) : void
 {
   global $theme;
 
@@ -1007,7 +1013,7 @@ function fromTimeString(&$units, $dur_units)
 
 // Gets the interval in periods for a booking with $start_time and $end_time
 // Takes account of DST
-function get_period_interval($start_time, $end_time)
+function get_period_interval(int $start_time, int $end_time) : int
 {
   global $periods;
 
@@ -1048,7 +1054,7 @@ function get_period_interval($start_time, $end_time)
     $result += get_period_interval($endDate->getTimestamp(), $end_time);
   }
 
-  return (int)$result;
+  return (int) $result;
 }
 
 
@@ -1126,19 +1132,21 @@ function fromPeriodString($start_period, &$units, $dur_units)
 
 // Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
 // For example "-1SU" is returned as array("-1", "SU");
-function byday_split($byday)
+function byday_split(string $byday) : array
 {
   $result = array();
+
   $split_pos = strlen($byday) -2;
   $result[] = substr($byday, 0, $split_pos);
   $result[] = substr($byday, $split_pos, 2);
+
   return $result;
 }
 
 
 // Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
 // the month, or -1MO for the last Monday.
-function date_byday($timestamp)
+function date_byday(int $timestamp) : string
 {
   global $RFC_5545_days;
 
@@ -1155,7 +1163,7 @@ function date_byday($timestamp)
 
 // Convert an RFC 5545 day to an ordinal number representing the day of the week,
 // eg "MO" returns "1"
-function RFC_5545_day_to_ord($day)
+function RFC_5545_day_to_ord(string $day) : int
 {
   global $RFC_5545_days;
 
@@ -1167,7 +1175,7 @@ function RFC_5545_day_to_ord($day)
 // Converts a BYDAY (eg "2SU") value for a given year and month into a
 // day of the month.   Returns FALSE if the day does not exist (eg for "5SU"
 // when there are only four Sundays in the month)
-function byday_to_day($year, $month, $byday)
+function byday_to_day(int $year, int $month, string $byday)
 {
   // First of all normalise the month and year, as we allow $month > 12
   while ($month > 12)
@@ -1207,7 +1215,7 @@ function byday_to_day($year, $month, $byday)
 // $hm1 and $hm2 are associative arrays indexed by 'hours' and 'minutes'.
 // The indices are chosen to allow the result of the PHP getdate() function
 // to be passed as parameters
-function hm_before($hm1, $hm2)
+function hm_before(array $hm1, array $hm2) : bool
 {
   return ($hm1['hours'] < $hm2['hours']) ||
          (($hm1['hours'] == $hm2['hours']) && ($hm1['minutes'] < $hm2['minutes']));
@@ -1216,7 +1224,7 @@ function hm_before($hm1, $hm2)
 
 // Returns TRUE if the end of the last slot is on the day after the beginning
 // of the first slot
-function day_past_midnight()
+function day_past_midnight() : bool
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $resolution;
 
@@ -1229,7 +1237,7 @@ function day_past_midnight()
 
 
 // Gets the UNIX timestamp for the start of the first slot on the given day
-function get_start_first_slot($month, $day, $year) : int
+function get_start_first_slot(int $month, int $day, int $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $enable_periods;
 
@@ -1253,7 +1261,7 @@ function get_start_first_slot($month, $day, $year) : int
 
 
 // Gets the UNIX timestamp for the start of the last slot on the given day
-function get_start_last_slot($month, $day, $year) : int
+function get_start_last_slot(int $month, int $day, int $year) : int
 {
   global $morningstarts, $morningstarts_minutes, $eveningends, $eveningends_minutes, $enable_periods, $periods;
 
@@ -1283,7 +1291,7 @@ function get_start_last_slot($month, $day, $year) : int
 }
 
 
-function get_end_last_slot($month, $day, $year) : int
+function get_end_last_slot(int $month, int $day, int $year) : int
 {
   global $resolution;
 
@@ -1293,7 +1301,7 @@ function get_end_last_slot($month, $day, $year) : int
 
 // Determines with a given timestamp is within a booking day, ie between the start of
 // the first slot and end of the last slot.   Returns a boolean.
-function is_in_booking_day($t) : bool
+function is_in_booking_day(int $t) : bool
 {
   global $morningstarts, $morningstarts_minutes,
          $eveningends, $eveningends_minutes,
@@ -1341,7 +1349,7 @@ function timestamp_set_time(int $timestamp, string $time) : int
 
 // Force a timestamp $t to be on a booking day, either by moving it back to the end
 // of the previous booking day, or forward to the start of the next.
-function fit_to_booking_day($t, $back=true)
+function fit_to_booking_day(int $t, bool $back=true) : int
 {
   if (is_in_booking_day($t))
   {
@@ -1381,7 +1389,7 @@ function fit_to_booking_day($t, $back=true)
 //    $end_time       int     end time as a Unix timestamp
 //    $enable_periods boolean whether we are using periods
 //    $translate      boolean whether to translate into the browser language
-function get_duration($start_time, $end_time, $enable_periods, $area_id, $translate=true)
+function get_duration(int $start_time, int $end_time, bool $enable_periods, int $area_id, bool $translate=true) : array
 {
   $result = array();
 

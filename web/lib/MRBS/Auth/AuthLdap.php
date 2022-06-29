@@ -500,6 +500,7 @@ class AuthLdap extends Auth
 
     if ($res === false)
     {
+      trigger_error("MRBS: could not get LDAP usernames.", E_USER_WARNING);
       return false;
     }
 
