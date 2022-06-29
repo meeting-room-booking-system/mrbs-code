@@ -1477,7 +1477,7 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
 //
 // Based on a function contributed by kongaspar at gmail dot com at
 // http://www.php.net/manual/function.addcslashes.php
-function escape_js($str)
+function escape_js(string $str) : string
 {
   return addcslashes($str, "\\\'\"&\n\r<>/");
 }
@@ -1488,7 +1488,7 @@ function escape_js($str)
 // first area in alphabetical order in the database (no guarantee there is an area 1).
 // The area must be enabled for it to be considered.
 // This could be changed to implement something like per-user defaults.
-function get_default_area()
+function get_default_area() : int
 {
   global $default_room;
 
@@ -1501,7 +1501,7 @@ function get_default_area()
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return $room->area_id;
+      return (int) $room->area_id;
     }
   }
 
@@ -1514,7 +1514,7 @@ function get_default_area()
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return $room->area_id;
+      return (int) $room->area_id;
     }
   }
 
@@ -1526,7 +1526,7 @@ function get_default_area()
 // user, then it returns $default_room. Otherwise it returns the first visible room
 // in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
-function get_default_room($area_id)
+function get_default_room(int $area_id) : int
 {
   global $default_room;
 
@@ -1541,7 +1541,7 @@ function get_default_room($area_id)
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return $room->id;
+      return (int) $room->id;
     }
   }
 
@@ -1551,7 +1551,7 @@ function get_default_room($area_id)
   {
     if (!$room->isDisabled() && $room->isVisible())
     {
-      return $room->id;
+      return (int) $room->id;
     }
   }
 
