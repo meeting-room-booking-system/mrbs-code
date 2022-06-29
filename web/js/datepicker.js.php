@@ -252,11 +252,26 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
-
+        config.mode=args.view=='day'?'single':'range';
+        
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
-            value.setDate(args.pageDate);
+            if(args.view=='day'){
+              value.setDate(args.pageDate);
+            }
+            else if(args.view=='week'){
+              value.setDate([
+                moment(args.pageDate,'YYYY-MM-DD').startOf('week').format('YYYY-MM-DD'),
+                moment(args.pageDate,'YYYY-MM-DD').endOf('week').format('YYYY-MM-DD')
+                ]);
+            }
+            else if(args.view=='month'){
+              value.setDate([
+                moment(args.pageDate,'YYYY-MM-DD').startOf('month').format('YYYY-MM-DD'),
+                moment(args.pageDate,'YYYY-MM-DD').endOf('month').format('YYYY-MM-DD')
+                ]);
+            }
             value.changeMonth(key);
           });
 
