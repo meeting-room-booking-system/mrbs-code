@@ -1500,7 +1500,7 @@ function get_default_area() : int
 // user, then it returns $default_room. Otherwise it returns the first visible room
 // in sort_key order in the database.
 // This could be changed to implement something like per-user defaults.
-function get_default_room($area)
+function get_default_room(int $area) : int
 {
   global $default_room;
 
@@ -1526,14 +1526,14 @@ function get_default_room($area)
 
     if (($room >= 0) && is_visible($room))
     {
-      return $room;
+      return (int) $room;
     }
   }
 
   // Otherwise just return the first visible room in the area
   $rooms = get_rooms($area, !$disabled_field_exists);
 
-  return (count($rooms) > 0) ? $rooms[0]['id'] : 0;
+  return (count($rooms) > 0) ? (int) $rooms[0]['id'] : 0;
 }
 
 
