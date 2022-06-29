@@ -1426,7 +1426,7 @@ function get_duration(int $start_time, int $end_time, bool $enable_periods, int 
 //
 // Based on a function contributed by kongaspar at gmail dot com at
 // http://www.php.net/manual/function.addcslashes.php
-function escape_js($str)
+function escape_js(string $str) : string
 {
   return addcslashes($str, "\\\'\"&\n\r<>/");
 }
@@ -1437,7 +1437,7 @@ function escape_js($str)
 // first area in alphabetical order in the database (no guarantee there is an area 1).
 // The area must be enabled for it to be considered.
 // This could be changed to implement something like per-user defaults.
-function get_default_area()
+function get_default_area() : int
 {
   global $default_room;
 
@@ -1464,7 +1464,7 @@ function get_default_area()
 
     if ($area >= 0)
     {
-      return $area;
+      return (int) $area;
     }
   }
 
@@ -1488,7 +1488,7 @@ function get_default_area()
   {
     if (is_visible($row['id']))
     {
-      return $row['area_id'];
+      return (int) $row['area_id'];
     }
   }
 
