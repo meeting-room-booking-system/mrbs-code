@@ -2068,7 +2068,7 @@ function period_name(int $s) : string
 // returns the numeric day of the week (0-6) in terms of the MRBS week as defined by
 // $weekstarts.   For example if $weekstarts is set to 2 (Tuesday) and a $time for
 // a Wednesday is given, then 1 is returned.
-function day_of_MRBS_week($time)
+function day_of_MRBS_week(int $time) : int
 {
   global $weekstarts;
 
@@ -2076,7 +2076,7 @@ function day_of_MRBS_week($time)
 }
 
 
-// Compares two nominal dates which are indexed by'hours', 'minutes', 'seconds',
+// Compares two nominal dates which are indexed by 'hours', 'minutes', 'seconds',
 // 'mon', 'mday' and 'year', ie as in the output of getdate().  Returns -1 if the
 // first date is before the second, 0 if they are equal and +1 if the first date
 // is after the second.   NULL if a comparison can't be done.
@@ -2084,7 +2084,7 @@ function day_of_MRBS_week($time)
 // (Note that internally the function uses gmmktime() so the parameters do not
 // have to represent valid values.   For example you could pass '32' for day and
 // that would be interpreted as 4 days after '28'.)
-function nominal_date_compare($d1, $d2)
+function nominal_date_compare(array $d1, array $d2) : int
 {
   // We compare the dates using gmmktime() because we are trying to compare nominal
   // dates and so do not want DST transitions
@@ -2110,7 +2110,7 @@ function nominal_date_compare($d1, $d2)
 // Determines whether there's a possibility that the interval between the two Unix
 // timestamps could contain nominal times that don't exist, for example from 0100 to
 // 0159 in Europe/London when entering DST.
-function is_possibly_invalid($start, $end)
+function is_possibly_invalid(int $start, int $end) : bool
 {
   // We err on the side of caution by widening the interval by a day at each end.   This
   // allows for the possibility that the start or end times have been calculated by using
