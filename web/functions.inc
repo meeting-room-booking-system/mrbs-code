@@ -1501,7 +1501,7 @@ function get_default_area() : int
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return (int) $room->area_id;
+      return $room->area_id;
     }
   }
 
@@ -1514,7 +1514,7 @@ function get_default_area() : int
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return (int) $room->area_id;
+      return $room->area_id;
     }
   }
 
@@ -1541,7 +1541,7 @@ function get_default_room(int $area_id) : int
         !$room->isDisabled() &&
         $room->isVisible())
     {
-      return (int) $room->id;
+      return $room->id;
     }
   }
 
@@ -1551,7 +1551,7 @@ function get_default_room(int $area_id) : int
   {
     if (!$room->isDisabled() && $room->isVisible())
     {
-      return (int) $room->id;
+      return $room->id;
     }
   }
 
