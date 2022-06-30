@@ -1564,7 +1564,7 @@ function get_default_room(int $area_id) : int
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
 // TODO: Rewrite all of this so that the global variables aren't overwritten
-function get_area_settings(int $area_id) : int
+function get_area_settings(int $area_id) : void
 {
   global $auth;
   global $resolution, $default_duration, $default_duration_all_day;
@@ -1974,7 +1974,7 @@ function round_t_up(int $t, int $resolution, int $am7) : int
 
 // Returns the nominal (ie ignoring DST transitions) seconds since the start of
 // the calendar day on the start of the booking day
-function nominal_seconds(int $t) int
+function nominal_seconds(int $t) : int
 {
   global $morningstarts, $morningstarts_minutes;
 
