@@ -1745,7 +1745,7 @@ function get_area_settings(int $area) : void
 
 // generate the predicate for use in an SQL query to test whether
 // an area has $field set
-function some_area_predicate($field)
+function some_area_predicate(string $field) : string
 {
   global $area_defaults;
 
@@ -1762,7 +1762,7 @@ function some_area_predicate($field)
 // is TRUE then the search is limited to enabled areas
 //
 // Returns: boolean
-function some_area($field, $enabled=false)
+function some_area(string $field, bool $enabled=false) : bool
 {
   $predicate = some_area_predicate($field);
   $sql = "SELECT COUNT(*) FROM " . _tbl('area') . " WHERE $predicate";
