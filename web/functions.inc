@@ -1606,7 +1606,7 @@ function clean_area_row(array $row) : array
 // Update the default area settings with the ones specific to this area.
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
-function get_area_settings($area)
+function get_area_settings(int $area) : void
 {
   global $auth;
   global $resolution, $default_duration, $default_duration_all_day;
