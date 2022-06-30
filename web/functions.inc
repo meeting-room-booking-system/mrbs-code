@@ -1898,7 +1898,7 @@ function mrbs_nl2br($string)
 
 // Take a string of email addresses separated by commas
 // and return a comma separated list with duplicates removed.
-function clean_address_list($string)
+function clean_address_list(string $string) : string
 {
   $array = explode(',', $string);
   array_walk($array, 'trim');
@@ -1906,7 +1906,7 @@ function clean_address_list($string)
 }
 
 
-function validate_email($email)
+function validate_email(string $email) : bool
 {
   return PHPMailer::validateAddress($email);
 }
@@ -1915,7 +1915,7 @@ function validate_email($email)
 // Validates a comma separated list of email addresses.  (The individual email
 // addresses are 'trimmed' before validation, so spaces are allowed after the commas).
 // Returns FALSE if any one of them is invalid, otherwise TRUE
-function validate_email_list($list)
+function validate_email_list(string $list) : bool
 {
   if (isset($list) && ($list !== ''))
   {
