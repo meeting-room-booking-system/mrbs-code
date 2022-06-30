@@ -1538,7 +1538,7 @@ function get_default_room(int $area) : int
 
 
 // Return an area id for a given room
-function get_area($room)
+function get_area(int $room) : int
 {
   $sql = "SELECT area_id
             FROM " . _tbl('room') . "
@@ -1547,7 +1547,7 @@ function get_area($room)
 
   $area = db()->query1($sql, array($room));
 
-  return ($area < 0 ? 0 : $area);
+  return ($area < 0 ? 0 : (int) $area);
 }
 
 
