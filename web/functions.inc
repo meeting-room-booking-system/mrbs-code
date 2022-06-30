@@ -2198,7 +2198,7 @@ function is_invalid_datetime(int $hour, int $minute, int $second, int $month, in
 
 // Returns the modification (in seconds) necessary on account of any DST
 // transitions when going from $start to $end
-function cross_dst($start, $end)
+function cross_dst(int $start, int $end) : int
 {
   global $timezone;
 
@@ -2216,7 +2216,7 @@ function cross_dst($start, $end)
 
 // If $time falls on a non-working day, shift it back to the end of the last
 // working day before that
-function shift_to_workday($time)
+function shift_to_workday(int $time) : int
 {
   global $working_days;
 
@@ -2245,7 +2245,7 @@ function shift_to_workday($time)
 
 // Returns the difference in seconds between two timestamps, $now and $then
 // It gives $now - $then, less any seconds that were part of a non-working day
-function working_time_diff($now, $then)
+function working_time_diff(int $now, int $then) : int
 {
   global $working_days;
 
@@ -2316,7 +2316,7 @@ function working_time_diff($now, $then)
 
 
 // checks whether a given day of the week is supposed to be hidden in the display
-function is_hidden_day($dow)
+function is_hidden_day($dow) : bool
 {
   global $hidden_days;
 
@@ -2325,7 +2325,7 @@ function is_hidden_day($dow)
 
 
 // checks whether a given day of the week is a weekend day
-function is_weekend($dow)
+function is_weekend($dow) : bool
 {
   global $weekdays;
 
