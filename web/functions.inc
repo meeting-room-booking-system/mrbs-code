@@ -1714,7 +1714,7 @@ function format_iso_date(int $year, int $month, int $day) : string
 
 // Splits a date in ISO 8601 format ('yyyy-mm-dd') and returns an
 // array of year, month, day with leading zeros removed.
-function split_iso_date($date)
+function split_iso_date(string $date) : array
 {
   // Split the date into components, sanitize the result and trim any leading zeros
   // If the date is malformed, pad it out with nulls so that three elements are returned.
@@ -1736,13 +1736,8 @@ function split_iso_date($date)
 
 
 // Validates that a string is a valid ISO date in yyyy-mm-dd format
-function validate_iso_date($date) : bool
+function validate_iso_date(string $date) : bool
 {
-  if (!is_string($date))
-  {
-    return false;
-  }
-
   // Try creating a DateTime object.  If that is successful and
   // the inverse operation gives the original string then it is
   // valid.  (This is to check that, for example, 2021-09-31 hasn't
