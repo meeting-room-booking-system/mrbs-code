@@ -1993,7 +1993,7 @@ function validate_email_list(string $list) : bool
 
 // Parses an email address and returns an array indexed by 'local' and 'domain',
 // or FALSE if the email address is not valid.
-function parse_email($email)
+function parse_email(string $email)
 {
   if (!filter_var($email, FILTER_VALIDATE_EMAIL))
   {
@@ -2010,20 +2010,18 @@ function parse_email($email)
 
 
 // Round time down to the nearest resolution
-function round_t_down($t, $resolution, $am7)
+function round_t_down(int $t, int $resolution, int $am7)
 {
-  return (int)$t - (int)abs(((int)$t-(int)$am7)
-                            % $resolution);
+  return $t - (int)abs(($t - $am7) % $resolution);
 }
 
 
 // Round time up to the nearest resolution
-function round_t_up($t, $resolution, $am7)
+function round_t_up(int $t, int $resolution, int $am7)
 {
   if (($t-$am7) % $resolution != 0)
   {
-    return $t + $resolution - abs(((int)$t-(int)
-                                   $am7) % $resolution);
+    return $t + $resolution - abs(($t - $am7) % $resolution);
   }
   else
   {
