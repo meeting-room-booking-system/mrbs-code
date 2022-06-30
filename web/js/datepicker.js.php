@@ -300,7 +300,7 @@ $(document).on('page_ready', function() {
   $('.view_container').removeClass('js_hidden');
 
   <?php
-  // Show the datepicker in the banner, which has ben hidden up until now
+  // Show the datepicker in the banner, which has been hidden up until now
   ?>
   $('#form_nav').removeClass('js_hidden');
 });
