@@ -1564,7 +1564,7 @@ function get_default_room(int $area_id) : int
 // If no value is set in the database, use the value from the config file.
 // If $area is empty, use the default area
 // TODO: Rewrite all of this so that the global variables aren't overwritten
-function get_area_settings($area_id)
+function get_area_settings(int $area_id) : int
 {
   global $auth;
   global $resolution, $default_duration, $default_duration_all_day;
