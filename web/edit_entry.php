@@ -919,13 +919,13 @@ function get_field_skip_conflicts($disabled=false)
 
 function get_fieldset_registration()
 {
-  global $enable_registration;
+  global $enable_registration, $enable_registration_users;
   global $allow_registration, $registrant_limit_enabled, $registrant_limit;
   global $registration_opens, $registration_opens_enabled;
   global $registration_closes, $registration_closes_enabled;
   global $enable_periods, $periods_booking_opens;
 
-  if (!$enable_registration || !is_book_admin())
+  if (!$enable_registration || (!$enable_registration_users && !is_book_admin()))
   {
     return null;
   }

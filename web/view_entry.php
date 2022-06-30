@@ -35,9 +35,10 @@ function generate_registrant_table($row, $previous_page=null)
     echo '<tr>';
     echo '<td>';
     // A registration can be cancelled by the registrant or by
-    // the person who registered them or by a booking admin
+    // the person who registered them or by the booking owner
     if (getWritable($registrant['username'], $row['room_id']) ||
-        getWritable($registrant['create_by'], $row['room_id']))
+        getWritable($registrant['create_by'], $row['room_id']) ||
+        getWritable($row['create_by'], $row['room_id']))
     {
       generate_cancel_registration_button(
         $row,
@@ -106,7 +107,7 @@ function generate_cancel_registration_button(array $row, array $registrant, $lab
   global $area, $room;
 
   // Check that it is not too late for ordinary users to cancel
-  if (!is_book_admin($row['room_id']) && entry_registration_cancellation_has_closed($row))
+  if (!getWritable($row['create_by'], $row['room_id']) && entry_registration_cancellation_has_closed($row))
   {
     return;
   }
@@ -160,7 +161,7 @@ function generate_register_button($row, $previous_page=null)
   global $area, $room;
 
   // Check that the user is an an admin or else that the entry is open for registration
-  if (!is_book_admin($row['room_id']) && !entry_registration_is_open($row))
+  if (!getWritable($row['create_by'], $row['room_id']) && !entry_registration_is_open($row))
   {
     return;
   }

@@ -693,6 +693,10 @@ $is_mandatory_field['users.display_name'] = true;
 // Set this to false if you do not want to have the ability to create events for which
 // other people can register.
 $enable_registration = true;
+// By default only admins are allowed to create registration bookings.  If you want
+// ordinary users to be able to do so as well then you need to set this to true.
+// However note that you will have to set $enable_registration to true as well.
+$enable_registration_users = false;
 
 // The default setting for new entries
 $allow_registration_default = false;
