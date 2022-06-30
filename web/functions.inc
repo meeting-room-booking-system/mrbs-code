@@ -1865,14 +1865,7 @@ function hour_min_format() : string
 {
   global $twentyfourhour_format, $strftime_format;
 
-  if ($twentyfourhour_format)
-  {
-    return $strftime_format['time24'];
-  }
-  else
-  {
-    return $strftime_format['time12'];
-  }
+  return ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
 }
 
 
