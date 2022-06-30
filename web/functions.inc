@@ -1553,7 +1553,7 @@ function get_area(int $room) : int
 
 // Clean up a row from the area table, making sure there are no nulls, casting
 // boolean fields into bools and doing some sanity checking
-function clean_area_row($row)
+function clean_area_row(array $row) : array
 {
   global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
 
