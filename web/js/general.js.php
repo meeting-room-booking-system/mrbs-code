@@ -165,7 +165,7 @@ $(document).on('page_ready', function() {
 
   <?php // Retrieve the data that the JavaScript files need. ?>
   args = $('body').data();
- console.log(args);
+  
   <?php // Fire off the Ajax requests for username fields ?>
   fillUsernameFields();
 
