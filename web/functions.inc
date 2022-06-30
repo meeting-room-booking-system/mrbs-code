@@ -2080,45 +2080,36 @@ function is_invalid_datetime(int $hour, int $minute, int $second, int $month, in
     }
     else
     {
-      // We are in a transition into DST, so we need to check more carefully.
-      // However we can only do this efficiently in PHP 5.3.0 or greater
-      if (version_compare(PHP_VERSION, '5.3.0') < 0)
+      $thisDateTimeZone = new DateTimeZone($tz);
+      // Get the transition data (we assume there is one and only one transition),
+      // in particular the time at which the transition happens and the new offset
+      $transitions = $thisDateTimeZone->getTransitions($dayBefore, $dayAfter);
+      // According to my reading of the PHP manual, getTransitions() should return
+      // all transitions between the start and end date.   However what it seems to do
+      // is return an array consisting of the time data for the start date followed by
+      // the transition data.   So as a precaution we take the last element of the array
+      // (we were only expecting one element, but seem to get two).
+      $transition = array_pop($transitions);
+      // If we failed for some reason to get any transition data, return NULL
+      if (!isset($transition))
       {
         $result = null;
       }
       else
       {
-        $thisDateTimeZone = new DateTimeZone($tz);
-        // Get the transition data (we assume there is one and only one transition),
-        // in particular the time at which the transition happens and the new offset
-        $transitions = $thisDateTimeZone->getTransitions($dayBefore, $dayAfter);
-        // According to my reading of the PHP manual, getTransitions() should return
-        // all transitions between the start and end date.   However what it seems to do
-        // is return an array consisting of the time data for the start date followed by
-        // the transition data.   So as a precaution we take the last element of the array
-        // (we were only expecting one element, but seem to get two).
-        $transition = array_pop($transitions);
-        // If we failed for some reason to get any transition data, return NULL
-        if (!isset($transition))
-        {
-          $result = null;
-        }
-        else
-        {
-          // Get the old offset and work out how many seconds the clocks change by
-          $beforeDateTime = new DateTime(date('c', $dayBefore), $thisDateTimeZone);
-          $change = $transition['offset'] - $beforeDateTime->getOffset();
+        // Get the old offset and work out how many seconds the clocks change by
+        $beforeDateTime = new DateTime(date('c', $dayBefore), $thisDateTimeZone);
+        $change = $transition['offset'] - $beforeDateTime->getOffset();
 
-          // See if the nominal date falls outside the gap
-          $lastValidSecond = getdate($transition['ts'] - 1);
-          $lastInvalidSecond = $lastValidSecond;
-          $lastInvalidSecond['seconds'] += $change;
-          $thisDate = array('hours' => $hour, 'minutes' => $minute, 'seconds' => $second,
-                            'mon' => $month, 'mday' => $day, 'year' => $year);
+        // See if the nominal date falls outside the gap
+        $lastValidSecond = getdate($transition['ts'] - 1);
+        $lastInvalidSecond = $lastValidSecond;
+        $lastInvalidSecond['seconds'] += $change;
+        $thisDate = array('hours' => $hour, 'minutes' => $minute, 'seconds' => $second,
+                          'mon' => $month, 'mday' => $day, 'year' => $year);
 
-          $result = ((nominal_date_compare($thisDate, $lastValidSecond) > 0) &&
-                     (nominal_date_compare($thisDate, $lastInvalidSecond) <= 0));
-        }
+        $result = ((nominal_date_compare($thisDate, $lastValidSecond) > 0) &&
+                   (nominal_date_compare($thisDate, $lastInvalidSecond) <= 0));
       }
     }
   }
