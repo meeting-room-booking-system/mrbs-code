@@ -1750,7 +1750,7 @@ function validate_iso_date(string $date) : bool
 
 
 // Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name($daynumber, $format=null)
+function day_name(int $daynumber, ?string $format=null) : string
 {
   global $strftime_format;
 
