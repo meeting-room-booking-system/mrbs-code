@@ -1861,7 +1861,7 @@ function get_rep_day_list($rep_opt)
 }
 
 
-function hour_min_format()
+function hour_min_format() : string
 {
   global $twentyfourhour_format, $strftime_format;
 
