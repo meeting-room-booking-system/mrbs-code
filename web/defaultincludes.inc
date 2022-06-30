@@ -1,13 +1,14 @@
 <?php
 namespace MRBS;
 
+define ('MRBS_MIN_PHP_VERSION', '7.2.0');
+
 // Check PHP version
 // Do it now before we start including code that might fail with a syntax error,
 // for example if anonymous functions are being used.
-$min_PHP_version = '7.2.0';
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, $min_PHP_version) < 0)
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, MRBS_MIN_PHP_VERSION) < 0)
 {
-  die("MRBS requires PHP $min_PHP_version or above.   This server is running version " . PHP_VERSION . ".");
+  die("MRBS requires PHP " . MRBS_MIN_PHP_VERSION . " or above.   This server is running version " . PHP_VERSION . ".");
 }
 
 define('MRBS_ROOT',     __DIR__);                   // Root of MRBS installation
