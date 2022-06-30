@@ -1952,14 +1952,14 @@ function parse_email(string $email)
 
 
 // Round time down to the nearest resolution
-function round_t_down(int $t, int $resolution, int $am7)
+function round_t_down(int $t, int $resolution, int $am7) : int
 {
   return $t - (int)abs(($t - $am7) % $resolution);
 }
 
 
 // Round time up to the nearest resolution
-function round_t_up(int $t, int $resolution, int $am7)
+function round_t_up(int $t, int $resolution, int $am7) : int
 {
   if (($t-$am7) % $resolution != 0)
   {
@@ -1974,7 +1974,7 @@ function round_t_up(int $t, int $resolution, int $am7)
 
 // Returns the nominal (ie ignoring DST transitions) seconds since the start of
 // the calendar day on the start of the booking day
-function nominal_seconds($t)
+function nominal_seconds(int $t) int
 {
   global $morningstarts, $morningstarts_minutes;
 
