@@ -1774,7 +1774,7 @@ function some_area(string $field, bool $enabled=false) : bool
 
 // Returns a date in ISO 8601 format ('yyyy-mm-dd'), having adjusted the date if necessary
 // to make sure it's a valid date
-function format_iso_date($year, $month, $day)
+function format_iso_date(int $year, int $month, int $day) : string
 {
   if (!checkdate($month, $day, $year))
   {
