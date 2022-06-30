@@ -2130,11 +2130,6 @@ function is_invalid_datetime(int $hour, int $minute, int $second, int $month, in
 
   // Do a quick check to see if there's a possibility of an invalid time by checking
   // whether there's a transition into DST from the day before to the day after
-  if (!function_exists('date_default_timezone_set'))
-  {
-    return null;
-  }
-
   if (empty($tz))
   {
     $tz = $timezone;  // default to the current timezone
