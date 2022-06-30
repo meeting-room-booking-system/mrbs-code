@@ -1830,7 +1830,7 @@ function period_name(int $s) : string
 
 // Returns the name of the period represented by Unix timestamp $t for area $area_id.
 // $mod_time will get the period $mod_time units before or after.
-function period_time_string($t, $area_id, $mod_time=0)
+function period_time_string(int $t, int $area_id, int $mod_time=0) : string
 {
   static $periods = array();
 
@@ -1849,7 +1849,7 @@ function period_time_string($t, $area_id, $mod_time=0)
 }
 
 
-function period_date_string($t, $area_id, $mod_time=0)
+function period_date_string(int $t, int $area_id, int $mod_time=0) : string
 {
   global $strftime_format;
 
@@ -1860,7 +1860,7 @@ function period_date_string($t, $area_id, $mod_time=0)
 }
 
 
-function time_date_string($t)
+function time_date_string(int $t) : string
 {
   global $twentyfourhour_format, $strftime_format;
 
