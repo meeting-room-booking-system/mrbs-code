@@ -2384,7 +2384,7 @@ function generate_global_uid($str)
 // Tests whether an array is associative
 //
 // Thanks to magentix at gmail dot com at http://php.net/manual/function.is-array.php
-function is_assoc($arr)
+function is_assoc(array $arr) : bool
 {
   return (is_array($arr) && count(array_filter(array_keys($arr),'is_string')) == count($arr));
 }
@@ -2394,7 +2394,7 @@ function is_assoc($arr)
 //
 // Based on code from mniewerth at ultimediaos dot com at
 // http://php.net/manual/features.commandline.php
-function is_cgi()
+function is_cgi() : bool
 {
   return (substr(PHP_SAPI, 0, 3) == 'cgi');
 }
@@ -2404,7 +2404,7 @@ function is_cgi()
 //
 // Based on code from mniewerth at ultimediaos dot com at
 // http://php.net/manual/features.commandline.php
-function is_cli()
+function is_cli() : bool
 {
   global $allow_cli;
 
