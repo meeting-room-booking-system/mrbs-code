@@ -1871,7 +1871,7 @@ function hour_min_format() : string
 
 // Returns a string representing the hour and minute for the nominal
 // seconds since the start of the day, $s
-function hour_min($s)
+function hour_min(int $s) : string
 {
   $following_day = ($s >= SECONDS_PER_DAY);
   $s = $s % SECONDS_PER_DAY;  // in case $s is on the next day
@@ -1886,7 +1886,7 @@ function hour_min($s)
 }
 
 
-function period_date_string($t, $area_id, $mod_time=0)
+function period_date_string(int $t, int $area_id, int $mod_time=0) : array
 {
   global $strftime_format;
 
