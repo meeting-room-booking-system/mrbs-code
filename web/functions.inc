@@ -1908,7 +1908,7 @@ function period_date_string(int $t, int $area_id, int $mod_time=0) : array
 }
 
 
-function period_time_string($t, $area_id, $mod_time=0)
+function period_time_string(int $t, int $area_id, int $mod_time=0) : string
 {
   $period_names = get_period_names();
 
@@ -1925,7 +1925,7 @@ function period_time_string($t, $area_id, $mod_time=0)
   return $period_names[$area_id][$p_num];
 }
 
-function time_date_string($t)
+function time_date_string(int $t) : string
 {
   global $twentyfourhour_format, $strftime_format;
 
