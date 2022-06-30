@@ -2032,7 +2032,7 @@ function round_t_up(int $t, int $resolution, int $am7)
 
 // Returns the nominal (ie ignoring DST transitions) seconds since the start of
 // the calendar day on the start of the booking day
-function nominal_seconds($t)
+function nominal_seconds(int $t) : int
 {
   global $morningstarts, $morningstarts_minutes;
 
@@ -2048,7 +2048,7 @@ function nominal_seconds($t)
 
 
 // Returns the index of the period represented by $s nominal seconds
-function period_index($s)
+function period_index(int $s) : int
 {
   // Periods are counted as minutes from noon, ie 1200 is $period[0],
   // 1201 $period[1], etc.
@@ -2057,7 +2057,7 @@ function period_index($s)
 
 
 // Returns the name of the period represented by nominal seconds $s
-function period_name($s)
+function period_name(int $s) : string
 {
   global $periods;
 
