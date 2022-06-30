@@ -2434,7 +2434,7 @@ function is_cli() : bool
 //
 // $set   TRUE    set ignore_user_abort
 //        FALSE   restore to the original state, if no other requests outstanding
-function mrbs_ignore_user_abort($set)
+function mrbs_ignore_user_abort(bool $set) : void
 {
   static $original_state;
   static $outstanding_requests = 0;
