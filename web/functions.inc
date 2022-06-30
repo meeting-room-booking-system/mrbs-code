@@ -1795,7 +1795,7 @@ function hour_min_format() : string
 
 // Returns a string representing the hour and minute for the nominal
 // seconds since the start of the day, $s
-function hour_min($s)
+function hour_min(int $s) : string
 {
   $following_day = ($s >= SECONDS_PER_DAY);
   $s = $s % SECONDS_PER_DAY;  // in case $s is on the next day
@@ -1811,7 +1811,7 @@ function hour_min($s)
 
 
 // Returns the index of the period represented by $s nominal seconds
-function period_index($s)
+function period_index(int $s) : int
 {
   // Periods are counted as minutes from noon, ie 1200 is $period[0],
   // 1201 $period[1], etc.
@@ -1820,7 +1820,7 @@ function period_index($s)
 
 
 // Returns the name of the period represented by nominal seconds $s
-function period_name($s)
+function period_name(int $s) : string
 {
   global $periods;
 
