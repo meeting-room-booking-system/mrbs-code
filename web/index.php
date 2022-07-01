@@ -85,7 +85,7 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
 } // end make_area_select_html
 
 
-function make_room_select_html ($view, $view_all, $year, $month, $day, $area, $current) : string
+function make_room_select_html (string $view, int $view_all, int $year, int $month, int $day, int $area, int $current) : string
 {
   global $multisite, $site;
 
