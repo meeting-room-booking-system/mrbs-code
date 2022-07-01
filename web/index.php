@@ -36,7 +36,7 @@ function get_color_key() : string
 
 // generates some html that can be used to select which area should be
 // displayed.
-function make_area_select_html($view, $year, $month, $day, $current) : string
+function make_area_select_html(string $view, int $year, int $month, int $day, int $current) : string
 {
   global $multisite, $site;
 
