@@ -448,9 +448,14 @@ switch ($view)
     break;
 }
 
+$date_heading = get_date_heading($view, $year, $month, $day);
+
 if ($refresh)
 {
-  echo $inner_html;
+  echo json_encode(array(
+    'date_heading' => $date_heading,
+    'inner_html' => $inner_html
+  ));
   exit;
 }
 
@@ -472,7 +477,7 @@ echo "<div class=\"minicalendars\">\n";
 echo "</div>\n";
 
 echo "<div class=\"view_container js_hidden\">\n";
-echo get_date_heading($view, $year, $month, $day);
+echo "<div class=\"date_heading\">$date_heading</div>";
 echo get_calendar_nav($view, $view_all, $year, $month, $day, $area, $room);
 
 $classes = array('dwm_main');

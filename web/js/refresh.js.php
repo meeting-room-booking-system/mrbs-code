@@ -81,13 +81,14 @@ var refreshPage = function refreshPage() {
                // (4) trigger a load event so that the resizable bookings are
                // re-created and a new timer started.
                ?>
-               if ((result.length > 0) && !isHidden() && !refreshPage.disabled)
+               if (result && !isHidden() && !refreshPage.disabled)
                {
                  var table = $('table.dwm_main');
                  if (!table.hasClass('resizing') && table.hasClass('refreshable'))
                  {
-                   table.empty();
-                   table.html(result);
+                   var dateHeading = $('.date_heading');
+                   dateHeading.empty().html(result.date_heading);
+                   table.empty().html(result.inner_html);
                    window.clearInterval(intervalId);
                    intervalId = undefined;
                    table.trigger('tableload');
@@ -95,7 +96,7 @@ var refreshPage = function refreshPage() {
 
                }
              },
-           'html'
+           'json'
         );
     }  <?php // if (!isHidden() etc.?>
   };
