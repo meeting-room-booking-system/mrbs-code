@@ -1388,7 +1388,7 @@ function timestamp_set_time(int $timestamp, string $time) : int
   $minute = intval($minute);
   $date = new DateTime();
   $date->setTimestamp($timestamp);
-  $date->setTime($hour, $minute, 0);
+  $date->setTime($hour, $minute);
   return $date->getTimestamp();
 }
 
