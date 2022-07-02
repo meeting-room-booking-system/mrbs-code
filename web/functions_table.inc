@@ -987,7 +987,7 @@ function get_day($t, $view)
 }
 
 
-function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
+function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
   global $row_labels_both_sides, $column_labels_both_ends;
   global $weekstarts;
