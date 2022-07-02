@@ -52,6 +52,7 @@ $vocab["registration_level_limited"]              = ' [%1$d/%2$d]';
 $vocab["registration_level_limited_with_names"]   = ' [%1$d/%2$d: %3$s]';
 $vocab["registration_level_unlimited"]            = ' [%1$d]';
 $vocab["registration_level_unlimited_with_names"] = ' [%1$d: %2$s]';
+$vocab["exit_kiosk_mode"]    = "Exit kiosk mode?";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
