@@ -11,9 +11,14 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\User;
 use function MRBS\auth;
+use function MRBS\get_form_var;
 use function MRBS\get_vocab;
+use function MRBS\location_header;
 use function MRBS\multisite;
+use function MRBS\print_footer;
 use function MRBS\print_header;
+use function MRBS\this_page;
+use function MRBS\utf8_strpos;
 
 
 // An abstract class for those session schemes that implement a login form
@@ -27,7 +32,7 @@ abstract class SessionWithLogin implements SessionInterface
     // Get non-standard form variables
     foreach (array('action', 'username', 'password', 'target_url', 'returl') as $var)
     {
-      $this->form[$var] = \MRBS\get_form_var($var, 'string', null, INPUT_POST);
+      $this->form[$var] = get_form_var($var, 'string', null, INPUT_POST);
     }
 
     if (isset($this->form['username']))
@@ -46,12 +51,12 @@ abstract class SessionWithLogin implements SessionInterface
   {
     if (!isset($target_url))
     {
-      $target_url = \MRBS\this_page(true);
+      $target_url = this_page(true);
     }
 
     // Omit the Login link in the header when we're on the login page itself
     print_header(null, false, true);
-    $action = multisite(\MRBS\this_page());
+    $action = multisite(this_page());
     $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
   }
@@ -67,7 +72,7 @@ abstract class SessionWithLogin implements SessionInterface
     return array(
         'action' => multisite('admin.php'),
         'method' => 'post',
-        'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
+        'hidden_inputs' =>  array('target_url' => this_page(true),
                                   'action'     => 'QueryName')
       );
   }
@@ -81,7 +86,7 @@ abstract class SessionWithLogin implements SessionInterface
     return array(
         'action' => multisite('admin.php'),
         'method' => 'post',
-        'hidden_inputs' =>  array('target_url' => \MRBS\this_page(true),
+        'hidden_inputs' =>  array('target_url' => this_page(true),
                                   'action'     => 'SetName',
                                   'username'   => '',
                                   'password'   => '')
@@ -128,12 +133,12 @@ abstract class SessionWithLogin implements SessionInterface
           if (!empty($this->form['returl']))
           {
             // check to see whether there's a query string already
-            $this->form['target_url'] .= (\MRBS\utf8_strpos($this->form['target_url'], '?') === false) ? '?' : '&';
+            $this->form['target_url'] .= (utf8_strpos($this->form['target_url'], '?') === false) ? '?' : '&';
             $this->form['target_url'] .= 'returl=' . urlencode($this->form['returl']);
           }
         }
 
-        \MRBS\location_header($this->form['target_url']); // Redirect browser to initial page
+        location_header($this->form['target_url']); // Redirect browser to initial page
       }
     }
   }
@@ -253,7 +258,7 @@ abstract class SessionWithLogin implements SessionInterface
 
 
     // Print footer and exit
-    \MRBS\print_footer(true);
+    print_footer(true);
   }
 
 
