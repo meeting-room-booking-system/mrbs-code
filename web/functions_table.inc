@@ -1678,7 +1678,7 @@ function get_blank_day(int $col) : string
 // and for entries starting before/ending after today.
 // There are 9 cases, for start time < = or > midnight this morning,
 // and end time < = or > midnight tonight.
-function get_booking_summary($start, $end, $day_start, $day_end)
+function get_booking_summary(int $start, int $end, int $day_start, int $day_end) : string
 {
   global $enable_periods, $area;
 
@@ -1739,7 +1739,7 @@ function get_booking_summary($start, $end, $day_start, $day_end)
 }
 
 
-function month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $room)
+function month_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room) : string
 {
 
   if ($view_all)
