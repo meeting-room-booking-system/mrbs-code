@@ -1446,7 +1446,7 @@ $(document).on('page_ready', function() {
         return false;
       });
       $('*').off();
-      $('body').on('click keypress', function() {
+      $(window).on('click keypress', function() {
         if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
         {
           // TODO Go to a login page
