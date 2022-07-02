@@ -1753,7 +1753,7 @@ function month_table_innerhtml($view, $view_all, $year, $month, $day, $area, $ro
 }
 
 
-function month_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id)
+function month_room_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
