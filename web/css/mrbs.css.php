@@ -2600,6 +2600,7 @@ div.eye {
 
 [data-kiosk] .minicalendars,
 [data-kiosk] nav.arrow,
-[data-kiosk] nav.view {
+[data-kiosk] nav.view,
+[data-kiosk] .banner nav {
   display: none;
 }
