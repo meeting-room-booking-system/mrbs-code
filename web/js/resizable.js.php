@@ -1434,16 +1434,25 @@ $(document).on('page_ready', function() {
         .first().trigger('mouseenter');
 
     <?php
-    // In kiosk mode disable all event listeners and links
+    // In kiosk mode disable all event listeners and links and
+    // replace them with a single listener that will throw a
+    // confirm dialog for exiting kiosk mode.
     ?>
     if (args.kiosk)
     {
-      $('*').off();
       $('a').on('click', function(e)
       {
         e.preventDefault();
         return false;
-      })
+      });
+      $('*').off();
+      $('body').on('click keypress', function() {
+        if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
+        {
+          // TODO Go to a login page
+        }
+        return false;
+      });
     }
 
     }).trigger('tableload');
