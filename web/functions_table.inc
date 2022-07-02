@@ -1615,7 +1615,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
 
 // 3-value compare: Returns result of compare as "< " "= " or "> ".
-function cmp3($a, $b)
+function cmp3(int $a, int $b) : string
 {
   if ($a < $b)
   {
@@ -1665,7 +1665,7 @@ function get_table_head() : string
 }
 
 
-function get_blank_day($col)
+function get_blank_day(int $col) : string
 {
   global $weekstarts;
 
