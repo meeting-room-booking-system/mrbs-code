@@ -8,7 +8,7 @@ use \IntlDateFormatter;
 // and (b) replacing the text in private fields if necessary.
 function prepare_entry(array $entry) : array
 {
-  global $is_private_field, $show_registration_level, $auth;
+  global $is_private_field, $show_registration_level, $auth, $kiosk;
 
   // Add in the registration level details
   if ($show_registration_level && $entry['allow_registration'])
@@ -37,7 +37,7 @@ function prepare_entry(array $entry) : array
 
   // Check whether the event is private
   if (is_private_event($entry['private']) &&
-    !getWritable($entry['create_by'], $entry['room_id']))
+      ($kiosk || !getWritable($entry['create_by'], $entry['room_id'])))
   {
     $entry['private'] = true;
 
