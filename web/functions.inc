@@ -1918,7 +1918,7 @@ function validate_email(string $email) : bool
 // Returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list(string $list) : bool
 {
-  if (isset($list) && ($list !== ''))
+  if ($list !== '')
   {
     $emails = explode(',', $list);
     foreach ($emails as $email)
