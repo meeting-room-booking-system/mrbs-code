@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use \IntlDateFormatter;
+use IntlDateFormatter;
 
 
 // Prepares an entry for display by (a) adding in registration level information
