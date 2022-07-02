@@ -1258,7 +1258,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
 //    $month, $day, $year   the start of the interval
 //    $n_days               the number of days in the interval
 //    $day_cells            if the columns/rows represent a full day (as in the week/month all rooms views)
-function get_slots($month, $day, $year, $n_days=1, $day_cells=false)
+function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cells=false) : ?array
 {
   global $enable_periods, $morningstarts, $morningstarts_minutes, $resolution;
 
