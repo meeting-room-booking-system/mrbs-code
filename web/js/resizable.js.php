@@ -1433,9 +1433,14 @@ $(document).on('page_ready', function() {
           })
         .first().trigger('mouseenter');
 
-    if (args.kiosk) {
+    <?php
+    // In kiosk mode disable all event listeners and links
+    ?>
+    if (args.kiosk)
+    {
       $('*').off();
-      $('a').on('click', function(e) {
+      $('a').on('click', function(e)
+      {
         e.preventDefault();
         return false;
       })
