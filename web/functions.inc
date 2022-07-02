@@ -1701,7 +1701,7 @@ function get_area_settings(int $area) : void
       $max_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_per_{$interval_type}";
+    $var = "max_per_$interval_type";
     if (isset($$var))
     {
       $max_per_interval_area[$interval_type] = $$var;
@@ -1713,7 +1713,7 @@ function get_area_settings(int $area) : void
       $max_secs_per_interval_area_enabled[$interval_type] = $$var;
     }
 
-    $var = "max_secs_per_{$interval_type}";
+    $var = "max_secs_per_$interval_type";
     if (isset($$var))
     {
       $max_secs_per_interval_area[$interval_type] = $$var;
