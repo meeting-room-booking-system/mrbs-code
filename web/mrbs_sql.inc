@@ -372,7 +372,7 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
 // Adjusts a book ahead time when using periods.  Because we don't
 // know when periods are in the day we adjust the book ahead time
 // down to the nearest whole day.
-function adjust_ahead_seconds($seconds)
+function adjust_ahead_seconds(int $seconds) : int
 {
   global $enable_periods;
 
