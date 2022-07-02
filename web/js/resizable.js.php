@@ -1433,6 +1433,14 @@ $(document).on('page_ready', function() {
           })
         .first().trigger('mouseenter');
 
+    if (args.kiosk) {
+      $('*').off();
+      $('a').on('click', function(e) {
+        e.preventDefault();
+        return false;
+      })
+    }
+
     }).trigger('tableload');
 
   $(window).on('resize', throttle(function(event) {
