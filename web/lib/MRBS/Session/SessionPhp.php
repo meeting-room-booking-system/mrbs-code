@@ -2,6 +2,9 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
+use function MRBS\get_form_var;
+use function MRBS\is_ajax;
 
 // Uses PHP's built-in session handling
 
@@ -25,8 +28,8 @@ class SessionPhp extends SessionWithLogin
       }
       // Ajax requests don't count as activity, unless it's the special Ajax request used
       // to record client side activity.
-      $activity = \MRBS\get_form_var('activity', 'int');
-      if ($activity || !\MRBS\is_ajax() || !isset($_SESSION['LastActivity']))
+      $activity = get_form_var('activity', 'int');
+      if ($activity || !is_ajax() || !isset($_SESSION['LastActivity']))
       {
         $_SESSION['LastActivity'] = time();
       }
@@ -42,7 +45,7 @@ class SessionPhp extends SessionWithLogin
 
   protected function logonUser(string $username) : void
   {
-    $user = \MRBS\auth()->getUser($username);
+    $user = auth()->getUser($username);
 
     $user->updateLastLogin();
 
