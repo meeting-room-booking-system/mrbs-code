@@ -1305,7 +1305,7 @@ function get_slots(int $month, int $day, int $year, int $n_days=1, bool $day_cel
 }
 
 
-function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight=null)
+function week_room_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null) : string
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
