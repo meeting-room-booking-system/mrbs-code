@@ -756,7 +756,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   }  // end standard view (for the header)
 
   // next: line to display times on right side
-  if (!empty($row_labels_both_sides))
+  if ($row_labels_both_sides)
   {
     $header_inner .= $first_last_html;
   }
@@ -817,7 +817,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
         }
         $tbody .= cell_html($today[$room['id']][$day][$s], $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
-      if ( false != $row_labels_both_sides )
+      if ($row_labels_both_sides)
       {
         $tbody .= $row_label;
       }
@@ -884,7 +884,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
       }
 
       // next lines to display times on right side
-      if ( false != $row_labels_both_sides )
+      if ($row_labels_both_sides)
       {
         $tbody .= time_cell_html($s, $url);
       }
@@ -1124,7 +1124,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
       }
 
       // next line to display rooms on right side
-      if (!empty($row_labels_both_sides))
+      if ($row_labels_both_sides)
       {
         $header_inner_rows[$i] .= $first_last_html;
       }
@@ -1219,7 +1219,7 @@ function multiday_view_all_rooms_innerhtml($view, $view_all, $year, $month, $day
         $tbody .= "</td>\n";
       }
 
-      if (!empty($row_labels_both_sides))
+      if ($row_labels_both_sides)
       {
         $tbody .= $row_label;
       }
@@ -1444,7 +1444,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
   }  // end standard view (for the header)
 
   // next line to display times on right side
-  if (!empty($row_labels_both_sides))
+  if ($row_labels_both_sides)
   {
     $header_inner .= $first_last_html;
   }
@@ -1510,7 +1510,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
         }
         $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
       }  // end looping through the time slots
-      if ( false != $row_labels_both_sides )
+      if ($row_labels_both_sides)
       {
         $tbody .= $row_label;
       }
@@ -1586,7 +1586,7 @@ function week_room_table_innerhtml($view, $view_all, $year, $month, $day, $area_
       }    // for loop
 
       // next lines to display times on right side
-      if ( false != $row_labels_both_sides )
+      if ($row_labels_both_sides)
         {
           $tbody .= time_cell_html($s, $url);
         }
