@@ -1,7 +1,7 @@
 <?php
 namespace MRBS;
 
-use \IntlDateFormatter;
+use IntlDateFormatter;
 
 // Prepares an entry for display by (a) adding in registration level information
 // and (b) replacing the text in private fields if necessary.
@@ -87,7 +87,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
   //       tentative
 
   // $column is a column of the map of the screen that will be displayed, and is an array
-  // indexed by the number of nominal seconds (ie ignoring DST changes] since the
+  // indexed by the number of nominal seconds (ie ignoring DST changes) since the
   // start of the calendar day which has the start of the booking day.  Each element of
   // the array consists of an array of entries that fall in that slot.
   //
@@ -104,7 +104,7 @@ function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_
   //       is_multiday_end    a boolean indicating if the booking stretches beyond the day end
   //       n_slots            the number of slots the booking lasts (tentatively set to 1)
 
-  // s is the number of nominal seconds (ie ignoring DST changes] since the
+  // s is the number of nominal seconds (ie ignoring DST changes) since the
   // start of the calendar day which has the start of the booking day
 
 
