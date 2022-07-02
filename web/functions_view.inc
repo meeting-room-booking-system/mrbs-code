@@ -44,7 +44,7 @@ function create_details_row(string $label, string $value, bool $as_html=false, s
 //                              note that $data must already have had values substituted
 //                              for private fields
 //    $room_disabled  boolean   if true then a note will be added that the room is disabled
-function create_details_body($data, $as_html=false, $keep_private=false, $room_disabled=false)
+function create_details_body(array $data, bool $as_html=false, bool $keep_private=false, bool $room_disabled=false) : string
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields;
