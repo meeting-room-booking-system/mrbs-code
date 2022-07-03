@@ -65,7 +65,7 @@ abstract class DB
   }
 
   //
-  public function error()
+  public function error() : string
   {
     $error = "No database connection!";
 
@@ -81,7 +81,7 @@ abstract class DB
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Throws a DBException on error.
-  public function command($sql, array $params = array())
+  public function command(string $sql, array $params = array()) : int
   {
     try
     {
@@ -103,7 +103,7 @@ abstract class DB
   // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
-  function query1($sql, array $params = array())
+  function query1(string $sql, array $params = array())
   {
     try
     {
@@ -142,7 +142,7 @@ abstract class DB
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results; throws a DBException if there's an error
-  public function query_array($sql, array $params = array())
+  public function query_array(string $sql, array $params = array()) : array
   {
     $stmt = $this->query($sql, $params);
 
