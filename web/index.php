@@ -197,11 +197,11 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
 // Gets the link for today
 function get_today_link(string $view, int $view_all, int $area, int $room) : string
 {
-  $date = getdate();
-
+  // Don't include a date in order to make sure that the link will result in the current
+  // day at the time it is clicked, not the time the page was loaded (which might have been
+  // a few days ago.
   $vars = array('view'      => $view,
                 'view_all'  => $view_all,
-                'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
                 'area'      => $area,
                 'room'      => $room);
 
