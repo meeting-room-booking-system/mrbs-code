@@ -164,12 +164,25 @@ if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
   $end_date = $start_date;
 }
 
-list($start_year, $start_month, $start_day) = split_iso_date($start_date);
-list($end_year, $end_month, $end_day) = split_iso_date($end_date);
+if (false === ($start_date_split = split_iso_date($start_date)))
+{
+  throw new Exception("Invalid start_date '$start_date'");
+}
+list($start_year, $start_month, $start_day) = $start_date_split;
+
+if (false === ($end_date_split = split_iso_date($end_date)))
+{
+  throw new Exception("Invalid end_date '$end_date'");
+}
+list($end_year, $end_month, $end_day) = $end_date_split;
 
 if (isset($rep_end_date))
 {
-  list($rep_end_year, $rep_end_month, $rep_end_day) = split_iso_date($rep_end_date);
+  if (false === ($rep_end_date_split = split_iso_date($rep_end_date)))
+  {
+    throw new Exception("Invalid rep_end_date '$rep_end_date'");
+  }
+  list($rep_end_year, $rep_end_month, $rep_end_day) = $rep_end_date_split;
 }
 
 // BACK:  we didn't really want to be here - send them to the returl

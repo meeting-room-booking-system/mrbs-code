@@ -43,7 +43,11 @@ get_area_settings($area);
 
 if (isset($page_date))
 {
-  list($year, $month, $day) = split_iso_date($page_date);
+  if (false === ($page_date_split = split_iso_date($page_date)))
+  {
+    throw new Exception("Invalid page_date '$page_date'");
+  }
+  list($year, $month, $day) = $page_date_split;
 }
 
 $date = new DateTime();

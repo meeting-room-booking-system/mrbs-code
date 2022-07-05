@@ -19,12 +19,11 @@ require "defaultincludes.inc";
 
 function get_field_from_date(array $data) : FieldInputDate
 {
-  $value = format_iso_date($data['from_year'], $data['from_month'], $data['from_day']);
   $field = new FieldInputDate();
   $field->setAttribute('id', 'div_report_start')
         ->setLabel(get_vocab('report_start'))
         ->setControlAttributes(array('name'     => 'from_date',
-                                     'value'    => $value,
+                                     'value'    => $data['from_date'],
                                      'required' => true));
   return $field;
 }
@@ -32,12 +31,11 @@ function get_field_from_date(array $data) : FieldInputDate
 
 function get_field_to_date(array $data) : FieldInputDate
 {
-  $value = format_iso_date($data['to_year'], $data['to_month'], $data['to_day']);
   $field = new FieldInputDate();
   $field->setAttribute('id', 'div_report_end')
         ->setLabel(get_vocab('report_end'))
         ->setControlAttributes(array('name'     => 'to_date',
-                                     'value'    => $value,
+                                     'value'    => $data['to_date'],
                                      'required' => true));
   return $field;
 }
@@ -1434,9 +1432,6 @@ if (!in_array($sumby, ['c', 'd', 't']))
   $sumby = FALLBACK_SUMBY;
 }
 
-list($from_year, $from_month, $from_day) = split_iso_date($from_date);
-list($to_year, $to_month, $to_day) = split_iso_date($to_date);
-
 $is_ajax = is_ajax();
 
 if ($cli_mode)
@@ -1557,8 +1552,17 @@ $field_order_list[] = 'last_updated';
 if ($phase == 2)
 {
   // Start and end times are also used to clip the times for summary info.
-  $report_start = mktime(0, 0, 0, $from_month+0, $from_day+0, $from_year+0);
-  $report_end = mktime(0, 0, 0, $to_month+0, $to_day+1, $to_year+0);
+  if (false === ($report_start_date = DateTime::createFromFormat('Y-m-d H:i:s', "$from_date 00:00:00")))
+  {
+    throw new Exception("Invalid from_date '$from_date'");
+  }
+  $report_start = $report_start_date->getTimestamp();
+
+  if (false === ($report_end_date = DateTime::createFromFormat('Y-m-d H:i:s', "$to_date 00:00:00")))
+  {
+    throw new Exception("Invalid to_date '$to_date'");
+  }
+  $report_end = $report_end_date->modify('+1 day')->getTimestamp();
 
   // Construct the SQL query
   $sql_params = array();
@@ -1774,8 +1778,7 @@ if ($output_form)
   $form = new Form();
 
   // Search variables
-  $search_var_keys = array('from_day', 'from_month', 'from_year',
-                           'to_day', 'to_month', 'to_year',
+  $search_var_keys = array('from_date', 'to_date',
                            'areamatch', 'roommatch',
                            'typematch', 'namematch', 'descrmatch', 'creatormatch',
                            'match_private', 'match_confirmed', 'match_approved',
