@@ -176,14 +176,6 @@ if (false === ($end_date_split = split_iso_date($end_date)))
 }
 list($end_year, $end_month, $end_day) = $end_date_split;
 
-if (isset($rep_end_date))
-{
-  if (false === ($rep_end_date_split = split_iso_date($rep_end_date)))
-  {
-    throw new Exception("Invalid rep_end_date '$rep_end_date'");
-  }
-  list($rep_end_year, $rep_end_month, $rep_end_day) = $rep_end_date_split;
-}
 
 // BACK:  we didn't really want to be here - send them to the returl
 if (!empty($back_button))
@@ -557,14 +549,15 @@ if ($end_time == $start_time)
   $end_time += $resolution;
 }
 
-if (isset($rep_type) && ($rep_type != REP_NONE) &&
-    isset($rep_end_month) && isset($rep_end_day) && isset($rep_end_year))
+if (isset($rep_type) && ($rep_type != REP_NONE) && isset($rep_end_date))
 {
   // Get the repeat entry settings
-  $rep_end_time = mktime(intval($start_seconds/SECONDS_PER_HOUR),
-                         intval(($start_seconds%SECONDS_PER_HOUR)/60),
-                         0,
-                         $rep_end_month, $rep_end_day, $rep_end_year);
+  if (false === ($date = DateTime::createFromFormat('Y-m-d', $rep_end_date)))
+  {
+    throw new Exception("Invalid rep_end_date '$rep_end_date'");
+  }
+  $date->setTime(intval($start_seconds/SECONDS_PER_HOUR), intval(($start_seconds%SECONDS_PER_HOUR)/60));
+  $rep_end_time = $date->getTimestamp();
 }
 else
 {
