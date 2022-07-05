@@ -1790,25 +1790,20 @@ function format_iso_date(int $year, int $month, int $day) : string
 
 
 // Splits a date in ISO 8601 format ('yyyy-mm-dd') and returns an
-// array of year, month, day with leading zeros removed.
-function split_iso_date(string $date) : array
+// array of year, month, day with leading zeros removed, or FALSE
+// on failure.
+function split_iso_date(string $iso_date)
 {
-  // Split the date into components, sanitize the result and trim any leading zeros
-  // If the date is malformed, pad it out with nulls so that three elements are returned.
-  $result = array_pad(explode('-', $date, 3), 3, null);
-
-  foreach ($result as &$value)
+  if (false === ($date = DateTime::createFromFormat('Y-m-d', $iso_date)))
   {
-    if (isset($value))
-    {
-      $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-      $value = ($value === '') ? null : (int) ltrim($value, '0');
-    }
+    return false;
   }
 
-  unset($value);  // Break the reference (not necessary here, but good practice)
-
-  return $result;
+  return array(
+    $date->format('Y'),
+    $date->format('n'),
+    $date->format('j')
+  );
 }
 
 
