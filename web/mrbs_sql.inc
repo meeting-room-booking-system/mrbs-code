@@ -361,8 +361,17 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
       }
     }
 
-    $interval_start = $interval_end;
-    $i++;
+    if (isset($interval_end))
+    {
+      $interval_start = $interval_end;
+      $i++;
+    }
+    else
+    {
+      // $interval_end won't be set if we're looking at all bookings in the future, in
+      // which case the interval end is effectively infinity and we should stop.
+      break;
+    }
   }
 
   return null;
