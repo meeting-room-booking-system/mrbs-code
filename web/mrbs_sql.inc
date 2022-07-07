@@ -250,7 +250,7 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
         $interval_end = mktime(0, 0, 0, 1, 1, $start_date['year'] + $i);
         break;
       case 'future':
-        $interval_end = null;
+        $interval_end = null;  // Effectively infinity.  We can't use PHP_INT_MAX because this will break some databases.
         break;
     }
 
@@ -305,7 +305,8 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
         // inside the interval.  Otherwise it's just one more booking.
         if ($check_seconds)
         {
-          $seconds = min($row['end_time'], $interval_end) - max($row['start_time'], $interval_start);
+          $seconds = (isset($interval_end)) ? min($row['end_time'], $interval_end) : $row['end_time'];
+          $seconds = $seconds - max($row['start_time'], $interval_start);
           $existing[$location][$check_type][$interval_type][$interval_start] += $seconds;
         }
         else
@@ -319,7 +320,8 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
     // inside the interval.  Otherwise it's just one more booking.
     if ($check_seconds)
     {
-      $seconds = min($booking['end_time'], $interval_end) - max($booking['start_time'], $interval_start);
+      $seconds = (isset($interval_end)) ? min($booking['end_time'], $interval_end) : $booking['end_time'];
+      $seconds = $seconds - max($booking['start_time'], $interval_start);
       $proposed[$location][$check_type][$interval_type][$interval_start] += $seconds;
     }
     else
@@ -365,8 +367,17 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
       }
     }
 
-    $interval_start = $interval_end;
-    $i++;
+    if (isset($interval_end))
+    {
+      $interval_start = $interval_end;
+      $i++;
+    }
+    else
+    {
+      // $interval_end won't be set if we're looking at all bookings in the future, in
+      // which case the interval end is effectively infinity and we should stop.
+      break;
+    }
   }
 
   return null;
