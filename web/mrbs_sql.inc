@@ -244,7 +244,7 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
         $interval_end = mktime(0, 0, 0, 1, 1, $start_date['year'] + $i);
         break;
       case 'future':
-        $interval_end = null;  // effectively infinity
+        $interval_end = null;  // Effectively infinity.  We can't use PHP_INT_MAX because this will break some databases.
         break;
     }
 
