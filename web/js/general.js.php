@@ -165,6 +165,16 @@ $(document).on('page_ready', function() {
 
   <?php // Retrieve the data that the JavaScript files need. ?>
   args = $('body').data();
+  //  unresolved bug that sometime isBookAdmin is string 'false'/'true', apply workaround here    
+    if (typeof args.isBookAdmin=='string'){
+      if (args.isBookAdmin=='true') args.isBookAdmin=true;
+      if (args.isBookAdmin=='false') args.isBookAdmin=false;
+    }
+  //  unresolved bug that sometime isAdmin is string 'false'/'true', apply workaround here    
+    if (typeof args.isAdmin=='string'){
+      if (args.isAdmin=='true') args.isAdmin=true;
+      if (args.isAdmin=='false') args.isAdmin=false;
+    }
 
   <?php // Fire off the Ajax requests for username fields ?>
   fillUsernameFields();
