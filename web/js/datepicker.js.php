@@ -66,7 +66,12 @@ function getISODate(year, month, day)
 
 function weekStart(date, weekStarts) {
   var d = new Date(date);
-  d.setDate(d.getDate() - (d.getDay() - weekStarts));
+  var diff = d.getDay() - weekStarts;
+  if (diff < 0)
+  {
+    diff += 7;
+  }
+  d.setDate(d.getDate() - diff);
   return d.toISOString().split('T')[0];
 }
 
