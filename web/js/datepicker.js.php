@@ -57,6 +57,24 @@ function getISODate(year, month, day)
     ].join('-');
 }
 
+<?php
+// Functions to find the start and end dates of a week and month given a
+// date in YYYY-MM-DD format.
+// (Could be implemented by extending the Date class, but extends isn't
+// supported by IE11.)
+?>
+
+function weekStart(date, weekStarts) {
+  var d = new Date(date);
+  d.setDate(d.getDate() - (d.getDay() - weekStarts));
+  return d.toISOString().split('T')[0];
+}
+
+function weekEnd(date, weekStarts) {
+  var d = new Date(weekStart(date, weekStarts));
+  d.setDate(d.getDate() + 6);
+  return d.toISOString().split('T')[0];
+}
 
 function monthStart(date) {
   var d = new Date(date);
@@ -71,17 +89,6 @@ function monthEnd(date) {
   return d.toISOString().split('T')[0];
 }
 
-function weekStart(date, weekStarts) {
-  var d = new Date(date);
-  d.setDate(d.getDate() - (d.getDay() - weekStarts));
-  return d.toISOString().split('T')[0];
-}
-
-function weekEnd(date, weekStarts) {
-  var d = new Date(weekStart(date, weekStarts));
-  d.setDate(d.getDate() + 6);
-  return d.toISOString().split('T')[0];
-}
 
 $(document).on('page_ready', function() {
 
