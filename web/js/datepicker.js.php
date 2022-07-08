@@ -282,21 +282,37 @@ $(document).on('page_ready', function() {
 
         $.each(minicalendars, function (key, value) {
             var startDate, endDate;
-            if (args.view === 'month')
+            <?php
+            // Setting a range only works if there are no hidden days: it does not make
+            // sense to set a start date of a range on a disabled day.
+            if (empty($hidden_days))
             {
-              startDate = monthStart(args.pageDate);
-              endDate = monthEnd(args.pageDate);
-            }
-            else if (args.view === 'week')
-            {
-              startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
-              endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+              ?>
+              if (args.view === 'month')
+              {
+                startDate = monthStart(args.pageDate);
+                endDate = monthEnd(args.pageDate);
+              }
+              else if (args.view === 'week')
+              {
+                startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+                endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+              }
+              else
+              {
+                startDate = args.pageDate;
+                endDate = startDate;
+              }
+              <?php
             }
             else
             {
+              ?>
               startDate = args.pageDate;
               endDate = startDate;
+              <?php
             }
+            ?>
             value.setDate([startDate, endDate]);
             value.changeMonth(key);
           });
