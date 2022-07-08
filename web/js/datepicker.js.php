@@ -58,6 +58,30 @@ function getISODate(year, month, day)
 }
 
 
+function monthStart(date) {
+  var d = new Date(date);
+  d.setDate(1);
+  return d.toISOString().split('T')[0];
+}
+
+function monthEnd(date) {
+  var d = new Date(date);
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(0);
+  return d.toISOString().split('T')[0];
+}
+
+function weekStart(date, weekStarts) {
+  var d = new Date(date);
+  d.setDate(d.getDate() - (d.getDay() - weekStarts));
+  return d.toISOString().split('T')[0];
+}
+
+function weekEnd(date, weekStarts) {
+  var d = new Date(weekStart(date, weekStarts));
+  d.setDate(d.getDate() + 6);
+  return d.toISOString().split('T')[0];
+}
 
 $(document).on('page_ready', function() {
 
@@ -252,11 +276,28 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
+        config.mode = 'range';
 
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
-            value.setDate(args.pageDate);
+            var startDate, endDate;
+            if (args.view === 'month')
+            {
+              startDate = monthStart(args.pageDate);
+              endDate = monthEnd(args.pageDate);
+            }
+            else if (args.view === 'week')
+            {
+              startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+              endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+            }
+            else
+            {
+              startDate = args.pageDate;
+              endDate = startDate;
+            }
+            value.setDate([startDate, endDate]);
             value.changeMonth(key);
           });
 
