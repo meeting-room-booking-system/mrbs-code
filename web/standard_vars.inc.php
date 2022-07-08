@@ -37,13 +37,16 @@ if (($view != 'day') && count(get_rooms($area)) == 1)
 // Get the settings (resolution, etc.) for this area
 get_area_settings($area);
 
-if (isset($page_date))
+if (isset($page_date) && ($page_date !== ''))
 {
   if (false === ($page_date_split = split_iso_date($page_date)))
   {
-    throw new Exception("Invalid page_date '$page_date'");
+    trigger_error("Invalid page_date '$page_date'", E_USER_NOTICE);
   }
-  list($year, $month, $day) = $page_date_split;
+  else
+  {
+    list($year, $month, $day) = $page_date_split;
+  }
 }
 
 $date = new DateTime();
