@@ -256,6 +256,12 @@ $(document).on('page_ready', function() {
         
         var minicalendars = flatpickr('span.minicalendar', config);
 
+        moment.locale('en',{
+          week:{
+            dow:<?= $weekstarts ?>
+          }
+        });
+
         $.each(minicalendars, function (key, value) {
             if(args.view=='day'){
               value.setDate(args.pageDate);
