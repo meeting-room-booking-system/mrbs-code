@@ -67,6 +67,7 @@ script(($debug) ? 'jquery/ui/jquery-ui.js' : 'jquery/ui/jquery-ui.min.js', true)
 script("js/functions.js.php?$query_string", true);
 script("js/general.js.php?$query_string", true);
 script("js/datepicker.js.php?$query_string", true);
+script("js/moment/moment.min.js",true);
 script("js/flatpickr/flatpickr.min.js", true);
 script("jquery/select2/dist/js/select2.full.min.js", true);
 
