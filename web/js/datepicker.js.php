@@ -38,23 +38,8 @@ function iPadMobileFix() {
 ?>
 function getISODate(year, month, day)
 {
-  while (month > 11)
-  {
-    month = month-12;
-    year++;
-  }
-
-  while (month < 0)
-  {
-    month = month+12;
-    year--;
-  }
-
-  return [
-      year,
-      ('0' + (month + 1)).slice(-2),
-      ('0' + day).slice(-2)
-    ].join('-');
+  var date = new Date(Date.UTC(year, month, day));
+  return date.toISOString().split('T')[0];
 }
 
 <?php
