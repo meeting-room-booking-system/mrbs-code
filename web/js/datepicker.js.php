@@ -60,6 +60,7 @@ function getISODate(year, month, day)
 <?php
 // Functions to find the start and end dates of a week and month given a
 // date in YYYY-MM-DD format.
+// weekStarts is the start day of the week (0 for Sunday, 1 for Monday etc.)
 // (Could be implemented by extending the Date class, but extends isn't
 // supported by IE11.)
 ?>
