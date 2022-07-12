@@ -89,10 +89,10 @@ var replaceBody = function(response, href) {
               {
                 <?php
                 // Data attributes have to be updated differently from other attributes because
-                // they are cached by jQuery.  If the attribute looks like a JSON array, then turn
-                // it back into an array.
+                // they are cached by jQuery.
                 ?>
                 var value = this.value;
+                <?php // If the attribute looks like a JSON array, then turn it back into an array. ?>
                 if (value.charAt(0) === '[')
                 {
                   try {
@@ -101,6 +101,15 @@ var replaceBody = function(response, href) {
                   catch (e) {
                     value = this.value;
                   }
+                }
+                <?php // If it looks like it should be a boolean then turn it back into one.  ?>
+                else if (value === 'true')
+                {
+                  value = true;
+                }
+                else if (value === 'false')
+                {
+                  value = false;
                 }
                 body.data(this.name.substring(5), value);
               }
