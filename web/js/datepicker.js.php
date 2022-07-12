@@ -42,6 +42,43 @@ function getISODate(year, month, day)
   return date.toISOString().split('T')[0];
 }
 
+<?php
+// Functions to find the start and end dates of a week and month given a
+// date in YYYY-MM-DD format.
+// weekStarts is the start day of the week (0 for Sunday, 1 for Monday etc.)
+// (Could be implemented by extending the Date class, but extends isn't
+// supported by IE11.)
+?>
+
+function weekStart(date, weekStarts) {
+  var d = new Date(date);
+  var diff = d.getDay() - weekStarts;
+  if (diff < 0)
+  {
+    diff += 7;
+  }
+  d.setDate(d.getDate() - diff);
+  return d.toISOString().split('T')[0];
+}
+
+function weekEnd(date, weekStarts) {
+  var d = new Date(weekStart(date, weekStarts));
+  d.setDate(d.getDate() + 6);
+  return d.toISOString().split('T')[0];
+}
+
+function monthStart(date) {
+  var d = new Date(date);
+  d.setDate(1);
+  return d.toISOString().split('T')[0];
+}
+
+function monthEnd(date) {
+  var d = new Date(date);
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(0);
+  return d.toISOString().split('T')[0];
+}
 
 
 $(document).on('page_ready', function() {
@@ -237,11 +274,44 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
+        config.mode = 'range';
 
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
-            value.setDate(args.pageDate);
+            var startDate, endDate;
+            <?php
+            // Setting a range only works if there are no hidden days: it does not make
+            // sense to set a start date of a range on a disabled day.
+            if (empty($hidden_days))
+            {
+              ?>
+              if (args.view === 'month')
+              {
+                startDate = monthStart(args.pageDate);
+                endDate = monthEnd(args.pageDate);
+              }
+              else if (args.view === 'week')
+              {
+                startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+                endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+              }
+              else
+              {
+                startDate = args.pageDate;
+                endDate = startDate;
+              }
+              <?php
+            }
+            else
+            {
+              ?>
+              startDate = args.pageDate;
+              endDate = startDate;
+              <?php
+            }
+            ?>
+            value.setDate([startDate, endDate]);
             value.changeMonth(key);
           });
 
