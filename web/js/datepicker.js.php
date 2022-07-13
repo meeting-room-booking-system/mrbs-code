@@ -42,7 +42,61 @@ function getISODate(year, month, day)
   return date.toISOString().split('T')[0];
 }
 
+<?php
+// Functions to find the start and end dates of a week and month given a
+// date in YYYY-MM-DD format.
+// weekStarts is the start day of the week (0 for Sunday, 1 for Monday etc.)
+// (Could be implemented by extending the Date class, but extends isn't
+// supported by IE11.)
+?>
 
+function weekStart(date, weekStarts) {
+  var d = new Date(date);
+  var diff = d.getDay() - weekStarts;
+  if (diff < 0)
+  {
+    diff += 7;
+  }
+  d.setDate(d.getDate() - diff);
+  return d.toISOString().split('T')[0];
+}
+
+function weekEnd(date, weekStarts) {
+  var d = new Date(weekStart(date, weekStarts));
+  d.setDate(d.getDate() + 6);
+  return d.toISOString().split('T')[0];
+}
+
+function monthStart(date) {
+  var d = new Date(date);
+  d.setDate(1);
+  return d.toISOString().split('T')[0];
+}
+
+function monthEnd(date) {
+  var d = new Date(date);
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(0);
+  return d.toISOString().split('T')[0];
+}
+
+
+// Returns an array of dates in the range startDate..endDate, optionally
+// excluding hidden days.
+function datesInRange(startDate, endDate, excludeHiddenDays) {
+  var result=[];
+  var e=new Date(endDate);
+  var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+  for (var d=new Date(startDate); !(d>e); d.setDate(d.getDate()+1))
+  {
+    if(excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
+    {
+      continue;
+    }
+    result.push(d.toISOString().split('T')[0]);
+  }
+  return result;
+}
 
 $(document).on('page_ready', function() {
 
@@ -237,11 +291,53 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
+        <?php
+        // Setting a range only works if there are no hidden days: it does not make
+        // sense to set a start date of a range on a disabled day.
+        if (empty($hidden_days))
+        {
+          ?>
+          config.mode = 'range';
+          <?php
+        }
+        ?>
+
 
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
-            value.setDate(args.pageDate);
+            var startDate, endDate;
+            if (args.view === 'month')
+            {
+              startDate = monthStart(args.pageDate);
+              endDate = monthEnd(args.pageDate);
+            }
+            else if (args.view === 'week')
+            {
+              startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+              endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+            }
+            else
+            {
+              startDate = args.pageDate;
+              endDate = startDate;
+            }
+            <?php
+            if (empty($hidden_days))
+            {
+              ?>
+              value.setDate([startDate, endDate]);
+              <?php
+            }
+            else
+            {
+              // If we've got hidden days then highlight in the minicalendars those
+              // days in the range that are not hidden.
+              ?>
+              value.setDate(datesInRange(startDate, endDate, true));
+              <?php
+            }
+            ?>
             value.changeMonth(key);
           });
 
