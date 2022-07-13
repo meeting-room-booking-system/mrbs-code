@@ -83,7 +83,7 @@ function monthEnd(date) {
 
 // Returns an array of dates in the range startDate..endDate, optionally
 // excluding hidden days.
-function datesInRange(startDate, endDate, excludeHiddenDays){
+function datesInRange(startDate, endDate, excludeHiddenDays) {
   var result=[];
   var e=new Date(endDate);
   var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
