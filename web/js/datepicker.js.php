@@ -81,6 +81,23 @@ function monthEnd(date) {
 }
 
 
+// Returns an array of dates in the range startDate..endDate, optionally
+// excluding hidden days.
+function datesInRange(startDate, endDate, excludeHiddenDays){
+  var result=[];
+  var e=new Date(endDate);
+  var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+  for (var d=new Date(startDate); !(d>e); d.setDate(d.getDate()+1))
+  {
+    if(excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
+    {
+        continue;
+    }
+    result.push(d.toISOString().split('T')[0]);
+  }
+  return result;
+}
+
 $(document).on('page_ready', function() {
 
   var locales = $('body').data('langPrefs');
@@ -274,44 +291,53 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
-        config.mode = 'range';
+        <?php
+        // Setting a range only works if there are no hidden days: it does not make
+        // sense to set a start date of a range on a disabled day.
+        if (empty($hidden_days))
+        {
+          ?>
+          config.mode = 'range';
+          <?php
+        }
+        ?>
+
 
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
             var startDate, endDate;
+            if (args.view === 'month')
+            {
+              startDate = monthStart(args.pageDate);
+              endDate = monthEnd(args.pageDate);
+            }
+            else if (args.view === 'week')
+            {
+              startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
+              endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
+            }
+            else
+            {
+              startDate = args.pageDate;
+              endDate = startDate;
+            }
             <?php
-            // Setting a range only works if there are no hidden days: it does not make
-            // sense to set a start date of a range on a disabled day.
             if (empty($hidden_days))
             {
               ?>
-              if (args.view === 'month')
-              {
-                startDate = monthStart(args.pageDate);
-                endDate = monthEnd(args.pageDate);
-              }
-              else if (args.view === 'week')
-              {
-                startDate = weekStart(args.pageDate, <?php echo $weekstarts?>);
-                endDate = weekEnd(args.pageDate, <?php echo $weekstarts?>);
-              }
-              else
-              {
-                startDate = args.pageDate;
-                endDate = startDate;
-              }
+              value.setDate([startDate, endDate]);
               <?php
             }
             else
             {
+              // If we've got hidden days then highlight in the minicalendars those
+              // days in the range that are not hidden.
               ?>
-              startDate = args.pageDate;
-              endDate = startDate;
+              value.setDate(datesInRange(startDate, endDate, true));
               <?php
             }
             ?>
-            value.setDate([startDate, endDate]);
             value.changeMonth(key);
           });
 
