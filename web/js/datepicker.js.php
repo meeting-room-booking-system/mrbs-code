@@ -91,7 +91,7 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
   {
     if(excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
     {
-        continue;
+      continue;
     }
     result.push(d.toISOString().split('T')[0]);
   }
