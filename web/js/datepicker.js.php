@@ -80,6 +80,28 @@ function monthEnd(date) {
   return d.toISOString().split('T')[0];
 }
 
+<?php
+// given a start and end date of a date range
+// then return the array of date inclusive the start and end date
+// but exclude any 'hidden day' if exclude flag is true
+?>
+
+function datesInRange(startDate, endDate, excludeHiddenDays){
+  var a=new Date(startDate);
+  var b=new Date(endDate);
+  var result=[];
+  for (var i=new Date(a.valueOf());i.valueOf()<=b.valueOf(); i.setDate(i.getDate()+1)){
+    if(excludeHiddenDays){
+      var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+      if (hiddenDays.indexOf(i.getDay()) >= 0) {
+        continue;
+      }
+    }
+    result.push(i.toISOString().split('T')[0]);
+  }
+  return result;
+}
+
 
 $(document).on('page_ready', function() {
 
@@ -274,18 +296,13 @@ $(document).on('page_ready', function() {
         config.onMonthChange = onMonthChange;
         config.onYearChange = onYearChange;
         config.onChange = onMinicalChange;
-        config.mode = 'range';
+        //config.mode = 'range';
 
         var minicalendars = flatpickr('span.minicalendar', config);
 
         $.each(minicalendars, function (key, value) {
             var startDate, endDate;
-            <?php
-            // Setting a range only works if there are no hidden days: it does not make
-            // sense to set a start date of a range on a disabled day.
-            if (empty($hidden_days))
-            {
-              ?>
+
               if (args.view === 'month')
               {
                 startDate = monthStart(args.pageDate);
@@ -301,17 +318,9 @@ $(document).on('page_ready', function() {
                 startDate = args.pageDate;
                 endDate = startDate;
               }
-              <?php
-            }
-            else
-            {
-              ?>
-              startDate = args.pageDate;
-              endDate = startDate;
-              <?php
-            }
-            ?>
-            value.setDate([startDate, endDate]);
+              
+            //value.setDate([startDate, endDate]);
+            value.setDate(datesInRange(startDate,endDate,true));
             value.changeMonth(key);
           });
 
