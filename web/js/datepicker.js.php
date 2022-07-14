@@ -87,6 +87,8 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
   var result=[];
   var e=new Date(endDate);
   var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
+
+  <?php // dates can be compared using > and < but not == or === ?>
   for (var d=new Date(startDate); !(d>e); d.setDate(d.getDate()+1))
   {
     if(excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
@@ -95,6 +97,7 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
     }
     result.push(d.toISOString().split('T')[0]);
   }
+  
   return result;
 }
 
