@@ -91,13 +91,13 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
   <?php // dates can be compared using > and < but not == or === ?>
   for (var d=new Date(startDate); !(d>e); d.setDate(d.getDate()+1))
   {
-    if(excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
+    if (excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
     {
       continue;
     }
     result.push(d.toISOString().split('T')[0]);
   }
-  
+
   return result;
 }
 
