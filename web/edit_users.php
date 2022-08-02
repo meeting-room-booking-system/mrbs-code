@@ -973,6 +973,12 @@ if (isset($action) && ($action == "update"))
       }
     }
 
+    // Remove any extra whitespace that may have accidentally been inserted in the display name
+    if ($fieldname == 'display_name')
+    {
+      $values[$fieldname] = preg_replace('/\s+/', ' ', $values[$fieldname]);
+    }
+
     // we will also put the data into a query string which we will use for passing
     // back to this page if we fail validation.   This will enable us to reload the
     // form with the original data so that the user doesn't have to
