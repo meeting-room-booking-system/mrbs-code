@@ -254,6 +254,11 @@ foreach($fields as $field)
 // $create_by isn't set yet, but a getWritable check will be done later,
 if (!$is_ajax)
 {
+  if (!isset($create_by))
+  {
+    // Shouldn't happen, unless something's gone wrong with the form or the POST request.
+    throw new Exception('$create_by not set');
+  }
   if (!is_book_admin($rooms) || (!isset($id) && $auth['admin_can_only_book_for_self']))
   {
     if ($create_by !== $mrbs_username)
