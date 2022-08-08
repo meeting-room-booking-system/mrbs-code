@@ -22,7 +22,7 @@ use function MRBS\utf8_strpos;
 
 
 // An abstract class for those session schemes that implement a login form
-abstract class SessionWithLogin implements SessionInterface
+abstract class SessionWithLogin extends Session
 {
   protected $form = array();
 
