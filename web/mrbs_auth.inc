@@ -370,10 +370,11 @@ function showAccessDenied($view=null, $view_all=null, $year=null, $month=null, $
   echo "<div>\n";
   echo "<h1>" . get_vocab("accessdenied") . "</h1>\n";
   echo "<p>" . get_vocab("norights") . "</p>\n";
-  if (isset($server['HTTP_REFERER']))
+  $referrer = session()->getReferrer();
+  if (isset($referrer))
   {
     echo "<p>\n";
-    echo "<a href=\"" . htmlspecialchars($server['HTTP_REFERER']) . "\">\n" . get_vocab("returnprev") . "</a>\n";
+    echo "<a href=\"" . htmlspecialchars($referrer) . "\">\n" . get_vocab("returnprev") . "</a>\n";
     echo "</p>\n";
   }
   echo "</div>\n";

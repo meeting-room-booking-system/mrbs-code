@@ -22,7 +22,7 @@ use MRBS\User;
  */
 
 
-class SessionNt extends SessionWithoutLogin
+class SessionNt extends Session
 {
 
   // For this scheme no need to prompt for a name - NT User always there.

@@ -1190,11 +1190,12 @@ Form::checkToken($post_only=true);
 // We might be going through edit_entry more than once, for example if we have to log on on the way.  We
 // still need to preserve the original calling page so that once we've completed edit_entry_handler we can
 // go back to the page we started at (rather than going to the default view).  If this is the first time
-// through, then $server['HTTP_REFERER'] holds the original caller.    If this is the second time through
+// through, then $referrer holds the original caller.    If this is the second time through
 // we will have stored it in $returl.
 if (!isset($returl))
 {
-  $returl = isset($server['HTTP_REFERER']) ? $server['HTTP_REFERER'] : '';
+  $referrer = session()->getReferrer();
+  $returl = $referrer ?? '';
 }
 
 // Check the user is authorised for this page
