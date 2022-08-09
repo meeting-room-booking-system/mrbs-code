@@ -22,7 +22,7 @@ use MRBS\User;
  */
 
 
-class SessionHost extends SessionWithoutLogin
+class SessionHost extends Session
 {
 
   // No need to prompt for a name: if no DNSname is returned, the IP address is used

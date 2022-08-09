@@ -510,24 +510,26 @@ $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
 $previous_page = get_form_var('previous_page', 'string');
 
-if (!isset($previous_page) && isset($server['HTTP_REFERER']))
+$referrer = session()->getReferrer();
+
+if (!isset($previous_page) && isset($referrer))
 {
-  $previous_page = $server['HTTP_REFERER'];
+  $previous_page = $referrer;
 }
 
 // Need to tell all the links where to go back to after an edit or delete
 if (!isset($returl))
 {
-  // We need $_SERVER['HTTP_REFERER'] to contain an actual page, and not be a directory, ie end in '/'
-  if (isset($server['HTTP_REFERER']) && (substr($server['HTTP_REFERER'], -1) != '/'))
+  // We need $referrer to contain an actual page, and not be a directory, ie end in '/'
+  if (isset($referrer) && (substr($referrer, -1) != '/'))
   {
-    $parsed_url = parse_url($server['HTTP_REFERER']);
+    $parsed_url = parse_url($referrer);
     if (isset($parsed_url['path']))
     {
       $returl = basename($parsed_url['path']);
     }
   }
-  // If we still haven't got a referer (eg if we've come here from an email) then construct
+  // If we still haven't got a referrer (eg if we've come here from an email) then construct
   // a sensible place to go to afterwards
   if (!isset($returl))
   {
