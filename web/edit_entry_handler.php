@@ -129,6 +129,9 @@ foreach($form_vars as $var => $var_type)
   }
 }
 
+// Convert the rooms to ints
+$rooms = array_map('intval', $rooms);
+
 // Convert the registration opens and closes times into seconds
 if (isset($registration_opens_value) && isset($registration_opens_units))
 {
