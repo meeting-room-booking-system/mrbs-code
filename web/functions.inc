@@ -1800,9 +1800,9 @@ function split_iso_date(string $iso_date)
   }
 
   return array(
-    $date->format('Y'),
-    $date->format('n'),
-    $date->format('j')
+    (int) $date->format('Y'),
+    (int) $date->format('n'),
+    (int) $date->format('j')
   );
 }
 
