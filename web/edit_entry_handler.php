@@ -402,9 +402,9 @@ if ($is_ajax && $commit)
         // from the current time, ie the days on which DST starts and ends.
         case 'start_seconds';
           $date = getdate($old_booking['start_time']);
-          $start_year = $date['year'];
-          $start_month = $date['mon'];
-          $start_day = $date['mday'];
+          $start_year = (int) $date['year'];
+          $start_month = (int) $date['mon'];
+          $start_day = (int) $date['mday'];
           $start_daystart = mktime(0, 0, 0, $start_month, $start_day, $start_year);
           $old_start = $old_booking['start_time'];
           $start_seconds = $old_start - $start_daystart;
@@ -412,9 +412,9 @@ if ($is_ajax && $commit)
           break;
         case 'end_seconds';
           $date = getdate($old_booking['end_time']);
-          $end_year = $date['year'];
-          $end_month = $date['mon'];
-          $end_day = $date['mday'];
+          $end_year = (int) $date['year'];
+          $end_month = (int) $date['mon'];
+          $end_day = (int) $date['mday'];
           $end_daystart = mktime(0, 0, 0, $end_month, $end_day, $end_year);
           $old_end = $old_booking['end_time'];
           $end_seconds = $old_end - $end_daystart;
@@ -480,9 +480,9 @@ if (day_past_midnight())
   {
     $start_seconds += SECONDS_PER_DAY;
     $day_before = getdate(mktime(0, 0, 0, $start_month, $start_day-1, $start_year));
-    $start_day = $day_before['mday'];
-    $start_month = $day_before['mon'];
-    $start_year = $day_before['year'];
+    $start_day = (int) $day_before['mday'];
+    $start_month = (int) $day_before['mon'];
+    $start_year = (int) $day_before['year'];
   }
 }
 
@@ -626,9 +626,9 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
     $duration -= cross_dst($start_time, $end_time);
     $start_time = $reps[0];
     $end_time = $start_time + $duration;
-    $start_day = date('j', $start_time);
-    $start_month = date('n', $start_time);
-    $start_year = date('Y', $start_time);
+    $start_day = (int) date('j', $start_time);
+    $start_month = (int) date('n', $start_time);
+    $start_year = (int) date('Y', $start_time);
   }
 }
 
