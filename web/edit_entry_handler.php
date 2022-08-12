@@ -10,6 +10,23 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
 
+// Check that a room id is set and not the empty string and convert it to an int.
+function sanitize_room_id($id) : int
+{
+  if (!isset($id))
+  {
+    throw new Exception("Room id not set");
+  }
+
+  if ($id === '')
+  {
+    throw new Exception("Room id is ''");
+  }
+
+  return intval($id);
+}
+
+
 function invalid_booking(string $message) : void
 {
   global $view, $view_all, $year, $month, $day, $area, $room;
@@ -129,8 +146,8 @@ foreach($form_vars as $var => $var_type)
   }
 }
 
-// Convert the rooms to ints
-$rooms = array_map('intval', $rooms);
+// Sanitize the room ids
+$rooms = array_map(__NAMESPACE__ . '\sanitize_room_id', $rooms);
 
 // Convert the registration opens and closes times into seconds
 if (isset($registration_opens_value) && isset($registration_opens_units))
