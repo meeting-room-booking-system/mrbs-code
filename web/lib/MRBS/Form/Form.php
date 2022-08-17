@@ -26,16 +26,9 @@ class Form extends Element
 
 
   // Adds a hidden input to the form
-  public function addHiddenInput($name, $value) : Form
+  public function addHiddenInput(string $name, $value) : Form
   {
-    if (is_bool($value))
-    {
-      $value = ($value) ? 1 : 0;
-    }
-    
-    $element = new ElementInputHidden();
-    $element->setAttributes(array('name'  => $name,
-                                  'value' => $value));
+    $element = new ElementInputHidden($name, $value);
     $this->addElement($element);
     return $this;
   }
