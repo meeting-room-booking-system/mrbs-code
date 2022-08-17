@@ -290,34 +290,36 @@ class DB_mysql extends DB
   {
     // Map MySQL types on to a set of generic types
     $nature_map = array(
-        'bigint'      => 'integer',
-        'char'        => 'character',
-        'date'        => 'timestamp',
-        'datetime'    => 'timestamp',
-        'decimal'     => 'decimal',
-        'double'      => 'real',
-        'float'       => 'real',
-        'int'         => 'integer',
-        'longtext'    => 'character',
-        'mediumint'   => 'integer',
-        'mediumtext'  => 'character',
-        'numeric'     => 'decimal',
-        'smallint'    => 'integer',
-        'text'        => 'character',
-        'time'        => 'timestamp',
-        'timestamp'   => 'timestamp',
-        'tinyint'     => 'integer',
-        'tinytext'    => 'character',
-        'varchar'     => 'character',
-        'year'        => 'timestamp'
-      );
+      'bigint'      => 'integer',
+      'char'        => 'character',
+      'date'        => 'timestamp',
+      'datetime'    => 'timestamp',
+      'decimal'     => 'decimal',
+      'double'      => 'real',
+      'float'       => 'real',
+      'int'         => 'integer',
+      'longtext'    => 'character',
+      'mediumint'   => 'integer',
+      'mediumtext'  => 'character',
+      'numeric'     => 'decimal',
+      'smallint'    => 'integer',
+      'text'        => 'character',
+      'time'        => 'timestamp',
+      'timestamp'   => 'timestamp',
+      'tinyint'     => 'integer',
+      'tinytext'    => 'character',
+      'varchar'     => 'character',
+      'year'        => 'timestamp'
+    );
 
     // Length in bytes of MySQL integer types
-    $int_bytes = array('bigint'    => 8, // bytes
-                       'int'       => 4,
-                       'mediumint' => 3,
-                       'smallint'  => 2,
-                       'tinyint'   => 1);
+    $int_bytes = array(
+      'bigint'    => 8, // bytes
+      'int'       => 4,
+      'mediumint' => 3,
+      'smallint'  => 2,
+      'tinyint'   => 1
+    );
 
     $stmt = $this->query("SHOW COLUMNS FROM $table", array());
 
@@ -327,6 +329,7 @@ class DB_mysql extends DB
     {
       $name = $row['Field'];
       $type = $row['Type'];
+      $default = $row['Default'];
       // Get the type and optionally length in parentheses, ignoring any attributes.  Note that the
       // length could be of the form (6,2) for a decimal.  Examples that we have to cope with:
       //    tinyint
@@ -342,6 +345,11 @@ class DB_mysql extends DB
       // now work out the length
       if ($nature == 'integer')
       {
+        // Convert the default to an int (unless it's NULL)
+        if (isset($default))
+        {
+          $default = (int) $default;
+        }
         // if it's one of the ints, then look up the length in bytes
         $length = (array_key_exists($short_type, $int_bytes)) ? $int_bytes[$short_type] : 0;
       }
@@ -367,12 +375,13 @@ class DB_mysql extends DB
       $is_nullable = (utf8_strtolower($row['Null']) == 'yes') ? true : false;
 
       $fields[] = array(
-          'name' => $name,
-          'type' => $type,
-          'nature' => $nature,
-          'length' => $length,
-          'is_nullable' => $is_nullable
-        );
+        'name' => $name,
+        'type' => $type,
+        'nature' => $nature,
+        'length' => $length,
+        'is_nullable' => $is_nullable,
+        'default' => $default
+      );
     }
 
     return $fields;
