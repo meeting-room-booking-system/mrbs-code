@@ -1562,7 +1562,7 @@ function clean_area_row(array $row) : array
   // not make any assumptions about the existence of extra columns in
   // the area table.
 
-  $columns = new Columns(_tbl('area'));
+  $columns = Columns::getInstance(_tbl('area'));
 
   foreach ($columns as $column)
   {

@@ -629,7 +629,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
                                     $compare, $as_html);
 
     // Custom fields
-    $columns = new Columns(_tbl('entry'));
+    $columns = Columns::getInstance(_tbl('entry'));
     foreach ($columns as $column)
     {
       if (!in_array($column->name, $standard_fields['entry']))

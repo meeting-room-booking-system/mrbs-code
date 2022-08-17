@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use ReflectionClass;
+
 
 class Column
 {
@@ -10,19 +12,47 @@ class Column
   const NATURE_DECIMAL = 3;
   const NATURE_INTEGER = 4;
   const NATURE_REAL = 5;
-  const NATURE_TIMESTAMP = 6;
+  const NATURE_TIME = 6;
+  const NATURE_TIMESTAMP = 7;
 
   public $table;
   public $name;
 
-  private $nature;
+  private $default;
+  private $is_nullable;
   private $length;
+  private $nature;
+  private $type;
 
 
   public function __construct($table, $name)
   {
     $this->table = $table;
     $this->name = $name;
+  }
+
+
+  public function getDefault()
+  {
+    return $this->default;
+  }
+
+
+  public function setDefault($default)
+  {
+    $this->default = $default;
+  }
+
+
+  public function getIsNullable()
+  {
+    return $this->is_nullable;
+  }
+
+
+  public function setIsNullable($is_nullable)
+  {
+    $this->is_nullable = $is_nullable;
   }
 
 
@@ -46,7 +76,7 @@ class Column
 
   public function setNature($nature)
   {
-    $reflectionClass = new \ReflectionClass($this);
+    $reflectionClass = new ReflectionClass($this);
     $constants = $reflectionClass->getConstants();
     if (!in_array($nature, array_values($constants), true))
     {
@@ -56,7 +86,18 @@ class Column
   }
 
 
-  // Gets the type ('int' or 'string') to be used with get_form_var().
+  public function getType() : ?string
+  {
+    return $this->type;
+  }
+
+
+  public function setType(string $type) : void
+  {
+    $this->type = $type;
+  }
+
+  // Gets the type ('bool', 'int' or 'string') to be used with get_form_var().
   // TODO: this method maybe doesn't belong here.
   public function getFormVarType()
   {
@@ -65,8 +106,11 @@ class Column
       case self::NATURE_CHARACTER:
         $var_type = 'string';
         break;
+      case self::NATURE_DECIMAL:
+        $var_type = 'decimal';
+        break;
       case self::NATURE_INTEGER:
-        $var_type = ($this->isBooleanLike()) ? 'string' : 'int';
+        $var_type = ($this->isBooleanLike()) ? 'bool' : 'int';
         break;
       // We can only really deal with the types above at the moment
       default:
@@ -78,16 +122,17 @@ class Column
   }
 
 
-  // Sanitizes a form variable
-  // TODO: this method maybe doesn't belong here.
-  public function sanitizeFormVar($value)
+  // Sanitize a value ready for insertion in the database
+  public function sanitizeValue($value)
   {
-    // Turn the "booleans" into 0/1 values
-    if ($this->isBooleanLike())
+    // Turn the booleans into 0/1 values (necessary for PostgreSQL)
+    if (is_bool($value))
     {
-      $value = (empty($value)) ? 0 : 1;
+      $value = ($value) ? 1 : 0;
     }
     // Trim the strings and truncate them to the maximum field length
+    // (necessary for PostgreSQL which doesn't truncate them itself
+    // but instead will throw an error)
     elseif (is_string($value))
     {
       // Some variables, eg decimals, will also be PHP strings, so only
@@ -101,7 +146,6 @@ class Column
 
     return $value;
   }
-
 
   public function isBooleanLike()
   {
