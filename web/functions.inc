@@ -1588,6 +1588,10 @@ function clean_area_row(array $row) : array
           // MySQL will return strings for integer fields, so cast them into ints
           $row[$column->name] = (int) $row[$column->name];
           break;
+        case Column::NATURE_REAL:
+          // MySQL will return strings for real fields, so cast them into floats
+          $row[$column->name] = (float) $row[$column->name];
+          break;
         default:
           break;
       }
