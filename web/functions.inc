@@ -1556,28 +1556,40 @@ function get_area(int $room) : int
 // boolean fields into bools and doing some sanity checking
 function clean_area_row(array $row) : array
 {
-  global $force_resolution, $area_defaults, $boolean_fields, $private_override_options;
+  global $force_resolution, $area_defaults, $private_override_options;
 
   // This code can get called during the upgrade process and so must
   // not make any assumptions about the existence of extra columns in
   // the area table.
-  foreach ($row as $key => $value)
+
+  $columns = new Columns(_tbl('area'));
+
+  foreach ($columns as $column)
   {
-    if (array_key_exists($key, $area_defaults))
+    if (array_key_exists($column->name, $area_defaults))
     {
-      // If the "per area" setting is in the database, then use that.   Otherwise
+      // If the "per area" setting is in the database, then use that.  Otherwise
       // just stick with the default setting from the config file.
       // (don't use the database setting if $force_resolution is TRUE
       // and we're looking at the resolution field)
-      if (!isset($row[$key]) ||
-          (($key == 'resolution') && !empty($force_resolution) && empty($row['enable_periods'])) )
+      if (!isset($row[$column->name]) ||
+          (($column->name == 'resolution') && !empty($force_resolution) && empty($row['enable_periods'])) )
       {
-        $row[$key] = $area_defaults[$key];
+        $row[$column->name] = $area_defaults[$column->name];
       }
-      // Cast those fields which are booleans into booleans
-      if (in_array($key, $boolean_fields['area']))
+
+      switch ($column->getNature())
       {
-        $row[$key] = (bool) $row[$key];
+        case Column::NATURE_BOOLEAN:
+          // Cast those fields which are booleans into booleans
+          $row[$column->name] = (bool) $row[$column->name];
+          break;
+        case Column::NATURE_INTEGER:
+          // MySQL will return strings for integer fields, so cast them into ints
+          $row[$column->name] = (int) $row[$column->name];
+          break;
+        default:
+          break;
       }
     }
   }
