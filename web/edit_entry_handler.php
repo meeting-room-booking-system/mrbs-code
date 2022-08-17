@@ -931,7 +931,7 @@ else
   if (!empty($result['conflicts']))
   {
     echo "<p>\n";
-    echo get_vocab("conflict").":\n";
+    echo get_vocab("conflict") . "\n";
     echo "</p>\n";
     echo "<ul>\n";
     foreach ($result['conflicts'] as $conflict)
