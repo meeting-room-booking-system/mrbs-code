@@ -6,11 +6,11 @@ define('INTERVAL_DAY', 0);
 
 // Some database systems (eg MySQL) return strings for ints and floats.  This function
 // casts them to their intended types.
-function row_cast_columns(array &$row, string $table_short_name)
+function row_cast_columns(array &$row, string $table_short_name) : void
 {
   global $dbsys;
 
-  if ($dbsys != 'pgsql')
+  if ($dbsys == 'pgsql')
   {
     return;
   }
@@ -1841,6 +1841,9 @@ function get_booking_info($id, $series, $silent=FALSE)
     }
   }
 
+  // Cast the columns to their intended types
+  row_cast_columns($row, ($series) ? 'repeat' : 'entry');
+
   // Turn the last_updated column into an int (PostgreSQL will return a float)
   $row['last_updated'] = intval($row['last_updated']);
 
@@ -1897,6 +1900,9 @@ function get_booking_info($id, $series, $silent=FALSE)
           fatal_error(get_vocab("invalid_series_id"));
         }
       }
+
+      // Cast the columns to their intended types
+      row_cast_columns($extra_row, 'repeat');
 
       $row['rep_type']         = $extra_row['rep_type'];
       $row['end_date']         = $extra_row['end_date'];
