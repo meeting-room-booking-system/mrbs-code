@@ -4,6 +4,45 @@ namespace MRBS;
 define('INTERVAL_DAY', 0);
 
 
+// Some database systems (eg MySQL) return strings for ints and floats.  This function
+// casts them to their intended types.
+function row_cast_columns(array &$row, string $table_short_name)
+{
+  global $dbsys;
+
+  if ($dbsys != 'pgsql')
+  {
+    return;
+  }
+
+  $columns = Columns::getInstance(_tbl($table_short_name));
+
+  foreach ($columns as $column)
+  {
+    if (isset($row[$column->name]))
+    {
+      switch ($column->getNature())
+      {
+        case Column::NATURE_BOOLEAN:
+          // Cast those fields which are booleans into booleans
+          $row[$column->name] = (bool) $row[$column->name];
+          break;
+        case Column::NATURE_INTEGER:
+          // MySQL will return strings for integer fields, so cast them into ints
+          $row[$column->name] = (int) $row[$column->name];
+          break;
+        case Column::NATURE_REAL:
+          // MySQL will return strings for real fields, so cast them into floats
+          $row[$column->name] = (float) $row[$column->name];
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}
+
+
 // Pack the various status fields into a single bitmap
 function pack_status(array &$data)
 {

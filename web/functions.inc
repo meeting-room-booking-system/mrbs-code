@@ -1562,6 +1562,10 @@ function clean_area_row(array $row) : array
   // not make any assumptions about the existence of extra columns in
   // the area table.
 
+  // Cast the columns to their intended types
+  row_cast_columns($row, 'area');
+
+  // Get the default settings if necessary
   $columns = Columns::getInstance(_tbl('area'));
 
   foreach ($columns as $column)
@@ -1576,24 +1580,6 @@ function clean_area_row(array $row) : array
           (($column->name == 'resolution') && !empty($force_resolution) && empty($row['enable_periods'])) )
       {
         $row[$column->name] = $area_defaults[$column->name];
-      }
-
-      switch ($column->getNature())
-      {
-        case Column::NATURE_BOOLEAN:
-          // Cast those fields which are booleans into booleans
-          $row[$column->name] = (bool) $row[$column->name];
-          break;
-        case Column::NATURE_INTEGER:
-          // MySQL will return strings for integer fields, so cast them into ints
-          $row[$column->name] = (int) $row[$column->name];
-          break;
-        case Column::NATURE_REAL:
-          // MySQL will return strings for real fields, so cast them into floats
-          $row[$column->name] = (float) $row[$column->name];
-          break;
-        default:
-          break;
       }
     }
   }
