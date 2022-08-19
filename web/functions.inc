@@ -1855,7 +1855,7 @@ function get_monthly_repeat_day(array $data) : string
   }
   else
   {
-    trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+    throw new Exception("Unknown monthly repeat type");
   }
 
   return $result;
