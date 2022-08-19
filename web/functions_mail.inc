@@ -694,44 +694,9 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 
       if ($data['rep_type'] == REP_MONTHLY)
       {
-
-        if (isset($data['month_absolute']))
-        {
-          $new = $data['month_absolute'];
-        }
-        elseif (isset($data['month_relative']))
-        {
-          // Note: this does not internationalise very well and could do with revisiting.
-          // It follows the select box order in edit_entry, which is the more difficult one
-          // to sort out.  It assumes all languages have the same order as English
-          // eg "the second Wednesday" which is probably not true.
-          list($ord, $dow) = byday_split($data['month_relative']);
-          $new = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
-        }
-        else
-        {
-          trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
-        }
-        if (isset($mail_previous['month_absolute']))
-        {
-          $old = $mail_previous['month_absolute'];
-        }
-        elseif (isset($mail_previous['month_relative']))
-        {
-          // Note: this does not internationalise very well and could do with revisiting.
-          // It follows the select box order in edit_entry, which is the more difficult one
-          // to sort out.  It assumes all languages have the same order as English
-          // eg "the second Wednesday" which is probably not true.
-          list($ord, $dow) = byday_split($mail_previous['month_relative']);
-          $old = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
-        }
-        else
-        {
-          trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
-        }
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
-                                        $new,
-                                        $old,
+                                        get_monthly_repeat_day($data),
+                                        get_monthly_repeat_day($mail_previous),
                                         $compare, $as_html);
       }
 

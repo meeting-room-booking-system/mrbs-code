@@ -1836,6 +1836,32 @@ function day_name(int $daynumber, ?string $format=null) : string
   return utf8_strftime($format, mktime(0,0,0,1,2+$daynumber,2000));
 }
 
+
+// Gets the monthly repeat day for an entry, for example "20" or "second Wednesday"
+function get_monthly_repeat_day(array $data) : string
+{
+  if (isset($data['month_absolute']))
+  {
+    $result = $data['month_absolute'];
+  }
+  elseif (isset($data['month_relative']))
+  {
+    // Note: this does not internationalise very well and could do with revisiting.
+    // It follows the select box order in edit_entry, which is the more difficult one
+    // to sort out.  It assumes all languages have the same order as English
+    // eg "the second Wednesday" which is probably not true.
+    list($ord, $dow) = byday_split($data['month_relative']);
+    $result = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
+  }
+  else
+  {
+    trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+  }
+
+  return $result;
+}
+
+
 // Returns a list of repeat days as a string (eg "Thursday Friday")
 //
 //    $rep_opt     an array of repeat days or
