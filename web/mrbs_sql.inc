@@ -1680,7 +1680,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     trigger_error("id not set", E_USER_WARNING);
     if ($silent)
     {
-      return FALSE;
+      return false;
     }
     else
     {
@@ -1689,30 +1689,32 @@ function get_booking_info($id, $series, $silent=FALSE)
   }
 
   $table = ($series) ? _tbl('repeat') : _tbl('entry');
-  $table_fields = db()->field_info($table);
 
-  // Build an array of the field names in the repeat table so that
-  // we'll be able to do some sanity checking later
-  $repeat_fields = db()->field_info(_tbl('repeat'));
-  $rep_fields = array();
-  foreach ($repeat_fields as $field)
+  $columns = Columns::getInstance($table);
+
+  if (!$series)
   {
-    $rep_fields[$field['name']] = 1;
+    // Build an array of the column names in the repeat table so that
+    // we'll be able to do some sanity checking later
+    $repeat_columns = Columns::getInstance(_tbl('repeat'));
+    $repeat_column_names = $repeat_columns->getNames();
   }
 
-  $terms = array("M.room_name",
-                 "M.room_admin_email",
-                 "M.area_id",
-                 "A.area_name",
-                 "A.area_admin_email",
-                 "M.disabled AS room_disabled",
-                 "A.disabled AS area_disabled",
-                 "A.enable_periods",
-                 "(end_time - start_time) AS duration");
+  $terms = array(
+      'M.room_name',
+      'M.room_admin_email',
+      'M.area_id',
+      'A.area_name',
+      'A.area_admin_email',
+      'M.disabled AS room_disabled',
+      'A.disabled AS area_disabled',
+      'A.enable_periods',
+      '(end_time - start_time) AS duration'
+    );
 
-  foreach ($table_fields as $field)
+  foreach ($columns as $column)
   {
-    switch ($field['name'])
+    switch ($column->name)
     {
       // these fields only exist in the entry table
       case 'entry_type':
@@ -1725,7 +1727,7 @@ function get_booking_info($id, $series, $silent=FALSE)
       case 'registration_opens_enabled':
       case 'registration_closes':
       case 'registration_closes_enabled':
-        array_push($terms, $field['name']);
+        array_push($terms, $column->name);
         break;
 
       case 'timestamp':
@@ -1737,11 +1739,11 @@ function get_booking_info($id, $series, $silent=FALSE)
       case 'info_text':
         if ($series)
         {
-          array_push($terms, $field['name'] . " AS repeat_".$field['name']);
+          array_push($terms, $column->name . " AS repeat_" . $column->name);
         }
         else
         {
-          array_push($terms, $field['name'] . " AS entry_".$field['name']);
+          array_push($terms, $column->name . " AS entry_" . $column->name);
         }
         break;
 
@@ -1749,14 +1751,14 @@ function get_booking_info($id, $series, $silent=FALSE)
         // These are (a) all the standard fields which are common to the entry
         // and repeat tables and (b) all the custom fields, which should be
         // common to the two tables (we will do a check to make sure)
-        if (!$series && !array_key_exists($field['name'], $rep_fields))
+        if (!$series && !in_array($column->name, $repeat_column_names))
         {
           // If this is the entry table then check that the custom field also
           // exists in the repeat table
-          fatal_error("Custom fields problem, '".$field['name']."' exists in entry table but not in repeat table");
+          fatal_error("Custom fields problem, '" . $column->name . "' exists in entry table but not in repeat table");
         }
 
-        array_push($terms, "T." . db()->quote($field['name']));
+        array_push($terms, "T." . db()->quote($column->name));
         break;
     }
   }
@@ -1777,7 +1779,7 @@ function get_booking_info($id, $series, $silent=FALSE)
     trigger_error(db()->error(), E_USER_WARNING);
     if ($silent)
     {
-      return FALSE;
+      return false;
     }
     else
     {
@@ -1803,7 +1805,6 @@ function get_booking_info($id, $series, $silent=FALSE)
       fatal_error(($series ? get_vocab("invalid_series_id") : get_vocab("invalid_entry_id")));
     }
   }
-
 
   // Turn the last_updated column into an int (PostgreSQL will return a float)
   $row['last_updated'] = intval($row['last_updated']);
@@ -1854,7 +1855,7 @@ function get_booking_info($id, $series, $silent=FALSE)
         }
         if ($silent)
         {
-          return FALSE;
+          return false;
         }
         else
         {
