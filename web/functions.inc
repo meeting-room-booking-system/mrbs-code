@@ -1842,7 +1842,7 @@ function get_monthly_repeat_day(array $data) : string
 {
   if (isset($data['month_absolute']))
   {
-    $result = $data['month_absolute'];
+    $result = (string) $data['month_absolute'];
   }
   elseif (isset($data['month_relative']))
   {
