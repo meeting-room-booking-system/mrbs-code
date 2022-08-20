@@ -1708,7 +1708,7 @@ function registration_somewhere() : bool
 // Returns the results in an array with keys the same as the table
 // field names.  In the event of an error stops with a fatal error,
 // unless $silent is TRUE, when it returns FALSE.
-function get_booking_info($id, $series, $silent=FALSE)
+function get_booking_info(int $id, bool $series, bool $silent=false)
 {
   // Check that we've got an id
   if (!isset($id))

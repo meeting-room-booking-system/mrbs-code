@@ -12,7 +12,7 @@ require_once "functions_mail.inc";
 // Get non-standard form variables
 $action = get_form_var('action', 'string');
 $id = get_form_var('id', 'int');
-$series = get_form_var('series', 'int');
+$series = get_form_var('series', 'bool');
 $returl = get_form_var('returl', 'string');
 $note = get_form_var('note', 'string');
 
