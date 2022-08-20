@@ -764,7 +764,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 //   $data     an array containing all the data concerning this booking
 //   $action   the action that has caused this email to be sent
 //
-function create_addresses($data, $action)
+function create_addresses(array $data, string $action)
 {
   global $approval_enabled, $mail_settings;
 
