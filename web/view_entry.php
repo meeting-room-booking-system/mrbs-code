@@ -504,7 +504,7 @@ function generateTextArea($form_action, $id, $series, $action_type, $returl, $su
 // If $series is TRUE, it means that the $id is the id of an
 // entry in the repeat table.  Otherwise it's from the entry table.
 $id = get_form_var('id', 'int');
-$series = get_form_var('series', 'int');
+$series = get_form_var('series', 'bool');
 $action = get_form_var('action', 'string');
 $returl = get_form_var('returl', 'string');
 $error = get_form_var('error', 'string');
