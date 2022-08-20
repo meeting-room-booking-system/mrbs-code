@@ -301,7 +301,7 @@ function get_room_admin_email($id, $series=FALSE)
 // Plain text:  returns "$label: $new" . MAIL_EOL
 // HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>" . MAIL_EOL
 // If $compare is TRUE then a third column is output with $old in parentheses
-function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=FALSE)
+function create_body_table_row(string $label, string $new, string $old='', bool $compare=false, bool $as_html=false) : string
 {
   $result  = ($as_html) ? '<tr>' . MAIL_EOL : '';
 
