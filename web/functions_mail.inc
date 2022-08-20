@@ -757,14 +757,13 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
 // create_addresses($data, $action)
 //
 // Returns an array indexed by 'from', 'to' and 'cc' with each element
-// consisting of a comma separated list of email addresses, or else
-// FALSE if there are no 'to' or 'cc' addresses
+// consisting of a comma separated list of email addresses.
 //
 // Parameters:
 //   $data     an array containing all the data concerning this booking
 //   $action   the action that has caused this email to be sent
 //
-function create_addresses(array $data, string $action)
+function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
@@ -859,16 +858,12 @@ function create_addresses(array $data, string $action)
       $to[] = $booker->mailbox();
     }
   }
-  // In case $to and $cc are empty, no need to go further
-  if (empty($to) && empty($cc))
-  {
-    return false;
-  }
 
   $addresses = array();
   $addresses['from'] = $from;
-  $addresses['to']   = get_address_list($to);
-  $addresses['cc'] = get_address_list($cc);
+  $addresses['to'] = (empty($to)) ? '' : get_address_list($to);
+  $addresses['cc'] = (empty($cc)) ? '' : get_address_list($cc);
+
   return $addresses;
 }
 
@@ -903,7 +898,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
-  if ($addresses === FALSE)
+  if (empty($addresses['to']) && empty($addresses['cc']))
   {
     mail_debug('Email abandoned: no addresses.');
     return;
@@ -1018,7 +1013,7 @@ function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete
 
   // Set up the addresses (from, to and cc)
   $addresses = create_addresses($data, $action);
-  if ($addresses === FALSE)
+  if (empty($addresses['to']) && empty($addresses['cc']))
   {
     mail_debug('Email abandoned: no addresses.');
     return;
