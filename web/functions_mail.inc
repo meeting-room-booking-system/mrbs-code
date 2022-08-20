@@ -341,7 +341,7 @@ function create_body_table_row($label, $new, $old='', $compare=FALSE, $as_html=F
 //
 //   $dates      an array of start times
 //   $as_html    (boolean) whether the list should be HTML or plain text
-function create_date_list($dates, $as_html)
+function create_date_list(array $dates, $as_html)
 {
   $result = ($as_html) ? '<ul>' . MAIL_EOL : '';
   foreach ($dates as $date)
@@ -362,7 +362,7 @@ function create_date_list($dates, $as_html)
 // Generate a list of repeat dates for a series
 //
 // $reps is an array of start_times that have been created/modified/deleted.
-function create_repeat_list($data, $action, $as_html, $reps)
+function create_repeat_list($data, $action, $as_html, array $reps)
 {
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
@@ -410,7 +410,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body($data, $mail_previous, $compare, $series, $action, $start_times, $as_html=false, ?string $note=null)
+function create_body(array $data, ?array $mail_previous, bool $compare, bool $series, string $action, array $start_times, bool $as_html=false, ?string $note=null) : string
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
