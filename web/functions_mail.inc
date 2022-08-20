@@ -410,7 +410,7 @@ function create_repeat_list($data, $action, $as_html, $reps)
 
 // $start_times is an array of start_times that have been created/modified/deleted.
 // If not specified the function works them out for itself from the repeat data
-function create_body($data, $mail_previous, $compare, $series, $action, $start_times, $as_html=false, $note='')
+function create_body($data, $mail_previous, $compare, $series, $action, $start_times, $as_html=false, ?string $note=null)
 {
   global $mrbs_company;
   global $enable_periods, $approval_enabled, $confirmation_enabled;
@@ -479,7 +479,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       $body .= get_mail_vocab("mail_body_more_info", $user_escaped);
       $body .= ($as_html) ? '</p><p>' : MAIL_EOL . MAIL_EOL;
       $body .= get_mail_vocab("info_requested") . ": ";
-      $body .= $note;
+      $body .= $note ?? '';
       break;
     case "remind":
       $body .= get_mail_vocab("mail_body_reminder");
@@ -488,7 +488,7 @@ function create_body($data, $mail_previous, $compare, $series, $action, $start_t
       $body .= get_mail_vocab("mail_body_rej_entry", $user_escaped);
       $body .= ($as_html) ? '</p><p>' : MAIL_EOL . MAIL_EOL;
       $body .= get_mail_vocab("reason") . ': ';
-      $body .= $note;
+      $body .= $note ?? '';
       break;
     case "delete":
       $body .= get_mail_vocab("mail_body_del_entry", $user_escaped);
@@ -887,7 +887,7 @@ function create_addresses($data, $action)
  * @param string  $action        the booking action (eg "delete", "more_info", etc.)
  * @param string  $note          a note that is used with "more_info"
  */
-function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', string $note='') : void
+function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry, bool $series, array $start_times, string $action='book', ?string $note=null) : void
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
@@ -1002,7 +1002,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
  * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
  * @param   string  $note      a note that is used with 'reject'
  */
-function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete', $note='')
+function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete', ?string $note=null)
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
