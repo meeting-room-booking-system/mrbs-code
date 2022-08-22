@@ -113,7 +113,7 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
  *
  * @param   timestamp   $t         timestamp to format
  * @param   boolean     $inc_time  include time in return string
- * @return  string                 formated string
+ * @return  string                 formatted string
  */
 function getMailTimeDateString($t, $inc_time=TRUE)
 {
