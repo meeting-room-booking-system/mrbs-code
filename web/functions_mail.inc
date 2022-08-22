@@ -111,11 +111,11 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
 /**
  * Format a timestamp in non-unicode output (for emails).
  *
- * @param   timestamp   $t         timestamp to format
+ * @param   int         $t         timestamp to format
  * @param   boolean     $inc_time  include time in return string
  * @return  string                 formatted string
  */
-function getMailTimeDateString($t, $inc_time=TRUE)
+function getMailTimeDateString(int $t, bool $inc_time=true) : string
 {
   global $twentyfourhour_format, $strftime_format;
 
