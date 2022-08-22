@@ -77,11 +77,11 @@ function get_mail_field_name(string $table, string $name) : string
 /**
  * Format a timestamp in non-unicode output (for emails).
  *
- * @param   timestamp   $t
+ * @param   int         $t
  * @param   int         $mod_time
  * @return  array
  */
-function getMailPeriodDateString($t, $mod_time=0)
+function getMailPeriodDateString(int $t, int $mod_time=0) : array
 {
   global $periods, $strftime_format;
 
