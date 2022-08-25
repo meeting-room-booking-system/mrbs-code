@@ -2,6 +2,8 @@
 
 namespace MRBS;
 
+use ResourceBundle;
+
 class System
 {
   // A set of special cases for mapping a language to a default region
@@ -911,7 +913,7 @@ class System
     }
 
     // Get the available locales
-    $locales = \ResourceBundle::getLocales('');
+    $locales = ResourceBundle::getLocales('');
     // Put our locale into PHP's format
     $locale = Locale::composeLocale(Locale::parseLocale($langtag));
     // See whether our locale exists.   Note that if it does we return the original
