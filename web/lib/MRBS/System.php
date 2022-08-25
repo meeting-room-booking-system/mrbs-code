@@ -858,7 +858,7 @@ class System
     );
 
 
-  public static function getServerOS()
+  public static function getServerOS() : string
   {
     static $server_os = null;
 
@@ -899,7 +899,7 @@ class System
 
 
   // Checks whether $langtag is advertised as being available on this system
-  private static function isAdvertisedLocale($langtag)
+  private static function isAdvertisedLocale(string $langtag) : string
   {
     if (!class_exists('\\ResourceBundle'))
     {
@@ -923,7 +923,7 @@ class System
 
 
   // Checks whether $langtag, which is in BCP 47 format, is available on this system
-  public static function isAvailableLocale($langtag)
+  public static function isAvailableLocale(string $langtag) : bool
   {
     // If the OS tells us it's available, then that's enough
     if (self::isAdvertisedLocale($langtag))
@@ -984,7 +984,7 @@ class System
 
 
   // Add a codeset suffix to $locale
-  private static function addCodeset($locale)
+  private static function addCodeset(string $locale) : string
   {
     $server_os = self::getServerOS();
 
@@ -1013,7 +1013,7 @@ class System
   // a BCP 47 language tag.  There is an array of locales to try because some
   // operating systems and versions accept locales with underscores, some with
   // hyphens and some as special codes.
-  public static function getOSlocale($langtag)
+  public static function getOSlocale(string $langtag) : array
   {
     $locales = self::getLocaleAlternatives($langtag);
 
@@ -1029,7 +1029,7 @@ class System
   // of MRBS where the $override_locale config setting was required to be operating
   // system specific (eg 'en_GB.utf-8' on Unix systems or 'eng' on Windows).  Now
   // $override_locale should be in BCP 47 format, but we accept old-style settings.
-  public static function getBCPlocale($locale)
+  public static function getBCPlocale(string $locale) : string
   {
     $result = $locale;
 
@@ -1057,7 +1057,7 @@ class System
   }
 
 
-  public static function utf8ConvertFromLocale($string, $locale=null)
+  public static function utf8ConvertFromLocale(string $string, ?string $locale=null)
   {
     $server_os = self::getServerOS();
 
@@ -1085,7 +1085,7 @@ class System
   }
 
 
-  private static function getLocaleAlternatives($langtag)
+  private static function getLocaleAlternatives(string $langtag) : array
   {
     $locales = array();
 
@@ -1136,7 +1136,7 @@ class System
 
 
   // Returns the default region for a language
-  private static function getDefaultRegion($language)
+  private static function getDefaultRegion(string $language) : string
   {
     if (isset(self::$default_regions[$language]))
     {
@@ -1150,7 +1150,7 @@ class System
   // AIX version of utf8_convert(); needed as locales won't give us UTF-8
   // NOTE: Should ONLY be called with input encoded in the default code set of the current locale!
   // NOTE: Uses the LC_TIME category for determining the current locale setting, so should preferably be used on date/time input only!
-  private static function utf8ConvertAix($string, $aix_locale = null)
+  private static function utf8ConvertAix(string $string, ?string $aix_locale=null) : string
   {
     if (!isset($aix_locale))
     {
@@ -1190,7 +1190,7 @@ class System
 
   // Translates a GNU libiconv character encoding name to its corresponding IBM AIX libiconv character
   // encoding name. Returns FALSE if character encoding name is unknown.
-  private static function getAixCharacterEncoding($character_encoding)
+  private static function getAixCharacterEncoding(?string $character_encoding)
   {
     // Check arguments
     if ($character_encoding == null ||
@@ -1214,7 +1214,7 @@ class System
 
 
   // Tests whether $langtag can be set on this system. Preserves the current locale.
-  private static function testLocale($langtag)
+  private static function testLocale(string $langtag) : bool
   {
     // Save the original locales so that we can restore them later.   Note that
     // there could be different locales for different categories
