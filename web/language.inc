@@ -212,7 +212,7 @@ set_vocab($lang);
 
 
 // Determines whether we are using a RTL language
-function using_rtl_lang()
+function using_rtl_lang() : bool
 {
   global $rtl_languages;
 
@@ -730,34 +730,28 @@ function set_vocab($lang)
 }
 
 
-function get_charset()
+function get_charset() : string
 {
   return 'utf-8';
 }
 
 
-function get_mail_charset()
+function get_mail_charset() : string
 {
   return PHPMailer::CHARSET_UTF8;
 }
 
 
-function get_csv_charset()
+function get_csv_charset() : string
 {
   global $csv_charset;
-  if (empty($csv_charset))
-  {
-    return get_charset();
-  }
-  else
-  {
-    return $csv_charset;
-  }
+
+  return (empty($csv_charset)) ? get_charset() : $csv_charset;
 }
 
 
 // Returns the language that MRBS is using, in BCP-47 format
-function get_lang()
+function get_lang() : string
 {
   global $lang;
 
