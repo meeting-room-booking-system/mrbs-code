@@ -18,7 +18,18 @@ class DB_mysql extends DB
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
 
-  public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
+  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+  // The attribute is only recognised by PHP 8.2 and later.
+  public function __construct(
+    $db_host,
+    #[SensitiveParameter]
+    $db_username,
+    #[SensitiveParameter]
+    $db_password,
+    #[SensitiveParameter]
+    $db_name,
+    $persist=false,
+    $db_port=null)
   {
     global $db_retries, $db_delay;
 

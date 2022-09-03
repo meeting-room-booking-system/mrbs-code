@@ -16,7 +16,18 @@ class DB_pgsql extends DB
   private static $min_version = '9.6';
 
 
-  public function __construct($db_host, $db_username, $db_password, $db_name, $persist=false, $db_port=null)
+  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+  // The attribute is only recognised by PHP 8.2 and later.
+  public function __construct(
+    $db_host,
+    #[SensitiveParameter]
+    $db_username,
+    #[SensitiveParameter]
+    $db_password,
+    #[SensitiveParameter]
+    $db_name,
+    $persist=false,
+    $db_port=null)
   {
     try
     {
