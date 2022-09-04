@@ -21,7 +21,7 @@ namespace MRBS;
 /**********
  * Timezone
  **********/
- 
+
 // The timezone your meeting rooms run in. It is especially important
 // to set this if you're using PHP 5 on Linux. In this configuration
 // if you don't, meetings in a different DST than you are currently
@@ -71,7 +71,7 @@ $db_tbl_prefix = "mrbs_";
 // locks (see http://php.net/manual/en/features.persistent-connections.php) and although
 // MRBS tries to avoid those problems, it is generally better not to use persistent
 // connections if you can.
-$db_persist = FALSE;
+$db_persist = false;
 
 
 /* Add lines from systemdefaults.inc.php and areadefaults.inc.php below here

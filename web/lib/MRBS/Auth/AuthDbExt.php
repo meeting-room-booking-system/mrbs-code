@@ -264,8 +264,8 @@ class AuthDbExt extends Auth
       }
 
       // Establish a connection
-      $persist = 0;
-      $port = isset($auth['db_ext']['db_port']) ? (int)$auth['db_ext']['db_port'] : null;
+      $persist = false;
+      $port = isset($auth['db_ext']['db_port']) ? (int) $auth['db_ext']['db_port'] : null;
 
       $connection = DBFactory::create(
           $auth['db_ext']['db_system'],
