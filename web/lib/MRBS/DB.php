@@ -22,29 +22,29 @@ abstract class DB
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
   abstract   public function __construct(
-    $db_host,
+    string $db_host,
     #[SensitiveParameter]
-    $db_username,
+    string $db_username,
     #[SensitiveParameter]
-    $db_password,
+    string $db_password,
     #[SensitiveParameter]
-    $db_name,
-    $persist=false,
-    $db_port=null);
+    string $db_name,
+    bool $persist=false,
+    ?int $db_port=null);
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
   protected function connect(
-    $db_host,
+    string $db_host,
     #[SensitiveParameter]
-    $db_username,
+    string $db_username,
     #[SensitiveParameter]
-    $db_password,
+    string $db_password,
     #[SensitiveParameter]
-    $db_name,
-    $persist=false,
-    $db_port=null)
+    string $db_name,
+    bool $persist=false,
+    ?int $db_port=null)
   {
     // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
