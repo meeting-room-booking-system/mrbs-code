@@ -33,8 +33,18 @@ abstract class DB
     $db_port=null);
 
 
-  protected function connect($db_host, $db_username, $db_password,
-                             $db_name, $persist=false, $db_port=null)
+  // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
+  // The attribute is only recognised by PHP 8.2 and later.
+  protected function connect(
+    $db_host,
+    #[SensitiveParameter]
+    $db_username,
+    #[SensitiveParameter]
+    $db_password,
+    #[SensitiveParameter]
+    $db_name,
+    $persist=false,
+    $db_port=null)
   {
     // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
