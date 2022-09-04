@@ -9,16 +9,16 @@ class DBFactory
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
   public static function create(
-    $db_system,
-    $db_host,
+    string $db_system,
+    string $db_host,
     #[SensitiveParameter]
-    $db_username,
+    string $db_username,
     #[SensitiveParameter]
-    $db_password,
+    string $db_password,
     #[SensitiveParameter]
-    $db_name,
-    $persist=false,
-    $db_port=null)
+    string $db_name,
+    bool $persist=false,
+    ?int $db_port=null)
   {
     switch ($db_system)
     {
