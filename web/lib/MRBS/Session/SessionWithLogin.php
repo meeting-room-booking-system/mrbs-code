@@ -145,7 +145,11 @@ abstract class SessionWithLogin extends Session
 
 
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
-  protected function getValidUser(?string $username, ?string $password) : string
+  protected function getValidUser(
+    #[SensitiveParameter]
+    ?string $username,
+    #[SensitiveParameter]
+    ?string $password) : string
   {
     if (($valid_username = auth()->validateUser($this->form['username'], $this->form['password'])) === false)
     {
