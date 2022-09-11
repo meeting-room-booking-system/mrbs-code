@@ -33,7 +33,11 @@ class AuthIdcheck extends AuthNone
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser(?string $user, ?string $pass)
+  public function validateUser(
+    #[SensitiveParameter]
+    ?string $user,
+    #[SensitiveParameter]
+    ?string $pass)
   {
     // Method provided for completeness as it's an abstract method.
     // However it's not used by the 'remote_user' session scheme.
