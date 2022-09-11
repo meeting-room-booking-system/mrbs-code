@@ -286,7 +286,12 @@ class AuthDb extends Auth
   }
 
 
-  public function resetPassword(?string $username, ?string $key, ?string $password) : bool
+  public function resetPassword(
+    #[SensitiveParameter]
+    ?string $username,
+    ?string $key,
+    #[SensitiveParameter]
+    ?string $password) : bool
   {
     // Check that we've got a password and we're allowed to reset the password
     if (!isset($password) || !auth()->isValidReset($username, $key))
@@ -707,7 +712,11 @@ class AuthDb extends Auth
   }
 
 
-  private function rehash(string $password, string $column_name, string $column_value) : void
+  private function rehash(
+    #[SensitiveParameter]
+    string $password,
+    string $column_name,
+    string $column_value) : void
   {
     $sql_params = array(password_hash($password, PASSWORD_DEFAULT));
 
@@ -743,7 +752,11 @@ class AuthDb extends Auth
   // where $column_name=$column_value.  Typically $column_name will be either
   // 'name' or 'email'.
   // Returns a boolean: true if they match, otherwise false.
-  private function checkPassword(string $password, string $password_hash, string $column_name, string $column_value) : bool
+  private function checkPassword(
+    #[SensitiveParameter] string $password,
+    string $password_hash,
+    string $column_name,
+    string $column_value) : bool
   {
     $result = false;
     $do_rehash = false;
