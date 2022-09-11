@@ -753,7 +753,8 @@ class AuthDb extends Auth
   // 'name' or 'email'.
   // Returns a boolean: true if they match, otherwise false.
   private function checkPassword(
-    #[SensitiveParameter] string $password,
+    #[SensitiveParameter]
+    string $password,
     string $password_hash,
     string $column_name,
     string $column_value) : bool
