@@ -27,7 +27,11 @@ abstract class Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  abstract public function validateUser(?string $user, ?string $pass);
+  abstract public function validateUser(
+    #[SensitiveParameter]
+    ?string $user,
+    #[SensitiveParameter]
+    ?string $pass);
 
 
   protected function getUserFresh(string $username) : ?User

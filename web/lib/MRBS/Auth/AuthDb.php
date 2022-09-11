@@ -32,7 +32,11 @@ class AuthDb extends Auth
    *   false    - The pair are invalid or do not exist
    *   string   - The validated username
    */
-  public function validateUser(?string $user, ?string $pass)
+  public function validateUser(
+    #[SensitiveParameter]
+    ?string $user,
+    #[SensitiveParameter]
+    ?string $pass)
   {
     // The string $user that the user logged on with could be either a username or
     // an email address, or even possibly just the local part of an email address.
