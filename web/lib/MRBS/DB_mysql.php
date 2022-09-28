@@ -109,20 +109,7 @@ class DB_mysql extends DB
   }
 
 
-  // Acquire a mutual-exclusion lock on the named table. For portability:
-  // This will not lock out SELECTs.
-  // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
-  // It will lock out other callers of this routine with the same name argument.
-  // It will timeout in 20 seconds and return false.
-  // It returns true when the lock has been acquired.
-  // Caller must release the lock with mutex_unlock().
-  // Caller must not have more than one mutex at any time.
-  // Do not mix this with begin()/end() calls.
-  //
-  // In MySQL, we avoid table locks, and use low-level locks instead.
-  //
-  // Note that MySQL 5.7.5 allows multiple locks, but we only allow one in case the
-  // MySQL version is earlier than 5.7.5.
+  // Acquire a mutual-exclusion lock
   public function mutex_lock(string $name) : bool
   {
     $timeout = 20;  // seconds
@@ -186,8 +173,7 @@ class DB_mysql extends DB
   }
 
 
-  // Release a mutual-exclusion lock on the named table.
-  // Returns true if the lock is released successfully, otherwise false
+  // Release a mutual-exclusion lock
   public function mutex_unlock(string $name) : bool
   {
     // First do some sanity checking before executing the SQL query
