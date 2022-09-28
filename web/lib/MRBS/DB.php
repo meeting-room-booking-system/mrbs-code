@@ -33,6 +33,20 @@ abstract class DB
     ?int $db_port=null);
 
 
+  // Destructor cleans up the connection
+  public function __destruct()
+  {
+    // Release any forgotten locks
+    foreach ($this->mutex_locks as $lock)
+    {
+      $this->mutex_unlock($lock);
+    }
+
+    // Rollback any outstanding transactions
+    $this->rollback();
+  }
+
+
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
   protected function connect(
@@ -287,8 +301,5 @@ abstract class DB
   // Release a mutual-exclusion lock.
   // Returns true if the lock is released successfully, otherwise false.
   abstract public function mutex_unlock(string $name) : bool;
-
-  // Destructor cleans up the connection
-  abstract public function __destruct();
 
 }

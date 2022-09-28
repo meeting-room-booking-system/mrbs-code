@@ -142,20 +142,6 @@ class DB_pgsql extends DB
   }
 
 
-  // Destructor cleans up the connection
-  function __destruct()
-  {
-    // Release any forgotten locks
-    foreach ($this->mutex_locks as $lock)
-    {
-      $this->mutex_unlock($lock);
-    }
-
-    // Rollback any outstanding transactions
-    $this->rollback();
-  }
-
-
   // Check if a table exists
   public function table_exists($table)
   {
