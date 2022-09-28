@@ -112,7 +112,7 @@ class DB_pgsql extends DB
 
     if ($result)
     {
-      $this->mutex_lock_name = $name;
+      $this->mutex_locks[] = $name;
     }
 
     return $result;
@@ -132,7 +132,10 @@ class DB_pgsql extends DB
 
     if ($result)
     {
-      $this->mutex_lock_name = null;
+      if (($key = array_search($name, $this->mutex_locks)) !== false)
+      {
+        unset($this->mutex_locks[$key]);
+      }
     }
 
     return $result;
@@ -142,12 +145,10 @@ class DB_pgsql extends DB
   // Destructor cleans up the connection
   function __destruct()
   {
-    //print "PostgreSQL destructor called\n";
-
     // Release any forgotten locks
-    if (isset($this->mutex_lock_name))
+    foreach ($this->mutex_locks as $lock)
     {
-      $this->mutex_unlock($this->mutex_lock_name);
+      $this->mutex_unlock($lock);
     }
 
     // Rollback any outstanding transactions
