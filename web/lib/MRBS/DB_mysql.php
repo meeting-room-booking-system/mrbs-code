@@ -123,7 +123,7 @@ class DB_mysql extends DB
   //
   // Note that MySQL 5.7.5 allows multiple locks, but we only allow one in case the
   // MySQL version is earlier than 5.7.5.
-  public function mutex_lock($name)
+  public function mutex_lock(string $name) : bool
   {
     $timeout = 20;  // seconds
 
@@ -188,7 +188,7 @@ class DB_mysql extends DB
 
   // Release a mutual-exclusion lock on the named table.
   // Returns true if the lock is released successfully, otherwise false
-  public function mutex_unlock($name)
+  public function mutex_unlock(string $name) : bool
   {
     // First do some sanity checking before executing the SQL query
     if (!isset($this->mutex_lock_name))
