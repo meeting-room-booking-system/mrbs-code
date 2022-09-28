@@ -16,7 +16,7 @@ abstract class DB
   const DB_CHARSET = 'UTF8';
 
   protected $dbh = null;
-  protected $mutex_lock_name;
+  protected $mutex_locks = array();
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.

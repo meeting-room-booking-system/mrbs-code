@@ -115,9 +115,9 @@ class DB_mysql extends DB
   {
     $timeout = 20;  // seconds
 
-    if (isset($this->mutex_lock_name))
+    if (!empty($this->mutex_locks))
     {
-      $message = "Trying to set lock '$name', but lock '" . $this->mutex_lock_name .
+      $message = "Trying to set lock '$name', but lock '" . $this->mutex_locks[0] .
                  "' already exists.  Only one lock is allowed at any one time.";
       trigger_error($message, E_USER_WARNING);
       return false;
@@ -150,7 +150,7 @@ class DB_mysql extends DB
 
     if ($result == '1')
     {
-      $this->mutex_lock_name = $name;
+      $this->mutex_locks[] = $name;
       return true;
     }
 
@@ -179,17 +179,9 @@ class DB_mysql extends DB
   public function mutex_unlock(string $name) : bool
   {
     // First do some sanity checking before executing the SQL query
-    if (!isset($this->mutex_lock_name))
+    if (!in_array($name, $this->mutex_locks))
     {
       trigger_error("Trying to release a lock ('$name') which hasn't been set", E_USER_WARNING);
-      return false;
-    }
-
-    if ($this->mutex_lock_name != $name)
-    {
-      $message = "Trying to release lock '$name' when the lock that has been set is '" .
-                 $this->mutex_lock_name . "'";
-      trigger_error($message, E_USER_WARNING);
       return false;
     }
 
@@ -215,7 +207,10 @@ class DB_mysql extends DB
 
     if ($result == '1')
     {
-      $this->mutex_lock_name = null;
+      if (($key = array_search($name, $this->mutex_locks)) !== false)
+      {
+        unset($this->mutex_locks[$key]);
+      }
       return true;
     }
 
@@ -242,11 +237,10 @@ class DB_mysql extends DB
   // Destructor cleans up the connection
   public function __destruct()
   {
-    //print "MySQL destructor called\n";
-     // Release any forgotten locks
-    if (isset($this->mutex_lock_name))
+    // Release any forgotten locks
+    foreach ($this->mutex_locks as $lock)
     {
-      $this->mutex_unlock($this->mutex_lock_name);
+      $this->mutex_unlock($lock);
     }
 
     // Rollback any outstanding transactions
