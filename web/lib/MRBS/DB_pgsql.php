@@ -100,7 +100,7 @@ class DB_pgsql extends DB
 
 
   // Acquire a mutual-exclusion lock.
-  // Returns true if the lock is released successfully, otherwise false.
+  // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
     $result = $this->query1("SELECT pg_try_advisory_lock(" . self::hash($name) . ")");
