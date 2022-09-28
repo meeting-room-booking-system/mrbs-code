@@ -273,4 +273,22 @@ abstract class DB
     return ($res->count() > 0);
   }
 
+  // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
+  abstract public function quote($identifier);
+
+  // Return the value of an autoincrement field from the last insert.
+  // Must be called right after an insert on that table!
+  abstract public function insert_id($table, $field);
+
+  // Acquire a mutual-exclusion lock.
+  // Returns true if the lock is acquired successfully, otherwise false.
+  abstract public function mutex_lock(string $name) : bool;
+
+  // Release a mutual-exclusion lock.
+  // Returns true if the lock is released successfully, otherwise false.
+  abstract public function mutex_unlock(string $name) : bool;
+
+  // Destructor cleans up the connection
+  abstract public function __destruct();
+
 }
