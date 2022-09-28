@@ -282,11 +282,11 @@ abstract class DB
   // Caller must release the lock with mutex_unlock().
   // Caller must not have more than one mutex at any time.
   // Do not mix this with begin()/end() calls.
-  abstract public function mutex_lock($name);
+  abstract public function mutex_lock(string $name) : bool;
 
   // Release a mutual-exclusion lock on the named table.
   // Returns true if the lock is released successfully, otherwise false
-  abstract public function mutex_unlock($name);
+  abstract public function mutex_unlock(string $name) : bool;
 
   // Destructor cleans up the connection
   abstract public function __destruct();
