@@ -91,7 +91,7 @@ class DB_mysql extends DB
 
 
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
-  public function quote($identifier)
+  public function quote(string $identifier) : string
   {
     $quote_char = '`';
     $parts = explode('.', $identifier);

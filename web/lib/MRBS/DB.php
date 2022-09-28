@@ -281,7 +281,7 @@ abstract class DB
   }
 
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
-  abstract public function quote($identifier);
+  abstract public function quote(string $identifier) : string;
 
   // Return the value of an autoincrement field from the last insert.
   // Must be called right after an insert on that table!

@@ -87,7 +87,7 @@ class DB_pgsql extends DB
   // should be discouraged.   And a PostgreSQL user generating custom fields would expect them to
   // be folded to lower case anyway, so presumably wouldn't try and create column names differing
   // only in case.
-  public function quote($identifier)
+  public function quote(string $identifier) : string
   {
     $quote_char = '"';
     $parts = explode('.', strtolower($identifier));
