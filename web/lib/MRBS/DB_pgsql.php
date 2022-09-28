@@ -104,52 +104,48 @@ class DB_pgsql extends DB
   }
 
 
-  // Acquire a mutual-exclusion lock on the named table. For portability:
-  // This will not lock out SELECTs.
-  // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
-  // It will lock out other callers of this routine with the same name argument.
-  // It may timeout and return false, or may wait forever.
-  // It returns true when the lock has been acquired.
-  // Caller must release the lock with mutex_unlock().
-  // Caller must not have more than one mutex at any time.
-  // Do not mix this with begin()/end() calls.
-  //
-  // In PostgreSQL, the EXCLUSIVE mode lock excludes all but SELECT.
-  // It does not timeout, but waits forever for the lock.
-  public function mutex_lock($name)
+  // Hash a string into an int
+  private static function hash(string $name) : int
   {
-    try
-    {
-      // LOCK TABLE can only be used in transaction blocks
-      if (!$this->dbh->inTransaction())
-      {
-        $this->begin();
-      }
-      $this->command("LOCK TABLE $name IN EXCLUSIVE MODE");
-    }
-    catch (DBException $e)
-    {
-      return false;
-    }
-
-    $this->mutex_lock_name = $name;
-    return true;
+    return crc32($name);
   }
 
 
-  // Release a mutual-exclusion lock on the named table. See mutex_lock().
-  // In PostgreSQL, all locks are released by closing the transaction; there
-  // is no other way.
-  // Returns true if the lock is released successfully, otherwise false
-  public function mutex_unlock($name)
+  // Acquire a mutual-exclusion lock
+  public function mutex_lock(string $name) : bool
   {
-    if ($this->dbh->inTransaction())
+    $result = $this->query1("SELECT pg_try_advisory_lock(" . self::hash($name) . ")");
+
+    if (!is_bool($result))
     {
-      $this->commit();
+      $result = false;
     }
 
-    $this->mutex_lock_name = null;
-    return true;
+    if ($result)
+    {
+      $this->mutex_lock_name = $name;
+    }
+
+    return $result;
+  }
+
+
+  // Release a mutual-exclusion lock.
+  public function mutex_unlock(string $name) : bool
+  {
+    $result = $this->query1("SELECT pg_advisory_unlock(" . self::hash($name) . ")");
+
+    if (!is_bool($result))
+    {
+      $result = false;
+    }
+
+    if ($result)
+    {
+      $this->mutex_lock_name = null;
+    }
+
+    return $result;
   }
 
 
@@ -161,7 +157,7 @@ class DB_pgsql extends DB
     // Release any forgotten locks
     if (isset($this->mutex_lock_name))
     {
-      $this->command("ABORT", array());
+      $this->mutex_unlock($this->mutex_lock_name);
     }
 
     // Rollback any outstanding transactions
