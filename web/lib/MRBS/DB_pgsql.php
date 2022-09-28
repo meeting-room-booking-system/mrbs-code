@@ -152,20 +152,7 @@ class DB_pgsql extends DB
 
     return $result;
   }
-
-
-  // Destructor cleans up the connection
-  public function __destruct()
-  {
-    // Release any forgotten locks
-    foreach ($this->mutex_locks as $lock)
-    {
-      $this->mutex_unlock($lock);
-    }
-
-    // Rollback any outstanding transactions
-    $this->rollback();
-  }
+  
 
   // Return a string identifying the database version
   public function version()
