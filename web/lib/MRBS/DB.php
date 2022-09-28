@@ -273,19 +273,12 @@ abstract class DB
   // Must be called right after an insert on that table!
   abstract public function insert_id($table, $field);
 
-  // Acquire a mutual-exclusion lock on the named table. For portability:
-  // This will not lock out SELECTs.
-  // It may lock out DELETE/UPDATE/INSERT or not, depending on the implementation.
-  // It will lock out other callers of this routine with the same name argument.
-  // It will timeout in 20 seconds and return false.
-  // It returns true when the lock has been acquired.
-  // Caller must release the lock with mutex_unlock().
-  // Caller must not have more than one mutex at any time.
-  // Do not mix this with begin()/end() calls.
+  // Acquire a mutual-exclusion lock.
+  // Returns true if the lock is acquired successfully, otherwise false.
   abstract public function mutex_lock(string $name) : bool;
 
-  // Release a mutual-exclusion lock on the named table.
-  // Returns true if the lock is released successfully, otherwise false
+  // Release a mutual-exclusion lock.
+  // Returns true if the lock is released successfully, otherwise false.
   abstract public function mutex_unlock(string $name) : bool;
 
   // Destructor cleans up the connection
