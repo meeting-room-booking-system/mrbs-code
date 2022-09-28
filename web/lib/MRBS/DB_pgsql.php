@@ -99,7 +99,8 @@ class DB_pgsql extends DB
   }
 
 
-  // Acquire a mutual-exclusion lock
+  // Acquire a mutual-exclusion lock.
+  // Returns true if the lock is released successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
     $result = $this->query1("SELECT pg_try_advisory_lock(" . self::hash($name) . ")");
@@ -118,7 +119,8 @@ class DB_pgsql extends DB
   }
 
 
-  // Release a mutual-exclusion lock
+  // Release a mutual-exclusion lock.
+  // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
     $result = $this->query1("SELECT pg_advisory_unlock(" . self::hash($name) . ")");

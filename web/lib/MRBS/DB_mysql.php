@@ -109,7 +109,8 @@ class DB_mysql extends DB
   }
 
 
-  // Acquire a mutual-exclusion lock
+  // Acquire a mutual-exclusion lock.
+  // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
     $timeout = 20;  // seconds
@@ -173,7 +174,8 @@ class DB_mysql extends DB
   }
 
 
-  // Release a mutual-exclusion lock
+  // Release a mutual-exclusion lock.
+  // Returns true if the lock is released successfully, otherwise false.
   public function mutex_unlock(string $name) : bool
   {
     // First do some sanity checking before executing the SQL query
