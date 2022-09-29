@@ -1,4 +1,4 @@
-/*! jQuery UI - v1.13.1 - 2022-05-14
+/*! jQuery UI - v1.13.2 - 2022-09-29
 * http://jqueryui.com
 * Includes: widget.js, position.js, data.js, disable-selection.js, focusable.js, form-reset-mixin.js, keycode.js, labels.js, scroll-parent.js, tabbable.js, unique-id.js, widgets/draggable.js, widgets/resizable.js, widgets/autocomplete.js, widgets/button.js, widgets/checkboxradio.js, widgets/controlgroup.js, widgets/dialog.js, widgets/menu.js, widgets/mouse.js, widgets/tabs.js
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
@@ -20,11 +20,11 @@
 
 $.ui = $.ui || {};
 
-var version = $.ui.version = "1.13.1";
+var version = $.ui.version = "1.13.2";
 
 
 /*!
- * jQuery UI Widget 1.13.1
+ * jQuery UI Widget 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -766,7 +766,7 @@ var widget = $.widget;
 
 
 /*!
- * jQuery UI Position 1.13.1
+ * jQuery UI Position 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1263,7 +1263,7 @@ var position = $.ui.position;
 
 
 /*!
- * jQuery UI :data 1.13.1
+ * jQuery UI :data 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1292,7 +1292,7 @@ var data = $.extend( $.expr.pseudos, {
 } );
 
 /*!
- * jQuery UI Disable Selection 1.13.1
+ * jQuery UI Disable Selection 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1327,7 +1327,7 @@ var disableSelection = $.fn.extend( {
 
 
 /*!
- * jQuery UI Focusable 1.13.1
+ * jQuery UI Focusable 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1409,7 +1409,7 @@ var form = $.fn._form = function() {
 
 
 /*!
- * jQuery UI Form Reset Mixin 1.13.1
+ * jQuery UI Form Reset Mixin 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1471,7 +1471,7 @@ var formResetMixin = $.ui.formResetMixin = {
 
 
 /*!
- * jQuery UI Keycode 1.13.1
+ * jQuery UI Keycode 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1506,7 +1506,7 @@ var keycode = $.ui.keyCode = {
 
 
 /*!
- * jQuery UI Labels 1.13.1
+ * jQuery UI Labels 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1561,7 +1561,7 @@ var labels = $.fn.labels = function() {
 
 
 /*!
- * jQuery UI Scroll Parent 1.13.1
+ * jQuery UI Scroll Parent 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1595,7 +1595,7 @@ var scrollParent = $.fn.scrollParent = function( includeHidden ) {
 
 
 /*!
- * jQuery UI Tabbable 1.13.1
+ * jQuery UI Tabbable 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1619,7 +1619,7 @@ var tabbable = $.extend( $.expr.pseudos, {
 
 
 /*!
- * jQuery UI Unique ID 1.13.1
+ * jQuery UI Unique ID 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1661,7 +1661,7 @@ var uniqueId = $.fn.extend( {
 var ie = $.ui.ie = !!/msie [\w.]+/.exec( navigator.userAgent.toLowerCase() );
 
 /*!
- * jQuery UI Mouse 1.13.1
+ * jQuery UI Mouse 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1681,7 +1681,7 @@ $( document ).on( "mouseup", function() {
 } );
 
 var widgetsMouse = $.widget( "ui.mouse", {
-	version: "1.13.1",
+	version: "1.13.2",
 	options: {
 		cancel: "input, textarea, button, select, option",
 		distance: 1,
@@ -1953,7 +1953,7 @@ var safeBlur = $.ui.safeBlur = function( element ) {
 
 
 /*!
- * jQuery UI Draggable 1.13.1
+ * jQuery UI Draggable 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -1970,7 +1970,7 @@ var safeBlur = $.ui.safeBlur = function( element ) {
 
 
 $.widget( "ui.draggable", $.ui.mouse, {
-	version: "1.13.1",
+	version: "1.13.2",
 	widgetEventPrefix: "drag",
 	options: {
 		addClasses: true,
@@ -3188,7 +3188,7 @@ var widgetsDraggable = $.ui.draggable;
 
 
 /*!
- * jQuery UI Resizable 1.13.1
+ * jQuery UI Resizable 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -3207,7 +3207,7 @@ var widgetsDraggable = $.ui.draggable;
 
 
 $.widget( "ui.resizable", $.ui.mouse, {
-	version: "1.13.1",
+	version: "1.13.2",
 	widgetEventPrefix: "resize",
 	options: {
 		alsoResize: false,
@@ -4386,7 +4386,7 @@ var widgetsResizable = $.ui.resizable;
 
 
 /*!
- * jQuery UI Menu 1.13.1
+ * jQuery UI Menu 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -4405,7 +4405,7 @@ var widgetsResizable = $.ui.resizable;
 
 
 var widgetsMenu = $.widget( "ui.menu", {
-	version: "1.13.1",
+	version: "1.13.2",
 	defaultElement: "<ul>",
 	delay: 300,
 	options: {
@@ -5077,7 +5077,7 @@ var widgetsMenu = $.widget( "ui.menu", {
 
 
 /*!
- * jQuery UI Autocomplete 1.13.1
+ * jQuery UI Autocomplete 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -5096,7 +5096,7 @@ var widgetsMenu = $.widget( "ui.menu", {
 
 
 $.widget( "ui.autocomplete", {
-	version: "1.13.1",
+	version: "1.13.2",
 	defaultElement: "<input>",
 	options: {
 		appendTo: null,
@@ -5733,7 +5733,7 @@ var widgetsAutocomplete = $.ui.autocomplete;
 
 
 /*!
- * jQuery UI Controlgroup 1.13.1
+ * jQuery UI Controlgroup 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -5754,7 +5754,7 @@ var widgetsAutocomplete = $.ui.autocomplete;
 var controlgroupCornerRegex = /ui-corner-([a-z]){2,6}/g;
 
 var widgetsControlgroup = $.widget( "ui.controlgroup", {
-	version: "1.13.1",
+	version: "1.13.2",
 	defaultElement: "<div>",
 	options: {
 		direction: "horizontal",
@@ -6018,7 +6018,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 } );
 
 /*!
- * jQuery UI Checkboxradio 1.13.1
+ * jQuery UI Checkboxradio 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -6038,7 +6038,7 @@ var widgetsControlgroup = $.widget( "ui.controlgroup", {
 
 
 $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
-	version: "1.13.1",
+	version: "1.13.2",
 	options: {
 		disabled: null,
 		label: null,
@@ -6050,8 +6050,7 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 	},
 
 	_getCreateOptions: function() {
-		var disabled, labels;
-		var that = this;
+		var disabled, labels, labelContents;
 		var options = this._super() || {};
 
 		// We read the type here, because it makes more sense to throw a element type error first,
@@ -6071,12 +6070,18 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 
 		// We need to get the label text but this may also need to make sure it does not contain the
 		// input itself.
-		this.label.contents().not( this.element[ 0 ] ).each( function() {
+		// The label contents could be text, html, or a mix. We wrap all elements
+		// and read the wrapper's `innerHTML` to get a string representation of
+		// the label, without the input as part of it.
+		labelContents = this.label.contents().not( this.element[ 0 ] );
 
-			// The label contents could be text, html, or a mix. We concat each element to get a
-			// string representation of the label, without the input as part of it.
-			that.originalLabel += this.nodeType === 3 ? $( this ).text() : this.outerHTML;
-		} );
+		if ( labelContents.length ) {
+			this.originalLabel += labelContents
+				.clone()
+				.wrapAll( "<div></div>" )
+				.parent()
+				.html();
+		}
 
 		// Set the label option if we found label text
 		if ( this.originalLabel ) {
@@ -6284,7 +6289,7 @@ var widgetsCheckboxradio = $.ui.checkboxradio;
 
 
 /*!
- * jQuery UI Button 1.13.1
+ * jQuery UI Button 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -6303,7 +6308,7 @@ var widgetsCheckboxradio = $.ui.checkboxradio;
 
 
 $.widget( "ui.button", {
-	version: "1.13.1",
+	version: "1.13.2",
 	defaultElement: "<button>",
 	options: {
 		classes: {
@@ -6709,7 +6714,7 @@ var widgetsButton = $.ui.button;
 
 
 /*!
- * jQuery UI Dialog 1.13.1
+ * jQuery UI Dialog 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -6728,7 +6733,7 @@ var widgetsButton = $.ui.button;
 
 
 $.widget( "ui.dialog", {
-	version: "1.13.1",
+	version: "1.13.2",
 	options: {
 		appendTo: "body",
 		autoOpen: true,
@@ -7634,7 +7639,7 @@ var widgetsDialog = $.ui.dialog;
 
 
 /*!
- * jQuery UI Tabs 1.13.1
+ * jQuery UI Tabs 1.13.2
  * http://jqueryui.com
  *
  * Copyright jQuery Foundation and other contributors
@@ -7653,7 +7658,7 @@ var widgetsDialog = $.ui.dialog;
 
 
 $.widget( "ui.tabs", {
-	version: "1.13.1",
+	version: "1.13.2",
 	delay: 300,
 	options: {
 		active: null,
