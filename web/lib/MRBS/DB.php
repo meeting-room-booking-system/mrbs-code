@@ -262,7 +262,7 @@ abstract class DB
 
     return ($result == -1) ? '' : $result;
   }
-  
+
 
   // Return a boolean depending on whether $field exists in $table
   public function field_exists($table, $field)
