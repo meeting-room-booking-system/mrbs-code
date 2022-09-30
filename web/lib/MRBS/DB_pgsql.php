@@ -161,6 +161,12 @@ class DB_pgsql extends DB
   }
 
 
+  public function version()
+  {
+    return $this->versionString();
+  }
+
+
   // Just returns a version number, eg "9.2.24"
   private function server_version()
   {
