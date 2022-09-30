@@ -246,16 +246,6 @@ class DB_mysql extends DB
   }
 
 
-  // Returns the version string, eg "8.0.28"
-  // or "10.3.36-MariaDB-log-cll-lve".
-  private function versionString() : string
-  {
-    $result = $this->query1("SELECT VERSION()");
-
-    return ($result == -1) ? '' : $result;
-  }
-
-
   // Return a string identifying the database version and type
   public function version() : string
   {
