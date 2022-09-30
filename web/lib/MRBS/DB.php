@@ -254,10 +254,13 @@ abstract class DB
   }
 
 
-  // Return a string identifying the database version
-  public function version()
+  // Returns the version string, eg "8.0.28"
+  // or "10.3.36-MariaDB-log-cll-lve".
+  protected function versionString() : string
   {
-    return $this->query1("SELECT VERSION()");
+    $result = $this->query1("SELECT VERSION()");
+
+    return ($result == -1) ? '' : $result;
   }
 
 
@@ -301,5 +304,8 @@ abstract class DB
   // Release a mutual-exclusion lock.
   // Returns true if the lock is released successfully, otherwise false.
   abstract public function mutex_unlock(string $name) : bool;
+
+  // Return a string identifying the database version
+  abstract public function version();
 
 }
