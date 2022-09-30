@@ -254,6 +254,16 @@ abstract class DB
   }
 
 
+  // Returns the version string, eg "8.0.28"
+  // or "10.3.36-MariaDB-log-cll-lve".
+  protected function versionString() : string
+  {
+    $result = $this->query1("SELECT VERSION()");
+
+    return ($result == -1) ? '' : $result;
+  }
+  
+
   // Return a boolean depending on whether $field exists in $table
   public function field_exists($table, $field)
   {
