@@ -10,6 +10,8 @@ class DB_pgsql extends DB
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER = "pgsql";
 
+  private static $min_version = '8.2';
+
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
@@ -27,6 +29,13 @@ class DB_pgsql extends DB
     try
     {
       $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+      $this_version = $this->server_version();
+      if (version_compare($this_version, self::$min_version) < 0)
+      {
+        $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
+          " This server is running version $this_version.";
+        die($message);
+      }
     }
     catch (PDOException $e)
     {
@@ -139,6 +148,13 @@ class DB_pgsql extends DB
     }
 
     return $result;
+  }
+
+
+  // Just returns a version number, eg "9.2.24"
+  private function server_version()
+  {
+    return $this->query1("SHOW SERVER_VERSION");
   }
 
 
