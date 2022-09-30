@@ -55,9 +55,9 @@ class DB_pgsql extends DB
 
   // A small utility function (not part of the DB abstraction API) to
   // resolve a qualified table name into its schema and table components.
-  // Returns an an array indexed by 'table_schema' and 'table_name'.
+  // Returns an array indexed by 'table_schema' and 'table_name'.
   // 'table_schema' can be NULL
-  private static function resolve_table($table)
+  private static function resolve_table(string $table) : array
   {
     if (utf8_strpos($table, '.') === false)
     {
