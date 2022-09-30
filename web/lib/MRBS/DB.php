@@ -112,6 +112,12 @@ abstract class DB
   }
 
 
+  public function getAttribute(int $attribute)
+  {
+    return $this->dbh->getAttribute($attribute);
+  }
+
+
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Throws a DBException on error.
