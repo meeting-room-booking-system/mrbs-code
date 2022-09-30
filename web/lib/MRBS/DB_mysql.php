@@ -234,10 +234,32 @@ class DB_mysql extends DB
   }
 
 
-  // Return a string identifying the database version
-  public function version()
+  // Returns the version_comment variable, eg "MySQL Community Server - GPL"
+  // or "MariaDB Server".
+  private function versionComment() : string
   {
-    return "MySQL " . $this->query1("SELECT VERSION()");
+    $sql = "SHOW variables LIKE 'version_comment'";
+    $res = db()->query($sql);
+    $row = $res->next_row_keyed();
+
+    return ($row === false) ? '' : $row['Value'];
+  }
+
+
+  // Returns the version string, eg "8.0.28"
+  // or "10.3.36-MariaDB-log-cll-lve".
+  private function versionString() : string
+  {
+    $result = $this->query1("SELECT VERSION()");
+
+    return ($result == -1) ? '' : $result;
+  }
+
+
+  // Return a string identifying the database version and type
+  public function version() : string
+  {
+    return $this->versionComment() . ' ' . $this->versionString();
   }
 
 
