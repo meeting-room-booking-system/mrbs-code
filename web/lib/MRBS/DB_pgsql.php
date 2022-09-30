@@ -54,7 +54,7 @@ class DB_pgsql extends DB
   // resolve a qualified table name into its schema and table components.
   // Returns an array indexed by 'table_schema' and 'table_name'.
   // 'table_schema' can be NULL
-  private static function resolve_table($table)
+  private static function resolve_table(string $table) : array
   {
     if (utf8_strpos($table, '.') === false)
     {
