@@ -254,8 +254,9 @@ abstract class DB
   }
 
 
-  // Returns the version string, eg "8.0.28"
-  // or "10.3.36-MariaDB-log-cll-lve".
+  // Returns the version string, eg "8.0.28",
+  // "10.3.36-MariaDB-log-cll-lve" or
+  // "PostgreSQL 14.2, compiled by Visual C++ build 1914, 64-bit".
   protected function versionString() : string
   {
     $result = $this->query1("SELECT VERSION()");
