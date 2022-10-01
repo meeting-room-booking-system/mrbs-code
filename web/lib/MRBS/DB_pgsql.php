@@ -29,13 +29,7 @@ class DB_pgsql extends DB
     try
     {
       $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-      $this_version = $this->versionNumber();
-      if (version_compare($this_version, self::$min_version) < 0)
-      {
-        $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
-          " This server is running version $this_version.";
-        die($message);
-      }
+      $this->checkVersion();
     }
     catch (PDOException $e)
     {
@@ -148,6 +142,16 @@ class DB_pgsql extends DB
     }
 
     return $result;
+  }
+
+
+  private function checkVersion()
+  {
+    $this_version = $this->versionNumber();
+    if (version_compare($this_version, self::$min_version) < 0)
+    {
+      $this->versionDie('PostgreSQL', $this_version, self::$min_version);
+    }
   }
 
 

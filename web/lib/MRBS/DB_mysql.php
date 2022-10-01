@@ -264,7 +264,6 @@ class DB_mysql extends DB
 
       $this->versionDie('MySQL', $this_version, self::$min_versions['mysql']);
     }
-
   }
 
 
