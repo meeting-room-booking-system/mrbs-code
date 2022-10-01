@@ -112,6 +112,12 @@ abstract class DB
   }
 
 
+  public function getAttribute(int $attribute)
+  {
+    return $this->dbh->getAttribute($attribute);
+  }
+
+
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples affected if OK (a number >= 0).
   // Throws a DBException on error.
@@ -254,11 +260,22 @@ abstract class DB
   }
 
 
+  protected function versionDie(string $database, string $this_version, string $min_version)
+  {
+    $message = "MRBS requires $database version $min_version or higher. " .
+               "This server is running version $this_version.";
+    die($message);
+  }
+
+
   // Returns the version string, eg "8.0.28",
   // "10.3.36-MariaDB-log-cll-lve" or
   // "PostgreSQL 14.2, compiled by Visual C++ build 1914, 64-bit".
   protected function versionString() : string
   {
+    // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
+    // sometimes also give you the version prefix (so-called "replication
+    // version hack") with MariaDB.
     $result = $this->query1("SELECT VERSION()");
 
     return ($result == -1) ? '' : $result;

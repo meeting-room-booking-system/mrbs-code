@@ -32,7 +32,7 @@ class DB_pgsql extends DB
     try
     {
       $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
-      $this_version = $this->server_version();
+      $this_version = $this->versionNumber();
       if (version_compare($this_version, self::$min_version) < 0)
       {
         $message = "MRBS requires PostgreSQL must be version " . self::$min_version . " or higher." .
@@ -168,7 +168,7 @@ class DB_pgsql extends DB
 
 
   // Just returns a version number, eg "9.2.24"
-  private function server_version()
+  private function versionNumber() : string
   {
     return $this->query1("SHOW SERVER_VERSION");
   }

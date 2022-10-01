@@ -2,6 +2,7 @@
 
 namespace MRBS;
 
+use PDO;
 use PDOException;
 
 //
@@ -17,6 +18,10 @@ class DB_mysql extends DB
   const ER_TOO_MANY_USER_CONNECTIONS  = 1203; // User %s already has more than 'max_user_connections' active connections
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
+  private static $min_versions = array(
+      //'mariadb' => '10.0.2',
+      'mysql'   => '5.5.3'
+    );
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
@@ -46,6 +51,7 @@ class DB_mysql extends DB
         $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
         // Set $attempts_left to zero as we won't have got here if an exception has been thrown
         $attempts_left = 0;
+        $this->checkVersion();
         // Turn off ONLY_FULL_GROUP_BY mode (which is the default in MySQL 5.7.5 and later) to prevent SQL
         // errors of the type "Syntax error or access violation: 1055 'mrbs.E.start_time' isn't in GROUP BY".
         // TODO: However the proper solution is probably to rewrite the offending queries.
@@ -234,15 +240,54 @@ class DB_mysql extends DB
   }
 
 
+  private function isMariaDB() : bool
+  {
+    return (false !== utf8_stripos($this->versionComment(), 'maria'));
+  }
+
+
+  private function checkVersion()
+  {
+    $this_version = $this->versionNumber();
+    if ($this->isMariaDB())
+    {
+      if (isset(self::$min_versions['mariadb']) &&
+          (version_compare($this_version, self::$min_versions['mariadb']) < 0))
+      {
+
+        $this->versionDie('MariaDB', $this_version, self::$min_versions['mariadb']);
+      }
+    }
+    elseif (isset(self::$min_versions['mysql']) &&
+            (version_compare($this_version, self::$min_versions['mysql']) < 0))
+    {
+
+      $this->versionDie('MySQL', $this_version, self::$min_versions['mysql']);
+    }
+
+  }
+
+
   // Returns the version_comment variable, eg "MySQL Community Server - GPL"
   // or "MariaDB Server".
   private function versionComment() : string
   {
     $sql = "SHOW variables LIKE 'version_comment'";
-    $res = db()->query($sql);
+    $res = $this->query($sql);
     $row = $res->next_row_keyed();
 
     return ($row === false) ? '' : $row['Value'];
+  }
+
+
+  private function versionNumber() : string
+  {
+    $result = $this->versionString();
+
+    // Extract the version number
+    preg_match('/^\d+(\.\d+)+/', $result, $matches);
+
+    return $matches[0];
   }
 
 
