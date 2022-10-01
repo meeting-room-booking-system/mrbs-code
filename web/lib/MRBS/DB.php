@@ -333,4 +333,7 @@ abstract class DB
   // Return a string identifying the database version and type
   abstract public function version() : string;
 
+  // Check if a table exists
+  abstract public function table_exists(string $table) : bool;
+
 }
