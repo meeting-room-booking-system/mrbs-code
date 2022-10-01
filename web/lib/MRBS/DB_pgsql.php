@@ -146,13 +146,6 @@ class DB_pgsql extends DB
 
     return $result;
   }
-  
-
-  // Return a string identifying the database version
-  public function version()
-  {
-    return $this->query1("SELECT VERSION()");
-  }
 
 
   // Checks that the database version meets the minimum requirement and dies if not
