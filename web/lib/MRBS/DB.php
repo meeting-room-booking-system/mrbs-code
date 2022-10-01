@@ -334,7 +334,7 @@ abstract class DB
   abstract public function version() : string;
 
   // Check if a table exists
-  abstract public function table_exists($table);
+  abstract public function table_exists(string $table) : bool;
 
   // Get information about the columns in a table
   // Returns an array with the following indices for each column
