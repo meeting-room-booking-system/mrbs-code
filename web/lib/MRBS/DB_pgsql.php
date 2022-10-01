@@ -171,7 +171,7 @@ class DB_pgsql extends DB
 
 
   // Check if a table exists
-  public function table_exists($table)
+  public function table_exists(string $table) : bool
   {
     // $table can be a qualified name.  We need to resolve it if necessary into its component
     // parts, the schema and table names
