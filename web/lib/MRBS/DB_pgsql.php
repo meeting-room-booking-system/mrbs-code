@@ -155,7 +155,8 @@ class DB_pgsql extends DB
   }
 
 
-  private function checkVersion()
+  // Checks that the database version meets the minimum requirement and dies if not
+  private function checkVersion() : void
   {
     $this_version = $this->versionNumber();
     if (version_compare($this_version, self::$min_version) < 0)
@@ -165,7 +166,8 @@ class DB_pgsql extends DB
   }
 
 
-  public function version()
+  // Return a string identifying the database version and type
+  public function version() : string
   {
     return $this->versionString();
   }

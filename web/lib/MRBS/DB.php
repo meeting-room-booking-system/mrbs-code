@@ -261,7 +261,8 @@ abstract class DB
   }
 
 
-  protected function versionDie(string $database, string $this_version, string $min_version)
+  // Dies with a message that the database version is lower than the minimum required
+  protected function versionDie(string $database, string $this_version, string $min_version) : void
   {
     $message = "MRBS requires $database version $min_version or higher. " .
                "This server is running version $this_version.";
@@ -329,8 +330,8 @@ abstract class DB
   // Returns true if the lock is released successfully, otherwise false.
   abstract public function mutex_unlock(string $name) : bool;
 
-  // Return a string identifying the database version
-  abstract public function version();
+  // Return a string identifying the database version and type
+  abstract public function version() : string;
 
   // Check if a table exists
   abstract public function table_exists($table);
