@@ -246,7 +246,8 @@ class DB_mysql extends DB
   }
 
 
-  private function checkVersion()
+  // Checks that the database version meets the minimum requirement and dies if not
+  private function checkVersion() : void
   {
     $this_version = $this->versionNumber();
     if ($this->isMariaDB())
@@ -279,6 +280,7 @@ class DB_mysql extends DB
   }
 
 
+  // Returns the database version number as a string
   private function versionNumber() : string
   {
     $result = $this->versionString();
