@@ -1466,13 +1466,24 @@ function utf8_strtoupper($str)
 
 
 // Wrapper round mb_strpos()
-function utf8_strpos($haystack, $needle, $offset=0)
+function utf8_strpos(string $haystack, string $needle, int $offset=0)
 {
   if (function_exists('mb_strpos'))
   {
     return mb_strpos($haystack, $needle, $offset);
   }
   return strpos($haystack, $needle, $offset);
+}
+
+
+// Wrapper round mb_stripos()
+function utf8_stripos(string $haystack, string $needle, int $offset=0)
+{
+  if (function_exists('mb_stripos'))
+  {
+    return mb_stripos($haystack, $needle, $offset);
+  }
+  return stripos($haystack, $needle, $offset);
 }
 
 
