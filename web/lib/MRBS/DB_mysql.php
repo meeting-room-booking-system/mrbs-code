@@ -511,14 +511,14 @@ class DB_mysql extends DB
   }
 
   // Generate non-standard SQL to match a string anywhere in a field's value
-  // in a case insensitive manner. $s is the un-escaped/un-slashed string.
+  // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
   //
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
   //
-  // In MySQL, REGEXP seems to be case sensitive, so use LIKE instead. But this
+  // In MySQL, REGEXP seems to be case-sensitive, so use LIKE instead. But this
   // requires quoting of % and _ in addition to the usual.
-  public function syntax_caseless_contains($fieldname, $string, &$params)
+  public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string
   {
     $string = str_replace("\\", "\\\\", $string);
     $string = str_replace("%", "\\%", $string);
