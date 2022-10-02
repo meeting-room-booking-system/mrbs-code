@@ -91,7 +91,7 @@ class DB_pgsql extends DB
 
   // Return the value of an autoincrement field from the last insert.
   // For PostgreSQL, this must be a SERIAL type field.
-  public function insert_id($table, $field)
+  public function insert_id(string $table, string $field)
   {
     $seq_name = $table . "_" . $field . "_seq";
     return $this->dbh->lastInsertId($seq_name);
