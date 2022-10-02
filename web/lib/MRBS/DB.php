@@ -352,6 +352,6 @@ abstract class DB
   //
   //  NOTE: the type mapping is incomplete and just covers the types commonly
   //  used by MRBS
-  abstract public function field_info($table);
-  
+  abstract public function field_info(string $table) : array;
+
 }
