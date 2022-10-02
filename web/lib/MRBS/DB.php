@@ -377,7 +377,7 @@ abstract class DB
 
   // Generate non-standard SQL to add a table column after another specified
   // column
-  abstract public function syntax_addcolumn_after($fieldname);
+  abstract public function syntax_addcolumn_after(string $fieldname) : string;
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
