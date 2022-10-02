@@ -375,4 +375,8 @@ abstract class DB
   // parameters appropriately.
   abstract public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string;
 
+  // Generate non-standard SQL to add a table column after another specified
+  // column
+  abstract public function syntax_addcolumn_after($fieldname);
+  
 }
