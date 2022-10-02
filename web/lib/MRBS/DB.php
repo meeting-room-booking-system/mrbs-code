@@ -368,4 +368,11 @@ abstract class DB
   // take account of trailing spaces.
   abstract public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params) : string;
 
+  // Generate non-standard SQL to match a string anywhere in a field's value
+  // in a case insensitive manner. $s is the un-escaped/un-slashed string.
+  //
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  abstract public function syntax_caseless_contains($fieldname, $string, &$params);
+  
 }
