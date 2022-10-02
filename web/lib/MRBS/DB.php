@@ -141,7 +141,7 @@ abstract class DB
   // It returns -1 if the query returns no result, or a single NULL value, such as from
   // a MIN or MAX aggregate function applied over no rows.
   // Throws a DBException on error.
-  function query1(string $sql, array $params = array())
+  public function query1(string $sql, array $params = array())
   {
     try
     {
