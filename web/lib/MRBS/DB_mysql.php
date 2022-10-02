@@ -12,15 +12,22 @@ class DB_mysql extends DB
   const DB_DBO_DRIVER = "mysql";
   const DB_CHARSET = "utf8mb4";
 
+  const DB_MARIADB = 0;
+  const DB_MYSQL   = 1;
+  const DB_OTHER   = 2;
+
   // For a full list of error codes see https://mariadb.com/kb/en/mariadb-error-codes/
   // (That page doesn't list codes only used by MySQL)
   const ER_CON_COUNT_ERROR            = 1040; // Too many connections
   const ER_TOO_MANY_USER_CONNECTIONS  = 1203; // User %s already has more than 'max_user_connections' active connections
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
+  private static $db_type = null;
+  private static $version_comment = null;
+
   private static $min_versions = array(
-      //'mariadb' => '10.0.2',
-      'mysql'   => '5.5.3'
+      self::DB_MARIADB => '10.0.2',
+      self::DB_MYSQL   => '5.5.3'
     );
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -251,31 +258,57 @@ class DB_mysql extends DB
   }
 
 
-  private function isMariaDB() : bool
+  private function dbType() : ?int
   {
-    return (false !== utf8_stripos($this->versionComment(), 'maria'));
+    global $debug;
+
+    if (!isset(self::$db_type))
+    {
+      if (false !== utf8_stripos($this->versionComment(), 'maria'))
+      {
+        self::$db_type = self::DB_MARIADB;
+      }
+      elseif (false !== utf8_stripos($this->versionComment(), 'mysql'))
+      {
+        self::$db_type = self::DB_MYSQL;
+      }
+      else
+      {
+        if ($debug)
+        {
+          trigger_error("Unknown database type '" . $this->versionComment() . "'");
+        }
+        self::$db_type = self::DB_OTHER;
+      }
+    }
+
+    return self::$db_type;
   }
 
 
   // Checks that the database version meets the minimum requirement and dies if not
   private function checkVersion() : void
   {
-    $this_version = $this->versionNumber();
-    if ($this->isMariaDB())
-    {
-      if (isset(self::$min_versions['mariadb']) &&
-          (version_compare($this_version, self::$min_versions['mariadb']) < 0))
-      {
+    $db_version = $this->versionNumber();
+    $db_type = $this->dbType();
 
-        $this->versionDie('MariaDB', $this_version, self::$min_versions['mariadb']);
+    if ($db_type === self::DB_MARIADB)
+    {
+      if (isset(self::$min_versions[self::DB_MARIADB]) &&
+          (version_compare($db_version, self::$min_versions[self::DB_MARIADB]) < 0))
+      {
+        $this->versionDie('MariaDB', $db_version, self::$min_versions[self::DB_MARIADB]);
       }
     }
-    elseif (isset(self::$min_versions['mysql']) &&
-            (version_compare($this_version, self::$min_versions['mysql']) < 0))
+    elseif ($db_type === self::DB_MYSQL)
     {
-
-      $this->versionDie('MySQL', $this_version, self::$min_versions['mysql']);
+      if (isset(self::$min_versions[self::DB_MYSQL]) &&
+          (version_compare($db_version, self::$min_versions[self::DB_MYSQL]) < 0))
+      {
+        $this->versionDie('MySQL', $db_version, self::$min_versions[self::DB_MYSQL]);
+      }
     }
+    // If it's another type of database we'll have to add some minimum version requirements fot it
   }
 
 
@@ -283,11 +316,16 @@ class DB_mysql extends DB
   // or "MariaDB Server".
   private function versionComment() : string
   {
-    $sql = "SHOW variables LIKE 'version_comment'";
-    $res = $this->query($sql);
-    $row = $res->next_row_keyed();
+    if (!isset(self::$version_comment))
+    {
+      $sql = "SHOW variables LIKE 'version_comment'";
+      $res = $this->query($sql);
+      $row = $res->next_row_keyed();
 
-    return ($row === false) ? '' : $row['Value'];
+      self::$version_comment = ($row === false) ? '' : $row['Value'];
+    }
+
+    return self::$version_comment;
   }
 
 
