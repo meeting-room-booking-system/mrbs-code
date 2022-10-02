@@ -368,8 +368,7 @@ class DB_pgsql extends DB
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
   //
-  // In PostgreSQL, we can do case-insensitive regexp with ~*, but not case-
-  // insensitive LIKE matching.
+  // In PostgreSQL, we can do case-insensitive regexp with ~*, but not case-insensitive LIKE matching.
   // Quotemeta escapes everything we need except for single quotes.
   public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string
   {
