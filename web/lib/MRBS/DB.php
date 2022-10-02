@@ -336,4 +336,22 @@ abstract class DB
   // Check if a table exists
   abstract public function table_exists(string $table) : bool;
 
+  // Get information about the columns in a table
+  // Returns an array with the following indices for each column
+  //
+  //  'name'        the column name
+  //  'type'        the type as reported by MySQL
+  //  'nature'      the type mapped onto one of a generic set of types
+  //                (boolean, integer, real, character, binary).   This enables
+  //                the nature to be used by MRBS code when deciding how to
+  //                display fields, without MRBS having to worry about the
+  //                differences between MySQL and PostgreSQL type names.
+  //  'length'      the maximum length of the field in bytes, octets or characters
+  //                (Note:  this could be NULL)
+  //  'is_nullable' whether the column can be set to NULL (boolean)
+  //
+  //  NOTE: the type mapping is incomplete and just covers the types commonly
+  //  used by MRBS
+  abstract public function field_info($table);
+  
 }
