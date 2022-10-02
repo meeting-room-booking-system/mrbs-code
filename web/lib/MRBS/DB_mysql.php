@@ -532,7 +532,7 @@ class DB_mysql extends DB
 
   // Generate non-standard SQL to add a table column after another specified
   // column
-  public function syntax_addcolumn_after($fieldname)
+  public function syntax_addcolumn_after(string $fieldname) : string
   {
     return "AFTER $fieldname";
   }
