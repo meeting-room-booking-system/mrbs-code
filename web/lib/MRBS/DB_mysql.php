@@ -484,14 +484,14 @@ class DB_mysql extends DB
 
 
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-  public function syntax_timestamp_to_unix($fieldname)
+  public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     return " UNIX_TIMESTAMP($fieldname) ";
   }
 
 
-  // Returns the syntax for a case sensitive string "equals" function
-  // (By default MySQL is case insensitive, so we force a binary comparison)
+  // Returns the syntax for a case-sensitive string "equals" function
+  // (By default MySQL is case-insensitive, so we force a binary comparison)
   //
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
