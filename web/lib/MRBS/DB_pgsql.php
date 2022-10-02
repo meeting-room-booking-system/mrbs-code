@@ -378,6 +378,15 @@ class DB_pgsql extends DB
   }
 
 
+  // Generate non-standard SQL to add a table column after another specified
+  // column
+  public function syntax_addcolumn_after(string $fieldname) : string
+  {
+    // Can't be done in PostgreSQL without dropping and re-creating the table.
+    return '';
+  }
+
+  
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
   public function syntax_createtable_autoincrementcolumn()
