@@ -83,7 +83,7 @@ abstract class DB
     $this->dbh = new PDO(static::DB_DBO_DRIVER.":{$hostpart}port=$db_port;dbname=$db_name",
                          $db_username,
                          $db_password,
-                         array(PDO::ATTR_PERSISTENT => (bool) $persist,
+                         array(PDO::ATTR_PERSISTENT => $persist,
                                PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
     $this->command("SET NAMES '".static::DB_CHARSET."'");
   }
