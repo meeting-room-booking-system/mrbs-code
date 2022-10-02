@@ -56,7 +56,7 @@ abstract class DB
     #[SensitiveParameter]
     string $db_name,
     bool $persist=false,
-    ?int $db_port=null)
+    ?int $db_port=null) : void
   {
     // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
@@ -90,7 +90,7 @@ abstract class DB
 
 
   // Output our own message to avoid giving away the database credentials
-  protected function connectError($message)
+  protected function connectError(string $message) : void
   {
     trigger_error($message, E_USER_WARNING);
     fatal_error(get_vocab('fatal_db_error'));
@@ -198,7 +198,7 @@ abstract class DB
   // Execute an SQL query. Returns a DBStatement object, a class with a number
   // of methods like row() and row_keyed() to get the results.
   // Throws a DBException on error
-  public function query ($sql, array $params = array())
+  public function query (string $sql, array $params = array()) : DBStatement
   {
     try
     {
@@ -215,7 +215,7 @@ abstract class DB
 
 
   //
-  public function begin()
+  public function begin() : void
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
@@ -230,7 +230,7 @@ abstract class DB
 
 
   // Commit (end) a transaction. See begin().
-  public function commit()
+  public function commit() : void
   {
     if ($this->dbh->inTransaction())
     {
@@ -241,7 +241,7 @@ abstract class DB
 
 
   // Roll back a transaction, aborting it. See begin().
-  public function rollback()
+  public function rollback() : void
   {
     if ($this->dbh && $this->dbh->inTransaction())
     {
@@ -252,7 +252,7 @@ abstract class DB
 
 
   // Checks if inside a transaction
-  public function inTransaction()
+  public function inTransaction() : bool
   {
     return $this->dbh->inTransaction();
   }
@@ -287,7 +287,7 @@ abstract class DB
 
 
   // Return a boolean depending on whether $field exists in $table
-  public function field_exists($table, $field)
+  public function field_exists(string $table, string $field) : bool
   {
     $rows = $this->field_info($table);
     foreach ($rows as $row)
@@ -302,7 +302,7 @@ abstract class DB
 
 
   // Checks whether a table has duplicate values for a field
-  public function tableHasDuplicates($table, $field)
+  public function tableHasDuplicates(string $table, string $field) : bool
   {
     $sql = "SELECT $field, COUNT(*)
               FROM $table
@@ -317,7 +317,7 @@ abstract class DB
 
   // Return the value of an autoincrement field from the last insert.
   // Must be called right after an insert on that table!
-  abstract public function insert_id($table, $field);
+  abstract public function insert_id(string $table, string $field);
 
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
