@@ -38,10 +38,7 @@ abstract class DB
   public function __destruct()
   {
     // Release any forgotten locks
-    foreach ($this->mutex_locks as $lock)
-    {
-      $this->mutex_unlock($lock);
-    }
+    $this->mutex_unlock_all();
 
     // Rollback any outstanding transactions
     $this->rollback();
@@ -329,6 +326,9 @@ abstract class DB
   // Release a mutual-exclusion lock.
   // Returns true if the lock is released successfully, otherwise false.
   abstract public function mutex_unlock(string $name) : bool;
+
+  // Release all mutual-exclusion locks.
+  abstract public function mutex_unlock_all() : void;
 
   // Return a string identifying the database version and type
   abstract public function version() : string;

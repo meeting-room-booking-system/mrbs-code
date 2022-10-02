@@ -145,6 +145,13 @@ class DB_pgsql extends DB
   }
 
 
+  // Release all mutual-exclusion locks.
+  public function mutex_unlock_all() : void
+  {
+    $this->query1("SELECT pg_advisory_unlock_all()");
+  }
+
+
   // Checks that the database version meets the minimum requirement and dies if not
   private function checkVersion() : void
   {
