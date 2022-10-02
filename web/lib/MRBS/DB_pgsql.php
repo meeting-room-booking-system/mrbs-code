@@ -341,7 +341,7 @@ class DB_pgsql extends DB
 
 
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-  public function syntax_timestamp_to_unix($fieldname)
+  public function syntax_timestamp_to_unix(string $fieldname) : string
   {
     // A PostgreSQL timestamp can be a float.  We need to round it
     // to the nearest integer.
@@ -349,7 +349,7 @@ class DB_pgsql extends DB
   }
 
 
-  // Returns the syntax for a case sensitive string "equals" function
+  // Returns the syntax for a case-sensitive string "equals" function
   //
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.

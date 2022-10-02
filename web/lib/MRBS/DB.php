@@ -358,7 +358,7 @@ abstract class DB
   abstract public function syntax_limit(int $count, int $offset) : string;
 
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-  abstract public function syntax_timestamp_to_unix($fieldname);
+  abstract public function syntax_timestamp_to_unix(string $fieldname) : string;
 
   // Returns the syntax for a case sensitive string "equals" function
   // Also takes a required pass-by-reference parameter to modify the SQL
