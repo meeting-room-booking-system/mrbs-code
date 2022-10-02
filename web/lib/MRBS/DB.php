@@ -360,4 +360,12 @@ abstract class DB
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   abstract public function syntax_timestamp_to_unix(string $fieldname) : string;
 
+  // Returns the syntax for a case sensitive string "equals" function
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  //
+  // NB:  This function is also assumed to do a strict comparison, ie
+  // take account of trailing spaces.
+  abstract public function syntax_casesensitive_equals($fieldname, $string, &$params);
+
 }
