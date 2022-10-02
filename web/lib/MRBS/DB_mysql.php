@@ -477,7 +477,7 @@ class DB_mysql extends DB
   // Syntax methods
 
   // Generate non-standard SQL for LIMIT clauses:
-  public function syntax_limit($count, $offset)
+  public function syntax_limit(int $count, int $offset) : string
   {
    return " LIMIT $offset,$count ";
   }

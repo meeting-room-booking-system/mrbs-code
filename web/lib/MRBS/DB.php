@@ -355,7 +355,7 @@ abstract class DB
   abstract public function field_info(string $table) : array;
 
   // Generate non-standard SQL for LIMIT clauses:
-  abstract public function syntax_limit($count, $offset);
+  abstract public function syntax_limit(int $count, int $offset) : string;
 
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
   abstract public function syntax_timestamp_to_unix($fieldname);
