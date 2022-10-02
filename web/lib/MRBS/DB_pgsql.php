@@ -237,7 +237,7 @@ class DB_pgsql extends DB
   //
   //  NOTE: the type mapping is incomplete and just covers the types commonly
   //  used by MRBS
-  public function field_info($table)
+  public function field_info(string $table) : array
   {
     $fields = array();
 

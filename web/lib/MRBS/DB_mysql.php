@@ -373,7 +373,7 @@ class DB_mysql extends DB
   //
   //  NOTE: the type mapping is incomplete and just covers the types commonly
   //  used by MRBS
-  public function field_info($table)
+  public function field_info(string $table) : array
   {
     // Map MySQL types on to a set of generic types
     $nature_map = array(
