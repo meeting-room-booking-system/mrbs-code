@@ -380,7 +380,7 @@ class DB_pgsql extends DB
     return " $fieldname ~* ? ";
   }
 
-  
+
   // Generate non-standard SQL to add a table column after another specified
   // column
   public function syntax_addcolumn_after(string $fieldname) : string
