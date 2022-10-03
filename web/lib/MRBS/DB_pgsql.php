@@ -399,7 +399,7 @@ class DB_pgsql extends DB
 
 
   // Returns the syntax for a bitwise XOR operator
-  public function syntax_bitwise_xor()
+  public function syntax_bitwise_xor() : string
   {
     return "#";
   }
