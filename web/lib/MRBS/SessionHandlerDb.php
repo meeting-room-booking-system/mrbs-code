@@ -6,7 +6,8 @@ use SessionHandlerInterface;
 
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are
-// not supported in PHP 7.
+// not supported in PHP 7.  Using the #[\ReturnTypeWillChange] attribute
+// does not help because that was only introduced in PHP 8.1.
 if (version_compare(MRBS_MIN_PHP_VERSION, '8.0.0') < 0)
 {
   $old_level = error_reporting();
