@@ -540,7 +540,7 @@ class DB_mysql extends DB
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
-  public function syntax_createtable_autoincrementcolumn()
+  public function syntax_createtable_autoincrementcolumn() : string
   {
     return "int NOT NULL auto_increment";
   }

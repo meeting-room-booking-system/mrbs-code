@@ -381,6 +381,6 @@ abstract class DB
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
-  abstract public function syntax_createtable_autoincrementcolumn();
-  
+  abstract public function syntax_createtable_autoincrementcolumn() : string;
+
 }
