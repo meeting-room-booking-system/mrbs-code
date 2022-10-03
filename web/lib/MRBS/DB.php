@@ -383,4 +383,7 @@ abstract class DB
   // integer while doing a CREATE TABLE
   abstract public function syntax_createtable_autoincrementcolumn() : string;
 
+  // Returns the syntax for a bitwise XOR operator
+  abstract public function syntax_bitwise_xor();
+
 }
