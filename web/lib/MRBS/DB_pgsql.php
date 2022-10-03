@@ -392,7 +392,7 @@ class DB_pgsql extends DB
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
-  public function syntax_createtable_autoincrementcolumn()
+  public function syntax_createtable_autoincrementcolumn() : string
   {
     return "serial";
   }
