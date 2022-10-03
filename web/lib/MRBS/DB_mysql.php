@@ -547,7 +547,7 @@ class DB_mysql extends DB
 
 
   // Returns the syntax for a bitwise XOR operator
-  public function syntax_bitwise_xor()
+  public function syntax_bitwise_xor() : string
   {
     return "^";
   }

@@ -384,6 +384,6 @@ abstract class DB
   abstract public function syntax_createtable_autoincrementcolumn() : string;
 
   // Returns the syntax for a bitwise XOR operator
-  abstract public function syntax_bitwise_xor();
+  abstract public function syntax_bitwise_xor() : string;
 
 }
