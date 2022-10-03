@@ -386,4 +386,10 @@ abstract class DB
   // Returns the syntax for a bitwise XOR operator
   abstract public function syntax_bitwise_xor() : string;
 
+  // Returns the syntax for a simple split of a column's value into two
+  // parts, separated by a delimiter.  $part can be 1 or 2.
+  // Also takes a required pass-by-reference parameter to modify the SQL
+  // parameters appropriately.
+  abstract public function syntax_simple_split($fieldname, $delimiter, $part, &$params);
+
 }
