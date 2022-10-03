@@ -393,6 +393,6 @@ abstract class DB
   abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string;
 
   // Returns the syntax for aggregating a number of rows as a delimited string
-  abstract public function syntax_group_array_as_string($fieldname, $delimiter=',');
+  abstract public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string;
 
 }
