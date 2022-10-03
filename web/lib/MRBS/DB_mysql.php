@@ -577,7 +577,7 @@ class DB_mysql extends DB
 
 
   // Returns the syntax for aggregating a number of rows as a delimited string
-  public function syntax_group_array_as_string($fieldname, $delimiter=',')
+  public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string
   {
     // Use DISTINCT to eliminate duplicates which can arise when the query
     // has joins on two or more junction tables.  Maybe a different query

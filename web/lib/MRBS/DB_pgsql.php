@@ -428,7 +428,7 @@ class DB_pgsql extends DB
 
 
   // Returns the syntax for aggregating a number of rows as a delimited string
-  public function syntax_group_array_as_string($fieldname, $delimiter=',')
+  public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string
   {
     // array_agg introduced in PostgreSQL version 8.4
     //
