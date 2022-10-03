@@ -556,7 +556,7 @@ class DB_mysql extends DB
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
-  public function syntax_simple_split($fieldname, $delimiter, $part, &$params)
+  public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string
   {
     switch ($part)
     {

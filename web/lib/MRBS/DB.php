@@ -390,6 +390,6 @@ abstract class DB
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
-  abstract public function syntax_simple_split($fieldname, $delimiter, $part, &$params);
+  abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string;
 
 }
