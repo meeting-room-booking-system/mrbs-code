@@ -316,7 +316,7 @@ class DB_pgsql extends DB
         $length = $row['character_octet_length'];
       }
       // Convert the is_nullable field to a boolean
-      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes') ? true : false;
+      $is_nullable = (utf8_strtolower($row['is_nullable']) == 'yes');
 
       $fields[] = array(
           'name' => $name,
