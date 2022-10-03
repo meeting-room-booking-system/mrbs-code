@@ -379,4 +379,8 @@ abstract class DB
   // column
   abstract public function syntax_addcolumn_after(string $fieldname) : string;
 
+  // Generate non-standard SQL to specify a column as an auto-incrementing
+  // integer while doing a CREATE TABLE
+  abstract public function syntax_createtable_autoincrementcolumn();
+  
 }
