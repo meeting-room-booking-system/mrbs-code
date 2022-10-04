@@ -2,6 +2,7 @@
 
 namespace MRBS;
 
+use PDOException;
 use SessionHandlerInterface;
 use SessionUpdateTimestampHandlerInterface;
 
@@ -213,7 +214,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
 
       db()->command($sql, $sql_params);
     }
-    catch(\PDOException $e)
+    catch(PDOException $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
       return false;
