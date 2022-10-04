@@ -2,7 +2,9 @@
 
 namespace MRBS;
 
+use PDOException;
 use SessionHandlerInterface;
+use SessionUpdateTimestampHandlerInterface;
 
 // Suppress deprecation notices until we get to requiring at least PHP 8
 // because union types, needed for the return types of read() and gc(), are
@@ -23,7 +25,7 @@ else
 //        directory is not writable
 //    (c) it's more resilient in clustered environments
 
-class SessionHandlerDb implements SessionHandlerInterface
+class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
   private static $table;
 
@@ -156,7 +158,49 @@ class SessionHandlerDb implements SessionHandlerInterface
     db()->command($sql, array(':old' => time() - $max_lifetime));
     return true;  // An exception will be thrown on error
   }
+
+
+  // Need to provide this method to circumvent a bug in some versions of PHP.
+  // See https://github.com/php/php-src/issues/9668
+  public function validateId($id) : bool
+  {
+    $sql = "SELECT COUNT(*)
+              FROM " . self::$table . "
+             WHERE id=:id
+             LIMIT 1";
+
+    return (db()->query1($sql, array(':id' => $id)) == 1);
+  }
+
+
+  // We only need to provide this method because it's part of SessionUpdateTimestampHandlerInterface
+  // which we are implementing in order to provide validateId().
+  public function updateTimestamp($id, $data) : bool
+  {
+    try
+    {
+      $sql = "UPDATE " . self::$table . "
+                 SET access=:access
+               WHERE id=:id";
+
+      $sql_params = array(
+        ':id' => $id,
+        ':access' => time()
+      );
+
+      db()->command($sql, $sql_params);
+    }
+    catch(PDOException $e)
+    {
+      trigger_error($e->getMessage(), E_USER_WARNING);
+      return false;
+    }
+
+    return true;
+  }
+
 }
+
 
 // Restore the original error reporting level
 if (version_compare(MRBS_MIN_PHP_VERSION, '8.0.0') < 0)
