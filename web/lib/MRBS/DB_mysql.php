@@ -155,7 +155,7 @@ class DB_mysql extends DB
 
 
   // Since MySQL 5.7.5 lock names are restricted to 64 characters.
-  // Truncating them is probably sufficient.
+  // Truncating them is probably sufficient to ensure uniqueness.
   private static function hash(string $name) : string
   {
     return substr($name, 0, 64);
