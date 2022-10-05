@@ -153,6 +153,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       $data = base64_encode($data);
     }
 
+    // Acquire a lock
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $id));
 
@@ -228,6 +234,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // which we are implementing in order to provide validateId().
   public function updateTimestamp($id, $data) : bool
   {
+    // Acquire a lock
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
     try
     {
       $sql = "UPDATE " . self::$table . "
@@ -240,13 +252,18 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
         );
 
       db()->command($sql, $sql_params);
-      return true;
+      $result = true;
     }
     catch(PDOException $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
-      return false;
+      $result = false;
     }
+
+    // Release the mutex lock
+    db()->mutex_unlock($id);
+
+    return $result;
   }
 
 }
