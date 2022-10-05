@@ -122,6 +122,32 @@ class DB_mysql extends DB
   }
 
 
+  // Determines whether the database supports multiple locks.
+  // This method should not be called while locks are in place,
+  // because it will release them.
+  public function supportsMultipleLocks() : bool
+  {
+    if (!empty($this->mutex_locks))
+    {
+      throw new Exception(__METHOD__ . " called when there are locks in place.");
+    }
+
+    try
+    {
+      // We could check version numbers, but then we have to test for different
+      // version numbers in MySQL and MariaDB, and possibly others.  It's
+      // probably cleaner to check for the capability to RELEASE_ALL_LOCKS(), which
+      // was introduced at the same time as support for multiple locks.
+      $this->query("SELECT RELEASE_ALL_LOCKS()");
+      return true;
+    }
+    catch(PDOException $e)
+    {
+      return false;
+    }
+  }
+
+
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool

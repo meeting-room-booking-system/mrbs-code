@@ -319,6 +319,12 @@ abstract class DB
   // Must be called right after an insert on that table!
   abstract public function insert_id(string $table, string $field);
 
+  // Determines whether the database supports multiple locks
+  public function supportsMultipleLocks() : bool
+  {
+    return true;
+  }
+
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
   abstract public function mutex_lock(string $name) : bool;
