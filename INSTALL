@@ -4,12 +4,20 @@
 
 REQUIREMENTS
 ---------------------------------------------------------------------------
-MRBS works with both MySQL (Version 5.5.3 and above) and PostgreSQL
-(Version 8.2 and above) systems. You must have at least PHP 7.2, with support
-for your chosen database system installed and working for this application.
-See the PHP (www.php.net), MySQL (www.mysql.com), and PostgreSQL
-(www.postgresql.org) sites for more info on setting these up.   You need
-to know how to install, secure, run, maintain, and back up your chosen database system.
+MRBS works with both MySQL (Version 5.5.3 and above, though MySQL Version
+5.7.5 and above or MariaDB Version 10.0.2 and above are recommended) and
+PostgreSQL (Version 8.2 and above) systems.  [The reason that if you are using
+MySQL you are recommended to use MySQL Version 5.7.5 and above or MariaDB
+Version 10.0.2 and above is that these versions support multiple locks and thus
+enable MRBS to use a custom database session handler.  This is more secure than
+the standard file based session handler, easier to configure and enables MRBS
+to be used on clustered web servers.]
+
+You must have at least PHP 7.2, with support for your chosen database system
+installed and working for this application. See the PHP (www.php.net), MySQL
+(www.mysql.com), and PostgreSQL (www.postgresql.org) sites for more info on
+setting these up.   You need to know how to install, secure, run, maintain,
+and back up your chosen database system.
 
 MRBS also requires that 'iconv' PHP extension, to provide
 internationalisation.

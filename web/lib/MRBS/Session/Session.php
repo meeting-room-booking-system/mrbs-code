@@ -19,4 +19,11 @@ abstract class Session
     return $server['HTTP_REFERER'] ?? null;
   }
 
+
+  // Updates the current and previous pages
+  public function updatePage(string $url) : void
+  {
+    return;
+  }
+
 }
