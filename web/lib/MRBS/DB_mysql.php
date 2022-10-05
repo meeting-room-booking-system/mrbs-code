@@ -290,10 +290,16 @@ class DB_mysql extends DB
   // Release all mutual-exclusion locks.
   public function mutex_unlock_all() : void
   {
-    // In MySQL 5.7.5 and above we can use SELECT RELEASE_ALL_LOCKS()
-    foreach ($this->mutex_locks as $lock)
+    if ($this->supportsMultipleLocks())
     {
-      $this->mutex_unlock($lock);
+      $this->query("SELECT RELEASE_ALL_LOCKS()");
+    }
+    else
+    {
+      foreach ($this->mutex_locks as $lock)
+      {
+        $this->mutex_unlock($lock);
+      }
     }
   }
 
