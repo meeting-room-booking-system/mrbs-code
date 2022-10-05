@@ -89,6 +89,15 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // TODO  to be converted to bytea.
   public function read($id)
   {
+    // Acquire mutex to lock the session id.  When using the default file session handler
+    // locks are obtained using flock().  We need to do something similar in order to prevent
+    // problems with multiple Ajax requests writing to the S_SESSION variable while
+    // another process is still using it.
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+    
     try
     {
       $sql = "SELECT data
@@ -120,6 +129,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // in the database (see read() above).
   public function write($id, $data): bool
   {
+    // Acquire a lock
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
     $rows = db()->query1($sql, array(':id' => $id));
 
@@ -192,6 +207,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // which we are implementing in order to provide validateId().
   public function updateTimestamp($id, $data) : bool
   {
+    // Acquire a lock
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
     try
     {
       $sql = "UPDATE " . self::$table . "
@@ -203,14 +224,19 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
         ':access' => time()
       );
 
-      // There should be one row updated
-      return (1 === db()->command($sql, $sql_params));
+      db()->command($sql, $sql_params);
+      $result = true;
     }
     catch(PDOException $e)
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
-      return false;
+      $result = false;
     }
+
+    // Release the mutex lock
+    db()->mutex_unlock($id);
+
+    return $result;
   }
 
 }
