@@ -69,6 +69,15 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   {
     global $dbsys;
 
+    // Acquire mutex to lock the session id.  When using the default file session handler
+    // locks are obtained using flock().  We need to do something similar in order to prevent
+    // problems with multiple Ajax requests writing to the S_SESSION variable while
+    // another process is still using it.
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+
     try
     {
       $sql = "SELECT data
@@ -152,6 +161,9 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                         ':access' => time());
 
     db()->command($sql, $sql_params);
+
+    // Release the mutex lock
+    db()->mutex_unlock($id);
 
     return true;
   }
