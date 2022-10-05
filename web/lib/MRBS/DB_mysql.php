@@ -168,7 +168,7 @@ class DB_mysql extends DB
   {
     $timeout = 20;  // seconds
 
-    if (!empty($this->mutex_locks))
+    if (!$this->supportsMultipleLocks() && !empty($this->mutex_locks))
     {
       $message = "Trying to set lock '$name', but lock '" . $this->mutex_locks[0] .
                  "' already exists.  Only one lock is allowed at any one time.";
