@@ -23,6 +23,7 @@ class DB_mysql extends DB
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
   private static $db_type = null;
+  private static $supports_multiple_locks = null;
   private static $version_comment = null;
 
   private static $min_versions = array(
@@ -119,6 +120,37 @@ class DB_mysql extends DB
   public function insert_id(string $table, string $field)
   {
     return $this->dbh->lastInsertId();
+  }
+
+
+  // Determines whether the database supports multiple locks.
+  // This method should not be called for the first time while
+  // locks are in place, because it will release them.
+  public function supportsMultipleLocks() : bool
+  {
+    if (!isset(self::$supports_multiple_locks))
+    {
+      if (!empty($this->mutex_locks))
+      {
+        throw new Exception(__METHOD__ . " called when there are locks in place.");
+      }
+
+      try
+      {
+        // We could check version numbers, but then we have to test for different
+        // version numbers in MySQL and MariaDB, and possibly others.  It's
+        // probably cleaner to check for the capability to RELEASE_ALL_LOCKS(), which
+        // was introduced at the same time as support for multiple locks.
+        $this->query("SELECT RELEASE_ALL_LOCKS()");
+        self::$supports_multiple_locks = true;
+      }
+      catch (PDOException $e)
+      {
+        self::$supports_multiple_locks = false;
+      }
+    }
+
+    return self::$supports_multiple_locks;
   }
 
 

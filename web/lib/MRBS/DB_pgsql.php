@@ -98,7 +98,8 @@ class DB_pgsql extends DB
   }
 
 
-  // Hash a string into an int
+  // Hash a string into an int.
+  // In PostgreSQL advisory lock keys are BIGINTs.
   private static function hash(string $name) : int
   {
     return crc32($name);
