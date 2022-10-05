@@ -154,13 +154,21 @@ class DB_mysql extends DB
   }
 
 
+  // Since MySQL 5.7.5 lock names are restricted to 64 characters.
+  // Truncating them is probably sufficient.
+  private static function hash(string $name) : string
+  {
+    return substr($name, 0, 64);
+  }
+
+
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
     $timeout = 20;  // seconds
 
-    if (!empty($this->mutex_locks))
+    if (!$this->supportsMultipleLocks() && !empty($this->mutex_locks))
     {
       $message = "Trying to set lock '$name', but lock '" . $this->mutex_locks[0] .
                  "' already exists.  Only one lock is allowed at any one time.";
@@ -174,7 +182,7 @@ class DB_mysql extends DB
     // killed with mysqladmin kill)
     try
     {
-      $sql_params = array(':str' => $name,
+      $sql_params = array(':str' => self::hash($name),
                           ':timeout' => $timeout);
       $stmt = $this->query("SELECT GET_LOCK(:str, :timeout)", $sql_params);
     }
@@ -233,7 +241,7 @@ class DB_mysql extends DB
     // If this request looks OK, then execute the SQL query
     try
     {
-      $stmt = $this->query("SELECT RELEASE_LOCK(?)", array($name));
+      $stmt = $this->query("SELECT RELEASE_LOCK(?)", array(self::hash($name)));
     }
     catch (DBException $e)
     {
@@ -282,10 +290,16 @@ class DB_mysql extends DB
   // Release all mutual-exclusion locks.
   public function mutex_unlock_all() : void
   {
-    // In MySQL 5.7.5 and above we can use SELECT RELEASE_ALL_LOCKS()
-    foreach ($this->mutex_locks as $lock)
+    if ($this->supportsMultipleLocks())
     {
-      $this->mutex_unlock($lock);
+      $this->query("SELECT RELEASE_ALL_LOCKS()");
+    }
+    else
+    {
+      foreach ($this->mutex_locks as $lock)
+      {
+        $this->mutex_unlock($lock);
+      }
     }
   }
 
