@@ -123,23 +123,20 @@ function init_sessions() : void
     session_set_save_handler($handler, true);
     $session_started = session_start();
   }
-  catch(\Exception $e)
+  catch(SessionHandlerDbException $e)
   {
-    if ($session_table_should_exist)
+    if ($session_table_should_exist &&
+        ($e->getCode() === SessionHandlerDbException::TABLE_NOT_EXISTS))
     {
       trigger_error($e->getMessage(), E_USER_WARNING);
+      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
+      trigger_error($message, E_USER_WARNING);
     }
     $session_started = false;
   }
 
   if ($session_started === false)
   {
-    if ($session_table_should_exist)
-    {
-      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
-      trigger_error($message, E_USER_WARNING);
-    }
-
     $handler = new SessionHandler();
     session_set_save_handler($handler, true);
 

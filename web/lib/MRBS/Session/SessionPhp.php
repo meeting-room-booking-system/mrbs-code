@@ -39,11 +39,7 @@ class SessionPhp extends SessionWithLogin
     if (isset($server['SCRIPT_FILENAME']) && (MRBS_ROOT === dirname($server['SCRIPT_FILENAME'])) &&
         !(isset($server['HTTP_X_REQUESTED_WITH']) && ($server['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')))
     {
-      if (isset($_SESSION['this_page']))
-      {
-        $_SESSION['last_page'] = $_SESSION['this_page'];
-      }
-      $_SESSION['this_page'] = $server['REQUEST_URI'] ?? $server['PHP_SELF'] ?? null;
+      $this->updatePage($server['REQUEST_URI'] ?? $server['PHP_SELF'] ?? null);
     }
   }
 
@@ -60,6 +56,13 @@ class SessionPhp extends SessionWithLogin
     }
 
     return $result;
+  }
+
+
+  public function updatePage(?string $url): void
+  {
+    $_SESSION['last_page'] = $_SESSION['this_page'] ?? null;
+    $_SESSION['this_page'] = $url;
   }
 
 
