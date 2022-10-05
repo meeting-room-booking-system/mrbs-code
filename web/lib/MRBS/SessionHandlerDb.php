@@ -31,7 +31,19 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
 
   public function __construct()
   {
-    self::$table = _tbl('session');
+    self::$table = _tbl('sessions');
+
+    // We need to lock the session data while it is in use in order to prevent problems
+    // with Ajax calls.  This happens with the default file session handler, but
+    // in order to provide it with the DB session handler we need the ability to set multiple locks.
+    if (!db()->supportsMultipleLocks())
+    {
+      throw new SessionHandlerDbException(
+        "MRBS: database does not support multiple locks.",
+        SessionHandlerDbException::NO_MULTIPLE_LOCKS
+      );
+
+    }
 
     if (!db()->table_exists(self::$table))
     {
@@ -44,7 +56,10 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
       //
       // This exception will also be thrown on the upgrade to database schema version 83, when the
       // table was renamed.
-      throw new \Exception("MRBS: session table does not exist");
+      throw new SessionHandlerDbException(
+        "MRBS: session table does not exist",
+        SessionHandlerDbException::TABLE_NOT_EXISTS
+      );
     }
   }
 
