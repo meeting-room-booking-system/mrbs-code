@@ -26,14 +26,14 @@ class DB_mysql extends DB
       PDO::MYSQL_ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
     );
 
-  private static $db_type = null;
-  private static $supports_multiple_locks = null;
-  private static $version_comment = null;
-
-  private static $min_versions = array(
+  private const MIN_VERSIONS = array(
       self::DB_MARIADB => '10.0.2',
       self::DB_MYSQL   => '5.5.3'
     );
+
+  private static $db_type = null;
+  private static $supports_multiple_locks = null;
+  private static $version_comment = null;
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
@@ -352,18 +352,18 @@ class DB_mysql extends DB
 
     if ($db_type === self::DB_MARIADB)
     {
-      if (isset(self::$min_versions[self::DB_MARIADB]) &&
-          (version_compare($db_version, self::$min_versions[self::DB_MARIADB]) < 0))
+      if (isset(self::MIN_VERSIONS[self::DB_MARIADB]) &&
+          (version_compare($db_version, self::MIN_VERSIONS[self::DB_MARIADB]) < 0))
       {
-        $this->versionDie('MariaDB', $db_version, self::$min_versions[self::DB_MARIADB]);
+        $this->versionDie('MariaDB', $db_version, self::MIN_VERSIONS[self::DB_MARIADB]);
       }
     }
     elseif ($db_type === self::DB_MYSQL)
     {
-      if (isset(self::$min_versions[self::DB_MYSQL]) &&
-          (version_compare($db_version, self::$min_versions[self::DB_MYSQL]) < 0))
+      if (isset(self::MIN_VERSIONS[self::DB_MYSQL]) &&
+          (version_compare($db_version, self::MIN_VERSIONS[self::DB_MYSQL]) < 0))
       {
-        $this->versionDie('MySQL', $db_version, self::$min_versions[self::DB_MYSQL]);
+        $this->versionDie('MySQL', $db_version, self::MIN_VERSIONS[self::DB_MYSQL]);
       }
     }
     // If it's another type of database we'll have to add some minimum version requirements fot it
