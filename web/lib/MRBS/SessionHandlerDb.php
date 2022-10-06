@@ -181,12 +181,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                         ':data' => $data,
                         ':access' => time());
 
-    db()->command($sql, $sql_params);
+    $result = (1 === db()->command($sql, $sql_params));
 
     // Release the mutex lock
     db()->mutex_unlock($id);
 
-    return true;
+    return $result;
   }
 
 
@@ -250,7 +250,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
           ':id' => $id,
           ':access' => time()
         );
-      
+
       $result = (1 === db()->command($sql, $sql_params));
     }
     catch(PDOException $e)
