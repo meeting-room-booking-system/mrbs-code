@@ -13,7 +13,7 @@ class DB_pgsql extends DB
   // 9.5 final release in Feb 2021
   // 9.5 required for INSERT INTO ... ON CONFLICT () DO UPDATE
   // 8.4 required for array_agg()
-  private static $min_version = '9.6';
+  private const MIN_VERSION = '9.6';
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -167,9 +167,9 @@ class DB_pgsql extends DB
   private function checkVersion() : void
   {
     $this_version = $this->versionNumber();
-    if (version_compare($this_version, self::$min_version) < 0)
+    if (version_compare($this_version, self::MIN_VERSION) < 0)
     {
-      $this->versionDie('PostgreSQL', $this_version, self::$min_version);
+      $this->versionDie('PostgreSQL', $this_version, self::MIN_VERSION);
     }
   }
 
