@@ -9,7 +9,8 @@ class DB_pgsql extends DB
 {
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER   = "pgsql";
-  const MIN_VERSION     = '8.2';
+  
+  private const MIN_VERSION     = '8.2';
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
