@@ -97,7 +97,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     {
       fatal_error(get_vocab("failed_to_acquire"));
     }
-    
+
     try
     {
       $sql = "SELECT data
@@ -157,9 +157,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
                         ':data' => base64_encode($data),
                         ':access' => time());
 
-    db()->command($sql, $sql_params);
+    $result = (1 === db()->command($sql, $sql_params));
 
-    return true;
+    // Release the mutex lock
+    db()->mutex_unlock($id);
+
+    return $result;
   }
 
 
@@ -224,8 +227,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
         ':access' => time()
       );
 
-      db()->command($sql, $sql_params);
-      $result = true;
+      $result = (1 === db()->command($sql, $sql_params));
     }
     catch(PDOException $e)
     {
