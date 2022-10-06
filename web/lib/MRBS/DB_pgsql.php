@@ -8,9 +8,8 @@ use PDOException;
 class DB_pgsql extends DB
 {
   const DB_DEFAULT_PORT = 5432;
-  const DB_DBO_DRIVER = "pgsql";
-
-  private static $min_version = '8.2';
+  const DB_DBO_DRIVER   = "pgsql";
+  const MIN_VERSION     = '8.2';
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -164,9 +163,9 @@ class DB_pgsql extends DB
   private function checkVersion() : void
   {
     $this_version = $this->versionNumber();
-    if (version_compare($this_version, self::$min_version) < 0)
+    if (version_compare($this_version, self::MIN_VERSION) < 0)
     {
-      $this->versionDie('PostgreSQL', $this_version, self::$min_version);
+      $this->versionDie('PostgreSQL', $this_version, self::MIN_VERSION);
     }
   }
 
