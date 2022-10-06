@@ -251,8 +251,8 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
           ':access' => time()
         );
 
-      db()->command($sql, $sql_params);
-      $result = true;
+      $n = db()->command($sql, $sql_params);
+      $result = ($n === 1);
     }
     catch(PDOException $e)
     {
