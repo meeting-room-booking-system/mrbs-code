@@ -47,16 +47,20 @@ abstract class DB
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
+  // $driver_options is an optional array of options that supplements/overrides the
+  // default options.
   protected function connect(
-    string $db_host,
-    #[SensitiveParameter]
-    string $db_username,
-    #[SensitiveParameter]
-    string $db_password,
-    #[SensitiveParameter]
-    string $db_name,
-    bool $persist=false,
-    ?int $db_port=null) : void
+      string $db_host,
+      #[SensitiveParameter]
+      string $db_username,
+      #[SensitiveParameter]
+      string $db_password,
+      #[SensitiveParameter]
+      string $db_name,
+      bool $persist=false,
+      ?int $db_port=null,
+      ?array $driver_options=null
+    ) : void
   {
     // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
@@ -80,11 +84,20 @@ abstract class DB
     {
       $hostpart = "host=$db_host;";
     }
-    $this->dbh = new PDO(static::DB_DBO_DRIVER.":{$hostpart}port=$db_port;dbname=$db_name",
-                         $db_username,
-                         $db_password,
-                         array(PDO::ATTR_PERSISTENT => $persist,
-                               PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION));
+
+    $default_options = array(
+      PDO::ATTR_PERSISTENT => $persist,
+      PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION
+    );
+    // The LHS of the array + operator overrides the RHS if the keys are the same
+    $options = (empty($driver_options)) ? $default_options : $driver_options + $default_options;
+
+    $this->dbh = new PDO(
+        static::DB_DBO_DRIVER.":{$hostpart}port=$db_port;dbname=$db_name",
+        $db_username,
+        $db_password,
+        $options
+      );
     $this->command("SET NAMES '".static::DB_CHARSET."'");
   }
 
@@ -117,7 +130,7 @@ abstract class DB
 
 
   // Execute a non-SELECT SQL command (insert/update/delete).
-  // Returns the number of tuples affected if OK (a number >= 0).
+  // Returns the number of tuples matched (whether affected or not) if OK (a number >= 0).
   // Throws a DBException on error.
   public function command(string $sql, array $params = array()) : int
   {

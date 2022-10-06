@@ -22,6 +22,10 @@ class DB_mysql extends DB
   const ER_TOO_MANY_USER_CONNECTIONS  = 1203; // User %s already has more than 'max_user_connections' active connections
   const ER_USER_LIMIT_REACHED         = 1226; // User '%s' has exceeded the '%s' resource (current value: %ld)
 
+  private const OPTIONS = array(
+      PDO::MYSQL_ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
+    );
+
   private static $db_type = null;
   private static $supports_multiple_locks = null;
   private static $version_comment = null;
@@ -56,7 +60,15 @@ class DB_mysql extends DB
     {
       try
       {
-        $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+        $this->connect(
+            $db_host,
+            $db_username,
+            $db_password,
+            $db_name,
+            $persist,
+            $db_port,
+            self::OPTIONS
+          );
         // Set $attempts_left to zero as we won't have got here if an exception has been thrown
         $attempts_left = 0;
         $this->checkVersion();

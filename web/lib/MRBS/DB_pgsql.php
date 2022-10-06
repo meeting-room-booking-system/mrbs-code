@@ -28,7 +28,14 @@ class DB_pgsql extends DB
   {
     try
     {
-      $this->connect($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+      $this->connect(
+          $db_host,
+          $db_username,
+          $db_password,
+          $db_name,
+          $persist,
+          $db_port
+        );
       $this->checkVersion();
     }
     catch (PDOException $e)
