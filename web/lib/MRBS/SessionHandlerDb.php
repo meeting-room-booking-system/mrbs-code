@@ -221,6 +221,12 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // See https://github.com/php/php-src/issues/9668
   public function validateId($id) : bool
   {
+    // Acquire a lock
+    if (!db()->mutex_lock($id))
+    {
+      fatal_error(get_vocab("failed_to_acquire"));
+    }
+    
     $sql = "SELECT COUNT(*)
               FROM " . self::$table . "
              WHERE id=:id
