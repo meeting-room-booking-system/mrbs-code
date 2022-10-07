@@ -91,7 +91,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      trigger_error("Failed to acquire a lock", E_USER_WARNING);
       return '';
     }
 
@@ -158,7 +158,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      trigger_error("Failed to acquire a lock", E_USER_WARNING);
       return false;
     }
 
@@ -227,7 +227,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      trigger_error("Failed to acquire a lock", E_USER_WARNING);
       return false;
     }
 
@@ -247,7 +247,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      trigger_error("Failed to acquire a lock", E_USER_WARNING);
       return false;
     }
 
