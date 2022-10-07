@@ -88,9 +88,11 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // locks are obtained using flock().  We need to do something similar in order to prevent
     // problems with multiple Ajax requests writing to the S_SESSION variable while
     // another process is still using it.
+    // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      return '';
     }
 
     try
@@ -156,7 +158,8 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      return false;
     }
 
     $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
@@ -224,9 +227,10 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      return false;
     }
-    
+
     $sql = "SELECT COUNT(*)
               FROM " . self::$table . "
              WHERE id=:id
@@ -243,7 +247,8 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
     // Acquire a lock
     if (!db()->mutex_lock($id))
     {
-      fatal_error(get_vocab("failed_to_acquire"));
+      trigger_error(get_vocab("failed_to_acquire"), E_USER_WARNING);
+      return false;
     }
 
     try
