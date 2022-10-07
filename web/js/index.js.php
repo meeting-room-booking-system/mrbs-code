@@ -128,10 +128,12 @@ var replaceBody = function(response, href) {
     $(document).trigger('page_ready');
 
     <?php // and tell the server we've moved to a new page, so that it can update its records ?>
-    $.post(
-      'ajax/update_page.php',
-      {csrf_token: getCSRFToken(), page: href}
-    );
+    var data = {csrf_token: getCSRFToken(), page: href};
+    if(args.site)
+    {
+      data.site = args.site;
+    }
+    $.post('ajax/update_page.php', data);
 
     <?php // change the URL in the address bar ?>
     history.pushState(null, '', href);
