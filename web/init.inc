@@ -1,9 +1,7 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Session\SessionFactory;
-use SessionHandler;
 
 
 // Convenience wrapper function to provide access to a Session object
