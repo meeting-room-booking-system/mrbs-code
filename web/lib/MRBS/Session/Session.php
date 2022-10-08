@@ -33,7 +33,7 @@ abstract class Session
     // We don't want the session garbage collector to delete the session before it has expired
     if ($auth['session_php']['session_expire_time'] !== 0)
     {
-      ini_set('session.gc_maxlifetime', $auth['session_php']['session_expire_time']);
+      ini_set('session.gc_maxlifetime', max(ini_get('session.gc_maxlifetime'), $auth['session_php']['session_expire_time']));
     }
 
     session_name($auth['session_php']['session_name']);  // call before session_set_cookie_params() - see PHP manual
