@@ -43,22 +43,6 @@ function auth()
 }
 
 
-// Convenience wrapper function to provide access to a Session object
-function session()
-{
-  global $auth;
-
-  static $session_obj = null;
-
-  if (is_null($session_obj))
-  {
-    $session_obj = SessionFactory::create($auth['session']);
-  }
-
-  return $session_obj;
-}
-
-
 // Checks if a page is open to users, using the config variables
 // $auth['only_admin_can_book'] and $auth['only_admin_can_book_before']
 function is_open_to_users()

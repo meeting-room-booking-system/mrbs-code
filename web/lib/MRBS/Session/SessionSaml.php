@@ -70,6 +70,20 @@ class SessionSaml extends SessionWithLogin
   }
 
 
+  public function init() : void
+  {
+    global $auth;
+
+    if ($auth['saml']['disable_mrbs_session_init'])
+    {
+      // If we're using SAML then initialising sessions here can interfere with
+      // session handling in some SAML libraries
+      return;
+    }
+
+    parent::init();
+  }
+
   // No need to prompt for a name - this is done by SimpleSamlPhp
   public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {

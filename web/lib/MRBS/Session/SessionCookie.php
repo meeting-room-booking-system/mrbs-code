@@ -26,6 +26,12 @@ class SessionCookie extends SessionWithLogin
   }
 
 
+  public function init() : void
+  {
+    // The cookie session scheme doesn't use PHP sessions
+  }
+
+
   public function getCurrentUser() : ?User
   {
     global $auth;
