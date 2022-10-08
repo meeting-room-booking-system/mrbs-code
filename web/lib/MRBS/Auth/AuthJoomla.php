@@ -67,6 +67,14 @@ class AuthJoomla extends Auth
   }
 
 
+  // TODO: sort out where getCurrentUser belongs.  We have it in both
+  // TODO: Auth and Session for Joomla!
+  public function getCurrentUser() : ?User
+  {
+    return $this->getUserFresh();
+  }
+
+
   // Return an array of MRBS users, indexed by 'username' and 'display_name'
   public function getUsernames() : array
   {

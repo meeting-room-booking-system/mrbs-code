@@ -19,7 +19,7 @@ class SessionJoomla extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return \MRBS\auth()->getUser();
+    return \MRBS\auth()->getCurrentUser();
   }
 
 
