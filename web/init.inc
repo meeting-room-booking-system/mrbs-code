@@ -2,7 +2,24 @@
 namespace MRBS;
 
 use MRBS\Form\Form;
+use MRBS\Session\SessionFactory;
 use SessionHandler;
+
+
+// Convenience wrapper function to provide access to a Session object
+function session()
+{
+  global $auth;
+
+  static $session_obj = null;
+
+  if (is_null($session_obj))
+  {
+    $session_obj = SessionFactory::create($auth['session']);
+  }
+
+  return $session_obj;
+}
 
 
 function init_errors() : void
@@ -57,161 +74,12 @@ function init_errors() : void
   register_shutdown_function(__NAMESPACE__ . "\\shutdown_function");
 }
 
-// TODO: init_joomla() and init_sessions() really need to go in the Session classes
-// TODO: with a method such as session()->init().  The SessionJoomla class could
-// TODO: maybe be subclassed for different versions?
-function init_joomla() : void
-{
-  require_once MRBS_ROOT . '/auth/cms/joomla.inc';
-
-  if (!defined('JVERSION'))
-  {
-    throw new \Exception("Joomla! version not known");
-  }
-
-  if (version_compare(JVERSION, '4.0', '<'))
-  {
-    $mainframe = JFactory::getApplication('site');
-    $mainframe->initialise();
-  }
-  else
-  {
-    // Thanks to Alex Chartier and Emmanuel Ingelaere.
-    // See https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA
-    
-    // Boot the DI container
-    $container = \Joomla\CMS\Factory::getContainer();
-
-    // Alias the session service keys to the web session service as that is the primary session backend for this application.
-    // In addition to aliasing "common" service keys, we also create aliases for the PHP classes to ensure autowiring objects
-    // is supported.  This includes aliases for aliased class names, and the keys for aliased class names should be considered
-    // deprecated to be removed when the class name alias is removed as well.
-    $container->alias('session.web', 'session.web.site')
-              ->alias('session', 'session.web.site')
-              ->alias('JSession', 'session.web.site')
-              ->alias(\Joomla\CMS\Session\Session::class, 'session.web.site')
-              ->alias(\Joomla\Session\Session::class, 'session.web.site')
-              ->alias(\Joomla\Session\SessionInterface::class, 'session.web.site');
-
-    // Instantiate the application.
-    $app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
-
-    // Set the application as global app
-    \Joomla\CMS\Factory::$application = $app;
-  }
-}
-
-
-function init_sessions() : void
-{
-  global $auth;
-
-  // The cookie session scheme doesn't use PHP sessions
-  if ($auth['session'] == 'cookie')
-  {
-    return;
-  }
-
-  // Joomla has its own session management
-  if ($auth['session'] == 'joomla')
-  {
-    init_joomla();
-    return;
-  }
-
-  // If we're using SAML then initialising sessions here can interfere with
-  // session handling in some SAML libraries
-  if (($auth['session'] == 'saml') && $auth['saml']['disable_mrbs_session_init'])
-  {
-    return;
-  }
-
-  // Set some session settings, as a defence against session fixation.
-  ini_set('session.use_only_cookies', '1');
-  ini_set('session.use_strict_mode', '1');  // Only available since PHP 5.5.2, but does no harm before then
-  ini_set('session.use_trans_sid', '0');
-
-  $cookie_path = get_cookie_path();
-
-  if (!isset($auth['session_php']['session_expire_time']))
-  {
-    // Default to the behaviour of previous versions of MRBS, use only
-    // session cookies - no persistent cookie.
-    $auth['session_php']['session_expire_time'] = 0;
-  }
-
-  // We don't want the session garbage collector to delete the session before it has expired
-  if ($auth['session_php']['session_expire_time'] !== 0)
-  {
-    ini_set('session.gc_maxlifetime', $auth['session_php']['session_expire_time']);
-  }
-
-  session_name($auth['session_php']['session_name']);  // call before session_set_cookie_params() - see PHP manual
-  session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
-
-  $current_db_schema_version = db_schema_version();
-  // The session table was created in Upgrade 56.   Before that we will ignore any errors
-  // to do with DB sessions.
-  $session_table_should_exist = ($current_db_schema_version >= 56);
-
-  try
-  {
-    $handler = new SessionHandlerDb();
-    session_set_save_handler($handler, true);
-    $session_started = session_start();
-  }
-  catch(SessionHandlerDbException $e)
-  {
-    if ($session_table_should_exist &&
-        ($e->getCode() === SessionHandlerDbException::TABLE_NOT_EXISTS))
-    {
-      trigger_error($e->getMessage(), E_USER_WARNING);
-      $message = "Could not start DB sessions, trying ordinary PHP sessions.";
-      trigger_error($message, E_USER_WARNING);
-    }
-    $session_started = false;
-  }
-
-  if ($session_started === false)
-  {
-    $handler = new SessionHandler();
-    session_set_save_handler($handler, true);
-
-    if (false === session_start())
-    {
-      // Check that the session started OK.   If we're using the 'php' session scheme then
-      // they are essential.   Otherwise they are desirable for storing CSRF tokens, but if
-      // they are not working we will fall back to using cookies.
-      $message = "MRBS: could not start sessions";
-
-      if ($auth['session'] == 'php')
-      {
-        throw new \Exception($message);
-      }
-      else
-      {
-        trigger_error($message, E_USER_WARNING);
-
-        // If sessions didn't work, then set a cookie containing the CSRF token.
-
-        // Note that the technique of creating a dummy form to store the token
-        // does not work when using sessions.  It only works for cookies.   That's
-        // because when using sessions, the new token is stored immediately.  So by
-        // the time we come to read $_SESSION to check the token we will be looking
-        // at the *new* token.   However, when using cookies, the browser will have
-        // already sent the cookie by the time we get to this point, so when reading
-        // $_COOKIE we are looking at the *old* token, which is what we want.
-        $dummy_form = new Form();
-      }
-    }
-  }
-}
 
 // Initialise error reporting
 init_errors();
 
 // Start up sessions
-init_sessions();
+session()->init();
 
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
