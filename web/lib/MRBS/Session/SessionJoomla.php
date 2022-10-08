@@ -13,17 +13,18 @@ class SessionJoomla extends SessionWithLogin
   public function __construct()
   {
     $this->checkTypeMatchesSession();
+
+    if (!defined('JVERSION'))
+    {
+      throw new \Exception("Joomla! version not known");
+    }
+
     parent::__construct();
   }
 
 
   public function init() : void
   {
-    if (!defined('JVERSION'))
-    {
-      throw new \Exception("Joomla! version not known");
-    }
-
     if (version_compare(JVERSION, '4.0', '<'))
     {
       $mainframe = JFactory::getApplication('site');
