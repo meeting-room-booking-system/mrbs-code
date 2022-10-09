@@ -53,7 +53,7 @@ abstract class Session
     catch(SessionHandlerDbException $e)
     {
       if ($session_table_should_exist &&
-        ($e->getCode() === SessionHandlerDbException::TABLE_NOT_EXISTS))
+          ($e->getCode() === SessionHandlerDbException::TABLE_NOT_EXISTS))
       {
         trigger_error($e->getMessage(), E_USER_WARNING);
         $message = "Could not start DB sessions, trying ordinary PHP sessions.";

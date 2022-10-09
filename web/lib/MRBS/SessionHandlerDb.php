@@ -31,7 +31,7 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
 
   public function __construct()
   {
-    self::$table = _tbl('sessions');
+    self::$table = _tbl('session');
 
     // We need to lock the session data while it is in use in order to prevent problems
     // with Ajax calls.  This happens with the default file session handler, but
