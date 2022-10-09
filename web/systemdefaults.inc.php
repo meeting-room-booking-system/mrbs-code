@@ -783,7 +783,7 @@ $auth["session_php"]["session_name"] = 'MRBS_SESSID';
 $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 
 // Set this to the expiry time for a session after a period of inactivity
-// in seconds.   Setting to zero means that the sesion will not expire after
+// in seconds.   Setting to zero means that the session will not expire after
 // a period of activity - but note that it will expire if the session cookie
 // happens to expire (see above).  Note that if you have $refresh_rate set and
 // your system is not capable of doing Ajax refreshes but instead uses a <meta>
