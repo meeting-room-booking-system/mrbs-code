@@ -773,10 +773,13 @@ $csrf_cookie["secret"] = "This still isn't a very good secret!";
 // The session name
 $auth["session_php"]["session_name"] = 'MRBS_SESSID';
 
-// The expiry time of a session cookie, in seconds
-// N.B. Long session expiry times rely on PHP not retiring the session
-// on the server too early. If you only want session cookies to be used,
-// set this to 0.
+// The expiry time of a session cookie, in seconds.  Set it to 0 for the
+// session to expire when the browser is closed.
+// Note:
+// (1) The expiration timestamp is set relative to the server time, which
+//     is not necessarily the same as the time in the client's browser.
+// (2) If session.gc_maxlifetime is less than the expiry time, MRBS will
+//     set it to the expiry time.
 $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 
 // Set this to the expiry time for a session after a period of inactivity
