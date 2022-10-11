@@ -104,6 +104,11 @@ function get_arg_string($args)
         $result[] = $arg;
         break;
 
+      case 'object':
+        $class = get_class($arg);
+        $result[] = ($class == 'SensitiveParameterValue') ? "[$class]" : $type;
+        break;
+
       default:
         $result[] = $type;
         break;
