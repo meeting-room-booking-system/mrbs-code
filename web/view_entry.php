@@ -75,7 +75,7 @@ function generate_registrant_table($row, $previous_page=null)
 }
 
 
-function get_returl($previous_page=null)
+function get_returl(?string $previous_page=null) : string
 {
   global $server;
 
