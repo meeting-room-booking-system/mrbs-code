@@ -31,9 +31,9 @@ class AuthPop3 extends Auth
    *   string   - The validated username
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     global $pop3_host, $pop3_port;

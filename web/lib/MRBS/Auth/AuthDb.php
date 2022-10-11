@@ -33,9 +33,9 @@ class AuthDb extends Auth
    *   string   - The validated username
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     // The string $user that the user logged on with could be either a username or
@@ -287,10 +287,10 @@ class AuthDb extends Auth
 
 
   public function resetPassword(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $username,
     ?string $key,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $password) : bool
   {
     // Check that we've got a password and we're allowed to reset the password
@@ -713,7 +713,7 @@ class AuthDb extends Auth
 
 
   private function rehash(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $password,
     string $column_name,
     string $column_value) : void
@@ -753,7 +753,7 @@ class AuthDb extends Auth
   // 'name' or 'email'.
   // Returns a boolean: true if they match, otherwise false.
   private function checkPassword(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $password,
     string $password_hash,
     string $column_name,

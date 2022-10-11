@@ -11,11 +11,11 @@ class DBFactory
   public static function create(
     string $db_system,
     string $db_host,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_username,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_password,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
     ?int $db_port=null)

@@ -31,9 +31,9 @@ class SessionWordpress extends SessionWithLogin
 
   // Can only return a valid username.  If the username and password are not valid it will ask for new ones.
   protected function getValidUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $username,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $password) : string
   {
     global $errors; // $errors is a WordPress global

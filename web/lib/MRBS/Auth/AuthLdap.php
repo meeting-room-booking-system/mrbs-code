@@ -204,9 +204,9 @@ class AuthLdap extends Auth
    *   string   - The validated username
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     // Check if we do not have a username/password
