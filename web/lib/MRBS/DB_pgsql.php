@@ -20,11 +20,11 @@ class DB_pgsql extends DB
   // The attribute is only recognised by PHP 8.2 and later.
   public function __construct(
     string $db_host,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_username,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_password,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
     ?int $db_port=null)

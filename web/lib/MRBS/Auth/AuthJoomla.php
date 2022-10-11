@@ -27,9 +27,9 @@ class AuthJoomla extends Auth
    *   true     - The user has been validated and logged in
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     $mainframe = JFactory::getApplication('site');

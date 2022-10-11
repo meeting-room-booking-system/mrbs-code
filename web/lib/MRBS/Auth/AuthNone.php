@@ -14,9 +14,9 @@ class AuthNone extends Auth
    * @return  string  $user   Always valid
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     return $user;

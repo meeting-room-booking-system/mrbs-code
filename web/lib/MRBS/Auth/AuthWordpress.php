@@ -25,9 +25,9 @@ class AuthWordpress extends Auth
    *   string   - The validated username
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     return (is_wp_error(wp_authenticate($user, $pass))) ? false : $user;

@@ -28,9 +28,9 @@ abstract class Auth
    *   string   - The validated username
    */
   abstract public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass);
 
 
@@ -176,7 +176,7 @@ abstract class Auth
   // pattern matching is very limited.   Would need to be implemented using
   // an add-in library).
   public function validatePassword(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     string $password) : bool
   {
     global $pwd_policy;

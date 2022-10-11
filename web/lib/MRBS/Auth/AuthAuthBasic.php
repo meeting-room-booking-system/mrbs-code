@@ -35,9 +35,9 @@ class AuthAuthBasic extends Auth
    *   string   - The validated username
    */
   public function validateUser(
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $user,
-    #[SensitiveParameter]
+    #[\SensitiveParameter]
     ?string $pass)
   {
     global $auth;
