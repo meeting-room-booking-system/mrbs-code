@@ -75,7 +75,7 @@ function generate_registrant_table($row, $previous_page=null)
 }
 
 
-function get_returl($previous_page=null)
+function get_returl(?string $previous_page=null) : string
 {
   global $server;
 
@@ -86,7 +86,7 @@ function get_returl($previous_page=null)
     // Add the previous_page (ie the one we were on before view_entry) to the query string
     // so that it is preserved.
     $returl = this_page();
-    $query_string = isset($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+    $query_string = $server['QUERY_STRING'] ?? '';
     parse_str($query_string, $query_string_parts);
     if (isset($previous_page))
     {
@@ -160,7 +160,7 @@ function generate_register_button($row, $previous_page=null)
 {
   global $area, $room;
 
-  // Check that the user is an an admin or else that the entry is open for registration
+  // Check that the user is an admin or else that the entry is open for registration
   if (!getWritable($row['create_by'], $row['room_id']) && !entry_registration_is_open($row))
   {
     return;
@@ -707,7 +707,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
 print_header($context);
