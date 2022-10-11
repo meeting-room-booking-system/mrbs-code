@@ -160,7 +160,7 @@ function generate_register_button($row, $previous_page=null)
 {
   global $area, $room;
 
-  // Check that the user is an an admin or else that the entry is open for registration
+  // Check that the user is an admin or else that the entry is open for registration
   if (!getWritable($row['create_by'], $row['room_id']) && !entry_registration_is_open($row))
   {
     return;
