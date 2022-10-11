@@ -86,7 +86,7 @@ function get_returl($previous_page=null)
     // Add the previous_page (ie the one we were on before view_entry) to the query string
     // so that it is preserved.
     $returl = this_page();
-    $query_string = isset($server['QUERY_STRING']) ? $server['QUERY_STRING'] : '';
+    $query_string = $server['QUERY_STRING'] ?? '';
     parse_str($query_string, $query_string_parts);
     if (isset($previous_page))
     {
@@ -707,7 +707,7 @@ $context = array(
     'month'     => $month,
     'day'       => $day,
     'area'      => $area,
-    'room'      => isset($room) ? $room : null
+    'room'      => $room ?? null
   );
 
 print_header($context);
