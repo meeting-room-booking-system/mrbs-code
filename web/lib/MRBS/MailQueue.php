@@ -372,10 +372,10 @@ class MailQueue
     {
       $mail->set('MIMEBody', $mime['body']);
       mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
-      mail_debug("From: " . (isset($addresses['from']) ? $addresses['from'] : ''));
-      mail_debug("To: " . (isset($addresses['to']) ? $addresses['to'] : ''));
-      mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
-      mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
+      mail_debug("From: " . ($addresses['from'] ?? ''));
+      mail_debug("To: " . ($addresses['to'] ?? ''));
+      mail_debug("Cc: " . ($addresses['cc'] ?? ''));
+      mail_debug("Bcc: " . ($addresses['bcc'] ?? ''));
 
       // Throttle the rate of mail sending if required
       if (!empty($mail_settings['rate_limit']))
