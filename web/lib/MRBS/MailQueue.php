@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use Mail_mimePart;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -15,7 +16,14 @@ class MailQueue
   protected static $mails = array();
 
 
-  public static function add($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
+  public static function add(
+      array $addresses,
+      string $subject,
+      array $text_body,
+      array $html_body,
+      array $attachment,
+      string $charset = 'us-ascii'
+    ) : void
   {
     global $mail_settings;
 
@@ -43,7 +51,7 @@ class MailQueue
   }
 
 
-  public static function flush()
+  public static function flush() : void
   {
     foreach (self::$mails as $mail)
     {
@@ -59,7 +67,7 @@ class MailQueue
   }
 
 
-  protected static function getNRecipients($addresses)
+  protected static function getNRecipients(array $addresses) : int
   {
     if (empty($addresses))
     {
@@ -96,9 +104,16 @@ class MailQueue
    *                                    'method'  the iCalendar METHOD
    *                                    'name'    the name to give it
    * @param string  $charset          character set used in body
-   * @return bool                     TRUE or PEAR error object if fails
+   * @return bool                     TRUE oon success, FALSE on failure
    */
-  protected static function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
+  protected static function sendMail(
+      array $addresses,
+      string $subject,
+      array $text_body,
+      array $html_body,
+      array $attachment,
+      string $charset = 'us-ascii'
+    ) : bool
   {
     // Modify the include path because this is run after shutdown when the working directory may have
     // changed (see the note in https://www.php.net/manual/en/function.register-shutdown-function.php).
@@ -276,7 +291,7 @@ class MailQueue
     $mime_params = array();
     $mime_params['eol'] = $eol;
     $mime_params['content_type'] = "multipart/alternative";
-    $mime_inner = new \Mail_mimePart('', $mime_params);
+    $mime_inner = new Mail_mimePart('', $mime_params);
 
     // Add the text part
     $mime_params['content_type'] = "text/plain";
@@ -313,7 +328,7 @@ class MailQueue
       $mime_params = array();
       $mime_params['eol'] = $eol;
       $mime_params['content_type'] = "multipart/mixed";
-      $mime = new \Mail_mimePart('', $mime_params);
+      $mime = new Mail_mimePart('', $mime_params);
 
       // Now add the inner section as the first sub part
       $mime_inner = $mime_inner->encode();
@@ -357,10 +372,10 @@ class MailQueue
     {
       $mail->set('MIMEBody', $mime['body']);
       mail_debug("Using backend '" . $mail_settings['admin_backend'] . "'");
-      mail_debug("From: " . (isset($addresses['from']) ? $addresses['from'] : ''));
-      mail_debug("To: " . (isset($addresses['to']) ? $addresses['to'] : ''));
-      mail_debug("Cc: " . (isset($addresses['cc']) ? $addresses['cc'] : ''));
-      mail_debug("Bcc: " . (isset($addresses['bcc']) ? $addresses['bcc'] : ''));
+      mail_debug("From: " . ($addresses['from'] ?? ''));
+      mail_debug("To: " . ($addresses['to'] ?? ''));
+      mail_debug("Cc: " . ($addresses['cc'] ?? ''));
+      mail_debug("Bcc: " . ($addresses['bcc'] ?? ''));
 
       // Throttle the rate of mail sending if required
       if (!empty($mail_settings['rate_limit']))
