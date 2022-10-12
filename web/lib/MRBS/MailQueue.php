@@ -207,6 +207,15 @@ class MailQueue
     $mail->AllowEmpty = true;  // remove this for production
     $mail->addCustomHeader('Auto-Submitted', 'auto-generated');
 
+    if (!empty($addresses['reply_to']))
+    {
+      $reply_to_addresses = PHPMailer::parseAddresses($addresses['reply_to']);
+      foreach ($reply_to_addresses as $reply_to_address)
+      {
+        $mail->addReplyTo($reply_to_address['address'], $reply_to_address['name']);
+      }
+    }
+
     if (isset($addresses['from']))
     {
       $from_addresses = PHPMailer::parseAddresses($addresses['from']);
