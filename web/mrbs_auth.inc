@@ -2,7 +2,6 @@
 namespace MRBS;
 
 use MRBS\Auth\AuthFactory;
-use MRBS\Session\SessionFactory;
 
 
 if (!isset($auth['session']))
