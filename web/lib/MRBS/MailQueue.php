@@ -111,7 +111,7 @@ class MailQueue
       array $text_body,
       array $html_body,
       array $attachment,
-      $charset = 'us-ascii'
+      string $charset = 'us-ascii'
     ) : bool
   {
     // Modify the include path because this is run after shutdown when the working directory may have
