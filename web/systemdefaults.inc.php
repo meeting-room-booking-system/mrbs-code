@@ -1312,6 +1312,10 @@ $mail_settings['from'] = 'admin_email@your.org';
 // From address above is used for all emails.
 $mail_settings['use_from_for_all_mail'] = false;
 
+// By default MRBS will set a Reply-To address and use current user's email address.  Set this to
+// false in order not to set a Reply-To address.
+$mail_settings['use_reply_to'] = true;
+
 // The address to be used for the ORGANIZER in an iCalendar event.   Do not make
 // this email address the same as the admin email address or the recipients
 // email address because on some mail systems, eg IBM Domino, the iCalendar email

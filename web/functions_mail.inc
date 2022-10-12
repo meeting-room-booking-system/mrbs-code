@@ -756,7 +756,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
 
 // create_addresses($data, $action)
 //
-// Returns an array indexed by 'from', 'to' and 'cc' with each element
+// Returns an array indexed by 'from', 'reply_to', 'to' and 'cc' with each element
 // consisting of a comma separated list of email addresses.
 //
 // Parameters:
@@ -767,26 +767,34 @@ function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
+  $reply_to = array();
   $to = array();
   $cc = array();
 
   $cc[] = $mail_settings['cc'];
 
-  // Set the From address.  If this is a reminder email or a request for more info
-  // then set the From address to be the user's - unless we've configured MRBS not
-  // to do this (to avoid the email being rejected as spam), in which case we'll
-  // put the user's address on the Cc line, which will enable the recipient to
-  // use it in a reply.
+
   $mrbs_user = session()->getCurrentUser();
-  if (isset($mrbs_user) && in_array($action, array('more_info', 'remind')))
+  if (isset($mrbs_user))
   {
-    if ($mail_settings['use_from_for_all_mail'])
+    // Set the Reply-To address
+    if ($mail_settings['use_reply_to'])
     {
-      $cc[] = $mrbs_user->mailbox();
+      $reply_to[] = $mrbs_user->mailbox();
     }
-    else
+    // Set the From address.  If this is a reminder email or a request for more info
+    // then set the From address to be the user's - unless we've configured MRBS not
+    // to do this (to avoid the email being rejected as spam), in which case we'll
+    // put the user's address on the Cc line, which will enable the recipient to
+    // use it in a reply.
+    if (in_array($action, array('more_info', 'remind')))
     {
-      $from = $mrbs_user->mailbox();
+      if ($mail_settings['use_from_for_all_mail']) {
+        $cc[] = $mrbs_user->mailbox();
+      }
+      else {
+        $from = $mrbs_user->mailbox();
+      }
     }
   }
 
@@ -861,6 +869,7 @@ function create_addresses(array $data, string $action) : array
 
   $addresses = array();
   $addresses['from'] = $from;
+  $addresses['reply_to'] = (empty($reply_to)) ? '' : get_address_list($reply_to);
   $addresses['to'] = (empty($to)) ? '' : get_address_list($to);
   $addresses['cc'] = (empty($cc)) ? '' : get_address_list($cc);
 
