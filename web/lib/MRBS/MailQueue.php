@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use Mail_mimePart;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -290,7 +291,7 @@ class MailQueue
     $mime_params = array();
     $mime_params['eol'] = $eol;
     $mime_params['content_type'] = "multipart/alternative";
-    $mime_inner = new \Mail_mimePart('', $mime_params);
+    $mime_inner = new Mail_mimePart('', $mime_params);
 
     // Add the text part
     $mime_params['content_type'] = "text/plain";
@@ -327,7 +328,7 @@ class MailQueue
       $mime_params = array();
       $mime_params['eol'] = $eol;
       $mime_params['content_type'] = "multipart/mixed";
-      $mime = new \Mail_mimePart('', $mime_params);
+      $mime = new Mail_mimePart('', $mime_params);
 
       // Now add the inner section as the first sub part
       $mime_inner = $mime_inner->encode();
