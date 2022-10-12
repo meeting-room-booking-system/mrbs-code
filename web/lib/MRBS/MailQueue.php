@@ -15,7 +15,14 @@ class MailQueue
   protected static $mails = array();
 
 
-  public static function add($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
+  public static function add(
+      array $addresses,
+      string $subject,
+      array $text_body,
+      array $html_body,
+      array $attachment,
+      string $charset = 'us-ascii'
+    ) : void
   {
     global $mail_settings;
 
@@ -43,7 +50,7 @@ class MailQueue
   }
 
 
-  public static function flush()
+  public static function flush() : void
   {
     foreach (self::$mails as $mail)
     {
@@ -59,7 +66,7 @@ class MailQueue
   }
 
 
-  protected static function getNRecipients($addresses)
+  protected static function getNRecipients(array $addresses) : int
   {
     if (empty($addresses))
     {
@@ -96,9 +103,16 @@ class MailQueue
    *                                    'method'  the iCalendar METHOD
    *                                    'name'    the name to give it
    * @param string  $charset          character set used in body
-   * @return bool                     TRUE or PEAR error object if fails
+   * @return bool                     TRUE oon success, FALSE on failure
    */
-  protected static function sendMail($addresses, $subject, $text_body, $html_body, $attachment, $charset = 'us-ascii')
+  protected static function sendMail(
+      array $addresses,
+      string $subject,
+      array $text_body,
+      array $html_body,
+      array $attachment,
+      $charset = 'us-ascii'
+    ) : bool
   {
     // Modify the include path because this is run after shutdown when the working directory may have
     // changed (see the note in https://www.php.net/manual/en/function.register-shutdown-function.php).
