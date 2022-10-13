@@ -21,7 +21,7 @@ class MailQueue
       string $subject,
       array $text_body,
       array $html_body,
-      array $attachment,
+      ?array $attachment,
       string $charset = 'us-ascii'
     ) : void
   {
@@ -111,7 +111,7 @@ class MailQueue
       string $subject,
       array $text_body,
       array $html_body,
-      array $attachment,
+      ?array $attachment,
       string $charset = 'us-ascii'
     ) : bool
   {
