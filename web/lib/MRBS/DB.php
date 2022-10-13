@@ -17,7 +17,7 @@ abstract class DB
 
   protected $dbh = null;
   protected $mutex_locks = array();
-  protected static $version_string = null;
+  protected $version_string = null;
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -285,17 +285,17 @@ abstract class DB
   // "PostgreSQL 14.2, compiled by Visual C++ build 1914, 64-bit".
   protected function versionString() : string
   {
-    if (!isset($this::$version_string))
+    if (!isset($this->version_string))
     {
       // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
       // sometimes also give you the version prefix (so-called "replication
       // version hack") with MariaDB.
       $result = $this->query1("SELECT VERSION()");
 
-      $this::$version_string =  ($result == -1) ? '' : $result;
+      $this->version_string =  ($result == -1) ? '' : $result;
     }
 
-    return $this::$version_string;
+    return $this->version_string;
   }
 
 
