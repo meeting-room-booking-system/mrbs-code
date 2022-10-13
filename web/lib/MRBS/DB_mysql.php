@@ -31,9 +31,9 @@ class DB_mysql extends DB
       self::DB_MYSQL   => '5.5.3'
     );
 
-  private static $db_type = null;
-  private static $supports_multiple_locks = null;
-  private static $version_comment = null;
+  private $db_type = null;
+  private $supports_multiple_locks = null;
+  private $version_comment = null;
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
@@ -140,7 +140,7 @@ class DB_mysql extends DB
   // locks are in place, because it will release them.
   public function supportsMultipleLocks() : bool
   {
-    if (!isset(self::$supports_multiple_locks))
+    if (!isset($this->supports_multiple_locks))
     {
       if (!empty($this->mutex_locks))
       {
@@ -154,15 +154,15 @@ class DB_mysql extends DB
         // probably cleaner to check for the capability to RELEASE_ALL_LOCKS(), which
         // was introduced at the same time as support for multiple locks.
         $this->query("SELECT RELEASE_ALL_LOCKS()");
-        self::$supports_multiple_locks = true;
+        $this->supports_multiple_locks = true;
       }
-      catch (PDOException $e)
+      catch (DBException $e)
       {
-        self::$supports_multiple_locks = false;
+        $this->supports_multiple_locks = false;
       }
     }
 
-    return self::$supports_multiple_locks;
+    return $this->supports_multiple_locks;
   }
 
 
@@ -320,15 +320,15 @@ class DB_mysql extends DB
   {
     global $debug;
 
-    if (!isset(self::$db_type))
+    if (!isset($this->db_type))
     {
       if (false !== utf8_stripos($this->versionComment(), 'maria'))
       {
-        self::$db_type = self::DB_MARIADB;
+        $this->db_type = self::DB_MARIADB;
       }
       elseif (false !== utf8_stripos($this->versionComment(), 'mysql'))
       {
-        self::$db_type = self::DB_MYSQL;
+        $this->db_type = self::DB_MYSQL;
       }
       else
       {
@@ -336,11 +336,11 @@ class DB_mysql extends DB
         {
           trigger_error("Unknown database type '" . $this->versionComment() . "'");
         }
-        self::$db_type = self::DB_OTHER;
+        $this->db_type = self::DB_OTHER;
       }
     }
 
-    return self::$db_type;
+    return $this->db_type;
   }
 
 
@@ -374,16 +374,16 @@ class DB_mysql extends DB
   // or "MariaDB Server".
   private function versionComment() : string
   {
-    if (!isset(self::$version_comment))
+    if (!isset($this->version_comment))
     {
       $sql = "SHOW variables LIKE 'version_comment'";
       $res = $this->query($sql);
       $row = $res->next_row_keyed();
 
-      self::$version_comment = ($row === false) ? '' : $row['Value'];
+      $this->version_comment = ($row === false) ? '' : $row['Value'];
     }
 
-    return self::$version_comment;
+    return $this->version_comment;
   }
 
 
