@@ -156,7 +156,7 @@ class DB_mysql extends DB
         $this->query("SELECT RELEASE_ALL_LOCKS()");
         self::$supports_multiple_locks = true;
       }
-      catch (PDOException $e)
+      catch (DBException $e)
       {
         self::$supports_multiple_locks = false;
       }
