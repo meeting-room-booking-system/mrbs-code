@@ -164,7 +164,7 @@ function parse_address($email_address)
     'common_name' => null
   );
 
-  $parsed_addresses = PHPMailer::parseAddresses($email_address);
+  $parsed_addresses = PHPMailer::parseAddresses($email_address, true, get_mail_charset());
 
   if (!empty($parsed_addresses))
   {
@@ -219,7 +219,7 @@ function get_address_list($array)
     if ($array[$i] !== '')
     {
       // Use parseAddresses() to validate the address because it could contain a display name
-      if (count(PHPMailer::parseAddresses($array[$i])) == 0)
+      if (count(PHPMailer::parseAddresses($array[$i], true, get_mail_charset())) == 0)
       {
         $message = 'Invalid email address "' . $array[$i] . '"';
         mail_debug($message);
