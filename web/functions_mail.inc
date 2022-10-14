@@ -153,52 +153,6 @@ function getMailDateString($time)
 }
 
 
-// Splits an email address of the form 'common_name <address>',
-// '"common_name" <address>' or just 'address' into a common name and an address.
-// Note that the common_name may have been MIME-encoded.
-// Returns the result as an array index by 'common_name' and 'address'.
-function parse_address($email_address)
-{
-  $result = array(
-    'address' => null,
-    'common_name' => null
-  );
-
-  $parsed_addresses = PHPMailer::parseAddresses($email_address, true, get_mail_charset());
-
-  if (!empty($parsed_addresses))
-  {
-    $parsed_address = $parsed_addresses[0];
-    if (isset($parsed_address['address']))
-    {
-      $result['address'] = $parsed_address['address'];
-    }
-
-    if (isset($parsed_address['name']))
-    {
-      if (function_exists('mb_decode_mimeheader'))
-      {
-        $result['common_name'] = mb_decode_mimeheader($parsed_address['name']);
-      }
-      elseif (function_exists('iconv_mime_decode'))
-      {
-        $result['common_name'] = iconv_mime_decode($parsed_address['name'], 0, get_charset());
-      }
-      // imap_utf8() produces utf-8 output, so we'll only use it if our charset is utf-8.  For
-      // other charsets we could in theory convert the output into our desired charset using iconv,
-      // but if we are able to do that then we wouldn't be here anyway because iconv_mime_decode()
-      // above would have worked.
-      elseif (function_exists('imap_utf8') && ('utf-8' == strtolower(get_charset())))
-      {
-        $result['common_name'] = imap_utf8($parsed_address['name']);
-      }
-    }
-  }
-
-  return $result;
-}
-
-
 // get_address_list($array)
 //
 // Takes an array of email addresses and returns a comma separated
