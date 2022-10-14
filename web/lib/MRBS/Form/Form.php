@@ -14,9 +14,11 @@ use function MRBS\session;
 
 class Form extends Element
 {
+  private const TOKEN_NAME = 'csrf_token';
+
   private static $token = null;
-  private static $token_name = 'csrf_token';  // As of PHP 7.1 this would be a private const
   private static $cookie_set = false;
+
 
   public function __construct()
   {
@@ -49,7 +51,7 @@ class Form extends Element
   public static function getTokenHTML() : string
   {
     $element = new ElementInputHidden();
-    $element->setAttributes(array('name'  => self::$token_name,
+    $element->setAttributes(array('name'  => self::TOKEN_NAME,
                                   'value' => self::getToken()));
     return $element->toHTML();
   }
@@ -78,7 +80,7 @@ class Form extends Element
       return;
     }
 
-    $token = get_form_var(self::$token_name, 'string', null, INPUT_POST);
+    $token = get_form_var(self::TOKEN_NAME, 'string', null, INPUT_POST);
     $stored_token = self::getStoredToken();
 
     if (!self::compareTokens($stored_token, $token))
@@ -122,7 +124,7 @@ class Form extends Element
 
   private function addCSRFToken() : Form
   {
-    $this->addHiddenInput(self::$token_name, self::getToken());
+    $this->addHiddenInput(self::TOKEN_NAME, self::getToken());
     return $this;
   }
 
@@ -194,7 +196,7 @@ class Form extends Element
       // class in due course?   Note also that Joomla's JSession class has methods for
       // getting and checking form tokens, so maybe that's another way of doing it?)
       $session = JFactory::getSession();
-      $session->set(self::$token_name, $token);
+      $session->set(self::TOKEN_NAME, $token);
       return;
     }
 
@@ -210,7 +212,7 @@ class Form extends Element
           throw new Exception("Could not start session");
         }
       }
-      $_SESSION[self::$token_name] = $token;
+      $_SESSION[self::TOKEN_NAME] = $token;
       return;
     }
 
@@ -220,7 +222,7 @@ class Form extends Element
       SessionCookie::setCookie('MRBS_CSRF',
                                $csrf_cookie['hash_algorithm'],
                                $csrf_cookie['secret'],
-                               array(self::$token_name => $token),
+                               array(self::TOKEN_NAME => $token),
                                0);  //Always a session cookie
 
       self::$cookie_set = true;
@@ -235,7 +237,7 @@ class Form extends Element
     if ($auth['session'] == 'joomla')
     {
       $session = JFactory::getSession();
-      return $session->get(self::$token_name);
+      return $session->get(self::TOKEN_NAME);
     }
 
     $session_status = session_status();
@@ -250,7 +252,7 @@ class Form extends Element
           throw new Exception("Could not start session");
         }
       }
-      return (isset($_SESSION[self::$token_name])) ? $_SESSION[self::$token_name] : null;
+      return (isset($_SESSION[self::TOKEN_NAME])) ? $_SESSION[self::TOKEN_NAME] : null;
     }
 
     // Otherwise use cookies
@@ -258,6 +260,6 @@ class Form extends Element
                                      $csrf_cookie['hash_algorithm'],
                                      $csrf_cookie['secret']);
 
-    return (isset($data[self::$token_name])) ? $data[self::$token_name] : null;
+    return (isset($data[self::TOKEN_NAME])) ? $data[self::TOKEN_NAME] : null;
   }
 }
