@@ -161,9 +161,8 @@ function get_address_list($array)
 {
   // Turn the array into a comma separated string
   $string = implode(',', $array);
-  // Now turn it back into an array.   This is necessary because
-  // some of the elements of the original array may themselves have
-  // been comma separated strings
+  // Now turn it back into an array.   This is necessary because some elements
+  // of the original array may themselves have been comma separated strings.
   $array = explode(',', $string);
   // remove any leading and trailing whitespace and any empty strings
   $trimmed_array = array();
