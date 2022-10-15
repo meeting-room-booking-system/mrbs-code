@@ -640,9 +640,17 @@ function checkConflicts(optional)
     }
 
     checkConflicts.nOutstanding++;
-    $.post('edit_entry_handler.php', params, function(result) {
-        if (result)
+    $.post('edit_entry_handler.php', params)
+      .fail(function() {
+        $('#checks').hide();
+      })
+      .done(function(result) {
+        if (!result)
         {
+          $('#checks').hide();
+        }
+        else {
+          $('#checks').show();
           checkConflicts.nOutstanding--;
           var conflictDiv = $('#conflict_check');
           var scheduleDetails = $('#schedule_details');
@@ -668,10 +676,10 @@ function checkConflicts(optional)
           scheduleDetails.html(detailsHTML);
 
           <?php
-          // Display the results of the policy check.   Set the class to "good" if there
-          // are no policy violations at all.  To "notice" if there are no errors, but some
+          // Display the results of the policy check. Set the class to "good" if there
+          // are no policy violations at all; to "notice" if there are no errors, but some
           // notices (this happens when an admin user makes a booking that an ordinary user
-          // would not be allowed to.  Otherwise "bad".  Content and styling are supplied by CSS.
+          // would not be allowed to); otherwise "bad".  Content and styling are supplied by CSS.
           ?>
           var policyDiv = $('#policy_check');
           if (result.violations.errors.length === 0)
@@ -705,7 +713,7 @@ function checkConflicts(optional)
           }
           policyDiv.attr('title', titleText);
           policyDetails.html(detailsHTML);
-        }  <?php // if (result) ?>
+        }  <?php // if (!result) else ?>
       }, 'json');
   }, timeout);  <?php // setTimeout() ?>
 

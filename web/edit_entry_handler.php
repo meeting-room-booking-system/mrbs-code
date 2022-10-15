@@ -11,6 +11,21 @@ use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 
 
+function invalid_date(string $message, bool $is_ajax) : void
+{
+  if ($is_ajax)
+  {
+    http_response_code(500);
+    // Trigger the error after we have sent the 500 code so that if $debug is set the JavaScript
+    // does not interpret the output as success.
+    trigger_error($message, E_USER_WARNING);
+    exit;
+  }
+
+  throw new Exception($message);
+}
+
+
 // Check that a room id is set and not the empty string and convert it to an int.
 function sanitize_room_id($id) : int
 {
@@ -187,13 +202,13 @@ if (!is_book_admin($rooms) && $auth['only_admin_can_book_multiday'])
 
 if (false === ($start_date_split = split_iso_date($start_date)))
 {
-  throw new Exception("Invalid start_date '$start_date'");
+  invalid_date("Invalid start_date '$start_date'", $is_ajax);
 }
 list($start_year, $start_month, $start_day) = $start_date_split;
 
 if (false === ($end_date_split = split_iso_date($end_date)))
 {
-  throw new Exception("Invalid end_date '$end_date'");
+  invalid_date("Invalid end_date '$end_date'", $is_ajax);
 }
 list($end_year, $end_month, $end_day) = $end_date_split;
 
