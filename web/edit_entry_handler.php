@@ -845,8 +845,8 @@ try
 
   $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
-// If we weren't just checking and this was a successful booking and
-// we were editing an existing booking, then delete the old booking
+  // If we weren't just checking and this was a successful booking and
+  // we were editing an existing booking, then delete the old booking
   if (!$just_check && $result['valid_booking'] && isset($id))
   {
     $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), true);
@@ -865,7 +865,7 @@ try
   db()->mutex_unlock(_tbl('entry'));
 
 
-// If this is an Ajax request, output the result and finish
+  // If this is an Ajax request, output the result and finish
   if ($is_ajax)
   {
     // Generate the new HTML
