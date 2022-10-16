@@ -1692,7 +1692,7 @@ $(document).on('page_ready', function() {
   // Enable the checkboxes which may have been disabled, otherwise their values
   // will not be posted.
   ?>
-  form.submit(function() {
+  form.on('submit', function() {
       $('#registration').find('input[type="checkbox"]').prop('disabled', false);
     });
 

@@ -232,7 +232,7 @@ $(document).on('page_ready', function() {
         var submit = $(this.element).data('submit');
         if (submit)
         {
-          $('#' + submit).submit();
+          $('#' + submit).trigger('submit');
         }
         else
         {
