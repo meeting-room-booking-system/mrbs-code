@@ -243,7 +243,7 @@ $(document).on('page_ready', function() {
 
   <?php
   // Disable hidden days, unless the user is a booking admin.  (If they're a booking
-  // admin then they'll still be able to select the date but it will be given a different
+  // admin then they'll still be able to select the date, but it will be given a different
   // class so that it can be styled differently - see code above in this file.)
   if (!empty($hidden_days))
   {
