@@ -1473,7 +1473,7 @@ $(document).on('page_ready', function() {
   // Use a click event for checkboxes as it seems that in some browsers the event fires
   // before the value is changed.
   ?>
-  var formFields = $('form#main').find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+  var formFields = form.find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
   formFields.filter(':checkbox')
             .on('click', function() {
                 checkConflicts();
@@ -1503,7 +1503,7 @@ $(document).on('page_ready', function() {
   $('<div>').attr('id', 'check_results')
             .css('display', 'none')
             .html(tabsHTML)
-            .appendTo($('form#main'));
+            .appendTo(form);
 
   $('#conflict_check, #policy_check').on('click', function manageTabs() {
       var tabId,
