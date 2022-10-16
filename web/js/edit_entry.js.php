@@ -925,8 +925,9 @@ function adjustSlotSelectors()
   //     to have a go at finding a time/period in the new area as close
   //     as possible to the one that was selected in the old area.
   ?>
-  var oldArea = $('#area').data('previous'),
-      currentArea = $('#area').data('current');
+  var area = $('#area'),
+      oldArea = area.data('previous'),
+      currentArea = area.data('current');
 
   var enablePeriods    = areaConfig('enable_periods'),
       oldEnablePeriods = areaConfig('enable_periods', oldArea),
