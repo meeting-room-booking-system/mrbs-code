@@ -2,6 +2,9 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
+use function MRBS\fatal_error;
+use function MRBS\get_cookie_path;
 
 
 // Manage sessions via cookies stored in the client browser
@@ -16,7 +19,7 @@ class SessionCookie extends SessionWithLogin
   {
     parent::__construct();
 
-    self::$cookie_path = \MRBS\get_cookie_path();
+    self::$cookie_path = get_cookie_path();
 
     // Delete old-style cookies
     if (!empty($_COOKIE) && isset($_COOKIE["UserName"]))
@@ -66,7 +69,7 @@ class SessionCookie extends SessionWithLogin
       $expiry_time = time() + $auth['session_cookie']['session_expire_time'];
     }
 
-    $user = \MRBS\auth()->getUser($username);
+    $user = auth()->getUser($username);
 
     self::setCookie('SessionToken',
                     $auth['session_cookie']['hash_algorithm'],
@@ -185,9 +188,9 @@ class SessionCookie extends SessionWithLogin
   {
     if (!function_exists('hash_hmac'))
     {
-      \MRBS\fatal_error("It appears that your PHP has the hash functions " .
-                        "disabled, which are required for the 'cookie' " .
-                        "session scheme.");
+      fatal_error("It appears that your PHP has the hash functions " .
+                  "disabled, which are required for the 'cookie' " .
+                  "session scheme.");
     }
 
     return hash_hmac($algo, $data, $key);
