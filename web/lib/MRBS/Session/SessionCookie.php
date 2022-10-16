@@ -96,7 +96,7 @@ class SessionCookie extends SessionWithLogin
 
     if ($auth['session_cookie']['include_ip'])
     {
-      $data['ip'] = isset($server['REMOTE_ADDR']) ? $server['REMOTE_ADDR'] : null;
+      $data['ip'] = $server['REMOTE_ADDR'] ?? null;
     }
 
     $json_data = json_encode($data);
