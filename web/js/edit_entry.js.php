@@ -1553,14 +1553,15 @@ $(document).on('page_ready', function() {
                            'minHeight': 150,
                            'draggable': true});
       <?php //steal the close button ?>
-      $('#details_tabs').append($('button.ui-dialog-titlebar-close'));
+      var detailsTabs = $('#details_tabs');
+      detailsTabs.append($('button.ui-dialog-titlebar-close'));
       <?php //move the tabs out of the content and make them draggable ?>
       $('.ui-dialog').addClass('ui-tabs')
-                     .prepend($('#details_tabs'))
+                     .prepend(detailsTabs)
                      .draggable('option', 'handle', '#details_tabs');
       <?php //switch the titlebar class ?>
       $('.ui-dialog-titlebar').remove();
-      $('#details_tabs').addClass('ui-dialog-titlebar');
+      detailsTabs.addClass('ui-dialog-titlebar');
 
       manageTabs.alreadyExists=true;
     });
