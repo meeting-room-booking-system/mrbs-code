@@ -1473,7 +1473,7 @@ $(document).on('page_ready', function() {
   // Use a click event for checkboxes as it seems that in some browsers the event fires
   // before the value is changed.
   ?>
-  var formFields = $('form#main').find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
+  var formFields = form.find('input.date, [name]').not(':disabled, [type="submit"], [type="button"], [type="image"]');
   formFields.filter(':checkbox')
             .on('click', function() {
                 checkConflicts();
@@ -1503,7 +1503,7 @@ $(document).on('page_ready', function() {
   $('<div>').attr('id', 'check_results')
             .css('display', 'none')
             .html(tabsHTML)
-            .appendTo($('form#main'));
+            .appendTo(form);
 
   $('#conflict_check, #policy_check').on('click', function manageTabs() {
       var tabId,
@@ -1553,14 +1553,15 @@ $(document).on('page_ready', function() {
                            'minHeight': 150,
                            'draggable': true});
       <?php //steal the close button ?>
-      $('#details_tabs').append($('button.ui-dialog-titlebar-close'));
+      var detailsTabs = $('#details_tabs');
+      detailsTabs.append($('button.ui-dialog-titlebar-close'));
       <?php //move the tabs out of the content and make them draggable ?>
       $('.ui-dialog').addClass('ui-tabs')
-                     .prepend($('#details_tabs'))
+                     .prepend(detailsTabs)
                      .draggable('option', 'handle', '#details_tabs');
       <?php //switch the titlebar class ?>
       $('.ui-dialog-titlebar').remove();
-      $('#details_tabs').addClass('ui-dialog-titlebar');
+      detailsTabs.addClass('ui-dialog-titlebar');
 
       manageTabs.alreadyExists=true;
     });
