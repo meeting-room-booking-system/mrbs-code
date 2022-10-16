@@ -682,6 +682,7 @@ function checkConflicts(optional)
           // would not be allowed to); otherwise "bad".  Content and styling are supplied by CSS.
           ?>
           var policyDiv = $('#policy_check');
+          var rulesList;
           if (result.violations.errors.length === 0)
           {
             if (result.violations.notices.length === 0)
@@ -696,7 +697,7 @@ function checkConflicts(optional)
               detailsHTML = "<p>";
               titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken_notices"))) ?>' + "\n\n";
               detailsHTML += titleText + "<\/p>";
-              var rulesList = getErrorList(result.violations.notices);
+              rulesList = getErrorList(result.violations.notices);
               detailsHTML += rulesList.html;
               titleText += rulesList.text;
             }
@@ -707,7 +708,7 @@ function checkConflicts(optional)
             detailsHTML = "<p>";
             titleText = '<?php echo escape_js(html_entity_decode(get_vocab("rules_broken"))) ?>' + "\n\n";
             detailsHTML += titleText + "<\/p>";
-            var rulesList = getErrorList(result.violations.errors);
+            rulesList = getErrorList(result.violations.errors);
             detailsHTML += rulesList.html;
             titleText += rulesList.text;
           }
