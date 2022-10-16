@@ -212,7 +212,7 @@ var Timeline = {
         return arr;
       }
 
-      <?php // Recursively gets the last element of a multi-dimensional array ?>
+      <?php // Recursively gets the last element of a multidimensional array ?>
       function getLast(arr)
       {
         if (Array.isArray(arr))
@@ -297,12 +297,12 @@ var Timeline = {
       <?php
       // We need the <th> header cells in <thead> because they are useful for working out the
       // dimensions of slots in the table.  We can't rely on the <td> cells in the <tbody> because
-      // they may have rowspans attached to the them.
+      // they may have rowspans attached to them.
       ?>
       headers = table.find('thead tr').first().find('th');
 
       <?php
-      // The time line can either be vertical or horizontal and stretch the full width/height of the
+      // The timeline can either be vertical or horizontal and stretch the full width/height
       // of the calendar or not. For example in the day view with $times_along_top = false the
       // timeline is horizontal and stretches the full width.   And in the week view for a single room
       // with $times_along_top = true the timeline is vertical and doesn't stretch the full height
@@ -313,8 +313,8 @@ var Timeline = {
         <?php // Get the row that contains the current time ?>
         row = table.find('tbody tr').eq(nowSlotIndices[1]);
         <?php
-        // Get the top, left edge and height of the timeline.  The left edge is the left edge of he cell,
-        // adjusted for the border width and then we add on the fraction that we are through the cell.
+        // Get the top, left edge and height of the timeline.  The left edge is the left edge of the cell,
+        // adjusted for the border width, and then we add on the fraction that we are through the cell.
         ?>
         element = headers.not('.first_last').eq(nowSlotIndices[0]);
         borderLeftWidth = parseInt(element.css('border-left-width'), 10);
@@ -334,7 +334,7 @@ var Timeline = {
           top = row.offset().top - table.parent().offset().top;
           <?php
           // Take 1px off the booking height to account for the bottom border of the <a> tag in a
-          // booked cell.  Bit of a hack, but difficult to see how to do it otherwise.
+          // booked cell. A bit of a hack, but difficult to see how to do it otherwise.
           ?>
           height = row.innerHeight() - 1;
         }
