@@ -1316,22 +1316,21 @@ $(document).on('page_ready', function() {
 
   isBookAdmin = args.isBookAdmin;
 
-  var form = $('#main');
+  var form = $('#main'),
+      areaSelect = $('#area'),
+      startSelect,
+      endSelect,
+      allDay;
 
   <?php
   // If there's only one enabled area in the database there won't be an area
   // select input, so we'll have to create a dummy input because the code
   // relies on it.
   ?>
-  if ($('#area').length === 0)
+  if (areaSelect.length === 0)
   {
     $('#div_rooms').before('<input id="area" type="hidden" value="' + args.area + '">');
   }
-
-  var areaSelect = $('#area'),
-      startSelect,
-      endSelect,
-      allDay;
 
   $('#div_areas').show();
 
