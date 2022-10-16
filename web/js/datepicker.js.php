@@ -29,7 +29,7 @@ function iPadMobileFix() {
         }
       };
     };
-};
+}
 
 <?php
 // Turn a JavaScript year, month, day (ie with Jan = 0) into an
