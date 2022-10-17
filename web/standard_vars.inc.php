@@ -45,6 +45,12 @@ if (isset($page_date) && ($page_date !== ''))
 {
   if (false === ($page_date_split = split_iso_date($page_date)))
   {
+    if (is_ajax())
+    {
+      http_response_code(500);
+      trigger_error("Ajax: invalid page_date '$page_date'", E_USER_NOTICE);
+      exit;
+    }
     trigger_error("Invalid page_date '$page_date'", E_USER_NOTICE);
   }
   else
