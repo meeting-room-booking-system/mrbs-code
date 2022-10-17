@@ -235,19 +235,24 @@ var prefetch = function() {
   }
 
   hrefs.forEach(function(href) {
-    $.get({
-        url: href,
-        dataType: 'html',
-        success: function(response) {
-            updateBody.prefetched[href] = response;
-            <?php // Once we've got all the responses back set off another timeout ?>
-            if (Object.keys(updateBody.prefetched).length === hrefs.length)
-            {
-              prefetch.timeoutId = setTimeout(prefetch, delay);
-            }
+    $.get({url: href, dataType: 'html'})
+      .fail(function() {
+          <?php // Don't do anything if the request failed ?>
+        })
+      .done(function(response) {
+          updateBody.prefetched[href] = response;
+          <?php // Once we've got all the responses back set off another timeout ?>
+          if (Object.keys(updateBody.prefetched).length === hrefs.length)
+          {
+            <?php
+            // Only set another timeout if the request was successful.  There's no point
+            // in doing so if it failed: it will probably fail again and just fill up
+            // the PHP error log.
+            ?>
+            prefetch.timeoutId = setTimeout(prefetch, delay);
           }
-      });
-  });
+        });
+    });
 
 };
 
