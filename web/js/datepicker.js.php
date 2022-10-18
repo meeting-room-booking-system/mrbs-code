@@ -174,7 +174,7 @@ $(document).on('page_ready', function() {
 
 
   <?php
-  // Sync all the minicalendars with this instance of one.   In other words
+  // Sync all the mini-calendars with this instance of one. In other words
   // make the mini-calendars show sequential months, aligning with this one.
   ?>
   function syncCals(instance)
@@ -217,7 +217,11 @@ $(document).on('page_ready', function() {
       {
         href += '&site=' + encodeURIComponent(args.site);
       }
-
+      <?php
+      // Set the new date in the mini-calendar, in order to avoid the previous one
+      // still showing as selected.
+      // TODO: change the date in the other mini-calendar of the date appears there as well?
+      ?>
       instance.setDate([selectedDates[0], selectedDates[0]], false);
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     };
@@ -336,7 +340,7 @@ $(document).on('page_ready', function() {
             }
             else
             {
-              // If we've got hidden days then highlight in the minicalendars those
+              // If we've got hidden days then highlight in the mini-calendars those
               // days in the range that are not hidden.
               ?>
               value.setDate(datesInRange(startDate, endDate, true));
@@ -352,7 +356,7 @@ $(document).on('page_ready', function() {
         div.css('margin-top', $('.view_container h2').outerHeight(true) + 'px');
 
         <?php
-        // Once the calendars are formed thern we add the class 'formed' which will
+        // Once the calendars are formed then we add the class 'formed' which will
         // bring into play CSS media queries.    We need to do this because if we
         // form them when the media queries are operational then they won't get
         // formed if the result of the query is 'display: none', which means that if
