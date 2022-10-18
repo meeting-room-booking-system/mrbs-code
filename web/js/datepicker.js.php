@@ -217,7 +217,11 @@ $(document).on('page_ready', function() {
       {
         href += '&site=' + encodeURIComponent(args.site);
       }
-
+      <?php
+      // Set the new date in the mini-calendar, in order to avoid the previous one
+      // still showing as selected.
+      // TODO: change the date in the other mini-calendar of the date appears there as well?
+      ?>
       instance.setDate([selectedDates[0], selectedDates[0]], false);
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     };
