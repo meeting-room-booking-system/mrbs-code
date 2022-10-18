@@ -34,14 +34,17 @@ var sizeColumns = function() {
 var refreshPage = function refreshPage() {
     if (!isHidden() &&
         !$('table.dwm_main').hasClass('resizing') &&
-        !isMeteredConnection())
+        !isMeteredConnection() &&
+        !refreshPage.disabled)
     {
-      var data = {refresh: 1,
-                  view: args.view,
-                  view_all: args.view_all,
-                  page_date: args.pageDate,
-                  area: args.area,
-                  room: args.room};
+      var data = {
+        refresh: 1,
+        view: args.view,
+        view_all: args.view_all,
+        page_date: args.pageDate,
+        area: args.area,
+        room: args.room
+      };
 
       if (args.timetohighlight !== undefined)
       {

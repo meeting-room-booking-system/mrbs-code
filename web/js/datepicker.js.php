@@ -217,6 +217,8 @@ $(document).on('page_ready', function() {
       {
         href += '&site=' + encodeURIComponent(args.site);
       }
+
+      instance.setDate([selectedDates[0], selectedDates[0]], false);
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     };
 
