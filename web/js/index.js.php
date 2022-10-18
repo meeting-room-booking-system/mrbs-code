@@ -171,13 +171,26 @@ var updateBody = function(event) {
     }
     else
     {
-      $.get({
-          url: href,
-          dataType: 'html',
-          success: function(response) {
-            replaceBody(response, href);
-          }
-        });
+      <?php
+      // Keep track of the last Ajax request, because it's only that one that we're
+      // interested in: if the server is slow and the user clicks on a succession
+      // of dates, we only want to show the data for the last date.
+      ?>
+      updateBody.lastRequest = href;
+      <?php
+      // We don't want a refresh to happen while we're waiting for the next date.
+      ?>
+      refreshPage.disabled = true;
+      $.get({url: href, dataType: 'html'})
+        .done(function(response) {
+            <?php // Only process this response if it corresponds to the last request ?>
+            if (href === updateBody.lastRequest)
+            {
+              updateBody.lastRequest = null;
+              refreshPage.disabled = false;
+              replaceBody(response, href);
+            }
+          });
     }
   };
 
@@ -187,7 +200,6 @@ var updateBody = function(event) {
 // the two most likely pages to be required.
 ?>
 var prefetch = function() {
-
   <?php
   // Don't pre-fetch if it's been disabled in the config
   if (empty($prefetch_refresh_rate))
@@ -196,9 +208,10 @@ var prefetch = function() {
     return;
     <?php
   }
-
-  // Don't pre-fetch and waste bandwidth if we're on a metered connection ?>
-  if (isMeteredConnection())
+  // Don't pre-fetch if we're in the process of moving to a different date (no point)
+  // or if we're on a metered connection (would waste bandwidth).
+  ?>
+  if (updateBody.lastRequest || isMeteredConnection())
   {
     return;
   }

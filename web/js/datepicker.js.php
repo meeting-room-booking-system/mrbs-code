@@ -205,7 +205,7 @@ $(document).on('page_ready', function() {
   var onMinicalChange = function(selectedDates, dateStr, instance) {
       <?php
       // The order of the query string parameters is important here.  It needs to be the
-      // same as the order in the Prev anbd Next navigation links so that the pre-fetched
+      // same as the order in the Prev and Next navigation links so that the pre-fetched
       // pages can be used when possible.
       ?>
       var href = 'index.php';
@@ -217,6 +217,8 @@ $(document).on('page_ready', function() {
       {
         href += '&site=' + encodeURIComponent(args.site);
       }
+
+      instance.setDate([selectedDates[0], selectedDates[0]], false);
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     };
 
