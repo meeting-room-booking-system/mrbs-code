@@ -430,7 +430,7 @@ if (!checkAuthorised(this_page(), $refresh))
 {
   exit;
 }
-sleep(2);
+
 switch ($view)
 {
   case 'week':
