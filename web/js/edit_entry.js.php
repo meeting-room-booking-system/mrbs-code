@@ -1330,7 +1330,8 @@ $(document).on('page_ready', function() {
   ?>
   if (areaSelect.length === 0)
   {
-    $('#div_rooms').before('<input id="area" type="hidden" value="' + args.area + '">');
+    areaSelect = $('<input id="area" type="hidden" value="' + args.area + '">');
+    $('#div_rooms').before(areaSelect);
   }
 
   $('#div_areas').show();
