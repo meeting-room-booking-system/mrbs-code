@@ -1,11 +1,11 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:Europe/Copenhagen
-LAST-MODIFIED:20201011T015911Z
-TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Copenhagen
-X-LIC-LOCATION:Europe/Copenhagen
+TZID:Europe/Berlin
+LAST-MODIFIED:20221013T075636Z
+TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Berlin
+X-LIC-LOCATION:Europe/Berlin
 BEGIN:DAYLIGHT
 TZNAME:CEST
 TZOFFSETFROM:+0100
