@@ -735,22 +735,28 @@ vocab.days    = {singular: '<?php echo escape_js(get_vocab("day")) ?>',
                  plural:   '<?php echo escape_js(get_vocab("days")) ?>'};
 
 
+<?php
+// Removes any trailing zeroes after the decimal point.
+?>
 function durFormat(r)
 {
+  var lastChar;
+
   r = r.toFixed(2);
   r = parseFloat(r);
   r = r.toLocaleString();
 
   if ((r.indexOf('.') >= 0) || (r.indexOf(',') >= 0))
   {
-    while (r.substr(r.length -1) === '0')
+    while (r.slice(-1) === '0')
     {
-      r = r.substr(0, r.length - 1);
+      r = r.slice(0, -1);
     }
 
-    if ((r.substr(r.length -1) === '.') || (r.substr(r.length -1) === ','))
+    lastChar = r.slice(-1);
+    if ((lastChar === '.') || (lastChar === ','))
     {
-      r = r.substr(0, r.length - 1);
+      r = r.slice(0, -1);
     }
   }
 
@@ -799,7 +805,9 @@ function getDuration(from, to, days)
   if (!enablePeriods && (duration >= 60))
   {
     durUnits = "hours";
+    console.log("Before: " + duration/60);
     duration = durFormat(duration/60);
+    console.log("Before: " + duration);
   }
 
   <?php
