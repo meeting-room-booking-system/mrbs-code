@@ -783,7 +783,6 @@ function getDuration(from, to, days)
 
 
   durUnits = (enablePeriods) ? '<?php echo "periods" ?>' : '<?php echo "minutes" ?>';
-  duration = to - from;
   duration = Math.floor((to - from) / 60);
 
   if (enablePeriods)
