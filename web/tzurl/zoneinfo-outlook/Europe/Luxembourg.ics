@@ -1,11 +1,11 @@
 BEGIN:VCALENDAR
-PRODID:-//tzurl.org//NONSGML Olson 2020b//EN
+PRODID:-//tzurl.org//NONSGML Olson 2022e//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:Europe/Luxembourg
-LAST-MODIFIED:20201011T015911Z
-TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Luxembourg
-X-LIC-LOCATION:Europe/Luxembourg
+TZID:Europe/Brussels
+LAST-MODIFIED:20221013T075636Z
+TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Brussels
+X-LIC-LOCATION:Europe/Brussels
 BEGIN:DAYLIGHT
 TZNAME:CEST
 TZOFFSETFROM:+0100
