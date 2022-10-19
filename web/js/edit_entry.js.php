@@ -804,9 +804,7 @@ function getDuration(from, to, days)
   if (!enablePeriods && (duration >= 60))
   {
     durUnits = "hours";
-    console.log("Before: " + duration/60);
     duration = durFormat(duration/60);
-    console.log("Before: " + duration);
   }
 
   <?php
