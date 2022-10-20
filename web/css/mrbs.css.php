@@ -231,9 +231,19 @@ tr:nth-child(odd) td.new,
   background-color: <?php echo $row_odd_color ?>;
 }
 
+tr:nth-child(odd) td.new.holiday,
+.all_rooms tr:nth-child(odd) td.holiday {
+  background-color: <?php echo $row_odd_color_holiday ?>;
+}
+
 tr:nth-child(even) td.new,
 .all_rooms tr:nth-child(even) td {
   background-color: <?php echo $row_even_color ?>;
+}
+
+tr:nth-child(even) td.new.holiday,
+.all_rooms tr:nth-child(even) td.holiday {
+  background-color: <?php echo $row_even_color_holiday ?>;
 }
 
 .all_rooms td {
@@ -1014,8 +1024,12 @@ table.dwm_main {
   border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
-.dwm_main#month_main td.valid {
+.dwm_main#month_main td {
   background-color: <?php echo $main_table_month_color ?>;
+}
+
+.dwm_main#month_main td.holiday {
+  background-color: <?php echo $main_table_month_holiday_color ?>;
 }
 
 .dwm_main#month_main td.invalid {
@@ -1236,8 +1250,16 @@ tbody tr:nth-child(odd) th {
   background-color: <?php echo $row_odd_color ?>;
 }
 
+tbody tr:nth-child(odd) th.holiday {
+  background-color: <?php echo $row_odd_color_holiday ?>;
+}
+
 tbody tr:nth-child(even) th {
   background-color: <?php echo $row_even_color ?>;
+}
+
+tbody tr:nth-child(even) th.holiday {
+  background-color: <?php echo $row_even_color_holiday ?>;
 }
 
 tbody th a {
@@ -1284,8 +1306,16 @@ tbody th a:hover {
   background-color: <?php echo $row_odd_color ?>;
 }
 
+.dwm_main.resizing tbody tr:nth-child(odd) td.holiday:hover.new {
+  background-color: <?php echo $row_odd_color_holiday ?>;
+}
+
 .dwm_main.resizing tbody tr:nth-child(even) td:hover.new {
   background-color: <?php echo $row_even_color ?>;
+}
+
+.dwm_main.resizing tbody tr:nth-child(even) td.holiday:hover.new {
+  background-color: <?php echo $row_even_color_holiday ?>;
 }
 
 .dwm_main.resizing tbody tr:hover th {
