@@ -301,6 +301,17 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
     else
     {
       $classes[] = 'new';
+      // Add a class for a weekend day
+      $date = new DateTime();
+      $date->setDate(
+        $query_vars['new_times']['year'],
+        $query_vars['new_times']['month'],
+        $query_vars['new_times']['day']
+      );
+      if (is_weekend($date->format('w')))
+      {
+        $classes[] = 'weekend';
+      }
     }
 
     // If there's no booking or if there are multiple bookings then make the slot one unit long
@@ -1824,7 +1835,15 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     }
     else
     {
-      $html .= "<td class=\"valid\">\n";
+      $classes = array('valid');
+      // Add a class if it's a weekend day
+      $date = new DateTime();
+      $date->setDate($year, $month, $d);
+      if (is_weekend($date->format('w')))
+      {
+        $classes[] = 'weekend';
+      }
+      $html .= '<td class="' . implode(' ', $classes) . "\">\n";
       $html .= "<div class=\"cell_container\">\n";
 
       $html .= "<div class=\"cell_header\">\n";
