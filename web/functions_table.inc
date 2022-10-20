@@ -1199,7 +1199,20 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         }
 
         $d = $day_start_interval + $j;
-        $tbody .= "<td>";
+        $classes = array();
+        // Add a class if it's a weekend day
+        $date = new DateTime();
+        $date->setDate($year, $month, $d);
+        if (is_weekend($date->format('w')))
+        {
+          $classes[] = 'weekend';
+        }
+        $tbody .= '<td';
+        if (!empty($classes))
+        {
+          $tbody .= ' class="' . implode(' ', $classes) . '"';
+        }
+        $tbody .= '>';
         $vars = array(
             'view'      => 'day',
             'view_all'  => $view_all,
