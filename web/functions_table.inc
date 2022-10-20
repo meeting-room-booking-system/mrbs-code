@@ -1820,7 +1820,15 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     }
     else
     {
-      $html .= "<td class=\"valid\">\n";
+      $classes = array('valid');
+      // Add a class if it's a weekend day
+      $date = new DateTime();
+      $date->setDate($year, $month, $d);
+      if (is_weekend($date->format('w')))
+      {
+        $classes[] = 'weekend';
+      }
+      $html .= '<td class="' . implode(' ', $classes) . "\">\n";
       $html .= "<div class=\"cell_container\">\n";
 
       $html .= "<div class=\"cell_header\">\n";
