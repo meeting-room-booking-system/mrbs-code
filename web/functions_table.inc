@@ -4,6 +4,23 @@ namespace MRBS;
 use IntlDateFormatter;
 
 
+function get_date_classes(DateTime $date) : array
+{
+  $result = array();
+
+  if ($date->isWeekend())
+  {
+    $result[] = 'weekend';
+  }
+  if ($date->isHoliday())
+  {
+    $result[] = 'holiday';
+  }
+
+  return $result;
+}
+
+
 // Prepares an entry for display by (a) adding in registration level information
 // and (b) replacing the text in private fields if necessary.
 function prepare_entry(array $entry) : array
@@ -300,17 +317,14 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
     else
     {
       $classes[] = 'new';
-      // Add a class for a weekend day
+      // Add classes for weekends and holidays
       $date = new DateTime();
       $date->setDate(
         $query_vars['new_times']['year'],
         $query_vars['new_times']['month'],
         $query_vars['new_times']['day']
       );
-      if (is_weekend($date->format('w')))
-      {
-        $classes[] = 'weekend';
-      }
+      $classes = array_merge($classes, get_date_classes($date));
     }
 
     // If there's no booking or if there are multiple bookings then make the slot one unit long
@@ -478,15 +492,19 @@ function room_cell_html(array $room, array $vars) : string
 //    $text     contains the date, formatted as a string (not escaped - allowed to contain HTML tags)
 //    $link     the href to be used for the link
 //    $date     the date in yyyy-mm-dd format
-function day_cell_html(string $text, string $link, string $date) : string
+function day_cell_html(string $text, string $link, string $iso_date) : string
 {
   $html = '';
   // Put the date into a data attribute so that it can be picked up by JavaScript
-  $html .= '<th data-date="' . htmlspecialchars($date) . '"';
-  if (is_weekend(date('w', strtotime($date))))
+  $html .= '<th data-date="' . htmlspecialchars($iso_date) . '"';
+
+  // Add classes for weekends and holidays
+  $classes = get_date_classes(new DateTime($iso_date));
+  if (!empty($classes))
   {
-    $html .= ' class="weekend"';
+    $html .= ' class="' . implode(' ', $classes) . '"';
   }
+
   $html .= '>';
   $html .= '<a href="' . htmlspecialchars($link) . '"' .
            ' title="' . htmlspecialchars(get_vocab("viewday")) . '">';
@@ -1129,8 +1147,11 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         $link = multisite($link);
         $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
         $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+        $date = new DateTime();
+        $date->setTimestamp($t);
+        $classes = get_date_classes($date);
         $header_inner_rows[$i] .= '<th' .
-          ((is_weekend(date('w', $t))) ? ' class="weekend"' : '') .
+          ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
           '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
       }
 
@@ -1184,14 +1205,12 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         }
 
         $d = $day_start_interval + $j;
-        $classes = array();
-        // Add a class if it's a weekend day
+
+        // Add a classes for weekends and classes
         $date = new DateTime();
         $date->setDate($year, $month, $d);
-        if (is_weekend($date->format('w')))
-        {
-          $classes[] = 'weekend';
-        }
+        $classes = get_date_classes($date);
+
         $tbody .= '<td';
         if (!empty($classes))
         {
@@ -1833,14 +1852,11 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
     }
     else
     {
-      $classes = array('valid');
-      // Add a class if it's a weekend day
+      // Add classes for weekends and holidays
       $date = new DateTime();
       $date->setDate($year, $month, $d);
-      if (is_weekend($date->format('w')))
-      {
-        $classes[] = 'weekend';
-      }
+      $classes = get_date_classes($date);
+
       $html .= '<td class="' . implode(' ', $classes) . "\">\n";
       $html .= "<div class=\"cell_container\">\n";
 
