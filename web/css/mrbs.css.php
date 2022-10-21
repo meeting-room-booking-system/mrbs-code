@@ -846,6 +846,11 @@ table.dwm_main {
   background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
 }
 
+.dwm_main thead th.holiday,
+.dwm_main tfoot th.holiday {
+  background-color: <?php echo $row_even_color_holiday ?>
+}
+
 .dwm_main th,
 .dwm_main td {
   border-right: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>;
