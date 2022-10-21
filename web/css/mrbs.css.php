@@ -1029,11 +1029,11 @@ table.dwm_main {
   border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
 }
 
-.dwm_main#month_main td {
+.dwm_main#month_main:not(.all_rooms) td {
   background-color: <?php echo $main_table_month_color ?>;
 }
 
-.dwm_main#month_main td.holiday {
+.dwm_main#month_main:not(.all_rooms) td.holiday {
   background-color: <?php echo $main_table_month_holiday_color ?>;
 }
 
