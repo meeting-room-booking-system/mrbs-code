@@ -26,7 +26,7 @@ class DateTime extends \DateTime
   // in the config variable $holidays.
   private function isHolidayConfig() : bool
   {
-    global $holidays;
+    global $holidays, $debug;
 
     $year = $this->format('Y');
     $iso_date = $this->format('Y-m-d');
@@ -36,6 +36,21 @@ class DateTime extends \DateTime
       foreach ($holidays[$year] as $holiday)
       {
         $limits = explode('..', $holiday);
+
+        // Check that the dates are valid
+        foreach ($limits as $limit)
+        {
+          if (!validate_iso_date($limit))
+          {
+            // Only trigger an error if debugging, otherwise there will be thousands of error messages
+            if ($debug)
+            {
+              trigger_error("Invalid holiday date '$limit'", E_USER_NOTICE);
+            }
+            continue 2;
+          }
+        }
+
         if (count($limits) == 1)
         {
           // It's a single date of the form '2022-01-01'
@@ -50,6 +65,14 @@ class DateTime extends \DateTime
           if (($iso_date >= $limits[0]) && ($iso_date <= $limits[1]))
           {
             return true;
+          }
+        }
+        else
+        {
+          // Only trigger an error if debugging, otherwise there will be thousands of error messages
+          if ($debug)
+          {
+            trigger_error("Invalid holiday element '$holiday'", E_USER_NOTICE);
           }
         }
       }
