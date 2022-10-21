@@ -1136,7 +1136,7 @@ function utf8_strftime(string $format, $time, $locale=null) : string
   // if we can.
   // TODO: This solution just translates strftime formats into the nearest
   // TODO: equivalent IntlDateFormatter patterns.  However it would be better
-  // TODO: to rewrite MRBS so that IntlDateFormatter patterns are used if
+  // TODO: to rewrite MRBS so that IntlDateFormatter patterns are used if possible
   // TODO: as they are more flexible and better suited to reflecting locales.
   if (class_exists('IntlDateFormatter'))
   {

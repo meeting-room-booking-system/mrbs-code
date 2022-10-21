@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use DateInterval;
+
 define('INTERVAL_DAY', 0);
 
 
@@ -443,14 +445,14 @@ function adjust_ahead_seconds(int $seconds) : int
 /** mrbsCheckPolicy()
  *
  * Check to see if a proposed booking conforms to any booking policies in force.
- * Can be used both for creating an entry as well as deleting an entry
+ * Can be used for both creating and deleting an entry.
  *
  * $booking   - The booking in question - an associative array
  * $delete    - TRUE: We're intending to delete an entry
  *            - FALSE:  We're intending to create an entry (the default)
  *
  * Returns:
- *            - An array of human readable errors, index by 'notices' or 'errors'.
+ *            - An array of human-readable errors, index by 'notices' or 'errors'.
  *              If there are no policy violations the array has length 0.
  */
 function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null, $delete=false)
@@ -467,6 +469,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
+  global $prevent_booking_on_holidays;
   global $periods_booking_opens, $measure_max_to_start_time;
 
   $result = array('notices' => array(),
@@ -520,6 +523,25 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   // Check creation policies
   else
   {
+    // Check whether the user is trying to book on a holiday
+    if ($prevent_booking_on_holidays)
+    {
+      $date = new DateTime();
+      $date->setTimestamp($booking['start_time']);
+      $date->setTime(0, 0);
+      $end_date = new DateTime();
+      $end_date->setTimestamp($booking['end_time']);
+      $end_date->setTime(0, 0);
+      while ($date <= $end_date)
+      {
+        if ($date->isHoliday())
+        {
+          $violations[] = get_vocab('no_bookings_on_holidays', utf8_strftime('%x', $date->getTimestamp()));
+          break;
+        }
+        $date->add(new DateInterval('P1D'));
+      }
+    }
     // Check whether the user is trying to book two rooms simultaneously
     if ($prevent_simultaneous_bookings)
     {

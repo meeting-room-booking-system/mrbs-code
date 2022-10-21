@@ -306,6 +306,9 @@ $prevent_invalid_types = true;
 // to the start time, in which case this can be achieved by changing this setting to true.
 $measure_max_to_start_time = false;
 
+// By default, bookings cannot be made on days that are designated holidays (see $holidays).
+$prevent_booking_on_holidays = true;
+
 /******************
  * Display settings
  ******************/
@@ -323,6 +326,8 @@ $weekdays = array(1, 2, 3, 4, 5);
 // $holidays[2022] = array('2022-01-01', '2022-11-24');  // New Year's Day and US Thanksgiving 2022
 // Dates can include ranges in the form 'yyyy-mm-dd..yyyy-mm-dd', eg
 // $holidays[2022] = array('2022-01-01', '2022-07-01..2022-07-31');  // New Year's Day and all of July
+// By default, bookings cannot be made on days that are designated holidays (see $prevent_booking_on_holidays).
+// Holidays are styled differently in the main calendar views.
 $holidays = array();
 
 // Days of the week that should be hidden from display
