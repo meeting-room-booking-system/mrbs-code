@@ -22,13 +22,27 @@ class DateTime extends \DateTime
   }
 
 
-  // Determines whether the date is a holiday.
-  // Holidays are defined in the config variable $holidays.
-  public function isHoliday() : bool
+  // Determines whether the date is a holiday, as defined
+  // in the config variable $holidays.
+  private function isHolidayConfig() : bool
   {
     global $holidays;
 
-    if (in_array($this->format('Y-m-d'), $holidays))
+    $year = $this->format('Y');
+
+    if (in_array($this->format('Y-m-d'), $holidays[$year]))
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+
+  // Determines whether the date is a holiday.
+  public function isHoliday() : bool
+  {
+    if ($this->isHolidayConfig())
     {
       return true;
     }
