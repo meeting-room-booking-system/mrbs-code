@@ -29,10 +29,30 @@ class DateTime extends \DateTime
     global $holidays;
 
     $year = $this->format('Y');
+    $iso_date = $this->format('Y-m-d');
 
-    if (in_array($this->format('Y-m-d'), $holidays[$year]))
+    if (!empty($holidays[$year]))
     {
-      return true;
+      foreach ($holidays[$year] as $holiday)
+      {
+        $limits = explode('..', $holiday);
+        if (count($limits) == 1)
+        {
+          // It's a single date of the form '2022-01-01'
+          if ($iso_date == $limits[0])
+          {
+            return true;
+          }
+        }
+        elseif (count($limits) == 2)
+        {
+          // It's a range of the form '2022-07-01..2022-07-31'
+          if (($iso_date >= $limits[0]) && ($iso_date <= $limits[1]))
+          {
+            return true;
+          }
+        }
+      }
     }
 
     return false;
