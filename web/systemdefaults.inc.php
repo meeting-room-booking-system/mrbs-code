@@ -321,6 +321,8 @@ $weekdays = array(1, 2, 3, 4, 5);
 
 // A two-dimensional array of holidays in yyyy-mm-dd format, indexed first by year, for example
 // $holidays[2022] = array('2022-01-01', '2022-11-24');  // New Year's Day and US Thanksgiving 2022
+// Dates can include ranges in the form 'yyyy-mm-dd..yyyy-mm-dd', eg
+// $holidays[2022] = array('2022-01-01', '2022-07-01..2022-07-31');  // New Year's Day and all of July
 $holidays = array();
 
 // Days of the week that should be hidden from display
