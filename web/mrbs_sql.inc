@@ -463,7 +463,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   global $interval_types, $strftime_format;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
-  global $prevent_booking_on_holidays;
+  global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
 
   $result = array('notices' => array(),
@@ -517,13 +517,21 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   // Check creation policies
   else
   {
+    $entryInterval = new EntryInterval($booking['start_time'], $booking['end_time']);
     // Check whether the user is trying to book on a holiday
     if ($prevent_booking_on_holidays)
     {
-      $entryInterval = new EntryInterval($booking['start_time'], $booking['end_time']);
       if (false !== ($date = $entryInterval->overlapsHoliday()))
       {
         $violations[] = get_vocab('no_bookings_on_holidays', utf8_strftime('%x', $date->getTimestamp()));
+      }
+    }
+    // Check whether the user is trying to book on a weekend
+    if ($prevent_booking_on_weekends)
+    {
+      if (false !== ($date = $entryInterval->overlapsWeekend()))
+      {
+        $violations[] = get_vocab('no_bookings_on_weekends', utf8_strftime('%x', $date->getTimestamp()));
       }
     }
     // Check whether the user is trying to book two rooms simultaneously
