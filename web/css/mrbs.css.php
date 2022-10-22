@@ -226,6 +226,13 @@ a:hover {
   font-weight: bold;
 }
 
+span.not_allowed {
+  cursor: not-allowed;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 tr:nth-child(odd) td.new,
 .all_rooms tr:nth-child(odd) td {
   background-color: <?php echo $row_odd_color ?>;
