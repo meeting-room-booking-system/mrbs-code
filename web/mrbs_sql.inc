@@ -1,8 +1,6 @@
 <?php
 namespace MRBS;
 
-use DateInterval;
-
 define('INTERVAL_DAY', 0);
 
 
@@ -526,20 +524,10 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     // Check whether the user is trying to book on a holiday
     if ($prevent_booking_on_holidays)
     {
-      $date = new DateTime();
-      $date->setTimestamp($booking['start_time']);
-      $date->setTime(0, 0);
-      $end_date = new DateTime();
-      $end_date->setTimestamp($booking['end_time']);
-      $end_date->setTime(0, 0);
-      while ($date <= $end_date)
+      $entryInterval = new EntryInterval($booking['start_time'], $booking['end_time']);
+      if (false !== ($date = $entryInterval->overlapsHoliday()))
       {
-        if ($date->isHoliday())
-        {
-          $violations[] = get_vocab('no_bookings_on_holidays', utf8_strftime('%x', $date->getTimestamp()));
-          break;
-        }
-        $date->add(new DateInterval('P1D'));
+        $violations[] = get_vocab('no_bookings_on_holidays', utf8_strftime('%x', $date->getTimestamp()));
       }
     }
     // Check whether the user is trying to book two rooms simultaneously
