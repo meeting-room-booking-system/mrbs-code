@@ -1795,6 +1795,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 {
   global $weekstarts, $view_week_number, $show_plus_link, $monthly_view_entries_details;
   global $enable_periods, $morningstarts, $morningstarts_minutes;
+  global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
 
   // Check that we've got a valid, enabled room
   if (is_null(get_room_name($room)) || !is_visible($room))
@@ -1893,28 +1894,40 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
 
       $html .= "</div>\n";
 
-      // then the link to make a new booking
-      $vars['view'] = $view;
-
-      if ($enable_periods)
+      // Then the link to make a new booking.
+      // Don't provide a link if the slot doesn't really exist or if the user is logged in, but not a booking admin,
+      // and it's a holiday/weekend and bookings on holidays/weekends are not allowed.  (We provide a link if they
+      // are not logged in because they might want to click and login as an admin).
+      if ((null !== session()->getCurrentUser()) && !is_book_admin($room) &&
+          (($prevent_booking_on_holidays && in_array('holiday', $classes)) ||
+           ($prevent_booking_on_weekends && in_array('weekend', $classes))))
       {
-        $vars['period'] = 0;
+        $html .= '<span class="not_allowed"></span>';
       }
       else
       {
-        $vars['hour'] = $morningstarts;
-        $vars['minute'] = $morningstarts_minutes;
-      }
+        $vars['view'] = $view;
 
-      $query = http_build_query($vars, '', '&');
+        if ($enable_periods)
+        {
+          $vars['period'] = 0;
+        }
+        else
+        {
+          $vars['hour'] = $morningstarts;
+          $vars['minute'] = $morningstarts_minutes;
+        }
 
-      $html .= '<a class="new_booking" href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
-               ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
-      if ($show_plus_link)
-      {
-        $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+        $query = http_build_query($vars, '', '&');
+
+        $html .= '<a class="new_booking" href="' . htmlspecialchars(multisite("edit_entry.php?$query")) . '"' .
+                 ' aria-label="' . htmlspecialchars(get_vocab('create_new_booking')) . "\">\n";
+        if ($show_plus_link)
+        {
+          $html .= "<img src=\"images/new.gif\" alt=\"New\" width=\"10\" height=\"10\">\n";
+        }
+        $html .= "</a>\n";
       }
-      $html .= "</a>\n";
 
       // then any bookings for the day
       $html .= "<div class=\"booking_list\">\n";
