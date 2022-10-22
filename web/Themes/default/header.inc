@@ -467,7 +467,7 @@ function print_unsupported_message($context)
 // When $omit_login is true the Login link is omitted.
 function print_theme_header($context=null, $simple=false, $omit_login=false)
 {
-  global $multisite, $site, $default_view, $default_view_all, $view_week_number;
+  global $multisite, $site, $default_view, $default_view_all, $view_week_number, $style_weekends;
 
   if ($simple)
   {
@@ -578,6 +578,11 @@ function print_theme_header($context=null, $simple=false, $omit_login=false)
     {
       $classes[] = 'view_week_number';
     }
+    if ($style_weekends)
+    {
+      $classes[] = 'style_weekends';
+    }
+
   }
 
   $headers = array("Content-Type: text/html; charset=" . get_charset());

@@ -231,6 +231,11 @@ tr:nth-child(odd) td.new,
   background-color: <?php echo $row_odd_color ?>;
 }
 
+.style_weekends tr:nth-child(odd) td.new.weekend,
+.style_weekends .all_rooms tr:nth-child(odd) td.weekend {
+  background-color: <?php echo $row_odd_color_weekend ?>;
+}
+
 tr:nth-child(odd) td.new.holiday,
 .all_rooms tr:nth-child(odd) td.holiday {
   background-color: <?php echo $row_odd_color_holiday ?>;
@@ -239,6 +244,11 @@ tr:nth-child(odd) td.new.holiday,
 tr:nth-child(even) td.new,
 .all_rooms tr:nth-child(even) td {
   background-color: <?php echo $row_even_color ?>;
+}
+
+.style_weekends tr:nth-child(even) td.new.weekend,
+.style_weekends .all_rooms tr:nth-child(even) td.weekend {
+  background-color: <?php echo $row_even_color_weekend ?>;
 }
 
 tr:nth-child(even) td.new.holiday,
@@ -846,6 +856,11 @@ table.dwm_main {
   background-clip: padding-box; <?php // to keep Edge happy when using position: sticky ?>
 }
 
+.style_weekends .dwm_main thead th.weekend,
+.style_weekends .dwm_main tfoot th.weekend {
+  background-color: <?php echo $row_even_color_weekend ?>
+}
+
 .dwm_main thead th.holiday,
 .dwm_main tfoot th.holiday {
   background-color: <?php echo $row_even_color_holiday ?>
@@ -1031,6 +1046,10 @@ table.dwm_main {
 
 .dwm_main#month_main:not(.all_rooms) td {
   background-color: <?php echo $main_table_month_color ?>;
+}
+
+.style_weekends .dwm_main#month_main:not(.all_rooms) td.weekend {
+  background-color: <?php echo $main_table_month_weekend_color ?>;
 }
 
 .dwm_main#month_main:not(.all_rooms) td.holiday {
@@ -1255,12 +1274,20 @@ tbody tr:nth-child(odd) th {
   background-color: <?php echo $row_odd_color ?>;
 }
 
+.style_weekends tbody tr:nth-child(odd) th.weekend {
+  background-color: <?php echo $row_odd_color_weekend ?>;
+}
+
 tbody tr:nth-child(odd) th.holiday {
   background-color: <?php echo $row_odd_color_holiday ?>;
 }
 
 tbody tr:nth-child(even) th {
   background-color: <?php echo $row_even_color ?>;
+}
+
+.style_weekends tbody tr:nth-child(even) th.weekend {
+  background-color: <?php echo $row_even_color_weekend ?>;
 }
 
 tbody tr:nth-child(even) th.holiday {
@@ -1311,12 +1338,20 @@ tbody th a:hover {
   background-color: <?php echo $row_odd_color ?>;
 }
 
+[style-wekends=true] .dwm_main.resizing tbody tr:nth-child(odd) td.weekend:hover.new {
+  background-color: <?php echo $row_odd_color_weekend ?>;
+}
+
 .dwm_main.resizing tbody tr:nth-child(odd) td.holiday:hover.new {
   background-color: <?php echo $row_odd_color_holiday ?>;
 }
 
 .dwm_main.resizing tbody tr:nth-child(even) td:hover.new {
   background-color: <?php echo $row_even_color ?>;
+}
+
+[style-wekends=true] .dwm_main.resizing tbody tr:nth-child(even) td.weekend:hover.new {
+  background-color: <?php echo $row_even_color_weekend ?>;
 }
 
 .dwm_main.resizing tbody tr:nth-child(even) td.holiday:hover.new {
