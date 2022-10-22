@@ -1829,7 +1829,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   $month_start = mktime(0, 0, 0, $month, 1, $year);
   // What column the month starts in: 0 means $weekstarts weekday.
   $weekday_start = (date("w", $month_start) - $weekstarts + DAYS_PER_WEEK) % DAYS_PER_WEEK;
-  $days_in_month = date("t", $month_start);
+  $last_day_of_month = (int) date("t", $month_start);
 
   $html .= get_table_head();
 
@@ -1847,10 +1847,10 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
   // entries for the interval in one go, rather than doing a query for each day.
   $entries = get_entries_by_room($room_id,
                                  get_start_first_slot($month, 1, $year),
-                                 get_end_last_slot($month, $days_in_month, $year));
+                                 get_end_last_slot($month, $last_day_of_month, $year));
 
   // Draw the days of the month:
-  for ($d = 1; $d <= $days_in_month; $d++)
+  for ($d = 1; $d <= $last_day_of_month; $d++)
   {
     // Get the slot times
     $start_first_slot = get_start_first_slot($month, $d, $year);
