@@ -24,9 +24,10 @@ class EntryInterval
   // or the first overlapped holiday as an MRBS\DateTime object if it does.
   public function overlapsHoliday()
   {
-    $date = $this->start_date;
+    // Zero the $date and $end times so that the while condition works.
+    $date = clone $this->start_date;
     $date->setTime(0,0);
-    $end = $this->end_date;
+    $end = clone $this->end_date;
     $end->setTime(0, 0);
 
     while ($date <= $end)
@@ -36,6 +37,32 @@ class EntryInterval
         return $date;
       }
       $date->add(new DateInterval('P1D'));
+    }
+
+    return false;
+  }
+
+
+  // Checks whether the interval overlaps a weekend.  Returns FALSE if it doesn't,
+  // or the first overlapped weekend day as an MRBS\DateTime object if it does.
+  public function overlapsWeekend()
+  {
+    // Zero the $date and $end times so that the while condition works.
+    $date = clone $this->start_date;
+    $date->setTime(0,0);
+    $end = clone $this->end_date;
+    $end->setTime(0, 0);
+    $i = 0;
+
+    // Don't check more than a week's worth of days in case no weekend days have been defined
+    while (($date <= $end) && ($i<DAYS_PER_WEEK))
+    {
+      if ($date->isWeekend())
+      {
+        return $date;
+      }
+      $date->add(new DateInterval('P1D'));
+      $i++;
     }
 
     return false;

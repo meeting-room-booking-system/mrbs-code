@@ -309,6 +309,10 @@ $measure_max_to_start_time = false;
 // By default, bookings cannot be made on days that are designated holidays (see $holidays).
 $prevent_booking_on_holidays = true;
 
+// Set this to true to prevent bookings being made on weekends (see $weekdays).
+$prevent_booking_on_weekends = false;
+
+
 /******************
  * Display settings
  ******************/
