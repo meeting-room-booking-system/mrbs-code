@@ -33,6 +33,7 @@ $main_table_header_border_color = "#dddddd";    // border colour for day/week/mo
 $main_table_body_h_border_color = "#ffffff";    // border colour for day/week/month tables - body, horizontal
 $main_table_body_v_border_color = "#e4e4e4";    // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
+$main_table_month_weekend_color = "#f4f4f4";    // background colour for weekends in the month view
 $main_table_month_holiday_color = "#e9edef";    // background colour for holidays in the month view
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
 $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid slots in the day and week views
@@ -75,6 +76,8 @@ $calendar_hidden_color          = "#dae0e4";                          // hidden 
 $row_highlight_color            = $banner_back_color;  // used for highlighting a row
 $row_even_color                 = "#ffffff"; // even rows in the day and week views
 $row_odd_color                  = "#efefef"; // odd rows in the day and week views
+$row_even_color_weekend         = "#f4f4f4"; // even rows in the day and week views for weekends
+$row_odd_color_weekend          = "#e4e4e4"; // odd rows in the day and week views for weekends
 $row_even_color_holiday         = "#dfdfdf"; // even rows in the day and week views for holidays
 $row_odd_color_holiday          = "#cfcfcf"; // odd rows in the day and week views for holidays
 
