@@ -292,7 +292,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
   // $is_invalid specifies whether the slot actually exists or is one of the non-existent
   // slots in the transition to DST
 
-  global $enable_periods, $show_plus_link;
+  global $enable_periods, $show_plus_link, $prevent_booking_on_holidays, $prevent_booking_on_weekends;
 
   $html = '';
   $classes = array();
@@ -337,8 +337,17 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
     // If the room isn't booked then allow it to be booked
     if (empty($cell))
     {
-      // Don't provide a link if the slot doesn't really exist
-      if (!$is_invalid)
+      // Don't provide a link if the slot doesn't really exist or if the user is logged in, but not a booking admin,
+      // and it's a holiday/weekend and bookings on holidays/weekends are not allowed.  (We provide a link if they
+      // are not logged in because they might want to click and login as an admin).
+      if ($is_invalid ||
+          ((null !== session()->getCurrentUser()) && !is_book_admin($query_vars['new_times']['room']) &&
+            (($prevent_booking_on_holidays && in_array('holiday', $classes)) ||
+             ($prevent_booking_on_weekends && in_array('weekend', $classes)))))
+      {
+        $html .= '<span class="not_allowed"></span>';
+      }
+      else
       {
         $vars = ($enable_periods) ? $query_vars['new_periods'] : $query_vars['new_times'];
         $query = http_build_query($vars, '', '&');
