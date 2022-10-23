@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use UnexpectedValueException;
+
 class DateTime extends \DateTime
 {
   private static $isHoliday = array();
@@ -35,22 +37,44 @@ class DateTime extends \DateTime
     // Only need to validate a year once, so store the answer in a static property
     if (!isset(self::$validHolidays[$year]))
     {
-      foreach ($holidays[$year] as $holiday)
+      try
       {
-        $limits = explode('..', $holiday);
-
-        // Check that the dates are valid
-        foreach ($limits as $limit)
+        foreach ($holidays[$year] as $holiday)
         {
-          if (!validate_iso_date($limit))
+          $limits = explode('..', $holiday);
+
+          // Various checks
+          foreach ($limits as $limit)
           {
-            self::$validHolidays[$year] = false;
-            trigger_error("Invalid holiday date '$limit'");
-            break 2;
+            // Check that the dates are valid
+            if (!validate_iso_date($limit))
+            {
+              throw new UnexpectedValueException("invalid holiday date '$limit'.");
+            }
+            // Check that the year is correct
+            if ($year != split_iso_date($limit)[0])
+            {
+              throw new UnexpectedValueException("the holiday '$limit' does not occur in the year '$year'.");
+            }
+          }
+          // Check that we haven't got more than two limits
+          if (count($limits) > 2)
+          {
+            throw new UnexpectedValueException("invalid range '$holiday'.");
+          }
+          // Check that the end of the range isn't before the beginning
+          elseif ((count($limits) == 2) && ($limits[1] < $limits[0]))
+          {
+            throw new UnexpectedValueException("invalid range '$holiday'; the end is before the beginning.");
           }
         }
+        self::$validHolidays[$year] = true;
       }
-      self::$validHolidays[$year] = true;
+      catch (UnexpectedValueException $e)
+      {
+        self::$validHolidays[$year] = false;
+        trigger_error('Check the config setting of $holidays: ' . $e->getMessage(), E_USER_WARNING);
+      }
     }
 
     return self::$validHolidays[$year];
