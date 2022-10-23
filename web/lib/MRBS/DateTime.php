@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use UnexpectedValueException;
+
 class DateTime extends \DateTime
 {
   private static $isHoliday = array();
@@ -35,45 +37,43 @@ class DateTime extends \DateTime
     // Only need to validate a year once, so store the answer in a static property
     if (!isset(self::$validHolidays[$year]))
     {
-      // Assume everything's valid unless one of the checks below fails
-      self::$validHolidays[$year] = true;
-      $message = 'Check the config setting of $holidays: ';
-      foreach ($holidays[$year] as $holiday)
+      try
       {
-        $limits = explode('..', $holiday);
+        foreach ($holidays[$year] as $holiday)
+        {
+          $limits = explode('..', $holiday);
 
-        // Various checks
-        foreach ($limits as $limit)
-        {
-          // Check that the dates are valid
-          if (!validate_iso_date($limit))
+          // Various checks
+          foreach ($limits as $limit)
           {
-            self::$validHolidays[$year] = false;
-            trigger_error($message . "invalid holiday date '$limit'.");
-            break 2;
+            // Check that the dates are valid
+            if (!validate_iso_date($limit))
+            {
+              throw new UnexpectedValueException("invalid holiday date '$limit'.");
+            }
+            // Check that the year is correct
+            if ($year != split_iso_date($limit)[0])
+            {
+              throw new UnexpectedValueException("the holiday '$limit' does not occur in the year '$year'.");
+            }
           }
-          // Check that the year is correct
-          if ($year != split_iso_date($limit)[0])
+          // Check that we haven't got more than two limits
+          if (count($limits) > 2)
           {
-            self::$validHolidays[$year] = false;
-            trigger_error($message . "the holiday '$limit' does not occur in the year '$year'.");
-            break 2;
+            throw new UnexpectedValueException("invalid range '$holiday'.");
+          }
+          // Check that the end of the range isn't before the beginning
+          elseif ((count($limits) == 2) && ($limits[1] < $limits[0]))
+          {
+            throw new UnexpectedValueException("invalid range '$holiday'; the end is before the beginning.");
           }
         }
-        // Check that we haven't got more than two limits
-        if (count($limits) > 2)
-        {
-          self::$validHolidays[$year] = false;
-          trigger_error($message . "invalid range '$holiday'.");
-          break;
-        }
-        // Check that the end of the range isn't before the beginning
-        elseif ((count($limits) == 2) && ($limits[1] < $limits[0]))
-        {
-          self::$validHolidays[$year] = false;
-          trigger_error($message . "invalid range '$holiday'; the end is before the beginning.");
-          break;
-        }
+        self::$validHolidays[$year] = true;
+      }
+      catch (UnexpectedValueException $e)
+      {
+        self::$validHolidays[$year] = false;
+        trigger_error('Check the config setting of $holidays: ' . $e->getMessage(), E_USER_WARNING);
       }
     }
 
