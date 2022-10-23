@@ -35,22 +35,46 @@ class DateTime extends \DateTime
     // Only need to validate a year once, so store the answer in a static property
     if (!isset(self::$validHolidays[$year]))
     {
+      // Assume everything's valid unless one of the checks below fails
+      self::$validHolidays[$year] = true;
+      $message = 'Check the config setting of $holidays: ';
       foreach ($holidays[$year] as $holiday)
       {
         $limits = explode('..', $holiday);
 
-        // Check that the dates are valid
+        // Various checks
         foreach ($limits as $limit)
         {
+          // Check that the dates are valid
           if (!validate_iso_date($limit))
           {
             self::$validHolidays[$year] = false;
-            trigger_error("Invalid holiday date '$limit'");
+            trigger_error($message . "invalid holiday date '$limit'.");
+            break 2;
+          }
+          // Check that the year is correct
+          if ($year != split_iso_date($limit)[0])
+          {
+            self::$validHolidays[$year] = false;
+            trigger_error($message . "the holiday '$limit' does not occur in the year '$year'.");
             break 2;
           }
         }
+        // Check that we haven't got more than two limits
+        if (count($limits) > 2)
+        {
+          self::$validHolidays[$year] = false;
+          trigger_error($message . "invalid range '$holiday'.");
+          break;
+        }
+        // Check that the end of the range isn't before the beginning
+        elseif ((count($limits) == 2) && ($limits[1] < $limits[0]))
+        {
+          self::$validHolidays[$year] = false;
+          trigger_error($message . "invalid range '$holiday'; the end is before the beginning.");
+          break;
+        }
       }
-      self::$validHolidays[$year] = true;
     }
 
     return self::$validHolidays[$year];
