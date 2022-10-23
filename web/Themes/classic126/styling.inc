@@ -30,6 +30,7 @@ $main_table_body_v_border_color = "#e4e4e4";    // border colour for day/week/mo
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view
 $main_table_month_weekend_color = "#f4f4f4";    // background colour for weekends in the month view
 $main_table_month_holiday_color = "#e8e8e8";    // background colour for holidays in the month view
+$main_table_month_weekend_holiday_color = "#dfdfdf";    // background colour for weekend holidays in the month view
 $main_table_month_invalid_color = "#d0d0d0";    // background colour for invalid days in the month view
 $main_table_slot_invalid_color  = "#d1d9de";    // background colour for invalid slots in the day and week views
 $main_table_slot_private_type_color = "#d1d9de";   // background colour when the type has to kept private
