@@ -9,6 +9,8 @@ class DateTime extends \DateTime
   private static $isHoliday = array();
   private static $validHolidays = array();
 
+  private const HOLIDAY_RANGE_OPERATOR = '..';
+
 
   public function getDay() : int
   {
@@ -41,9 +43,8 @@ class DateTime extends \DateTime
       {
         foreach ($holidays[$year] as $holiday)
         {
-          $limits = explode('..', $holiday);
+          $limits = explode(self::HOLIDAY_RANGE_OPERATOR, $holiday);
 
-          // Various checks
           foreach ($limits as $limit)
           {
             // Check that the dates are valid
@@ -57,10 +58,12 @@ class DateTime extends \DateTime
               throw new UnexpectedValueException("the holiday '$limit' does not occur in the year '$year'.");
             }
           }
+
           // Check that we haven't got more than two limits
           if (count($limits) > 2)
           {
-            throw new UnexpectedValueException("invalid range '$holiday'.");
+            throw new UnexpectedValueException("invalid range '$holiday'; there is more than one " .
+              "range operator (" . self::HOLIDAY_RANGE_OPERATOR . ").");
           }
           // Check that the end of the range isn't before the beginning
           elseif ((count($limits) == 2) && ($limits[1] < $limits[0]))
@@ -68,6 +71,7 @@ class DateTime extends \DateTime
             throw new UnexpectedValueException("invalid range '$holiday'; the end is before the beginning.");
           }
         }
+
         self::$validHolidays[$year] = true;
       }
       catch (UnexpectedValueException $e)
