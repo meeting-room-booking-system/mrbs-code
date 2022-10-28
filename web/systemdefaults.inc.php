@@ -75,16 +75,16 @@ $dbsys = "mysql";
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $db_host = "localhost";
-// If you need to use a non standard port for the database connection you
+// If you need to use a non-standard port for the database connection you
 // can uncomment the following line and specify the port number
 // $db_port = 1234;
 // Database name:
 $db_database = "mrbs";
 // Schema name.  This only applies to PostgreSQL and is only necessary if you have more
-// than one schema in your database and also you are using the same MRBS table names in
+// than one schema in your database, and you are also using the same MRBS table names in
 // multiple schemas.
 //$db_schema = "public";
-// Database login user name:
+// Database login username:
 $db_login = "mrbs";
 // Database login password:
 $db_password = 'mrbs-password';
