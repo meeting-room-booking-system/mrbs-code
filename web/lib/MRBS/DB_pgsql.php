@@ -128,19 +128,22 @@ class DB_pgsql extends DB
   // Returns true if the lock is acquired successfully, otherwise false.
   public function mutex_lock(string $name) : bool
   {
-    $result = $this->query1("SELECT pg_try_advisory_lock(" . self::hash($name) . ")");
-
-    if (!is_bool($result))
+    // pg_advisory_lock() will block indefinitely by default until a lock
+    // is obtained or a deadlock detected.
+    // TODO: should we set a lock timeout?
+    try
     {
-      $result = false;
+      $this->query("SELECT pg_advisory_lock(" . self::hash($name) . ")");
+    }
+    catch (DBException $e)
+    {
+      trigger_error($e->getMessage());
+      return false;
     }
 
-    if ($result)
-    {
-      $this->mutex_locks[] = $name;
-    }
+    $this->mutex_locks[] = $name;
 
-    return $result;
+    return true;
   }
 
 
