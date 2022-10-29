@@ -9,8 +9,11 @@ class DB_pgsql extends DB
 {
   const DB_DEFAULT_PORT = 5432;
   const DB_DBO_DRIVER   = "pgsql";
-  
+
   private const MIN_VERSION     = '8.2';
+
+  private const OPTIONS = array();
+  private const OPTIONS_MAP = array();
 
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
@@ -24,8 +27,18 @@ class DB_pgsql extends DB
     #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
-    ?int $db_port=null)
+    ?int $db_port=null,
+    array $db_options=[])
   {
+    $driver_options = self::OPTIONS;
+
+    // If user-defined driver options exist add them in to the standard driver options, having
+    // first replaced the keys with their PDO values.
+    if (!empty($db_options['pgsql']))
+    {
+      $driver_options = self::replaceOptionKeys($db_options['pgsql'], self::OPTIONS_MAP) + $driver_options;
+    }
+
     try
     {
       $this->connect(
@@ -34,7 +47,8 @@ class DB_pgsql extends DB
           $db_password,
           $db_name,
           $persist,
-          $db_port
+          $db_port,
+          $driver_options
         );
       $this->checkVersion();
     }

@@ -105,6 +105,38 @@ $db_retries = 2;
 $db_delay = 750; // milliseconds
 
 
+// MySQL driver options
+// --------------------
+
+// If you are using MySQL over SSL you may need to set some of the
+// following options.
+
+// The file path to the SSL certificate authority.
+$db_options['mysql']['ssl_ca'] = null;
+
+// The file path to the directory that contains the trusted SSL CA certificates, which are stored in PEM format.
+$db_options['mysql']['ssl_capath'] = null;
+
+// The file path to the SSL certificate.
+$db_options['mysql']['ssl_cert'] = null;
+
+// A list of one or more permissible ciphers to use for SSL encryption, in a format understood by OpenSSL.
+// For example: DHE-RSA-AES256-SHA:AES128-SHA
+$db_options['mysql']['ssl_cipher'] = null;
+
+// The file path to the SSL key.
+$db_options['mysql']['ssl_key'] = null;
+
+// Provides a way to disable verification of the server SSL certificate.
+$db_options['mysql']['ssl_verify_server_cert'] = null;  // boolean
+
+
+// PostgreSQL driver options
+// -------------------------
+
+// There are none at the moment.
+
+
 /*********************************
  * Site identification information
  *********************************/

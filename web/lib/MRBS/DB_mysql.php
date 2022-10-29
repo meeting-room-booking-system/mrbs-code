@@ -26,6 +26,15 @@ class DB_mysql extends DB
       PDO::MYSQL_ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
     );
 
+  private const OPTIONS_MAP = array(
+      'ssl_ca'                  => PDO::MYSQL_ATTR_SSL_CA,
+      'ssl_capath'              => PDO::MYSQL_ATTR_SSL_CAPATH,
+      'ssl_cert'                => PDO::MYSQL_ATTR_SSL_CERT,
+      'ssl_cipher'              => PDO::MYSQL_ATTR_SSL_CIPHER,
+      'ssl_key'                 => PDO::MYSQL_ATTR_SSL_KEY,
+      'ssl_verify_server_cert'  => PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
+    );
+
   private const MIN_VERSIONS = array(
       self::DB_MARIADB => '10.0.2',
       self::DB_MYSQL   => '5.5.3'
@@ -46,9 +55,19 @@ class DB_mysql extends DB
     #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
-    ?int $db_port=null)
+    ?int $db_port=null,
+    array $db_options=[])
   {
     global $db_retries, $db_delay;
+
+    $driver_options = self::OPTIONS;
+
+    // If user-defined driver options exist add them in to the standard driver options, having
+    // first replaced the keys with their PDO values.
+    if (!empty($db_options['mysql']))
+    {
+      $driver_options = self::replaceOptionKeys($db_options['mysql'], self::OPTIONS_MAP) + $driver_options;
+    }
 
     // We allow retries if the connection fails due to a resource constraint, possibly because
     // this database user already has max_user_connections open (through other instances of users
@@ -67,7 +86,7 @@ class DB_mysql extends DB
             $db_name,
             $persist,
             $db_port,
-            self::OPTIONS
+            $driver_options
           );
         // Set $attempts_left to zero as we won't have got here if an exception has been thrown
         $attempts_left = 0;
