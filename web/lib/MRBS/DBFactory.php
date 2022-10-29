@@ -18,16 +18,17 @@ class DBFactory
     #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
-    ?int $db_port=null)
+    ?int $db_port=null,
+    array $db_options=[])
   {
     switch ($db_system)
     {
       case 'mysql':
       case 'mysqli':
-        return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+        return new DB_mysql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
         break;
       case 'pgsql':
-        return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port);
+        return new DB_pgsql($db_host, $db_username, $db_password, $db_name, $persist, $db_port, $db_options);
         break;
       default:
         throw new Exception("Unsupported database driver '$db_system'");

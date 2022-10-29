@@ -31,7 +31,9 @@ abstract class DB
     #[\SensitiveParameter]
     string $db_name,
     bool $persist=false,
-    ?int $db_port=null);
+    ?int $db_port=null,
+    array $db_options=[]
+  );
 
 
   // Destructor cleans up the connection
@@ -296,6 +298,31 @@ abstract class DB
     }
 
     return $this->version_string;
+  }
+
+
+  // Replaces the keys in the array $array according to $key_map.  Elements with
+  // value NULL are dropped.
+  protected static function replaceOptionKeys(array $array, array $key_map) : array
+  {
+    $result = array();
+
+    foreach ($array as $key => $value)
+    {
+      if (isset($value))
+      {
+        if (array_key_exists($key, $key_map))
+        {
+          $result[$key_map[$key]] = $value;
+        }
+        else
+        {
+          trigger_error("Unsupported database driver option '$key'");
+        }
+      }
+    }
+
+    return $result;
   }
 
 
