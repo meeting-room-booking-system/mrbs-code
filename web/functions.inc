@@ -555,6 +555,11 @@ function get_cookie_path()
     $cookie_path = $server['REQUEST_URI'] ?? $server['PHP_SELF'];
     // Strip off everything after the last '/'
     $cookie_path = preg_replace('/[^\/]*$/', '', $cookie_path);
+    // Some cases have been observed of the cookie path being set to, for example,
+    // '/mrbs/ajax/'.  It's not clear how this can happen (possibly some kind of
+    // timing issue when an Ajax request arrives before the main page??) but in case
+    // it does, strip off any trailing 'ajax/' string.
+    $cookie_path = preg_replace('/ajax\/$/', '', $cookie_path);
   }
 
   return $cookie_path;
