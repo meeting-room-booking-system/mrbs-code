@@ -36,14 +36,17 @@ abstract class DB
   );
 
 
-  // Destructor cleans up the connection
+  // Destructor cleans up the connection if there is one
   public function __destruct()
   {
-    // Release any forgotten locks
-    $this->mutex_unlock_all();
+    if (isset($this->dbh))
+    {
+      // Release any forgotten locks
+      $this->mutex_unlock_all();
 
-    // Rollback any outstanding transactions
-    $this->rollback();
+      // Rollback any outstanding transactions
+      $this->rollback();
+    }
   }
 
 
