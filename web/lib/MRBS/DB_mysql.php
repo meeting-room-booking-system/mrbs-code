@@ -2,6 +2,7 @@
 
 namespace MRBS;
 
+use Error;
 use PDO;
 use PDOException;
 
@@ -24,15 +25,6 @@ class DB_mysql extends DB
 
   private const OPTIONS = array(
       PDO::MYSQL_ATTR_FOUND_ROWS => true  // Return the number of found (matched) rows, not the number of changed rows.
-    );
-
-  private const OPTIONS_MAP = array(
-      'ssl_ca'                  => PDO::MYSQL_ATTR_SSL_CA,
-      'ssl_capath'              => PDO::MYSQL_ATTR_SSL_CAPATH,
-      'ssl_cert'                => PDO::MYSQL_ATTR_SSL_CERT,
-      'ssl_cipher'              => PDO::MYSQL_ATTR_SSL_CIPHER,
-      'ssl_key'                 => PDO::MYSQL_ATTR_SSL_KEY,
-      'ssl_verify_server_cert'  => PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT
     );
 
   private const MIN_VERSIONS = array(
@@ -60,14 +52,7 @@ class DB_mysql extends DB
   {
     global $db_retries, $db_delay;
 
-    $driver_options = self::OPTIONS;
-
-    // If user-defined driver options exist add them in to the standard driver options, having
-    // first replaced the keys with their PDO values.
-    if (!empty($db_options['mysql']))
-    {
-      $driver_options = self::replaceOptionKeys($db_options['mysql'], self::OPTIONS_MAP) + $driver_options;
-    }
+    $driver_options =  self::siteOptions() + self::OPTIONS;
 
     // We allow retries if the connection fails due to a resource constraint, possibly because
     // this database user already has max_user_connections open (through other instances of users
@@ -132,6 +117,67 @@ class DB_mysql extends DB
         }
       }
     }
+  }
+
+
+  // Translates $db_options['mysql'] into an array of options indexed by their
+  // PDO constants.
+  // Note that we cannot declare a constant array to hold this mapping as not all
+  // systems support all the PDO constants.
+  private static function siteOptions() : array
+  {
+    global $db_options;
+
+    $result = array();
+
+    foreach ($db_options['mysql'] as $key => $value)
+    {
+      // Only try and set the option if we need to. Otherwise, we could trigger an
+      // 'undefined class constant' error unnecessarily.
+      if (isset($value))
+      {
+        try
+        {
+          switch ($key)
+          {
+            case 'ssl_ca':
+              $index = PDO::MYSQL_ATTR_SSL_CA;
+              break;
+            case 'ssl_capath':
+              $index = PDO::MYSQL_ATTR_SSL_CAPATH;
+              break;
+            case 'ssl_cert':
+              $index = PDO::MYSQL_ATTR_SSL_CERT;
+              break;
+            case 'ssl_cipher':
+              $index = PDO::MYSQL_ATTR_SSL_CIPHER;
+              break;
+            case 'ssl_key':
+              $index = PDO::MYSQL_ATTR_SSL_KEY;
+              break;
+            case 'ssl_verify_server_cert':
+              $index = PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT;
+              break;
+            default:
+              $index = null;
+              trigger_error("Unsupported option '$key'");
+              break;
+          }
+          if (isset($index))
+          {
+            $result[$index] = $value;
+          }
+        }
+        catch (Error $e)
+        {
+          $message = $e->getMessage() . ". Try using the 'nd_pdo_mysql' extension instead of 'pdo_mysql'.";
+          trigger_error($message, E_USER_WARNING);
+          fatal_error(get_vocab("fatal_error"));
+        }
+      }
+    }
+
+    return $result;
   }
 
 

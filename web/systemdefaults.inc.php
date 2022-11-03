@@ -109,7 +109,8 @@ $db_delay = 750; // milliseconds
 // --------------------
 
 // If you are using MySQL over SSL you may need to set some of the
-// following options.
+// following options. (You may need to use the 'nd_pdo_mysql' extension
+// instead of 'pdo_mysql'.)
 
 // The file path to the SSL certificate authority.
 $db_options['mysql']['ssl_ca'] = null;
