@@ -91,11 +91,30 @@ class SessionPhp extends SessionWithLogin
 
   public function logoffUser() : void
   {
-    // Delete the session cookie
+    global $cookie_path_override;
+
     if (ini_get("session.use_cookies"))
     {
+      // Delete the session cookie
       $params = session_get_cookie_params();
-      setcookie(session_name(), '', time()-42000, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
+      setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], isset($params['httponly']));
+
+      // Delete any cookies which may have previously been set, incorrectly, before the fixes to get_cookie_path (see
+      // https://github.com/meeting-room-booking-system/mrbs-code/commit/90ceeb8a0bc5f4850065695a3e085114c5ecae8e and
+      // https://github.com/meeting-room-booking-system/mrbs-code/commit/cb74320048149c4199281b88d50fb69988a41312).
+      // Note that the problem didn't occur if $cookie_path_override was set.
+      // In time, once all the incorrect cookies have expired naturally, this block can be deleted.
+      if (!isset($cookie_path_override))
+      {
+        foreach (['ajax/', 'js/'] as $suffix)
+        {
+          // If the path ends with the suffix we'll already have deleted it above
+          if (!str_ends_with($params['path'], $suffix))
+          {
+            setcookie(session_name(), '', time() - 42000, $params['path'] . $suffix, $params['domain'], $params['secure'], isset($params['httponly']));
+          }
+        }
+      }
     }
 
     // Unset the session variables
