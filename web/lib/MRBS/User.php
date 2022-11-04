@@ -42,6 +42,18 @@ class User
   }
 
 
+  public function __isset($name)
+  {
+    return (array_key_exists($name, $this->data) && isset($this->data[$name]));
+  }
+
+
+  public function __unset($name)
+  {
+    unset($this->data[$name]);
+  }
+
+
   public function load(array $data)
   {
     foreach ($data as $key => $value)
