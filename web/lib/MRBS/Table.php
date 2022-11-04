@@ -43,7 +43,7 @@ abstract class Table
 
   public function __get($name)
   {
-    return (isset($this->data) && isset($this->data[$name])) ? $this->data[$name] : null;
+    return (array_key_exists($name, $this->data)) ? $this->data[$name] : null;
   }
 
 
@@ -55,7 +55,13 @@ abstract class Table
 
   public function __isset($name)
   {
-    return (isset($this->data) && isset($this->data[$name]));
+    return (array_key_exists($name, $this->data) && isset($this->data[$name]));
+  }
+
+
+  public function __unset($name)
+  {
+    unset($this->data[$name]);
   }
 
 
