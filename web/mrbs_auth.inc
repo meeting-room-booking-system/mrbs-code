@@ -2,28 +2,7 @@
 namespace MRBS;
 
 use MRBS\Auth\AuthFactory;
-
-
-if (!isset($auth['session']))
-{
-  switch ($auth['type'])
-  {
-    case 'joomla':
-    case 'saml':
-    case 'wordpress':
-      $auth['session'] = $auth['type'];
-      break;
-    default:
-      $auth['session'] = 'php';
-      break;
-  }
-}
-
-
-if (method_exists(session(), 'processForm'))
-{
-  session()->processForm();
-}
+use MRBS\Session\SessionFactory;
 
 
 // Convenience wrapper function to provide access to an Auth object
@@ -40,6 +19,23 @@ function auth()
 
   return $auth_obj;
 }
+
+
+// Convenience wrapper function to provide access to a Session object
+function session()
+{
+  global $auth;
+
+  static $session_obj = null;
+
+  if (is_null($session_obj))
+  {
+    $session_obj = SessionFactory::create($auth['session']);
+  }
+
+  return $session_obj;
+}
+
 
 
 // Checks if a page is open to users, using the config variables
