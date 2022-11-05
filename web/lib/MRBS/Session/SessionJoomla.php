@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Session;
 
-use \MRBS\JFactory;
+use MRBS\JFactory;
 use MRBS\User;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
