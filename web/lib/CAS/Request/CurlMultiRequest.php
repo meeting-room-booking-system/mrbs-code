@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/Request/AbstractRequest.php
  * @category Authentication
@@ -80,7 +80,8 @@ implements CAS_Request_MultiRequestInterface
     /**
      * Retrieve the number of requests added to this batch.
      *
-     * @return number of request elements
+     * @return int number of request elements
+     * @throws CAS_OutOfSequenceException if the request has already been sent
      */
     public function getNumRequests()
     {

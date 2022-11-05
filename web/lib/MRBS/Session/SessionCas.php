@@ -18,6 +18,12 @@ class SessionCas extends SessionWithLogin
   }
 
 
+  public function init() : void
+  {
+    // phpCAS does its own session initialisation and handling
+  }
+
+
   public function authGet(?string $target_url=null, ?string $returl=null, ?string $error=null, bool $raw=false) : void
   {
     // Useless Method - CAS does it all

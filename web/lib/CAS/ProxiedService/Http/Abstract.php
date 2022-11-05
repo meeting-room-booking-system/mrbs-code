@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/ProxiedService/Http/Abstract.php
  * @category Authentication
@@ -180,7 +180,7 @@ CAS_ProxiedService_Abstract implements CAS_ProxiedService_Http
     /**
      * The response status code.
      *
-     * @var string $_responseStatusCode;
+     * @var int $_responseStatusCode;
      */
     private $_responseStatusCode = '';
 
@@ -266,7 +266,7 @@ CAS_ProxiedService_Abstract implements CAS_ProxiedService_Http
      *
      * @param array $responseHeaders response header to extract a redirect from
      *
-     * @return string or null
+     * @return string|null
      */
     protected function getRedirectUrl(array $responseHeaders)
     {

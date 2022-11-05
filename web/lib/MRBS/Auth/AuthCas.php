@@ -4,6 +4,7 @@ namespace MRBS\Auth;
 use MRBS\Locale;
 use MRBS\User;
 use \phpCAS;
+use function MRBS\is_https;
 
 class AuthCas extends Auth
 {
@@ -18,7 +19,7 @@ class AuthCas extends Auth
   // Initialise CAS
   public function init() : void
   {
-    global $auth;
+    global $auth, $server;
 
     static $init_complete = false;
 
@@ -27,16 +28,40 @@ class AuthCas extends Auth
       return;
     }
 
+    // We still use a couple of deprecated features - the phpCAS autoloader instead of composer and
+    // phpCAS::setDebug() instead of phpCAS::setLogger() - so temporarily disable deprecation errors
+    // and restore them later.
+    // TODO: Fix this
+    $old_level = error_reporting();
+    error_reporting($old_level & ~E_USER_DEPRECATED);
+
     if ($auth['cas']['debug'])
     {
       phpCAS::setDebug();
       phpCAS::setVerbose(true);
     }
 
+    // Form a client service name if we haven't been given one
+    if (isset($auth['cas']['client_service_name']))
+    {
+      $client_service_name = $auth['cas']['client_service_name'];
+    }
+    else
+    {
+      $client_service_name = ((is_https()) ? 'https' : 'http') . '://' . $server['HTTP_HOST'];
+      $client_service_name .= (isset($server['SERVER_PORT'])) ? ':' . $server['SERVER_PORT'] : '';
+    }
+
     phpCAS::client(CAS_VERSION_2_0,
       $auth['cas']['host'],
       (int)$auth['cas']['port'],
-      $auth['cas']['context']);
+      $auth['cas']['context'],
+      $client_service_name
+    );
+
+    // Restore the original level of error reporting now that we've made the first
+    // call to phpCAS.
+    error_reporting($old_level);
 
     if ($auth['cas']['no_server_validation'])
     {

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/GracefullTerminationException.php
  * @category Authentication
@@ -53,9 +53,9 @@ implements CAS_Exception
      * with our tests.
      *
      * @param string $message Message Text
-     * @param string $code    Error code
+     * @param int $code    Error code
      *
-     * @return void
+     * @return self
      */
     public function __construct ($message = 'Terminate Gracefully', $code = 0)
     {

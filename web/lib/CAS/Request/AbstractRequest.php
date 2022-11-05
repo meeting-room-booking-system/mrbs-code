@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/Request/AbstractRequest.php
  * @category Authentication
@@ -322,6 +322,7 @@ implements CAS_Request_RequestInterface
      *
      * @return int
      * @throws CAS_OutOfSequenceException If called before the Request has been sent.
+     * @throws CAS_Request_Exception if the response did not contain a status code
      */
     public function getResponseStatusCode ()
     {

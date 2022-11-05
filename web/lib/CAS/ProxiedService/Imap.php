@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/ProxiedService/Imap.php
  * @category Authentication
@@ -248,6 +248,7 @@ extends CAS_ProxiedService_Abstract
      * Answer the IMAP stream
      *
      * @return resource
+     * @throws CAS_OutOfSequenceException if stream is not opened yet
      */
     public function getStream ()
     {
