@@ -38,7 +38,6 @@ class AuthImap extends Auth
   {
     global $imap_host, $imap_port;
 
-    $all_imap_hosts = array();
     $all_imap_ports = array();
 
     // Check if we do not have a username/password
