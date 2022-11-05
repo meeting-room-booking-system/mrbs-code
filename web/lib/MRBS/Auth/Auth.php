@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
-use \MRBS\User;
+use MRBS\User;
 use function MRBS\format_compound_name;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
@@ -9,6 +9,7 @@ use function MRBS\get_vocab;
 use function MRBS\in_arrayi;
 use function MRBS\session;
 use function MRBS\strcasecmp_locale;
+use function MRBS\utf8_strlen;
 
 
 abstract class Auth
@@ -196,7 +197,7 @@ abstract class Auth
         switch($rule)
         {
           case 'length':
-            if (\MRBS\utf8_strlen($password) < $pwd_policy[$rule])
+            if (utf8_strlen($password) < $value)
             {
               return false;
             }
@@ -206,7 +207,7 @@ abstract class Auth
             $pattern[$rule] .= 'u';
 
             $n = preg_match_all($pattern[$rule], $password, $matches);
-            if (($n === false) || ($n < $pwd_policy[$rule]))
+            if (($n === false) || ($n < $value))
             {
               return false;
             }

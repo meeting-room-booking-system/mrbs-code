@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
 
 // Get user identity using the HTTP basic authentication
 
@@ -35,18 +36,18 @@ class SessionHttp extends SessionWithLogin
       return null;
     }
 
-    if (\MRBS\auth()->validateUser($php_auth_user, self::getAuthPassword()) === false)
+    if (auth()->validateUser($php_auth_user, self::getAuthPassword()) === false)
     {
       return null;
     }
 
-    return \MRBS\auth()->getUser($php_auth_user);
+    return auth()->getUser($php_auth_user);
   }
 
 
   public function getLogoffFormParams() : ?array
   {
-    // Just return null - you can't logoff
+    // Just return null - you can't log off
     // (well, there are ways of achieving a logoff but we haven't implemented them)
     return null;
   }

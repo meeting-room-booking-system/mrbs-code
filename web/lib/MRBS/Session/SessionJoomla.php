@@ -1,8 +1,9 @@
 <?php
 namespace MRBS\Session;
 
-use \MRBS\JFactory;
+use MRBS\JFactory;
 use MRBS\User;
+use function MRBS\auth;
 
 require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 
@@ -60,7 +61,7 @@ class SessionJoomla extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return \MRBS\auth()->getCurrentUser();
+    return auth()->getCurrentUser();
   }
 
 

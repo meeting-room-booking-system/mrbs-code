@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
 
 require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
@@ -25,7 +26,7 @@ class SessionWordpress extends SessionWithLogin
 
     $mrbs_user = wp_get_current_user();
 
-    return \MRBS\auth()->getUser($mrbs_user->user_login);
+    return auth()->getUser($mrbs_user->user_login);
   }
 
 
@@ -49,7 +50,7 @@ class SessionWordpress extends SessionWithLogin
       $errors = $wp_user;
       $error_message = apply_filters('login_errors', $wp_user->get_error_message());
       // The WordPress error message contains HTML so don't escape it.
-      $this->authGet($this->form['target_url'], $this->form['returl'], $error_message, $raw=true);
+      $this->authGet($this->form['target_url'], $this->form['returl'], $error_message, true);
       exit(); // unnecessary because authGet() exits, but just included for clarity
     }
 

@@ -184,7 +184,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  private static function getHash(string $algo, string $data, string $key)
+  private static function getHash(string $algo, string $data, string $key) : string
   {
     if (!function_exists('hash_hmac'))
     {

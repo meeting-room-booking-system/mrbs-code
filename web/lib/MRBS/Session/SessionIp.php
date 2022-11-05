@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
 
 /*
  * Session management scheme that uses IP addresses to identify users.
@@ -36,7 +37,7 @@ class SessionIp extends Session
       return null;
     }
 
-    return \MRBS\auth()->getUser($server['REMOTE_ADDR']);
+    return auth()->getUser($server['REMOTE_ADDR']);
   }
 
 }
