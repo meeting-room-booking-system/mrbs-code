@@ -56,14 +56,7 @@ class SessionSaml extends SessionWithLogin
     require_once $auth['saml']['ssp_path'] . '/lib/_autoload.php';
 
     // Get the SimpleSamlPhp instance for the configured auth source
-    if (isset($auth['saml']['authsource']))
-    {
-      $authSource = $auth['saml']['authsource'];
-    }
-    else
-    {
-      $authSource = 'default-sp';
-    }
+    $authSource = $auth['saml']['authsource'] ?? 'default-sp';
 
     $this->ssp = new SimpleSAML_Auth_Simple($authSource);
     parent::__construct();
