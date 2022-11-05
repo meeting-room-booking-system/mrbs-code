@@ -5,6 +5,8 @@ use MRBS\User;
 use \phpCAS;
 use MRBS\Form\Form;
 use function MRBS\auth;
+use function MRBS\location_header;
+use function MRBS\this_page;
 
 
 class SessionCas extends SessionWithLogin
@@ -38,7 +40,7 @@ class SessionCas extends SessionWithLogin
 
   public function getLogonFormParams() : ?array
   {
-    $target_url = \MRBS\this_page(true);
+    $target_url = this_page(true);
 
     return array(
         'action' => $target_url,
@@ -70,7 +72,7 @@ class SessionCas extends SessionWithLogin
         // link, no matter what the value of the form parameters.
         $this->logoffUser();
 
-        \MRBS\location_header($this->form['target_url']); // Redirect browser to initial page
+        location_header($this->form['target_url']); // Redirect browser to initial page
       }
     }
   }
