@@ -20,6 +20,7 @@ namespace MRBS\Session;
 
 
 use MRBS\User;
+use function MRBS\auth;
 
 class SessionRemoteUser extends SessionWithLogin
 {
@@ -41,7 +42,7 @@ class SessionRemoteUser extends SessionWithLogin
       return null;
     }
 
-    return \MRBS\auth()->getUser($server['REMOTE_USER']);
+    return auth()->getUser($server['REMOTE_USER']);
   }
 
 
