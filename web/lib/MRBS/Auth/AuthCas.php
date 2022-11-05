@@ -3,7 +3,7 @@ namespace MRBS\Auth;
 
 use MRBS\Locale;
 use MRBS\User;
-use \phpCAS;
+use phpCAS;
 use function MRBS\is_https;
 
 class AuthCas extends Auth
