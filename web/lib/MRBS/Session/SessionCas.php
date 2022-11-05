@@ -2,7 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
-use \phpCAS;
+use phpCAS;
 use MRBS\Form\Form;
 use function MRBS\auth;
 use function MRBS\location_header;
