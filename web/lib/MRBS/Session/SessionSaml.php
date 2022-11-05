@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Session;
 
-use \SimpleSAML_Auth_Simple;
+use SimpleSAML_Auth_Simple;
 use MRBS\User;
 use function MRBS\auth;
 use function MRBS\this_page;
