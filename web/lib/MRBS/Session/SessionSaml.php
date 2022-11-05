@@ -3,6 +3,9 @@ namespace MRBS\Session;
 
 use \SimpleSAML_Auth_Simple;
 use MRBS\User;
+use function MRBS\auth;
+use function MRBS\this_page;
+use function MRBS\url_base;
 
 
 /*
@@ -88,7 +91,7 @@ class SessionSaml extends SessionWithLogin
   {
     $current_username = $this->getUsername();
 
-    return (isset($current_username)) ? \MRBS\auth()->getUser($current_username) : null;
+    return (isset($current_username)) ? auth()->getUser($current_username) : null;
   }
 
 
@@ -110,7 +113,7 @@ class SessionSaml extends SessionWithLogin
 
   public function getLogonFormParams() : ?array
   {
-    $target_url = \MRBS\url_base() . \MRBS\this_page(true);
+    $target_url = url_base() . this_page(true);
     $url = $this->ssp->getLoginURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
@@ -131,7 +134,7 @@ class SessionSaml extends SessionWithLogin
 
   public function getLogoffFormParams() : ?array
   {
-    $target_url = \MRBS\url_base() . \MRBS\this_page(true);
+    $target_url = url_base() . this_page(true);
     $url = $this->ssp->getLogoutURL($target_url);
     $baseURL = strstr($url, '?', true);
     parse_str(substr(strstr($url, '?'), 1), $params);
