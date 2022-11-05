@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
 
 require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 
@@ -25,7 +26,7 @@ class SessionWordpress extends SessionWithLogin
 
     $mrbs_user = wp_get_current_user();
 
-    return \MRBS\auth()->getUser($mrbs_user->user_login);
+    return auth()->getUser($mrbs_user->user_login);
   }
 
 
