@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
-use \MRBS\User;
+use MRBS\User;
 use function MRBS\format_compound_name;
 use function MRBS\get_registrants;
 use function MRBS\get_sortable_name;
