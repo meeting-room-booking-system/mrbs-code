@@ -92,11 +92,14 @@ class AuthCas extends Auth
       'en' => PHPCAS_LANG_ENGLISH,
       'es' => PHPCAS_LANG_SPANISH,
       'fr' => PHPCAS_LANG_FRENCH,
+      'gl' => PHPCAS_LANG_GALEGO,
       'ja' => PHPCAS_LANG_JAPANESE,
+      'pt' => PHPCAS_LANG_PORTUGUESE,
       'zh' => PHPCAS_LANG_CHINESE_SIMPLIFIED
     );
 
     $locale = Locale::parseLocale(get_lang());
+    
     if (isset($cas_lang_map[$locale['language']]))
     {
       phpCAS::setLang($cas_lang_map[$locale['language']]);
