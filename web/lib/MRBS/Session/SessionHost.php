@@ -2,6 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
+use function MRBS\auth;
 
 /*
  * This is a slight variant of session_ip.
@@ -37,7 +38,7 @@ class SessionHost extends Session
       return null;
     }
 
-    return \MRBS\auth()->getUser(gethostbyaddr($server['REMOTE_ADDR']));
+    return auth()->getUser(gethostbyaddr($server['REMOTE_ADDR']));
   }
 
 }
