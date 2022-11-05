@@ -192,7 +192,7 @@ abstract class Auth
         switch($rule)
         {
           case 'length':
-            if (utf8_strlen($password) < $pwd_policy[$rule])
+            if (utf8_strlen($password) < $value)
             {
               return false;
             }
@@ -202,7 +202,7 @@ abstract class Auth
             $pattern[$rule] .= 'u';
 
             $n = preg_match_all($pattern[$rule], $password, $matches);
-            if (($n === false) || ($n < $pwd_policy[$rule]))
+            if (($n === false) || ($n < $value))
             {
               return false;
             }
