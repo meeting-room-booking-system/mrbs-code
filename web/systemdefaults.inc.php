@@ -916,6 +916,9 @@ $auth['cas']['context'] = '/cas';  // Context of the CAS Server
 // tied up parsing bogus XML messages.
 //$auth['cas']['real_hosts'] = array('cas-real-1.example.com', 'cas-real-2.example.com');
 
+// Client config for the required domain name, should be protocol, hostname and port
+//$auth['cas']['client_service_name'];
+
 // For production use set the CA certificate that is the issuer of the certificate
 // on the CAS server
 $auth['cas']['ca_cert_path'] = '/path/to/cachain.pem';

@@ -4,6 +4,7 @@ namespace MRBS\Session;
 use MRBS\User;
 use \phpCAS;
 use MRBS\Form\Form;
+use function MRBS\auth;
 
 
 class SessionCas extends SessionWithLogin
@@ -12,8 +13,14 @@ class SessionCas extends SessionWithLogin
   public function __construct()
   {
     $this->checkTypeMatchesSession();
-    \MRBS\auth()->init();  // Initialise CAS
+    auth()->init();  // Initialise CAS
     parent::__construct();
+  }
+
+
+  public function init() : void
+  {
+    // phpCAS does its own session initialisation and handling
   }
 
 
@@ -25,7 +32,7 @@ class SessionCas extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return (phpCAS::isAuthenticated()) ? \MRBS\auth()->getUser(phpCAS::getUser()) : null;
+    return (phpCAS::isAuthenticated()) ? auth()->getUser(phpCAS::getUser()) : null;
   }
 
 

@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/AuthenticationException.php
  * @category Authentication
@@ -66,17 +66,21 @@ implements CAS_Exception
      * @param string     $err_msg      the error message given by the CAS server
      */
     public function __construct($client,$failure,$cas_url,$no_response,
-        $bad_response='',$cas_response='',$err_code='',$err_msg=''
+        $bad_response=false,$cas_response='',$err_code=-1,$err_msg=''
     ) {
         $messages = array();
         phpCAS::traceBegin();
         $lang = $client->getLangObj();
         $client->printHTMLHeader($lang->getAuthenticationFailed());
-        printf(
-            $lang->getYouWereNotAuthenticated(),
-            htmlentities($client->getURL()),
-            isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN']:''
-        );
+
+        if (phpCAS::getVerbose()) {
+            printf(
+                $lang->getYouWereNotAuthenticated(),
+                htmlentities($client->getURL()),
+                $_SERVER['SERVER_ADMIN'] ?? ''
+            );
+        }
+
         phpCAS::trace($messages[] = 'CAS URL: '.$cas_url);
         phpCAS::trace($messages[] = 'Authentication failure: '.$failure);
         if ( $no_response ) {
@@ -91,7 +95,7 @@ implements CAS_Exception
                     break;
                 case CAS_VERSION_2_0:
                 case CAS_VERSION_3_0:
-                    if ( empty($err_code) ) {
+                    if ( $err_code === -1 ) {
                         phpCAS::trace($messages[] = 'Reason: no CAS error');
                     } else {
                         phpCAS::trace($messages[] = 'Reason: ['.$err_code.'] CAS error: '.$err_msg);

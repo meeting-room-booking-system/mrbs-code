@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @file     CAS/ProxyChain/AllowedList.php
  * @category Authentication
@@ -98,7 +98,7 @@ class CAS_ProxyChain_AllowedList
      *
      * @param array $list List of proxies from the proxy ticket validation.
      *
-     * @return if any chain fully matches the supplied list
+     * @return bool if any chain fully matches the supplied list
      */
     public function contains(array $list)
     {

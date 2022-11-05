@@ -30,7 +30,7 @@ require_once 'functions.inc';
 require_once 'language.inc';
 require_once 'theme.inc';
 require_once 'dbsys.inc';
-require_once 'init.inc';
 require_once 'mrbs_auth.inc';
+require_once 'init.inc';
 require_once 'upgrade.inc';
 require 'standard_vars.inc.php';
