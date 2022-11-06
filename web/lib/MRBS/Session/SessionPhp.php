@@ -5,6 +5,7 @@ use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_form_var;
 use function MRBS\is_ajax;
+use function MRBS\str_ends_with_array;
 
 // Uses PHP's built-in session handling
 
@@ -106,10 +107,11 @@ class SessionPhp extends SessionWithLogin
       // In time, once all the incorrect cookies have expired naturally, this block can be deleted.
       if (!isset($cookie_path_override))
       {
-        foreach (['ajax/', 'js/'] as $suffix)
+        $suffixes = array('ajax/', 'js/');
+        // If the path ends with one of the suffixes we'll already have deleted it above
+        if (!str_ends_with_array($params['path'], $suffixes))
         {
-          // If the path ends with the suffix we'll already have deleted it above
-          if (!str_ends_with($params['path'], $suffix))
+          foreach ($suffixes as $suffix)
           {
             setcookie(session_name(), '', time() - 42000, $params['path'] . $suffix, $params['domain'], $params['secure'], isset($params['httponly']));
           }
