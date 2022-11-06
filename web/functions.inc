@@ -37,6 +37,22 @@ function in_arrayi($needle, array $haystack, bool $strict=false) : bool
 }
 
 
+
+// Checks if a string ends with one of an array of given substrings
+function str_ends_with_array(string $haystack, array $needles) : bool
+{
+  foreach ($needles as $needle)
+  {
+    if (str_ends_with($haystack, $needle))
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 function generate_token(int $length) : string
 {
   if (function_exists('random_bytes'))
