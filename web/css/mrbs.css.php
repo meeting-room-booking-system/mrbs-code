@@ -2057,11 +2057,6 @@ form#add_new_user, form#sync {
   align-items: center;
 }
 
-nav.menu, nav.logon {
-  margin-left: 1rem;
-  padding-left: 1rem;
-}
-
 nav.menu {
   display: -ms-flexbox;
   display: flex;
@@ -2071,6 +2066,8 @@ nav.menu {
 nav.logon {
   display: -ms-flexbox;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   -ms-flex-align: center;
   align-items: center;
 }
@@ -2085,9 +2082,15 @@ nav.logon input,
 nav.logon span {
   display: inline-block;
   text-align: center;
-  padding: 0.3rem 1rem;
+  padding: 0.3rem 0 0.3rem 1.5rem;
   line-height: 1.5em;
   border-radius: 0.8em;
+}
+
+nav.logon a.notification {
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  margin-left: 1.5rem;
 }
 
 .banner a.attention {
