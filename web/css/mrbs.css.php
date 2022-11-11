@@ -2065,6 +2065,7 @@ nav.menu, nav.logon {
 nav.menu {
   display: -ms-flexbox;
   display: flex;
+  flex-wrap: wrap;
 }
 
 nav.logon {
