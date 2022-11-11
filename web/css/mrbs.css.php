@@ -1974,6 +1974,7 @@ nav.menu {
 nav.logon {
   display: -ms-flexbox;
   display: flex;
+  flex-wrap: wrap;
   -ms-flex-align: center;
   align-items: center;
 }
