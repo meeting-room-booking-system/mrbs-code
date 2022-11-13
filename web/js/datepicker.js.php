@@ -244,6 +244,12 @@ $(document).on('page_ready', function() {
         {
           $(this.element).trigger('change');
         }
+      },
+      onReady: function(selectedDates, dateStr, instance) {
+        if (instance.altInput.ariaLabel === null)
+        {
+          instance.altInput.ariaLabel = instance.input.ariaLabel;
+        }
       }
     };
 

@@ -156,6 +156,7 @@ function print_goto_date($context)
   $input = new ElementInputDate();
   $input->setAttributes(array('name'        => 'page_date',
                               'value'       => format_iso_date($context['year'], $context['month'], $context['day']),
+                              'aria-label'  => get_vocab('goto'),
                               'required'    => true,
                               'data-submit' => $form_id));
 
