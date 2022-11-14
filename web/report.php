@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use DateInterval;
 use MRBS\Form\Element;
 use MRBS\Form\Field;
 use MRBS\Form\Form;
@@ -801,7 +802,7 @@ function close_summary() : void
 
 
 // Output a table row.
-function output_row($values, $output_format, $body_row = TRUE)
+function output_row(array $values, int $output_format, bool $body_row = true) : void
 {
   global $json_data, $is_ajax, $csv_col_sep, $csv_row_sep;
 
@@ -1131,8 +1132,8 @@ function accumulate($row, &$count, &$hours, $report_start, $report_end,
 
     $endDate = new DateTime();
     $endDate->setTimestamp($report_end)->modify('12:00');
-    $endDate->sub(new \DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
-    $endDate->add(new \DateInterval('PT' . $periods_per_day . 'M'));
+    $endDate->sub(new DateInterval('P1D'));  // Go back one day because the $report_end is at 00:00 the day after
+    $endDate->add(new DateInterval('PT' . $periods_per_day . 'M'));
 
     $increment = get_period_interval(max($row['start_time'], $startDate->getTimestamp()),
                                      min($row['end_time'], $endDate->getTimestamp()));
