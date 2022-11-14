@@ -801,7 +801,7 @@ function close_summary() : void
 
 
 // Output a table row.
-function output_row($values, $output_format, $body_row = TRUE)
+function output_row(array $values, int $output_format, bool $body_row = true) : void
 {
   global $json_data, $is_ajax, $csv_col_sep, $csv_row_sep;
 
