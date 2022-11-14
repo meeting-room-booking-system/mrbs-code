@@ -19,37 +19,53 @@ require "defaultincludes.inc";
 
 function get_field_from_date(array $data) : FieldInputDate
 {
+  $label = get_vocab('report_start');
+
   $field = new FieldInputDate();
   $field->setAttribute('id', 'div_report_start')
-        ->setLabel(get_vocab('report_start'))
-        ->setControlAttributes(array('name'     => 'from_date',
-                                     'value'    => $data['from_date'],
-                                     'required' => true));
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'from_date',
+            'value'       => $data['from_date'],
+            'aria-label'  => $label,
+            'required'    => true)
+          );
+
   return $field;
 }
 
 
 function get_field_to_date(array $data) : FieldInputDate
 {
+  $label = get_vocab('report_end');
+
   $field = new FieldInputDate();
   $field->setAttribute('id', 'div_report_end')
-        ->setLabel(get_vocab('report_end'))
-        ->setControlAttributes(array('name'     => 'to_date',
-                                     'value'    => $data['to_date'],
-                                     'required' => true));
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'to_date',
+            'value'       => $data['to_date'],
+            'aria-label'  => $label,
+            'required'    => true)
+          );
+
   return $field;
 }
 
 
 function get_field_areamatch(array $data) : FieldInputDatalist
 {
+  $label = get_vocab('match_area');
+
   $field = new FieldInputDatalist();
   $areas = new Areas();
   $field->setAttribute('id', 'div_areamatch')
-        ->setLabel(get_vocab('match_area'))
-        ->setControlAttributes(array('name'  => 'areamatch',
-                                     'value' => $data['areamatch']))
-        ->addDatalistOptions($areas->getNames(true), false);
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'areamatch',
+            'value'       => $data['areamatch'],
+            'aria-label'  => $label))
+        ->addDatalistOptions($options, false);
 
   return $field;
 }
@@ -57,6 +73,8 @@ function get_field_areamatch(array $data) : FieldInputDatalist
 
 function get_field_roommatch(array $data) : FieldInputDatalist
 {
+  $label = get_vocab('match_room');
+
   $field = new FieldInputDatalist();
 
   // (We need DISTINCT because it's possible to have two rooms of the same name
@@ -75,9 +93,11 @@ function get_field_roommatch(array $data) : FieldInputDatalist
   $options = db()->query_array($sql);
 
   $field->setAttribute('id', 'div_roommatch')
-        ->setLabel(get_vocab('match_room'))
-        ->setControlAttributes(array('name'  => 'roommatch',
-                                     'value' => $data['roommatch']))
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'roommatch',
+            'value'       => $data['roommatch'],
+            'aria-label'  => $label))
         ->addDatalistOptions($options, false);
 
   return $field;
