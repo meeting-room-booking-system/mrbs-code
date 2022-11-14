@@ -26,7 +26,7 @@ function get_search_nav_button(array $hidden_inputs, string $value, bool $disabl
 }
 
 
-function generate_search_nav_html($search_pos, $total, $num_records, $search_str)
+function generate_search_nav_html(int $search_pos, int $total, int $num_records, string $search_str) : string
 {
   global $from_date;
   global $search;
