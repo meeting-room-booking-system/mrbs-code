@@ -11,7 +11,7 @@ use MRBS\Form\FieldInputSubmit;
 require "defaultincludes.inc";
 
 
-function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
+function get_search_nav_button(array $hidden_inputs, string $value, bool $disabled=false) : string
 {
   $html = '';
 
