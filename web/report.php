@@ -1325,7 +1325,7 @@ function do_summary($count, $hours, &$room_hash, &$name_hash)
 }
 
 
-function get_match_condition($full_column_name, $match, &$sql_params)
+function get_match_condition(string $full_column_name, ?string $match, array &$sql_params) : string
 {
   global $select_options, $field_natures, $field_lengths;
 
