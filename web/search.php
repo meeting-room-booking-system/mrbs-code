@@ -11,10 +11,8 @@ use MRBS\Form\FieldInputSubmit;
 require "defaultincludes.inc";
 
 
-function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
+function get_search_nav_button(array $hidden_inputs, string $value, bool $disabled=false) : string
 {
-  $html = '';
-
   $form = new Form();
   $form->setAttributes(array('action' => multisite(this_page()),
                              'method' => 'post'));
@@ -23,13 +21,12 @@ function get_search_nav_button(array $hidden_inputs, $value, $disabled=false)
   $submit->setAttributes(array('value'    => $value,
                                'disabled' => $disabled));
   $form->addElement($submit);
-  $html .= $form->toHTML();
 
-  return $html;
+  return $form->toHTML();
 }
 
 
-function generate_search_nav_html($search_pos, $total, $num_records, $search_str)
+function generate_search_nav_html(int $search_pos, int $total, int $num_records, string $search_str) : string
 {
   global $from_date;
   global $search;
