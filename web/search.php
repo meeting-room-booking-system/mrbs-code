@@ -13,8 +13,6 @@ require "defaultincludes.inc";
 
 function get_search_nav_button(array $hidden_inputs, string $value, bool $disabled=false) : string
 {
-  $html = '';
-
   $form = new Form();
   $form->setAttributes(array('action' => multisite(this_page()),
                              'method' => 'post'));
@@ -23,9 +21,8 @@ function get_search_nav_button(array $hidden_inputs, string $value, bool $disabl
   $submit->setAttributes(array('value'    => $value,
                                'disabled' => $disabled));
   $form->addElement($submit);
-  $html .= $form->toHTML();
 
-  return $html;
+  return $form->toHTML();
 }
 
 
