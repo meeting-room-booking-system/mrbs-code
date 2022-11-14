@@ -620,7 +620,7 @@ function get_sort_columns(string $sortby) : array
 
 
 // Output the first row (header row) for CSV reports
-function report_header()
+function report_header() : void
 {
   global $output_format, $is_ajax;
   global $custom_fields;
@@ -728,7 +728,7 @@ function report_header()
 }
 
 
-function open_report()
+function open_report() : void
 {
   global $output_format, $is_ajax, $sortby;
 
@@ -748,7 +748,7 @@ function open_report()
 }
 
 
-function close_report()
+function close_report() : void
 {
   global $output_format, $is_ajax, $json_data;
 
@@ -766,7 +766,7 @@ function close_report()
 }
 
 
-function open_summary()
+function open_summary() : void
 {
   global $output_format, $times_somewhere, $periods_somewhere;
 
@@ -788,7 +788,7 @@ function open_summary()
 }
 
 
-function close_summary()
+function close_summary() : void
 {
   global $output_format;
 
