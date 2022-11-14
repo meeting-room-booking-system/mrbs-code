@@ -287,19 +287,23 @@ function get_field_start_time($value, $disabled=false)
   $date = getbookingdate($value);
   $start_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+  $label = get_vocab('start');
 
   $field = new FieldDiv();
 
   // Generate the live slot selector and all day checkbox
   $element_date = new ElementInputDate();
-  $element_date->setAttributes(array('id'       => 'start_date',
-                                     'name'     => 'start_date',
-                                     'value'    => $start_date,
-                                     'disabled' => $disabled,
-                                     'required' => true));
+  $element_date->setAttributes(array(
+      'id'          => 'start_date',
+      'name'        => 'start_date',
+      'value'       => $start_date,
+      'aria-label'  => $label,
+      'disabled'    => $disabled,
+      'required'    => true)
+    );
 
   $field->setAttribute('class', 'start_end')
-        ->setLabel(get_vocab('start'))
+        ->setLabel($label)
         ->addControlElement($element_date)
         ->addControlElement(get_slot_selector($areas[$area_id],
                                               'start_seconds',
@@ -343,6 +347,7 @@ function get_field_end_time($value, $disabled=false)
   $date = getbookingdate($value, true);
   $end_date = format_iso_date($date['year'], $date['mon'], $date['mday']);
   $current_s = (($date['hours'] * 60) + $date['minutes']) * 60;
+  $label = get_vocab('end');
 
   $field = new FieldDiv();
 
@@ -351,10 +356,13 @@ function get_field_end_time($value, $disabled=false)
   // so subtract one period because the "end" period is actually the beginning
   // of the last period booked
   $element_date = new ElementInputDate();
-  $element_date->setAttributes(array('id'       => 'end_date',
-                                     'name'     => 'end_date',
-                                     'value'    => $end_date,
-                                     'disabled' => $disabled));
+  $element_date->setAttributes(array(
+      'id'          => 'end_date',
+      'name'        => 'end_date',
+      'value'       => $end_date,
+      'aria-label'  => $label,
+      'disabled'    => $disabled)
+    );
 
   // Don't show the end date if multiday bookings are not allowed
   if (!$multiday_allowed)
@@ -367,7 +375,7 @@ function get_field_end_time($value, $disabled=false)
   $this_current_s = ($a['enable_periods']) ? $current_s - $a['resolution'] : $current_s;
 
   $field->setAttribute('class', 'start_end')
-        ->setLabel(get_vocab('end'))
+        ->setLabel($label)
         ->addControlElement($element_date)
         ->addControlElement(get_slot_selector($areas[$area_id],
                                               'end_seconds',
