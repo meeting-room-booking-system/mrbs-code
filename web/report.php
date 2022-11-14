@@ -1062,12 +1062,12 @@ function report_row(&$rows, $data)
 }
 
 
-function get_sumby_name_from_row($row)
+function get_sumby_name_from_row(array $row) : string
 {
   global $sumby;
 
   // Use brief description, created by or type as the name:
-  switch( $sumby )
+  switch ($sumby)
   {
     case 'd':
       $name = $row['name'];
@@ -1079,11 +1079,12 @@ function get_sumby_name_from_row($row)
       $name = $row['create_by'];
       break;
   }
+
   return escape($name);
 }
 
 
-// Increments a two dimensional array by $increment
+// Increments a two-dimensional array by $increment
 function increment_count(&$array, $index1, $index2, $increment)
 {
   if (!isset($array[$index1]))
@@ -1317,7 +1318,7 @@ function do_summary($count, $hours, &$room_hash, &$name_hash)
 }
 
 
-function get_match_condition($full_column_name, $match, &$sql_params)
+function get_match_condition(string $full_column_name, ?string $match, array &$sql_params) : string
 {
   global $select_options, $field_natures, $field_lengths;
 
@@ -1757,7 +1758,7 @@ elseif ($output_form)
       'month'     => $month,
       'day'       => $day,
       'area'      => $area,
-      'room'      => isset($room) ? $room : null
+      'room'      => $room ?? null
     );
 
   print_header($context);
