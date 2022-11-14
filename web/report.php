@@ -55,12 +55,16 @@ function get_field_to_date(array $data) : FieldInputDate
 
 function get_field_areamatch(array $data) : FieldInputDatalist
 {
+  $label = get_vocab('match_area');
+
   $field = new FieldInputDatalist();
   $options = get_area_names($all=true);
   $field->setAttribute('id', 'div_areamatch')
-        ->setLabel(get_vocab('match_area'))
-        ->setControlAttributes(array('name'  => 'areamatch',
-                                     'value' => $data['areamatch']))
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'areamatch',
+            'value'       => $data['areamatch'],
+            'aria-label'  => $label))
         ->addDatalistOptions($options, false);
 
   return $field;
@@ -69,6 +73,8 @@ function get_field_areamatch(array $data) : FieldInputDatalist
 
 function get_field_roommatch(array $data) : FieldInputDatalist
 {
+  $label = get_vocab('match_room');
+
   $field = new FieldInputDatalist();
 
   // (We need DISTINCT because it's possible to have two rooms of the same name
@@ -87,9 +93,11 @@ function get_field_roommatch(array $data) : FieldInputDatalist
   $options = db()->query_array($sql);
 
   $field->setAttribute('id', 'div_roommatch')
-        ->setLabel(get_vocab('match_room'))
-        ->setControlAttributes(array('name'  => 'roommatch',
-                                     'value' => $data['roommatch']))
+        ->setLabel($label)
+        ->setControlAttributes(array(
+            'name'        => 'roommatch',
+            'value'       => $data['roommatch'],
+            'aria-label'  => $label))
         ->addDatalistOptions($options, false);
 
   return $field;
