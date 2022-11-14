@@ -1069,12 +1069,12 @@ function report_row(&$rows, $data)
 }
 
 
-function get_sumby_name_from_row($row)
+function get_sumby_name_from_row(array $row) : string
 {
   global $sumby;
 
   // Use brief description, created by or type as the name:
-  switch( $sumby )
+  switch ($sumby)
   {
     case 'd':
       $name = $row['name'];
@@ -1086,11 +1086,12 @@ function get_sumby_name_from_row($row)
       $name = $row['create_by'];
       break;
   }
+
   return escape($name);
 }
 
 
-// Increments a two dimensional array by $increment
+// Increments a two-dimensional array by $increment
 function increment_count(&$array, $index1, $index2, $increment)
 {
   if (!isset($array[$index1]))
