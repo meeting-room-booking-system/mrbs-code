@@ -620,7 +620,7 @@ function get_sort_columns(string $sortby) : array
 
 
 // Output the first row (header row) for CSV reports
-function report_header()
+function report_header() : void
 {
   global $output_format, $is_ajax;
   global $custom_fields;
@@ -728,7 +728,7 @@ function report_header()
 }
 
 
-function open_report()
+function open_report() : void
 {
   global $output_format, $is_ajax, $sortby;
 
@@ -748,7 +748,7 @@ function open_report()
 }
 
 
-function close_report()
+function close_report() : void
 {
   global $output_format, $is_ajax, $json_data;
 
@@ -766,7 +766,7 @@ function close_report()
 }
 
 
-function open_summary()
+function open_summary() : void
 {
   global $output_format, $times_somewhere, $periods_somewhere;
 
@@ -788,7 +788,7 @@ function open_summary()
 }
 
 
-function close_summary()
+function close_summary() : void
 {
   global $output_format;
 
@@ -831,7 +831,7 @@ function output_row($values, $output_format, $body_row = TRUE)
 }
 
 
-function output_head_rows($rows, $format)
+function output_head_rows(array $rows, int $format) : void
 {
   if (count($rows) == 0)
   {
@@ -856,7 +856,7 @@ function output_head_rows($rows, $format)
 }
 
 
-function output_body_rows($rows, $format)
+function output_body_rows(array $rows, int $format) : void
 {
   global $is_ajax;
 
@@ -874,7 +874,7 @@ function output_body_rows($rows, $format)
 }
 
 
-function output_foot_rows($rows, $format)
+function output_foot_rows(array $rows, int $format) : void
 {
   if (count($rows) == 0)
   {
