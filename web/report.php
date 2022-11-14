@@ -65,7 +65,7 @@ function get_field_areamatch(array $data) : FieldInputDatalist
             'name'        => 'areamatch',
             'value'       => $data['areamatch'],
             'aria-label'  => $label))
-        ->addDatalistOptions($options, false);
+        ->addDatalistOptions($areas->getNames(true), false);
 
   return $field;
 }
