@@ -831,7 +831,7 @@ function output_row($values, $output_format, $body_row = TRUE)
 }
 
 
-function output_head_rows($rows, $format)
+function output_head_rows(array $rows, int $format) : void
 {
   if (count($rows) == 0)
   {
@@ -856,7 +856,7 @@ function output_head_rows($rows, $format)
 }
 
 
-function output_body_rows($rows, $format)
+function output_body_rows(array $rows, int $format) : void
 {
   global $is_ajax;
 
@@ -874,7 +874,7 @@ function output_body_rows($rows, $format)
 }
 
 
-function output_foot_rows($rows, $format)
+function output_foot_rows(array $rows, int $format) : void
 {
   if (count($rows) == 0)
   {
