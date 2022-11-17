@@ -278,6 +278,11 @@ $vocab["max_secs_per_future_area"]    = 'The maximum total length of outstanding
 $vocab["skip_and_book"]           = "Skip and book";
 $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past the conflicting entries";
 
+// Used in kiosk.php
+$vocab["enter"]                     = "Enter";
+$vocab["kiosk"]                     = "Kiosk";
+$vocab["kiosk_mode"]                = "Kiosk Mode";
+
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";
 $vocab["none_outstanding"]   = "You have no bookings awaiting approval.";

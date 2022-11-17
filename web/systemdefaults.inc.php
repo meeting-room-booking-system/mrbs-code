@@ -456,6 +456,12 @@ $prefetch_refresh_rate = 30;
 // Refresh rate (in seconds) when in kiosk mode
 $kiosk_refresh_rate = 0; // Temporarily disabled
 
+// Whether kiosk mode is enabled
+$kiosk_mode_enabled = false;
+
+// Default mode for kiosk mode.  Can be 'room' or 'area'.
+$kiosk_default_mode = 'room';
+
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
 // "both" for both. Default is "both", but 6 entries per day are shown instead

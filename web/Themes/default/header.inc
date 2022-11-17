@@ -203,12 +203,18 @@ function print_outstanding($query)
 
 function print_menu_items($query)
 {
-  global $auth;
+  global $auth, $kiosk_mode_enabled;
 
   $menu_items = array('help'   => 'help.php',
                       'report' => 'report.php',
-                      'import' => 'import.php',
-                      'rooms'  => 'admin.php');
+                      'import' => 'import.php');
+
+  if ($kiosk_mode_enabled)
+  {
+    $menu_items['kiosk'] = 'kiosk.php';
+  }
+
+  $menu_items['rooms'] = 'admin.php';
 
   if ($auth['type'] == 'db')
   {
