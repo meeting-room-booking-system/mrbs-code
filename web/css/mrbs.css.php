@@ -1946,6 +1946,7 @@ form#add_new_user {
 .banner nav.container > nav > nav {
   -ms-flex-align: center;
   align-items: center;
+  justify-content: right;
 }
 
 .banner nav.container > nav:first-child {
@@ -1985,7 +1986,9 @@ nav.logon input,
 nav.logon span {
   display: inline-block;
   text-align: center;
-  padding: 0.3rem 0 0.3rem 1.5rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.75rem;
+  margin-right: -0.75rem;
+  margin-left: 0.75rem;
   line-height: 1.5em;
   border-radius: 0.8em;
 }
