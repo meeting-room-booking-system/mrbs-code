@@ -1442,6 +1442,18 @@ $(document).on('page_ready', function() {
       $('*').off();
       $(window).on('click keypress', function(e) {
         e.preventDefault();
+        if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
+        {
+          var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
+          href += '&area=' + encodeURIComponent(args.area);
+          href += '&room=' + encodeURIComponent(args.room);
+          if (args.site)
+          {
+            href += '&site=' + encodeURIComponent(args.site);
+          }
+          //window.location.href = href;
+          $.redirect(href, {'csrf_token': getCSRFToken()});
+        }
         return false;
       });
     }

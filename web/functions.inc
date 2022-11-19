@@ -788,12 +788,33 @@ function add_query_parameter(string $location, string $name, $value) : string
 }
 
 
+function remove_query_parameter(string $location, string $name) : string
+{
+  $parts = parse_url($location);
+
+  if ($parts === false)
+  {
+    throw new \Exception("Could not parse the URL '$location'");
+  }
+
+  if (!isset($parts['query']))
+  {
+    $parts['query'] = '';
+  }
+
+  parse_str($parts['query'], $result);
+  unset($result[$name]);
+  $parts['query'] = http_build_query($result, '', '&');
+  return build_url($parts);
+}
+
+
 // Adds the site parameter in the query string if necessary
 function multisite(string $location) : string
 {
   global $multisite, $site;
 
-  // Add the site, if there one, to the query string
+  // Add the site, if there is one, to the query string
   if ($multisite && isset($site) && ($site !== ''))
   {
     return add_query_parameter($location, 'site', $site);

@@ -280,8 +280,11 @@ $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past th
 
 // Used in kiosk.php
 $vocab["enter"]                     = "Enter";
+$vocab["exit"]                      = "Exit";
+$vocab["enter_kiosk_mode"]          = "Enter Kiosk Mode";
+$vocab["exit_kiosk_mode"]           = "Exit Kiosk Mode";
 $vocab["kiosk"]                     = "Kiosk";
-$vocab["kiosk_mode"]                = "Kiosk Mode";
+$vocab["kiosk_password"]            = "Kiosk password";
 
 // Used in pending.php
 $vocab["pending"]            = "Bookings awaiting approval";
