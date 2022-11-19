@@ -203,15 +203,25 @@ function print_outstanding($query)
 
 function print_menu_items($query)
 {
+  global $kiosk_mode_enabled;
+
   $menu_items = array(
       'help'      => 'help.php',
       'report'    => 'report.php',
       'import'    => 'import.php',
+    );
+
+  if ($kiosk_mode_enabled)
+  {
+    $menu_items['kiosk'] = 'kiosk.php';
+  }
+
+  $menu_items = array_merge($menu_items, array(
       'rooms'     => 'admin.php',
       'roles'     => 'edit_role.php',
       'groups'    => 'edit_group.php',
       'user_list' => 'edit_user.php'
-    );
+    ));
 
   foreach ($menu_items as $token => $page)
   {
