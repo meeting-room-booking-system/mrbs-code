@@ -190,7 +190,7 @@ function getAuthorised($level, $returl)
 /* checkAuthorised()
  *
  * Checks to see that a user is authorised to access a page.
- * If they are not, then shows an Access Denied message and exits.
+ * If they are not, then shows an "Access Denied" message and exits.
  *
  */
 function checkAuthorised($page, $just_check=false)
