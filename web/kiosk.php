@@ -104,9 +104,10 @@ function print_enter_form() : void
 
   // Area
   $field = new FieldSelect();
-  $areas = get_area_names();
+  $areas = new Areas();
+  $area_names = $areas->getNames();
   $field->setLabel(get_vocab('area'))
-        ->addSelectOptions($areas, $area, true)
+        ->addSelectOptions($area_names, $area, true)
         ->setControlAttributes(array(
               'name' => 'area'
             ));
@@ -115,12 +116,12 @@ function print_enter_form() : void
   // Room
   $field = new FieldSelect();
   $options = array();
-  foreach($areas as $area_id => $area_name)
+  foreach($area_names as $area_id => $area_name)
   {
-    $rooms = get_room_names($area_id);
+    $rooms = new Rooms($area_id);
     if (!empty($rooms))
     {
-      $options[$area_name] = $rooms;
+      $options[$area_name] = $rooms->getNames();
     }
   }
   $field->setLabel(get_vocab('room'))
