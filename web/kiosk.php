@@ -239,7 +239,7 @@ if (!empty(get_form_var('enter_button')))
   {
     session()->logoffUser();
   }
-  session()->init();
+  session()->init(0); // We only want the session to expire when the browser is closed
 
   $kiosk_url = multisite("index.php?kiosk=$mode&area=$area&room=$room");
   $_SESSION['kiosk_password_hash'] = password_hash($kiosk_password, PASSWORD_DEFAULT);
