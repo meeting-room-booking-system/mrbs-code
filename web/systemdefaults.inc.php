@@ -454,7 +454,7 @@ $ajax_refresh_rate = 10;
 $prefetch_refresh_rate = 30;
 
 // Refresh rate (in seconds) when in kiosk mode
-$kiosk_refresh_rate = 0; // Temporarily disabled
+$kiosk_refresh_rate = 300; // 5 minutes
 
 // Whether kiosk mode is enabled
 $kiosk_mode_enabled = false;
