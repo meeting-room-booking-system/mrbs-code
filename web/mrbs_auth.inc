@@ -126,6 +126,7 @@ function get_page_level($page)
     case 'edit_area_handler.php':
     case 'edit_room_handler.php':
     case 'import.php':
+    case 'kiosk.php':
     case 'report.php':
       $result = 2;
       break;
