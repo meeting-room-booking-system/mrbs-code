@@ -37,9 +37,9 @@ if (method_exists(session(), 'processForm'))
 }
 
 // If we're in kiosk mode make sure somebody's not trying to get to
-// anywhere other than index.php or one of the js/***.js.php pages.
-if (is_kiosk_mode() && ('index.php' != this_page()) &&
-    isset($server['SCRIPT_NAME']) && !preg_match('/js\/.+\.js\.php$/', $server['SCRIPT_NAME']))
+// anywhere other than index.php, kiosk.php or one of the js/***.js.php pages.
+if (is_kiosk_mode() &&
+    (!isset($server['SCRIPT_NAME']) || !preg_match('/index\.php$|kiosk\.php$|js\/.+\.js\.php$/', $server['SCRIPT_NAME'])))
 {
   location_header(multisite($_SESSION['kiosk_url'] ?? 'index.php'));
 }
