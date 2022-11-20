@@ -132,6 +132,7 @@ function get_page_level($page)
     case 'edit_room_handler.php':
     case 'effective_permissions.php':   // Ajax page for getting effective permissions
     case 'import.php':
+    case 'kiosk.php':
     case 'report.php':
       $result = 2;
       break;

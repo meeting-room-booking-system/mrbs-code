@@ -12,7 +12,7 @@ use function MRBS\get_cookie_path;
 abstract class Session
 {
 
-  public function init() : void
+  public function init(int $lifetime) : void
   {
     global $auth;
 
@@ -23,21 +23,14 @@ abstract class Session
 
     $cookie_path = get_cookie_path();
 
-    if (!isset($auth['session_php']['session_expire_time']))
-    {
-      // Default to the behaviour of previous versions of MRBS, use only
-      // session cookies - no persistent cookie.
-      $auth['session_php']['session_expire_time'] = 0;
-    }
-
     // We don't want the session garbage collector to delete the session before it has expired
-    if ($auth['session_php']['session_expire_time'] !== 0)
+    if ($lifetime !== 0)
     {
-      ini_set('session.gc_maxlifetime', max(ini_get('session.gc_maxlifetime'), $auth['session_php']['session_expire_time']));
+      ini_set('session.gc_maxlifetime', max(ini_get('session.gc_maxlifetime'), $lifetime));
     }
 
     session_name($auth['session_php']['session_name']);  // call before session_set_cookie_params() - see PHP manual
-    session_set_cookie_params($auth['session_php']['session_expire_time'], $cookie_path);
+    session_set_cookie_params($lifetime, $cookie_path);
 
     $current_db_schema_version = db_schema_version();
     // The session table was created in Upgrade 56 and then renamed in Upgrade 83.   Before that we
