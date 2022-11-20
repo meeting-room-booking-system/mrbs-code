@@ -4,6 +4,7 @@ namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\ElementP;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputRadioGroup;
@@ -203,6 +204,7 @@ if (!empty($kiosk) && isset($_SESSION['kiosk_password_hash']))
   Form::checkToken();
   print_header($context);
   echo "<h1>" . get_vocab('exit_kiosk_mode') . "</h1>\n";
+  echo "<p>" . get_vocab('exit_kiosk_intro') . "</p>\n";
   print_exit_form();
   print_footer(true);
 }
@@ -255,5 +257,6 @@ if (!empty(get_form_var('enter_button')))
 // Print the page header
 print_header($context);
 echo "<h1>" . get_vocab('enter_kiosk_mode') . "</h1>\n";
+echo "<p>" . get_vocab('enter_kiosk_intro') . "</p>\n";
 print_enter_form();
 print_footer();

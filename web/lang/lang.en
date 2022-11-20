@@ -281,6 +281,8 @@ $vocab["skip_and_book_note"]      = "Carry on with the booking, skipping past th
 // Used in kiosk.php
 $vocab["enter"]                     = "Enter";
 $vocab["exit"]                      = "Exit";
+$vocab["enter_kiosk_intro"]         = "Set a password which will be needed to exit kiosk mode.";
+$vocab["exit_kiosk_intro"]          = "Enter the password you set when you entered kiosk mode.";
 $vocab["enter_kiosk_mode"]          = "Enter Kiosk Mode";
 $vocab["exit_kiosk_mode"]           = "Exit Kiosk Mode";
 $vocab["kiosk"]                     = "Kiosk";

@@ -5,6 +5,7 @@ use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_form_var;
 use function MRBS\is_ajax;
+use function MRBS\is_kiosk_mode;
 use function MRBS\str_ends_with_array;
 
 // Uses PHP's built-in session handling
@@ -18,11 +19,13 @@ class SessionPhp extends SessionWithLogin
 
     parent::__construct();
 
-    // Check to see if we've been inactive for longer than allowed and if so logout
-    // the user
-    if (!empty($auth['session_php']['inactivity_expire_time'])) {
+    // Check to see if we've been inactive for longer than allowed and if so log out the user.
+    // Don't log out the user if we're in kiosk mode because the kiosk will normally be inactive.
+    if (!empty($auth['session_php']['inactivity_expire_time']) && !is_kiosk_mode())
+    {
       if (isset($_SESSION['LastActivity']) &&
-        ((time() - $_SESSION['LastActivity']) > $auth['session_php']['inactivity_expire_time'])) {
+        ((time() - $_SESSION['LastActivity']) > $auth['session_php']['inactivity_expire_time']))
+      {
         $this->logoffUser();
       }
       // Ajax requests don't count as activity, unless it's the special Ajax request used

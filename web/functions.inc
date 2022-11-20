@@ -2416,6 +2416,14 @@ function is_cli() : bool
   }
 }
 
+
+// Determines whether we are in kiosk mode
+function is_kiosk_mode() : bool
+{
+  return isset($_SESSION['kiosk_password_hash']);
+}
+
+
 // Set and restore ignore_user_abort.   The function is designed to be used to
 // ensure a critical piece of code can't be aborted, and used in pairs of set and
 // restore calls.  The function keeps track of outstanding set requests so that

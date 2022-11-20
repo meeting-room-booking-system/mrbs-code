@@ -147,6 +147,12 @@ function get_page_level($page)
     $result = max($result, 1);
   }
 
+  // Can always access index.php when in kiosk mode
+  if ($page == 'index.php' && is_kiosk_mode())
+  {
+    $result = 0;
+  }
+
   return $result;
 }
 
