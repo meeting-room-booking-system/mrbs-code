@@ -4,7 +4,6 @@ namespace MRBS;
 
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
-use MRBS\Form\ElementP;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputRadioGroup;

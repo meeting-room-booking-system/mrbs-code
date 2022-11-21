@@ -135,26 +135,57 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
   while (false !== ($row = $res->next_row_keyed()))
   {
     unpack_status($row);
-    $start_date = getdate($row['start_time']);
-    $end_date = getdate($row['end_time']);
-    $different_dates = ( $start_date['year'] != $end_date['year'] ||
-                         $start_date['yday'] != $end_date['yday']);
+    $existing_entry_interval = new EntryInterval($row['start_time'], $row['end_time']);
+
+    $existing_start_date = new DateTime();
+    $existing_start_date->setTimestamp($row['start_time']);
+
+    $existing_end_date = new DateTime();
+    $existing_end_date->setTimestamp($row['end_time']);
+
+    $proposed_end_date = new DateTime();
+    $proposed_end_date->setTimestamp($booking['end_time']);
 
     if ($enable_periods)
     {
-      $p_num = $start_date['minutes'];
-      // The number of periods might have been reduced since the booking was made
-      $p_end_num = min(count($periods), $end_date['minutes']) - 1;
-      if ($different_dates)
+      $p_num = (int) $existing_start_date->format('i');
+      // The number of periods might have been reduced since the booking was made, so if
+      // the end period no longer exists use the last of the remaining periods.
+      $p_end_num = min(count($periods), (int) $existing_end_date->format('i')) - 1;
+      // If the number of periods has been reduced and the start period of the existing
+      // booking no longer exists ...
+      if (!array_key_exists($p_num, $periods))
       {
-        $timestr = $periods[$p_num] . ", " .
-                   utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
-                   $periods[$p_end_num] . ", " .
-                   utf8_strftime($strftime_format['date'], $row['end_time']);
+        // If the existing entry finishes on the same day, or the proposed new booking ends on a day no
+        // later than the existing start date, then the booking isn't really clashing at all.
+        // [Note that we are only treating bookings after the last slot as non-existent in the case of
+        // periods, because we don't know when they would have taken place and whether there would
+        // have been a clash.  But in the case of times, we do know when they are taking place and
+        // whether there's going to be a clash.]
+        if (!$existing_entry_interval->spansMultipleDays() ||
+            ($proposed_end_date->format('Y-m-d') <= $existing_start_date->format('Y-m-d')))
+        {
+          continue;
+        }
+        // Otherwise there is a clash, but we don't know any longer what the start period is called.
+        else
+        {
+          $timestr = '?';
+        }
       }
       else
       {
         $timestr = $periods[$p_num];
+      }
+      if ($existing_entry_interval->spansMultipleDays())
+      {
+        $timestr .= ", " .
+                    utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
+                    $periods[$p_end_num] . ", " .
+                    utf8_strftime($strftime_format['date'], $row['end_time']);
+      }
+      else
+      {
         if ($p_num != $p_end_num)
         {
           $timestr .= " - " . $periods[$p_end_num];
@@ -164,7 +195,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     }
     else
     {
-      if ($different_dates)
+      if ($existing_entry_interval->spansMultipleDays())
       {
         $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
       }
@@ -174,7 +205,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
       }
       $timestr = utf8_strftime($date_format, $row['start_time']) . " - " .
                  utf8_strftime($date_format, $row['end_time']);
-      if (!$different_dates)
+      if (!$existing_entry_interval->spansMultipleDays())
       {
         $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
       }
@@ -188,9 +219,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     }
 
     // enclose the viewday etc. links in a span to make it easier for JavaScript to strip them out
-    $vars = array('year'  => $start_date['year'],
-                  'month' => $start_date['mon'],
-                  'day'   => $start_date['mday'],
+    $vars = array('page_date' => $existing_start_date->format('Y-m-d'),
                   'area'  => $area,
                   'room'  => $room_id);
 
