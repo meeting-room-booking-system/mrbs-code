@@ -143,9 +143,6 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     $existing_end_date = new DateTime();
     $existing_end_date->setTimestamp($row['end_time']);
 
-    $proposed_end_date = new DateTime();
-    $proposed_end_date->setTimestamp($booking['end_time']);
-
     if ($enable_periods)
     {
       $p_num = (int) $existing_start_date->format('i');
@@ -156,22 +153,12 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
       // booking no longer exists ...
       if (!array_key_exists($p_num, $periods))
       {
-        // If the existing entry finishes on the same day, or the proposed new booking ends on a day no
-        // later than the existing start date, then the booking isn't really clashing at all.
-        // [Note that we are only treating bookings after the last slot as non-existent in the case of
-        // periods, because we don't know when they would have taken place and whether there would
-        // have been a clash.  But in the case of times, we do know when they are taking place and
-        // whether there's going to be a clash.]
-        if (!$existing_entry_interval->spansMultipleDays() ||
-            ($proposed_end_date->format('Y-m-d') <= $existing_start_date->format('Y-m-d')))
-        {
-          continue;
-        }
-        // Otherwise there is a clash, but we don't know any longer what the start period is called.
-        else
-        {
-          $timestr = '?';
-        }
+        // If the booking clashes with an existing one that starts in a period that no longer exists
+        // we won't know the name of the period, so we have to use something to describe it.
+        // [Note that although there may not be a clash in practice, there may be if the periods
+        // are later extended, so we can't afford to allow a booking that will clash in MRBS even though
+        // it may not clash in practice - but we don't know when the periods occur, so we can't be sure.]
+        $timestr = '?';
       }
       else
       {
