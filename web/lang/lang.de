@@ -163,7 +163,7 @@ $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag lösche
 $vocab["confirmdel_series"]       = "Sind Sie sicher, dass Sie diese Serienbuchung löschen wollen?";
 $vocab["confirm_edit_series"]     = "Für ein oder mehr Einträge der Serienbuchung haben sich Benutzer angemeldet." .
                                     "Wenn die Serienbuchung bearbeitet wird, gehen die Anmeldungen verloren. " .
-                                    "Sind Sie sicher, dass Sie fortfahren möchten?";														  
+                                    "Sind Sie sicher, dass Sie fortfahren möchten?";
 $vocab["returnprev"]         = "Zurück zur vorigen Seite";
 $vocab["invalid_entry_id"]   = "Ungültige ID des Eintrags.";
 $vocab["invalid_series_id"]  = "Ungültige ID des Serienbuchung.";
