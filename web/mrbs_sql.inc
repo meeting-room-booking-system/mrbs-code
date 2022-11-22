@@ -140,75 +140,62 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     $existing_start_date = new DateTime();
     $existing_start_date->setTimestamp($row['start_time']);
 
-    $existing_end_date = new DateTime();
-    $existing_end_date->setTimestamp($row['end_time']);
-
-    $proposed_end_date = new DateTime();
-    $proposed_end_date->setTimestamp($booking['end_time']);
-
     if ($enable_periods)
     {
-      $p_num = (int) $existing_start_date->format('i');
+      $p_num = period_index_timestamp($row['start_time']);
       // The number of periods might have been reduced since the booking was made, so if
       // the end period no longer exists use the last of the remaining periods.
-      $p_end_num = min(count($periods), (int) $existing_end_date->format('i')) - 1;
-      // If the number of periods has been reduced and the start period of the existing
-      // booking no longer exists ...
       if (!array_key_exists($p_num, $periods))
       {
-        // If the existing entry finishes on the same day, or the proposed new booking ends on a day no
-        // later than the existing start date, then the booking isn't really clashing at all.
-        // [Note that we are only treating bookings after the last slot as non-existent in the case of
-        // periods, because we don't know when they would have taken place and whether there would
-        // have been a clash.  But in the case of times, we do know when they are taking place and
-        // whether there's going to be a clash.]
-        if (!$existing_entry_interval->spansMultipleDays() ||
-            ($proposed_end_date->format('Y-m-d') <= $existing_start_date->format('Y-m-d')))
-        {
-          continue;
-        }
-        // Otherwise there is a clash, but we don't know any longer what the start period is called.
-        else
-        {
-          $timestr = '?';
-        }
+        // If the booking clashes with an existing one that starts in a period that no longer exists,
+        // because the number of periods was reduced after the booking was created, we won't know
+        // the name of the period, so we have to use something to describe it.
+        // [Note that although there may not be a clash in practice, there may be if the periods
+        // are later extended, so we can't afford to allow a booking that will clash in MRBS even though
+        // it may not clash in practice - but we don't know when the periods occur, so we can't be sure.]
+        $timestr = unknown_period_name($p_num);
       }
       else
       {
         $timestr = $periods[$p_num];
       }
+
+      $p_end_num = period_index_timestamp($row['end_time']) - 1;
+      // Similarly if the end period no longer exists, then we won't know its name either.  But
+      // if it's on a different day we'll just pretend that it's the last period of the day. (That
+      // trick won't work if it's on the same day because it will look as though the booking end
+      // period is before the start period.)
+      if (array_key_exists($p_end_num, $periods))
+      {
+        $p_end_str = $periods[$p_end_num];
+      }
+      elseif ($existing_entry_interval->spansMultipleDays())
+      {
+        $p_end_str = $periods[count($periods) - 1];
+      }
+      else
+      {
+        $p_end_str = unknown_period_name($p_end_num);
+      }
       if ($existing_entry_interval->spansMultipleDays())
       {
         $timestr .= ", " .
                     utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
-                    $periods[$p_end_num] . ", " .
+                    $p_end_str . ", " .
                     utf8_strftime($strftime_format['date'], $row['end_time']);
       }
       else
       {
         if ($p_num != $p_end_num)
         {
-          $timestr .= " - " . $periods[$p_end_num];
+          $timestr .= " - " . $p_end_str;
         }
         $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
       }
     }
     else
     {
-      if ($existing_entry_interval->spansMultipleDays())
-      {
-        $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
-      }
-      else
-      {
-        $date_format = ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
-      }
-      $timestr = utf8_strftime($date_format, $row['start_time']) . " - " .
-                 utf8_strftime($date_format, $row['end_time']);
-      if (!$existing_entry_interval->spansMultipleDays())
-      {
-        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
-      }
+      $timestr = (string) $existing_entry_interval;
     }
 
     if (is_private_event($row['private']) &&

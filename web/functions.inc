@@ -2053,6 +2053,42 @@ function nominal_seconds(int $t) : int
 }
 
 
+// Returns the index of the period represented by the timestamp $timestamp
+function period_index_timestamp(int $timestamp) : int
+{
+  // Periods are counted as minutes from noon, ie 1200 is $period[0],
+  // 1201 $period[1], etc.
+  $date = getdate($timestamp);
+
+  return intval((($date['hours'] - 12) * 60) + $date['minutes']);
+}
+
+
+// Returns the index of the period represented by $s nominal seconds
+function period_index_nominal(int $s) : int
+{
+  // Periods are counted as minutes from noon, ie 1200 is $period[0],
+  // 1201 $period[1], etc.
+  return intval($s/60) - (12*60);
+}
+
+
+// Returns the name of the period represented by nominal seconds $s
+function period_name_nominal(int $s) : string
+{
+  global $periods;
+
+  return $periods[period_index_nominal($s)];
+}
+
+
+// Returns the name of a period that doesn't exist
+function unknown_period_name($index) : string
+{
+  return get_vocab('unknown_period', $index);
+}
+
+
 // returns the numeric day of the week (0-6) in terms of the MRBS week as defined by
 // $weekstarts.   For example if $weekstarts is set to 2 (Tuesday) and a $time for
 // a Wednesday is given, then 1 is returned.

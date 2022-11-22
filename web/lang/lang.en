@@ -75,6 +75,7 @@ $vocab["start_date"]         = "Start time";
 $vocab["end_date"]           = "End time";
 $vocab["time"]               = "Time";
 $vocab["period"]             = "Period";
+$vocab["unknown_period"]     = "<Period %d>";
 $vocab["duration"]           = "Duration";
 $vocab["second_lc"]          = "second";
 $vocab["seconds"]            = "seconds";
