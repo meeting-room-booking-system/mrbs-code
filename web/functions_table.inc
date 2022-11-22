@@ -441,7 +441,7 @@ function time_cell_html($s, $url) : string
 
   if ($enable_periods)
   {
-    $html .= htmlspecialchars(period_name($s));
+    $html .= htmlspecialchars(period_name_nominal($s));
   }
   else
   {
@@ -606,7 +606,7 @@ function get_query_vars($view, $area, $room, $month, $day, $year, $s) : array
   }
   $hour = $date['hours'];
   $minute = $date['minutes'];
-  $period = period_index($s);
+  $period = period_index_nominal($s);
 
   $vars = array('view'  => $view,
                 'year'  => $year,
@@ -638,7 +638,7 @@ function get_times_header_cells($start, $end, $increment) : string
     $html .= "<span>";
     if ( $enable_periods )
     {
-      $html .= htmlspecialchars(period_name($s));
+      $html .= htmlspecialchars(period_name_nominal($s));
     }
     else
     {

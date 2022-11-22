@@ -2114,7 +2114,7 @@ function nominal_seconds(int $t) : int
 
 
 // Returns the index of the period represented by $s nominal seconds
-function period_index(int $s) : int
+function period_index_nominal(int $s) : int
 {
   // Periods are counted as minutes from noon, ie 1200 is $period[0],
   // 1201 $period[1], etc.
@@ -2123,11 +2123,11 @@ function period_index(int $s) : int
 
 
 // Returns the name of the period represented by nominal seconds $s
-function period_name(int $s) : string
+function period_name_nominal(int $s) : string
 {
   global $periods;
 
-  return $periods[period_index($s)];
+  return $periods[period_index_nominal($s)];
 }
 
 
