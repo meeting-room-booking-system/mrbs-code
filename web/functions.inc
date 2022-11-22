@@ -1874,24 +1874,6 @@ function hour_min(int $s) : string
 }
 
 
-// Returns the index of the period represented by $s nominal seconds
-function period_index(int $s) : int
-{
-  // Periods are counted as minutes from noon, ie 1200 is $period[0],
-  // 1201 $period[1], etc.
-  return intval($s/60) - (12*60);
-}
-
-
-// Returns the name of the period represented by nominal seconds $s
-function period_name(int $s) : string
-{
-  global $periods;
-
-  return $periods[period_index($s)];
-}
-
-
 // Returns the name of the period represented by Unix timestamp $t for area $area_id.
 // $mod_time will get the period $mod_time units before or after.
 function period_time_string(int $t, int $area_id, int $mod_time=0) : string
