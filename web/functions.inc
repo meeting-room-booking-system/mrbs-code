@@ -2113,6 +2113,17 @@ function nominal_seconds(int $t) : int
 }
 
 
+// Returns the index of the period represented by the timestamp $timestamp
+function period_index_timestamp(int $timestamp) : int
+{
+  // Periods are counted as minutes from noon, ie 1200 is $period[0],
+  // 1201 $period[1], etc.
+  $date = getdate($timestamp);
+
+  return intval((($date['hours'] - 12) * 60) + $date['minutes']);
+}
+
+
 // Returns the index of the period represented by $s nominal seconds
 function period_index_nominal(int $s) : int
 {

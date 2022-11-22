@@ -140,9 +140,6 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     $existing_start_date = new DateTime();
     $existing_start_date->setTimestamp($row['start_time']);
 
-    $existing_end_date = new DateTime();
-    $existing_end_date->setTimestamp($row['end_time']);
-
     if ($enable_periods)
     {
       $p_num = (int) $existing_start_date->format('i');
@@ -163,7 +160,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
         $timestr = $periods[$p_num];
       }
 
-      $p_end_num = (int) $existing_end_date->format('i') - 1;
+      $p_end_num = period_index_timestamp($row['end_time']) - 1;
       // Similarly if the end period no longer exists, then we won't know its name either.  But
       // if it's on a different day we'll just pretend that it's the last period of the day. (That
       // trick won't work if it's on the same day because it will look as though the booking end
