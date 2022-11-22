@@ -142,7 +142,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
 
     if ($enable_periods)
     {
-      $p_num = (int) $existing_start_date->format('i');
+      $p_num = period_index_timestamp($row['start_time']);
       // The number of periods might have been reduced since the booking was made, so if
       // the end period no longer exists use the last of the remaining periods.
       if (!array_key_exists($p_num, $periods))
