@@ -70,6 +70,7 @@ $vocab["start_date"]         = "Anfangsdatum";
 $vocab["end_date"]           = "Enddatum";
 $vocab["time"]               = "Zeit";
 $vocab["period"]             = "Zeitblock";
+$vocab["unknown_period"]     = "<Zeitblock %d>";
 $vocab["duration"]           = "Dauer";
 $vocab["second_lc"]          = "Sekunde";
 $vocab["seconds"]            = "Sekunden";
@@ -159,6 +160,7 @@ $vocab["deleteseries"]       = "Alle Einträge der Serienbuchung löschen";
 $vocab["exportentry"]        = "Eintrag exportieren";
 $vocab["exportseries"]       = "Serienbuchung exportieren";
 $vocab["confirmdel"]         = "Sind Sie sicher, dass Sie diesen Eintrag löschen wollen?";
+$vocab["confirmdel_series"]       = "Sind Sie sicher, dass Sie diese Serienbuchung löschen wollen?";
 $vocab["confirm_edit_series"]     = "Für ein oder mehr Einträge der Serienbuchung haben sich Benutzer angemeldet." .
                                     "Wenn die Serienbuchung bearbeitet wird, gehen die Anmeldungen verloren. " .
                                     "Sind Sie sicher, dass Sie fortfahren möchten?";
@@ -235,6 +237,8 @@ $vocab["reason"]              = "Begründung";
 $vocab["info_requested"]      = "Informationen angefordert";
 $vocab["cannot_change_approved_bookings"] = "Genehmigte Buchung können nicht bearbeitet oder gelöscht werden";
 $vocab["no_simultaneous_bookings"]        = "Buchungen dürfen sich zeitlich nicht mit einer bereits vorhandenen Buchung überschneiden";
+$vocab["no_bookings_on_holidays"] = "Sie haben versucht, eine Buchung in den Ferien zu tätigen (%s)";
+$vocab["no_bookings_on_weekends"] = "Sie haben versucht, eine Buchung an einem Wochenende zu tätigen (%s)";
 $vocab["type_not_allowed"]        = 'Buchungen der Kategorie %1$s sind in %2$s nicht erlaubt';
 $vocab["min_create_time_before"]  = 'Sie können keine Buchung erstellen, die in weniger als %1$d %2$s beginnt';
 $vocab["max_create_time_before"]  = 'Sie können keine Buchung erstellen, die in mehr als %1$d %2$s endet';
@@ -267,6 +271,16 @@ $vocab["max_secs_per_year_area"]      = 'Die maximale Buchungszeit pro Jahr pro 
 $vocab["max_secs_per_future_area"]    = 'Das maximale überschüssige Buchungsguthaben pro Benutzer für diesen Bereich beträgt %1$s %2$s';
 $vocab["skip_and_book"]           = "Überspringen und buchen";
 $vocab["skip_and_book_note"]      = "Buchung eintragen, dabei Buchungstermine mit Konflikten überspringen";
+
+// Used in kiosk.php
+$vocab["enter"]                     = "Starten";
+$vocab["exit"]                      = "Verlassen";
+$vocab["enter_kiosk_intro"]         = "Legen Sie das Passwort zum Verlassen des Kioskmodus fest.";
+$vocab["exit_kiosk_intro"]          = "Geben Sie das Passwort zum Verlassen des Kioskmodus ein, welches Sie beim Starten festgelegt haben.";
+$vocab["enter_kiosk_mode"]          = "Kioskmodus starten";
+$vocab["exit_kiosk_mode"]           = "Kioskmodus beenden";
+$vocab["kiosk"]                     = "Kiosk";
+$vocab["kiosk_password"]            = "Kiosk Passwort";
 
 // Used in pending.php
 $vocab["pending"]            = "Eintrag erwartet Genehmigung";
@@ -412,6 +426,7 @@ $vocab["delete_entries_warning"] = "WARNUNG!  Alle Einträge, die den Suchkriter
                                    "Wollen Sie wirklich fortfahren?\n\n" .
                                    "Anzahl der zu löschenden Einträge: ";
 $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.";
+$vocab["registered"]            = "Angemeldet";
 
 // Used in admin.php
 $vocab["edit"]               = "Bearbeiten";
@@ -518,9 +533,11 @@ $vocab["book_ahead_note_periods"] = "Bei der Benutzung von Zeitblöcken werden B
 $vocab["invalid_types"]           = "Ungültige Kategorie";
 $vocab["invalid_types_note"]      = "Dies sind Kategorien, die in diesem Raum nicht verwendet werden dürfen.";
 
+
 // Used in edit_users.php
 $vocab["name_empty"]         = "Sie müssen einen Namen angeben.";
 $vocab["name_not_unique"]    = "existiert bereits.  Bitte wählen Sie einen anderen Namen.";
+$vocab["invalid_date"]        = "Das Feld '%s' muss ein gültiges Datum im Format YYYY-MM-DD enthalten.";
 $vocab["confirm_delete_user"] = "Möchten Sie diesen Benutzer wirklich löschen?";
 
 // Used in del.php
@@ -547,6 +564,7 @@ $vocab["please_contact"]     = "Bitte kontaktieren Sie %s für Fragen die hier n
 
 // Used in import.php
 $vocab["import_icalendar"]          = "iCalendar-Datei importieren";
+$vocab["source"]                      = "Quelle";
 $vocab["area_room_settings"]        = "Bereiche und Räume";
 $vocab["other_settings"]            = "Weitere Einstellungen";
 $vocab["import_intro"]              = "Dieses Formular erlaubt Ihnen eine RFC 5545 kompatibles " .
@@ -558,8 +576,11 @@ $vocab["import_text_file"]          = "unkomprimiert iCalendar Dateien";
 $vocab["import_zip"]                = "Zip-Archiv, einschließlich mehrerer Dateien in einem Archiv";
 $vocab["import_gzip"]               = "gzip Dateien";
 $vocab["import_bzip2"]              = "bzip2 Dateien";
+$vocab["source_type"]                 = "Quelltyp";
+$vocab["file"]                        = "Datei";
 $vocab["file_name"]                 = "Dateiname";
 $vocab["url"]                       = "URL";
+$vocab["invalid_url"]                 = "Ungültige URL";
 $vocab["import"]                    = "Importieren";
 $vocab["upload_failed"]             = "Hochladen mit Fehler abgebrochen";
 $vocab["max_allowed_file_size"]     = "Die naximale Dateigröße beträgt";
@@ -568,13 +589,15 @@ $vocab["could_not_process"]         = "Import fehlgeschlagen: Datei konnte nicht
 $vocab["badly_formed_ics"]          = "Fehlerhaft formatierte VCALENDAR-Datei";
 $vocab["default_room"]              = "Standardraum";
 $vocab["default_room_note"]         = "Raum der bei fehlender LOCATION-Eigenschaft verwendet wird";
+$vocab["ignore_location"]             = "Den Standardraum anstelle von LOCATION verwenden";
+$vocab["add_location"]                = "Füge LOCATION ein"; 
 $vocab["area_room_order"]           = "Reihenfolge";
 $vocab["area_room_order_note"]      = "Reihenfolg der Bereichs- und Raumnamen in der LOCATION Eigenschaft";
 $vocab["area_room"]                 = "Bereich - Raum";
 $vocab["room_area"]                 = "Raum - Bereich";
 $vocab["area_room_delimiter"]       = "Begrenzer";
 $vocab["area_room_delimiter_note"]  = "Trenn-Zeichen für die Bereichs- und Raumnamen in der LOCATION Eigenschaft.  " .
-                                      "Wird kein Trenn-Zeichen erkannt, wird nach einem eindeutigen Raum mit dem selben " .
+                                      "Wird kein Trennzeichen erkannt, wird nach einem eindeutigen Raum mit dem selben " .
                                       "Namen wie die LOCATION gesucht";
 $vocab["area_room_create"]          = "Räume anlegen, wenn notwendig";
 $vocab["import_past"]               = "Importiere Buchungen in der Vergangenheit";
@@ -589,6 +612,7 @@ $vocab["could_not_create_area"]     = "Bereich konnte nicht angelegt werden";
 $vocab["could_not_create_room"]     = "Raum konnte nicht angelegt werden";
 $vocab["could_not_find_room"]       = "Raum wurde nicht gefunden";
 $vocab["could_not_import"]          = "Import gescheitert";
+$vocab["import_no_SUMMARY"]           = "Importierte Buchung - keine SUMMARY verfügbar";  // This string cannot be empty
 $vocab["no_LOCATION"]               = "Das VEVENT behinhaltet keine LOCATION Eigenschaft";
 $vocab["invalid_RRULE"]             = "Fehlerhafte RRULE: FREQ Bereich fehlt";
 $vocab["more_than_one_BYDAY"]       = "MRBS unterstützt keine mehrfachen BYDAY Werte, wenn FREQ=";
@@ -615,10 +639,13 @@ $vocab["type.I"]             = "Intern";
 $vocab["type.E"]             = "Extern";
 
 // General
-$vocab["fatal_error"]        = "Oh je!  Leider ist in MRBS ein fataler Fehler aufgetreten.  Bitte konsultieren Sie Ihren Systemadministrator.";
-$vocab["fatal_db_error"]     = "Fataler Fehler: Leider steht die Datenbank im Moment nicht zur Verfügung.";
-$vocab["fatal_no_tables"]    = "Fataler Fehler: die MRBS Tabellen existieren nicht oder sind nicht zugänglich.";
+$vocab["fatal_error"]        = "Oh je!  Leider ist in MRBS ein schwerwiegender Fehler aufgetreten.  Bitte konsultieren Sie Ihren Systemadministrator.";
+$vocab["fatal_db_error"]     = "Schwerwiegender Fehler: Leider steht die Datenbank im Moment nicht zur Verfügung.";
+$vocab["resize_error"]       = "Oh je! MRBS hat einen Fehler beim Anpassen der Buchung festgestellt. Wenn das " .
+                               "häufiger geschieht kontaktiere bitte deinen Administrator.";
+$vocab["fatal_no_tables"]    = "Schwerwiegender Fehler: Die MRBS Tabellen existieren nicht oder sind nicht zugänglich.";
 $vocab["session_expired"]    = "Ihre Sitzung ist abgelaufen.";
 $vocab["browser_not_supported"] = "Leider wird Ihr Browser nicht von %s unterstützt. Sie benötigen eine " .
                                   "aktuellere Version oder einen anderen Browser.";
 $vocab["back"]               = "Zurück";
+
