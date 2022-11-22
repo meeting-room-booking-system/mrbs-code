@@ -8,15 +8,44 @@ class EntryInterval
 {
   private $start_date;
   private $end_date;
+  private $start_timestamp;
+  private $end_timestamp;
 
 
   // $start_time and $end_time are Unix timestamps
-  public function __construct(int $start_time, int $end_time)
+  public function __construct(int $start_timestamp, int $end_timestamp)
   {
     $this->start_date = new DateTime();
-    $this->start_date->setTimestamp($start_time);
+    $this->start_date->setTimestamp($start_timestamp);
     $this->end_date = new DateTime();
-    $this->end_date->setTimestamp($end_time);
+    $this->end_date->setTimestamp($end_timestamp);
+    $this->start_timestamp = $start_timestamp;
+    $this->end_timestamp = $end_timestamp;
+  }
+
+
+  public function __toString()
+  {
+    global $twentyfourhour_format, $strftime_format;
+
+    if ($this->spansMultipleDays())
+    {
+      $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
+    }
+    else
+    {
+      $date_format = ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
+    }
+
+    $result = utf8_strftime($date_format, $this->start_timestamp) . " - " .
+              utf8_strftime($date_format, $this->end_timestamp);
+
+    if (!$this->spansMultipleDays())
+    {
+      $result .= ", " . utf8_strftime($strftime_format['date'], $this->start_timestamp);
+    }
+
+    return $result;
   }
 
 

@@ -195,20 +195,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
     }
     else
     {
-      if ($existing_entry_interval->spansMultipleDays())
-      {
-        $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
-      }
-      else
-      {
-        $date_format = ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
-      }
-      $timestr = utf8_strftime($date_format, $row['start_time']) . " - " .
-                 utf8_strftime($date_format, $row['end_time']);
-      if (!$existing_entry_interval->spansMultipleDays())
-      {
-        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
-      }
+      $timestr = (string) $existing_entry_interval;
     }
 
     if (is_private_event($row['private']) &&
