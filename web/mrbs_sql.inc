@@ -153,7 +153,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
         // [Note that although there may not be a clash in practice, there may be if the periods
         // are later extended, so we can't afford to allow a booking that will clash in MRBS even though
         // it may not clash in practice - but we don't know when the periods occur, so we can't be sure.]
-        $timestr = '?';
+        $timestr = unknown_period_name($p_num);
       }
       else
       {
@@ -175,7 +175,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
       }
       else
       {
-        $p_end_str = '?';
+        $p_end_str = unknown_period_name($p_end_num);
       }
       if ($existing_entry_interval->spansMultipleDays())
       {

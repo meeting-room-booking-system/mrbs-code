@@ -2142,6 +2142,13 @@ function period_name_nominal(int $s) : string
 }
 
 
+// Returns the name of a period that doesn't exist
+function unknown_period_name($index) : string
+{
+  return get_vocab('unknown_period', $index);
+}
+
+
 // returns the numeric day of the week (0-6) in terms of the MRBS week as defined by
 // $weekstarts.   For example if $weekstarts is set to 2 (Tuesday) and a $time for
 // a Wednesday is given, then 1 is returned.
