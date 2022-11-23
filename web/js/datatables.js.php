@@ -4,11 +4,37 @@ namespace MRBS;
 require "../defaultincludes.inc";
 
 http_headers(array("Content-type: application/x-javascript"),
-             60*30);  // 30 minute expiry
+  60*30);  // 30 minute expiry
 
 if ($use_strict)
 {
   echo "'use strict';\n";
+}
+
+// See https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pagesetup?view=openxml-2.8.1
+define('EXCEL_PAGE_SIZES', array(
+  1 =>  'LETTER',
+  3 =>  'TABLOID',
+  5 =>  'LEGAL',
+  8 =>  'A3',
+  9 =>  'A4',
+  11 => 'A5'
+));
+
+// Get the Excel paper size constant.  If the config setting hasn't been set for some reason choose
+// a suitable default.  Otherwise if it's one of the predefined strings get its value, or else just
+// use the value itself.
+if (!isset($excel_default_paper))
+{
+  $excel_paper_size = array_search('A4', EXCEL_PAGE_SIZES);
+}
+elseif ((in_arrayi($excel_default_paper, EXCEL_PAGE_SIZES)))
+{
+  $excel_paper_size = array_search($excel_default_paper, EXCEL_PAGE_SIZES);
+}
+else
+{
+  $excel_paper_size = $excel_default_paper;
 }
 
 
@@ -45,6 +71,16 @@ var getTypes = function getTypes(table) {
     return result;
   };
 
+var customizeExcel = function(xlsx) {
+  <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
+  var sheet = xlsx.xl.worksheets['sheet1.xml'];
+  var pageSetup = sheet.createElement('pageSetup');
+  sheet.childNodes['0'].appendChild(pageSetup);
+  var settings = sheet.getElementsByTagName('pageSetup')[0];
+  settings.setAttribute("r:id", "rId1"); <?php // Relationship ID - do not change ?>
+  settings.setAttribute('orientation', '<?php echo $excel_default_orientation ?>');
+  settings.setAttribute('paperSize', '<?php echo $excel_paper_size ?>');
+};
 
 <?php
 // Turn the table with id 'id' into a DataTable, using specificOptions
@@ -164,7 +200,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       }),
       $.extend(true, {}, buttonCommon, {
         extend: 'excel',
-        text: '<?php echo escape_js(get_vocab('excel')) ?>'
+        text: '<?php echo escape_js(get_vocab('excel')) ?>',
+        customize: customizeExcel
       }),
       $.extend(true, {}, buttonCommon, {
         extend: 'pdf',
