@@ -1434,14 +1434,12 @@ $(document).on('page_ready', function() {
         .first().trigger('mouseenter');
 
     <?php
-    // In kiosk mode disable all previously attached event listeners and
-    // disable all mouse and keyboard events.
+    // In kiosk mode intercept all mouse and keyboard events as (a) we don't want to
+    // allow links to be clicked and (b) that's the way a user exits kiosk mode
     ?>
     if (args.kiosk)
     {
-      $('*').off();
       $(window).on('click keypress', function(e) {
-        e.preventDefault();
         if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
         {
           var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
@@ -1454,6 +1452,7 @@ $(document).on('page_ready', function() {
           //window.location.href = href;
           $.redirect(href, {'csrf_token': getCSRFToken()});
         }
+        e.preventDefault();
         return false;
       });
     }
