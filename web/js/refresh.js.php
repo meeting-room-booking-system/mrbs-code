@@ -32,9 +32,13 @@ var sizeColumns = function() {
 
 
 var refreshPage = function refreshPage() {
+    <?php
+    // Allow refreshing if we're on a metered connection and in kiosk
+    // mode, because kiosk mode relies on regular refreshing.
+    ?>
     if (!isHidden() &&
         !$('table.dwm_main').hasClass('resizing') &&
-        !isMeteredConnection() &&
+        (args.kiosk || !isMeteredConnection()) &&
         !refreshPage.disabled)
     {
       var data = {
