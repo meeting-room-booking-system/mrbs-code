@@ -29,7 +29,7 @@ class SessionCookie extends SessionWithLogin
   }
 
 
-  public function init() : void
+  public function init(int $lifetime) : void
   {
     // The cookie session scheme doesn't use PHP sessions
   }

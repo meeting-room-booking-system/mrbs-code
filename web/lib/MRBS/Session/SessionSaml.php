@@ -66,7 +66,7 @@ class SessionSaml extends SessionWithLogin
   }
 
 
-  public function init() : void
+  public function init(int $lifetime) : void
   {
     global $auth;
 
