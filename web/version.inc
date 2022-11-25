@@ -7,9 +7,9 @@ namespace MRBS;
 // Read the actual version number from a much simpler file
 require_once('version_num.inc');
 
-function get_mrbs_version()
+function get_mrbs_version() : string
 {
-  global $hg_command;
+  global $git_command;
   global $mrbs_version_number;
 
   $mrbs_version = "MRBS $mrbs_version_number";

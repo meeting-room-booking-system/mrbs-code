@@ -24,7 +24,7 @@ class SessionJoomla extends SessionWithLogin
   }
 
 
-  public function init() : void
+  public function init(int $lifetime) : void
   {
     if (version_compare(JVERSION, '4.0', '<'))
     {
