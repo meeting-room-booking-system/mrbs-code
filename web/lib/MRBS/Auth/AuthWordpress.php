@@ -1,7 +1,7 @@
 <?php
 namespace MRBS\Auth;
 
-use \MRBS\User;
+use MRBS\User;
 
 require_once MRBS_ROOT . '/auth/cms/wordpress.inc';
 

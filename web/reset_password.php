@@ -31,7 +31,7 @@ function generate_reset_request_form($result=null)
     ));
 
   $fieldset = new ElementFieldset();
-  $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
+  $fieldset->addLegend(get_vocab('password_reset'));
 
   $field = new FieldDiv();
   if (isset($result) && ($result=='request_failed'))
@@ -52,7 +52,7 @@ function generate_reset_request_form($result=null)
   $placeholder = \MRBS\get_vocab($tag);
 
   $field = new FieldInputText();
-  $field->setLabel(\MRBS\get_vocab('user'))
+  $field->setLabel(get_vocab('user'))
         ->setLabelAttributes(array('title' => $placeholder))
         ->setControlAttributes(array('id'           => 'username',
                                      'name'         => 'username',
@@ -67,7 +67,7 @@ function generate_reset_request_form($result=null)
   // The submit button
   $fieldset = new ElementFieldset();
   $field = new FieldInputSubmit();
-  $field->setControlAttributes(array('value' => \MRBS\get_vocab('get_new_password')));
+  $field->setControlAttributes(array('value' => get_vocab('get_new_password')));
   $fieldset->addElement($field);
 
   $form->addElement($fieldset);
@@ -111,7 +111,7 @@ function generate_reset_form(array $usernames, $key, $error=null)
     ));
 
   $fieldset = new ElementFieldset();
-  $fieldset->addLegend(\MRBS\get_vocab('password_reset'));
+  $fieldset->addLegend(get_vocab('password_reset'));
 
   $field = new FieldDiv();
   if (isset($error) && ($error=='pwd_not_match'))
@@ -178,7 +178,7 @@ function generate_reset_form(array $usernames, $key, $error=null)
   // The submit button
   $fieldset = new ElementFieldset();
   $field = new FieldInputSubmit();
-  $field->setControlAttributes(array('value' => \MRBS\get_vocab('reset_password')));
+  $field->setControlAttributes(array('value' => get_vocab('reset_password')));
   $fieldset->addElement($field);
 
   $form->addElement($fieldset);

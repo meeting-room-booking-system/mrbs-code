@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 
 // Extracts a VTIMEZONE component from a VCALENDAR.
-function extract_vtimezone($vcalendar)
+function extract_vtimezone(string $vcalendar) : string
 {
   // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
   // extract the VTIMEZONE component.
@@ -385,7 +385,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
           }
           else
           {
-            $result['relative'] = $byday_day;
+            $result['month_relative'] = $byday_day;
           }
         }
       }
