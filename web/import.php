@@ -12,7 +12,7 @@ use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
-use \ZipArchive;
+use ZipArchive;
 
 
 require "defaultincludes.inc";
