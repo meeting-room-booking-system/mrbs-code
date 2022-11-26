@@ -49,7 +49,7 @@ function generate_reset_request_form($result=null)
   $fieldset->addElement($field);
 
   $tag = ($can_reset_by_email) ? 'username_or_email' : 'user.name';
-  $placeholder = \MRBS\get_vocab($tag);
+  $placeholder = get_vocab($tag);
 
   $field = new FieldInputText();
   $field->setLabel(get_vocab('user'))
@@ -166,7 +166,7 @@ function generate_reset_form(array $usernames, $key, $error=null)
   for ($i=0; $i<2; $i++)
   {
     $field = new FieldInputPassword();
-    $field->setLabel(\MRBS\get_vocab('user.password'))
+    $field->setLabel(get_vocab('user.password'))
           ->setControlAttributes(array('id' => "password$i",
                                        'name' => "password$i",
                                        'autocomplete' => 'new-password'));
