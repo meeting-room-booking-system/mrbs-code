@@ -385,7 +385,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
           }
           else
           {
-            $result['relative'] = $byday_day;
+            $result['month_relative'] = $byday_day;
           }
         }
       }
