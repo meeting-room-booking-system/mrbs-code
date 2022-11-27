@@ -940,7 +940,7 @@ function create_icalendar($method, $components)
   $results = array();
   $results[] = "BEGIN:VCALENDAR";
   // Compulsory properties
-  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . " //EN";
+  $results[] = "PRODID:-//MRBS//NONSGML " . get_mrbs_version() . "//EN";
   $results[] = "VERSION:2.0";
   // Optional properties
   $results[] = "CALSCALE:GREGORIAN";

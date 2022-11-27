@@ -8,7 +8,7 @@ function get_mrbs_version() : string
 {
   // Read the actual version number from a much simpler file
   require_once MRBS_ROOT . '/version_num.inc';
-  
+
   global $git_command;
 
   $mrbs_version = "MRBS $mrbs_version_number";
