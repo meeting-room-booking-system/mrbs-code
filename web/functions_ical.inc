@@ -569,7 +569,7 @@ function ical_escape_text(string $str) : string
 
 
 // Reverses RFC 5545 escaping of text
-function ical_unescape_text($str)
+function ical_unescape_text(string $str) : string
 {
   // Unescape '\N'
   $str = str_replace("\\N", "\N", $str);
@@ -581,6 +581,7 @@ function ical_unescape_text($str)
   $str = str_replace("\;", ";", $str);
   // Unescape '\'
   $str = str_replace("\\\\", "\\", $str);
+
   return $str;
 }
 
