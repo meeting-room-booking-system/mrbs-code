@@ -284,15 +284,17 @@ function get_create_by($organizer)
 
 
 // Returns an MRBS rep_opt string given an array of RFC 5545 days
-function get_rep_opt($byday_days)
+function get_rep_opt(array $byday_days) : string
 {
   global $RFC_5545_days;
 
   $rep_opt = '';
+
   foreach ($RFC_5545_days as $day)
   {
     $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
   }
+
   return $rep_opt;
 }
 
@@ -419,7 +421,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
 }
 
 
-// "Folds" lines longer than 75 octets.  Multi-byte safe.
+// "Folds" lines longer than 75 octets. Multibyte safe.
 //
 // "Lines of text SHOULD NOT be longer than 75 octets, excluding the line
 // break.  Long content lines SHOULD be split into a multiple line
@@ -429,7 +431,7 @@ function get_repeat_details($rrule, $start_time, &$errors)
 // SPACE or HTAB).  Any sequence of CRLF followed immediately by a
 // single linear white-space character is ignored (i.e., removed) when
 // processing the content type."  (RFC 5545)
-function ical_fold($str)
+function ical_fold(string $str) : string
 {
   $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
 
@@ -498,14 +500,10 @@ function ical_fold($str)
 
 // Reverse the RFC 5545 folding process, which splits lines into groups
 // of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
-function ical_unfold($str)
+function ical_unfold(string $str) : string
 {
-  // Deal with the trivial cases
-  if (!isset($str))
-  {
-    return null;
-  }
-  if ($str == '')
+  // Deal with the trivial case
+  if ($str === '')
   {
     return $str;
   }
@@ -549,7 +547,7 @@ function ical_unfold($str)
 
 
 // Escape text for use in an iCalendar text value
-function ical_escape_text($str)
+function ical_escape_text(string $str) : string
 {
   // Escape '\'
   $str = str_replace("\\", "\\\\", $str);
@@ -563,12 +561,13 @@ function ical_escape_text($str)
   $str = str_replace("\n", "\\n", $str);
   // Escape '\N'
   $str = str_replace("\N", "\\N", $str);
+
   return $str;
 }
 
 
 // Reverses RFC 5545 escaping of text
-function ical_unescape_text($str)
+function ical_unescape_text(string $str) : string
 {
   // Unescape '\N'
   $str = str_replace("\\N", "\N", $str);
@@ -580,12 +579,13 @@ function ical_unescape_text($str)
   $str = str_replace("\;", ";", $str);
   // Unescape '\'
   $str = str_replace("\\\\", "\\", $str);
+
   return $str;
 }
 
 
 // Escape text for use in an iCalendar quoted string
-function ical_escape_quoted_string($str)
+function ical_escape_quoted_string(string $str) : string
 {
   // From RFC 5545:
   //    quoted-string = DQUOTE *QSAFE-CHAR DQUOTE
@@ -595,12 +595,11 @@ function ical_escape_quoted_string($str)
 
   // We'll just get rid of any double quotes, replacing them with a space.
   // (There is no way of escaping double quotes)
-  $str = str_replace('"', ' ', $str);
-  return $str;
+  return str_replace('"', ' ', $str);
 }
 
 
-function ical_unescape_quoted_string($str)
+function ical_unescape_quoted_string(string $str) : string
 {
   return trim($str, '"');
 }
