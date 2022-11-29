@@ -398,9 +398,9 @@ function get_repeat_details($rrule, $start_time, &$errors)
       break;
   }
 
-  if (isset($rules['interval']) && ($rules['interval'] > 1))
+  if (isset($rules['INTERVAL']) && ($rules['INTERVAL'] > 1))
   {
-    $result['rep_interval'] = $rules['interval'];
+    $result['rep_interval'] = $rules['INTERVAL'];
   }
   else
   {
