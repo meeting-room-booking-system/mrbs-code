@@ -587,7 +587,7 @@ function ical_unescape_text(string $str) : string
 
 
 // Escape text for use in an iCalendar quoted string
-function ical_escape_quoted_string($str)
+function ical_escape_quoted_string(string $str) : string
 {
   // From RFC 5545:
   //    quoted-string = DQUOTE *QSAFE-CHAR DQUOTE
@@ -602,7 +602,7 @@ function ical_escape_quoted_string($str)
 }
 
 
-function ical_unescape_quoted_string($str)
+function ical_unescape_quoted_string(string $str) : string
 {
   return trim($str, '"');
 }
