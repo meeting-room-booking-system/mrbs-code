@@ -500,14 +500,10 @@ function ical_fold(string $str) : string
 
 // Reverse the RFC 5545 folding process, which splits lines into groups
 // of max 75 octets separated by 'CRLFspace' or 'CRLFtab'
-function ical_unfold(?string $str) : ?string
+function ical_unfold(string $str) : string
 {
-  // Deal with the trivial cases
-  if (!isset($str))
-  {
-    return null;
-  }
-  if ($str == '')
+  // Deal with the trivial case
+  if ($str === '')
   {
     return $str;
   }
