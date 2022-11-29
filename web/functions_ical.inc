@@ -284,15 +284,17 @@ function get_create_by($organizer)
 
 
 // Returns an MRBS rep_opt string given an array of RFC 5545 days
-function get_rep_opt($byday_days)
+function get_rep_opt(array $byday_days) : string
 {
   global $RFC_5545_days;
 
   $rep_opt = '';
+  
   foreach ($RFC_5545_days as $day)
   {
     $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
   }
+
   return $rep_opt;
 }
 
