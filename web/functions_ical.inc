@@ -597,8 +597,7 @@ function ical_escape_quoted_string(string $str) : string
 
   // We'll just get rid of any double quotes, replacing them with a space.
   // (There is no way of escaping double quotes)
-  $str = str_replace('"', ' ', $str);
-  return $str;
+  return str_replace('"', ' ', $str);
 }
 
 
