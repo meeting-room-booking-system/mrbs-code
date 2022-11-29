@@ -10,20 +10,8 @@ function extract_vtimezone(string $vcalendar) : string
 {
   // The VTIMEZONE components are enclosed in a VCALENDAR, so we want to
   // extract the VTIMEZONE component.
-  $vtimezone = strstr($vcalendar, "BEGIN:VTIMEZONE");
-  // Would be simpler to use strstr() again, but the optional
-  // third parameter was only introduced in PHP 5.3.0
-  $pos = utf8_strpos($vtimezone, "END:VTIMEZONE");
-  if ($pos !== false)
-  {
-    $vtimezone = substr($vtimezone, 0, $pos);
-    if (!empty($vtimezone))
-    {
-      $vtimezone .= "END:VTIMEZONE";
-      return $vtimezone;
-    }
-  }
-  return '';  // There wasn't a VTIMEZONE component
+  preg_match('/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE/', $vcalendar, $matches);
+  return $matches[0] ?? '';
 }
 
 
