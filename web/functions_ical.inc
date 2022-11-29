@@ -549,7 +549,7 @@ function ical_unfold($str)
 
 
 // Escape text for use in an iCalendar text value
-function ical_escape_text($str)
+function ical_escape_text(string $str) : string
 {
   // Escape '\'
   $str = str_replace("\\", "\\\\", $str);
@@ -563,6 +563,7 @@ function ical_escape_text($str)
   $str = str_replace("\n", "\\n", $str);
   // Escape '\N'
   $str = str_replace("\N", "\\N", $str);
+
   return $str;
 }
 
