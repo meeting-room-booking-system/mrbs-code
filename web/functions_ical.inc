@@ -612,7 +612,7 @@ function ical_unescape_quoted_string(string $str) : string
 //
 // Returns an array of three elements (the second is the delimiter)
 // or just one element if the delimiter is not found
-function ical_split($string)
+function ical_split(string $string) : array
 {
   // We want to split the string up to the first delimiter which isn't inside a quoted
   // string.   So the look ahead must not contain exactly one double quote before the next
@@ -629,7 +629,7 @@ function ical_split($string)
 //   'name'       the property name
 //   'params'     an associative array of parameters indexed by parameter name
 //   'value'      the property value.  The value will have escaping reversed
-function parse_ical_property($line)
+function parse_ical_property(string $line) : array
 {
   $result = array();
   // First of all get the string up to the first colon or semicolon.   This will
@@ -659,7 +659,7 @@ function parse_ical_property($line)
 
 
 // Create an iCalendar Recurrence Rule
-function create_rrule($data)
+function create_rrule(array $data) : string
 {
   global $RFC_5545_days;
 
@@ -730,7 +730,7 @@ function create_rrule($data)
 
 // Create a comma separated list of dates for use with the EXDATE property.
 // The TZID parameter if used must be added separately
-function create_exdate_list($dates)
+function create_exdate_list(array $dates) : string
 {
   global $timezone;
 
@@ -754,7 +754,7 @@ function create_exdate_list($dates)
 
 
 // Create an RFC 5545 iCalendar Event component
-function create_ical_event($method, $data, $addresses=null, $series=false)
+function create_ical_event(string $method, array $data, ?array $addresses=null, bool $series=false) : string
 {
   require_once "functions_mail.inc";
 
