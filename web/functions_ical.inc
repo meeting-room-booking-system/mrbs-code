@@ -616,7 +616,7 @@ function ical_split($string)
 {
   // We want to split the string up to the first delimiter which isn't inside a quoted
   // string.   So the look ahead must not contain exactly one double quote before the next
-  // delimiter.   Note that (a) you cannot escape double quotes inside a quoted string, so we
+  // delimiter.   Note that (a) you cannot escape double quotes inside a quoted string, so
   // we don't have to worry about that complication (b) we assume there will always be a
   // second delimiter
   return preg_split('/([:;](?![^"]*"{1}[:;]))/', $string, 2, PREG_SPLIT_DELIM_CAPTURE);
