@@ -916,7 +916,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 // Creates an iCalendar object in RFC 5545 format
 //    $method      string   the RFC 5545 METHOD (eg "REQUEST", "PUBLISH", "CANCEL")
 //    $components  array    an array of iCalendar components, each a string
-function create_icalendar($method, $components)
+function create_icalendar(string $method, array $components) : string
 {
   require_once "version.inc";
 
