@@ -731,7 +731,7 @@ function create_addresses(array $data, string $action) : array
   if (isset($mrbs_user))
   {
     // Set the Reply-To address
-    if ($mail_settings['use_reply_to'])
+    if ($mail_settings['use_reply_to'] && !empty($mrbs_user->email))
     {
       $reply_to[] = $mrbs_user->mailbox();
     }
