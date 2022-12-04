@@ -1,17 +1,17 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\ElementInputHidden;
-use MRBS\Form\FieldInputCheckboxGroup;
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\FieldInputCheckbox;
+use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputFile;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\Form;
 use ReflectionClass;
 use ZipArchive;
 
@@ -986,7 +986,7 @@ $context = array(
   'month'     => $month,
   'day'       => $day,
   'area'      => $area,
-  'room'      => isset($room) ? $room : null
+  'room'      => $room ?? null
 );
 
 print_header($context);
