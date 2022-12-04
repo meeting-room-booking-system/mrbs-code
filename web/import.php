@@ -1,17 +1,18 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\ElementInputHidden;
-use MRBS\Form\FieldInputCheckboxGroup;
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputHidden;
 use MRBS\Form\FieldInputCheckbox;
+use MRBS\Form\FieldInputCheckboxGroup;
 use MRBS\Form\FieldInputFile;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputUrl;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\Form;
+use ReflectionClass;
 use ZipArchive;
 
 
@@ -547,7 +548,7 @@ function process_event(array $vevent)
 }
 
 
-function get_file_details_url($file) : array
+function get_file_details_url(string $file) : array
 {
   $files = array();
   list( , $tmp_name) = explode('://', $file, 2);
@@ -630,7 +631,7 @@ function get_file_details_zip($file) : array
       //
       // It's safe to use ReflectionClass (PHP 5) as we already know that
       // ZipArchive (PHP 5.2.0) exists
-      $reflection = new \ReflectionClass('ZipArchive');
+      $reflection = new ReflectionClass('ZipArchive');
       $constants = $reflection->getConstants();
       foreach ($constants as $key => $value)
       {
@@ -671,7 +672,7 @@ function get_file_details_zip($file) : array
 }
 
 
-function get_details($file)
+function get_details($file) : array
 {
   $result = array();
 
@@ -965,7 +966,7 @@ $context = array(
   'month'     => $month,
   'day'       => $day,
   'area'      => $area,
-  'room'      => isset($room) ? $room : null
+  'room'      => $room ?? null
 );
 
 print_header($context);
