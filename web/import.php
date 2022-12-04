@@ -549,7 +549,7 @@ function process_event(array $vevent)
 }
 
 
-function get_file_details_url($file) : array
+function get_file_details_url(string $file) : array
 {
   $files = array();
   list( , $tmp_name) = explode('://', $file, 2);
