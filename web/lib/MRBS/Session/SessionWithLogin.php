@@ -1,14 +1,14 @@
 <?php
 namespace MRBS\Session;
 
-use MRBS\Form\FieldDiv;
-use MRBS\Form\Form;
 use MRBS\Form\ElementA;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementP;
+use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
+use MRBS\Form\Form;
 use MRBS\User;
 use function MRBS\auth;
 use function MRBS\get_form_var;
@@ -29,6 +29,8 @@ abstract class SessionWithLogin extends Session
 
   public function __construct()
   {
+    parent::__construct();
+
     // Get non-standard form variables
     foreach (array('action', 'username', 'password', 'target_url', 'returl') as $var)
     {

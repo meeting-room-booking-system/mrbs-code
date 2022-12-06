@@ -25,11 +25,6 @@ if (!isset($auth['session']))
   }
 }
 
-// Start up sessions
-// Default to the behaviour of previous versions of MRBS, use only
-// session cookies - no persistent cookie.
-$lifetime = $auth['session_php']['session_expire_time'] ?? 0;
-session()->init($lifetime);
 
 if (method_exists(session(), 'processForm'))
 {
