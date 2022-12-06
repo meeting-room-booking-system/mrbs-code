@@ -24,6 +24,9 @@ abstract class Session
   }
 
 
+  // Normally there's no need to call init() from outside the Session classes.
+  // It only needs to be called to restart sessions, after for example a user
+  // has been logged off and you need to use $_SESSION.
   public function init(int $lifetime) : void
   {
     global $auth;
