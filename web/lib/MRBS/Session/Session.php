@@ -12,9 +12,27 @@ use function MRBS\get_cookie_path;
 abstract class Session
 {
 
+  public function __construct()
+  {
+    global $auth;
+
+    // Start up sessions
+    // Default to the behaviour of previous versions of MRBS, use only
+    // session cookies - no persistent cookie.
+    $lifetime = $auth['session_php']['session_expire_time'] ?? 0;
+    $this->init($lifetime);
+  }
+
+
   public function init(int $lifetime) : void
   {
     global $auth;
+
+    if (session_status() === PHP_SESSION_ACTIVE)
+    {
+      // We've already started sessions
+      return;
+    }
 
     // Set some session settings, as a defence against session fixation.
     ini_set('session.use_only_cookies', '1');
