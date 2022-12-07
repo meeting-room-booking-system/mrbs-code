@@ -578,6 +578,19 @@ $pdf_default_orientation = 'portrait';
 // Options: 'A3', 'A4', 'A5', 'LEGAL', 'LETTER' or 'TABLOID'
 $pdf_default_paper = 'A4';
 
+// Enable or disable state saving (eg pagination position, display length, filtering and sorting) for
+// data tables, eg the users table or report output.
+$state_save = true;
+
+// The validity duration of the saved state for data tables.
+// This option is also used to indicate to DataTables if localStorage or sessionStorage should be used
+// for storing the table's state. When set to -1 sessionStorage will be used, while for 0 or greater
+// localStorage will be used.  The difference between the two storage APIs is that sessionStorage retains
+// data only for the current session (i.e. the current browser window).  Please note that the value is
+// given in seconds. The value 0 is a special value as it indicates that the state can be stored and
+// retrieved indefinitely with no time limit.
+$state_duration = 0;
+
 // Whether to sort users by their last names or not
 $sort_users_by_last_name = false;
 
