@@ -165,7 +165,8 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     pagingType: 'full_numbers',
     processing: true,
     scrollCollapse: true,
-    stateSave: true,
+    stateSave: <?php echo (empty($state_save)) ? 'false' : 'true' ?>,
+    stateDuration: <?php echo $state_duration ?? 0 ?>,
     dom: 'B<"clear">lfrtip',
     scrollX: '100%',
     colReorder: {}
