@@ -759,7 +759,7 @@ function get_lang() : string
 }
 
 
-function get_bom($charset)
+function get_bom(string $charset) : string
 {
   switch(utf8_strtolower($charset))
   {
