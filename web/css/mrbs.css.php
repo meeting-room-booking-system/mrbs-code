@@ -2879,6 +2879,22 @@ div.eye {
 [data-kiosk] .minicalendars,
 [data-kiosk] nav.arrow,
 [data-kiosk] nav.view,
-[data-kiosk] .banner nav {
+[data-kiosk] .banner nav:not(.qr) {
   display: none;
 }
+
+nav.qr {
+  padding: 0.5rem 0;
+  margin-left: auto;
+}
+
+.qr-svg {
+  width: 4rem !important;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+
+

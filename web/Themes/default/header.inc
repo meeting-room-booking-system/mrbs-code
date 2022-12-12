@@ -1,10 +1,12 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use MRBS\Form\ElementInputDate;
 use MRBS\Form\ElementInputSearch;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\Form;
 
 
 function print_head($simple=false)
@@ -388,6 +390,8 @@ function print_logoff()
 // When $omit_login is true the Login link is omitted.
 function print_banner($context, $simple=false, $omit_login=false)
 {
+  global $kiosk_QR_code;
+
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
 
   $vars = array();
@@ -448,6 +452,23 @@ function print_banner($context, $simple=false, $omit_login=false)
     echo "</nav>\n";
 
     echo "</nav>\n";
+
+    // Add in a QR code for kiosk mode
+    // (The QR code library requires PHP 7.4 or greater)
+    if (isset($context['kiosk']) &&
+        $kiosk_QR_code &&
+        (version_compare(PHP_VERSION, 7.4) >= 0))
+    {
+      echo "<nav class='qr'>\n";
+      $options = new QROptions([
+        'outputType'  => QRCode::OUTPUT_MARKUP_SVG,
+        'imageBase64' => false,
+      ]);
+      $qrcode = new QRCode($options);
+      $url = url_base() . "/index.php?$query";
+      echo $qrcode->render($url);
+      echo "</nav>\n";
+    }
   }
 
   echo "</header>\n";

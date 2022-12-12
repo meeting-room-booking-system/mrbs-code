@@ -455,6 +455,10 @@ $kiosk_mode_enabled = false;
 // Default mode for kiosk mode.  Can be 'room' or 'area'.
 $kiosk_default_mode = 'room';
 
+// Whether to show a QR code in kiosk mode
+// Note that PHP 7.4 or greater is required for a QR code
+$kiosk_QR_code = true;
+
 // Entries in monthly view can be shown as start/end slot, brief description or
 // both. Set to "description" for brief description, "slot" for time slot and
 // "both" for both. Default is "both", but 6 entries per day are shown instead
