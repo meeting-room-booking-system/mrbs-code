@@ -6,6 +6,7 @@ use MRBS\SessionHandlerDb;
 use MRBS\SessionHandlerDbException;
 use MRBS\User;
 use SessionHandler;
+use function MRBS\db;
 use function MRBS\db_schema_version;
 use function MRBS\get_cookie_path;
 
@@ -60,8 +61,15 @@ abstract class Session
 
     try
     {
-      $handler = new SessionHandlerDb();
-      session_set_save_handler($handler, true);
+      // The DB session handler uses locks and because we use locks elsewhere
+      // this means we need support for multiple locks.  We need to test now,
+      // rather than catching an exception, because resetting the session
+      // handler will reset the session id causing us to lose session data.
+      if (db()->supportsMultipleLocks())
+      {
+        $handler = new SessionHandlerDb();
+        session_set_save_handler($handler, true);
+      }
       $session_started = session_start();
     }
     catch(SessionHandlerDbException $e)
