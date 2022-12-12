@@ -2889,7 +2889,7 @@ nav.qr {
 }
 
 .qr-svg {
-  width: 4rem !important;
+  width: 5rem !important;
   position: relative;
   top: 50%;
   -ms-transform: translateY(-50%);
