@@ -1,9 +1,9 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "functions_table.inc";
@@ -67,6 +67,7 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
                                  'name'       => 'area',
+                                 'disabled'   => is_kiosk_mode(),
                                  'aria-label' => get_vocab('select_area'),
                                  'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($areas, $current, true);
@@ -133,6 +134,7 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
     $select = new ElementSelect();
     $select->setAttributes(array('class'      => 'room_area_select',
                                  'name'       => 'room',
+                                 'disabled'   => is_kiosk_mode(),
                                  'aria-label' => get_vocab('select_room'),
                                  'onchange'   => 'this.form.submit()'))
            ->addSelectOptions($options, $current, true);
