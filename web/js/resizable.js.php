@@ -1433,30 +1433,6 @@ $(document).on('page_ready', function() {
           })
         .first().trigger('mouseenter');
 
-    <?php
-    // In kiosk mode intercept all mouse and keyboard events as (a) we don't want to
-    // allow links to be clicked and (b) that's the way a user exits kiosk mode
-    ?>
-    if (args.kiosk)
-    {
-      $(window).on('click keypress', function(e) {
-        if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
-        {
-          var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
-          href += '&area=' + encodeURIComponent(args.area);
-          href += '&room=' + encodeURIComponent(args.room);
-          if (args.site)
-          {
-            href += '&site=' + encodeURIComponent(args.site);
-          }
-          //window.location.href = href;
-          $.redirect(href, {'csrf_token': getCSRFToken()});
-        }
-        e.preventDefault();
-        return false;
-      });
-    }
-
     }).trigger('tableload');
 
   $(window).on('resize', throttle(function(event) {
