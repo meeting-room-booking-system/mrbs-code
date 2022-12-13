@@ -465,7 +465,7 @@ function print_banner($context, $simple=false, $omit_login=false)
         'imageBase64' => false,
       ]);
       $qrcode = new QRCode($options);
-      $url = url_base() . "/index.php?$query";
+      $url = multisite(url_base() . "/index.php?$query");
       echo $qrcode->render($url);
       echo "</nav>\n";
     }
