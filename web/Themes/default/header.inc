@@ -459,13 +459,13 @@ function print_banner($context, $simple=false, $omit_login=false)
         $kiosk_QR_code &&
         (version_compare(PHP_VERSION, 7.4) >= 0))
     {
-      echo "<nav class='qr'>\n";
+      $url = multisite(url_base() . "/index.php?$query");
+      echo '<nav class="qr" title="' . htmlspecialchars($url) . "\">\n";
       $options = new QROptions([
         'outputType'  => QRCode::OUTPUT_MARKUP_SVG,
         'imageBase64' => false,
       ]);
       $qrcode = new QRCode($options);
-      $url = multisite(url_base() . "/index.php?$query");
       echo $qrcode->render($url);
       echo "</nav>\n";
     }
