@@ -80,7 +80,7 @@ function print_enter_form() : void
 
   $form->setAttributes(array(
       'class'   => 'standard',
-      'id'      => 'kiosk',
+      'id'      => 'kiosk_enter',  // This id is used by the Javascript
       'action'  => multisite(this_page()),
       'method'  => 'post')
     );
@@ -155,7 +155,7 @@ function print_exit_form() : void
 
   $form->setAttributes(array(
       'class'   => 'standard',
-      'id'      => 'kiosk',
+      'id'      => 'kiosk_exit',  // This id is used by the Javascript
       'action'  => multisite(this_page()),
       'method'  => 'post')
   );
