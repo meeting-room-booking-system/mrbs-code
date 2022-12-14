@@ -41,6 +41,8 @@ var refreshPage = function refreshPage() {
         (args.kiosk || !isMeteredConnection()) &&
         !refreshPage.disabled)
     {
+      var url = 'index.php';
+
       var data = {
         refresh: 1,
         view: args.view,
@@ -53,11 +55,6 @@ var refreshPage = function refreshPage() {
       if (args.timetohighlight !== undefined)
       {
         data.timetohighlight = args.timetohighlight;
-      }
-
-      if (args.kiosk !== undefined)
-      {
-        data.kiosk = args.kiosk;
       }
 
       <?php
@@ -77,8 +74,16 @@ var refreshPage = function refreshPage() {
         data.site = args.site;
       }
 
+      // If we're in kiosk mode add the kiosk parameter in the query string rather than as a POST
+      // parameter to avoid an unnecessary redirection by the server (the server checks for a kiosk
+      // in the query string and, if not found, will redirect to the kiosk URL).
+      if (args.kiosk !== undefined)
+      {
+        url += '?kiosk=' + args.kiosk;
+      }
+
       return $.post(
-          'index.php',
+           url,
            data,
            function(result){
                <?php
