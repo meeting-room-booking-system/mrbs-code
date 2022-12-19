@@ -869,7 +869,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
     $keys = array('to', 'cc');  // We won't do 'bcc' as they need to stay blind
     foreach ($keys as $key)
     {
-      $attendees[$key] = explode(',', $attendees[$key]);  // convert the list into an array
+      $attendees[$key] = PHPMailer::parseAddresses($attendees[$key], true, get_mail_charset());  // convert the list into an array
     }
     foreach ($keys as $key)
     {
@@ -896,7 +896,6 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
               break;
           }
           // Use the common name if there is one
-          $attendee = PHPMailer::parseAddresses($attendee, true, get_mail_charset())[0];
           $partstat = ($partstat_accepted) ? "ACCEPTED" : "NEEDS-ACTION";
           $results[] = "ATTENDEE;" .
                        ((isset($attendee['name']) && ($attendee['name'] !== '')) ? "CN=\"" . ical_escape_quoted_string($attendee['name']) . "\";" : "") .
