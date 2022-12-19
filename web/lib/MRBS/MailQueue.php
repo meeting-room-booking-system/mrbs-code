@@ -144,16 +144,6 @@ class MailQueue
 
     $eol = "\n";  // EOL sequence to use in mail headers.  Need "\n" for mail backend
 
-    // for cases where the mail server refuses
-    // to send emails with cc or bcc set, put the cc
-    // addresses on the to line
-    if (!empty($addresses['cc']) && $mail_settings['treat_cc_as_to'])
-    {
-      $recipients_array = array_merge(explode(',', $addresses['to']),
-        explode(',', $addresses['cc']));
-      $addresses['to'] = get_address_list($recipients_array);
-      $addresses['cc'] = NULL;
-    }
     if (empty($addresses['from']))
     {
       if (isset($mail_settings['from']))
@@ -248,7 +238,16 @@ class MailQueue
       $cc_addresses = PHPMailer::parseAddresses($addresses['cc'], true, get_mail_charset());
       foreach ($cc_addresses as $cc_address)
       {
-        $mail->addCC($cc_address['address'], $cc_address['name']);
+        // for cases where the mail server refuses to send emails with cc set, put the cc addresses on the to line
+        if ($mail_settings['treat_cc_as_to'])
+        {
+          $mail->addAddress($cc_address['address'], $cc_address['name']);
+        }
+        // otherwise treat them normally, adding them to the cc line
+        else
+        {
+          $mail->addCC($cc_address['address'], $cc_address['name']);
+        }
       }
     }
 
