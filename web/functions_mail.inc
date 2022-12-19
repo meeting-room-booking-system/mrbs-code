@@ -159,12 +159,7 @@ function getMailDateString($time)
 // list of addresses with duplicates removed.
 function get_address_list($array)
 {
-  // Turn the array into a comma separated string
-  $string = implode(',', $array);
-  // Now turn it back into an array.   This is necessary because some elements
-  // of the original array may themselves have been comma separated strings.
-  $array = explode(',', $string);
-  // remove any leading and trailing whitespace and any empty strings
+  // Remove any leading and trailing whitespace and any empty strings
   $trimmed_array = array();
   for ($i=0; $i < count($array); $i++)
   {
@@ -724,8 +719,10 @@ function create_addresses(array $data, string $action) : array
   $to = array();
   $cc = array();
 
-  $cc[] = $mail_settings['cc'];
-
+  if (!empty($mail_settings['cc']))
+  {
+    $cc = array_merge($cc, explode(',', $mail_settings['cc']));
+  }
 
   $mrbs_user = session()->getCurrentUser();
   if (isset($mrbs_user))
@@ -742,10 +739,12 @@ function create_addresses(array $data, string $action) : array
     // use it in a reply.
     if (in_array($action, array('more_info', 'remind')))
     {
-      if ($mail_settings['use_from_for_all_mail']) {
+      if ($mail_settings['use_from_for_all_mail'])
+      {
         $cc[] = $mrbs_user->mailbox();
       }
-      else {
+      else
+      {
         $from = $mrbs_user->mailbox();
       }
     }
@@ -762,12 +761,16 @@ function create_addresses(array $data, string $action) : array
       $approval_enabled &&
       !is_book_admin($data['room_id']))
   {
-    $to[] = get_approvers_email($data['room_id']);
+    $email = get_approvers_email($data['room_id']);
+    if (!empty($email))
+    {
+      $to = array_merge($to, explode(',', $email));
+    }
   }
 
-  if ($mail_settings['admin_on_bookings'])
+  if ($mail_settings['admin_on_bookings'] && !empty($mail_settings['recipients']))
   {
-    $to[] = $mail_settings['recipients'];
+    $to = array_merge($to, explode(',', $mail_settings['recipients']));
   }
 
   if ($mail_settings['area_admin_on_bookings'])
@@ -776,14 +779,14 @@ function create_addresses(array $data, string $action) : array
     if (empty($data['area_admin_email']))
     {
       $email = get_area_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
-      if (!empty($email))
-      {
-        $to[] = $email;
-      }
     }
     else
     {
-      $to[] = $data['area_admin_email'];
+      $email = $data['area_admin_email'];
+    }
+    if (!empty($email))
+    {
+      $to = array_merge($to, explode(',', $email));
     }
   }
 
@@ -793,14 +796,14 @@ function create_addresses(array $data, string $action) : array
     if (empty($data['room_admin_email']))
     {
       $email = get_room_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
-      if (!empty($email))
-      {
-        $to[] = $email;
-      }
     }
     else
     {
-      $to[] = $data['room_admin_email'];
+      $email = $data['room_admin_email'];
+    }
+    if (!empty($email))
+    {
+      $to = array_merge($to, explode(',', $email));
     }
   }
 
