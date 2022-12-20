@@ -702,6 +702,27 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   return $body;
 }
 
+
+// Merges a comma separated string of addresses (could be a single address) into
+// an array of addresses
+// TODO: simplify all address handling
+function address_merge(array $addresses, string $address_string) : array
+{
+  $result = $addresses;
+
+  $new_addresses = PHPMailer::parseAddresses($address_string, true, get_mail_charset());
+  $mailer = new PHPMailer();
+  $mailer->CharSet = get_mail_charset();
+
+  foreach ($new_addresses as $new_address)
+  {
+    $result[] = $mailer->addrFormat(array($new_address['address'], $new_address['name']));
+  }
+
+  return $result;
+}
+
+
 // create_addresses($data, $action)
 //
 // Returns an array indexed by 'from', 'reply_to', 'to' and 'cc' with each element
@@ -721,7 +742,7 @@ function create_addresses(array $data, string $action) : array
 
   if (!empty($mail_settings['cc']))
   {
-    $cc = array_merge($cc, explode(',', $mail_settings['cc']));
+    $cc = address_merge($cc, $mail_settings['cc']);
   }
 
   $mrbs_user = session()->getCurrentUser();
@@ -764,13 +785,13 @@ function create_addresses(array $data, string $action) : array
     $email = get_approvers_email($data['room_id']);
     if (!empty($email))
     {
-      $to = array_merge($to, explode(',', $email));
+      $to = address_merge($to, $email);
     }
   }
 
   if ($mail_settings['admin_on_bookings'] && !empty($mail_settings['recipients']))
   {
-    $to = array_merge($to, explode(',', $mail_settings['recipients']));
+    $to = address_merge($to, $mail_settings['recipients']);
   }
 
   if ($mail_settings['area_admin_on_bookings'])
@@ -786,7 +807,7 @@ function create_addresses(array $data, string $action) : array
     }
     if (!empty($email))
     {
-      $to = array_merge($to, explode(',', $email));
+      $to = address_merge($to, $email);
     }
   }
 
@@ -803,7 +824,7 @@ function create_addresses(array $data, string $action) : array
     }
     if (!empty($email))
     {
-      $to = array_merge($to, explode(',', $email));
+      $to = address_merge($to, $email);
     }
   }
 
