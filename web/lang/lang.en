@@ -547,7 +547,7 @@ $vocab["disabled_room_note"]      = "If this room is disabled, it will not appea
 $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are rounded down to the nearest whole day.";
 $vocab["invalid_types"]           = "Invalid types";
 $vocab["invalid_types_note"]      = "These are types that are not allowed to be used in this room.";
-
+$vocab["select_note"]             = "Use CTRL and click to select/deselect an option";
 
 // Used in edit_users.php
 $vocab["name_empty"]          = "You must enter a name.";
