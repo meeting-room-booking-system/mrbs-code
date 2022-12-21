@@ -1,18 +1,18 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
-use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputCheckbox;
-use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldTextarea;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -67,7 +67,7 @@ function get_custom_fields(Room $room)
   global $standard_fields, $text_input_max;
 
   // TODO: have a common way of generating custom fields for all tables
-  
+
   $result = array();
   $disabled = !is_admin();
 

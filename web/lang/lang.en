@@ -586,7 +586,7 @@ $vocab["book_ahead_note_periods"] = "When using periods, book ahead times are ro
                                     " start at the time shown below.";
 $vocab["invalid_types"]           = "Invalid types";
 $vocab["invalid_types_note"]      = "These are types that are not allowed to be used in this room.";
-
+$vocab["select_note"]             = "Use CTRL and click to select/deselect an option";
 
 // Used in edit_user.php
 $vocab["name_empty"]              = "You must enter a name.";
