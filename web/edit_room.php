@@ -225,13 +225,14 @@ function get_fieldset_general(Room $room)
   {
     $field = new FieldSelect();
     $field->setAttribute('class', 'multiline')
-      ->setLabel(get_vocab('invalid_types'))
-      ->setLabelAttribute('title', get_vocab('invalid_types_note'))
-      ->setControlAttributes(array(
-          'name' => 'invalid_types[]',
-          'multiple' => true)
-      )
-      ->addSelectOptions($type_options, $room->invalid_types, true);
+          ->setLabel(get_vocab('invalid_types'))
+          ->setLabelAttribute('title', get_vocab('invalid_types_note'))
+          ->setControlAttributes(array(
+              'name'      => 'invalid_types[]',
+              'title'     => get_vocab('select_note'),
+              'multiple'  => true)
+            )
+          ->addSelectOptions($type_options, $room->invalid_types, true);
     $fieldset->addElement($field);
   }
 
