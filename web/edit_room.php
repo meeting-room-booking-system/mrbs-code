@@ -1,18 +1,18 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
-use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementFieldset;
+use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
 use MRBS\Form\FieldInputCheckbox;
-use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
+use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldTextarea;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 require_once "mrbs_sql.inc";
@@ -67,7 +67,7 @@ function get_custom_fields($data)
   global $standard_fields, $text_input_max;
 
   // TODO: have a common way of generating custom fields for all tables
-  
+
   $result = array();
   $disabled = !is_admin();
 
@@ -225,13 +225,14 @@ function get_fieldset_general($data)
   {
     $field = new FieldSelect();
     $field->setAttribute('class', 'multiline')
-      ->setLabel(get_vocab('invalid_types'))
-      ->setLabelAttribute('title', get_vocab('invalid_types_note'))
-      ->setControlAttributes(array(
-          'name' => 'invalid_types[]',
-          'multiple' => true)
-        )
-      ->addSelectOptions($type_options, $data['invalid_types'], true);
+          ->setLabel(get_vocab('invalid_types'))
+          ->setLabelAttribute('title', get_vocab('invalid_types_note'))
+          ->setControlAttributes(array(
+              'name'      => 'invalid_types[]',
+              'title'     => get_vocab('select_note'),
+              'multiple'  => true)
+            )
+          ->addSelectOptions($type_options, $data['invalid_types'], true);
     $fieldset->addElement($field);
   }
 
