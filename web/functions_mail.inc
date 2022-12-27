@@ -288,7 +288,7 @@ function create_body_table_row(string $label, string $new, string $old='', bool 
 //
 //   $dates      an array of start times
 //   $as_html    (boolean) whether the list should be HTML or plain text
-function create_date_list(array $dates, $as_html)
+function create_date_list(array $dates, bool $as_html) : string
 {
   $result = ($as_html) ? '<ul>' . MAIL_EOL : '';
   foreach ($dates as $date)
@@ -309,7 +309,7 @@ function create_date_list(array $dates, $as_html)
 // Generate a list of repeat dates for a series
 //
 // $reps is an array of start_times that have been created/modified/deleted.
-function create_repeat_list($data, $action, $as_html, array $reps)
+function create_repeat_list($data, $action, bool $as_html, array $reps)
 {
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
