@@ -1058,7 +1058,7 @@ function notifyAdminOnDelete($data, $start_times, bool $series=false, string $ac
 }
 
 
-function debug_output($message)
+function debug_output(string $message) : void
 {
   global $mail_settings;
 
@@ -1080,7 +1080,7 @@ function debug_output($message)
 }
 
 
-function mail_debug($message)
+function mail_debug(string $message) : void
 {
   global $mail_settings;
 
