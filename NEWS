@@ -7,6 +7,202 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.0 (Tue 27th December 2022):
+
+[-] Fixed bug when $auth['db_ext']['column_name_level'] is not set.  See SF Support Requests #2470.
+
+[*] PHP 8.2 compatibility fixes.
+
+[*] Cached the results of getUser() for all auth types to improve performance.
+
+[-] Fixed bug in display of report table when there are no bookings that have registration enabled.
+
+[*] Added the name, if different, of the person who registered someone in the list of registrants in reports.
+
+[*] Added a configuration variable to determine whether or not to include in reports the name of the person
+ making the registration.
+
+[+] Added support for custom integer fields in the users table.
+
+[*] Improved performance of db_ext authentication type.
+
+[-] Fixed bug causing registration opening and closing times not to account for DST transitions properly.
+
+[-] Fixed bug causing end_date not to be restored on the booking form after a conflict on a multi-day booking.
+
+[-] Fixed bug causing end_date not to be restored on the booking form after a conflict on a multi-day booking
+ - for existing bookings
+
+[*] Made the Wix backend limit a configuration setting.
+
+[*] Made the Wix display name property a configuration variable.
+
+[-] Fixed bug causing a textarea to appear instead of a select or datalist element when the column length
+ exceeds $text_input_max.
+
+[-] Fixed problem with positioning of the eye icon on the password reset page.
+
+[-] Fixed bug when Wix can't find a username.
+
+[*] Allowed for a more appropriate login placeholder for those authentication types that only validate by email address.
+
+[*] Made the $faqfilelang config setting more intuitive, whilst maintaining backwards compatability.  See SF Bugs #517.
+
+[*] Wix authentication: switched to using badges instead of custom fields to determine MRBS admins as custom fields can
+ be edited by members themselves in their profile.
+
+[*] A lot of code simplification/tidying/improvement.
+
+[*] Improved performance of Search and Report when working with external authentication types.
+
+[*] Switched to using a config variable for determining whether to get display names all at once.
+
+[*] Improved performance of calendar views when using registration and a remote authentication type.
+
+[*] Improved performance of view_entry.php when using registration and a remote authentication type.
+
+[-] Fixed bug causing incorrect registration opening and closing times to be used when generating a
+ series with conflicts and the "Skip past conflicts" box is not checked.
+
+[*] Made DataTables respect the sort order defined on the report form.  See SF Support Requests #2498.
+
+[*] Added config settings for the default values of the Sort by and Sum by fields on the Report page.
+
+[*] Made the value of the PARTSTAT property in iCal notifications a config setting.  See SF Support Requests #2503.
+
+[*] Added a class ("weekend") to weekend header cells so that a style can be applied. See SF Support Requests #2504.
+
+[-] Fixed bug causing checkmarks not to show up in Excel exports from the users table.
+
+[*] Added class of 'mrbs-weekend' to flatpickr weekend days.  See SF Support Requests 2507.
+
+[-] Fixed bug in import.php when $booking_types is unset.  See SF Bugs #519.
+
+[*] Upgraded to PHPMailer Version 6.7.1.
+
+[-] Fixed problem with username.  See SF Bugs #518.
+
+[*] Updated Spanish translation.  Thanks to Andres Sierra.
+
+[-] Fixed bug when using a custom field of type DECIMAL and no form value is input.
+
+[*] Improved performance of curl requests by using compression if possible.
+
+[-] Fixed bug resulting in users sometimes not being able to register even though registration was open.
+
+[*] Improved internationalisation.
+
+[+] Added email obfuscation.
+
+[*] Added email links (when sensible) for Created By and Modified By on the view_entry page.  See
+ SF Support Requests #2545.
+
+[*] Update jQuery UI to v 1.13.2.
+
+[-] Fixed bug causing MRBS to return to the wrong view after making a booking.  See SF Support Requests #2552.
+
+[-] Fixed bug causing registration settings to be lost on resizing.
+
+[*] Added error handling to Ajax post requests on resizing a booking.  See SF Bugs #524.
+
+[-] Fixed bug resulting in an uncaught exception (database integrity constraint violation) if you try and
+ rename a room to a room that already exists but is in a different case.  That was because the test to check
+ if the name is in use was case sensitive, whereas the database collation was case insensitive.
+
+[+] Added the option to include registrants' usernames in reports.
+
+[+] Added the ability to configure placeholders for text fields in the edit_entry form.  See GitHub Issue #41.
+
+[-] Fixed problem with case insensitive admin name checking when using non-ANSI characters, eg "Ändra"
+ and "ändra".  See also GitHub Issues #44.
+
+[*] Converted to using locale aware version of strcasecmp().
+
+[*] Updated the instructions for creating the config file.  See SF Support Requests #2568.
+
+[-] Fixed fatal error on systems where PHP_INT_MAX is greater than the maximum value allowed by the database
+ column type.
+
+[-] Fixed potential bug.  See GitHub Issues #47.
+
+[-] Fixed problem when comparing certain strings in some locales.  See GitHub Issues #46.
+
+[*] Improved error handling.  See GitHub Issues #50.
+
+[+] Added an option for ordinary users to be able to create registration bookings.
+
+[*] Removed redundant code now that the minimum PHP version is 7.2.0.
+
+[*] Improved error handling in the case of invalid dates.
+
+[-] Fix for the issue identified in GitHub Pull Request #54.
+
+[*] Added highlight of current period on mini calendar.
+
+[*] Stored the last page as a session variable so that it can be used instead of $_SERVER['HTTP_REFERER']
+ when the Referrer-Policy is set to strict-origin.  See GitHub Issue #57.
+
+[*] Changed the implementation of mutex_lock() in DB_pgsql.php to use PostgreSQL advisory locks,
+ avoiding the more heavy-handed table locks that were used previously and more closely matching the
+ DB_mysql.php implementation.
+
+[*] Improved identification of version for MySQL databases.
+
+[+] Added check for minimum versions of MySQL/MariaDB.
+
+[-] Fixed bug preventing sessions from working when using certain versions of PHP. 
+ See https://github.com/php/php-src/issues/9668.
+
+[*] Truncated lock names in MySQL as since MYSQL 5.7.5 they are restricted to 64 characters.
+
+[-] Fixed bug when authenticating against Joomla! Version 3.
+
+[*] Changed the way that the session.gc_maxlifetime variable is set so that it now respects an
+ existing setting if that is greater than $auth["session_php"]["session_expire_time"].
+
+[*] Added the user's email address as a Reply-To address by default.  This can be disabled by
+ a config setting to bring the behaviour back to how it used to be.  See SF Support Requests #2621.
+
+[*] Upgraded to jQuery 3.6.1.
+
+[-] Fixed bug resulting in "Invalid page_date yyyy-mm-dd to yyyy-nn-ee" message when a user clicks
+ on multiple dates in the mini-calendars in succession on a slow server.
+
+[*] Added a CSS class for weekend days.
+
+[+] Added support for defining holidays.
+
+[+] Added the ability to prevent bookings at weekends.
+
+[*] Added French translations.  Thanks to Philippe.
+
+[*] Added support for database driver options.  See SF Support Requests #2634.
+
+[-] Fixed occasional incorrect determination of cookie path.
+
+[-] Fixed bug when using CAS authentication.
+
+[*] Upgraded to phpCAS 1.6.0.  See SF Bugs #532.
+
+[*] Updated german translations, thanks to Fabian Ascheberg.
+
+[*] Added the ability to define paper size and page orientation for Excel output.
+
+[-] Fixed when importing events with a relative monthly repeat (eg "every third Tuesday").
+
+[-] Fixed bug when importing a series with INTERVAL > 1.  See SF Support Requests #2656.
+
+[*] Made the DataTables stateSave and stateDuration options configurable and changed the
+ default for stateDuration from 7200 seconds to 0 (ie indefinite).
+
+[*] Updated licence info.
+
+[*] Added a tooltip explaining how to deselect an option.  See GitHub Issues #61.
+
+[*] Made use of Control-Click terminology consistent.
+
+
+-------------------------------------------------------------------------------
 Version 1.10.0 (Mon 29th November 2021):
 
 [*] Updated minimum PHP version to 7.2.
