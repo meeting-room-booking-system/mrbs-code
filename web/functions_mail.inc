@@ -157,7 +157,7 @@ function getMailDateString($time)
 //
 // Takes an array of email addresses and returns a comma separated
 // list of addresses with duplicates removed.
-function get_address_list($address_strings)
+function get_address_list(array $address_strings) : string
 {
   // Remove any leading and trailing whitespace and any empty strings
   $trimmed_array = array();
