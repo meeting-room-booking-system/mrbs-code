@@ -157,30 +157,29 @@ function getMailDateString($time)
 //
 // Takes an array of email addresses and returns a comma separated
 // list of addresses with duplicates removed.
-function get_address_list($array)
+function get_address_list($address_strings)
 {
   // Remove any leading and trailing whitespace and any empty strings
   $trimmed_array = array();
-  for ($i=0; $i < count($array); $i++)
+  foreach ($address_strings as $address_string)
   {
-    $array[$i] = trim($array[$i]);
-    if ($array[$i] !== '')
+    $address_string = trim($address_string);
+    if ($address_string !== '')
     {
       // Use parseAddresses() to validate the address because it could contain a display name
-      if (count(PHPMailer::parseAddresses($array[$i], true, get_mail_charset())) == 0)
+      if (count(PHPMailer::parseAddresses($address_string, true, get_mail_charset())) == 0)
       {
-        $message = 'Invalid email address "' . $array[$i] . '"';
+        $message = 'Invalid email address "' . $address_string . '"';
         mail_debug($message);
         trigger_error($message, E_USER_NOTICE);
       }
-      $trimmed_array[] = $array[$i];
+      $trimmed_array[] = $address_string;
     }
   }
   // remove duplicates
   $trimmed_array = array_unique($trimmed_array);
   // re-assemble the string
-  $string = implode(',', $trimmed_array);
-  return $string;
+  return implode(',', $trimmed_array);
 }
 
 
