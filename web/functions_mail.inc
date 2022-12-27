@@ -753,7 +753,7 @@ function create_addresses(array $data, string $action) : array
     {
       $reply_to[] = $mrbs_user->mailbox();
     }
-    // Set the From address.  If this is a reminder email or a request for more info
+    // Set the From address.  If this is a reminder email or a request for more info,
     // then set the From address to be the user's - unless we've configured MRBS not
     // to do this (to avoid the email being rejected as spam), in which case we'll
     // put the user's address on the Cc line, which will enable the recipient to
