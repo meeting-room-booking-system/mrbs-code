@@ -982,7 +982,7 @@ function notifyAdminOnBooking(array $data, array $mail_previous, bool $new_entry
  * @param   string  $action    the booking action (eg 'delete', 'more_info', etc.)
  * @param   string  $note      a note that is used with 'reject'
  */
-function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete', ?string $note=null)
+function notifyAdminOnDelete($data, $start_times, bool $series=false, string $action='delete', ?string $note=null)
 {
   global $mail_settings, $enable_periods;
   global $mrbs_company;
@@ -1058,7 +1058,7 @@ function notifyAdminOnDelete($data, $start_times, $series=false, $action='delete
 }
 
 
-function debug_output($message)
+function debug_output(string $message) : void
 {
   global $mail_settings;
 
@@ -1080,7 +1080,7 @@ function debug_output($message)
 }
 
 
-function mail_debug($message)
+function mail_debug(string $message) : void
 {
   global $mail_settings;
 
