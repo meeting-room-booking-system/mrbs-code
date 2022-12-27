@@ -157,30 +157,29 @@ function getMailDateString($time)
 //
 // Takes an array of email addresses and returns a comma separated
 // list of addresses with duplicates removed.
-function get_address_list($array)
+function get_address_list(array $address_strings) : string
 {
   // Remove any leading and trailing whitespace and any empty strings
   $trimmed_array = array();
-  for ($i=0; $i < count($array); $i++)
+  foreach ($address_strings as $address_string)
   {
-    $array[$i] = trim($array[$i]);
-    if ($array[$i] !== '')
+    $address_string = trim($address_string);
+    if ($address_string !== '')
     {
       // Use parseAddresses() to validate the address because it could contain a display name
-      if (count(PHPMailer::parseAddresses($array[$i], true, get_mail_charset())) == 0)
+      if (count(PHPMailer::parseAddresses($address_string, true, get_mail_charset())) == 0)
       {
-        $message = 'Invalid email address "' . $array[$i] . '"';
+        $message = 'Invalid email address "' . $address_string . '"';
         mail_debug($message);
         trigger_error($message, E_USER_NOTICE);
       }
-      $trimmed_array[] = $array[$i];
+      $trimmed_array[] = $address_string;
     }
   }
   // remove duplicates
   $trimmed_array = array_unique($trimmed_array);
   // re-assemble the string
-  $string = implode(',', $trimmed_array);
-  return $string;
+  return implode(',', $trimmed_array);
 }
 
 
@@ -289,7 +288,7 @@ function create_body_table_row(string $label, string $new, string $old='', bool 
 //
 //   $dates      an array of start times
 //   $as_html    (boolean) whether the list should be HTML or plain text
-function create_date_list(array $dates, $as_html)
+function create_date_list(array $dates, bool $as_html) : string
 {
   $result = ($as_html) ? '<ul>' . MAIL_EOL : '';
   foreach ($dates as $date)
@@ -310,7 +309,7 @@ function create_date_list(array $dates, $as_html)
 // Generate a list of repeat dates for a series
 //
 // $reps is an array of start_times that have been created/modified/deleted.
-function create_repeat_list($data, $action, $as_html, array $reps)
+function create_repeat_list(array $data, $action, bool $as_html, array $reps) : string
 {
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
@@ -753,7 +752,7 @@ function create_addresses(array $data, string $action) : array
     {
       $reply_to[] = $mrbs_user->mailbox();
     }
-    // Set the From address.  If this is a reminder email or a request for more info
+    // Set the From address.  If this is a reminder email or a request for more info,
     // then set the From address to be the user's - unless we've configured MRBS not
     // to do this (to avoid the email being rejected as spam), in which case we'll
     // put the user's address on the Cc line, which will enable the recipient to
