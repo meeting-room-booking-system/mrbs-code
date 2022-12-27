@@ -17,7 +17,7 @@ require_once "functions_mail.inc";
 
 // Get non-standard form variables
 $id = get_form_var('id', 'int', null, INPUT_POST);
-$series = get_form_var('series', 'int', null, INPUT_POST);
+$series = get_form_var('series', 'bool', null, INPUT_POST);
 $returl = get_form_var('returl', 'string', null, INPUT_POST);
 $action = get_form_var('action', 'string', null, INPUT_POST);
 $note = get_form_var('note', 'string', '', INPUT_POST);
