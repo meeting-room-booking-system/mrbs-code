@@ -309,7 +309,7 @@ function create_date_list(array $dates, bool $as_html) : string
 // Generate a list of repeat dates for a series
 //
 // $reps is an array of start_times that have been created/modified/deleted.
-function create_repeat_list($data, $action, bool $as_html, array $reps)
+function create_repeat_list(array $data, $action, bool $as_html, array $reps) : string
 {
   if (($data['rep_type'] == REP_NONE) ||
        in_array($action, array('more_info', 'remind')))
