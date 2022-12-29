@@ -641,9 +641,10 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
 
       if ($data['rep_type'] == REP_MONTHLY)
       {
+        $previous_repeat_day = ($mail_previous['rep_type'] == REP_MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
                                         get_monthly_repeat_day($data),
-                                        get_monthly_repeat_day($mail_previous),
+                                        $previous_repeat_day,
                                         $compare, $as_html);
       }
 
