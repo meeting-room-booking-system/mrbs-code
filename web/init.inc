@@ -37,5 +37,6 @@ if (is_kiosk_mode() &&
     !((isset($server['REQUEST_URI']) && preg_match('/index\.php\?.*kiosk=/', $server['REQUEST_URI'])) ||
       (isset($server['SCRIPT_NAME']) && preg_match('/kiosk\.php$|js\/.+\.js\.php$/', $server['SCRIPT_NAME']) )))
 {
-  location_header(multisite($_SESSION['kiosk_url'] ?? url_base() . "index.php?kiosk=$kiosk_default_mode"));
+  $location = (session()->isset('kiosk_url')) ? session()->get('kiosk_url') : "index.php?kiosk=$kiosk_default_mode";
+  location_header(multisite($location));
 }

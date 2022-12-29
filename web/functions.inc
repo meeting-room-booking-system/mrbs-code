@@ -2516,7 +2516,7 @@ function is_cli() : bool
 // Determines whether we are in kiosk mode
 function is_kiosk_mode() : bool
 {
-  return isset($_SESSION['kiosk_password_hash']);
+  return session()->isset('kiosk_password_hash');
 }
 
 

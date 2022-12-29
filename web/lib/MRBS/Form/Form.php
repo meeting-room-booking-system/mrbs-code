@@ -2,9 +2,6 @@
 
 namespace MRBS\Form;
 
-use MRBS\Exception;
-use MRBS\JFactory;
-use MRBS\Session\SessionCookie;
 use function MRBS\fatal_error;
 use function MRBS\generate_token;
 use function MRBS\get_form_var;
@@ -188,80 +185,13 @@ class Form extends Element
 
   private static function storeToken($token) : void
   {
-    global $auth, $csrf_cookie;
-
-    if ($auth['session'] == 'joomla')
-    {
-      // Joomla has its own session handling and will clear the $_SESSION variable,
-      // so if we are using Joomla authentication we need to do sessions the Joomla
-      // way.   (Maybe MRBS should abstract session handling into a separate Session
-      // class in due course?   Note also that Joomla's JSession class has methods for
-      // getting and checking form tokens, so maybe that's another way of doing it?)
-      $session = JFactory::getSession();
-      $session->set(self::TOKEN_NAME, $token);
-      return;
-    }
-
-    $session_status = session_status();
-
-    // Use PHP sessions if we can
-    if ($session_status !== PHP_SESSION_DISABLED)
-    {
-      if ($session_status === PHP_SESSION_NONE)
-      {
-        if (false === session_start())
-        {
-          throw new Exception("Could not start session");
-        }
-      }
-      $_SESSION[self::TOKEN_NAME] = $token;
-      return;
-    }
-
-    // Otherwise use cookies
-    if (!self::$cookie_set)
-    {
-      SessionCookie::setCookie('MRBS_CSRF',
-                               $csrf_cookie['hash_algorithm'],
-                               $csrf_cookie['secret'],
-                               array(self::TOKEN_NAME => $token),
-                               0);  //Always a session cookie
-
-      self::$cookie_set = true;
-    }
+    session()->set(self::TOKEN_NAME, $token);
   }
 
 
   private static function getStoredToken() : ?string
   {
-    global $auth, $csrf_cookie;
-
-    if ($auth['session'] == 'joomla')
-    {
-      $session = JFactory::getSession();
-      return $session->get(self::TOKEN_NAME);
-    }
-
-    $session_status = session_status();
-
-    // Use PHP sessions if we can
-    if ($session_status !== PHP_SESSION_DISABLED)
-    {
-      if ($session_status === PHP_SESSION_NONE)
-      {
-        if (false === session_start())
-        {
-          throw new Exception("Could not start session");
-        }
-      }
-      return (isset($_SESSION[self::TOKEN_NAME])) ? $_SESSION[self::TOKEN_NAME] : null;
-    }
-
-    // Otherwise use cookies
-    $data = SessionCookie::getCookie('MRBS_CSRF',
-                                     $csrf_cookie['hash_algorithm'],
-                                     $csrf_cookie['secret']);
-
-    return (isset($data[self::TOKEN_NAME])) ? $data[self::TOKEN_NAME] : null;
+    return session()->get(self::TOKEN_NAME);
   }
+
 }

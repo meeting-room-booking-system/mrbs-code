@@ -11,6 +11,10 @@ require_once MRBS_ROOT . '/auth/cms/joomla.inc';
 class SessionJoomla extends SessionWithLogin
 {
 
+  private const NAMESPACE = 'MRBS';
+
+  private $session;
+
   public function __construct()
   {
     $this->checkTypeMatchesSession();
@@ -56,6 +60,31 @@ class SessionJoomla extends SessionWithLogin
       // Set the application as global app
       \Joomla\CMS\Factory::$application = $app;
     }
+
+    $this->session = JFactory::getSession();
+  }
+
+
+  public function get(string $name)
+  {
+    return $this->session->get($name, null, self::NAMESPACE);
+  }
+
+
+  public function isset(string $name) : bool
+  {
+    return ($this->session->get($name, null, self::NAMESPACE) !== null);
+  }
+
+  public function set(string $name, $value) : void
+  {
+    $this->session->set($name, $value, self::NAMESPACE);
+  }
+
+
+  public function unset(string $name) : void
+  {
+    $this->session->clear($name, self::NAMESPACE);
   }
 
 
