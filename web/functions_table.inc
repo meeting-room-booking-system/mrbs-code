@@ -699,8 +699,9 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
   // not showing (will only be relevant in kiosk mode).
   $skipped_slots = 0;
 
-  // If we are in kiosk mode we are not interested in what has already happened
-  if (isset($kiosk))
+  // If we are in kiosk mode we are not interested in what has already happened.
+  // But if we are in periods mode we don't know when the periods occur, so show them all.
+  if (isset($kiosk) && !$enable_periods)
   {
     $now = time();
     $start_next_slot = $start_first_slot + $resolution;
