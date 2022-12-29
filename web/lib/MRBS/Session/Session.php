@@ -1,7 +1,6 @@
 <?php
 namespace MRBS\Session;
 
-use MRBS\Form\Form;
 use MRBS\SessionHandlerDb;
 use MRBS\SessionHandlerDbException;
 use MRBS\User;
@@ -27,7 +26,7 @@ abstract class Session
 
   // Normally there's no need to call init() from outside the Session classes.
   // It only needs to be called to restart sessions, after for example a user
-  // has been logged off and you need to use $_SESSION.
+  // has been logged off and you need to use session variables.
   public function init(int $lifetime) : void
   {
     global $auth;
@@ -91,36 +90,36 @@ abstract class Session
 
       if (false === session_start())
       {
-        // Check that the session started OK.  If we're using the 'php' session scheme then
-        // they are essential.  Otherwise they are desirable for storing CSRF tokens, but if
-        // they are not working we will fall back to using cookies.
-        $message = "MRBS: could not start sessions";
-
-        if ($auth['session'] == 'php')
-        {
-          throw new \Exception($message);
-        }
-        else
-        {
-          trigger_error($message, E_USER_WARNING);
-
-          // If sessions didn't work, then set a cookie containing the CSRF token.
-
-          // Note that the technique of creating a dummy form to store the token
-          // does not work when using sessions.  It only works for cookies.   That's
-          // because when using sessions, the new token is stored immediately.  So by
-          // the time we come to read $_SESSION to check the token we will be looking
-          // at the *new* token.   However, when using cookies, the browser will have
-          // already sent the cookie by the time we get to this point, so when reading
-          // $_COOKIE we are looking at the *old* token, which is what we want.
-          $dummy_form = new Form();
-        }
+        throw new \Exception("MRBS: could not start sessions");
       }
     }
   }
 
 
-  // Returns the currently logged in user
+  public function get(string $name)
+  {
+    return $_SESSION[$name] ?? null;
+  }
+
+
+  public function isset(string $name) : bool
+  {
+    return isset($_SESSION[$name]);
+  }
+
+  public function set(string $name, $value) : void
+  {
+    $_SESSION[$name] = $value;
+  }
+
+
+  public function unset(string $name) : void
+  {
+    unset($_SESSION[$name]);
+  }
+
+
+  // Returns the currently logged-in user
   abstract public function getCurrentUser() : ?User;
 
   // Allows this to be extended with strategies for getting the referer when

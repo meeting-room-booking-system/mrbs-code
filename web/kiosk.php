@@ -167,7 +167,7 @@ function print_exit_form() : void
   $fieldset->addElement(get_field_password(false));
   $form->addElement($fieldset);
 
-  $return_url = $_SESSION['kiosk_url'] ?? null;
+  $return_url = session()->isset('kiosk_url') ? session()->get('kiosk_url') : null;
   $form->addElement(get_fieldset_buttons($return_url, 'exit_button', get_vocab('exit')));
   if (isset($return_url))
   {
@@ -197,7 +197,7 @@ if (!empty(get_form_var('back_button')))
 }
 
 // Check whether they are trying to exit kiosk mode
-if (!empty($kiosk) && isset($_SESSION['kiosk_password_hash']))
+if (!empty($kiosk) && session()->isset('kiosk_password_hash'))
 {
   // Check the CSRF token
   Form::checkToken();
@@ -214,14 +214,14 @@ if (!empty(get_form_var('exit_button')))
 {
   // Phase 2 (Exit) - Check the CSRF token
   Form::checkToken();
-  $location = $_SESSION['kiosk_url'] ?? 'index.php&kiosk=' . $kiosk_default_mode;
-  if (isset($_SESSION['kiosk_password_hash']) && password_verify($kiosk_password, $_SESSION['kiosk_password_hash']))
+  $location = (session()->isset('kiosk_url')) ? session()->get('kiosk_url') : 'index.php?kiosk=' . $kiosk_default_mode;
+  if (session()->isset('kiosk_password_hash') && password_verify($kiosk_password, session()->get('kiosk_password_hash')))
   {
-    unset($_SESSION['kiosk_url']);
-    unset($_SESSION['kiosk_password_hash']);
+    session()->unset('kiosk_url');
+    session()->unset('kiosk_password_hash');
     $location = remove_query_parameter($location, 'kiosk');
   }
-  location_header($location);
+  location_header(multisite($location));
   // location_header() includes an exit
 }
 
@@ -244,8 +244,8 @@ if (!empty(get_form_var('enter_button')))
   session()->init(0); // We only want the session to expire when the browser is closed
 
   $kiosk_url = multisite(url_base() . "index.php?kiosk=$mode&area=$area&room=$room");
-  $_SESSION['kiosk_password_hash'] = password_hash($kiosk_password, PASSWORD_DEFAULT);
-  $_SESSION['kiosk_url'] = $kiosk_url;
+  session()->set('kiosk_password_hash', password_hash($kiosk_password, PASSWORD_DEFAULT));
+  session()->set('kiosk_url', $kiosk_url);
 
   location_header($kiosk_url);
   // location_header() includes an exit

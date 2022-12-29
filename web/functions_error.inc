@@ -183,6 +183,9 @@ function output_error($heading, $body, $show_data=false)
     $default_timezone_set = true;
   }
 
+  // TODO: Should we use the abstracted access to session variables through session()?
+  // TODO: Or does it not matter?  If it does, how do you find all the session variables in
+  // TODO: Joomla, for example?
   if ($show_data &&
       (isset($get) || isset($post) || isset($_SESSION)))
   {
