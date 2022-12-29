@@ -58,8 +58,9 @@ if (isset($page_date) && ($page_date !== ''))
 $date = new DateTime();
 
 // If we're in kiosk mode and the current time is after the end of the last slot
-// then advance to tomorrow.
-if (isset($kiosk))
+// then advance to tomorrow - unless we're in periods mode when we don't know
+// the actual time of the last slot.
+if (isset($kiosk) && !$enable_periods)
 {
   if ($date->getTimestamp() > get_end_last_slot($date->getMonth(), $date->getDay(), $date->getYear()))
   {
