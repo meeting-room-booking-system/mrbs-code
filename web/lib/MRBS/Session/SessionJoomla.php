@@ -24,12 +24,6 @@ class SessionJoomla extends SessionWithLogin
       throw new \Exception("Joomla! version not known");
     }
 
-    parent::__construct();
-  }
-
-
-  public function init(int $lifetime) : void
-  {
     if (version_compare(JVERSION, '4.0', '<'))
     {
       $mainframe = JFactory::getApplication('site');
@@ -62,6 +56,13 @@ class SessionJoomla extends SessionWithLogin
     }
 
     $this->session = JFactory::getSession();
+
+    parent::__construct();
+  }
+
+
+  public function init(int $lifetime) : void
+  {
   }
 
 
