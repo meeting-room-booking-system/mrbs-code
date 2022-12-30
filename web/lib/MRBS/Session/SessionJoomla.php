@@ -13,6 +13,7 @@ class SessionJoomla extends SessionWithLogin
 
   private const NAMESPACE = 'MRBS';
 
+  private $app;
   private $session;
 
   public function __construct()
@@ -26,8 +27,8 @@ class SessionJoomla extends SessionWithLogin
 
     if (version_compare(JVERSION, '4.0', '<'))
     {
-      $mainframe = JFactory::getApplication('site');
-      $mainframe->initialise();
+      $this->app = JFactory::getApplication('site');
+      $this->app->initialise();
     }
     else
     {
@@ -49,10 +50,10 @@ class SessionJoomla extends SessionWithLogin
                 ->alias(\Joomla\Session\SessionInterface::class, 'session.web.site');
 
       // Instantiate the application.
-      $app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
+      $this->app = $container->get(\Joomla\CMS\Application\SiteApplication::class);
 
       // Set the application as global app
-      \Joomla\CMS\Factory::$application = $app;
+      \Joomla\CMS\Factory::$application = $this->app;
     }
 
     $this->session = JFactory::getSession();
@@ -104,7 +105,6 @@ class SessionJoomla extends SessionWithLogin
 
   public function logoffUser() : void
   {
-    $mainframe = JFactory::getApplication('site');
-    $mainframe->logout();
+    $this->app->logout();
   }
 }
