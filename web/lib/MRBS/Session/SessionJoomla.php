@@ -73,7 +73,7 @@ class SessionJoomla extends SessionWithLogin
 
   public function isset(string $name) : bool
   {
-    return ($this->session->get($name, null, self::NAMESPACE) !== null);
+    return ($this->get($name) !== null);
   }
 
   public function set(string $name, $value) : void
