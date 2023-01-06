@@ -316,7 +316,7 @@ $(document).on('page_ready', function() {
   if (args.kiosk)
   {
     $(window).on('click keypress', function(e) {
-      if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode'))?>'))
+      if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode_confirm'))?>'))
       {
         var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
         href += '&area=' + encodeURIComponent(args.area);
