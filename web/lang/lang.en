@@ -381,6 +381,7 @@ $vocab["copy_email_addresses"]  = "Copy email addresses";
 // Used in search.php
 $vocab["invalid_search"]     = "Empty or invalid search string.";
 $vocab["search_results"]     = 'Search results for \'%1$s\' from %2$s';
+$vocab["search_results_unlimited"] = "Search results for '%s'";
 $vocab["nothing_found"]      = "No matching entries found.";
 $vocab["records"]            = "Records ";
 $vocab["through"]            = " through ";
