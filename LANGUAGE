@@ -21,11 +21,11 @@ If you would like to complete or improve an existing language file, the
 "checklang.php" script included in the distribution can help. Copy this
 to your web server area.
 Now use your browser to access:
-         http://your-host/checklang.php?lang=xx
+         http://your-host-and-dir/checklang.php?lang=xx
 (where "xx" is the code of the language file you want to check). This
 will report missing or untranslated strings in "lang.xx" compared to
 "lang.en". If you omit the parameter and access:
-         http://your-host/checklang.php
+         http://your-host-and-dir/checklang.php
 you will see the results of checking all available language files.
 
 If you do create or improve a language file, please post a message about
