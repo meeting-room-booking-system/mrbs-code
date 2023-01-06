@@ -1,12 +1,12 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputSearch;
 use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
@@ -128,26 +128,6 @@ $datatable = get_form_var('datatable', 'int');  // Will only be set if we're usi
 // Get the start day/month/year and make them the current day/month/year
 $from_date = get_form_var('from_date', 'string');
 
-if (isset($from_date))
-{
-  if (false === ($from_date_split = split_iso_date($from_date)))
-  {
-    throw new Exception("Invalid from_date '$from_date'");
-  }
-  list($year, $month, $day) = $from_date_split;
-}
-
-// If we haven't been given a sensible date then use today's
-if (!isset($day) || !isset($month) || !isset($year) || !checkdate($month, $day, $year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-
-// Reconstruct the from_date using the, possibly new, values of year/month/day
-$from_date = format_iso_date($year, $month, $day);
-
 // If we're going to be doing something then check the CSRF token
 if (isset($search_str) && ($search_str !== ''))
 {
@@ -174,27 +154,36 @@ if (!isset($search_str))
   $search_str = '';
 }
 
-$search_start_time = mktime(0, 0, 0, $month, $day, $year);
-
-if (!$is_ajax)
+if (isset($from_date))
 {
+  if (validate_iso_date($from_date))
+  {
+    $search_start_time = DateTime::createFromFormat('Y-m-d', $from_date)->getTimestamp();
+  }
+  else
+  {
+    unset($from_date);  // We don't want to perpetuate invalid from dates in the form
+  }
+}
+
+if (!$is_ajax) {
   $context = array(
-      'view'      => $view,
-      'view_all'  => $view_all,
-      'year'      => $year,
-      'month'     => $month,
-      'day'       => $day,
-      'area'      => $area,
-      'room'      => $room ?? null
-    );
+    'view' => $view,
+    'view_all' => $view_all,
+    'year' => $year,
+    'month' => $month,
+    'day' => $day,
+    'area' => $area,
+    'room' => $room ?? null
+  );
 
   print_header($context);
 
   $form = new Form();
-  $form->setAttributes(array('class'  => 'standard',
-                             'id'     => 'search_form',
-                             'method' => 'post',
-                             'action' => multisite(this_page())));
+  $form->setAttributes(array('class' => 'standard',
+    'id' => 'search_form',
+    'method' => 'post',
+    'action' => multisite(this_page())));
 
   $fieldset = new ElementFieldset();
   $fieldset->addLegend(get_vocab('search'));
@@ -202,18 +191,19 @@ if (!$is_ajax)
   // Search string
   $field = new FieldInputSearch();
   $field->setLabel(get_vocab('search_for'))
-        ->setControlAttributes(array('name'      => 'search_str',
-                                     'value'     => (isset($search_str)) ? $search_str : '',
-                                     'required'  => true,
-                                     'autofocus' => true));
+    ->setControlAttributes(array('name' => 'search_str',
+      'value' => (isset($search_str)) ? $search_str : '',
+      'required' => true,
+      'autofocus' => true));
   $fieldset->addElement($field);
 
   // From date
   $field = new FieldInputDate();
   $field->setLabel(get_vocab('from'))
-        ->setControlAttributes(array('name'      => 'from_date',
-                                     'value'     => $from_date,
-                                     'required'  => true));
+    ->setControlAttributes(array(
+        'name'  => 'from_date',
+        'value' => $from_date ?? null)
+      );
   $fieldset->addElement($field);
 
   // Submit button
@@ -225,17 +215,25 @@ if (!$is_ajax)
 
   $form->render();
 
-  if (!isset($search_str) || ($search_str === ''))
-  {
+  if (!isset($search_str) || ($search_str === '')) {
     echo "<p class=\"error\">" . get_vocab("invalid_search") . "</p>";
     print_footer();
     exit;
   }
 
   echo '<h3 class="search_results">';
-  echo get_vocab("search_results",
-                 htmlspecialchars($search_str),
-                 htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time)));
+  if (isset($search_start_time))
+  {
+    echo get_vocab(
+      'search_results',
+      htmlspecialchars($search_str),
+      htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time))
+    );
+  }
+  else
+  {
+    echo get_vocab('search_results_unlimited', htmlspecialchars($search_str));
+  }
   echo "</h3>\n";
 }  // if (!$is_ajax)
 
@@ -278,8 +276,13 @@ foreach ($fields as $field)
   }
 }
 
-$sql_pred .= ") AND (E.end_time > ?)";
-$sql_params[] = $search_start_time;
+$sql_pred .= ')';
+
+if (isset($search_start_time))
+{
+  $sql_pred .= " AND (E.end_time > ?)";
+  $sql_params[] = $search_start_time;
+}
 
 // We only want the bookings for rooms that are visible
 $invisible_room_ids = get_invisible_room_ids();
@@ -387,7 +390,10 @@ if (!$is_ajax)
 
   // Put the search parameters as data attributes so that the JavaScript can use them
   echo ' data-search_str="' . htmlspecialchars($search_str) . '"';
-  echo ' data-from_date="' . htmlspecialchars($from_date) . '"';
+  if (isset($from_date))
+  {
+    echo ' data-from_date="' . htmlspecialchars($from_date) . '"';
+  }
 
   echo ">\n";
   echo "<thead>\n";
