@@ -45,7 +45,7 @@
 // the MRBS 'web' directory
 $path_to_mrbs = ".";
 
-const PATTERN_START = '/^\$vocab\["([^"]+)"\]/';
+const PATTERN_START = '/^\$vocab\["([^"]+)"]/';
 const PATTERN_END   = '/;\s*(?:(?:#|\/\/).*)?$/';
 
 unset($lang);
