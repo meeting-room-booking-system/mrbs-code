@@ -281,6 +281,7 @@ $vocab["warning_last_admin"] = "Amaran!  Ini adalah pentadbir yang terakhir dan 
 // Used in search.php
 $vocab["invalid_search"]     = "Kosong atau carian tidak sah.";
 $vocab["search_results"]     = 'Keputusan carian untuk \'%1$s\' daripada %2$s';
+$vocab["search_results_unlimited"] = "Keputusan carian untuk '%s'";
 $vocab["nothing_found"]      = "Tiada padanan carian dijumpai.";
 $vocab["records"]            = "Rekod ";
 $vocab["through"]            = " melepasi ";
