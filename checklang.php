@@ -45,6 +45,9 @@
 // the MRBS 'web' directory
 $path_to_mrbs = ".";
 
+const PATTERN_START = '/^\$vocab\["([^"]+)"\]/';
+const PATTERN_END   = '/;\s*(?:(?:#|\/\/).*)?$/';
+
 unset($lang);
 $lang = array();
 
@@ -134,21 +137,21 @@ foreach ($lang as $l)
         $statement .= $line;
       }
       // Otherwise, if this is the start of a new statement, make this line the first line.
-      elseif (preg_match('/^\$vocab\["([^"]+)"\]/', $line, $matches))
+      elseif (preg_match(PATTERN_START, $line, $matches))
       {
         $statement = $line;
         $token = $matches[1];
       }
 
       // And if this line is also the end of a statement, close it off and add it to the array.
-      if (preg_match('/;\s*(?:(?:#|\/\/).*)?$/', $line))
+      if (preg_match(PATTERN_END, $line))
       {
         $ref_statements[$token] = $statement;
         unset($statement);
       }
     }
     fclose($in);
-    
+
     $in = fopen("$path_to_mrbs/$langs$l", "r") or
       die("Failed to open $path_to_mrbs/$langs$l for reading");
     $out = fopen("$path_to_mrbs/$langs$l.new", "w") or
@@ -161,7 +164,7 @@ foreach ($lang as $l)
     {
       $line = fgets($in);
       $token_match = "";
-      if (preg_match('/^\$vocab\["([^"]+)"\]/', $line, $matches))
+      if (preg_match(PATTERN_START, $line, $matches))
       {
 // DEBUG        print "<tr><td>$matches[1]</td><td>".key($ref_statements);
         $token_match = $matches[1];
