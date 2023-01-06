@@ -45,6 +45,9 @@
 // the MRBS 'web' directory
 $path_to_mrbs = ".";
 
+const PATTERN_START = '/^\$vocab\["([^"]+)"]/';
+const PATTERN_END   = '/;\s*(?:(?:#|\/\/).*)?$/';
+
 unset($lang);
 $lang = array();
 
@@ -121,19 +124,34 @@ foreach ($lang as $l)
   include "$path_to_mrbs/$langs$l";
   if ($update)
   {
-    $ref_lines = array();
+    $ref_statements = array();
     $in = fopen("$path_to_mrbs/$langs$ref_lang", "r")
       or die("Failed to open $path_to_mrbs/$langs$ref_lang for reading\n");
     while (!feof($in))
     {
       $line = fgets($in);
-      if (preg_match('/^\$vocab\["([^"]+)"\]/', $line, $matches))
+      // Handle multi-line statements.
+      // If we've started a statement append this line to it.
+      if (isset($statement))
       {
-// DEBUG        print "MATCH $matches[1]<br>\n";
-        $ref_lines[$matches[1]] = $line;
+        $statement .= $line;
+      }
+      // Otherwise, if this is the start of a new statement, make this line the first line.
+      elseif (preg_match(PATTERN_START, $line, $matches))
+      {
+        $statement = $line;
+        $token = $matches[1];
+      }
+
+      // And if this line is also the end of a statement, close it off and add it to the array.
+      if (preg_match(PATTERN_END, $line))
+      {
+        $ref_statements[$token] = $statement;
+        unset($statement);
       }
     }
     fclose($in);
+
     $in = fopen("$path_to_mrbs/$langs$l", "r") or
       die("Failed to open $path_to_mrbs/$langs$l for reading");
     $out = fopen("$path_to_mrbs/$langs$l.new", "w") or
@@ -146,34 +164,34 @@ foreach ($lang as $l)
     {
       $line = fgets($in);
       $token_match = "";
-      if (preg_match('/^\$vocab\["([^"]+)"\]/', $line, $matches))
+      if (preg_match(PATTERN_START, $line, $matches))
       {
-// DEBUG        print "<tr><td>$matches[1]</td><td>".key($ref_lines);
+// DEBUG        print "<tr><td>$matches[1]</td><td>".key($ref_statements);
         $token_match = $matches[1];
 
-        if (!array_key_exists($token_match, $ref_lines))
+        if (!array_key_exists($token_match, $ref_statements))
         {
           fwrite($out, "// REMOVED - ".$line);
           continue;
         }
-        while (($token_match != key($ref_lines)) &&
-               (!array_key_exists(key($ref_lines), $vocab)))
+        while (($token_match != key($ref_statements)) &&
+               (!array_key_exists(key($ref_statements), $vocab)))
         {
-          if (array_key_exists(key($ref_lines), $seen))
+          if (array_key_exists(key($ref_statements), $seen))
           {
             break;
           }
-          $seen[key($ref_lines)] = 1;
-          fwrite($out, current($ref_lines));
-          $added[] = htmlspecialchars(key($ref_lines));
-          $ret = next($ref_lines);
-// DEBUG          print " ".key($ref_lines);
+          $seen[key($ref_statements)] = 1;
+          fwrite($out, current($ref_statements));
+          $added[] = htmlspecialchars(key($ref_statements));
+          $ret = next($ref_statements);
+// DEBUG          print " ".key($ref_statements);
           if (!$ret)
           {
             break;
           }
         }
-        next($ref_lines);
+        next($ref_statements);
       }
       $seen[$token_match] = 1;
       fwrite($out, $line);
