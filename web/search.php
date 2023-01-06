@@ -1,12 +1,12 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputSearch;
 use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\Form;
 
 require "defaultincludes.inc";
 
@@ -130,11 +130,10 @@ $from_date = get_form_var('from_date', 'string');
 
 if (isset($from_date))
 {
-  if (false === ($from_date_split = split_iso_date($from_date)))
+  if (false !== ($from_date_split = split_iso_date($from_date)))
   {
-    throw new Exception("Invalid from_date '$from_date'");
+    list($year, $month, $day) = $from_date_split;
   }
-  list($year, $month, $day) = $from_date_split;
 }
 
 // If we haven't been given a sensible date then use today's
