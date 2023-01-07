@@ -249,13 +249,20 @@ function print_search($context)
 
   $form = new Form();
 
-  $form->setAttributes(array('id'     => 'header_search',
-                             'method' => 'post',
-                             'action' => multisite('search.php')))
-       ->addHiddenInputs(array('view'  => $context['view'],
-                               'year'  => $context['year'],
-                               'month' => $context['month'],
-                               'day'   => $context['day']));
+  $form->setAttributes(array(
+          'id'     => 'header_search',
+          'method' => 'post',
+          'action' => multisite('search.php'))
+        )
+       ->addHiddenInputs(array(
+          'view'       => $context['view'],
+          'year'       => $context['year'],
+          'month'      => $context['month'],
+          'day'        => $context['day'],
+          'from_date'  => format_iso_date($context['year'], $context['month'], $context['day'])
+        )
+     );
+
   if (!empty($context['area']))
   {
     $form->addHiddenInput('area', $context['area']);
