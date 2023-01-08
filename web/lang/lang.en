@@ -473,7 +473,9 @@ $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries m
                                    "the search string.  The operation cannot be undone.  Are " .
                                    "you sure you want to continue?\n\n" .
                                    "Total number of entries that will be deleted: ";
+$vocab["deleting_n_entries"]    = "Deleting %%d entries ..."; // The % sign is escaped because the number substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "The entries could not be deleted.";
+$vocab["cancel"]                = "Cancel";
 $vocab["registered"]            = "Registered";
 $vocab["na"]                    = "[N/A]";
 $vocab["compound_name"]            = '%1$s (%2$s)';  // 1: username, 2: display name

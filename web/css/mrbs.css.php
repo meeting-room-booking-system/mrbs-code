@@ -2432,6 +2432,26 @@ button#delete_button {
   margin: 1em 0 3em 0;
 }
 
+#progress_container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -50%);
+  box-shadow:0 0 0 max(100vh, 100vw) rgba(0,0,0,0.6);
+  width: 20rem;
+  max-width: 80%;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  display: none;
+}
+
+#progress_container progress {
+  width: 100%;
+  margin: 0.75rem 0;
+}
 
 /* ------------ SEARCH.PHP ----------------------*/
 
