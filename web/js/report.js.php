@@ -100,122 +100,188 @@ $(document).on('page_ready', function() {
   if ($auth['show_bulk_delete'])
   {
     ?>
+
+    var addDeleteButton = function addDeleteButton() {
+
+      var data;
+      var nBatches;
+      var nEntries;
+      var progressContainer = $('<div id="progress_container"></div>');
+      var requests;
+      var requestsCompleted;
+      var requestsAborted;
+
+      <?php // Initialise the delete button and progress bar ?>
+      function initDeleteButton()
+      {
+        var title = '<?php echo escape_js(get_vocab("deleting_n_entries")) ?>';
+        data = reportTable.rows({filter: 'applied'}).data().toArray();
+        nEntries = data.length;
+        requests = [];
+        requestsCompleted = 0;
+        requestsAborted = 0;
+        title = title.replace('%d', nEntries.toLocaleString());
+        progressContainer.find('span').text(title);
+      }
+
+      function reloadReport() {
+        $('#report_table_processing').css('visibility', 'hidden');
+
+        <?php
+        // Reload the page to get the new dataset.   If we're using
+        // an Ajax data source (for true Ajax data sources, not server
+        // side processing) and there's no summary table we can be
+        // slightly more elegant and just reload the Ajax data source.
+        ?>
+
+        if (reportTable.ajax.url() &&
+          !reportTable.page.info().serverSide &&
+          ($('#div_summary').length === 0))
+        {
+          reportTable.ajax.reload(function() {
+            <?php
+            // Once the report data has been reloaded we also need to update the number of entries,
+            // hide the progress bar and reinitialise the delete button for the new data.
+            ?>
+            progressContainer.hide();
+            initDeleteButton();
+            $('#n_entries').text(nEntries);
+          });
+        }
+        else
+        {
+          window.location.reload();
+        }
+      }
+
+      <?php
+      // Add a progress bar, with a title and a cancel button. The title text will be
+      // added later, once we know how many entries there are to be deleted.
+      ?>
+      progressContainer.append('<span></span>')
+        .append('<progress></progress>')
+        .append('<button id="cancel_deletions"><?php echo escape_js(get_vocab("cancel")) ?></button>')
+        .insertAfter('#report_table_paginate');
+
+      <?php // Add a delete button ?>
+      $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
+        .on('click', function() {
+          if ((nEntries> 0) && window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
+            nEntries.toLocaleString()))
+          {
+            var progress = progressContainer.find('progress');
+            var success = true;
+            var totalDeleted = 0;
+
+            progress.attr('max', nEntries).val(0).text('0');
+            progressContainer.show();
+            <?php
+            // We're going to split the POST requests into batches because if a
+            // single POST request is too large we could get a 406 error. The POST
+            // requests are fired off asynchronously, so we need to count them all
+            // back before we know that we've finished.
+            ?>
+            var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
+              batches = [],
+              batch = [],
+              i;
+
+            for (i=0; i<nEntries; i++)
+            {
+              batch.push($(data[i][0]).data('id'));
+              if (batch.length >= batchSize)
+              {
+                batches.push(batch);
+                batch = [];
+              }
+            }
+            if (batch.length > 0)
+            {
+              batches.push(batch);
+            }
+            <?php // Dispatch the batches (if any) ?>
+            nBatches = batches.length;
+            if (nBatches > 0)
+            {
+              $('#report_table_processing').css('visibility', 'visible');
+              for (i=0; i<nBatches; i++)
+              {
+                var params = {csrf_token: getCSRFToken(),
+                  ids: batches[i]};
+                if(args.site)
+                {
+                  params.site = args.site;
+                }
+                <?php // Save the XHR request in case we need to abort it ?>
+                requests.push($.post(
+                  'ajax/del_entries.php',
+                  params,
+                  function(result) {
+                    var isInt = /^\s*\d+\s*$/;
+
+                    requestsCompleted ++;
+                    if (isInt.test(result))
+                    {
+                      totalDeleted += parseInt(result, 10);
+                      progress.val(totalDeleted).text(totalDeleted);
+                    }
+                    else
+                    {
+                      success = false;
+                    }
+                    <?php // Check whether everything has finished ?>
+                    if (requestsCompleted + requestsAborted >= nBatches)
+                    {
+                      if (!success)
+                      {
+                        window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                      }
+                      reloadReport();
+                    }
+                  })
+                );
+              }
+            }
+          }
+        })
+        .insertAfter('#report_table_paginate');
+
+      <?php // While deletion is in progress disable all interaction except with the cancel button ?>
+      $(window).on('click keypress', function(e) {
+        if (progressContainer.is(':visible'))
+        {
+          if (e.target.id === 'cancel_deletions')
+          {
+            $.each(requests, function(index, request) {
+              <?php
+              // Abort all requests that haven't yet been sent, ie all those where the
+              // readyState hasn't yet reached 2 (HEADERS_RECEIVED).  For more details see
+              // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState.
+              // We don't abort those that have already been sent because we can't stop the
+              // server processing the deletions and we want to know the result.
+              ?>
+              if (request.readyState < 2)
+              {
+                request.abort();
+                requestsAborted++;
+                if (requestsCompleted + requestsAborted >= nBatches)
+                {
+                  reloadReport();
+                }
+              }
+            });
+          }
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      initDeleteButton();
+    };
+
     if (args.isAdmin)
     {
-      tableOptions.initComplete = function(){
-
-            $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
-                  .on('click', function() {
-                      var data = reportTable.rows({filter: 'applied'}).data().toArray(),
-                          nEntries = data.length;
-
-                      if (window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
-                                  nEntries.toLocaleString()))
-                      {
-                        <?php
-                        // We're going to split the POST requests into batches because
-                        // if a single POST request is too large we could get a 406
-                        // error.    The POST requests are fired off asynchronously
-                        // so we need to count them all back before we know that we've
-                        // finished.  The results will be held in the results array.
-                        ?>
-                        var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
-                            batches = [],
-                            batch = [],
-                            nBatches,
-                            results,
-                            i,
-                            j;
-
-                        for (i=0; i<nEntries; i++)
-                        {
-                          batch.push($(data[i][0]).data('id'));
-                          if (batch.length >= batchSize)
-                          {
-                            batches.push(batch);
-                            batch = [];
-                          }
-                        }
-                        if (batch.length > 0)
-                        {
-                          batches.push(batch);
-                        }
-                        <?php // Dispatch the batches (if any) ?>
-                        nBatches = batches.length;
-                        if (nBatches > 0)
-                        {
-                          results = [];
-                          $('#report_table_processing').css('visibility', 'visible');
-                          for (j=0; j<nBatches; j++)
-                          {
-                            var params = {csrf_token: getCSRFToken(),
-                                          ids: batches[j]};
-                            if(args.site)
-                            {
-                              params.site = args.site;
-                            }
-                            $.post('ajax/del_entries.php',
-                                   params,
-                                   function(result) {
-                                      var nDeleted,
-                                          isInt,
-                                          i,
-                                          oSettings,
-                                          span;
-
-                                      results.push(result);
-                                      <?php // Check whether everything has finished ?>
-                                      if (results.length >= nBatches)
-                                      {
-                                        $('#report_table_processing').css('visibility', 'hidden');
-                                        <?php
-                                        // If all's gone well the result will contain the number of entries deleted
-                                        ?>
-                                        nDeleted = 0;
-                                        isInt = /^\s*\d+\s*$/;
-                                        for (i=0; i<results.length; i++)
-                                        {
-                                          if (!isInt.test(results[i]))
-                                          {
-                                            window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
-                                            break;
-                                          }
-                                          nDeleted += parseInt(results[i], 10);
-                                        }
-                                        <?php
-                                        // Reload the page to get the new dataset.   If we're using
-                                        // an Ajax data source (for true Ajax data sources, not server
-                                        // side processing) and there's no summary table we can be
-                                        // slightly more elegant and just reload the Ajax data source.
-                                        ?>
-
-                                        if (reportTable.ajax.url() &&
-                                            !reportTable.page.info().serverSide &&
-                                            ($('#div_summary').length === 0))
-                                        {
-                                          reportTable.ajax.reload();
-                                          <?php
-                                          // We also need to update the count of the number of entries.  We
-                                          // can't just get the length of the data, because the new data is
-                                          // loaded asynchronously and won't be there yet.  So we calculate it
-                                          // by subtracting the number of entries deleted from theee previous count.
-                                          ?>
-                                          span = $('#n_entries');
-                                          span.text(parseInt(span.text(), 10) - nDeleted);
-                                        }
-                                        else
-                                        {
-                                          window.location.reload();
-                                        }
-                                      }
-                                    });
-                          }
-                        }
-                      }
-                    })
-                  .insertAfter('#report_table_paginate');
-
-        };
+      tableOptions.initComplete = addDeleteButton;
     }
     <?php
   }
