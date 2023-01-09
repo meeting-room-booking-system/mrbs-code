@@ -66,14 +66,16 @@ $(document).on('page_ready', function() {
   // May need to use the FormData emulation (https://github.com/francois2metz/html5-formdata)
   // for older browsers
   ?>
-  tableOptions.ajax = {url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
-                       method: 'POST',
-                       processData: false,
-                       contentType: false,
-                       data: function() {
-                           var formdata = new FormData($('#report_form')[0]);
-                           return formdata;
-                         } };
+  tableOptions.ajax = {
+      url: 'report.php' + ((args.site) ? '?site=' + args.site : ''),
+      method: 'POST',
+      processData: false,
+      contentType: false,
+      data: function() {
+          return new FormData($('#report_form')[0]);
+        }
+    };
+
   <?php
   // Add in a hidden input to the form so that we can tell if we are using DataTables
   // (which will be if JavaScript is enabled).   We need to know this because when we're using an
