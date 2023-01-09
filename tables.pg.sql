@@ -218,6 +218,7 @@ CREATE TABLE mrbs_sessions
   access  int DEFAULT NULL,
   data    text DEFAULT NULL
 );
+comment on column mrbs_sessions.access is 'Unix timestamp';
 create index mrbs_idxAccess on mrbs_sessions(access);
 
 CREATE TABLE mrbs_users
