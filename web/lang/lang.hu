@@ -293,7 +293,7 @@ $vocab["delete_entries"]        = "Bejegyzések törlése";
 $vocab["delete_entries_warning"] = "FIGYELEM! Ez a művelet törölni fogja az összes olyan rekordot " .
                                    "amire illeszkednek a keresési feltételek. Ez a művelet nem vonható vissza. " .
                                    "Biztos vagy benne, hogy törlöd a bejegyzéseket?\n\n" .
-                                   "Törlendő rekordok száma: ";
+                                   "Törlendő rekordok száma: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "A bejegyzéseket nem sikerült törölni.";
 
 // Used in admin.php

@@ -362,7 +362,7 @@ $vocab["delete_entries"]        = "Supprimer des réservations";
 $vocab["delete_entries_warning"] = "ATTENTION!  Cette action va supprimer les réservations " .
                                    "correspondantes à la recherche.  Cette opération n'est pas REVERSIBLE !!! " .
                                    "Êtes-vous sûr(e) de vouloir supprimer les réservations ?\n\n" .
-                                   "Nombre de réservations à supprimer définitivement : ";
+                                   "Nombre de réservations à supprimer définitivement : %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Les réservations ne peuvent pas être supprimées.";
 
 // Used in admin.php

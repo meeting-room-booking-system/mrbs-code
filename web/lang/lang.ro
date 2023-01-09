@@ -327,7 +327,7 @@ $vocab["delete_entries"]        = "Sterge rezervari";
 $vocab["delete_entries_warning"] = "ATENTIE!  Se vor sterge toate rezervarile continand" .
                                    "string de cautare.  Operatia nu poate fi reversibila.  Esti " .
                                    "sigur ca vrei sa continui?\n\n" .
-                                   "Numar total de rezervari ce vor fi sterse: ";
+                                   "Numar total de rezervari ce vor fi sterse: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Rezervarile nu au putut fi sterse.";
 
 // Used in admin.php

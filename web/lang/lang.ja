@@ -304,7 +304,7 @@ $vocab["delete_entries"]        = "エントリーを削除する";
 $vocab["delete_entries_warning"] = "警告! この操作は、検索文字列に一致する全てのエントリーを削除します。 " .
                                    "操作を取り消すことはできません。" .
                                    "継続してもよろしいですが\n\n" .
-                                   "削除されるエントリーの合計: ";
+                                   "削除されるエントリーの合計: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "エントリーを削除することができませんでした。";
 
 // Used in admin.php

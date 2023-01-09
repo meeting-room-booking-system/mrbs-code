@@ -348,7 +348,7 @@ $vocab["delete_entries"]        = "Slette reservasjoner";
 $vocab["delete_entries_warning"] = "ADVARSEL! Dette vil slette alle reservasjoner som matcher søkestrengen." .
                                    "Denne operasjonen kan ikke angres. " .
                                    "Er du sikker på at du vil fortsette?\n\n" .
-                                   "Antall reservasjoner som slettes: ";
+                                   "Antall reservasjoner som slettes: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Reservasjonene kunne ikke slettes.";
 
 // Used in admin.php
