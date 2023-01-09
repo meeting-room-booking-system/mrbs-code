@@ -303,7 +303,7 @@ $vocab["delete_entries"]        = "Poista varaukset";
 $vocab["delete_entries_warning"] = "VAROITUS! Olet poistamassa kaikkia hakusanan löytyvät " .
                                    "varaukset. Tämä poistaa varaukset lopullisesti. " .
                                    "Haluatko varmasti jatkaa?\n\n" .
-                                   "Poistettavien merkintöjen määrä: ";
+                                   "Poistettavien merkintöjen määrä: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Varauksia ei voitu poistaa.";
 
 // Used in admin.php

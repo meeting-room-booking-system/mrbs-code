@@ -168,9 +168,14 @@ $(document).on('page_ready', function() {
       <?php // Add a delete button ?>
       $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
         .on('click', function() {
-          if ((nEntries> 0) && window.confirm("<?php echo escape_js(get_vocab('delete_entries_warning')) ?>" +
-            nEntries.toLocaleString()))
-          {
+            if (nEntries === 0) {
+              return;
+            }
+            var message = "<?php echo escape_js(get_vocab('delete_entries_warning')) ?>";
+            message = message.replace('%s', nEntries.toLocaleString());
+            if (!window.confirm(message)) {
+              return;
+            }
             var progress = progressContainer.find('progress');
             var success = true;
             var totalDeleted = 0;
@@ -188,64 +193,55 @@ $(document).on('page_ready', function() {
               batch = [],
               i;
 
-            for (i=0; i<nEntries; i++)
-            {
+            for (i=0; i<nEntries; i++) {
               batch.push($(data[i][0]).data('id'));
-              if (batch.length >= batchSize)
-              {
+              if (batch.length >= batchSize) {
                 batches.push(batch);
                 batch = [];
               }
             }
-            if (batch.length > 0)
-            {
+            if (batch.length > 0) {
               batches.push(batch);
             }
             <?php // Dispatch the batches (if any) ?>
             nBatches = batches.length;
-            if (nBatches > 0)
-            {
+            if (nBatches > 0) {
               $('#report_table_processing').css('visibility', 'visible');
-              for (i=0; i<nBatches; i++)
-              {
-                var params = {csrf_token: getCSRFToken(),
-                  ids: batches[i]};
-                if(args.site)
-                {
+              for (i=0; i<nBatches; i++) {
+                var params = {
+                  csrf_token: getCSRFToken(),
+                  ids: batches[i]
+                };
+                if (args.site) {
                   params.site = args.site;
                 }
                 <?php // Save the XHR request in case we need to abort it ?>
                 requests.push($.post(
-                  'ajax/del_entries.php',
-                  params,
-                  function(result) {
-                    var isInt = /^\s*\d+\s*$/;
+                    'ajax/del_entries.php',
+                    params,
+                    function (result) {
+                        var isInt = /^\s*\d+\s*$/;
 
-                    requestsCompleted ++;
-                    if (isInt.test(result))
-                    {
-                      totalDeleted += parseInt(result, 10);
-                      progress.val(totalDeleted).text(totalDeleted);
-                    }
-                    else
-                    {
-                      success = false;
-                    }
-                    <?php // Check whether everything has finished ?>
-                    if (requestsCompleted + requestsAborted >= nBatches)
-                    {
-                      if (!success)
-                      {
-                        window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                        requestsCompleted++;
+                        if (isInt.test(result)) {
+                          totalDeleted += parseInt(result, 10);
+                          progress.val(totalDeleted).text(totalDeleted);
+                        } else {
+                          success = false;
+                        }
+                        <?php // Check whether everything has finished ?>
+                        if (requestsCompleted + requestsAborted >= nBatches) {
+                          if (!success) {
+                            window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                          }
+                          reloadReport();
+                        }
                       }
-                      reloadReport();
-                    }
-                  })
-                );
+                    )
+                  )
               }
             }
-          }
-        })
+          })
         .insertAfter('#report_table_paginate');
 
       <?php // While deletion is in progress disable all interaction except with the cancel button ?>

@@ -337,7 +337,7 @@ $vocab["delete_entries"]        = "Padam entri";
 $vocab["delete_entries_warning"] = "AMARAN!  Ini akan memadamkan semua entri padanan " .
                                    "rentetan carian.  Operasi ini tidak dapat diundur.  Adakah " .
                                    "anda yakin anda  meneruskan?\n\n" .
-                                   "Jumlah entri yang akan dibuang: ";
+                                   "Jumlah entri yang akan dibuang: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Entri ini tidak dapat dipadamkan.";
 
 // Used in admin.php

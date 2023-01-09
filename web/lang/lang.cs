@@ -318,7 +318,7 @@ $vocab["delete_entries"]        = "Odstranění položek";
 $vocab["delete_entries_warning"] = "UPOZORNĚNÍ! Vymaže všechny položky odpovídající " .
                                    "danému hledanému řetězci. Tuto operaci nelze vrátit zpět. Opravdu " .
                                    "chcete pokračovat?\n\n" .
-                                   "Celkový počet položek, které budou smazány: ";
+                                   "Celkový počet položek, které budou smazány: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Položky nemohou být odstraněny.";
 
 // Used in admin.php

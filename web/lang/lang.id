@@ -319,7 +319,7 @@ $vocab["delete_entries"]        = "Hapus entri";
 $vocab["delete_entries_warning"] = "PERHATIAN!  Aksi berikut akan menghapus entri yg cocok " .
                                    "sesuai kata kunci yg anda masukkan. Data terhapus tidak dapat dikembalikan lagi. Apakah " .
                                    "anda yakin melanjutkan?\n\n" .
-                                   "Jumlah entri yang akan dihapus: ";
+                                   "Jumlah entri yang akan dihapus: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Entri tidak dapat dihapus.";
 
 // Used in admin.php

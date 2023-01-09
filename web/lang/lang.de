@@ -424,7 +424,7 @@ $vocab["delete_entries"]        = "Einträge löschen";
 $vocab["delete_entries_warning"] = "WARNUNG!  Alle Einträge, die den Suchkriterien entsprechen, " .
                                    "werden gelöscht.  Dieser Vorgang kann nicht rückgängig gemacht werden." .
                                    "Wollen Sie wirklich fortfahren?\n\n" .
-                                   "Anzahl der zu löschenden Einträge: ";
+                                   "Anzahl der zu löschenden Einträge: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Die Einträge konnten nicht gelöscht werden.";
 $vocab["registered"]            = "Angemeldet";
 

@@ -301,7 +301,7 @@ $vocab["delete_entries"]        = "Usuń wejścia";
 $vocab["delete_entries_warning"] = "UWAGA!  Spowoduje to usunięcie wszystkich dopasowanych wpisów " .
                                    "ciag wyszukiwania. Operacji nie można cofnąć. Jesteś " .
                                    "pewien że chcesz kontynuować?\n\n" .
-                                   "Całkowita usuniętych wejść: ";
+                                   "Całkowita usuniętych wejść: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "Wejścia nie mogą być usunięte.";
 
 // Uzyte w admin.php

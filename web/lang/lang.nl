@@ -429,7 +429,7 @@ $vocab["search_criteria"]       = "Zoekcriteria";
 $vocab["presentation_options"]  = "Presentatiemogelijkheden";
 $vocab["delete_entries"]        = "Verwijder boekingen";
 $vocab["delete_entries_warning"] = "WAARSCHUWING!  Dit zal alle boekingen verwijderen die overeenkomen met de zoekterm. Deze actie kan niet ongedaan worden gemaakt. Ben je zeker dat je verder wilt gaan?\n\n" .
-    "Totale aantal boekingen dat zal worden verwijded: ";
+    "Totale aantal boekingen dat zal worden verwijded: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["delete_entries_failed"] = "De boekingen konden niet worden verwijderd.";
 $vocab["registered"]            = "Aangemeld";
 $vocab["na"]                    = "[N/B]";

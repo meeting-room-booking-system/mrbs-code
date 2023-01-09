@@ -391,7 +391,7 @@ $vocab["presentation_options"]  = "输出选项";
 $vocab["delete_entries"]        = "删除条目";
 $vocab["delete_entries_warning"] = "警告!  这将会删除所有符合搜索条件的条目." .
                                    "该操作不能回退.  你确定要继续吗?\n\n" .
-                                   "将要删除的条目数: ";
+                                   "将要删除的条目数: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 
 $vocab["delete_entries_failed"] = "不能删除这些条目.";
 
