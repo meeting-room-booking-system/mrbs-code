@@ -434,7 +434,7 @@ $vocab["search_criteria"]       = "Search criteria";
 $vocab["presentation_options"]  = "Output options";
 $vocab["delete_entries"]        = "Delete entries";
 $vocab["delete_entries_warning"] = "WARNING!  This will delete all the entries matching " .
-                                   "the search string.  The operation cannot be undone.  Are " .
+                                   "the search criteria.  The operation cannot be undone.  Are " .
                                    "you sure you want to continue?\n\n" .
                                    "Total number of entries that will be deleted: %%s"; // The % sign is escaped because the string substitution is done by JavaScript
 $vocab["deleting_n_entries"]    = "Deleting %%d entries ..."; // The % sign is escaped because the number substitution is done by JavaScript
