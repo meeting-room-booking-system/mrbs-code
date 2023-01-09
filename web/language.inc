@@ -1133,21 +1133,23 @@ function date_formatter_intl(string $format, $time, $locale=null) : string
 function utf8_strftime(string $format, $time, $locale=null) : string
 {
   // strftime() is deprecated from PHP 8.1, so we use IntlDateFormatter
-  // if we can.
+  // if we can, or if we can't map the strftime format to a suitable Intl one.
   // TODO: This solution just translates strftime formats into the nearest
   // TODO: equivalent IntlDateFormatter patterns.  However it would be better
   // TODO: to rewrite MRBS so that IntlDateFormatter patterns are used if possible
   // TODO: as they are more flexible and better suited to reflecting locales.
-  if (class_exists('IntlDateFormatter'))
+
+  try
   {
     return date_formatter_intl($format, $time, $locale);
   }
-  else
+  // Catch either an Error if the IntlDateFormatter class doesn't exist or an
+  // Exception if we can't map the format.
+  catch (\Throwable $e)
   {
     return date_formatter_strftime($format, $time, $locale);
   }
 }
-
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
