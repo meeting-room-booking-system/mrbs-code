@@ -323,7 +323,6 @@ $vocab["privacy_status"]        = "Stato privacy";
 $vocab["search_criteria"]       = "Criteri di ricerca";
 $vocab["presentation_options"]  = "Opzioni di presentazione";
 $vocab["delete_entries"]        = "Cancella valori";
-$vocab["delete_entries_warning"] = "ATENZIONE!  Questa operazione cancellerà tutti i valori che soddisfano " .
 $vocab["delete_entries_failed"] = "Non è stato possibile cancellare i valori.";
 
 // Used in admin.php
