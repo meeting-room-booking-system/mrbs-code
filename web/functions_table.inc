@@ -399,7 +399,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
 
         $html .= '<div class="' . implode(' ', $classes) . '">';
         $html .= '<a href="' . htmlspecialchars(multisite("view_entry.php?$query")) . '"' .
-                   ' title="' . htmlspecialchars($booking['description']) . '"' .
+                   ' title="' . htmlspecialchars($booking['description'] ?? '') . '"' .
                    ' class="' . $booking['type'] . '"' .
                    ' data-id="' . $booking['id'] . '"' .
                    ' data-type="' . $booking['type'] . '">';
