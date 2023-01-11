@@ -3,16 +3,16 @@ namespace MRBS;
 
 use DateInterval;
 use MRBS\Form\Element;
-use MRBS\Form\Field;
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputHidden;
+use MRBS\Form\Field;
 use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\Form;
 
 
 require "defaultincludes.inc";
@@ -1012,7 +1012,7 @@ function report_row(&$rows, $data)
         }
         break;
     }
-    $value = escape($value);
+    $value = escape($value ?? '');
 
     // For HTML output we take special action for some fields
     if ($output_format == OUTPUT_HTML)

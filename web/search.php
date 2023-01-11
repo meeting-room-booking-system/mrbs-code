@@ -104,7 +104,7 @@ function output_row($row, $returl)
   //    add a span with the numeric start time in the title for sorting
   $values[] = "<span title=\"" . $row['start_time'] . "\"></span>" . $link;
   // description
-  $values[] = htmlspecialchars($row['description']);
+  $values[] = htmlspecialchars($row['description'] ?? '');
 
   if ($is_ajax)
   {

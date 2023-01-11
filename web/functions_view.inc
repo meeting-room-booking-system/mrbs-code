@@ -9,7 +9,7 @@ function create_details_row(string $label, ?string $value, bool $as_html=false, 
 {
   $value = $value ?? '';
   $result = '';
-  
+
   if ($as_html)
   {
     $escaped_value = mrbs_nl2br(htmlspecialchars($value));
