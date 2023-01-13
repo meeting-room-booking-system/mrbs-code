@@ -1,8 +1,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.default = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.default = {}));
+}(this, (function (exports) { 'use strict';
 
   var english = {
       weekdays: {
@@ -15,7 +15,7 @@
               "Thursday",
               "Friday",
               "Saturday",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -45,7 +45,7 @@
               "October",
               "November",
               "December",
-          ]
+          ],
       },
       daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
       firstDayOfWeek: 0,
@@ -70,9 +70,10 @@
       toggleTitle: "Click to toggle",
       amPM: ["AM", "PM"],
       yearAriaLabel: "Year",
+      monthAriaLabel: "Month",
       hourAriaLabel: "Hour",
       minuteAriaLabel: "Minute",
-      time_24hr: false
+      time_24hr: false,
   };
 
   exports.default = english;
@@ -80,4 +81,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

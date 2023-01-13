@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global['zh-tw'] = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['zh-tw'] = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var MandarinTraditional = {
       weekdays: {
@@ -20,7 +20,7 @@
               "星期四",
               "星期五",
               "星期六",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,12 +50,12 @@
               "十月",
               "十一月",
               "十二月",
-          ]
+          ],
       },
       rangeSeparator: " 至 ",
       weekAbbreviation: "週",
       scrollTitle: "滾動切換",
-      toggleTitle: "點擊切換 12/24 小時時制"
+      toggleTitle: "點擊切換 12/24 小時時制",
   };
   fp.l10ns.zh_tw = MandarinTraditional;
   var zhTw = fp.l10ns;
@@ -65,4 +65,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

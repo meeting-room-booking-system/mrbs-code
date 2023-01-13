@@ -1,63 +1,64 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.sv = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sv = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Swedish = {
       firstDayOfWeek: 1,
       weekAbbreviation: "v",
       weekdays: {
-          shorthand: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
+          shorthand: ["sön", "mån", "tis", "ons", "tor", "fre", "lör"],
           longhand: [
-              "Söndag",
-              "Måndag",
-              "Tisdag",
-              "Onsdag",
-              "Torsdag",
-              "Fredag",
-              "Lördag",
-          ]
+              "söndag",
+              "måndag",
+              "tisdag",
+              "onsdag",
+              "torsdag",
+              "fredag",
+              "lördag",
+          ],
       },
       months: {
           shorthand: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "Maj",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Okt",
-              "Nov",
-              "Dec",
+              "jan",
+              "feb",
+              "mar",
+              "apr",
+              "maj",
+              "jun",
+              "jul",
+              "aug",
+              "sep",
+              "okt",
+              "nov",
+              "dec",
           ],
           longhand: [
-              "Januari",
-              "Februari",
-              "Mars",
-              "April",
-              "Maj",
-              "Juni",
-              "Juli",
-              "Augusti",
-              "September",
-              "Oktober",
-              "November",
-              "December",
-          ]
+              "januari",
+              "februari",
+              "mars",
+              "april",
+              "maj",
+              "juni",
+              "juli",
+              "augusti",
+              "september",
+              "oktober",
+              "november",
+              "december",
+          ],
       },
+      rangeSeparator: " till ",
       time_24hr: true,
       ordinal: function () {
           return ".";
-      }
+      },
   };
   fp.l10ns.sv = Swedish;
   var sv = fp.l10ns;
@@ -67,4 +68,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

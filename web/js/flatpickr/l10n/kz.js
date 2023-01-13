@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.kz = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.kz = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Kazakh = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Бейсенбi",
               "Жұма",
               "Сенбi",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "Қазан",
               "Қараша",
               "Желтоқсан",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       ordinal: function () {
@@ -61,7 +61,7 @@
       scrollTitle: "Үлкейту үшін айналдырыңыз",
       toggleTitle: "Ауыстыру үшін басыңыз",
       amPM: ["ТД", "ТК"],
-      yearAriaLabel: "Жыл"
+      yearAriaLabel: "Жыл",
   };
   fp.l10ns.kz = Kazakh;
   var kz = fp.l10ns;
@@ -71,4 +71,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

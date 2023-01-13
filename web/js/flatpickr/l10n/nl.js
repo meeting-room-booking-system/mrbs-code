@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.nl = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.nl = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Dutch = {
       weekdays: {
@@ -20,7 +20,7 @@
               "donderdag",
               "vrijdag",
               "zaterdag",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,11 +50,11 @@
               "oktober",
               "november",
               "december",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       weekAbbreviation: "wk",
-      rangeSeparator: " tot ",
+      rangeSeparator: " t/m ",
       scrollTitle: "Scroll voor volgende / vorige",
       toggleTitle: "Klik om te wisselen",
       time_24hr: true,
@@ -62,7 +62,7 @@
           if (nth === 1 || nth === 8 || nth >= 20)
               return "ste";
           return "de";
-      }
+      },
   };
   fp.l10ns.nl = Dutch;
   var nl = fp.l10ns;
@@ -72,4 +72,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

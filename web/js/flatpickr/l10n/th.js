@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.th = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.th = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Thai = {
       weekdays: {
@@ -20,7 +20,7 @@
               "พฤหัสบดี",
               "ศุกร์",
               "เสาร์",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "ตุลาคม",
               "พฤศจิกายน",
               "ธันวาคม",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       rangeSeparator: " ถึง ",
@@ -59,7 +59,7 @@
       time_24hr: true,
       ordinal: function () {
           return "";
-      }
+      },
   };
   fp.l10ns.th = Thai;
   var th = fp.l10ns;
@@ -69,4 +69,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
