@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.tr = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.tr = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Turkish = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Perşembe",
               "Cuma",
               "Cumartesi",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "Ekim",
               "Kasım",
               "Aralık",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       ordinal: function () {
@@ -61,7 +61,7 @@
       scrollTitle: "Artırmak için kaydırın",
       toggleTitle: "Aç/Kapa",
       amPM: ["ÖÖ", "ÖS"],
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.tr = Turkish;
   var tr = fp.l10ns;
@@ -71,4 +71,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

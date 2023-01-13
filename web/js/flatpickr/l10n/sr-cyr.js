@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global['sr-cyr'] = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['sr-cyr'] = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var SerbianCyrillic = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Четвртак",
               "Петак",
               "Субота",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,11 +50,11 @@
               "Октобар",
               "Новембар",
               "Децембар",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       weekAbbreviation: "Нед.",
-      rangeSeparator: " до "
+      rangeSeparator: " до ",
   };
   fp.l10ns.sr = SerbianCyrillic;
   var srCyr = fp.l10ns;
@@ -64,4 +64,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

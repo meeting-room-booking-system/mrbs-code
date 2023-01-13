@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ar = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['ar-dz'] = {}));
 }(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,7 +9,7 @@
       : {
           l10ns: {},
       };
-  var Arabic = {
+  var AlgerianArabic = {
       weekdays: {
           shorthand: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
           longhand: [
@@ -25,37 +25,36 @@
       months: {
           shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
           longhand: [
-              "يناير",
-              "فبراير",
+              "جانفي",
+              "فيفري",
               "مارس",
-              "أبريل",
-              "مايو",
-              "يونيو",
-              "يوليو",
-              "أغسطس",
+              "أفريل",
+              "ماي",
+              "جوان",
+              "جويليه",
+              "أوت",
               "سبتمبر",
               "أكتوبر",
               "نوفمبر",
               "ديسمبر",
           ],
       },
-      firstDayOfWeek: 6,
+      firstDayOfWeek: 0,
       rangeSeparator: " إلى ",
       weekAbbreviation: "Wk",
       scrollTitle: "قم بالتمرير للزيادة",
       toggleTitle: "اضغط للتبديل",
-      amPM: ["ص", "م"],
       yearAriaLabel: "سنة",
       monthAriaLabel: "شهر",
       hourAriaLabel: "ساعة",
       minuteAriaLabel: "دقيقة",
-      time_24hr: false,
+      time_24hr: true,
   };
-  fp.l10ns.ar = Arabic;
-  var ar = fp.l10ns;
+  fp.l10ns.ar = AlgerianArabic;
+  var arDz = fp.l10ns;
 
-  exports.Arabic = Arabic;
-  exports.default = ar;
+  exports.AlgerianArabic = AlgerianArabic;
+  exports.default = arDz;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

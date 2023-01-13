@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.cat = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.cat = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Catalan = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Dijous",
               "Divendres",
               "Dissabte",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "Octubre",
               "Novembre",
               "Desembre",
-          ]
+          ],
       },
       ordinal: function (nth) {
           var s = nth % 100;
@@ -70,9 +70,10 @@
           }
       },
       firstDayOfWeek: 1,
-      time_24hr: true
+      rangeSeparator: " a ",
+      time_24hr: true,
   };
-  fp.l10ns.cat = Catalan;
+  fp.l10ns.cat = fp.l10ns.ca = Catalan;
   var cat = fp.l10ns;
 
   exports.Catalan = Catalan;
@@ -80,4 +81,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.bg = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bg = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Bulgarian = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Четвъртък",
               "Петък",
               "Събота",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,10 +50,10 @@
               "Октомври",
               "Ноември",
               "Декември",
-          ]
+          ],
       },
       time_24hr: true,
-      firstDayOfWeek: 1
+      firstDayOfWeek: 1,
   };
   fp.l10ns.bg = Bulgarian;
   var bg = fp.l10ns;
@@ -63,4 +63,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

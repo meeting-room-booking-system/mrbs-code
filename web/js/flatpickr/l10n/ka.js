@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.ka = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ka = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Georgian = {
       weekdays: {
@@ -20,7 +20,7 @@
               "ხუთშაბათი",
               "პარასკევი",
               "შაბათი",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "ოქტომბერი",
               "ნოემბერი",
               "დეკემბერი",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       ordinal: function () {
@@ -62,7 +62,7 @@
       toggleTitle: "დააკლიკეთ გადართვისთვის",
       amPM: ["AM", "PM"],
       yearAriaLabel: "წელი",
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.ka = Georgian;
   var ka = fp.l10ns;
@@ -72,4 +72,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

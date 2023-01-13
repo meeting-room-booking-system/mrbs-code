@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.sk = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sk = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Slovak = {
       weekdays: {
@@ -20,7 +20,7 @@
               "Štvrtok",
               "Piatok",
               "Sobota",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,14 +50,14 @@
               "Október",
               "November",
               "December",
-          ]
+          ],
       },
       firstDayOfWeek: 1,
       rangeSeparator: " do ",
       time_24hr: true,
       ordinal: function () {
           return ".";
-      }
+      },
   };
   fp.l10ns.sk = Slovak;
   var sk = fp.l10ns;
@@ -67,4 +67,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

@@ -1,62 +1,62 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.fi = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.fi = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Finnish = {
       firstDayOfWeek: 1,
       weekdays: {
-          shorthand: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"],
+          shorthand: ["su", "ma", "ti", "ke", "to", "pe", "la"],
           longhand: [
-              "Sunnuntai",
-              "Maanantai",
-              "Tiistai",
-              "Keskiviikko",
-              "Torstai",
-              "Perjantai",
-              "Lauantai",
-          ]
+              "sunnuntai",
+              "maanantai",
+              "tiistai",
+              "keskiviikko",
+              "torstai",
+              "perjantai",
+              "lauantai",
+          ],
       },
       months: {
           shorthand: [
-              "Tammi",
-              "Helmi",
-              "Maalis",
-              "Huhti",
-              "Touko",
-              "Kesä",
-              "Heinä",
-              "Elo",
-              "Syys",
-              "Loka",
-              "Marras",
-              "Joulu",
+              "tammi",
+              "helmi",
+              "maalis",
+              "huhti",
+              "touko",
+              "kesä",
+              "heinä",
+              "elo",
+              "syys",
+              "loka",
+              "marras",
+              "joulu",
           ],
           longhand: [
-              "Tammikuu",
-              "Helmikuu",
-              "Maaliskuu",
-              "Huhtikuu",
-              "Toukokuu",
-              "Kesäkuu",
-              "Heinäkuu",
-              "Elokuu",
-              "Syyskuu",
-              "Lokakuu",
-              "Marraskuu",
-              "Joulukuu",
-          ]
+              "tammikuu",
+              "helmikuu",
+              "maaliskuu",
+              "huhtikuu",
+              "toukokuu",
+              "kesäkuu",
+              "heinäkuu",
+              "elokuu",
+              "syyskuu",
+              "lokakuu",
+              "marraskuu",
+              "joulukuu",
+          ],
       },
       ordinal: function () {
           return ".";
       },
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.fi = Finnish;
   var fi = fp.l10ns;
@@ -66,4 +66,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
