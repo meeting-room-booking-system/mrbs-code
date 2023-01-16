@@ -32,8 +32,9 @@ $flatpickr_lang_map = array(
 // Map flatpickr language file names onto flatpickr fp.l10ns properties
 // so that they can be used with flatpickr.localize.
 $flatpickr_property_map = array(
-  'sr-cyr' => 'sr',
-  'zh-tw'  => 'zh_tw'
+  'ar-dz'   => 'arDz',
+  'sr-cyr'  => 'sr',
+  'zh-tw'   => 'zh_tw'
 );
 
 // The DataTables language files are for the moment given descriptive names.   I have
