@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.az = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.uz_latn = {}));
 }(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -9,17 +9,17 @@
       : {
           l10ns: {},
       };
-  var Azerbaijan = {
+  var UzbekLatin = {
       weekdays: {
-          shorthand: ["B.", "B.e.", "Ç.a.", "Ç.", "C.a.", "C.", "Ş."],
+          shorthand: ["Ya", "Du", "Se", "Cho", "Pa", "Ju", "Sha"],
           longhand: [
-              "Bazar",
-              "Bazar ertəsi",
-              "Çərşənbə axşamı",
-              "Çərşənbə",
-              "Cümə axşamı",
-              "Cümə",
-              "Şənbə",
+              "Yakshanba",
+              "Dushanba",
+              "Seshanba",
+              "Chorshanba",
+              "Payshanba",
+              "Juma",
+              "Shanba",
           ],
       },
       months: {
@@ -29,9 +29,9 @@
               "Mar",
               "Apr",
               "May",
-              "İyn",
-              "İyl",
-              "Avq",
+              "Iyun",
+              "Iyul",
+              "Avg",
               "Sen",
               "Okt",
               "Noy",
@@ -43,31 +43,32 @@
               "Mart",
               "Aprel",
               "May",
-              "İyun",
-              "İyul",
-              "Avqust",
-              "Sentyabr",
-              "Oktyabr",
+              "Iyun",
+              "Iyul",
+              "Avgust",
+              "Sentabr",
+              "Oktabr",
               "Noyabr",
               "Dekabr",
           ],
       },
       firstDayOfWeek: 1,
       ordinal: function () {
-          return ".";
+          return "";
       },
-      rangeSeparator: " - ",
-      weekAbbreviation: "Hf",
-      scrollTitle: "Artırmaq üçün sürüşdürün",
-      toggleTitle: "Aç / Bağla",
-      amPM: ["GƏ", "GS"],
+      rangeSeparator: " — ",
+      weekAbbreviation: "Hafta",
+      scrollTitle: "Kattalashtirish uchun aylantiring",
+      toggleTitle: "O‘tish uchun bosing",
+      amPM: ["AM", "PM"],
+      yearAriaLabel: "Yil",
       time_24hr: true,
   };
-  fp.l10ns.az = Azerbaijan;
-  var az = fp.l10ns;
+  fp.l10ns["uz_latn"] = UzbekLatin;
+  var uz_latn = fp.l10ns;
 
-  exports.Azerbaijan = Azerbaijan;
-  exports.default = az;
+  exports.UzbekLatin = UzbekLatin;
+  exports.default = uz_latn;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

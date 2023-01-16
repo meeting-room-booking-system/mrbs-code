@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.hr = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.hr = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Croatian = {
       firstDayOfWeek: 1,
@@ -21,7 +21,7 @@
               "Četvrtak",
               "Petak",
               "Subota",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -51,9 +51,9 @@
               "Listopad",
               "Studeni",
               "Prosinac",
-          ]
+          ],
       },
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.hr = Croatian;
   var hr = fp.l10ns;
@@ -63,4 +63,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

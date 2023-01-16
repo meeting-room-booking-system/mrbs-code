@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.pa = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.pa = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Punjabi = {
       weekdays: {
@@ -20,7 +20,7 @@
               "ਵੀਰਵਾਰ",
               "ਸ਼ੁੱਕਰਵਾਰ",
               "ਸ਼ਨਿੱਚਰਵਾਰ",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,9 +50,9 @@
               "ਅਕਤੂਬਰ",
               "ਨਵੰਬਰ",
               "ਦਸੰਬਰ",
-          ]
+          ],
       },
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.pa = Punjabi;
   var pa = fp.l10ns;
@@ -62,4 +62,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

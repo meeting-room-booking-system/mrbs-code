@@ -1,13 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.km = {}));
-}(this, function (exports) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.km = {}));
+}(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
       ? window.flatpickr
       : {
-          l10ns: {}
+          l10ns: {},
       };
   var Khmer = {
       weekdays: {
@@ -20,7 +20,7 @@
               "ព្រហស្បតិ៍",
               "សុក្រ",
               "សៅរ៍",
-          ]
+          ],
       },
       months: {
           shorthand: [
@@ -50,7 +50,7 @@
               "តុលា",
               "វិច្ឆិកា",
               "ធ្នូ",
-          ]
+          ],
       },
       ordinal: function () {
           return "";
@@ -61,7 +61,7 @@
       scrollTitle: "រំកិលដើម្បីបង្កើន",
       toggleTitle: "ចុចដើម្បីផ្លាស់ប្ដូរ",
       yearAriaLabel: "ឆ្នាំ",
-      time_24hr: true
+      time_24hr: true,
   };
   fp.l10ns.km = Khmer;
   var km = fp.l10ns;
@@ -71,4 +71,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
