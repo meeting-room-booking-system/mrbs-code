@@ -56,7 +56,7 @@
       weekAbbreviation: "Нед.",
       rangeSeparator: " до ",
   };
-  fp.l10ns.sr = SerbianCyrillic;
+  fp.l10ns.srCyr = SerbianCyrillic;
   var srCyr = fp.l10ns;
 
   exports.SerbianCyrillic = SerbianCyrillic;

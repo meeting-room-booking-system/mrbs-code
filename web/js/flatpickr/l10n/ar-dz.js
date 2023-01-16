@@ -50,7 +50,7 @@
       minuteAriaLabel: "دقيقة",
       time_24hr: true,
   };
-  fp.l10ns.ar = AlgerianArabic;
+  fp.l10ns.arDz = AlgerianArabic;
   var arDz = fp.l10ns;
 
   exports.AlgerianArabic = AlgerianArabic;
