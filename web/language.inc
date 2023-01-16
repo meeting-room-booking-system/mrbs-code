@@ -33,7 +33,7 @@ $flatpickr_lang_map = array(
 // so that they can be used with flatpickr.localize.
 $flatpickr_property_map = array(
   'ar-dz'   => 'arDz',
-  'sr-cyr'  => 'sr',
+  'sr-cyr'  => 'srCyr',
   'zh-tw'   => 'zh_tw'
 );
 
