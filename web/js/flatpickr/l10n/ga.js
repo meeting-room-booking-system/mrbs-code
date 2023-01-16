@@ -55,7 +55,7 @@
       },
       time_24hr: true,
   };
-  fp.l10ns.hr = Irish;
+  fp.l10ns.ga = Irish;
   var ga = fp.l10ns;
 
   exports.Irish = Irish;
