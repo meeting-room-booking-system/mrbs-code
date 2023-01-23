@@ -29,7 +29,7 @@ $(document).on('page_ready', function() {
       idleTimer = setTimeout(whenUserIdle, <?php echo $kiosk_exit_page_timeout ?>*1000);
     }
 
-    function whenUserIdle(){
+    function whenUserIdle() {
       window.location.replace('index.php');
     }
 
