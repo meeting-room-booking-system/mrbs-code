@@ -16,15 +16,33 @@ if ($use_strict)
 
 $(document).on('page_ready', function() {
 
-  <?php // If it's the exit page then disable everything except the exit form ?>
+  <?php
+  // If it's the exit page then (a) disable everything except the exit form and
+  // (b) set a timeout on the page.
+  ?>
   if ($('#kiosk_exit').length) {
-    $(window).on('click keypress', function (e) {
+
+    var idleTimer;
+
+    function resetTimer() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(whenUserIdle, <?php echo $kiosk_exit_page_timeout ?>*1000);
+    }
+
+    function whenUserIdle(){
+      window.location.replace('index.php');
+    }
+
+    $(document.body).on('click keydown mousemove', resetTimer)
+                    .on('click keydown', function (e) {
       if ($(e.target).parents('#kiosk_exit').length === 0)
       {
         e.preventDefault();
         return false;
       }
     });
+
+    resetTimer(); // Start the timer
   }
 
   <?php // Otherwise, toggle the area and room selects depending on the mode ?>
