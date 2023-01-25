@@ -633,6 +633,12 @@ var Table = {
 
 $(document).on('page_ready', function() {
 
+  <?php // Don't do anything if we're in kiosk mode ?>
+  if (args.kiosk)
+  {
+    return;
+  }
+
   <?php
   // Resizable bookings work by creating an element which is a clone of the real booking
   // element and making it resizable.   We can't make the real element resizable

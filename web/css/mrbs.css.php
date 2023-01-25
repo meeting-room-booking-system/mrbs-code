@@ -2657,6 +2657,10 @@ div#check_tabs {background-image: none}
 .edit_entry #ui-tab-dialog-close a {float:none; padding:0}
 
 
+.ui-dialog {
+  z-index: 800;
+}
+
 
 <?php
 // Modify the flatpickr blue
