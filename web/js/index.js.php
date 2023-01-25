@@ -315,20 +315,60 @@ $(document).on('page_ready', function() {
   ?>
   if (args.kiosk)
   {
-    $(window).on('click keypress', function(e) {
-      if (window.confirm('<?php echo escape_js(get_vocab('exit_kiosk_mode_confirm'))?>'))
-      {
-        var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
-        href += '&area=' + encodeURIComponent(args.area);
-        href += '&room=' + encodeURIComponent(args.room);
-        if (args.site)
-        {
-          href += '&site=' + encodeURIComponent(args.site);
-        }
-        $.redirect(href, {'csrf_token': getCSRFToken()});
+    <?php // We need to use a jQuery UI dialog because we can't time out a confirm box ?>
+    var dialog = $('<div id="dialog_exit_kiosk"></div>');
+    var timeout;
+
+    $(document.body).on('click keypress', function(e) {
+
+      function dialogClose() {
+        dialog.dialog('close');
       }
+
       e.preventDefault();
+
+      if (!dialog.dialog('instance'))
+      {
+        dialog.dialog({
+          buttons: [
+            {text: "<?php echo escape_js(get_vocab('ok'))?>",
+              click: function() {
+                var href = 'kiosk.php?kiosk=' + encodeURIComponent(args.kiosk);
+                href += '&area=' + encodeURIComponent(args.area);
+                href += '&room=' + encodeURIComponent(args.room);
+                if (args.site)
+                {
+                  href += '&site=' + encodeURIComponent(args.site);
+                }
+                $.redirect(href, {'csrf_token': getCSRFToken()});
+              }
+            },
+            {text: "<?php echo escape_js(get_vocab('cancel'))?>",
+              click: function() {
+                dialog.dialog('close');
+              }
+            }
+          ],
+          close: function(event, ui) {
+            <?php // Clear the timeout so that a dialog being reopened gets a new timeout ?>
+            clearTimeout(timeout);
+          },
+          closeText: "<?php echo escape_js(get_vocab('close'))?>",
+          modal: true,
+          open: function(event, ui){
+            timeout = setTimeout(dialogClose, <?php echo $kiosk_exit_dialog_timeout; ?> *1000);
+          },
+          title: "<?php echo escape_js(get_vocab('exit_kiosk_mode_confirm'))?>"
+        });
+      }
+      <?php // Don't open a dialog if the event came from one ?>
+      else if (!dialog.dialog('isOpen') && !$(e.target).parents('[role="dialog"]').length)
+      {
+        dialog.dialog('open');
+      }
+
       return false;
+
     });
   }
 

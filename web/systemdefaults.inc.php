@@ -459,6 +459,9 @@ $kiosk_default_mode = 'room';
 // Note that PHP 7.4 or greater is required for a QR code
 $kiosk_QR_code = true;
 
+// Timeout if the exit kiosk mode dialog is not acted upon
+$kiosk_exit_dialog_timeout = 10; // seconds
+
 // Timeout if there is no activity on the kiosk exit page
 $kiosk_exit_page_timeout = 10; // seconds
 
