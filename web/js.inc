@@ -58,7 +58,7 @@ script(($debug) ? 'jquery/jquery-migrate-3.4.0.js' : 'jquery/jquery-migrate-3.4.
 //      - Mouse
 //      - Tabs
 //
-//   - Sunny theme
+//   - Cupertino theme
 // If you need any other components you will need to rebuild the custom UI library
 // See http://jqueryui.com/
 script(($debug) ? 'jquery/ui/jquery-ui.js' : 'jquery/ui/jquery-ui.min.js', true);
