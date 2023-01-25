@@ -19,7 +19,7 @@ global $custom_css_url;
 global $debug;
 
 link(($debug) ? 'jquery/ui/css/jquery-ui.structure.css' : 'jquery/ui/css/jquery-ui.structure.min.css', true);
-link(($debug) ? 'jquery/ui/css/sunny/jquery-ui.theme.css' : 'jquery/ui/css/sunny/jquery-ui.theme.min.css', true);
+link(($debug) ? 'jquery/ui/css/cupertino/jquery-ui.theme.css' : 'jquery/ui/css/cupertino/jquery-ui.theme.min.css', true);
 link(($debug) ? 'jquery/datatables/datatables.css' : 'jquery/datatables/datatables.min.css', true);
 link('js/flatpickr/css/flatpickr.min.css', true);
 link('jquery/select2/dist/css/select2.min.css', true);
