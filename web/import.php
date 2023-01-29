@@ -702,6 +702,7 @@ function get_details($file)
         $result['wrapper'] = 'compress.zlib';
         $result['files'] = get_file_details_gzip($file);
         break;
+      case 'application/x-zip-compressed':
       case 'application/zip':
         $result['wrapper'] = 'zip';
         $result['files'] = get_file_details_zip($file);
