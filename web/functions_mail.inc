@@ -248,8 +248,10 @@ function get_room_admin_email($id, $series=FALSE)
 // Plain text:  returns "$label: $new" . MAIL_EOL
 // HTML:        returns "<tr><td>$label: </td><td>$new</td></tr>" . MAIL_EOL
 // If $compare is TRUE then a third column is output with $old in parentheses
-function create_body_table_row(string $label, string $new, string $old='', bool $compare=false, bool $as_html=false) : string
+function create_body_table_row(string $label, string $new, ?string $old, bool $compare=false, bool $as_html=false) : string
 {
+  $old = $old ?? '';
+
   $result  = ($as_html) ? '<tr>' . MAIL_EOL : '';
 
   // The label
@@ -582,7 +584,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
       if (!in_array($column->name, $standard_fields['entry']))
       {
         $key = $column->name;
-        $value = (isset($data[$key])) ? $data[$key] : '';
+        $value = $data[$key] ?? '';
         // Convert any booleans or pseudo-booleans to text strings (in the mail language)
         if ($column->isBooleanLike())
         {
