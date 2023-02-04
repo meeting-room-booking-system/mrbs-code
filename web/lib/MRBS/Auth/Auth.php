@@ -328,6 +328,10 @@ abstract class Auth
   {
     $display_name1 = get_sortable_name($user1['display_name']);
     $display_name2 = get_sortable_name($user2['display_name']);
+    // Provide fallbacks just in case the display names are NULL or empty
+    $display_name1 = (isset($display_name1) && ($display_name1 !== '')) ? $display_name1 : $user1['username'];
+    $display_name2 = (isset($display_name2) && ($display_name2 !== '')) ? $display_name2 : $user2['username'];
+
     $display_name_comparison = strcasecmp_locale($display_name1, $display_name2);
 
     if ($display_name_comparison === 0)
