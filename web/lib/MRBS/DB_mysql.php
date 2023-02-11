@@ -387,11 +387,11 @@ class DB_mysql extends DB
 
     if (!isset($this->db_type))
     {
-      if (false !== utf8_stripos($this->versionComment(), 'maria'))
+      if ((false !== utf8_stripos($this->versionComment(), 'maria')) || (false !== utf8_stripos($this->version(), 'maria')))
       {
         $this->db_type = self::DB_MARIADB;
       }
-      elseif (false !== utf8_stripos($this->versionComment(), 'mysql'))
+      elseif ((false !== utf8_stripos($this->versionComment(), 'mysql')) || (false !== utf8_stripos($this->version(), 'mysql')))
       {
         $this->db_type = self::DB_MYSQL;
       }
