@@ -26,7 +26,7 @@ function get_vtimezone($tz)
 {
   global $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
 
-  static $vtimezone = array();  // Cache the componernts for performance
+  static $vtimezone = array();  // Cache the components for performance
 
   if (!isset($vtimezone[$tz]))
   {
@@ -59,9 +59,9 @@ function get_vtimezone($tz)
         // and update the database.
         //
         // (Note that a VTIMEZONE component can contain a TZURL property which
-        // gives the URL of the most up to date version.  Calendar applications
+        // gives the URL of the most up-to-date version.  Calendar applications
         // should be able to check this themselves, but we might as well give them
-        // the most up to date version in the first place).
+        // the most up-to-date version in the first place).
         $properties = explode("\r\n", ical_unfold($vtimezone[$tz]));
         foreach ($properties as $property)
         {
