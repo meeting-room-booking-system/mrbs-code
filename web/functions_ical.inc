@@ -85,10 +85,10 @@ function get_vtimezone_db(string $tz) : ?array
   global $zoneinfo_outlook_compatible;
 
   $sql = "SELECT vtimezone, last_updated
-              FROM " . _tbl('zoneinfo') . "
-             WHERE timezone=:timezone
-               AND outlook_compatible=:outlook_compatible
-             LIMIT 1";
+            FROM " . _tbl('zoneinfo') . "
+           WHERE timezone=:timezone
+             AND outlook_compatible=:outlook_compatible
+           LIMIT 1";
 
   $sql_params = array(
     ':timezone' => $tz,
@@ -252,7 +252,7 @@ function get_vtimezone(string $tz)
 
 // Returns a UNIX timestamp given an RFC5545 date or date-time
 // $params is an optional second argument and is an array of property parameters
-function get_time($value, $params=null)
+function get_time(string $value, ?array $params=null)
 {
   // If we haven't got any parameters default to "UTC".   Not strictly correct,
   // but in most cases it will be true.  Need to do something better.
