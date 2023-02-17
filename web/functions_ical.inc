@@ -15,6 +15,173 @@ function extract_vtimezone(string $vcalendar) : string
 }
 
 
+// Gets a VTIMEZONE definition from the file system.
+// Returns NULL if none found.
+function get_vtimezone_file(string $tz) : ?string
+{
+  global $zoneinfo_outlook_compatible;
+
+  $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
+  $tz_file = "$tz_dir/$tz.ics";
+
+  if (!is_readable($tz_file))
+  {
+    return null;
+  }
+
+  $vcalendar = file_get_contents($tz_file);
+
+  return ($vcalendar) ? $vcalendar : null;
+}
+
+
+// Gets a VTIMEZONE definition from the TZURL defined in the $vtimezone component
+function get_vtimezone_url(string $vtimezone) : ?string
+{
+  // (Note that a VTIMEZONE component can contain a TZURL property which
+  // gives the URL of the most up-to-date version.  Calendar applications
+  // should be able to check this themselves, but we might as well give them
+  // the most up-to-date version in the first place).
+  $properties = explode("\r\n", ical_unfold($vtimezone));
+  foreach ($properties as $property)
+  {
+    if (utf8_strpos($property, "TZURL:") === 0)
+    {
+      $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
+      break;
+    }
+  }
+
+  if (!isset($tz_url))
+  {
+    trigger_error("The VTIMEZONE component didn't contain a TZURL property.", E_USER_NOTICE);
+    return null;
+  }
+
+  $contents = url_get_contents($tz_url);
+  $vcalendar = $contents['body'];
+
+  if ($vcalendar === false)
+  {
+    trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
+    return null;
+  }
+
+  $new_vtimezone = extract_vtimezone($vcalendar);
+  if (empty($new_vtimezone))
+  {
+    trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
+    return null;
+  }
+
+  return $new_vtimezone;
+}
+
+
+// Get a VTIMEZONE definition from the database.  Returns an array indexed by
+// 'vtimezone' and 'last_updated', or NULL if none found.
+function get_vtimezone_db(string $tz) : ?array
+{
+  global $zoneinfo_outlook_compatible;
+
+  $sql = "SELECT vtimezone, last_updated
+              FROM " . _tbl('zoneinfo') . "
+             WHERE timezone=:timezone
+               AND outlook_compatible=:outlook_compatible
+             LIMIT 1";
+
+  $sql_params = array(
+    ':timezone' => $tz,
+    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
+  );
+
+  $res = db()->query($sql, $sql_params);
+
+  return ($res->count() === 0) ? null : $res->next_row_keyed();
+}
+
+
+// Update the last_updated time for a timezone in the database
+function touch_vtimezone_db(string $tz) : void
+{
+  global $zoneinfo_outlook_compatible;
+
+  $sql = "UPDATE " . _tbl('zoneinfo') . "
+             SET last_updated=:last_updated,
+           WHERE timezone=:timezone,
+             AND outlook_compatible=?";
+
+  $sql_params = array(
+    ':last_updated' => time(),
+    ':timezone' => $tz,
+    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
+  );
+
+  db()->command($sql, $sql_params);
+}
+
+
+// Insert a new VTIMEZONE definition for a timezone into the database
+function insert_vtimezone_db(string $tz, string $vtimezone) : void
+{
+  global $zoneinfo_outlook_compatible;
+
+  try
+  {
+    $sql = "INSERT INTO " . _tbl('zoneinfo') . "
+                      (vtimezone, last_updated, timezone, outlook_compatible)
+               VALUES (:vtimezone, :last_updated, :timezone, :outlook_compatible)";
+
+    $sql_params = array(
+      ':vtimezone' => $vtimezone,
+      ':last_updated' => time(),
+      ':timezone' => $tz,
+      ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
+    );
+
+    db()->command($sql, $sql_params);
+  }
+  catch (DBException $e)
+  {
+    // Catch any database exception because it's just possible that someone else has inserted a row just
+    // before us and then we'll get an error because of the unique constraint.   If we do then that's
+    // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
+    // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
+    // both MySQL and PostgreSQL).
+    //
+    // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
+    // PostgreSQL 9.5.
+    //
+    // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
+    // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
+    // one active lock.
+    trigger_error($e->getMessage(), E_USER_NOTICE);
+  }
+}
+
+
+// Update the database with a new VTIMEZONE definition for a timezone
+function update_vtimezone_db(string $tz, string $vtimezone) : void
+{
+  global $zoneinfo_outlook_compatible;
+
+  $sql = "UPDATE " . _tbl('zoneinfo') . "
+             SET vtimezone=:vtimezone,
+                 last_updated=:last_updated,
+           WHERE timezone=:timezone,
+             AND outlook_compatible=?";
+
+  $sql_params = array(
+    ':vtimezone' => $vtimezone,
+    ':last_updated' => time(),
+    ':timezone' => $tz,
+    ':outlook_compatible' => ($zoneinfo_outlook_compatible) ? 1 : 0
+  );
+
+  db()->command($sql, $sql_params);
+}
+
+
 // Get a VTIMEZONE component for the timezone $tz.
 // If none available returns FALSE.
 //
@@ -22,131 +189,64 @@ function extract_vtimezone(string $vcalendar) : string
 // we go to the web for the latest version or if there's nothing in the database
 // in the first place we try and populate it from the VTIMEZONE definitions in
 // the filesystem.
-function get_vtimezone($tz)
+function get_vtimezone(string $tz)
 {
-  global $zoneinfo_update, $zoneinfo_expiry, $zoneinfo_outlook_compatible;
+  global $zoneinfo_update, $zoneinfo_expiry;
 
-  static $vtimezone = array();  // Cache the componernts for performance
+  static $vtimezones = array();  // Cache the components for performance
 
-  if (!isset($vtimezone[$tz]))
+  if (!isset($vtimezones[$tz]))
   {
-    $vtimezone[$tz] = false;  // Default value in case we don't find one
-
-    $tz_dir = ($zoneinfo_outlook_compatible) ? TZDIR_OUTLOOK : TZDIR;
-    $tz_file = "$tz_dir/$tz.ics";  // A fallback for a VTIMEZONE definition
-
-    // Convert booleans into 1 or 0 (necessary for the database)
-    $zoneinfo_outlook_compatible = ($zoneinfo_outlook_compatible) ? 1 : 0;
-
-    // Look and see if there's a component in the database
-    $sql = "SELECT vtimezone, last_updated
-              FROM " . _tbl('zoneinfo') . "
-             WHERE timezone=?
-               AND outlook_compatible=?
-             LIMIT 1";
-    $res = db()->query($sql, array($tz,$zoneinfo_outlook_compatible));
-
-    if ($res->count() > 0)
+    // Look for a timezone definition in the database
+    $vtimezone_db = get_vtimezone_db($tz);
+    if (isset($vtimezone_db['vtimezone']))
     {
-      // If there's something in the database and it hasn't expired, then
-      // that's it.
-      $row = $res->next_row_keyed();
-      $vtimezone[$tz] = $row['vtimezone'];
-      if ($zoneinfo_update && ((time() - $row['last_updated']) >= $zoneinfo_expiry))
+      // If the definition hasn't expired, or we're not updating it, then we've finished
+      if (!$zoneinfo_update || ((time() - $vtimezone_db['last_updated']) < $zoneinfo_expiry))
       {
-        // Otherwise, provided that the config variable $zoneinfo_update
-        // is true, we get the URL of the latest version on the web,
-        // and update the database.
-        //
-        // (Note that a VTIMEZONE component can contain a TZURL property which
-        // gives the URL of the most up to date version.  Calendar applications
-        // should be able to check this themselves, but we might as well give them
-        // the most up to date version in the first place).
-        $properties = explode("\r\n", ical_unfold($vtimezone[$tz]));
-        foreach ($properties as $property)
-        {
-          if (utf8_strpos($property, "TZURL:") === 0)
-          {
-            $tz_url = substr($property, 6);  // 6 is the length of "TZURL:"
-          }
-        }
-
-        $contents = url_get_contents($tz_url);
-        $vcalendar = $contents['body'];
-
-        if ($vcalendar === false)
-        {
-          trigger_error("MRBS: failed to download a new timezone definition from $tz_url", E_USER_WARNING);
-        }
-        else
-        {
-          $new_vtimezone = extract_vtimezone($vcalendar);
-          if (empty($new_vtimezone))
-          {
-            trigger_error("MRBS: $tz_url did not contain a valid VTIMEZONE", E_USER_WARNING);
-          }
-          else
-          {
-            // We've got a valid VTIMEZONE, so we can overwrite $vtimezone
-            $vtimezone[$tz] = $new_vtimezone;
-          }
-        }
-
-        // Update the database, whether we've successfully got a new VTIMEZONE or not.
-        // If we didn't manage to get a new VTIMEZONE, updating the database will update
-        // the last_updated field and mean that MRBS will not try again until after the
-        // expiry interval has passed.  This will mean that we don't introduce a few
-        // seconds delay every time this file is included.  (The most likely reason that
-        // we couldn't get a new VTIMEZONE is that the site doesn't have external internet
-        // access, so there's no point in retrying for a while).
-        $sql = "UPDATE " . _tbl('zoneinfo') . "
-                   SET vtimezone=?,
-                       last_updated=?
-                 WHERE timezone=?
-                   AND outlook_compatible=?";
-        db()->command($sql, array($vtimezone[$tz], time(), $tz, $zoneinfo_outlook_compatible));
+        $vtimezones[$tz] = $vtimezone_db['vtimezone'];
+        return $vtimezones[$tz];
+      }
+      // Otherwise get a fresh definition from the URL
+      $vtimezone = get_vtimezone_url($vtimezone_db['vtimezone']);
+      if (isset($vtimezone))
+      {
+        // We've got a valid VTIMEZONE, so we can update the database
+        update_vtimezone_db($tz, $vtimezone);
+        $vtimezones[$tz] = $vtimezone;
+        return $vtimezones[$tz];
+      }
+      else
+      {
+        // If we didn't manage to get a new VTIMEZONE, update the last_updated field
+        // so that MRBS will not try again until after the expiry interval has passed.
+        // This will mean that we don't keep encountering a timeout delay. (The most
+        // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
+        // have external internet access, so there's no point in retrying for a while).
+        touch_vtimezone_db($tz);
       }
     }
-    // There's nothing in the database, so try and get a VTIMEZONE component
-    // from the filesystem.
-    elseif (is_readable($tz_file))
+    else
     {
-      $vcalendar = file_get_contents($tz_file);
-
-      if ($vcalendar)
+      // If there's nothing in the database, get one from the filesystem
+      $vtimezone = get_vtimezone_file($tz);
+      if (isset($vtimezone))
       {
-        $vtimezone[$tz] = extract_vtimezone($vcalendar);
-        if (!empty($vtimezone[$tz]))
-        {
-          try
-          {
-            $sql = "INSERT INTO " . _tbl('zoneinfo') . "
-                                (timezone, outlook_compatible, vtimezone, last_updated)
-                         VALUES (?, ?, ?, ?)";
-            db()->command($sql, array($tz, $zoneinfo_outlook_compatible, $vtimezone[$tz], time()));
-          }
-          catch (DBException $e)
-          {
-            // Catch any database exception because it's just possible that someone else has inserted a row just
-            // before us and then we'll get an error because of the unique constraint.   If we do then that's
-            // fine and we can ignore it, but trigger an error anyway just in case it's some other kind of error.
-            // (Ideally we'd want to be more specific about looking for constraint errors, but we have to consider
-            // both MySQL and PostgreSQL).
-            //
-            // We could have used an INSERT IGNORE, but there isn't an easy PostgreSQL alternative until
-            // PostgreSQL 9.5.
-            //
-            // We can't put a mutex lock round the SELECT - INSERT operation because we're normally already
-            // inside another lock from edit_entry_handler and you can only, in the MYSQL implementation, have
-            // one active lock.
-            trigger_error($e->getMessage(), E_USER_NOTICE);
-          }
-        }
+        // And put it in the database if it's valid
+        insert_vtimezone_db($tz, $vtimezone);
+        $vtimezones[$tz] = $vtimezone;
+        return $vtimezones[$tz];
+      }
+      else
+      {
+        // Everything has failed
+        $vtimezones[$tz] = false;
+        return $vtimezones[$tz];
       }
     }
   }
 
-  return $vtimezone[$tz];
+  return $vtimezones[$tz];
 }
 
 
