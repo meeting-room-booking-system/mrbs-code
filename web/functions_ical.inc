@@ -16,7 +16,7 @@ function extract_vtimezone(string $vcalendar) : string
 
 
 // Gets a VTIMEZONE definition from the file system.
-// Returns NULL if none found.
+// Returns NULL if none found or it's empty.
 function get_vtimezone_file(string $tz) : ?string
 {
   global $zoneinfo_outlook_compatible;
@@ -31,7 +31,7 @@ function get_vtimezone_file(string $tz) : ?string
 
   $vcalendar = file_get_contents($tz_file);
 
-  return ($vcalendar) ? $vcalendar : null;
+  return (empty($vcalendar)) ? null : $vcalendar;
 }
 
 
