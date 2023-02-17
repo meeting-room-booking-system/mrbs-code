@@ -85,10 +85,10 @@ function get_vtimezone_db(string $tz) : ?array
   global $zoneinfo_outlook_compatible;
 
   $sql = "SELECT vtimezone, last_updated
-              FROM " . _tbl('zoneinfo') . "
-             WHERE timezone=:timezone
-               AND outlook_compatible=:outlook_compatible
-             LIMIT 1";
+            FROM " . _tbl('zoneinfo') . "
+           WHERE timezone=:timezone
+             AND outlook_compatible=:outlook_compatible
+           LIMIT 1";
 
   $sql_params = array(
     ':timezone' => $tz,
