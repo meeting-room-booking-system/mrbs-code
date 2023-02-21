@@ -30,7 +30,7 @@ abstract class Location extends Table
   abstract public function getRules(array $role_ids) : array;
 
 
-  // Determines whether the location is visible to the currently logged in user
+  // Determines whether the location is visible to the currently logged-in user
   public function isVisible() : bool
   {
     if (!isset($this->is_visible))
@@ -49,7 +49,7 @@ abstract class Location extends Table
   {
     if (!isset($user) || empty($user->level))
     {
-      // If there's no logged in user or the user has level 0, use the default rules
+      // If there's no logged-in user or the user has level 0, use the default rules
       $rules = array($this->getDefaultRule($user));
     }
     else
