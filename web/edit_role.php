@@ -557,7 +557,7 @@ function generate_area_roles_table(Role $role)
   $fieldset->addElement($button);
   $form->addElement($fieldset);
 
-  $form->render();;
+  $form->render();
 }
 
 
