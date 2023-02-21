@@ -183,15 +183,22 @@ function get_address_list(array $address_strings) : string
 }
 
 
+// Get the admin email address(es), provided that the config settings allow it.
+function get_admin_email() : string
+{
+  global $mail_settings;
+
+  return ($mail_settings['admin_on_bookings'] && isset($mail_settings['recipients'])) ? $mail_settings['recipients'] : '';
+}
+
+
 // get the list of email addresses that are allowed to approve bookings
 // for the room with id $room_id
 // (At the moment this is just the admin email address, but this could
 // be extended.)
-function get_approvers_email($room_id)
+function get_approvers_email($room_id) : string
 {
-  global $mail_settings;
-
-  return $mail_settings['recipients'];
+  return get_admin_email();
 }
 
 
@@ -792,10 +799,7 @@ function create_addresses(array $data, string $action) : array
     }
   }
 
-  if ($mail_settings['admin_on_bookings'] && !empty($mail_settings['recipients']))
-  {
-    $to = address_merge($to, $mail_settings['recipients']);
-  }
+  $to = address_merge($to, get_admin_email());
 
   if ($mail_settings['area_admin_on_bookings'])
   {
