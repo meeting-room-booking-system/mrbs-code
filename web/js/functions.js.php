@@ -57,9 +57,9 @@ jQuery.fn.extend({
 
   <?php
   // Turn a select element into a fancy Select2 field control.  This wrapper function also
-  // (a) only does anything if we are using tags or are not on a mobile device, because the native select
-  //     elements on mobile devices tend to be better.  [Could maybe turn the element from a <select>
-  //     into a <datalist> if we are using tags?]
+  // (a) only does anything if we are using tags or are not on a mobile device, unless useOnMobile
+  //     is true, because the native select elements on mobile devices tend to be better.
+  //     [Could maybe turn the element from a <select> into a <datalist> if we are using tags?]
   // (b) wraps the select element in a <div> because in some places, eg in forms,  MRBS uses
   //     a table structure and because Select2 adds a sibling element the table structure is
   //     ruined.
@@ -69,8 +69,8 @@ jQuery.fn.extend({
   // Get the best available language
   $select2_lang = basename(get_select2_lang_path(), '.js');
   ?>
-  mrbsSelect: function(tags) {
-    if (tags || !isMobile())
+  mrbsSelect: function(tags, useOnMobile) {
+    if (tags || useOnMobile || !isMobile())
     {
       tags = Boolean(tags);
       $(this).wrap('<div></div>')
