@@ -235,14 +235,13 @@ function get_vtimezone(string $tz)
         // And put it in the database if it's valid
         insert_vtimezone_db($tz, $vtimezone);
         $vtimezones[$tz] = $vtimezone;
-        return $vtimezones[$tz];
       }
       else
       {
         // Everything has failed
         $vtimezones[$tz] = false;
-        return $vtimezones[$tz];
       }
+      return $vtimezones[$tz];
     }
   }
 
