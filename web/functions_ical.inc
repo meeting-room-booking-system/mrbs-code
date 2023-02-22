@@ -107,8 +107,8 @@ function touch_vtimezone_db(string $tz) : void
   global $zoneinfo_outlook_compatible;
 
   $sql = "UPDATE " . _tbl('zoneinfo') . "
-             SET last_updated=:last_updated,
-           WHERE timezone=:timezone,
+             SET last_updated=:last_updated
+           WHERE timezone=:timezone
              AND outlook_compatible=:outlook_compatible";
 
   $sql_params = array(
@@ -167,8 +167,8 @@ function update_vtimezone_db(string $tz, string $vtimezone) : void
 
   $sql = "UPDATE " . _tbl('zoneinfo') . "
              SET vtimezone=:vtimezone,
-                 last_updated=:last_updated,
-           WHERE timezone=:timezone,
+                 last_updated=:last_updated
+           WHERE timezone=:timezone
              AND outlook_compatible=:outlook_compatible";
 
   $sql_params = array(
