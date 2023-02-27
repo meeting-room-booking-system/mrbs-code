@@ -303,7 +303,7 @@ class DB_pgsql extends DB
       $sql .= " AND table_schema = ?";
       $sql_params[] = $table_parts['table_schema'];
     }
-    $sql .= "ORDER BY ordinal_position";
+    $sql .= " ORDER BY ordinal_position";
 
     $stmt = $this->query($sql, $sql_params);
 
