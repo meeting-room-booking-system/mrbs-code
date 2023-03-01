@@ -1720,7 +1720,10 @@ if ($phase == 2)
   {
     // If we're producing an iCalendar then we'll want the entries ordered by
     // repeat_id and then recurrence_id
-    $sql .= " ORDER BY repeat_id, ical_recur_id";
+    // Note that by default NULLs are low in MySQL and high in PostgreSQL and as it's
+    // important that the NULLs (ie non-series entries) are at the beginning then we
+    // need to be explicit about the sort order of NULLS.
+    $sql .= " ORDER BY repeat_id IS NULL DESC, repeat_id, ical_recur_id";
   }
   elseif ($sortby == "r")
   {
