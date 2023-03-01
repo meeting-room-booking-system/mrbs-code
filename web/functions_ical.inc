@@ -31,7 +31,14 @@ function get_vtimezone_file(string $tz) : ?string
 
   $vcalendar = file_get_contents($tz_file);
 
-  return (empty($vcalendar)) ? null : $vcalendar;
+  if (empty($vcalendar))
+  {
+    return null;
+  }
+
+  $vtimezone = extract_vtimezone($vcalendar);
+
+  return (empty($vtimezone)) ? null : $vtimezone;
 }
 
 
