@@ -12,21 +12,22 @@ abstract class Attributes extends TableIterator
   // Converts an array of ids to an array of names indexed by id
   public static function idsToNames(array $ids) : array
   {
-    static $names;
+    static $names = array();
+    $class = get_called_class();
 
-    if (!isset($names))
+    if (!isset($names[$class]))
     {
       $instance = new static();
-      $names = $instance->getNames();
+      $names[$class] = $instance->getNames();
     }
 
     $result = array();
 
     foreach ($ids as $id)
     {
-      if (isset($names[$id]))
+      if (isset($names[$class][$id]))
       {
-        $result[$id] = $names[$id];
+        $result[$id] = $names[$class][$id];
       }
       else
       {
