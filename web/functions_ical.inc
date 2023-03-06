@@ -258,17 +258,16 @@ function get_vtimezone(string $tz)
 
 // Returns a UNIX timestamp given an RFC5545 date or date-time
 // $params is an optional second argument and is an array of property parameters
-function get_time(string $value, ?array $params=null)
+function get_time(string $value, ?array $params=null) : int
 {
   // If we haven't got any parameters default to "UTC".   Not strictly correct,
   // but in most cases it will be true.  Need to do something better.
   if (empty($params))
   {
-    $this_timezone = "UTC";
+    $event_timezone = 'UTC';
   }
 
-  $value_type = "DATE-TIME";  // the default
-
+  $value_type = 'DATE-TIME';  // the default
 
   // Work out which, if any, parameters have been set
   if (isset($params))
@@ -281,56 +280,34 @@ function get_time(string $value, ?array $params=null)
           $value_type = $param_value;
           break;
         case 'TZID':
-          $this_timezone = $param_value;
+          $event_timezone = $param_value;
           break;
       }
     }
   }
 
-  if (utf8_strpos($value, 'Z') !== false)
+  if (str_ends_with($value, 'Z'))
   {
-    $value = str_replace('Z', '', $value);
-    $this_timezone = 'UTC';
+    $value = rtrim($value, 'Z');
+    $event_timezone = 'UTC';
   }
-  if ($value_type == "DATE-TIME")
-  {
-    list($date, $time) = explode('T', $value, 2);
-  }
-  else
-  {
-    $date = $value;
-    $time = '000000';
-  }
-  $year = substr($date, 0, 4);
-  $month = substr($date, 4, 2);
-  $day = substr($date, 6, 2);
-  $hour = substr($time, 0, 2);
-  $minute = substr($time, 2, 2);
-  $second = substr($time, 4, 2);
 
-  if (isset($this_timezone))
+  if (!isset($event_timezone))
   {
-    if (utf8_strtoupper($this_timezone) == 'UTC')
-    {
-      $result = gmmktime($hour, $minute, $second, $month, $day, $year);
-    }
-    else
-    {
-      $old_timezone = mrbs_default_timezone_get();
-      mrbs_default_timezone_set($this_timezone);
-      $result = mktime($hour, $minute, $second, $month, $day, $year);
-      mrbs_default_timezone_set($old_timezone);
-    }
-  }
-  else
-  {
-    if ($value_type == "DATE-TIME")
+    $event_timezone = date_default_timezone_get();
+    if ($value_type == 'DATE-TIME')
     {
       trigger_error("Floating times not supported", E_USER_NOTICE);
     }
-    $result = mktime($hour, $minute, $second, $month, $day, $year);
   }
-  return $result;
+
+  if ($value_type == 'DATE')
+  {
+    $value .= 'T000000';
+  }
+
+  $datetime = DateTime::createFromFormat('Ymd\THis', $value, new \DateTimeZone($event_timezone));
+  return $datetime->getTimestamp();
 }
 
 
