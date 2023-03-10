@@ -1,12 +1,12 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\FieldDiv;
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldTextarea;
+use MRBS\Form\Form;
 
 
 require "defaultincludes.inc";
@@ -825,11 +825,14 @@ echo "</table>\n";
 
 echo "<div id=\"view_entry_nav\">\n";
 
-// Set the return URL.  If $previous_page is set then it means that we've come from
-// the registration handler and the original return URL is held in $previous_page.
+// Set the return URL.  If $previous_page is set and $returl is not 'index.php' then
+// it means that we've come from the registration handler and the original return URL
+// is held in $previous_page.
 // TODO: simplify the code concerning return urls, target urls and the previous page
 // TODO: throughout MRBS.
-if (isset($previous_page))
+
+if (isset($previous_page) &&
+    (!(isset($returl) && (parse_url($returl)['path'] == 'index.php'))))
 {
   $returl = $previous_page;
 }
