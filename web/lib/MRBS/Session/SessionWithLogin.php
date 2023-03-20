@@ -9,7 +9,6 @@ use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\Form;
-use MRBS\User;
 use MRBS\Users;
 use function MRBS\auth;
 use function MRBS\get_form_var;
@@ -63,9 +62,6 @@ abstract class SessionWithLogin extends Session
     $this->printLoginForm($action, $target_url, $returl, $error, $raw);
     exit;
   }
-
-
-  abstract public function getCurrentUser() : ?User;
 
 
   // Returns the parameters ('method', 'action' and 'hidden_inputs') for a
