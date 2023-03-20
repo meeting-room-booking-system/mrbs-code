@@ -1,8 +1,8 @@
 <?php
 namespace MRBS\Session;
 
-use SimpleSAML_Auth_Simple;
 use MRBS\User;
+use SimpleSAML_Auth_Simple;
 use function MRBS\auth;
 use function MRBS\this_page;
 use function MRBS\url_base;
@@ -91,7 +91,7 @@ class SessionSaml extends SessionWithLogin
   {
     $current_username = $this->getUsername();
 
-    return (isset($current_username)) ? auth()->getUser($current_username) : null;
+    return (isset($current_username)) ? auth()->getUser($current_username) : parent::getCurrentUser();
   }
 
 

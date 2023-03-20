@@ -395,7 +395,7 @@ function print_logoff()
 // When $omit_login is true the Login link is omitted.
 function print_banner($context, $simple=false, $omit_login=false)
 {
-  global $kiosk_QR_code;
+  global $kiosk_QR_code, $auth;
 
   echo '<header class="banner' . (($simple) ? ' simple' : '') . "\">\n";
 
@@ -437,7 +437,8 @@ function print_banner($context, $simple=false, $omit_login=false)
 
     $mrbs_user = session()->getCurrentUser();
 
-    if (isset($mrbs_user))
+    // The empty string username is a special case when using anonymous booking
+    if (isset($mrbs_user) && (!$auth['allow_anonymous_booking'] || ($mrbs_user->username !== '')))
     {
       print_report_link($mrbs_user);
       print_logoff();

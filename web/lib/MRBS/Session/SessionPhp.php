@@ -72,7 +72,7 @@ class SessionPhp extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return $_SESSION['user'] ?? null;
+    return $_SESSION['user'] ?? parent::getCurrentUser();
   }
 
 

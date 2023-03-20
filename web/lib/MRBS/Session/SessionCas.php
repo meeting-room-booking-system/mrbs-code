@@ -1,9 +1,9 @@
 <?php
 namespace MRBS\Session;
 
+use MRBS\Form\Form;
 use MRBS\User;
 use phpCAS;
-use MRBS\Form\Form;
 use function MRBS\auth;
 use function MRBS\location_header;
 use function MRBS\this_page;
@@ -34,7 +34,7 @@ class SessionCas extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return (phpCAS::isAuthenticated()) ? auth()->getUser(phpCAS::getUser()) : null;
+    return (phpCAS::isAuthenticated()) ? auth()->getUser(phpCAS::getUser()) : parent::getCurrentUser();
   }
 
 

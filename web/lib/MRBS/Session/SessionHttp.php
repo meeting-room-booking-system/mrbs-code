@@ -25,7 +25,7 @@ class SessionHttp extends SessionWithLogin
 
     if (!isset($server['PHP_AUTH_USER']))
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     // Trim any whitespace because PHP_AUTH_USER can contain it.
@@ -33,12 +33,12 @@ class SessionHttp extends SessionWithLogin
 
     if ($php_auth_user === '')
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     if (auth()->validateUser($php_auth_user, self::getAuthPassword()) === false)
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     return auth()->getUser($php_auth_user);

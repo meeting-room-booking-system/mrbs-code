@@ -52,7 +52,7 @@ class SessionOmni extends Session
         (!is_string($server['REMOTE_USER'])) ||
         (($server['REMOTE_USER'] === '')))
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     return auth()->getUser($server['REMOTE_USER']);

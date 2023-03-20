@@ -120,7 +120,19 @@ abstract class Session
 
 
   // Returns the currently logged-in user
-  abstract public function getCurrentUser() : ?User;
+  public function getCurrentUser() : ?User
+  {
+    global $auth;
+
+    if (empty($auth['allow_anonymous_booking']))
+    {
+      return null;
+    }
+
+    // Use an empty string for anonymous bookings
+    return new User('');
+  }
+
 
   // Allows this to be extended with strategies for getting the referer when
   // HTTP_REFERER is going to be unreliable, eg when the Referrer-Policy is
