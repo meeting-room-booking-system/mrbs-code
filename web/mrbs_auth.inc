@@ -40,13 +40,18 @@ function session()
 
 // Checks if a page is open to users, using the config variables
 // $auth['only_admin_can_book'] and $auth['only_admin_can_book_before']
-function is_open_to_users()
+function booking_level() : int
 {
   global $auth;
 
+  if ($auth['allow_anonymous_booking'])
+  {
+    return 0;
+  }
+
   if ($auth['only_admin_can_book'])
   {
-    return false;
+    return 2;
   }
   elseif ($auth['only_admin_can_book_before'])
   {
@@ -55,15 +60,15 @@ function is_open_to_users()
     {
       $message = "Could not calculate time from '" . $auth['only_admin_can_book_before'] . "'.";
       trigger_error($message);
-      return false;
+      return 2;
     }
     else
     {
-      return (time() >= $go_live);
+      return (time() >= $go_live) ? 1 : 2;
     }
   }
 
-  return true;
+  return 1;
 }
 
 
@@ -92,8 +97,11 @@ function get_page_level($page)
     // These pages reveal usernames, which could be of assistance to someone trying to
     // break into the system, so users are required to be logged in before viewing them.
     case 'search.php':
-    case 'view_entry.php':
       $result = 1;
+      break;
+
+    case 'view_entry.php':
+      $result = ($auth['allow_anonymous_booking']) ? 0 : 1;
       break;
 
     // These pages are set to have a minimum access level of 1 as ordinary users
@@ -120,7 +128,7 @@ function get_page_level($page)
     case 'del_entry.php':
     case 'edit_entry.php':
     case 'edit_entry_handler.php':
-      return (is_open_to_users()) ? 1 : 2;
+      return booking_level();
       break;
 
     // These pages only contain admin features

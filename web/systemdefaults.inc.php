@@ -1289,6 +1289,9 @@ define('COOKIEHASH', md5($domain_name));
 // Only supported for the 'db' authentication type.
 $auth['allow_local_part_email'] = false;
 
+// Set this to true if you want users to be able to make bookings without logging in.
+$auth['allow_anonymous_booking'] = false;
+
 // If you want only administrators to be able to make and delete bookings,
 // set this variable to true
 $auth['only_admin_can_book'] = false;

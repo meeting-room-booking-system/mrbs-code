@@ -29,7 +29,7 @@ class SessionNt extends Session
   // For this scheme no need to prompt for a name - NT User always there.
   public function getCurrentUser() : ?User
   {
-    return auth()->getUser(get_current_user());
+    return auth()->getUser(get_current_user()) ?? parent::getCurrentUser();
   }
 
 }

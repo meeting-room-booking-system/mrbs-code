@@ -92,7 +92,7 @@ class SessionJoomla extends SessionWithLogin
 
   public function getCurrentUser() : ?User
   {
-    return auth()->getCurrentUser();
+    return auth()->getCurrentUser() ?? parent::getCurrentUser();
   }
 
 

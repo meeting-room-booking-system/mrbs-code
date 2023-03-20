@@ -35,7 +35,7 @@ class SessionHost extends Session
         (!is_string($server['REMOTE_ADDR'])) ||
         (($server['REMOTE_ADDR'] === '')))
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     return auth()->getUser(gethostbyaddr($server['REMOTE_ADDR']));

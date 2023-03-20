@@ -34,7 +34,7 @@ class SessionIp extends Session
         (!is_string($server['REMOTE_ADDR'])) ||
         (($server['REMOTE_ADDR'] === '')))
     {
-      return null;
+      return parent::getCurrentUser();
     }
 
     return auth()->getUser($server['REMOTE_ADDR']);

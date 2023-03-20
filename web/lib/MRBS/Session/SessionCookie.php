@@ -48,7 +48,7 @@ class SessionCookie extends SessionWithLogin
                               $auth['session_cookie']['hash_algorithm'],
                               $auth['session_cookie']['secret']);
 
-      $cached_user = (isset($data['user'])) ? $data['user'] : null;
+      $cached_user = (isset($data['user'])) ? $data['user'] : parent::getCurrentUser();
       $have_checked_cookie = true;
     }
 
