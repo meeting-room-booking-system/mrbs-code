@@ -120,6 +120,9 @@ abstract class Session
 
 
   // Returns the currently logged-in user
+  // This method provides the fallback user for un-logged in users.
+  // Subclasses are expected to override this method, calling it as the parent
+  // if they cannot find a current user.
   public function getCurrentUser() : ?User
   {
     global $auth;
