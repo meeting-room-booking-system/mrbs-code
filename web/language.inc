@@ -966,7 +966,7 @@ function get_equivalent_pattern(string $format, string $locale) : string
     'H' => 'HH',
     'k' => 'H',
     'I' => 'hh',
-    // 'l' not supported
+    'l' => 'h',  // not an exact equivalent ('h' doesn't have a leading space in front of single digits)
     'M' => 'mm',
     'p' => 'a',  // not an exact equivalent
     'P' => 'a',  // not an exact equivalent
