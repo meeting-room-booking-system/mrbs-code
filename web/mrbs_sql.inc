@@ -305,50 +305,20 @@ function check_interval(string $interval_type, array $booking, ?int $ignore, ?in
 
     if (!isset($existing[$location][$check_type][$interval_type][$interval_start]))
     {
-      $sql = "SELECT E.start_time, E.end_time
-                FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
-               WHERE E.end_time > :interval_start
-                 AND E.create_by = :create_by
-                 AND E.room_id = R.id
-                 AND R.area_id = A.id
-                 AND R.disabled = 0";
-
-      $sql_params = array(
-        ':interval_start' => $interval_start,
-        ':create_by' => $booking['create_by']
-      );
-
-      if (isset($interval_end))
-      {
-        $sql .= " AND E.start_time < :interval_end";
-        $sql_params[':interval_end'] = $interval_end;
-      }
-
-      if ($check_seconds)
-      {
-        // If we're checking for the actual time of bookings, then exclude areas using periods
-        $sql .= " AND A.enable_periods=0";
-      }
-      if ($only_area)
-      {
-        $sql .= " AND R.area_id = :area_id";
-        $sql_params[':area_id'] = $area_id;
-      }
-      if (isset($ignore))
-      {
-        $sql .= " AND E.id <> :ignore";
-        $sql_params[':ignore'] = $ignore;
-      }
-      if (isset($repignore))
-      {
-        $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> :repignore)";
-        $sql_params[':repignore'] = $repignore;
-      }
-
       $existing[$location][$check_type][$interval_type][$interval_start] = 0;
       $proposed[$location][$check_type][$interval_type][$interval_start] = 0;
-      $res = db()->query($sql, $sql_params);
-      while (false !== ($row = $res->next_row_keyed()))
+
+      $rows = get_entry_times_by_user(
+          $booking['create_by'],
+          $interval_start,
+          $interval_end,
+          ($only_area) ? $area_id : null,
+          $check_seconds,
+          $ignore,
+          $repignore
+        );
+
+      foreach ($rows as $row)
       {
         // If we're checking for total time we want the length of the existing booking that falls
         // inside the interval.  Otherwise it's just one more booking.
@@ -889,6 +859,68 @@ function get_entries_by_room(int $room_id, int $interval_start, int $interval_en
     unpack_status($row);
   }
   unset($row);
+
+  return $result;
+}
+
+
+function get_entry_times_by_user(
+  string $create_by,
+  int $interval_start,
+  ?int $interval_end=null,
+  ?int $area_id=null,
+  bool $exclude_periods=false,
+  ?int $ignore=null,
+  ?int $repignore=null) : array
+{
+  $sql = "SELECT E.start_time, E.end_time
+                FROM " . _tbl('entry') . " E, " . _tbl('room') . " R, " . _tbl('area') . " A
+               WHERE E.end_time > :interval_start
+                 AND E.create_by = :create_by
+                 AND E.room_id = R.id
+                 AND R.area_id = A.id
+                 AND R.disabled = 0";
+
+  $sql_params = array(
+    ':interval_start' => $interval_start,
+    ':create_by' => $create_by
+  );
+
+  if (isset($interval_end))
+  {
+    $sql .= " AND E.start_time < :interval_end";
+    $sql_params[':interval_end'] = $interval_end;
+  }
+
+  if ($exclude_periods)
+  {
+    // If we're checking for the actual time of bookings, then exclude areas using periods
+    $sql .= " AND A.enable_periods=0";
+  }
+  if (isset($area_id))
+  {
+    $sql .= " AND R.area_id = :area_id";
+    $sql_params[':area_id'] = $area_id;
+  }
+  if (isset($ignore))
+  {
+    $sql .= " AND E.id <> :ignore";
+    $sql_params[':ignore'] = $ignore;
+  }
+  if (isset($repignore))
+  {
+    $sql .= " AND (E.repeat_id IS NULL OR E.repeat_id <> :repignore)";
+    $sql_params[':repignore'] = $repignore;
+  }
+
+  $res = db()->query($sql, $sql_params);
+
+  $result = array();
+
+  while (false !== ($row = $res->next_row_keyed()))
+  {
+    $result[] = $row;
+  }
 
   return $result;
 }
