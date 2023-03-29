@@ -282,13 +282,16 @@ function validationMessages()
   <?php
   foreach ($is_mandatory_field as $key => $value)
   {
-    list($table, $fieldname) = explode('.', $key, 2);
-    if ($table == 'entry')
+    if ($value)
     {
-      $prefix = (in_array($fieldname, $standard_fields['entry'])) ? '' : VAR_PREFIX;
-      ?>
-      validationMessages.vocab['<?php echo escape_js($prefix . $fieldname) ?>'] = '';
-      <?php
+      list($table, $fieldname) = explode('.', $key, 2);
+      if ($table == 'entry')
+      {
+        $prefix = (in_array($fieldname, $standard_fields['entry'])) ? '' : VAR_PREFIX;
+        ?>
+        validationMessages.vocab['<?php echo escape_js($prefix . $fieldname) ?>'] = '';
+        <?php
+      }
     }
   }
 
