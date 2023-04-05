@@ -208,29 +208,26 @@ function get_vtimezone(string $tz)
     $vtimezone_db = get_vtimezone_db($tz);
     if (isset($vtimezone_db['vtimezone']))
     {
-      // If the definition hasn't expired, or we're not updating it, then we've finished
-      if (!$zoneinfo_update || ((time() - $vtimezone_db['last_updated']) < $zoneinfo_expiry))
+      $vtimezones[$tz] = $vtimezone_db['vtimezone'];
+      // If the definition has expired, and we're updating it, then get a fresh definition from the URL
+      if ($zoneinfo_update && ((time() - $vtimezone_db['last_updated']) >= $zoneinfo_expiry))
       {
-        $vtimezones[$tz] = $vtimezone_db['vtimezone'];
-        return $vtimezones[$tz];
-      }
-      // Otherwise get a fresh definition from the URL
-      $vtimezone = get_vtimezone_url($vtimezone_db['vtimezone']);
-      if (isset($vtimezone))
-      {
-        // We've got a valid VTIMEZONE, so we can update the database
-        update_vtimezone_db($tz, $vtimezone);
-        $vtimezones[$tz] = $vtimezone;
-        return $vtimezones[$tz];
-      }
-      else
-      {
-        // If we didn't manage to get a new VTIMEZONE, update the last_updated field
-        // so that MRBS will not try again until after the expiry interval has passed.
-        // This will mean that we don't keep encountering a timeout delay. (The most
-        // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
-        // have external internet access, so there's no point in retrying for a while).
-        touch_vtimezone_db($tz);
+        $vtimezone = get_vtimezone_url($vtimezone_db['vtimezone']);
+        if (isset($vtimezone))
+        {
+          // We've got a valid VTIMEZONE, so we can update the database and the static variable
+          update_vtimezone_db($tz, $vtimezone);
+          $vtimezones[$tz] = $vtimezone;
+        }
+        else
+        {
+          // If we didn't manage to get a new VTIMEZONE, update the last_updated field
+          // so that MRBS will not try again until after the expiry interval has passed.
+          // This will mean that we don't keep encountering a timeout delay. (The most
+          // likely reason that we couldn't get a new VTIMEZONE is that the site doesn't
+          // have external internet access, so there's no point in retrying for a while).
+          touch_vtimezone_db($tz);
+        }
       }
     }
     else
@@ -248,7 +245,6 @@ function get_vtimezone(string $tz)
         // Everything has failed
         $vtimezones[$tz] = false;
       }
-      return $vtimezones[$tz];
     }
   }
 
