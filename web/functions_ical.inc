@@ -308,7 +308,7 @@ function get_time(string $value, ?array $params=null) : int
 
 
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by($organizer)
+function get_create_by(string $organizer)
 {
   global $auth, $mail_settings;
 
@@ -379,9 +379,9 @@ function get_rep_opt(array $byday_days) : string
 
 
 // Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
-// details.   Indexed by rep_type, rep_interval, rep_opt, end_date
+// details.  Indexed by rep_type, rep_interval, rep_opt, end_date
 // Returns FALSE on failure with error messages being returned in the array $errors
-function get_repeat_details($rrule, $start_time, &$errors)
+function get_repeat_details(string $rrule, int $start_time, array &$errors)
 {
   global $RFC_5545_days;
 
@@ -515,7 +515,7 @@ function ical_fold(string $str) : string
   $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
 
   // We assume that we are using UTF-8 and therefore that a space character
-  // is one octet long.   If we ever switched for some reason to using for
+  // is one octet long.  If we ever switched for some reason to using for
   // example UTF-16 this assumption would be invalid.
   if ((get_charset() != 'utf-8') || (get_mail_charset() != 'utf-8'))
   {
@@ -562,7 +562,7 @@ function ical_fold(string $str) : string
     //
     // [Note:  It's not entirely clear from the RFC whether the octet that is introduced
     // when folding counts towards the 75 octets.   Some implementations (eg Google
-    // Calendar as of Jan 2011) do not count it.   However it can do no harm to err on
+    // Calendar as of Jan 2011) do not count it.  However, it can do no harm to err on
     // the safe side and include the initial whitespace in the count.]
     elseif (($octets + $char_octets) > $octets_max)
     {
@@ -604,7 +604,7 @@ function ical_unfold(string $str) : string
       {
         $char = utf8_seq($str, $byte_index);
         // If that's a space or a tab then ignore it because we've just had a fold
-        // sequence.    Otherwise add the characters into the result string.
+        // sequence.  Otherwise, add the characters into the result string.
         if (($char != " ") && ($char != "\t"))
         {
           $result .= "\r\n" . $char;
@@ -902,7 +902,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // in the Status property, as some calendar apps will use it.   For example Outlook 2007 will
   // distinguish between tentative and confirmed bookings.  However, having sent it we need to
   // send a STATUS:CANCELLED on cancellation.    It's not clear to me from the spec whether this
-  // is strictly necessary but it can do no harm and there are some apps that seem to need it -
+  // is strictly necessary, but it can do no harm and there are some apps that seem to need it -
   // for example Outlook 2003 (but not 2007).
   if ($method == "CANCEL")
   {
@@ -1043,7 +1043,7 @@ function create_icalendar(string $method, array $components) : string
 //                          also contain the area name, the room name and the repeat
 //                          details (rep_type, end_date, rep_opt, rep_interval)
 //    $export_end int       a Unix timestamp giving the end limit for the export
-function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_MAX)
+function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : void
 {
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
@@ -1052,7 +1052,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
   // it was sorted by repeat_id and then by ical_recur_id we will
   //    - get all the individual entries (which will not have a rep_type)
   //    - then get the series.    For each series we have to:
-  //        - identify the series information.   This is the original series information
+  //        - identify the series information.   This is the original series information,
   //          so we can only get it from an entry that has not been changed, ie has
   //          entry_type == ENTRY_RPT_ORIGINAL.   If there isn't one of these then it
   //          does not matter, because every entry will have been changed and so there
@@ -1062,12 +1062,12 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
   //          with entry_type == ENTRY_RPT_CHANGED
   //        - identify any events from the original series that have been cancelled.  We
   //          can do this because we know from the repeat information the events that
-  //          should be there and we can tell from the recurrence-id the events that
+  //          should be there, and we can tell from the recurrence-id the events that
   //          are actually there.   We can then issue cancellations for the missing
   //          events.
 
   // We use PUBLISH rather than REQUEST because we're not inviting people to these meetings,
-  // we're just exporting the calendar.   Furthermore if we don't use PUBLISH then some
+  // we're just exporting the calendar.   Furthermore, if we don't use PUBLISH then some
   // calendar apps (eg Outlook, at least 2010 and 2013) won't open the full calendar.
   $method = "PUBLISH";
 
@@ -1101,7 +1101,7 @@ function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_M
       }
 
       // If it's a series that we haven't seen yet, or we've got no more
-      // rows then process the series
+      // rows, then process the series
       if (($row['repeat_id'] != $series->repeat_id) || ($i == $n_rows - 1))
       {
         $ical_events = array_merge($ical_events, $series->toEvents($method));
