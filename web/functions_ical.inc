@@ -1043,7 +1043,7 @@ function create_icalendar(string $method, array $components) : string
 //                          also contain the area name, the room name and the repeat
 //                          details (rep_type, end_date, rep_opt, rep_interval)
 //    $export_end int       a Unix timestamp giving the end limit for the export
-function export_icalendar(DBStatement $res, $keep_private, $export_end=PHP_INT_MAX)
+function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=PHP_INT_MAX) : void
 {
   require_once "functions_view.inc";
   require_once "mrbs_sql.inc";
