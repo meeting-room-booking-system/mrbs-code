@@ -308,7 +308,7 @@ function get_time(string $value, ?array $params=null) : int
 
 
 // Gets a username given an ORGANIZER value.   Returns NULL if none found
-function get_create_by($organizer)
+function get_create_by(string $organizer)
 {
   global $auth, $mail_settings;
 
