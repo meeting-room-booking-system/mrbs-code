@@ -902,7 +902,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   // in the Status property, as some calendar apps will use it.   For example Outlook 2007 will
   // distinguish between tentative and confirmed bookings.  However, having sent it we need to
   // send a STATUS:CANCELLED on cancellation.    It's not clear to me from the spec whether this
-  // is strictly necessary but it can do no harm and there are some apps that seem to need it -
+  // is strictly necessary, but it can do no harm and there are some apps that seem to need it -
   // for example Outlook 2003 (but not 2007).
   if ($method == "CANCEL")
   {
