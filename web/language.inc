@@ -1156,7 +1156,7 @@ function utf8_strftime(string $format, $time, $locale=null) : string
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
-function utf8_substr_old($str, $start, $length=null)
+function utf8_substr_old(string $str, int $start, ?int $length=null) : string
 {
   preg_match_all("/./su", $str, $ar);
 
@@ -1165,7 +1165,7 @@ function utf8_substr_old($str, $start, $length=null)
 
 
 // UTF-8 compatible substr function
-function utf8_substr(string $str, int $start, ?int $length=null)
+function utf8_substr(string $str, int $start, ?int $length=null) : string
 {
   if (!isset($length))
   {
