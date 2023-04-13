@@ -1250,7 +1250,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
 
 // Takes a string (which may be UTF-8) and returns how long it is in
 // _bytes_
-function utf8_bytecount($str)
+function utf8_bytecount(string $str) : int
 {
   // We cannot rely on strlen() to return the number of bytes because it might
   // have been overloaded by mb_strlen() which returns characters
