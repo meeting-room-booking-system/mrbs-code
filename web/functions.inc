@@ -404,7 +404,7 @@ function get_rep_interval_units_mail(int $rep_type, int $rep_interval) : string
 // performed as the results are stored in a static variable and so the maximum lengths
 // may change after an upgrade.  $column is of the form, <table_short_name.column_name>,
 // for example, 'area.area_name'.
-function maxlength($column)
+function maxlength(string $column) : ?int
 {
   static $maxlengths = array();
 
@@ -433,7 +433,7 @@ function maxlength($column)
       }
     }
   }
-
+  
   return (isset($maxlengths[$table_short_name][$column_name])) ? $maxlengths[$table_short_name][$column_name] : null;
 }
 
