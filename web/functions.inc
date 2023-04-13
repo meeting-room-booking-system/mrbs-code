@@ -353,7 +353,7 @@ function get_type_names(?array $types, string $glue=', ') : string
 }
 
 
-function get_rep_interval_units($rep_type, $rep_interval) : string
+function get_rep_interval_units(int $rep_type, int $rep_interval) : string
 {
   switch ($rep_type)
   {
@@ -376,7 +376,7 @@ function get_rep_interval_units($rep_type, $rep_interval) : string
 }
 
 
-function get_rep_interval_units_mail($rep_type, $rep_interval) : string
+function get_rep_interval_units_mail(int $rep_type, int $rep_interval) : string
 {
   switch ($rep_type)
   {
