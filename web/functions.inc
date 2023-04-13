@@ -433,7 +433,7 @@ function maxlength(string $column) : ?int
       }
     }
   }
-  
+
   return (isset($maxlengths[$table_short_name][$column_name])) ? $maxlengths[$table_short_name][$column_name] : null;
 }
 
@@ -451,7 +451,7 @@ function maxlength(string $column) : ?int
 // This is OK in current versions of MySQL and PostgreSQL, though in earler
 // versions of MySQL (I haven't checked PostgreSQL) this could cause problems
 // as a VARCHAR(n) was n bytes long rather than n characters.
-function truncate($value, $column)
+function truncate(string $value, string $column) : string
 {
   if (null !== ($maxlength = maxlength($column)))
   {
