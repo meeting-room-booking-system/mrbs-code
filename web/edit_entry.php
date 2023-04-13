@@ -1,14 +1,11 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\FieldTimeWithUnits;
-use MRBS\Form\Form;
 use MRBS\Form\ElementDiv;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputCheckbox;
 use MRBS\Form\ElementInputDate;
 use MRBS\Form\ElementInputHidden;
-use MRBS\Form\ElementInputNumber;
 use MRBS\Form\ElementInputRadio;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementLabel;
@@ -17,13 +14,12 @@ use MRBS\Form\ElementSpan;
 use MRBS\Form\FieldDiv;
 use MRBS\Form\FieldInputCheckbox;
 use MRBS\Form\FieldInputCheckboxGroup;
-use MRBS\Form\FieldInputDatalist;
 use MRBS\Form\FieldInputDate;
 use MRBS\Form\FieldInputNumber;
 use MRBS\Form\FieldInputRadioGroup;
-use MRBS\Form\FieldInputSubmit;
-use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\FieldTimeWithUnits;
+use MRBS\Form\Form;
 
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
@@ -887,7 +883,7 @@ function get_field_rep_end_date($disabled=false)
 }
 
 
-function get_field_rep_interval($rep_interval, $disabled=false)
+function get_field_rep_interval(int $rep_interval, bool $disabled=false) : FieldInputNumber
 {
   global $rep_type;
 
