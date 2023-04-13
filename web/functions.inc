@@ -11,7 +11,7 @@ require_once "mrbs_sql.inc";
 // Constrain an integer to fit a certain type.  Useful for making sure
 // that integers will fit within the range for a database type.
 // Only 4 byte unsigned integers supported at the moment.
-function constrain_int($n, $bytes, $unsigned=false)
+function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
 {
   if (!$unsigned && ($bytes == 4))
   {
@@ -381,7 +381,7 @@ function get_type_names(?array $types, string $glue=', ') : string
 }
 
 
-function get_rep_interval_units($rep_type, $rep_interval) : string
+function get_rep_interval_units(int $rep_type, int $rep_interval) : string
 {
   switch ($rep_type)
   {
@@ -404,7 +404,7 @@ function get_rep_interval_units($rep_type, $rep_interval) : string
 }
 
 
-function get_rep_interval_units_mail($rep_type, $rep_interval) : string
+function get_rep_interval_units_mail(int $rep_type, int $rep_interval) : string
 {
   switch ($rep_type)
   {
@@ -432,7 +432,7 @@ function get_rep_interval_units_mail($rep_type, $rep_interval) : string
 // performed as the results are stored in a static variable and so the maximum lengths
 // may change after an upgrade.  $column is of the form, <table_short_name.column_name>,
 // for example, 'area.area_name'.
-function maxlength($column)
+function maxlength(string $column) : ?int
 {
   static $maxlengths = array();
 
@@ -479,7 +479,7 @@ function maxlength($column)
 // This is OK in current versions of MySQL and PostgreSQL, though in earler
 // versions of MySQL (I haven't checked PostgreSQL) this could cause problems
 // as a VARCHAR(n) was n bytes long rather than n characters.
-function truncate($value, $column)
+function truncate(string $value, string $column) : string
 {
   if (null !== ($maxlength = maxlength($column)))
   {
