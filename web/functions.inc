@@ -11,7 +11,7 @@ require_once "mrbs_sql.inc";
 // Constrain an integer to fit a certain type.  Useful for making sure
 // that integers will fit within the range for a database type.
 // Only 4 byte unsigned integers supported at the moment.
-function constrain_int($n, $bytes, $unsigned=false)
+function constrain_int(int $n, int $bytes, bool $unsigned=false) : int
 {
   if (!$unsigned && ($bytes == 4))
   {
