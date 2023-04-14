@@ -233,7 +233,7 @@ function convert_to_BCP47($locale)
   }
 
   // Parse it and then recompose it.  This will get the capitalisation correct, eg
-  // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
+  // "sr-Latn-RS".  Note though that BCP 47 language tags are case-insensitive and
   // the capitalisation is just a convention.
   $locale = Locale::composeLocale(Locale::parseLocale($locale));
   // Replace the underscores with hyphens.  The PHP Locale class will return underscores,
@@ -1445,7 +1445,7 @@ function utf8_strlen($str)
 // function overloading is not enabled.
 // The ordinary strtolower() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'I'.
-function utf8_strtolower($str)
+function utf8_strtolower(string $str) : string
 {
   if (function_exists('mb_strtolower'))
   {
@@ -1460,7 +1460,7 @@ function utf8_strtolower($str)
 // function overloading is not enabled.
 // The ordinary strtoupper() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'i'.
-function utf8_strtoupper($str)
+function utf8_strtoupper(string $str) : string
 {
   if (function_exists('mb_strtoupper'))
   {
@@ -1492,7 +1492,7 @@ function utf8_stripos(string $haystack, string $needle, int $offset=0)
 }
 
 
-function language_debug($message)
+function language_debug(string $message) : void
 {
   global $language_debug;
 
