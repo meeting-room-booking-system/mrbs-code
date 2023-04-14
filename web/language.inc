@@ -233,7 +233,7 @@ function convert_to_BCP47($locale)
   }
 
   // Parse it and then recompose it.  This will get the capitalisation correct, eg
-  // "sr-Latn-RS".  Note though that BCP 47 language tags are case insensitive and
+  // "sr-Latn-RS".  Note though that BCP 47 language tags are case-insensitive and
   // the capitalisation is just a convention.
   $locale = Locale::composeLocale(Locale::parseLocale($locale));
   // Replace the underscores with hyphens.  The PHP Locale class will return underscores,
