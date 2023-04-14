@@ -1167,36 +1167,32 @@ function utf8_substr_old(string $str, int $start, ?int $length=null) : string
 // UTF-8 compatible substr function
 function utf8_substr(string $str, int $start, ?int $length=null) : string
 {
+  // If we have mb_substr, use it - it's much quicker than our
+  // routines, as it's native code
+  if (function_exists('mb_substr'))
+  {
+    $encoding = mb_detect_encoding($str);
+    return mb_substr($str, $start, $length, $encoding);
+  }
+
+  // Otherwise do it ourselves
   if (!isset($length))
   {
     // We cannot set $length to PHP_INT_MAX because there is a bug (#42101)
-    // in mb_substr() when using PHP_INT_MAX on 64 bit Linux systems.  See
-    // https://bugs.php.net/bug.php?id=42101.    Note also that passing NULL
+    // in mb_substr() when using PHP_INT_MAX on 64-bit Linux systems.  See
+    // https://bugs.php.net/bug.php?id=42101.  Note also that passing NULL
     // for the length in mb_substr() causes mb_substr to use a length of 0.
     // See the user contributed notes on the PHP mb_substr() manual page.
     $length = utf8_strlen($str);
   }
 
-  if (function_exists('mb_substr'))
-  {
-    // If we have mb_substr, use it - it's much quicker than our
-    // routines, as it's native code
-
-    $encoding = mb_detect_encoding($str);
-
-    return mb_substr($str, $start, $length, $encoding);
-  }
-
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
-
     return utf8_substr_old($str, $start, $length);
   }
 
-  // Deal with the trivial cases first, which won't be dealt with properly otherwise
-  // below, due to the dummy string we have to use to convince PHP to treat the result as
-  // a string rather than an array.
+  // Deal with the trivial cases first
   if (($str === '') || ($length === 0))
   {
     return '';
