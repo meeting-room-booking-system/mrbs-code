@@ -1280,7 +1280,7 @@ function utf8_next(string $str)
   if ($index)
   {
     $i = 0;
-    while (isset($str[$index]) && ord($str[$index]) != 0)
+    while (isset($str[$index]) && (ord($str[$index]) != 0))
     {
       $ret[$i] = $str[$index];
       $i++;
