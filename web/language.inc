@@ -1226,7 +1226,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
       $j++;
     }
     $j = 0;
-    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
+    $ret = '';
     for ($i = $index;
          isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
@@ -1237,7 +1237,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
   else
   {
     $j = 0;
-    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
+    $ret = '';
     for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j++] = $str[$i];
