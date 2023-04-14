@@ -1460,7 +1460,7 @@ function utf8_strtolower($str)
 // function overloading is not enabled.
 // The ordinary strtoupper() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'i'.
-function utf8_strtoupper($str)
+function utf8_strtoupper(string $str) : string
 {
   if (function_exists('mb_strtoupper'))
   {
