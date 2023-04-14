@@ -512,6 +512,12 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
 // processing the content type."  (RFC 5545)
 function ical_fold(string $str) : string
 {
+  // Deal with the trivial case
+  if ($str === '')
+  {
+    return $str;
+  }
+
   $line_split = "\r\n ";  // The RFC also allows a tab instead of a space
 
   // We assume that we are using UTF-8 and therefore that a space character
