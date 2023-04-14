@@ -1266,25 +1266,27 @@ function utf8_bytecount(string $str) : int
 
 
 // Takes a UTF-8 string and returns the string with one Unicode character
-// removed from the front
-function utf8_next($str)
+// removed from the front. Returns FALSE if the original string is empty.
+function utf8_next(string $str)
 {
-  $ret = null;
-
-  if (isset($str))
+  if ($str === '')
   {
-    $index = utf8_next_index($str, 0);
+    return false;
+  }
 
-    if ($index)
+  $ret = '';
+  $index = utf8_next_index($str, 0);
+
+  if ($index)
+  {
+    $i = 0;
+    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
+    while (isset($str[$index]) && ord($str[$index]) != 0)
     {
-      $i = 0;
-      $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
-      while (isset($str[$index]) && ord($str[$index]) != 0)
-      {
-        $ret[$i++] = $str[$index++];
-      }
+      $ret[$i++] = $str[$index++];
     }
   }
+
   return $ret;
 }
 
