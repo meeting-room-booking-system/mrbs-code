@@ -499,7 +499,7 @@ function get_browser_langs(?string $header, bool $translate_wildcard=false) : ar
 
 // Gets all the language tags in a directory where the filenames are of the format
 // $prefix . $lang . $suffix.  Returns an array.
-function get_langtags($dir, $prefix='', $suffix='')
+function get_langtags(string $dir, string $prefix='', string $suffix='') : array
 {
   $result = array();
 
