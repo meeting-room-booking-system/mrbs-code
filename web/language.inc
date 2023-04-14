@@ -1333,6 +1333,7 @@ function utf8_seq(string $str, int &$byte_index)
 {
   if ($str === '')
   {
+    $byte_index = null;
     return false;
   }
 
