@@ -1445,7 +1445,7 @@ function utf8_strlen($str)
 // function overloading is not enabled.
 // The ordinary strtolower() will give unexpected results when the locale is set to
 // Turkish and will not convert the letter 'I'.
-function utf8_strtolower($str)
+function utf8_strtolower(string $str) : string
 {
   if (function_exists('mb_strtolower'))
   {
