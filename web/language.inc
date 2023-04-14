@@ -1133,7 +1133,7 @@ function date_formatter_intl(string $format, $time, $locale=null) : string
 // $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales.  If $locale
 // is not set then the current locale is used.
-function utf8_strftime(string $format, $time, $locale=null) : string
+function utf8_strftime(string $format, int $time, $locale=null) : string
 {
   // strftime() is deprecated from PHP 8.1, so we use IntlDateFormatter
   // if we can, or if we can't map the strftime format to a suitable Intl one.
