@@ -1327,10 +1327,16 @@ function utf8_next_index($str, $start)
 // Given a UTF-8 string and a byte index, return the UTF-8 sequence
 // at this index as a string, and update the byte index to point to
 // the next sequence. When the end of the string is encountered, the
-// last sequence is returned, and the byte index set to NULL
-function utf8_seq(string $str, int &$byte_index) : string
+// last sequence is returned, and the byte index set to NULL.
+// Returns FALSE if the original string is empty.
+function utf8_seq(string $str, int &$byte_index)
 {
-  $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
+  if ($str === '')
+  {
+    return false;
+  }
+
+  $ret = '';
 
   $next = utf8_next_index($str, $byte_index);
 
