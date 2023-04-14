@@ -39,21 +39,21 @@ function need_to_send_mail() : bool
 }
 
 
+function get_mail_lang() : string
+{
+  global $mail_settings;
+
+  return $mail_settings['admin_lang'] ?? 'en';
+}
+
+
 function get_mail_locale()
 {
   static $mail_locale;
-  global $mail_settings;
 
   if (!isset($mail_locale))
   {
-    if (isset($mail_settings['admin_lang']))
-    {
-      $mail_locale = System::getOSlocale($mail_settings['admin_lang']);
-    }
-    else
-    {
-      $mail_locale = FALSE;
-    }
+    $mail_locale = System::getOSlocale(get_mail_lang());
   }
 
   return $mail_locale;
@@ -387,7 +387,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   if ($as_html)
   {
     $body .= DOCTYPE . MAIL_EOL;
-    $body .= '<html lang="' . convert_to_BCP47($mail_settings['admin_lang']) . '">' . MAIL_EOL;
+    $body .= '<html lang="' . convert_to_BCP47(get_mail_lang()) . '">' . MAIL_EOL;
     $body .= '<head>' . MAIL_EOL;
     $body .= '<meta http-equiv="Content-Type" content="text/html; charset=' . get_mail_charset() . '">' . MAIL_EOL;
     $body .= '<title>' . htmlspecialchars($mrbs_company) . '</title>' . MAIL_EOL;

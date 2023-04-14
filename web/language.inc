@@ -499,7 +499,7 @@ function get_browser_langs(?string $header, bool $translate_wildcard=false) : ar
 
 // Gets all the language tags in a directory where the filenames are of the format
 // $prefix . $lang . $suffix.  Returns an array.
-function get_langtags($dir, $prefix='', $suffix='')
+function get_langtags(string $dir, string $prefix='', string $suffix='') : array
 {
   $result = array();
 
@@ -545,10 +545,8 @@ function get_langtags($dir, $prefix='', $suffix='')
 //
 // The file names are assumed to be of the form $prefix . $lang . $suffix, eg
 // 'datepicker-en-GB.js'
-function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtags=null, array $lang_map=null)
+function get_best_lang_file(string $dir, string $prefix='', string $suffix='', array $default_langtags=null, array $lang_map=null) : ?string
 {
-  global $default_language_tokens;
-
   if (!is_dir($dir))
   {
     trigger_error("MRBS: directory $dir does not exist", E_USER_NOTICE);
@@ -608,7 +606,7 @@ function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtag
 
 // Returns the pathname of the language file to use for the flatpickr
 // datepicker.    If no suitable language file exists then returns NULL.
-function get_flatpickr_lang_path()
+function get_flatpickr_lang_path() : ?string
 {
   global $flatpickr_lang_map;
 
@@ -641,7 +639,7 @@ function get_flatpickr_property($lang_file)
 
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns NULL.
-function get_datatable_lang_path()
+function get_datatable_lang_path() : ?string
 {
   global $datatables_lang_map;
 
@@ -1133,7 +1131,7 @@ function date_formatter_intl(string $format, $time, $locale=null) : string
 // $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales.  If $locale
 // is not set then the current locale is used.
-function utf8_strftime(string $format, $time, $locale=null) : string
+function utf8_strftime(string $format, int $time, $locale=null) : string
 {
   // strftime() is deprecated from PHP 8.1, so we use IntlDateFormatter
   // if we can, or if we can't map the strftime format to a suitable Intl one.
@@ -1167,36 +1165,32 @@ function utf8_substr_old(string $str, int $start, ?int $length=null) : string
 // UTF-8 compatible substr function
 function utf8_substr(string $str, int $start, ?int $length=null) : string
 {
+  // If we have mb_substr, use it - it's much quicker than our
+  // routines, as it's native code
+  if (function_exists('mb_substr'))
+  {
+    $encoding = mb_detect_encoding($str);
+    return mb_substr($str, $start, $length, $encoding);
+  }
+
+  // Otherwise do it ourselves
   if (!isset($length))
   {
     // We cannot set $length to PHP_INT_MAX because there is a bug (#42101)
-    // in mb_substr() when using PHP_INT_MAX on 64 bit Linux systems.  See
-    // https://bugs.php.net/bug.php?id=42101.    Note also that passing NULL
+    // in mb_substr() when using PHP_INT_MAX on 64-bit Linux systems.  See
+    // https://bugs.php.net/bug.php?id=42101.  Note also that passing NULL
     // for the length in mb_substr() causes mb_substr to use a length of 0.
     // See the user contributed notes on the PHP mb_substr() manual page.
     $length = utf8_strlen($str);
   }
 
-  if (function_exists('mb_substr'))
-  {
-    // If we have mb_substr, use it - it's much quicker than our
-    // routines, as it's native code
-
-    $encoding = mb_detect_encoding($str);
-
-    return mb_substr($str, $start, $length, $encoding);
-  }
-
   if (strlen($str) > 1000)
   {
     // If the string is long, the old routine is quicker. :(
-
     return utf8_substr_old($str, $start, $length);
   }
 
-  // Deal with the trivial cases first, which won't be dealt with properly otherwise
-  // below, due to the dummy string we have to use to convince PHP to treat the result as
-  // a string rather than an array.
+  // Deal with the trivial cases first
   if (($str === '') || ($length === 0))
   {
     return '';
@@ -1226,7 +1220,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
       $j++;
     }
     $j = 0;
-    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
+    $ret = '';
     for ($i = $index;
          isset($str[$i]) && (ord($str[$i]) != 0) && (!isset($end_index) || ($i < $end_index));
          $i++)
@@ -1237,7 +1231,7 @@ function utf8_substr(string $str, int $start, ?int $length=null) : string
   else
   {
     $j = 0;
-    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
+    $ret = '';
     for ($i = $index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
     {
       $ret[$j++] = $str[$i];
