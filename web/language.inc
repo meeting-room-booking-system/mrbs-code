@@ -639,7 +639,7 @@ function get_flatpickr_property($lang_file)
 
 // Returns the pathname of the language file to use for the dataTables
 // jQuery plugin.    If no suitable language file exists then returns NULL.
-function get_datatable_lang_path()
+function get_datatable_lang_path() : ?string
 {
   global $datatables_lang_map;
 
