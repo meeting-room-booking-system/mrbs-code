@@ -1420,16 +1420,17 @@ function utf8_to_utf16($string)
 
 // Takes a UTF-8 string, and returns the number of _characters_ in the
 // string
-function utf8_strlen($str)
+function utf8_strlen(string $str) : int
 {
-  if (!isset($str) || ($str == ""))
-  {
-    return 0;
-  }
+  // If we have mb_strlen(), use it - it'll be quicker
   if (function_exists('mb_strlen'))
   {
-    // If we have mb_strlen(), use it - it'll be quicker
     return mb_strlen($str);
+  }
+
+  if ($str === '')
+  {
+    return 0;
   }
   $len = 1;
   $next = 0;
