@@ -1338,27 +1338,15 @@ function utf8_seq(string $str, int &$byte_index)
   }
 
   $ret = '';
-
   $next = utf8_next_index($str, $byte_index);
+  $j = 0;
+  
+  for ($i = $byte_index; isset($next) ? ($i < $next) : isset($str[$i]) && (ord($str[$i]) != 0); $i++)
+  {
+    $ret[$j] = $str[$i];
+    $j++;
+  }
 
-  if (isset($next))
-  {
-    $j = 0;
-    for ($i = $byte_index; $i < $next; $i++)
-    {
-      $ret[$j] = $str[$i];
-      $j++;
-    }
-  }
-  else
-  {
-    $j = 0;
-    for ($i = $byte_index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
-    {
-      $ret[$j] = $str[$i];
-      $j++;
-    }
-  }
   $byte_index = $next;
   return $ret;
 }
