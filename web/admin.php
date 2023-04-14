@@ -1,16 +1,16 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementButton;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementImg;
 use MRBS\Form\ElementInputImage;
 use MRBS\Form\FieldInputEmail;
 use MRBS\Form\FieldInputNumber;
-use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldInputSubmit;
+use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\Form;
 
 
 require "defaultincludes.inc";
@@ -496,7 +496,7 @@ if (is_admin() || !empty($enabled_areas))
                     else
                     {
                       // strings
-                      $value = (isset($r[$field['name']])) ? $r[$field['name']] : '';
+                      $value = $r[$field['name']] ?? '';
                       $html = "<td title=\"" . htmlspecialchars($value) . "\"><div>";
                       // Truncate before conversion, otherwise you could chop off in the middle of an entity
                       $html .= htmlspecialchars(utf8_substr($value, 0, $max_content_length));
