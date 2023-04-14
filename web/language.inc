@@ -1358,7 +1358,7 @@ function utf8_seq($str, &$byte_index)
 
 
 // Takes a UTF-8 string and converts it to UTF-16 without using iconv
-function utf8_to_utf16($string)
+function utf8_to_utf16(string $string) : string
 {
   $ucs2 = array();
   $byte_index = 0;
