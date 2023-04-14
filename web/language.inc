@@ -1266,25 +1266,28 @@ function utf8_bytecount(string $str) : int
 
 
 // Takes a UTF-8 string and returns the string with one Unicode character
-// removed from the front
-function utf8_next($str)
+// removed from the front. Returns FALSE if the original string is empty.
+function utf8_next(string $str)
 {
-  $ret = null;
-
-  if (isset($str))
+  if ($str === '')
   {
-    $index = utf8_next_index($str, 0);
+    return false;
+  }
 
-    if ($index)
+  $ret = '';
+  $index = utf8_next_index($str, 0);
+
+  if ($index)
+  {
+    $i = 0;
+    while (isset($str[$index]) && (ord($str[$index]) != 0))
     {
-      $i = 0;
-      $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
-      while (isset($str[$index]) && ord($str[$index]) != 0)
-      {
-        $ret[$i++] = $str[$index++];
-      }
+      $ret[$i] = $str[$index];
+      $i++;
+      $index++;
     }
   }
+
   return $ret;
 }
 
@@ -1292,13 +1295,13 @@ function utf8_next($str)
 // Takes a UTF-8 string and a byte index into that string, and
 // returns the byte index of the next UTF-8 sequence. When the end
 // of the string is encountered, the function returns NULL
-function utf8_next_index($str, $start)
+function utf8_next_index(string $str, int $start) : ?int
 {
   $ret = null;
 
   $i = $start;
 
-  if (isset($str) && isset($str[$i]))
+  if (isset($str[$i]))
   {
     if (ord($str[$i]) < 0xc0)
     {
@@ -1317,6 +1320,7 @@ function utf8_next_index($str, $start)
       $ret = $i;
     }
   }
+
   return $ret;
 }
 
@@ -1324,38 +1328,33 @@ function utf8_next_index($str, $start)
 // Given a UTF-8 string and a byte index, return the UTF-8 sequence
 // at this index as a string, and update the byte index to point to
 // the next sequence. When the end of the string is encountered, the
-// last sequence is returned, and the byte index set to NULL
-function utf8_seq($str, &$byte_index)
+// last sequence is returned, and the byte index set to NULL.
+// Returns FALSE if the original string is empty.
+function utf8_seq(string $str, int &$byte_index)
 {
-  $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
+  if ($str === '')
+  {
+    $byte_index = null;
+    return false;
+  }
 
+  $ret = '';
   $next = utf8_next_index($str, $byte_index);
+  $j = 0;
 
-  if (isset($next))
+  for ($i = $byte_index; isset($next) ? ($i < $next) : isset($str[$i]) && (ord($str[$i]) != 0); $i++)
   {
-    $j = 0;
-    for ($i = $byte_index; $i < $next; $i++)
-    {
-      $ret[$j] = $str[$i];
-      $j++;
-    }
+    $ret[$j] = $str[$i];
+    $j++;
   }
-  else
-  {
-    $j = 0;
-    for ($i = $byte_index; isset($str[$i]) && (ord($str[$i]) != 0); $i++)
-    {
-      $ret[$j] = $str[$i];
-      $j++;
-    }
-  }
+
   $byte_index = $next;
   return $ret;
 }
 
 
 // Takes a UTF-8 string and converts it to UTF-16 without using iconv
-function utf8_to_utf16($string)
+function utf8_to_utf16(string $string) : string
 {
   $ucs2 = array();
   $byte_index = 0;
@@ -1418,25 +1417,28 @@ function utf8_to_utf16($string)
 }
 
 
-// Takes a UTF-8 string, and returns the number of _characters_ in the
-// string
-function utf8_strlen($str)
+// Takes a UTF-8 string, and returns the number of _characters_ in the string
+function utf8_strlen(string $str) : int
 {
-  if (!isset($str) || ($str == ""))
+  // If we have mb_strlen(), use it - it'll be quicker
+  if (function_exists('mb_strlen'))
+  {
+    return mb_strlen($str);
+  }
+
+  // Otherwise do it ourselves
+  if ($str === '')
   {
     return 0;
   }
-  if (function_exists('mb_strlen'))
-  {
-    // If we have mb_strlen(), use it - it'll be quicker
-    return mb_strlen($str);
-  }
+
   $len = 1;
   $next = 0;
   while ($next = utf8_next_index($str, $next))
   {
     $len++;
   }
+
   return $len;
 }
 
