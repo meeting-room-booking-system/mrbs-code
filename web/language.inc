@@ -545,7 +545,7 @@ function get_langtags($dir, $prefix='', $suffix='')
 //
 // The file names are assumed to be of the form $prefix . $lang . $suffix, eg
 // 'datepicker-en-GB.js'
-function get_best_lang_file($dir, $prefix='', $suffix='', array $default_langtags=null, array $lang_map=null)
+function get_best_lang_file(string $dir, string $prefix='', string $suffix='', array $default_langtags=null, array $lang_map=null) : ?string
 {
   global $default_language_tokens;
 
