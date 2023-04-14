@@ -1295,13 +1295,13 @@ function utf8_next(string $str)
 // Takes a UTF-8 string and a byte index into that string, and
 // returns the byte index of the next UTF-8 sequence. When the end
 // of the string is encountered, the function returns NULL
-function utf8_next_index($str, $start)
+function utf8_next_index(string $str, int $start) : ?int
 {
   $ret = null;
 
   $i = $start;
 
-  if (isset($str) && isset($str[$i]))
+  if (isset($str[$i]))
   {
     if (ord($str[$i]) < 0xc0)
     {
@@ -1320,6 +1320,7 @@ function utf8_next_index($str, $start)
       $ret = $i;
     }
   }
+
   return $ret;
 }
 
@@ -1340,7 +1341,7 @@ function utf8_seq(string $str, int &$byte_index)
   $ret = '';
   $next = utf8_next_index($str, $byte_index);
   $j = 0;
-  
+
   for ($i = $byte_index; isset($next) ? ($i < $next) : isset($str[$i]) && (ord($str[$i]) != 0); $i++)
   {
     $ret[$j] = $str[$i];
