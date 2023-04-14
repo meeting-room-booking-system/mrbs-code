@@ -606,7 +606,7 @@ function get_best_lang_file(string $dir, string $prefix='', string $suffix='', a
 
 // Returns the pathname of the language file to use for the flatpickr
 // datepicker.    If no suitable language file exists then returns NULL.
-function get_flatpickr_lang_path()
+function get_flatpickr_lang_path() : ?string
 {
   global $flatpickr_lang_map;
 
