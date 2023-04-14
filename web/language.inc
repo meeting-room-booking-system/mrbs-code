@@ -1328,7 +1328,7 @@ function utf8_next_index($str, $start)
 // at this index as a string, and update the byte index to point to
 // the next sequence. When the end of the string is encountered, the
 // last sequence is returned, and the byte index set to NULL
-function utf8_seq($str, &$byte_index)
+function utf8_seq(string $str, int &$byte_index) : string
 {
   $ret = '.';  // Dummy to fool PHP. If we us an empty string it thinks it's an array.
 
