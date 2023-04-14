@@ -1280,7 +1280,6 @@ function utf8_next(string $str)
   if ($index)
   {
     $i = 0;
-    $ret = '.';  // Dummy to fool PHP. If we use an empty string it thinks it's an array.
     while (isset($str[$index]) && ord($str[$index]) != 0)
     {
       $ret[$i] = $str[$index];
