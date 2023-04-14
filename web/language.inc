@@ -1492,7 +1492,7 @@ function utf8_stripos(string $haystack, string $needle, int $offset=0)
 }
 
 
-function language_debug($message)
+function language_debug(string $message) : void
 {
   global $language_debug;
 
