@@ -432,6 +432,8 @@ $strftime_format['view_week_start']    = "%e ";        // year and month the sam
 $strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
 $strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
 
+$format_pattern['view_month'] = "MMMM y";
+
 // Whether or not to display the timezone
 $display_timezone = false;
 

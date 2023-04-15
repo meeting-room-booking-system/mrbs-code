@@ -990,7 +990,13 @@ function get_date($t, $view) : string
 
   if ($view == 'month')
   {
-    return utf8_strftime('%e', $t);
+    $formatter = new IntlDateFormatter(
+      get_mrbs_locale(),
+      IntlDateFormatter::SHORT,
+      IntlDateFormatter::SHORT,
+      null, null, 'd'
+    );
+    return $formatter->format($t);
   }
   else
   {
@@ -1001,28 +1007,18 @@ function get_date($t, $view) : string
 
 function get_day($t, $view)
 {
-  // The strftime %a format often (but not always) returns a three letter abbreviation for the day which
-  // can make the month view unnecessarily wide.  So if we are able to then use the IntlDateFormatter
-  // class which gives us the ability to specify patterns for shorter day abbreviations.
-  if (class_exists('IntlDateFormatter'))
-  {
-    $pattern = ($view == 'month') ? 'cccccc' : 'ccc';
-    $date = new DateTime();
-    $date->setTimestamp($t);
-    $formatter = new IntlDateFormatter(get_mrbs_locale(),
-                                       IntlDateFormatter::SHORT,
-                                       IntlDateFormatter::SHORT,
-                                       null, null, $pattern);
-    $result = $formatter->format($date);
-  }
+  // In the month view use a pattern which will tend to give a narrower result, to save space.
+  $pattern = ($view == 'month') ? 'cccccc' : 'ccc';
+  $date = new DateTime();
+  $date->setTimestamp($t);
+  $formatter = new IntlDateFormatter(
+    get_mrbs_locale(),
+    IntlDateFormatter::SHORT,
+    IntlDateFormatter::SHORT,
+    null, null, $pattern
+  );
 
-  // Fallback if IntlDateFormatter does not exist or failed
-  if (!isset($result) || ($result === false))
-  {
-    $result = utf8_strftime('%a', $t);
-  }
-
-  return $result;
+  return $formatter->format($date);
 }
 
 
