@@ -77,11 +77,10 @@ class IntlDateFormatter
         }
       }
       // The end of a token
-      if (($char !== $token_char) || empty($chars))
+      if (isset($token_char) && (($char !== $token_char) || empty($chars)))
       {
         $converted_token = self::convertFormatToken($token);
-        if ($converted_token === false)
-        {
+        if ($converted_token === false) {
           throw new \MRBS\Exception("Could not convert '$token'");
         }
         $format .= $converted_token;
@@ -94,7 +93,7 @@ class IntlDateFormatter
       }
       // TODO: handle single quotes
     }
-    
+
     return \MRBS\date_formatter_strftime($format, $t, $this->locale);
   }
 
