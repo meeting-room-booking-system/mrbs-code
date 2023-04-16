@@ -3,6 +3,8 @@
 // A basic emulation of PHP's IntlDateFormatter class.  This will only be loaded if the
 // standard PHP class does not exist.
 
+use function MRBS\date_formatter_strftime;
+
 class IntlDateFormatter
 {
   const FULL    = 0;
@@ -94,7 +96,7 @@ class IntlDateFormatter
       // TODO: handle single quotes
     }
 
-    return \MRBS\date_formatter_strftime($format, $t, $this->locale);
+    return date_formatter_strftime($format, $t, $this->locale);
   }
 
 
