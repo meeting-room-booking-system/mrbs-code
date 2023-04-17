@@ -19,6 +19,8 @@ class IntlDateFormatter
   const GREGORIAN   = 1;
   const TRADITIONAL = 0;
 
+  private const QUOTE_CHAR = "'";
+
   private $locale;
   private $dateType;
   private $timeType;
@@ -59,11 +61,12 @@ class IntlDateFormatter
     // Parse the pattern
     $format = '';
     $token_char = null;
+    $in_quotes = false;
     $chars = preg_split("//u", $this->pattern, 0, PREG_SPLIT_NO_EMPTY);
 
     while (null !== ($char = array_shift($chars)))
     {
-      $is_token_char = preg_match("/^[a-z]$/i", $char);
+      $is_token_char = !$in_quotes && preg_match("/^[a-z]$/i", $char);
       if ($is_token_char)
       {
         // The start of a token
@@ -88,12 +91,46 @@ class IntlDateFormatter
         $format .= $converted_token;
         $token_char = null;
       }
+
       // Quoted text
       if (!$is_token_char)
       {
-        $format .= $char;
+        if ($char === self::QUOTE_CHAR)
+        {
+          // Get the next character
+          $char = array_shift($chars);
+          if (isset($char))
+          {
+            // If it is a quote then it's an escaped quote.  Otherwise,
+            // it's either the start or end of a quoted section.
+            if ($char === self::QUOTE_CHAR)
+            {
+              // It's an escaped quote, so add it to the format
+              $format .= $char;
+            }
+            // It's not an escaped quote character, so toggle $in_quotes and add
+            // the character to the format if we're in quotes, otherwise replace
+            // it so that it gets handled properly next time round.
+            else
+            {
+              $in_quotes = !$in_quotes;
+              if ($in_quotes)
+              {
+                $format .= $char;
+              }
+              else
+              {
+                array_unshift($chars, $char);
+              }
+            }
+          }
+        }
+        // It's not a quote so just add the character to the format
+        else
+        {
+          $format .= $char;
+        }
       }
-      // TODO: handle single quotes
     }
 
     return date_formatter_strftime($format, $t, $this->locale);
