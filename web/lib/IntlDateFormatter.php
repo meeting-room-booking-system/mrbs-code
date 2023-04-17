@@ -95,22 +95,27 @@ class IntlDateFormatter
       // Quoted text
       if (!$is_token_char)
       {
-        if ($char === self::QUOTE_CHAR)
+        // If it's not a quote just add the character to the format
+        if ($char !== self::QUOTE_CHAR)
+        {
+          $format .= $char;
+        }
+        // Otherwise we have to work out whether the quote is the start or end of a
+        // quoted sequence, or part of an escaped quote
+        else
         {
           // Get the next character
           $char = array_shift($chars);
           if (isset($char))
           {
-            // If it is a quote then it's an escaped quote.  Otherwise,
-            // it's either the start or end of a quoted section.
+            // If it is a quote then it's an escaped quote and add it to the format
             if ($char === self::QUOTE_CHAR)
             {
-              // It's an escaped quote, so add it to the format
               $format .= $char;
             }
-            // It's not an escaped quote character, so toggle $in_quotes and add
-            // the character to the format if we're in quotes, otherwise replace
-            // it so that it gets handled properly next time round.
+            // Otherwise it's either the start or end of a quoted section.
+            // Toggle $in_quotes and add the character to the format if we're in quotes,
+            // or else replace it so that it gets handled properly next time round.
             else
             {
               $in_quotes = !$in_quotes;
@@ -124,11 +129,6 @@ class IntlDateFormatter
               }
             }
           }
-        }
-        // It's not a quote so just add the character to the format
-        else
-        {
-          $format .= $char;
         }
       }
     }
