@@ -59,6 +59,13 @@ class IntlDateFormatter
     }
 
     // Parse the pattern
+    // See https://unicode-org.github.io/icu/userguide/format_parse/datetime/
+    // "Note: Any characters in the pattern that are not in the ranges of [‘a’..’z’] and
+    // [‘A’..’Z’] will be treated as quoted text. For instance, characters like ':', '.',
+    // ' ', '#' and '@' will appear in the resulting time text even they are not enclosed
+    // within single quotes. The single quote is used to ‘escape’ letters. Two single
+    // quotes in a row, whether inside or outside a quoted sequence, represent a ‘real’
+    // single quote."
     $format = '';
     $token_char = null;
     $in_quotes = false;
