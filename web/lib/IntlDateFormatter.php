@@ -140,7 +140,7 @@ class IntlDateFormatter
         }
       }
     }
-
+    // TODO: escape strftime formats
     return date_formatter_strftime($format, $t, $this->locale);
   }
 
