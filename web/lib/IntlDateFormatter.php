@@ -62,6 +62,7 @@ class IntlDateFormatter
     $format = '';
     $token_char = null;
     $in_quotes = false;
+    // Split the string into an array of multibyte characters
     $chars = preg_split("//u", $this->pattern, 0, PREG_SPLIT_NO_EMPTY);
 
     while (null !== ($char = array_shift($chars)))
