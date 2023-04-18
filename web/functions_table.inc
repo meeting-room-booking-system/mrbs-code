@@ -1,9 +1,6 @@
 <?php
 namespace MRBS;
 
-use IntlDateFormatter;
-
-
 function get_date_classes(DateTime $date) : array
 {
   $result = array();
@@ -990,13 +987,7 @@ function get_date($t, $view) : string
 
   if ($view == 'month')
   {
-    $formatter = new IntlDateFormatter(
-      get_mrbs_locale(),
-      IntlDateFormatter::SHORT,
-      IntlDateFormatter::SHORT,
-      null, null, 'd'
-    );
-    return $formatter->format($t);
+    return datetime_format(['pattern' => 'd'], $t);
   }
   else
   {
@@ -1009,16 +1000,8 @@ function get_day($t, $view)
 {
   // In the month view use a pattern which will tend to give a narrower result, to save space.
   $pattern = ($view == 'month') ? 'cccccc' : 'ccc';
-  $date = new DateTime();
-  $date->setTimestamp($t);
-  $formatter = new IntlDateFormatter(
-    get_mrbs_locale(),
-    IntlDateFormatter::SHORT,
-    IntlDateFormatter::SHORT,
-    null, null, $pattern
-  );
 
-  return $formatter->format($date);
+  return datetime_format(['pattern' => $pattern], $t);
 }
 
 
