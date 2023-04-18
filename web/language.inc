@@ -1126,6 +1126,28 @@ function date_formatter_intl(string $format, $time, $locale=null) : string
 }
 
 
+function datetime_format(array $format, int $timestamp=null) : string
+{
+  if (isset($format['skeleton']))
+  {
+
+  }
+  else
+  {
+    $pattern = $format['pattern'];
+  }
+
+  $formatter = new IntlDateFormatter(
+    get_mrbs_locale(),
+    IntlDateFormatter::SHORT,
+    IntlDateFormatter::SHORT,
+    null, null, $pattern
+  );
+
+  return $formatter->format($timestamp ?? time());
+}
+
+
 // Format a local time/date according to locale settings, returning the
 // result as a UTF-8 string.
 // $time can be an int or a float (union type declarations not supported until PHP 8.0)
