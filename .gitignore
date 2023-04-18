@@ -10,3 +10,4 @@ web/config.inc.php
 /.idea
 /hg-code.iml
 /nbproject
+/.vs
