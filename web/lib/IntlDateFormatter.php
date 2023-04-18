@@ -115,7 +115,7 @@ class IntlDateFormatter
         // If it's not a quote just add the character to the format
         if ($char !== self::QUOTE_CHAR)
         {
-          $format .= $char;
+          $format .= self::escapeForStrftime($char);
         }
         // Otherwise we have to work out whether the quote is the start or end of a
         // quoted sequence, or part of an escaped quote
@@ -128,7 +128,7 @@ class IntlDateFormatter
             // If it is a quote then it's an escaped quote and add it to the format
             if ($char === self::QUOTE_CHAR)
             {
-              $format .= $char;
+              $format .= self::escapeForStrftime($char);
             }
             // Otherwise it's either the start or end of a quoted section.
             // Toggle $in_quotes and add the character to the format if we're in quotes,
@@ -138,7 +138,7 @@ class IntlDateFormatter
               $in_quotes = !$in_quotes;
               if ($in_quotes)
               {
-                $format .= $char;
+                $format .= self::escapeForStrftime($char);
               }
               else
               {
@@ -149,7 +149,7 @@ class IntlDateFormatter
         }
       }
     }
-    // TODO: escape strftime formats
+
     return date_formatter_strftime($format, $t, $this->locale);
   }
 
@@ -236,5 +236,24 @@ class IntlDateFormatter
     return $format;
   }
 
+
+  private static function escapeForStrftime(string $char) : string
+  {
+    switch ($char)
+    {
+      case "\n":
+        return '%n';
+        break;
+      case "\t":
+        return '%t';
+        break;
+      case "%":
+        return '%%';
+        break;
+      default:
+        return $char;
+        break;
+    }
+  }
 
 }
