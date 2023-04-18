@@ -433,6 +433,7 @@ $strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
 $strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
 
 $datetime_formats['view_month'] = array(
+  'skeleton' => 'MMMMy',
   'pattern' => 'MMMM y'
 );
 

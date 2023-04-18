@@ -5,6 +5,7 @@ namespace MRBS;
 // isn't always installed).
 
 use IntlDateFormatter;
+use IntlDatePatternGenerator;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";
@@ -1130,9 +1131,11 @@ function datetime_format(array $format, int $timestamp=null) : string
 {
   if (isset($format['skeleton']))
   {
-
+    $pattern_generator = new IntlDatePatternGenerator(get_mrbs_locale());
+    $pattern = $pattern_generator->getBestPattern($format['skeleton']);
   }
-  else
+
+  if (!isset($pattern) || ($pattern === false))
   {
     $pattern = $format['pattern'];
   }
