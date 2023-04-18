@@ -3,6 +3,7 @@ namespace MRBS;
 
 use DateInterval;
 use DateTimeZone;
+use IntlDateFormatter;
 use MRBS\Form\FieldSelect;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -1862,6 +1863,28 @@ function validate_iso_date(string $date) : bool
   $datetime = DateTime::createFromFormat($format, $date);
 
   return ($datetime && ($datetime->format($format) === $date));
+}
+
+
+function datetime_format(array $format, int $timestamp=null) : string
+{
+  if (isset($format['skeleton']))
+  {
+
+  }
+  else
+  {
+    $pattern = $format['pattern'];
+  }
+
+  $formatter = new IntlDateFormatter(
+    get_mrbs_locale(),
+    IntlDateFormatter::SHORT,
+    IntlDateFormatter::SHORT,
+    null, null, $pattern
+  );
+
+  return $formatter->format($timestamp ?? time());
 }
 
 

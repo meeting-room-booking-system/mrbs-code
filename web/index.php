@@ -1,7 +1,6 @@
 <?php
 namespace MRBS;
 
-use IntlDateFormatter;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementSelect;
 use MRBS\Form\Form;
@@ -331,7 +330,7 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
-  global $strftime_format, $format_pattern, $display_timezone,
+  global $strftime_format, $datetime_formats, $display_timezone,
          $weekstarts, $mincals_week_numbers;
 
   $html = '';
@@ -380,13 +379,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       break;
 
     case 'month':
-      $formatter = new IntlDateFormatter(
-        get_mrbs_locale(),
-        IntlDateFormatter::SHORT,
-        IntlDateFormatter::SHORT,
-        null, null, $format_pattern['view_month']
-      );
-      $html .= $formatter->format($time);
+      $html .= datetime_format($datetime_formats['view_month'], $time);
       break;
 
     default:
