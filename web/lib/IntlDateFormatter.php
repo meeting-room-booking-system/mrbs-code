@@ -2,6 +2,15 @@
 
 // A basic emulation of PHP's IntlDateFormatter class.  This will only be loaded if the
 // standard PHP class does not exist.
+//
+// The emulation uses the deprecated function strftime() and is only necessary for older
+// PHP systems where the Intl extension isn't available.  Eventually the emulation can be
+// dispensed with.
+//
+// Note that there is a polyfill for IntlDateFormatter available at
+// https://github.com/symfony/polyfill-intl-icu, but it is limited to the 'en' locale.
+// There are also backwards compatibility versions of strftime() available, but
+// IntlDateFormatter is a more powerful solution.
 
 use function MRBS\date_formatter_strftime;
 
