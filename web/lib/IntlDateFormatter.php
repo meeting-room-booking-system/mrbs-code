@@ -50,7 +50,7 @@ class IntlDateFormatter
     $this->timeType = $timeType;
     $this->timezone = $timezone;
     $this->calendar = $calendar ?? self::GREGORIAN;
-    $this->pattern = $pattern;
+    $this->setPattern($pattern);
   }
 
 
@@ -151,6 +151,26 @@ class IntlDateFormatter
     }
     // TODO: escape strftime formats
     return date_formatter_strftime($format, $t, $this->locale);
+  }
+
+
+  // The standard PHP version can also return false
+  public function getPattern()
+  {
+    if (!isset($this->pattern))
+    {
+      throw new Exception("Pattern not set");
+      // TODO: set patterns when the pattern is not defined in the constructor
+    }
+    return $this->pattern;
+  }
+
+
+  // The standard PHP version can also return false
+  public function setPattern(string $pattern): bool
+  {
+    $this->pattern = $pattern;
+    return true;
   }
 
 
