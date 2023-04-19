@@ -216,7 +216,7 @@ function url_get_contents(string $url, ?string $if_modified_since=null, ?string 
   // (We can only set a timeout on transfer time with file_get_contents()).  The
   // connection timeout is important because MRBS may be being used in sites
   // where direct access to the internet is not allowed.
-  if (function_exists('curl_init'))
+  if (function_available('curl_exec'))
   {
     $headers = array();
     $ch = curl_init($url);
@@ -489,6 +489,12 @@ function function_disabled(string $name) : bool
 {
   $disabled = explode(', ', ini_get('disable_functions'));
   return in_array($name, $disabled);
+}
+
+
+function function_available(string $name) : bool
+{
+  return function_exists($name) && !function_disabled($name);
 }
 
 
