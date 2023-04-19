@@ -27,9 +27,11 @@ class IntlDatePatternGenerator
   {
     $file = MRBS_ROOT . "/lib/IntlDatePatternGenerator/skeletons/$skeleton.ini";
 
-    if (is_readable($file)) {
+    if (is_readable($file))
+    {
       $patterns = parse_ini_file($file);
-      if (!empty($patterns)) {
+      if (!empty($patterns))
+      {
         return $patterns[$this->locale] ?? $patterns['default'] ?? false;
       }
     }
