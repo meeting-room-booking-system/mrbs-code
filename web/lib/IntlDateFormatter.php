@@ -45,7 +45,7 @@ class IntlDateFormatter
     $calendar = null,
     ?string $pattern = null)
   {
-    $this->$locale = $locale;
+    $this->locale = $locale;
     $this->dateType = $dateType;
     $this->timeType = $timeType;
     $this->timezone = $timezone;
