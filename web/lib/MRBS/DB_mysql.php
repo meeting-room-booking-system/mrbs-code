@@ -15,7 +15,8 @@ class DB_mysql extends DB
 
   const DB_MARIADB = 0;
   const DB_MYSQL   = 1;
-  const DB_OTHER   = 2;
+  const DB_PERCONA = 2;
+  const DB_OTHER   = 3;
 
   // For a full list of error codes see https://mariadb.com/kb/en/mariadb-error-codes/
   // (That page doesn't list codes only used by MySQL)
@@ -29,8 +30,15 @@ class DB_mysql extends DB
 
   private const MIN_VERSIONS = array(
       self::DB_MARIADB => '10.0.2',
-      self::DB_MYSQL   => '5.5.3'
+      self::DB_MYSQL   => '5.5.3',
+      self::DB_PERCONA => '5.5.3'
     );
+
+  private const DB_NAMES = array(
+    self::DB_MARIADB => 'MariaDB',
+    self::DB_MYSQL   => 'MySQL',
+    self::DB_PERCONA => 'Percona'
+  );
 
   private $db_type = null;
   private $supports_multiple_locks = null;
@@ -395,6 +403,10 @@ class DB_mysql extends DB
       {
         $this->db_type = self::DB_MYSQL;
       }
+      elseif ((false !== utf8_stripos($this->versionComment(), 'percona')) || (false !== utf8_stripos($this->version(), 'percona')))
+      {
+        $this->db_type = self::DB_PERCONA;
+      }
       else
       {
         if ($debug)
@@ -415,21 +427,10 @@ class DB_mysql extends DB
     $db_version = $this->versionNumber();
     $db_type = $this->dbType();
 
-    if ($db_type === self::DB_MARIADB)
+    if (isset(self::MIN_VERSIONS[$db_type]) &&
+        (version_compare($db_version, self::MIN_VERSIONS[$db_type]) < 0))
     {
-      if (isset(self::MIN_VERSIONS[self::DB_MARIADB]) &&
-          (version_compare($db_version, self::MIN_VERSIONS[self::DB_MARIADB]) < 0))
-      {
-        $this->versionDie('MariaDB', $db_version, self::MIN_VERSIONS[self::DB_MARIADB]);
-      }
-    }
-    elseif ($db_type === self::DB_MYSQL)
-    {
-      if (isset(self::MIN_VERSIONS[self::DB_MYSQL]) &&
-          (version_compare($db_version, self::MIN_VERSIONS[self::DB_MYSQL]) < 0))
-      {
-        $this->versionDie('MySQL', $db_version, self::MIN_VERSIONS[self::DB_MYSQL]);
-      }
+      $this->versionDie(self::DB_NAMES[$db_type], $db_version, self::MIN_VERSIONS[$db_type]);
     }
     // If it's another type of database we'll have to add some minimum version requirements fot it
   }
