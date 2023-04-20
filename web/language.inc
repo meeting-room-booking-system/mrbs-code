@@ -1135,7 +1135,7 @@ function datetime_format(array $format, int $timestamp=null) : string
     $pattern = $pattern_generator->getBestPattern($format['skeleton']);
   }
 
-  if (!isset($pattern) || ($pattern === false))
+  if (!isset($pattern) || ($pattern === false) || ($pattern === ''))
   {
     $pattern = $format['pattern'];
   }
