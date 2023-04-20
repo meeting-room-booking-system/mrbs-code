@@ -487,7 +487,7 @@ function get_microtime()
 
 function function_disabled(string $name) : bool
 {
-  $disabled = explode(', ', ini_get('disable_functions'));
+  $disabled = preg_split('/\s*,\s*/', ini_get('disable_functions'));
   return in_array($name, $disabled);
 }
 
