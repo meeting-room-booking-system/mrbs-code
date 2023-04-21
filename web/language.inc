@@ -1137,13 +1137,13 @@ function datetime_format(array $format, int $timestamp=null) : string
 
   if (!isset($pattern) || ($pattern === false) || ($pattern === ''))
   {
-    $pattern = $format['pattern'];
+    $pattern = $format['pattern'] ?? null;
   }
 
   $formatter = new IntlDateFormatter(
     get_mrbs_locale(),
-    IntlDateFormatter::SHORT,
-    IntlDateFormatter::SHORT,
+    $format['date_type'] ?? null,
+    $format['time_type'] ?? null,
     null, null, $pattern
   );
 

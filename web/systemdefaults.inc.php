@@ -1,6 +1,8 @@
 <?php
 namespace MRBS;
 
+use IntlDateFormatter;
+
 /**************************************************************************
  *   MRBS system defaults file
  *
@@ -435,6 +437,11 @@ $strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) dif
 $datetime_formats['view_month'] = array(
   'skeleton' => 'MMMMy',
   'pattern' => 'MMMM y'
+);
+
+$datetime_formats['view_day'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::NONE
 );
 
 // Whether or not to display the timezone
