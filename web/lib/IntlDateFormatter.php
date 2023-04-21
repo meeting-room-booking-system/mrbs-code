@@ -210,6 +210,10 @@ class IntlDateFormatter
     {
       // stand-alone local day of week
       case 'cccc':     // Tuesday
+      // day of week
+      case 'EEEE':   // Tuesday
+      // local day of week
+      case 'eeee':   // Tuesday
         $format = '%A';  // A full textual representation of the day, eg Sunday through Saturday
         break;
 
@@ -228,13 +232,6 @@ class IntlDateFormatter
       case 'eeeee':   // T
       case 'eeeeee':  // Tu
         $format = '%a';   // An abbreviated textual representation of the day, eg Sun through Sat
-        break;
-
-      // day of week
-      case 'EEEE':   // Tuesday
-      // local day of week
-      case 'eeee':   // Tuesday
-        $format = '%A';   // A full textual representation of the day, eg Sunday through Saturday
         break;
 
       // day in month
