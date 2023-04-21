@@ -3,6 +3,8 @@ namespace MRBS;
 
 use IntlDateFormatter;
 
+require_once 'lib/autoload.inc';
+
 /**************************************************************************
  *   MRBS system defaults file
  *

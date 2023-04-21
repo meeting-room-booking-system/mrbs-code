@@ -1,6 +1,10 @@
 <?php // -*-mode: PHP; coding:utf-8;-*-
 namespace MRBS;
 
+use IntlDateFormatter;
+
+require_once 'lib/autoload.inc';
+
 /**************************************************************************
  *   MRBS Configuration File
  *   Configure this file for your site.

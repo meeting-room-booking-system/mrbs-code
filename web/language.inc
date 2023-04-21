@@ -1142,8 +1142,8 @@ function datetime_format(array $format, int $timestamp=null) : string
 
   $formatter = new IntlDateFormatter(
     get_mrbs_locale(),
-    $format['date_type'] ?? null,
-    $format['time_type'] ?? null,
+    $format['date_type'] ?? IntlDateFormatter::FULL,
+    $format['time_type'] ?? IntlDateFormatter::FULL,
     null, null, $pattern
   );
 

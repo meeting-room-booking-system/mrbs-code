@@ -5,6 +5,8 @@
 
 class IntlDatePatternGenerator
 {
+  private const DEFAULT_LOCALE = 'en';
+
   private $locale;
 
   // $locale  The locale. If null is passed, uses the ini setting intl.default_locale.
@@ -32,7 +34,7 @@ class IntlDatePatternGenerator
       $patterns = parse_ini_file($file);
       if (!empty($patterns))
       {
-        return $patterns[$this->locale] ?? $patterns['default'] ?? false;
+        return $patterns[$this->locale] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
       }
     }
 
