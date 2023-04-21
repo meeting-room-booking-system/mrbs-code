@@ -28,6 +28,15 @@ class IntlDateFormatter
   const GREGORIAN   = 1;
   const TRADITIONAL = 0;
 
+  private const TYPE_NAMES = array(
+    self::FULL => 'full',
+    self::LONG => 'long',
+    self::MEDIUM => 'medium',
+    self::SHORT => 'short',
+    self::NONE => 'none'
+  );
+
+  private const DEFAULT_LOCALE = 'en';
   private const QUOTE_CHAR = "'";
 
   private $locale;
@@ -50,6 +59,26 @@ class IntlDateFormatter
     $this->timeType = $timeType;
     $this->timezone = $timezone;
     $this->calendar = $calendar ?? self::GREGORIAN;
+
+    if (!isset($pattern))
+    {
+      $file = MRBS_ROOT . "/lib/IntlDatePatternGenerator/types/" .
+        self::TYPE_NAMES[$this->dateType] . "_" . self::TYPE_NAMES[$this->timeType] . ".ini";
+      if (is_readable($file))
+      {
+        $patterns = parse_ini_file($file);
+        if (!empty($patterns))
+        {
+          $pattern =  $patterns[$this->locale] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
+        }
+      }
+    }
+
+    if (!isset($pattern))
+    {
+      throw new Exception("Could not get pattern");
+    }
+
     $this->setPattern($pattern);
   }
 
@@ -188,17 +217,24 @@ class IntlDateFormatter
       case 'ccc':     // Tue
       case 'ccccc':   // T
       case 'cccccc':  // Tu
-        // day of week
+      // day of week
       case 'E':       // Tue
       case 'EE':      // Tue
       case 'EEE':     // Tue
       case 'EEEEE':   // T
       case 'EEEEEE':  // Tu
-        // local day of week
+      // local day of week
       case 'eee':     // Tue
       case 'eeeee':   // T
       case 'eeeeee':  // Tu
         $format = '%a';   // An abbreviated textual representation of the day, eg Sun through Sat
+        break;
+
+      // day of week
+      case 'EEEE':   // Tuesday
+      // local day of week
+      case 'eeee':   // Tuesday
+        $format = '%A';   // A full textual representation of the day, eg Sunday through Saturday
         break;
 
       // day in month
