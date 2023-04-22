@@ -15,6 +15,7 @@
 use MRBS\System;
 use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
+use function MRBS\utf8_strlen;
 
 class IntlDateFormatter
 {
@@ -357,8 +358,20 @@ class IntlDateFormatter
       $format = preg_replace('/%p/', $ampm, $format);
     }
 
-    $result = strftime($format, $time);
-    $result = System::utf8ConvertFromLocale($result, $new_locale);
+    $result = '';
+    $tokens = self::parseStrftimeFormat($format);
+
+    foreach ($tokens as $token)
+    {
+      if (utf8_strlen($token) === 1)
+      {
+        $result .= $token;
+      }
+      else
+      {
+        $result .= System::utf8ConvertFromLocale(strftime($token, $time), $new_locale);
+      }
+    }
 
     // Restore the original locale
     if (!empty($locale))
@@ -369,5 +382,50 @@ class IntlDateFormatter
     return $result;
   }
 
+
+  // Parses a strftime format into an array of strings, which will either be two-character
+  // formats or one-character text strings.
+  private static function parseStrftimeFormat(string $format) : array
+  {
+    $result = array();
+
+    // Split the format into an array of multibyte characters
+    $chars = preg_split("//u", $format, 0, PREG_SPLIT_NO_EMPTY);
+
+    while (null !== ($char = array_shift($chars)))
+    {
+      if ($char === '%')
+      {
+        // Get the next character which will either be a conversion specifier or an escaped character
+        $char = array_shift($chars);
+        switch ($char)
+        {
+          case null:
+            throw new Exception("Invalid format");
+            break;
+          case 'n':
+            $result[] = "\n";
+            break;
+          case 't':
+            $result[] = "\t";
+            break;
+          case '%':
+            $result[] = "%";
+            break;
+          default:
+            $result [] = "%$char";
+            break;
+        }
+      }
+      else
+      {
+        // It's ordinary text
+        $result[] = $char;
+      }
+
+    }
+
+    return $result;
+  }
 
 }
