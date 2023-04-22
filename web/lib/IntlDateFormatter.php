@@ -243,6 +243,11 @@ class IntlDateFormatter
         break;
 
       // month in year
+      case 'M':       // 9
+        $format = '%f';   // One/two digit representation of the month, eg 1 (for January) through 12 (for December)
+        break;
+
+      // month in year
       case 'MM':      // 09
         $format = '%m';   // Two digit representation of the month, eg 01 (for January) through 12 (for December)
         break;
@@ -302,10 +307,17 @@ class IntlDateFormatter
 // $time can be an int or a float (union type declarations not supported until PHP 8.0)
 // $locale can either be a string or an array of locales.  If $locale
 // is not set then the current locale is used.
+//
+// This method extends the standard PHP strftime() function and adds extra formats:
+//
+//  %f  Numeric representation of the month 	      1 (for January) through 12 (for December)
+//      without leading zeroes.  Won't
+//      necessarily work in locales that don't
+//      use [0..9] for the month.
   private static function strftimePlus(string $format, $time, $locale)
   {
     $time = (int) $time;
-    
+
     $server_os = System::getServerOS();
 
     // Set the temporary locale.  Note that $temp_locale could be an array of locales,
@@ -369,7 +381,19 @@ class IntlDateFormatter
       }
       else
       {
-        $result .= System::utf8ConvertFromLocale(strftime($token, $time), $new_locale);
+        switch ($token)
+        {
+          case '%f':
+            // We want a month number without leading zeroes.  We can't use date('n', $time)
+            // because date will return an English answer with a month made up of the characters
+            // [0..9] which won't be correct for all locales.
+            $formatted = ltrim(strftime('%m', $time), '0');
+            break;
+          default:
+            $formatted = strftime($token, $time);
+            break;
+        }
+        $result .= System::utf8ConvertFromLocale($formatted, $new_locale);
       }
     }
 
