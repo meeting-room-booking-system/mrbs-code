@@ -304,10 +304,8 @@ class IntlDateFormatter
 // is not set then the current locale is used.
   private static function strftimePlus(string $format, $time, $locale)
   {
-    // Cast $time to an integer because we're going to use it in strftime() and date(), both
-    // of which expect integers and will otherwise throw an E_DEPRECATED error in PHP 8.1
     $time = (int) $time;
-
+    
     $server_os = System::getServerOS();
 
     // Set the temporary locale.  Note that $temp_locale could be an array of locales,
@@ -359,6 +357,8 @@ class IntlDateFormatter
     }
 
     $result = '';
+
+    // Split the format into individual tokens so that we can process our extensions
     $tokens = self::parseStrftimeFormat($format);
 
     foreach ($tokens as $token)
