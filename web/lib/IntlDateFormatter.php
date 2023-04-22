@@ -12,7 +12,9 @@
 // There are also backwards compatibility versions of strftime() available, but
 // IntlDateFormatter is a more powerful solution.
 
-use function MRBS\date_formatter_strftime;
+use MRBS\System;
+use function MRBS\get_mrbs_locale;
+use function MRBS\set_mrbs_locale;
 
 class IntlDateFormatter
 {
@@ -179,7 +181,7 @@ class IntlDateFormatter
       }
     }
 
-    return date_formatter_strftime($format, $t, $this->locale);
+    return self::strftimePlus($format, $t, $this->locale);
   }
 
 
@@ -292,5 +294,80 @@ class IntlDateFormatter
         break;
     }
   }
+
+
+// Format a local time/date according to locale settings, returning the
+// result as a UTF-8 string.  This function is based on strftime()
+// $time can be an int or a float (union type declarations not supported until PHP 8.0)
+// $locale can either be a string or an array of locales.  If $locale
+// is not set then the current locale is used.
+  private static function strftimePlus(string $format, $time, $locale)
+  {
+    // Cast $time to an integer because we're going to use it in strftime() and date(), both
+    // of which expect integers and will otherwise throw an E_DEPRECATED error in PHP 8.1
+    $time = (int) $time;
+
+    $server_os = System::getServerOS();
+
+    // Set the temporary locale.  Note that $temp_locale could be an array of locales,
+    // so we need to find out which locale actually worked.
+    if (!empty($locale))
+    {
+      $old_locale = setlocale(LC_TIME, '0');
+      $new_locale = setlocale(LC_TIME, $locale);
+    }
+    elseif ($server_os == "windows")
+    {
+      // If we are running Windows we have to set the locale again in case another script
+      // running in the same process has changed the locale since we first set it.  See the
+      // warning on the PHP manual page for setlocale():
+      //
+      // "The locale information is maintained per process, not per thread. If you are
+      // running PHP on a multithreaded server API like IIS or Apache on Windows, you may
+      // experience sudden changes in locale settings while a script is running, though
+      // the script itself never called setlocale(). This happens due to other scripts
+      // running in different threads of the same process at the same time, changing the
+      // process-wide locale using setlocale()."
+      $new_locale = get_mrbs_locale();
+      set_mrbs_locale($new_locale);
+    }
+    else
+    {
+      $new_locale = null;
+    }
+
+    if ($server_os == "windows")
+    {
+      // Some formats not supported on Windows.   Replace with suitable alternatives
+      $format = str_replace("%R", "%H:%M", $format);
+      $format = str_replace("%P", "%p", $format);
+      $format = str_replace("%l", "%I", $format);
+      $format = str_replace("%e", "%#d", $format);
+    }
+
+    // %p doesn't actually work in some locales, we have to patch it up ourselves
+    if (preg_match('/%p/', $format))
+    {
+      $ampm = strftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
+      if ($ampm == '')
+      {
+        $ampm = date('a', $time);
+      }
+
+      $format = preg_replace('/%p/', $ampm, $format);
+    }
+
+    $result = strftime($format, $time);
+    $result = System::utf8ConvertFromLocale($result, $new_locale);
+
+    // Restore the original locale
+    if (!empty($locale))
+    {
+      setlocale(LC_TIME, $old_locale);
+    }
+
+    return $result;
+  }
+
 
 }
