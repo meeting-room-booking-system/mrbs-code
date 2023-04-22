@@ -53,9 +53,9 @@ if ($info = get_booking_info($id, FALSE, TRUE))
   }
   if ($authorised)
   {
-    $day   = date('d', $info['start_time']);
-    $month = date('m', $info['start_time']);
-    $year  = date('Y', $info['start_time']);
+    $day   = (int) date('d', $info['start_time']);
+    $month = (int) date('m', $info['start_time']);
+    $year  = (int) date('Y', $info['start_time']);
     $area  = mrbsGetRoomArea($info["room_id"]);
     // Get the settings for this area (they will be needed for policy checking)
     get_area_settings($area);
