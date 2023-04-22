@@ -418,7 +418,12 @@ class IntlDateFormatter
 
     while (null !== ($char = array_shift($chars)))
     {
-      if ($char === '%')
+      if ($char !== '%')
+      {
+        // It's ordinary text
+        $result[] = $char;
+      }
+      else
       {
         // Get the next character which will either be a conversion specifier or an escaped character
         $char = array_shift($chars);
@@ -441,12 +446,6 @@ class IntlDateFormatter
             break;
         }
       }
-      else
-      {
-        // It's ordinary text
-        $result[] = $char;
-      }
-
     }
 
     return $result;
