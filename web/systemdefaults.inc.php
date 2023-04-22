@@ -436,23 +436,35 @@ $strftime_format['view_week_start']    = "%e ";        // year and month the sam
 $strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
 $strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
 
+// Used on the Search page
+$datetime_formats['date_search'] = array(
+  'date_type' => IntlDateFormatter::SHORT,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// The default format for day names
 $datetime_formats['day_name'] = array(
   'pattern' => 'cccc'
 );
 
+// The format used for the weekly repeat day name on edit_entry.php
 $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The title of the day view calendar
+$datetime_formats['view_day'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// The title of the month view calendar
 $datetime_formats['view_month'] = array(
   'skeleton' => 'MMMMy',
   'pattern' => 'MMMM y'
 );
 
-$datetime_formats['view_day'] = array(
-  'date_type' => IntlDateFormatter::FULL,
-  'time_type' => IntlDateFormatter::NONE
-);
+
 
 // Whether or not to display the timezone
 $display_timezone = false;

@@ -182,7 +182,7 @@ class IntlDateFormatter
     return date_formatter_strftime($format, $t, $this->locale);
   }
 
-  
+
   public function getPattern()
   {
     return $this->pattern ?? false;
@@ -237,6 +237,16 @@ class IntlDateFormatter
       // day in month
       case 'dd':      // 02
         $format = '%d';   // Two-digit day of the month (with leading zeros), eg 01 to 31
+        break;
+
+      // month in year
+      case 'MM':      // 09
+        $format = '%m';   // Two digit representation of the month, eg 01 (for January) through 12 (for December)
+        break;
+
+      // month in year
+      case 'MMM':     // Sep
+        $format = '%b';   // Abbreviated month name, based on the locale, eg Jan through Dec
         break;
 
       // month in year
