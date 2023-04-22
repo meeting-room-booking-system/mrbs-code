@@ -1461,9 +1461,9 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
-                    'year'     => utf8_strftime("%Y", $t),
-                    'month'    => utf8_strftime("%m", $t),
-                    'day'      => utf8_strftime('%d', $t),
+                    'year'     => date('Y', $t),
+                    'month'    => date('m', $t),
+                    'day'      => date('d', $t),
                     'area'     => $area_id,
                     'room'     => $room_id);
 
@@ -1507,18 +1507,18 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
       $tbody .= "<tr>\n";
 
       $wt = mktime( 12, 0, 0, $month, $day_start_week + $thisday, $year );
-      $wday = date("d", $wt);
-      $wmonth = date("m", $wt);
-      $wyear = date("Y", $wt);
+      $wday = date('d', $wt);
+      $wmonth = date('m', $wt);
+      $wyear = date('Y', $wt);
       $wdate = date('Y-n-d', $wt);
 
       $day_cell_text = utf8_strftime($dformat, $wt);
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
-                    'year'     => utf8_strftime("%Y", $wt),
-                    'month'    => utf8_strftime("%m", $wt),
-                    'day'      => utf8_strftime("%d", $wt),
+                    'year'     => date('Y', $wt),
+                    'month'    => date('m', $wt),
+                    'day'      => date('d', $wt),
                     'area'     => $area_id,
                     'room'     => $room_id);
 
