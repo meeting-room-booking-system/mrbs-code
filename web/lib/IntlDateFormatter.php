@@ -412,7 +412,7 @@ class IntlDateFormatter
   }
 
 
-  // Parses a strftime format into an array of strings, which will either be two-character
+  // Parses a strftime format into an array of strings, which will either be two or three-character
   // formats or one-character text strings.
   private static function parseStrftimeFormat(string $format) : array
   {
@@ -435,7 +435,7 @@ class IntlDateFormatter
         switch ($char)
         {
           case null:
-            throw new Exception("Invalid format");
+            throw new Exception("Invalid format '$format'");
             break;
           case 'n':
             $result[] = "\n";
@@ -445,6 +445,18 @@ class IntlDateFormatter
             break;
           case '%':
             $result[] = "%";
+            break;
+          case '#':
+            // This covers the case of '%#d' on Windows
+            $char = array_shift($chars);
+            if (!isset($char))
+            {
+              throw new Exception("Invalid format '$format'");
+            }
+            else
+            {
+              $result [] = "%#$char";
+            }
             break;
           default:
             $result [] = "%$char";
