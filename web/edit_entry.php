@@ -1374,9 +1374,9 @@ if (isset($id))
         $end_time = $row['end_time'];
       }
 
-      $rep_end_day   = (int)utf8_strftime('%d', $row['end_date']);
-      $rep_end_month = (int)utf8_strftime('%m', $row['end_date']);
-      $rep_end_year  = (int)utf8_strftime('%Y', $row['end_date']);
+      $rep_end_day   = (int) date('d', $row['end_date']);
+      $rep_end_month = (int) date('m', $row['end_date']);
+      $rep_end_year  = (int) date('Y', $row['end_date']);
       // Get the end date in string format as well, for use when
       // the input is disabled
       $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
