@@ -719,7 +719,7 @@ function get_field_rep_type($value, $disabled=false)
 // Repeat day
 function get_field_rep_day($disabled=false)
 {
-  global $weekstarts, $strftime_format;
+  global $weekstarts, $datetime_formats;
   global $rep_day;
 
   for ($i = 0; $i < DAYS_PER_WEEK; $i++)
@@ -727,7 +727,7 @@ function get_field_rep_day($disabled=false)
     // Display day name checkboxes according to language and preferred weekday start.
     $wday = ($i + $weekstarts) % DAYS_PER_WEEK;
     // We need to ensure the index is a string to force the array to be associative
-    $options[$wday] = day_name($wday, $strftime_format['dayname_edit']);
+    $options[$wday] = day_name($wday, $datetime_formats['day_name_edit']);
   }
 
   $field = new FieldInputCheckboxGroup();
