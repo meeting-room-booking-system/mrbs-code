@@ -233,8 +233,7 @@ class IntlDateFormatter
 
       // day in month
       case 'd':       // 2
-        $format = '%e';   // Day of the month, with a space preceding single digits, eg 1 to 31
-        // Not implemented as described on Windows. MRBS compensates.
+        $format = '%i';   // One/two digit day of the month, eg 1 to 31
         break;
 
       // day in month
@@ -314,6 +313,9 @@ class IntlDateFormatter
 //      without leading zeroes.  Won't
 //      necessarily work in locales that don't
 //      use [0..9] for the month.
+//
+//  %i  One/two digit day of the month, with no     1 to 31
+//      leading space
   private static function strftimePlus(string $format, $time, $locale)
   {
     $time = (int) $time;
@@ -387,7 +389,10 @@ class IntlDateFormatter
             // We want a month number without leading zeroes.  We can't use date('n', $time)
             // because date will return an English answer with a month made up of the characters
             // [0..9] which won't be correct for all locales.
-            $formatted = ltrim(strftime('%m', $time), '0');
+            $formatted = ltrim(self::strftimePlus('%m', $time, $locale), '0');
+            break;
+          case '%i':
+            $formatted = ltrim(self::strftimePlus('%e', $time, $locale));
             break;
           default:
             $formatted = strftime($token, $time);
