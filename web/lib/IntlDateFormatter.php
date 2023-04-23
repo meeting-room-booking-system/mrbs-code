@@ -364,7 +364,13 @@ class IntlDateFormatter
   // Wrapper for strftime()
   private static function doStrftime(string $format, ?int $timestamp = null)
   {
+    // Temporarily suppress deprecation errors so that we are not flooded with them.
+    // We have a single message in init.inc.
+    $error_level = error_reporting();
+    error_reporting($error_level & ~E_DEPRECATED);
     $result = strftime($format, $timestamp);
+    error_reporting($error_level);
+
     return $result;
   }
 
