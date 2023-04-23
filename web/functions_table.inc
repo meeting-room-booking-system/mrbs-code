@@ -1715,8 +1715,8 @@ function get_booking_summary(int $start, int $end, int $day_start, int $day_end)
   }
   else
   {
-    $start_str = htmlspecialchars(utf8_strftime(hour_min_format(), $start));
-    $end_str   = htmlspecialchars(utf8_strftime(hour_min_format(), $end));
+    $start_str = htmlspecialchars(datetime_format(hour_min_format(), $start));
+    $end_str   = htmlspecialchars(datetime_format(hour_min_format(), $end));
   }
 
   switch (cmp3($start, $day_start) . cmp3($end, $day_end + 1))

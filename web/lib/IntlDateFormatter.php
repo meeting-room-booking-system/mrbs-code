@@ -205,12 +205,21 @@ class IntlDateFormatter
   {
     switch ($token)
     {
+      // AM or PM
+      case 'a':       // PM [abbrev]
+      case 'aa':      // PM [abbrev]
+      case 'aaa':     // PM [abbrev]
+      case 'aaaa':    // PM [wide]
+      case 'aaaaa':   // p
+        $format = '%P';  // lower-case 'am' or 'pm' based on the given time
+        break;
+
       // stand-alone local day of week
-      case 'cccc':     // Tuesday
+      case 'cccc':    // Tuesday
       // day of week
-      case 'EEEE':   // Tuesday
+      case 'EEEE':    // Tuesday
       // local day of week
-      case 'eeee':   // Tuesday
+      case 'eeee':    // Tuesday
         $format = '%A';  // A full textual representation of the day, eg Sunday through Saturday
         break;
 
@@ -241,6 +250,16 @@ class IntlDateFormatter
         $format = '%d';   // Two-digit day of the month (with leading zeros), eg 01 to 31
         break;
 
+      // hour in am/pm (1~12)
+      case 'h':       // 7
+        $format = '%o';   // Hour in 12-hour format, with no space preceding single digits
+        break;
+
+      // hour in am/pm (1~12)
+      case 'hh':      // 07
+        $format = '%I';   // Two digit representation of the hour in 12-hour format, eg 01 through 12
+        break;
+
       // month in year
       case 'M':       // 9
         $format = '%f';   // One/two digit representation of the month, eg 1 (for January) through 12 (for December)
@@ -259,6 +278,16 @@ class IntlDateFormatter
       // month in year
       case 'MMMM':    // September
         $format = '%B';   // Full month name, based on the locale, eg January through December
+        break;
+
+      // minute in hour
+      case 'm':       // 4
+        $format = '%q';   // Minute in the hour, with no leading zero
+        break;
+
+      // minute in hour
+      case 'mm':      // 04
+        $format = '%M';   // Minute in the hour, with leading zeroes
         break;
 
       // month in year
@@ -316,6 +345,11 @@ class IntlDateFormatter
 //
 //  %i  One/two digit day of the month, with no     1 to 31
 //      leading space
+//
+//  %o  Hour in 12-hour format, with no space       1 through 12
+//      preceding single digits
+//
+//  %q  Minute in the hour, with no leading zero    4
   private function strftimePlus(string $format, int $timestamp) : string
   {
     $server_os = System::getServerOS();
@@ -421,6 +455,13 @@ class IntlDateFormatter
             break;
           case '%i':
             $formatted = ltrim(self::doStrftimePlus('%e', $timestamp, $locale));
+            break;
+          case '%o':
+            $formatted = ltrim(self::doStrftimePlus('%l', $timestamp, $locale));
+            break;
+          case '%q':
+            // We want a minute without leading zeroes.
+            $formatted = ltrim(self::doStrftimePlus('%M', $timestamp, $locale), '0');
             break;
           default:
             $formatted = self::doStrftime($token, $timestamp);

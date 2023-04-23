@@ -970,7 +970,7 @@ function get_fieldset_registration()
   if ($enable_periods)
   {
     $time = strtotime($periods_booking_opens);
-    $time = utf8_strftime(hour_min_format(), $time);
+    $time = datetime_format(hour_min_format(), $time);
     $in_advance_vocab = get_vocab('in_advance_periods', $time);
   }
   else

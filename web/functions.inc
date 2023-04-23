@@ -1934,11 +1934,11 @@ function get_rep_day_list($rep_opt) : string
 }
 
 
-function hour_min_format() : string
+function hour_min_format() : array
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  return ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
+  return $datetime_formats['time'];
 }
 
 
@@ -1950,7 +1950,7 @@ function hour_min(int $s) : string
   $s = $s % SECONDS_PER_DAY;  // in case $s is on the next day
   // Choose a day that doesn't have any DST transitions in any timezone
   $t = mktime(0, 0, $s, 1, 1, 2000);
-  $result = utf8_strftime(hour_min_format(), $t);
+  $result = datetime_format(hour_min_format(), $t);
   if ($following_day)
   {
     $result = "* " . $result;

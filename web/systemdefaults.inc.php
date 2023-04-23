@@ -452,6 +452,12 @@ $datetime_formats['day_name_edit'] = array(
   'pattern' => 'ccc'
 );
 
+// The format used for times
+$datetime_formats['time'] = array(
+  'date_type' => IntlDateFormatter::NONE,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
 // The title of the day view calendar
 $datetime_formats['view_day'] = array(
   'date_type' => IntlDateFormatter::FULL,
