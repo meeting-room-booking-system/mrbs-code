@@ -92,11 +92,11 @@ class IntlDateFormatter
     // TODO: Handle the remaining possible types
     if ($datetime instanceof DateTimeInterface)
     {
-      $t = $datetime->getTimestamp();
+      $timestamp = $datetime->getTimestamp();
     }
     else
     {
-      $t = $datetime;
+      $timestamp = (int) $datetime;
     }
 
     // Parse the pattern
@@ -182,7 +182,7 @@ class IntlDateFormatter
       }
     }
 
-    return $this->strftimePlus($format, $t);
+    return $this->strftimePlus($format, $timestamp);
   }
 
 
@@ -316,10 +316,8 @@ class IntlDateFormatter
 //
 //  %i  One/two digit day of the month, with no     1 to 31
 //      leading space
-  private function strftimePlus(string $format, $time) : string
+  private function strftimePlus(string $format, int $timestamp) : string
   {
-    $time = (int) $time;
-
     $server_os = System::getServerOS();
 
     // Set the temporary locale.  Note that $this->locale could be an array of locales,
@@ -349,7 +347,7 @@ class IntlDateFormatter
       $new_locale = null;
     }
 
-    $result = self::doStrftimePlus($format, $time, $new_locale);
+    $result = self::doStrftimePlus($format, $timestamp, $new_locale);
 
     // Restore the original locale
     if (!empty($locale))
@@ -375,7 +373,7 @@ class IntlDateFormatter
   }
 
 
-  private static function doStrftimePlus(string $format, int $time, ?string $locale) : string
+  private static function doStrftimePlus(string $format, int $timestamp, ?string $locale) : string
   {
     $server_os = System::getServerOS();
 
@@ -391,10 +389,10 @@ class IntlDateFormatter
     // %p doesn't actually work in some locales, we have to patch it up ourselves
     if (preg_match('/%p/', $format))
     {
-      $ampm = self::doStrftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
+      $ampm = self::doStrftime('%p', $timestamp);  // Don't replace the %p with the $strftime_format variable!!
       if ($ampm == '')
       {
-        $ampm = date('a', $time);
+        $ampm = date('a', $timestamp);
       }
 
       $format = preg_replace('/%p/', $ampm, $format);
@@ -419,13 +417,13 @@ class IntlDateFormatter
             // We want a month number without leading zeroes.  We can't use date('n', $time)
             // because date will return an English answer with a month made up of the characters
             // [0..9] which won't be correct for all locales.
-            $formatted = ltrim(self::doStrftimePlus('%m', $time, $locale), '0');
+            $formatted = ltrim(self::doStrftimePlus('%m', $timestamp, $locale), '0');
             break;
           case '%i':
-            $formatted = ltrim(self::doStrftimePlus('%e', $time, $locale));
+            $formatted = ltrim(self::doStrftimePlus('%e', $timestamp, $locale));
             break;
           default:
-            $formatted = self::doStrftime($token, $time);
+            $formatted = self::doStrftime($token, $timestamp);
             break;
         }
         $result .= System::utf8ConvertFromLocale($formatted, $locale);
