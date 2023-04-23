@@ -1554,8 +1554,8 @@ if (!isset($month_absolute))
 }
 list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 
-$start_hour  = utf8_strftime('%H', $start_time);
-$start_min   = utf8_strftime('%M', $start_time);
+$start_hour  = date('H', $start_time);
+$start_min   = date('i', $start_time);
 
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);
