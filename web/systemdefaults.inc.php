@@ -436,6 +436,13 @@ $strftime_format['view_week_start']    = "%e ";        // year and month the sam
 $strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
 $strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
 
+
+// The format used for dates
+$datetime_formats['date'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::NONE
+);
+
 // The format used for dates with times
 $datetime_formats['date_and_time'] = array(
   'date_type' => IntlDateFormatter::FULL,
