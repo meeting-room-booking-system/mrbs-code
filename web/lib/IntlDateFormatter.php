@@ -349,7 +349,7 @@ class IntlDateFormatter
       $new_locale = null;
     }
 
-    $result = self::doStrftime($format, $time, $new_locale);
+    $result = self::doStrftimePlus($format, $time, $new_locale);
 
     // Restore the original locale
     if (!empty($locale))
@@ -361,7 +361,15 @@ class IntlDateFormatter
   }
 
 
-  private static function doStrftime(string $format, int $time, ?string $locale) : string
+  // Wrapper for strftime()
+  private static function doStrftime(string $format, ?int $timestamp = null)
+  {
+    $result = strftime($format, $timestamp);
+    return $result;
+  }
+
+
+  private static function doStrftimePlus(string $format, int $time, ?string $locale) : string
   {
     $server_os = System::getServerOS();
 
@@ -377,7 +385,7 @@ class IntlDateFormatter
     // %p doesn't actually work in some locales, we have to patch it up ourselves
     if (preg_match('/%p/', $format))
     {
-      $ampm = strftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
+      $ampm = self::doStrftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
       if ($ampm == '')
       {
         $ampm = date('a', $time);
@@ -411,7 +419,7 @@ class IntlDateFormatter
             $formatted = ltrim(self::strftimePlus('%e', $time, $locale));
             break;
           default:
-            $formatted = strftime($token, $time);
+            $formatted = self::doStrftime($token, $time);
             break;
         }
         $result .= System::utf8ConvertFromLocale($formatted, $locale);
