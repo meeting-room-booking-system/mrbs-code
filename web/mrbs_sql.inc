@@ -446,7 +446,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
   global $max_secs_per_interval_global_enabled, $max_secs_per_interval_area_enabled;
-  global $interval_types, $strftime_format;
+  global $interval_types, $datetime_formats;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
@@ -593,7 +593,10 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if ($booking['start_time'] < mktime(0, 0, 0, $m, $d, $y))
       {
-        $violations[] = get_vocab("earliest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
+        $violations[] = get_vocab(
+          'earliest_booking_date',
+          datetime_format($datetime_formats['date'], mktime(0, 0, 0, $m, $d, $y))
+        );
       }
     }
     else
@@ -610,7 +613,10 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if ($booking['end_time'] > mktime(0, 0, 0, $m, $d+1, $y))
       {
-        $violations[] = get_vocab("latest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
+        $violations[] = get_vocab(
+          'latest_booking_date',
+          datetime_format($datetime_formats['date'], mktime(0, 0, 0, $m, $d, $y))
+        );
       }
     }
     else
