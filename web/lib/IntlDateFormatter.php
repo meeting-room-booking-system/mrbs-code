@@ -250,6 +250,16 @@ class IntlDateFormatter
         $format = '%d';   // Two-digit day of the month (with leading zeros), eg 01 to 31
         break;
 
+      // hour in day (0~23)
+      case 'H':       // 0
+        $format = '%k';   // Hour in 24-hour format, with a space preceding single digits, eg 0 through 23
+        break;
+
+      // hour in day (0~23)
+      case 'HH':      // 00
+        $format = '%H';   // Two digit representation of the hour in 24-hour format, eg 00 through 23
+        break;
+
       // hour in am/pm (1~12)
       case 'h':       // 7
         $format = '%o';   // Hour in 12-hour format, with no space preceding single digits

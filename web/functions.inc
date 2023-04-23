@@ -2000,16 +2000,9 @@ function period_time_string(int $t, int $area_id, int $mod_time=0) : string
 
 function time_date_string(int $t) : string
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  if ($twentyfourhour_format)
-  {
-    return utf8_strftime($strftime_format['datetime24'], $t);
-  }
-  else
-  {
-    return utf8_strftime($strftime_format['datetime12'], $t);
-  }
+  return datetime_format($datetime_formats['date_and_time'], $t);
 }
 
 // version of the standard PHP function nl2br() that takes account of the fact
