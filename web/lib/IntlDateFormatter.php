@@ -182,7 +182,7 @@ class IntlDateFormatter
       }
     }
 
-    return self::strftimePlus($format, $t, $this->locale);
+    return $this->strftimePlus($format, $t);
   }
 
 
@@ -316,18 +316,18 @@ class IntlDateFormatter
 //
 //  %i  One/two digit day of the month, with no     1 to 31
 //      leading space
-  private static function strftimePlus(string $format, $time, $locale) : string
+  private function strftimePlus(string $format, $time) : string
   {
     $time = (int) $time;
 
     $server_os = System::getServerOS();
 
-    // Set the temporary locale.  Note that $locale could be an array of locales,
+    // Set the temporary locale.  Note that $this->locale could be an array of locales,
     // so we need to find out which locale actually worked.
     if (!empty($locale))
     {
       $old_locale = setlocale(LC_TIME, '0');
-      $new_locale = setlocale(LC_TIME, $locale);
+      $new_locale = setlocale(LC_TIME, $this->locale);
     }
     elseif ($server_os == "windows")
     {
