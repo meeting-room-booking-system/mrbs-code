@@ -419,10 +419,10 @@ class IntlDateFormatter
             // We want a month number without leading zeroes.  We can't use date('n', $time)
             // because date will return an English answer with a month made up of the characters
             // [0..9] which won't be correct for all locales.
-            $formatted = ltrim(self::strftimePlus('%m', $time, $locale), '0');
+            $formatted = ltrim(self::doStrftimePlus('%m', $time, $locale), '0');
             break;
           case '%i':
-            $formatted = ltrim(self::strftimePlus('%e', $time, $locale));
+            $formatted = ltrim(self::doStrftimePlus('%e', $time, $locale));
             break;
           default:
             $formatted = self::doStrftime($token, $time);
