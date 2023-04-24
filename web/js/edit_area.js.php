@@ -60,11 +60,11 @@ function getTimeString(time, twentyfourhour_format)
    {
      if (hour > 11)
      {
-       ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(14, 0, 0)) ?>";
+       ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(14, 0, 0)) ?>";
      }
      else
      {
-       ap = "<?php echo utf8_strftime($strftime_format['ampm'], mktime(10, 0, 0)) ?>";
+       ap = "<?php echo datetime_format(array('pattern' => 'a'), mktime(10, 0, 0)) ?>";
      }
      if (hour > 12)
      {
