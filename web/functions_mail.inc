@@ -117,23 +117,10 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
  */
 function getMailTimeDateString(int $t, bool $inc_time=true) : string
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  if ($inc_time)
-  {
-    if ($twentyfourhour_format)
-    {
-      return utf8_strftime($strftime_format['datetime24'], $t, get_mail_locale());
-    }
-    else
-    {
-      return utf8_strftime($strftime_format['datetime12'], $t, get_mail_locale());
-    }
-  }
-  else
-  {
-    return utf8_strftime($strftime_format['date'], $t, get_mail_locale());
-  }
+  $format = ($inc_time) ? $datetime_formats['date_and_time'] : $datetime_formats['date'];
+  return datetime_format($format, $t, get_mail_lang());
 }
 
 
