@@ -83,7 +83,7 @@ function get_mail_field_name(string $table, string $name) : string
  */
 function getMailPeriodDateString(int $t, int $mod_time=0) : array
 {
-  global $periods, $strftime_format;
+  global $periods, $datetime_formats;
 
   $time = getdate($t);
   $p_num = $time['minutes'] + $mod_time;
@@ -102,7 +102,7 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
   $mailperiod = $periods[$p_num];
 
   // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
-  return array($p_num, $mailperiod . utf8_strftime(", " . $strftime_format['date'], $t, get_mail_locale()));
+  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, get_mail_lang()));
 }
 
 // }}}

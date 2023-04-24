@@ -271,7 +271,7 @@ function set_mrbs_locale($locale)
 // Note: the first time this function is called, it should be called with a $header string.
 // Subsequent calls will just return the static $locale variable which was calculated on
 // the first call
-function get_mrbs_locale($header=null)
+function get_mrbs_locale($header=null) : string
 {
   global $override_locale, $disable_automatic_language_changing, $default_language_tokens;
   global $cli_language;
@@ -1127,11 +1127,16 @@ function date_formatter_intl(string $format, $time, $locale=null) : string
 }
 
 
-function datetime_format(array $format, int $timestamp=null) : string
+function datetime_format(array $format, int $timestamp=null, string $locale=null) : string
 {
+  if (!isset($locale))
+  {
+    $locale = get_mrbs_locale();
+  }
+
   if (isset($format['skeleton']))
   {
-    $pattern_generator = new IntlDatePatternGenerator(get_mrbs_locale());
+    $pattern_generator = new IntlDatePatternGenerator($locale);
     $pattern = $pattern_generator->getBestPattern($format['skeleton']);
   }
 
@@ -1141,7 +1146,7 @@ function datetime_format(array $format, int $timestamp=null) : string
   }
 
   $formatter = new IntlDateFormatter(
-    get_mrbs_locale(),
+    $locale,
     $format['date_type'] ?? IntlDateFormatter::FULL,
     $format['time_type'] ?? IntlDateFormatter::FULL,
     null, null, $pattern

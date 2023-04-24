@@ -366,10 +366,10 @@ class IntlDateFormatter
 
     // Set the temporary locale.  Note that $this->locale could be an array of locales,
     // so we need to find out which locale actually worked.
-    if (!empty($locale))
+    if (!empty($this->locale))
     {
       $old_locale = setlocale(LC_TIME, '0');
-      $new_locale = setlocale(LC_TIME, $this->locale);
+      $new_locale = setlocale(LC_TIME, System::getOSlocale($this->locale));
     }
     elseif ($server_os == "windows")
     {
@@ -394,7 +394,7 @@ class IntlDateFormatter
     $result = self::doStrftimePlus($format, $timestamp, $new_locale);
 
     // Restore the original locale
-    if (!empty($locale))
+    if (!empty($this->locale))
     {
       setlocale(LC_TIME, $old_locale);
     }
