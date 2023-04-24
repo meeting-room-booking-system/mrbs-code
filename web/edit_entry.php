@@ -1234,11 +1234,16 @@ if (isset($start_seconds))
 
 if (isset($start_date))
 {
+  // We'll only have got here from a drag select.  If the end date is not the same
+  // as the start date then it's from the week view and will be a repeat.
   list($year, $month, $day) = explode('-', $start_date);
   if (isset($end_date) && ($start_date != $end_date) && $repeats_allowed)
   {
+    // The end date that came through from the drag select is actually the repeat end
+    // date, and the real end date will actually be the start date.
     $rep_type = REP_DAILY;
     list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
+    $end_date = $start_date;
   }
 }
 else
