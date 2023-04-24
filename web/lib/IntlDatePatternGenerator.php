@@ -3,6 +3,8 @@
 // A basic emulation of the PHP IntlDatePatternGenerator.
 // Will only be loaded if the PHP class doesn't exist.
 
+use function MRBS\convert_to_BCP47;
+
 class IntlDatePatternGenerator
 {
   private const DEFAULT_LOCALE = 'en';
@@ -34,7 +36,7 @@ class IntlDatePatternGenerator
       $patterns = parse_ini_file($file);
       if (!empty($patterns))
       {
-        return $patterns[$this->locale] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
+        return $patterns[convert_to_BCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? false;
       }
     }
 

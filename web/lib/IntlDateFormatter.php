@@ -13,6 +13,7 @@
 // IntlDateFormatter is a more powerful solution.
 
 use MRBS\System;
+use function MRBS\convert_to_BCP47;
 use function MRBS\get_mrbs_locale;
 use function MRBS\set_mrbs_locale;
 use function MRBS\utf8_strlen;
@@ -72,7 +73,7 @@ class IntlDateFormatter
         $patterns = parse_ini_file($file);
         if (!empty($patterns))
         {
-          $pattern =  $patterns[$this->locale] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
+          $pattern =  $patterns[convert_to_BCP47($this->locale)] ?? $patterns[self::DEFAULT_LOCALE] ?? null;
         }
       }
     }
