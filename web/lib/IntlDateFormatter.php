@@ -301,6 +301,16 @@ class IntlDateFormatter
         $format = '%M';   // Minute in the hour, with leading zeroes
         break;
 
+      // second in minute
+      case 's':       // 5
+        $format = '%v';   // Seconds, with no leading zeroes
+        break;
+
+      // second in minute
+      case 'ss':      // 05
+        $format = '%S';   // Two digit representation of the second, eg 00 through 59
+        break;
+
       // month in year
       case 'y':       // 1996
       case 'yyyy':    // 1996
@@ -311,6 +321,14 @@ class IntlDateFormatter
       case 'yy':      // 96
         $format = '%y';   // Two digit representation of the year, eg 09 for 2009, 79 for 1979
         break;
+
+      // Time Zone: specific non-location
+      case 'z':       // PDT
+      case 'zz':      // PDT
+      case 'zzz':     // PDT
+      case 'zzzz':    // Pacific Daylight Time
+        $format = '%Z';   // The time zone abbreviation, eg EST for Eastern Time
+        break;            // Windows: The %z and %Z modifiers both return the time zone name instead of the offset or abbreviation
 
       default:
         $format = false;
@@ -361,6 +379,8 @@ class IntlDateFormatter
 //      preceding single digits
 //
 //  %q  Minute in the hour, with no leading zero    4
+//
+//  %v  Seconds, with no leading zero
   private function strftimePlus(string $format, int $timestamp) : string
   {
     $server_os = System::getServerOS();
@@ -474,6 +494,11 @@ class IntlDateFormatter
           case '%q':
             // We want a minute without leading zeroes.
             $formatted = self::doStrftimePlus('%M', $timestamp, $locale);
+            $formatted = ($formatted === '00') ? '0' : ltrim($formatted, '0');
+            break;
+          case '%v':
+            // We want seconds without leading zeroes.
+            $formatted = self::doStrftimePlus('%S', $timestamp, $locale);
             $formatted = ($formatted === '00') ? '0' : ltrim($formatted, '0');
             break;
           default:
