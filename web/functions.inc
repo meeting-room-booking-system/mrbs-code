@@ -1961,7 +1961,7 @@ function hour_min(int $s) : string
 
 function period_date_string(int $t, int $area_id, int $mod_time=0) : array
 {
-  global $strftime_format;
+  global $datetime_formats;
 
   $period_names = get_period_names();
 
@@ -1977,7 +1977,7 @@ function period_date_string(int $t, int $area_id, int $mod_time=0) : array
   }
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
-  return array($p_num, $period_names[$area_id][$p_num] . utf8_strftime(", " . $strftime_format['date'], $t));
+  return array($p_num, $period_names[$area_id][$p_num] . ', ' . datetime_format($datetime_formats['date'], $t));
 }
 
 
