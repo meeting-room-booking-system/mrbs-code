@@ -66,7 +66,7 @@ class IntlDateFormatter
 
     if (!isset($pattern))
     {
-      $file = MRBS_ROOT . "/lib/IntlDatePatternGenerator/types/" .
+      $file = MRBS_ROOT . "/lib/intl/types/" .
         self::TYPE_NAMES[$this->dateType] . "_" . self::TYPE_NAMES[$this->timeType] . ".ini";
       if (is_readable($file))
       {
