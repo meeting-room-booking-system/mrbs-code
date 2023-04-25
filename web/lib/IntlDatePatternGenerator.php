@@ -29,7 +29,7 @@ class IntlDatePatternGenerator
 
   public function getBestPattern(string $skeleton)
   {
-    $file = MRBS_ROOT . "/lib/intl/skeletons/$skeleton.ini";
+    $file = MRBS_ROOT . "/intl/skeletons/$skeleton.ini";
 
     if (is_readable($file))
     {
