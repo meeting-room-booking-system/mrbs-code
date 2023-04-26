@@ -374,8 +374,8 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       {
         $start_format = $strftime_format['view_week_start'];
       }
-      $html .= utf8_strftime($start_format, $start_of_week) . '-' .
-               utf8_strftime($strftime_format['view_week_end'], $end_of_week);
+      $html .= utf8_strftime($start_format, $start_of_week) . ' - ' .
+               datetime_format($datetime_formats['view_week_end'], $end_of_week);
       break;
 
     case 'month':

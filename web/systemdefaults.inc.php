@@ -489,6 +489,12 @@ $datetime_formats['view_month'] = array(
   'pattern' => 'MMMM y'
 );
 
+// The title of the week view calendar (end of the week)
+$datetime_formats['view_week_end'] = array(
+  'date_type' => IntlDateFormatter::LONG,
+  'time_type' => IntlDateFormatter::NONE
+);
+
 
 
 // Whether or not to display the timezone
