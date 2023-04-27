@@ -489,8 +489,22 @@ $datetime_formats['view_month'] = array(
   'pattern' => 'MMMM y'
 );
 
+// The title of the week view calendar when the years and
+// months are the same for the start and end of the week
+$datetime_formats['view_week_date'] = array(
+  'skeleton' => 'd',
+  'pattern' => 'd'
+);
+
+// The title of the week view calendar when just the years
+// are the same for the start and end of the week
+$datetime_formats['view_week_month'] = array(
+  'skeleton' => 'dMMMM',
+  'pattern' => 'd MMMM'
+);
+
 // The title of the week view calendar (end of the week)
-$datetime_formats['view_week_end'] = array(
+$datetime_formats['view_week_year'] = array(
   'date_type' => IntlDateFormatter::LONG,
   'time_type' => IntlDateFormatter::NONE
 );

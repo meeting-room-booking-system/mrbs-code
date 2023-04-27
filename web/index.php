@@ -330,7 +330,7 @@ function get_calendar_nav(string $view, int $view_all, int $year, int $month, in
 
 function get_date_heading(string $view, int $year, int $month, int $day) : string
 {
-  global $strftime_format, $datetime_formats, $display_timezone,
+  global $datetime_formats, $display_timezone,
          $weekstarts, $mincals_week_numbers;
 
   $html = '';
@@ -364,18 +364,18 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       //    Years and months the same:      6 - 12 Feb 2017
       if (date('Y', $start_of_week) != date('Y', $end_of_week))
       {
-        $start_format = $strftime_format['view_week_start_y'];
+        $start_format = $datetime_formats['view_week_year'];
       }
       elseif (date('m', $start_of_week) != date('m', $end_of_week))
       {
-        $start_format = $strftime_format['view_week_start_m'];
+        $start_format = $datetime_formats['view_week_month'];
       }
       else
       {
-        $start_format = $strftime_format['view_week_start'];
+        $start_format = $datetime_formats['view_week_date'];
       }
-      $html .= utf8_strftime($start_format, $start_of_week) . ' - ' .
-               datetime_format($datetime_formats['view_week_end'], $end_of_week);
+      $html .= datetime_format($start_format, $start_of_week) . ' - ' .
+               datetime_format($datetime_formats['view_week_year'], $end_of_week);
       break;
 
     case 'month':

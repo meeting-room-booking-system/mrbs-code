@@ -18,6 +18,8 @@ $locales = \ResourceBundle::getLocales('');
 echo "<h2>Skeleton files</h2>\n";
 
 $skeletons = array(
+  'd',
+  'dMMMM',
   'MMMMy'
 );
 
