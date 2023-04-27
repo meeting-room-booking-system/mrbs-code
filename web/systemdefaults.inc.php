@@ -455,6 +455,12 @@ $datetime_formats['date_and_time_help'] = array(
   'time_type' => IntlDateFormatter::LONG
 );
 
+// Used in policy violation reports for holidays and weekends
+$datetime_formats['date_holiday'] = array(
+  'date_type' => IntlDateFormatter::SHORT,
+  'time_type' => IntlDateFormatter::NONE
+);
+
 // Used on the Search page
 $datetime_formats['date_search'] = array(
   'date_type' => IntlDateFormatter::SHORT,
