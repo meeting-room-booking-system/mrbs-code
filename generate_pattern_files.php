@@ -19,6 +19,7 @@ echo "<h2>Skeleton files</h2>\n";
 
 $skeletons = array(
   'd',
+  'dEMMM',
   'dMMM',
   'dMMMM',
   'MMMMy'

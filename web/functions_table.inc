@@ -1342,7 +1342,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes;
-  global $weekstarts, $strftime_format;
+  global $weekstarts, $strftime_format, $datetime_formats;
 
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
@@ -1494,6 +1494,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   // We can display the table in two ways
   if ($times_along_top)
   {
+    $format = $datetime_formats['view_week_day_date_month'];
     // with times along the top and days of the week down the side
     // See note above: weekday==0 is day $weekstarts, not necessarily Sunday.
     for ($thisday = 0; $thisday < DAYS_PER_WEEK; $thisday++)
@@ -1512,7 +1513,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
       $wyear = date('Y', $wt);
       $wdate = date('Y-n-d', $wt);
 
-      $day_cell_text = utf8_strftime($dformat, $wt);
+      $day_cell_text = datetime_format($format, $wt);
 
       $vars = array('view'     => 'day',
                     'view_all' => $view_all,
