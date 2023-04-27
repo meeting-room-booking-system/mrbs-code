@@ -489,6 +489,12 @@ $datetime_formats['view_month'] = array(
   'pattern' => 'MMMM y'
 );
 
+// The day and month as used in the header row of the week view
+$datetime_formats['view_week_day_month'] = array(
+  'skeleton' => 'dMMM',
+  'pattern' => 'MMM d'
+);
+
 // The title of the week view calendar when the years and
 // months are the same for the start and end of the week
 $datetime_formats['view_week_date'] = array(
@@ -500,7 +506,7 @@ $datetime_formats['view_week_date'] = array(
 // are the same for the start and end of the week
 $datetime_formats['view_week_month'] = array(
   'skeleton' => 'dMMMM',
-  'pattern' => 'd MMMM'
+  'pattern' => 'MMMM d'
 );
 
 // The title of the week view calendar (end of the week)

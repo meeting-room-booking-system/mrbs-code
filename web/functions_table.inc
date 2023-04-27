@@ -983,7 +983,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 
 function get_date($t, $view) : string
 {
-  global $strftime_format;
+  global $datetime_formats;
 
   if ($view == 'month')
   {
@@ -991,7 +991,7 @@ function get_date($t, $view) : string
   }
   else
   {
-    return utf8_strftime($strftime_format['weekview_date'], $t);
+    return datetime_format($datetime_formats['view_week_day_month'], $t);
   }
 }
 
