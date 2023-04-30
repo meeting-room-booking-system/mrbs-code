@@ -1014,18 +1014,23 @@ function multiday_header_rows(
   int $area_id,
   int $room_id,
   int $n_days,
-  int $start_dow
+  int $start_dow,
+  string $label=''
 ) : array
 {
   global $row_labels_both_sides;
 
   $result = array();
+  $n_rows = 2;
   // Loop through twice: one row for the days of the week, the next for the date.
-  for ($i = 0; $i < 2; $i++)
+  for ($i = 0; $i < $n_rows; $i++)
   {
     $result[$i] = "<tr>\n";
 
-    $first_last_html = '<th class="first_last"></th>';
+    // Could use a rowspan here, but we'd need to make sure the sticky cells work
+    // and change the JavaScript in refresh.js.php
+    $text = ($i == 0) ? '' : $label;
+    $first_last_html = '<th class="first_last">' . htmlspecialchars($text) . "</th>\n";
     $result[$i] .= $first_last_html;
 
     $vars = array(
@@ -1361,7 +1366,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
   global $resolution, $morningstarts, $morningstarts_minutes;
-  global $weekstarts, $strftime_format, $datetime_formats;
+  global $weekstarts, $datetime_formats;
 
   // Check that we've got a valid, enabled room
   $room_name = get_room_name($room_id);
@@ -1433,16 +1438,6 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   }
   $thead .= ">\n";
 
-  $header_inner = "<tr>\n";
-
-  $dformat = $strftime_format['weekview_headers'];
-  // If we've got a table with times along the top then put everything on the same line
-  // (ie replace the <br> with a space).   It looks slightly better
-  if ($times_along_top)
-  {
-    $dformat = preg_replace("/<br>/", " ", $dformat);
-  }
-
   if ($times_along_top)
   {
     $tag = 'date';
@@ -1455,57 +1450,35 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   {
     $tag = 'time';
   }
-
-  $first_last_html = '<th class="first_last">' . get_vocab($tag) . "</th>\n";
-  $header_inner .= $first_last_html;
+  $label = get_vocab($tag);
 
   // We can display the table in two ways
   if ($times_along_top)
   {
+    $header_inner = "<tr>\n";
+    $first_last_html = '<th class="first_last">' . $label . "</th>\n";
+    $header_inner .= $first_last_html;
     $header_inner .= get_times_header_cells($morning_slot_seconds, $evening_slot_seconds, $resolution);
+    // next line to display times on right side
+    if ($row_labels_both_sides)
+    {
+      $header_inner .= $first_last_html;
+    }
+    $header_inner .= "</tr>\n";
+    $header_inner_rows = [$header_inner];
   }
 
   else
   {
-    // the standard view, with days along the top and times down the side
-    for ($j = 0; $j < DAYS_PER_WEEK; $j++)
-    {
-      $t = mktime(12, 0, 0, $month, $day_start_week+$j, $year);
-      $date = date('Y-m-d', $t);
-
-      if (is_hidden_day(($j + $weekstarts) % DAYS_PER_WEEK))
-      {
-        continue;
-      }
-
-      $vars = array('view'     => 'day',
-                    'view_all' => $view_all,
-                    'year'     => date('Y', $t),
-                    'month'    => date('m', $t),
-                    'day'      => date('d', $t),
-                    'area'     => $area_id,
-                    'room'     => $room_id);
-
-      $link = 'index.php?' . http_build_query($vars, '', '&');
-      $link = multisite($link);
-      $text = utf8_strftime($dformat, $t);
-      $header_inner .= day_cell_html($text, $link, $date);
-    }
-    unset($j);  // Just so that we pick up any accidental attempt to use it later
-  }  // end standard view (for the header)
-
-  // next line to display times on right side
-  if ($row_labels_both_sides)
-  {
-    $header_inner .= $first_last_html;
+    $header_inner_rows = multiday_header_rows($view, $view_all, $year, $month, $day_start_week, $area_id, $room_id, DAYS_PER_WEEK, $weekstarts, $label);
   }
 
-  $header_inner .= "</tr>\n";
-  $thead .= $header_inner;
+
+  $thead .= implode('', $header_inner_rows);
   $thead .= "</thead>\n";
 
   // Now repeat the header in a footer if required
-  $tfoot = ($column_labels_both_ends) ? "<tfoot>\n$header_inner</tfoot>\n" : '';
+  $tfoot = ($column_labels_both_ends) ? "<tfoot>\n" . implode('',array_reverse($header_inner_rows)) . "</tfoot>\n" : '';
 
   // TABLE BODY LISTING BOOKINGS
   $tbody = "<tbody>\n";
