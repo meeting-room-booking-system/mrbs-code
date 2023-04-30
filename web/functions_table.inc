@@ -1005,6 +1005,69 @@ function get_day($t, $view)
 }
 
 
+function multiday_header_rows(
+  string $view,
+  int $view_all,
+  int $year,
+  int $month,
+  int $day_start_interval,
+  int $area_id,
+  int $room_id,
+  int $n_days,
+  int $start_dow
+) : array
+{
+  global $row_labels_both_sides;
+
+  $result = array();
+  // Loop through twice: one row for the days of the week, the next for the date.
+  for ($i = 0; $i < 2; $i++)
+  {
+    $result[$i] = "<tr>\n";
+
+    $first_last_html = '<th class="first_last"></th>';
+    $result[$i] .= $first_last_html;
+
+    $vars = array(
+      'view' => 'day',
+      'view_all' => $view_all,
+      'area' => $area_id,
+      'room' => $room_id
+    );
+
+    // the standard view, with days along the top and rooms down the side
+    for ($j = 0; $j < $n_days; $j++)
+    {
+      if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
+      {
+        continue;
+      }
+      $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
+      $link = "index.php?" . http_build_query($vars, '', '&');
+      $link = multisite($link);
+      $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
+      $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
+      $date = new DateTime();
+      $date->setTimestamp($t);
+      $classes = get_date_classes($date);
+      $result[$i] .= '<th' .
+        ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
+        '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
+    }
+
+    // next line to display rooms on right side
+    if ($row_labels_both_sides)
+    {
+      $result[$i] .= $first_last_html;
+    }
+
+    $result[$i] .= "</tr>\n";
+  }
+
+  return $result;
+}
+
+
 function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id) : string
 {
   global $row_labels_both_sides, $column_labels_both_ends;
@@ -1051,8 +1114,8 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
       break;
     case 'month':
       $day_start_interval = 1;
-      $n_days = date('t', $time);
-      $start_dow = date('N', mktime(12, 0, 0, $month, 1, $year));
+      $n_days = (int) date('t', $time);
+      $start_dow = (int) date('N', mktime(12, 0, 0, $month, 1, $year));
       break;
     default:
       trigger_error("Unsupported view '$view'", E_USER_WARNING);
@@ -1105,53 +1168,9 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
   $thead .= ">\n";
 
-  $header_inner_rows = array();
-
   if ($days_along_top)
   {
-    // Loop through twice: one row for the days of the week, the next for the date.
-    for ($i = 0; $i < 2; $i++)
-    {
-      $header_inner_rows[$i] = "<tr>\n";
-
-      $first_last_html = '<th class="first_last"></th>';
-      $header_inner_rows[$i] .= $first_last_html;
-
-      $vars = array(
-        'view' => 'day',
-        'view_all' => $view_all,
-        'area' => $area_id,
-        'room' => $room_id
-      );
-
-      // the standard view, with days along the top and rooms down the side
-      for ($j = 0; $j < $n_days; $j++)
-      {
-        if (is_hidden_day(($j + $start_dow) % DAYS_PER_WEEK))
-        {
-          continue;
-        }
-        $vars['page_date'] = format_iso_date($year, $month, $day_start_interval + $j);
-        $link = "index.php?" . http_build_query($vars, '', '&');
-        $link = multisite($link);
-        $t = mktime(12, 0, 0, $month, $day_start_interval + $j, $year);
-        $text = ($i === 0) ? get_day($t, $view) : get_date($t, $view);
-        $date = new DateTime();
-        $date->setTimestamp($t);
-        $classes = get_date_classes($date);
-        $header_inner_rows[$i] .= '<th' .
-          ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
-          '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
-      }
-
-      // next line to display rooms on right side
-      if ($row_labels_both_sides)
-      {
-        $header_inner_rows[$i] .= $first_last_html;
-      }
-
-      $header_inner_rows[$i] .= "</tr>\n";
-    }
+    $header_inner_rows = multiday_header_rows($view, $view_all, $year, $month, $day_start_interval, $area_id, $room_id, $n_days, $start_dow);
   }
   else
   {
