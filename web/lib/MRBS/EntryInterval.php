@@ -26,23 +26,16 @@ class EntryInterval
 
   public function __toString()
   {
-    global $twentyfourhour_format, $strftime_format;
+    global $datetime_formats;
 
-    if ($this->spansMultipleDays())
-    {
-      $date_format = ($twentyfourhour_format) ? $strftime_format['datetime24'] : $strftime_format['datetime12'];
-    }
-    else
-    {
-      $date_format = ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
-    }
+    $format = ($this->spansMultipleDays()) ? $datetime_formats['date_and_time'] : $datetime_formats['time'];
 
-    $result = utf8_strftime($date_format, $this->start_timestamp) . " - " .
-              utf8_strftime($date_format, $this->end_timestamp);
+    $result = datetime_format($format, $this->start_timestamp) . " - " .
+              datetime_format($format, $this->end_timestamp);
 
     if (!$this->spansMultipleDays())
     {
-      $result .= ", " . utf8_strftime($strftime_format['date'], $this->start_timestamp);
+      $result .= ", " . datetime_format($datetime_formats['date'], $this->start_timestamp);
     }
 
     return $result;
