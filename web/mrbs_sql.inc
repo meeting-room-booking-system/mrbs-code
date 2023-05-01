@@ -90,7 +90,7 @@ function unpack_status(array &$data)
 function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) : array
 {
   global $enable_periods, $periods;
-  global $strftime_format, $is_private_field;
+  global $datetime_formats, $is_private_field;
 
   $room_id = $booking['room_id'];
 
@@ -180,9 +180,9 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
       if ($existing_entry_interval->spansMultipleDays())
       {
         $timestr .= ", " .
-                    utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
+                    datetime_format($datetime_formats['date'], $row['start_time']) . " - " .
                     $p_end_str . ", " .
-                    utf8_strftime($strftime_format['date'], $row['end_time']);
+                    datetime_format($datetime_formats['date'], $row['end_time']);
       }
       else
       {
@@ -190,7 +190,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
         {
           $timestr .= " - " . $p_end_str;
         }
-        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
+        $timestr .= ", " . datetime_format($datetime_formats['date'], $row['start_time']);
       }
     }
     else
