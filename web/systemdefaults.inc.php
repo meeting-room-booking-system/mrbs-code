@@ -394,141 +394,6 @@ $hidden_days = array();
 // in 24 hour format
 $twentyfourhour_format = true;
 
-// Formats used for dates and times.   For formatting options
-// see http://php.net/manual/function.strftime.php.   Note that MRBS will automatically
-// convert the following formats which are not supported on Windows: %e, %l, %P and %R.
-// MRBS will use IntlDateFormatter if it exists in preference to strftime() and try and convert
-// the strftime formats into an equivalent pattern for use with IntlDateFormatter.  The following
-// strftime formats do not have an equivalent and are not supported: %u, %w, %U, %V, %W, %C,
-// %g, $G, %l and %s.
-$strftime_format['date']               = "%A %d %B %Y";  // Used in Day view
-$strftime_format['date_short']         = "%x";           // Used in Search results
-$strftime_format['dayname']            = "%A";           // Used in Month view
-$strftime_format['dayname_edit']       = "%a";           // Used in edit_entry form
-$strftime_format['weekview_date']      = "%b %e";        // Used in the table header in Week view
-$strftime_format['weekview_headers']   = "%a<br>%b %e";  // Used in the table header in Week view (all rooms)
-$strftime_format['monthview_headers']  = "%a<br>%e";     // Used in the table header in Month view (all rooms)
-$strftime_format['minical_monthname']  = "%B %Y";        // Used in mini calendar heading
-$strftime_format['minical_dayname']    = "%a";           // Used in mini calendar heading
-$strftime_format['mon']                = "%b";           // Used in date selectors
-$strftime_format['ampm']               = "%p";
-$strftime_format['time12']             = "%I:%M%p";      // 12 hour clock
-$strftime_format['time24']             = "%H:%M";        // 24 hour clock
-$strftime_format['datetime']           = "%c";           // Used in Help
-$strftime_format['datetime12']         = "%I:%M%p - %A %d %B %Y";  // 12 hour clock
-$strftime_format['datetime24']         = "%H:%M - %A %d %B %Y";    // 24 hour clock
-// If you prefer dates as "10 Jul" instead of "Jul 10" ($dateformat = true in
-// MRBS 1.4.5 and earlier) then use
-// $strftime_format['daymonth']        = "%d %b";
-$strftime_format['daymonth']           = "%b %d";
-
-// Used in the day/week/month views.  Note that for the week view we have to
-// cater for three possible cases, for example:
-//    Years differ:                   26 Dec 2016 - 1 Jan 2017
-//    Years same, but months differ:  30 Jan - 5 Feb 2017
-//    Years and months the same:      6 - 12 Feb 2017
-// Note that the separator between the start and end of the week is just '-',
-// so any spaces required need to put in the formats below.
-$strftime_format['view_day']           = "%A %e %B %Y";
-$strftime_format['view_month']         = "%B %Y";
-$strftime_format['view_week_end']      = " %e %B %Y";
-$strftime_format['view_week_start']    = "%e ";        // year and month the same
-$strftime_format['view_week_start_m']  = "%e %B ";     // just the year the same
-$strftime_format['view_week_start_y']  = "%e %B %Y ";  // years (and months) different
-
-
-// The format used for dates
-$datetime_formats['date'] = array(
-  'date_type' => IntlDateFormatter::FULL,
-  'time_type' => IntlDateFormatter::NONE
-);
-
-// The format used for dates with times
-$datetime_formats['date_and_time'] = array(
-  'date_type' => IntlDateFormatter::FULL,
-  'time_type' => IntlDateFormatter::SHORT
-);
-
-// The format used for dates with times on the Help page
-$datetime_formats['date_and_time_help'] = array(
-  'date_type' => IntlDateFormatter::FULL,
-  'time_type' => IntlDateFormatter::LONG
-);
-
-// Used in policy violation reports for holidays and weekends
-$datetime_formats['date_holiday'] = array(
-  'date_type' => IntlDateFormatter::SHORT,
-  'time_type' => IntlDateFormatter::NONE
-);
-
-// Used on the Search page
-$datetime_formats['date_search'] = array(
-  'date_type' => IntlDateFormatter::SHORT,
-  'time_type' => IntlDateFormatter::NONE
-);
-
-// The default format for day names
-$datetime_formats['day_name'] = array(
-  'pattern' => 'cccc'
-);
-
-// The format used for the weekly repeat day name on edit_entry.php
-$datetime_formats['day_name_edit'] = array(
-  'pattern' => 'ccc'
-);
-
-// The format used for times
-$datetime_formats['time'] = array(
-  'date_type' => IntlDateFormatter::NONE,
-  'time_type' => IntlDateFormatter::SHORT
-);
-
-// The title of the day view calendar
-$datetime_formats['view_day'] = array(
-  'date_type' => IntlDateFormatter::FULL,
-  'time_type' => IntlDateFormatter::NONE
-);
-
-// The title of the month view calendar
-$datetime_formats['view_month'] = array(
-  'skeleton' => 'MMMMy',
-  'pattern' => 'MMMM y'
-);
-
-// The day and month as used in the header row of the week view
-$datetime_formats['view_week_day_month'] = array(
-  'skeleton' => 'dMMM',
-  'pattern' => 'MMM d'
-);
-
-// The day and month as used in the header column of the week view
-$datetime_formats['view_week_day_date_month'] = array(
-  'skeleton' => 'dEMMM',
-  'pattern' => 'EEE, MMM d'
-);
-
-// The title of the week view calendar when the years and
-// months are the same for the start and end of the week
-$datetime_formats['view_week_date'] = array(
-  'skeleton' => 'd',
-  'pattern' => 'd'
-);
-
-// The title of the week view calendar when just the years
-// are the same for the start and end of the week
-$datetime_formats['view_week_month'] = array(
-  'skeleton' => 'dMMMM',
-  'pattern' => 'MMMM d'
-);
-
-// The title of the week view calendar (end of the week)
-$datetime_formats['view_week_year'] = array(
-  'date_type' => IntlDateFormatter::LONG,
-  'time_type' => IntlDateFormatter::NONE
-);
-
-
-
 // Whether or not to display the timezone
 $display_timezone = false;
 
@@ -707,6 +572,126 @@ $state_duration = 0;
 
 // Whether to sort users by their last names or not
 $sort_users_by_last_name = false;
+
+
+/***********************
+ * Date and time formats
+ ***********************/
+
+// MRBS uses PHP's IntlDateFormatter and IntlDatePatternGenerator classes for formatting
+// dates and times in the user's locale.  On systems where the 'intl' extension is not
+// enabled, MRBS emulates those two classes and uses the strftime() function. However,
+// strftime() is deprecated from PHP 8.1 onwards, and you are recommended to ensure that
+// the 'intl' extension is enabled.
+//
+// The formats used by MRBS are specified using the $datetime_formats configuration
+// settings below. Each setting is an associative array, indexed by four possible keys:
+//
+//    'date_type'   one of the IntlDateFormatter constants (ie FULL, LONG, MEDIUM, SHORT
+//                  or NONE; default FULL).  Note that the RELATIVE_ constants are not
+//                  supported by the emulation.
+//    'time_type'   one of the IntlDateFormatter constants (ie FULL, LONG, MEDIUM, SHORT
+//                  or NONE; default FULL).
+//    'skeleton'    a "skeleton".  See
+//                  https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetimepatterngenerator.
+//                  Note that not all skeletons are emulated.
+//    'pattern'     a "pattern".  See https://unicode-org.github.io/icu/userguide/format_parse/datetime/
+//
+//    If a 'skeleton' is specified and a pattern can be generated from the skeleton, that
+//    will be used; otherwise the 'pattern' is used.  If no skeleton or pattern are specified
+//    then the appropriate date and time representations for 'date_type' and 'time_type' will
+//    be used.
+//
+// The format used for dates
+$datetime_formats['date'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// The format used for dates with times
+$datetime_formats['date_and_time'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
+// The format used for dates with times on the Help page
+$datetime_formats['date_and_time_help'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::LONG
+);
+
+// Used in policy violation reports for holidays and weekends
+$datetime_formats['date_holiday'] = array(
+  'date_type' => IntlDateFormatter::SHORT,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// Used on the Search page
+$datetime_formats['date_search'] = array(
+  'date_type' => IntlDateFormatter::SHORT,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// The default format for day names
+$datetime_formats['day_name'] = array(
+  'pattern' => 'cccc'
+);
+
+// The format used for the weekly repeat day name on edit_entry.php
+$datetime_formats['day_name_edit'] = array(
+  'pattern' => 'ccc'
+);
+
+// The format used for times
+$datetime_formats['time'] = array(
+  'date_type' => IntlDateFormatter::NONE,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
+// The title of the day view calendar
+$datetime_formats['view_day'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::NONE
+);
+
+// The title of the month view calendar
+$datetime_formats['view_month'] = array(
+  'skeleton' => 'MMMMy',
+  'pattern' => 'MMMM y'
+);
+
+// The day and month as used in the header row of the week view
+$datetime_formats['view_week_day_month'] = array(
+  'skeleton' => 'dMMM',
+  'pattern' => 'MMM d'
+);
+
+// The day and month as used in the header column of the week view
+$datetime_formats['view_week_day_date_month'] = array(
+  'skeleton' => 'dEMMM',
+  'pattern' => 'EEE, MMM d'
+);
+
+// The title of the week view calendar when the years and
+// months are the same for the start and end of the week
+$datetime_formats['view_week_date'] = array(
+  'skeleton' => 'd',
+  'pattern' => 'd'
+);
+
+// The title of the week view calendar when just the years
+// are the same for the start and end of the week
+$datetime_formats['view_week_month'] = array(
+  'skeleton' => 'dMMMM',
+  'pattern' => 'MMMM d'
+);
+
+// The title of the week view calendar (end of the week)
+$datetime_formats['view_week_year'] = array(
+  'date_type' => IntlDateFormatter::LONG,
+  'time_type' => IntlDateFormatter::NONE
+);
+
 
 /************************
  * Miscellaneous settings
