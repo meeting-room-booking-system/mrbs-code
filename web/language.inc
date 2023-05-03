@@ -882,6 +882,33 @@ function datetime_format(array $format, int $timestamp=null, string $locale=null
 }
 
 
+// Determines whether a locale (default the current locale) uses a 12-hour clock.
+// Returns NULL if it can't be determined.
+function is_ampm(string $locale=null) : ?bool
+{
+  if (!isset($locale))
+  {
+    $locale = get_mrbs_locale();
+  }
+
+  $formatter = new IntlDateFormatter(
+    $locale,
+    $format['date_type'] ?? IntlDateFormatter::NONE,
+    $format['time_type'] ?? IntlDateFormatter::SHORT
+  );
+
+  $pattern = $formatter->getPattern();
+
+  if ($pattern === false)
+  {
+    trigger_error("Could not determine whether '$locale' uses a 12-hour clock");
+    return null;
+  }
+
+  return str_contains($pattern, 'a');
+}
+
+
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()
 function utf8_substr_old(string $str, int $start, ?int $length=null) : string
