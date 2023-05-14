@@ -169,6 +169,15 @@ if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
   trigger_error($message, E_USER_NOTICE);
 }
 
+// Variables no longer used in versions of MRBS > 1.11.0
+if (isset($twentyfourhour_format))
+{
+  $message = 'Please check your config file.  The setting $twentyfourhour_format ' .
+             'is no longer used and whether a 12 or 24-hour clock is used is determined ' .
+             'by the locale.  See systemdefaults.inc.php for more details.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
 
 /********************************************************
  * Checking

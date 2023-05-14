@@ -390,10 +390,6 @@ $holidays = array();
 // by defining some custom CSS for the .hidden_day class.
 $hidden_days = array();
 
-// Time format in pages. FALSE to show dates in 12 hour format, TRUE to show them
-// in 24 hour format
-$twentyfourhour_format = true;
-
 // Whether or not to display the timezone
 $display_timezone = false;
 
@@ -602,6 +598,19 @@ $sort_users_by_last_name = false;
 //    then the appropriate date and time representations for 'date_type' and 'time_type' will
 //    be used.
 //
+//    Note that IntlDateFormatter automatically determines whether a 12 or 24-hour clock should
+//    be used based on the locale. If you need to override this and force a 12 or 24-hour clock
+//    then you will need to override the settings below in your config file with formats using
+//    patterns instead of date_type and time_type.  For example, the en-AU locale will use a 12-
+//    hour clock by default.  To force a 24-hour clock for time set
+//
+//    $datetime_formats['time'] = array(
+//      'pattern' => 'HH:mm'
+//    );
+//
+//    and similarly for the other formats involving time.  The files in intl/types are useful for
+//    seeing what the default pattern is for a locale.
+
 // The format used for dates
 $datetime_formats['date'] = array(
   'date_type' => IntlDateFormatter::FULL,
