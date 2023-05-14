@@ -179,7 +179,7 @@ function generateLastSlotSelect()
     }
     select.append($('<option>')
                   .val(getTimeString(tCorrected, true))
-                  .text(getTimeString(tCorrected, <?php echo ($twentyfourhour_format ? "true" : "false") ?>)));
+                  .text(getTimeString(tCorrected, <?php echo (is_ampm() ? "false" : "true") ?>)));
   }
 
   <?php // and make the selected option the new last slot value ?>
