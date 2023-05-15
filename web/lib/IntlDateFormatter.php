@@ -454,7 +454,7 @@ class IntlDateFormatter
     // %p doesn't actually work in some locales, we have to patch it up ourselves
     if (preg_match('/%p/', $format))
     {
-      $ampm = self::doStrftime('%p', $timestamp);  // Don't replace the %p with the $strftime_format variable!!
+      $ampm = self::doStrftime('%p', $timestamp);
       if ($ampm == '')
       {
         $ampm = date('a', $timestamp);
