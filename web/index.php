@@ -392,7 +392,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
   if ($display_timezone)
   {
     $html .= '<span class="timezone">';
-    $html .= get_vocab("timezone") . ": " . date('T', $time) . " (UTC" . date('O', $time) . ")";
+    $html .= get_vocab("timezone") . ": " . datetime_format($datetime_formats['timezone'], $time);
     $html .= '</span>';
   }
 

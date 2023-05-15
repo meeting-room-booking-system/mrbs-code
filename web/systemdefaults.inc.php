@@ -657,6 +657,11 @@ $datetime_formats['time'] = array(
   'time_type' => IntlDateFormatter::SHORT
 );
 
+// The format used for timezones
+$datetime_formats['timezone'] = array(
+  'pattern' => 'z'
+);
+
 // The title of the day view calendar
 $datetime_formats['view_day'] = array(
   'date_type' => IntlDateFormatter::FULL,
