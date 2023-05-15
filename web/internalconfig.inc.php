@@ -42,12 +42,12 @@ if (isset($mail_settings['admin_on_delete']))
   $mail_settings['on_delete'] = ($mail_settings['admin_on_delete']) ? TRUE : FALSE;
 }
 
-if (!empty($dateformat))
+if (isset($dateformat))
 {
-  $message = 'Please check your config file.   The variable $dateformat ' .
-             'is no longer used and has been replaced by $strftime_format["daymonth"].';
-  trigger_error($message, E_USER_WARNING);
-  $strftime_format['daymonth']     = "%d %b";
+  $message = 'Please check your config file. The setting $dateformat ' .
+             'is no longer used and has been replaced by $datetime_formats. ' .
+             'See systemdefaults.inc.php for more details.';
+  trigger_error($message, E_USER_NOTICE);
 }
 
 // Variables no longer used in versions of MRBS > 1.4.7
@@ -172,9 +172,17 @@ if (false !== ($key = array_search('rooms', $edit_entry_field_order)))
 // Variables no longer used in versions of MRBS > 1.11.0
 if (isset($twentyfourhour_format))
 {
-  $message = 'Please check your config file.  The setting $twentyfourhour_format ' .
+  $message = 'Please check your config file. The setting $twentyfourhour_format ' .
              'is no longer used and whether a 12 or 24-hour clock is used is determined ' .
-             'by the locale.  See systemdefaults.inc.php for more details.';
+             'by the locale. See systemdefaults.inc.php for more details.';
+  trigger_error($message, E_USER_NOTICE);
+}
+
+if (isset($strftime_format))
+{
+  $message = 'Please check your config file. The setting $strftime_format ' .
+             'is no longer used and has been replaced by $datetime_formats. ' .
+             'See systemdefaults.inc.php for more details.';
   trigger_error($message, E_USER_NOTICE);
 }
 
