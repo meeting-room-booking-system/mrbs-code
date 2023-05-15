@@ -886,25 +886,36 @@ function datetime_format(array $format, int $timestamp=null, string $locale=null
 // Returns NULL if it can't be determined.
 function is_ampm(string $locale=null) : ?bool
 {
+  global $datetime_formats;
+
   if (!isset($locale))
   {
     $locale = get_mrbs_locale();
   }
 
-  $formatter = new IntlDateFormatter(
-    $locale,
-    $format['date_type'] ?? IntlDateFormatter::NONE,
-    $format['time_type'] ?? IntlDateFormatter::SHORT
-  );
-
-  $pattern = $formatter->getPattern();
-
-  if ($pattern === false)
+  // Work out what pattern is being used for times.
+  // If an explicit pattern has been set in the config file then use that.
+  if (isset($datetime_formats['time']['pattern']))
   {
-    trigger_error("Could not determine whether '$locale' uses a 12-hour clock");
-    return null;
+    $pattern = $datetime_formats['time']['pattern'];
+  }
+  // Otherwise get the pattern that would be used by default.
+  else
+  {
+    $formatter = new IntlDateFormatter(
+      $locale,
+      $format['date_type'] ?? IntlDateFormatter::NONE,
+      $format['time_type'] ?? IntlDateFormatter::SHORT
+    );
+    $pattern = $formatter->getPattern();
+    if ($pattern === false)
+    {
+      trigger_error("Could not determine whether '$locale' uses a 12-hour clock");
+      return null;
+    }
   }
 
+  // And see if it contains an 'a'
   return str_contains($pattern, 'a');
 }
 
