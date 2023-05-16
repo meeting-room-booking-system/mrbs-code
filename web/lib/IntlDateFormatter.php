@@ -251,6 +251,11 @@ class IntlDateFormatter
         $format = '%d';   // Two-digit day of the month (with leading zeros), eg 01 to 31
         break;
 
+      // day of year
+      case 'D':       // 189
+        $format = '%E';   // Day of the year without leading zeroes
+        break;
+        
       // hour in day (0~23)
       case 'H':       // 0
         $format = '%k';   // Hour in 24-hour format, with a space preceding single digits, eg 0 through 23
@@ -271,21 +276,29 @@ class IntlDateFormatter
         $format = '%I';   // Two digit representation of the hour in 12-hour format, eg 01 through 12
         break;
 
+      // stand-alone month in year
+      case 'L':       // 9
       // month in year
       case 'M':       // 9
         $format = '%f';   // One/two digit representation of the month, eg 1 (for January) through 12 (for December)
         break;
 
+      // stand-alone month in year
+      case 'LL':      // 09
       // month in year
       case 'MM':      // 09
         $format = '%m';   // Two digit representation of the month, eg 01 (for January) through 12 (for December)
         break;
 
+      // stand-alone month in year
+      case 'LLL':     // Sep
       // month in year
       case 'MMM':     // Sep
         $format = '%b';   // Abbreviated month name, based on the locale, eg Jan through Dec
         break;
 
+      // stand-alone month in year
+      case 'LLLL':    // September
       // month in year
       case 'MMMM':    // September
         $format = '%B';   // Full month name, based on the locale, eg January through December
@@ -381,6 +394,8 @@ class IntlDateFormatter
 //  %q  Minute in the hour, with no leading zero    4
 //
 //  %v  Seconds, with no leading zero
+//
+//  %E  Day of year, with no leading zeroes
   private function strftimePlus(string $format, int $timestamp) : string
   {
     $server_os = System::getServerOS();
@@ -478,6 +493,11 @@ class IntlDateFormatter
       {
         switch ($token)
         {
+          case '%E':
+            // We want the day of the year without leading zeroes.
+            $formatted = self::doStrftimePlus('%j', $timestamp, $locale);
+            $formatted = ltrim($formatted, '0');
+            break;
           case '%f':
             // We want a month number without leading zeroes.  We can't use date('n', $time)
             // because date will return an English answer with a month made up of the characters
