@@ -311,13 +311,13 @@ class IntlDateFormatter
         $format = '%S';   // Two digit representation of the second, eg 00 through 59
         break;
 
-      // month in year
+      // year
       case 'y':       // 1996
       case 'yyyy':    // 1996
         $format = '%Y';   // Four digit representation for the year, eg 2038
         break;
 
-      // month in year
+      // year
       case 'yy':      // 96
         $format = '%y';   // Two digit representation of the year, eg 09 for 2009, 79 for 1979
         break;
