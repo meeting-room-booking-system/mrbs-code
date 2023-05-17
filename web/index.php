@@ -350,7 +350,7 @@ function get_date_heading(string $view, int $year, int $month, int $day) : strin
       if ($mincals_week_numbers && ($weekstarts == 1))
       {
         $html .= '<span class="week_number">' .
-                 get_vocab('week_number', date('W', $time)) .
+                 get_vocab('week_number', datetime_format($datetime_formats['week_number'], $time)) .
                  '</span>';
       }
       // Then display the actual dates

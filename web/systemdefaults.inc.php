@@ -706,6 +706,11 @@ $datetime_formats['view_week_year'] = array(
   'time_type' => IntlDateFormatter::NONE
 );
 
+// Week number
+$datetime_formats['week_number'] = array(
+  'pattern' => 'w'
+);
+
 
 /************************
  * Miscellaneous settings
