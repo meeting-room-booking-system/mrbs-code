@@ -255,7 +255,7 @@ class IntlDateFormatter
       case 'D':       // 189
         $format = '%E';   // Day of the year without leading zeroes
         break;
-        
+
       // hour in day (0~23)
       case 'H':       // 0
         $format = '%k';   // Hour in 24-hour format, with a space preceding single digits, eg 0 through 23
@@ -322,6 +322,17 @@ class IntlDateFormatter
       // second in minute
       case 'ss':      // 05
         $format = '%S';   // Two digit representation of the second, eg 00 through 59
+        break;
+
+      // week of year
+      // The ICU documentation isn't very clear what is meant by "week of year", but testing reveals that it is
+      // the ISO week number.
+      case 'w':       // 7
+        $format = '%J';   // ISO-8601:1988 week number of the given year without leading zeroes, eg 1 through 53
+        break;
+
+      case 'ww':      // 07
+        $format = '%V';   // ISO-8601:1988 week number of the given year, eg 01 through 53
         break;
 
       // year
@@ -507,6 +518,11 @@ class IntlDateFormatter
             break;
           case '%i':
             $formatted = ltrim(self::doStrftimePlus('%e', $timestamp, $locale));
+            break;
+          case '%J':
+            // We want the week of the year without leading zeroes.
+            $formatted = self::doStrftimePlus('%V', $timestamp, $locale);
+            $formatted = ltrim($formatted, '0');
             break;
           case '%o':
             $formatted = ltrim(self::doStrftimePlus('%l', $timestamp, $locale));
