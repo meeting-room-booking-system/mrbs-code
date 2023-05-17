@@ -259,7 +259,7 @@ function set_mrbs_locale($locale)
                " for language tag '$locale'.";
     trigger_error($message, E_USER_NOTICE);
 
-    if (false === setlocale(LC_ALL, 'C'))
+    if (false === setlocale(LC_ALL, array('C.UTF-8', 'C.utf-8', 'C.utf8', 'C')))
     {
       fatal_error("Could not set locale at all, not even to 'C'");
     }
