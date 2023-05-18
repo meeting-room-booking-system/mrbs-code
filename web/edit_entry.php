@@ -104,7 +104,7 @@ foreach ($fields as $field)
 }
 
 
-function get_field_create_by($create_by, $disabled=false)
+function get_field_create_by(string $create_by, bool $disabled=false)
 {
   $params = array('label'    => get_vocab('createdby'),
                   'name'     => 'create_by',
