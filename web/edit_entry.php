@@ -234,7 +234,7 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
 
 
 // Generate the All Day checkbox for an area
-function get_all_day($area, $input_id, $input_name, $display_none=false, $disabled=false)
+function get_all_day(array $area, string $input_id, string $input_name, bool $display_none=false, bool $disabled=false) : ElementDiv
 {
   global $drag, $id;
 
