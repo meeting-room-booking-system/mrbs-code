@@ -2260,29 +2260,14 @@ function mrbsAddArea($name, &$error)
   if (!isset($name) || ($name === ''))
   {
     $error = "empty_name";
-    return FALSE;
+    return false;
   }
 
   // Truncate the name field to the maximum length as a precaution.
   $name = utf8_substr($name, 0, maxlength('area.area_name'));
-  // Acquire a mutex to lock out others who might be editing the area
-  if (!db()->mutex_lock(_tbl('area')))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
-  }
-  // Check that the area name is unique
-  $sql = "SELECT COUNT(*)
-            FROM " . _tbl('area') . "
-           WHERE area_name=?
-           LIMIT 1";
-  if (db()->query1($sql, array($name)) > 0)
-  {
-    db()->mutex_unlock(_tbl('area'));
-    $error = "invalid_area_name";
-    return FALSE;
-  }
-  // If so, insert the area into the database.   We insert the area name that
-  // we have been given, together with the default values for the per-area settings
+
+  // Insert the area into the database.   We insert the area name that we have
+  // been given, together with the default values for the per-area settings.
 
   // Build arrays of data to be inserted into the table
   $sql_params = array();
@@ -2291,48 +2276,58 @@ function mrbsAddArea($name, &$error)
   // Get the information about the fields in the room table
   $fields = db()->field_info(_tbl('area'));
   // Loop through the fields and build up the arrays
-  foreach ($fields as $field)
-  {
+  foreach ($fields as $field) {
     $key = $field['name'];
-    switch ($key)
-    {
-    case 'area_name':
-    case 'sort_key':
-      $sql_col[] = $key;
-      $sql_val[] = "?";
-      $sql_params[] = $name;
-      break;
-    case 'periods':
-      $sql_col[] = $key;
-      $sql_val[] = "?";
-      $sql_params[] = json_encode($area_defaults[$key]);
-      break;
-    default:
-      if (array_key_exists($key, $area_defaults))
-      {
+    switch ($key) {
+      case 'area_name':
+      case 'sort_key':
         $sql_col[] = $key;
         $sql_val[] = "?";
-        if (in_array($key, $boolean_fields['area']))
-        {
-          $sql_params[] = ($area_defaults[$key]) ? 1 : 0;
+        $sql_params[] = $name;
+        break;
+      case 'periods':
+        $sql_col[] = $key;
+        $sql_val[] = "?";
+        $sql_params[] = json_encode($area_defaults[$key]);
+        break;
+      default:
+        if (array_key_exists($key, $area_defaults)) {
+          $sql_col[] = $key;
+          $sql_val[] = "?";
+          if (in_array($key, $boolean_fields['area'])) {
+            $sql_params[] = ($area_defaults[$key]) ? 1 : 0;
+          }
+          else {
+            $sql_params[] = $area_defaults[$key];
+          }
         }
-        else
-        {
-          $sql_params[] = $area_defaults[$key];
-        }
-      }
-      break;
+        break;
     }
   }
 
-  $sql = "INSERT INTO " . _tbl('area') . " (" . implode(', ',$sql_col) . ")
-               VALUES (" . implode(', ',$sql_val) . ")";
-  db()->command($sql, $sql_params);
-  $area = db()->insert_id(_tbl('area'), 'id');
+  try {
+    $sql = "INSERT INTO " . _tbl('area') . " (" . implode(', ', $sql_col) . ")
+                 VALUES (" . implode(', ', $sql_val) . ")";
+    db()->command($sql, $sql_params);
+    $area_id = db()->insert_id(_tbl('area'), 'id');
+  }
+  catch (DBException $e) {
+    // Check whether the area name is unique and if not return an
+    // appropriate error
+    $sql = "SELECT COUNT(*)
+              FROM " . _tbl('area') . "
+             WHERE area_name=?
+             LIMIT 1";
+    if (db()->query1($sql, array($name)) > 0)
+    {
+      $error = "invalid_area_name";
+      return false;
+    }
+    // Otherwise re-throw the exception
+    throw new DBException($e->getMessage(), $e->getCode(), $e);
+  }
 
-  // Release the mutex
-  db()->mutex_unlock(_tbl('area'));
-  return $area;
+  return $area_id;
 }
 
 
