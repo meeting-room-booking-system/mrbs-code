@@ -46,7 +46,7 @@ elseif ($type === 'area')
     }
     else
     {
-      throw new DBException($e->getMessage(), $e->getCode(), $e);
+      throw $e;
     }
   }
 }

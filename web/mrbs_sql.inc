@@ -2051,7 +2051,7 @@ function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $r
       $error = 'invalid_room_name';
       return false;
     }
-    throw new DBException($e->getMessage(), $e->getCode(), $e);
+    throw $e;
   }
 
   return $room->id;
