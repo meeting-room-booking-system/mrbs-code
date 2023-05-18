@@ -2331,7 +2331,7 @@ function mrbsAddArea($name, &$error)
       return false;
     }
     // Otherwise re-throw the exception
-    throw new DBException($e->getMessage(), $e->getCode(), $e);
+    throw $e;
   }
 
   return $area_id;
@@ -2376,7 +2376,7 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
       return false;
     }
     // Otherwise re-throw the exception
-    throw new DBException($e->getMessage(), $e->getCode(), $e);
+    throw $e;
   }
 
   return $room_id;
