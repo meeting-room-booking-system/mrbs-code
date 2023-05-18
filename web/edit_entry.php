@@ -404,7 +404,7 @@ function get_field_end_time($value, $disabled=false)
 }
 
 
-function get_field_areas($value, $disabled=false)
+function get_field_areas(int $value, bool $disabled=false) : ?FieldSelect
 {
   global $areas;
 
