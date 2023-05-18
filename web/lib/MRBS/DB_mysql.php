@@ -211,6 +211,8 @@ class DB_mysql extends DB
   // Determines whether the database supports multiple locks.
   // This method should not be called for the first time while
   // locks are in place, because it will release them.
+  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
+  //  is not supportedby MariaDB Galera Cluster.
   public function supportsMultipleLocks() : bool
   {
     if (!isset($this->supports_multiple_locks))
@@ -249,6 +251,8 @@ class DB_mysql extends DB
 
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
+  // WARNING! This method should not be used as GET_LOCK is not supported
+  // by MariaDB Galera Cluster.
   public function mutex_lock(string $name) : bool
   {
     $timeout = 20;  // seconds
@@ -314,6 +318,8 @@ class DB_mysql extends DB
 
   // Release a mutual-exclusion lock.
   // Returns true if the lock is released successfully, otherwise false.
+  // WARNING! This method should not be used as RELEASE_LOCK
+  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock(string $name) : bool
   {
     // First do some sanity checking before executing the SQL query
@@ -373,6 +379,8 @@ class DB_mysql extends DB
 
 
   // Release all mutual-exclusion locks.
+  // WARNING! This method should not be used as RELEASE_ALL_LOCKS
+  // is not supported by MariaDB Galera Cluster.
   public function mutex_unlock_all() : void
   {
     if ($this->supportsMultipleLocks())
