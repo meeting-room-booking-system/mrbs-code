@@ -104,7 +104,7 @@ foreach ($fields as $field)
 }
 
 
-function get_field_create_by($create_by, $disabled=false)
+function get_field_create_by(string $create_by, bool $disabled=false)
 {
   $params = array('label'    => get_vocab('createdby'),
                   'name'     => 'create_by',
@@ -234,7 +234,7 @@ function get_slot_selector($area, $id, $name, $current_s, $display_none=false, $
 
 
 // Generate the All Day checkbox for an area
-function get_all_day($area, $input_id, $input_name, $display_none=false, $disabled=false)
+function get_all_day(array $area, string $input_id, string $input_name, bool $display_none=false, bool $disabled=false) : ElementDiv
 {
   global $drag, $id;
 
@@ -404,7 +404,7 @@ function get_field_end_time($value, $disabled=false)
 }
 
 
-function get_field_areas($value, $disabled=false)
+function get_field_areas(int $value, bool $disabled=false) : ?FieldSelect
 {
   global $areas;
 
@@ -531,7 +531,7 @@ function get_field_type($value, $disabled=false)
 }
 
 
-function get_field_confirmation_status($value, $disabled=false)
+function get_field_confirmation_status(int $value, bool $disabled=false) : ?FieldInputRadioGroup
 {
   global $confirmation_enabled;
 
