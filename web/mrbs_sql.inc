@@ -2038,17 +2038,21 @@ function mrbsAddRoom($name, $area_id, &$error, $description='', $capacity='', $r
   $description = utf8_substr($description, 0, maxlength('room.description'));
 
   $room = new Room($name, $area_id);
-
-  if ($room->exists())
-  {
-    $error = 'invalid_room_name';
-    return false;
-  }
-
   $room->description = $description;
   $room->capacity = (empty($capacity)) ? 0 : $capacity;
   $room->room_admin_email = clean_address_list($room_admin_email);
-  $room->save();
+
+  try {
+    $room->insert();
+  }
+  catch (DBException $e) {
+    if ($room->exists())
+    {
+      $error = 'invalid_room_name';
+      return false;
+    }
+    throw new DBException($e->getMessage(), $e->getCode(), $e);
+  }
 
   return $room->id;
 }

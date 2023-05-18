@@ -130,7 +130,7 @@ abstract class Table
     // If there is an id column, and we have an id, then this isn't a new object
     if (isset($this->data['id']))
     {
-      throw new Exception("Object already exists");
+      throw new DBException("Object already exists");
     }
 
     $this->upsert(true);
