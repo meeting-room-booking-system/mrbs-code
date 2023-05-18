@@ -122,6 +122,21 @@ abstract class Table
   }
 
 
+  // Inserts a new object into the database
+  public function insert() : void
+  {
+    $this->data = static::onWrite($this->data);
+
+    // If there is an id column, and we have an id, then this isn't a new object
+    if (isset($this->data['id']))
+    {
+      throw new Exception("Object already exists");
+    }
+
+    $this->upsert(true);
+  }
+
+
   // To be used when updating a table which has an id column and when
   // the id is already known, ie we are updating an existing row.
   private function update() : void
@@ -152,7 +167,7 @@ abstract class Table
 
 
   // Inserts/updates into the table.
-  private function upsert() : void
+  private function upsert($insert_only = false) : void
   {
     // We use an "upsert" query here because that avoids having to test to
     // see whether the row exists first - leaving a (very small) chance that
@@ -182,9 +197,14 @@ abstract class Table
     $sql = "INSERT INTO " . _tbl(static::TABLE_NAME) . "
                         (" . implode(', ', $quoted_columns) . ")
                  VALUES (" . implode(', ', $values) . ") ";
-    $sql .= db()->syntax_on_duplicate_key_update(static::$unique_columns,
-                                                 $assignments,
-                                                 $cols->hasIdColumn());
+    if (!$insert_only)
+    {
+      $sql .= db()->syntax_on_duplicate_key_update(
+        static::$unique_columns,
+        $assignments,
+        $cols->hasIdColumn()
+      );
+    }
 
     $res = db()->query($sql, $sql_params);
 
@@ -198,7 +218,7 @@ abstract class Table
       // rows affected, not the number of rows in the result.
       try
       {
-        if (false !== ($row = $res->next_row_keyed()))
+        if (!$insert_only && (false !== ($row = $res->next_row_keyed())))
         {
           $this->id = $row['id'];
         }

@@ -34,23 +34,21 @@ if (!isset($name) || ($name === ''))
 elseif ($type === 'area')
 {
   $area_object = new Area($name);
-  // Lock the table in case somebody else manages to create a table of the
-  // same name in between us checking that the name is unique and saving the area
-  if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
-  {
-    fatal_error(get_vocab('failed_to_acquire'));
-  }
-  if ($area_object->exists())
-  {
-    $error = 'invalid_area_name';
-  }
-  else
-  {
-    $area_object->save();
+
+  try {
+    $area_object->insert();
     $area = $area_object->id;
   }
-  // Unlock the table
-  db()->mutex_unlock(_tbl(Area::TABLE_NAME));
+  catch (DBException $e) {
+    if ($area_object->exists())
+    {
+      $error = 'invalid_area_name';
+    }
+    else
+    {
+      throw new DBException($e->getMessage(), $e->getCode(), $e);
+    }
+  }
 }
 
 elseif ($type === 'room')
