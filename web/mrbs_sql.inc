@@ -2336,8 +2336,7 @@ function mrbsAddArea($name, &$error)
 function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room_admin_email='')
 {
   // First of all check that we've got a name
-  if (!isset($name) || ($name === ''))
-  {
+  if (!isset($name) || ($name === '')) {
     $error = "empty_name";
     return FALSE;
   }
@@ -2350,31 +2349,30 @@ function mrbsAddRoom($name, $area, &$error, $description='', $capacity='', $room
   {
     $capacity = 0;
   }
-  // Acquire a mutex to lock out others who might be editing rooms
-  if (!db()->mutex_lock(_tbl('room')))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
+
+  try {
+    // Insert the room into the database
+    $sql = "INSERT INTO " . _tbl('room') . " (room_name, sort_key, area_id, description, capacity, room_admin_email)
+            VALUES (?, ?, ?, ?, ?, ?)";
+    db()->command($sql, array($name, $name, $area, $description, $capacity, $room_admin_email));
+    $room_id = db()->insert_id(_tbl('room'), 'id');
   }
-  // Check that the room name is unique within the area
-  $sql = "SELECT COUNT(*)
+  catch (DBException $e) {
+    // Check whether the room name is unique within the area and
+    // if not return an appropriate error
+    $sql = "SELECT COUNT(*)
             FROM " . _tbl('room') . "
            WHERE room_name=? AND area_id=?
            LIMIT 1";
-  if (db()->query1($sql, array($name, $area)) > 0)
-  {
-    db()->mutex_unlock(_tbl('room'));
-    $error = "invalid_room_name";
-    return FALSE;
+    if (db()->query1($sql, array($name, $area)) > 0) {
+      $error = "invalid_room_name";
+      return false;
+    }
+    // Otherwise re-throw the exception
+    throw new DBException($e->getMessage(), $e->getCode(), $e);
   }
-  // If so, insert the room into the database
-  $sql = "INSERT INTO " . _tbl('room') . " (room_name, sort_key, area_id, description, capacity, room_admin_email)
-          VALUES (?, ?, ?, ?, ?, ?)";
-  db()->command($sql, array($name,$name,$area,$description,$capacity,$room_admin_email));
-  $room = db()->insert_id(_tbl('room'), 'id');
 
-  // Release the mutex
-  db()->mutex_unlock(_tbl('room'));
-  return $room;
+  return $room_id;
 }
 
 
