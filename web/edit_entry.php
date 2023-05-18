@@ -531,7 +531,7 @@ function get_field_type($value, $disabled=false)
 }
 
 
-function get_field_confirmation_status($value, $disabled=false)
+function get_field_confirmation_status(int $value, bool $disabled=false) : ?FieldInputRadioGroup
 {
   global $confirmation_enabled;
 
