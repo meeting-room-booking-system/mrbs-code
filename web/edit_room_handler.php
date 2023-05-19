@@ -131,7 +131,7 @@ if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
 $room_object = Room::getById($room);
 if (!isset($room_object))
 {
-  throw new \Exception("The area with id $room no longer exists");
+  throw new \Exception("The room with id $room no longer exists");
 }
 
 get_form_data($room_object);
