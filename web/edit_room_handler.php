@@ -117,34 +117,35 @@ if (empty($errors))
   // Used purely for the syntax_casesensitive_equals() call below, and then ignored
   $sql_params = array();
 
-  // Acquire a mutex to lock out others who might be deleting the new area
-  if (!db()->mutex_lock(_tbl('area')))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
-  }
+  // Start a transaction
+  db()->begin();
 
   // Check the new area still exists
-  $sql = "SELECT COUNT(*)
+  $sql = "SELECT id
             FROM " . _tbl('area') . "
            WHERE id=?
-           LIMIT 1";
+           LIMIT 1
+      FOR UPDATE";  // lock this row
 
   if (db()->query1($sql, array($new_area)) < 1)
   {
     $errors[] = 'invalid_area';
+    db()->rollback();
   }
   // If so, check that the room name is not already used in the area
   // (only do this if you're changing the room name or the area - if you're
   // just editing the other details for an existing room we don't want to reject
   // the edit because the room already exists!)
   elseif ( (($new_area != $old_area) || ($room_name != $old_room_name))
-          && db()->query1("SELECT COUNT(*)
-                             FROM " . _tbl('room') . "
-                            WHERE room_name=:room_name
-                              AND area_id=:area_id
-                            LIMIT 1", array(":room_name" => $room_name, ":area_id" => $new_area)) > 0)
+          && db()->query1("SELECT id
+                                 FROM " . _tbl('room') . "
+                                WHERE room_name=:room_name
+                                  AND area_id=:area_id
+                                LIMIT 1
+                           FOR UPDATE", array(":room_name" => $room_name, ":area_id" => $new_area)) > 0)
   {
     $errors[] = 'invalid_room_name';
+    db()->rollback();
   }
   // If everything is still OK, update the database
   else
@@ -226,13 +227,13 @@ if (empty($errors))
     $sql_params[] = $room;
     db()->command($sql, $sql_params);
 
-    // Release the mutex and go back to the admin page (for the new area)
-    db()->mutex_unlock(_tbl('area'));
+    // Commit the transaction
+    db()->commit();
+
+    // Go back to the admin page (for the new area)
     location_header("admin.php?day=$day&month=$month&year=$year&area=$new_area&room=$room");
   }
 
-  // Release the mutex
-  db()->mutex_unlock(_tbl('area'));
 }
 
 
