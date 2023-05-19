@@ -121,41 +121,46 @@ if (empty($room))
   throw new \Exception('$room is empty');
 }
 
-// Acquire a mutex to lock out others who might be deleting the new area
-if (!db()->mutex_lock(_tbl(Area::TABLE_NAME)))
-{
-  fatal_error(get_vocab('failed_to_acquire'));
-}
-
 // Get the existing room
 $room_object = Room::getById($room);
 if (!isset($room_object))
 {
   throw new \Exception("The room with id $room no longer exists");
 }
-
 get_form_data($room_object);
+// Save a copy before validation
+$original_room_object = clone $room_object;
 $errors = validate_form_data($room_object);
 
-if (empty($errors))
-{
+try {
+  if (!empty($errors))
+  {
+    throw new Exception("Validation failed");
+  }
   // Everything is OK, update the database and go back to the admin page (for the new area)
   $room_object->save();
   $returl = 'admin.php';
   $query_string = "day=$day&month=$month&year=$year&area=$room_object->new_area&room=$room";
 }
-else
-{
-  // Go back to the room form with errors
+catch (\Exception $e) {
+  if (empty($errors))
+  {
+    // Revalidate the form in case something has changed in the (short) interval
+    // between the original validation and saving.
+    $errors = validate_form_data($original_room_object);
+    if (empty($errors))
+    {
+      // If there are still no validation errors it must be something else, so
+      // re-throw the exception.
+      throw $e;
+    }
+  }
+  // Go back to the room form with the errors
   $returl = 'edit_room.php';
   $query_string = "area=$room_object->old_area&room=$room";
-  foreach ($errors as $error)
-  {
+  foreach ($errors as $error) {
     $query_string .= "&errors[]=$error";
   }
 }
-
-// Release the lock
-db()->mutex_unlock(_tbl(Area::TABLE_NAME));
 
 location_header("$returl?$query_string");
