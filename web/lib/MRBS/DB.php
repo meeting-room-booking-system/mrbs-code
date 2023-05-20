@@ -440,14 +440,14 @@ abstract class DB
   //  &$params          an array which will hold the SQL params
   //  $conflict_keys    the key(s) which is/are unique; can be a scalar or an array
   //  $has_id_column    whether the table has an id column
-  public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=array(), $has_id_column = false): string
+  public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=[], array $ignore_columns=[], $has_id_column = false): string
   {
     if (is_scalar($conflict_keys))
     {
       $conflict_keys = array($conflict_keys);
     }
 
-    list('columns' => $columns, 'values' => $values, 'sql_params' => $params) = $this->prepareData($data, $table);
+    list('columns' => $columns, 'values' => $values, 'sql_params' => $params) = $this->prepareData($data, $table, $ignore_columns);
     $quoted_columns = array_map(array(db(), 'quote'), $columns);
     $sql = "INSERT INTO " . $this->quote($table) . "
                         (" . implode(', ', $quoted_columns) . ")
@@ -475,7 +475,7 @@ abstract class DB
 
   // Prepares $data for an SQL query. If $table is given then it will also sanitize values,
   // eg by trimming and truncating strings and converting booleans into 0/1.
-  private function prepareData(array $data, string $table=null): array
+  private function prepareData(array $data, string $table=null, array $ignore_columns=[]): array
   {
     $columns = array();
     $values = array();
@@ -486,11 +486,11 @@ abstract class DB
     $i = 0;
     foreach ($cols as $col)
     {
-      // We are only interested in those elements of $data that have
-      // a corresponding column in the table - except for 'id' which is
-      // assumed to be auto-increment, and 'timestamp' which is assumed to
-      // auto-update.
-      if (is_object($col) && in_array($col->name, array('id', 'timestamp')))
+      // We are only interested in those elements of $data that have a corresponding
+      // column in the table - except for those that we have been told to ignore.
+      // Examples might be 'id' which normally auto-increments, and 'timestamp' which
+      // normally auto-updates.
+      if (is_object($col) && in_array($col->name, $ignore_columns))
       {
         continue;
       }
