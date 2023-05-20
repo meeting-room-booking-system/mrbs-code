@@ -131,41 +131,16 @@ class SessionHandlerDb implements SessionHandlerInterface, SessionUpdateTimestam
   // in the database (see read() above).
   public function write($id, $data): bool
   {
-    // Acquire a lock
-    if (!db()->mutex_lock($id))
-    {
-      trigger_error("Failed to acquire a lock", E_USER_WARNING);
-      return false;
-    }
+    $query_data = array(
+      'id' => $id,
+      'data' => base64_encode($data),
+      'access' => time()
+    );
 
-    $sql = "SELECT COUNT(*) FROM " . self::$table . " WHERE id=:id LIMIT 1";
-    $rows = db()->query1($sql, array(':id' => $id));
+    $sql_params = array();
+    $sql = db()->syntax_upsert($query_data, self::$table, $sql_params, 'id');
 
-    if ($rows > 0)
-    {
-      $sql = "UPDATE " . self::$table . "
-                 SET data=:data, access=:access
-               WHERE id=:id";
-    }
-    else
-    {
-      // The id didn't exist so we have to INSERT it (we couldn't use
-      // REPLACE INTO because we have to cater for both MySQL and PostgreSQL)
-      $sql = "INSERT INTO " . self::$table . "
-                          (id, data, access)
-                   VALUES (:id, :data, :access)";
-    }
-
-    $sql_params = array(':id' => $id,
-                        ':data' => base64_encode($data),
-                        ':access' => time());
-
-    $result = (1 === db()->command($sql, $sql_params));
-
-    // Release the mutex lock
-    db()->mutex_unlock($id);
-
-    return $result;
+    return (0 < db()->command($sql, $sql_params));
   }
 
 
