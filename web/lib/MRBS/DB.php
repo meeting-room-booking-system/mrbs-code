@@ -22,7 +22,7 @@ abstract class DB
 
   // The SensitiveParameter attribute needs to be on a separate line for PHP 7.
   // The attribute is only recognised by PHP 8.2 and later.
-  abstract   public function __construct(
+  abstract public function __construct(
     string $db_host,
     #[\SensitiveParameter]
     string $db_username,
@@ -30,17 +30,16 @@ abstract class DB
     string $db_password,
     #[\SensitiveParameter]
     string $db_name,
-    bool $persist=false,
-    ?int $db_port=null,
-    array $db_options=[]
+    bool   $persist = false,
+    ?int   $db_port = null,
+    array  $db_options = []
   );
 
 
   // Destructor cleans up the connection if there is one
   public function __destruct()
   {
-    if (isset($this->dbh))
-    {
+    if (isset($this->dbh)) {
       // Release any forgotten locks
       $this->mutex_unlock_all();
 
@@ -55,72 +54,67 @@ abstract class DB
   // $driver_options is an optional array of options that supplements/overrides the
   // default options.
   protected function connect(
-      string $db_host,
-      #[\SensitiveParameter]
-      string $db_username,
-      #[\SensitiveParameter]
-      string $db_password,
-      #[\SensitiveParameter]
-      string $db_name,
-      bool $persist=false,
-      ?int $db_port=null,
-      ?array $driver_options=null
-    ) : void
+    string $db_host,
+    #[\SensitiveParameter]
+    string $db_username,
+    #[\SensitiveParameter]
+    string $db_password,
+    #[\SensitiveParameter]
+    string $db_name,
+    bool   $persist = false,
+    ?int   $db_port = null,
+    ?array $driver_options = null
+  ): void
   {
     // Early error handling
     if (is_null(static::DB_DBO_DRIVER) ||
-        is_null(static::DB_DEFAULT_PORT))
-    {
+      is_null(static::DB_DEFAULT_PORT)) {
       throw new Exception("Encountered a fatal bug in DB abstraction code!");
     }
 
     // If no port has been provided, set a SQL variant dependent default
-    if (empty($db_port))
-    {
+    if (empty($db_port)) {
       $db_port = static::DB_DEFAULT_PORT;
     }
 
     // Establish a database connection.
-    if (!isset($db_host) || ($db_host == ""))
-    {
+    if (!isset($db_host) || ($db_host == "")) {
       $hostpart = "";
     }
-    else
-    {
+    else {
       $hostpart = "host=$db_host;";
     }
 
     $default_options = array(
       PDO::ATTR_PERSISTENT => $persist,
-      PDO::ATTR_ERRMODE    => PDO::ERRMODE_EXCEPTION
+      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
     // The LHS of the array + operator overrides the RHS if the keys are the same
     $options = (empty($driver_options)) ? $default_options : $driver_options + $default_options;
 
     $this->dbh = new PDO(
-        static::DB_DBO_DRIVER.":{$hostpart}port=$db_port;dbname=$db_name",
-        $db_username,
-        $db_password,
-        $options
-      );
-    $this->command("SET NAMES '".static::DB_CHARSET."'");
+      static::DB_DBO_DRIVER . ":{$hostpart}port=$db_port;dbname=$db_name",
+      $db_username,
+      $db_password,
+      $options
+    );
+    $this->command("SET NAMES '" . static::DB_CHARSET . "'");
   }
 
 
   // Output our own message to avoid giving away the database credentials
-  protected function connectError(string $message) : void
+  protected function connectError(string $message): void
   {
     trigger_error($message, E_USER_WARNING);
     fatal_error(get_vocab('fatal_db_error'));
   }
 
   //
-  public function error() : string
+  public function error(): string
   {
     $error = "No database connection!";
 
-    if ($this->dbh)
-    {
+    if ($this->dbh) {
       $error_info = $this->dbh->errorInfo();
       $error = $error_info[2];
     }
@@ -137,15 +131,12 @@ abstract class DB
   // Execute a non-SELECT SQL command (insert/update/delete).
   // Returns the number of tuples matched (whether affected or not) if OK (a number >= 0).
   // Throws a DBException on error.
-  public function command(string $sql, array $params = array()) : int
+  public function command(string $sql, array $params = array()): int
   {
-    try
-    {
+    try {
       $sth = $this->dbh->prepare($sql);
       $sth->execute($params);
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
 
@@ -161,33 +152,26 @@ abstract class DB
   // Throws a DBException on error.
   public function query1(string $sql, array $params = array())
   {
-    try
-    {
+    try {
       $sth = $this->dbh->prepare($sql);
       $sth->execute($params);
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
 
-    if ($sth->rowCount() > 1)
-    {
+    if ($sth->rowCount() > 1) {
       throw new DBException("query1() returned more than one row.", 0, null, $sql, $params);
     }
 
-    if ($sth->columnCount() > 1)
-    {
+    if ($sth->columnCount() > 1) {
       throw new DBException("query1() returned more than one column.", 0, null, $sql, $params);
     }
 
     $row = $sth->fetch(PDO::FETCH_NUM);
-    if (($row === null) || ($row === false))
-    {
+    if (($row === null) || ($row === false)) {
       $result = -1;
     }
-    else
-    {
+    else {
       $result = $row[0];
     }
     $sth->closeCursor();
@@ -198,14 +182,13 @@ abstract class DB
   // Run an SQL query that returns a simple one dimensional array of results.
   // The SQL query must select only one column.   Returns an empty array if
   // no results; throws a DBException if there's an error
-  public function query_array(string $sql, array $params = array()) : array
+  public function query_array(string $sql, array $params = array()): array
   {
     $stmt = $this->query($sql, $params);
 
     $result = array();
 
-    while (false !== ($row = $stmt->next_row()))
-    {
+    while (false !== ($row = $stmt->next_row())) {
       $result[] = $row[0];
     }
 
@@ -216,15 +199,12 @@ abstract class DB
   // Execute an SQL query. Returns a DBStatement object, a class with a number
   // of methods like row() and row_keyed() to get the results.
   // Throws a DBException on error
-  public function query (string $sql, array $params = array()) : DBStatement
+  public function query(string $sql, array $params = array()): DBStatement
   {
-    try
-    {
+    try {
       $sth = $this->dbh->prepare($sql);
       $sth->execute($params);
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
       throw new DBException($e->getMessage(), 0, $e, $sql, $params);
     }
 
@@ -233,25 +213,23 @@ abstract class DB
 
 
   //
-  public function begin() : void
+  public function begin(): void
   {
     // Turn off ignore_user_abort until the transaction has been committed or rolled back.
     // See the warning at http://php.net/manual/en/features.persistent-connections.php
     // (Only applies to persistent connections, but we'll do it for all cases to keep
     // things simple)
     mrbs_ignore_user_abort(TRUE);
-    if (!$this->dbh->inTransaction())
-    {
+    if (!$this->dbh->inTransaction()) {
       $this->dbh->beginTransaction();
     }
   }
 
 
   // Commit (end) a transaction. See begin().
-  public function commit() : void
+  public function commit(): void
   {
-    if ($this->dbh->inTransaction())
-    {
+    if ($this->dbh->inTransaction()) {
       $this->dbh->commit();
     }
     mrbs_ignore_user_abort(FALSE);
@@ -259,10 +237,9 @@ abstract class DB
 
 
   // Roll back a transaction, aborting it. See begin().
-  public function rollback() : void
+  public function rollback(): void
   {
-    if ($this->dbh && $this->dbh->inTransaction())
-    {
+    if ($this->dbh && $this->dbh->inTransaction()) {
       $this->dbh->rollBack();
     }
     mrbs_ignore_user_abort(FALSE);
@@ -270,17 +247,17 @@ abstract class DB
 
 
   // Checks if inside a transaction
-  public function inTransaction() : bool
+  public function inTransaction(): bool
   {
     return $this->dbh->inTransaction();
   }
 
 
   // Dies with a message that the database version is lower than the minimum required
-  protected function versionDie(string $database, string $this_version, string $min_version) : void
+  protected function versionDie(string $database, string $this_version, string $min_version): void
   {
     $message = "MRBS requires $database version $min_version or higher. " .
-               "This server is running version $this_version.";
+      "This server is running version $this_version.";
     die($message);
   }
 
@@ -288,16 +265,15 @@ abstract class DB
   // Returns the version string, eg "8.0.28",
   // "10.3.36-MariaDB-log-cll-lve" or
   // "PostgreSQL 14.2, compiled by Visual C++ build 1914, 64-bit".
-  protected function versionString() : string
+  protected function versionString(): string
   {
-    if (!isset($this->version_string))
-    {
+    if (!isset($this->version_string)) {
       // Don't use getAttribute(PDO::ATTR_SERVER_VERSION) because that will
       // sometimes also give you the version prefix (so-called "replication
       // version hack") with MariaDB.
       $result = $this->query1("SELECT VERSION()");
 
-      $this->version_string =  ($result == -1) ? '' : $result;
+      $this->version_string = ($result == -1) ? '' : $result;
     }
 
     return $this->version_string;
@@ -306,20 +282,16 @@ abstract class DB
 
   // Replaces the keys in the array $array according to $key_map.  Elements with
   // value NULL are dropped.
-  protected static function replaceOptionKeys(array $array, array $key_map) : array
+  protected static function replaceOptionKeys(array $array, array $key_map): array
   {
     $result = array();
 
-    foreach ($array as $key => $value)
-    {
-      if (isset($value))
-      {
-        if (array_key_exists($key, $key_map))
-        {
+    foreach ($array as $key => $value) {
+      if (isset($value)) {
+        if (array_key_exists($key, $key_map)) {
           $result[$key_map[$key]] = $value;
         }
-        else
-        {
+        else {
           trigger_error("Unsupported database driver option '$key'");
         }
       }
@@ -330,13 +302,11 @@ abstract class DB
 
 
   // Return a boolean depending on whether $field exists in $table
-  public function field_exists(string $table, string $field) : bool
+  public function field_exists(string $table, string $field): bool
   {
     $rows = $this->field_info($table);
-    foreach ($rows as $row)
-    {
-      if ($row['name'] === $field)
-      {
+    foreach ($rows as $row) {
+      if ($row['name'] === $field) {
         return true;
       }
     }
@@ -345,7 +315,7 @@ abstract class DB
 
 
   // Checks whether a table has duplicate values for a field
-  public function tableHasDuplicates(string $table, string $field) : bool
+  public function tableHasDuplicates(string $table, string $field): bool
   {
     $sql = "SELECT $field, COUNT(*)
               FROM $table
@@ -356,34 +326,34 @@ abstract class DB
   }
 
   // Quote a table or column name (which could be a qualified identifier, eg 'table.column')
-  abstract public function quote(string $identifier) : string;
+  abstract public function quote(string $identifier): string;
 
   // Return the value of an autoincrement field from the last insert.
   // Must be called right after an insert on that table!
   abstract public function insert_id(string $table, string $field);
 
   // Determines whether the database supports multiple locks
-  public function supportsMultipleLocks() : bool
+  public function supportsMultipleLocks(): bool
   {
     return true;
   }
 
   // Acquire a mutual-exclusion lock.
   // Returns true if the lock is acquired successfully, otherwise false.
-  abstract public function mutex_lock(string $name) : bool;
+  abstract public function mutex_lock(string $name): bool;
 
   // Release a mutual-exclusion lock.
   // Returns true if the lock is released successfully, otherwise false.
-  abstract public function mutex_unlock(string $name) : bool;
+  abstract public function mutex_unlock(string $name): bool;
 
   // Release all mutual-exclusion locks.
-  abstract public function mutex_unlock_all() : void;
+  abstract public function mutex_unlock_all(): void;
 
   // Return a string identifying the database version and type
-  abstract public function version() : string;
+  abstract public function version(): string;
 
   // Check if a table exists
-  abstract public function table_exists(string $table) : bool;
+  abstract public function table_exists(string $table): bool;
 
   // Get information about the columns in a table
   // Returns an array with the following indices for each column
@@ -401,13 +371,13 @@ abstract class DB
   //
   //  NOTE: the type mapping is incomplete and just covers the types commonly
   //  used by MRBS
-  abstract public function field_info(string $table) : array;
+  abstract public function field_info(string $table): array;
 
   // Generate non-standard SQL for LIMIT clauses:
-  abstract public function syntax_limit(int $count, int $offset) : string;
+  abstract public function syntax_limit(int $count, int $offset): string;
 
   // Generate non-standard SQL to output a TIMESTAMP as a Unix-time:
-  abstract public function syntax_timestamp_to_unix(string $fieldname) : string;
+  abstract public function syntax_timestamp_to_unix(string $fieldname): string;
 
   // Returns the syntax for a case-sensitive string "equals" function
   // Also takes a required pass-by-reference parameter to modify the SQL
@@ -415,33 +385,155 @@ abstract class DB
   //
   // NB:  This function is also assumed to do a strict comparison, ie
   // take account of trailing spaces.
-  abstract public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params) : string;
+  abstract public function syntax_casesensitive_equals(string $fieldname, string $string, array &$params): string;
 
   // Generate non-standard SQL to match a string anywhere in a field's value
   // in a case-insensitive manner. $s is the un-escaped/un-slashed string.
   //
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
-  abstract public function syntax_caseless_contains(string $fieldname, string $string, array &$params) : string;
+  abstract public function syntax_caseless_contains(string $fieldname, string $string, array &$params): string;
 
   // Generate non-standard SQL to add a table column after another specified
   // column
-  abstract public function syntax_addcolumn_after(string $fieldname) : string;
+  abstract public function syntax_addcolumn_after(string $fieldname): string;
 
   // Generate non-standard SQL to specify a column as an auto-incrementing
   // integer while doing a CREATE TABLE
-  abstract public function syntax_createtable_autoincrementcolumn() : string;
+  abstract public function syntax_createtable_autoincrementcolumn(): string;
 
   // Returns the syntax for a bitwise XOR operator
-  abstract public function syntax_bitwise_xor() : string;
+  abstract public function syntax_bitwise_xor(): string;
 
   // Returns the syntax for a simple split of a column's value into two
   // parts, separated by a delimiter.  $part can be 1 or 2.
   // Also takes a required pass-by-reference parameter to modify the SQL
   // parameters appropriately.
-  abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params) : string;
+  abstract public function syntax_simple_split(string $fieldname, string $delimiter, int $part, array &$params): string;
 
   // Returns the syntax for aggregating a number of rows as a delimited string
-  abstract public function syntax_group_array_as_string(string $fieldname, string $delimiter=',') : string;
+  abstract public function syntax_group_array_as_string(string $fieldname, string $delimiter = ','): string;
+
+  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
+  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+  // return a row with the id in the 'id' column.  However there isn't a corresponding
+  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // an insert or update was performed.
+  //
+  //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  //  $assignments       an array of assignments for the UPDATE clause
+  //  $has_id_column     whether the table has an id column
+  abstract public function syntax_on_duplicate_key_update(
+    $conflict_keys,
+    array $assignments,
+    $has_id_column=false
+  );
+
+  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
+  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+  // return a row with the id in the 'id' column.  However there isn't a corresponding
+  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // an insert or update was performed.
+  //
+  //  $data             an associative array of values indexed by column name
+  //  $table            the table to insert into or update
+  //  &$params          an array which will hold the SQL params
+  //  $conflict_keys    the key(s) which is/are unique; can be a scalar or an array
+  //  $has_id_column    whether the table has an id column
+  public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=[], array $ignore_columns=[], $has_id_column = false): string
+  {
+    if (is_scalar($conflict_keys))
+    {
+      $conflict_keys = array($conflict_keys);
+    }
+
+    list('columns' => $columns, 'values' => $values, 'sql_params' => $params) = $this->prepareData($data, $table, $ignore_columns);
+    $quoted_columns = array_map(array(db(), 'quote'), $columns);
+    $sql = "INSERT INTO " . $this->quote($table) . "
+                        (" . implode(', ', $quoted_columns) . ")
+                 VALUES (" . implode(', ', $values) . ") ";
+
+    // Go through the columns we've just found and turn them into assignments
+    // for the update part
+    $assignments = array();
+    for ($i=0; $i<count($columns); $i++)
+    {
+      $column = $columns[$i];
+      $value = $values[$i];
+      $assignments[] = $this->quote($column) . "=$value";
+    }
+
+    $sql .= db()->syntax_on_duplicate_key_update(
+      $conflict_keys,
+      $assignments,
+      $has_id_column
+    );
+
+    return $sql;
+  }
+
+
+  // Prepares $data for an SQL query. If $table is given then it will also sanitize values,
+  // eg by trimming and truncating strings and converting booleans into 0/1.
+  private function prepareData(array $data, string $table=null, array $ignore_columns=[]): array
+  {
+    $columns = array();
+    $values = array();
+    $sql_params = array();
+
+    $cols = (isset($table)) ? Columns::getInstance($table) : array_keys($data);
+
+    $i = 0;
+    foreach ($cols as $col)
+    {
+      // We are only interested in those elements of $data that have a corresponding
+      // column in the table - except for those that we have been told to ignore.
+      // Examples might be 'id' which normally auto-increments, and 'timestamp' which
+      // normally auto-updates.
+      if (is_object($col) && in_array($col->name, $ignore_columns))
+      {
+        continue;
+      }
+
+      $column_name = (is_object($col)) ? $col->name : $col;
+      $columns[] = $column_name;
+
+      if (!isset($data[$column_name]) && (!is_object($col) || $col->getIsNullable()))
+      {
+        $values[] = 'NULL';
+      }
+      else
+      {
+        // Need to make sure the placeholder only uses allowed characters which are
+        // [a-zA-Z0-9_].   We can't use the column name because the column name might
+        // contain characters which are not allowed.   And we can't use '?' because
+        // we may want to use the placeholders twice, once for an insert and once for an
+        // update.  Besides, debugging is easier with named parameters.
+        $named_parameter = ":p$i";
+        $values[] = $named_parameter;
+        if (isset($data[$column_name]))
+        {
+          $sql_param = $data[$column_name];
+          if (is_object($col))
+          {
+            $sql_param = $col->sanitizeValue($sql_param);
+          }
+        }
+        else
+        {
+          // The column is not nullable and $col is an object if we got here
+          $sql_param = $col->getDefault();
+        }
+        $sql_params[$named_parameter] = $sql_param;
+        $i++;
+      }
+    }
+
+    return array(
+      'columns' => $columns,
+      'values' => $values,
+      'sql_params' => $sql_params
+    );
+  }
 
 }

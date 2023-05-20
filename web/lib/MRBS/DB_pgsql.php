@@ -308,7 +308,8 @@ class DB_pgsql extends DB
     {
       $name = $row['column_name'];
       $type = $row['data_type'];
-      $default = $row['column_default'];
+      $parsed_default = $this->parseDefault($row['column_default']);
+      $default = $parsed_default['value'];
       // map the type onto one of the generic natures, if a mapping exists
       $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
       // Convert the default to be of the correct type
@@ -459,6 +460,58 @@ class DB_pgsql extends DB
     // would eliminate the duplicates and the need for DISTINCT, and it may
     // or may not be more efficient.
     return "array_to_string(array_agg(DISTINCT $fieldname), '$delimiter')";
+  }
+
+
+  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
+  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+  // return a row with the id in the 'id' column.  However there isn't a corresponding
+  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // an insert or update was performed.  In PostgreSQL insert_id() returns the sequence
+  // number and not the id of the row.  Because the sequence number is updated on every
+  // INSERT in Postgres, regardless of whether a row was actually inserted, the value
+  // won't be the id of the row in the case of an update.  Note that one side effect of
+  // this behaviour is that there will be gaps in the sequence numbers of the rows, but
+  // this doesn't matter.
+  //
+  //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  //  $assignments       an array of assignments for the UPDATE clause
+  //  $has_id_column     whether the table has an id column
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  {
+    $conflict_keys = array_map(array($this, 'quote'), $conflict_keys);
+    $sql = "ON CONFLICT (" . implode(', ', $conflict_keys) . ")";
+    $sql .= " DO UPDATE SET " . implode(', ', $assignments);
+    if ($has_id_column)
+    {
+      $sql .= " RETURNING id";
+    }
+
+    return $sql;
+  }
+
+
+  // Parse the contents of column_default to get the default value.
+  // Examples of column_default are "nextval('mrbs_users_id_seq'::regclass)", "NULL",
+  // "0" and "'E'::bpchar"
+  // WARNING: this is a very rough and ready parser and only deals with simple cases.
+  // TODO: do something better
+  private function parseDefault($default)
+  {
+    if (is_null($default) || str_starts_with($default, 'NULL::'))
+    {
+      $value = null;
+    }
+    elseif (preg_match("/^'(.*)'::/", $default, $matches))
+    {
+      $value = $matches[1];
+    }
+    else
+    {
+      $value = $default;
+    }
+
+    return ['value' => $value];
   }
 
 }

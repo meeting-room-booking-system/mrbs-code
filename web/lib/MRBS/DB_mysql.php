@@ -718,4 +718,26 @@ class DB_mysql extends DB
     return "GROUP_CONCAT(DISTINCT $fieldname SEPARATOR '$delimiter')";
   }
 
+
+  // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
+  // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
+  // return a row with the id in the 'id' column.  However there isn't a corresponding
+  // way of doing this in MySQL, but db()->insert_id() will work, regardless of whether
+  // an insert or update was performed.
+  //
+  //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
+  //                     (ignored in MySQL)
+  //  $assignments       an array of assignments for the UPDATE clause
+  //  $has_id_column     whether the table has an id column
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  {
+    if ($has_id_column)
+    {
+      // In order to make lastInsertId() work even after an UPDATE
+      $assignments[] = "id=LAST_INSERT_ID(id)";
+    }
+
+    return "ON DUPLICATE KEY UPDATE " . implode(', ', $assignments);
+  }
+
 }
