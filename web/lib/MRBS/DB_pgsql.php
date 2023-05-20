@@ -311,7 +311,8 @@ class DB_pgsql extends DB
     {
       $name = $row['column_name'];
       $type = $row['data_type'];
-      $default = $row['column_default'];
+      $parsed_default = $this->parseDefault($row['column_default']);
+      $default = $parsed_default['value'];
       // map the type onto one of the generic natures, if a mapping exists
       $nature = (array_key_exists($type, $nature_map)) ? $nature_map[$type] : $type;
       // Convert the default to be of the correct type
