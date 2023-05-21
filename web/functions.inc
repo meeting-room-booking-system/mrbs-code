@@ -1904,12 +1904,12 @@ function period_time_string(int $t, int $area_id, int $mod_time=0) : string
 
 function period_date_string(int $t, int $area_id, int $mod_time=0) : string
 {
-  global $strftime_format;
+  global $datetime_formats;
 
   // The separator is a ',' as a '-' leads to an ambiguous
   // display in report.php when showing end times.
   return period_time_string($t, $area_id, $mod_time) .
-         utf8_strftime(', ' . $strftime_format['date'], $t);
+         ', ' . datetime_format($datetime_formats['date'], $t);
 }
 
 
