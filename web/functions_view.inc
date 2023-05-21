@@ -50,7 +50,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
 {
   global $enable_periods, $confirmation_enabled, $approval_enabled;
   global $is_private_field, $standard_fields;
-  global $strftime_format;
+  global $datetime_formats;
   global $select_options, $booking_types;
   global $edit_entry_field_order;
   global $auth;
@@ -347,10 +347,11 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
     $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
 
     // Repeat end date
-    $tbody .= create_details_row(get_vocab("rep_end_date"),
-                                 utf8_strftime($strftime_format['date'],
-                                 $data['end_date']),
-                                 $as_html);
+    $tbody .= create_details_row(
+      get_vocab("rep_end_date"),
+      datetime_format($datetime_formats['date'], $data['end_date']),
+      $as_html
+    );
   }
 
   $tbody .= ($as_html) ? "</tbody>\n" : "";

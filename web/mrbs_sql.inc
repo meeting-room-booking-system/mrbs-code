@@ -89,8 +89,8 @@ function unpack_status(array &$data)
  */
 function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) : array
 {
-  global $enable_periods, $periods, $twentyfourhour_format;
-  global $strftime_format, $is_private_field;
+  global $enable_periods, $periods;
+  global $datetime_formats, $is_private_field;
 
   $room_id = $booking['room_id'];
 
@@ -180,9 +180,9 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
       if ($existing_entry_interval->spansMultipleDays())
       {
         $timestr .= ", " .
-                    utf8_strftime($strftime_format['date'], $row['start_time']) . " - " .
+                    datetime_format($datetime_formats['date'], $row['start_time']) . " - " .
                     $p_end_str . ", " .
-                    utf8_strftime($strftime_format['date'], $row['end_time']);
+                    datetime_format($datetime_formats['date'], $row['end_time']);
       }
       else
       {
@@ -190,7 +190,7 @@ function mrbsCheckFree(array $booking, ?int $ignore=null, ?int $repignore=null) 
         {
           $timestr .= " - " . $p_end_str;
         }
-        $timestr .= ", " . utf8_strftime($strftime_format['date'], $row['start_time']);
+        $timestr .= ", " . datetime_format($datetime_formats['date'], $row['start_time']);
       }
     }
     else
@@ -450,11 +450,12 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   global $max_duration_enabled, $max_duration_secs, $max_duration_periods;
   global $max_per_interval_global_enabled, $max_per_interval_area_enabled;
   global $max_secs_per_interval_global_enabled, $max_secs_per_interval_area_enabled;
-  global $interval_types, $strftime_format;
+  global $interval_types, $datetime_formats;
   global $approved_bookings_cannot_be_changed, $approval_enabled;
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
+  global $datetime_formats;
 
   $result = array('notices' => array(),
                   'errors'  => array());
@@ -513,7 +514,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if (false !== ($date = $entryInterval->overlapsHoliday()))
       {
-        $violations[] = get_vocab('no_bookings_on_holidays', utf8_strftime('%x', $date->getTimestamp()));
+        $violations[] = get_vocab('no_bookings_on_holidays', datetime_format($datetime_formats['date_holiday'], $date->getTimestamp()));
       }
     }
     // Check whether the user is trying to book on a weekend
@@ -521,7 +522,7 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if (false !== ($date = $entryInterval->overlapsWeekend()))
       {
-        $violations[] = get_vocab('no_bookings_on_weekends', utf8_strftime('%x', $date->getTimestamp()));
+        $violations[] = get_vocab('no_bookings_on_weekends', datetime_format($datetime_formats['date_holiday'], $date->getTimestamp()));
       }
     }
     // Check whether the user is trying to book two rooms simultaneously
@@ -597,7 +598,10 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if ($booking['start_time'] < mktime(0, 0, 0, $m, $d, $y))
       {
-        $violations[] = get_vocab("earliest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
+        $violations[] = get_vocab(
+          'earliest_booking_date',
+          datetime_format($datetime_formats['date'], mktime(0, 0, 0, $m, $d, $y))
+        );
       }
     }
     else
@@ -614,7 +618,10 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
     {
       if ($booking['end_time'] > mktime(0, 0, 0, $m, $d+1, $y))
       {
-        $violations[] = get_vocab("latest_booking_date", utf8_strftime($strftime_format['date'], mktime(0, 0, 0, $m, $d, $y)));
+        $violations[] = get_vocab(
+          'latest_booking_date',
+          datetime_format($datetime_formats['date'], mktime(0, 0, 0, $m, $d, $y))
+        );
       }
     }
     else

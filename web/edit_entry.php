@@ -755,7 +755,7 @@ function get_field_rep_type($value, $disabled=false)
 // Repeat day
 function get_field_rep_day($disabled=false)
 {
-  global $weekstarts, $strftime_format;
+  global $weekstarts, $datetime_formats;
   global $rep_day;
 
   for ($i = 0; $i < DAYS_PER_WEEK; $i++)
@@ -763,7 +763,7 @@ function get_field_rep_day($disabled=false)
     // Display day name checkboxes according to language and preferred weekday start.
     $wday = ($i + $weekstarts) % DAYS_PER_WEEK;
     // We need to ensure the index is a string to force the array to be associative
-    $options[$wday] = day_name($wday, $strftime_format['dayname_edit']);
+    $options[$wday] = day_name($wday, $datetime_formats['day_name_edit']);
   }
 
   $field = new FieldInputCheckboxGroup();
@@ -1006,7 +1006,7 @@ function get_fieldset_registration()
   if ($enable_periods)
   {
     $time = strtotime($periods_booking_opens);
-    $time = utf8_strftime(hour_min_format(), $time);
+    $time = datetime_format(hour_min_format(), $time);
     $in_advance_vocab = get_vocab('in_advance_periods', $time);
   }
   else
@@ -1415,12 +1415,9 @@ if (isset($id))
         $end_time = $row['end_time'];
       }
 
-      $rep_end_day   = (int)utf8_strftime('%d', $row['end_date']);
-      $rep_end_month = (int)utf8_strftime('%m', $row['end_date']);
-      $rep_end_year  = (int)utf8_strftime('%Y', $row['end_date']);
-      // Get the end date in string format as well, for use when
-      // the input is disabled
-      $rep_end_date = utf8_strftime('%A %d %B %Y',$row['end_date']);
+      $rep_end_day   = (int) date('d', $row['end_date']);
+      $rep_end_month = (int) date('m', $row['end_date']);
+      $rep_end_year  = (int) date('Y', $row['end_date']);
 
       switch ($rep_type)
       {
@@ -1595,8 +1592,8 @@ if (!isset($month_absolute))
 }
 list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
 
-$start_hour  = utf8_strftime('%H', $start_time);
-$start_min   = utf8_strftime('%M', $start_time);
+$start_hour  = date('H', $start_time);
+$start_min   = date('i', $start_time);
 
 // Determine the area id of the room in question first
 $area_id = mrbsGetRoomArea($room_id);

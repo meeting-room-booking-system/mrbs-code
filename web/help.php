@@ -45,7 +45,7 @@ else
   echo "<tr><td>" . get_vocab("database") . "</td><td>" . db()->version() . "</td></tr>\n";
   echo "<tr><td>" . get_vocab("system") . "</td><td>" . php_uname() . "</td></tr>\n";
   echo "<tr><td>" . get_vocab("servertime") . "</td><td>" .
-       utf8_strftime($strftime_format['datetime'], time()) .
+       datetime_format($datetime_formats['date_and_time_help'], time()) .
        "</td></tr>\n";
   echo "<tr><td>" . get_vocab("server_software") . "</td><td>" .
        htmlspecialchars(get_server_software()) . "</td></tr>\n";

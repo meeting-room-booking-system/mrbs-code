@@ -1793,17 +1793,18 @@ function validate_iso_date(string $date) : bool
 }
 
 
-// Get the local day name based on language. Note 2000-01-02 is a Sunday.
-function day_name(int $daynumber, ?string $format=null) : string
+// Get the local day name based on language.
+function day_name(int $day_number, array $format=null) : string
 {
-  global $strftime_format;
+  global $datetime_formats;
 
   if (!isset($format))
   {
-    $format = $strftime_format['dayname'];
+    $format = $datetime_formats['day_name'];
   }
 
-  return utf8_strftime($format, mktime(0,0,0,1,2+$daynumber,2000));
+  // Note 2000-01-02 is a Sunday.
+  return datetime_format($format, mktime(0,0,0,1,2+$day_number,2000));
 }
 
 
@@ -1855,11 +1856,11 @@ function get_rep_day_list($rep_opt) : string
 }
 
 
-function hour_min_format() : string
+function hour_min_format() : array
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  return ($twentyfourhour_format) ? $strftime_format['time24'] : $strftime_format['time12'];
+  return $datetime_formats['time'];
 }
 
 
@@ -1871,7 +1872,7 @@ function hour_min(int $s) : string
   $s = $s % SECONDS_PER_DAY;  // in case $s is on the next day
   // Choose a day that doesn't have any DST transitions in any timezone
   $t = mktime(0, 0, $s, 1, 1, 2000);
-  $result = utf8_strftime(hour_min_format(), $t);
+  $result = datetime_format(hour_min_format(), $t);
   if ($following_day)
   {
     $result = "* " . $result;
@@ -1914,16 +1915,9 @@ function period_date_string(int $t, int $area_id, int $mod_time=0) : string
 
 function time_date_string(int $t) : string
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  if ($twentyfourhour_format)
-  {
-    return utf8_strftime($strftime_format['datetime24'], $t);
-  }
-  else
-  {
-    return utf8_strftime($strftime_format['datetime12'], $t);
-  }
+  return datetime_format($datetime_formats['date_and_time'], $t);
 }
 
 

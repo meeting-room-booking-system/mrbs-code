@@ -83,7 +83,7 @@ function get_mail_field_name(string $table, string $name) : string
  */
 function getMailPeriodDateString(int $t, int $mod_time=0) : array
 {
-  global $periods, $strftime_format;
+  global $periods, $datetime_formats;
 
   $time = getdate($t);
   $p_num = $time['minutes'] + $mod_time;
@@ -102,7 +102,7 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
   $mailperiod = $periods[$p_num];
 
   // The separator is a ',' as a '-' leads to an ambiguous display in report.php when showing end times.
-  return array($p_num, $mailperiod . utf8_strftime(", " . $strftime_format['date'], $t, get_mail_locale()));
+  return array($p_num, $mailperiod . ', ' . datetime_format($datetime_formats['date'], $t, get_mail_lang()));
 }
 
 // }}}
@@ -117,23 +117,10 @@ function getMailPeriodDateString(int $t, int $mod_time=0) : array
  */
 function getMailTimeDateString(int $t, bool $inc_time=true) : string
 {
-  global $twentyfourhour_format, $strftime_format;
+  global $datetime_formats;
 
-  if ($inc_time)
-  {
-    if ($twentyfourhour_format)
-    {
-      return utf8_strftime($strftime_format['datetime24'], $t, get_mail_locale());
-    }
-    else
-    {
-      return utf8_strftime($strftime_format['datetime12'], $t, get_mail_locale());
-    }
-  }
-  else
-  {
-    return utf8_strftime($strftime_format['date'], $t, get_mail_locale());
-  }
+  $format = ($inc_time) ? $datetime_formats['date_and_time'] : $datetime_formats['date'];
+  return datetime_format($format, $t, get_mail_lang());
 }
 
 

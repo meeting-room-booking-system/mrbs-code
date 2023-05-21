@@ -219,7 +219,7 @@ if (!$is_ajax) {
     echo get_vocab(
       'search_results',
       htmlspecialchars($search_str),
-      htmlspecialchars(utf8_strftime($strftime_format['date_short'], $search_start_time))
+      htmlspecialchars(datetime_format($datetime_formats['date_search'], $search_start_time))
     );
   }
   else
