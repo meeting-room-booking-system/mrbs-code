@@ -5,6 +5,7 @@ namespace MRBS;
 // isn't always installed).
 
 use IntlDateFormatter;
+use IntlDatePatternGenerator;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "functions.inc";
@@ -270,7 +271,7 @@ function set_mrbs_locale($locale)
 // Note: the first time this function is called, it should be called with a $header string.
 // Subsequent calls will just return the static $locale variable which was calculated on
 // the first call
-function get_mrbs_locale($header=null)
+function get_mrbs_locale($header=null) : string
 {
   global $override_locale, $disable_automatic_language_changing, $default_language_tokens;
   global $cli_language;
@@ -852,305 +853,72 @@ function get_loc_field_name(string $table, string $name) : string
 }
 
 
-// Format a local time/date according to locale settings, returning the
-// result as a UTF-8 string.  This function is based on strftime()
-// $time can be an int or a float (union type declarations not supported until PHP 8.0)
-// $locale can either be a string or an array of locales.  If $locale
-// is not set then the current locale is used.
-function date_formatter_strftime(string $format, $time, $locale)
-{
-  // Cast $time to an integer because we're going to use it in strftime() and date(), both
-  // of which expect integers and will otherwise throw an E_DEPRECATED error in PHP 8.1
-  $time = (int) $time;
-
-  $server_os = System::getServerOS();
-
-  // Set the temporary locale.  Note that $temp_locale could be an array of locales,
-  // so we need to find out which locale actually worked.
-  if (!empty($locale))
-  {
-    $old_locale = setlocale(LC_TIME, '0');
-    $new_locale = setlocale(LC_TIME, $locale);
-  }
-  elseif ($server_os == "windows")
-  {
-    // If we are running Windows we have to set the locale again in case another script
-    // running in the same process has changed the locale since we first set it.  See the
-    // warning on the PHP manual page for setlocale():
-    //
-    // "The locale information is maintained per process, not per thread. If you are
-    // running PHP on a multithreaded server API like IIS or Apache on Windows, you may
-    // experience sudden changes in locale settings while a script is running, though
-    // the script itself never called setlocale(). This happens due to other scripts
-    // running in different threads of the same process at the same time, changing the
-    // process-wide locale using setlocale()."
-    $new_locale = get_mrbs_locale();
-    set_mrbs_locale($new_locale);
-  }
-  else
-  {
-    $new_locale = null;
-  }
-
-  if ($server_os == "windows")
-  {
-    // Some formats not supported on Windows.   Replace with suitable alternatives
-    $format = str_replace("%R", "%H:%M", $format);
-    $format = str_replace("%P", "%p", $format);
-    $format = str_replace("%l", "%I", $format);
-    $format = str_replace("%e", "%#d", $format);
-  }
-
-  // %p doesn't actually work in some locales, we have to patch it up ourselves
-  if (preg_match('/%p/', $format))
-  {
-    $ampm = strftime('%p', $time);  // Don't replace the %p with the $strftime_format variable!!
-    if ($ampm == '')
-    {
-      $ampm = date('a', $time);
-    }
-
-    $format = preg_replace('/%p/', $ampm, $format);
-  }
-
-  $result = strftime($format, $time);
-  $result = System::utf8ConvertFromLocale($result, $new_locale);
-
-  // Restore the original locale
-  if (!empty($locale))
-  {
-    setlocale(LC_TIME, $old_locale);
-  }
-
-  return $result;
-}
-
-
-// Converts a single strftime() format character into an equivalent
-// pattern for use with IntlDateFormatter.
-// See https://www.php.net/manual/en/function.strftime.php and
-// https://unicode-org.github.io/icu/userguide/format_parse/datetime/
-function get_equivalent_pattern(string $format, string $locale) : string
-{
-  $map = array(
-    // Day
-    'a' => 'ccc',
-    'A' => 'cccc',
-    'd' => 'dd',
-    'e' => 'd',
-    'j' => 'D', // not an exact equivalent: 'j' has leading zeros
-    // 'u' not supported
-    // 'w' not supported
-
-    // Week
-    // 'U' not supported
-    // 'V' not supported
-    // 'W' not supported
-
-    // Month
-    'b' => 'LLL',
-    'B' => 'LLLL',
-    'h' => 'LLL',
-    'm' => 'LL',
-
-    // Year
-    // 'C' not supported
-    // 'g' not supported
-    // 'G' not supported
-    'y' => 'yy',
-    'Y' => 'y',
-
-    // Time
-    'H' => 'HH',
-    'k' => 'H',
-    'I' => 'hh',
-    'l' => 'h',  // not an exact equivalent ('h' doesn't have a leading space in front of single digits)
-    'M' => 'mm',
-    'p' => 'a',  // not an exact equivalent
-    'P' => 'a',  // not an exact equivalent
-    'r' => 'hh:mm:ss a',
-    'R' => 'HH:mm',
-    'S' => 'ss',
-    'T' => 'HH:mm:ss',
-    // 'X' see below
-    'z' => 'Z',
-    'Z' => 'z',
-
-    // Time and Date Stamps
-    // 'c' see below
-    'D' => 'LL/dd/yy',
-    'F' => 'y-LL-dd'
-    // 's' not supported
-    // 'x' see below
-  );
-
-  // The simple case - there's a near equivalent
-  if (isset($map[$format]))
-  {
-    return $map[$format];
-  }
-
-  // More complicated cases - the pattern is locale dependent
-  switch ($format)
-  {
-    case 'X':
-      $date_type = IntlDateFormatter::NONE;
-      $time_type = IntlDateFormatter::MEDIUM;
-      break;
-    case 'c':
-      $date_type = IntlDateFormatter::MEDIUM;
-      $time_type = IntlDateFormatter::LONG;
-      break;
-    case 'x':
-      $date_type = IntlDateFormatter::SHORT;
-      $time_type = IntlDateFormatter::NONE;
-      break;
-    default:
-      throw new \Exception("Cannot convert format '%$format'");
-      break;
-  }
-
-  $formatter = new IntlDateFormatter(
-    $locale,
-    $date_type,
-    $time_type
-  );
-
-  return $formatter->getPattern();
-}
-
-
-// Convert a strftime() format, which can contain a mixture of formatters and text,
-// into an IntlDateFormatter pattern
-function format_convert(string $format, string $locale) : string
-{
-  // Trivial case
-  if (!isset($format) || ($format === ''))
-  {
-    return $format;
-  }
-
-  // Split the string, which may contain multibyte characters, into an array and
-  // then iterate through the array
-  $chars = preg_split('//u', $format, -1, PREG_SPLIT_NO_EMPTY);
-  $char = current($chars);
-  $text = '';
-  $result = '';
-
-  do
-  {
-    if ($char == '%')
-    {
-      if (false === ($next_char = next($chars)))
-      {
-        trigger_error("Badly formed format '$format'", E_USER_NOTICE);
-      }
-      elseif (in_array($next_char, array('n', 't', '%')))
-      {
-        // Escaped characters
-        switch ($next_char)
-        {
-          case 'n':
-            $text_char = "\n";
-            break;
-          case 't':
-            $text_char = "\t";
-            break;
-          case '%':
-            $text_char = '%';
-            break;
-        }
-        $text .= $text_char;
-      }
-      else
-      {
-        // It's a format character
-        // If there's a text string outstanding then append that to the result
-        if ($text !== '')
-        {
-          // Don't need to escape characters outside ['a'..'z'] and ['A'..'Z'] but it's simpler to do so
-          $result .= "'$text'";
-          $text = '';
-        }
-        // Followed by the ICU equivalent of the format character
-        $result .= get_equivalent_pattern($next_char, $locale);
-      }
-    }
-    else
-    {
-      $text .= ($char == "'") ? "''" : $char;  // Escape single quotes
-    }
-  } while (false !== ($char = next($chars)));
-
-  // Add any remaining text
-  if ($text !== '')
-  {
-    // Don't need to escape characters outside ['a'..'z'] and ['A'..'Z'] but it's simpler to do so
-    $result .= "'$text'";
-  }
-
-  return $result;
-}
-
-
-// Format a local time/date according to locale settings, returning the
-// result as a UTF-8 string.  This function is based on IntlDateFormatter.
-// $time can be an int or a float (union type declarations not supported until PHP 8.0)
-// $locale can either be a string or an array of locales, but if an array
-// then only the first is used.
-// If $locale is not set then the current locale is used.
-function date_formatter_intl(string $format, $time, $locale=null) : string
+function datetime_format(array $format, int $timestamp=null, string $locale=null) : string
 {
   if (!isset($locale))
   {
     $locale = get_mrbs_locale();
   }
 
-  if (is_array($locale))
+  if (isset($format['skeleton']))
   {
-    $locale = $locale[0];
+    $pattern_generator = new IntlDatePatternGenerator($locale);
+    $pattern = $pattern_generator->getBestPattern($format['skeleton']);
   }
 
-  $pattern = format_convert($format, $locale);
+  if (!isset($pattern) || ($pattern === false) || ($pattern === ''))
+  {
+    $pattern = $format['pattern'] ?? null;
+  }
 
   $formatter = new IntlDateFormatter(
     $locale,
-    IntlDateFormatter::FULL,
-    IntlDateFormatter::FULL,
-    null,
-    null,
-    $pattern
+    $format['date_type'] ?? IntlDateFormatter::FULL,
+    $format['time_type'] ?? IntlDateFormatter::FULL,
+    null, null, $pattern
   );
 
-  return $formatter->format($time);
+  return $formatter->format($timestamp ?? time());
 }
 
 
-// Format a local time/date according to locale settings, returning the
-// result as a UTF-8 string.
-// $time can be an int or a float (union type declarations not supported until PHP 8.0)
-// $locale can either be a string or an array of locales.  If $locale
-// is not set then the current locale is used.
-function utf8_strftime(string $format, int $time, $locale=null) : string
+// Determines whether a locale (default the current locale) uses a 12-hour clock.
+// Returns NULL if it can't be determined.
+function is_ampm(string $locale=null) : ?bool
 {
-  // strftime() is deprecated from PHP 8.1, so we use IntlDateFormatter
-  // if we can, or if we can't map the strftime format to a suitable Intl one.
-  // TODO: This solution just translates strftime formats into the nearest
-  // TODO: equivalent IntlDateFormatter patterns.  However it would be better
-  // TODO: to rewrite MRBS so that IntlDateFormatter patterns are used if possible
-  // TODO: as they are more flexible and better suited to reflecting locales.
+  global $datetime_formats;
 
-  try
+  if (!isset($locale))
   {
-    return date_formatter_intl($format, $time, $locale);
+    $locale = get_mrbs_locale();
   }
-  // Catch either an Error if the IntlDateFormatter class doesn't exist or an
-  // Exception if we can't map the format.
-  catch (\Throwable $e)
+
+  // Work out what pattern is being used for times.
+  // If an explicit pattern has been set in the config file then use that.
+  if (isset($datetime_formats['time']['pattern']))
   {
-    return date_formatter_strftime($format, $time, $locale);
+    $pattern = $datetime_formats['time']['pattern'];
   }
+  // Otherwise get the pattern that would be used by default.
+  else
+  {
+    $formatter = new IntlDateFormatter(
+      $locale,
+      $format['date_type'] ?? IntlDateFormatter::NONE,
+      $format['time_type'] ?? IntlDateFormatter::SHORT
+    );
+    $pattern = $formatter->getPattern();
+    if ($pattern === false)
+    {
+      trigger_error("Could not determine whether '$locale' uses a 12-hour clock");
+      return null;
+    }
+  }
+
+  // And see if it contains an 'a'
+  return str_contains($pattern, 'a');
 }
+
 
 // UTF-8 compatible substr function obtained from a contribution by
 // "frank at jkelloggs dot dk" in the PHP online manual for substr()

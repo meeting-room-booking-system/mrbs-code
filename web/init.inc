@@ -8,6 +8,17 @@ init_errors();
 // Flush the mail queue on shutdown
 register_shutdown_function(__NAMESPACE__ . "\\MailQueue::flush");
 
+// Check extensions
+if ((version_compare(PHP_VERSION, '8.1.0') >= 0) && !extension_loaded('intl'))
+{
+  // We suppress deprecation messages each time we use strftime() in MRBS's emulation of the IntlDateFormatter
+  // class and just have a single message here, in order to avoid flooding the log with messages.
+  $message = "MRBS has detected that you do not have the PHP 'intl' extension loaded on your server and " .
+             "so it is using the deprecated strftime() function instead.  You are recommended to enable " .
+             "the 'intl' extension.";
+  trigger_error($message, E_USER_DEPRECATED);
+}
+
 // Set the session scheme if it hasn't been already
 if (!isset($auth['session']))
 {
