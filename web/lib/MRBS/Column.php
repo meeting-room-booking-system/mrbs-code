@@ -99,7 +99,7 @@ class Column
 
   // Gets the type ('bool', 'int' or 'string') to be used with get_form_var().
   // TODO: this method maybe doesn't belong here.
-  public function getFormVarType()
+  public function getFormVarType() : string
   {
     switch ($this->nature)
     {
@@ -147,7 +147,7 @@ class Column
     return $value;
   }
 
-  public function isBooleanLike()
+  public function isBooleanLike() : bool
   {
     // Smallints and tinyints are considered to be booleans
     return (($this->nature == self::NATURE_BOOLEAN) ||
