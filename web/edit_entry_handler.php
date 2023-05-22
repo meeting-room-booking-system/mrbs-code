@@ -7,8 +7,8 @@ require_once 'mrbs_sql.inc';
 require_once 'functions_ical.inc';
 require_once 'functions_mail.inc';
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementInputSubmit;
+use MRBS\Form\Form;
 
 
 function invalid_date(string $message, bool $is_ajax) : void
@@ -829,20 +829,13 @@ $send_mail = ($no_mail) ? false : need_to_send_mail();
 
 try
 {
-  // Wrap the editing process in a transaction, because if deleting the old booking should fail for
-  // some reason then we'll potentially be left with two overlapping bookings.  A deletion could fail
-  // if, for example, the database user hasn't been granted DELETE rights.
-
-  // Acquire mutex to lock out others trying to book the same slot(s).
-  if (!db()->mutex_lock(_tbl('entry')))
-  {
-    fatal_error(get_vocab("failed_to_acquire"));
-  }
-
+  // Wrap the editing process in a transaction, because we'll want to roll back the edit if the
+  // deletion of the old booking fails.  This could happen, for example, if
+  //    (a) somebody else has already edited the booking and the original booking no longer exists; or
+  //    (b) if there's some other problem, eg the database user hasn't been granted DELETE rights, in which
+  //        case we would be left with two overlapping bookings.
   db()->begin();
-
   $transaction_ok = true;
-
   $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
 
   // If we weren't just checking and this was a successful booking and
@@ -861,9 +854,6 @@ try
     db()->rollback();
     trigger_error('Edit failed.', E_USER_WARNING);
   }
-
-  db()->mutex_unlock(_tbl('entry'));
-
 
   // If this is an Ajax request, output the result and finish
   if ($is_ajax)
