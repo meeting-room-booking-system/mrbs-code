@@ -33,7 +33,7 @@ class Columns implements Countable, Iterator
     throw new \Exception("Cannot unserialize a singleton.");
   }
 
-  public static function getInstance($table_name)
+  public static function getInstance(string $table_name) : Columns
   {
     if (!isset(self::$instances[$table_name]))
     {
