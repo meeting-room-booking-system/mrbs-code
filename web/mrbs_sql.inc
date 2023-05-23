@@ -455,7 +455,6 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
   global $prevent_simultaneous_bookings, $prevent_invalid_types;
   global $prevent_booking_on_holidays, $prevent_booking_on_weekends;
   global $periods_booking_opens, $measure_max_to_start_time;
-  global $datetime_formats;
 
   $result = array('notices' => array(),
                   'errors'  => array());
