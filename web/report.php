@@ -899,6 +899,7 @@ function report_row(&$rows, $data)
   global $select_options, $booking_types;
   global $field_order_list;
   global $include_registered_by, $include_registrant_username;
+  global $datetime_formats;
 
   // If we're capable of delivering an Ajax request and this is not Ajax request,
   // then don't do anything.  We're going to save sending the data until we actually
@@ -938,7 +939,7 @@ function report_row(&$rows, $data)
         }
         else
         {
-          $date = time_date_string($value);
+          $date = datetime_format($datetime_formats['date_and_time_report'], $value);
         }
         $value = $date;
         break;
@@ -968,7 +969,7 @@ function report_row(&$rows, $data)
         }
         break;
       case 'last_updated':
-        $value = time_date_string($value);
+        $value = datetime_format($datetime_formats['date_and_time_report'], $value);
         break;
       case 'allow_registration':
         if ($data['allow_registration'])

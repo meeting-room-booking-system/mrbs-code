@@ -629,6 +629,12 @@ $datetime_formats['date_and_time_help'] = array(
   'time_type' => IntlDateFormatter::LONG
 );
 
+// The format used for dates with times on the Report
+$datetime_formats['date_and_time_report'] = array(
+  'date_type' => IntlDateFormatter::FULL,
+  'time_type' => IntlDateFormatter::SHORT
+);
+
 // Used in policy violation reports for holidays and weekends
 $datetime_formats['date_holiday'] = array(
   'date_type' => IntlDateFormatter::SHORT,
