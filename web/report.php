@@ -933,7 +933,14 @@ function report_row(&$rows, $data)
         $d_string = escape($d_string);
       case 'start_time':
         $mod_time = ($field == 'start_time') ? 0 : -1;
-        $date = date_string($data['enable_periods'], $value, $data['area_id'], $mod_time);
+        if ($data['enable_periods'])
+        {
+          $date = period_date_string($value, $data['area_id'], $mod_time);
+        }
+        else
+        {
+          $date = datetime_format($datetime_formats['date_and_time_report'], $value);
+        }
         $value = $date;
         break;
       case 'type':
