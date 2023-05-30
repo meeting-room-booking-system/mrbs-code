@@ -227,7 +227,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // therefore cannot be used with language.url, but instead have to be
     // included directly.
     ?>
-    defaultOptions.language = <?php include "../$lang_file" ?>;
+    defaultOptions.language = <?php include MRBS_ROOT . "/$lang_file" ?>;
     <?php
   }
   ?>
