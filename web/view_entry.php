@@ -1009,7 +1009,10 @@ if (!$keep_private && !$enable_periods)
 }
 echo "</div>\n";
 
-if (isset($previous_page)) //remove the link if displayed from an email
+// Don't display a link to the previous page if there isn't one (eg if we've got here
+// from an email), or if it would just send the user to the same page for some reason.
+if (isset($previous_page) &&
+    (basename(parse_url($previous_page)['path']) !== this_page()))
 {
   echo "<div id=\"returl\">\n";
   echo '<a href="' . htmlspecialchars($previous_page) . '">' . get_vocab('returnprev') . "</a>\n";
