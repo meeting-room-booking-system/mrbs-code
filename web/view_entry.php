@@ -832,7 +832,7 @@ echo "<div id=\"view_entry_nav\">\n";
 // TODO: throughout MRBS.
 
 if (isset($previous_page) &&
-    (!(isset($returl) && (parse_url($returl)['path'] == 'index.php'))))
+    (!(isset($returl) && (basename(parse_url($returl)['path']) == 'index.php'))))
 {
   $returl = $previous_page;
 }
