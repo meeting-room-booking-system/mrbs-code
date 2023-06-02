@@ -813,11 +813,6 @@ if ($approval_enabled && !$room_disabled && $awaiting_approval)
       generateOwnerButtons($id, $series);
     }
     // Others don't get any buttons
-    else
-    {
-      // But valid HTML requires that there's something inside the <tfoot></tfoot>
-      echo "<tr><td></td><td></td></tr>\n";
-    }
   }
   echo "</tfoot>\n";
 }
