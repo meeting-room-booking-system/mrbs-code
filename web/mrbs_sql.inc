@@ -1406,17 +1406,10 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
         do
         {
           $month = $month + $rep_details['rep_interval'];
-          if (isset($rep_details['month_absolute']))
-          {
-            // Get the day of the month back to where it should be (in case we
-            // decremented it to make it a valid date last time round)
-            $day = $rep_details['month_absolute'];
-          }
-          else
-          {
-            $day = byday_to_day($year, $month, $rep_details['month_relative']);
-          }
-        } while ($day === FALSE);
+          // Get the day of the month back to where it should be (in case we
+          // decremented it to make it a valid date last time round)
+          $day = $rep_details['month_absolute'] ?? byday_to_day($year, $month, $rep_details['month_relative']);
+        } while ($day === false);
         trimToEndOfMonth($month, $day, $year);
         break;
 
