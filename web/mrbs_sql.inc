@@ -2191,7 +2191,7 @@ function get_rooms($area, $include_disabled=false, $include_invisible=false)
 
 
 // Gets the ids of all the invisible rooms in the system
-function get_invisible_room_ids()
+function get_invisible_room_ids() : array
 {
   $sql = "SELECT id FROM " . _tbl('room');
 
