@@ -2236,16 +2236,16 @@ function get_period_names()
 }
 
 
-function mrbsGetRoomArea($id)
+function mrbsGetRoomArea(int $room_id) : int
 {
   $sql = "SELECT area_id
             FROM " . _tbl('room') . "
            WHERE id=?
            LIMIT 1";
 
-  $id = db()->query1($sql, array($id));
+  $area_id = db()->query1($sql, array($room_id));
 
-  return ($id <= 0) ? 0 : $id;
+  return ($area_id <= 0) ? 0 : $area_id;
 }
 
 
