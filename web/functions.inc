@@ -2005,18 +2005,10 @@ function time_date_string(int $t) : string
   return datetime_format($datetime_formats['date_and_time'], $t);
 }
 
-// version of the standard PHP function nl2br() that takes account of the fact
-// that the optional second parameter is only available from PHP 5.3.0 onwards.
-function mrbs_nl2br($string)
+// Wrapper for the standard PHP function nl2br() that sets $use_xhtml to false
+function mrbs_nl2br(string $string) : string
 {
-  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.3.0', 'ge'))
-  {
-    return nl2br($string, IS_XHTML);
-  }
-  else
-  {
-    return nl2br($string);
-  }
+  return nl2br($string, false);
 }
 
 
