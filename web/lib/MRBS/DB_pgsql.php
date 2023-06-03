@@ -477,7 +477,7 @@ class DB_pgsql extends DB
   //  $conflict_keys     the key(s) which is/are unique; can be a scalar or an array
   //  $assignments       an array of assignments for the UPDATE clause
   //  $has_id_column     whether the table has an id column
-  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, bool $has_id_column=false) : string
   {
     $conflict_keys = array_map(array($this, 'quote'), $conflict_keys);
     $sql = "ON CONFLICT (" . implode(', ', $conflict_keys) . ")";

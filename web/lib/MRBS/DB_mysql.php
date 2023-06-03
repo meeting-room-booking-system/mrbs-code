@@ -729,7 +729,7 @@ class DB_mysql extends DB
   //                     (ignored in MySQL)
   //  $assignments       an array of assignments for the UPDATE clause
   //  $has_id_column     whether the table has an id column
-  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, $has_id_column=false)
+  public function syntax_on_duplicate_key_update($conflict_keys, array $assignments, bool $has_id_column=false) : string
   {
     if ($has_id_column)
     {
