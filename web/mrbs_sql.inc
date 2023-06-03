@@ -799,7 +799,7 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
   if ($enable_periods)
   {
     // Allow registration to be cancelled all the way up to the end of the
-    // the current day, because we don't know when in the day the period starts.
+    // current day, because we don't know when in the day the period starts.
     $date = new DateTime();
     $date->setTimestamp($entry['start_time']);
     $date->setTime(0, 0);
@@ -1991,7 +1991,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
 
 // Gets the ids of all the invisible rooms in the system
-function get_invisible_room_ids()
+function get_invisible_room_ids() : array
 {
   $result = array();
 
