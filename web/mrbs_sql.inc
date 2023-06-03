@@ -1314,7 +1314,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *   an array  - This is a list of start times of each of the repeat entries
  */
 
-function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
+function mrbsGetRepeatEntryList(int $time, int $rep_end_time, array $rep_details, int $n) : array
 {
   $entries = array();
 
