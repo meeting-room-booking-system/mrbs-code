@@ -426,8 +426,8 @@ abstract class DB
   abstract public function syntax_on_duplicate_key_update(
     $conflict_keys,
     array $assignments,
-    $has_id_column=false
-  );
+    bool $has_id_column=false
+  ) : string;
 
   // Returns the syntax for an "upsert" query.  Unfortunately getting the id of the
   // last row differs between MySQL and PostgreSQL.   In PostgreSQL the query will
@@ -440,7 +440,7 @@ abstract class DB
   //  &$params          an array which will hold the SQL params
   //  $conflict_keys    the key(s) which is/are unique; can be a scalar or an array
   //  $has_id_column    whether the table has an id column
-  public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=[], array $ignore_columns=[], $has_id_column = false): string
+  public function syntax_upsert(array $data, string $table, array &$params, $conflict_keys=[], array $ignore_columns=[], bool $has_id_column = false): string
   {
     if (is_scalar($conflict_keys))
     {
