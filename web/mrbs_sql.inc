@@ -1434,7 +1434,7 @@ function mrbsGetRepeatEntryList(int $time, int $rep_end_time, array $rep_details
 
 /** mrbsCreateRepeatingEntrys()
  *
- * Creates a repeat entry in the data base + all the repeating entries
+ * Creates a repeat entry in the database + all the repeating entries
  *
  * $data      - An array containing the entry details
  *
