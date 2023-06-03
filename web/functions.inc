@@ -1088,7 +1088,7 @@ function get_period_interval(int $start_time, int $end_time) : int
 
   if ($interval_days == 0)
   {
-    // If the interval starts and ends on the same day, the we just calculate the number
+    // If the interval starts and ends on the same day, then we just calculate the number
     // of periods by calculating the number of minutes between the start and end times.
     $result = ($end_time - $start_time)/60;
   }
