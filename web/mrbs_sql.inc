@@ -1724,7 +1724,7 @@ function get_registration_by_id($id)
 
 
 // Get the people registered for an event
-function get_registrants($id, $series)
+function get_registrants(int $id, bool $series) : ?array
 {
   // You can't register for a series (yet)
   if ($series)
