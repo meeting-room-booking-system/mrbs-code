@@ -2026,7 +2026,7 @@ function get_area_name($id, $all=FALSE)
 // Gets an array of area names indexed by area id.
 // If $all=TRUE then all areas are returned, otherwise just the ones that
 // are not disabled
-function get_area_names($all=FALSE)
+function get_area_names(bool $all=false) : array
 {
   $areas = array();
 
