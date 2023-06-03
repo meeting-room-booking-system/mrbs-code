@@ -59,7 +59,7 @@ function get_field_areamatch(array $data) : FieldInputDatalist
   $label = get_vocab('match_area');
 
   $field = new FieldInputDatalist();
-  $options = get_area_names($all=true);
+  $options = get_area_names(true);
   $field->setAttribute('id', 'div_areamatch')
         ->setLabel($label)
         ->setControlAttributes(array(

@@ -841,7 +841,7 @@ function get_fieldset_location_settings() : ElementFieldset
   $fieldset->addLegend(get_vocab('area_room_settings'));
 
   // Default room
-  $areas = get_area_names($all=true);
+  $areas = get_area_names(true);
   if (count($areas) > 0)
   {
     $options = array();

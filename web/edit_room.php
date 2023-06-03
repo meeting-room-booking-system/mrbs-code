@@ -147,7 +147,7 @@ function get_fieldset_general($data)
   $fieldset = new ElementFieldset();
 
   // The area select
-  $areas = get_area_names($all=true);
+  $areas = get_area_names(true);
   $field = new FieldSelect();
   $field->setLabel(get_vocab('area'))
         ->setControlAttributes(array('name'     => 'new_area',
