@@ -1447,11 +1447,11 @@ function mrbsGetRepeatEntryList(int $time, int $rep_end_time, array $rep_details
  *   ['start_times'] - an array of start times that have been created
  *
  */
-function mrbsCreateRepeatingEntrys(array $data)
+function mrbsCreateRepeatingEntrys(array $data) : array
 {
   global $max_rep_entrys;
 
-  $result = array('id' => 0, 'series' => FALSE, 'start_times' => array());
+  $result = array('id' => 0, 'series' => false, 'start_times' => array());
 
   if (!isset($data['skip_list']))
   {
