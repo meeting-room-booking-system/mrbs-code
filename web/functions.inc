@@ -2208,7 +2208,7 @@ function is_possibly_invalid(int $start, int $end) : bool
 // example from 0100 to 0159 in Europe/London.
 // Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
 // a simple equality test will default to a valid time if MRBS can't determine an answer)
-function is_invalid_datetime(int $hour, int $minute, int $second, int $month, int $day, int $year, ?string $tz=null)
+function is_invalid_datetime(int $hour, int $minute, int $second, int $month, int $day, int $year, ?string $tz=null) : ?bool
 {
   global $timezone;
 
