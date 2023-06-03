@@ -1121,7 +1121,7 @@ function get_period_interval(int $start_time, int $end_time) : int
 
   if ($interval_days == 0)
   {
-    // If the interval starts and ends on the same day, the we just calculate the number
+    // If the interval starts and ends on the same day, then we just calculate the number
     // of periods by calculating the number of minutes between the start and end times.
     $result = ($end_time - $start_time)/60;
   }
@@ -1927,18 +1927,10 @@ function date_string($use_periods, $t, $area_id, $mod_time=0)
 }
 
 
-// version of the standard PHP function nl2br() that takes account of the fact
-// that the optional second parameter is only available from PHP 5.3.0 onwards.
-function mrbs_nl2br($string)
+// Wrapper for the standard PHP function nl2br() that sets $use_xhtml to false
+function mrbs_nl2br(string $string) : string
 {
-  if (function_exists('version_compare') && version_compare(PHP_VERSION, '5.3.0', 'ge'))
-  {
-    return nl2br($string, IS_XHTML);
-  }
-  else
-  {
-    return nl2br($string);
-  }
+  return nl2br($string, false);
 }
 
 
@@ -2130,7 +2122,7 @@ function is_possibly_invalid(int $start, int $end) : bool
 // example from 0100 to 0159 in Europe/London.
 // Returns NULL if MRBS is unable to determine an answer, otherwise TRUE or FALSE (so
 // a simple equality test will default to a valid time if MRBS can't determine an answer)
-function is_invalid_datetime(int $hour, int $minute, int $second, int $month, int $day, int $year, ?string $tz=null)
+function is_invalid_datetime(int $hour, int $minute, int $second, int $month, int $day, int $year, ?string $tz=null) : ?bool
 {
   global $timezone;
 
