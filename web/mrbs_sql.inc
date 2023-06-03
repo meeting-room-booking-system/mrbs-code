@@ -2212,7 +2212,7 @@ function get_invisible_room_ids() : array
 
 
 // Gets a two-dimensional array of period names indexed by area id.
-function get_period_names()
+function get_period_names() : array
 {
   static $period_names = null;
 
