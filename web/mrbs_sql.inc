@@ -1317,7 +1317,7 @@ function trimToEndOfMonth(&$month, &$day, &$year)
  *   an array  - This is a list of start times of each of the repeat entries
  */
 
-function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
+function mrbsGetRepeatEntryList(int $time, int $rep_end_time, array $rep_details, int $n) : array
 {
   $entries = array();
 
@@ -1409,17 +1409,10 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
         do
         {
           $month = $month + $rep_details['rep_interval'];
-          if (isset($rep_details['month_absolute']))
-          {
-            // Get the day of the month back to where it should be (in case we
-            // decremented it to make it a valid date last time round)
-            $day = $rep_details['month_absolute'];
-          }
-          else
-          {
-            $day = byday_to_day($year, $month, $rep_details['month_relative']);
-          }
-        } while ($day === FALSE);
+          // Get the day of the month back to where it should be (in case we
+          // decremented it to make it a valid date last time round)
+          $day = $rep_details['month_absolute'] ?? byday_to_day($year, $month, $rep_details['month_relative']);
+        } while ($day === false);
         trimToEndOfMonth($month, $day, $year);
         break;
 
@@ -1444,7 +1437,7 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
 
 /** mrbsCreateRepeatingEntrys()
  *
- * Creates a repeat entry in the data base + all the repeating entries
+ * Creates a repeat entry in the database + all the repeating entries
  *
  * $data      - An array containing the entry details
  *
@@ -1457,11 +1450,11 @@ function mrbsGetRepeatEntryList($time, $rep_end_time, array $rep_details, $n)
  *   ['start_times'] - an array of start times that have been created
  *
  */
-function mrbsCreateRepeatingEntrys(array $data)
+function mrbsCreateRepeatingEntrys(array $data) : array
 {
   global $max_rep_entrys;
 
-  $result = array('id' => 0, 'series' => FALSE, 'start_times' => array());
+  $result = array('id' => 0, 'series' => false, 'start_times' => array());
 
   if (!isset($data['skip_list']))
   {
