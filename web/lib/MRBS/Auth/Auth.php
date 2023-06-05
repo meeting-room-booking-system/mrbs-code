@@ -273,7 +273,7 @@ abstract class Auth
   // Gets the level from the $auth['admin'] array in the config file
   protected function getDefaultLevel(?string $username) : int
   {
-    global $auth;
+    global $auth, $max_level;
 
     // User not logged in, user level '0'
     if(!isset($username))
@@ -282,7 +282,7 @@ abstract class Auth
     }
 
     // Check whether the user is an admin; if not they are level 1.
-    return (isset($auth['admin']) && in_arrayi($username, $auth['admin'])) ? 2 : 1;
+    return (isset($auth['admin']) && in_arrayi($username, $auth['admin'])) ? $max_level : 1;
   }
 
 
