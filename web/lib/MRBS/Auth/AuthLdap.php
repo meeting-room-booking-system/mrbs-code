@@ -373,7 +373,7 @@ class AuthLdap extends Auth
   private static function getUserCallback(&$ldap, $base_dn, $dn, $user_search,
                                           $user, &$object)
   {
-    global $ldap_get_user_email, $ldap_debug_attributes;
+    global $ldap_get_user_email, $ldap_debug_attributes, $max_level;
 
     self::debug("base_dn '$base_dn' dn '$dn' user_search '$user_search' user '$user'");
 
@@ -477,7 +477,7 @@ class AuthLdap extends Auth
     {
       if (isset($object['config']['ldap_admin_group_dn']))
       {
-        $user['level'] = in_arrayi($object['config']['ldap_admin_group_dn'], $user['groups']) ? 2 : 1;
+        $user['level'] = in_arrayi($object['config']['ldap_admin_group_dn'], $user['groups']) ? $max_level : 1;
       }
     }
 
