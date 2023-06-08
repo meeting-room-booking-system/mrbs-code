@@ -77,7 +77,7 @@ class SessionSaml extends SessionWithLogin
       return;
     }
 
-    parent::init();
+    parent::init($lifetime);
   }
 
   // No need to prompt for a name - this is done by SimpleSamlPhp
