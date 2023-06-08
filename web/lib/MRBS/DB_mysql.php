@@ -411,6 +411,18 @@ class DB_mysql extends DB
       {
         $this->db_type = self::DB_MYSQL;
       }
+      // Most Ubuntu packages will identify the database type - see https://github.com/meeting-room-booking-system/mrbs-code/issues/72.
+      // But there are some packages that don't seem to include the database type in any of the version information, for example
+      // see SF Bugs #545 (https://sourceforge.net/p/mrbs/bugs/545/).  Let's assume that they are MySQL databases, though this isn't
+      // necessarily true as it seems Ubuntu can be packaged with either MySQL or MariaDB - see for example https://launchpad.net/ubuntu.
+      // However, if we assume MySQL then the required MySQL version number will be less than or equal to the required MariaDB version
+      // number and the initial version check will pass, though the code may fail later on when it tries to use an unsupported feature.
+      // TODO: something better. Perhaps we could also look at version numbers and then make some assumptions about whether the database
+      // TODO: is MySQL or MariaDB, but that could become dangerous in the future. Or perhaps there's some other way.
+      elseif ((false !== utf8_stripos($this->versionComment(), 'ubuntu')) || (false !== utf8_stripos($this->version(), 'ubuntu')))
+      {
+        $this->db_type = self::DB_MYSQL;
+      }
       elseif ((false !== utf8_stripos($this->versionComment(), 'percona')) || (false !== utf8_stripos($this->version(), 'percona')))
       {
         $this->db_type = self::DB_PERCONA;
