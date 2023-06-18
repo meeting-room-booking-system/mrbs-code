@@ -127,7 +127,7 @@ class AuthSaml extends Auth
   }
 
   // Gets the users displayname from the SAML attributes.
-  // Returns an empty string if no e-mail address was found
+  // Returns an empty string if no givenName and surname was found
   private function getUserDisplayName(string $username) : string
   {
     global $auth;
@@ -141,7 +141,7 @@ class AuthSaml extends Auth
     {
       $givenName = array_key_exists($givenNameAttr, $userData) ? $userData[$givenNameAttr][0] : '';
       $surname = array_key_exists($surnameAttr, $userData) ? $userData[$surnameAttr][0] : '';
-      return $givenName . ' ' . $surname;
+      return trim($givenName . ' ' . $surname);
     }
 
     return '';
