@@ -21,6 +21,8 @@ use function MRBS\url_base;
  * $auth['saml']['authsource'] = 'default-sp';
  * $auth['saml']['attr']['username'] = 'sAMAccountName';
  * $auth['saml']['attr']['mail'] = 'mail';
+ * $auth['saml']['attr']['givenName'] = 'givenname';
+ * $auth['saml']['attr']['surname'] = 'sn'
  * $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
  *
  * This scheme assumes that you've already configured SimpleSamlPhp,

@@ -1309,6 +1309,8 @@ $auth['saml']['ssp_path'] = '/opt/simplesamlphp';  // must be an absolute and no
 $auth['saml']['authsource'] = 'default-sp';
 $auth['saml']['attr']['username'] = 'sAMAccountName';
 $auth['saml']['attr']['mail'] = 'mail';
+$auth['saml']['attr']['givenName'] = 'givenname';
+$auth['saml']['attr']['surname'] = 'sn';
 $auth['saml']['admin']['memberOf'] = ['CN=Domain Admins,CN=Users,DC=example,DC=com'];
 // MRBS session initialisation can interfere with session handling in some
 // SAML libraries.  If so, set this to true.
