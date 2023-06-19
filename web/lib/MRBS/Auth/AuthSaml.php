@@ -55,6 +55,7 @@ class AuthSaml extends Auth
     $user = new User($username);
     $user->level = $this->getLevel($username);
     $user->email = $this->getEmail($username);
+    $user->display_name = $this->getUserDisplayName($username);
 
     return $user;
   }
@@ -120,6 +121,27 @@ class AuthSaml extends Auth
     if (isset($current_username) && $current_username === $username)
     {
       return array_key_exists($mailAttr, $userData) ? $userData[$mailAttr][0] : '';
+    }
+
+    return '';
+  }
+
+  // Gets the users displayname from the SAML attributes.
+  // Returns an empty string if no givenName and surname was found
+  private function getUserDisplayName(string $username) : string
+  {
+    global $auth;
+
+    $givenNameAttr = $auth['saml']['attr']['givenName'];
+    $surnameAttr = $auth['saml']['attr']['surname'];
+    $userData = \MRBS\session()->ssp->getAttributes();
+    $current_username = \MRBS\session()->getUsername();
+
+    if (isset($current_username) && $current_username === $username)
+    {
+      $givenName = array_key_exists($givenNameAttr, $userData) ? $userData[$givenNameAttr][0] : '';
+      $surname = array_key_exists($surnameAttr, $userData) ? $userData[$surnameAttr][0] : '';
+      return trim($givenName . ' ' . $surname);
     }
 
     return '';
