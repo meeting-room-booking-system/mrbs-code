@@ -34,8 +34,19 @@ class AuthJoomla extends Auth
   {
     $mainframe = JFactory::getApplication('site');
 
-    return $mainframe->login(array('username' => $user,
-                                   'password' => $pass));
+    try
+    {
+      return $mainframe->login(array('username' => $user, 'password' => $pass));
+    }
+    // We shouldn't have to do this, but from Joomla 4.3.0 logging in with an invalid
+    // username/password combination throws an error, so we catch it and return FALSE.
+    // See https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA/m/IpBrs3HZAgAJ?utm_medium=email&utm_source=footer&pli=1
+    // See also auth/cms/joomla.inc.
+    // TODO: something better
+    catch (\Throwable $e)
+    {
+      return false;
+    }
   }
 
 
