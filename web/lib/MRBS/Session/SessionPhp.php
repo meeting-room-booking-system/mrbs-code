@@ -121,8 +121,14 @@ class SessionPhp extends SessionWithLogin
     }
 
     // Unset the session variables
-    session_unset();
-    session_destroy();
+    // Note that session_unset() only works if a session is active.
+    $_SESSION = [];
+    // Check whether a session is active before destroying it in order to avoid a
+    // "Trying to destroy uninitialized session" warning.
+    if (session_status() === PHP_SESSION_ACTIVE)
+    {
+      session_destroy();
+    }
 
     // Problems have been reported on Windows IIS with session data not being
     // written out without a call to session_write_close(). [Is this necessary
