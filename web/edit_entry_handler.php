@@ -263,7 +263,7 @@ foreach($fields as $field)
         isset($field['length']) &&
         ($field['length'] <= 2))
     {
-      $custom_fields[$field['name']] = ($custom_fields[$field['name']]) ? true : false;
+      $custom_fields[$field['name']] = (bool) $custom_fields[$field['name']];
     }
 
     // Trim any strings and truncate them to the maximum field length
@@ -380,7 +380,7 @@ if ($private_mandatory && !is_book_admin())
 }
 else
 {
-  $isprivate = ($private) ? true : false;
+  $isprivate = (bool) $private;
 }
 
 // Make sure the area corresponds to the room that is being booked
