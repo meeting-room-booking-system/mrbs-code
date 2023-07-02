@@ -89,7 +89,7 @@ function make_area_select_html(string $view, int $year, int $month, int $day, in
 
 function make_room_select_html (string $view, int $view_all, int $year, int $month, int $day, int $area, int $current) : string
 {
-  global $multisite, $site;
+  global $multisite, $site, $always_offer_view_all;
 
   $out_html = '';
 
@@ -106,7 +106,7 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
     // And if we are viewing all the rooms then make sure the current room is negative.
     // (The room select uses a negative value of $room to signify that we want to view all
     // rooms in an area.   The absolute value of $room is the current room.)
-    if (in_array($view, array('week', 'month')) && ($n_rooms > 1))
+    if (in_array($view, array('week', 'month')) && ($always_offer_view_all || ($n_rooms > 1)))
     {
       $all = -abs($current);
       if ($view_all)

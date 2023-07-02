@@ -478,6 +478,10 @@ $default_view = "day";
 // rooms (true) or not (false).
 $default_view_all = true;
 
+// If there's only one room in an area, the view_all option will not mormally
+// be offered.  This can be overridden by setting the variable below to true.
+$always_offer_view_all = false;
+
 // Define default room to start with (used by index.php)
 // Room numbers can be determined by looking at the Edit or Delete URL for a
 // room on the admin page.
