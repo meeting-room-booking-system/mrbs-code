@@ -32,7 +32,7 @@ if (empty($room))
 if ($view != 'day')
 {
   $rooms = new Rooms($area);
-  if ($rooms->countVisible() == 1)
+  if (!$always_offer_view_all && ($rooms->countVisible() == 1))
   {
     $view_all = false;
   }
