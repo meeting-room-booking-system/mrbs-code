@@ -485,7 +485,7 @@ $default_view = "day";
 // rooms (true) or not (false).
 $default_view_all = true;
 
-// If there's only one room in an area, the view_all option will not mormally
+// If there's only one room in an area, the view_all option will not normally
 // be offered.  This can be overridden by setting the variable below to true.
 $always_offer_view_all = false;
 
