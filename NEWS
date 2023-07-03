@@ -7,6 +7,138 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.1 (Mon 3rd July 2023):
+
+[*] Added type declarations across the codebase.
+
+[-] Bug fixes for running kiosk mode with periods.  See SF Support Requests #2671.
+
+[-] Fixes kiosk mode when using Joomla.  See SF Support Requests #2671.
+
+[-] Fixes bug in email notifications when switching a series to a monthly repeat from another type.  See SF Bugs #533.
+
+[-] Fixes uncaught exception when an invalid date is given.  Now today's date is used.  See GitHub Issues #66.
+
+[*] Allows no from date to be used, resulting in all search results to be returned.  See GitHub Issues #66.
+
+[*] Fixes problem with multi-line vocab strings.  See GitHub Issues #65.
+
+[*] Updates for 'nl' translation.
+
+[*] Adds a progress bar and Cancel button while entries are being deleted from the Report page.  See SF Support Requests #2672.
+
+[*] Improved internationalisation of language string.
+
+[-] Fixes bugs when the description is null (which it can be when an event without a description is imported).
+
+[-] Fixed fatal infinite loop when using $auth["session_php"]["inactivity_expire_time"].
+
+[*] Upgrades flatpickr to 4.6.13 fixing GitHub Issue #70.
+
+[-] Fixed bug in Algerian version of flatpickr.
+
+[-] Fixed bug in Serbian Cyrillic version of flatpickr
+
+[*] Added a timeout on the Exit Kiosk mode page - see SF Support Requests #2425.
+
+[*] Added a timeout to exit kiosk mode dialog box.
+
+[*] Changed jQuery UI theme to Cupertino.
+
+[*] Added an additional MIME type for importing zip files.
+
+[-] Fixed bug in mail notifications when a custom field is nullable.  See SF Support Requests #2682.
+
+[-] Fixed potential bug when the display_name is not set.
+
+[*] Upgraded to jQuery version 3.6.3.
+
+[*] Improved detection of database type.  See GitHub Issues #72.
+
+[*] Improved error message when the PDO MySQL driver is not enabled. See SF Support Requests #2691.
+
+[-] Fixed bug when the database VTIMEZONE component doesn't contain a TZURL property.  See SF Bugs #537.
+
+[-] Fixed bug - added formnovalidate to the Back button.
+
+[-] Fixes GitHub Issue #74.
+
+[*] Added parameter to force Select2 to be used on mobile devices.
+
+[-] Fixes syntax error exposed by PostgreSQL 15.  See SF Patches #123.
+
+[-] Fixes bug that results in missing series when producing .ics reports using PostgreSQL.
+
+[*] Upgraded to PHPMailer 6.8.0.
+
+[-] Fixed uncaught exception.  See SF Bugs #540.
+
+[+] Allowed anonymous booking.  See SF Support Requests #2725.
+
+[*] Fixes error in Korean language string. See SF Support Requests #2729.
+
+[-] Fixed bug causing spurious validation message when $is_mandatory_field[entry.xxx] is set to false. 
+ See SF Support Requests #2733.
+
+[-] Fixed bug when the timezone definition in the database has expired and MRBS is unable to get a
+ new one from the URL
+
+[*] Adds fallback mail language.
+
+[*] Removed deprecated usage of strftime, using IntlDateFormatter if available and a simple
+ emulation if it's not.
+
+[*] Updated 'ms' translation (Malay).
+
+[-] Fixes bug when curl_exec has been disabled.  See SF Support Requests #2744.
+
+[*] Adds support for Percona version checking.  See SF Support Requests #2744.
+
+[-] Fixes bug when trying to create a daily series by dragging in the week view.  See SF
+ Support Requests#2748.
+
+[+] Added new Dockerfile and GitHub Actions to build an MRBS container on release.
+
+[*] Remove use of $twentyfourhour_format.
+
+[*] Add setting UTF-8 variants of 'C' as a fallback locale.  See GitHub Issues #80.
+
+[*] Eliminate a call to mutex_lock().  See SF Bugs #543.
+
+[*] Add syntax_upsert() method into DB abstraction class.
+
+[*] Add the datepicker language as a query string parameter to prevent problems with browser caching.
+
+[*] Remove an unnecesary call to mutex_lock().  Any problems will be caught by the transaction.  See
+ SF Bugs #543.
+
+[+] Add the ability to have separate datetime formats in reports.
+
+[-] Issue #82: Fix lang file include.
+
+[-] Fix uncaught exception error when following a link to a booking from an email when not logged in.
+
+[-] Fix display of unnecessary colon when approval is enabled and an entry owned by someone
+ else is being viewed by an ordinary user.  See SF Support Requests #2766.
+
+[-] Set LDAP admin level to $max_level instead of 2.  See SF Support Requests #2763.
+
+[*] Swap the priority of $cli_language and $override_locale when determining which locale to use. 
+ It was always intended that $override_locale should override everything else.
+
+[-] Fix "Unknown database type '(Ubuntu)'" problem on some Ubuntu systems.  See SF Bugs #545.
+
+[+] Feat: make it possible to get display name from saml
+
+[-] Fixed bug when authenticating against Joomla 4.3.0 or above.  See SF Feature Requests #455.
+
+[-] Fix problem with occasional "Trying to destroy uninitialized session" warnings.
+
+[+] Add a config option $always_offer_view_all to allow sites to give users the option of the
+ view_all view even if there's only one room.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.0 (Tue 27th December 2022):
 
 [-] Fixed bug when $auth['db_ext']['column_name_level'] is not set.  See SF Support Requests #2470.
