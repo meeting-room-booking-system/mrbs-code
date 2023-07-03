@@ -1,4 +1,2901 @@
-commit 3995d9b5 (HEAD -> main, origin/main)
+commit ea3a7f94 (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Mon Jul 3 14:41:55 2023 +0100
+
+    Updated version number for release
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ea828ec5 (origin/main)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jul 2 14:14:34 2023 +0100
+
+    Add a config option $always_offer_view_all to allow sites to give users the option of the view_all view even if there's only one room.
+
+ web/index.php              | 4 ++--
+ web/standard_vars.inc.php  | 2 +-
+ web/systemdefaults.inc.php | 4 ++++
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+
+commit 612edcf1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jul 1 11:15:30 2023 +0100
+
+    Fix problem with occasional "Trying to destroy uninitialized session" warnings
+
+ web/lib/MRBS/Session/SessionPhp.php | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit 2cae4cda
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 26 19:15:16 2023 +0100
+
+    Simplify code
+
+ web/edit_entry_handler.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit dae1dfbb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 26 17:42:01 2023 +0100
+
+    Fixed bug when authenticating against Joomla 4.3.0 or above.  See SF Feature Requests #455.
+
+ web/auth/cms/joomla.inc          | 10 +++++++++-
+ web/lib/MRBS/Auth/AuthJoomla.php | 15 +++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+
+commit 96b1070b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 19 16:44:26 2023 +0100
+
+    Fixed bug in recent PR
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b5418591
+Merge: 8035319d cb2a02d9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 19 16:42:17 2023 +0100
+
+    Merge pull request #85 from dorianim-forks/main
+    
+    Feat: get display name from SAML
+
+commit cb2a02d9
+Author: Dorian Zedler <dorian@itsblue.de>
+Date:   Sun Jun 18 22:53:32 2023 +0200
+
+    Chore: add default values
+
+ web/systemdefaults.inc.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 3b73c0e7
+Author: Dorian Zedler <dorian@itsblue.de>
+Date:   Sun Jun 18 22:51:36 2023 +0200
+
+    Fix: typo
+
+ web/lib/MRBS/Auth/AuthSaml.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1ba7e2c3
+Author: Dorian Zedler <dorian@itsblue.de>
+Date:   Sun Jun 18 20:53:15 2023 +0200
+
+    Chore: update docs
+
+ web/lib/MRBS/Session/SessionSaml.php | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit ceed98ea
+Author: Dorian Zedler <dorian@itsblue.de>
+Date:   Sun Jun 18 20:51:21 2023 +0200
+
+    Feat: make it possible to get display name from saml
+
+ web/lib/MRBS/Auth/AuthSaml.php | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+commit 8035319d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 8 08:03:37 2023 +0100
+
+    Fix ArgumentCountError.  See SF Bugs #545.
+
+ web/lib/MRBS/Session/SessionSaml.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6bf8f154
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 8 07:57:43 2023 +0100
+
+    Fix "Unknown database type '(Ubuntu)'" problem on some Ubuntu systems.  See SF Bugs #545.
+
+ web/lib/MRBS/DB_mysql.php | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+commit 4799ec2d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jun 6 16:31:58 2023 +0100
+
+    Swap the priority of $cli_language and $override_locale when determining which locale to use.  It was always intended that $override_locale should override everything else.
+
+ web/language.inc | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit eb0ace6e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 5 10:12:41 2023 +0100
+
+    Set default admin level to $max_level instead of 2.  See SF Support Requests #2763.
+
+ web/lib/MRBS/Auth/Auth.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1ba41569
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jun 5 09:55:54 2023 +0100
+
+    Set LDAP admin level to $max_level instead of 2.  See SF Support Requests #2763.
+
+ web/lib/MRBS/Auth/AuthLdap.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 14cda1f0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 18:39:10 2023 +0100
+
+    Add type declarations
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit bed40850
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 18:32:32 2023 +0100
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2cce6cb5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 18:22:03 2023 +0100
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7015c648
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 18:18:30 2023 +0100
+
+    Remove duplicate word in comment
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 338bcb41
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 18:05:11 2023 +0100
+
+    Add type declarations
+
+ web/lib/MRBS/DB.php       | 6 +++---
+ web/lib/MRBS/DB_mysql.php | 2 +-
+ web/lib/MRBS/DB_pgsql.php | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 632367f1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:26:38 2023 +0100
+
+    Add type declaration and clarify code
+
+ web/mrbs_sql.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 742aa15e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:17:45 2023 +0100
+
+    Remove redundant local variables
+
+ web/edit_room.php | 2 +-
+ web/import.php    | 2 +-
+ web/report.php    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+commit bd934af1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:13:43 2023 +0100
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 611c89b1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:08:56 2023 +0100
+
+    Correct typo in comment
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 98034356
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:08:15 2023 +0100
+
+    Add type declaration
+
+ web/mrbs_sql.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 89340930
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:04:43 2023 +0100
+
+    Add type declarations
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 55f4ee28
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 16:00:03 2023 +0100
+
+    Simplify code
+
+ web/mrbs_sql.inc | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
+
+commit 5e778833
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 15:49:44 2023 +0100
+
+    Correct typo in comment
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c10fb3e8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 15:46:57 2023 +0100
+
+    Add type declaration and remove redundant code
+
+ web/functions.inc          | 14 +++-----------
+ web/internalconfig.inc.php |  5 -----
+ 2 files changed, 3 insertions(+), 16 deletions(-)
+
+commit 5e9a75e9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jun 3 15:33:31 2023 +0100
+
+    Add type declaration
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 72a2a2d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jun 2 10:12:10 2023 +0100
+
+    Fix display of unnecessary colon when approval is enabled and an entry owned by someone else is being viewed by an ordinary user.  See SF Support Requests #2766.
+
+ web/view_entry.php | 5 -----
+ 1 file changed, 5 deletions(-)
+
+commit 44b013b5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Jun 1 09:12:47 2023 +0100
+
+    Fix potential bug
+
+ web/view_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d6c76b4c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 31 20:22:07 2023 +0100
+
+    Fix uncaught exception error when following a link to a booking from an email when not logged in.
+
+ web/view_entry.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 018a2010
+Merge: 9428523c a13d99bc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 30 11:36:40 2023 +0100
+
+    Merge pull request #83 from yorkshire-pudding/issue-82-jquery-lang-files
+    
+    Issue #82: Fix lang file include
+
+commit a13d99bc
+Author: Martin Price <github@systemhorizons.co.uk>
+Date:   Tue May 30 10:33:07 2023 +0100
+
+    Issue #82: Fix lang file include
+
+ web/js/datatables.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9428523c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 24 11:10:45 2023 +0100
+
+    Add the ability to have separate datetime formats in reports.
+
+ web/report.php             | 5 +++--
+ web/systemdefaults.inc.php | 6 ++++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+commit 4f79eb87
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 23 18:32:19 2023 +0100
+
+    Remove duplicate global declaration
+
+ web/mrbs_sql.inc | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 6823ff73
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 22 18:49:59 2023 +0100
+
+    Add type declarations
+
+ web/lib/MRBS/Columns.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f9d29e0e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 22 18:45:09 2023 +0100
+
+    Add type declarations
+
+ web/lib/MRBS/Column.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit be88dc44
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 22 17:23:33 2023 +0100
+
+    Remove an unnecesary call to mutex_lock().  Any problems will be caught by the transaction.  See SF Bugs #543.
+
+ web/edit_entry_handler.php | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
+
+commit c2d5cb82
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 21 19:09:36 2023 +0100
+
+    Add the datepicker language as a query string parameter to prevent problems with browser caching
+
+ web/js.inc               | 20 ++++++++++++++------
+ web/js/datepicker.js.php |  3 +++
+ 2 files changed, 17 insertions(+), 6 deletions(-)
+
+commit 9e9f0c5b
+Merge: d6b11c45 d31149fa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 21 15:49:43 2023 +0100
+
+    Merge pull request #81 from meeting-room-booking-system/intl_date
+    
+    Support for date formatting with Intl
+
+commit d31149fa (origin/intl_date, intl_date)
+Merge: 3b0e7909 d6b11c45
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 20 18:19:39 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit d6b11c45
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 20 18:14:02 2023 +0100
+
+    Eliminate a call to mutex_lock().  See SF Bugs #543.
+
+ web/lib/MRBS/DB.php               | 16 +++++------
+ web/lib/MRBS/SessionHandlerDb.php | 41 ++++++-----------------------
+ 2 files changed, 16 insertions(+), 41 deletions(-)
+
+commit 882004c8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat May 20 17:07:12 2023 +0100
+
+    Add syntax_upsert() method
+
+ web/lib/MRBS/DB.php       | 316 +++++++++++++++++++++++-------------
+ web/lib/MRBS/DB_mysql.php |  22 +++
+ web/lib/MRBS/DB_pgsql.php |  55 ++++++-
+ 3 files changed, 280 insertions(+), 113 deletions(-)
+
+commit 3b0e7909
+Merge: 1800732b f0410e7e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri May 19 18:36:33 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit f0410e7e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri May 19 16:23:07 2023 +0100
+
+    Eliminate a call to mutex_lock().  See SF Bugs #543.
+
+ web/edit_room_handler.php | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
+
+commit 1800732b
+Merge: ca3f4659 1671fc8e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:38:23 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit 1671fc8e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:35:52 2023 +0100
+
+    Add type declarations
+
+ web/edit_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 634bc19c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:26:33 2023 +0100
+
+    Add type declarations
+
+ web/edit_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 76478c48
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:22:37 2023 +0100
+
+    Add type declarations
+
+ web/edit_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 41d83367
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:20:34 2023 +0100
+
+    Add type declarations
+
+ web/edit_entry.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ca3f4659
+Merge: ad7c7d65 f0310a6e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:07:02 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit f0310a6e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 20:03:33 2023 +0100
+
+    Fix error introduced in recent commit
+
+ web/mrbs_sql.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit ad7c7d65
+Merge: 923df98f cd950a2d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 18:02:27 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit cd950a2d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 18:01:30 2023 +0100
+
+    Add comment.  See SF Bugs #543.
+
+ web/lib/MRBS/DB_mysql.php | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 4b1ff63b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 17:33:41 2023 +0100
+
+    Eliminate a call to mutex_lock().  See SF Bugs #543.
+
+ web/mrbs_sql.inc | 40 +++++++++++++++++++---------------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
+
+commit 923df98f
+Merge: 43518289 8dda820e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 16:35:42 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit 8dda820e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu May 18 15:38:39 2023 +0100
+
+    Eliminate a call to mutex_lock().  See SF Bugs #543.
+
+ web/lib/MRBS/DBException.php |  15 +++--
+ web/mrbs_sql.inc             | 101 ++++++++++++++++-----------------
+ 2 files changed, 57 insertions(+), 59 deletions(-)
+
+commit 43518289
+Merge: 679882c8 91af94d8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 17 17:20:47 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit 679882c8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 17 16:52:19 2023 +0100
+
+    Improve localisation of week number
+
+ web/index.php              | 2 +-
+ web/systemdefaults.inc.php | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit 246a7604
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 17 16:27:54 2023 +0100
+
+    Add support for more patterns
+
+ web/lib/IntlDateFormatter.php | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+commit 91af94d8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 17 12:46:16 2023 +0100
+
+    Add setting UTF-8 variants of 'C' as a fallback locale.  See GitHub Issues #80.
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c35b4b92
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 16 18:42:54 2023 +0100
+
+    Added support for more patterns
+
+ web/lib/IntlDateFormatter.php | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+commit ec5d19a4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 16 18:09:07 2023 +0100
+
+    Fix comment
+
+ web/lib/IntlDateFormatter.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit e6956937
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 15 20:17:32 2023 +0100
+
+    Improve localisation of timezone
+
+ web/index.php              | 2 +-
+ web/systemdefaults.inc.php | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit e11d4121
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 15 08:06:00 2023 +0100
+
+    Add notice about use of the obsolete config setting $strftime_format
+
+ web/internalconfig.inc.php | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+commit 36a0b1df
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 15 07:52:26 2023 +0100
+
+    Remove redundant comment
+
+ web/lib/IntlDateFormatter.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1c2adae6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 15 07:38:00 2023 +0100
+
+    Fix bug when the time format has been overridden.
+
+ web/language.inc | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
+
+commit f9310fb9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 14 19:09:40 2023 +0100
+
+    Remove use of $twentyfourhour_format
+
+ web/internalconfig.inc.php |  9 +++++++++
+ web/systemdefaults.inc.php | 17 +++++++++++++----
+ 2 files changed, 22 insertions(+), 4 deletions(-)
+
+commit 9e03efe8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun May 14 18:32:31 2023 +0100
+
+    Remove use of $twentyfourhour_format
+
+ web/js/edit_area.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ea22528e (tag: v1.11.1)
+Merge: 6c3286bd f2d652c9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 10 11:22:12 2023 +0100
+
+    Merge branch 'main' of https://github.com/meeting-room-booking-system/mrbs-code
+
+commit 6c3286bd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 10 11:19:50 2023 +0100
+
+    Strengthened warning message.
+
+ web/lang/lang.en | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 31a31fe9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed May 3 14:44:56 2023 +0100
+
+    Adds function
+
+ web/language.inc | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+commit dea484a1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue May 2 11:02:19 2023 +0100
+
+    Removes redundant config settings
+
+ web/systemdefaults.inc.php | 255 +++++++++++++++++------------------
+ 1 file changed, 120 insertions(+), 135 deletions(-)
+
+commit 03ec568d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 1 16:03:13 2023 +0100
+
+    Removes redundant code
+
+ web/language.inc | 300 ---------------------------------------------
+ 1 file changed, 300 deletions(-)
+
+commit 7954a6de
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 1 15:20:38 2023 +0100
+
+    Removes calls to strftime()
+
+ web/edit_entry.php | 3 ---
+ 1 file changed, 3 deletions(-)
+
+commit d54fad0f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 1 15:12:06 2023 +0100
+
+    Removes calls to strftime()
+
+ web/lib/MRBS/EntryInterval.php | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
+
+commit ee6bc953
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 1 14:58:54 2023 +0100
+
+    Removes calls to strftime()
+
+ web/mrbs_sql.inc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit e72b6b90
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon May 1 14:43:53 2023 +0100
+
+    Removes redundant global declaration
+
+ web/mrbs_sql.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c59a3252
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 30 18:49:19 2023 +0100
+
+    Removes calls to strftime()
+
+ web/functions_table.inc | 75 +++++++++++++--------------------------
+ 1 file changed, 24 insertions(+), 51 deletions(-)
+
+commit 736c1917
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 30 16:32:33 2023 +0100
+
+    Restructures
+
+ web/functions_table.inc | 113 ++++++++++++++++++++++----------------
+ 1 file changed, 66 insertions(+), 47 deletions(-)
+
+commit 0c5869ba
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 27 18:04:48 2023 +0100
+
+    Removes calls to strftime()
+
+ web/mrbs_sql.inc           | 5 +++--
+ web/systemdefaults.inc.php | 6 ++++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+commit 96cd93b6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 27 17:46:28 2023 +0100
+
+    Removes calls to strftime()
+
+ generate_pattern_files.php         |   1 +
+ web/functions_table.inc            |   5 +-
+ web/intl/skeletons/dEMMM.ini (new) | 734 +++++++++++++++++++++++++++
+ web/intl/skeletons/dMMM.ini (new)  | 734 +++++++++++++++++++++++++++
+ web/systemdefaults.inc.php         |   6 +
+ 5 files changed, 1478 insertions(+), 2 deletions(-)
+
+commit ce386e5a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 27 17:16:00 2023 +0100
+
+    Removes calls to strftime()
+
+ generate_pattern_files.php | 1 +
+ web/functions_table.inc    | 4 ++--
+ web/systemdefaults.inc.php | 8 +++++++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+commit 9bd2bc27
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 27 16:52:06 2023 +0100
+
+    Removes calls to strftime()
+
+ generate_pattern_files.php         |   2 +
+ web/index.php                      |  12 +-
+ web/intl/skeletons/d.ini (new)     | 734 +++++++++++++++++++++++++++
+ web/intl/skeletons/dMMMM.ini (new) | 734 +++++++++++++++++++++++++++
+ web/systemdefaults.inc.php         |  16 +-
+ 5 files changed, 1491 insertions(+), 7 deletions(-)
+
+commit f2d652c9
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Apr 26 22:27:46 2023 +0100
+
+    Dockerfile fixes for locale generation
+
+ Dockerfile | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit 8248bb06
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Apr 26 21:32:20 2023 +0100
+
+    Corrected Docker image build
+
+ .github/workflows/docker-image.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 14298b95
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Apr 26 21:30:40 2023 +0100
+
+    Added new Dockerfile, which uses environment variables for basic configuration
+
+ .github/workflows/docker-image.yml |  2 +-
+ Dockerfile (new)                   | 10 ++++
+ docker-config.inc.php (new)        | 78 ++++++++++++++++++++++++++++
+ 3 files changed, 89 insertions(+), 1 deletion(-)
+
+commit 59c3c759
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Apr 26 20:37:23 2023 +0100
+
+    Create docker-image.yml
+
+ .github/workflows/docker-image.yml (new) | 53 ++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+commit 0ccf1fd8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 26 18:35:52 2023 +0100
+
+    Removes calls to strftime()
+
+ web/index.php              | 4 ++--
+ web/systemdefaults.inc.php | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+commit b18fd21e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 25 07:51:30 2023 +0100
+
+    Moves directory
+
+ web/{lib => }/intl/skeletons/MMMMy.ini     | 0
+ web/{lib => }/intl/types/full_full.ini     | 0
+ web/{lib => }/intl/types/full_long.ini     | 0
+ web/{lib => }/intl/types/full_medium.ini   | 0
+ web/{lib => }/intl/types/full_none.ini     | 0
+ web/{lib => }/intl/types/full_short.ini    | 0
+ web/{lib => }/intl/types/long_full.ini     | 0
+ web/{lib => }/intl/types/long_long.ini     | 0
+ web/{lib => }/intl/types/long_medium.ini   | 0
+ web/{lib => }/intl/types/long_none.ini     | 0
+ web/{lib => }/intl/types/long_short.ini    | 0
+ web/{lib => }/intl/types/medium_full.ini   | 0
+ web/{lib => }/intl/types/medium_long.ini   | 0
+ web/{lib => }/intl/types/medium_medium.ini | 0
+ web/{lib => }/intl/types/medium_none.ini   | 0
+ web/{lib => }/intl/types/medium_short.ini  | 0
+ web/{lib => }/intl/types/none_full.ini     | 0
+ web/{lib => }/intl/types/none_long.ini     | 0
+ web/{lib => }/intl/types/none_medium.ini   | 0
+ web/{lib => }/intl/types/none_short.ini    | 0
+ web/{lib => }/intl/types/short_full.ini    | 0
+ web/{lib => }/intl/types/short_long.ini    | 0
+ web/{lib => }/intl/types/short_medium.ini  | 0
+ web/{lib => }/intl/types/short_none.ini    | 0
+ web/{lib => }/intl/types/short_short.ini   | 0
+ web/lib/IntlDateFormatter.php              | 2 +-
+ web/lib/IntlDatePatternGenerator.php       | 2 +-
+ 27 files changed, 2 insertions(+), 2 deletions(-)
+
+commit f7d70ba9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 25 07:48:12 2023 +0100
+
+    Renames directory
+
+ web/lib/IntlDateFormatter.php                                 | 2 +-
+ web/lib/IntlDatePatternGenerator.php                          | 2 +-
+ .../{IntlDatePatternGenerator => intl}/skeletons/MMMMy.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/full_full.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/full_long.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/full_medium.ini  | 0
+ .../{IntlDatePatternGenerator => intl}/types/full_none.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/full_short.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/long_full.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/long_long.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/long_medium.ini  | 0
+ .../{IntlDatePatternGenerator => intl}/types/long_none.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/long_short.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/medium_full.ini  | 0
+ .../{IntlDatePatternGenerator => intl}/types/medium_long.ini  | 0
+ .../types/medium_medium.ini                                   | 0
+ .../{IntlDatePatternGenerator => intl}/types/medium_none.ini  | 0
+ .../{IntlDatePatternGenerator => intl}/types/medium_short.ini | 0
+ .../{IntlDatePatternGenerator => intl}/types/none_full.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/none_long.ini    | 0
+ .../{IntlDatePatternGenerator => intl}/types/none_medium.ini  | 0
+ .../{IntlDatePatternGenerator => intl}/types/none_short.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/short_full.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/short_long.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/short_medium.ini | 0
+ .../{IntlDatePatternGenerator => intl}/types/short_none.ini   | 0
+ .../{IntlDatePatternGenerator => intl}/types/short_short.ini  | 0
+ 27 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 314eeb4e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 19:12:38 2023 +0100
+
+    Removes calls to strftime()
+
+ web/help.php                  |  2 +-
+ web/lib/IntlDateFormatter.php | 25 +++++++++++++++++++++++++
+ web/systemdefaults.inc.php    |  6 ++++++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
+
+commit f7cafb42
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 18:39:12 2023 +0100
+
+    Removes calls to strftime()
+
+ web/functions_mail.inc | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
+
+commit 596df255
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 18:19:17 2023 +0100
+
+    Fixes bug
+
+ web/lib/IntlDateFormatter.php        | 3 ++-
+ web/lib/IntlDatePatternGenerator.php | 4 +++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+commit 293a137a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 18:04:03 2023 +0100
+
+    Removes calls to strftime()
+
+ web/functions_mail.inc        |  4 ++--
+ web/language.inc              | 13 +++++++++----
+ web/lib/IntlDateFormatter.php |  6 +++---
+ 3 files changed, 14 insertions(+), 9 deletions(-)
+
+commit a7daff8a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 16:34:21 2023 +0100
+
+    Removes calls to strftime()
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b0f0459e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 16:27:14 2023 +0100
+
+    Removes calls to strftime()
+
+ web/js/edit_area.js.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit ef89a7cc
+Merge: 5ff7053b b244394c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 13:53:32 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit b244394c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 24 13:52:33 2023 +0100
+
+    Fixes bug when trying to create a daily series by dragging in the week view.  See SF Support Requests#2748.
+
+ web/edit_entry.php | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 5ff7053b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 18:54:12 2023 +0100
+
+    More conversions
+
+ web/edit_entry.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2348059e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 18:21:03 2023 +0100
+
+    More conversions
+
+ web/mrbs_sql.inc | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+commit c9e68b0b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 18:09:24 2023 +0100
+
+    Converts repeat end date in view_entry
+
+ web/functions_view.inc     | 11 ++++++-----
+ web/systemdefaults.inc.php |  7 +++++++
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+commit ab519a3f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 17:47:26 2023 +0100
+
+    Fixes bug
+
+ web/lib/IntlDateFormatter.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 176314d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 17:39:52 2023 +0100
+
+    Converts time_date_string()
+
+ web/functions.inc             | 11 ++---------
+ web/lib/IntlDateFormatter.php | 10 ++++++++++
+ web/systemdefaults.inc.php    |  6 ++++++
+ 3 files changed, 18 insertions(+), 9 deletions(-)
+
+commit 541df742
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 17:12:49 2023 +0100
+
+    Converts hour_min_format()
+
+ web/edit_entry.php            |  2 +-
+ web/functions.inc             |  8 +++---
+ web/functions_table.inc       |  4 +--
+ web/lib/IntlDateFormatter.php | 47 ++++++++++++++++++++++++++++++---
+ web/systemdefaults.inc.php    |  6 +++++
+ 5 files changed, 57 insertions(+), 10 deletions(-)
+
+commit 64ed86bf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 15:44:38 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
+
+commit 85ea1f79
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 15:35:56 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 541c7b06
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 15:30:36 2023 +0100
+
+    Fixes bug introduced in recent commit
+
+ web/lib/IntlDateFormatter.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 5f77b613
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 15:21:59 2023 +0100
+
+    Suppresses multiple strftime() deprecation messages
+
+ web/init.inc                  | 11 +++++++++++
+ web/lib/IntlDateFormatter.php |  6 ++++++
+ 2 files changed, 17 insertions(+)
+
+commit c46cf1e5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 14:47:24 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+commit 45e56623
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 23 14:39:09 2023 +0100
+
+    Improves performance
+
+ web/lib/IntlDateFormatter.php | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
+
+commit 8bf512e2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 18:48:24 2023 +0100
+
+    Removes calls to strftime()
+
+ web/edit_entry.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 9e1eaa64
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 18:18:50 2023 +0100
+
+    Removes calls to strftime()
+
+ web/functions_table.inc | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+commit eeaa41a1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 15:59:09 2023 +0100
+
+    Adds casts to int
+
+ web/del_entry.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 698e0195
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 15:56:48 2023 +0100
+
+    Fixes 'd' pattern on Windows
+
+ web/lib/IntlDateFormatter.php | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+commit 5304cbee
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 15:22:04 2023 +0100
+
+    Removes leading space from 'd' pattern
+
+ web/lib/IntlDateFormatter.php | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+commit 7a20b86b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 15:02:43 2023 +0100
+
+    Removes calls to strftime()
+
+ web/del_entry.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 49093512
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 14:37:36 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+commit ef98bbad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 14:35:19 2023 +0100
+
+    Adds support for 'M' pattern
+
+ web/lib/IntlDateFormatter.php | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
+
+commit 6292be8d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 14:00:30 2023 +0100
+
+    Reverts last commit
+
+ web/lib/IntlDateFormatter.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 4aedadbd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 13:52:47 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 62 +++++++++++++++++++++++++++++++--
+ 1 file changed, 60 insertions(+), 2 deletions(-)
+
+commit 1f8f9ae1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 13:23:09 2023 +0100
+
+    Restructures
+
+ web/lib/IntlDateFormatter.php | 81 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 2 deletions(-)
+
+commit 89841fd8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 12:38:21 2023 +0100
+
+    Converts search.php to use datetime_format()
+
+ web/lib/IntlDateFormatter.php | 12 +++++++++++-
+ web/search.php                |  2 +-
+ web/systemdefaults.inc.php    | 20 ++++++++++++++++----
+ 3 files changed, 28 insertions(+), 6 deletions(-)
+
+commit 7929b232
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 22 12:12:30 2023 +0100
+
+    Converts day_name() to use datetime_format()
+
+ web/edit_entry.php         |  4 ++--
+ web/functions.inc          | 11 ++++++-----
+ web/systemdefaults.inc.php |  8 ++++++++
+ 3 files changed, 16 insertions(+), 7 deletions(-)
+
+commit 42003f20
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 21 17:45:59 2023 +0100
+
+    Removes TODO
+
+ web/lib/IntlDateFormatter.php | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+commit fef4276b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 21 17:37:18 2023 +0100
+
+    Eliminates duplicate code
+
+ web/lib/IntlDateFormatter.php | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+commit 1f805077
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 21 17:33:24 2023 +0100
+
+    Implements 'view_day'
+
+ web/lib/IntlDateFormatter.php | 40 +++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
+
+commit 9e064d78
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 21 17:11:12 2023 +0100
+
+    Fixes bugs
+
+ web/config.inc.php-sample            | 4 ++++
+ web/language.inc                     | 4 ++--
+ web/lib/IntlDatePatternGenerator.php | 4 +++-
+ web/systemdefaults.inc.php           | 2 ++
+ 4 files changed, 11 insertions(+), 3 deletions(-)
+
+commit 23d474fe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 21 16:58:27 2023 +0100
+
+    Adds pattern files and the tool for generating them
+
+ generate_pattern_files.php (new)             |  83 ++
+ web/index.php                                |   2 +-
+ web/language.inc                             |   6 +-
+ .../skeletons/MMMMy.ini                      | 449 +++++++++-
+ .../types/full_full.ini (new)                | 734 +++++++++++++++++
+ .../types/full_long.ini (new)                | 734 +++++++++++++++++
+ .../types/full_medium.ini (new)              | 734 +++++++++++++++++
+ .../types/full_none.ini (new)                | 734 +++++++++++++++++
+ .../types/full_short.ini (new)               | 734 +++++++++++++++++
+ .../types/long_full.ini (new)                | 734 +++++++++++++++++
+ .../types/long_long.ini (new)                | 734 +++++++++++++++++
+ .../types/long_medium.ini (new)              | 734 +++++++++++++++++
+ .../types/long_none.ini (new)                | 734 +++++++++++++++++
+ .../types/long_short.ini (new)               | 734 +++++++++++++++++
+ .../types/medium_full.ini (new)              | 734 +++++++++++++++++
+ .../types/medium_long.ini (new)              | 734 +++++++++++++++++
+ .../types/medium_medium.ini (new)            | 734 +++++++++++++++++
+ .../types/medium_none.ini (new)              | 734 +++++++++++++++++
+ .../types/medium_short.ini (new)             | 734 +++++++++++++++++
+ .../types/none_full.ini (new)                | 734 +++++++++++++++++
+ .../types/none_long.ini (new)                | 734 +++++++++++++++++
+ .../types/none_medium.ini (new)              | 734 +++++++++++++++++
+ .../types/none_short.ini (new)               | 734 +++++++++++++++++
+ .../types/short_full.ini (new)               | 734 +++++++++++++++++
+ .../types/short_long.ini (new)               | 734 +++++++++++++++++
+ .../types/short_medium.ini (new)             | 734 +++++++++++++++++
+ .../types/short_none.ini (new)               | 734 +++++++++++++++++
+ .../types/short_short.ini (new)              | 734 +++++++++++++++++
+ web/systemdefaults.inc.php                   |   7 +
+ 29 files changed, 18154 insertions(+), 9 deletions(-)
+
+commit 727c98e7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 20 15:48:42 2023 +0100
+
+    Prevents use of empty patterns generated by a skeleton
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b11470f4
+Merge: af0a54ad b0dfff67
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 20 11:36:13 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit b0dfff67
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 20 11:20:26 2023 +0100
+
+    Adds support for Percona version checking.  See SF Support Requests #2744.
+
+ web/lib/MRBS/DB_mysql.php | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
+
+commit af0a54ad
+Merge: 212ad689 f8b06194
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 20 08:07:25 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit f8b06194
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 20 07:25:24 2023 +0100
+
+    Fixed bug when disabled functions are just separated by a comma.
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 212ad689
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 18:57:35 2023 +0100
+
+    Tweaks comment
+
+ web/lib/IntlDatePatternGenerator/skeletons/MMMMy.ini | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit d7b3a5a5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 18:51:51 2023 +0100
+
+    Reformats code
+
+ web/lib/IntlDatePatternGenerator.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit c1694da8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 18:45:05 2023 +0100
+
+    Adds support for zh-CN and zh-TW
+
+ web/lib/IntlDatePatternGenerator/skeletons/MMMMy.ini | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 9771fa3d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 18:38:33 2023 +0100
+
+    Added locale specific patterns for skeletons
+
+ web/lib/IntlDateFormatter.php                |   2 +-
+ web/lib/IntlDatePatternGenerator.php (new)   |  39 +++
+ .../skeletons/MMMMy.ini (new)                | 292 +++++++++++++++++
+ 3 files changed, 332 insertions(+), 1 deletion(-)
+
+commit a54739dd
+Merge: a4ee4261 83ff02fe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 17:38:27 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit 83ff02fe
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 19 17:02:13 2023 +0100
+
+    Fixes bug when curl_exec has been disabled.  See SF Support Requests #2744.
+
+ web/functions.inc | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+commit a4ee4261
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 18:34:02 2023 +0100
+
+    Adds IntlDatePatternGenerator
+
+ web/language.inc           | 7 +++++--
+ web/systemdefaults.inc.php | 1 +
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+commit b3e51acf
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 17:36:14 2023 +0100
+
+    Restructures
+
+ web/functions_table.inc | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
+
+commit 68a0a0ba
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 17:29:20 2023 +0100
+
+    Restructures
+
+ web/functions.inc | 23 -----------------------
+ web/language.inc  | 22 ++++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 23 deletions(-)
+
+commit 8241820a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 17:22:30 2023 +0100
+
+    Restructures
+
+ web/functions.inc          | 23 +++++++++++++++++++++++
+ web/index.php              | 11 ++---------
+ web/systemdefaults.inc.php |  4 +++-
+ 3 files changed, 28 insertions(+), 10 deletions(-)
+
+commit 3057fbc6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 16:55:54 2023 +0100
+
+    Removes test strings
+
+ web/systemdefaults.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f1c72541
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 16:53:18 2023 +0100
+
+    Adds escaping for strftime
+
+ web/lib/IntlDateFormatter.php | 27 +++++++++++++++++++++++----
+ web/systemdefaults.inc.php    |  2 +-
+ 2 files changed, 24 insertions(+), 5 deletions(-)
+
+commit 3c7c96ad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 12:10:24 2023 +0100
+
+    Adds getPattern() and setPattern()
+
+ web/lib/IntlDateFormatter.php | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+commit 46274b32
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 11:54:20 2023 +0100
+
+    Adds comment
+
+ web/lib/IntlDateFormatter.php | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+commit 5146b9b9
+Merge: 24c2829e ce878794
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 11:39:45 2023 +0100
+
+    Merge branch 'main' into intl_date
+
+commit ce878794
+Merge: 66dfc7aa 48fe1600
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 18 11:33:40 2023 +0100
+
+    Merge pull request #79 from fare4z/patch-1
+    
+    Update lang.ms
+
+commit 48fe1600
+Author: Fareez Borhanudin <fare4z@gmail.com>
+Date:   Tue Apr 18 11:07:30 2023 +0800
+
+    Update lang.ms
+    
+    Translate some word from english to malay.
+
+ web/lang/lang.ms | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 24c2829e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 17 19:36:35 2023 +0100
+
+    Adds TODO
+
+ web/lib/IntlDateFormatter.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4e37b6e2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 17 19:35:31 2023 +0100
+
+    Adds comment
+
+ web/lib/IntlDateFormatter.php | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit ae7f99f5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 17 19:28:28 2023 +0100
+
+    Adds comment
+
+ web/lib/IntlDateFormatter.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a3a0b028
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 17 18:58:52 2023 +0100
+
+    Simplifies code
+
+ web/lib/IntlDateFormatter.php | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+commit 3dbb6384
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Apr 17 18:52:08 2023 +0100
+
+    Handles single quotes in patterns
+
+ web/lib/IntlDateFormatter.php | 43 ++++++++++++++++++++++++++++++---
+ web/systemdefaults.inc.php    |  2 +-
+ 2 files changed, 41 insertions(+), 4 deletions(-)
+
+commit 6682c816
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Apr 16 18:34:57 2023 +0100
+
+    Replaces qualifier with import
+
+ web/lib/IntlDateFormatter.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit ff852969
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 15 19:55:52 2023 +0100
+
+    Fixes bug
+
+ web/lib/IntlDateFormatter.php | 7 +++----
+ web/systemdefaults.inc.php    | 2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
+commit f8ea050e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 15 19:45:33 2023 +0100
+
+    Month view working
+
+ web/functions_table.inc       |  42 +++++-----
+ web/index.php                 |  11 ++-
+ web/lib/IntlDateFormatter.php | 133 ++++++++++++++++++++++++++++++++
+ web/systemdefaults.inc.php    |   2 +
+ 4 files changed, 163 insertions(+), 25 deletions(-)
+
+commit 66dfc7aa
+Author: John Beranek <john@redux.org.uk>
+Date:   Sat Apr 15 12:17:29 2023 +0100
+
+    Added .vs directory to .gitignore.
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 46b49f9b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Apr 15 10:26:08 2023 +0100
+
+    Started branch to get rid of usages of the deprecated strftime() function.  Started a basic emulation of IntlDateFormatter.
+
+ web/lib/IntlDateFormatter.php (new) | 32 +++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+commit 2582796d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:35:53 2023 +0100
+
+    Adds type declaration
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit eccd6846
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:34:09 2023 +0100
+
+    Adds type declaration
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d5cab0e3
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:31:57 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3bf9f2d6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:27:24 2023 +0100
+
+    Removes redundant global declaration
+
+ web/language.inc | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit bc20552b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:23:09 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0521b05d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:09:10 2023 +0100
+
+    Simplifies code
+
+ web/language.inc | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+commit aeac30b4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 18:01:36 2023 +0100
+
+    Removes line that's no longer necessary
+
+ web/language.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit fba034bc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 17:56:13 2023 +0100
+
+    Adds type declaration
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8a14fdaa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 17:46:15 2023 +0100
+
+    Adds fallback mail language
+
+ web/functions_mail.inc | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+commit ee9b8c97
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 17:28:20 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+commit 346f30ef
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 17:20:55 2023 +0100
+
+    Eliminates duplicate code
+
+ web/language.inc | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
+
+commit 215474dd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 17:11:20 2023 +0100
+
+    Fixes bug introduced in recent commit
+
+ web/language.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c3a9c1ed
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:39:22 2023 +0100
+
+    Adds handling of trivial case
+
+ web/functions_ical.inc | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 37d6639f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:32:44 2023 +0100
+
+    Removes line that's no longer necessary
+
+ web/language.inc | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+commit 3dfb60b9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:21:13 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit fec11dd2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:11:39 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ebdbf509
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:06:08 2023 +0100
+
+    Improves readability
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 884a1de7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 16:00:10 2023 +0100
+
+    Removes line that's no longer necessary
+
+ web/language.inc | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit c55b2bca
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 15:45:58 2023 +0100
+
+    Improves readability
+
+ web/language.inc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit ab72500a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 15:39:44 2023 +0100
+
+    Adds type declaration
+
+ web/language.inc | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
+
+commit e2ee3d00
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 15:09:59 2023 +0100
+
+    Adds comment
+
+ web/language.inc | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 86af7c81
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 14:37:12 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit f7d4bb46
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 14:14:48 2023 +0100
+
+    Uses null coalescing operator
+
+ web/admin.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 8ab64d73
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 14:06:45 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b37fc4d1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 14:05:29 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9ff149b2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 14:03:07 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 453beff1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Apr 14 13:44:05 2023 +0100
+
+    Tweaks comment
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7f5c5a89
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 19:08:19 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit be4814b0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:56:54 2023 +0100
+
+    Adds type declarations
+
+ web/language.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 3925d25b
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:52:17 2023 +0100
+
+    Adds type declarations
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit dcb5514c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:48:27 2023 +0100
+
+    Adds type declarations
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8324193c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:44:17 2023 +0100
+
+    Adds type declarations
+
+ web/functions.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 44760fc2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:37:18 2023 +0100
+
+    Adds type declarations
+
+ web/edit_entry.php | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+commit 02fcb8cc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Apr 13 18:26:14 2023 +0100
+
+    Adds type declarations
+
+ web/functions.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d249f7a1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:37:27 2023 +0100
+
+    Tweaks comments
+
+ web/functions_ical.inc | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+commit e66c0d0c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:34:05 2023 +0100
+
+    Adds type declarations
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8cfbb237
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:27:35 2023 +0100
+
+    Adds comma in comment
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8d766d81
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:16:23 2023 +0100
+
+    Adds type declarations
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit efef83d7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:08:51 2023 +0100
+
+    Adds type declaration
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1fdf46e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Apr 11 18:04:38 2023 +0100
+
+    Corrects typo in comment
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 492f59e6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Apr 5 17:09:15 2023 +0100
+
+    Fixed bug when the timezone definition in the database has expired and MRBS is unable to get a new one from the URL
+
+ web/functions_ical.inc | 42 ++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 23 deletions(-)
+
+commit 6ac15516
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Mar 29 18:56:16 2023 +0100
+
+    Fixed bug causing spurious validation message when $is_mandatory_field[entry.xxx] is set to false.  See SF Support Requests #2733.
+
+ web/js/edit_entry.js.php | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+commit 992ca1f0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 28 08:15:54 2023 +0100
+
+    Fixes error in Korean language string. See SF Support Requests #2729.
+
+ web/lang/lang.ko | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 1c04913e (upstream/main)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Mar 22 10:47:02 2023 +0000
+
+    Restructured
+
+ web/mrbs_sql.inc | 116 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 74 insertions(+), 42 deletions(-)
+
+commit 5d99953c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Mar 22 09:15:15 2023 +0000
+
+    Provided an IntlDateFormatter equivalent for strftime '%l'
+
+ web/language.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 6c28bc19
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 20 17:12:38 2023 +0000
+
+    Added comment
+
+ web/lib/MRBS/Session/Session.php | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit e5e7e23d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 20 10:59:47 2023 +0000
+
+    Allowed anonymous booking.  See SF Support Requests #2725.
+
+ web/Themes/default/header.inc              |  5 +++--
+ web/lib/MRBS/Session/Session.php           | 14 ++++++++++++-
+ web/lib/MRBS/Session/SessionCas.php        |  4 ++--
+ web/lib/MRBS/Session/SessionCookie.php     |  2 +-
+ web/lib/MRBS/Session/SessionHost.php       |  2 +-
+ web/lib/MRBS/Session/SessionHttp.php       |  6 +++---
+ web/lib/MRBS/Session/SessionIp.php         |  2 +-
+ web/lib/MRBS/Session/SessionJoomla.php     |  2 +-
+ web/lib/MRBS/Session/SessionNt.php         |  2 +-
+ web/lib/MRBS/Session/SessionOmni.php       |  2 +-
+ web/lib/MRBS/Session/SessionPhp.php        |  2 +-
+ web/lib/MRBS/Session/SessionRemoteUser.php |  2 +-
+ web/lib/MRBS/Session/SessionSaml.php       |  4 ++--
+ web/lib/MRBS/Session/SessionWithLogin.php  |  4 ----
+ web/lib/MRBS/Session/SessionWordpress.php  |  2 +-
+ web/mrbs_auth.inc                          | 22 +++++++++++++-------
+ web/systemdefaults.inc.php                 |  3 +++
+ 17 files changed, 50 insertions(+), 30 deletions(-)
+
+commit 5f8bb27a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 10 18:04:45 2023 +0000
+
+    Added missing file from recent PHPMailer upgrade
+
+ .../PHPMailer/src/DSNConfigurator.php (new)  | 247 +++++++++++++++++
+ 1 file changed, 247 insertions(+)
+
+commit 63053b32
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Mar 10 16:13:55 2023 +0000
+
+    Fixed uncaught exception.  See SF Bugs #540.
+
+ web/view_entry.php | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit 154fc1cb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Mar 7 12:26:44 2023 +0000
+
+    Upgraded to PHPMailer 6.8.0
+
+ web/lib/PHPMailer/README.md                      |  2 +-
+ web/lib/PHPMailer/VERSION                        |  2 +-
+ web/lib/PHPMailer/language/phpmailer.lang-hi.php | 12 ++++++++++--
+ web/lib/PHPMailer/src/PHPMailer.php              |  4 ++--
+ web/lib/PHPMailer/src/POP3.php                   |  2 +-
+ web/lib/PHPMailer/src/SMTP.php                   | 10 +++++++++-
+ 6 files changed, 24 insertions(+), 8 deletions(-)
+
+commit 2c5a7bfa
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Mar 6 18:03:45 2023 +0000
+
+    Simplifies code
+
+ web/functions_ical.inc | 59 ++++++++++++----------------------------
+ 1 file changed, 18 insertions(+), 41 deletions(-)
+
+commit 40cc1e96
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Mar 1 16:43:00 2023 +0000
+
+    Fixes bug that results in missing series when producing .ics reports using PostgreSQL
+
+ web/report.php | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 5a5822df
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Mar 1 14:40:32 2023 +0000
+
+    Fixed bug introduced in a recent commit causing invalid VTIMEZONE components to be used.
+
+ web/functions_ical.inc | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit 5f3a2b7c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 27 09:39:34 2023 +0000
+
+    Fixes syntax error exposed by PostgreSQL 15.  See SF Patches #123.
+
+ web/lib/MRBS/DB_pgsql.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c075fe18
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 22 17:56:46 2023 +0000
+
+    Simplified code
+
+ web/functions_ical.inc | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+commit 89e12df1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 22 15:12:53 2023 +0000
+
+    Fixed bugs introduced in recent commit
+
+ web/functions_ical.inc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit d0e2c230
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Feb 22 13:35:00 2023 +0000
+
+    Added parameter to force Select2 to be used on mobile devices
+
+ web/js/functions.js.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+commit 1ce3c9b7
+Merge: 98323e89 f534ae03
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 21 16:47:18 2023 +0000
+
+    Merge pull request #75 from meeting-room-booking-system/issue_74
+    
+    Fixes GitHub Issue #74
+
+commit f534ae03
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 21 16:46:14 2023 +0000
+
+    Fixes GitHub Issue #74
+
+ web/functions_mail.inc | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+commit 98323e89
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Feb 21 14:54:33 2023 +0000
+
+    Fixed bug introduced in recent commit
+
+ web/functions_ical.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 2476ba03
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 20 14:26:47 2023 +0000
+
+    Fixed bug - added formnovalidate to the Back button
+
+ web/edit_room.php | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+commit f317cee5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 17 10:11:39 2023 +0000
+
+    Clarified code
+
+ web/functions_ical.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 7978dc36
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 17 09:44:31 2023 +0000
+
+    Added type declarations
+
+ web/functions_ical.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 072c95d4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 17 09:37:26 2023 +0000
+
+    Tweaked formatting
+
+ web/functions_ical.inc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 8b30fee1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 17 09:16:23 2023 +0000
+
+    Fixed bug when the database VTIMEZONE component doesn't contain a TZURL property.  See SF Bugs #537.
+
+ web/functions_ical.inc | 322 +++++++++++++++++++++++++--------------
+ 1 file changed, 211 insertions(+), 111 deletions(-)
+
+commit 9010d67f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Feb 16 17:48:36 2023 +0000
+
+    Corrected typos in comments
+
+ web/functions_ical.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 569e819e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Feb 13 18:35:26 2023 +0000
+
+    Improved error message when the PDO MySQL driver is not enabled. See SF Support Requests #2691.
+
+ web/lib/MRBS/DBFactory.php | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+commit 35301015
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 11 14:59:03 2023 +0000
+
+    Improved detection of database type.  See GitHub Issues #72.
+
+ web/lib/MRBS/DB_mysql.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 83cc2878
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Feb 10 18:04:36 2023 +0000
+
+    Upgraded to jQuery version 3.6.3.
+
+ web/jquery/jquery-3.6.1.min.js (gone)        |   2 -
+ .../{jquery-3.6.1.js => jquery-3.6.3.js}     | 108 +++++++++++++++--
+ web/jquery/jquery-3.6.3.min.js (new)         |   2 +
+ web/js.inc                                   |   2 +-
+ 4 files changed, 99 insertions(+), 15 deletions(-)
+
+commit 9260ed35
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Feb 4 15:31:43 2023 +0000
+
+    Fixed potential bug when the display_name is not set.
+
+ web/lib/MRBS/Auth/Auth.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 36b16a7f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 31 17:47:21 2023 +0000
+
+    Simplified code.
+
+ web/functions_mail.inc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 54efd8e5
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 31 17:32:36 2023 +0000
+
+    Fixed bug in mail notifications when a custom field is nullable.  See SF Support Requests #2682.
+
+ web/functions_mail.inc | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 34a711f0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 29 16:18:37 2023 +0000
+
+    Added an additional MIME type for importing zip files
+
+ web/import.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a5819522
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 25 17:53:33 2023 +0000
+
+    Changed jQuery UI theme to Cupertino
+
+ ...diagonals-thick_90_eeeeee_40x40.png (new) | Bin 0 -> 432 bytes
+ .../ui-bg_glass_100_e4f1fb_1x400.png (new)   | Bin 0 -> 460 bytes
+ .../ui-bg_glass_50_3baae3_1x400.png (new)    | Bin 0 -> 446 bytes
+ .../ui-bg_glass_80_d7ebf9_1x400.png (new)    | Bin 0 -> 456 bytes
+ ...highlight-hard_100_f2f5f7_1x100.png (new) | Bin 0 -> 442 bytes
+ ..._highlight-hard_70_000000_1x100.png (new) | Bin 0 -> 362 bytes
+ ...highlight-soft_100_deedf7_1x100.png (new) | Bin 0 -> 497 bytes
+ ..._highlight-soft_25_ffef8f_1x100.png (new) | Bin 0 -> 419 bytes
+ .../images/ui-icons_2694e8_256x240.png (new) | Bin 0 -> 4670 bytes
+ .../images/ui-icons_2e83ff_256x240.png (new) | Bin 0 -> 4670 bytes
+ .../images/ui-icons_3d80b3_256x240.png (new) | Bin 0 -> 4670 bytes
+ .../images/ui-icons_72a7cf_256x240.png (new) | Bin 0 -> 4670 bytes
+ .../images/ui-icons_ffffff_256x240.png (new) | Bin 0 -> 6539 bytes
+ .../css/cupertino/jquery-ui.theme.css (new)  | 446 +++++++++++++++++
+ .../cupertino/jquery-ui.theme.min.css (new)  |   5 +
+ .../ui/css/jquery-ui.structure.min.css       |   2 +-
+ web/jquery/ui/jquery-ui.js                   |   2 +-
+ web/jquery/ui/jquery-ui.min.js               |   2 +-
+ web/js.inc                                   |   2 +-
+ web/style.inc                                |   2 +-
+ 20 files changed, 456 insertions(+), 5 deletions(-)
+
+commit e6f47377
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 25 17:08:24 2023 +0000
+
+    Added a timeout to exit kiosk mode dialog box
+
+ web/css/mrbs.css.php       |  4 +++
+ web/js/index.js.php        | 62 +++++++++++++++++++++++++++++-------
+ web/js/resizable.js.php    |  6 ++++
+ web/lang/lang.en           |  3 ++
+ web/systemdefaults.inc.php |  3 ++
+ 5 files changed, 67 insertions(+), 11 deletions(-)
+
+commit aadf15f7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 23 17:41:17 2023 +0000
+
+    Code formatting change
+
+ web/js/kiosk.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 639876e4
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 23 17:39:20 2023 +0000
+
+    Added a timeout on the Exit Kiosk mode page - see SF Support Requests #2425.
+
+ web/js/kiosk.js.php        | 22 ++++++++++++++++++++--
+ web/systemdefaults.inc.php |  3 +++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
+
+commit 2ff61d07
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 16 04:48:10 2023 +0000
+
+    Fixes bug in Serbian Cyrillic version of flatpickr
+
+ web/js/flatpickr/l10n/sr-cyr.js | 2 +-
+ web/language.inc                | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 7b1cc968
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 16 04:41:02 2023 +0000
+
+    Fixes bug in Algerian version of flatpickr
+
+ web/js/flatpickr/l10n/ar-dz.js | 2 +-
+ web/language.inc               | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+commit 5ca42131
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 16 04:40:35 2023 +0000
+
+    Improves robustness of code
+
+ web/js/datepicker.js.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3461304d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 16 03:26:49 2023 +0000
+
+    Fixes bug in Irish version of flatpickr
+
+ web/js/flatpickr/l10n/ga.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 4453853e
+Merge: 3a4bbaa8 9ddf3028
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 13 21:13:33 2023 +0000
+
+    Merge pull request #71 from meeting-room-booking-system/issue_70
+    
+    Upgrades flatpickr to 4.6.13 fixing GitHub Issue #70
+
+commit 9ddf3028
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 13 21:11:07 2023 +0000
+
+    Upgrades flatpickr to 4.6.13 fixing GitHub Issue #70
+
+ web/js/flatpickr/css/flatpickr.min.css |  8 +--
+ web/js/flatpickr/flatpickr.min.js      |  4 +-
+ web/js/flatpickr/l10n/ar-dz.js (new)   | 61 ++++++++++++++++++
+ web/js/flatpickr/l10n/ar.js            | 24 ++++---
+ web/js/flatpickr/l10n/at.js            | 15 ++---
+ web/js/flatpickr/l10n/az.js            | 16 ++---
+ web/js/flatpickr/l10n/be.js            | 14 ++---
+ web/js/flatpickr/l10n/bg.js            | 14 ++---
+ web/js/flatpickr/l10n/bn.js            | 14 ++---
+ web/js/flatpickr/l10n/bs.js            | 14 ++---
+ web/js/flatpickr/l10n/cat.js           | 17 ++---
+ web/js/flatpickr/l10n/ckb.js (new)     | 76 ++++++++++++++++++++++
+ web/js/flatpickr/l10n/cs.js            | 14 ++---
+ web/js/flatpickr/l10n/cy.js            | 14 ++---
+ web/js/flatpickr/l10n/da.js            | 14 ++---
+ web/js/flatpickr/l10n/de.js            | 14 ++---
+ web/js/flatpickr/l10n/en.js            | 13 ++--
+ web/js/flatpickr/l10n/eo.js            | 14 ++---
+ web/js/flatpickr/l10n/es.js            | 14 ++---
+ web/js/flatpickr/l10n/et.js            | 14 ++---
+ web/js/flatpickr/l10n/fa.js            | 14 ++---
+ web/js/flatpickr/l10n/fi.js            | 78 +++++++++++------------
+ web/js/flatpickr/l10n/fo.js            | 14 ++---
+ web/js/flatpickr/l10n/fr.js            | 14 ++---
+ web/js/flatpickr/l10n/ga.js (new)      | 66 +++++++++++++++++++
+ web/js/flatpickr/l10n/gr.js            | 22 ++++---
+ web/js/flatpickr/l10n/he.js            | 14 ++---
+ web/js/flatpickr/l10n/hi.js            | 14 ++---
+ web/js/flatpickr/l10n/hr.js            | 14 ++---
+ web/js/flatpickr/l10n/hu.js            | 14 ++---
+ web/js/flatpickr/l10n/hy.js (new)      | 78 +++++++++++++++++++++++
+ web/js/flatpickr/l10n/id.js            | 14 ++---
+ web/js/flatpickr/l10n/is.js            | 14 ++---
+ web/js/flatpickr/l10n/it.js            | 14 ++---
+ web/js/flatpickr/l10n/ja.js            | 18 +++---
+ web/js/flatpickr/l10n/ka.js            | 14 ++---
+ web/js/flatpickr/l10n/km.js            | 14 ++---
+ web/js/flatpickr/l10n/ko.js            | 15 ++---
+ web/js/flatpickr/l10n/kz.js            | 14 ++---
+ web/js/flatpickr/l10n/lt.js            | 15 ++---
+ web/js/flatpickr/l10n/lv.js            | 14 ++---
+ web/js/flatpickr/l10n/mk.js            | 14 ++---
+ web/js/flatpickr/l10n/mn.js            | 14 ++---
+ web/js/flatpickr/l10n/ms.js            | 25 +++-----
+ web/js/flatpickr/l10n/my.js            | 14 ++---
+ web/js/flatpickr/l10n/nb.js            | 80 +++++++++++++++++-------
+ web/js/flatpickr/l10n/nl.js            | 16 ++---
+ web/js/flatpickr/l10n/nn.js            | 80 +++++++++++++++++-------
+ web/js/flatpickr/l10n/no.js            | 14 ++---
+ web/js/flatpickr/l10n/pa.js            | 14 ++---
+ web/js/flatpickr/l10n/pl.js            | 14 ++---
+ web/js/flatpickr/l10n/pt.js            | 14 ++---
+ web/js/flatpickr/l10n/ro.js            | 14 ++---
+ web/js/flatpickr/l10n/ru.js            | 14 ++---
+ web/js/flatpickr/l10n/si.js            | 14 ++---
+ web/js/flatpickr/l10n/sk.js            | 14 ++---
+ web/js/flatpickr/l10n/sl.js            | 14 ++---
+ web/js/flatpickr/l10n/sq.js            | 21 ++++---
+ web/js/flatpickr/l10n/sr-cyr.js        | 14 ++---
+ web/js/flatpickr/l10n/sr.js            | 14 ++---
+ web/js/flatpickr/l10n/sv.js            | 79 +++++++++++------------
+ web/js/flatpickr/l10n/th.js            | 14 ++---
+ web/js/flatpickr/l10n/tr.js            | 14 ++---
+ web/js/flatpickr/l10n/uk.js            | 14 ++---
+ web/js/flatpickr/l10n/uz.js (new)      | 75 ++++++++++++++++++++++
+ web/js/flatpickr/l10n/uz_latn.js (new) | 75 ++++++++++++++++++++++
+ web/js/flatpickr/l10n/vn.js            | 18 +++---
+ web/js/flatpickr/l10n/zh-tw.js         | 14 ++---
+ web/js/flatpickr/l10n/zh.js            | 14 ++---
+ web/language.inc                       | 14 +++--
+ 70 files changed, 1076 insertions(+), 549 deletions(-)
+
+commit 3a4bbaa8
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 11 23:39:03 2023 +0000
+
+    Fixes return type declaration
+
+ web/import.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 1fc090bb
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 11 22:08:24 2023 +0000
+
+    Fixed fatal infinite loop when using $auth["session_php"]["inactivity_expire_time"].
+
+ web/lib/MRBS/Session/SessionPhp.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit 0dcae02a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 11 05:48:56 2023 +0000
+
+    Fixes bugs when the description is null (which it can be when an event without a description is imported).
+
+ web/functions_view.inc | 2 +-
+ web/report.php         | 6 +++---
+ web/search.php         | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+commit 77b06968
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jan 11 05:36:51 2023 +0000
+
+    Better fix for when the description is null (which it can be when an event without a description is imported).
+
+ web/functions_view.inc | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+commit 4df7f24c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Jan 10 22:23:48 2023 +0000
+
+    Fixes bugs when the description is null (which it can be when an event without a description is imported).
+
+ web/functions_table.inc | 2 +-
+ web/functions_view.inc  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 85f36a78
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 21:40:37 2023 +0000
+
+    Fixes a fatal error if the strftime format can't be mapped to a suitable IntlDateFormatter one.
+
+ web/language.inc | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit 53538b53
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 06:03:57 2023 +0000
+
+    Adds comment.
+
+ tables.my.sql | 2 +-
+ tables.pg.sql | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+commit 335bbbcd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 05:04:11 2023 +0000
+
+    Improves message.
+
+ web/lang/lang.en | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 30777ca0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 05:03:00 2023 +0000
+
+    Removes incomplete translations.
+
+ web/lang/lang.it |  1 -
+ web/lang/lang.th | 19 +++++++++----------
+ 2 files changed, 9 insertions(+), 11 deletions(-)
+
+commit 33431135
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 04:57:02 2023 +0000
+
+    Improves internationalisation of language string.
+
+ web/js/report.js.php     | 84 ++++++++++++++++++--------------------
+ web/lang/lang.cs         |  2 +-
+ web/lang/lang.de         |  2 +-
+ web/lang/lang.en         |  2 +-
+ web/lang/lang.es         |  2 +-
+ web/lang/lang.fi         |  2 +-
+ web/lang/lang.fr         |  2 +-
+ web/lang/lang.hu         |  2 +-
+ web/lang/lang.id         |  2 +-
+ web/lang/lang.ja         |  2 +-
+ web/lang/lang.ms         |  2 +-
+ web/lang/lang.nb         |  2 +-
+ web/lang/lang.nl         |  2 +-
+ web/lang/lang.nn         |  2 +-
+ web/lang/lang.no         |  2 +-
+ web/lang/lang.pl         |  2 +-
+ web/lang/lang.ro         |  2 +-
+ web/lang/lang.sk         |  2 +-
+ web/lang/lang.sr-latn-rs |  2 +-
+ web/lang/lang.sv         |  2 +-
+ web/lang/lang.zh-cn      |  2 +-
+ 21 files changed, 60 insertions(+), 64 deletions(-)
+
+commit ca5e6168
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Mon Jan 9 04:09:27 2023 +0000
+
+    Removes redundant variable
+
+ web/js/report.js.php | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+commit 9c4c4d12
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sun Jan 8 21:13:52 2023 +0000
+
+    Adds a progress bar and Cancel button while entries are being deleted from the Report page.  See SF Support Requests #2672.
+
+ web/css/mrbs.css.php |  20 +++
+ web/js/report.js.php | 288 +++++++++++++++++++++++++----------------
+ web/lang/lang.en     |   2 +
+ 3 files changed, 199 insertions(+), 111 deletions(-)
+
+commit 974c3e39
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Sat Jan 7 01:41:46 2023 +0000
+
+    Restores default behaviour of Search box in the header.  See GitHub Issues #66.
+
+ web/Themes/default/header.inc | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+commit e65b889b
+Merge: 792f6bb1 d1392d25
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 23:16:37 2023 +0000
+
+    Merge pull request #69 from Klap-in/patch-2
+    
+    Update lang.nl
+
+commit 792f6bb1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 23:11:17 2023 +0000
+
+    Remove redundant escape character in regex pattern.
+
+ checklang.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ceeff212
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 23:08:53 2023 +0000
+
+    Simplifies code
+
+ checklang.php | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit d1392d25
+Author: Gerrit Uitslag <klapinklapin@gmail.com>
+Date:   Sat Jan 7 00:08:00 2023 +0100
+
+    Update lang.nl
+    
+    'area' and 'room' are now consequently translated with 'gebouw' and 'ruimte'.
+
+ web/lang/lang.nl | 544 ++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 420 insertions(+), 124 deletions(-)
+
+commit 11a5081b
+Merge: 61b7f4bb 76a9dbad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 22:52:11 2023 +0000
+
+    Merge pull request #68 from meeting-room-booking-system/issue_65
+    
+    Fixes problem with multi-line vocab strings.  See GitHub Issues #65.
+
+commit 76a9dbad
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 22:50:50 2023 +0000
+
+    Fixes problem with multi-line vocab strings.  See GitHub Issues #65.
+
+ checklang.php | 45 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
+
+commit 61b7f4bb
+Merge: 341c620a 658041cd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 20:29:02 2023 +0000
+
+    Merge pull request #67 from meeting-room-booking-system/issue_66
+    
+    Fixes Issue 66
+
+commit 658041cd
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 20:25:07 2023 +0000
+
+    Allows no from date to be used, resulting in all search results to be returned.  See GitHub Issues #66.
+
+ web/lang/lang.en |   1 +
+ web/lang/lang.ms |   1 +
+ web/search.php   | 105 ++++++++++++++++++++++++---------------------
+ 3 files changed, 58 insertions(+), 49 deletions(-)
+
+commit 6408072a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 19:03:07 2023 +0000
+
+    Fixes uncaught exception when an invalid date is given.  Now today's date is used.  See GitHub Issues #66.
+
+ web/search.php | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+commit 341c620a
+Merge: 2cf332f6 21703e6e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 00:14:11 2023 +0000
+
+    Merge pull request #64 from Klap-in/patch-1
+    
+    checklang.php must not be called from the lang folder
+
+commit 2cf332f6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Jan 6 00:05:22 2023 +0000
+
+    Fixed duplicate language key
+
+ web/js/index.js.php | 2 +-
+ web/lang/lang.en    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 21703e6e
+Author: Gerrit Uitslag <klapinklapin@gmail.com>
+Date:   Fri Jan 6 01:04:37 2023 +0100
+
+    restore path
+
+ LANGUAGE | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit cb4959f9
+Author: Gerrit Uitslag <klapinklapin@gmail.com>
+Date:   Thu Jan 5 22:28:40 2023 +0100
+
+    checklang.php must not be called from the lang folder
+
+ LANGUAGE | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit efabbc4e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 30 21:29:17 2022 +0000
+
+    Simplifies code
+
+ web/lib/MRBS/Session/SessionJoomla.php | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 44a4766f
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 30 21:19:17 2022 +0000
+
+    Restructured
+
+ web/lib/MRBS/Session/SessionJoomla.php | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit d3eea671
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Fri Dec 30 20:52:14 2022 +0000
+
+    Simplifies code
+
+ web/lib/MRBS/Session/SessionJoomla.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b4f4ca5a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 29 19:38:30 2022 +0000
+
+    Fixes bug in email notifications when switching a series to a monthly repeat from another type.  See SF Bugs #533.
+
+ web/functions_mail.inc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 354758f6
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 29 18:16:35 2022 +0000
+
+    Fixes kiosk mode when using Joomla.  See SF Support Requests #2671.
+
+ web/functions.inc                      |  2 +-
+ web/functions_error.inc                |  3 +
+ web/init.inc                           |  3 +-
+ web/kiosk.php                          | 18 +++---
+ web/lib/MRBS/Form/Form.php             | 76 +-----------------------
+ web/lib/MRBS/Session/Session.php       | 53 ++++++++---------
+ web/lib/MRBS/Session/SessionJoomla.php | 29 +++++++++
+ 7 files changed, 73 insertions(+), 111 deletions(-)
+
+commit 7bc5e9e1
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 29 16:15:43 2022 +0000
+
+    Fixes problem with previous fix
+
+ web/standard_vars.inc.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 7e5fcb6c
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 29 12:40:02 2022 +0000
+
+    Fixes another bug when running kiosk mode with periods.  See SF Support Requests #2671.
+
+ web/standard_vars.inc.php | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit fe33a966
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Thu Dec 29 12:09:04 2022 +0000
+
+    Fixes bug when running kiosk mode with periods.  See SF Support Requests #2671.
+
+ web/functions_table.inc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit b7f0367d
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 18:05:39 2022 +0000
+
+    Added type declarations
+
+ web/functions_mail.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit aef131b7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 18:03:27 2022 +0000
+
+    Added type declarations
+
+ web/functions_mail.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 98a97c8e
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:57:46 2022 +0000
+
+    Added type declarations
+
+ web/del_entry.php | 2 +-
+ web/mrbs_sql.inc  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 293ec8ac
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:39:36 2022 +0000
+
+    Added type declarations
+
+ web/functions_mail.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 853072de
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:34:46 2022 +0000
+
+    Added type declarations
+
+ web/functions_mail.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 58db3cd2
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:28:03 2022 +0000
+
+    Added type declarations
+
+ web/functions_mail.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f900a4fc
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:23:37 2022 +0000
+
+    Simplified code
+
+ web/functions_mail.inc | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+commit a65147d9
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Tue Dec 27 17:13:09 2022 +0000
+
+    Tweaked comment
+
+ web/functions_mail.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3dc84a50 (tag: mrbs-1_11_0)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Dec 27 15:04:05 2022 +0000
+
+    Updated NEWS and ChangeLog for release of 1.11.0
+
+ ChangeLog | 7374 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ NEWS      |  196 ++
+ 2 files changed, 7533 insertions(+), 37 deletions(-)
+
+commit 66ed778a
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Dec 27 14:24:16 2022 +0000
+
+    Updated version number for release of 1.11.0
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3995d9b5
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Wed Dec 21 10:24:00 2022 +0000
 
@@ -20131,7 +23028,7 @@ Date:   Fri Mar 27 14:28:20 2020 +0000
 
     Merge with week_view_all_rooms
 
-commit 7436c734 (origin/week_view_all_rooms, week_view_all_rooms)
+commit 7436c734 (origin/week_view_all_rooms)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Mar 27 14:25:27 2020 +0000
 
@@ -22433,7 +25330,7 @@ Date:   Fri Nov 8 16:24:39 2019 +0000
 
     Merge with timeline
 
-commit c4256182 (origin/timeline, timeline)
+commit c4256182 (origin/timeline)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Nov 8 16:24:11 2019 +0000
 
@@ -28563,7 +31460,7 @@ Date:   Thu Dec 20 09:53:53 2018 +0000
 
     Merged nav_improvements branch back into the default branch
 
-commit e1fbccd9 (origin/nav_improvements, nav_improvements)
+commit e1fbccd9 (origin/nav_improvements)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Thu Dec 20 09:52:53 2018 +0000
 
@@ -31512,7 +34409,7 @@ Date:   Wed Jul 4 11:26:59 2018 +0100
 
     Merge with db_sessions
 
-commit c9d18247 (origin/db_sessions, db_sessions)
+commit c9d18247 (origin/db_sessions)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Jul 4 11:26:17 2018 +0100
 
@@ -31915,7 +34812,7 @@ Date:   Sat Jun 23 14:03:13 2018 +0100
 
     Merge with CAS_authentication
 
-commit 24b97693 (origin/CAS_authentication, CAS_authentication)
+commit 24b97693 (origin/CAS_authentication)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Sat Jun 23 14:02:36 2018 +0100
 
@@ -40917,7 +43814,7 @@ Date:   Fri Oct 6 14:35:41 2017 +0100
 
     Merge with jquery_update
 
-commit 67c58cc2 (origin/jquery_update, jquery_update)
+commit 67c58cc2 (origin/jquery_update)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 6 14:34:27 2017 +0100
 
@@ -41287,7 +44184,7 @@ Date:   Mon May 15 17:35:25 2017 +0100
 
     Merging periods_per_area branch back into the default branch
 
-commit 57d89de8 (origin/periods_per_area, periods_per_area)
+commit 57d89de8 (origin/periods_per_area)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon May 15 17:33:39 2017 +0100
 
@@ -42600,7 +45497,7 @@ Date:   Fri Mar 3 14:32:25 2017 +0000
     local-part of the email address - but this feature has to be enabled by a config
     variable setting.
 
-commit 9424ecd2 (origin/login_with_email_address, login_with_email_address)
+commit 9424ecd2 (origin/login_with_email_address)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Mar 3 14:28:26 2017 +0000
 
@@ -45985,7 +48882,7 @@ Date:   Wed Sep 14 20:22:52 2016 +0100
 
     Merge with namespace
 
-commit 1d72ff5e (origin/namespace, namespace)
+commit 1d72ff5e (origin/namespace)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Sep 14 20:18:17 2016 +0100
 
@@ -48588,7 +51485,7 @@ Date:   Sat Oct 17 23:20:39 2015 +0100
     the session cookie to use authenticated data, instead of
     Blowfish encrypted data.
 
-commit 24f6a1a9 (origin/session_cookie_improvements, session_cookie_improvements)
+commit 24f6a1a9 (origin/session_cookie_improvements)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sat Oct 17 23:18:49 2015 +0100
 
@@ -48848,7 +51745,7 @@ Date:   Fri Oct 2 18:03:32 2015 +0100
 
     Merge with datatables_update
 
-commit 503b22ce (origin/datatables_update, datatables_update)
+commit 503b22ce (origin/datatables_update)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 2 18:02:37 2015 +0100
 
@@ -52383,7 +55280,7 @@ Date:   Tue Nov 25 16:39:17 2014 +0000
 
     Re-integrated the create_policy branch back into the trunk.   The book_ahead capabilities have been split into create_ahead and delete_ahead capabilities, allowing finer control of policies.  It is now possible to distinguish between creating new bookings and editing or deleting existing bookings.   (An edit requires a new booking to be created and the old one to be deleted).
 
-commit bc4a3b4b (origin/create_policy, create_policy)
+commit bc4a3b4b (origin/create_policy)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Nov 25 16:20:10 2014 +0000
 
@@ -56177,7 +59074,7 @@ Date:   Fri Oct 19 15:17:37 2012 +0000
 
     Reintegrated the improved_repeat_interface back into the trunk.  MRBS now has a simplified interface for making repeat bookings and the range of monthly repeats has been expanded.   It is now possible to have monthly repeats on the last, second last, third last and fourth last weekdays of the month.  (Last was possible before, but only if the first member of the series happened to be on the fifth weekday of a month).
 
-commit 785110d9 (origin/improved_repeat_interface, improved_repeat_interface)
+commit 785110d9 (origin/improved_repeat_interface)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Oct 19 15:02:09 2012 +0000
 
@@ -56757,7 +59654,7 @@ Date:   Wed Oct 3 20:03:53 2012 +0000
  web/version.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit c617517e (origin/flexible_day_end, flexible_day_end)
+commit c617517e (origin/flexible_day_end)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Oct 3 19:43:09 2012 +0000
 
@@ -58824,7 +61721,7 @@ Date:   Fri Jan 27 18:27:26 2012 +0000
 
     Reintegrated ics_import branch.   import.php is a utility (not linked to from the rest of MRBS) that can be used to import .ics files into MRBS.   Still some tidying up to be done.
 
-commit 0a33ce2c (origin/ics_import, ics_import)
+commit 0a33ce2c (origin/ics_import)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Jan 27 18:15:54 2012 +0000
 
@@ -60035,7 +62932,7 @@ Date:   Sun Oct 23 18:47:56 2011 +0000
 
     Reintegrated the draggable bookings branch.   MRBS now supports (except for IE8 and below) (a) the selection of new bookings by dragging over empty cells on the day and week views and (b) the adjustment of existing bookings by dragging their sides or corners.
 
-commit 85ca4de5 (origin/draggable_bookings, draggable_bookings)
+commit 85ca4de5 (origin/draggable_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Sun Oct 23 17:24:18 2011 +0000
 
@@ -60804,7 +63701,7 @@ Date:   Mon Oct 3 13:01:55 2011 +0000
 
     Reintegrated the datatables branch back into the trunk.   The report results, search results, users list, rooms list and pending list are now sortable, searchable tables.  In addition admins can do bulk deletes of the entries returned in a report.
 
-commit ec3f96cd (origin/datatables, datatables)
+commit ec3f96cd (origin/datatables)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon Oct 3 10:57:10 2011 +0000
 
@@ -66595,7 +69492,7 @@ Date:   Wed Jan 26 11:27:39 2011 +0000
      To come is an improved convert_db_to_utf8.php script that I have been
      working on.
 
-commit c591213b (origin/only_unicode, only_unicode)
+commit c591213b (origin/only_unicode)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Jan 25 15:00:15 2011 +0000
 
@@ -66709,7 +69606,7 @@ Date:   Fri Jan 7 17:00:33 2011 +0000
     - emails containing iCalendar details that can be imported automatically into calendar apps (eg Outlook, iCal, Thunderbird/Lightning, Google Calendar)
     - export of bookings as iCalendar files (.ics) from view_entry.php and report.php
 
-commit 943f06a8 (origin/ics_attachments, ics_attachments)
+commit 943f06a8 (origin/ics_attachments)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Jan 7 09:16:55 2011 +0000
 
@@ -67819,7 +70716,7 @@ Date:   Mon Nov 22 14:39:15 2010 +0000
  web/jquery/ui/jquery-ui-datepicker-en-US.js | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-commit 3babfd12 (origin/disabled_rooms, disabled_rooms)
+commit 3babfd12 (origin/disabled_rooms)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Mon Nov 22 11:12:47 2010 +0000
 
@@ -68240,7 +71137,7 @@ Date:   Fri Nov 5 11:49:58 2010 +0000
  web/systemdefaults.inc.php |  4 +++-
  3 files changed, 30 insertions(+), 2 deletions(-)
 
-commit d41880df (origin/from_to_bookings, from_to_bookings)
+commit d41880df (origin/from_to_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Fri Nov 5 11:22:33 2010 +0000
 
@@ -68429,7 +71326,7 @@ Date:   Tue Nov 2 15:10:18 2010 +0000
 
     Merged the provisional_bookings_new_style branch back into the trunk.   MRBS now has the ability to make "tentative" bookings, ie bookings which are not 100% certain to happen, but where the user wants to reserve the slot in the meantime.
 
-commit a96e93fb (origin/provisional_bookings_new_style, provisional_bookings_new_style)
+commit a96e93fb (origin/provisional_bookings_new_style)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Nov 2 14:51:00 2010 +0000
 
@@ -70177,7 +73074,7 @@ Date:   Thu Aug 19 17:01:17 2010 +0000
 
     Merged datepicker branch (pop-up calendars) back into the trunk.
 
-commit c73e6cad (origin/datepicker, datepicker)
+commit c73e6cad (origin/datepicker)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Aug 17 16:55:42 2010 +0000
 
@@ -70383,7 +73280,7 @@ Date:   Tue Jul 27 11:27:51 2010 +0000
 
     Merged the custom_entry_fields branch back into the trunk.   MRBS now recognises custom fields added to the entry and repeat tables.  As well as the edit_entry and view_entry pages, the Report and Search pages and email notifications now support custom fields.
 
-commit 6b69a3de (origin/custom_entry_fields, custom_entry_fields)
+commit 6b69a3de (origin/custom_entry_fields)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Tue Jul 27 10:37:43 2010 +0000
 
@@ -71615,7 +74512,7 @@ Date:   Wed Dec 9 22:37:17 2009 +0000
     * Performed --reintegrate branch merge of 'provisional_bookings' branch,
      r1242-1280.
 
-commit 47fd8233 (origin/provisional_bookings, provisional_bookings)
+commit 47fd8233 (origin/provisional_bookings)
 Author: Campbell Morrison <cimorrison@users.sourceforge.net>
 Date:   Wed Dec 9 21:02:28 2009 +0000
 
@@ -75705,7 +78602,7 @@ Date:   Tue Sep 2 18:54:04 2008 +0000
 
     Merged into the trunk revisions 804-872 from the improve_css_2008_06
 
-commit 1ef2feeb (origin/improve_css_2008_06, improve_css_2008_06)
+commit 1ef2feeb (origin/improve_css_2008_06)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Sep 2 12:38:39 2008 +0000
 
@@ -76797,7 +79694,7 @@ Date:   Sat Apr 12 21:05:36 2008 +0000
      branches/abandoned-mrbs-1_3-development/ to abandon the trunk development
      that was working towards MRBS 1.3.
 
-commit 146066da (origin/mrbs-1_2-branch, mrbs-1_2-branch)
+commit 146066da (origin/mrbs-1_2-branch)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Sat Apr 12 20:03:49 2008 +0000
 
@@ -76827,7 +79724,7 @@ Date:   Thu Apr 3 18:59:27 2008 +0000
      HTML 4.01 Transitional HTML. Majority of changes thanks to
      Claudio Strizzolo.
 
-commit 53ad5e35 (tag: mrbs12_better_html_mp1, origin/mrbs12_better_html, mrbs12_better_html)
+commit 53ad5e35 (tag: mrbs12_better_html_mp1, origin/mrbs12_better_html)
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Thu Apr 3 18:51:15 2008 +0000
 
@@ -82079,7 +84976,7 @@ Date:   Sun Feb 25 01:34:20 2001 +0000
 
     Merge branch mrbs-0-9-1xp into trunk
 
-commit 8dff23db (origin/mrbs-0-9-1xp, mrbs-0-9-1xp)
+commit 8dff23db (origin/mrbs-0-9-1xp)
 Author: Daniel <nambit@users.sourceforge.net>
 Date:   Thu Feb 22 20:11:10 2001 +0000
 
@@ -84570,7 +87467,7 @@ Date:   Wed May 3 22:41:26 2000 +0000
 
     Standard project directories initialized by cvs2svn.
 
-commit 50650434 (tag: start, origin/vendor, vendor)
+commit 50650434 (tag: start, origin/vendor)
 Author: Daniel <nambit@users.sourceforge.net>
 Date:   Wed May 3 22:41:26 2000 +0000
 
