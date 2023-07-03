@@ -268,7 +268,7 @@ $theme = "default";
 // configure per area settings.   This would allow you to set policies such as allowing
 // a maximum of 10 bookings per month in total with a maximum of 1 per day in Area A.
 $max_per_interval_global_enabled['day']    = false;
-$max_per_interval_global['day'] = 1;      // max 1 bookings per day in total
+$max_per_interval_global['day'] = 1;      // max 1 booking per day in total
 
 $max_per_interval_global_enabled['week']   = false;
 $max_per_interval_global['week'] = 5;     // max 5 bookings per week in total
@@ -478,7 +478,7 @@ $default_view = "day";
 // rooms (true) or not (false).
 $default_view_all = true;
 
-// If there's only one room in an area, the view_all option will not mormally
+// If there's only one room in an area, the view_all option will not normally
 // be offered.  This can be overridden by setting the variable below to true.
 $always_offer_view_all = false;
 
@@ -1110,7 +1110,7 @@ $auth['db_ext']['db_system'] = 'mysql';
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
 $auth['db_ext']['db_host'] = 'localhost';
-// If you need to use a non standard port for the database connection you
+// If you need to use a non-standard port for the database connection you
 // can uncomment the following line and specify the port number
 //$auth['db_ext']['db_port'] = 1234;
 $auth['db_ext']['db_username'] = 'authuser';

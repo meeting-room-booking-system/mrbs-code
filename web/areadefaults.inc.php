@@ -237,7 +237,7 @@ $max_secs_per_interval_area['future'] = 60*60*100; // max 100 hours in the futur
 // no notion of when periods actually occur they are assumed to start
 // at the time below when we are enforcing book ahead policies.
 // The setting defines the time of day when bookings open.
-// This should be a string in the format hh:mm using the 24 hour clock.
+// This should be a string in the format hh:mm using the 24-hour clock.
 $periods_booking_opens = '00:00';
 
 
