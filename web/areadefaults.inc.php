@@ -88,7 +88,7 @@ $eveningends_minutes   = 30;   // must be integer in range 0-59
 // and eveningends_minutes = 30
 
 // Example 2.
-// To get a full 24 hour display with 15-minute steps, set morningstarts=0; eveningends=23;
+// To get a full 24-hour display with 15-minute steps, set morningstarts=0; eveningends=23;
 // eveningends_minutes=45; and resolution=900.
 //
 // Example 3.
@@ -180,7 +180,7 @@ $max_delete_ahead_secs = 60*60*24*7;  // (seconds) no more than one week ahead
 // As MRBS does not know when the periods occur in the day, there is no way of specifying, for example,
 // that bookings must be made at least 24 hours in advance.    Setting $min_create_ahead_secs=86400
 // will allow somebody to make a booking at 11:59 pm for the first period the next day, which
-// which may occur at 8.00 am.
+// may occur at 8.00 am.
 
 
 // Set a maximum duration for bookings
