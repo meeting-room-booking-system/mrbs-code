@@ -268,7 +268,7 @@ $theme = "default";
 // configure per area settings.   This would allow you to set policies such as allowing
 // a maximum of 10 bookings per month in total with a maximum of 1 per day in Area A.
 $max_per_interval_global_enabled['day']    = false;
-$max_per_interval_global['day'] = 1;      // max 1 bookings per day in total
+$max_per_interval_global['day'] = 1;      // max 1 booking per day in total
 
 $max_per_interval_global_enabled['week']   = false;
 $max_per_interval_global['week'] = 5;     // max 5 bookings per week in total
