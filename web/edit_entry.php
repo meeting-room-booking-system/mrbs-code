@@ -717,7 +717,7 @@ function get_field_rep_type(int $value, bool $disabled=false) : FieldDiv
 
 
 // Repeat day
-function get_field_rep_day($disabled=false)
+function get_field_rep_day(bool $disabled=false) : FieldInputCheckboxGroup
 {
   global $weekstarts, $datetime_formats;
   global $rep_day;
@@ -740,7 +740,7 @@ function get_field_rep_day($disabled=false)
 }
 
 
-function get_fieldset_rep_weekly_details($disabled=false)
+function get_fieldset_rep_weekly_details(bool $disabled=false) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
@@ -753,7 +753,7 @@ function get_fieldset_rep_weekly_details($disabled=false)
 
 
 // MONTH ABSOLUTE (eg Day 15 of every month)
-function get_fieldset_month_absolute($disabled=false)
+function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
 {
   global $month_type, $month_absolute;
 
@@ -792,7 +792,7 @@ function get_fieldset_month_absolute($disabled=false)
 
 
 // MONTH RELATIVE (eg the second Thursday of every month)
-function get_fieldset_month_relative($disabled=false)
+function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
 {
   global $month_type, $month_relative_ord, $month_relative_day;
   global $weekstarts, $RFC_5545_days;
@@ -845,7 +845,7 @@ function get_fieldset_month_relative($disabled=false)
 }
 
 
-function get_fieldset_rep_monthly_details($disabled=false)
+function get_fieldset_rep_monthly_details(bool $disabled=false) : ElementFieldset
 {
   global $month_type;
 
@@ -868,7 +868,7 @@ function get_fieldset_rep_monthly_details($disabled=false)
 }
 
 
-function get_field_rep_end_date($disabled=false)
+function get_field_rep_end_date(bool $disabled=false) : FieldInputDate
 {
   global $rep_end_year, $rep_end_month, $rep_end_day;
 
