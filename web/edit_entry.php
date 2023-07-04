@@ -470,8 +470,8 @@ function get_field_areas(int $value, bool $disabled=false) : ?FieldSelect
   return $field;
 }
 
-
-function get_field_rooms($value, $disabled=false)
+// $value can be a scalar or an array
+function get_field_rooms($value, bool $disabled=false) : FieldSelect
 {
   global $multiroom_allowed, $area_id, $area_details, $room_options;
 
