@@ -158,7 +158,7 @@ function get_field_description($value, $disabled=false)
 //                                that $display_none is FALSE.  (This prevents multiple inputs
 //                                of the same name)
 //    $is_start                   Boolean.  Whether this is the start selector.  Default FALSE
-function get_slot_selector(Area $area, $id, $name, $current_s, $display_none=false, $disabled=false, $is_start=false)
+function get_slot_selector(Area $area, string $id, string $name, int $current_s, bool $display_none=false, bool $disabled=false, bool $is_start=false) : ElementSelect
 {
   // Check that $resolution is positive to avoid an infinite loop below.
   // (Shouldn't be possible, but just in case ...)
