@@ -711,7 +711,7 @@ function get_field_custom(string $key, bool $disabled=false)
 
 
 // Repeat type
-function get_field_rep_type($value, $disabled=false)
+function get_field_rep_type(int $value, bool $disabled=false) : FieldDiv
 {
   $field = new FieldDiv();
 
