@@ -1939,7 +1939,7 @@ function mrbs_nl2br(string $string) : string
 function clean_address_list(string $string) : string
 {
   $array = explode(',', $string);
-  array_walk($array, 'trim');
+  $array = array_map('trim', $array);
   return implode(', ', array_unique($array));
 }
 
