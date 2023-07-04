@@ -335,7 +335,7 @@ function get_field_start_time(int $value, bool $disabled=false) : FieldDiv
 }
 
 
-function get_field_end_time($value, $disabled=false)
+function get_field_end_time(int $value, bool $disabled=false) : FieldDiv
 {
   global $areas, $area_id;
   global $multiday_allowed;
