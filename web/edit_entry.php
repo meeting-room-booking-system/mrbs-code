@@ -939,7 +939,7 @@ function get_field_rep_interval(int $rep_interval, bool $disabled=false) : Field
   return $field;
 }
 
-function get_field_skip_conflicts($disabled=false)
+function get_field_skip_conflicts(bool $disabled=false) : ?FieldInputCheckbox
 {
   global $skip_default;
 
@@ -957,7 +957,7 @@ function get_field_skip_conflicts($disabled=false)
   return $field;
 }
 
-function get_fieldset_registration()
+function get_fieldset_registration() : ?ElementFieldset
 {
   global $enable_registration, $enable_registration_users;
   global $allow_registration, $registrant_limit_enabled, $registrant_limit;
@@ -1049,7 +1049,7 @@ function get_fieldset_registration()
 }
 
 
-function get_fieldset_repeat()
+function get_fieldset_repeat() : ElementFieldset
 {
   global $edit_type, $repeats_allowed;
   global $rep_type, $rep_interval;
@@ -1075,7 +1075,7 @@ function get_fieldset_repeat()
 }
 
 
-function get_fieldset_booking_controls()
+function get_fieldset_booking_controls() : ElementFieldset
 {
   global $mail_settings;
 
@@ -1094,7 +1094,7 @@ function get_fieldset_booking_controls()
 }
 
 
-function get_fieldset_submit_buttons()
+function get_fieldset_submit_buttons() : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
