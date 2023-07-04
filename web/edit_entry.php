@@ -499,7 +499,7 @@ function get_field_rooms($value, bool $disabled=false) : FieldSelect
 }
 
 
-function get_field_type($value, $disabled=false)
+function get_field_type(string $value, bool $disabled=false) : ?FieldSelect
 {
   global $is_mandatory_field;
 
