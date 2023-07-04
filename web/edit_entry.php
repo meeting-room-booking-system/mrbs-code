@@ -276,7 +276,7 @@ function get_all_day(array $area, string $input_id, string $input_name, bool $di
 }
 
 
-function get_field_start_time($value, $disabled=false)
+function get_field_start_time(int $value, bool $disabled=false) : FieldDiv
 {
   global $areas, $area_id;
 
