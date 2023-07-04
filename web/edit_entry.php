@@ -554,7 +554,7 @@ function get_field_confirmation_status(int $value, bool $disabled=false) : ?Fiel
 }
 
 
-function get_field_privacy_status($value, $disabled=false)
+function get_field_privacy_status(bool $value, bool $disabled=false) : ?FieldInputRadioGroup
 {
   global $private_enabled, $private_mandatory;
 
