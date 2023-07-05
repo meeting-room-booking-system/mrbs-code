@@ -1010,7 +1010,7 @@ function get_date($t, $view) : string
 }
 
 
-function get_day($t, $view)
+function get_day(int $t, string $view) : string
 {
   // In the month view use a pattern which will tend to give a narrower result, to save space.
   $pattern = ($view == 'month') ? 'cccccc' : 'ccc';
