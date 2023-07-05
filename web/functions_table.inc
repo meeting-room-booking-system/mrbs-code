@@ -77,7 +77,7 @@ function prepare_entry(array $entry) : array
 }
 
 
-function map_add_booking(array $entry, &$column, $start_first_slot, $start_last_slot) : void
+function map_add_booking(array $entry, array &$column, int $start_first_slot, int $start_last_slot) : void
 {
   // Enters the contents of the booking found in $entry into $column, which is
   // a column of the map of the bookings being prepared ready for display.
@@ -721,10 +721,18 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
   // We want to build an array containing all the data we want to show
   // and then spit it out.
-  $today = array();
+  $today = [];
 
   foreach ($entries as $entry)
   {
+    if (!isset($today[$entry['room_id']]))
+    {
+      $today[$entry['room_id']] = [];
+    }
+    if (!isset($today[$entry['room_id']][$day]))
+    {
+      $today[$entry['room_id']][$day] = [];
+    }
     map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
   }
 
@@ -1151,7 +1159,7 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
                                  get_end_last_slot($month, $day_start_interval + $n_days-1, $year));
 
   // We want to build an array containing all the data we want to show and then spit it out.
-  $interval = array();
+  $interval = [];
   for ($j = 0; $j < $n_days; $j++)
   {
     $d = $day_start_interval + $j;
@@ -1160,6 +1168,14 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
     foreach ($entries as $entry)
     {
+      if (!isset($interval[$entry['room_id']]))
+      {
+        $interval[$entry['room_id']] = [];
+      }
+      if (!isset($interval[$entry['room_id']][$d]))
+      {
+        $interval[$entry['room_id']][$d] = [];
+      }
       map_add_booking($entry, $interval[$entry['room_id']][$d], $start_first_slot, $start_last_slot);
     }
     foreach ($rooms as $room)
@@ -1423,12 +1439,20 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
                                  $start_first_slot[0],
                                  $start_last_slot[DAYS_PER_WEEK - 1] + $resolution);
 
-  $week_map = array();
+  $week_map = [];
 
   for ($j = 0; $j < DAYS_PER_WEEK; $j++)
   {
     foreach ($entries as $entry)
     {
+      if (!isset($week_map[$room_id]))
+      {
+        $week_map[$room_id] = [];
+      }
+      if (!isset($week_map[$room_id][$j]))
+      {
+        $week_map[$room_id][$j] = [];
+      }
       map_add_booking($entry, $week_map[$room_id][$j], $start_first_slot[$j], $start_last_slot[$j]);
     }
     map_coalesce_bookings($week_map[$room_id][$j]);
