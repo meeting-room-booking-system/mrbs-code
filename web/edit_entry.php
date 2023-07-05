@@ -1106,7 +1106,7 @@ function get_fieldset_submit_buttons() : ElementFieldset
 // If $is_end is set then this is the end time and so if the booking day happens to
 // last exactly 24 hours, when there will be two possible answers, we want the later
 // one.
-function getbookingdate($t, $is_end=false)
+function getbookingdate(int $t, bool $is_end=false) : array
 {
   global $eveningends, $eveningends_minutes, $resolution;
 
