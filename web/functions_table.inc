@@ -968,7 +968,7 @@ function get_flex_div($slots, $classes, $title=null, $text=null) : string
 }
 
 
-function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $room_id, $timetohighlight) : string
+function week_table_innerhtml(string $view, int $view_all, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight) : string
 {
   if ($view_all)
   {
