@@ -995,7 +995,7 @@ function week_table_innerhtml($view, $view_all, $year, $month, $day, $area_id, $
 }
 
 
-function get_date($t, $view) : string
+function get_date(int $t, string $view) : string
 {
   global $datetime_formats;
 
