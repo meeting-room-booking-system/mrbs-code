@@ -723,7 +723,6 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
     $entry = prepare_entry($entry);
     $map->add($entry, $day, $start_first_slot, $start_last_slot);
   }
-  $map->coalesce();
 
   $n_time_slots = get_n_time_slots() - $skipped_slots;
   $morning_slot_seconds = ((($morningstarts * 60) + $morningstarts_minutes) * 60) + ($skipped_slots * $resolution);

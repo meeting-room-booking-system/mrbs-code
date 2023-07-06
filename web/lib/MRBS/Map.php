@@ -5,6 +5,9 @@ namespace MRBS;
 class Map
 {
   private $resolution;
+  private $data_has_been_coalesced = false;
+  private $output_started = false;
+
   // $data is a column of the map of the screen that will be displayed, and is an array indexed
   // by the room_id, then day, then number of nominal seconds (ie ignoring DST changes) since the
   // start of the calendar day which has the start of the booking day.  Each element of the array
@@ -55,11 +58,10 @@ class Map
     // s is the number of nominal seconds (ie ignoring DST changes) since the
     // start of the calendar day which has the start of the booking day
 
-    // Fill in the map for this meeting. Start at the meeting start time,
-    // or the day start time, whichever is later. End one slot before the
-    // meeting end time (since the next slot is for meetings which start then),
-    // or at the last slot in the day, whichever is earlier.
-    // Time is of the format HHMM without leading zeros.
+    if ($this->output_started)
+    {
+      throw new Exception("Map: entries cannot be added after output has started");
+    }
 
     // We're only interested in entries which occur on this day (it's possible
     // for $entry to contain entries for other days)
@@ -69,8 +71,14 @@ class Map
       return;
     }
 
+    // Fill in the map for this meeting. Start at the meeting start time,
+    // or the day start time, whichever is later. End one slot before the
+    // meeting end time (since the next slot is for meetings which start then),
+    // or at the last slot in the day, whichever is earlier.
+    // Time is of the format HHMM without leading zeros.
+
     // Adjust the starting and ending times so that bookings which don't
-    // start or end at a recognized time still appear.
+    // start or end at a recognised time still appear.
     $start_t = max(round_t_down($entry['start_time'], $this->resolution, $start_first_slot), $start_first_slot);
     $end_t = min(round_t_up($entry['end_time'], $this->resolution, $start_first_slot) - $this->resolution, $start_last_slot);
 
@@ -94,8 +102,24 @@ class Map
   }
 
 
+  // Returns the entry that should be displayed at slot $s on day $day for room $room_id.
+  // Returns an empty array if there is no entry.
+  // Should not be called until after all the data has been added
+  public function slot(int $room_id, int $day, int $slot) : array
+  {
+    if (!$this->data_has_been_coalesced)
+    {
+      $this->coalesce();;
+    }
+
+    $this->output_started = true;
+
+    return $this->data[$room_id][$day][$slot] ?? [];
+  }
+
+
   // Coalesces map entries that span consecutive time slots.
-  function coalesce() : void
+  private function coalesce() : void
   {
     // The map_add_booking() method set n_slots=1 for all map entries.  For each
     // booking in the room that spans multiple consecutive time slots, and that
@@ -139,14 +163,8 @@ class Map
         }
       }
     }
-  }
 
-
-  // Returns the entry that should be displayed at slot $s on day $day for room $room_id.
-  // Returns an empty array if there is no entry.
-  public function slot(int $room_id, int $day, int $slot) : array
-  {
-    return $this->data[$room_id][$day][$slot] ?? [];
+    $this->data_has_been_coalesced = true;
   }
 
 }
