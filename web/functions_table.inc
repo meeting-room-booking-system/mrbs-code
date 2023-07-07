@@ -380,7 +380,7 @@ function day_cell_html(string $text, string $link, string $iso_date) : string
 //
 // $data is an optional third parameter which if set passes an
 // associative array of name-value pairs to be used in data attributes
-function tdcell($classes, $slots, ?array $data=null) : string
+function tdcell($classes, int $slots, ?array $data=null) : string
 {
   global $times_along_top;
 
