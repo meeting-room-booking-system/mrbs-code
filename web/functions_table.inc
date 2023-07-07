@@ -1885,7 +1885,7 @@ function month_room_table_innerhtml(string $view, int $view_all, int $year, int 
       // Don't provide a link if the slot doesn't really exist or if the user is logged in, but not a booking admin,
       // and it's a holiday/weekend and bookings on holidays/weekends are not allowed.  (We provide a link if they
       // are not logged in because they might want to click and login as an admin).
-      if ((null !== session()->getCurrentUser()) && !is_book_admin($room) &&
+      if ((null !== session()->getCurrentUser()) && !is_book_admin($room->id) &&
           (($prevent_booking_on_holidays && in_array('holiday', $classes)) ||
            ($prevent_booking_on_weekends && in_array('weekend', $classes))))
       {
