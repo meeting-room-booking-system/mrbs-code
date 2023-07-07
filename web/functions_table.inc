@@ -719,29 +719,13 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
   $entries = get_entries_by_area($area_id, $start_first_slot, $start_last_slot + $resolution);
 
-  // We want to build an array containing all the data we want to show
+  // We want to build a map containing all the data we want to show
   // and then spit it out.
-  $today = [];
-
+  $map = new Map($resolution);
   foreach ($entries as $entry)
   {
-    if (!isset($today[$entry['room_id']]))
-    {
-      $today[$entry['room_id']] = [];
-    }
-    if (!isset($today[$entry['room_id']][$day]))
-    {
-      $today[$entry['room_id']][$day] = [];
-    }
-    map_add_booking($entry, $today[$entry['room_id']][$day], $start_first_slot, $start_last_slot);
-  }
-
-  foreach ($rooms as $room)
-  {
-    if (isset($today[$room->id]))
-    {
-      map_coalesce_bookings($today[$room->id][$day]);
-    }
+    $entry = prepare_entry($entry);
+    $map->add($entry, $day, $start_first_slot, $start_last_slot);
   }
 
   $n_time_slots = get_n_time_slots() - $skipped_slots;
@@ -864,11 +848,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
         $query_vars = get_query_vars($view, $area_id, $room->id, $month, $day, $year, $s);
 
         // and then draw the cell
-        if (!isset($today[$room->id][$day][$s]))
-        {
-          $today[$room->id][$day][$s] = array();
-        }
-        $tbody .= cell_html($today[$room->id][$day][$s], $query_vars, $is_invalid[$s]);
+        $tbody .= cell_html($map->slot($room->id, $day, $s), $query_vars, $is_invalid[$s]);
       }  // end for (looping through the times)
       if ($row_labels_both_sides)
       {
@@ -932,13 +912,7 @@ function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $ti
 
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($view, $area_id, $room->id, $month, $day, $year, $s);
-
-        if (!isset($today[$room->id][$day][$s]))
-        {
-          $today[$room->id][$day][$s] = array();
-        }
-
-        $tbody .= cell_html($today[$room->id][$day][$s], $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room->id, $day, $s), $query_vars, $is_invalid);
       }
 
       // next lines to display times on right side
