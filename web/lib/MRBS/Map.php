@@ -91,8 +91,7 @@ class Map
     $entry['is_multiday_start'] = ($entry['start_time'] < $start_first_slot);
     $entry['is_multiday_end'] = ($entry['end_time'] > ($start_last_slot + $this->resolution));
 
-    // Tentatively assume that this booking occupies 1 slot.  Call map_coalesce_bookings()
-    // later to fix it.
+    // Tentatively assume that this booking occupies 1 slot.  Call coalesce() later to fix it.
     $entry['n_slots'] = 1;
 
     for ($s = $start_s; $s <= $end_s; $s += $this->resolution)
@@ -119,11 +118,10 @@ class Map
   // Coalesces map entries that span consecutive time slots.
   private function coalesce() : void
   {
-    // The map_add_booking() method set n_slots=1 for all map entries.  For each
-    // booking in the room that spans multiple consecutive time slots, and that
-    // does not have conflicting bookings, the first entry will have its slot
-    // count adjusted, and the continuation entries will have their n_slots
-    // attribute set to NULL.
+    // The add() method set n_slots=1 for all map entries.  For each booking in the
+    // room that spans multiple consecutive time slots, and that does not have
+    // conflicting bookings, the first entry will have its slot count adjusted, and
+    // the continuation entries will have their n_slots attribute set to NULL.
     foreach ($this->data as &$room_data)
     {
       foreach ($room_data as &$day_data)
