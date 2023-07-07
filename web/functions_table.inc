@@ -434,7 +434,7 @@ function get_n_time_slots() : int
 
 
 // $s is nominal seconds
-function get_query_vars($view, $area, $room, $month, $day, $year, $s) : array
+function get_query_vars(string $view, int $area, int $room, int $month, int $day, int $year, int $s) : array
 {
   global $morningstarts, $morningstarts_minutes;
 
