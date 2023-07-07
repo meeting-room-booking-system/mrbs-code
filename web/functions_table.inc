@@ -1120,7 +1120,8 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
                                  get_end_last_slot($month, $day_start_interval + $n_days-1, $year));
 
   // We want to build an array containing all the data we want to show and then spit it out.
-  $interval = [];
+  $map = new Map($resolution);
+
   for ($j = 0; $j < $n_days; $j++)
   {
     $d = $day_start_interval + $j;
@@ -1129,22 +1130,8 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
 
     foreach ($entries as $entry)
     {
-      if (!isset($interval[$entry['room_id']]))
-      {
-        $interval[$entry['room_id']] = [];
-      }
-      if (!isset($interval[$entry['room_id']][$d]))
-      {
-        $interval[$entry['room_id']][$d] = [];
-      }
-      map_add_booking($entry, $interval[$entry['room_id']][$d], $start_first_slot, $start_last_slot);
-    }
-    foreach ($rooms as $room)
-    {
-      if (isset($interval[$room['id']]))
-      {
-        map_coalesce_bookings($interval[$room['id']][$d]);
-      }
+      $entry = prepare_entry($entry);
+      $map->add($entry, $d, $start_first_slot, $start_last_slot);
     }
   }
 
@@ -1234,13 +1221,14 @@ function multiday_view_all_rooms_innerhtml(string $view, int $view_all, int $yea
         $slots = 0;
         while ($s <= $evening_slot_seconds)
         {
-          if (isset($interval[$room_id][$d][$s]))
+          $this_slot = $map->slot($room_id, $d, $s);
+          if (!empty($this_slot))
           {
             if ($slots > 0)
             {
               $tbody .= get_flex_div($slots, 'free');
             }
-            $this_entry = $interval[$room_id][$d][$s][0];
+            $this_entry = $this_slot[0];
             $n =    $this_entry['n_slots'];
             $text = $this_entry['name'];
             $classes = get_entry_classes($this_entry);
