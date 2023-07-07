@@ -2,11 +2,11 @@
 declare(strict_types=1);
 namespace MRBS;
 
+// A class for building a map of bookings which can be used for constructing the calendar display
 class Map
 {
   private $resolution;
   private $data_has_been_coalesced = false;
-  private $output_started = false;
 
   // $data is a column of the map of the screen that will be displayed, and is an array indexed
   // by the room_id, then day, then number of nominal seconds (ie ignoring DST changes) since the
@@ -58,7 +58,7 @@ class Map
     // s is the number of nominal seconds (ie ignoring DST changes) since the
     // start of the calendar day which has the start of the booking day
 
-    if ($this->output_started)
+    if ($this->data_has_been_coalesced)
     {
       throw new Exception("Map: entries cannot be added after output has started");
     }
@@ -111,9 +111,6 @@ class Map
     {
       $this->coalesce();
     }
-
-    // To make sure we don't try and add any more entries after this
-    $this->output_started = true;
 
     return $this->data[$room_id][$day][$slot] ?? [];
   }
