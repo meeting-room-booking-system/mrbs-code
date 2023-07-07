@@ -109,9 +109,10 @@ class Map
   {
     if (!$this->data_has_been_coalesced)
     {
-      $this->coalesce();;
+      $this->coalesce();
     }
 
+    // To make sure we don't try and add any more entries after this
     $this->output_started = true;
 
     return $this->data[$room_id][$day][$slot] ?? [];
