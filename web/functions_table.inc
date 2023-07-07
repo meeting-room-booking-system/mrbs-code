@@ -121,7 +121,7 @@ function get_entry_classes($entry) : array
 }
 
 
-function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
+function cell_html(array $cell, array $query_vars, bool $is_invalid = false) : string
 {
   // draws a single cell in the main table of the day and week views
   //
@@ -262,7 +262,7 @@ function cell_html(array $cell, array $query_vars, $is_invalid = false) : string
 }  // end function draw_cell
 
 
-function get_timeslot_text($s, $resolution) : string
+function get_timeslot_text(int $s, int $resolution) : string
 {
   global $show_slot_endtime;
 
@@ -279,7 +279,7 @@ function get_timeslot_text($s, $resolution) : string
 // Draw a time cell to be used in the first and last columns of the day and week views
 //    $s                 the number of seconds since the start of the day (nominal - not adjusted for DST)
 //    $url               the url to form the basis of the link in the time cell
-function time_cell_html($s, $url)
+function time_cell_html(int $s, string $url) : string
 {
   global $enable_periods, $resolution;
 
