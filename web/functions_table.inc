@@ -78,7 +78,7 @@ function prepare_entry(array $entry) : array
 
 
 // Returns an array of classes to be used for the entry
-function get_entry_classes($entry) : array
+function get_entry_classes(array $entry) : array
 {
   global $approval_enabled, $confirmation_enabled;
 
