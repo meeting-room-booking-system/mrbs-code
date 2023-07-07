@@ -509,7 +509,7 @@ function get_rooms_header_cells(array $rooms, array $vars) : string
 }
 
 
-function day_table_innerhtml($view, $year, $month, $day, $area_id, $room_id, $timetohighlight=null, ?string $kiosk=null) : string
+function day_table_innerhtml(string $view, int $year, int $month, int $day, int $area_id, int $room_id, ?int $timetohighlight=null, ?string $kiosk=null) : string
 {
   global $enable_periods;
   global $times_along_top, $row_labels_both_sides, $column_labels_both_ends;
