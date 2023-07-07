@@ -1401,23 +1401,14 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
                                  $start_first_slot[0],
                                  $start_last_slot[DAYS_PER_WEEK - 1] + $resolution);
 
-  $week_map = [];
+  $map = new Map($resolution);
 
   for ($j = 0; $j < DAYS_PER_WEEK; $j++)
   {
     foreach ($entries as $entry)
     {
-      if (!isset($week_map[$room_id]))
-      {
-        $week_map[$room_id] = [];
-      }
-      if (!isset($week_map[$room_id][$j]))
-      {
-        $week_map[$room_id][$j] = [];
-      }
-      map_add_booking($entry, $week_map[$room_id][$j], $start_first_slot[$j], $start_last_slot[$j]);
+      $map->add($entry, $j, $start_first_slot[$j], $start_last_slot[$j]);
     }
-    map_coalesce_bookings($week_map[$room_id][$j]);
   }
   unset($j);  // Just so that we pick up any accidental attempt to use it later
 
@@ -1528,13 +1519,8 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
         $is_invalid = $is_possibly_invalid[$thisday] && is_invalid_datetime(0, 0, $s, $wmonth, $wday, $wyear);
         // set up the query vars to be used for the link in the cell
         $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
-
         // and then draw the cell
-        if (!isset($week_map[$room_id][$thisday][$s]))
-        {
-          $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
-        }
-        $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
+        $tbody .= cell_html($map->slot($room_id, $thisday, $s), $query_vars, $is_invalid);
       }  // end looping through the time slots
       if ($row_labels_both_sides)
       {
@@ -1604,12 +1590,8 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
         $query_vars = get_query_vars($view, $area_id, $room_id, $wmonth, $wday, $wyear, $s);
 
         // and then draw the cell
-        if (!isset($week_map[$room_id][$thisday][$s]))
-        {
-          $week_map[$room_id][$thisday][$s] = array();  // to avoid an undefined index NOTICE error
-        }
-        $tbody .= cell_html($week_map[$room_id][$thisday][$s], $query_vars, $is_invalid);
-      }    // for loop
+        $tbody .= cell_html($map->slot($room_id, $thisday, $s), $query_vars, $is_invalid);
+      }
 
       // next lines to display times on right side
       if ($row_labels_both_sides)
