@@ -179,7 +179,7 @@ function cell_html(array $cell, array $query_vars, bool $is_invalid = false) : s
     // If there's no booking or if there are multiple bookings then make the slot one unit long
     $slots = (count($cell) == 1) ? $cell[0]['n_slots'] : 1;
 
-    $html .= tdcell(implode(' ', $classes), $slots);
+    $html .= tdcell($classes, $slots);
 
     // If the room isn't booked then allow it to be booked
     if (empty($cell))
@@ -380,20 +380,14 @@ function day_cell_html(string $text, string $link, string $iso_date) : string
 //
 // $data is an optional third parameter which if set passes an
 // associative array of name-value pairs to be used in data attributes
-function tdcell($classes, $slots, ?array $data=null) : string
+function tdcell(array $classes, int $slots, ?array $data=null) : string
 {
   global $times_along_top;
 
-  if (isset($classes) && ($classes !== '') && !is_array($classes))
-  {
-    $classes = array($classes);
-  }
-
   $html = '';
-
   $html .= '<td';
 
-  if (isset($classes))
+  if (!empty($classes))
   {
     $html.= ' class="' . implode(' ', $classes) . '"';
   }
@@ -440,7 +434,7 @@ function get_n_time_slots() : int
 
 
 // $s is nominal seconds
-function get_query_vars($view, $area, $room, $month, $day, $year, $s) : array
+function get_query_vars(string $view, int $area, int $room, int $month, int $day, int $year, int $s) : array
 {
   global $morningstarts, $morningstarts_minutes;
 
