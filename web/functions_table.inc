@@ -465,7 +465,7 @@ function get_query_vars(string $view, int $area, int $room, int $month, int $day
 }
 
 
-function get_times_header_cells($start, $end, $increment) : string
+function get_times_header_cells(int $start, int $end, int $increment) : string
 {
   global $enable_periods;
 
