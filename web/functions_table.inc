@@ -495,7 +495,7 @@ function get_times_header_cells(int $start, int $end, int $increment) : string
 }
 
 
-function get_rooms_header_cells($rooms, $vars) : string
+function get_rooms_header_cells(array $rooms, array $vars) : string
 {
   $html = '';
 
