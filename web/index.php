@@ -183,11 +183,12 @@ function get_adjacent_link(string $view, int $view_all, int $year, int $month, i
       break;
   }
 
-  $date = getdate($time);
+  $date = new DateTime();
+  $date->setTimestamp($time);
 
   $vars = array('view'      => $view,
                 'view_all'  => $view_all,
-                'page_date' => format_iso_date($date['year'], $date['mon'], $date['mday']),
+                'page_date' => $date->getISODate(),
                 'area'      => $area,
                 'room'      => $room);
 

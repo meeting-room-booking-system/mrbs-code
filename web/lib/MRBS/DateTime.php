@@ -30,6 +30,13 @@ class DateTime extends \DateTime
   }
 
 
+  // Returns a date in ISO 8601 format ('yyyy-mm-dd')
+  public function getISODate() : string
+  {
+    return $this->format('Y-m-d');
+  }
+
+
   // Checks whether the config setting of holidays for $year consists
   // of a valid set of dates.
   private static function validateHolidays(string $year) : bool
