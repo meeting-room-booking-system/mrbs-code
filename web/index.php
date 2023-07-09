@@ -157,34 +157,32 @@ function make_room_select_html (string $view, int $view_all, int $year, int $mon
 // Gets the link to the next/previous day/week/month
 function get_adjacent_link(string $view, int $view_all, int $year, int $month, int $day, int $area, int $room, bool $next=false) : string
 {
+  $date = new DateTime();
+  $date->setDate($year, $month, $day);
+
   switch ($view)
   {
     case 'day':
-      // find the adjacent non-hidden day
-      $d = $day;
-      do
-      {
-        $d += ($next) ? 1 : -1;
-        $time = mktime(12, 0, 0, $month, $d, $year);
-      }
-      while (is_hidden_day(date('w', $time)) && (abs($d - $day) < DAYS_PER_WEEK));  // break the loop if all days are hidden
+      $modifier = ($next) ? '+1 day' : '-1 day';
+      // find the next non-hidden day
+      $i = 0;
+      do {
+        $i++;
+        $date->modify($modifier);
+      } while ($date->isHiddenDay() && ($i < DAYS_PER_WEEK)); // break the loop if all days are hidden
       break;
     case 'week':
-      $time = mktime(12, 0, 0, $month, $day + (($next) ? DAYS_PER_WEEK : -DAYS_PER_WEEK), $year);
+      $modifier = ($next) ? '+1 week' : '-1 week';
+      $date->modify($modifier);
       break;
     case 'month':
-      $time = mktime(12, 0, 0, $month + (($next) ? 1 : -1), 1, $year);
-      // Keep the day information, but make sure it's a valid day in the new month
-      $d = min($day, date('t', $time));
-      $time = mktime(12, 0, 0, $month + (($next) ? 1 : -1), $d, $year);
+      $n = ($next) ? 1 : -1;
+      $date->modifyMonthsNoOverflow($n);
       break;
     default:
       throw new \Exception("Unknown view '$view'");
       break;
   }
-
-  $date = new DateTime();
-  $date->setTimestamp($time);
 
   $vars = array('view'      => $view,
                 'view_all'  => $view_all,

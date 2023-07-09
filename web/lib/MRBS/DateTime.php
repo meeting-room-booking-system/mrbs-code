@@ -12,6 +12,24 @@ class DateTime extends \DateTime
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
+  // Adds $n (which can be negative) months to this date, without overflowing
+  // into the next month.  For example modifying 2023-01-31 by +1 month gives
+  // 2023-02-28 rather than 2023-03-03.
+  public function modifyMonthsNoOverflow(int $n) : void
+  {
+    if ($n == 0)
+    {
+      return;
+    }
+
+    $modifier = (abs($n) == 1) ? "$n month" : "$n months";
+    $day = $this->format('j');
+    $this->modify('first day of this month');
+    $this->modify($modifier);
+    $this->modify('+' . (min($day, $this->format('t')) - 1) . ' days');
+  }
+
+
   public function getDay() : int
   {
     return intval($this->format('j'));
@@ -139,6 +157,15 @@ class DateTime extends \DateTime
     }
 
     return self::$isHoliday[$iso_date];
+  }
+
+
+  // Determines whether a given date is supposed to be hidden in the display
+  public function isHiddenDay() : bool
+  {
+    global $hidden_days;
+
+    return (isset($hidden_days) && in_array($this->format('w'), $hidden_days));
   }
 
 
