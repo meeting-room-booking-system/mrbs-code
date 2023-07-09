@@ -322,7 +322,7 @@ function room_cell_html(array $room, array $vars) : string
       $tag = 'viewmonth';
       break;
     default:
-      trigger_error("Unknown view '$view'", E_USER_NOTICE);
+      trigger_error("Unknown view '" . $vars['view'] . "'", E_USER_NOTICE);
       $tag = 'viewweek';
       break;
   }
