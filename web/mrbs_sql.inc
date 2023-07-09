@@ -439,7 +439,7 @@ function adjust_ahead_seconds(int $seconds) : int
  *            - An array of human-readable errors, index by 'notices' or 'errors'.
  *              If there are no policy violations the array has length 0.
  */
-function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null, $delete=false)
+function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null, $delete=false) : array
 {
   global $periods, $enable_periods;
   global $min_create_ahead_enabled, $min_create_ahead_secs;
