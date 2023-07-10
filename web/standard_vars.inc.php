@@ -81,9 +81,9 @@ elseif (!empty($day) && !empty($month) && !empty($year))
 if (!empty($hidden_days) &&     // Use !empty in case $hidden_days is not set
     (count($hidden_days) < 7))  // Avoid an infinite loop
 {
-  while (in_array($date->format('w'), $hidden_days))
+  while ($date->isHiddenDay())
   {
-    $date->add(new DateInterval('P1D'));
+    $date->modify('+1 day');
   }
 }
 

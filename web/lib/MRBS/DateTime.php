@@ -12,6 +12,29 @@ class DateTime extends \DateTime
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
+  // Adds $n (which can be negative) months to this date, without overflowing
+  // into the next month.  For example modifying 2023-01-31 by +1 month gives
+  // 2023-02-28 rather than 2023-03-03.
+  public function modifyMonthsNoOverflow(int $n, bool $allow_hidden_days = false) : void
+  {
+    if ($n == 0)
+    {
+      return;
+    }
+
+    $modifier = (abs($n) == 1) ? "$n month" : "$n months";
+    $day = $this->format('j');
+    $this->modify('first day of this month');
+    $this->modify($modifier);
+    $this->modify('+' . (min($day, $this->format('t')) - 1) . ' days');
+
+    if (!$allow_hidden_days)
+    {
+      $this->findNearestUnhiddenDayInMonth();
+    }
+  }
+
+
   public function getDay() : int
   {
     return intval($this->format('j'));
@@ -27,6 +50,13 @@ class DateTime extends \DateTime
   public function getYear() : int
   {
     return intval($this->format('Y'));
+  }
+
+
+  // Returns a date in ISO 8601 format ('yyyy-mm-dd')
+  public function getISODate() : string
+  {
+    return $this->format('Y-m-d');
   }
 
 
@@ -85,6 +115,71 @@ class DateTime extends \DateTime
   }
 
 
+  // Move the date to the nearest unhidden day in this month.
+  private function findNearestUnhiddenDayInMonth() : void
+  {
+    // Trivial case: it's already unhidden
+    if (!$this->isHiddenDay())
+    {
+      return;
+    }
+
+    // Keep track of whether we've already tried looking beyond the ends
+    // of the month, to avoid doing it again unnecessarily.
+    $end_of_month_reached = false;
+    $start_of_month_reached =false;
+
+    // Create a series of modifiers going progressively +1, -1, +2, -2 ..
+    // +6, -6 days away from this day and test each one to check that the
+    // modified day is both in the same month as the original date and is
+    // not hidden.
+    for ($i=1; $i<7; $i++)
+    {
+      $unsigned_modifier = "$i day";
+      if ($i > 1)
+      {
+        $unsigned_modifier .= 's';  // plural
+      }
+      foreach (['+', '-'] as $sign)
+      {
+        // Check whether we've already been past the end/start of the
+        // month, and if so try the next modifier.
+        if ((($sign == '+') && $end_of_month_reached) ||
+            (($sign == '-') && $start_of_month_reached))
+        {
+          continue;
+        }
+        // Otherwise, create a clone and test it with this modifier
+        $clone = clone $this;
+        $modifier = $sign . $unsigned_modifier;
+        $clone->modify($modifier);
+        if ($clone->getMonth() == $this->getMonth())
+        {
+          if (!$clone->isHiddenDay())
+          {
+            // Success! The clone is in the same month and not hidden,
+            // so apply the same modifier to the original.
+            $this->modify($modifier);
+            return;
+          }
+        }
+        else
+        {
+          if ($sign == '+')
+          {
+            $end_of_month_reached = true;
+          }
+          else
+          {
+            $start_of_month_reached = true;
+          }
+        }
+        unset($clone);
+      }
+    }
+  }
+
+
   // Determines whether the date is a holiday, as defined
   // in the config variable $holidays.
   private function isHolidayConfig() : bool
@@ -132,6 +227,15 @@ class DateTime extends \DateTime
     }
 
     return self::$isHoliday[$iso_date];
+  }
+
+
+  // Determines whether a given date is supposed to be hidden in the display
+  public function isHiddenDay() : bool
+  {
+    global $hidden_days;
+
+    return (isset($hidden_days) && in_array($this->format('w'), $hidden_days));
   }
 
 
