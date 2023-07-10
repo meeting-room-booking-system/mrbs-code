@@ -133,7 +133,7 @@ class DateTime extends \DateTime
     // +6, -6 days away from this day and test each one to check that the
     // modified day is both in the same month as the original date and is
     // not hidden.
-    for ($i=1; $i<7; $i++)
+    for ($i=1; $i<DAYS_PER_WEEK; $i++)
     {
       $unsigned_modifier = "$i day";
       if ($i > 1)
