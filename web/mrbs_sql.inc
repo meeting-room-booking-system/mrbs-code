@@ -558,7 +558,8 @@ function mrbsCheckPolicy(array $booking, ?int $ignore=null, ?int $repignore=null
       if (isset($room_details['invalid_types']) &&
           in_array($booking['type'], $room_details['invalid_types']))
       {
-        $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), $room_details['room_name']);
+        // TODO: is this the best place for the htmlspecialchars()?  Should it go closer to the output?
+        $violations[] = get_vocab('type_not_allowed', get_type_vocab($booking['type']), htmlspecialchars($room_details['room_name']));
       }
     }
 
