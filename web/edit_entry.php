@@ -675,7 +675,7 @@ function get_field_custom(string $key, bool $disabled=false)
 
 
 // Repeat type
-function get_field_rep_type(int $value, bool $disabled=false) : FieldDiv
+function get_field_rep_type(int $value, array $rep_days, bool $disabled=false) : FieldDiv
 {
   $field = new FieldDiv();
 
@@ -701,7 +701,7 @@ function get_field_rep_type(int $value, bool $disabled=false) : FieldDiv
     // fields are disabled and the repeat type is not a weekly repeat
     if (!$disabled || ($value == REP_WEEKLY))
     {
-      $field->addControlElement(get_fieldset_rep_weekly_details($disabled));
+      $field->addControlElement(get_fieldset_rep_weekly_details($rep_days, $disabled));
     }
 
     // And no point in showing the monthly repeat details if the repeat
@@ -717,10 +717,9 @@ function get_field_rep_type(int $value, bool $disabled=false) : FieldDiv
 
 
 // Repeat day
-function get_field_rep_day(bool $disabled=false) : FieldInputCheckboxGroup
+function get_field_rep_day(array $rep_days, bool $disabled=false) : FieldInputCheckboxGroup
 {
   global $weekstarts, $datetime_formats;
-  global $rep_day;
 
   for ($i = 0; $i < DAYS_PER_WEEK; $i++)
   {
@@ -734,19 +733,19 @@ function get_field_rep_day(bool $disabled=false) : FieldInputCheckboxGroup
 
   $field->setAttribute('id', 'rep_day')
         ->setLabel(get_vocab('rep_rep_day'))
-        ->addCheckboxOptions($options, 'rep_day[]', $rep_day, true, $disabled);
+        ->addCheckboxOptions($options, 'rep_day[]', $rep_days, true, $disabled);
 
   return $field;
 }
 
 
-function get_fieldset_rep_weekly_details(bool $disabled=false) : ElementFieldset
+function get_fieldset_rep_weekly_details(array $rep_days, bool $disabled=false) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_weekly'));
-  $fieldset->addElement(get_field_rep_day($disabled));
+  $fieldset->addElement(get_field_rep_day($rep_days, $disabled));
 
   return $fieldset;
 }
@@ -1011,7 +1010,7 @@ function get_fieldset_registration() : ?ElementFieldset
 }
 
 
-function get_fieldset_repeat(DateTime $rep_end_date) : ElementFieldset
+function get_fieldset_repeat(DateTime $rep_end_date, array $rep_days) : ElementFieldset
 {
   global $edit_type, $repeats_allowed;
   global $rep_type, $rep_interval;
@@ -1028,7 +1027,7 @@ function get_fieldset_repeat(DateTime $rep_end_date) : ElementFieldset
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'rep_info');
 
-  $fieldset->addElement(get_field_rep_type($rep_type, $disabled))
+  $fieldset->addElement(get_field_rep_type($rep_type, $rep_days, $disabled))
            ->addElement(get_field_rep_interval($rep_interval, $disabled))
            ->addElement(get_field_rep_end_date($rep_end_date, $disabled))
            ->addElement(get_field_skip_conflicts($disabled));
@@ -1252,7 +1251,7 @@ if (isset($id))
   $keep_private = isset($copy) && is_private_event($private) && !getWritable($entry['create_by'], $entry['room_id']);
 
   // default settings
-  $rep_day = array();
+  $rep_days = array();
   $rep_type = REP_NONE;
   $rep_interval = 1;
 
@@ -1387,7 +1386,7 @@ if (isset($id))
           {
             if ($row['rep_opt'][$i])
             {
-              $rep_day[] = $i;
+              $rep_days[] = $i;
             }
           }
           break;
@@ -1537,7 +1536,7 @@ else
     $rep_end_date = new DateTime();
     $rep_end_date->setDate($year, $month, $day);
   }
-  $rep_day       = array(date('w', $start_time));
+  $rep_days = array(date('w', $start_time));
   $rep_interval = 1;
   $month_type = REP_MONTH_ABSOLUTE;
 }
@@ -1821,7 +1820,7 @@ $form->addElement(get_fieldset_registration());
 // series or else you're making a new booking.  This should be tidied up sometime!)
 if (($edit_type == "series") && $repeats_allowed)
 {
-  $form->addElement(get_fieldset_repeat($rep_end_date));
+  $form->addElement(get_fieldset_repeat($rep_end_date, $rep_days));
 }
 
 // Checkbox for no email
