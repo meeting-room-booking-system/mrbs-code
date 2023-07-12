@@ -717,7 +717,7 @@ function get_field_rep_type(int $value, array $rep_days, bool $disabled=false) :
 
 
 // Repeat day
-function get_field_rep_day(array $rep_days, bool $disabled=false) : FieldInputCheckboxGroup
+function get_field_rep_days(array $rep_days, bool $disabled=false) : FieldInputCheckboxGroup
 {
   global $weekstarts, $datetime_formats;
 
@@ -745,7 +745,7 @@ function get_fieldset_rep_weekly_details(array $rep_days, bool $disabled=false) 
 
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_weekly'));
-  $fieldset->addElement(get_field_rep_day($rep_days, $disabled));
+  $fieldset->addElement(get_field_rep_days($rep_days, $disabled));
 
   return $fieldset;
 }
