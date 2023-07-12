@@ -7,6 +7,20 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.2 (Tue 11th July 2023):
+
+[*] Various code tidying/improvements.
+
+[-] Fix SF Bugs #546.
+
+[*] Avoid hidden days when navigating between months.
+
+[-] Fixed potential bug in debug output.
+
+[-] Fixed reported XSS vulnerability in mrbsCheckPolicy() - only exploitable by an administrator
+ with permissions to name rooms. Thanks to Nguyễn Hữu Cường for the report. (SF Bugs #547)
+
+-------------------------------------------------------------------------------
 Version 1.11.1 (Mon 3rd July 2023):
 
 [*] Added type declarations across the codebase.
