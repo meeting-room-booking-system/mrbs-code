@@ -870,13 +870,13 @@ function get_fieldset_rep_monthly_details(bool $disabled=false) : ElementFieldse
 
 function get_field_rep_end_date(bool $disabled=false) : FieldInputDate
 {
-  global $rep_end_year, $rep_end_month, $rep_end_day;
+  global $rep_end_date;
 
   $field = new FieldInputDate();
 
   $field->setLabel(get_vocab('rep_end_date'))
         ->setControlAttributes(array('name'     => 'rep_end_date',
-                                     'value'    => format_iso_date($rep_end_year, $rep_end_month, $rep_end_day),
+                                     'value'    => $rep_end_date->getISODate(),
                                      'disabled' => $disabled));
 
   return $field;
@@ -1206,7 +1206,7 @@ if (isset($start_date))
     // The end date that came through from the drag select is actually the repeat end
     // date, and the real end date will actually be the start date.
     $rep_type = REP_DAILY;
-    list($rep_end_year, $rep_end_month, $rep_end_day) = explode('-', $end_date);
+    $rep_end_date = DateTime::createFromFormat('Y-m-d', $end_date);
     $end_date = $start_date;
   }
 }
@@ -1379,9 +1379,8 @@ if (isset($id))
         $end_time = $row['end_time'];
       }
 
-      $rep_end_day   = (int) date('d', $row['end_date']);
-      $rep_end_month = (int) date('m', $row['end_date']);
-      $rep_end_year  = (int) date('Y', $row['end_date']);
+      $rep_end_date = new DateTime();
+      $rep_end_date->setTimestamp($row['end_date']);
 
       switch ($rep_type)
       {
@@ -1537,9 +1536,8 @@ else
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
     $rep_type      = REP_NONE;
-    $rep_end_day   = $day;
-    $rep_end_month = $month;
-    $rep_end_year  = $year;
+    $rep_end_date = new DateTime();
+    $rep_end_date->setDate($year, $month, $day);
   }
   $rep_day       = array(date('w', $start_time));
   $rep_interval = 1;
