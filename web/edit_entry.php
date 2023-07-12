@@ -904,10 +904,8 @@ function get_fieldset_rep_monthly_details(bool $disabled=false) : ElementFieldse
 }
 
 
-function get_field_rep_end_date(bool $disabled=false) : FieldInputDate
+function get_field_rep_end_date(DateTime $rep_end_date, bool $disabled=false) : FieldInputDate
 {
-  global $rep_end_date;
-
   $field = new FieldInputDate();
 
   $field->setLabel(get_vocab('rep_end_date'))
@@ -1049,7 +1047,7 @@ function get_fieldset_registration() : ?ElementFieldset
 }
 
 
-function get_fieldset_repeat() : ElementFieldset
+function get_fieldset_repeat(DateTime $rep_end_date) : ElementFieldset
 {
   global $edit_type, $repeats_allowed;
   global $rep_type, $rep_interval;
@@ -1068,7 +1066,7 @@ function get_fieldset_repeat() : ElementFieldset
 
   $fieldset->addElement(get_field_rep_type($rep_type, $disabled))
            ->addElement(get_field_rep_interval($rep_interval, $disabled))
-           ->addElement(get_field_rep_end_date($disabled))
+           ->addElement(get_field_rep_end_date($rep_end_date, $disabled))
            ->addElement(get_field_skip_conflicts($disabled));
 
   return $fieldset;
@@ -1810,7 +1808,7 @@ $form->addElement(get_fieldset_registration());
 // series or else you're making a new booking.  This should be tidied up sometime!)
 if (($edit_type == "series") && $repeats_allowed)
 {
-  $form->addElement(get_fieldset_repeat());
+  $form->addElement(get_fieldset_repeat($rep_end_date));
 }
 
 // Checkbox for no email
