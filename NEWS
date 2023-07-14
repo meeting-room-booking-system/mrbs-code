@@ -7,6 +7,14 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.3 (Wed 12th July 2023):
+
+[*] Some code improvements.
+
+[-] Remove strict types declaration causing uncaught exceptions on some systems.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.2 (Tue 11th July 2023):
 
 [*] Various code tidying/improvements.
