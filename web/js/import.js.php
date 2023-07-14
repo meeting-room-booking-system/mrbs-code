@@ -20,7 +20,7 @@ function checkSourceType(object) {
   // Disable the URL field if it's not being used in order to
   // stop the browser trying to validate the content.
   ?>
-  $('input[name="url"').prop('disabled', isFile);
+  $('input[name="url"]').prop('disabled', isFile);
 }
 
 $(document).on('page_ready', function() {
