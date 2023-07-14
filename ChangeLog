@@ -1,4 +1,68 @@
-commit c9525e2f (HEAD -> main)
+commit 3cfcae94 (HEAD -> main)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Wed Jul 12 13:29:21 2023 +0100
+
+    Updated version number for release of 1.11.3
+
+ web/version_num.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2dee7281 (origin/main)
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 12 12:36:31 2023 +0100
+
+    Remove strict types declaration causing uncaught exceptions on some systems.
+
+ web/lib/MRBS/Map.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit d30f22b7
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 12 12:17:19 2023 +0100
+
+    Rename function
+
+ web/edit_entry.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8463c3b0
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 12 12:13:35 2023 +0100
+
+    Simplify code
+
+ web/edit_entry.php | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
+
+commit 3b6c776a
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 12 11:23:15 2023 +0100
+
+    Simplify code
+
+ web/edit_entry.php | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+commit 34ff1702
+Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
+Date:   Wed Jul 12 11:10:38 2023 +0100
+
+    Simplify code
+
+ web/edit_entry.php | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+commit e765b6f4 (tag: v1.11.2)
+Author: John Beranek <jberanek@users.sourceforge.net>
+Date:   Tue Jul 11 13:36:32 2023 +0100
+
+    Updated ChangeLog/NEWS for release of 1.11.2
+
+ ChangeLog | 443 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ NEWS      |  14 ++
+ 2 files changed, 454 insertions(+), 3 deletions(-)
+
+commit c9525e2f
 Author: John Beranek <jberanek@users.sourceforge.net>
 Date:   Tue Jul 11 13:19:51 2023 +0100
 
@@ -7,7 +71,7 @@ Date:   Tue Jul 11 13:19:51 2023 +0100
  web/version_num.inc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit bc1f24fb (origin/main)
+commit bc1f24fb
 Author: campbell-m <87438215+campbell-m@users.noreply.github.com>
 Date:   Tue Jul 11 10:37:30 2023 +0100
 
