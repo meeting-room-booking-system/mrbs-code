@@ -1,4 +1,4 @@
-import {ok, forbidden, serverError} from 'wix-http-functions';
+import {forbidden, ok, serverError} from 'wix-http-functions';
 import {authentication} from 'wix-members-backend';
 import wixData from 'wix-data';
 import {contacts} from 'wix-crm-backend';
@@ -112,9 +112,9 @@ export async function post_getMemberByEmail(request) {
         let member = members.items[0];
         // Now we've got the member we have to get (a) their full details (including
         // custom fields, which aren't in PrivateMembersData) from Contacts using
-        // the contactId and (b) their badges from Members/Badges.  Get these two
-        // sets of data in parallel using promises.
-        const getContactPromise = contacts.getContact(member.contactId, {suppressAuth: true})
+        // the id and (b) their badges from Members/Badges.  Get these two sets of
+        // data in parallel using promises.
+        const getContactPromise = contacts.getContact(member._id, {suppressAuth: true})
           .then((contact) => {
             return {
               member: member,
@@ -140,7 +140,7 @@ export async function post_getMemberByEmail(request) {
               // Iterate through the badges checking if this member has the badge
               if (promiseResults[1].value) {
                 promiseResults[1].value.forEach(badge => {
-                  if (badge.members.includes(member.contactId)) {
+                  if (badge.members.includes(member._id)) {
                     result.badges.push(badge.title);
                   }
                 });
