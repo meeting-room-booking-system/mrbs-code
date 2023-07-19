@@ -607,18 +607,26 @@ if (!isset($rep_day))
 
 $rep_opt = "";
 
-
 // Get the repeat details
-if (isset($rep_type) && ($rep_type != REP_NONE))
+$repeat_rule = new RepeatRule();
+$repeat_rule->setType($rep_type ?? RepeatRule::NONE);
+
+if ($repeat_rule->getType() != RepeatRule::NONE)
 {
-  if ($rep_type == REP_WEEKLY)
+  $repeat_rule->setInterval($rep_interval);
+  $repeat_rule->setMonthlyType($month_type);
+  $repeat_rule->setMonthlyAbsolute($month_absolute);
+  $repeat_rule->setMonthlyRelative($month_relative);
+  if (isset($rep_end_date))
+  {
+    $repeat_rule->setEndDate(DateTime::createFromFormat('Y-m-d', $rep_end_date));
+  }
+
+  if ($repeat_rule->getType() == RepeatRule::WEEKLY)
   {
     // If no repeat day has been set, then set a default repeat day
     // as the day of the week of the start of the period
-    if (count($rep_day) == 0)
-    {
-      $rep_day[] = date('w', $start_time);
-    }
+    $repeat_rule->setDays ((count($rep_day) > 0) ? $rep_day : array(date('w', $start_time)));
     // Build string of weekdays to repeat on:
     for ($i = 0; $i < DAYS_PER_WEEK; $i++)
     {
