@@ -304,8 +304,9 @@ function get_mrbs_locale($header=null) : string
     {
       $locale = Locale::acceptFromHttp($header);
     }
-    // If there aren't any browser preferences, use English
-    else
+
+    // If everything fails, use English
+    if (!isset($locale))
     {
       $locale = 'en';
     }
