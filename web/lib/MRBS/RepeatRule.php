@@ -140,11 +140,29 @@ class RepeatRule
         }
         while (!in_array($start_date->format('w'), $repeat_days))
         {
+          // The hour will be preserved across DST transitions
           $start_date->modify('+1 day');
         }
-        // TODO: continue converting from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         break;
       case self::MONTHLY:
+        if ($this->getMonthlyType() == self::MONTHLY_ABSOLUTE)
+        {
+          if ($start_date->getDay() != $this->getMonthlyAbsolute())
+          {
+            if ($start_date->getDay() > $this->getMonthlyAbsolute())
+            {
+              $start_date->modify('+1 month');
+            }
+            $start_date->setDayNoOverflow($this->getMonthlyAbsolute());
+          }
+        }
+        // TODO: continue converting from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // TODO: implement setDayNoOverflow()
+        // TODO: implement sanity checking in setMonthlyType() and setType()
+        else // must be relative
+        {
+
+        }
         if (isset($rep_details['month_absolute']))
         {
           $day = $rep_details['month_absolute'];
