@@ -60,6 +60,21 @@ class DateTime extends \DateTime
   }
 
 
+  // Set the day to $day
+  public function setDay(int $day) : void
+  {
+    $date = getdate($this->getTimestamp());
+    $this->setDate($date['year'], $date['mon'], $day);
+  }
+
+
+  // Sets the day to $day, but not past the
+  public function setDayNoOverflow(int $day) : void
+  {
+    $this->setDay(min($day, $this->format('t')));
+  }
+
+
   // Checks whether the config setting of holidays for $year consists
   // of a valid set of dates.
   private static function validateHolidays(string $year) : bool

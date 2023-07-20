@@ -10,10 +10,21 @@ class RepeatRule
   public const WEEKLY = 2;
   public const MONTHLY = 3;
   public const YEARLY = 4;
+  public const REPEAT_TYPES = [
+    self::NONE,
+    self::DAILY,
+    self::WEEKLY,
+    self::MONTHLY,
+    self::YEARLY
+  ];
 
   // Monthly repeat types
   public const MONTHLY_ABSOLUTE = 0;
   public const MONTHLY_RELATIVE = 1;
+  public const MONTHLY_TYPES = [
+    self::MONTHLY_ABSOLUTE,
+    self::MONTHLY_RELATIVE
+  ];
 
   private $days;  // An array of days for weekly repeats; 0 for Sunday, etc.
   private $end_date;  // The repeat end date.  A DateTime object
@@ -27,6 +38,7 @@ class RepeatRule
   {
     $this->setDays([]);
   }
+
 
   public function getDays() : array
   {
@@ -72,7 +84,7 @@ class RepeatRule
       // Check it's a valid day
       if (($day < 0) || ($day > 6))
       {
-        throw new Exception("Invalid day of the week '$day'");
+        throw new \InvalidArgumentException("Invalid day of the week '$day'");
       }
     }
   }
@@ -99,11 +111,19 @@ class RepeatRule
 
   public function setMonthlyType(?int $monthly_type) : void
   {
+    if (!in_array($monthly_type, self::MONTHLY_TYPES))
+    {
+      throw new \InvalidArgumentException("Invalid monthly type '$monthly_type'");
+    }
     $this->monthly_type = $monthly_type;
   }
 
   public function setType(int $type) : void
   {
+    if (!in_array($type, self::REPEAT_TYPES))
+    {
+      throw new \InvalidArgumentException("Invalid repeat type '$type'");
+    }
     $this->type = $type;
   }
 
@@ -157,20 +177,19 @@ class RepeatRule
           }
         }
         // TODO: continue converting from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO: implement setDayNoOverflow()
-        // TODO: implement sanity checking in setMonthlyType() and setType()
+        // TODO: why is 5th Sunday not showing in calendar in test?
+        // TODO: implement convertRelativeToAbsolute (base on byday_to_day)
         else // must be relative
         {
-
-        }
-        if (isset($rep_details['month_absolute']))
-        {
-          $day = $rep_details['month_absolute'];
-          if ($day < $start_dom)
+          // Advance to a month that has this relative date. For example, not
+          // every month will have a '5SU' (fifth Sunday)
+          while (false === $this->convertRelativeToAbsolute($start_date))
           {
-            $month++;
+            $start_date->modify('+1 month');
           }
+          // Set the day (possibly having to advance it)
         }
+
         elseif (isset($rep_details['month_relative']))
         {
           $day = byday_to_day($year, $month, $rep_details['month_relative']);
