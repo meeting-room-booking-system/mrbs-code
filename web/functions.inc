@@ -2068,23 +2068,53 @@ function parse_email(string $email)
 
 
 // Round time down to the nearest resolution
-function round_t_down(int $t, int $resolution, int $am7) : int
+function round_t_down(int $t, int $resolution, int $start_first_slot) : int
 {
-  return $t - (int)abs(($t - $am7) % $resolution);
+  // The simple case when no DST transition is involved
+  if (cross_dst($start_first_slot, $t) == 0)
+  {
+    return $t - (int)abs(($t - $start_first_slot) % $resolution);
+  }
+  // Otherwise we have to pay attention to DST transitions
+  $date = new DateTime();
+  $date->setTimestamp($start_first_slot);
+  $nominal_seconds = nominal_seconds($start_first_slot);
+  // Keep advancing the slot until we find the one that is closest to $t
+  do {
+    $candidate_slot = $date->getTimestamp();
+    $nominal_seconds += $resolution;
+    $date->setNominalSeconds($nominal_seconds);
+  } while ($date->getTimestamp() <= $t);
+
+  return $candidate_slot;
 }
 
 
 // Round time up to the nearest resolution
-function round_t_up(int $t, int $resolution, int $am7) : int
+function round_t_up(int $t, int $resolution, int $start_first_slot) : int
 {
-  if (($t-$am7) % $resolution != 0)
+  // The simple case when no DST transition is involved
+  if (cross_dst($start_first_slot, $t) == 0)
   {
-    return $t + $resolution - abs(($t - $am7) % $resolution);
+    if (($t - $start_first_slot) % $resolution != 0) {
+      return $t + $resolution - abs(($t - $start_first_slot) % $resolution);
+    }
+    else {
+      return $t;
+    }
   }
-  else
-  {
-    return $t;
-  }
+  // Otherwise we have to pay attention to DST transitions
+  $date = new DateTime();
+  $date->setTimestamp($start_first_slot);
+  $nominal_seconds = nominal_seconds($start_first_slot);
+  // Keep advancing the slot until we find the one that is >= $t
+  do {
+    $candidate_slot = $date->getTimestamp();
+    $nominal_seconds += $resolution;
+    $date->setNominalSeconds($nominal_seconds);
+  } while ($candidate_slot < $t);
+
+  return $candidate_slot;
 }
 
 
