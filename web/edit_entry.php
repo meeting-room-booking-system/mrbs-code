@@ -1468,11 +1468,7 @@ else
   // if (a) somebody messes with the query string or (b) somebody changes morningstarts or the
   // resolution in another browser window and then this page is refreshed with the same query string).
   $start_first_slot = get_start_first_slot($month, $day, $year);
-  $start_time = max($start_first_slot, $start_time);
-  if (($start_time - $start_first_slot)%$resolution != 0)
-  {
-    $start_time = $start_first_slot + intval(($start_time - $start_first_slot)/$resolution);  // rounds down
-  }
+  $start_time = max(round_t_down($start_time, $resolution, $start_first_slot), $start_first_slot);
 
   if (isset($end_seconds))
   {
