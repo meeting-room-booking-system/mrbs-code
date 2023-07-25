@@ -177,13 +177,12 @@ class RepeatRule
           }
         }
         // TODO: continue converting from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO: why is 5th Sunday not showing in calendar in test?
         // TODO: implement convertRelativeToAbsolute (base on byday_to_day)
         else // must be relative
         {
           // Advance to a month that has this relative date. For example, not
           // every month will have a '5SU' (fifth Sunday)
-          while (false === $this->convertRelativeToAbsolute($start_date))
+          while (false === $start_date->convertToAbsolute($this->getMonthlyRelative()))
           {
             $start_date->modify('+1 month');
           }
@@ -273,5 +272,7 @@ class RepeatRule
     return $entries;
   }
 
+
+  public function
 
 }

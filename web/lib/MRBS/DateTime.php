@@ -12,6 +12,14 @@ class DateTime extends \DateTime
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
+  public function convertToAbsolute(string $relative) : bool
+  {
+    $clone = clone $this;
+
+
+  }
+
+
   // Adds $n (which can be negative) months to this date, without overflowing
   // into the next month.  For example modifying 2023-01-31 by +1 month gives
   // 2023-02-28 rather than 2023-03-03.
