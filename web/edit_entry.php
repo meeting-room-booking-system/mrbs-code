@@ -20,6 +20,7 @@ use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldTimeWithUnits;
 use MRBS\Form\Form;
+use MRBS\ICalendar\RFC5545;
 
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
@@ -794,7 +795,7 @@ function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
 function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
 {
   global $month_type, $month_relative_ord, $month_relative_day;
-  global $weekstarts, $RFC_5545_days;
+  global $weekstarts;
 
   $fieldset = new ElementFieldset();
 
@@ -831,7 +832,7 @@ function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
   for ($i=0; $i<DAYS_PER_WEEK; $i++)
   {
     $i_offset = ($i + $weekstarts)%DAYS_PER_WEEK;
-    $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
+    $options[RFC5545::DAYS[$i_offset]] = day_name($i_offset);
   }
   $select = new ElementSelect();
   $select->setAttributes(array('name'     => 'month_relative_day',

@@ -355,11 +355,6 @@ define('TZDIR_OUTLOOK', 'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
 
-// Create an array which can be used to map day of the week numbers (0..6)
-// onto days of the week as defined in RFC 5545
-$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-
-
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change
  ****************************************************************/

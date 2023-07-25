@@ -4,6 +4,7 @@ namespace MRBS;
 use DateInterval;
 use DateTimeZone;
 use MRBS\Form\FieldSelect;
+use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "mrbs_sql.inc";
@@ -1197,9 +1198,7 @@ function byday_split(string $byday) : array
 // the month, or -1MO for the last Monday.
 function date_byday(int $timestamp) : string
 {
-  global $RFC_5545_days;
-
-  $dow = $RFC_5545_days[date('w', $timestamp)];
+  $dow = RFC5545::DAYS[date('w', $timestamp)];
   $dom = date('j', $timestamp);
   $ord = intval(($dom - 1)/DAYS_PER_WEEK) + 1;
   if ($ord == 5)
@@ -1207,17 +1206,6 @@ function date_byday(int $timestamp) : string
     $ord = -1;
   }
   return $ord . $dow;
-}
-
-
-// Convert an RFC 5545 day to an ordinal number representing the day of the week,
-// eg "MO" returns "1"
-function RFC_5545_day_to_ord(string $day) : int
-{
-  global $RFC_5545_days;
-
-  $tmp = array_keys($RFC_5545_days, $day);
-  return $tmp[0];
 }
 
 
@@ -1239,7 +1227,7 @@ function byday_to_day(int $year, int $month, string $byday)
   // Get the starting day of the week
   $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
   // Turn the BYDAY day of the week into an integer
-  $byday_dow = RFC_5545_day_to_ord($dow);
+  $byday_dow = RFC5545::convertDayToOrd($dow);
   // get the difference in days
   $diff = $byday_dow - $start_dow;
   $diff += ($ord > 0) ? DAYS_PER_WEEK : -DAYS_PER_WEEK;
@@ -1900,7 +1888,7 @@ function get_monthly_repeat_day(array $data) : string
     // to sort out.  It assumes all languages have the same order as English
     // eg "the second Wednesday" which is probably not true.
     list($ord, $dow) = byday_split($data['month_relative']);
-    $result = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
+    $result = get_vocab("ord_" . $ord) . " " . day_name(RFC5545::convertDayToOrd($dow));
   }
   else
   {

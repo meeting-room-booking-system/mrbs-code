@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -365,11 +366,9 @@ function get_create_by(string $organizer)
 // Returns an MRBS rep_opt string given an array of RFC 5545 days
 function get_rep_opt(array $byday_days) : string
 {
-  global $RFC_5545_days;
-
   $rep_opt = '';
 
-  foreach ($RFC_5545_days as $day)
+  foreach (RFC5545::DAYS as $day)
   {
     $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
   }
@@ -383,8 +382,6 @@ function get_rep_opt(array $byday_days) : string
 // Returns FALSE on failure with error messages being returned in the array $errors
 function get_repeat_details(string $rrule, int $start_time, array &$errors)
 {
-  global $RFC_5545_days;
-
   // Set up the result array with safe defaults
   $result = array('rep_type' => REP_NONE,
                   'rep_opt' => '0000000',
@@ -418,7 +415,7 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
       {
         // If there's no repeat day specified in the RRULE then
         // 'the day is gotten from "DTSTART"'
-        $byday_days = array($RFC_5545_days[date('w', $start_time)]);
+        $byday_days = array(RFC5545::DAYS[date('w', $start_time)]);
       }
       $result['rep_opt'] = get_rep_opt($byday_days);
       break;
@@ -746,8 +743,6 @@ function parse_ical_property(string $line) : array
 // Create an iCalendar Recurrence Rule
 function create_rrule(array $data) : string
 {
-  global $RFC_5545_days;
-
   $rule = '';
 
   if (!isset($data['rep_type']) || ($data['rep_type'] === REP_NONE))
@@ -769,7 +764,7 @@ function create_rrule(array $data) : string
       {
         if ($data['rep_opt'][$i])
         {
-          $days_of_week[] = $RFC_5545_days[$i];
+          $days_of_week[] = RFC5545::DAYS[$i];
         }
       }
       $dow_list = implode(',', $days_of_week);
