@@ -13,10 +13,12 @@ class RFC5545
   public static function convertDayToOrd($day) : int
   {
     $tmp = array_keys(self::DAYS, $day);
+
     if (count($tmp) === 0)
     {
       throw new \InvalidArgumentException("Invalid day '$day'");
     }
+
     return $tmp[0];
   }
 }
