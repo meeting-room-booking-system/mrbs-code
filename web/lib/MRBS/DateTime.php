@@ -19,6 +19,7 @@ class DateTime extends \DateTime
     // Get the ordinal number and the day of the week
     list($ord, $dow) = byday_split($relative);
     // Get the starting day of the month
+    //TODO: Set the date and then advance/retreat
     $start_dom = ($ord > 0) ? 1 : $clone->format('t');
     // Get the starting day of the week
     $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
