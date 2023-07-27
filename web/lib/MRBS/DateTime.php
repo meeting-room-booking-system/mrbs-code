@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\ICalendar\RFC5545;
 use UnexpectedValueException;
 
 class DateTime extends \DateTime
@@ -20,22 +21,29 @@ class DateTime extends \DateTime
     list($ord, $dow) = byday_split($relative);
     // Set the starting day of the month, either to the first or last day of
     // the month, depending on whether we are counting forwards or backwards.
-    $clone->setDay(($ord > 0) ? 1 : $clone->format('t'));
+    $clone->setDay(($ord > 0) ? 1 : (int) $clone->format('t'));
     // Advance/go back to the first day of the week that is required
-    // TODO: this could be optimised slightly by calculating the exact number od days required
-    while (// TODO)
+    // TODO: this could be optimised slightly by calculating the exact number of days required
+    while ($clone->format('w') != RFC5545::convertDayToOrd($dow))
     {
       $modifier = ($ord > 0) ? '+1 day' : '-1 day';
       $clone->modify($modifier);
     }
-
-    //TODO: Set the date and then advance/retreat
-    // TODO: does 't' return an int?
-    $start_dom = ($ord > 0) ? 1 : $clone->format('t');
-    // Get the starting day of the week
-    $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
-
-
+    // Advance/go back the required number of weeks
+    if (abs($ord) > 1)
+    {
+      $modifier = (($ord > 0) ? '+' : '-') . ($ord - 1) . 'weeks';
+      $clone->modify($modifier);
+    }
+    // See if we are still in the same month.  If not, then the relative day doesn't
+    // exist in this month and return FALSE.  If so, then set this date to be the
+    // clone's and return TRUE.
+    if ($clone->getMonth() !== $this->getMonth())
+    {
+      return false;
+    }
+    $this->setTimestamp($clone->getTimestamp());
+    return true;
   }
 
 
@@ -177,11 +185,7 @@ class DateTime extends \DateTime
     // not hidden.
     for ($i=1; $i<DAYS_PER_WEEK; $i++)
     {
-      $unsigned_modifier = "$i day";
-      if ($i > 1)
-      {
-        $unsigned_modifier .= 's';  // plural
-      }
+      $unsigned_modifier = "$i days";
       foreach (['+', '-'] as $sign)
       {
         // Check whether we've already been past the end/start of the
