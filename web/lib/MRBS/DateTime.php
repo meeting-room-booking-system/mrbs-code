@@ -13,7 +13,12 @@ class DateTime extends \DateTime
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
-  public function convertToAbsolute(string $relative) : bool
+  // TODO: replace usages of byday_to_day() with this method
+  // TODO: make $relative an object?
+  // Sets the day to $relative, where relative is an RFC5545 relative day,
+  // eg "-2SU".  Returns FALSE if the relative day doesn't exist in this
+  // month, otherwise TRUE.
+  public function setRelativeDay(string $relative) : bool
   {
     $clone = clone $this;
 

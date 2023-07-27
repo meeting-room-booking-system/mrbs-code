@@ -182,7 +182,7 @@ class RepeatRule
         {
           // Advance to a month that has this relative date. For example, not
           // every month will have a '5SU' (fifth Sunday)
-          while (false === $start_date->convertToAbsolute($this->getMonthlyRelative()))
+          while (false === $start_date->setRelativeDay($this->getMonthlyRelative()))
           {
             $start_date->modify('+1 month');
           }
