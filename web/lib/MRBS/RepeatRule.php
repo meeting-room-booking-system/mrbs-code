@@ -151,6 +151,7 @@ class RepeatRule
           // The hour will be preserved across DST transitions
           $date->modify('+1 day');
         }
+        $start_dow = $date->format('w'); // We will need this later
         break;
 
       case self::MONTHLY:
@@ -197,10 +198,30 @@ class RepeatRule
           $date->modify($modifier);
           break;
         case self::WEEKLY:
+          // TODO: Weekly stuff: advance to next repeat day
+          pp
           break;
         case self::MONTHLY:
+          $date->modifyMonthsNoOverflow(1, true);
+          // TODO: comment
+        ll
+          if ($this->getMonthlyType() == self::MONTHLY_ABSOLUTE)
+          {
+            $date->setDayNoOverflow($this->getMonthlyAbsolute());
+          }
+          // TODO: comment
+          ll
+          else
+          {
+            while (false === $date->setRelativeDay($this->getMonthlyRelative()))
+            {
+              $date->modifyMonthsNoOverflow(1, true);
+            }
+          }
           break;
         case self::YEARLY:
+          // TODO:
+          ll
           break;
       }
     }
