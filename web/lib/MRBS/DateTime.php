@@ -18,8 +18,19 @@ class DateTime extends \DateTime
 
     // Get the ordinal number and the day of the week
     list($ord, $dow) = byday_split($relative);
-    // Get the starting day of the month
+    // Set the starting day of the month, either to the first or last day of
+    // the month, depending on whether we are counting forwards or backwards.
+    $clone->setDay(($ord > 0) ? 1 : $clone->format('t'));
+    // Advance/go back to the first day of the week that is required
+    // TODO: this could be optimised slightly by calculating the exact number od days required
+    while (// TODO)
+    {
+      $modifier = ($ord > 0) ? '+1 day' : '-1 day';
+      $clone->modify($modifier);
+    }
+
     //TODO: Set the date and then advance/retreat
+    // TODO: does 't' return an int?
     $start_dom = ($ord > 0) ? 1 : $clone->format('t');
     // Get the starting day of the week
     $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
