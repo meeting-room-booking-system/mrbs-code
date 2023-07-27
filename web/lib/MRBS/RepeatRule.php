@@ -134,20 +134,8 @@ class RepeatRule
   {
     $entries = array();
 
-    $start_date = new DateTime();
-    $start_date->setTimestamp($start_time);
-
-    $date = getdate($start_time);
-
-    $sec         = $date['seconds'];
-    $min         = $date['minutes'];
-    $hour        = $date['hours'];
-    $day         = $date['mday'];
-    $month       = $date['mon'];
-    $year        = $date['year'];
-    $start_day   = $date['wday'];
-    $start_dom   = $day;  // the starting day of the month
-    $start_month = $month;
+    $date = new DateTime();
+    $date->setTimestamp($start_time);
 
     // Make sure that the first date is a member of the series
     switch($this->getType())
@@ -158,72 +146,66 @@ class RepeatRule
         {
           throw new Exception("No weekly repeat days specified in repeat rule");
         }
-        while (!in_array($start_date->format('w'), $repeat_days))
+        while (!in_array($date->format('w'), $repeat_days))
         {
           // The hour will be preserved across DST transitions
-          $start_date->modify('+1 day');
+          $date->modify('+1 day');
         }
         break;
+
       case self::MONTHLY:
         if ($this->getMonthlyType() == self::MONTHLY_ABSOLUTE)
         {
-          if ($start_date->getDay() != $this->getMonthlyAbsolute())
+          if ($date->getDay() != $this->getMonthlyAbsolute())
           {
-            if ($start_date->getDay() > $this->getMonthlyAbsolute())
+            if ($date->getDay() > $this->getMonthlyAbsolute())
             {
-              $start_date->modify('+1 month');
+              $date->modify('+1 month');
             }
-            $start_date->setDayNoOverflow($this->getMonthlyAbsolute());
+            $date->setDayNoOverflow($this->getMonthlyAbsolute());
           }
         }
-        // TODO: continue converting from here !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO: implement convertRelativeToAbsolute (base on byday_to_day)
         else // must be relative
         {
           // Advance to a month that has this relative date. For example, not
           // every month will have a '5SU' (fifth Sunday)
-          while (false === $start_date->setRelativeDay($this->getMonthlyRelative()))
+          while (false === $date->setRelativeDay($this->getMonthlyRelative()))
           {
-            $start_date->modify('+1 month');
-          }
-          // Set the day (possibly having to advance it)
-        }
-
-        elseif (isset($rep_details['month_relative']))
-        {
-          $day = byday_to_day($year, $month, $rep_details['month_relative']);
-          while (($day === FALSE) || (($day < $start_dom) && ($month == $start_month)))
-          {
-            $month++;
-            $day = byday_to_day($year, $month, $rep_details['month_relative']);
+            $date->modify('+1 month');
           }
         }
-        else
-        {
-          trigger_error("No monthly repeat type, E_USER_WARNING");
-        }
-        trimToEndOfMonth($month, $day, $year);
         break;
+
       default:
         break;
     }
 
-    for ($i = 0; $i < $n; $i++)
+    // Now get the entry start times
+    $i = 0;
+    // TODO: check end_date condition
+    while (($i <  $limit) && ($date <= $this->getEndDate()))
     {
-      $time = mktime($hour, $min, $sec, $month, $day, $year);
+      // Add this start date to the result and increment the counter
+      $i++;
+      $entries[] = $date->getTimestamp();
 
-      if ($time > $rep_end_time)
+      // Advance to the next entry
+      switch ($this->getType())
       {
-        break;
-      }
-
-      $entries[] = $time;
-
-      switch($rep_details['rep_type'])
-      {
-        case REP_DAILY:
-          $day = $day + $rep_details['rep_interval'];
+        case self::DAILY:
+          $modifier = '+' . $this->getInterval() . 'days';
+          $date->modify($modifier);
           break;
+        case self::WEEKLY:
+          break;
+        case self::MONTHLY:
+          break;
+        case self::YEARLY:
+          break;
+      }
+    }
+
+    return $entries;
 
         case REP_WEEKLY:
           $j = $cur_day = date("w", $time);
@@ -271,8 +253,5 @@ class RepeatRule
 
     return $entries;
   }
-
-
-  public function
 
 }
