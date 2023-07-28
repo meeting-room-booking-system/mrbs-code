@@ -309,4 +309,24 @@ class DateTime extends \DateTime
     return is_weekend($this->format('w'));
   }
 
+
+  // Set the time to $s, where $s is the nominal number of
+  // seconds after midnight, ignoring DST changes.
+  public function setNominalSeconds(int $s) : void
+  {
+    $second = $s % 60;
+    $s -= $second;
+    $m = $s/60;
+    $minute = $m % 60;
+    $m -= $minute;
+    $hour = $m/60;
+
+    while ($hour > 24)
+    {
+      $this->modify('+1 day');
+      $hour -= 24;
+    }
+
+    $this->setTime($hour, $minute, $second);
+  }
 }

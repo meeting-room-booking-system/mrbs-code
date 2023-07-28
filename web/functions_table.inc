@@ -883,6 +883,9 @@ function multiday_header_rows(
       $date->setTimestamp($t);
       $classes = get_date_classes($date);
       $result[$i] .= '<th' .
+        // Add the date for JavaScript.  Only really necessary for the first row in
+        // the week view when not viewing all the rooms, but just add it always.
+        ' data-date="' . htmlspecialchars($date->getISODate()) . '"' .
         ((!empty($classes)) ? ' class="' . implode(' ', $classes) . '"' : '') .
         '><a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . "</a></th>\n";
     }
