@@ -28,18 +28,13 @@ class RepeatRule
     self::MONTHLY_RELATIVE
   ];
 
-  private $days;  // An array of days for weekly repeats; 0 for Sunday, etc.
+  private $days = [];  // An array of days for weekly repeats; 0 for Sunday, etc.
   private $end_date;  // The repeat end date.  A DateTime object
   private $interval;  // The repeat interval
   private $monthly_absolute;  // The absolute day of the month to repeat on for monthly repeats
   private $monthly_relative;  // The relative day of the month to repeat on for monthly repeats
   private $monthly_type;  // The monthly repeat type (Absolute or relative).  An int.
   private $type;  // The repeat type (NONE, DAILY, etc.).  An int.
-
-  public function __construct()
-  {
-    $this->setDays([]);
-  }
 
 
   public function getDays() : array
@@ -95,7 +90,7 @@ class RepeatRule
 
   public function setEndDate(?DateTime $end_date) : void
   {
-    $this->days = $end_date;
+    $this->end_date = $end_date;
   }
 
   public function setInterval(int $interval) : void
@@ -134,7 +129,7 @@ class RepeatRule
 
   // Returns an array of start times for the entries in this series given a start time
   // for the beginning of the series.  Optionally limited to $limit entries.
-  public function getRepeatStartTimes(int $start_time, ?int $limit) : array
+  public function getRepeatStartTimes(int $start_time, int $limit=null) : array
   {
     $entries = array();
 
@@ -194,7 +189,7 @@ class RepeatRule
     // Now get the entry start times
     $i = 0;
     // TODO: check end_date condition
-    while (($i < $limit) && ($date <= $this->getEndDate()))
+    while ((!isset($limit) || ($i < $limit)) && ($date <= $this->getEndDate()))
     {
       // Add this start date to the result and increment the counter
       $i++;

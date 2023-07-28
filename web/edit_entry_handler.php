@@ -619,7 +619,12 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   $repeat_rule->setMonthlyRelative($month_relative);
   if (isset($rep_end_date))
   {
-    $repeat_rule->setEndDate(DateTime::createFromFormat('Y-m-d', $rep_end_date));
+    $end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
+    if ($end_date === false)
+    {
+      throw new Exception("Could not create repeat end date");
+    }
+    $repeat_rule->setEndDate($end_date);
   }
 
   if ($repeat_rule->getType() == RepeatRule::WEEKLY)
@@ -657,6 +662,19 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
       $rep_details['month_relative'] = $month_relative;
     }
   }
+
+  // Testing
+  $reps_old = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, PHP_INT_MAX);
+  $reps_new = $repeat_rule->getRepeatStartTimes($start_time);
+  if ($reps_new === $reps_old)
+  {
+    echo "Equal";
+  }
+  else{
+    var_dump($reps_old);
+    var_dump($reps_new);
+  }
+  exit;
 
   // Get the first entry in the series and make that the start time
   $reps = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, 1);
