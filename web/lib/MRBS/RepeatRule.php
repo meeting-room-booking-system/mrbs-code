@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use InvalidArgumentException;
+
 class RepeatRule
 {
   // Repeat types
@@ -84,9 +86,11 @@ class RepeatRule
       // Check it's a valid day
       if (($day < 0) || ($day > 6))
       {
-        throw new \InvalidArgumentException("Invalid day of the week '$day'");
+        throw new InvalidArgumentException("Invalid day of the week '$day'");
       }
     }
+    // We need the repeat days to be in order
+    sort($this->days);
   }
 
   public function setEndDate(?DateTime $end_date) : void
@@ -113,7 +117,7 @@ class RepeatRule
   {
     if (!in_array($monthly_type, self::MONTHLY_TYPES))
     {
-      throw new \InvalidArgumentException("Invalid monthly type '$monthly_type'");
+      throw new InvalidArgumentException("Invalid monthly type '$monthly_type'");
     }
     $this->monthly_type = $monthly_type;
   }
@@ -122,7 +126,7 @@ class RepeatRule
   {
     if (!in_array($type, self::REPEAT_TYPES))
     {
-      throw new \InvalidArgumentException("Invalid repeat type '$type'");
+      throw new InvalidArgumentException("Invalid repeat type '$type'");
     }
     $this->type = $type;
   }
@@ -142,7 +146,8 @@ class RepeatRule
     {
       case self::WEEKLY:
         $repeat_days = $this->getDays();
-        if (count($repeat_days) == 0)
+        $n_repeat_days = count($repeat_days); // We will need this later
+        if ($n_repeat_days == 0)
         {
           throw new Exception("No weekly repeat days specified in repeat rule");
         }
@@ -152,6 +157,7 @@ class RepeatRule
           $date->modify('+1 day');
         }
         $start_dow = $date->format('w'); // We will need this later
+        $start_index = array_search($start_dow, $repeat_days); // We will need this later
         break;
 
       case self::MONTHLY:
@@ -177,6 +183,10 @@ class RepeatRule
         }
         break;
 
+      case self::YEARLY:
+        $start_day = $date->getDay(); // We will need this later
+        break;
+
       default:
         break;
     }
@@ -184,7 +194,7 @@ class RepeatRule
     // Now get the entry start times
     $i = 0;
     // TODO: check end_date condition
-    while (($i <  $limit) && ($date <= $this->getEndDate()))
+    while (($i < $limit) && ($date <= $this->getEndDate()))
     {
       // Add this start date to the result and increment the counter
       $i++;
@@ -197,77 +207,56 @@ class RepeatRule
           $modifier = '+' . $this->getInterval() . 'days';
           $date->modify($modifier);
           break;
+
         case self::WEEKLY:
-          // TODO: Weekly stuff: advance to next repeat day
-          pp
+          $delta_weeks = $this->getInterval();
+          // If there is more than one repeat day then advance to the next repeat day
+          if ($n_repeat_days > 1)
+          {
+            // Get the next repeat day
+            $current_index = array_search($date->format('w'), $repeat_days);
+            $next_index = ($current_index + 1) % $n_repeat_days;
+            // Advance to it
+            $day_modifier = '+' . (($next_index + DAYS_PER_WEEK - $current_index) % DAYS_PER_WEEK) . 'days';
+            $date->modify($day_modifier);
+            // If we're back to the start day then we need to advance by the interval less a week.
+            // Otherwise, we don't need to do anything more
+            $delta_weeks = ($next_index == $start_index) ? $delta_weeks - 1 : 0;
+          }
+          // Advance by the required number of weeks
+          if ($delta_weeks != 0)
+          {
+            $modifier = '+' . $delta_weeks . ' weeks';
+            $date->modify($modifier);
+          }
           break;
+
         case self::MONTHLY:
-          $date->modifyMonthsNoOverflow(1, true);
-          // TODO: comment
-        ll
+          // Move the date forward by the interval number of months
+          $date->modifyMonthsNoOverflow($this->getInterval(), true);
+          // If it's an absolute date then set the day again, in case previously the date
+          // was moved back to the end of the month.
           if ($this->getMonthlyType() == self::MONTHLY_ABSOLUTE)
           {
             $date->setDayNoOverflow($this->getMonthlyAbsolute());
           }
-          // TODO: comment
-          ll
+          // If it's a relative date then set the new relative date in the first month that's
+          // got one.
           else
           {
             while (false === $date->setRelativeDay($this->getMonthlyRelative()))
             {
-              $date->modifyMonthsNoOverflow(1, true);
+              $date->modifyMonthsNoOverflow($this->getInterval(), true);
             }
           }
           break;
+
         case self::YEARLY:
-          // TODO:
-          ll
-          break;
-      }
-    }
-
-    return $entries;
-
-        case REP_WEEKLY:
-          $j = $cur_day = date("w", $time);
-          // Skip over days of the week which are not enabled:
-          do
-          {
-            $day++;
-            $j = ($j + 1) % DAYS_PER_WEEK;
-            // If we've got back to the beginning of the week, then skip
-            // over the weeks we've got to miss out (eg miss out one week
-            // if we're repeating every two weeks)
-            if ($j == $start_day)
-            {
-              $day += DAYS_PER_WEEK * ($rep_details['rep_interval'] - 1);
-            }
-          }
-          while (($j != $cur_day) && !$rep_details['rep_opt'][$j]);
-          break;
-
-        case REP_MONTHLY:
-          do
-          {
-            $month = $month + $rep_details['rep_interval'];
-            // Get the day of the month back to where it should be (in case we
-            // decremented it to make it a valid date last time round)
-            $day = $rep_details['month_absolute'] ?? byday_to_day($year, $month, $rep_details['month_relative']);
-          } while ($day === false);
-          trimToEndOfMonth($month, $day, $year);
-          break;
-
-        case REP_YEARLY:
+          // Move the year forward by the interval number of years
+          $date->modifyYearsNoOverflow($this->getInterval(), true);
           // Get the day of the month back to where it should be (in case we
           // decremented it to make it a valid date last time round)
-          $day = $start_dom;
-          $year = $year + $rep_details['rep_interval'];
-          trimToEndOfMonth($month, $day, $year);
-          break;
-
-        // Unknown repeat option
-        default:
-          trigger_error("Unknown repeat type, E_USER_NOTICE");
+          $date->setDay($start_day);
           break;
       }
     }

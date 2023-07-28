@@ -62,7 +62,7 @@ class DateTime extends \DateTime
       return;
     }
 
-    $modifier = (abs($n) == 1) ? "$n month" : "$n months";
+    $modifier = "$n months";
     $day = $this->format('j');
     $this->modify('first day of this month');
     $this->modify($modifier);
@@ -72,6 +72,15 @@ class DateTime extends \DateTime
     {
       $this->findNearestUnhiddenDayInMonth();
     }
+  }
+
+
+  // Adds $n (which can be negative) years to this date, without overflowing
+  // into the next month.  For example modifying 2024-02-29 by +1 year gives
+  // 2025-02-28 rather than 2025-03-01.
+  public function modifyYearsNoOverflow(int $n, bool $allow_hidden_days = false) : void
+  {
+    $this->modifyMonthsNoOverflow(12 * $n, $allow_hidden_days);
   }
 
 
