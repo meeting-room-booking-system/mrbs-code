@@ -274,4 +274,25 @@ class RepeatRule
     return $entries;
   }
 
+
+  // Temporary method while we transition the code to using RepeatRule.
+  // Converts a new style $data into one with old style repeat fields
+  public static function fixUp(array $data) : array
+  {
+    $result = $data;
+
+    if (isset($data['repeat_rule']))
+    {
+      $repeat_rule = $data['repeat_rule'];
+      $result['rep_type'] = $repeat_rule->getType();
+      $result['rep_interval'] = $repeat_rule->getInterval();
+      $repeat_end_date = $repeat_rule->getEndDate();
+      $result['end_date'] = (isset($repeat_end_date)) ? $repeat_end_date->getTimestamp() : null;
+      $result['rep_opt'] = $repeat_rule->getRepOpt();
+      $result['monthly_absolute'] = $repeat_rule->getMonthlyAbsolute();
+      $result['monthly_relative'] = $repeat_rule->getMonthlyRelative();
+    }
+
+    return $result;
+  }
 }

@@ -1877,6 +1877,20 @@ function day_name(int $day_number, array $format=null) : string
 // Gets the monthly repeat day for an entry, for example "20" or "second Wednesday"
 function get_monthly_repeat_day(array $data) : string
 {
+  // Fix up the keys while we're still transitioning to the RepeatRule
+  if (isset($data['repeat_rule']))
+  {
+    $repeat_rule = $data['repeat_rule'];
+    if ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE)
+    {
+      $data['month_absolute'] = $repeat_rule->getMonthlyAbsolute();
+    }
+    else
+    {
+      $data['month_relative'] = $repeat_rule->getMonthlyRelative();
+    }
+  }
+
   if (isset($data['month_absolute']))
   {
     $result = (string) $data['month_absolute'];

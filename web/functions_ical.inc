@@ -743,6 +743,9 @@ function parse_ical_property(string $line) : array
 // Create an iCalendar Recurrence Rule
 function create_rrule(array $data) : string
 {
+  // Fix up the repeat data (the code isn't yet expecting $data to have a repeat_rule key)
+  $data = RepeatRule::fixUp($data);
+
   $rule = '';
 
   if (!isset($data['rep_type']) || ($data['rep_type'] === REP_NONE))
