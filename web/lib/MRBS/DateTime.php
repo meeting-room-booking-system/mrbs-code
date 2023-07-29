@@ -117,7 +117,7 @@ class DateTime extends \DateTime
   }
 
 
-  // Sets the day to $day, but not past the
+  // Sets the day to $day, but not past the end of the month
   public function setDayNoOverflow(int $day) : void
   {
     $this->setDay(min($day, (int) $this->format('t')));
