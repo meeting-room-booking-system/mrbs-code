@@ -647,22 +647,6 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   // start of the event.  For recurring events, it also specifies the very first
   // instance in the recurrence set."]
 
-  $rep_details = array('rep_type'       => $rep_type,
-                       'rep_opt'        => $rep_opt,
-                       'rep_interval'   => $rep_interval);
-
-  if (isset($month_type))
-  {
-    if ($month_type == REP_MONTH_ABSOLUTE)
-    {
-      $rep_details['month_absolute'] = $month_absolute;
-    }
-    else
-    {
-      $rep_details['month_relative'] = $month_relative;
-    }
-  }
-
   // Get the first entry in the series and make that the start time
   $reps = $repeat_rule->getRepeatStartTimes($start_time, 1);
 
