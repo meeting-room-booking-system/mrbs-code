@@ -767,9 +767,6 @@ foreach ($rooms as $room_id)
   $booking['room_id'] = $room_id;
   $booking['start_time'] = $start_time;
   $booking['end_time'] = $end_time;
-  $booking['rep_type'] = $rep_type;
-  $booking['rep_opt'] = $rep_opt;
-  $booking['rep_interval'] = $rep_interval;
   $booking['end_date'] = $rep_end_time;
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;
@@ -781,19 +778,7 @@ foreach ($rooms as $room_id)
   $booking['registration_opens_enabled'] = $registration_opens_enabled;
   $booking['registration_closes'] = (isset($registration_closes)) ? $registration_closes : null;
   $booking['registration_closes_enabled'] = $registration_closes_enabled;
-
-
-  if ($booking['rep_type'] == REP_MONTHLY)
-  {
-    if ($month_type == REP_MONTH_ABSOLUTE)
-    {
-      $booking['month_absolute'] = $month_absolute;
-    }
-    else
-    {
-      $booking['month_relative'] = $month_relative;
-    }
-  }
+  $booking['repeat_rule'] = $repeat_rule;
 
   // Do the custom fields
   foreach ($custom_fields as $key => $value)

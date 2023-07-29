@@ -47,9 +47,9 @@ class RepeatRule
     return $this->end_date ?? null;
   }
 
-  public function getInterval() : int
+  public function getInterval() : ?int
   {
-    return $this->interval;
+    return $this->interval ?? null;
   }
 
   public function getMonthlyAbsolute() : ?int
@@ -66,6 +66,21 @@ class RepeatRule
   {
     return $this->monthly_type ?? null;
   }
+
+
+  // Returns the repeat days encoded as a 7 character string for use in the database
+  public function getRepOpt() : string
+  {
+    $result = '';
+
+    for ($i = 0; $i < DAYS_PER_WEEK; $i++)
+    {
+      $result .= in_array($i, $this->days) ? '1' : '0';
+    }
+
+    return $result;
+  }
+
 
   public function getType() : int
   {
