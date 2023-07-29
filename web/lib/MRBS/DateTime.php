@@ -120,7 +120,7 @@ class DateTime extends \DateTime
   // Sets the day to $day, but not past the
   public function setDayNoOverflow(int $day) : void
   {
-    $this->setDay(min($day, $this->format('t')));
+    $this->setDay(min($day, (int) $this->format('t')));
   }
 
 
