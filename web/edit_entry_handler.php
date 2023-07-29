@@ -663,34 +663,8 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
     }
   }
 
-  // Testing
-  $reps_old = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, PHP_INT_MAX);
-  $reps_new = $repeat_rule->getRepeatStartTimes($start_time);
-  if ($reps_new === $reps_old)
-  {
-    echo "Equal";
-  }
-  else{
-    var_dump($reps_old);
-    var_dump($reps_new);
-    echo "<br>\n";
-    foreach ([$reps_old, $reps_new] as $reps)
-    {
-      foreach ($reps as $rep)
-      {
-        $date = new DateTime();
-        $date->setTimestamp($rep);
-        echo $date->format('r');
-        echo "<br>\n";
-      }
-      echo "<br>\n";
-    }
-
-  }
-  exit;
-
   // Get the first entry in the series and make that the start time
-  $reps = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, 1);
+  $reps = $repeat_rule->getRepeatStartTimes($start_time, 1);
 
   if (count($reps) > 0)
   {
