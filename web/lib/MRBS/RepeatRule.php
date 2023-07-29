@@ -212,7 +212,7 @@ class RepeatRule
             $current_index = array_search($date->format('w'), $repeat_days);
             $next_index = ($current_index + 1) % $n_repeat_days;
             // Advance to it
-            $day_modifier = '+' . (($next_index + DAYS_PER_WEEK - $current_index) % DAYS_PER_WEEK) . 'days';
+            $day_modifier = '+' . (($repeat_days[$next_index] + DAYS_PER_WEEK - $repeat_days[$current_index]) % DAYS_PER_WEEK) . 'days';
             $date->modify($day_modifier);
             // If we're back to the start day then we need to advance by the interval less a week.
             // Otherwise, we don't need to do anything more

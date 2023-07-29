@@ -673,6 +673,19 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   else{
     var_dump($reps_old);
     var_dump($reps_new);
+    echo "<br>\n";
+    foreach ([$reps_old, $reps_new] as $reps)
+    {
+      foreach ($reps as $rep)
+      {
+        $date = new DateTime();
+        $date->setTimestamp($rep);
+        echo $date->format('r');
+        echo "<br>\n";
+      }
+      echo "<br>\n";
+    }
+
   }
   exit;
 
