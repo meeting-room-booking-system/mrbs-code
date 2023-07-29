@@ -251,7 +251,7 @@ class RepeatRule
           $date->modifyYearsNoOverflow($this->getInterval(), true);
           // Get the day of the month back to where it should be (in case we
           // decremented it to make it a valid date last time round)
-          $date->setDay($start_day);
+          $date->setDayNoOverflow($start_day);
           break;
       }
     }
