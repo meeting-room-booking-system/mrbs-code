@@ -23,7 +23,7 @@ class DateTime extends \DateTime
     $clone = clone $this;
 
     // Get the ordinal number and the day of the week
-    list($ord, $dow) = byday_split($relative);
+    list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($relative);
     // Set the starting day of the month, either to the first or last day of
     // the month, depending on whether we are counting forwards or backwards.
     $clone->setDay(($ord > 0) ? 1 : (int) $clone->format('t'));

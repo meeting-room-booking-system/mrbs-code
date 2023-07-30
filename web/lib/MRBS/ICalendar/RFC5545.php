@@ -21,4 +21,19 @@ class RFC5545
 
     return $tmp[0];
   }
+
+
+  // Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
+  // For example "-1SU" is returned an array indexed by 'ordinal' and 'day' keys, eg
+  // array('ordinal' => -1, 'day' => 'SU');
+  public static function parseByday(string $byday) : array
+  {
+    $result = array();
+
+    $split_pos = strlen($byday) -2;
+    $result['ordinal'] = (int) substr($byday, 0, $split_pos);
+    $result['day'] = substr($byday, $split_pos, 2);
+
+    return $result;
+  }
 }
