@@ -1800,7 +1800,7 @@ function validate_iso_date(string $date) : bool
 
 
 // Get the local day name based on language.
-function day_name(int $day_number, array $format=null) : string
+function day_name(int $day_number, array $format=null, string $locale=null) : string
 {
   global $datetime_formats;
 
@@ -1810,7 +1810,7 @@ function day_name(int $day_number, array $format=null) : string
   }
 
   // Note 2000-01-02 is a Sunday.
-  return datetime_format($format, mktime(0,0,0,1,2+$day_number,2000));
+  return datetime_format($format, mktime(0,0,0,1,2+$day_number,2000), $locale);
 }
 
 

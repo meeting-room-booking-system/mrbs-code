@@ -45,18 +45,19 @@ class RepeatRule
 
   // Returns a list of repeat days as a string (eg "Thursday Friday"),
   // sorted in order and starting at $weekstarts
-  public function getDaysAsNames() : string
+  public function getDaysAsNames(bool $for_mail=false) : string
   {
     global $weekstarts;
 
     $names = array();
+    $locale = ($for_mail) ? get_mail_lang() : null;
 
     for ($i=0; $i<DAYS_PER_WEEK; $i++)
     {
       $d = ($i + $weekstarts) % DAYS_PER_WEEK;
       if (in_array($d, $this->getDays()))
       {
-        $names[] = day_name($d);
+        $names[] = day_name($d, null, $locale);
       }
     }
 
