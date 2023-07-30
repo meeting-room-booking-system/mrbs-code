@@ -308,7 +308,7 @@ function create_date_list(array $dates, bool $as_html) : string
 // $reps is an array of start_times that have been created/modified/deleted.
 function create_repeat_list(array $data, $action, bool $as_html, array $reps) : string
 {
-  if (($data['repeat_rule']->getType() != RepeatRule::NONE) ||
+  if (($data['repeat_rule']->getType() == RepeatRule::NONE) ||
        in_array($action, array('more_info', 'remind')))
   {
     return '';
