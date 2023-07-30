@@ -332,7 +332,7 @@ if (!$is_ajax)
     invalid_booking(get_vocab('must_set_description'));
   }
 
-  if (($rep_type != REP_NONE) && ($rep_interval < 1))
+  if (($rep_type != RepeatRule::NONE) && ($rep_interval < 1))
   {
     invalid_booking(get_vocab('invalid_rep_interval'));
   }
@@ -584,7 +584,7 @@ if ($end_time == $start_time)
   $end_time += $resolution;
 }
 
-if (isset($rep_type) && ($rep_type != REP_NONE) && isset($rep_end_date))
+if (isset($rep_type) && ($rep_type != RepeatRule::NONE) && isset($rep_end_date))
 {
   // Get the repeat entry settings
   if (false === ($date = DateTime::createFromFormat('Y-m-d', $rep_end_date)))
@@ -596,7 +596,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) && isset($rep_end_date))
 }
 else
 {
-  $rep_type = REP_NONE;
+  $rep_type = RepeatRule::NONE;
   $rep_end_time = 0;  // to avoid an undefined variable notice
 }
 
@@ -736,7 +736,7 @@ $returl .= '?' . http_build_query($vars, '', '&');
 // is allowed to make/edit repeat bookings.   (The edit_entry form should
 // prevent you ever getting here, but this check is here as a safeguard in
 // case someone has spoofed the HTML)
-if (isset($rep_type) && ($rep_type != REP_NONE) &&
+if (isset($rep_type) && ($rep_type != RepeatRule::NONE) &&
     !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
@@ -944,7 +944,7 @@ $form->addElement($submit);
 // Skip and Book button (to book the entries that don't conflict)
 // Only show this button if there were no policies broken and it's a series
 if (empty($result['violations']['errors'])  &&
-    isset($rep_type) && ($rep_type != REP_NONE))
+    isset($rep_type) && ($rep_type != RepeatRule::NONE))
 {
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array(
