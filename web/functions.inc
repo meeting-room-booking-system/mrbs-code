@@ -1853,29 +1853,6 @@ function get_monthly_repeat_day(array $data) : string
 }
 
 
-// Returns a list of repeat days as a string (eg "Thursday Friday")
-//
-//    $rep_opt     an array of repeat days or
-//                 a string of repeat days that can be used as an array
-function get_rep_day_list($rep_opt) : string
-{
-  global $weekstarts;
-
-  $rep_days = array();
-
-  for ($i=0; $i<DAYS_PER_WEEK; $i++)
-  {
-    $daynum = ($i + $weekstarts) % DAYS_PER_WEEK;
-    if (isset($rep_opt[$daynum]) && $rep_opt[$daynum])
-    {
-      $rep_days[] = day_name($daynum);
-    }
-  }
-
-  return implode(' ', $rep_days);
-}
-
-
 function hour_min_format() : array
 {
   global $datetime_formats;

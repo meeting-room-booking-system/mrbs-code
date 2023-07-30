@@ -341,7 +341,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
     {
       case RepeatRule::WEEKLY:
         // Repeat days
-        $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
+        $tbody .= create_details_row(get_vocab("rep_rep_day"), $data['repeat_rule']->getDaysAsNames(), $as_html);
         break;
       case RepeatRule::MONTHLY:
         $tbody .= create_details_row(get_vocab("repeat_on"), get_monthly_repeat_day($data), $as_html);
