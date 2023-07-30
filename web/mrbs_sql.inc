@@ -1848,7 +1848,7 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
 
   // Add the repeat information
   $repeat_rule = new RepeatRule();
-  if (!isset($row['repeat_id']))
+  if (!$series && !isset($row['repeat_id']))
   {
     $repeat_rule->setType(RepeatRule::NONE);
   }
