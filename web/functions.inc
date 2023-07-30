@@ -1180,20 +1180,6 @@ function fromPeriodString($start_period, &$units, $dur_units)
 }
 
 
-// Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
-// For example "-1SU" is returned as array("-1", "SU");
-function byday_split(string $byday) : array
-{
-  $result = array();
-
-  $split_pos = strlen($byday) -2;
-  $result[] = substr($byday, 0, $split_pos);
-  $result[] = substr($byday, $split_pos, 2);
-
-  return $result;
-}
-
-
 // Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
 // the month, or -1MO for the last Monday.
 function date_byday(int $timestamp) : string
@@ -1221,7 +1207,7 @@ function byday_to_day(int $year, int $month, string $byday)
     $year++;
   }
   // Get the ordinal number and the day of the week
-  list($ord, $dow) = byday_split($byday);
+  list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($byday);
   // Get the starting day of the month
   $start_dom = ($ord > 0) ? 1 : date('t', mktime(0, 0, 0, $month, 1, $year));
   // Get the starting day of the week
@@ -1901,7 +1887,7 @@ function get_monthly_repeat_day(array $data) : string
     // It follows the select box order in edit_entry, which is the more difficult one
     // to sort out.  It assumes all languages have the same order as English
     // eg "the second Wednesday" which is probably not true.
-    list($ord, $dow) = byday_split($data['month_relative']);
+    list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($data['month_relative']);
     $result = get_vocab("ord_" . $ord) . " " . day_name(RFC5545::convertDayToOrd($dow));
   }
   else

@@ -1546,7 +1546,7 @@ if (!isset($month_absolute))
 {
   $month_absolute = date('j', $start_time);
 }
-list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
+list('ordinal' => $month_relative_ord, 'day' => $month_relative_day) = RFC5545::parseByday($month_relative);
 
 $start_hour  = date('H', $start_time);
 $start_min   = date('i', $start_time);
