@@ -1198,7 +1198,7 @@ if (isset($start_date))
   {
     // The end date that came through from the drag select is actually the repeat end
     // date, and the real end date will actually be the start date.
-    $rep_type = REP_DAILY;
+    $rep_type = RepeatRule::DAILY;
     $rep_end_date = DateTime::createFromFormat('Y-m-d', $end_date);
     $end_date = $start_date;
   }
@@ -1248,7 +1248,7 @@ if (isset($id))
 
   // default settings
   $rep_days = array();
-  $rep_type = REP_NONE;
+  $rep_type = RepeatRule::NONE;
   $rep_interval = 1;
 
   foreach ($entry as $column => $value)
@@ -1356,11 +1356,11 @@ if (isset($id))
 
     if (!isset($rep_type))
     {
-      $rep_type = REP_NONE;
+      $rep_type = RepeatRule::NONE;
     }
 
     // If it's a repeating entry get the repeat details
-    if ($rep_type != REP_NONE)
+    if ($rep_type != RepeatRule::NONE)
     {
       $rep_interval = $row['rep_interval'];
 
@@ -1377,7 +1377,7 @@ if (isset($id))
 
       switch ($rep_type)
       {
-        case REP_WEEKLY:
+        case RepeatRule::WEEKLY:
           for ($i=0; $i<DAYS_PER_WEEK; $i++)
           {
             if ($row['rep_opt'][$i])
@@ -1386,15 +1386,15 @@ if (isset($id))
             }
           }
           break;
-        case REP_MONTHLY:
+        case RepeatRule::MONTHLY:
           if (isset($row['month_absolute']))
           {
-            $month_type = REP_MONTH_ABSOLUTE;
+            $month_type = RepeatRule::MONTHLY_ABSOLUTE;
             $month_absolute = $row['month_absolute'];
           }
           elseif (isset($row['month_relative']))
           {
-            $month_type = REP_MONTH_RELATIVE;
+            $month_type = RepeatRule::MONTHLY_RELATIVE;
             $month_relative = $row['month_relative'];
           }
           else
@@ -1524,13 +1524,13 @@ else
   $rep_id        = 0;
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
-    $rep_type      = REP_NONE;
+    $rep_type      = RepeatRule::NONE;
     $rep_end_date = new DateTime();
     $rep_end_date->setDate($year, $month, $day);
   }
   $rep_days = array(date('w', $start_time));
   $rep_interval = 1;
-  $month_type = REP_MONTH_ABSOLUTE;
+  $month_type = RepeatRule::MONTHLY_ABSOLUTE;
 }
 
 $repeat_rule = new RepeatRule();
