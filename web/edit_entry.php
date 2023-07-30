@@ -1533,22 +1533,13 @@ else
   $month_type = REP_MONTH_ABSOLUTE;
 }
 
-if (!isset($month_relative))
-{
-  $month_relative = date_byday($start_time);
-}
-if (!isset($month_absolute))
-{
-  $month_absolute = date('j', $start_time);
-}
-
 $repeat_rule = new RepeatRule();
 $repeat_rule->setType($rep_type);
 $repeat_rule->setInterval($rep_interval);
 $repeat_rule->setDays($rep_days);
 $repeat_rule->setMonthlyType($month_type ?? RepeatRule::MONTHLY_ABSOLUTE);
-$repeat_rule->setMonthlyAbsolute($month_absolute);
-$repeat_rule->setMonthlyRelative($month_relative);
+$repeat_rule->setMonthlyAbsolute($month_absolute ?? (int) date('j', $start_time));
+$repeat_rule->setMonthlyRelative($month_relative ?? date_byday($start_time));
 $repeat_rule->setEndDate($rep_end_date);
 
 $start_hour  = date('H', $start_time);
