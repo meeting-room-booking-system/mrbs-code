@@ -728,8 +728,7 @@ function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
-  // TODO: change temporary code when the transition to RepeatRule is complete
-  $repeat_type = (isset($data['repeat_rule'])) ? $data['repeat_rule']->getType() : $data['rep_type'];
+  $repeat_type = $data['repeat_rule']->getType();
 
   $reply_to = array();
   $to = array();
