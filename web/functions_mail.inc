@@ -357,8 +357,6 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   if (empty($mail_previous))
   {
     $mail_previous = $data;
-    // Fix up the repeat data (the code isn't yet expecting $mail_previous to have a repeat_rule key)
-    $mail_previous = RepeatRule::fixUp($mail_previous);
   }
 
   // set up the body
