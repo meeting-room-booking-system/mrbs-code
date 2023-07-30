@@ -1546,7 +1546,7 @@ $repeat_rule = new RepeatRule();
 $repeat_rule->setType($rep_type);
 $repeat_rule->setInterval($rep_interval);
 $repeat_rule->setDays($rep_days);
-$repeat_rule->setMonthlyType($month_type);
+$repeat_rule->setMonthlyType($month_type ?? RepeatRule::MONTHLY_ABSOLUTE);
 $repeat_rule->setMonthlyAbsolute($month_absolute);
 $repeat_rule->setMonthlyRelative($month_relative);
 $repeat_rule->setEndDate($rep_end_date);
