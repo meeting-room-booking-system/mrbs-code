@@ -74,6 +74,56 @@ class RepeatRule
     return $this->interval ?? null;
   }
 
+
+  // Returns the interval units, in the local language.  If $for_mail
+  // is set the mail language is used.
+  public function getIntervalUnits(bool $for_mail=false) : string
+  {
+    $repeat_type = $this->getType();
+    $repeat_interval = $this->getInterval();
+
+    if ($for_mail)
+    {
+      switch ($repeat_type)
+      {
+        case RepeatRule::DAILY:
+          return ($repeat_interval == 1) ? get_mail_vocab('day') : get_mail_vocab('days');
+          break;
+        case RepeatRule::WEEKLY:
+          return ($repeat_interval == 1) ? get_mail_vocab('week') : get_mail_vocab('weeks');
+          break;
+        case RepeatRule::MONTHLY:
+          return ($repeat_interval == 1) ? get_mail_vocab('month') : get_mail_vocab('months');
+          break;
+        case RepeatRule::YEARLY:
+          return ($repeat_interval == 1) ? get_mail_vocab('year_lc') : get_mail_vocab('years');
+          break;
+        default:
+          return '';
+          break;
+      }
+    }
+
+    switch ($repeat_type)
+    {
+      case RepeatRule::DAILY:
+        return ($repeat_interval == 1) ? get_vocab('day') : get_vocab('days');
+        break;
+      case RepeatRule::WEEKLY:
+        return ($repeat_interval == 1) ? get_vocab('week') : get_vocab('weeks');
+        break;
+      case RepeatRule::MONTHLY:
+        return ($repeat_interval == 1) ? get_vocab('month') : get_vocab('months');
+        break;
+      case RepeatRule::YEARLY:
+        return ($repeat_interval == 1) ? get_vocab('year_lc') : get_vocab('years');
+        break;
+      default:
+        return '';
+        break;
+    }
+  }
+
   public function getMonthlyAbsolute() : ?int
   {
     return $this->monthly_absolute ?? null;

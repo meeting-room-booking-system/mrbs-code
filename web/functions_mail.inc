@@ -639,14 +639,12 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
 
       // Repeat interval
       $repeat_interval = $data['repeat_rule']->getInterval();
-      $new = $repeat_interval . ' ' .
-             get_rep_interval_units_mail($repeat_type, $repeat_interval);
+      $new = $repeat_interval . ' ' . $data['repeat_rule']->getIntervalUnits(true);
 
       $previous_repeat_interval = $mail_previous['repeat_rule']->getInterval();
       if (isset($previous_repeat_interval))
       {
-        $old = $previous_repeat_interval . ' ' .
-               get_rep_interval_units_mail($mail_previous['repeat_rule']->getType(), $previous_repeat_interval);
+        $old = $previous_repeat_interval . ' ' . $mail_previous['repeat_rule']->getIntervalUnits(true);
       }
       else
       {

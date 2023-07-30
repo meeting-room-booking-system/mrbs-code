@@ -885,7 +885,7 @@ function get_field_rep_interval(RepeatRule $repeat_rule, bool $disabled=false) :
 
   $span = new ElementSpan();
   $span->setAttribute('id', 'interval_units')
-       ->setText(get_rep_interval_units($repeat_rule->getType(), $repeat_rule->getInterval()));
+       ->setText($repeat_rule->getIntervalUnits());
 
   $field->setLabel(get_vocab('rep_interval'))
         ->setControlAttributes(array('name'     => 'rep_interval',
