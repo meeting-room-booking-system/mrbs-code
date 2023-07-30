@@ -608,7 +608,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
     // Repeat Type
     $body .= create_body_table_row (get_mail_vocab("rep_type"),
                                     get_mail_vocab("rep_type_" . $data['repeat_rule']->getType()),
-                                    get_mail_vocab("rep_type_" . $mail_previous['rep_type']),
+                                    get_mail_vocab("rep_type_" . $mail_previous['repeat_rule']->getType()),
                                     $compare, $as_html);
 
     // Details if a series
@@ -658,7 +658,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                       $compare, $as_html);
 
       // Repeat end date
-      $end_previous = ($mail_previous['rep_type'] == RepeatRule::NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
+      $end_previous = ($mail_previous['repeat_rule']->getType() == RepeatRule::NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
                                       getMailTimeDateString($data['end_date'], FALSE),
                                       $end_previous,
