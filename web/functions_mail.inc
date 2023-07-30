@@ -621,7 +621,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
         // Repeat days
         // Display day names according to language and preferred weekday start.
         $opt = $data['repeat_rule']->getDaysAsNames();
-        $opt_previous = ($compare) ? $data['repeat_rule']->getDaysAsNames() : '';
+        $opt_previous = ($compare) ? $mail_previous['repeat_rule']->getDaysAsNames() : '';
         $body .= create_body_table_row (get_mail_vocab("rep_rep_day"),
                                         $opt,
                                         $opt_previous,
