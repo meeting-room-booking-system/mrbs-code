@@ -630,7 +630,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                         $compare, $as_html);
       }
 
-      if ($repeat_type == RepeatRule::WEEKLY)
+      if ($repeat_type == RepeatRule::MONTHLY)
       {
         $previous_repeat_day = ($mail_previous['rep_type'] == RepeatRule::MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
