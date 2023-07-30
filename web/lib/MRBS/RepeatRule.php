@@ -42,6 +42,28 @@ class RepeatRule
     return $this->days;
   }
 
+
+  // Returns a list of repeat days as a string (eg "Thursday Friday"),
+  // sorted in order and starting at $weekstarts
+  public function getDaysAsNames() : string
+  {
+    global $weekstarts;
+
+    $names = array();
+
+    for ($i=0; $i<DAYS_PER_WEEK; $i++)
+    {
+      $d = ($i + $weekstarts) % DAYS_PER_WEEK;
+      if (in_array($d, $this->getDays()))
+      {
+        $names[] = day_name($d);
+      }
+    }
+
+    return implode(' ', $names);
+  }
+
+
   public function getEndDate() : ?DateTime
   {
     return $this->end_date ?? null;

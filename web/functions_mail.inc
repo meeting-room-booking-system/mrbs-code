@@ -621,7 +621,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
         // Repeat days
         // Display day names according to language and preferred weekday start.
         $opt = get_rep_day_list($data['repeat_rule']->getRepOpt());
-        $opt_previous = ($compare) ? get_rep_day_list($mail_previous['rep_opt']) : "";
+        $opt_previous = ($compare) ? $data['repeat_rule']->getDaysAsNames() : '';
         $body .= create_body_table_row (get_mail_vocab("rep_rep_day"),
                                         $opt,
                                         $opt_previous,
@@ -630,7 +630,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
 
       if ($repeat_type == RepeatRule::MONTHLY)
       {
-        $previous_repeat_day = ($mail_previous['rep_type'] == RepeatRule::MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
+        $previous_repeat_day = ($mail_previous['repeat_rule']->getType() == RepeatRule::MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
                                         get_monthly_repeat_day($data),
                                         $previous_repeat_day,
@@ -642,10 +642,11 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
       $new = $repeat_interval . ' ' .
              get_rep_interval_units_mail($repeat_type, $repeat_interval);
 
-      if (isset($mail_previous['rep_interval']))
+      $previous_repeat_interval = $mail_previous['repeat_rule']->getInterval();
+      if (isset($previous_repeat_interval))
       {
-        $old = $mail_previous['rep_interval'] . ' ' .
-               get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
+        $old = $previous_repeat_interval . ' ' .
+               get_rep_interval_units_mail($mail_previous['repeat_rule']->getType(), $previous_repeat_interval);
       }
       else
       {
@@ -658,9 +659,9 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                       $compare, $as_html);
 
       // Repeat end date
-      $end_previous = ($mail_previous['repeat_rule']->getType() == RepeatRule::NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
+      $end_previous = ($mail_previous['repeat_rule']->getType() == RepeatRule::NONE) ? '' : getMailTimeDateString($mail_previous['repeat_rule']->getEndDate()->getTimestamp(), false);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
-                                      getMailTimeDateString($data['end_date'], FALSE),
+                                      getMailTimeDateString($data['repeat_rule']->getEndDate()->getTimestamp(), false),
                                       $end_previous,
                                       $compare, $as_html);
 

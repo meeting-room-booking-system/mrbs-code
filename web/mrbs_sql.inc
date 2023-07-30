@@ -1941,9 +1941,11 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
   else
   {
     // Get the repeat information
+    $repeat_rule = new RepeatRule();
     if (!isset($row['repeat_id']))
     {
-      $row['rep_type'] = REP_NONE;   // just as a precaution
+      $repeat_rule->setType(RepeatRule::NONE); // just as a precaution
+      $row['repeat_rule'] = $repeat_rule;
       $row['repeat_info_time'] = '';
       $row['repeat_info_user'] = '';
       $row['repeat_info_text'] = '';
@@ -1977,7 +1979,6 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
       // Cast the columns to their intended types
       row_cast_columns($extra_row, 'repeat');
 
-      $repeat_rule = new RepeatRule();
       $repeat_rule->setType($extra_row['rep_type']);
       $end_date = new DateTime();
       $end_date->setTimestamp($extra_row['end_date']);
