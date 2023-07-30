@@ -1977,12 +1977,32 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
       // Cast the columns to their intended types
       row_cast_columns($extra_row, 'repeat');
 
-      $row['rep_type']         = $extra_row['rep_type'];
-      $row['end_date']         = $extra_row['end_date'];
-      $row['rep_opt']          = $extra_row['rep_opt'];
-      $row['rep_interval']     = $extra_row['rep_interval'];
-      $row['month_absolute']   = $extra_row['month_absolute'];
-      $row['month_relative']   = $extra_row['month_relative'];
+      $repeat_rule = new RepeatRule();
+      $repeat_rule->setType($extra_row['rep_type']);
+      $end_date = new DateTime();
+      $end_date->setTimestamp($extra_row['end_date']);
+      $repeat_rule->setEndDate($end_date);
+      $repeat_rule->setInterval($extra_row['rep_interval']);
+      $repeat_rule->setDaysFromOpt($extra_row['rep_opt']);
+      if ($extra_row['rep_type'] == RepeatRule::MONTHLY)
+      {
+        if (isset($extra_row['month_absolute']))
+        {
+          $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
+          $repeat_rule->setMonthlyAbsolute($extra_row['month_absolute']);
+        }
+        else
+        {
+          $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
+          $repeat_rule->setMonthlyRelative($extra_row['month_relative']);
+        }
+      }
+
+      $row['repeat_rule'] = $repeat_rule;
+
+      // TODO: remove temporary code when the transition to RepeatRule is complete
+      $row = RepeatRule::fixUp($row);
+
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];

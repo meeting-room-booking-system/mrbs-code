@@ -728,6 +728,9 @@ function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
 
+  // TODO: change temporary code when the transition to RepeatRule is complete
+  $repeat_type = (isset($data['repeat_rule'])) ? $data['repeat_rule']->getType() : $data['rep_type'];
+
   $reply_to = array();
   $to = array();
   $cc = array();
@@ -788,7 +791,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of area admins email addresses
     if (empty($data['area_admin_email']))
     {
-      $email = get_area_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
+      $email = get_area_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
     }
     else
     {
@@ -805,7 +808,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of room admins email addresses
     if (empty($data['room_admin_email']))
     {
-      $email = get_room_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
+      $email = get_room_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
     }
     else
     {

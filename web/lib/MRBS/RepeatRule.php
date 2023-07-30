@@ -103,6 +103,23 @@ class RepeatRule
     sort($this->days);
   }
 
+
+  public function setDaysFromOpt(string $rep_opt) : void
+  {
+    $days = [];
+
+    for ($i=0; $i<DAYS_PER_WEEK; $i++)
+    {
+      if (isset($rep_opt[$i]) && $rep_opt[$i])
+      {
+        $days[] = $i;
+      }
+    }
+
+    $this->setDays($days);
+  }
+
+
   public function setEndDate(?DateTime $end_date) : void
   {
     $this->end_date = $end_date;
@@ -275,6 +292,7 @@ class RepeatRule
   }
 
 
+  // TODO: remove temporary code when the transition to RepeatRule is complete
   // Temporary method while we transition the code to using RepeatRule.
   // Converts a new style $data into one with old style repeat fields
   public static function fixUp(array $data) : array
