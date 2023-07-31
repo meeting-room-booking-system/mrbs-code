@@ -327,20 +327,6 @@ define('STATUS_TENTATIVE',         0x04);
 
 
 /*************************************************
- * REPEAT TYPE CODES - internal use, do not change
- *************************************************/
-
-define('REP_NONE',            0);
-define('REP_DAILY',           1);
-define('REP_WEEKLY',          2);
-define('REP_MONTHLY',         3);
-define('REP_YEARLY',          4);
-
-define('REP_MONTH_ABSOLUTE', 0);
-define('REP_MONTH_RELATIVE', 1);
-
-
-/*************************************************
  * DIRECTORIES - internal use, do not change
  *************************************************/
 
