@@ -434,7 +434,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
         $byday_days = explode(',', $rules['BYDAY']);
         if (count($byday_days) > 1)
         {
-          $errors[] = get_vocab("more_than_one_BYDAY") . $result['freq'];
+          $errors[] = get_vocab("more_than_one_BYDAY") . $rules['FREQ'];
         }
         foreach ($byday_days as $byday_day)
         {
