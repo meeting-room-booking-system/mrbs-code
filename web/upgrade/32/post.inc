@@ -1,7 +1,6 @@
 <?php
 namespace MRBS;
 
-require_once 'lib/autoload.inc';
 require_once 'standard_vars.inc.php'; // to ensure the timezone is set
 
 global $admin_handle;

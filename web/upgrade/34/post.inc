@@ -3,7 +3,6 @@ namespace MRBS;
 
 // Convert MONTHLY_SAMEDAY repeats into MONTHLY repeats with a specified month_relative (eg '2TU')
 
-require_once 'lib/autoload.inc';
 require_once 'standard_vars.inc.php'; // to ensure the timezone is set
 
 global $admin_handle;
