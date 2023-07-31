@@ -428,7 +428,6 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
       {
         $repeat_rule->setMonthlyAbsolute((int) $rules['BYMONTHDAY']);
       }
-      // TODO: from here
       else
       {
         $byday_days = explode(',', $rules['BYDAY']);
@@ -447,7 +446,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
             // rule, MO represents all Mondays within the month." [RFC 5545]
             // So that comes to the same thing as a WEEKLY repeat
             $repeat_rule->setType(RepeatRule::WEEKLY);
-            $result['rep_opt'] = get_rep_opt(array($day));
+            $repeat_rule->setDays(array($day));
           }
           elseif (($nth == '5') || ($nth == '-5'))
           {
@@ -455,7 +454,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
           }
           else
           {
-            $result['month_relative'] = $byday_day;
+            $repeat_rule->setMonthlyRelative($byday_day);
           }
         }
       }
@@ -470,11 +469,11 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 
   if (isset($rules['INTERVAL']) && ($rules['INTERVAL'] > 1))
   {
-    $result['rep_interval'] = $rules['INTERVAL'];
+    $repeat_rule->setInterval((int) $rules['INTERVAL']);
   }
   else
   {
-    $result['rep_interval'] = 1;
+    $repeat_rule->setInterval(1);
   }
 
   if (isset($rules['UNTIL']))
@@ -485,7 +484,9 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
     // time or a date with local time and time zone reference, then the UNTIL rule
     // part MUST be specified as a date with UTC time" - so in nearly all cases
     // supported by MRBS the value will be a UTC time.
-    $result['end_date'] = get_time($rules['UNTIL']);
+    $repeat_end_date = new DateTime();
+    $repeat_end_date->setTimestamp(get_time($rules['UNTIL']));
+    $repeat_rule->setEndDate($repeat_end_date);
   }
   elseif (isset($rules['COUNT']))
   {
@@ -497,7 +498,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
     $errors[] = get_vocab("no_indefinite_repeats");
   }
 
-  return (empty($errors)) ? $result : false;
+  return (empty($errors)) ? $repeat_rule : false;
 }
 
 
