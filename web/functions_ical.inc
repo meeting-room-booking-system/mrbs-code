@@ -377,16 +377,19 @@ function get_rep_opt(array $byday_days) : string
 }
 
 
-// Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
-// details.  Indexed by rep_type, rep_interval, rep_opt, end_date
+// Given an RFC 5545 recurrence rule, returns a RepeatRule object giving the MRBS repeat
+// details.
 // Returns FALSE on failure with error messages being returned in the array $errors
-function get_repeat_details(string $rrule, int $start_time, array &$errors)
+function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 {
-  // Set up the result array with safe defaults
-  $result = array('rep_type' => RepeatRule::NONE,
-                  'rep_opt' => '0000000',
-                  'rep_interval' => 1,
-                  'end_date' => 0);
+  // Set up the result with safe defaults
+  $repeat_rule = new RepeatRule();
+  $repeat_rule->setType(RepeatRule::NONE);
+  $repeat_rule->setInterval(1);
+  $end_date = new DateTime();
+  $end_date->setTimestamp(0);
+  $repeat_rule->setEndDate($end_date);
+
   $rules = array();
   $recur_rule_parts = explode(';', $rrule);
   foreach ($recur_rule_parts as $recur_rule_part)
@@ -403,10 +406,10 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
   switch ($rules['FREQ'])
   {
     case 'DAILY':
-      $result['rep_type'] = RepeatRule::DAILY;
+      $repeat_rule->setType(RepeatRule::DAILY);
       break;
     case 'WEEKLY':
-      $result['rep_type'] = RepeatRule::WEEKLY;
+      $repeat_rule->setType(RepeatRule::WEEKLY);
       if (isset($rules['BYDAY']))
       {
         $byday_days = explode(',', $rules['BYDAY']);
@@ -417,14 +420,15 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
         // 'the day is gotten from "DTSTART"'
         $byday_days = array(RFC5545::DAYS[date('w', $start_time)]);
       }
-      $result['rep_opt'] = get_rep_opt($byday_days);
+      $repeat_rule->setDays($byday_days);
       break;
     case 'MONTHLY':
-      $result['rep_type'] = RepeatRule::MONTHLY;
+      $repeat_rule->setType(RepeatRule::MONTHLY);
       if (!isset($rules['BYDAY']))
       {
-        $result['month_absolute'] = $rules['BYMONTHDAY'];
+        $repeat_rule->setMonthlyAbsolute((int) $rules['BYMONTHDAY']);
       }
+      // TODO: from here
       else
       {
         $byday_days = explode(',', $rules['BYDAY']);
@@ -442,7 +446,7 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
             // type within the specified frequency.  For example, within a MONTHLY
             // rule, MO represents all Mondays within the month." [RFC 5545]
             // So that comes to the same thing as a WEEKLY repeat
-            $result['rep_type'] = RepeatRule::WEEKLY;
+            $repeat_rule->setType(RepeatRule::WEEKLY);
             $result['rep_opt'] = get_rep_opt(array($day));
           }
           elseif (($nth == '5') || ($nth == '-5'))
@@ -457,7 +461,7 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
       }
       break;
     case 'YEARLY':
-      $result['rep_type'] = RepeatRule::YEARLY;
+      $repeat_rule->setType(RepeatRule::YEARLY);
       break;
     default:
       $errors[] = get_vocab("unsupported_FREQ") . $rules['FREQ'];

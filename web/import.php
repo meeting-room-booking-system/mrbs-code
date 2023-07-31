@@ -263,7 +263,7 @@ function process_event(array $vevent)
   $booking['awaiting_approval'] = false;
   $booking['private'] = false;
   $booking['tentative'] = false;
-  $booking['rep_type'] = REP_NONE;
+  $booking['rep_type'] = RepeatRule::NONE;
   $booking['type'] = $import_default_type;
   $booking['room_id'] = $import_default_room;
 
@@ -351,7 +351,7 @@ function process_event(array $vevent)
 
       case 'RRULE':
         $rrule_errors = array();
-        $repeat_details = get_repeat_details($details['value'], $booking['start_time'], $rrule_errors);
+        $repeat_details = get_repeat_rule($details['value'], $booking['start_time'], $rrule_errors);
         if ($repeat_details === false)
         {
           $problems = array_merge($problems, $rrule_errors);
