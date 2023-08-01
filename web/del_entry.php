@@ -69,7 +69,7 @@ if ($info = get_booking_info($id, FALSE, TRUE))
       // If this is an individual entry of a series then force the entry_type
       // to be a changed entry, so that when we create the iCalendar object we know that
       // we only want to delete the individual entry
-      if (!$series && ($mail_previous['rep_type'] != REP_NONE))
+      if (!$series && ($mail_previous['repeat_rule']->getType() != RepeatRule::NONE))
       {
         $mail_previous['entry_type'] = ENTRY_RPT_CHANGED;
       }

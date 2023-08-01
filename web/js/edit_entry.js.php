@@ -59,10 +59,10 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
     $('.rep_type_details').hide();
     switch (repType)
     {
-      case <?php echo REP_WEEKLY ?>:
+      case <?php echo RepeatRule::WEEKLY ?>:
         $('#rep_weekly').show();
         break;
-      case <?php echo REP_MONTHLY ?>:
+      case <?php echo RepeatRule::MONTHLY ?>:
         $('#rep_monthly').show();
         break;
       default:
@@ -82,16 +82,16 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     var text;
     switch (repType)
     {
-      case <?php echo REP_DAILY ?>:
+      case <?php echo RepeatRule::DAILY ?>:
         text = (repInterval === 1) ? '<?php echo get_vocab('day') ?>' : '<?php echo get_vocab('days') ?>';
         break;
-      case <?php echo REP_WEEKLY ?>:
+      case <?php echo RepeatRule::WEEKLY ?>:
         text = (repInterval === 1) ? '<?php echo get_vocab('week') ?>' : '<?php echo get_vocab('weeks') ?>';
         break;
-      case <?php echo REP_MONTHLY ?>:
+      case <?php echo RepeatRule::MONTHLY ?>:
         text = (repInterval === 1) ? '<?php echo get_vocab('month') ?>' : '<?php echo get_vocab('months') ?>';
         break;
-      case <?php echo REP_YEARLY ?>:
+      case <?php echo RepeatRule::YEARLY ?>:
         text = (repInterval === 1) ? '<?php echo get_vocab('year_lc') ?>' : '<?php echo get_vocab('years') ?>';
         break;
       default:
@@ -100,10 +100,10 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     }
     units.text(text);
 
-    units.parent().toggle(repType !== <?php echo REP_NONE ?>);
+    units.parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
 
-    $('#rep_end_date').parent().toggle(repType !== <?php echo REP_NONE ?>);
-    $('#skip').parent().toggle(repType !== <?php echo REP_NONE ?>);
+    $('#rep_end_date').parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
+    $('#skip').parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
   };
 
 
@@ -470,7 +470,7 @@ function validate(form)
 
   <?php // Repeat checks ?>
   var repType = form.find('input:radio[name=rep_type]:checked').val();
-  if ((repType !== undefined) && (parseInt(repType, 10) !== <?php echo REP_NONE ?>))
+  if ((repType !== undefined) && (parseInt(repType, 10) !== <?php echo RepeatRule::NONE ?>))
   {
     <?php
     // Check that there's a sensible value for rep_interval.   Only necessary

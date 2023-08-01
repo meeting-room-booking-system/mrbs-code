@@ -2,6 +2,9 @@
 
 namespace MRBS\ICalendar;
 
+use MRBS\DateTime;
+use MRBS\RepeatRule;
+
 require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
 
@@ -19,13 +22,8 @@ class Series
   // Constructs a new Series object and adds $row to it.
   // $limit is the limiting UNIX timestamp for the series.  This may be before the actual end
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
-  public function __construct(array $row, $limit=null)
+  public function __construct(array $row, int $limit=null)
   {
-    if (!isset($limit))
-    {
-      $limit = PHP_INT_MAX;
-    }
-
     $this->data = array();
     $this->repeat_id = $row['repeat_id'];
 
@@ -38,31 +36,33 @@ class Series
     // will be the recurrence-id of the first entry in the series, which is this one
     // thanks to the SQL query which ordered the entries by recurrence-id.
     $this->start_row = $row;  // Make a copy of the data because we are going to tweak it.
-    $this->start_row['end_date'] = min($limit, $this->start_row['end_date']);
+    if (isset($limit))
+    {
+      $this->start_row['end_date'] = min($limit, $this->start_row['end_date']);
+    }
     $duration = $this->start_row['end_time'] - $this->start_row['start_time'];
     $this->start_row['start_time'] = strtotime($row['ical_recur_id']);
     $this->start_row['end_time'] = $this->start_row['start_time'] + $duration;
 
     // Construct an array of the entries we'd expect to see in this series so that
     // we can check whether any are missing and if so set their status to cancelled.
-    // (We use PHP_INT_MAX rather than $max_rep_entrys because $max_rep_entrys may
-    // have changed since the series was created.)
-    $rep_details = array();
-
-    foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
+    $repeat_rule = new RepeatRule();
+    $repeat_rule->setType($this->start_row['rep_type']);
+    $repeat_rule->setInterval($this->start_row['rep_interval']);
+    $repeat_end_date = new DateTime();
+    $repeat_end_date->setTimestamp($this->start_row['end_date']);
+    $repeat_rule->setEndDate($repeat_end_date);
+    $repeat_rule->setDaysFromOpt($this->start_row['rep_opt']);
+    if (isset($this->start_row['month_absolute']))
     {
-      if (isset($this->start_row[$key]))
-      {
-        $rep_details[$key] = $this->start_row[$key];
-      }
+      $repeat_rule->setMonthlyAbsolute($this->start_row['month_absolute']);
+    }
+    if (isset($this->start_row['month_relative']))
+    {
+      $repeat_rule->setMonthlyRelative($this->start_row['month_relative']);
     }
 
-    $this->expected_entries = \MRBS\mrbsGetRepeatEntryList(
-      $this->start_row['start_time'],
-      $this->start_row['end_date'],
-      $rep_details,
-      PHP_INT_MAX
-    );
+    $this->expected_entries = $repeat_rule->getRepeatStartTimes($this->start_row['start_time']);
 
     // And keep an array of all the entries we actually see
     $this->actual_entries = array();

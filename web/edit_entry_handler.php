@@ -333,7 +333,7 @@ if (!$is_ajax)
     invalid_booking(get_vocab('must_set_description'));
   }
 
-  if (($rep_type != REP_NONE) && ($rep_interval < 1))
+  if (($rep_type != RepeatRule::NONE) && ($rep_interval < 1))
   {
     invalid_booking(get_vocab('invalid_rep_interval'));
   }
@@ -590,7 +590,7 @@ if ($end_time == $start_time)
   $end_time += $resolution;
 }
 
-if (isset($rep_type) && ($rep_type != REP_NONE) && isset($rep_end_date))
+if (isset($rep_type) && ($rep_type != RepeatRule::NONE) && isset($rep_end_date))
 {
   // Get the repeat entry settings
   if (false === ($date = DateTime::createFromFormat('Y-m-d', $rep_end_date)))
@@ -602,7 +602,7 @@ if (isset($rep_type) && ($rep_type != REP_NONE) && isset($rep_end_date))
 }
 else
 {
-  $rep_type = REP_NONE;
+  $rep_type = RepeatRule::NONE;
   $rep_end_time = 0;  // to avoid an undefined variable notice
 }
 
@@ -613,18 +613,31 @@ if (!isset($rep_day))
 
 $rep_opt = "";
 
-
 // Get the repeat details
-if (isset($rep_type) && ($rep_type != REP_NONE))
+$repeat_rule = new RepeatRule();
+$repeat_rule->setType($rep_type ?? RepeatRule::NONE);
+
+if ($repeat_rule->getType() != RepeatRule::NONE)
 {
-  if ($rep_type == REP_WEEKLY)
+  $repeat_rule->setInterval($rep_interval);
+  $repeat_rule->setMonthlyType($month_type);
+  $repeat_rule->setMonthlyAbsolute($month_absolute);
+  $repeat_rule->setMonthlyRelative($month_relative);
+  if (isset($rep_end_date))
+  {
+    $end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
+    if ($end_date === false)
+    {
+      throw new Exception("Could not create repeat end date");
+    }
+    $repeat_rule->setEndDate($end_date);
+  }
+
+  if ($repeat_rule->getType() == RepeatRule::WEEKLY)
   {
     // If no repeat day has been set, then set a default repeat day
     // as the day of the week of the start of the period
-    if (count($rep_day) == 0)
-    {
-      $rep_day[] = date('w', $start_time);
-    }
+    $repeat_rule->setDays ((count($rep_day) > 0) ? $rep_day : array(date('w', $start_time)));
     // Build string of weekdays to repeat on:
     for ($i = 0; $i < DAYS_PER_WEEK; $i++)
     {
@@ -640,24 +653,8 @@ if (isset($rep_type) && ($rep_type != REP_NONE))
   // start of the event.  For recurring events, it also specifies the very first
   // instance in the recurrence set."]
 
-  $rep_details = array('rep_type'       => $rep_type,
-                       'rep_opt'        => $rep_opt,
-                       'rep_interval'   => $rep_interval);
-
-  if (isset($month_type))
-  {
-    if ($month_type == REP_MONTH_ABSOLUTE)
-    {
-      $rep_details['month_absolute'] = $month_absolute;
-    }
-    else
-    {
-      $rep_details['month_relative'] = $month_relative;
-    }
-  }
-
   // Get the first entry in the series and make that the start time
-  $reps = mrbsGetRepeatEntryList($start_time, $rep_end_time, $rep_details, 1);
+  $reps = $repeat_rule->getRepeatStartTimes($start_time, 1);
 
   if (count($reps) > 0)
   {
@@ -745,7 +742,7 @@ $returl .= '?' . http_build_query($vars, '', '&');
 // is allowed to make/edit repeat bookings.   (The edit_entry form should
 // prevent you ever getting here, but this check is here as a safeguard in
 // case someone has spoofed the HTML)
-if (isset($rep_type) && ($rep_type != REP_NONE) &&
+if (isset($rep_type) && ($rep_type != RepeatRule::NONE) &&
     !is_book_admin($rooms) &&
     !empty($auth['only_admin_can_book_repeat']))
 {
@@ -776,9 +773,6 @@ foreach ($rooms as $room_id)
   $booking['room_id'] = $room_id;
   $booking['start_time'] = $start_time;
   $booking['end_time'] = $end_time;
-  $booking['rep_type'] = $rep_type;
-  $booking['rep_opt'] = $rep_opt;
-  $booking['rep_interval'] = $rep_interval;
   $booking['end_date'] = $rep_end_time;
   $booking['ical_uid'] = $ical_uid;
   $booking['ical_sequence'] = $ical_sequence;
@@ -790,19 +784,7 @@ foreach ($rooms as $room_id)
   $booking['registration_opens_enabled'] = $registration_opens_enabled;
   $booking['registration_closes'] = (isset($registration_closes)) ? $registration_closes : null;
   $booking['registration_closes_enabled'] = $registration_closes_enabled;
-
-
-  if ($booking['rep_type'] == REP_MONTHLY)
-  {
-    if ($month_type == REP_MONTH_ABSOLUTE)
-    {
-      $booking['month_absolute'] = $month_absolute;
-    }
-    else
-    {
-      $booking['month_relative'] = $month_relative;
-    }
-  }
+  $booking['repeat_rule'] = $repeat_rule;
 
   // Do the custom fields
   foreach ($custom_fields as $key => $value)
@@ -968,7 +950,7 @@ $form->addElement($submit);
 // Skip and Book button (to book the entries that don't conflict)
 // Only show this button if there were no policies broken and it's a series
 if (empty($result['violations']['errors'])  &&
-    isset($rep_type) && ($rep_type != REP_NONE))
+    isset($rep_type) && ($rep_type != RepeatRule::NONE))
 {
   $submit = new ElementInputSubmit();
   $submit->setAttributes(array(

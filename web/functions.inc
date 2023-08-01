@@ -4,6 +4,7 @@ namespace MRBS;
 use DateInterval;
 use DateTimeZone;
 use MRBS\Form\FieldSelect;
+use MRBS\ICalendar\RFC5545;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once "mrbs_sql.inc";
@@ -378,52 +379,6 @@ function get_type_names(?array $types, string $glue=', ') : string
   }
 
   return implode($glue, $names);
-}
-
-
-function get_rep_interval_units(int $rep_type, int $rep_interval) : string
-{
-  switch ($rep_type)
-  {
-    case REP_DAILY:
-      return ($rep_interval == 1) ? get_vocab('day') : get_vocab('days');
-      break;
-    case REP_WEEKLY:
-      return ($rep_interval == 1) ? get_vocab('week') : get_vocab('weeks');
-      break;
-    case REP_MONTHLY:
-      return ($rep_interval == 1) ? get_vocab('month') : get_vocab('months');
-      break;
-    case REP_YEARLY:
-      return ($rep_interval == 1) ? get_vocab('year_lc') : get_vocab('years');
-      break;
-    default:
-      return '';
-      break;
-  }
-}
-
-
-function get_rep_interval_units_mail(int $rep_type, int $rep_interval) : string
-{
-  switch ($rep_type)
-  {
-    case REP_DAILY:
-      return ($rep_interval == 1) ? get_mail_vocab('day') : get_mail_vocab('days');
-      break;
-    case REP_WEEKLY:
-      return ($rep_interval == 1) ? get_mail_vocab('week') : get_mail_vocab('weeks');
-      break;
-    case REP_MONTHLY:
-      return ($rep_interval == 1) ? get_mail_vocab('month') : get_mail_vocab('months');
-      break;
-    case REP_YEARLY:
-      return ($rep_interval == 1) ? get_mail_vocab('year_lc') : get_mail_vocab('years');
-      break;
-    default:
-      return '';
-      break;
-  }
 }
 
 
@@ -1224,27 +1179,11 @@ function from_period_string($start_period, array $duration)
 }
 
 
-// Splits a BYDAY string into its ordinal and day parts, returned as a simple array.
-// For example "-1SU" is returned as array("-1", "SU");
-function byday_split(string $byday) : array
-{
-  $result = array();
-
-  $split_pos = strlen($byday) -2;
-  $result[] = substr($byday, 0, $split_pos);
-  $result[] = substr($byday, $split_pos, 2);
-
-  return $result;
-}
-
-
 // Returns the BYDAY value for a given timestamp, eg 4SU for fourth Sunday in
 // the month, or -1MO for the last Monday.
 function date_byday(int $timestamp) : string
 {
-  global $RFC_5545_days;
-
-  $dow = $RFC_5545_days[date('w', $timestamp)];
+  $dow = RFC5545::DAYS[date('w', $timestamp)];
   $dom = date('j', $timestamp);
   $ord = intval(($dom - 1)/DAYS_PER_WEEK) + 1;
   if ($ord == 5)
@@ -1252,17 +1191,6 @@ function date_byday(int $timestamp) : string
     $ord = -1;
   }
   return $ord . $dow;
-}
-
-
-// Convert an RFC 5545 day to an ordinal number representing the day of the week,
-// eg "MO" returns "1"
-function RFC_5545_day_to_ord(string $day) : int
-{
-  global $RFC_5545_days;
-
-  $tmp = array_keys($RFC_5545_days, $day);
-  return $tmp[0];
 }
 
 
@@ -1278,13 +1206,13 @@ function byday_to_day(int $year, int $month, string $byday)
     $year++;
   }
   // Get the ordinal number and the day of the week
-  list($ord, $dow) = byday_split($byday);
+  list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($byday);
   // Get the starting day of the month
   $start_dom = ($ord > 0) ? 1 : date('t', mktime(0, 0, 0, $month, 1, $year));
   // Get the starting day of the week
   $start_dow = date('w', mktime(0, 0, 0, $month, $start_dom, $year));
   // Turn the BYDAY day of the week into an integer
-  $byday_dow = RFC_5545_day_to_ord($dow);
+  $byday_dow = RFC5545::convertDayToOrd($dow);
   // get the difference in days
   $diff = $byday_dow - $start_dow;
   $diff += ($ord > 0) ? DAYS_PER_WEEK : -DAYS_PER_WEEK;
@@ -1794,7 +1722,7 @@ function validate_iso_date(string $date) : bool
 
 
 // Get the local day name based on language.
-function day_name(int $day_number, array $format=null) : string
+function day_name(int $day_number, array $format=null, string $locale=null) : string
 {
   global $datetime_formats;
 
@@ -1804,13 +1732,27 @@ function day_name(int $day_number, array $format=null) : string
   }
 
   // Note 2000-01-02 is a Sunday.
-  return datetime_format($format, mktime(0,0,0,1,2+$day_number,2000));
+  return datetime_format($format, mktime(0,0,0,1,2+$day_number,2000), $locale);
 }
 
 
 // Gets the monthly repeat day for an entry, for example "20" or "second Wednesday"
 function get_monthly_repeat_day(array $data) : string
 {
+  // Fix up the keys while we're still transitioning to the RepeatRule
+  if (isset($data['repeat_rule']))
+  {
+    $repeat_rule = $data['repeat_rule'];
+    if ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE)
+    {
+      $data['month_absolute'] = $repeat_rule->getMonthlyAbsolute();
+    }
+    else
+    {
+      $data['month_relative'] = $repeat_rule->getMonthlyRelative();
+    }
+  }
+
   if (isset($data['month_absolute']))
   {
     $result = (string) $data['month_absolute'];
@@ -1821,8 +1763,8 @@ function get_monthly_repeat_day(array $data) : string
     // It follows the select box order in edit_entry, which is the more difficult one
     // to sort out.  It assumes all languages have the same order as English
     // eg "the second Wednesday" which is probably not true.
-    list($ord, $dow) = byday_split($data['month_relative']);
-    $result = get_vocab("ord_" . $ord) . " " . day_name(RFC_5545_day_to_ord($dow));
+    list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($data['month_relative']);
+    $result = get_vocab("ord_" . $ord) . " " . day_name(RFC5545::convertDayToOrd($dow));
   }
   else
   {
@@ -1830,29 +1772,6 @@ function get_monthly_repeat_day(array $data) : string
   }
 
   return $result;
-}
-
-
-// Returns a list of repeat days as a string (eg "Thursday Friday")
-//
-//    $rep_opt     an array of repeat days or
-//                 a string of repeat days that can be used as an array
-function get_rep_day_list($rep_opt) : string
-{
-  global $weekstarts;
-
-  $rep_days = array();
-
-  for ($i=0; $i<DAYS_PER_WEEK; $i++)
-  {
-    $daynum = ($i + $weekstarts) % DAYS_PER_WEEK;
-    if (isset($rep_opt[$daynum]) && $rep_opt[$daynum])
-    {
-      $rep_days[] = day_name($daynum);
-    }
-  }
-
-  return implode(' ', $rep_days);
 }
 
 

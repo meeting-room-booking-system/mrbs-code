@@ -1124,9 +1124,6 @@ function mrbsCreateEntry(string $table, array $data)
         case 'end_time':
         case 'entry_type':
         case 'repeat_id':
-        case 'rep_type':
-        case 'month_absolute':
-        case 'end_date':
         case 'room_id':
         case 'status':
         case 'ical_sequence':
@@ -1153,7 +1150,6 @@ function mrbsCreateEntry(string $table, array $data)
         case 'name':
         case 'type':
         case 'description':
-        case 'month_relative':
         case 'ical_uid':
         case 'ical_recur_id':
           $sql_col[] = $key;
@@ -1161,27 +1157,20 @@ function mrbsCreateEntry(string $table, array $data)
           $sql_params[] = (isset($data[$key])) ? $data[$key] : null;
           break;
 
-        // special case - rep_opt
-        case 'rep_opt':
-          // pgsql doesn't like empty strings
-          $sql_col[] = $key;
-          $sql_val[] = '?';
-          $sql_params[] = (empty($data[$key])) ? '0' : $data[$key];
-          break;
-
-        // special case - rep_interval
-        case 'rep_interval':
-          if (!empty($data[$key]))
-          {
-            $sql_col[] = $key;
-            $sql_val[] = '?';
-            $sql_params[] = $data[$key];
-          }
-          break;
-
         default:
           // custom fields
-          if (!in_array($key, $standard_fields[$table_short_name]))
+          // We handle the repeat data separately
+          $repeat_fields = [
+            'repeat_rule',
+            'rep_type',
+            'rep_opt',
+            'rep_interval',
+            'month_absolute',
+            'month_relative'
+          ];
+
+          if (!in_array($key, $standard_fields[$table_short_name]) &&
+              !in_array($key, $repeat_fields))
           {
             $sql_col[] = $key;
 
@@ -1222,6 +1211,40 @@ function mrbsCreateEntry(string $table, array $data)
       } // switch ($key)
     } // if
   } // foreach
+
+  // Add in the repeat data for the repeat table
+  if ($table_short_name == 'repeat')
+  {
+    $repeat_rule = $data['repeat_rule'];
+    $sql_col[] = 'rep_type';
+    $sql_val[] = '?';
+    $sql_params[] = $repeat_rule->getType();
+
+    $sql_col[] = 'end_date';
+    $sql_val[] = '?';
+    $end_date = $repeat_rule->getEndDate();
+    $sql_params[] = (isset($end_date)) ? $end_date->getTimestamp() : null;
+
+    // special case - rep_interval
+    $rep_interval = $repeat_rule->getInterval();
+    if (isset($rep_interval)) {
+      $sql_col[] = 'rep_interval';
+      $sql_val[] = '?';
+      $sql_params[] = $rep_interval;
+    }
+
+    $sql_col[] = 'rep_opt';
+    $sql_val[] = '?';
+    $sql_params[] = $repeat_rule->getRepOpt();
+
+    $sql_col[] = 'month_absolute';
+    $sql_val[] = '?';
+    $sql_params[] = $repeat_rule->getMonthlyAbsolute();
+
+    $sql_col[] = 'month_relative';
+    $sql_val[] = '?';
+    $sql_params[] = $repeat_rule->getMonthlyRelative();
+  }
 
   foreach ($sql_col as &$col)
   {
@@ -1299,143 +1322,6 @@ function trimToEndOfMonth(&$month, &$day, &$year)
 }
 
 
-/** mrbsGetRepeatEntryList
- *
- * Returns a list of the repeating entries
- *
- * $time          The start time
- * $rep_end_time  When the repeat ends (Unix timestamp)
- * $rep_details   An associative array containing the repeat details, indexed by
- *                  rep_type        What type of repeat is it
- *                  rep_opt         The repeat entries (if the repeat type is weekly then at least one
- *                                  repeat day must be set)
- *                  rep_interval    The repeat interval
- *                  month_absolute  The repeat day of the month for monthly repeats
- * $n             Maximum number of entries to find
- *
- * Returns:
- *   empty     - The entry does not repeat
- *   an array  - This is a list of start times of each of the repeat entries
- */
-
-function mrbsGetRepeatEntryList(int $time, int $rep_end_time, array $rep_details, int $n) : array
-{
-  $entries = array();
-
-  $date = getdate($time);
-
-  $sec         = $date['seconds'];
-  $min         = $date['minutes'];
-  $hour        = $date['hours'];
-  $day         = $date['mday'];
-  $month       = $date['mon'];
-  $year        = $date['year'];
-  $start_day   = $date['wday'];
-  $start_dom   = $day;  // the starting day of the month
-  $start_month = $month;
-
-  // Make sure that the first date is a member of the series
-  switch($rep_details['rep_type'])
-  {
-    case REP_WEEKLY:
-      for ($j=$start_day; ($j<DAYS_PER_WEEK+$start_day) && !$rep_details['rep_opt'][$j%DAYS_PER_WEEK]; $j++)
-      {
-        $day++;
-      }
-      break;
-    case REP_MONTHLY:
-      if (isset($rep_details['month_absolute']))
-      {
-        $day = $rep_details['month_absolute'];
-        if ($day < $start_dom)
-        {
-          $month++;
-        }
-      }
-      elseif (isset($rep_details['month_relative']))
-      {
-        $day = byday_to_day($year, $month, $rep_details['month_relative']);
-        while (($day === FALSE) || (($day < $start_dom) && ($month == $start_month)))
-        {
-          $month++;
-          $day = byday_to_day($year, $month, $rep_details['month_relative']);
-        }
-      }
-      else
-      {
-        trigger_error("No monthly repeat type, E_USER_WARNING");
-      }
-      trimToEndOfMonth($month, $day, $year);
-      break;
-    default:
-      break;
-  }
-
-  for ($i = 0; $i < $n; $i++)
-  {
-    $time = mktime($hour, $min, $sec, $month, $day, $year);
-
-    if ($time > $rep_end_time)
-    {
-      break;
-    }
-
-    $entries[] = $time;
-
-    switch($rep_details['rep_type'])
-    {
-      case REP_DAILY:
-        $day = $day + $rep_details['rep_interval'];
-        break;
-
-      case REP_WEEKLY:
-        $j = $cur_day = date("w", $time);
-        // Skip over days of the week which are not enabled:
-        do
-        {
-          $day++;
-          $j = ($j + 1) % DAYS_PER_WEEK;
-          // If we've got back to the beginning of the week, then skip
-          // over the weeks we've got to miss out (eg miss out one week
-          // if we're repeating every two weeks)
-          if ($j == $start_day)
-          {
-            $day += DAYS_PER_WEEK * ($rep_details['rep_interval'] - 1);
-          }
-        }
-        while (($j != $cur_day) && !$rep_details['rep_opt'][$j]);
-        break;
-
-      case REP_MONTHLY:
-        do
-        {
-          $month = $month + $rep_details['rep_interval'];
-          // Get the day of the month back to where it should be (in case we
-          // decremented it to make it a valid date last time round)
-          $day = $rep_details['month_absolute'] ?? byday_to_day($year, $month, $rep_details['month_relative']);
-        } while ($day === false);
-        trimToEndOfMonth($month, $day, $year);
-        break;
-
-      case REP_YEARLY:
-        // Get the day of the month back to where it should be (in case we
-        // decremented it to make it a valid date last time round)
-        $day = $start_dom;
-        $year = $year + $rep_details['rep_interval'];
-        trimToEndOfMonth($month, $day, $year);
-        break;
-
-      // Unknown repeat option
-      default:
-        trigger_error("Unknown repeat type, E_USER_NOTICE");
-        break;
-    }
-  }
-
-  return $entries;
-}
-
-
 /** mrbsCreateRepeatingEntrys()
  *
  * Creates a repeat entry in the database + all the repeating entries
@@ -1462,23 +1348,7 @@ function mrbsCreateRepeatingEntrys(array $data) : array
     $data['skip_list'] = array();
   }
 
-  $rep_details = array();
-  foreach (array('rep_type',
-                 'rep_opt',
-                 'rep_interval',
-                 'month_absolute',
-                 'month_relative') as $key)
-  {
-    if (isset($data[$key]))
-    {
-      $rep_details[$key] = $data[$key];
-    }
-  }
-
-  $reps = mrbsGetRepeatEntryList($data['start_time'],
-                                 $data['end_date'],
-                                 $rep_details,
-                                 $max_rep_entrys);
+  $reps = $data['repeat_rule']->getRepeatStartTimes($data['start_time'], $max_rep_entrys);
 
   // Don't make any bookings if
   // (a) we've been asked to book up more entries than we are
@@ -1940,7 +1810,6 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
     // Get the repeat information
     if (!isset($row['repeat_id']))
     {
-      $row['rep_type'] = REP_NONE;   // just as a precaution
       $row['repeat_info_time'] = '';
       $row['repeat_info_user'] = '';
       $row['repeat_info_text'] = '';
@@ -1974,18 +1843,44 @@ function get_booking_info(int $id, bool $series, bool $silent=false)
       // Cast the columns to their intended types
       row_cast_columns($extra_row, 'repeat');
 
-      $row['rep_type']         = $extra_row['rep_type'];
-      $row['end_date']         = $extra_row['end_date'];
-      $row['rep_opt']          = $extra_row['rep_opt'];
-      $row['rep_interval']     = $extra_row['rep_interval'];
-      $row['month_absolute']   = $extra_row['month_absolute'];
-      $row['month_relative']   = $extra_row['month_relative'];
       $row['repeat_info_time'] = $extra_row['repeat_info_time'];
       $row['repeat_info_user'] = $extra_row['repeat_info_user'];
       $row['repeat_info_text'] = $extra_row['repeat_info_text'];
       unset($res);
     }
   }
+
+  // Add the repeat information
+  $repeat_rule = new RepeatRule();
+  if (!$series && !isset($row['repeat_id']))
+  {
+    $repeat_rule->setType(RepeatRule::NONE);
+  }
+  else
+  {
+    $repeat_row = ($series) ? $row : $extra_row;
+    $repeat_rule->setType($repeat_row['rep_type']);
+    $end_date = new DateTime();
+    $end_date->setTimestamp($repeat_row['end_date']);
+    $repeat_rule->setEndDate($end_date);
+    $repeat_rule->setInterval($repeat_row['rep_interval']);
+    $repeat_rule->setDaysFromOpt($repeat_row['rep_opt']);
+    if ($repeat_row['rep_type'] == RepeatRule::MONTHLY) {
+      if (isset($repeat_row['month_absolute'])) {
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
+        $repeat_rule->setMonthlyAbsolute($repeat_row['month_absolute']);
+      }
+      else {
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
+        $repeat_rule->setMonthlyRelative($repeat_row['month_relative']);
+      }
+    }
+  }
+
+  $row['repeat_rule'] = $repeat_rule;
+
+  // TODO: remove temporary code when the transition to RepeatRule is complete
+  $row = RepeatRule::fixUp($row);
 
   return $row;
 }
@@ -2115,24 +2010,9 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   $dur_units = $tmp['units'];
 
   // Expand a series into a list of start times:
-  if ($bookings[0]['rep_type'] != REP_NONE)
+  if ($bookings[0]['repeat_rule']->getType() != RepeatRule::NONE)
   {
-    $rep_details = array();
-    foreach (array('rep_type',
-                   'rep_opt',
-                   'rep_interval',
-                   'month_absolute',
-                   'month_relative') as $key)
-    {
-      if (isset($common[$key]))
-      {
-        $rep_details[$key] = $common[$key];
-      }
-    }
-    $reps = mrbsGetRepeatEntryList($common['start_time'],
-                                   isset($common['end_date']) ? $common['end_date'] : 0,
-                                   $rep_details,
-                                   $max_rep_entrys);
+    $reps = $bookings[0]['repeat_rule']->getRepeatStartTimes($common['start_time'], $max_rep_entrys);
   }
 
   // When checking for overlaps, for Edit (not New), ignore this entry and series:
@@ -2194,7 +2074,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   foreach ($bookings as $booking)
   {
     $skip_lists[$booking['room_id']] = array();
-    if ($booking['rep_type'] != REP_NONE && !empty($reps))
+    if ($booking['repeat_rule']->getType() != RepeatRule::NONE && !empty($reps))
     {
       if(count($reps) < $max_rep_entrys)
       {
@@ -2393,7 +2273,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
       }
     }
 
-    if ($booking['rep_type'] == REP_NONE)
+    if ($booking['repeat_rule']->getType() == RepeatRule::NONE)
     {
       $booking['entry_type'] = (isset($repeat_id)) ? ENTRY_RPT_CHANGED : ENTRY_SINGLE;
       $booking['repeat_id'] = $repeat_id;
@@ -2407,7 +2287,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
     $booking['duration'] = $duration;
     $booking['dur_units'] = $dur_units;
 
-    if ($booking['rep_type'] != REP_NONE)
+    if ($booking['repeat_rule']->getType() != RepeatRule::NONE)
     {
       $details = mrbsCreateRepeatingEntrys($booking);
       $new_id = $details['id'];
