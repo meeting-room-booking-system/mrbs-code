@@ -20,6 +20,7 @@ use MRBS\Form\FieldInputRadioGroup;
 use MRBS\Form\FieldSelect;
 use MRBS\Form\FieldTimeWithUnits;
 use MRBS\Form\Form;
+use MRBS\ICalendar\RFC5545;
 
 // If you want to add some extra columns to the entry and repeat tables to
 // record extra details about bookings then you can do so and this page should
@@ -675,7 +676,7 @@ function get_field_custom(string $key, bool $disabled=false)
 
 
 // Repeat type
-function get_field_rep_type(int $value, array $rep_days, bool $disabled=false) : FieldDiv
+function get_field_rep_type(RepeatRule $repeat_rule, bool $disabled=false) : FieldDiv
 {
   $field = new FieldDiv();
 
@@ -683,32 +684,32 @@ function get_field_rep_type(int $value, array $rep_days, bool $disabled=false) :
                               'class' => 'multiline'))
         ->setLabel(get_vocab('rep_type'));
 
-  foreach (array(REP_NONE, REP_DAILY, REP_WEEKLY, REP_MONTHLY, REP_YEARLY) as $i)
+  foreach (RepeatRule::REPEAT_TYPES as $i)
   {
     $options[$i] = get_vocab("rep_type_$i");
   }
   $radio_group = new ElementDiv();
   $radio_group->setAttribute('class', 'group long')
-              ->addRadioOptions($options, 'rep_type', $value, true);
+              ->addRadioOptions($options, 'rep_type', $repeat_rule->getType(), true);
 
   $field->addControlElement($radio_group);
 
   // No point in showing anything more if the repeat fields are disabled
   // and the repeat type is None
-  if (!$disabled || ($value != REP_NONE))
+  if (!$disabled || ($repeat_rule->getType() != RepeatRule::NONE))
   {
     // And no point in showing the weekly repeat details if the repeat
     // fields are disabled and the repeat type is not a weekly repeat
-    if (!$disabled || ($value == REP_WEEKLY))
+    if (!$disabled || ($repeat_rule->getType() == RepeatRule::WEEKLY))
     {
-      $field->addControlElement(get_fieldset_rep_weekly_details($rep_days, $disabled));
+      $field->addControlElement(get_fieldset_rep_weekly_details($repeat_rule, $disabled));
     }
 
     // And no point in showing the monthly repeat details if the repeat
     // fields are disabled and the repeat type is not a monthly repeat
-    if (!$disabled || ($value == REP_MONTHLY))
+    if (!$disabled || ($repeat_rule->getType() == RepeatRule::MONTHLY))
     {
-      $field->addControlElement(get_fieldset_rep_monthly_details($disabled));
+      $field->addControlElement(get_fieldset_rep_monthly_details($repeat_rule, $disabled));
     }
   }
 
@@ -717,7 +718,7 @@ function get_field_rep_type(int $value, array $rep_days, bool $disabled=false) :
 
 
 // Repeat day
-function get_field_rep_days(array $rep_days, bool $disabled=false) : FieldInputCheckboxGroup
+function get_field_rep_days(RepeatRule $repeat_rule, bool $disabled=false) : FieldInputCheckboxGroup
 {
   global $weekstarts, $datetime_formats;
 
@@ -733,29 +734,27 @@ function get_field_rep_days(array $rep_days, bool $disabled=false) : FieldInputC
 
   $field->setAttribute('id', 'rep_day')
         ->setLabel(get_vocab('rep_rep_day'))
-        ->addCheckboxOptions($options, 'rep_day[]', $rep_days, true, $disabled);
+        ->addCheckboxOptions($options, 'rep_day[]', $repeat_rule->getDays(), true, $disabled);
 
   return $field;
 }
 
 
-function get_fieldset_rep_weekly_details(array $rep_days, bool $disabled=false) : ElementFieldset
+function get_fieldset_rep_weekly_details(RepeatRule $repeat_rule, bool $disabled=false) : ElementFieldset
 {
   $fieldset = new ElementFieldset();
 
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_weekly'));
-  $fieldset->addElement(get_field_rep_days($rep_days, $disabled));
+  $fieldset->addElement(get_field_rep_days($repeat_rule, $disabled));
 
   return $fieldset;
 }
 
 
 // MONTH ABSOLUTE (eg Day 15 of every month)
-function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
+function get_fieldset_month_absolute(RepeatRule $repeat_rule, bool $disabled=false) : ElementFieldset
 {
-  global $month_type, $month_absolute;
-
   $fieldset = new ElementFieldset();
 
   $label = new ElementLabel();
@@ -764,8 +763,8 @@ function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
 
   $radio = new ElementInputRadio();
   $radio->setAttributes(array('name'     => 'month_type',
-                              'value'    => REP_MONTH_ABSOLUTE,
-                              'checked'  => ($month_type == REP_MONTH_ABSOLUTE),
+                              'value'    => RepeatRule::MONTHLY_ABSOLUTE,
+                              'checked'  => ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE),
                               'disabled' => $disabled));
 
   $label->addElement($radio);
@@ -782,7 +781,7 @@ function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
   $select = new ElementSelect();
   $select->setAttributes(array('name'     => 'month_absolute',
                                'disabled' => $disabled))
-         ->addSelectOptions($options, $month_absolute, false);
+         ->addSelectOptions($options, $repeat_rule->getMonthlyAbsolute(), false);
 
   $fieldset->addElement($select);
 
@@ -791,10 +790,9 @@ function get_fieldset_month_absolute(bool $disabled=false) : ElementFieldset
 
 
 // MONTH RELATIVE (eg the second Thursday of every month)
-function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
+function get_fieldset_month_relative(RepeatRule $repeat_rule, bool $disabled=false) : ElementFieldset
 {
-  global $month_type, $month_relative_ord, $month_relative_day;
-  global $weekstarts, $RFC_5545_days;
+  global $weekstarts;
 
   $fieldset = new ElementFieldset();
 
@@ -804,8 +802,8 @@ function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
 
   $radio = new ElementInputRadio();
   $radio->setAttributes(array('name'     => 'month_type',
-                              'value'    => REP_MONTH_RELATIVE,
-                              'checked'  => ($month_type == REP_MONTH_RELATIVE),
+                              'value'    => RepeatRule::MONTHLY_RELATIVE,
+                              'checked'  => ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_RELATIVE),
                               'disabled' => $disabled));
 
   $label->addElement($radio);
@@ -815,6 +813,7 @@ function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
   // Note: the select box order does not internationalise very well and could
   // do with revisiting.   It assumes all languages have the same order as English
   // eg "the second Wednesday" which is probably not true.
+  list('ordinal' => $month_relative_ord, 'day' => $month_relative_day) = RFC5545::parseByday($repeat_rule->getMonthlyRelative());
   $options = array();
   foreach (array('1', '2', '3', '4', '5', '-1', '-2', '-3', '-4', '-5') as $i)
   {
@@ -831,7 +830,7 @@ function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
   for ($i=0; $i<DAYS_PER_WEEK; $i++)
   {
     $i_offset = ($i + $weekstarts)%DAYS_PER_WEEK;
-    $options[$RFC_5545_days[$i_offset]] = day_name($i_offset);
+    $options[RFC5545::DAYS[$i_offset]] = day_name($i_offset);
   }
   $select = new ElementSelect();
   $select->setAttributes(array('name'     => 'month_relative_day',
@@ -844,56 +843,54 @@ function get_fieldset_month_relative(bool $disabled=false) : ElementFieldset
 }
 
 
-function get_fieldset_rep_monthly_details(bool $disabled=false) : ElementFieldset
+function get_fieldset_rep_monthly_details(RepeatRule $repeat_rule, bool $disabled=false) : ElementFieldset
 {
-  global $month_type;
-
   $fieldset = new ElementFieldset();
+
+  $month_type = $repeat_rule->getMonthlyType();
 
   // If the existing repeat type is other than a monthly repeat, we'll
   // need to define a default month type in case the user decides to change
   // to a monthly repeat
   if (!isset($month_type))
   {
-    $month_type = REP_MONTH_ABSOLUTE;
+    $month_type = RepeatRule::MONTHLY_ABSOLUTE;
   }
 
   $fieldset->setAttributes(array('class' => 'rep_type_details js_none',
                                  'id'    => 'rep_monthly'));
-  $fieldset->addElement(get_fieldset_month_absolute($disabled))
-           ->addElement(get_fieldset_month_relative($disabled));
+  $fieldset->addElement(get_fieldset_month_absolute($repeat_rule, $disabled))
+           ->addElement(get_fieldset_month_relative($repeat_rule, $disabled));
 
   return $fieldset;
 }
 
 
-function get_field_rep_end_date(DateTime $rep_end_date, bool $disabled=false) : FieldInputDate
+function get_field_rep_end_date(RepeatRule $repeat_rule, bool $disabled=false) : FieldInputDate
 {
   $field = new FieldInputDate();
 
   $field->setLabel(get_vocab('rep_end_date'))
         ->setControlAttributes(array('name'     => 'rep_end_date',
-                                     'value'    => $rep_end_date->getISODate(),
+                                     'value'    => $repeat_rule->getEndDate()->getISODate(),
                                      'disabled' => $disabled));
 
   return $field;
 }
 
 
-function get_field_rep_interval(int $rep_interval, bool $disabled=false) : FieldInputNumber
+function get_field_rep_interval(RepeatRule $repeat_rule, bool $disabled=false) : FieldInputNumber
 {
-  global $rep_type;
-
   $field = new FieldInputNumber();
 
   $span = new ElementSpan();
   $span->setAttribute('id', 'interval_units')
-       ->setText(get_rep_interval_units($rep_type, $rep_interval));
+       ->setText($repeat_rule->getIntervalUnits());
 
   $field->setLabel(get_vocab('rep_interval'))
         ->setControlAttributes(array('name'     => 'rep_interval',
                                      'min'      => 1,
-                                     'value'    => $rep_interval,
+                                     'value'    => $repeat_rule->getInterval(),
                                      'disabled' => $disabled))
         ->addElement($span);
 
@@ -1010,10 +1007,9 @@ function get_fieldset_registration() : ?ElementFieldset
 }
 
 
-function get_fieldset_repeat(DateTime $rep_end_date, array $rep_days) : ElementFieldset
+function get_fieldset_repeat(RepeatRule $repeat_rule) : ElementFieldset
 {
   global $edit_type, $repeats_allowed;
-  global $rep_type, $rep_interval;
 
   // If repeats aren't allowed or this is not a series then disable
   // the repeat fields - they're for information only
@@ -1027,9 +1023,9 @@ function get_fieldset_repeat(DateTime $rep_end_date, array $rep_days) : ElementF
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'rep_info');
 
-  $fieldset->addElement(get_field_rep_type($rep_type, $rep_days, $disabled))
-           ->addElement(get_field_rep_interval($rep_interval, $disabled))
-           ->addElement(get_field_rep_end_date($rep_end_date, $disabled))
+  $fieldset->addElement(get_field_rep_type($repeat_rule, $disabled))
+           ->addElement(get_field_rep_interval($repeat_rule, $disabled))
+           ->addElement(get_field_rep_end_date($repeat_rule, $disabled))
            ->addElement(get_field_skip_conflicts($disabled));
 
   return $fieldset;
@@ -1202,7 +1198,7 @@ if (isset($start_date))
   {
     // The end date that came through from the drag select is actually the repeat end
     // date, and the real end date will actually be the start date.
-    $rep_type = REP_DAILY;
+    $rep_type = RepeatRule::DAILY;
     $rep_end_date = DateTime::createFromFormat('Y-m-d', $end_date);
     $end_date = $start_date;
   }
@@ -1252,7 +1248,7 @@ if (isset($id))
 
   // default settings
   $rep_days = array();
-  $rep_type = REP_NONE;
+  $rep_type = RepeatRule::NONE;
   $rep_interval = 1;
 
   foreach ($entry as $column => $value)
@@ -1360,11 +1356,11 @@ if (isset($id))
 
     if (!isset($rep_type))
     {
-      $rep_type = REP_NONE;
+      $rep_type = RepeatRule::NONE;
     }
 
     // If it's a repeating entry get the repeat details
-    if ($rep_type != REP_NONE)
+    if ($rep_type != RepeatRule::NONE)
     {
       $rep_interval = $row['rep_interval'];
 
@@ -1381,7 +1377,7 @@ if (isset($id))
 
       switch ($rep_type)
       {
-        case REP_WEEKLY:
+        case RepeatRule::WEEKLY:
           for ($i=0; $i<DAYS_PER_WEEK; $i++)
           {
             if ($row['rep_opt'][$i])
@@ -1390,15 +1386,15 @@ if (isset($id))
             }
           }
           break;
-        case REP_MONTHLY:
+        case RepeatRule::MONTHLY:
           if (isset($row['month_absolute']))
           {
-            $month_type = REP_MONTH_ABSOLUTE;
+            $month_type = RepeatRule::MONTHLY_ABSOLUTE;
             $month_absolute = $row['month_absolute'];
           }
           elseif (isset($row['month_relative']))
           {
-            $month_type = REP_MONTH_RELATIVE;
+            $month_type = RepeatRule::MONTHLY_RELATIVE;
             $month_relative = $row['month_relative'];
           }
           else
@@ -1528,24 +1524,23 @@ else
   $rep_id        = 0;
   if (!isset($rep_type))  // We might have set it through a drag selection
   {
-    $rep_type      = REP_NONE;
+    $rep_type      = RepeatRule::NONE;
     $rep_end_date = new DateTime();
     $rep_end_date->setDate($year, $month, $day);
   }
   $rep_days = array(date('w', $start_time));
   $rep_interval = 1;
-  $month_type = REP_MONTH_ABSOLUTE;
+  $month_type = RepeatRule::MONTHLY_ABSOLUTE;
 }
 
-if (!isset($month_relative))
-{
-  $month_relative = date_byday($start_time);
-}
-if (!isset($month_absolute))
-{
-  $month_absolute = date('j', $start_time);
-}
-list($month_relative_ord, $month_relative_day) = byday_split($month_relative);
+$repeat_rule = new RepeatRule();
+$repeat_rule->setType($rep_type);
+$repeat_rule->setInterval($rep_interval);
+$repeat_rule->setDays($rep_days);
+$repeat_rule->setMonthlyType($month_type ?? RepeatRule::MONTHLY_ABSOLUTE);
+$repeat_rule->setMonthlyAbsolute($month_absolute ?? (int) date('j', $start_time));
+$repeat_rule->setMonthlyRelative($month_relative ?? date_byday($start_time));
+$repeat_rule->setEndDate($rep_end_date);
 
 $start_hour  = date('H', $start_time);
 $start_min   = date('i', $start_time);
@@ -1816,7 +1811,7 @@ $form->addElement(get_fieldset_registration());
 // series or else you're making a new booking.  This should be tidied up sometime!)
 if (($edit_type == "series") && $repeats_allowed)
 {
-  $form->addElement(get_fieldset_repeat($rep_end_date, $rep_days));
+  $form->addElement(get_fieldset_repeat($repeat_rule));
 }
 
 // Checkbox for no email

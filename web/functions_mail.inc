@@ -308,7 +308,7 @@ function create_date_list(array $dates, bool $as_html) : string
 // $reps is an array of start_times that have been created/modified/deleted.
 function create_repeat_list(array $data, $action, bool $as_html, array $reps) : string
 {
-  if (($data['rep_type'] == REP_NONE) ||
+  if (($data['repeat_rule']->getType() == RepeatRule::NONE) ||
        in_array($action, array('more_info', 'remind')))
   {
     return '';
@@ -325,15 +325,6 @@ function create_repeat_list(array $data, $action, bool $as_html, array $reps) : 
     $result .= get_vocab("mail_body_repeats_booked");
   }
   $result .= ($as_html) ? '</p>' . MAIL_EOL : MAIL_EOL . MAIL_EOL;
-
-  $rep_details = array();
-  foreach (array('rep_type', 'rep_opt', 'rep_interval', 'month_absolute', 'month_relative') as $key)
-  {
-    if (isset($data[$key]))
-    {
-      $rep_details[$key] = $data[$key];
-    }
-  }
 
   $result .= create_date_list($reps, $as_html);
 
@@ -616,29 +607,30 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
 
     // Repeat Type
     $body .= create_body_table_row (get_mail_vocab("rep_type"),
-                                    get_mail_vocab("rep_type_" . $data['rep_type']),
-                                    get_mail_vocab("rep_type_" . $mail_previous['rep_type']),
+                                    get_mail_vocab("rep_type_" . $data['repeat_rule']->getType()),
+                                    get_mail_vocab("rep_type_" . $mail_previous['repeat_rule']->getType()),
                                     $compare, $as_html);
 
     // Details if a series
-    if ($data['rep_type'] != REP_NONE)
+    $repeat_type = $data['repeat_rule']->getType();
+    if ($repeat_type != RepeatRule::NONE)
     {
 
-      if ($data['rep_type'] == REP_WEEKLY)
+      if ($repeat_type == RepeatRule::WEEKLY)
       {
         // Repeat days
         // Display day names according to language and preferred weekday start.
-        $opt = get_rep_day_list($data['rep_opt']);
-        $opt_previous = ($compare) ? get_rep_day_list($mail_previous['rep_opt']) : "";
+        $opt = $data['repeat_rule']->getDaysAsNames(true);
+        $opt_previous = ($compare) ? $mail_previous['repeat_rule']->getDaysAsNames(true) : '';
         $body .= create_body_table_row (get_mail_vocab("rep_rep_day"),
                                         $opt,
                                         $opt_previous,
                                         $compare, $as_html);
       }
 
-      if ($data['rep_type'] == REP_MONTHLY)
+      if ($repeat_type == RepeatRule::MONTHLY)
       {
-        $previous_repeat_day = ($mail_previous['rep_type'] == REP_MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
+        $previous_repeat_day = ($mail_previous['repeat_rule']->getType() == RepeatRule::MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
                                         get_monthly_repeat_day($data),
                                         $previous_repeat_day,
@@ -646,13 +638,13 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
       }
 
       // Repeat interval
-      $new = $data['rep_interval'] . ' ' .
-             get_rep_interval_units_mail($data['rep_type'], $data['rep_interval']);
+      $repeat_interval = $data['repeat_rule']->getInterval();
+      $new = $repeat_interval . ' ' . $data['repeat_rule']->getIntervalUnits(true);
 
-      if (isset($mail_previous['rep_interval']))
+      $previous_repeat_interval = $mail_previous['repeat_rule']->getInterval();
+      if (isset($previous_repeat_interval))
       {
-        $old = $mail_previous['rep_interval'] . ' ' .
-               get_rep_interval_units_mail($mail_previous['rep_type'], $mail_previous['rep_interval']);
+        $old = $previous_repeat_interval . ' ' . $mail_previous['repeat_rule']->getIntervalUnits(true);
       }
       else
       {
@@ -665,9 +657,9 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                       $compare, $as_html);
 
       // Repeat end date
-      $end_previous = ($mail_previous['rep_type'] == REP_NONE) ? '' : getMailTimeDateString($mail_previous['end_date'], FALSE);
+      $end_previous = ($mail_previous['repeat_rule']->getType() == RepeatRule::NONE) ? '' : getMailTimeDateString($mail_previous['repeat_rule']->getEndDate()->getTimestamp(), false);
       $body .= create_body_table_row (get_mail_vocab("rep_end_date"),
-                                      getMailTimeDateString($data['end_date'], FALSE),
+                                      getMailTimeDateString($data['repeat_rule']->getEndDate()->getTimestamp(), false),
                                       $end_previous,
                                       $compare, $as_html);
 
@@ -684,7 +676,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   // above, it's often helpful to have this expanded out into a list of actual dates to
   // avoid any confusion.    The repeat list also gives a list of dates that could not
   // be booked due to conflicts.
-  if ($data['rep_type'] != REP_NONE)
+  if ($repeat_type != RepeatRule::NONE)
   {
     $body .= create_repeat_list($data, $action, $as_html, $start_times);
   }
@@ -732,6 +724,8 @@ function address_merge(array $addresses, string $address_string) : array
 function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
+
+  $repeat_type = $data['repeat_rule']->getType();
 
   $reply_to = array();
   $to = array();
@@ -793,7 +787,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of area admins email addresses
     if (empty($data['area_admin_email']))
     {
-      $email = get_area_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
+      $email = get_area_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
     }
     else
     {
@@ -810,7 +804,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of room admins email addresses
     if (empty($data['room_admin_email']))
     {
-      $email = get_room_admin_email($data['id'], ($data['rep_type'] != REP_NONE));
+      $email = get_room_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
     }
     else
     {

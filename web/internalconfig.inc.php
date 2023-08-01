@@ -327,20 +327,6 @@ define('STATUS_TENTATIVE',         0x04);
 
 
 /*************************************************
- * REPEAT TYPE CODES - internal use, do not change
- *************************************************/
-
-define('REP_NONE',            0);
-define('REP_DAILY',           1);
-define('REP_WEEKLY',          2);
-define('REP_MONTHLY',         3);
-define('REP_YEARLY',          4);
-
-define('REP_MONTH_ABSOLUTE', 0);
-define('REP_MONTH_RELATIVE', 1);
-
-
-/*************************************************
  * DIRECTORIES - internal use, do not change
  *************************************************/
 
@@ -354,11 +340,6 @@ define('TZDIR_OUTLOOK', 'tzurl/zoneinfo-outlook');  // Outlook compatible TZURL 
 
 define ('RFC5545_FORMAT', 'Ymd\THis');  // Format for expressing iCalendar dates
 define ('ICAL_EOL', "\r\n");            // Lines must be terminated by CRLF
-
-// Create an array which can be used to map day of the week numbers (0..6)
-// onto days of the week as defined in RFC 5545
-$RFC_5545_days = array('SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA');
-
 
 /****************************************************************
  * DATABASE TABLES  - internal use, do not change

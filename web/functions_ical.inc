@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -365,11 +366,9 @@ function get_create_by(string $organizer)
 // Returns an MRBS rep_opt string given an array of RFC 5545 days
 function get_rep_opt(array $byday_days) : string
 {
-  global $RFC_5545_days;
-
   $rep_opt = '';
 
-  foreach ($RFC_5545_days as $day)
+  foreach (RFC5545::DAYS as $day)
   {
     $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
   }
@@ -378,18 +377,19 @@ function get_rep_opt(array $byday_days) : string
 }
 
 
-// Given an RFC 5545 recurrence rule, returns an array giving the MRBS repeat
-// details.  Indexed by rep_type, rep_interval, rep_opt, end_date
+// Given an RFC 5545 recurrence rule, returns a RepeatRule object giving the MRBS repeat
+// details.
 // Returns FALSE on failure with error messages being returned in the array $errors
-function get_repeat_details(string $rrule, int $start_time, array &$errors)
+function get_repeat_rule(string $rrule, int $start_time, array &$errors)
 {
-  global $RFC_5545_days;
+  // Set up the result with safe defaults
+  $repeat_rule = new RepeatRule();
+  $repeat_rule->setType(RepeatRule::NONE);
+  $repeat_rule->setInterval(1);
+  $end_date = new DateTime();
+  $end_date->setTimestamp(0);
+  $repeat_rule->setEndDate($end_date);
 
-  // Set up the result array with safe defaults
-  $result = array('rep_type' => REP_NONE,
-                  'rep_opt' => '0000000',
-                  'rep_interval' => 1,
-                  'end_date' => 0);
   $rules = array();
   $recur_rule_parts = explode(';', $rrule);
   foreach ($recur_rule_parts as $recur_rule_part)
@@ -406,10 +406,10 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
   switch ($rules['FREQ'])
   {
     case 'DAILY':
-      $result['rep_type'] = REP_DAILY;
+      $repeat_rule->setType(RepeatRule::DAILY);
       break;
     case 'WEEKLY':
-      $result['rep_type'] = REP_WEEKLY;
+      $repeat_rule->setType(RepeatRule::WEEKLY);
       if (isset($rules['BYDAY']))
       {
         $byday_days = explode(',', $rules['BYDAY']);
@@ -418,22 +418,22 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
       {
         // If there's no repeat day specified in the RRULE then
         // 'the day is gotten from "DTSTART"'
-        $byday_days = array($RFC_5545_days[date('w', $start_time)]);
+        $byday_days = array(RFC5545::DAYS[date('w', $start_time)]);
       }
-      $result['rep_opt'] = get_rep_opt($byday_days);
+      $repeat_rule->setDays($byday_days);
       break;
     case 'MONTHLY':
-      $result['rep_type'] = REP_MONTHLY;
+      $repeat_rule->setType(RepeatRule::MONTHLY);
       if (!isset($rules['BYDAY']))
       {
-        $result['month_absolute'] = $rules['BYMONTHDAY'];
+        $repeat_rule->setMonthlyAbsolute((int) $rules['BYMONTHDAY']);
       }
       else
       {
         $byday_days = explode(',', $rules['BYDAY']);
         if (count($byday_days) > 1)
         {
-          $errors[] = get_vocab("more_than_one_BYDAY") . $result['freq'];
+          $errors[] = get_vocab("more_than_one_BYDAY") . $rules['FREQ'];
         }
         foreach ($byday_days as $byday_day)
         {
@@ -445,8 +445,8 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
             // type within the specified frequency.  For example, within a MONTHLY
             // rule, MO represents all Mondays within the month." [RFC 5545]
             // So that comes to the same thing as a WEEKLY repeat
-            $result['rep_type'] = REP_WEEKLY;
-            $result['rep_opt'] = get_rep_opt(array($day));
+            $repeat_rule->setType(RepeatRule::WEEKLY);
+            $repeat_rule->setDays(array($day));
           }
           elseif (($nth == '5') || ($nth == '-5'))
           {
@@ -454,13 +454,13 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
           }
           else
           {
-            $result['month_relative'] = $byday_day;
+            $repeat_rule->setMonthlyRelative($byday_day);
           }
         }
       }
       break;
     case 'YEARLY':
-      $result['rep_type'] = REP_YEARLY;
+      $repeat_rule->setType(RepeatRule::YEARLY);
       break;
     default:
       $errors[] = get_vocab("unsupported_FREQ") . $rules['FREQ'];
@@ -469,11 +469,11 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
 
   if (isset($rules['INTERVAL']) && ($rules['INTERVAL'] > 1))
   {
-    $result['rep_interval'] = $rules['INTERVAL'];
+    $repeat_rule->setInterval((int) $rules['INTERVAL']);
   }
   else
   {
-    $result['rep_interval'] = 1;
+    $repeat_rule->setInterval(1);
   }
 
   if (isset($rules['UNTIL']))
@@ -484,7 +484,9 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
     // time or a date with local time and time zone reference, then the UNTIL rule
     // part MUST be specified as a date with UTC time" - so in nearly all cases
     // supported by MRBS the value will be a UTC time.
-    $result['end_date'] = get_time($rules['UNTIL']);
+    $repeat_end_date = new DateTime();
+    $repeat_end_date->setTimestamp(get_time($rules['UNTIL']));
+    $repeat_rule->setEndDate($repeat_end_date);
   }
   elseif (isset($rules['COUNT']))
   {
@@ -496,7 +498,7 @@ function get_repeat_details(string $rrule, int $start_time, array &$errors)
     $errors[] = get_vocab("no_indefinite_repeats");
   }
 
-  return (empty($errors)) ? $result : false;
+  return (empty($errors)) ? $repeat_rule : false;
 }
 
 
@@ -746,22 +748,23 @@ function parse_ical_property(string $line) : array
 // Create an iCalendar Recurrence Rule
 function create_rrule(array $data) : string
 {
-  global $RFC_5545_days;
+  // Fix up the repeat data (the code isn't yet expecting $data to have a repeat_rule key)
+  $data = RepeatRule::fixUp($data);
 
   $rule = '';
 
-  if (!isset($data['rep_type']) || ($data['rep_type'] === REP_NONE))
+  if (!isset($data['rep_type']) || ($data['rep_type'] === RepeatRule::NONE))
   {
     return $rule;
   }
 
   switch($data['rep_type'])
   {
-    case REP_DAILY:
+    case RepeatRule::DAILY:
       $rule .= "FREQ=DAILY";
       break;
 
-    case REP_WEEKLY:
+    case RepeatRule::WEEKLY:
       $rule .= "FREQ=WEEKLY";
       // Get the repeat days of the week
       $days_of_week = array();
@@ -769,7 +772,7 @@ function create_rrule(array $data) : string
       {
         if ($data['rep_opt'][$i])
         {
-          $days_of_week[] = $RFC_5545_days[$i];
+          $days_of_week[] = RFC5545::DAYS[$i];
         }
       }
       $dow_list = implode(',', $days_of_week);
@@ -779,7 +782,7 @@ function create_rrule(array $data) : string
       }
       break;
 
-    case REP_MONTHLY:
+    case RepeatRule::MONTHLY:
       $rule .= "FREQ=MONTHLY";
       if (isset($data['month_absolute']))
       {
@@ -795,7 +798,7 @@ function create_rrule(array $data) : string
       }
       break;
 
-    case REP_YEARLY:
+    case RepeatRule::YEARLY:
       $rule .= "FREQ=YEARLY";
       break;
   }
@@ -1086,7 +1089,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
   {
     unpack_status($row);
     // If this is an individual entry, then construct an event
-    if (!isset($row['rep_type']) || ($row['rep_type'] == REP_NONE))
+    if (!isset($row['rep_type']) || ($row['rep_type'] == RepeatRule::NONE))
     {
       $ical_events[] = create_ical_event($method, $row);
     }

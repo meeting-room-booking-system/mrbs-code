@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace MRBS;
 
+use MRBS\ICalendar\RFC5545;
 use UnexpectedValueException;
 
 class DateTime extends \DateTime
@@ -10,6 +11,45 @@ class DateTime extends \DateTime
   private static $validHolidays = array();
 
   private const HOLIDAY_RANGE_OPERATOR = '..';
+
+
+  // TODO: replace usages of byday_to_day() with this method
+  // TODO: make $relative an object?
+  // Sets the day to $relative, where relative is an RFC5545 relative day,
+  // eg "-2SU".  Returns FALSE if the relative day doesn't exist in this
+  // month, otherwise TRUE.
+  public function setRelativeDay(string $relative) : bool
+  {
+    $clone = clone $this;
+
+    // Get the ordinal number and the day of the week
+    list('ordinal' => $ord, 'day' => $dow) = RFC5545::parseByday($relative);
+    // Set the starting day of the month, either to the first or last day of
+    // the month, depending on whether we are counting forwards or backwards.
+    $clone->setDay(($ord > 0) ? 1 : (int) $clone->format('t'));
+    // Advance/go back to the first day of the week that is required
+    // TODO: this could be optimised slightly by calculating the exact number of days required
+    while ($clone->format('w') != RFC5545::convertDayToOrd($dow))
+    {
+      $modifier = ($ord > 0) ? '+1 day' : '-1 day';
+      $clone->modify($modifier);
+    }
+    // Advance/go back the required number of weeks
+    if (abs($ord) > 1)
+    {
+      $modifier = (($ord > 0) ? '+' : '-') . ($ord - 1) . 'weeks';
+      $clone->modify($modifier);
+    }
+    // See if we are still in the same month.  If not, then the relative day doesn't
+    // exist in this month and return FALSE.  If so, then set this date to be the
+    // clone's and return TRUE.
+    if ($clone->getMonth() !== $this->getMonth())
+    {
+      return false;
+    }
+    $this->setTimestamp($clone->getTimestamp());
+    return true;
+  }
 
 
   // Adds $n (which can be negative) months to this date, without overflowing
@@ -22,7 +62,7 @@ class DateTime extends \DateTime
       return;
     }
 
-    $modifier = (abs($n) == 1) ? "$n month" : "$n months";
+    $modifier = "$n months";
     $day = $this->format('j');
     $this->modify('first day of this month');
     $this->modify($modifier);
@@ -32,6 +72,15 @@ class DateTime extends \DateTime
     {
       $this->findNearestUnhiddenDayInMonth();
     }
+  }
+
+
+  // Adds $n (which can be negative) years to this date, without overflowing
+  // into the next month.  For example modifying 2024-02-29 by +1 year gives
+  // 2025-02-28 rather than 2025-03-01.
+  public function modifyYearsNoOverflow(int $n, bool $allow_hidden_days = false) : void
+  {
+    $this->modifyMonthsNoOverflow(12 * $n, $allow_hidden_days);
   }
 
 
@@ -57,6 +106,21 @@ class DateTime extends \DateTime
   public function getISODate() : string
   {
     return $this->format('Y-m-d');
+  }
+
+
+  // Set the day to $day
+  public function setDay(int $day) : void
+  {
+    $date = getdate($this->getTimestamp());
+    $this->setDate($date['year'], $date['mon'], $day);
+  }
+
+
+  // Sets the day to $day, but not past the end of the month
+  public function setDayNoOverflow(int $day) : void
+  {
+    $this->setDay(min($day, (int) $this->format('t')));
   }
 
 
@@ -135,11 +199,7 @@ class DateTime extends \DateTime
     // not hidden.
     for ($i=1; $i<DAYS_PER_WEEK; $i++)
     {
-      $unsigned_modifier = "$i day";
-      if ($i > 1)
-      {
-        $unsigned_modifier .= 's';  // plural
-      }
+      $unsigned_modifier = "$i days";
       foreach (['+', '-'] as $sign)
       {
         // Check whether we've already been past the end/start of the

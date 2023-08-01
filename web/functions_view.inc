@@ -64,12 +64,6 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
     $data['dur_units'] = $d['dur_units'];
   }
 
-  // Set a rep_type if it hasn't been
-  if (!isset($data['rep_type']))
-  {
-    $data['rep_type'] = REP_NONE;
-  }
-
   // Go through each of the columns and for each of them that can be made private
   // substitute the private text if the user is not allowed to see the data
   $private_text = "[" . get_vocab("unavailable") . "]";
@@ -341,15 +335,15 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
   // Repeat type
   $tbody .= create_details_row(get_vocab("rep_type"), get_vocab("rep_type_" . $data['rep_type']), $as_html);
   // Repeat details
-  if($data['rep_type'] != REP_NONE)
+  if($data['repeat_rule']->getType() != RepeatRule::NONE)
   {
-    switch ($data['rep_type'])
+    switch ($data['repeat_rule']->getType())
     {
-      case REP_WEEKLY:
+      case RepeatRule::WEEKLY:
         // Repeat days
-        $tbody .= create_details_row(get_vocab("rep_rep_day"), get_rep_day_list($data['rep_opt']), $as_html);
+        $tbody .= create_details_row(get_vocab("rep_rep_day"), $data['repeat_rule']->getDaysAsNames(), $as_html);
         break;
-      case REP_MONTHLY:
+      case RepeatRule::MONTHLY:
         $tbody .= create_details_row(get_vocab("repeat_on"), get_monthly_repeat_day($data), $as_html);
         break;
       default:
@@ -357,7 +351,7 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
     }
 
     // Repeat interval
-    $value = $data['rep_interval'] . ' ' . get_rep_interval_units($data['rep_type'], $data['rep_interval']);
+    $value = $data['repeat_rule']->getInterval() . ' ' . $data['repeat_rule']->getIntervalUnits();
     $tbody .= create_details_row(get_vocab("rep_interval"), $value, $as_html);
 
     // Repeat end date
