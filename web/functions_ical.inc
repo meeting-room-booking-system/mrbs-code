@@ -363,20 +363,6 @@ function get_create_by(string $organizer)
 }
 
 
-// Returns an MRBS rep_opt string given an array of RFC 5545 days
-function get_rep_opt(array $byday_days) : string
-{
-  $rep_opt = '';
-
-  foreach (RFC5545::DAYS as $day)
-  {
-    $rep_opt .= (in_array($day, $byday_days)) ? '1' : '0';
-  }
-
-  return $rep_opt;
-}
-
-
 // Given an RFC 5545 recurrence rule, returns a RepeatRule object giving the MRBS repeat
 // details.
 // Returns FALSE on failure with error messages being returned in the array $errors
