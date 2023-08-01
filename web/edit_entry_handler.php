@@ -605,8 +605,6 @@ if (!isset($rep_day))
   $rep_day = array();
 }
 
-$rep_opt = "";
-
 // Get the repeat details
 $repeat_rule = new RepeatRule();
 $repeat_rule->setType($rep_type ?? RepeatRule::NONE);
@@ -632,11 +630,6 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
     // If no repeat day has been set, then set a default repeat day
     // as the day of the week of the start of the period
     $repeat_rule->setDays ((count($rep_day) > 0) ? $rep_day : array(date('w', $start_time)));
-    // Build string of weekdays to repeat on:
-    for ($i = 0; $i < DAYS_PER_WEEK; $i++)
-    {
-      $rep_opt .= in_array($i, $rep_day) ? "1" : "0";  // $rep_opt is a string
-    }
   }
 
   // Make sure that the starttime coincides with a repeat day.  In
