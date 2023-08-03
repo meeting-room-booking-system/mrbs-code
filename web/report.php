@@ -644,59 +644,59 @@ function report_header() : void
     switch ($field)
     {
       case 'name':
-        $values[] = get_vocab("namebooker");
+        $values[$field] = get_vocab("namebooker");
         break;
       case 'area_name':
-        $values[] = type_wrap(get_vocab("area"), 'title-string');
+        $values[$field] = type_wrap(get_vocab("area"), 'title-string');
         break;
       case 'room_name':
-        $values[] = type_wrap(get_vocab("room"), 'title-string');
+        $values[$field] = type_wrap(get_vocab("room"), 'title-string');
         break;
       case 'start_time':
-        $values[] = type_wrap(get_vocab("start_date"), 'title-numeric');
+        $values[$field] = type_wrap(get_vocab("start_date"), 'title-numeric');
         break;
       case 'end_time':
-        $values[] = type_wrap(get_vocab("end_date"), 'title-numeric');
-        $values[] = type_wrap(get_vocab("duration"), 'title-numeric');
+        $values[$field] = type_wrap(get_vocab("end_date"), 'title-numeric');
+        $values['duration'] = type_wrap(get_vocab("duration"), 'title-numeric');
         break;
       case 'description':
-        $values[] = get_vocab("fulldescription_short");
+        $values[$field] = get_vocab("fulldescription_short");
         break;
       case 'type':
         if (isset($booking_types) && (count($booking_types) > 1))
         {
-          $values[] = get_vocab("type");
+          $values[$field] = get_vocab("type");
         }
         break;
       case 'allow_registration':
         if ($registration_somewhere)
         {
-          $values[] = get_vocab("registered");
+          $values[$field] = get_vocab("registered");
         }
         break;
       case 'create_by':
-        $values[] = get_vocab("createdby");
+        $values[$field] = get_vocab("createdby");
         break;
       case 'confirmation_enabled':
         if ($confirmation_somewhere)
         {
-          $values[] = get_vocab("confirmation_status");
+          $values[$field] = get_vocab("confirmation_status");
         }
         break;
       case 'approval_enabled':
         if ($approval_somewhere)
         {
-          $values[] = get_vocab("approval_status");
+          $values[$field] = get_vocab("approval_status");
         }
         break;
       case 'last_updated':
-        $values[] = type_wrap(get_vocab("lastupdate"), 'title-numeric');
+        $values[$field] = type_wrap(get_vocab("lastupdate"), 'title-numeric');
         break;
       default:
         // the custom fields
         if (array_key_exists($field, $custom_fields))
         {
-          $values[] = get_loc_field_name(_tbl('entry'), $field);
+          $values[$field] = get_loc_field_name(_tbl('entry'), $field);
         }
         break;
     }  // switch
@@ -706,19 +706,19 @@ function report_header() : void
   // Find out what the non-breaking space is in this character set
   $charset = get_charset();
   $nbsp = html_entity_decode('&nbsp;', ENT_NOQUOTES, $charset);
-  for ($i=0; $i < count($values); $i++)
+  foreach($values as $key => $value)
   {
     if ($output_format != OUTPUT_HTML)
     {
       // Remove any HTML entities from the values
-      $values[$i] = html_entity_decode($values[$i], ENT_NOQUOTES, $charset);
+      $value = html_entity_decode($value, ENT_NOQUOTES, $charset);
       // Trim non-breaking spaces from the string
-      $values[$i] = trim($values[$i], $nbsp);
+      $value = trim($value, $nbsp);
       // And do an ordinary trim
-      $values[$i] = trim($values[$i]);
+      $value = trim($value);
       // We don't escape HTML output here because the vocab strings are trusted.
       // And some of them contain HTML entities such as &nbsp; on purpose
-      $values[$i] = escape($values[$i]);
+      $values[$key] = escape($value);
     }
 
   }
@@ -821,11 +821,14 @@ function output_row(array $values, int $output_format, bool $body_row = true) : 
     }
     elseif ($output_format == OUTPUT_HTML)
     {
-      $line = '';
-      $cell_tag = ($body_row) ? 'td' : 'th';
-      $line .= "<tr>\n<$cell_tag>";
-      $line .= implode("</$cell_tag>\n<$cell_tag>", $values);
-      $line .= "</$cell_tag>\n</tr>\n";
+      $line = '<tr>';
+      foreach ($values as $key => $value)
+      {
+        $line .= ($body_row) ? '<td>' : '<th id="'. htmlspecialchars("col_$key") . '">';
+        $line .= $value;
+        $line .= ($body_row) ? '</td>' : '</th>';
+        $line .= "\n";
+      }
     }
     echo $line;
   }
