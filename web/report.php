@@ -920,7 +920,8 @@ function report_row(&$rows, $data)
     switch ($field)
     {
       case 'create_by':
-        $value  = get_compound_name($value);
+        $create_by = $value; // We will need it later
+        $value  = get_compound_name($create_by);
         break;
       case 'end_time':
         // Calculate the duration and then fall through to calculating the end date
@@ -1020,6 +1021,14 @@ function report_row(&$rows, $data)
     {
       switch ($field)
       {
+        case 'create_by':
+          // Add a mailto: link if we can
+          $user = auth()->getUser($create_by);
+          if (isset($user->email) && ($user->email !== ''))
+          {
+            $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$value</a>";
+          }
+          break;
         case 'name':
           // Add a link to the entry and also a data-id value for the Bulk Delete JavaScript
           $href = multisite('view_entry.php?id=' . urlencode($data['id']));
