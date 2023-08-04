@@ -511,7 +511,10 @@ In multisite mode a single instance of the MRBS code can serve a number of
 sites. Each site has its own config file in the sites/<sitename> directory
 which will override any settings in the global config file.  At a minimum
 the local config file will contain a table prefix for the site, but can also
-contain any other config settings including a theme and custom CSS.
+contain any other config settings including a theme and custom CSS.  The sites
+are reached by specifying the sitename in the query string, eg
+
+index.php?site=sitename
 
 Individual sites can even have their own authentication methods, but note that
 authentication against WordPress multisite is not supported.
