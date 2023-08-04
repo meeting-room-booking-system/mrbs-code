@@ -316,6 +316,7 @@ $(document).on('page_ready', function() {
       action: function ( e, dt, node, config ) {
         var result = [];
         var scheme = 'mailto:';
+        var message;
         $.each(dt.column('#col_create_by').data(), function(index, value) {
           var href = $(value).attr('href');
           if ((href !== undefined) && href.startsWith(scheme))
@@ -328,28 +329,21 @@ $(document).on('page_ready', function() {
           }
         });
         result.sort();
-        navigator.clipboard.writeText(result.join(', ')).then(
-          () => {
-            <?php // Success ?>
-            var message = '<?php echo get_vocab('unique_addresses_copied')?>';
+        navigator.clipboard.writeText(result.join(', '))
+          .then(() => {
+            message = '<?php echo get_vocab('unique_addresses_copied')?>';
             message = message.replace('%d', result.length.toString());
+          })
+          .catch((err) => {
+            message = '<?php echo get_vocab('clipboard_copy_failed')?>';
+            console.error(err);
+          })
+          .finally(() => {
             dt.buttons.info(
               dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
               message,
               2000
-            );
-          },
-          () => {
-            <?php // Failure ?>
-            var message = '<?php echo get_vocab('unique_addresses_copied')?>';
-            dt.buttons.info(
-              dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
-              message,
-              2000
-            );
-            console.error(message);
-          },
-        );
+            )});
       }
     }
   ];
