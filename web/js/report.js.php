@@ -330,10 +330,24 @@ $(document).on('page_ready', function() {
         result.sort();
         navigator.clipboard.writeText(result.join(', ')).then(
           () => {
-            /* clipboard successfully set */
+            <?php // Success ?>
+            var message = '<?php echo get_vocab('unique_addresses_copied')?>';
+            message = message.replace('%d', result.length.toString());
+            dt.buttons.info(
+              dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
+              message,
+              2000
+            );
           },
           () => {
-            console.error("Clipboard copy failed");
+            <?php // Failure ?>
+            var message = '<?php echo get_vocab('unique_addresses_copied')?>';
+            dt.buttons.info(
+              dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
+              message,
+              2000
+            );
+            console.error(message);
           },
         );
       }
