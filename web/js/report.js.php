@@ -301,6 +301,45 @@ $(document).on('page_ready', function() {
     tableOptions.stateSave = false;
   }
 
+  tableOptions.buttons = [
+    {
+      <?php // The first button is assumed to be the colvis button ?>
+      extend: 'colvis'
+    },
+    {
+      <?php
+      // Add in an extra button to copy email addresses as a unique, sorted, comma separated
+      // list so that they can be pasted into an address field in an email client.
+      // Useful for sending messages to those booked on a certain day or in a certain room.
+      ?>
+      text: '<?php echo escape_js(get_vocab('copy_email_addresses')) ?>',
+      action: function ( e, dt, node, config ) {
+        var result = [];
+        var scheme = 'mailto:';
+        $.each(dt.column('#col_create_by').data(), function(index, value) {
+          var href = $(value).attr('href');
+          if ((href !== undefined) && href.startsWith(scheme))
+          {
+            var address = href.substring(scheme.length);
+            if ((address !== '') && !result.includes(address))
+            {
+              result.push(address);
+            }
+          }
+        });
+        result.sort();
+        navigator.clipboard.writeText(result.join(', ')).then(
+          () => {
+            /* clipboard successfully set */
+          },
+          () => {
+            console.error("Clipboard copy failed");
+          },
+        );
+      }
+    }
+  ];
+
   reportTable = makeDataTable('#report_table', tableOptions, {leftColumns: 1});
 
 });
