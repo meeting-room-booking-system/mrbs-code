@@ -1576,7 +1576,10 @@ $repeat_rule->setDays($rep_days);
 $repeat_rule->setMonthlyType($month_type ?? RepeatRule::MONTHLY_ABSOLUTE);
 $repeat_rule->setMonthlyAbsolute($month_absolute ?? (int) date('j', $start_time));
 $repeat_rule->setMonthlyRelative($month_relative ?? date_byday($start_time));
-$repeat_rule->setEndDate($rep_end_date);
+if (isset($rep_end_date))
+{
+  $repeat_rule->setEndDate($rep_end_date);
+}
 
 $start_hour  = date('H', $start_time);
 $start_min   = date('i', $start_time);

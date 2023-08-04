@@ -29,9 +29,9 @@ class DB_mysql extends DB
     );
 
   private const MIN_VERSIONS = array(
-      self::DB_MARIADB => '10.0.2',
-      self::DB_MYSQL   => '5.5.3',
-      self::DB_PERCONA => '5.5.3'
+      self::DB_MARIADB => '5.5.3', // '10.0.2' recommended for multiple lock support
+      self::DB_MYSQL   => '5.5.3', // '5.7.5' recommended for multiple lock support
+      self::DB_PERCONA => '5.5.3'  // '5.7.5' recommended for multiple lock support
     );
 
   private const DB_NAMES = array(
