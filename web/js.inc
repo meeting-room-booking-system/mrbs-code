@@ -33,7 +33,7 @@ if ($multisite && isset($site) && ($site !== ''))
 // file can't use jQuery.
 script('js/init.js.php', true);
 
-script(($debug) ? 'jquery/jquery-3.6.3.js' : 'jquery/jquery-3.6.3.min.js');
+script(($debug) ? 'jquery/jquery-3.7.0.js' : 'jquery/jquery-3.7.0.min.js');
 
 // We need the migration script now that we are running jQuery 3.0+, or at least
 // until we are confident that our JavaScript is not using any features that have
