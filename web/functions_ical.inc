@@ -405,7 +405,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
       {
         // If there's no repeat day specified in the RRULE then
         // 'the day is gotten from "DTSTART"'
-        $byday_days = array(RFC5545::DAYS[date('w', $start_time)]);
+        $byday_days = array(date('w', $start_time));
       }
       $repeat_rule->setDays($byday_days);
       break;
