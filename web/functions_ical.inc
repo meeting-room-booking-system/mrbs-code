@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\ICalendar\RFC5545;
+use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -454,12 +455,9 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
         break;
     }
   }
-  catch (\InvalidArgumentException $e)
+  catch (RFC5545Exception $e)
   {
-    // TODO: the exception message is not localised and therefore not really suitable
-    // TODO: for presenting to the user.  But it's better for now than a fatal error.
     $errors[] = $e->getMessage();
-    trigger_error($e->getMessage());
   }
 
   if (isset($rules['INTERVAL']) && ($rules['INTERVAL'] > 1))

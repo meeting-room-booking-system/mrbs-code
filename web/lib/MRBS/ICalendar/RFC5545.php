@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace MRBS\ICalendar;
 
+use function MRBS\get_vocab;
+
 class RFC5545
 {
   // An array which can be used to map day of the week numbers (0..6)
@@ -16,7 +18,10 @@ class RFC5545
 
     if (count($tmp) === 0)
     {
-      throw new \InvalidArgumentException("Invalid day '$day'");
+      throw new RFC5545Exception(
+        get_vocab('invalid_RFC5545_day', $day),
+        RFC5545Exception::INVALID_DAY
+      );
     }
 
     return $tmp[0];
