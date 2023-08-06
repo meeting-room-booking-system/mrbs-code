@@ -399,6 +399,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
       if (isset($rules['BYDAY']))
       {
         $byday_days = explode(',', $rules['BYDAY']);
+        $byday_days = array_map(__NAMESPACE__ . '\\ICalendar\\RFC5545::convertDayToOrd', $byday_days);
       }
       else
       {
