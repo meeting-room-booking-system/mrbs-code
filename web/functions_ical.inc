@@ -422,20 +422,20 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
         }
         foreach ($byday_days as $byday_day)
         {
-          $day = substr($byday_day, -2);     // the last two characters of the string
+          $rfc5545day = substr($byday_day, -2);     // the last two characters of the string
           $nth = substr($byday_day, 0, -2);  // everything except the last two characters
-          if ($nth === false)
+          if ($nth === '')
           {
             // "If an integer modifier is not present, it means all days of this
             // type within the specified frequency.  For example, within a MONTHLY
             // rule, MO represents all Mondays within the month." [RFC 5545]
             // So that comes to the same thing as a WEEKLY repeat
             $repeat_rule->setType(RepeatRule::WEEKLY);
-            $repeat_rule->setDays(array($day));
+            $repeat_rule->setDaysFromRFC5545(array($rfc5545day));
           }
           elseif (($nth == '5') || ($nth == '-5'))
           {
-            $errors[] = get_vocab("BYDAY_equals_5") . " $nth$day";
+            $errors[] = get_vocab("BYDAY_equals_5") . " $nth$rfc5545day";
           }
           else
           {
