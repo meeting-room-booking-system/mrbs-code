@@ -398,16 +398,14 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
       $repeat_rule->setType(RepeatRule::WEEKLY);
       if (isset($rules['BYDAY']))
       {
-        $byday_days = explode(',', $rules['BYDAY']);
-        $byday_days = array_map(__NAMESPACE__ . '\\ICalendar\\RFC5545::convertDayToOrd', $byday_days);
+        $repeat_rule->setDaysFromRFC5545(explode(',', $rules['BYDAY']));
       }
       else
       {
         // If there's no repeat day specified in the RRULE then
         // 'the day is gotten from "DTSTART"'
-        $byday_days = array(date('w', $start_time));
+        $repeat_rule->setDays(array(date('w', $start_time)));
       }
-      $repeat_rule->setDays($byday_days);
       break;
     case 'MONTHLY':
       $repeat_rule->setType(RepeatRule::MONTHLY);
