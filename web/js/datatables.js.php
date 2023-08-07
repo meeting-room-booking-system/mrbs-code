@@ -232,11 +232,6 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   // Set the language file to be used
   if ($lang_file = get_datatable_lang_path())
   {
-    // If using the language.url way of loading a DataTables language file,
-    // then the file must be valid JSON.   The .lang files that can be
-    // downloaded from GitHub are not valid JSON as they contain comments.  They
-    // therefore cannot be used with language.url, but instead have to be
-    // included directly.
     ?>
     defaultOptions.language = {url: '<?php echo "./$lang_file" ?>'}
     <?php
