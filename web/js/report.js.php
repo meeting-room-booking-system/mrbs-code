@@ -318,14 +318,20 @@ $(document).on('page_ready', function() {
         var scheme = 'mailto:';
         var message;
         $.each(dt.column('#col_create_by').data(), function(index, value) {
-          var href = $(value).attr('href');
-          if ((href !== undefined) && href.startsWith(scheme))
-          {
-            var address = href.substring(scheme.length);
-            if ((address !== '') && !result.includes(address))
-            {
-              result.push(address);
+          try {
+            var href = $(value).attr('href');
+            if ((href !== undefined) && href.startsWith(scheme)) {
+              var address = href.substring(scheme.length);
+              if ((address !== '') && !result.includes(address)) {
+                result.push(address);
+              }
             }
+          }
+          catch (error) {
+            <?php
+            // No need to do anything. This will catch the cases when $(value) fails because
+            // value is not a valid anchor element, and so we are not interested in it anyway.
+            ?>
           }
         });
         result.sort();
