@@ -617,12 +617,12 @@ if ($repeat_rule->getType() != RepeatRule::NONE)
   $repeat_rule->setMonthlyRelative($month_relative);
   if (isset($rep_end_date))
   {
-    $end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
-    if ($end_date === false)
+    $repeat_end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
+    if ($repeat_end_date === false)
     {
       throw new Exception("Could not create repeat end date");
     }
-    $repeat_rule->setEndDate($end_date);
+    $repeat_rule->setEndDate($repeat_end_date);
   }
 
   if ($repeat_rule->getType() == RepeatRule::WEEKLY)
