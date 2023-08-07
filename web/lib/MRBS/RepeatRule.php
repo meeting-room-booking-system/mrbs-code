@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace MRBS;
 
 use InvalidArgumentException;
+use MRBS\ICalendar\RFC5545;
 
 class RepeatRule
 {
@@ -187,6 +188,20 @@ class RepeatRule
       {
         $days[] = $i;
       }
+    }
+
+    $this->setDays($days);
+  }
+
+
+  // Set the repeat days given an array of RFC5545 days, eg ['MO', 'TH'].
+  public function setDaysFromRFC5545(array $rfc5545_days) : void
+  {
+    $days = [];
+
+    foreach ($rfc5545_days as $rfc5545_day)
+    {
+      $days[] = RFC5545::convertDayToOrd($rfc5545_day);
     }
 
     $this->setDays($days);

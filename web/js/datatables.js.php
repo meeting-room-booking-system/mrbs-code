@@ -37,7 +37,18 @@ else
   $excel_paper_size = $excel_default_paper;
 }
 
+// Actions to take once the datatable's initialisation is complete.
+// Remember that some of the table initialisation operations, eg loading of the
+// language file, are asynchronous.
+?>
+var initCompleteActions = function initCompleteActions(dataTable) {
+  <?php // Make the table visible ?>
+  $('.datatable_container').css('visibility', 'visible');
+  <?php // Need to adjust column sizing after the table is made visible ?>
+  dataTable.columns.adjust();
+}
 
+<?php
 // Get the types, which are assumed to be in a data-type in a <span> in the <th>
 // of the table
 ?>
@@ -227,7 +238,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     // therefore cannot be used with language.url, but instead have to be
     // included directly.
     ?>
-    defaultOptions.language = <?php include MRBS_ROOT . "/$lang_file" ?>;
+    defaultOptions.language = {url: '<?php echo "./$lang_file" ?>'}
     <?php
   }
   ?>
@@ -266,11 +277,26 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     }
     defaultOptions.buttons[0].columns = colVisIncludeCols;
   }
+
+  defaultOptions.initComplete = initCompleteActions;
   <?php
   // Merge the specific options with the default options.  We do a deep
   // merge.
   ?>
   mergedOptions = $.extend(true, {}, defaultOptions, specificOptions);
+  // Merge the initComplete properties, if any of them are set.  This has to be
+  // done separately as they are functions.
+  if (defaultOptions.initComplete || specificOptions.initComplete) {
+    mergedOptions.initComplete = function () {
+      if (defaultOptions.initComplete) {
+        defaultOptions.initComplete.call(this, dataTable);
+      }
+      if (specificOptions.initComplete) {
+        specificOptions.initComplete.call(this);
+      }
+    };
+  }
+
   dataTable = table.DataTable(mergedOptions);
 
   if (fixedColumnsOptions)
@@ -301,10 +327,6 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
     */
     ?>
   }
-
-  $('.datatable_container').css('visibility', 'visible');
-  <?php // Need to adjust column sizing after the table is made visible ?>
-  dataTable.columns.adjust();
 
   <?php
   // Adjust the column sizing on a window resize.   We shouldn't have to do this because

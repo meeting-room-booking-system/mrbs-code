@@ -439,9 +439,18 @@ table.dataTable thead th:first-child, table.dataTable thead td:first-child {
 .admin_table th,
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc {
+table.dataTable thead .sorting_desc,
+table.dataTable thead tr > .dtfc-fixed-left,
+table.dataTable thead tr > .dtfc-fixed-right,
+table.dataTable tfoot tr > .dtfc-fixed-left,
+table.dataTable tfoot tr > .dtfc-fixed-right {
   color: <?php echo $admin_table_header_font_color ?>;
   background-color: <?php echo $admin_table_header_back_color ?>;
+}
+
+table.dataTable tbody tr > .dtfc-fixed-left,
+table.dataTable tbody tr > .dtfc-fixed-right {
+  background-color: inherit;
 }
 
 .admin_table td.action {

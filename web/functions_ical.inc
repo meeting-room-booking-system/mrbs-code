@@ -2,6 +2,7 @@
 namespace MRBS;
 
 use MRBS\ICalendar\RFC5545;
+use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -389,68 +390,74 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
     $errors[] = get_vocab("invalid_RRULE");
   }
 
-  switch ($rules['FREQ'])
+  try
   {
-    case 'DAILY':
-      $repeat_rule->setType(RepeatRule::DAILY);
-      break;
-    case 'WEEKLY':
-      $repeat_rule->setType(RepeatRule::WEEKLY);
-      if (isset($rules['BYDAY']))
-      {
-        $byday_days = explode(',', $rules['BYDAY']);
-      }
-      else
-      {
-        // If there's no repeat day specified in the RRULE then
-        // 'the day is gotten from "DTSTART"'
-        $byday_days = array(RFC5545::DAYS[date('w', $start_time)]);
-      }
-      $repeat_rule->setDays($byday_days);
-      break;
-    case 'MONTHLY':
-      $repeat_rule->setType(RepeatRule::MONTHLY);
-      if (!isset($rules['BYDAY']))
-      {
-        $repeat_rule->setMonthlyAbsolute((int) $rules['BYMONTHDAY']);
-      }
-      else
-      {
-        $byday_days = explode(',', $rules['BYDAY']);
-        if (count($byday_days) > 1)
+    switch ($rules['FREQ'])
+    {
+      case 'DAILY':
+        $repeat_rule->setType(RepeatRule::DAILY);
+        break;
+      case 'WEEKLY':
+        $repeat_rule->setType(RepeatRule::WEEKLY);
+        if (isset($rules['BYDAY']))
         {
-          $errors[] = get_vocab("more_than_one_BYDAY") . $rules['FREQ'];
+          $repeat_rule->setDaysFromRFC5545(explode(',', $rules['BYDAY']));
         }
-        foreach ($byday_days as $byday_day)
+        else
         {
-          $day = substr($byday_day, -2);     // the last two characters of the string
-          $nth = substr($byday_day, 0, -2);  // everything except the last two characters
-          if ($nth === false)
+          // If there's no repeat day specified in the RRULE then
+          // 'the day is gotten from "DTSTART"'
+          $repeat_rule->setDays(array(date('w', $start_time)));
+        }
+        break;
+      case 'MONTHLY':
+        $repeat_rule->setType(RepeatRule::MONTHLY);
+        if (!isset($rules['BYDAY']))
+        {
+          $repeat_rule->setMonthlyAbsolute((int)$rules['BYMONTHDAY']);
+        }
+        else
+        {
+          $byday_days = explode(',', $rules['BYDAY']);
+          if (count($byday_days) > 1)
           {
-            // "If an integer modifier is not present, it means all days of this
-            // type within the specified frequency.  For example, within a MONTHLY
-            // rule, MO represents all Mondays within the month." [RFC 5545]
-            // So that comes to the same thing as a WEEKLY repeat
-            $repeat_rule->setType(RepeatRule::WEEKLY);
-            $repeat_rule->setDays(array($day));
+            $errors[] = get_vocab("more_than_one_BYDAY") . $rules['FREQ'];
           }
-          elseif (($nth == '5') || ($nth == '-5'))
+          foreach ($byday_days as $byday_day)
           {
-            $errors[] = get_vocab("BYDAY_equals_5") . " $nth$day";
-          }
-          else
-          {
-            $repeat_rule->setMonthlyRelative($byday_day);
+            $rfc5545day = substr($byday_day, -2);     // the last two characters of the string
+            $nth = substr($byday_day, 0, -2);  // everything except the last two characters
+            if ($nth === '')
+            {
+              // "If an integer modifier is not present, it means all days of this
+              // type within the specified frequency.  For example, within a MONTHLY
+              // rule, MO represents all Mondays within the month." [RFC 5545]
+              // So that comes to the same thing as a WEEKLY repeat
+              $repeat_rule->setType(RepeatRule::WEEKLY);
+              $repeat_rule->setDaysFromRFC5545(array($rfc5545day));
+            }
+            elseif (($nth == '5') || ($nth == '-5'))
+            {
+              $errors[] = get_vocab("BYDAY_equals_5") . " $nth$rfc5545day";
+            }
+            else
+            {
+              $repeat_rule->setMonthlyRelative($byday_day);
+            }
           }
         }
-      }
-      break;
-    case 'YEARLY':
-      $repeat_rule->setType(RepeatRule::YEARLY);
-      break;
-    default:
-      $errors[] = get_vocab("unsupported_FREQ") . $rules['FREQ'];
-      break;
+        break;
+      case 'YEARLY':
+        $repeat_rule->setType(RepeatRule::YEARLY);
+        break;
+      default:
+        $errors[] = get_vocab("unsupported_FREQ") . $rules['FREQ'];
+        break;
+    }
+  }
+  catch (RFC5545Exception $e)
+  {
+    $errors[] = $e->getMessage();
   }
 
   if (isset($rules['INTERVAL']) && ($rules['INTERVAL'] > 1))

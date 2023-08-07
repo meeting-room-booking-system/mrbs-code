@@ -38,92 +38,6 @@ $flatpickr_property_map = array(
   'zh-tw'   => 'zh_tw'
 );
 
-// The DataTables language files are for the moment given descriptive names.   I have
-// asked the DataTables team to use BCP 47 tags instead, but until that happens we have
-// to map the descriptions onto tags.  (The other method would be to rename all the files,
-// but then it would be less easy to take new releases of DataTables).
-$datatables_lang_map = array(
-  'Afrikaans'           => 'af',
-  'Albanian'            => 'sq',
-  'Amharic'             => 'am',
-  'Arabic'              => 'ar',
-  'Armenian'            => 'hy',
-  'Azerbaijan'          => 'az',
-  'Bangla'              => 'bn',
-  'Basque'              => 'eu',
-  'Belarusian'          => 'be',
-  'Bulgarian'           => 'bg',
-  'Catalan'             => 'ca',
-  'Chinese-traditional' => 'zh-tw',
-  'Chinese'             => 'zh',
-  'Croatian'            => 'hr',
-  'Czech'               => 'cs',
-  'Danish'              => 'da',
-  'Dutch'               => 'nl',
-  'English'             => 'en',
-  'Esperanto'           => 'eo',
-  'Estonian'            => 'et',
-  'Filipino'            => 'fil',
-  'Finnish'             => 'fi',
-  'French'              => 'fr',
-  'Galician'            => 'gl',
-  'Georgian'            => 'ka',
-  'German'              => 'de',
-  'Greek'               => 'el',
-  'Gujarati'            => 'gu',
-  'Hebrew'              => 'he',
-  'Hindi'               => 'hi',
-  'Hungarian'           => 'hu',
-  'Icelandic'           => 'is',
-  'Indonesian'          => 'id',
-  'Irish'               => 'ga',
-  'Italian'             => 'it',
-  'Japanese'            => 'ja',
-  'Kannada'             => 'kn',
-  'Kazakh'              => 'kk',
-  'Khmer'               => 'km',
-  'Korean'              => 'ko',
-  'Kurdish'             => 'ku',
-  'Kyrgyz'              => 'ky',
-  'Lao'                 => 'lo',
-  'Latvian'             => 'lv',
-  'Lithuanian'          => 'lt',
-  'Macedonian'          => 'mk',
-  'Malay'               => 'ms',
-  'Mongolian'           => 'mn',
-  'Nepali'              => 'ne',
-  'Norwegian-Bokmal'    => 'nb',
-  'Norwegian-Nynorsk'   => 'nn',
-  'Pashto'              => 'ps',
-  'Persian'             => 'fa',
-  'Polish'              => 'pl',
-  'Portuguese-Brasil'   => 'pt-br',
-  'Portuguese'          => 'pt',
-  'Punjabi'             => 'pa',
-  'Romanian'            => 'ro',
-  'Rumantsch'           => 'rm',
-  'Russian'             => 'ru',
-  'Serbian'             => 'sr',
-  'Serbian_latin'       => 'sr-latn',
-  'Sinhala'             => 'si',
-  'Slovak'              => 'sk',
-  'Slovenian'           => 'sl',
-  'Spanish'             => 'es',
-  'Swahili'             => 'sw',
-  'Swedish'             => 'sv',
-  'Tajik'               => 'tg',
-  'Tamil'               => 'ta',
-  'telugu'              => 'te',
-  'Thai'                => 'th',
-  'Turkish'             => 'tr',
-  'Ukrainian'           => 'uk',
-  'Urdu'                => 'ur',
-  'Uzbek'               => 'uz',
-  'Vietnamese'          => 'vi',
-  'Welsh'               => 'cy'
-);
-
-
 // A list of languages that use Right to Left text
 $rtl_languages = array(
   'he'
@@ -644,15 +558,13 @@ function get_flatpickr_property($lang_file)
 // jQuery plugin.    If no suitable language file exists then returns NULL.
 function get_datatable_lang_path() : ?string
 {
-  global $datatables_lang_map;
-
   static $have_result = false;
   static $result = null;
 
   if (!$have_result)
   {
     $dir = 'jquery/datatables/language';
-    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.lang', null, $datatables_lang_map);
+    $file = get_best_lang_file(__DIR__ . "/$dir", '', '.json');
     $result = (isset($file)) ? "$dir/$file" : null;
     $have_result = true;
   }
