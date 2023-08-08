@@ -618,9 +618,18 @@ $repeat_rule->setType($rep_type ?? RepeatRule::NONE);
 if ($repeat_rule->getType() != RepeatRule::NONE)
 {
   $repeat_rule->setInterval($rep_interval);
-  $repeat_rule->setMonthlyType($month_type);
-  $repeat_rule->setMonthlyAbsolute($month_absolute);
-  $repeat_rule->setMonthlyRelative($month_relative);
+  if ($repeat_rule->getType() == RepeatRule::MONTHLY)
+  {
+    $repeat_rule->setMonthlyType($month_type);
+    if ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE)
+    {
+      $repeat_rule->setMonthlyAbsolute($month_absolute);
+    }
+    else
+    {
+      $repeat_rule->setMonthlyRelative($month_relative);
+    }
+  }
   if (isset($rep_end_date))
   {
     $repeat_end_date = DateTime::createFromFormat('Y-m-d', $rep_end_date);
