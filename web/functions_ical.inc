@@ -739,19 +739,16 @@ function parse_ical_property(string $line) : array
 
 
 // Create an iCalendar Recurrence Rule
-function create_rrule(array $data) : string
+function create_rrule(RepeatRule $repeat_rule) : string
 {
-  // Fix up the repeat data (the code isn't yet expecting $data to have a repeat_rule key)
-  $data = RepeatRule::fixUp($data);
-
   $rule = '';
 
-  if (!isset($data['rep_type']) || ($data['rep_type'] === RepeatRule::NONE))
+  if ($repeat_rule->getType() == RepeatRule::NONE)
   {
     return $rule;
   }
 
-  switch($data['rep_type'])
+  switch($repeat_rule->getType())
   {
     case RepeatRule::DAILY:
       $rule .= "FREQ=DAILY";
@@ -761,12 +758,9 @@ function create_rrule(array $data) : string
       $rule .= "FREQ=WEEKLY";
       // Get the repeat days of the week
       $days_of_week = array();
-      for ($i = 0; $i < DAYS_PER_WEEK; $i++)
+      foreach ($repeat_rule->getDays() as $day)
       {
-        if ($data['rep_opt'][$i])
-        {
-          $days_of_week[] = RFC5545::DAYS[$i];
-        }
+        $days_of_week[] = RFC5545::DAYS[$day];
       }
       $dow_list = implode(',', $days_of_week);
       if (!empty($dow_list))
@@ -777,17 +771,13 @@ function create_rrule(array $data) : string
 
     case RepeatRule::MONTHLY:
       $rule .= "FREQ=MONTHLY";
-      if (isset($data['month_absolute']))
+      if ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE)
       {
-        $rule .= ";BYMONTHDAY=" . $data['month_absolute'];
-      }
-      elseif (isset($data['month_relative']))
-      {
-        $rule .= ";BYDAY=" . $data['month_relative'];
+        $rule .= ";BYMONTHDAY=" . $repeat_rule->getMonthlyAbsolute();
       }
       else
       {
-        trigger_error("Unknown monthly repeat type, E_USER_NOTICE");
+        $rule .= ";BYDAY=" . $repeat_rule->getMonthlyRelative();
       }
       break;
 
@@ -797,13 +787,13 @@ function create_rrule(array $data) : string
   }
 
   // The interval (if necessary)
-  if ($data['rep_interval'] > 1)
+  if ($repeat_rule->getInterval() > 1)
   {
-    $rule .= ";INTERVAL=" . $data['rep_interval'];
+    $rule .= ";INTERVAL=" . $repeat_rule->getInterval();
   }
 
   // The UNTIL date-time "MUST be specified in UTC time"
-  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $data['end_date']);
+  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $repeat_rule->getEndDate()->getTimestamp());
 
   return $rule;
 }
@@ -882,7 +872,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if ($series)
   {
-    $results[] = "RRULE:" . create_rrule($data);
+    $results[] = "RRULE:" . create_rrule($data['repeat_rule']);
     if (!empty($data['skip_list']))
     {
       $results[] = "EXDATE" .
