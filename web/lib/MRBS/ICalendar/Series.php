@@ -3,6 +3,7 @@
 namespace MRBS\ICalendar;
 
 use MRBS\DateTime;
+use MRBS\Exception;
 use MRBS\RepeatRule;
 
 require_once MRBS_ROOT . '/functions_ical.inc';
@@ -45,7 +46,7 @@ class Series
     $this->start_row['end_time'] = $this->start_row['start_time'] + $duration;
 
     // Construct an array of the entries we'd expect to see in this series so that
-    // we can check whether any are missing and if so set their status to cancelled.
+    // we can check whether any are missing and if so set their status to "cancelled".
     $repeat_rule = new RepeatRule();
     $repeat_rule->setType($this->start_row['rep_type']);
     $repeat_rule->setInterval($this->start_row['rep_interval']);
@@ -53,13 +54,19 @@ class Series
     $repeat_end_date->setTimestamp($this->start_row['end_date']);
     $repeat_rule->setEndDate($repeat_end_date);
     $repeat_rule->setDaysFromOpt($this->start_row['rep_opt']);
-    if (isset($this->start_row['month_absolute']))
+    if ($repeat_rule->getType() == RepeatRule::MONTHLY)
     {
-      $repeat_rule->setMonthlyAbsolute($this->start_row['month_absolute']);
-    }
-    if (isset($this->start_row['month_relative']))
-    {
-      $repeat_rule->setMonthlyRelative($this->start_row['month_relative']);
+      if (isset($this->start_row['month_absolute'])) {
+        $repeat_rule->setMonthlyAbsolute($this->start_row['month_absolute']);
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
+      }
+      elseif (isset($this->start_row['month_relative'])) {
+        $repeat_rule->setMonthlyRelative($this->start_row['month_relative']);
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
+      }
+      else {
+        throw new Exception("The repeat type is monthly but both the absolute and relative days are null.");
+      }
     }
 
     $this->expected_entries = $repeat_rule->getRepeatStartTimes($this->start_row['start_time']);
