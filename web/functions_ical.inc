@@ -1,7 +1,6 @@
 <?php
 namespace MRBS;
 
-use MRBS\ICalendar\RFC5545;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -738,67 +737,6 @@ function parse_ical_property(string $line) : array
 }
 
 
-// Create an iCalendar Recurrence Rule
-function create_rrule(RepeatRule $repeat_rule) : string
-{
-  $rule = '';
-
-  if ($repeat_rule->getType() == RepeatRule::NONE)
-  {
-    return $rule;
-  }
-
-  switch($repeat_rule->getType())
-  {
-    case RepeatRule::DAILY:
-      $rule .= "FREQ=DAILY";
-      break;
-
-    case RepeatRule::WEEKLY:
-      $rule .= "FREQ=WEEKLY";
-      // Get the repeat days of the week
-      $days_of_week = array();
-      foreach ($repeat_rule->getDays() as $day)
-      {
-        $days_of_week[] = RFC5545::DAYS[$day];
-      }
-      $dow_list = implode(',', $days_of_week);
-      if (!empty($dow_list))
-      {
-        $rule .= ";BYDAY=$dow_list";
-      }
-      break;
-
-    case RepeatRule::MONTHLY:
-      $rule .= "FREQ=MONTHLY";
-      if ($repeat_rule->getMonthlyType() == RepeatRule::MONTHLY_ABSOLUTE)
-      {
-        $rule .= ";BYMONTHDAY=" . $repeat_rule->getMonthlyAbsolute();
-      }
-      else
-      {
-        $rule .= ";BYDAY=" . $repeat_rule->getMonthlyRelative();
-      }
-      break;
-
-    case RepeatRule::YEARLY:
-      $rule .= "FREQ=YEARLY";
-      break;
-  }
-
-  // The interval (if necessary)
-  if ($repeat_rule->getInterval() > 1)
-  {
-    $rule .= ";INTERVAL=" . $repeat_rule->getInterval();
-  }
-
-  // The UNTIL date-time "MUST be specified in UTC time"
-  $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $repeat_rule->getEndDate()->getTimestamp());
-
-  return $rule;
-}
-
-
 // Create a comma separated list of dates for use with the EXDATE property.
 // The TZID parameter if used must be added separately
 function create_exdate_list(array $dates) : string
@@ -872,7 +810,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if ($series)
   {
-    $results[] = "RRULE:" . create_rrule($data['repeat_rule']);
+    $results[] = "RRULE:" . $data['repeat_rule']->toRFCC5545Rule();
     if (!empty($data['skip_list']))
     {
       $results[] = "EXDATE" .

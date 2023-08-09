@@ -401,4 +401,65 @@ class RepeatRule
 
     return $result;
   }
+
+
+  // Converts a repeat rule to an RFC5545 recurrence rule (RRULE)
+  public function toRFC5545Rule() : string
+  {
+    $rule = '';
+
+    if ($this->getType() == self::NONE)
+    {
+      return $rule;
+    }
+
+    switch($this->getType())
+    {
+      case self::DAILY:
+        $rule .= "FREQ=DAILY";
+        break;
+
+      case self::WEEKLY:
+        $rule .= "FREQ=WEEKLY";
+        // Get the repeat days of the week
+        $days_of_week = array();
+        foreach ($this->getDays() as $day)
+        {
+          $days_of_week[] = RFC5545::DAYS[$day];
+        }
+        $dow_list = implode(',', $days_of_week);
+        if (!empty($dow_list))
+        {
+          $rule .= ";BYDAY=$dow_list";
+        }
+        break;
+
+      case self::MONTHLY:
+        $rule .= "FREQ=MONTHLY";
+        if ($this->getMonthlyType() == self::MONTHLY_ABSOLUTE)
+        {
+          $rule .= ";BYMONTHDAY=" . $this->getMonthlyAbsolute();
+        }
+        else
+        {
+          $rule .= ";BYDAY=" . $this->getMonthlyRelative();
+        }
+        break;
+
+      case self::YEARLY:
+        $rule .= "FREQ=YEARLY";
+        break;
+    }
+
+    // The interval (if necessary)
+    if ($this->getInterval() > 1)
+    {
+      $rule .= ";INTERVAL=" . $this->getInterval();
+    }
+
+    // The UNTIL date-time "MUST be specified in UTC time"
+    $rule .= ";UNTIL=" . gmdate(RFC5545_FORMAT . '\Z', $this->getEndDate()->getTimestamp());
+
+    return $rule;
+  }
 }
