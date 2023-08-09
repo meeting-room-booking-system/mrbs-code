@@ -25,29 +25,8 @@ class Series
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
   public function __construct(array $row, int $limit=null)
   {
-    // Construct the repeat rule and add it to the row
-    $repeat_rule = new RepeatRule();
-    $repeat_rule->setType($row['rep_type']);
-    $repeat_rule->setInterval($row['rep_interval']);
-    $repeat_end_date = new DateTime();
-    $repeat_end_date->setTimestamp($row['end_date']);
-    $repeat_rule->setEndDate($repeat_end_date);
-    $repeat_rule->setDaysFromOpt($row['rep_opt']);
-    if ($repeat_rule->getType() == RepeatRule::MONTHLY)
-    {
-      if (isset($row['month_absolute'])) {
-        $repeat_rule->setMonthlyAbsolute($row['month_absolute']);
-        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
-      }
-      elseif (isset($row['month_relative'])) {
-        $repeat_rule->setMonthlyRelative($row['month_relative']);
-        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
-      }
-      else {
-        throw new Exception("The repeat type is monthly but both the absolute and relative days are null.");
-      }
-    }
-    $row['repeat_rule'] = $repeat_rule;
+    // Temporary fix-up
+    $row = self::addRepeatRule($row);
 
     $this->data = array();
     $this->repeat_id = $row['repeat_id'];
@@ -71,7 +50,7 @@ class Series
 
     // Construct an array of the entries we'd expect to see in this series so that
     // we can check whether any are missing and if so set their status to "cancelled".
-    $this->expected_entries = $repeat_rule->getRepeatStartTimes($this->start_row['start_time']);
+    $this->expected_entries = $this->start_row['repeat_rule']->getRepeatStartTimes($this->start_row['start_time']);
 
     // And keep an array of all the entries we actually see
     $this->actual_entries = array();
@@ -84,6 +63,9 @@ class Series
   // Add a row to the series
   public function addRow(array $row)
   {
+    // Temporary fix-up
+    $row = self::addRepeatRule($row);
+
     // Add the row to the data array
     $this->data[] = $row;
 
@@ -124,6 +106,40 @@ class Series
     }
 
     return $events;
+  }
+
+
+  // Temporary fix-up to add a repeat_rule key to the $row array
+  // TODO: fix this properly
+  private static function addRepeatRule(array $row) : array
+  {
+    // Construct the repeat rule and add it to the row
+    $repeat_rule = new RepeatRule();
+    $repeat_rule->setType($row['rep_type']);
+    $repeat_rule->setInterval($row['rep_interval']);
+    $repeat_end_date = new DateTime();
+    $repeat_end_date->setTimestamp($row['end_date']);
+    $repeat_rule->setEndDate($repeat_end_date);
+    $repeat_rule->setDaysFromOpt($row['rep_opt']);
+
+    if ($repeat_rule->getType() == RepeatRule::MONTHLY)
+    {
+      if (isset($row['month_absolute'])) {
+        $repeat_rule->setMonthlyAbsolute($row['month_absolute']);
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
+      }
+      elseif (isset($row['month_relative'])) {
+        $repeat_rule->setMonthlyRelative($row['month_relative']);
+        $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
+      }
+      else {
+        throw new Exception("The repeat type is monthly but both the absolute and relative days are null.");
+      }
+    }
+
+    $row['repeat_rule'] = $repeat_rule;
+
+    return $row;
   }
 
 }
