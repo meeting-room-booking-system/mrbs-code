@@ -810,7 +810,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
 
   if ($series)
   {
-    $results[] = "RRULE:" . $data['repeat_rule']->toRFCC5545Rule();
+    $results[] = "RRULE:" . $data['repeat_rule']->toRFC5545Rule();
     if (!empty($data['skip_list']))
     {
       $results[] = "EXDATE" .
