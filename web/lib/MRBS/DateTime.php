@@ -13,6 +13,26 @@ class DateTime extends \DateTime
   private const HOLIDAY_RANGE_OPERATOR = '..';
 
 
+  // Before PHP 8 a child of DateTime::createFromFormat() returned an instance of the
+  // parent, rather than the child.  So we have to force createFromFormat() to return
+  // an instance of the child.  See https://bugs.php.net/bug.php?id=79975 and also
+  // https://stackoverflow.com/questions/5450197/make-datetimecreatefromformat-return-child-class-instead-of-parent
+  // This method will no longer be necessary when the minimum PHP version is > 7.
+  #[\ReturnTypeWillChange]
+  public static function createFromFormat($format, $datetime, $timezone = null)
+  {
+    assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "This method is now redundant.");
+
+    $parent = parent::createFromFormat($format, $datetime, $timezone);
+
+    if ($parent === false)
+    {
+      return false;
+    }
+
+    return new static($parent->format('Y-m-d\TH:i:s.u'), $parent->getTimezone());
+  }
+
   // TODO: replace usages of byday_to_day() with this method
   // TODO: make $relative an object?
   // Sets the day to $relative, where relative is an RFC5545 relative day,
