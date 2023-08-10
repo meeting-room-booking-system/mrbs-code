@@ -51,11 +51,19 @@ var conflictTimer = function conflictTimer(set) {
 
 
 <?php
-// Function to display the secondary repeat type fieldset appropriate
-// to the selected repeat type
+// Function to (1) add a 'required' attribute to the rep_interval field if it's a repeating booking
+// and (2) to display the secondary repeat type fieldset appropriate to the selected repeat type.
 ?>
 var changeRepTypeDetails = function changeRepTypeDetails() {
     var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+    <?php
+    // Add a 'required' attribute to the rep_interval input to prevent users entering an
+    // empty string.  But remove it if it's not a repeating entry, because if they happen
+    // to have an empty string they won't see the validation message because the input
+    // will be hidden.
+    ?>
+    $('#rep_interval').prop('required', (repType !== <?php echo RepeatRule::NONE ?>));
+    <?php // Show the appropriate details ?>
     $('.rep_type_details').hide();
     switch (repType)
     {
@@ -1644,11 +1652,12 @@ $(document).on('page_ready', function() {
       checkTimeSlots($(this));
     });
 
-  $('input[name="rep_type"]').on('change', changeRepTypeDetails);
-  changeRepTypeDetails();
-
   $('input[name="rep_interval"]').on('change', changeRepIntervalUnits);
-  $('input[name="rep_type"]').on('change', changeRepIntervalUnits).trigger('change');
+
+  $('input[name="rep_type"]').on('change', function() {
+    changeRepTypeDetails();
+    changeRepIntervalUnits();
+  }).trigger('change');
 
   <?php
   // Add an event listener to detect a change in the visibility
