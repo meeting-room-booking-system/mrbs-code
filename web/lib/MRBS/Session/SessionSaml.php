@@ -2,7 +2,7 @@
 namespace MRBS\Session;
 
 use MRBS\User;
-use SimpleSAML_Auth_Simple;
+use SimpleSAML\Auth\Simple;
 use function MRBS\auth;
 use function MRBS\this_page;
 use function MRBS\url_base;
@@ -63,7 +63,7 @@ class SessionSaml extends SessionWithLogin
     // Get the SimpleSamlPhp instance for the configured auth source
     $authSource = $auth['saml']['authsource'] ?? 'default-sp';
 
-    $this->ssp = new SimpleSAML_Auth_Simple($authSource);
+    $this->ssp = new \SimpleSAML\Auth\Simple($authSource);
     parent::__construct();
   }
 
