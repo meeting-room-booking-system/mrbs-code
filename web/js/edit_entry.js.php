@@ -51,18 +51,23 @@ var conflictTimer = function conflictTimer(set) {
 
 
 <?php
-// Function to (1) add a 'required' attribute to the rep_interval field if it's a repeating booking
-// and (2) to display the secondary repeat type fieldset appropriate to the selected repeat type.
+// Function to (1) add a 'required' attribute to the rep_interval field if it's a repeating booking,
+// (2) show/hide the repeat end date and skip fields and (3) display the secondary repeat type fieldset
+// appropriate to the selected repeat type.
 ?>
 var changeRepTypeDetails = function changeRepTypeDetails() {
     var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
+    var isRepeat = (repType !== <?php echo RepeatRule::NONE ?>);
     <?php
     // Add a 'required' attribute to the rep_interval input to prevent users entering an
     // empty string.  But remove it if it's not a repeating entry, because if they happen
-    // to have an empty string they won't see the validation message because the input
-    // will be hidden.
+    // to have an empty string they won't see the validation message since the input will
+    // be hidden.
     ?>
-    $('#rep_interval').prop('required', (repType !== <?php echo RepeatRule::NONE ?>));
+    $('#rep_interval').prop('required', isRepeat);
+    <?php // Show/hide the repeat end date and skip fields ?>
+    $('#rep_end_date').parent().toggle(isRepeat);
+    $('#skip').parent().toggle(isRepeat);
     <?php // Show the appropriate details ?>
     $('.rep_type_details').hide();
     switch (repType)
@@ -81,7 +86,6 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
 
 <?php
 // Function to change the units for the repeat interval to match the repeat type.
-// Additionally, the lines for repetition and skipping are shown/hidden.
 ?>
 var changeRepIntervalUnits = function changeRepIntervalUnits() {
     var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
@@ -109,9 +113,6 @@ var changeRepIntervalUnits = function changeRepIntervalUnits() {
     units.text(text);
 
     units.parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
-
-    $('#rep_end_date').parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
-    $('#skip').parent().toggle(repType !== <?php echo RepeatRule::NONE ?>);
   };
 
 
