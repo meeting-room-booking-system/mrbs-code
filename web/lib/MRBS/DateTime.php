@@ -19,7 +19,7 @@ class DateTime extends \DateTime
   // https://stackoverflow.com/questions/5450197/make-datetimecreatefromformat-return-child-class-instead-of-parent
   // This method will no longer be necessary when the minimum PHP version is > 7.
   #[\ReturnTypeWillChange]
-  public static function createFromFormat($format, $datetime, $timezone = null)
+  public static function createFromFormat($format, $datetime, \DateTimeZone $timezone = null)
   {
     assert(version_compare(MRBS_MIN_PHP_VERSION, '8.0.0', '<'), "This method is now redundant.");
 
