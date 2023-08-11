@@ -110,10 +110,8 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
             ($user->email === '') ||
             // The field must not be private
             $hide_this_field ||
-            // The user must be logged in, so that we don't expose email addresses to the public
-            (null === session()->getCurrentUser()) ||
-            // MRBS must be configured to allow ordinary users to see others' details
-            ($auth['only_admin_can_see_other_users'] && !is_admin()))
+            // And the user must be allowed to see others' email addresses
+            !can_see_email_addresses())
         {
           $email[$key] = null;
         }
