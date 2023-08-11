@@ -55,13 +55,34 @@ function generate_registrant_table($row, $previous_page=null)
       if (($key == 'create_by') && ($registrant['create_by'] === $registrant['username']))
       {
         $display_name = '';
+        $email = null;
+      }
+      elseif (can_see_email_addresses())
+      {
+        $user = auth()->getUser($registrant[$key]);
+        $display_name = $user->display_name;
+        $email = $user->email;
       }
       else
       {
+        // Can be faster sometimes if we don't need the email address
         $display_name = auth()->getDisplayName($registrant[$key]);
+        $email = null;
       }
       $sort_name = get_sortable_name($display_name);
-      echo '<td data-order="' . htmlspecialchars($sort_name) . '">' . htmlspecialchars($display_name) . '</td>';
+      $have_email = isset($email) && ($email !== '');
+      echo '<td data-order="' . htmlspecialchars($sort_name) . '">';
+      // Add a mailto: link if we've got an email address
+      if ($have_email)
+      {
+        echo '<a href="mailto:' . htmlspecialchars($email) . '">';
+      }
+      echo htmlspecialchars($display_name);
+      if ($have_email)
+      {
+        echo '</a>';
+      }
+      echo '</td>';
     }
     // Time of registration
     $time = time_date_string($registrant['registered']);
