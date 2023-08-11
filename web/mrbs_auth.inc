@@ -477,7 +477,7 @@ function is_user_admin()
 
 
 // Checks whether a user is allowed to register other users for events
-function can_register_others($room_id=null)
+function can_register_others($room_id=null) : bool
 {
   global $auth;
 
@@ -489,4 +489,27 @@ function can_register_others($room_id=null)
   }
 
   return $auth['users_can_register_others'] || is_book_admin($room_id);
+}
+
+
+function can_see_email_addresses() : bool
+{
+  global $auth;
+
+  // Admins can see everything
+  if (is_admin())
+  {
+    return true;
+  }
+
+  $mrbs_user = session()->getCurrentUser();
+
+  // Don't expose email addresses to the public
+  if (!isset($mrbs_user))
+  {
+    return false;
+  }
+
+  // Otherwise MRBS must be configured for logged-in users to see others' details
+  return !$auth['only_admin_can_see_other_users'];
 }
