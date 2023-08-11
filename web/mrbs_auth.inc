@@ -260,7 +260,7 @@ function checkAuthorised($page, $just_check=false)
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $rooms=null, $all=true)
+function getWritable($creator, $rooms=null, $all=true) : bool
 {
   if (is_array($rooms) && (count($rooms) > 0))
   {
