@@ -1025,11 +1025,14 @@ function report_row(&$rows, $data)
       switch ($field)
       {
         case 'create_by':
-          // Add a mailto: link if we can
-          $user = auth()->getUser($create_by);
-          if (isset($user->email) && ($user->email !== ''))
+          // Add a mailto: link if we can and only if the current user is an admin (for privacy reasons)
+          if (is_admin())
           {
-            $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$value</a>";
+            $user = auth()->getUser($create_by);
+            if (isset($user->email) && ($user->email !== ''))
+            {
+              $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$value</a>";
+            }
           }
           break;
         case 'name':

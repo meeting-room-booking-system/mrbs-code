@@ -266,7 +266,7 @@ function checkAuthorised($page, $just_check=false)
  *   false  - The user does not have the required access
  *   true   - The user has the required access
  */
-function getWritable($creator, $room_ids=null, $all=true)
+function getWritable($creator, $room_ids=null, $all=true) : bool
 {
   // You need to be logged in in order to be able to make a booking
   $mrbs_user = session()->getCurrentUser();
