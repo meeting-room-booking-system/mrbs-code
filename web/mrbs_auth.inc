@@ -454,7 +454,7 @@ function is_visible($room)
 
 
 // Checks whether a user is allowed to register other users for events
-function can_register_others($room_id=null)
+function can_register_others($room_id=null) : bool
 {
   global $auth;
 
