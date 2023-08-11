@@ -765,7 +765,7 @@ $is_private_field['entry.modified_by'] = true;
 
 // SETTINGS FOR APPROVING BOOKINGS - PER-AREA
 
-// These settings can all be be configured on a per-area basis, so these variables
+// These settings can all be configured on a per-area basis, so these variables
 // appear in the areadefaults.inc.php file.
 
 

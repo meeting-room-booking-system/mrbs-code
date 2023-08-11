@@ -492,9 +492,10 @@ function can_register_others($room_id=null) : bool
 }
 
 
+// Checks whether the current user can see others' email addresses
 function can_see_email_addresses() : bool
 {
-  global $auth;
+  global $auth, $is_private_field;
 
   // Admins can see everything
   if (is_admin())
@@ -510,6 +511,12 @@ function can_see_email_addresses() : bool
     return false;
   }
 
-  // Otherwise MRBS must be configured for logged-in users to see others' details
-  return !$auth['only_admin_can_see_other_users'];
+  // MRBS must be configured for logged-in users to see others' details
+  if ($auth['only_admin_can_see_other_users'])
+  {
+    return false;
+  }
+
+  // Otherwise the email field in the users table must not be private
+  return (($auth['type'] != 'db') || !$is_private_field['users.email']);
 }
