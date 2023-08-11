@@ -469,6 +469,7 @@ function can_register_others($room_id=null) : bool
 }
 
 
+// Checks whether the current user can see others' email addresses
 function can_see_email_addresses() : bool
 {
   global $auth;
@@ -487,6 +488,11 @@ function can_see_email_addresses() : bool
     return false;
   }
 
-  // Otherwise MRBS must be configured for logged-in users to see others' details
-  return !$auth['only_admin_can_see_other_users'];
+  // MRBS must be configured for logged-in users to see others' details
+  if ($auth['only_admin_can_see_other_users'])
+  {
+    return false;
+  }
+
+  return (($auth['type'] != 'db'));
 }
