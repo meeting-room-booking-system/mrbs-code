@@ -162,6 +162,13 @@ foreach($form_vars as $var => $var_type)
   }
 }
 
+// Provide a default for $rep_interval (it could be null in an Ajax post request
+// if the user has an empty string in the input).
+if (!isset($rep_interval))
+{
+  $rep_interval = 1;
+}
+
 // Sanitize the room ids
 $rooms = array_map(__NAMESPACE__ . '\sanitize_room_id', $rooms);
 
