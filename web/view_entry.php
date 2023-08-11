@@ -48,21 +48,21 @@ function generate_registrant_table($row, $previous_page=null)
       );
     }
     echo '</td>';
-    // Registrant
-    $display_name = auth()->getDisplayName($registrant['username']);
-    $sortname = get_sortable_name($display_name);
-    echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
-    // Registered by - only show if it's someone other than the registrant
-    if ($registrant['create_by'] === $registrant['username'])
+    // Registrant and Registered by
+    foreach(['username', 'create_by'] as $key)
     {
-      $display_name = '';
+      // Registered by - only show if it's someone other than the registrant
+      if (($key == 'create_by') && ($registrant['create_by'] === $registrant['username']))
+      {
+        $display_name = '';
+      }
+      else
+      {
+        $display_name = auth()->getDisplayName($registrant[$key]);
+      }
+      $sort_name = get_sortable_name($display_name);
+      echo '<td data-order="' . htmlspecialchars($sort_name) . '">' . htmlspecialchars($display_name) . '</td>';
     }
-    else
-    {
-      $display_name = auth()->getDisplayName($registrant['create_by']);
-    }
-    $sortname = get_sortable_name($display_name);
-    echo '<td data-order="' . htmlspecialchars($sortname) . '">' . htmlspecialchars($display_name) . '</td>';
     // Time of registration
     $time = time_date_string($registrant['registered']);
     echo '<td data-order="' . htmlspecialchars($registrant['registered']) . '">' . htmlspecialchars($time) . '</td>';
