@@ -89,8 +89,8 @@ var getTypes = function getTypes(table) {
 ?>
 var extractEmailAddresses = function(dt, columnSelector, sort) {
   var result = [];
-  var scheme = 'mailto:';
   var message;
+  const scheme = 'mailto:';
 
   $.each(dt.columns(columnSelector).data(), function (i, column) {
     $.each(column, function (j, value) {
