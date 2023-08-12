@@ -316,42 +316,7 @@ $(document).on('page_ready', function() {
         ?>
         text: '<?php echo escape_js(get_vocab('copy_email_addresses')) ?>',
         action: function (e, dt, node, config) {
-          var result = [];
-          var scheme = 'mailto:';
-          var message;
-          $.each(dt.column('#col_create_by').data(), function (index, value) {
-            try {
-              var href = $(value).attr('href');
-              if ((href !== undefined) && href.startsWith(scheme)) {
-                var address = href.substring(scheme.length);
-                if ((address !== '') && !result.includes(address)) {
-                  result.push(address);
-                }
-              }
-            } catch (error) {
-              <?php
-              // No need to do anything. This will catch the cases when $(value) fails because
-              // value is not a valid anchor element, and so we are not interested in it anyway.
-              ?>
-            }
-          });
-          result.sort();
-          navigator.clipboard.writeText(result.join(', '))
-            .then(() => {
-              message = '<?php echo get_vocab('unique_addresses_copied')?>';
-              message = message.replace('%d', result.length.toString());
-            })
-            .catch((err) => {
-              message = '<?php echo get_vocab('clipboard_copy_failed')?>';
-              console.error(err);
-            })
-            .finally(() => {
-              dt.buttons.info(
-                dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
-                message,
-                2000
-              )
-            });
+          extractEmailAddresses(dt, '#col_create_by', true);
         }
       }
     ];

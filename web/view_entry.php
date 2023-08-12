@@ -22,8 +22,8 @@ function generate_registrant_table($row, $previous_page=null)
   echo "<thead>\n";
   echo '<tr>';
   echo '<th></th>';
-  echo '<th>' . get_vocab('name') . '</th>';
-  echo '<th>' . get_vocab('registered_by') . '</th>';
+  echo '<th class="name">' . get_vocab('name') . '</th>';
+  echo '<th class="name">' . get_vocab('registered_by') . '</th>';
   echo '<th>' . get_vocab('registered_on') . '</th>';
   echo "</tr>\n";
   echo "</thead>\n";
