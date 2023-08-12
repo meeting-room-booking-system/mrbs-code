@@ -82,6 +82,58 @@ var getTypes = function getTypes(table) {
     return result;
   };
 
+
+<?php
+// Extract email addresses from mailto: links in the columns defined by columnSelector and
+// copy them to the clipboard, optionally sorting the result.
+?>
+var extractEmailAddresses = function(dt, columnSelector, sort) {
+  var result = [];
+  var message;
+  const scheme = 'mailto:';
+
+  $.each(dt.columns(columnSelector).data(), function (i, column) {
+    $.each(column, function (j, value) {
+      try {
+        var href = $(value).attr('href');
+        if ((href !== undefined) && href.startsWith(scheme)) {
+          var address = href.substring(scheme.length);
+          if ((address !== '') && !result.includes(address)) {
+            result.push(address);
+          }
+        }
+      } catch (error) {
+        <?php
+        // No need to do anything. This will catch the cases when $(value) fails because
+        // value is not a valid anchor element, and so we are not interested in it anyway.
+        ?>
+      }
+    });
+  });
+
+  if (sort) {
+    result.sort();
+  }
+
+  navigator.clipboard.writeText(result.join(', '))
+    .then(() => {
+      message = '<?php echo get_vocab('unique_addresses_copied')?>';
+      message = message.replace('%d', result.length.toString());
+    })
+    .catch((err) => {
+      message = '<?php echo get_vocab('clipboard_copy_failed')?>';
+      console.error(err);
+    })
+    .finally(() => {
+      dt.buttons.info(
+        dt.i18n('buttons.copyTitle', 'Copy to clipboard'),
+        message,
+        2000
+      )
+    });
+};
+
+
 var customizeExcel = function(xlsx) {
   <?php // See https://datatables.net/forums/discussion/45277/modify-page-orientation-in-xlxs-export ?>
   var sheet = xlsx.xl.worksheets['sheet1.xml'];
