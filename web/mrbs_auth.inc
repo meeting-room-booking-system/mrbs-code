@@ -495,5 +495,5 @@ function can_see_email_addresses() : bool
   }
 
   // Otherwise the email field in the users table must not be private
-  return (($auth['type'] != 'db') || !$is_private_field['users.email']);
+  return (($auth['type'] != 'db') || empty($is_private_field['users.email']));
 }
