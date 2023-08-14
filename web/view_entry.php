@@ -51,23 +51,30 @@ function generate_registrant_table($row, $previous_page=null)
     // Registrant and Registered by
     foreach(['username', 'create_by'] as $key)
     {
-      // Registered by - only show if it's someone other than the registrant
-      if (($key == 'create_by') && ($registrant['create_by'] === $registrant['username']))
+      // Default values
+      $display_name = '';
+      $email = null;
+      // Only show a name if it's the registrant or the creator is someone other than the registrant
+      if (($key != 'create_by') || ($registrant['create_by'] !== $registrant['username']))
       {
-        $display_name = '';
-        $email = null;
-      }
-      elseif (can_see_email_addresses())
-      {
-        $user = auth()->getUser($registrant[$key]);
-        $display_name = $user->display_name;
-        $email = $user->email;
-      }
-      else
-      {
-        // Can be faster sometimes if we don't need the email address
-        $display_name = auth()->getDisplayName($registrant[$key]);
-        $email = null;
+        if (can_see_email_addresses())
+        {
+          $user = auth()->getUser($registrant[$key]);
+          if (isset($user))
+          {
+            $display_name = $user->display_name;
+            $email = $user->email;
+          }
+          else
+          {
+            $display_name = $registrant[$key];
+          }
+        }
+        else
+        {
+          // Can be faster sometimes if we don't need the email address
+          $display_name = auth()->getDisplayName($registrant[$key]);
+        }
       }
       $sort_name = get_sortable_name($display_name);
       $have_email = isset($email) && ($email !== '');
