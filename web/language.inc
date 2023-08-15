@@ -292,7 +292,7 @@ function get_lang_preferences() : array
 // Note: the first time this function is called, it should be called with a $locale.
 // Subsequent calls will just return the static $lang variable which was calculated on
 // the first call
-function get_mrbs_lang($locale=null)
+function get_mrbs_lang(string $locale=null)
 {
   global $disable_automatic_language_changing,
          $default_language_tokens,
