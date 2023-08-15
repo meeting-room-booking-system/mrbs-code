@@ -53,7 +53,6 @@ function create_details_body(array $data, bool $as_html=false, bool $keep_privat
   global $datetime_formats;
   global $select_options, $booking_types;
   global $edit_entry_field_order;
-  global $auth;
 
   // Get the duration if we haven't got it already
   if (!isset($data['duration']))
