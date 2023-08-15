@@ -239,7 +239,7 @@ function get_mrbs_locale($header=null) : string
 // locale used by MRBS, and given by get_mrbs_locale(), may not be available.  So this function
 // returns as wide a list of languages as possible, in the hope that one of them may be
 // supported by the third party library.
-function get_lang_preferences()
+function get_lang_preferences() : array
 {
   global $cli_language, $disable_automatic_language_changing, $default_language_tokens;
   global $override_locale;
