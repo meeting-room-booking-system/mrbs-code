@@ -234,7 +234,7 @@ class Locale
 
   // Searches the items in the array $langtag for the best match to the language range
   // specified in $locale according to RFC 4647's lookup algorithm.   The langtags and
-  // locale can have subtags separated by '-' or '_' and the search is case insensitive.
+  // locale can have subtags separated by '-' or '_' and the search is case-insensitive.
   // Charsets (eg '.UTF-8') are stripped off $locale
   //
   // Returns the best match, or else an empty string if no match
