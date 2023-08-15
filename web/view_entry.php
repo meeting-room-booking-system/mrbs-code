@@ -349,7 +349,7 @@ function generate_event_registration($row, $previous_page=null)
 
 // Generates a single button.  Parameters in the array $params
 //
-//    Manadatory parameters
+//    Mandatory parameters
 //      action    The form action attribute
 //      value     The value of the button
 //      inputs    An array of hidden form inputs
