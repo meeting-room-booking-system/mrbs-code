@@ -349,7 +349,7 @@ function generate_event_registration($row, $previous_page=null)
 
 // Generates a single button.  Parameters in the array $params
 //
-//    Manadatory parameters
+//    Mandatory parameters
 //      action    The form action attribute
 //      value     The value of the button
 //      inputs    An array of hidden form inputs
@@ -565,7 +565,7 @@ if (!isset($returl))
   }
 
   // Add on the query string
-  if (isset($parsed_url) && isset($parsed_url['query']))
+  if (isset($parsed_url['query']))
   {
     $returl .= '?' . $parsed_url['query'];
   }

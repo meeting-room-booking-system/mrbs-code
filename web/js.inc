@@ -41,7 +41,7 @@ script(($debug) ? 'jquery/jquery-3.7.0.js' : 'jquery/jquery-3.7.0.min.js');
 // deprecated features to the console
 script(($debug) ? 'jquery/jquery-migrate-3.4.0.js' : 'jquery/jquery-migrate-3.4.0.min.js');
 
-// We are using the jQuery UI library, which has been custom built to include the following components:
+// We are using the jQuery UI library, which has been custom-built to include the following components:
 //   - Core
 //      - as defined by dependencies in order to support the required interactions and widgets
 //      - no need for jQuery 1.8 support

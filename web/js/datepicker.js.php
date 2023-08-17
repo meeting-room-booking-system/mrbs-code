@@ -229,6 +229,8 @@ $(document).on('page_ready', function() {
       updateBody(href);  <?php // Update the body via an Ajax call to avoid flickering ?>
     };
 
+  var lastValidDate = {};
+
   var config = {
       plugins: [iPadMobileFix()],
       dateFormat: 'Y-m-d',
@@ -239,19 +241,33 @@ $(document).on('page_ready', function() {
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
         var submit = $(this.element).data('submit');
-        if (submit)
-        {
+        var elementName = instance.element.getAttribute('name');
+        if (submit) {
           $('#' + submit).trigger('submit');
         }
-        else
-        {
+        else {
           $(this.element).trigger('change');
+        }
+        <?php
+        // Flatpickr allows the user to delete the date in the input field, even when allowInput
+        // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
+        // See https://github.com/flatpickr/flatpickr/issues/936 and
+        // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
+        // merged.  To get round this we substitute an empty string for the last known valid date.
+        ?>
+        if (dateStr) {
+          lastValidDate[elementName] = dateStr;
+        }
+        else if (lastValidDate[elementName]) {
+          instance.setDate(lastValidDate[elementName]);
         }
       },
       onReady: function(selectedDates, dateStr, instance) {
-        if (instance.altInput.ariaLabel === null)
-        {
+        if (instance.altInput.ariaLabel === null) {
           instance.altInput.ariaLabel = instance.input.ariaLabel;
+        }
+        if (dateStr) {
+          lastValidDate[instance.element.getAttribute('name')] = dateStr;
         }
       }
     };
