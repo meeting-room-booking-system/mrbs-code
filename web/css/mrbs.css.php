@@ -63,6 +63,10 @@ input, textarea {
   box-sizing: border-box;
 }
 
+.hidden_field {
+  visibility: hidden;
+}
+
 <?php
 // <input> elements of type 'date' are converted by the JavaScript into datepickers.
 // In order to prevent the display shifting about during the conversion process we set
