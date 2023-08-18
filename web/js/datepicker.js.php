@@ -248,7 +248,8 @@ $(document).on('page_ready', function() {
         // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
         // See https://github.com/flatpickr/flatpickr/issues/936 and
         // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
-        // merged.  To get round this we substitute an empty string for the last known valid date.
+        // merged.  To get round this we substitute an empty string for the last known valid date,
+        // but only for required inputs.
         ?>
         if (dateStr) {
           lastValidDate[elementName] = dateStr;
@@ -256,6 +257,7 @@ $(document).on('page_ready', function() {
         else if (element.prop('required') && lastValidDate[elementName]) {
           instance.setDate(lastValidDate[elementName]);
         }
+        <?php // Submit will be set for the datepicker in the banner ?>
         if (submit) {
           $('#' + submit).trigger('submit');
         }
