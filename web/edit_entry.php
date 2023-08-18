@@ -358,7 +358,8 @@ function get_field_end_time(int $value, bool $disabled=false) : FieldDiv
       'name'        => 'end_date',
       'value'       => $end_date,
       'aria-label'  => $label,
-      'disabled'    => $disabled)
+      'disabled'    => $disabled,
+      'required'    => true)
     );
 
   // Don't show the end date if multiday bookings are not allowed
