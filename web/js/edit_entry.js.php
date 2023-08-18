@@ -51,9 +51,9 @@ var conflictTimer = function conflictTimer(set) {
 
 
 <?php
-// Function to (1) add a 'required' attribute to the rep_interval field if it's a repeating booking,
-// (2) show/hide the repeat end date and skip fields and (3) display the secondary repeat type fieldset
-// appropriate to the selected repeat type.
+// Function to (1) add 'required' attributes to the rep_interval and rep_end_date fields
+// if it's a repeating booking, (2) show/hide the repeat end date and skip fields and
+// (3) display the secondary repeat type fieldset appropriate to the selected repeat type.
 ?>
 var changeRepTypeDetails = function changeRepTypeDetails() {
     var repType = parseInt($('input[name="rep_type"]:checked').val(), 10);
@@ -65,8 +65,11 @@ var changeRepTypeDetails = function changeRepTypeDetails() {
     // be hidden.
     ?>
     $('#rep_interval').prop('required', isRepeat);
-    <?php // Show/hide the repeat end date and skip fields ?>
-    $('#rep_end_date').parent().toggle(isRepeat);
+    <?php
+    // Add a 'required' attribute to the rep_end_date input if shown to prevent users
+    //  entering an empty string.  Show/hide the repeat end date and skip fields
+    ?>
+    $('#rep_end_date').prop('required', isRepeat).parent().toggle(isRepeat);
     $('#skip').parent().toggle(isRepeat);
     <?php // Show the appropriate details ?>
     $('.rep_type_details').hide();
