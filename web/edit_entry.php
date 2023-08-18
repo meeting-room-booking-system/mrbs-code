@@ -397,14 +397,15 @@ function get_field_end_time(int $value, bool $disabled=false) : FieldDiv
       'name'        => 'end_date',
       'value'       => $end_date,
       'aria-label'  => $label,
-      'disabled'    => $disabled)
-    );
+      'disabled'    => $disabled,
+      'required'    => true
+    ));
 
   // Don't show the end date if multiday bookings are not allowed
   if (!$multiday_allowed)
   {
-    $element_date->setAttributes(array('style'    => 'visibility: hidden',
-                                       'disabled' => true));
+    $element_date->setAttribute('disabled', true)
+                 ->addClass('hidden_field');
   }
 
   $a = $area_details[$area_id];
