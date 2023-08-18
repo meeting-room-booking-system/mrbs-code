@@ -240,14 +240,9 @@ $(document).on('page_ready', function() {
       onDayCreate: onDayCreate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
-        var submit = $(this.element).data('submit');
-        var elementName = instance.element.getAttribute('name');
-        if (submit) {
-          $('#' + submit).trigger('submit');
-        }
-        else {
-          $(this.element).trigger('change');
-        }
+        var element = $(instance.element);
+        var submit = element.data('submit');
+        var elementName = element.attr('name');
         <?php
         // Flatpickr allows the user to delete the date in the input field, even when allowInput
         // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
@@ -258,8 +253,14 @@ $(document).on('page_ready', function() {
         if (dateStr) {
           lastValidDate[elementName] = dateStr;
         }
-        else if (lastValidDate[elementName]) {
+        else if (element.prop('required') && lastValidDate[elementName]) {
           instance.setDate(lastValidDate[elementName]);
+        }
+        if (submit) {
+          $('#' + submit).trigger('submit');
+        }
+        else {
+          element.trigger('change');
         }
       },
       onReady: function(selectedDates, dateStr, instance) {
