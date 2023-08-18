@@ -240,26 +240,27 @@ $(document).on('page_ready', function() {
       onDayCreate: onDayCreate,
       locale: {firstDayOfWeek: <?php echo $weekstarts ?>},
       onChange: function(selectedDates, dateStr, instance) {
-        var submit = $(this.element).data('submit');
-        var elementName = instance.element.getAttribute('name');
+        var element = $(instance.element);
+        var submit = element.data('submit');
         if (submit) {
           $('#' + submit).trigger('submit');
         }
         else {
-          $(this.element).trigger('change');
-        }
-        <?php
-        // Flatpickr allows the user to delete the date in the input field, even when allowInput
-        // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
-        // See https://github.com/flatpickr/flatpickr/issues/936 and
-        // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
-        // merged.  To get round this we substitute an empty string for the last known valid date.
-        ?>
-        if (dateStr) {
-          lastValidDate[elementName] = dateStr;
-        }
-        else if (lastValidDate[elementName]) {
-          instance.setDate(lastValidDate[elementName]);
+          <?php
+          // Flatpickr allows the user to delete the date in the input field, even when allowInput
+          // is false, resulting in an empty string, which then causes problems for edit_entry_handler.php.
+          // See https://github.com/flatpickr/flatpickr/issues/936 and
+          // https://github.com/flatpickr/flatpickr/pull/2252 . At the time of writing the PR has not been
+          // merged.  To get round this we substitute an empty string for the last known valid date.
+          ?>
+          var elementName = element.attr('name');
+          if (dateStr) {
+            lastValidDate[elementName] = dateStr;
+          }
+          else if (element.prop('required') && lastValidDate[elementName]) {
+            instance.setDate(lastValidDate[elementName]);
+          }
+          element.trigger('change');
         }
       },
       onReady: function(selectedDates, dateStr, instance) {
