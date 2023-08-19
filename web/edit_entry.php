@@ -362,7 +362,7 @@ function get_field_end_time(int $value, bool $disabled=false) : FieldDiv
       'required'    => true
     ));
 
-  // Don't show the end date if multiday bookings are not allowed
+  // Don't show the end date if multi-day bookings are not allowed
   if (!$multiday_allowed)
   {
     $element_date->setAttribute('disabled', true)
