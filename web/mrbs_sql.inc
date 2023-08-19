@@ -1412,7 +1412,7 @@ function mrbsCreateRepeatingEntrys(array $data) : array
 
 // Gets the repeat_id for an entry in the entry table with id $entry_id
 // Returns the repeat_id or NULL
-function get_repeat_id($entry_id) : ?int
+function get_repeat_id(int $entry_id) : ?int
 {
   $sql = "SELECT repeat_id
             FROM " . _tbl('entry') . "
