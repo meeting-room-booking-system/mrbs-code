@@ -141,7 +141,7 @@ $form_vars = array(
   'month_absolute'              => 'int',
   'month_relative_ord'          => 'string',
   'month_relative_day'          => 'string',
-  'skip'                        => 'string',  // bool, actually
+  'skip'                        => 'bool',
   'no_mail'                     => 'string',  // bool, actually
   'private'                     => 'string',  // bool, actually
   'confirmed'                   => 'string',
@@ -186,9 +186,6 @@ if (isset($registration_closes_value) && isset($registration_closes_units))
   fromTimeString($registration_closes, $registration_closes_units);
   $registration_closes = constrain_int($registration_closes, 4);
 }
-
-// Convert the form booleans
-$skip = (bool) $skip;
 
 if (!$is_ajax)
 {
