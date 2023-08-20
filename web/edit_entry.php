@@ -1671,32 +1671,15 @@ if (!isset($areas[$area_id]))
 
 if (isset($id) && !$copy)
 {
-  if ($edit_series)
-  {
-    $token = "editseries";
-  }
-  else
-  {
-    $token = "editentry";
-  }
+  $token = ($edit_series) ? 'editseries' : 'editentry';
+}
+elseif ($copy)
+{
+  $token = ($edit_series) ? 'copyseries' : 'copyentry';
 }
 else
 {
-  if ($copy)
-  {
-    if ($edit_series)
-    {
-      $token = "copyseries";
-    }
-    else
-    {
-      $token = "copyentry";
-    }
-  }
-  else
-  {
-    $token = "addentry";
-  }
+  $token = "addentry";
 }
 
 
