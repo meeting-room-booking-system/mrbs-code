@@ -1656,36 +1656,18 @@ if (!isset($area_details[$area_id]))
   print_footer(true);
 }
 
-if (isset($id) && !$copy)
+if (!isset($id))
 {
-  if ($edit_series)
-  {
-    $token = "editseries";
-  }
-  else
-  {
-    $token = "editentry";
-  }
+  $token = "addentry";
+}
+elseif ($copy)
+{
+  $token = ($edit_series) ? 'copyseries' : 'copyentry';
 }
 else
 {
-  if ($copy)
-  {
-    if ($edit_series)
-    {
-      $token = "copyseries";
-    }
-    else
-    {
-      $token = "copyentry";
-    }
-  }
-  else
-  {
-    $token = "addentry";
-  }
+  $token = ($edit_series) ? 'editseries' : 'editentry';
 }
-
 
 $form = new Form();
 
