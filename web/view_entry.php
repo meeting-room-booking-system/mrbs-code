@@ -983,13 +983,14 @@ if (!$auth['only_admin_can_copy_others_entries'] || $writeable)
   }
   if ((!empty($repeat_id) || $series) && $repeats_allowed) {
     echo "<div>\n";
-    $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-      'value' => get_vocab('copyseries'),
-      'inputs' => array('id' => $id,
-      'edit_series' => true,
-      'copy' => 1,
-      'returl' => $returl)
-    );
+    $params = array(
+        'action'      => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+        'value'       => get_vocab('copyseries'),
+        'inputs'      => array('id' => $id,
+        'edit_series' => true,
+        'copy'        => 1,
+        'returl'      => $returl)
+      );
     generate_button($params);
     echo "</div>\n";
   }
