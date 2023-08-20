@@ -1669,9 +1669,9 @@ if (!isset($areas[$area_id]))
   print_footer(true);
 }
 
-if (isset($id) && !$copy)
+if (!isset($id))
 {
-  $token = ($edit_series) ? 'editseries' : 'editentry';
+  $token = "addentry";
 }
 elseif ($copy)
 {
@@ -1679,9 +1679,8 @@ elseif ($copy)
 }
 else
 {
-  $token = "addentry";
+  $token = ($edit_series) ? 'editseries' : 'editentry';
 }
-
 
 $form = new Form();
 
