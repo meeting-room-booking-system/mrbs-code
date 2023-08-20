@@ -1046,7 +1046,7 @@ function get_fieldset_registration() : ?ElementFieldset
 
 function get_fieldset_repeat(RepeatRule $repeat_rule) : ElementFieldset
 {
-  global $edit_type, $repeats_allowed;
+  global $repeats_allowed;
 
   // If repeats aren't allowed or this is not a series then disable
   // the repeat fields - they're for information only
@@ -1055,7 +1055,7 @@ function get_fieldset_repeat(RepeatRule $repeat_rule) : ElementFieldset
   // But we have to cater for the possibility because it could happen if (a) the
   // series was created before the policy was introduced or (b) the user has
   // been demoted since the series was created).
-  $disabled = ($edit_type != "series") || !$repeats_allowed;
+  $disabled = !$repeats_allowed;
 
   $fieldset = new ElementFieldset();
   $fieldset->setAttribute('id', 'rep_info');
@@ -1448,7 +1448,6 @@ if (isset($id))
 else
 {
   // It is a new booking. The data comes from whichever button the user clicked
-  $edit_type     = "series";
   if ($default_name_display_name)
   {
     $name = (isset($mrbs_user)) ? $mrbs_user->display_name : '';
@@ -1796,11 +1795,9 @@ $form->addElement($fieldset);
 
 $form->addElement(get_fieldset_registration());
 
-// Show the repeat fields if (a) it's a new booking and repeats are allowed,
-// or else if it's an existing booking and it's a series.  (It's not particularly obvious but
-// if edit_type is "series" then it means that either you're editing an existing
-// series or else you're making a new booking.  This should be tidied up sometime!)
-if (($edit_type == "series") && $repeats_allowed)
+// Show the repeat fields if it's (a) it's an existing booking and a series or (b)
+// a new booking and repeats are allowed.
+if ((isset($id) && ($edit_type == "series")) || (!isset($id) && $repeats_allowed))
 {
   $form->addElement(get_fieldset_repeat($repeat_rule));
 }
