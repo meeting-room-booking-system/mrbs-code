@@ -1129,7 +1129,7 @@ $hour = get_form_var('hour', 'int');
 $minute = get_form_var('minute', 'int');
 $period = get_form_var('period', 'int');
 $id = get_form_var('id', 'int');
-$copy = get_form_var('copy', 'int');
+$copy = get_form_var('copy', 'bool');
 $edit_series = get_form_var('edit_series', 'bool');
 $returl = get_form_var('returl', 'string');
 // The following variables are used when coming via a JavaScript drag select
@@ -1245,7 +1245,7 @@ if (isset($id))
   }
   // Need to clear some data if entry is private and user
   // does not have permission to edit/view details
-  $keep_private = isset($copy) && is_private_event($private) && !getWritable($entry['create_by'], $entry['room_id']);
+  $keep_private = $copy && is_private_event($private) && !getWritable($entry['create_by'], $entry['room_id']);
 
   // default settings
   $rep_days = array();
@@ -1316,7 +1316,7 @@ if (isset($id))
       case 'create_by':
         // If we're copying an existing entry then we need to change the create_by (they could be
         // different if it's an admin doing the copying)
-        $create_by   = (isset($copy)) ? $mrbs_username : $entry['create_by'];
+        $create_by   = ($copy) ? $mrbs_username : $entry['create_by'];
         break;
 
       case 'start_time':
@@ -1669,7 +1669,7 @@ if (!isset($areas[$area_id]))
   print_footer(true);
 }
 
-if (isset($id) && !isset($copy))
+if (isset($id) && !$copy)
 {
   if ($edit_series)
   {
@@ -1682,7 +1682,7 @@ if (isset($id) && !isset($copy))
 }
 else
 {
-  if (isset($copy))
+  if ($copy)
   {
     if ($edit_series)
     {
@@ -1733,7 +1733,7 @@ if (isset($original_room_id))
                                'ical_recur_id'    => $ical_recur_id));
 }
 
-if(isset($id) && !isset($copy))
+if(isset($id) && !$copy)
 {
   $form->addHiddenInput('id', $id);
 }
