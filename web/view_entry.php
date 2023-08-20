@@ -901,11 +901,11 @@ if (!$room_disabled)
     if ((!empty($repeat_id) || $series) && $repeats_allowed)
     {
       echo "<div>\n";
-      $params = array('action'    => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
-                      'value'     => get_vocab('editseries'),
-                      'inputs'    => array('id' => $id,
-                      'edit_type' => 'series',
-                      'returl'    => $returl)
+      $params = array('action'      => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
+                      'value'       => get_vocab('editseries'),
+                      'inputs'      => array('id' => $id,
+                      'edit_series' => true,
+                      'returl'      => $returl)
       );
 
       if (empty($button_attributes['disabled']) &&
@@ -986,9 +986,9 @@ if (!$auth['only_admin_can_copy_others_entries'] || $writeable)
     $params = array('action' => multisite("edit_entry.php?day=$day&month=$month&year=$year"),
       'value' => get_vocab('copyseries'),
       'inputs' => array('id' => $id,
-        'edit_type' => 'series',
-        'copy' => 1,
-        'returl' => $returl)
+      'edit_series' => true,
+      'copy' => 1,
+      'returl' => $returl)
     );
     generate_button($params);
     echo "</div>\n";

@@ -1130,7 +1130,7 @@ $minute = get_form_var('minute', 'int');
 $period = get_form_var('period', 'int');
 $id = get_form_var('id', 'int');
 $copy = get_form_var('copy', 'int');
-$edit_type = get_form_var('edit_type', 'string', '');
+$edit_series = get_form_var('edit_series', 'bool');
 $returl = get_form_var('returl', 'string');
 // The following variables are used when coming via a JavaScript drag select
 $drag = get_form_var('drag', 'int');
@@ -1367,7 +1367,7 @@ if (isset($id))
 
       // If we're editing the series we want the start_time and end_time to be the
       // start and of the first entry of the series, not the start of this entry
-      if ($edit_type == "series")
+      if ($edit_series)
       {
         $start_time = $row['start_time'];
         $end_time = $row['end_time'];
@@ -1671,7 +1671,7 @@ if (!isset($areas[$area_id]))
 
 if (isset($id) && !isset($copy))
 {
-  if ($edit_type == "series")
+  if ($edit_series)
   {
     $token = "editseries";
   }
@@ -1684,7 +1684,7 @@ else
 {
   if (isset($copy))
   {
-    if ($edit_type == "series")
+    if ($edit_series)
     {
       $token = "copyseries";
     }
@@ -1713,9 +1713,9 @@ if (!empty($back_button))
   $form->setAttribute('data-back', 1);
 }
 
-$hidden_inputs = array('returl'    => $returl,
-                       'rep_id'    => $rep_id,
-                       'edit_type' => $edit_type);
+$hidden_inputs = array('returl'      => $returl,
+                       'rep_id'      => $rep_id,
+                       'edit_series' => $edit_series);
 
 $form->addHiddenInputs($hidden_inputs);
 
@@ -1810,7 +1810,7 @@ $form->addElement(get_fieldset_registration());
 
 // Show the repeat fields if it's (a) it's an existing booking and a series or (b)
 // a new booking and repeats are allowed.
-if ((isset($id) && ($edit_type == "series")) || (!isset($id) && $repeats_allowed))
+if ((isset($id) && $edit_series) || (!isset($id) && $repeats_allowed))
 {
   $form->addElement(get_fieldset_repeat($repeat_rule));
 }

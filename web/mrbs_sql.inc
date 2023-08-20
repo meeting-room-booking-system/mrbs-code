@@ -2297,7 +2297,7 @@ function update_participants(int $old_id, $new_id)
 // Makes bookings
 //    $bookings     an array of bookings
 //    $id           the id of the current booking when editing an existing entry
-function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, ?int $original_room_id=null, bool $send_mail=false, $edit_type='')
+function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false, bool $skip=false, ?int $original_room_id=null, bool $send_mail=false, bool $edit_series=false)
 {
   global $max_rep_entrys, $enable_periods, $resolution, $mail_settings;
   global $prevent_simultaneous_bookings, $auth;
@@ -2493,7 +2493,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   if (isset($id))
   {
 
-    if ($edit_type == "series")
+    if ($edit_series)
     {
       $old_bookings = get_bookings_in_series($repeat_id);
     }
@@ -2650,7 +2650,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
         // so that we can highlight the changes
         if (isset($id))
         {
-          if ($edit_type == "series")
+          if ($edit_series)
           {
             $mail_previous = get_booking_info($repeat_id, TRUE);
           }

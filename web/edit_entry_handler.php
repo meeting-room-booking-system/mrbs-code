@@ -132,7 +132,7 @@ $form_vars = array(
   'returl'                      => 'string',
   'id'                          => 'int',
   'rep_id'                      => 'int',
-  'edit_type'                   => 'string',
+  'edit_series'                 => 'bool',
   'rep_type'                    => 'int',
   'rep_end_date'                => 'string',
   'rep_day'                     => 'array',   // array of bools
@@ -827,13 +827,13 @@ try
   //        case we would be left with two overlapping bookings.
   db()->begin();
   $transaction_ok = true;
-  $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_type);
+  $result = mrbsMakeBookings($bookings, $this_id, $just_check, $skip, $original_room_id, $send_mail, $edit_series);
 
   // If we weren't just checking and this was a successful booking and
   // we were editing an existing booking, then delete the old booking
   if (!$just_check && $result['valid_booking'] && isset($id))
   {
-    $transaction_ok = mrbsDelEntry($id, ($edit_type == "series"), true);
+    $transaction_ok = mrbsDelEntry($id, $edit_series, true);
   }
 
   if ($transaction_ok)
