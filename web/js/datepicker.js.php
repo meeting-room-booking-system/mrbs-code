@@ -42,6 +42,27 @@ function getISODate(year, month, day)
   return date.toISOString().split('T')[0];
 }
 
+
+function getLocalISODateString(date)
+{
+  var month = (date.getMonth() + 1).toString();
+  var day = date.getDate().toString();
+  var year = date.getFullYear().toString();
+
+  if (month.length < 2)
+  {
+    month = '0' + month;
+  }
+  if (day.length < 2)
+  {
+    day = '0' + day;
+  }
+
+  return [year, month, day].join('-');
+}
+
+
+
 <?php
 // Functions to find the start and end dates of a week and month given a
 // date in YYYY-MM-DD format.
@@ -58,26 +79,26 @@ function weekStart(date, weekStarts) {
     diff += 7;
   }
   d.setDate(d.getDate() - diff);
-  return d.toISOString().split('T')[0];
+  return getLocalISODateString(d);
 }
 
 function weekEnd(date, weekStarts) {
   var d = new Date(weekStart(date, weekStarts));
   d.setDate(d.getDate() + 6);
-  return d.toISOString().split('T')[0];
+  return getLocalISODateString(d);
 }
 
 function monthStart(date) {
   var d = new Date(date);
   d.setDate(1);
-  return d.toISOString().split('T')[0];
+  return getLocalISODateString(d);
 }
 
 function monthEnd(date) {
   var d = new Date(date);
   d.setMonth(d.getMonth() + 1);
   d.setDate(0);
-  return d.toISOString().split('T')[0];
+  return getLocalISODateString(d);
 }
 
 
@@ -95,7 +116,7 @@ function datesInRange(startDate, endDate, excludeHiddenDays) {
     {
       continue;
     }
-    result.push(d.toISOString().split('T')[0]);
+    result.push(getLocalISODateString(d));
   }
 
   return result;
