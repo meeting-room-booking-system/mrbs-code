@@ -38,11 +38,14 @@ function iPadMobileFix() {
 ?>
 function getISODate(year, month, day)
 {
+  <?php // toISOString() converts to UTC, so make the date a UTC date ?>
   var date = new Date(Date.UTC(year, month, day));
   return date.toISOString().split('T')[0];
 }
 
 
+// Given a JavaScript Date object returns a date string in YYYY-MM-DD
+// format.  (Note that toISOString() returns a date in UTC time).
 function getLocalISODateString(date)
 {
   var month = (date.getMonth() + 1).toString();
