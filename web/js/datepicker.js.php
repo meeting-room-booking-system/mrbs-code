@@ -96,6 +96,12 @@ function monthStart(date) {
 
 function monthEnd(date) {
   var d = new Date(date);
+  <?php
+  // Set the date to the first of the month, because otherwise we will
+  // advance by two months when incrementing the month below if we're at the
+  // end of the month and the next month has fewer days than this one.
+  ?>
+  d.setDate(1);
   d.setMonth(d.getMonth() + 1);
   d.setDate(0);
   return getLocalISODateString(d);
