@@ -48,18 +48,9 @@ function getISODate(year, month, day)
 // format.  (Note that toISOString() returns a date in UTC time).
 function getLocalISODateString(date)
 {
-  var month = (date.getMonth() + 1).toString();
-  var day = date.getDate().toString();
+  var month = (date.getMonth() + 1).toString().padStart(2, '0');
+  var day = date.getDate().toString().padStart(2, '0');
   var year = date.getFullYear().toString();
-
-  if (month.length < 2)
-  {
-    month = '0' + month;
-  }
-  if (day.length < 2)
-  {
-    day = '0' + day;
-  }
 
   return [year, month, day].join('-');
 }
