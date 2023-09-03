@@ -19,6 +19,9 @@ namespace MRBS\Auth;
 
 class AuthPop3 extends Auth
 {
+  private const CONNECT_TIMEOUT = 15; // seconds
+  private const STREAM_TIMEOUT = 15; // seconds
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
@@ -57,7 +60,7 @@ class AuthPop3 extends Auth
       return false;
     }
 
-    // Transfer the list of pop3 hosts to an new value to ensure that
+    // Transfer the list of pop3 hosts to a new value to ensure that
     // an array is always used.
     // If a single value is passed then turn it into an array
     if (is_array($pop3_host))
@@ -90,15 +93,25 @@ class AuthPop3 extends Auth
       $error_string = '';
 
       // Connect to POP3 server
-      $stream = fsockopen( $host, $all_pop3_ports[$idx], $error_number,
-        $error_string, 15 );
-      $response = fgets( $stream, 1024 );
+      $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
+      if ($stream === false)
+      {
+        continue;
+      }
+
+      stream_set_timeout($stream, self::STREAM_TIMEOUT);
+      $response = fgets($stream, 1024);
+      if ($response === false)
+      {
+        trigger_error("fgets() failed using host '$host' and port '$all_pop3_ports[$idx]'", E_USER_WARNING);
+        continue;
+      }
 
       // first we try to use APOP, and then if that fails we fall back to
       // traditional stuff
 
       // get the shared secret ( something on the greeting line that looks like <XXXX> )
-      if (preg_match( '/(<[^>]*>)/', $response, $match ))
+      if (preg_match('/(<[^>]*>)/', $response, $match))
       {
         $shared_secret = $match[0];
       }
@@ -107,47 +120,41 @@ class AuthPop3 extends Auth
       if ($shared_secret)
       {
         $md5_token = md5("$shared_secret$pass");
+        $auth_string = "APOP $user $md5_token\r\n";
+        fputs($stream, $auth_string);
 
-        if ($stream)
+        // read the response. if it's an OK then we're authenticated
+        $response = fgets($stream, 1024);
+        if (substr($response, 0, 3) == '+OK')
         {
-          $auth_string = "APOP $user $md5_token\r\n";
-          fputs( $stream, $auth_string );
-
-          // read the response. if it's an OK then we're authenticated
-          $response = fgets( $stream, 1024 );
-          if( substr( $response, 0, 3 ) == '+OK' )
-          {
-            fputs( $stream, "QUIT\r\n" );
-            return $user;
-          }
+          fputs($stream, "QUIT\r\n");
+          return $user;
         }
-      } // end shared secret if
+      }
 
       // if we've still not authenticated then try using traditional methods
       // need to reconnect if we tried APOP
-      if ($shared_secret)
+      $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
+
+      if ($stream === false)
       {
-        $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number,
-                            $error_string, 15);
-        $response = fgets($stream, 1024);
+        continue;
       }
 
+      stream_set_timeout($stream, self::STREAM_TIMEOUT);
       // send standard POP3 USER and PASS commands
-      if ($stream)
+      fputs($stream, "USER $user\r\n");
+      $response = fgets($stream, 1024);
+      if (substr($response, 0, 3) == '+OK')
       {
-        fputs($stream, "USER $user\r\n");
+        fputs($stream, "PASS $pass\r\n");
         $response = fgets($stream, 1024);
-        if(substr( $response, 0, 3 ) == '+OK')
+        if (substr($response, 0, 3) == '+OK')
         {
-          fputs($stream, "PASS $pass\r\n");
-          $response = fgets( $stream, 1024 );
-          if ( substr( $response, 0, 3 ) == '+OK' )
-          {
-            return $user;
-          }
+          return $user;
         }
-        fputs($stream, "QUIT\r\n");
       }
+      fputs($stream, "QUIT\r\n");
     }
 
     // return failure
