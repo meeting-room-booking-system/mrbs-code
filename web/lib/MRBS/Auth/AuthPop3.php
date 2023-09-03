@@ -17,16 +17,49 @@ namespace MRBS\Auth;
  * $auth["admin"][] = "pop3user2";
  */
 
+use MRBS\Exception;
+
 class AuthPop3 extends Auth
 {
   private const CONNECT_TIMEOUT = 15; // seconds
   private const STREAM_TIMEOUT = 15; // seconds
 
+  private $hosts;
+  private $ports;
+
+
+  public function __construct()
+  {
+    global $pop3_host, $pop3_port;
+
+    // Build an array of hosts and ports from the config settings
+    $this->hosts = array();
+    $this->ports = array();
+
+    // Check that if there is an array of hosts and an array of ports
+    // then the number of each is the same
+    if (is_array($pop3_host) && is_array($pop3_port) &&
+        (count($pop3_port) != count($pop3_host)))
+    {
+      $message = "MRBS config error: number of POP3 hosts does not match number of POP3 ports.";
+      throw new Exception($message);
+    }
+
+    // Transfer the list of POP3 hosts to a new value to ensure that an array is always used.
+    // If a single value is passed then turn it into an array
+    $this->hosts = (is_array($pop3_host)) ? $pop3_host : array($pop3_host);
+
+    // Create an array of the port numbers to match the number of
+    // hosts if a single port number has been passed.
+    $this->ports = (is_array($pop3_port)) ? $pop3_port : array_pad($this->ports, count($this->hosts), $pop3_port);
+  }
+
+
   /* validateUser($user, $pass)
    *
    * Checks if the specified username/password pair are valid
    *
-   * $user  - The user name
+   * $user  - The username
    * $pass  - The password
    *
    * Returns:
@@ -39,56 +72,18 @@ class AuthPop3 extends Auth
     #[\SensitiveParameter]
     ?string $pass)
   {
-    global $pop3_host, $pop3_port;
-
-    $all_pop3_hosts = array();
-    $all_pop3_ports = array();
-
     // Check if we do not have a username/password
     if (!isset($user) || !isset($pass) || strlen($pass)==0)
     {
       return false;
     }
 
-    // Check that if there is an array of hosts and an array of ports
-    // then the number of each is the same
-    if (is_array($pop3_host) && is_array($pop3_port) &&
-        count($pop3_port) != count($pop3_host) )
-    {
-      return false;
-    }
-
-    // Transfer the list of pop3 hosts to a new value to ensure that
-    // an array is always used.
-    // If a single value is passed then turn it into an array
-    if (is_array($pop3_host))
-    {
-      $all_pop3_hosts = $pop3_host;
-    }
-    else
-    {
-      $all_pop3_hosts = array($pop3_host);
-    }
-
-    // create an array of the port numbers to match the number of
-    // hosts if a single port number has been passed.
-    if (is_array($pop3_port))
-    {
-      $all_pop3_ports = $pop3_port;
-    }
-    else
-    {
-      foreach ($all_pop3_hosts as $value)
-      {
-        $all_pop3_ports[] = $pop3_port;
-      }
-    }
-
     // iterate over all hosts and return if you get a successful login
-    foreach ($all_pop3_hosts as $idx => $host)
+    foreach ($this->hosts as $i => $host)
     {
+      $port = $this->ports[$i];
       // Connect to POP3 server
-      $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
+      $stream = fsockopen($host, $port, $error_number, $error_string, self::CONNECT_TIMEOUT);
       if ($stream === false)
       {
         continue;
@@ -98,7 +93,7 @@ class AuthPop3 extends Auth
       $response = fgets($stream, 1024);
       if ($response === false)
       {
-        trigger_error("fgets() failed using host '$host' and port '$all_pop3_ports[$idx]'", E_USER_WARNING);
+        trigger_error("fgets() failed using host '$host' and port '$port'", E_USER_WARNING);
         continue;
       }
 
@@ -129,7 +124,7 @@ class AuthPop3 extends Auth
 
       // If we've still not authenticated then try using traditional methods.
       // Need to reconnect if we tried APOP
-      $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
+      $stream = fsockopen($host, $port, $error_number, $error_string, self::CONNECT_TIMEOUT);
 
       if ($stream === false)
       {
