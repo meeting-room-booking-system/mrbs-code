@@ -104,33 +104,33 @@ class AuthPop3 extends Auth
         continue;
       }
 
-      // first we try to use APOP, and then if that fails we fall back to
+      // First we try to use APOP, and then if that fails we fall back to
       // traditional stuff
 
-      // get the shared secret ( something on the greeting line that looks like <XXXX> )
+      // Get the shared secret ( something on the greeting line that looks like <XXXX> )
       if (preg_match('/(<[^>]*>)/', $response, $match))
       {
         $shared_secret = $match[0];
       }
 
-      // if we have a shared secret then try APOP
+      // If we have a shared secret then try APOP
       if ($shared_secret)
       {
         $md5_token = md5("$shared_secret$pass");
         $auth_string = "APOP $user $md5_token\r\n";
         fputs($stream, $auth_string);
 
-        // read the response. if it's an OK then we're authenticated
+        // Read the response. If it's an OK then we're authenticated
         $response = fgets($stream, 1024);
-        if (substr($response, 0, 3) == '+OK')
+        if (str_starts_with($response, '+OK'))
         {
           fputs($stream, "QUIT\r\n");
           return $user;
         }
       }
 
-      // if we've still not authenticated then try using traditional methods
-      // need to reconnect if we tried APOP
+      // If we've still not authenticated then try using traditional methods.
+      // Need to reconnect if we tried APOP
       $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
 
       if ($stream === false)
@@ -139,14 +139,14 @@ class AuthPop3 extends Auth
       }
 
       stream_set_timeout($stream, self::STREAM_TIMEOUT);
-      // send standard POP3 USER and PASS commands
+      // Send standard POP3 USER and PASS commands
       fputs($stream, "USER $user\r\n");
       $response = fgets($stream, 1024);
-      if (substr($response, 0, 3) == '+OK')
+      if (str_starts_with($response, '+OK'))
       {
         fputs($stream, "PASS $pass\r\n");
         $response = fgets($stream, 1024);
-        if (substr($response, 0, 3) == '+OK')
+        if (str_starts_with($response, '+OK'))
         {
           return $user;
         }
@@ -154,7 +154,7 @@ class AuthPop3 extends Auth
       fputs($stream, "QUIT\r\n");
     }
 
-    // return failure
+    // Return failure
     return false;
   }
 
