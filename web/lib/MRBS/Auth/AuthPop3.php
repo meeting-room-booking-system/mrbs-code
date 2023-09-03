@@ -89,9 +89,6 @@ class AuthPop3 extends Auth
     // iterate over all hosts and return if you get a successful login
     foreach ($all_pop3_hosts as $idx => $host)
     {
-      $error_number = '';
-      $error_string = '';
-
       // Connect to POP3 server
       $stream = fsockopen($host, $all_pop3_ports[$idx], $error_number, $error_string, self::CONNECT_TIMEOUT);
       if ($stream === false)
