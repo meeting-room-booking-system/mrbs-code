@@ -41,8 +41,6 @@ class AuthPop3 extends Auth
   {
     global $pop3_host, $pop3_port;
 
-    $match = array();
-    $shared_secret = '';
     $all_pop3_hosts = array();
     $all_pop3_ports = array();
 
@@ -114,7 +112,7 @@ class AuthPop3 extends Auth
       }
 
       // If we have a shared secret then try APOP
-      if ($shared_secret)
+      if (isset($shared_secret) && ($shared_secret !== ''))
       {
         $md5_token = md5("$shared_secret$pass");
         $auth_string = "APOP $user $md5_token\r\n";
