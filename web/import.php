@@ -171,6 +171,24 @@ function get_room_id($location, &$error)
 }
 
 
+// Turn an EXDATE property into an array of timestamps
+function get_skip_list(string $values, array $params) : array
+{
+  $result = array();
+
+  $tzid = $params['TZID'] ?? 'UTC';
+  $date_time_zone = new \DateTimeZone($tzid);
+  $exdates = explode(',', $values);
+
+  foreach ($exdates as $exdate)
+  {
+    $date = new DateTime($exdate, $date_time_zone);
+    $result[] = $date->getTimestamp();
+  }
+
+  return $result;
+}
+
 // Get the next line, after unfolding, from the stream.
 // Returns FALSE when EOF is reached
 function get_unfolded_line($handle)
@@ -362,6 +380,10 @@ function process_event(array $vevent)
         {
           $booking['repeat_rule'] = $repeat_rule;
         }
+        break;
+
+      case 'EXDATE':
+        $booking['skip_list'] = get_skip_list($details['value'], $details['params']);
         break;
 
       case 'CLASS':
