@@ -414,6 +414,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
         if (!isset($rules['BYDAY']))
         {
           $repeat_rule->setMonthlyAbsolute((int)$rules['BYMONTHDAY']);
+          $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_ABSOLUTE);
         }
         else
         {
@@ -442,6 +443,7 @@ function get_repeat_rule(string $rrule, int $start_time, array &$errors)
             else
             {
               $repeat_rule->setMonthlyRelative($byday_day);
+              $repeat_rule->setMonthlyType(RepeatRule::MONTHLY_RELATIVE);
             }
           }
         }
