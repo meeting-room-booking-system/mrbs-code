@@ -2396,7 +2396,7 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
         for ($i = 0; $i < count($reps); $i++)
         {
           // Ignore conflicts in the booking's skip list, because they won't be made.
-          if (in_array($reps[$i], $booking['skip_list']))
+          if (isset($booking['skip_list']) && in_array($reps[$i], $booking['skip_list']))
           {
             continue;
           }
