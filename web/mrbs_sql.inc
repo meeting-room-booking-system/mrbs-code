@@ -2070,16 +2070,21 @@ function mrbsMakeBookings(array $bookings, ?int $id=null, bool $just_check=false
   }
 
   // Check for any schedule conflicts in each room we're going to try and
-  // book in;  also check that the booking conforms to the policy
+  // book in; also check that the booking conforms to the policy
   foreach ($bookings as $booking)
   {
-    $skip_lists[$booking['room_id']] = array();
+    $skip_lists[$booking['room_id']] = $booking['skip_list'] ?? [];
     if ($booking['repeat_rule']->getType() != RepeatRule::NONE && !empty($reps))
     {
       if(count($reps) < $max_rep_entrys)
       {
         for ($i = 0; $i < count($reps); $i++)
         {
+          // Ignore conflicts in the booking's skip list, because they won't be made.
+          if (isset($booking['skip_list']) && in_array($reps[$i], $booking['skip_list']))
+          {
+            continue;
+          }
           // Calculate diff each time and correct where events cross DST
           $diff = $duration_seconds;
           $diff += cross_dst($reps[$i], $reps[$i] + $diff);

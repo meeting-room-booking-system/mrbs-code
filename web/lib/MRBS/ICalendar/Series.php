@@ -69,8 +69,11 @@ class Series
     // Add the row to the data array
     $this->data[] = $row;
 
-    // Add this entry to the array of ones we've seen
-    $this->actual_entries[] = strtotime($row['ical_recur_id']);
+    // If this is an original entry, add it to the array of ones we've seen
+    if ($row['entry_type'] == ENTRY_RPT_ORIGINAL)
+    {
+      $this->actual_entries[] = strtotime($row['ical_recur_id']);
+    }
 
     // And if it's an original row save it, because it will have all the original data,
     // eg description, which we can use later.

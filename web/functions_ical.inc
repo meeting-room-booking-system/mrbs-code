@@ -1026,7 +1026,7 @@ function export_icalendar(DBStatement $res, bool $keep_private, int $export_end=
         $series = new Series($row, $export_end);
       }
 
-      // Otherwise, if this row is a member of the current series, add the row to the series
+      // Otherwise, if this row is a member of the current series, add the row to the series.
       elseif ($row['repeat_id'] == $series->repeat_id)
       {
         $series->addRow($row);
