@@ -274,6 +274,16 @@ function process_event(array $vevent)
   // in order to avoid lots of database lookups
   static $room_settings = array();
 
+  $registration_keys = array(
+    'allow_registration',
+    'registrant_limit',
+    'registrant_limit_enabled',
+    'registration_opens',
+    'registration_opens_enabled',
+    'registration_closes',
+    'registration_closes_enabled'
+  );
+
   // Set up the booking with some defaults
   $booking = array();
   $booking['awaiting_approval'] = false;
@@ -392,20 +402,6 @@ function process_event(array $vevent)
         $booking['tentative'] = ($details['value'] == 'TENTATIVE');
         break;
 
-      case 'X-MRBS-TYPE':
-        if (!empty($booking_types))
-        {
-          foreach ($booking_types as $type)
-          {
-            if ($details['value'] == get_type_vocab($type))
-            {
-              $booking['type'] = $type;
-              break;
-            }
-          }
-        }
-        break;
-
       case 'UID':
         $booking['ical_uid'] = $details['value'];
         break;
@@ -420,6 +416,35 @@ function process_event(array $vevent)
         break;
 
       default:
+        // MRBS specific properties
+        $mrbs_prefix = 'X-MRBS-';
+        if (str_starts_with($name, $mrbs_prefix))
+        {
+          $key = substr($name, strlen($mrbs_prefix));
+          $key = strtolower($key);
+          $key = str_replace('-', '_', $key);
+          // Type
+          if ($key == 'type')
+          {
+            if (!empty($booking_types))
+            {
+              foreach ($booking_types as $type)
+              {
+                if ($details['value'] == get_type_vocab($type))
+                {
+                  $booking['type'] = $type;
+                  break;
+                }
+              }
+            }
+          }
+          // Registration keys
+          elseif (in_array($key, $registration_keys))
+          {
+            $booking[$key] = $details['value'];
+          }
+          // TODO: custom fields
+        }
         break;
     }
   }
