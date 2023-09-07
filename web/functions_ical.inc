@@ -823,7 +823,6 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   $results[] = "SUMMARY:" . ical_escape_text($data['name']);
   $results[] = "DESCRIPTION:" . ical_escape_text($data['description']);
   $results[] = "LOCATION:" . ical_escape_text($data['area_name'] . $default_area_room_delimiter . $data['room_name']);
-  $results[] = "X-MRBS-TYPE:" . ical_escape_text(get_type_vocab($data['type']));
   $results[] = "SEQUENCE:" . $data['ical_sequence'];
   // If this is an individual member of a series then set the recurrence id
   if (!$series && ($data['entry_type'] != ENTRY_SINGLE))
@@ -913,7 +912,26 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
                        "PARTSTAT=$partstat;ROLE=$role:mailto:" . $attendee['address'];
         }
       }
+      // TODO: custom fields
     }
+  }
+
+  // MRBS specific properties
+  // Type
+  $results[] = "X-MRBS-TYPE:" . ical_escape_text(get_type_vocab($data['type']));
+  // Registration properties
+  $properties = array(
+      'allow_registration',
+      'registrant_limit',
+      'registrant_limit_enabled',
+      'registration_opens',
+      'registration_opens_enabled',
+      'registration_closes',
+      'registration_closes_enabled'
+    );
+  foreach ($properties as $property)
+  {
+    $results[] = "X-MRBS-" . strtoupper(str_replace('_', '-', $property)) . ":" . $data[$property];
   }
 
   $results[] = "END:VEVENT";
