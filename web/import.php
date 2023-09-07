@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use DateTimeZone;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputHidden;
 use MRBS\Form\FieldInputCheckbox;
@@ -175,7 +176,7 @@ function get_skip_list(string $values, array $params) : array
   $result = array();
 
   $tzid = $params['TZID'] ?? 'UTC';
-  $date_time_zone = new \DateTimeZone($tzid);
+  $date_time_zone = new DateTimeZone($tzid);
   $exdates = explode(',', $values);
 
   foreach ($exdates as $exdate)
@@ -262,7 +263,7 @@ function get_event($handle)
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
-function process_event(array $vevent)
+function process_event(array $vevent) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;

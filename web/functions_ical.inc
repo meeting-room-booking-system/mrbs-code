@@ -1,6 +1,7 @@
 <?php
 namespace MRBS;
 
+use DateTimeZone;
 use MRBS\ICalendar\RFC5545Exception;
 use MRBS\ICalendar\Series;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -303,7 +304,7 @@ function get_time(string $value, ?array $params=null) : int
     $value .= 'T000000';
   }
 
-  $datetime = DateTime::createFromFormat('Ymd\THis', $value, new \DateTimeZone($event_timezone));
+  $datetime = DateTime::createFromFormat('Ymd\THis', $value, new DateTimeZone($event_timezone));
   return $datetime->getTimestamp();
 }
 
