@@ -265,7 +265,7 @@ function get_event($handle)
 
 
 // Add a VEVENT to MRBS.   Returns TRUE on success, FALSE if the event wasn't added
-function process_event(array $vevent)
+function process_event(array $vevent) : bool
 {
   global $import_default_room, $import_default_type, $import_past, $skip;
   global $morningstarts, $morningstarts_minutes, $resolution;
