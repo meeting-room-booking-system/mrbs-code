@@ -403,8 +403,7 @@ function process_event(array $vevent) : bool
           // If it's a bad timezone, flag that as a problem, otherwise rethrow the exception
           if (str_contains($e->getMessage(), 'Unknown or bad timezone'))
           {
-            // Remove the class and method details (everything up to and including the first ': ')
-            $problems[] = preg_replace('/^.*: /', '', $e->getMessage(), 1);
+            $problems[] = get_vocab('bad_timezone', $details['params']['TZID'] ?? 'UTC');
           }
           else
           {
