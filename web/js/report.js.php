@@ -167,7 +167,7 @@ $(document).on('page_ready', function() {
 
       <?php // Add a delete button ?>
       $('<button id="delete_button"><?php echo escape_js(get_vocab("delete_entries")) ?><\/button>')
-        .on('click', function() {
+        .on('click', async function() {
             if (nEntries === 0) {
               return;
             }
@@ -189,9 +189,11 @@ $(document).on('page_ready', function() {
             // back before we know that we've finished.
             ?>
             var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
-              batches = [],
-              batch = [],
-              i;
+                batches = [],
+                batch = [],
+                i,
+                nTimeouts,
+                timeout = 1;
 
             for (i=0; i<nEntries; i++) {
               batch.push($(data[i][0]).data('id'));
@@ -215,6 +217,20 @@ $(document).on('page_ready', function() {
                 if (args.site) {
                   params.site = args.site;
                 }
+
+                <?php // Throttle the Ajax requests to avoid overloading the server. ?>
+                nTimeouts = 0;
+                while (requests.length - (requestsCompleted + requestsAborted) >= <?php echo DEL_ENTRIES_PARALLEL_REQUESTS ?>)
+                {
+                  let thisTimeout = timeout;
+                  await new Promise(r => setTimeout(r, thisTimeout));
+                  nTimeouts++;
+                  <?php // If this is our second delay then increase the timeout ?>
+                  if (nTimeouts > 1) {
+                    timeout = Math.ceil(timeout * 1.1);
+                  }
+                }
+
                 <?php // Save the XHR request in case we need to abort it ?>
                 requests.push($.post(
                     'ajax/del_entries.php',

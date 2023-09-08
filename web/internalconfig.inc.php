@@ -527,6 +527,8 @@ $area_defaults['max_secs_per_future']           = $max_secs_per_interval_area['f
 // error, we split the requests into batches with a maximum number of ids
 // in the array defined below.
 define('DEL_ENTRIES_AJAX_BATCH_SIZE', 100);
+// The maximum number of parallel requests to ajax/del_entries.php.
+define('DEL_ENTRIES_PARALLEL_REQUESTS', 2);
 
 // Interval types used in booking policies
 $interval_types = array('day', 'week', 'month', 'year', 'future');
