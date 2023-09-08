@@ -392,7 +392,22 @@ function process_event(array $vevent) : bool
         break;
 
       case 'EXDATE':
-        $booking['skip_list'] = get_skip_list($details['value'], $details['params']);
+        try
+        {
+          $booking['skip_list'] = get_skip_list($details['value'], $details['params']);
+        }
+        catch (\Exception $e)
+        {
+          // If it's a bad timezone, flag that as a problem, otherwise rethrow the exception
+          if (str_contains($e->getMessage(), 'Unknown or bad timezone'))
+          {
+            $problems[] = get_vocab('bad_timezone', $details['params']['TZID'] ?? 'UTC');
+          }
+          else
+          {
+            throw new \Exception($e);
+          }
+        }
         break;
 
       case 'CLASS':

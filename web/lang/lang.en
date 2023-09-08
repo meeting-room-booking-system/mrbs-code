@@ -689,6 +689,7 @@ $vocab["BYDAY_equals_5"]              = "MRBS does not support a BYDAY value of 
 $vocab["unsupported_FREQ"]            = "MRBS does not support FREQ=";
 $vocab["unsupported_COUNT"]           = "COUNT not yet supported by MRBS";
 $vocab["no_indefinite_repeats"]       = "Indefinite repeats not yet supported by MRBS";
+$vocab["bad_timezone"]                = "Unknown or bad timezone '%s'";
 $vocab["events_imported"]             = "events imported";
 $vocab["events_not_imported"]         = "events not imported";
 
