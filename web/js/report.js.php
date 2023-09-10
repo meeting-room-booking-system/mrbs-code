@@ -183,18 +183,12 @@ $(document).on('page_ready', function() {
                 <?php // The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit ?>
                 ids: JSON.stringify(batch)
               };
-              var url = 'ajax/del_entries.php';
-              <?php
-              // It's not clear why this should be the case, but if the site is sent as a POST parameter
-              // when there are a large number, eg 1000, of ids, then it gets lost.  So instead we send it
-              // in the query string.
-              ?>
               if (args.site) {
-                url += '?site=' + args.site;
+                params.site = args.site;
               }
               <?php // Save the XHR request in case we need to abort it ?>
               requests.push($.post(
-                  url,
+                  'ajax/del_entries.php',
                   params,
                   function (result) {
                     var isInt = /^\s*\d+\s*$/;
