@@ -106,7 +106,7 @@ $(document).on('page_ready', function() {
     var addDeleteButton = function addDeleteButton() {
 
       var data;
-      var batches = [];
+      var batches;
       var nBatches;
       var nEntries;
       var progressContainer = $('<div id="progress_container"></div>');
@@ -260,6 +260,8 @@ $(document).on('page_ready', function() {
             var batchSize = <?php echo $del_entries_ajax_batch_size ?>,
                 batch = [],
                 i;
+
+            batches = [];
 
             for (i=0; i<nEntries; i++) {
               batch.push($(data[i][0]).data('id'));
