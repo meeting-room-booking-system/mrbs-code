@@ -180,7 +180,8 @@ $(document).on('page_ready', function() {
             var postBatch = function(batch) {
               var params = {
                 csrf_token: getCSRFToken(),
-                ids: batch
+                <?php // The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit ?>
+                ids: JSON.stringify(batch)
               };
               var url = 'ajax/del_entries.php';
               <?php
