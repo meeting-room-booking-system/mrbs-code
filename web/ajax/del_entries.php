@@ -10,7 +10,7 @@ use MRBS\Form\Form;
 // kind of string on failure (most likely a login page).
 //
 // If deleting lots of entries you may need to split the Ajax requests into
-// multiple smaller requests in order to avoid exceeding the system limit 
+// multiple smaller requests in order to avoid exceeding the system limit
 // for POST requests, and also the limit on the size of the SQL query once
 // the ids are imploded.
 //
@@ -40,7 +40,9 @@ if (!is_book_admin())
 }
 
 // Get non-standard form variables
-$ids = get_form_var('ids', 'array', null, INPUT_POST);
+$ids = get_form_var('ids', 'string', '[]', INPUT_POST);
+// The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit
+$ids = json_decode($ids);
 
 // Check that $ids consists of an array of integers, to guard against SQL injection
 foreach ($ids as $id)

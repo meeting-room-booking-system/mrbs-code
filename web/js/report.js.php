@@ -106,6 +106,7 @@ $(document).on('page_ready', function() {
     var addDeleteButton = function addDeleteButton() {
 
       var data;
+      var batches;
       var nBatches;
       var nEntries;
       var progressContainer = $('<div id="progress_container"></div>');
@@ -171,6 +172,59 @@ $(document).on('page_ready', function() {
             if (nEntries === 0) {
               return;
             }
+
+            <?php
+            // Fire off an Ajax POST request.  Upon completion fire off another one until there
+            // are none left.
+            ?>
+            var postBatch = function(batch) {
+              var params = {
+                csrf_token: getCSRFToken(),
+                <?php // The ids are JSON encoded to avoid hitting the php.ini max_input_vars limit ?>
+                ids: JSON.stringify(batch)
+              };
+              if (args.site) {
+                params.site = args.site;
+              }
+              <?php // Save the XHR request in case we need to abort it ?>
+              requests.push($.post(
+                  'ajax/del_entries.php',
+                  params,
+                  function (result) {
+                    var isInt = /^\s*\d+\s*$/;
+                    requestsCompleted++;
+                    if (isInt.test(result)) {
+                      totalDeleted += parseInt(result, 10);
+                      progress.val(totalDeleted).text(totalDeleted);
+                    } else {
+                      success = false;
+                    }
+                    <?php // Fire off another request if there is one ?>
+                    var batch = batches.pop();
+                    if (batch !== undefined) {
+                      postBatch(batch);
+                    }
+                    <?php // Otherwise check whether everything has finished ?>
+                    else if (requestsCompleted + requestsAborted >= nBatches) {
+                      <?php
+                      // Log the time it took to delete the entries if we're got $debug set.
+                      if ($debug)
+                      {
+                        ?>
+                        console.log((Date.now() - startTime)/1000 + " seconds");
+                        <?php
+                      }
+                      ?>
+                      if (!success) {
+                        window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
+                      }
+                      reloadReport();
+                    }
+                  }
+                )
+              )
+            }
+
             var message = "<?php echo escape_js(get_vocab('delete_entries_warning')) ?>";
             message = message.replace('%s', nEntries.toLocaleString());
             if (!window.confirm(message)) {
@@ -179,6 +233,15 @@ $(document).on('page_ready', function() {
             var progress = progressContainer.find('progress');
             var success = true;
             var totalDeleted = 0;
+            <?php
+            // If $debug is set record how long it takes to delete the entries
+            if ($debug)
+            {
+              ?>
+              var startTime = Date.now();
+              <?php
+            }
+            ?>
 
             progress.attr('max', nEntries).val(0).text('0');
             progressContainer.show();
@@ -188,10 +251,11 @@ $(document).on('page_ready', function() {
             // requests are fired off asynchronously, so we need to count them all
             // back before we know that we've finished.
             ?>
-            var batchSize = <?php echo DEL_ENTRIES_AJAX_BATCH_SIZE ?>,
-              batches = [],
-              batch = [],
-              i;
+            var batchSize = <?php echo $del_entries_ajax_batch_size ?>,
+                batch = [],
+                i;
+
+            batches = [];
 
             for (i=0; i<nEntries; i++) {
               batch.push($(data[i][0]).data('id'));
@@ -203,42 +267,19 @@ $(document).on('page_ready', function() {
             if (batch.length > 0) {
               batches.push(batch);
             }
-            <?php // Dispatch the batches (if any) ?>
+            <?php
+            // Dispatch the batches (if any) setting off parallel Ajax requests up to the maximum
+            // number determined by the config settings.  When each request completes it will set
+            // off another one until all the batches have been processed.
+            ?>
             nBatches = batches.length;
             if (nBatches > 0) {
               $('#report_table_processing').css('visibility', 'visible');
-              for (i=0; i<nBatches; i++) {
-                var params = {
-                  csrf_token: getCSRFToken(),
-                  ids: batches[i]
-                };
-                if (args.site) {
-                  params.site = args.site;
+              for (i=0; i<<?php echo $del_entries_parallel_requests ?>; i++) {
+                batch = batches.pop();
+                if (batch !== undefined) {
+                  postBatch(batch);
                 }
-                <?php // Save the XHR request in case we need to abort it ?>
-                requests.push($.post(
-                    'ajax/del_entries.php',
-                    params,
-                    function (result) {
-                        var isInt = /^\s*\d+\s*$/;
-
-                        requestsCompleted++;
-                        if (isInt.test(result)) {
-                          totalDeleted += parseInt(result, 10);
-                          progress.val(totalDeleted).text(totalDeleted);
-                        } else {
-                          success = false;
-                        }
-                        <?php // Check whether everything has finished ?>
-                        if (requestsCompleted + requestsAborted >= nBatches) {
-                          if (!success) {
-                            window.alert("<?php echo escape_js(get_vocab('delete_entries_failed')) ?>");
-                          }
-                          reloadReport();
-                        }
-                      }
-                    )
-                  )
               }
             }
           })
@@ -256,13 +297,13 @@ $(document).on('page_ready', function() {
               // readyState hasn't yet reached 2 (HEADERS_RECEIVED).  For more details see
               // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState.
               // We don't abort those that have already been sent because we can't stop the
-              // server processing the deletions and we want to know the result.
+              // server processing the deletions, and we want to know the result.
               ?>
               if (request.readyState < 2)
               {
                 request.abort();
                 requestsAborted++;
-                if (requestsCompleted + requestsAborted >= nBatches)
+                if (requestsCompleted + requestsAborted + batches.length >= nBatches)
                 {
                   reloadReport();
                 }
