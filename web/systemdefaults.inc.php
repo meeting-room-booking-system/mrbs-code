@@ -1872,7 +1872,7 @@ $default_description = "";
 // In order to stop the POST request getting too large and triggering a 406
 // error, or else exceeding the maximum size of an SQL query, we split the request
 // into batches with the maximum number of ids in the array defined below.
-$del_entries_ajax_batch_size = 1000;
+$del_entries_ajax_batch_size = 5000;
 // The maximum number of parallel requests to ajax/del_entries.php. Increasing
 // this number will increase the speed of processing, but if it's too large will
 // increase the load on the server and possibly cause errors.
