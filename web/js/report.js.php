@@ -192,7 +192,6 @@ $(document).on('page_ready', function() {
                   params,
                   function (result) {
                     var isInt = /^\s*\d+\s*$/;
-                    console.log(result);
                     requestsCompleted++;
                     if (isInt.test(result)) {
                       totalDeleted += parseInt(result, 10);
