@@ -962,7 +962,7 @@ $auth["type"] = "db"; // How to validate the user/password. One of
 
 $auth["session"] = "php"; // How to get and keep the user ID. One of
                           // "cas", "cookie", "host", "http", "ip", "joomla", "nt",
-                          // "omni", "php", "remote_user", "saml" or "wordpress".
+                          // "omni", "php", "remote_user", "saml", "wordpress" or "moodle".
 
 // Configuration parameters for 'cookie' session scheme
 
@@ -1041,6 +1041,16 @@ $auth["realm"]  = "mrbs";
 // 'session_remote_user' configuration settings
 //$auth['remote_user']['login_link'] = '/login/link.html';
 //$auth['remote_user']['logout_link'] = '/logout/link.html';
+
+// session "moodle" configuration settings
+// to be used  with auth="none" (the authentication is already done by moodle
+$auth['moodle']['rel_path'] = '..'; //MRBS should be in a subdirectory of moodle
+//If you want to display a logout link, set in config.inc.php:
+$auth['moodle']['logout_link'] = $auth['moodle']['rel_path'] . '/login/logout.php'; //param sesskey will be added automatically
+$auth["admin"][] = "admin";
+$auth["moodle"]["admin_access_levels"] = "admin";
+$auth['moodle']['contextcoursecatID'] = 2; //the id of the category in Moodle where teachers are allowed to create courses, i.e. moodle/course:create
+
 
 // 'auth_ext' configuration settings
 $auth["prog"]   = "";
