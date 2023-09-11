@@ -245,7 +245,9 @@ function onAllDayClick()
     {
       <?php
       // If the booking day spans midnight then the first and last slots
-      // are going to be on different days
+      // are going to be on different days.
+      // This code works because new Date() with just a date string generates a UTC
+      // date and toISOString() always returns a UTC datetime.
       ?>
       if (onAllDayClick.oldStart < firstSlot)
       {
