@@ -66,7 +66,13 @@ function getLocalISODateString(date)
 ?>
 
 function weekStart(date, weekStarts) {
-  var d = new Date(date);
+  <?php
+  // Need to add a time to make sure the date is interpreted as local rather than UTC.
+  // "When the time zone offset is absent, date-only forms are interpreted as a UTC time and
+  // date-time forms are interpreted as local time. This is due to a historical spec error
+  // that was not consistent with ISO 8601 but could not be changed due to web compatibility."
+  ?>
+  var d = new Date(date + "T00:00:00");
   var diff = d.getDay() - weekStarts;
   if (diff < 0)
   {
@@ -77,19 +83,22 @@ function weekStart(date, weekStarts) {
 }
 
 function weekEnd(date, weekStarts) {
-  var d = new Date(weekStart(date, weekStarts));
+  <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
+  var d = new Date(weekStart(date, weekStarts) + "T00:00:00");
   d.setDate(d.getDate() + 6);
   return getLocalISODateString(d);
 }
 
 function monthStart(date) {
-  var d = new Date(date);
+  <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
+  var d = new Date(date + "T00:00:00");
   d.setDate(1);
   return getLocalISODateString(d);
 }
 
 function monthEnd(date) {
-  var d = new Date(date);
+  <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
+  var d = new Date(date + "T00:00:00");
   <?php
   // Set the date to the first of the month, because otherwise we will
   // advance by two months when incrementing the month below if we're at the
@@ -106,11 +115,12 @@ function monthEnd(date) {
 // excluding hidden days.
 function datesInRange(startDate, endDate, excludeHiddenDays) {
   var result=[];
-  var e=new Date(endDate);
+  <?php // Need to add a time to make sure the date is interpreted as local rather than UTC. ?>
+  var e=new Date(endDate + "T00:00:00");
   var hiddenDays = [<?php echo implode(',', $hidden_days)?>];
 
   <?php // dates can be compared using > and < but not == or === ?>
-  for (var d=new Date(startDate); !(d>e); d.setDate(d.getDate()+1))
+  for (var d=new Date(startDate + "T00:00:00"); !(d>e); d.setDate(d.getDate()+1))
   {
     if (excludeHiddenDays && (hiddenDays.indexOf(d.getDay()) >= 0))
     {
