@@ -98,12 +98,9 @@ class SessionMoodle extends SessionWithLogin
     // Check if they have user access
       //require_once $moodle_dir . '/lib/accesslib.php';
         $context = $PAGE->context;
-      $instance = new \stdClass();
-      #$block_prenotazioni = context_block::instance( $auth['moodle']['blockid_teachers'] );
-      #if (has_capability('moodle/block:edit',  $block_prenotazioni))
     $contextcoursecatID = $auth['moodle']['contextcoursecatID'];
     $context = \context_coursecat::instance($contextcoursecatID);
-    if (has_capability('moodle/course:create', $context))
+    if (has_capability('moodle/course:create', $context, $USER->id))
       {
         return 1;
       }
