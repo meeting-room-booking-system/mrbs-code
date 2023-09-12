@@ -1048,8 +1048,9 @@ $auth['moodle']['rel_path'] = '..'; //MRBS should be in a subdirectory of moodle
 //If you want to display a logout link, set in config.inc.php:
 $auth['moodle']['logout_link'] = $auth['moodle']['rel_path'] . '/login/logout.php'; //param sesskey will be added automatically
 $auth["admin"][] = "admin";
-$auth["moodle"]["admin_access_levels"] = "admin";
-$auth['moodle']['contextcoursecatID'] = 2; //the id of the category in Moodle where teachers are allowed to create courses, i.e. moodle/course:create - those will get Auth level 1 in MRBS
+$auth["moodle"]["admin_access_levels"] = "admin"; //user who gains a Level 2 access
+$auth['moodle']['contextcoursecatID'] = 2; //the id of the category in Moodle where moodle users are allowed
+// to create courses, i.e. have the capability moodle/course:create: those users will get Auth level 1 in MRBS (edit)
 
 
 // 'auth_ext' configuration settings

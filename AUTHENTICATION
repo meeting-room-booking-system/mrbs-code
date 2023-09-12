@@ -338,7 +338,7 @@ others are left in for historical reasons:
 |         |authentication.               |                    |                |
 |         |                              |                    |                |
 +---------+------------------------------+--------------------+----------------+
-|moodle   |Use when authentications      |                    |                |
+|moodle   |Use when authentication       |                    |                |
 |         |is set to none                |                    |                |
 |         |                              |                    |                |
 +---------+------------------------------+--------------------+----------------+
@@ -848,21 +848,23 @@ Moodle Authentication
 
 Set in config.inc.php
 
-$auth['joomla']['rel_path'] = '..';   // Path to the Joomla! installation relative to MRBS.
-//The authentication is set to "none" because the moodle USER variable is trusted and used to identify the user.
+$auth['session']  = 'moodle'; //MRBS reads the $USER variable set by moodle
+
+$auth['type'] = 'none'; //It is set to "none" because the moodle USER variable is trusted and used to identify the user.
+$auth['moodle']['rel_path'] = '..';   // Path to the Moodle directory relative to MRBS
+//(for the moodle's $USER variable to be read, moodle must be in a parent directory).
+
 //Because of the way roles work in Moodle, the level of access in MRBS has to be set according to a capability
 //that the user has in Moodle. SessionMoodle.php uses the has_capability function to determine if a user is allowed
-//to create a course in a specific category: tipically, this is a teacher role. Other capabilities can easily be 
+//to create a course in a specific category: tipically, this is a teacher role. Other capabilities can easily be
 //used according to the user's need, with minimal coding requirements.
-$auth['session']  = 'moodle';
-$auth['type'] = 'none';
+$auth['moodle']['contextcoursecatID'] = 2; //the category where teachers are allowed to create courses
+//(the id of the category be found in Moodle looking at the parameter in the category'sURL)
 
-$auth['moodle']['rel_path'] = '..'; //to easily access the $USER variable set in moodle after login
 //If you want to display a logout link, set in config.inc.php:
-$auth['moodle']['logout_link'] = $auth['moodle']['rel_path'] . '/login/logout.php'; // the sesskey for logout is automatically added
+$auth['moodle']['logout_link'] = $auth['moodle']['rel_path'] . '/login/logout.php'; //sesskey is automatically added
 $auth["admin"][] = "admin";
-$auth["moodle"]["admin_access_levels"] = "admin";
-$auth['moodle']['contextcoursecatID'] = 2; //the category where teachers are allowed to create courses (can be found in the url as parameter in Moodle)
+$auth["moodle"]["admin_access_levels"] = "admin"; // user who gains Access level 2
 
 
 WordPress Authentication
