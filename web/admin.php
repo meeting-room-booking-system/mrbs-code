@@ -473,7 +473,7 @@ if (is_admin() || !empty($enabled_areas))
                     echo "<td><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
                     break;
                   case 'capacity':
-                    echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+                    echo "<td class=\"int\"><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
                     break;
                   case 'invalid_types':
                     echo "<td><div>" . get_type_names($r[$field['name']]) . "</div></td>\n";
@@ -491,7 +491,7 @@ if (is_admin() || !empty($enabled_areas))
                     elseif (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] > 2))
                     {
                       // integer values
-                      echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
+                      echo "<td class=\"int\"><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
                     }
                     else
                     {
