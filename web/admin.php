@@ -348,10 +348,10 @@ function display_rooms($area_id)
                 // the standard MRBS fields
                 case 'description':
                 case 'room_admin_email':
-                  echo "<td><div>" . htmlspecialchars($room->{$column->name}) . "</div></td>\n";
+                  echo "<td><div>" . htmlspecialchars($room->{$column->name} ?? '') . "</div></td>\n";
                   break;
                 case 'capacity':
-                  echo "<td class=\"int\"><div>" . $room->{$column->name} . "</div></td>\n";
+                  echo "<td class=\"int\"><div>" . htmlspecialchars($room->{$column->name} ?? '') . "</div></td>\n";
                   break;
                 case 'invalid_types':
                   echo "<td><div>" . get_type_names($room->{$column->name}) . "</div></td>\n";
@@ -368,7 +368,7 @@ function display_rooms($area_id)
                   elseif ($column->getNature() == Column::NATURE_INTEGER)
                   {
                     // integer values
-                    echo "<td class=\"int\"><div>" . $room->{$column->name} . "</div></td>\n";
+                    echo "<td class=\"int\"><div>" . htmlspecialchars($room->{$column->name} ?? '') . "</div></td>\n";
                   }
                   else
                   {
