@@ -470,7 +470,7 @@ if (is_admin() || !empty($enabled_areas))
                   // the standard MRBS fields
                   case 'description':
                   case 'room_admin_email':
-                    echo "<td><div>" . htmlspecialchars($r[$field['name']]) . "</div></td>\n";
+                    echo "<td><div>" . htmlspecialchars($r[$field['name']] ?? '') . "</div></td>\n";
                     break;
                   case 'capacity':
                     echo "<td class=\"int\"><div>" . $r[$field['name']] . "</div></td>\n";
