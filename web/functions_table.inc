@@ -1240,6 +1240,7 @@ function week_room_table_innerhtml(string $view, int $view_all, int $year, int $
   {
     foreach ($entries as $entry)
     {
+      $entry = prepare_entry($entry);
       $map->add($entry, $j, $start_first_slot[$j], $start_last_slot[$j]);
     }
   }
