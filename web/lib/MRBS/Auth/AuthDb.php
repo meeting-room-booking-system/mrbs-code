@@ -625,7 +625,7 @@ class AuthDb extends Auth
   }
 
 
-  private function getUserByUserId(int $id) : ?array
+  public function getUserByUserId(int $id) : ?User
   {
     $sql = "SELECT *
               FROM " . _tbl('users') . "
@@ -640,7 +640,21 @@ class AuthDb extends Auth
       return null;
     }
 
-    return $result->next_row_keyed();
+    // The username does exist - return a User object
+    $user = new User();
+    $row = $result->next_row_keyed();
+
+    // $user->level and $user->display_name will be set as part of this
+    foreach ($row as $key => $value)
+    {
+      if ($key == 'name')
+      {
+        $user->username = $value;
+      }
+      $user->$key = $value;
+    }
+
+    return $user;
   }
 
 

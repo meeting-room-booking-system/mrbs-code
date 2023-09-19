@@ -54,6 +54,34 @@ class User
   }
 
 
+  // Checks whether the user appears somewhere in the bookings as (a) the creator
+  // of a booking, (b) the modifier of a booking or (c) a registrant.
+  public function isInBookings() : bool
+  {
+    $sql_params = [':username' => $this->username];
+
+    foreach (['entry', 'repeat'] as $table)
+    {
+      $sql = "SELECT COUNT(id)
+                FROM ". _tbl($table) . "
+               WHERE (create_by = :username)
+                  OR (modified_by = :username)
+               LIMIT 1";
+      if (db()->query1($sql, $sql_params) > 0)
+      {
+        return true;
+      }
+    }
+
+    $sql = "SELECT COUNT(id)
+              FROM ". _tbl('participants') . "
+             WHERE username = :username
+             LIMIT 1";
+
+    return (db()->query1($sql, $sql_params) > 0);
+  }
+
+
   public function load(array $data)
   {
     foreach ($data as $key => $value)

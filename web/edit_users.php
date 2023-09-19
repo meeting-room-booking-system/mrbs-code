@@ -1,7 +1,6 @@
 <?php
 namespace MRBS;
 
-use MRBS\Form\Form;
 use MRBS\Form\ElementFieldset;
 use MRBS\Form\ElementInputSubmit;
 use MRBS\Form\ElementP;
@@ -10,6 +9,7 @@ use MRBS\Form\FieldInputPassword;
 use MRBS\Form\FieldInputSubmit;
 use MRBS\Form\FieldInputText;
 use MRBS\Form\FieldSelect;
+use MRBS\Form\Form;
 
 /*****************************************************************************\
 *                                                                            *
@@ -558,8 +558,34 @@ function get_fieldset_password($id=null, $disabled=false)
 //    $delete               If true, make the second button a Delete button instead of a Back button
 //    $disabled             If true, disable the Delete button
 //    $last_admin_warning   If true, add a warning about editing the last admin
-function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin_warning=false)
+function get_fieldset_submit_buttons(?int $user_id, $delete=false, $disabled=false, $last_admin_warning=false)
 {
+  global $auth;
+
+  // Check whether the user can be deleted and if so what message to use
+  if ($delete && isset($user_id))
+  {
+    $user = auth()->getUserByUserId($user_id);
+    // If the user has bookings of some form in the system, then either
+    // disallow the deletion, depending on the config setting, or provide
+    // a different warning message.
+    if (isset($user) && $user->isInBookings())
+    {
+      if ($auth['db']['prevent_deletion_of_users_in_bookings'])
+      {
+        $delete = false;
+      }
+      else
+      {
+        $message = get_vocab("confirm_delete_user_plus");
+      }
+    }
+    else
+    {
+      $message = get_vocab("confirm_delete_user");
+    }
+  }
+
   $fieldset = new ElementFieldset();
 
   if ($last_admin_warning)
@@ -590,7 +616,6 @@ function get_fieldset_submit_buttons($delete=false, $disabled=false, $last_admin
 
   if ($delete)
   {
-    $message = get_vocab("confirm_delete_user");
     $button->setAttribute('onclick', "return confirm('" . escape_js($message) . "');");
   }
 
@@ -887,7 +912,7 @@ if (isset($action) && ( ($action == "edit") or ($action == "add") ))
   // Don't let the last admin be deleted, otherwise you'll be locked out.
   $button_disabled = $delete && $editing_last_admin;
 
-  $form->addElement(get_fieldset_submit_buttons($delete, $button_disabled, $editing_last_admin));
+  $form->addElement(get_fieldset_submit_buttons($id, $delete, $button_disabled, $editing_last_admin));
 
   $form->render();
 
@@ -1240,19 +1265,19 @@ if (isset($action) && ($action == "update"))
 
 if (isset($action) && ($action == "delete"))
 {
-  $sql = "SELECT level
-            FROM " . _tbl('users') . "
-           WHERE id=?
-           LIMIT 1";
+  $user = auth()->getUserByUserId($id);
 
-  $target_level = db()->query1($sql, array($id));
-  if ($target_level < 0)
+  if (!isset($user))
   {
     fatal_error("Fatal error while deleting a user");
   }
-  // you can't delete a user if you're not some kind of admin, and then you can't
-  // delete someone higher than you
-  if (!is_user_admin() || ($level < $target_level))
+
+  // You can't delete a user if you're not some kind of admin, and then you can't
+  // delete someone higher than you.
+  // You also can't delete a user if MRBS has been configured not to allow the
+  // deletion of users that appear in bookings in some form.
+  if (!is_user_admin() || ($level < $user->level) ||
+      ($auth['db']['prevent_deletion_of_users_in_bookings']) && $user->isInBookings())
   {
     showAccessDenied();
     exit();
