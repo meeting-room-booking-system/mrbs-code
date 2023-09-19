@@ -941,7 +941,7 @@ if (isset($action) && ($action == "update"))
     $my_id = null;
   }
 
-  // You are only alowed to do this if (a) you're creating the first user or
+  // You are only allowed to do this if (a) you're creating the first user or
   // (b) you are a user admin or (c) you are editing your own details
   if (!$initial_user_creation &&
       !is_user_admin() &&
