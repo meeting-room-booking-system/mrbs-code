@@ -602,6 +602,9 @@ $vocab["name_empty"]              = "You must enter a name.";
 $vocab["name_not_unique"]         = "already exists.   Please choose another name.";
 $vocab["invalid_date"]            = "The field '%s' must contain a valid date in the format YYYY-MM-DD.";
 $vocab["confirm_delete_user"]     = "Are you sure you want to delete this user?";
+$vocab["confirm_delete_user_plus"]  = "Are you sure you want to delete this user? They are involved in " .
+                                      "bookings as a creator, modifier or registrant and deleting the user " .
+                                      "will lose information such as their display name and email address.";
 $vocab["effective_permissions"]   = "Effective permissions";
 
 // Used in del.php

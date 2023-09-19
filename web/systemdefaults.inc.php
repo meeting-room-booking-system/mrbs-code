@@ -1098,6 +1098,11 @@ $auth['cas']['debug']   = false;  // Set to true to enable debug output. Disable
 $auth['db']['protected_fields'] = array('level', 'name', 'display_name', 'roles');
 // Expiry time for a password reset key
 $auth['db']['reset_key_expiry'] = 60*60*24; // seconds
+// Set this to true if you want to prevent users that appear in some form in
+// bookings - as creators, modifiers or registrants - from being deleted.
+// This will stop their associated information such as display name and email
+// address from being lost.
+$auth['db']['prevent_deletion_of_users_in_bookings'] = false;
 
 
 // 'auth_db_ext' configuration settings

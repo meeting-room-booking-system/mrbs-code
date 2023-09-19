@@ -563,7 +563,26 @@ class AuthDb extends Auth
   }
 
 
-  private function getUserByUserId(int $id) : ?array
+  private function getUserByUsername(string $username) : ?array
+  {
+    $sql = "SELECT *
+              FROM " . _tbl('users') . "
+             WHERE name=:name
+             LIMIT 1";
+
+    $result = db()->query($sql, array(':name' => $username));
+
+    // The username doesn't exist - return NULL
+    if ($result->count() === 0)
+    {
+      return null;
+    }
+
+    return $result->next_row_keyed();
+  }
+
+
+  public function getUserByUserId(int $id) : ?User
   {
     $sql = "SELECT *
               FROM " . _tbl(User::TABLE_NAME) . "
@@ -578,7 +597,21 @@ class AuthDb extends Auth
       return null;
     }
 
-    return $result->next_row_keyed();
+    // The username does exist - return a User object
+    $user = new User();
+    $row = $result->next_row_keyed();
+
+    // $user->level and $user->display_name will be set as part of this
+    foreach ($row as $key => $value)
+    {
+      if ($key == 'name')
+      {
+        $user->username = $value;
+      }
+      $user->$key = $value;
+    }
+
+    return $user;
   }
 
 
