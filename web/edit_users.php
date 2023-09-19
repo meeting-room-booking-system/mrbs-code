@@ -1265,19 +1265,19 @@ if (isset($action) && ($action == "update"))
 
 if (isset($action) && ($action == "delete"))
 {
-  $sql = "SELECT level
-            FROM " . _tbl('users') . "
-           WHERE id=?
-           LIMIT 1";
+  $user = auth()->getUserByUserId($id);
 
-  $target_level = db()->query1($sql, array($id));
-  if ($target_level < 0)
+  if (!isset($user))
   {
     fatal_error("Fatal error while deleting a user");
   }
-  // you can't delete a user if you're not some kind of admin, and then you can't
-  // delete someone higher than you
-  if (!is_user_admin() || ($level < $target_level))
+
+  // You can't delete a user if you're not some kind of admin, and then you can't
+  // delete someone higher than you.
+  // You also can't delete a user if MRBS has been configured not to allow the
+  // deletion of users that appear in bookings in some form.
+  if (!is_user_admin() || ($level < $user->level) ||
+      ($auth['db']['prevent_deletion_of_users_in_bookings']) && $user->isInBookings())
   {
     showAccessDenied();
     exit();
