@@ -244,8 +244,10 @@ if (isset($delete_button))
     if ($mrbs_user->level >= $user->level)
     {
       // And if this is the 'db' scheme then you can't delete the last admin, to stop you
-      // getting locked out of the system.
-      if (($auth['type'] != 'db') || ($user->level < $max_level) || (Users::getNAdmins() > 1))
+      // getting locked out of the system.  You also can't delete a user if MRBS has been
+      // configured not to allow the deletion of users that appear in bookings in some form.
+      if (($auth['type'] != 'db') || ($user->level < $max_level) || (Users::getNAdmins() > 1)
+          || !$auth['db']['prevent_deletion_of_users_in_bookings'] || !$user->isInBookings())
       {
         $user->delete();
       }
