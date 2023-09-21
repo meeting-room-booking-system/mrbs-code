@@ -268,7 +268,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
         customize: customizeExcel
       }),
       $.extend(true, {}, buttonCommon, {
-        extend: 'pdf',
+        extend: 'pdfHtml5',
         text: '<?php echo escape_js(get_vocab('pdf')) ?>',
         orientation: '<?php echo $pdf_default_orientation ?>',
         pageSize: '<?php echo $pdf_default_paper ?>'
