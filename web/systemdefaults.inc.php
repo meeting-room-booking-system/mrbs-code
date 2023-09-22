@@ -436,7 +436,7 @@ $kiosk_exit_page_timeout = 10; // seconds
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To show ISO week numbers, set this to true
+// To show ISO week numbers in the main calendar, set this to true
 $view_week_number = false;
 
 // Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only

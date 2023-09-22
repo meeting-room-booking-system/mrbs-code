@@ -337,7 +337,7 @@ $(document).on('page_ready', function() {
   }
   else
   {
-    config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
+    config.weekNumbers = <?php echo ($mincals_week_numbers) ? 'true' : 'false' ?>;
   }
 
   flatpickr('input[type="date"]', config);
