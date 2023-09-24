@@ -337,7 +337,8 @@ $(document).on('page_ready', function() {
   }
   else
   {
-    config.weekNumbers = <?php echo ($view_week_number) ? 'true' : 'false' ?>;
+    <?php // Only display the week number if the week starts on a Monday (the start of the ISO week ?>
+    config.weekNumbers = <?php echo ($mincals_week_numbers && ($weekstarts == 1)) ? 'true' : 'false' ?>;
   }
 
   flatpickr('input[type="date"]', config);

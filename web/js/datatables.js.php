@@ -268,7 +268,11 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
         customize: customizeExcel
       }),
       $.extend(true, {}, buttonCommon, {
-        extend: 'pdf',
+        <?php
+        // Use 'pdfHtml5' rather than 'pdf'.  See
+        // https://github.com/meeting-room-booking-system/mrbs-code/issues/3512
+        ?>
+        extend: 'pdfHtml5',
         text: '<?php echo escape_js(get_vocab('pdf')) ?>',
         orientation: '<?php echo $pdf_default_orientation ?>',
         pageSize: '<?php echo $pdf_default_paper ?>'
