@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.nb = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.no = {}));
 }(this, (function (exports) { 'use strict';
 
   var fp = typeof window !== "undefined" && window.flatpickr !== undefined
@@ -11,26 +11,26 @@
       };
   var NorwegianBokmål = {
       weekdays: {
-          shorthand: ["Sø.", "Må.", "Ty.", "On.", "To.", "Fr.", "La."],
+          shorthand: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
           longhand: [
               "Søndag",
-              "Måndag",
-              "Tysdag",
+              "Mandag",
+              "Tirsdag",
               "Onsdag",
               "Torsdag",
               "Fredag",
-              "Laurdag",
+              "Lørdag",
           ],
       },
       months: {
           shorthand: [
               "Jan",
               "Feb",
-              "Mars",
+              "Mar",
               "Apr",
               "Mai",
-              "Juni",
-              "Juli",
+              "Jun",
+              "Jul",
               "Aug",
               "Sep",
               "Okt",
@@ -54,7 +54,7 @@
       },
       firstDayOfWeek: 1,
       rangeSeparator: " til ",
-      weekAbbreviation: "Veke",
+      weekAbbreviation: "Uke",
       scrollTitle: "Scroll for å endre",
       toggleTitle: "Klikk for å veksle",
       time_24hr: true,
