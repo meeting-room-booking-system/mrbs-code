@@ -436,7 +436,9 @@ $kiosk_exit_page_timeout = 10; // seconds
 // of 12.
 $monthly_view_entries_details = "both";
 
-// To show ISO week numbers in the main calendar, set this to true
+// To show ISO week numbers in the main calendar, set this to true. The week
+// numbers are only displayed if you set $weekstarts to 1 (Monday), i.e. the
+// start of the ISO week.
 $view_week_number = false;
 
 // Whether or not the mini-calendars are displayed.  (Note that mini-calendars are only
@@ -449,8 +451,8 @@ $display_mincals = true;
 $display_mincals_above = false;
 
 // To display week numbers in the mini-calendars, set this to true. The week
-// numbers are only accurate if you set $weekstarts to 1, i.e. set the
-// start of the week to Monday
+// numbers are only displayed if you set $weekstarts to 1 (Monday), i.e. the
+// start of the ISO week.
 $mincals_week_numbers = false;
 
 // To display the endtime in the slot description, eg '09:00-09:30' instead of '09:00', set
