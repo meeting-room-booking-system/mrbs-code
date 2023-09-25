@@ -7,6 +7,129 @@
 [============================]
 
 -------------------------------------------------------------------------------
+Version 1.11.4 (Sun 24th September 2023):
+
+[-] Fix problem with not being able to press the Import button on the Import form.
+ See GitHub Issues #3466.
+
+[-] Fix problem with not being able to authenticate against Wix.  (Wix has changed the
+ names of the member properties.)
+
+[-] Fix GitHub Issue #3468. Fatal error when no locales installed.
+
+[*] Make it clear that policy limits apply per user.
+
+[-] Fix bug resulting in bookings not being displayed in some circumstances on DST
+ transition days when the start of the booking day occurs before the DST transition.
+
+[*] Remove use of assert_options() which is deprecated in PHP 8.3.
+
+[*] Created RFC5545 class.
+
+[-] Fix bug causing resizable bookings not to work in the week view.
+
+[*] Updated Brazilian Portuguese translation. Thanks to Bruno Calado. See GitHub Issues #3476.
+
+[*] Repeat logic moved into a class.
+
+[-] Fix incorrect minimum version for MariaDB.  See GitHub Issues #3481.
+
+[*] Add mailto: link to booking creator in reports.
+
+[+] Add button to copy email addresses to the clipboard in reports.  Useful for sending
+ messages to those booked on a certain day or in a certain room.
+
+[*] Make the instructions for multisite clearer.  See GitHub Issues #3483.
+
+[*] Upgrade to jQuery Version 3.7.0.
+
+[-] Fix problem with importing weekly repeats. See GitHub Issues #3485.
+
+[-] Fix problem with importing weekly repeats when BYDAY is not specified. See also
+ GitHub Issues #3485.
+
+[-] Fix bug when importing MONTHLY events and an integer modifier for BYDAY is not
+ present.
+
+[*] Upgrade to latest version of DataTables.
+
+[-] Fix bug in Copy Email Addresses button when there is no anchor.
+
+[-] Updated SimpleSAML namespace separator to backslash.
+
+[*] Add a 'required' attribute to the rep_interval field.
+
+[*] Provide a default for rep_interval to prevent uncaught exceptions on post requests.
+
+[*] Restrict ability to see email addresses in reports to admins, for privacy reasons.
+
+[*] Disallow viewing of email addresses if the email field in the users table is
+ private.
+
+[*] Add mailto: links to registrants table.
+
+[*] Add "Copy email addresses" button to registrants table.
+
+[-] MRBS Docker container will now install the PHP intl extension and PHP 8.2.
+
+[-] Fix problem with datepickers returning empty strings when Backspace or Delete is
+ pressed.
+
+[*] Upgraded to PHPMailer 6.8.1.
+
+[-] Fix problem with getting ISO Date strings in timezones other than UTC.
+
+[-] Fix problem with the wrong minicalendars being shown in the month view when you're
+ at the end of the month (eg Aug 31) and the next month has fewer days than the current
+ one.
+
+[-] Reduce stream timeout.  See GitHub Issues #3497.
+
+[-] Fix bug causing the EXDATE property to be ignored when importing events.
+
+[-] Fix bug producing incorrect .ics files when exporting a series with a changed entry.
+
+[-] Fix bug when importing a series with a changed entry.
+
+[+] Add export and import of registration details (but not registrants at this stage).
+
+[*] Handle invalid timezones on import.
+
+[*] Internationalise bad timezone message.
+
+[*] Throttle the Ajax requests to del_entries.php.
+
+[*] Improve performance of bulk deletion.
+
+[-] Fix bug causing repeated deletion of entries after a cancellation.
+
+[*] Add some basic language versions of the DataTables language files which are copies
+ of the main country specific version (eg fr.json is a copy of fr-FR.json).  See GitHub
+ Issue #3502.
+
+[-] Fix potential PHP deprecation notice.
+
+[*] Initial shot at preventing users with bookings in the system from being deleted.
+
+[-] Fix bug allowing private entry information to be displayed in the week (single
+ room) view.  See GitHub Issues #3510.
+
+[*] Add server-side checking of whether users can be deleted.
+
+[+] Add a configuration option to prevent the deletion of users that appear in bookings.
+
+[-] Fix problem with PDF landscape orientation not being respected on some clients.  See
+ GitHub Issues #3512.
+
+[-] Remove repeated colons in Norwegian translations.
+
+[-] Fix bugs in use of $mincals_week_numbers and $view_week_number.  See GitHub Issues #3515.
+
+[*] Only display week numbers in the mini-calendars if the week starts on a Monday, the start of the
+ ISO week.
+
+
+-------------------------------------------------------------------------------
 Version 1.11.3 (Wed 12th July 2023):
 
 [*] Some code improvements.
@@ -99,7 +222,7 @@ Version 1.11.1 (Mon 3rd July 2023):
 
 [*] Fixes error in Korean language string. See SF Support Requests #2729.
 
-[-] Fixed bug causing spurious validation message when $is_mandatory_field[entry.xxx] is set to false. 
+[-] Fixed bug causing spurious validation message when $is_mandatory_field[entry.xxx] is set to false.
  See SF Support Requests #2733.
 
 [-] Fixed bug when the timezone definition in the database has expired and MRBS is unable to get a
@@ -145,7 +268,7 @@ Version 1.11.1 (Mon 3rd July 2023):
 
 [-] Set LDAP admin level to $max_level instead of 2.  See SF Support Requests #2763.
 
-[*] Swap the priority of $cli_language and $override_locale when determining which locale to use. 
+[*] Swap the priority of $cli_language and $override_locale when determining which locale to use.
  It was always intended that $override_locale should override everything else.
 
 [-] Fix "Unknown database type '(Ubuntu)'" problem on some Ubuntu systems.  See SF Bugs #545.
@@ -304,7 +427,7 @@ Version 1.11.0 (Tue 27th December 2022):
 
 [+] Added check for minimum versions of MySQL/MariaDB.
 
-[-] Fixed bug preventing sessions from working when using certain versions of PHP. 
+[-] Fixed bug preventing sessions from working when using certain versions of PHP.
  See https://github.com/php/php-src/issues/9668.
 
 [*] Truncated lock names in MySQL as since MYSQL 5.7.5 they are restricted to 64 characters.
@@ -410,7 +533,7 @@ initialisation to be disabled when using SAML.  See SF Support Requests #2390.
 
 [*] Improved print layout.
 
-[*]  Improved fix if no booking types are set. 
+[*]  Improved fix if no booking types are set.
  See https://github.com/meeting-room-booking-system/mrbs-code/issues/11#issuecomment-90
 
 [*] Improved documentation on auth/session classes.
