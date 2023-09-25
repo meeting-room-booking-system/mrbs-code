@@ -307,7 +307,11 @@ function print_report_link(User $user)
   elseif (checkAuthorised('search.php', true))
   {
     $attributes = array('action' => multisite('search.php'));
-    $hidden_inputs = array('search_str' => $user->username);
+    $date_now = new DateTime();
+    $hidden_inputs = array(
+      'search_str' => $user->username,
+      'from_date'  => $date_now->getISODate()
+    );
   }
   else
   {
