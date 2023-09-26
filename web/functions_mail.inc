@@ -612,11 +612,10 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                     $compare, $as_html);
 
     // Details if a series
-    $repeat_type = $data['repeat_rule']->getType();
-    if ($repeat_type != RepeatRule::NONE)
+    if ($data['repeat_rule']->getType() != RepeatRule::NONE)
     {
 
-      if ($repeat_type == RepeatRule::WEEKLY)
+      if ($data['repeat_rule']->getType() == RepeatRule::WEEKLY)
       {
         // Repeat days
         // Display day names according to language and preferred weekday start.
@@ -628,7 +627,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
                                         $compare, $as_html);
       }
 
-      if ($repeat_type == RepeatRule::MONTHLY)
+      if ($data['repeat_rule']->getType() == RepeatRule::MONTHLY)
       {
         $previous_repeat_day = ($mail_previous['repeat_rule']->getType() == RepeatRule::MONTHLY) ? get_monthly_repeat_day($mail_previous) : '';
         $body .= create_body_table_row (get_mail_vocab("repeat_on"),
@@ -676,7 +675,7 @@ function create_body(array $data, ?array $mail_previous, bool $compare, bool $se
   // above, it's often helpful to have this expanded out into a list of actual dates to
   // avoid any confusion.    The repeat list also gives a list of dates that could not
   // be booked due to conflicts.
-  if ($repeat_type != RepeatRule::NONE)
+  if ($data['repeat_rule']->getType() != RepeatRule::NONE)
   {
     $body .= create_repeat_list($data, $action, $as_html, $start_times);
   }
@@ -724,8 +723,6 @@ function address_merge(array $addresses, string $address_string) : array
 function create_addresses(array $data, string $action) : array
 {
   global $approval_enabled, $mail_settings;
-
-  $repeat_type = $data['repeat_rule']->getType();
 
   $reply_to = array();
   $to = array();
@@ -787,7 +784,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of area admins email addresses
     if (empty($data['area_admin_email']))
     {
-      $email = get_area_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
+      $email = get_area_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
     }
     else
     {
@@ -804,7 +801,7 @@ function create_addresses(array $data, string $action) : array
     // Look for list of room admins email addresses
     if (empty($data['room_admin_email']))
     {
-      $email = get_room_admin_email($data['id'], ($repeat_type != RepeatRule::NONE));
+      $email = get_room_admin_email($data['id'], ($data['repeat_rule']->getType() != RepeatRule::NONE));
     }
     else
     {
