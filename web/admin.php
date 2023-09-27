@@ -412,19 +412,21 @@ if (is_admin() || !empty($enabled_areas))
             switch ($field['name'])
             {
               // the standard MRBS fields (strings)
+              case 'capacity':
               case 'description':
               case 'invalid_types':
               case 'room_admin_email':
-                $text = '<span class="normal" data-type="string">' . get_vocab($field['name']) . '</span>';
-                break;
-              // the standard MRBS fields (numeric)
-              case 'capacity':
                 $text = get_vocab($field['name']);
                 break;
               // any user defined fields
               default:
                 $text = get_loc_field_name(_tbl('room'), $field['name']);
                 break;
+            }
+            // Add a data-type to help JavaScript sort
+            if ($field['nature'] == 'character')
+            {
+              $text = '<span class="normal" data-type="string">' . $text . '</span>';
             }
             // We don't use htmlspecialchars() here because the column names are
             // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
