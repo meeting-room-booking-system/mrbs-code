@@ -1081,7 +1081,7 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     // First three columns which are the name, display name, email address and roles
     echo '<th><span class="normal" data-type="string">' . get_vocab("user.display_name") . "</span></th>\n";
     echo '<th><span class="normal" data-type="string">' . get_vocab("user.name") . "</span></th>\n";
-    echo '<th id="col_email">' . get_vocab("user.email") . "</th>\n";
+    echo '<th id="col_email"><span class="normal" data-type="string">' . get_vocab("user.email") . "</th>\n";
     echo '<th><span class="normal" data-type="title-numeric">' . get_vocab("user.level") . "</span></th>\n";
     echo '<th><span class="normal" data-type="string">' . get_vocab("groups") . "</span></th>\n";
     echo '<th><span class="normal" data-type="string">' . get_vocab("roles") . "</span></th>\n";
