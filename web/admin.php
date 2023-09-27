@@ -396,7 +396,7 @@ if (is_admin() || !empty($enabled_areas))
         echo "<thead>\n";
         echo "<tr>\n";
 
-        echo '<th><span data-type="string">' . get_vocab("name") . "</span></th>\n";
+        echo '<th><span class="normal" data-type="string">' . get_vocab("name") . "</span></th>\n";
         if (is_admin())
         {
           // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
