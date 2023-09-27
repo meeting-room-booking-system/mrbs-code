@@ -1101,9 +1101,14 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
           {
             case 'timestamp':
             case 'last_login':
+              // TODO: Switch from using title-numeric to just numeric(?)
               $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
               break;
             default:
+              if ($field['nature'] == 'character')
+              {
+                $heading = '<span class="normal" data-type="string">' . $heading . '</span>';
+              }
               break;
           }
           echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
