@@ -1387,6 +1387,7 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
           case 'level':
           case 'timestamp':
           case 'last_login':
+            // TODO: Switch from using title-numeric to just numeric(?)
             $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
             break;
           default:
