@@ -1391,6 +1391,10 @@ if ($initial_user_creation != 1)   // don't print the user table if there are no
             $heading = '<span class="normal" data-type="title-numeric">' . $heading . '</span>';
             break;
           default:
+            if ($field['nature'] == 'character')
+            {
+              $heading = '<span class="normal" data-type="string">' . $heading . '</span>';
+            }
             break;
         }
         echo '<th id="col_' . htmlspecialchars($fieldname) . "\">$heading</th>";
