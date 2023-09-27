@@ -411,7 +411,7 @@ if (is_admin() || !empty($enabled_areas))
           {
             switch ($field['name'])
             {
-              // the standard MRBS fields (strings)
+              // the standard MRBS fields
               case 'capacity':
               case 'description':
               case 'invalid_types':
