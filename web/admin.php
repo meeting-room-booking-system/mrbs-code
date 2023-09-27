@@ -411,8 +411,11 @@ if (is_admin() || !empty($enabled_areas))
           {
             switch ($field['name'])
             {
-              // the standard MRBS fields
+              // the standard MRBS fields (strings)
               case 'description':
+                $text = '<span data-type="string">' . get_vocab($field['name']) . '</span>';
+                break;
+
               case 'capacity':
               case 'room_admin_email':
               case 'invalid_types':
