@@ -58,7 +58,7 @@ class User extends Table
     }
 
     $sql = "SELECT COUNT(id)
-              FROM ". _tbl('participants') . "
+              FROM ". _tbl('participant') . "
              WHERE username = :username
              LIMIT 1";
 
