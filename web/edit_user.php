@@ -163,11 +163,11 @@ function output_row(User $user)
   }
 
   $sortname = get_sortable_name($user->display_name);
-  $values[] = '<span title="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
+  // TODO: move the data-order attribute up into the <td> and get rid of the <span>
+  $values[] = '<span data-order="' . htmlspecialchars($sortname) . '"></span>' . $first_column_value;
 
   // Then the username
-  $name_value = "<span class=\"normal\">" . htmlspecialchars($user->name) . "</span>";
-  $values[] = '<span title="' . htmlspecialchars($user->name) . '"></span>' . $name_value;
+  $values[] = '<span class="normal">' . htmlspecialchars($user->name) . '</span>';
 
   // Then the email address
   // we don't want to truncate the email address
@@ -1079,12 +1079,12 @@ if (!$initial_user_creation)   // don't print the user table if there are no use
     echo "<tr>";
 
     // First three columns which are the name, display name, email address and roles
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.display_name") . "</span></th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("user.name") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="string">' . get_vocab("user.display_name") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="string">' . get_vocab("user.name") . "</span></th>\n";
     echo '<th id="col_email">' . get_vocab("user.email") . "</th>\n";
     echo '<th><span class="normal" data-type="title-numeric">' . get_vocab("user.level") . "</span></th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("groups") . "</span></th>\n";
-    echo '<th><span class="normal" data-type="title-string">' . get_vocab("roles") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="string">' . get_vocab("groups") . "</span></th>\n";
+    echo '<th><span class="normal" data-type="string">' . get_vocab("roles") . "</span></th>\n";
 
     // Other column headers
     if ($auth['type'] == 'db')
