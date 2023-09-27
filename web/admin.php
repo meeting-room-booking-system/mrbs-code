@@ -396,7 +396,7 @@ if (is_admin() || !empty($enabled_areas))
         echo "<thead>\n";
         echo "<tr>\n";
 
-        echo "<th>" . get_vocab("name") . "</th>\n";
+        echo '<th><span data-type="string">' . get_vocab("name") . "</span></th>\n";
         if (is_admin())
         {
           // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
@@ -450,10 +450,9 @@ if (is_admin() || !empty($enabled_areas))
 
             $html_name = htmlspecialchars($r['room_name']);
             $href = multisite('edit_room.php?room=' . $r['id']);
-            // We insert an invisible span containing the sort key so that the rooms will
+            // We insert a data attribute containing the sort key so that the rooms will
             // be sorted properly
-            echo "<td><div>" .
-                 "<span>" . htmlspecialchars($r['sort_key']) . "</span>" .
+            echo '<td data-order="' . htmlspecialchars($r['sort_key']) . '"><div>' .
                  "<a title=\"$html_name\" href=\"" . htmlspecialchars($href) . "\">$html_name</a>" .
                  "</div></td>\n";
             if (is_admin())
