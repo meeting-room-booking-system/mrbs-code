@@ -330,6 +330,7 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
   }
 
   defaultOptions.initComplete = initCompleteActions;
+
   <?php
   // Merge the specific options with the default options.  We do a deep
   // merge.
@@ -347,6 +348,9 @@ function makeDataTable(id, specificOptions, fixedColumnsOptions)
       }
     };
   }
+
+  <?php // Localise the sorting.  See https://datatables.net/blog/2017-02-28 ?>
+  $.fn.dataTable.ext.order.intl($('body').data('langPrefs'));
 
   dataTable = table.DataTable(mergedOptions);
 
