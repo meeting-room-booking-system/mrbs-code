@@ -273,7 +273,7 @@ function display_rooms($area_id)
       echo "<thead>\n";
       echo "<tr>\n";
 
-      echo '<th><span data-type="string">' . get_vocab("name") . "</span></th>\n";
+      echo '<th><span class="normal" data-type="string">' . get_vocab("name") . "</span></th>\n";
       if (is_admin())
       {
         // Don't show ordinary users the disabled status:  they are only going to see enabled rooms
@@ -300,6 +300,11 @@ function display_rooms($area_id)
             default:
               $text = get_loc_field_name(_tbl('room'), $column->name);
               break;
+          }
+          // Add a data-type to help JavaScript sort
+          if ($column->getNature() == Column::NATURE_CHARACTER)
+          {
+            $text = '<span class="normal" data-type="string">' . $text . '</span>';
           }
           // We don't use htmlspecialchars() here because the column names are
           // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
