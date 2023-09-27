@@ -306,8 +306,9 @@ function display_rooms($area_id)
           {
             $text = '<span class="normal" data-type="string">' . $text . '</span>';
           }
-          // We don't use htmlspecialchars() here because the column names are
+          // We don't use htmlspecialchars() here because (a) the column names are
           // trusted and some of them may deliberately contain HTML entities (eg &nbsp;)
+          // (b) $text could contain the span above.
           echo "<th>$text</th>\n";
         }
       }
