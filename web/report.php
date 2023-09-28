@@ -644,7 +644,7 @@ function report_header() : void
     switch ($field)
     {
       case 'name':
-        $values[$field] = get_vocab("namebooker");
+        $values[$field] = type_wrap(get_vocab("namebooker"), 'string');
         break;
       case 'area_name':
         $values[$field] = type_wrap(get_vocab("area"), 'title-string');
@@ -1038,9 +1038,14 @@ function report_row(&$rows, $data)
         case 'name':
           // Add a link to the entry and also a data-id value for the Bulk Delete JavaScript
           $href = multisite('view_entry.php?id=' . urlencode($data['id']));
-          $value = '<a href="' . htmlspecialchars($href) . '"' .
+          // Put an invisible <span> at the beginning for sorting.
+          // TODO This should really be done by putting a data-order attribute in the <td> element,
+          // TODO but we can't do that with Ajax loading.  The solution is to switch to use DataTables'
+          // TODO orthogonal data.
+          $value = "<span>$value</span>" .
+                   '<a href="' . htmlspecialchars($href) . '"' .
                    ' data-id="' . htmlspecialchars($data['id']) . '"' .
-                   ' title="' . $value . '">' . $value . '</a>';  // $value already escaped
+                   $value . '">' . $value . '</a>';  // $value already escaped
           break;
         case 'end_time':
           // Process the duration and then fall through to the end_time
