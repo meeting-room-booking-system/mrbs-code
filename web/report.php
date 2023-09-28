@@ -647,10 +647,10 @@ function report_header() : void
         $values[$field] = type_wrap(get_vocab("namebooker"), 'string');
         break;
       case 'area_name':
-        $values[$field] = type_wrap(get_vocab("area"), 'title-string');
+        $values[$field] = type_wrap(get_vocab("area"), 'string');
         break;
       case 'room_name':
-        $values[$field] = type_wrap(get_vocab("room"), 'title-string');
+        $values[$field] = type_wrap(get_vocab("room"), 'string');
         break;
       case 'start_time':
         $values[$field] = type_wrap(get_vocab("start_date"), 'title-numeric');
@@ -1059,10 +1059,12 @@ function report_row(&$rows, $data)
           $value = '<span title="' . htmlspecialchars($data[$field]) . '"></span>' . $value;
           break;
         case 'area_name':
-          $value = '<span title="' . htmlspecialchars($data['area_sort_key']) . '"></span></span>' . $value;
+          // TODO Use orthogonal data instead of a span
+          $value = '<span>' . htmlspecialchars($data['area_sort_key']) . '</span>' . $value;
           break;
         case 'room_name':
-          $value = '<span title="' . htmlspecialchars($data['room_sort_key']) . '"></span></span>' . $value;
+          // TODO Use orthogonal data instead of a span
+          $value = '<span>' . htmlspecialchars($data['room_sort_key']) . '</span>' . $value;
           break;
         default:
           break;
