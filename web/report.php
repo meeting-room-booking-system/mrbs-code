@@ -641,7 +641,8 @@ function report_header() : void
   {
     // We give some columns a type data value so that the JavaScript knows how to sort them
     // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
-    // TODO: is 'string' really necessary or does DataTables auto-detect?
+    // TODO: is 'string' really necessary or does DataTables auto-detect? (But it is necessary
+    // TODO: if there's HTML.)
     switch ($field)
     {
       case 'name':
@@ -676,7 +677,7 @@ function report_header() : void
         }
         break;
       case 'create_by':
-        $values[$field] = get_vocab("createdby");
+        $values[$field] = type_wrap(get_vocab("createdby"), 'string');
         break;
       case 'confirmation_enabled':
         if ($confirmation_somewhere)
@@ -1026,15 +1027,20 @@ function report_row(&$rows, $data)
       switch ($field)
       {
         case 'create_by':
+          $text = $value;
           // Add a mailto: link if we can and only if the current user is an admin (for privacy reasons)
           if (is_admin())
           {
             $user = auth()->getUser($create_by);
             if (isset($user->email) && ($user->email !== ''))
             {
-              $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$value</a>";
+              $value = '<a href="mailto:' . htmlspecialchars($user->email) . '">' . "$text</a>";
             }
           }
+          // Put an invisible <span> at the beginning for sorting.
+          // $text and $value are already escaped.
+          // TODO Use orthogonal data
+          $value = "<span>$text</span>$value";
           break;
         case 'name':
           // Add a link to the entry and also a data-id value for the Bulk Delete JavaScript
