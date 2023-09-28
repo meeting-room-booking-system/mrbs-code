@@ -999,6 +999,7 @@ class System
         break;
 
       case 'macosx':
+      case 'windows':
         $codeset = '.utf-8';
         break;
 
