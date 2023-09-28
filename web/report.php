@@ -660,7 +660,7 @@ function report_header() : void
         $values['duration'] = type_wrap(get_vocab("duration"), 'title-numeric');
         break;
       case 'description':
-        $values[$field] = get_vocab("fulldescription_short");
+        $values[$field] = type_wrap(get_vocab("fulldescription_short"), 'string');
         break;
       case 'type':
         if (isset($booking_types) && (count($booking_types) > 1))
