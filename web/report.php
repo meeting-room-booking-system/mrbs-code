@@ -641,6 +641,7 @@ function report_header() : void
   {
     // We give some columns a type data value so that the JavaScript knows how to sort them
     // TODO: the 'title-*' plugins are now deprecated in DataTables.  Use the replacement.
+    // TODO: is 'string' really necessary or does DataTables auto-detect?
     switch ($field)
     {
       case 'name':
