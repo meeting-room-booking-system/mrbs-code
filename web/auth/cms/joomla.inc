@@ -25,4 +25,7 @@ if (version_compare(JVERSION, '4.3.0', '>='))
 {
   require_once JPATH_BASE . '/plugins/authentication/joomla/src/Extension/Joomla.php';
   require_once JPATH_BASE . '/plugins/authentication/cookie/src/Extension/Cookie.php';
+  require_once JPATH_BASE . '/plugins/authentication/ldap/src/Extension/Ldap.php';
+  require_once JPATH_BASE . '/plugins/authentication/ldap/src/Factory/LdapFactoryInterface.php';
+  require_once JPATH_BASE . '/plugins/authentication/ldap/src/Factory/LdapFactory.php';
 }
