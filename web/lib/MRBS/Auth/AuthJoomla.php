@@ -40,6 +40,9 @@ class AuthJoomla extends Auth
     }
     // We shouldn't have to do this, but from Joomla 4.3.0 logging in with an invalid
     // username/password combination throws an error, so we catch it and return FALSE.
+    // [The problem with catching all throwables is that we mask other possible errors.
+    // However, there's no guarantee that the current error on an invalid user won't
+    // change in future versions of Joomla.]
     // See https://groups.google.com/g/joomla-dev-general/c/55J2s9hhMxA/m/IpBrs3HZAgAJ?utm_medium=email&utm_source=footer&pli=1
     // See also auth/cms/joomla.inc.
     // TODO: something better
