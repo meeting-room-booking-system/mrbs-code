@@ -5,6 +5,7 @@ namespace MRBS\ICalendar;
 use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\RepeatRule;
+use function MRBS\create_ical_event;
 
 require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
@@ -97,14 +98,14 @@ class Series
 
     // Create the series event
     $this->original_row['skip_list'] = array_diff($this->expected_entries, $this->actual_entries);
-    $events[] = \MRBS\create_ical_event($method, $this->original_row, null, true);
+    $events[] = create_ical_event($method, $this->original_row, null, true);
 
     // Then iterate through the series looking for changed entries
     foreach($this->data as $entry)
     {
       if ($entry['entry_type'] == ENTRY_RPT_CHANGED)
       {
-        $events[] = \MRBS\create_ical_event($method, $entry);
+        $events[] = create_ical_event($method, $entry);
       }
     }
 
