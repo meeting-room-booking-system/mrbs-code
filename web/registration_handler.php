@@ -55,7 +55,7 @@ function register($username, $event_id)
     return;
   }
 
-  // Check that the user is an an admin or else that the entry is open for registration
+  // Check that the user is an admin or else that the entry is open for registration
   if (!is_book_admin($entry['room_id']) && !entry_registration_is_open($entry))
   {
     return;
