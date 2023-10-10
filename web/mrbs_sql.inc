@@ -1648,7 +1648,7 @@ function entry_has_registrants(int $entry_id) : bool
 {
   $sql = "SELECT COUNT(username)
             FROM " . _tbl('entry') . " E
-       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+       LEFT JOIN " . _tbl('participant') . " P ON E.id=P.entry_id
            WHERE E.id=:entry_id
            LIMIT 1";
 
