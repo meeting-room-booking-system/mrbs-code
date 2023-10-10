@@ -934,13 +934,15 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   {
     $results[] = "X-MRBS-" . strtoupper(str_replace('_', '-', $property)) . ":" . $data[$property];
   }
-  // Registrants
-  $registrants = get_registrants($data['id'], false);
-  foreach ($registrants as $registrant)
+  // Registrants (but only for individual entries)
+  if (!$series)
   {
-    $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
-      ';' . 'X-MRBS-CREATE-BY="' . ical_escape_quoted_string($registrant['create_by']) . '"' .
-      ':' . ical_escape_text($registrant['username']);
+    $registrants = get_registrants($data['id'], false);
+    foreach ($registrants as $registrant) {
+      $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
+        ';' . 'X-MRBS-CREATE-BY="' . ical_escape_quoted_string($registrant['create_by']) . '"' .
+        ':' . ical_escape_text($registrant['username']);
+    }
   }
 
   $results[] = "END:VEVENT";
