@@ -6,6 +6,7 @@ use MRBS\DateTime;
 use MRBS\Exception;
 use MRBS\RepeatRule;
 use function MRBS\create_ical_event;
+use function MRBS\entry_has_registrants;
 
 require_once MRBS_ROOT . '/functions_ical.inc';
 require_once MRBS_ROOT . '/mrbs_sql.inc';
@@ -26,8 +27,7 @@ class Series
   // of the series.   Defaults to null, ie no limit.  This enables the series extract to be truncated.
   public function __construct(array $row, int $limit=null)
   {
-    // Temporary fix-up
-    $row = self::addRepeatRule($row);
+    $row = self::fixUpRow($row);
 
     $this->data = array();
     $this->repeat_id = $row['repeat_id'];
@@ -64,8 +64,7 @@ class Series
   // Add a row to the series
   public function addRow(array $row)
   {
-    // Temporary fix-up
-    $row = self::addRepeatRule($row);
+    $row = self::fixUpRow($row);
 
     // Add the row to the data array
     $this->data[] = $row;
@@ -146,4 +145,23 @@ class Series
     return $row;
   }
 
+
+  private static function fixUpRow(array $row) : array
+  {
+    // Temporary fix-up
+    $row = self::addRepeatRule($row);
+
+    // Another fix-up: if the entry has registrants then treat it like
+    // a changed entry so that it appears as individual event in the calendar
+    // and can therefore have registrants associated with it.
+    // TODO: fix this properly.  (Maybe entries with registrants should be
+    // TODO: ENTRY_RPT_CHANGED in the database in the first place? That would
+    // TODO: also solve the problem of not being able to edit series with registrants.)
+    if (entry_has_registrants($row['id']))
+    {
+      $row['entry_type'] = ENTRY_RPT_CHANGED;
+    }
+
+    return $row;
+  }
 }
