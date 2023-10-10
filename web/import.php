@@ -286,6 +286,7 @@ function process_event(array $vevent) : bool
   );
 
   // Set up the booking with some defaults
+  $registrants = array();
   $booking = array();
   $booking['awaiting_approval'] = false;
   $booking['private'] = false;
@@ -311,8 +312,12 @@ function process_event(array $vevent) : bool
     // than 1 (not sure if you can), make sure we've got to the matching END.
     if ($property['name'] != 'BEGIN')
     {
-      $properties[$property['name']] = array('params' => $property['params'],
-                                             'value' => $property['value']);
+      $properties[] = $property;
+      // Get the start time because we'll need it later
+      if ($property['name'] == 'DTSTART')
+      {
+        $booking['start_time'] = get_time($property['value'], $property['params']);
+      }
     }
     else
     {
@@ -325,36 +330,32 @@ function process_event(array $vevent) : bool
     }
     $line = next($vevent);
   }
-  // Get the start time because we'll need it later
-  if (!isset($properties['DTSTART']))
+
+  if (!isset($booking['start_time']))
   {
     trigger_error("No DTSTART", E_USER_WARNING);
   }
-  else
+
+  // Now go through the properties
+  foreach($properties as $property)
   {
-    $booking['start_time'] = get_time($properties['DTSTART']['value'],
-                                      $properties['DTSTART']['params']);
-  }
-  // Now go through the rest of the properties
-  foreach($properties as $name => $details)
-  {
-    switch ($name)
+    switch ($property['name'])
     {
       case 'ORGANIZER':
-        $booking['create_by'] = get_create_by($details['value']);
+        $booking['create_by'] = get_create_by($property['value']);
         $booking['modified_by'] = '';
         break;
 
       case 'SUMMARY':
-        $booking['name'] = $details['value'];
+        $booking['name'] = $property['value'];
         break;
 
       case 'DESCRIPTION':
-        $booking['description'] = $details['value'];
+        $booking['description'] = $property['value'];
         break;
 
       case 'LOCATION':
-        $location = $details['value']; // We may need the original LOCATION later
+        $location = $property['value']; // We may need the original LOCATION later
         if ($ignore_location)
         {
           $booking['room_id'] = $import_default_room;
@@ -370,8 +371,12 @@ function process_event(array $vevent) : bool
         }
         break;
 
+      case 'DTSTART':
+        // We've already handled this
+        break;
+
       case 'DTEND':
-        $booking['end_time'] = get_time($details['value'], $details['params']);
+        $booking['end_time'] = get_time($property['value'], $property['params']);
         break;
 
       case 'DURATION':
@@ -380,7 +385,7 @@ function process_event(array $vevent) : bool
 
       case 'RRULE':
         $rrule_errors = array();
-        $repeat_rule = get_repeat_rule($details['value'], $booking['start_time'], $rrule_errors);
+        $repeat_rule = get_repeat_rule($property['value'], $booking['start_time'], $rrule_errors);
         if ($repeat_rule === false)
         {
           $problems = array_merge($problems, $rrule_errors);
@@ -394,14 +399,14 @@ function process_event(array $vevent) : bool
       case 'EXDATE':
         try
         {
-          $booking['skip_list'] = get_skip_list($details['value'], $details['params']);
+          $booking['skip_list'] = get_skip_list($property['value'], $property['params']);
         }
         catch (\Exception $e)
         {
           // If it's a bad timezone, flag that as a problem, otherwise rethrow the exception
           if (str_contains($e->getMessage(), 'Unknown or bad timezone'))
           {
-            $problems[] = get_vocab('bad_timezone', $details['params']['TZID'] ?? 'UTC');
+            $problems[] = get_vocab('bad_timezone', $property['params']['TZID'] ?? 'UTC');
           }
           else
           {
@@ -411,19 +416,19 @@ function process_event(array $vevent) : bool
         break;
 
       case 'CLASS':
-        $booking['private'] = in_array($details['value'], array('PRIVATE', 'CONFIDENTIAL'));
+        $booking['private'] = in_array($property['value'], array('PRIVATE', 'CONFIDENTIAL'));
         break;
 
       case 'STATUS':
-        $booking['tentative'] = ($details['value'] == 'TENTATIVE');
+        $booking['tentative'] = ($property['value'] == 'TENTATIVE');
         break;
 
       case 'UID':
-        $booking['ical_uid'] = $details['value'];
+        $booking['ical_uid'] = $property['value'];
         break;
 
       case 'SEQUENCE':
-        $booking['ical_sequence'] = $details['value'];
+        $booking['ical_sequence'] = $property['value'];
         break;
 
       case 'LAST-MODIFIED':
@@ -434,9 +439,9 @@ function process_event(array $vevent) : bool
       default:
         // MRBS specific properties
         $mrbs_prefix = 'X-MRBS-';
-        if (str_starts_with($name, $mrbs_prefix))
+        if (str_starts_with($property['name'], $mrbs_prefix))
         {
-          $key = substr($name, strlen($mrbs_prefix));
+          $key = substr($property['name'], strlen($mrbs_prefix));
           $key = strtolower($key);
           $key = str_replace('-', '_', $key);
           // Type
@@ -446,7 +451,7 @@ function process_event(array $vevent) : bool
             {
               foreach ($booking_types as $type)
               {
-                if ($details['value'] == get_type_vocab($type))
+                if ($property['value'] == get_type_vocab($type))
                 {
                   $booking['type'] = $type;
                   break;
@@ -457,7 +462,16 @@ function process_event(array $vevent) : bool
           // Registration keys
           elseif (in_array($key, $registration_keys))
           {
-            $booking[$key] = $details['value'];
+            $booking[$key] = $property['value'];
+          }
+          // Registrants
+          elseif ($key == 'registrant')
+          {
+            $registrants[] = array(
+              'username'    => $property['value'],
+              'registered'  => $property['params']['X-MRBS-REGISTERED'],
+              'create_by'   => ical_unescape_quoted_string($property['params']['X-MRBS-CREATE-BY'])
+            );
           }
           // TODO: custom fields
         }
@@ -570,8 +584,20 @@ function process_event(array $vevent) : bool
     // Make the bookings
     $bookings = array($booking);
     $result = mrbsMakeBookings($bookings, null, false, $skip);
+
     if ($result['valid_booking'])
     {
+      // If the bookings been made then add the registrants
+      // TODO: could optimise this with a single query
+      foreach ($registrants as $registrant)
+      {
+        add_registrant(
+          $result['new_details'][0]['id'],
+          $registrant['username'],
+          $registrant['create_by'],
+          $registrant['registered']
+        );
+      }
       return true;
     }
   }

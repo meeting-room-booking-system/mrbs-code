@@ -814,6 +814,22 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
 }
 
 
+function add_registrant(int $entry_id, string $username, string $create_by, int $timestamp = null) : void
+{
+  $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, create_by, registered)
+                     VALUES (:entry_id, :username, :create_by, :registered)";
+
+  $sql_params = array(
+    ':entry_id'   => $entry_id,
+    ':username'   => $username,
+    ':create_by'  => $create_by,
+    ':registered' => $timestamp ?? time()
+  );
+
+  db()->command($sql, $sql_params);
+}
+
+
 // Get all the entries for the area with $area_id in the interval that starts at $interval_start
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
