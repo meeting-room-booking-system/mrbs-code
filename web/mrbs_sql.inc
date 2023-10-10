@@ -1640,6 +1640,21 @@ function get_registrants(int $id, bool $series) : ?array
 }
 
 
+// Check whether an entry has any registrants
+function entry_has_registrants(int $entry_id) : bool
+{
+  $sql = "SELECT COUNT(username)
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+           WHERE E.id=:entry_id
+           LIMIT 1";
+
+  $sql_params = array(':entry_id' => $entry_id);
+
+  return (db()->query1($sql, $sql_params) > 0);
+}
+
+
 // Check whether any entries in a series have users registered
 function series_has_registrants($repeat_id)
 {
