@@ -593,9 +593,7 @@ function process_event(array $vevent) : bool
       {
         add_registrant(
           $result['new_details'][0]['id'],
-          $registrant['username'],
-          $registrant['create_by'],
-          $registrant['registered']
+          $registrant
         );
       }
       return true;
