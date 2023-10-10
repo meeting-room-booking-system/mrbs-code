@@ -818,17 +818,7 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
 // the entry with id $entry_id
 function add_registrant(int $entry_id, array $registrant) : void
 {
-  $sql = "INSERT INTO " . _tbl('participant') . " (entry_id, username, create_by, registered)
-                     VALUES (:entry_id, :username, :create_by, :registered)";
-
-  $sql_params = array(
-    ':entry_id'   => $entry_id,
-    ':username'   => $registrant['username'],
-    ':create_by'  => $registrant['create_by'],
-    ':registered' => $registrant['registered']
-  );
-
-  db()->command($sql, $sql_params);
+  add_registrants($entry_id, [$registrant]);
 }
 
 
@@ -836,11 +826,26 @@ function add_registrant(int $entry_id, array $registrant) : void
 // the entry with id $entry_id
 function add_registrants(int $entry_id, array $registrants) : void
 {
-  // TODO: could optimise this with a single query
-  foreach ($registrants as $registrant)
+  if (empty($registrants))
   {
-    add_registrant($entry_id, $registrant);
+    return;
   }
+
+  $sql_params = array(':entry_id' => $entry_id);
+  $values = array();
+
+  foreach ($registrants as $i => $registrant)
+  {
+    $sql_params[":username$i"] = $registrant['username'];
+    $sql_params[":create_by$i"] = $registrant['create_by'];
+    $sql_params[":registered$i"] = $registrant['registered'];
+    $values[] = "(:entry_id, :username$i, :create_by$i, :registered$i)";
+  }
+
+  $sql = "INSERT INTO " . _tbl('participant') . " (entry_id, username, create_by, registered) VALUES " .
+    implode(', ', $values);
+
+  db()->command($sql, $sql_params);
 }
 
 
