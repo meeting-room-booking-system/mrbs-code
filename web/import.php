@@ -590,14 +590,7 @@ function process_event(array $vevent) : bool
     if ($result['valid_booking'])
     {
       // If the bookings been made then add the registrants
-      // TODO: could optimise this with a single query
-      foreach ($registrants as $registrant)
-      {
-        add_registrant(
-          $result['new_details'][0]['id'],
-          $registrant
-        );
-      }
+      add_registrants($result['new_details'][0]['id'], $registrants);
       return true;
     }
   }

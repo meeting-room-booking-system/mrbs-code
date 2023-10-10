@@ -829,6 +829,18 @@ function add_registrant(int $entry_id, array $registrant) : void
 }
 
 
+// Add the registrants (indexed by 'username', 'create_by' and 'registered') to
+// the entry with id $entry_id
+function add_registrants(int $entry_id, array $registrants) : void
+{
+  // TODO: could optimise this with a single query
+  foreach ($registrants as $registrant)
+  {
+    add_registrant($entry_id, $registrant);
+  }
+}
+
+
 // Get all the entries for the area with $area_id in the interval that starts at $interval_start
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
