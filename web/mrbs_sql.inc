@@ -816,7 +816,7 @@ function entry_registration_cancellation_has_closed(array $entry) : bool
 
 function add_registrant(int $entry_id, string $username, string $create_by, int $timestamp = null) : void
 {
-  $sql = "INSERT INTO " . _tbl('participants') . " (entry_id, username, create_by, registered)
+  $sql = "INSERT INTO " . _tbl('participant') . " (entry_id, username, create_by, registered)
                      VALUES (:entry_id, :username, :create_by, :registered)";
 
   $sql_params = array(
