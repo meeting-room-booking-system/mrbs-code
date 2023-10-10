@@ -832,6 +832,18 @@ function add_registrant(int $entry_id, array $registrant) : void
 }
 
 
+// Add the registrants (indexed by 'username', 'create_by' and 'registered') to
+// the entry with id $entry_id
+function add_registrants(int $entry_id, array $registrants) : void
+{
+  // TODO: could optimise this with a single query
+  foreach ($registrants as $registrant)
+  {
+    add_registrant($entry_id, $registrant);
+  }
+}
+
+
 // Get all the entries for the area with $area_id in the interval that starts at $interval_start
 // and ends at $interval_start (both Unix timestamps).   Only gets entries for enabled rooms.
 // Returns an array of entries.   Each element of the array is itself an array with keys
@@ -1628,6 +1640,21 @@ function get_registrants(int $id, bool $series) : ?array
   $res = db()->query($sql, array(':entry_id' => $id));
 
   return $res->all_rows_keyed();
+}
+
+
+// Check whether an entry has any registrants
+function entry_has_registrants(int $entry_id) : bool
+{
+  $sql = "SELECT COUNT(username)
+            FROM " . _tbl('entry') . " E
+       LEFT JOIN " . _tbl('participants') . " P ON E.id=P.entry_id
+           WHERE E.id=:entry_id
+           LIMIT 1";
+
+  $sql_params = array(':entry_id' => $entry_id);
+
+  return (db()->query1($sql, $sql_params) > 0);
 }
 
 
