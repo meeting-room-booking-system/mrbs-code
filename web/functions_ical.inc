@@ -939,6 +939,7 @@ function create_ical_event(string $method, array $data, ?array $addresses=null, 
   {
     $registrants = get_registrants($data['id'], false);
     foreach ($registrants as $registrant) {
+      // We can't use the ATTENDEEE property because its value has to be a URI.
       $results[] = "X-MRBS-REGISTRANT;X-MRBS-REGISTERED=" . $registrant['registered'] .
         ';' . 'X-MRBS-CREATE-BY="' . ical_escape_quoted_string($registrant['create_by']) . '"' .
         ':' . ical_escape_text($registrant['username']);
