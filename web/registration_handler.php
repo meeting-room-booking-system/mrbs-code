@@ -81,7 +81,11 @@ function register($username, $event_id)
         $mrbs_user = session()->getCurrentUser();
         $mrbs_username = (isset($mrbs_user)) ? $mrbs_user->username : null;
         // then register the user
-        add_registrant($event_id, $username, $mrbs_username);
+        add_registrant($event_id, array(
+          'username'    => $username,
+          'create_by'   => $mrbs_username,
+          'registered'  => time()
+        ));
       }
     }
   }
